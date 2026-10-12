@@ -1,0 +1,1382 @@
+{
+  "identity": {
+    "evaluator_head": "84d0782793c49cd661e879baabfab9ca02ed9b3b",
+    "mode": "selector-T",
+    "reference_time": "2026-10-12T12:00:00Z",
+    "runtime_composition_blob": "86b3bc292d11c9e81eccbb404cdabe2a34145567",
+    "runtime_composition_path": "/tmp/claude-0/wt4/sel/reference/agentmem_ref/runtime/runtime_composition.py",
+    "runtime_root_head": "6e00f42f2dc2e81ec137eeecc2ca68f9d1c160e6",
+    "runtime_tree_clean": true
+  },
+  "per_query": [
+    {
+      "applicability": {
+        "adr-db-v2": "unknown_temporal_basis",
+        "authz-5s": "unknown_temporal_basis",
+        "bookclub": "unknown_temporal_basis",
+        "bus": "unknown_temporal_basis",
+        "deploy-days": "unknown_temporal_basis",
+        "freeze-bf25": "outside_target_interval",
+        "fx-fetch": "unknown_temporal_basis",
+        "fx-why": "unknown_temporal_basis",
+        "inc-2207": "unknown_temporal_basis",
+        "migration-rule": "unknown_temporal_basis",
+        "money-repr": "unknown_temporal_basis",
+        "oncall-lrt": "unknown_temporal_basis",
+        "pgver-16": "unknown_temporal_basis",
+        "ratelimit": "unknown_temporal_basis",
+        "ratelimit-rumor": "unknown_temporal_basis",
+        "region-eu-us": "unknown_temporal_basis",
+        "room": "unknown_temporal_basis"
+      },
+      "excluded_known_inapplicable": [
+        "freeze-bf25"
+      ],
+      "id": "H01",
+      "intent": "current",
+      "known_inapplicable_count": 1,
+      "ranked_admitted": [
+        "bus",
+        "migration-rule",
+        "pgver-16",
+        "inc-2207",
+        "room",
+        "adr-db-v2",
+        "oncall-lrt",
+        "authz-5s",
+        "deploy-days",
+        "bookclub",
+        "money-repr",
+        "region-eu-us",
+        "fx-why",
+        "ratelimit",
+        "fx-fetch",
+        "ratelimit-rumor",
+        "freeze-bf25"
+      ],
+      "selector": "served",
+      "served": [
+        "bus",
+        "migration-rule",
+        "pgver-16"
+      ],
+      "unknown_applicability_count": 16
+    },
+    {
+      "applicability": {
+        "adr-db-v1": "not_evaluated",
+        "adr-db-v2": "not_evaluated",
+        "authz-5s": "not_evaluated",
+        "bookclub": "not_evaluated",
+        "bus": "not_evaluated",
+        "deploy-days": "not_evaluated",
+        "freeze-bf25": "not_evaluated",
+        "fx-fetch": "not_evaluated",
+        "fx-why": "not_evaluated",
+        "inc-2207": "not_evaluated",
+        "migration-rule": "not_evaluated",
+        "money-repr": "not_evaluated",
+        "oncall-lrt": "not_evaluated",
+        "oncall-platform": "not_evaluated",
+        "pgver-13": "not_evaluated",
+        "pgver-15": "not_evaluated",
+        "pgver-16": "not_evaluated",
+        "ratelimit": "not_evaluated",
+        "ratelimit-rumor": "not_evaluated",
+        "region-draft": "not_evaluated",
+        "region-eu": "not_evaluated",
+        "region-eu-us": "not_evaluated",
+        "room": "not_evaluated"
+      },
+      "id": "H02",
+      "intent": "historical",
+      "ranked_admitted": [
+        "pgver-16",
+        "pgver-15",
+        "adr-db-v2",
+        "migration-rule",
+        "pgver-13",
+        "room",
+        "oncall-lrt",
+        "adr-db-v1",
+        "region-draft",
+        "oncall-platform",
+        "deploy-days",
+        "bookclub",
+        "inc-2207",
+        "bus",
+        "money-repr",
+        "freeze-bf25",
+        "region-eu-us",
+        "region-eu",
+        "fx-why",
+        "ratelimit",
+        "fx-fetch",
+        "authz-5s",
+        "ratelimit-rumor"
+      ],
+      "served": [
+        "pgver-16",
+        "pgver-15",
+        "adr-db-v2"
+      ]
+    },
+    {
+      "applicability": {
+        "adr-db-v1": "not_evaluated",
+        "adr-db-v2": "not_evaluated",
+        "authz-5s": "not_evaluated",
+        "bookclub": "not_evaluated",
+        "bus": "not_evaluated",
+        "deploy-days": "not_evaluated",
+        "freeze-bf25": "not_evaluated",
+        "fx-fetch": "not_evaluated",
+        "fx-why": "not_evaluated",
+        "inc-2207": "not_evaluated",
+        "migration-rule": "not_evaluated",
+        "money-repr": "not_evaluated",
+        "oncall-lrt": "not_evaluated",
+        "oncall-platform": "not_evaluated",
+        "pgver-13": "not_evaluated",
+        "pgver-15": "not_evaluated",
+        "pgver-16": "not_evaluated",
+        "ratelimit": "not_evaluated",
+        "ratelimit-rumor": "not_evaluated",
+        "region-draft": "not_evaluated",
+        "region-eu": "not_evaluated",
+        "region-eu-us": "not_evaluated",
+        "room": "not_evaluated",
+        "webhook-retry": "not_evaluated"
+      },
+      "id": "H03",
+      "intent": "historical",
+      "ranked_admitted": [
+        "adr-db-v1",
+        "oncall-lrt",
+        "oncall-platform",
+        "room",
+        "inc-2207",
+        "freeze-bf25",
+        "deploy-days",
+        "fx-fetch",
+        "pgver-13",
+        "webhook-retry",
+        "pgver-16",
+        "pgver-15",
+        "region-draft",
+        "fx-why",
+        "bus",
+        "money-repr",
+        "migration-rule",
+        "adr-db-v2",
+        "region-eu-us",
+        "region-eu",
+        "ratelimit",
+        "bookclub",
+        "authz-5s",
+        "ratelimit-rumor"
+      ],
+      "served": [
+        "adr-db-v1",
+        "oncall-lrt",
+        "oncall-platform"
+      ]
+    },
+    {
+      "applicability": {
+        "adr-db-v1": "not_evaluated",
+        "adr-db-v2": "not_evaluated",
+        "authz-5s": "not_evaluated",
+        "bookclub": "not_evaluated",
+        "bus": "not_evaluated",
+        "freeze-bf25": "not_evaluated",
+        "fx-fetch": "not_evaluated",
+        "fx-why": "not_evaluated",
+        "inc-2207": "not_evaluated",
+        "migration-rule": "not_evaluated",
+        "money-repr": "not_evaluated",
+        "oncall-lrt": "not_evaluated",
+        "oncall-platform": "not_evaluated",
+        "pgver-13": "not_evaluated",
+        "pgver-15": "not_evaluated",
+        "pgver-16": "not_evaluated",
+        "ratelimit": "not_evaluated",
+        "ratelimit-rumor": "not_evaluated",
+        "region-eu": "not_evaluated",
+        "region-eu-us": "not_evaluated",
+        "room": "not_evaluated"
+      },
+      "id": "H04",
+      "intent": "historical",
+      "ranked_admitted": [
+        "bookclub",
+        "adr-db-v1",
+        "fx-fetch",
+        "fx-why",
+        "pgver-13",
+        "inc-2207",
+        "pgver-16",
+        "pgver-15",
+        "room",
+        "bus",
+        "oncall-lrt",
+        "money-repr",
+        "migration-rule",
+        "adr-db-v2",
+        "oncall-platform",
+        "freeze-bf25",
+        "region-eu-us",
+        "region-eu",
+        "ratelimit",
+        "authz-5s",
+        "ratelimit-rumor"
+      ],
+      "served": [
+        "bookclub",
+        "adr-db-v1",
+        "fx-fetch"
+      ]
+    },
+    {
+      "applicability": {
+        "adr-db-v2": "not_evaluated",
+        "bookclub": "not_evaluated",
+        "bus": "not_evaluated",
+        "bus-why": "not_evaluated",
+        "deploy-days": "not_evaluated",
+        "freeze-bf25": "not_evaluated",
+        "fx-fetch": "not_evaluated",
+        "fx-why": "not_evaluated",
+        "inc-2207": "not_evaluated",
+        "pci": "not_evaluated",
+        "region-draft": "not_evaluated",
+        "room": "not_evaluated",
+        "webhook-retry": "not_evaluated"
+      },
+      "id": "H05",
+      "intent": "timeless",
+      "ranked_admitted": [
+        "bus-why",
+        "bus",
+        "bookclub",
+        "pci",
+        "fx-why",
+        "adr-db-v2",
+        "deploy-days",
+        "freeze-bf25",
+        "webhook-retry",
+        "fx-fetch",
+        "room",
+        "region-draft",
+        "inc-2207"
+      ],
+      "served": [
+        "bus-why",
+        "bus",
+        "bookclub"
+      ]
+    },
+    {
+      "applicability": {
+        "adr-db-v2": "unknown_temporal_basis",
+        "authz-5s": "unknown_temporal_basis",
+        "bookclub": "unknown_temporal_basis",
+        "bus": "unknown_temporal_basis",
+        "deploy-days": "unknown_temporal_basis",
+        "freeze-bf25": "outside_target_interval",
+        "fx-fetch": "unknown_temporal_basis",
+        "fx-why": "unknown_temporal_basis",
+        "inc-2207": "unknown_temporal_basis",
+        "migration-rule": "unknown_temporal_basis",
+        "money-repr": "unknown_temporal_basis",
+        "oncall-lrt": "unknown_temporal_basis",
+        "pgver-16": "unknown_temporal_basis",
+        "ratelimit": "unknown_temporal_basis",
+        "ratelimit-rumor": "unknown_temporal_basis",
+        "region-draft": "unknown_temporal_basis",
+        "region-eu-us": "unknown_temporal_basis",
+        "room": "unknown_temporal_basis"
+      },
+      "excluded_known_inapplicable": [
+        "freeze-bf25"
+      ],
+      "id": "H06",
+      "intent": "current",
+      "known_inapplicable_count": 1,
+      "ranked_admitted": [
+        "oncall-lrt",
+        "deploy-days",
+        "bookclub",
+        "room",
+        "ratelimit",
+        "region-eu-us",
+        "ratelimit-rumor",
+        "region-draft",
+        "pgver-16",
+        "fx-why",
+        "bus",
+        "fx-fetch",
+        "money-repr",
+        "authz-5s",
+        "migration-rule",
+        "adr-db-v2",
+        "inc-2207",
+        "freeze-bf25"
+      ],
+      "selector": "served",
+      "served": [
+        "oncall-lrt",
+        "deploy-days"
+      ],
+      "unknown_applicability_count": 17
+    },
+    {
+      "applicability": {
+        "adr-db-v2": "unknown_temporal_basis",
+        "authz-5s": "unknown_temporal_basis",
+        "bookclub": "unknown_temporal_basis",
+        "bus": "unknown_temporal_basis",
+        "deploy-days": "unknown_temporal_basis",
+        "freeze-bf25": "outside_target_interval",
+        "fx-fetch": "unknown_temporal_basis",
+        "fx-why": "unknown_temporal_basis",
+        "inc-2207": "unknown_temporal_basis",
+        "migration-rule": "unknown_temporal_basis",
+        "money-repr": "unknown_temporal_basis",
+        "oncall-lrt": "unknown_temporal_basis",
+        "pgver-16": "unknown_temporal_basis",
+        "ratelimit": "unknown_temporal_basis",
+        "ratelimit-rumor": "unknown_temporal_basis",
+        "region-draft": "unknown_temporal_basis",
+        "region-eu-us": "unknown_temporal_basis",
+        "room": "unknown_temporal_basis",
+        "webhook-retry": "unknown_temporal_basis"
+      },
+      "excluded_known_inapplicable": [
+        "freeze-bf25"
+      ],
+      "id": "H07",
+      "intent": "current",
+      "known_inapplicable_count": 1,
+      "ranked_admitted": [
+        "ratelimit",
+        "ratelimit-rumor",
+        "oncall-lrt",
+        "room",
+        "fx-why",
+        "deploy-days",
+        "bookclub",
+        "region-draft",
+        "region-eu-us",
+        "fx-fetch",
+        "webhook-retry",
+        "inc-2207",
+        "pgver-16",
+        "bus",
+        "money-repr",
+        "authz-5s",
+        "migration-rule",
+        "adr-db-v2",
+        "freeze-bf25"
+      ],
+      "selector": "served",
+      "served": [
+        "ratelimit",
+        "ratelimit-rumor",
+        "oncall-lrt"
+      ],
+      "unknown_applicability_count": 18
+    },
+    {
+      "applicability": {
+        "authz-5s": "unknown_temporal_basis",
+        "bus-why": "unknown_temporal_basis",
+        "inc-2207": "unknown_temporal_basis",
+        "migration-rule": "unknown_temporal_basis",
+        "pci": "unknown_temporal_basis",
+        "region-draft": "unknown_temporal_basis"
+      },
+      "excluded_known_inapplicable": [],
+      "id": "H08",
+      "intent": "current",
+      "known_inapplicable_count": 0,
+      "ranked_admitted": [
+        "authz-5s",
+        "migration-rule",
+        "pci",
+        "region-draft",
+        "bus-why",
+        "inc-2207"
+      ],
+      "selector": "served",
+      "served": [
+        "authz-5s",
+        "migration-rule"
+      ],
+      "unknown_applicability_count": 6
+    },
+    {
+      "applicability": {
+        "adr-db-v2": "unknown_temporal_basis",
+        "authz-5s": "unknown_temporal_basis",
+        "bookclub": "unknown_temporal_basis",
+        "bus": "unknown_temporal_basis",
+        "bus-why": "unknown_temporal_basis",
+        "deploy-days": "unknown_temporal_basis",
+        "freeze-bf25": "outside_target_interval",
+        "fx-fetch": "unknown_temporal_basis",
+        "fx-why": "unknown_temporal_basis",
+        "inc-2207": "unknown_temporal_basis",
+        "migration-rule": "unknown_temporal_basis",
+        "money-repr": "unknown_temporal_basis",
+        "oncall-lrt": "unknown_temporal_basis",
+        "pci": "unknown_temporal_basis",
+        "pgver-16": "unknown_temporal_basis",
+        "ratelimit": "unknown_temporal_basis",
+        "ratelimit-rumor": "unknown_temporal_basis",
+        "region-draft": "unknown_temporal_basis",
+        "region-eu-us": "unknown_temporal_basis",
+        "room": "unknown_temporal_basis",
+        "webhook-retry": "unknown_temporal_basis"
+      },
+      "excluded_known_inapplicable": [
+        "freeze-bf25"
+      ],
+      "id": "H09",
+      "intent": "current",
+      "known_inapplicable_count": 1,
+      "ranked_admitted": [
+        "deploy-days",
+        "region-eu-us",
+        "adr-db-v2",
+        "bus-why",
+        "bookclub",
+        "pci",
+        "bus",
+        "ratelimit",
+        "authz-5s",
+        "oncall-lrt",
+        "fx-why",
+        "ratelimit-rumor",
+        "webhook-retry",
+        "region-draft",
+        "room",
+        "pgver-16",
+        "fx-fetch",
+        "money-repr",
+        "migration-rule",
+        "inc-2207",
+        "freeze-bf25"
+      ],
+      "selector": "served",
+      "served": [
+        "deploy-days",
+        "region-eu-us",
+        "adr-db-v2"
+      ],
+      "unknown_applicability_count": 20
+    },
+    {
+      "applicability": {
+        "adr-db-v2": "not_evaluated",
+        "bus-why": "not_evaluated",
+        "deploy-days": "not_evaluated",
+        "fx-fetch": "not_evaluated",
+        "fx-why": "not_evaluated",
+        "inc-2207": "not_evaluated",
+        "migration-rule": "not_evaluated",
+        "money-repr": "not_evaluated",
+        "oncall-lrt": "not_evaluated",
+        "pgver-16": "not_evaluated",
+        "region-draft": "not_evaluated",
+        "region-eu-us": "not_evaluated",
+        "room": "not_evaluated"
+      },
+      "id": "H10",
+      "intent": "timeless",
+      "ranked_admitted": [
+        "inc-2207",
+        "migration-rule",
+        "region-draft",
+        "adr-db-v2",
+        "bus-why",
+        "deploy-days",
+        "pgver-16",
+        "fx-fetch",
+        "room",
+        "money-repr",
+        "oncall-lrt",
+        "region-eu-us",
+        "fx-why"
+      ],
+      "served": [
+        "inc-2207",
+        "migration-rule",
+        "region-draft"
+      ]
+    },
+    {
+      "applicability": {
+        "adr-db-v2": "not_evaluated",
+        "authz-5s": "not_evaluated",
+        "bookclub": "not_evaluated",
+        "bus": "not_evaluated",
+        "bus-why": "not_evaluated",
+        "freeze-bf25": "not_evaluated",
+        "fx-fetch": "not_evaluated",
+        "fx-why": "not_evaluated",
+        "inc-2207": "not_evaluated",
+        "migration-rule": "not_evaluated",
+        "money-repr": "not_evaluated",
+        "oncall-lrt": "not_evaluated",
+        "pci": "not_evaluated",
+        "pgver-16": "not_evaluated",
+        "ratelimit": "not_evaluated",
+        "ratelimit-rumor": "not_evaluated",
+        "region-eu-us": "not_evaluated",
+        "room": "not_evaluated",
+        "webhook-retry": "not_evaluated"
+      },
+      "id": "H11",
+      "intent": "timeless",
+      "ranked_admitted": [
+        "money-repr",
+        "bus",
+        "pci",
+        "inc-2207",
+        "freeze-bf25",
+        "adr-db-v2",
+        "fx-fetch",
+        "webhook-retry",
+        "pgver-16",
+        "region-eu-us",
+        "room",
+        "oncall-lrt",
+        "ratelimit-rumor",
+        "migration-rule",
+        "fx-why",
+        "bus-why",
+        "ratelimit",
+        "bookclub",
+        "authz-5s"
+      ],
+      "served": [
+        "money-repr",
+        "bus"
+      ]
+    },
+    {
+      "applicability": {
+        "bus": "not_evaluated",
+        "deploy-days": "not_evaluated",
+        "freeze-bf25": "not_evaluated",
+        "fx-fetch": "not_evaluated",
+        "fx-why": "not_evaluated",
+        "inc-2207": "not_evaluated",
+        "money-repr": "not_evaluated",
+        "pci": "not_evaluated",
+        "region-draft": "not_evaluated",
+        "room": "not_evaluated",
+        "webhook-retry": "not_evaluated"
+      },
+      "id": "H12",
+      "intent": "timeless",
+      "ranked_admitted": [
+        "fx-fetch",
+        "fx-why",
+        "money-repr",
+        "freeze-bf25",
+        "webhook-retry",
+        "bus",
+        "pci",
+        "deploy-days",
+        "room",
+        "region-draft",
+        "inc-2207"
+      ],
+      "served": [
+        "fx-fetch",
+        "fx-why",
+        "money-repr"
+      ]
+    },
+    {
+      "applicability": {
+        "adr-db-v2": "unknown_temporal_basis",
+        "authz-5s": "unknown_temporal_basis",
+        "bookclub": "unknown_temporal_basis",
+        "bus": "unknown_temporal_basis",
+        "deploy-days": "unknown_temporal_basis",
+        "freeze-bf25": "outside_target_interval",
+        "fx-fetch": "unknown_temporal_basis",
+        "fx-why": "unknown_temporal_basis",
+        "inc-2207": "unknown_temporal_basis",
+        "migration-rule": "unknown_temporal_basis",
+        "money-repr": "unknown_temporal_basis",
+        "oncall-lrt": "unknown_temporal_basis",
+        "pgver-16": "unknown_temporal_basis",
+        "ratelimit": "unknown_temporal_basis",
+        "ratelimit-rumor": "unknown_temporal_basis",
+        "region-draft": "unknown_temporal_basis",
+        "region-eu-us": "unknown_temporal_basis",
+        "room": "unknown_temporal_basis"
+      },
+      "excluded_known_inapplicable": [
+        "freeze-bf25"
+      ],
+      "id": "H13",
+      "intent": "current",
+      "known_inapplicable_count": 1,
+      "ranked_admitted": [
+        "region-eu-us",
+        "bus",
+        "migration-rule",
+        "ratelimit",
+        "oncall-lrt",
+        "deploy-days",
+        "ratelimit-rumor",
+        "region-draft",
+        "room",
+        "pgver-16",
+        "fx-why",
+        "bookclub",
+        "fx-fetch",
+        "money-repr",
+        "authz-5s",
+        "adr-db-v2",
+        "inc-2207",
+        "freeze-bf25"
+      ],
+      "selector": "served",
+      "served": [
+        "region-eu-us",
+        "bus",
+        "migration-rule"
+      ],
+      "unknown_applicability_count": 17
+    },
+    {
+      "applicability": {
+        "adr-db-v1": "not_evaluated",
+        "adr-db-v2": "not_evaluated",
+        "authz-5s": "not_evaluated",
+        "bookclub": "not_evaluated",
+        "bus": "not_evaluated",
+        "deploy-days": "not_evaluated",
+        "freeze-bf25": "not_evaluated",
+        "fx-fetch": "not_evaluated",
+        "fx-why": "not_evaluated",
+        "inc-2207": "not_evaluated",
+        "migration-rule": "not_evaluated",
+        "money-repr": "not_evaluated",
+        "oncall-lrt": "not_evaluated",
+        "oncall-platform": "not_evaluated",
+        "pgver-13": "not_evaluated",
+        "pgver-15": "not_evaluated",
+        "pgver-16": "not_evaluated",
+        "ratelimit": "not_evaluated",
+        "ratelimit-rumor": "not_evaluated",
+        "region-draft": "not_evaluated",
+        "region-eu": "not_evaluated",
+        "region-eu-us": "not_evaluated",
+        "room": "not_evaluated"
+      },
+      "id": "H14",
+      "intent": "historical",
+      "ranked_admitted": [
+        "region-eu-us",
+        "region-eu",
+        "region-draft",
+        "migration-rule",
+        "pgver-15",
+        "adr-db-v2",
+        "adr-db-v1",
+        "oncall-platform",
+        "freeze-bf25",
+        "ratelimit",
+        "deploy-days",
+        "oncall-lrt",
+        "ratelimit-rumor",
+        "room",
+        "pgver-16",
+        "pgver-13",
+        "fx-why",
+        "bookclub",
+        "fx-fetch",
+        "bus",
+        "money-repr",
+        "authz-5s",
+        "inc-2207"
+      ],
+      "served": [
+        "region-eu-us",
+        "region-eu",
+        "region-draft"
+      ]
+    },
+    {
+      "applicability": {
+        "adr-db-v2": "not_evaluated",
+        "authz-5s": "not_evaluated",
+        "bookclub": "not_evaluated",
+        "bus-why": "not_evaluated",
+        "fx-why": "not_evaluated",
+        "pci": "not_evaluated"
+      },
+      "id": "H15",
+      "intent": "timeless",
+      "ranked_admitted": [
+        "pci",
+        "authz-5s",
+        "bookclub",
+        "bus-why",
+        "adr-db-v2",
+        "fx-why"
+      ],
+      "served": [
+        "pci",
+        "authz-5s"
+      ]
+    },
+    {
+      "applicability": {
+        "adr-db-v2": "not_evaluated",
+        "bookclub": "not_evaluated",
+        "bus-why": "not_evaluated",
+        "deploy-days": "not_evaluated",
+        "freeze-bf25": "not_evaluated",
+        "fx-fetch": "not_evaluated",
+        "fx-why": "not_evaluated",
+        "inc-2207": "not_evaluated",
+        "migration-rule": "not_evaluated",
+        "pci": "not_evaluated",
+        "region-draft": "not_evaluated",
+        "room": "not_evaluated",
+        "webhook-retry": "not_evaluated"
+      },
+      "id": "H16",
+      "intent": "timeless",
+      "ranked_admitted": [
+        "webhook-retry",
+        "pci",
+        "bus-why",
+        "region-draft",
+        "inc-2207",
+        "fx-why",
+        "bookclub",
+        "migration-rule",
+        "adr-db-v2",
+        "deploy-days",
+        "freeze-bf25",
+        "fx-fetch",
+        "room"
+      ],
+      "served": [
+        "webhook-retry",
+        "pci"
+      ]
+    },
+    {
+      "applicability": {
+        "adr-db-v2": "unknown_temporal_basis",
+        "authz-5s": "unknown_temporal_basis",
+        "bookclub": "unknown_temporal_basis",
+        "bus": "unknown_temporal_basis",
+        "deploy-days": "unknown_temporal_basis",
+        "freeze-bf25": "outside_target_interval",
+        "fx-fetch": "unknown_temporal_basis",
+        "fx-why": "unknown_temporal_basis",
+        "inc-2207": "unknown_temporal_basis",
+        "migration-rule": "unknown_temporal_basis",
+        "money-repr": "unknown_temporal_basis",
+        "oncall-lrt": "unknown_temporal_basis",
+        "pgver-16": "unknown_temporal_basis",
+        "ratelimit": "unknown_temporal_basis",
+        "ratelimit-rumor": "unknown_temporal_basis",
+        "region-draft": "unknown_temporal_basis",
+        "region-eu-us": "unknown_temporal_basis",
+        "room": "unknown_temporal_basis"
+      },
+      "excluded_known_inapplicable": [
+        "freeze-bf25"
+      ],
+      "id": "H17",
+      "intent": "current",
+      "known_inapplicable_count": 1,
+      "ranked_admitted": [
+        "oncall-lrt",
+        "bookclub",
+        "room",
+        "ratelimit",
+        "deploy-days",
+        "region-eu-us",
+        "ratelimit-rumor",
+        "region-draft",
+        "pgver-16",
+        "fx-why",
+        "bus",
+        "fx-fetch",
+        "money-repr",
+        "authz-5s",
+        "migration-rule",
+        "adr-db-v2",
+        "inc-2207",
+        "freeze-bf25"
+      ],
+      "selector": "served",
+      "served": [
+        "oncall-lrt",
+        "bookclub",
+        "room"
+      ],
+      "unknown_applicability_count": 17
+    },
+    {
+      "applicability": {
+        "adr-db-v2": "unknown_temporal_basis",
+        "authz-5s": "unknown_temporal_basis",
+        "bookclub": "unknown_temporal_basis",
+        "bus": "unknown_temporal_basis",
+        "freeze-bf25": "outside_target_interval",
+        "fx-fetch": "unknown_temporal_basis",
+        "fx-why": "unknown_temporal_basis",
+        "inc-2207": "unknown_temporal_basis",
+        "migration-rule": "unknown_temporal_basis",
+        "money-repr": "unknown_temporal_basis",
+        "oncall-lrt": "unknown_temporal_basis",
+        "pgver-16": "unknown_temporal_basis",
+        "ratelimit": "unknown_temporal_basis",
+        "ratelimit-rumor": "unknown_temporal_basis",
+        "region-eu-us": "unknown_temporal_basis",
+        "room": "unknown_temporal_basis"
+      },
+      "excluded_known_inapplicable": [
+        "freeze-bf25"
+      ],
+      "id": "H18",
+      "intent": "current",
+      "known_inapplicable_count": 1,
+      "ranked_admitted": [
+        "ratelimit",
+        "ratelimit-rumor",
+        "bookclub",
+        "room",
+        "oncall-lrt",
+        "pgver-16",
+        "region-eu-us",
+        "fx-why",
+        "bus",
+        "fx-fetch",
+        "money-repr",
+        "authz-5s",
+        "migration-rule",
+        "adr-db-v2",
+        "inc-2207",
+        "freeze-bf25"
+      ],
+      "selector": "served",
+      "served": [
+        "ratelimit",
+        "ratelimit-rumor",
+        "bookclub"
+      ],
+      "unknown_applicability_count": 15
+    },
+    {
+      "applicability": {
+        "adr-db-v2": "unknown_temporal_basis",
+        "authz-5s": "unknown_temporal_basis",
+        "bookclub": "unknown_temporal_basis",
+        "bus": "unknown_temporal_basis",
+        "freeze-bf25": "outside_target_interval",
+        "fx-fetch": "unknown_temporal_basis",
+        "fx-why": "unknown_temporal_basis",
+        "inc-2207": "unknown_temporal_basis",
+        "migration-rule": "unknown_temporal_basis",
+        "money-repr": "unknown_temporal_basis",
+        "oncall-lrt": "unknown_temporal_basis",
+        "pgver-16": "unknown_temporal_basis",
+        "ratelimit": "unknown_temporal_basis",
+        "ratelimit-rumor": "unknown_temporal_basis",
+        "region-eu-us": "unknown_temporal_basis",
+        "room": "unknown_temporal_basis"
+      },
+      "excluded_known_inapplicable": [
+        "freeze-bf25"
+      ],
+      "id": "H19",
+      "intent": "current",
+      "known_inapplicable_count": 1,
+      "ranked_admitted": [
+        "oncall-lrt",
+        "bookclub",
+        "room",
+        "pgver-16",
+        "region-eu-us",
+        "fx-why",
+        "ratelimit",
+        "bus",
+        "fx-fetch",
+        "money-repr",
+        "authz-5s",
+        "migration-rule",
+        "ratelimit-rumor",
+        "adr-db-v2",
+        "inc-2207",
+        "freeze-bf25"
+      ],
+      "selector": "served",
+      "served": [
+        "oncall-lrt",
+        "bookclub",
+        "room"
+      ],
+      "unknown_applicability_count": 15
+    },
+    {
+      "applicability": {
+        "adr-db-v2": "unknown_temporal_basis",
+        "authz-5s": "unknown_temporal_basis",
+        "bookclub": "unknown_temporal_basis",
+        "bus": "unknown_temporal_basis",
+        "bus-why": "unknown_temporal_basis",
+        "deploy-days": "unknown_temporal_basis",
+        "freeze-bf25": "outside_target_interval",
+        "fx-fetch": "unknown_temporal_basis",
+        "fx-why": "unknown_temporal_basis",
+        "inc-2207": "unknown_temporal_basis",
+        "migration-rule": "unknown_temporal_basis",
+        "money-repr": "unknown_temporal_basis",
+        "oncall-lrt": "unknown_temporal_basis",
+        "pci": "unknown_temporal_basis",
+        "pgver-16": "unknown_temporal_basis",
+        "ratelimit": "unknown_temporal_basis",
+        "ratelimit-rumor": "unknown_temporal_basis",
+        "region-draft": "unknown_temporal_basis",
+        "region-eu-us": "unknown_temporal_basis",
+        "room": "unknown_temporal_basis",
+        "webhook-retry": "unknown_temporal_basis"
+      },
+      "excluded_known_inapplicable": [
+        "freeze-bf25"
+      ],
+      "id": "H20",
+      "intent": "current",
+      "known_inapplicable_count": 1,
+      "ranked_admitted": [
+        "fx-why",
+        "ratelimit-rumor",
+        "fx-fetch",
+        "inc-2207",
+        "money-repr",
+        "authz-5s",
+        "ratelimit",
+        "migration-rule",
+        "pci",
+        "webhook-retry",
+        "deploy-days",
+        "region-draft",
+        "bus",
+        "region-eu-us",
+        "room",
+        "bus-why",
+        "adr-db-v2",
+        "pgver-16",
+        "oncall-lrt",
+        "bookclub",
+        "freeze-bf25"
+      ],
+      "selector": "served",
+      "served": [
+        "fx-why",
+        "ratelimit-rumor",
+        "fx-fetch",
+        "inc-2207"
+      ],
+      "unknown_applicability_count": 20
+    },
+    {
+      "applicability": {
+        "adr-db-v2": "not_evaluated",
+        "bus": "not_evaluated",
+        "bus-why": "not_evaluated",
+        "deploy-days": "not_evaluated",
+        "fx-fetch": "not_evaluated",
+        "fx-why": "not_evaluated",
+        "inc-2207": "not_evaluated",
+        "migration-rule": "not_evaluated",
+        "ratelimit-rumor": "not_evaluated",
+        "region-draft": "not_evaluated",
+        "region-eu-us": "not_evaluated"
+      },
+      "id": "H21",
+      "intent": "timeless",
+      "ranked_admitted": [
+        "bus",
+        "region-draft",
+        "ratelimit-rumor",
+        "bus-why",
+        "deploy-days",
+        "fx-fetch",
+        "region-eu-us",
+        "migration-rule",
+        "adr-db-v2",
+        "inc-2207",
+        "fx-why"
+      ],
+      "served": [
+        "bus",
+        "region-draft",
+        "ratelimit-rumor"
+      ]
+    },
+    {
+      "applicability": {
+        "adr-db-v2": "unknown_temporal_basis",
+        "authz-5s": "unknown_temporal_basis",
+        "bookclub": "unknown_temporal_basis",
+        "bus": "unknown_temporal_basis",
+        "deploy-days": "unknown_temporal_basis",
+        "freeze-bf25": "outside_target_interval",
+        "fx-fetch": "unknown_temporal_basis",
+        "fx-why": "unknown_temporal_basis",
+        "inc-2207": "unknown_temporal_basis",
+        "migration-rule": "unknown_temporal_basis",
+        "money-repr": "unknown_temporal_basis",
+        "oncall-lrt": "unknown_temporal_basis",
+        "pgver-16": "unknown_temporal_basis",
+        "ratelimit": "unknown_temporal_basis",
+        "ratelimit-rumor": "unknown_temporal_basis",
+        "region-draft": "unknown_temporal_basis",
+        "region-eu-us": "unknown_temporal_basis",
+        "room": "unknown_temporal_basis"
+      },
+      "excluded_known_inapplicable": [
+        "freeze-bf25"
+      ],
+      "id": "H22",
+      "intent": "current",
+      "known_inapplicable_count": 1,
+      "ranked_admitted": [
+        "ratelimit-rumor",
+        "ratelimit",
+        "fx-why",
+        "oncall-lrt",
+        "bookclub",
+        "room",
+        "deploy-days",
+        "region-eu-us",
+        "region-draft",
+        "pgver-16",
+        "bus",
+        "fx-fetch",
+        "money-repr",
+        "authz-5s",
+        "migration-rule",
+        "adr-db-v2",
+        "inc-2207",
+        "freeze-bf25"
+      ],
+      "selector": "served",
+      "served": [
+        "ratelimit-rumor",
+        "ratelimit",
+        "fx-why"
+      ],
+      "unknown_applicability_count": 17
+    },
+    {
+      "applicability": {
+        "adr-db-v2": "not_evaluated",
+        "authz-5s": "not_evaluated",
+        "bookclub": "not_evaluated",
+        "bus": "not_evaluated",
+        "bus-why": "not_evaluated",
+        "deploy-days": "not_evaluated",
+        "freeze-bf25": "not_evaluated",
+        "fx-fetch": "not_evaluated",
+        "fx-why": "not_evaluated",
+        "inc-2207": "not_evaluated",
+        "migration-rule": "not_evaluated",
+        "money-repr": "not_evaluated",
+        "oncall-lrt": "not_evaluated",
+        "pci": "not_evaluated",
+        "pgver-16": "not_evaluated",
+        "ratelimit": "not_evaluated",
+        "ratelimit-rumor": "not_evaluated",
+        "region-draft": "not_evaluated",
+        "region-eu-us": "not_evaluated",
+        "room": "not_evaluated"
+      },
+      "id": "H23",
+      "intent": "timeless",
+      "ranked_admitted": [
+        "migration-rule",
+        "inc-2207",
+        "bookclub",
+        "pci",
+        "room",
+        "oncall-lrt",
+        "bus-why",
+        "adr-db-v2",
+        "deploy-days",
+        "pgver-16",
+        "region-draft",
+        "fx-why",
+        "bus",
+        "money-repr",
+        "freeze-bf25",
+        "region-eu-us",
+        "ratelimit",
+        "fx-fetch",
+        "authz-5s",
+        "ratelimit-rumor"
+      ],
+      "served": [
+        "migration-rule",
+        "inc-2207",
+        "bookclub"
+      ]
+    },
+    {
+      "applicability": {
+        "adr-db-v2": "not_evaluated",
+        "authz-5s": "not_evaluated",
+        "bookclub": "not_evaluated",
+        "bus": "not_evaluated",
+        "freeze-bf25": "not_evaluated",
+        "fx-fetch": "not_evaluated",
+        "fx-why": "not_evaluated",
+        "inc-2207": "not_evaluated",
+        "migration-rule": "not_evaluated",
+        "money-repr": "not_evaluated",
+        "oncall-lrt": "not_evaluated",
+        "pgver-16": "not_evaluated",
+        "ratelimit": "not_evaluated",
+        "ratelimit-rumor": "not_evaluated",
+        "region-eu-us": "not_evaluated",
+        "room": "not_evaluated"
+      },
+      "id": "H24",
+      "intent": "timeless",
+      "ranked_admitted": [
+        "room",
+        "bookclub",
+        "oncall-lrt",
+        "pgver-16",
+        "freeze-bf25",
+        "region-eu-us",
+        "fx-why",
+        "ratelimit",
+        "fx-fetch",
+        "bus",
+        "money-repr",
+        "authz-5s",
+        "migration-rule",
+        "ratelimit-rumor",
+        "adr-db-v2",
+        "inc-2207"
+      ],
+      "served": [
+        "room",
+        "bookclub"
+      ]
+    }
+  ],
+  "run": {
+    "execution_backend": "composed-multiroute",
+    "input_sha256": "640835eab6b02af5750f15e83d9298326869989d35fc286540ad92c26248d68d",
+    "lane_id": "phase-d-selector-T",
+    "rows": [
+      {
+        "id": "H01",
+        "returned": [
+          "bus",
+          "migration-rule",
+          "pgver-16"
+        ]
+      },
+      {
+        "id": "H02",
+        "returned": [
+          "pgver-16",
+          "pgver-15",
+          "adr-db-v2"
+        ]
+      },
+      {
+        "id": "H03",
+        "returned": [
+          "adr-db-v1",
+          "oncall-lrt",
+          "oncall-platform"
+        ]
+      },
+      {
+        "id": "H04",
+        "returned": [
+          "bookclub",
+          "adr-db-v1",
+          "fx-fetch"
+        ]
+      },
+      {
+        "id": "H05",
+        "returned": [
+          "bus-why",
+          "bus",
+          "bookclub"
+        ]
+      },
+      {
+        "id": "H06",
+        "returned": [
+          "oncall-lrt",
+          "deploy-days"
+        ]
+      },
+      {
+        "id": "H07",
+        "returned": [
+          "ratelimit",
+          "ratelimit-rumor",
+          "oncall-lrt"
+        ]
+      },
+      {
+        "id": "H08",
+        "returned": [
+          "authz-5s",
+          "migration-rule"
+        ]
+      },
+      {
+        "id": "H09",
+        "returned": [
+          "deploy-days",
+          "region-eu-us",
+          "adr-db-v2"
+        ]
+      },
+      {
+        "id": "H10",
+        "returned": [
+          "inc-2207",
+          "migration-rule",
+          "region-draft"
+        ]
+      },
+      {
+        "id": "H11",
+        "returned": [
+          "money-repr",
+          "bus"
+        ]
+      },
+      {
+        "id": "H12",
+        "returned": [
+          "fx-fetch",
+          "fx-why",
+          "money-repr"
+        ]
+      },
+      {
+        "id": "H13",
+        "returned": [
+          "region-eu-us",
+          "bus",
+          "migration-rule"
+        ]
+      },
+      {
+        "id": "H14",
+        "returned": [
+          "region-eu-us",
+          "region-eu",
+          "region-draft"
+        ]
+      },
+      {
+        "id": "H15",
+        "returned": [
+          "pci",
+          "authz-5s"
+        ]
+      },
+      {
+        "id": "H16",
+        "returned": [
+          "webhook-retry",
+          "pci"
+        ]
+      },
+      {
+        "id": "H17",
+        "returned": [
+          "oncall-lrt",
+          "bookclub",
+          "room"
+        ]
+      },
+      {
+        "id": "H18",
+        "returned": [
+          "ratelimit",
+          "ratelimit-rumor",
+          "bookclub"
+        ]
+      },
+      {
+        "id": "H19",
+        "returned": [
+          "oncall-lrt",
+          "bookclub",
+          "room"
+        ]
+      },
+      {
+        "id": "H20",
+        "returned": [
+          "fx-why",
+          "ratelimit-rumor",
+          "fx-fetch",
+          "inc-2207"
+        ]
+      },
+      {
+        "id": "H21",
+        "returned": [
+          "bus",
+          "region-draft",
+          "ratelimit-rumor"
+        ]
+      },
+      {
+        "id": "H22",
+        "returned": [
+          "ratelimit-rumor",
+          "ratelimit",
+          "fx-why"
+        ]
+      },
+      {
+        "id": "H23",
+        "returned": [
+          "migration-rule",
+          "inc-2207",
+          "bookclub"
+        ]
+      },
+      {
+        "id": "H24",
+        "returned": [
+          "room",
+          "bookclub"
+        ]
+      }
+    ],
+    "runtime_revision": "6e00f42f2dc2e81ec137eeecc2ca68f9d1c160e6",
+    "schema": "served-memory-run-v1"
+  }
+}
