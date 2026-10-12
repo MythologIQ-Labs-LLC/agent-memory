@@ -1,0 +1,27 @@
+test_declared_older_successor_yields_its_own_predecessor (tests.test_774_strict_successor_target_contract.StrictHistoricalSuccessorTargets.test_declared_older_successor_yields_its_own_predecessor) ... ok
+test_explicit_current_successor_preserves_latest_predecessor_behavior (tests.test_774_strict_successor_target_contract.StrictHistoricalSuccessorTargets.test_explicit_current_successor_preserves_latest_predecessor_behavior) ... ok
+test_missing_successor_identity_must_not_assume_current_head (tests.test_774_strict_successor_target_contract.StrictHistoricalSuccessorTargets.test_missing_successor_identity_must_not_assume_current_head) ... FAIL
+test_no_auto_predecessor_promotion_for_ambiguous_historical_target (tests.test_774_strict_successor_target_contract.StrictHistoricalSuccessorTargets.test_no_auto_predecessor_promotion_for_ambiguous_historical_target) ... FAIL
+
+======================================================================
+FAIL: test_missing_successor_identity_must_not_assume_current_head (tests.test_774_strict_successor_target_contract.StrictHistoricalSuccessorTargets.test_missing_successor_identity_must_not_assume_current_head)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt7/s774/reference/tests/test_774_strict_successor_target_contract.py", line 44, in test_missing_successor_identity_must_not_assume_current_head
+    self.assertIsNone(result.predecessor_ref)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'ref-0018' is not None
+
+======================================================================
+FAIL: test_no_auto_predecessor_promotion_for_ambiguous_historical_target (tests.test_774_strict_successor_target_contract.StrictHistoricalSuccessorTargets.test_no_auto_predecessor_promotion_for_ambiguous_historical_target)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt7/s774/reference/tests/test_774_strict_successor_target_contract.py", line 58, in test_no_auto_predecessor_promotion_for_ambiguous_historical_target
+    self.assertIsNone(selected.predecessor_ref)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'ref-0018' is not None
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.153s
+
+FAILED (failures=2)
