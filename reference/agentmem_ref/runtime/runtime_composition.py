@@ -120,8 +120,8 @@ class MultiRouteRecallResult:
 # Post-v7 experimental opt-in served-context contract (#773).
 # This is NOT part of the frozen #770 v7 declaration or default recall.
 _CURRENT_REFERENCE_TIME = re.compile(
-    r"\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}"
-    r"(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})\\Z"
+    r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}"
+    r"(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})\Z"
 )
 _KNOWN_NOT_CURRENT = frozenset((
     "outside_target_interval",
