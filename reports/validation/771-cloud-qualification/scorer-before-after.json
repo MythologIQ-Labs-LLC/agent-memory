@@ -1,0 +1,984 @@
+{
+  "candidate_scorer": "23321e4bc1d8039ea64f8d135aac080fc98806fa",
+  "comparisons": {
+    "halcyon-holdout-v1.1/composed-multiroute": {
+      "P0_identical": true,
+      "P1_new_fields": {
+        "no_safe_answer_served_total": 9
+      },
+      "P1_top1_and_coverage_identical": true,
+      "P2_after": {
+        "irrelevant_served_total": 36,
+        "macro_critical_coverage": 0.904762,
+        "macro_ndcg_at_budget": 0.825514,
+        "macro_relevant_precision": 0.444444,
+        "macro_relevant_recall": 0.904762,
+        "macro_relevant_recall_at_budget": 0.904762,
+        "macro_scope": "answerable_cases_only"
+      },
+      "P2_before": {
+        "irrelevant_served_total": 36,
+        "macro_critical_coverage": 0.904762,
+        "macro_ndcg_at_budget": 0.833445,
+        "macro_relevant_precision": 0.388889,
+        "macro_relevant_recall": 0.904762
+      },
+      "per_case_changes": [
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H01"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H02"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              0.5
+            ]
+          },
+          "id": "H03"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              0.5
+            ]
+          },
+          "id": "H04"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H05"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H06"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H07"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H08"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H09"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H10"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H11"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H12"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H13"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H14"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H15"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H16"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              0.0
+            ]
+          },
+          "id": "H20"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H21"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H22"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H23"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H24"
+        }
+      ]
+    },
+    "halcyon-holdout-v1.1/governed-lexical": {
+      "P0_identical": true,
+      "P1_new_fields": {
+        "no_safe_answer_served_total": 9
+      },
+      "P1_top1_and_coverage_identical": true,
+      "P2_after": {
+        "irrelevant_served_total": 38,
+        "macro_critical_coverage": 0.714286,
+        "macro_ndcg_at_budget": 0.656202,
+        "macro_relevant_precision": 0.357143,
+        "macro_relevant_recall": 0.738095,
+        "macro_relevant_recall_at_budget": 0.738095,
+        "macro_scope": "answerable_cases_only"
+      },
+      "P2_before": {
+        "irrelevant_served_total": 38,
+        "macro_critical_coverage": 0.714286,
+        "macro_ndcg_at_budget": 0.671829,
+        "macro_relevant_precision": 0.3125,
+        "macro_relevant_recall": 0.738095
+      },
+      "per_case_changes": [
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H01"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              0.5
+            ]
+          },
+          "id": "H02"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              0.0
+            ]
+          },
+          "id": "H03"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              0.5
+            ]
+          },
+          "id": "H04"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H05"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H06"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H07"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H08"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              0.0
+            ]
+          },
+          "id": "H09"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H10"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              0.0
+            ]
+          },
+          "id": "H11"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H12"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H13"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              0.5
+            ]
+          },
+          "id": "H14"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H15"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H16"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              0.0
+            ]
+          },
+          "id": "H20"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H21"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H22"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H23"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H24"
+        }
+      ]
+    },
+    "halcyon-holdout/composed-multiroute": {
+      "P0_identical": true,
+      "P1_new_fields": {
+        "no_safe_answer_served_total": 9
+      },
+      "P1_top1_and_coverage_identical": true,
+      "P2_after": {
+        "irrelevant_served_total": 40,
+        "macro_critical_coverage": 0.761905,
+        "macro_ndcg_at_budget": 0.731855,
+        "macro_relevant_precision": 0.380952,
+        "macro_relevant_recall": 0.809524,
+        "macro_relevant_recall_at_budget": 0.809524,
+        "macro_scope": "answerable_cases_only"
+      },
+      "P2_before": {
+        "irrelevant_served_total": 40,
+        "macro_critical_coverage": 0.761905,
+        "macro_ndcg_at_budget": 0.744043,
+        "macro_relevant_precision": 0.333333,
+        "macro_relevant_recall": 0.809524
+      },
+      "per_case_changes": [
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H01"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              0.5
+            ]
+          },
+          "id": "H02"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              0.0
+            ]
+          },
+          "id": "H03"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              0.0
+            ]
+          },
+          "id": "H04"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H05"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H06"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H07"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H08"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H09"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H10"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H11"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H12"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H13"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              0.5
+            ]
+          },
+          "id": "H14"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H15"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H16"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              0.0
+            ]
+          },
+          "id": "H20"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H21"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H22"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H23"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H24"
+        }
+      ]
+    },
+    "halcyon-holdout/governed-lexical": {
+      "P0_identical": true,
+      "P1_new_fields": {
+        "no_safe_answer_served_total": 9
+      },
+      "P1_top1_and_coverage_identical": true,
+      "P2_after": {
+        "irrelevant_served_total": 38,
+        "macro_critical_coverage": 0.714286,
+        "macro_ndcg_at_budget": 0.656202,
+        "macro_relevant_precision": 0.357143,
+        "macro_relevant_recall": 0.738095,
+        "macro_relevant_recall_at_budget": 0.738095,
+        "macro_scope": "answerable_cases_only"
+      },
+      "P2_before": {
+        "irrelevant_served_total": 38,
+        "macro_critical_coverage": 0.714286,
+        "macro_ndcg_at_budget": 0.671829,
+        "macro_relevant_precision": 0.3125,
+        "macro_relevant_recall": 0.738095
+      },
+      "per_case_changes": [
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H01"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              0.5
+            ]
+          },
+          "id": "H02"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              0.0
+            ]
+          },
+          "id": "H03"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              0.5
+            ]
+          },
+          "id": "H04"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H05"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H06"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H07"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H08"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              0.0
+            ]
+          },
+          "id": "H09"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H10"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              0.0
+            ]
+          },
+          "id": "H11"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H12"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H13"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              0.5
+            ]
+          },
+          "id": "H14"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H15"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H16"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              0.0
+            ]
+          },
+          "id": "H20"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H21"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H22"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H23"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "H24"
+        }
+      ]
+    },
+    "v1-integration/composed-multiroute": {
+      "P0_identical": true,
+      "P1_new_fields": {
+        "no_safe_answer_served_total": 2
+      },
+      "P1_top1_and_coverage_identical": true,
+      "P2_after": {
+        "irrelevant_served_total": 6,
+        "macro_critical_coverage": 1.0,
+        "macro_ndcg_at_budget": 0.974137,
+        "macro_relevant_precision": 0.5,
+        "macro_relevant_recall": 1.0,
+        "macro_relevant_recall_at_budget": 1.0,
+        "macro_scope": "answerable_cases_only"
+      },
+      "P2_before": {
+        "irrelevant_served_total": 6,
+        "macro_critical_coverage": 1.0,
+        "macro_ndcg_at_budget": 0.974137,
+        "macro_relevant_precision": 0.4,
+        "macro_relevant_recall": 1.0
+      },
+      "per_case_changes": [
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "Q-current-endpoint"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "Q-compound"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "Q-release-history"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "Q-release-current"
+        }
+      ]
+    },
+    "v1-integration/governed-lexical": {
+      "P0_identical": true,
+      "P1_new_fields": {
+        "no_safe_answer_served_total": 2
+      },
+      "P1_top1_and_coverage_identical": true,
+      "P2_after": {
+        "irrelevant_served_total": 6,
+        "macro_critical_coverage": 1.0,
+        "macro_ndcg_at_budget": 0.881869,
+        "macro_relevant_precision": 0.5,
+        "macro_relevant_recall": 1.0,
+        "macro_relevant_recall_at_budget": 1.0,
+        "macro_scope": "answerable_cases_only"
+      },
+      "P2_before": {
+        "irrelevant_served_total": 6,
+        "macro_critical_coverage": 1.0,
+        "macro_ndcg_at_budget": 0.881869,
+        "macro_relevant_precision": 0.4,
+        "macro_relevant_recall": 1.0
+      },
+      "per_case_changes": [
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "Q-current-endpoint"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "Q-compound"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "Q-release-history"
+        },
+        {
+          "changes": {
+            "relevant_recall_at_budget": [
+              null,
+              1.0
+            ]
+          },
+          "id": "Q-release-current"
+        }
+      ]
+    }
+  },
+  "runs_from": "measurements-baseline.json"
+}
