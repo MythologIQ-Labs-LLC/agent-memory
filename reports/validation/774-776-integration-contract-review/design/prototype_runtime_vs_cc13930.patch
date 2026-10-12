@@ -1,0 +1,307 @@
+diff --git a/reference/agentmem_ref/runtime/adapter.py b/reference/agentmem_ref/runtime/adapter.py
+index 251972b0..7a582c53 100644
+--- a/reference/agentmem_ref/runtime/adapter.py
++++ b/reference/agentmem_ref/runtime/adapter.py
+@@ -1285,6 +1285,103 @@ class GovernedMemoryAdapter:
+         record = (self.extension_state.get(REPLACEMENT_RECORDS_KEY) or {}).get(fact_uuid)
+         return dict(record) if record else None
+ 
++    def lineage_visible(self, fact_uuid: str, context: RecallContext) -> bool:
++        """#774: may this reader see the fact as current OR as historical evidence?"""
++        fact = self._substrate.get_fact(fact_uuid) if isinstance(fact_uuid, str) and fact_uuid else None
++        if fact is None or not isinstance(context, RecallContext):
++            return False
++        return (self._admission_refusal(fact, context) is None
++                or self._admission_refusal(fact, context, HISTORICAL_EVIDENCE_ADMISSION, None) is None)
++
++    def lineage_head(self, fact_uuid: str, context: RecallContext) -> str | None:
++        """#774: the current governed version of this fact's memory, if visible.
++
++        None when the memory was deleted, has no current version, or the
++        reader may not see it.
++        """
++        # Integration design (#774 x #776): generation = fact identity plus deletion
++        # membership. A fact in a deleted generation has no head; a live fact's head is
++        # its memory's current fact, which is necessarily in the same live generation.
++        memory = self._fact_memory.get(fact_uuid) if isinstance(fact_uuid, str) else None
++        if memory is None or self.memory_deleted(fact_uuid):
++            return None
++        head = self._current_fact_by_memory.get(memory)
++        if head is None or self.memory_deleted(head):
++            return None
++        return head if self.lineage_visible(head, context) else None
++
++    def memory_deleted(self, fact_uuid: str) -> bool:
++        """#774: does this fact belong to a memory with a deletion tombstone?"""
++        if not isinstance(fact_uuid, str) or not fact_uuid:
++            return False
++        if fact_uuid in self._tombstones:
++            return True
++        fact = self._substrate.get_fact(fact_uuid)
++        if fact is None:
++            # physically erased: deleted iff a deletion record covers it
++            return fact_uuid in self._deleted_lineage() if self._tombstones else False
++        return self._deleted_lineage_reason(fact) is not None
++
++    def _erased_generation_members(self, memory: str) -> set[str]:
++        """Facts covered by a HEAD deletion of ``memory`` (a whole generation).
++
++        A head was never replaced, so its tombstone key has no replacement record; a
++        superseded-version deletion's key does. Only whole generations can be dropped
++        from ordering safely, because a re-creation always follows them.
++        """
++        members: set[str] = set()
++        for key, record in self._tombstones.items():
++            if record.get("memory_id") != memory or self.replacement_record(key) is not None:
++                continue
++            members.add(key)
++            members.update(str(ref) for ref in record.get("deleted_fact_uuids") or ())
++        return members
++
++    def governed_state_change_predecessor(self, fact_uuid: str, context: RecallContext) -> str | None:
++        """#774: the immediate predecessor of ``fact_uuid`` through governed lineage.
++
++        Walks the fact's logical memory backwards in governed write order.
++        A version replaced by an ERROR correction never held and is skipped.
++        The first version replaced by a STATE CHANGE is the immediate
++        predecessor, returned only if canonical historical admission admits
++        it to this reader; otherwise nothing is returned (never an older
++        version instead). A memory with a deletion tombstone yields nothing.
++        This is lineage only: no causal or explanatory relation is implied.
++        """
++        if not self.lineage_visible(fact_uuid, context):
++            return None
++        memory = self._fact_memory.get(fact_uuid)
++        if memory is None or self.memory_deleted(fact_uuid):
++            return None
++        versions = []
++        erased_generations = self._erased_generation_members(memory)
++        for uuid, owner in self._fact_memory.items():
++            if owner != memory:
++                continue
++            fact = self._substrate.get_fact(uuid)
++            if fact is None:
++                if uuid in erased_generations:
++                    continue  # an erased EARLIER generation: entirely before any live fact
++                return None  # erased superseded version or unexplained gap: cannot place a barrier
++            versions.append((parse_time(fact.created_at), uuid))
++        if any(when is None for when, _ in versions):
++            return None
++        versions.sort()
++        order = [uuid for _, uuid in versions]
++        for uuid in reversed(order[:order.index(fact_uuid)]):
++            if self.memory_deleted(uuid):
++                return None  # generation boundary or deleted version: never cross, never skip
++            record = self.replacement_record(uuid)
++            if record is None:
++                return None  # an earlier version that was never replaced: inconsistent lineage
++            if record.get("kind") == ERROR_CORRECTION:
++                continue
++            fact = self._substrate.get_fact(uuid)
++            if self._admission_refusal(fact, context, HISTORICAL_EVIDENCE_ADMISSION, None) is not None:
++                return None
++            return uuid
++        return None
++
+     def _historical_evidence_refusal(self, fact: Fact, mode: str, target_seconds: float | None) -> str | None:
+         """#549: an event-invalid fact is admissible only as historical evidence of a
+         governed state change, under explicit historical/as-of admission, inside its
+diff --git a/reference/agentmem_ref/runtime/runtime_composition.py b/reference/agentmem_ref/runtime/runtime_composition.py
+index 65a39d5e..18f24a7b 100644
+--- a/reference/agentmem_ref/runtime/runtime_composition.py
++++ b/reference/agentmem_ref/runtime/runtime_composition.py
+@@ -116,6 +116,96 @@ class MultiRouteRecallResult:
+         return tuple(self.route_hits.get(candidate_ref, ()))
+ 
+ 
++# Post-v7 experimental opt-in historical predecessor contract (#774).
++# NOT part of the frozen #770 v7 declaration or default recall.
++PREDECESSOR_RELATION = "immediate_state_change_predecessor"
++
++
++@dataclass(frozen=True)
++class HistoricalPredecessorContext:
++    """Bounded historical context with one lineage-identified predecessor first.
++
++    ``predecessor_ref`` comes only from governed replacement lineage and
++    canonical historical admission. It states WHICH value held before, never
++    WHY it changed. Never a completeness, stop or authority claim.
++    """
++
++    served_refs: tuple[str, ...]
++    predecessor_ref: str | None
++    successor_ref: str | None
++    relation: str = PREDECESSOR_RELATION
++    complete_evidence_attested: bool = False
++    authority_effect: str = "none"
++    selection_policy_version: str = "0.1.0"
++
++    def __post_init__(self):
++        refs = self.served_refs
++        if (not isinstance(refs, tuple) or any(type(r) is not str for r in refs)
++                or len(set(refs)) != len(refs)
++                or self.relation != PREDECESSOR_RELATION
++                or (self.predecessor_ref is None) != (self.successor_ref is None)
++                or (self.predecessor_ref is not None
++                    and (self.predecessor_ref == self.successor_ref or refs[:1] != (self.predecessor_ref,)))
++                or self.complete_evidence_attested is not False
++                or self.authority_effect != "none"
++                or self.selection_policy_version != "0.1.0"):
++            raise ValueError("invalid or authoritative historical predecessor selection")
++
++
++# #774 automatic routing. Built ONLY on the frozen temporal-cue interpreter's own
++# evidence (no new lexicon): a predecessor-relation cue routes unless an origin
++# cue ("the first value") or a prospective cue is also present. Declined spans
++# (quoted or metalinguistic mentions) carry no evidence and never route.
++PREDECESSOR_ROUTING_POLICY_VERSION = "0.2.0"
++PREDECESSOR_RELATION_CUES = frozenset({
++    "historical:low:before", "historical:high:previously", "historical:high:used to",
++    "historical:high:formerly", "historical:high:prior to", "historical:low:earlier",
++})
++ORIGIN_CUES = frozenset({
++    "historical:high:originally", "historical:high:initially", "historical:high:at first",
++    "historical:low:first time",
++})
++
++
++@dataclass(frozen=True)
++class PredecessorRoutingDecision:
++    routed: bool
++    evidence: tuple[str, ...]
++    policy_version: str = PREDECESSOR_ROUTING_POLICY_VERSION
++    authority_effect: str = "none"
++
++
++def predecessor_routing(query: str) -> PredecessorRoutingDecision:
++    """Does this query ask for the value that held before a later one? Query-only, deterministic."""
++    if not isinstance(query, str):
++        raise TypeError("predecessor routing requires a query string")
++    evidence = tuple(resolve_intent(query, None).to_dict().get("evidence") or ())
++    cues = set(evidence)
++    routed = bool(cues & PREDECESSOR_RELATION_CUES) and not cues & ORIGIN_CUES and not any(
++        cue.startswith("prospective:") for cue in cues)
++    return PredecessorRoutingDecision(routed=routed, evidence=evidence)
++
++
++@dataclass(frozen=True)
++class RoutedHistoricalContext:
++    """Served refs from automatic routing; ``routed`` says which path produced them."""
++
++    served_refs: tuple[str, ...]
++    routed: bool
++    routing_evidence: tuple[str, ...]
++    predecessor_ref: str | None = None
++    successor_ref: str | None = None
++    routing_policy_version: str = PREDECESSOR_ROUTING_POLICY_VERSION
++    complete_evidence_attested: bool = False
++    authority_effect: str = "none"
++
++    def __post_init__(self):
++        if (not isinstance(self.served_refs, tuple) or len(set(self.served_refs)) != len(self.served_refs)
++                or (self.predecessor_ref is not None and (not self.routed or self.served_refs[:1] != (self.predecessor_ref,)))
++                or self.complete_evidence_attested is not False or self.authority_effect != "none"):
++            raise ValueError("invalid or authoritative routed historical context")
++
++
+ MULTI_ROUTE_RANKING_POLICY = ExplicitCurrentCrossFactRankingPolicy(
+     policy_id="multi-route-default",
+     route_score_order=(SHARED_EVIDENCE_ROUTE, LEXICAL_ROUTE),
+@@ -498,6 +588,97 @@ class ConfiguredCompositionRuntime:
+             temporal_intent=temporal_intent,
+         )
+ 
++    def historical_predecessor_context(
++        self,
++        query: str,
++        context: RecallContext,
++        *,
++        budget: int,
++        successor_ref: str | None = None,
++    ) -> HistoricalPredecessorContext:
++        """Opt-in (#774): serve the governed immediate predecessor first.
++
++        The CALLER declares the relationship by invoking this method; nothing
++        is inferred from query wording. Historical recall runs unchanged. The
++        anchor is the caller-declared ``successor_ref`` (which must be
++        visible to this reader) or else the CURRENT governed version of the
++        memory of the highest-ranked admitted candidate whose current version
++        has a governed state-change predecessor. Exactly one item -- that
++        predecessor -- is moved to rank 1; every other item keeps its
++        governed order. No predecessor means unchanged ranking. Versions of a
++        memory with a deletion tombstone are never served by this method,
++        even when plain historical recall still admits them.
++        """
++        if type(budget) is not int or not 1 <= budget <= 100:
++            raise ValueError("historical predecessor budget must be integer 1..100")
++        if successor_ref is not None and (type(successor_ref) is not str
++                                          or not self.adapter.lineage_visible(successor_ref, context)):
++            raise ValueError("declared successor is not visible to this reader")
++        result = self.multi_route_recall(query, context, temporal_intent={"mode": "historical"})
++        if result.authority_effect != "none":
++            raise RuntimeRecoveryError("governed recall asserted unexpected authority")
++        ranked = list(result.ranked_admitted)
++        if len(ranked) != len(set(ranked)) or not set(ranked).issubset(result.admitted):
++            raise RuntimeRecoveryError("ranking violates canonical admission")
++        ranked = [ref for ref in ranked if not self.adapter.memory_deleted(ref)]
++        predecessor = successor = None
++        if successor_ref is not None:
++            anchors = [successor_ref]
++        else:
++            # Wrong-subject guard (#774 follow-on): an automatic anchor must already
++            # be represented in the governed served budget. A lineage that ranks
++            # below the budget is never pulled in to displace what would be served.
++            anchors, seen = [], set()
++            for ref in ranked[:budget]:
++                head = self.adapter.lineage_head(ref, context)
++                if head is not None and head not in seen:
++                    seen.add(head)
++                    anchors.append(head)
++        for anchor in anchors:
++            found = self.adapter.governed_state_change_predecessor(anchor, context)
++            if found is not None:
++                predecessor, successor = found, anchor
++                break
++        if predecessor is None:
++            served = ranked[:budget]
++        else:
++            served = ([predecessor] + [ref for ref in ranked if ref != predecessor])[:budget]
++        return HistoricalPredecessorContext(
++            served_refs=tuple(served), predecessor_ref=predecessor, successor_ref=successor)
++
++    def routed_historical_context(
++        self,
++        query: str,
++        context: RecallContext,
++        *,
++        budget: int,
++        temporal_intent=None,
++    ) -> RoutedHistoricalContext:
++        """Opt-in (#774): route predecessor-relation questions automatically.
++
++        Routed questions take ``historical_predecessor_context``; every other
++        question is served exactly as ``multi_route_recall`` with the caller's
++        ``temporal_intent`` would serve it. Never routes all historical questions.
++
++        Policy 0.2.0: only a question the caller sent with HISTORICAL intent may be
++        routed. A current, timeless or unspecified question is never routed, even
++        when a predecessor cue is present ("how long before X times out"), so an
++        automatic route can never serve a superseded value first for it.
++        """
++        decision = predecessor_routing(query)
++        caller_mode = (temporal_intent or {}).get("mode") if isinstance(temporal_intent, dict) else getattr(
++            temporal_intent, "mode", None)
++        if decision.routed and caller_mode == "historical":
++            selected = self.historical_predecessor_context(query, context, budget=budget)
++            return RoutedHistoricalContext(
++                served_refs=selected.served_refs, routed=True, routing_evidence=decision.evidence,
++                predecessor_ref=selected.predecessor_ref, successor_ref=selected.successor_ref)
++        if type(budget) is not int or not 1 <= budget <= 100:
++            raise ValueError("historical predecessor budget must be integer 1..100")
++        result = self.multi_route_recall(query, context, temporal_intent=temporal_intent)
++        return RoutedHistoricalContext(served_refs=tuple(result.ranked_admitted[:budget]), routed=False,
++                                       routing_evidence=decision.evidence)
++
+     def projection_admission(self) -> ProjectionAdmission:
+         projection = self.projections.store.get(self._projection_id)
+         if not self._projection_component_enabled:

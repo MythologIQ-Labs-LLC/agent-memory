@@ -1,0 +1,27 @@
+test_deleting_superseded_version_preserves_current_predecessor_target (tests.test_774_776_lineage_recreation_contract.RecreatedMemoryLineageIntegration.test_deleting_superseded_version_preserves_current_predecessor_target) ... FAIL
+test_new_generation_cannot_inherit_predecessor_of_deleted_generation (tests.test_774_776_lineage_recreation_contract.RecreatedMemoryLineageIntegration.test_new_generation_cannot_inherit_predecessor_of_deleted_generation) ... ok
+test_new_generation_visible_after_prior_lineage_pruned (tests.test_774_776_lineage_recreation_contract.RecreatedMemoryLineageIntegration.test_new_generation_visible_after_prior_lineage_pruned) ... FAIL
+test_other_memory_history_unaffected_by_reused_deleted_identity (tests.test_774_776_lineage_recreation_contract.RecreatedMemoryLineageIntegration.test_other_memory_history_unaffected_by_reused_deleted_identity) ... ok
+
+======================================================================
+FAIL: test_deleting_superseded_version_preserves_current_predecessor_target (tests.test_774_776_lineage_recreation_contract.RecreatedMemoryLineageIntegration.test_deleting_superseded_version_preserves_current_predecessor_target)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt6/i774/reference/tests/test_774_776_lineage_recreation_contract.py", line 75, in test_deleting_superseded_version_preserves_current_predecessor_target
+    self.assertFalse(h.runtime.adapter.memory_deleted(current))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_new_generation_visible_after_prior_lineage_pruned (tests.test_774_776_lineage_recreation_contract.RecreatedMemoryLineageIntegration.test_new_generation_visible_after_prior_lineage_pruned)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt6/i774/reference/tests/test_774_776_lineage_recreation_contract.py", line 34, in test_new_generation_visible_after_prior_lineage_pruned
+    self.assertFalse(set(old_refs).intersection(history.admitted))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'ref-0004'} is not false
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.138s
+
+FAILED (failures=2)

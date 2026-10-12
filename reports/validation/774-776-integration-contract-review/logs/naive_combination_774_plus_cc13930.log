@@ -1,0 +1,25 @@
+F.F............u..................................
+======================================================================
+FAIL: test_deleting_superseded_version_preserves_current_predecessor_target (tests.test_774_776_lineage_recreation_contract.RecreatedMemoryLineageIntegration.test_deleting_superseded_version_preserves_current_predecessor_target)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt6/design/reference/tests/test_774_776_lineage_recreation_contract.py", line 75, in test_deleting_superseded_version_preserves_current_predecessor_target
+    self.assertFalse(h.runtime.adapter.memory_deleted(current))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_new_generation_visible_after_prior_lineage_pruned (tests.test_774_776_lineage_recreation_contract.RecreatedMemoryLineageIntegration.test_new_generation_visible_after_prior_lineage_pruned)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt6/design/reference/tests/test_774_776_lineage_recreation_contract.py", line 35, in test_new_generation_visible_after_prior_lineage_pruned
+    self.assertFalse(h.runtime.adapter.memory_deleted(newest.fact_uuid))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+======================================================================
+UNEXPECTED SUCCESS: test_plain_historical_recall_does_not_serve_a_deleted_memorys_history (tests.test_774_governed_predecessor.PreExistingDeletionLeak.test_plain_historical_recall_does_not_serve_a_deleted_memorys_history)
+----------------------------------------------------------------------
+Ran 50 tests in 2.887s
+
+FAILED (failures=2, unexpected successes=1)
