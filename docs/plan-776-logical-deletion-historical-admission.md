@@ -174,3 +174,47 @@ qualification**. The new code-only import commit needs an exact-SHA replay.
 No activation of any successor baseline is authorized. #773 and #774
 remain independent protected candidates based on frozen v7; do not
 silently concatenate candidate patches or call each one "v8".
+
+
+## Second independent adoption review: transitive derivation P0 repaired
+
+Validation: validation/776-adoption-qualification @
+8face162dbe1be2e20acbab476cae23ae73451af.
+The prior adopted source at cc13930 still served the content of a deleted
+logical-memory lineage through **two- or three-hop** derived facts. Both
+ordinary public recall and write_semantics could read that content, and a
+restart did not close the path. The reviewer committed the failing
+three-test suite at 7093c3a **before** the repair at 42c218a.
+
+Source/test blobs imported independently and without the validation
+scorecard:
+- Protected adapter: 6823eeaff24c5d94892ae2417fd6cfdae95339cb
+- Three new regression tests: 4b15ab6f037350a52b050e7c81ea0c48ea570bf8
+- The full #776 suite now contains **26** tests.
+
+The repair traverses governed canonical fact evidence/provenance
+transitively and memoizes the result per deleted-lineage state. It
+does not infer links from similar words. Live, unrelated derivation
+chains remain available in the tested cases.
+
+**Review evidence:** 26/26 focused tests passed at 42c218a,
+with the same four expected protected-runtime declaration guards
+and pre-existing adapter_eof durability failure across the full
+reference suite. On Halcyon, Cedarline, Brightwater, Fenmoor and a
+separately authored blind theatre corpus, the reviewed runtime reported
+zero prohibited deleted-memory exposure, without removing any other
+legitimate served memories from these scenarios. This measurement was
+made on 42c218a, not the distinct GitHub code-adoption HEAD.
+
+**Policy decision:** normal caller-facing diagnostics MUST NOT enumerate
+the identifiers or relations of deleted memory generations.
+Retain only scoped internal audit evidence, with separately authorized
+access, where lifecycle rules allow. Track this as distinct read-projection
+work under #777; do not misrepresent identifier-only exposure as confirmed
+deleted-text exposure. It is also unsafe to remove immutable audit
+records for pruning merely to hide the public display.
+
+The original one-hop limitation and all prior reports remain historically
+visible. They no longer describe the present source blob, but the latest
+code remains **unqualified** until exact-HEAD replay, a sanctioned
+successor declaration and independent review. No baseline publication.
