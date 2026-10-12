@@ -281,6 +281,33 @@ class RestartAndRoutes(unittest.TestCase):
             self.assertFalse({old, new} & set(exact.admitted), mode)
         self.assertEqual(h.adapter.current_governed_typed_claim(old, ctx), (False, None))
 
+    def test_typed_graph_route_cannot_reach_a_deleted_earlier_version(self):
+        # No governed relation-write API exists; the relation is written on the
+        # substrate exactly as tests/test_typed_graph_retrieval.py does.
+        from agentmem_ref.recall_control import (ControlledRecallPlanner, NativeTypedGraphCandidateRetriever,
+                                                 RecallControlPlan, RecallRouteBudget, TYPED_GRAPH_ROUTE)
+        from agentmem_ref.runtime_composition import EXACT_IDENTITY_ROUTE, LEXICAL_ROUTE, SHARED_EVIDENCE_ROUTE
+        from tests.test_typed_graph_retrieval import _FixedController, _relation
+
+        h = _Store(self)
+        old, _ = h.chain("kiln", KILN)
+        seed = h.chain("studio", [("The pottery studio fires glazes on Fridays.", None)])[0]
+        h.adapter.checkpoint_substrate().write_relation(replace(
+            _relation("relation:studio-kiln", seed, old), group_id=TENANT))
+        h.prune("kiln")
+        plan = RecallControlPlan(controller_ref="test:776r", controller_version="1", route_budgets=(
+            RecallRouteBudget(LEXICAL_ROUTE, 0), RecallRouteBudget(EXACT_IDENTITY_ROUTE, 1),
+            RecallRouteBudget(TYPED_GRAPH_ROUTE, 8), RecallRouteBudget(SHARED_EVIDENCE_ROUTE, 0)))
+        planner = ControlledRecallPlanner(h.adapter, controller=_FixedController(plan),
+                                          graph_retriever=NativeTypedGraphCandidateRetriever())
+        for mode in ("current", "historical"):
+            result = planner.recall("", _context(), logical_memory_refs=("memory:776r:studio",),
+                                    temporal_intent={"mode": mode})
+            self.assertIn(seed, result.recall.admitted, mode)
+            self.assertIn(old, result.recall.candidates, mode)  # reachable ...
+            self.assertNotIn(old, result.recall.admitted, mode)  # ... never admitted
+            self.assertEqual(result.recall.refusals.get(old), "logical_memory_deleted")
+
     def test_out_of_scope_reader_never_learns_of_the_deletion(self):
         h = _Store(self)
         old, _ = h.chain("kiln", KILN)
