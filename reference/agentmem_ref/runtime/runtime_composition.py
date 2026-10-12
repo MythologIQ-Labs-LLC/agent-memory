@@ -152,6 +152,60 @@ class HistoricalPredecessorContext:
             raise ValueError("invalid or authoritative historical predecessor selection")
 
 
+# #774 automatic routing. Built ONLY on the frozen temporal-cue interpreter's own
+# evidence (no new lexicon): a predecessor-relation cue routes unless an origin
+# cue ("the first value") or a prospective cue is also present. Declined spans
+# (quoted or metalinguistic mentions) carry no evidence and never route.
+PREDECESSOR_ROUTING_POLICY_VERSION = "0.1.0"
+PREDECESSOR_RELATION_CUES = frozenset({
+    "historical:low:before", "historical:high:previously", "historical:high:used to",
+    "historical:high:formerly", "historical:high:prior to", "historical:low:earlier",
+})
+ORIGIN_CUES = frozenset({
+    "historical:high:originally", "historical:high:initially", "historical:high:at first",
+    "historical:low:first time",
+})
+
+
+@dataclass(frozen=True)
+class PredecessorRoutingDecision:
+    routed: bool
+    evidence: tuple[str, ...]
+    policy_version: str = PREDECESSOR_ROUTING_POLICY_VERSION
+    authority_effect: str = "none"
+
+
+def predecessor_routing(query: str) -> PredecessorRoutingDecision:
+    """Does this query ask for the value that held before a later one? Query-only, deterministic."""
+    if not isinstance(query, str):
+        raise TypeError("predecessor routing requires a query string")
+    evidence = tuple(resolve_intent(query, None).to_dict().get("evidence") or ())
+    cues = set(evidence)
+    routed = bool(cues & PREDECESSOR_RELATION_CUES) and not cues & ORIGIN_CUES and not any(
+        cue.startswith("prospective:") for cue in cues)
+    return PredecessorRoutingDecision(routed=routed, evidence=evidence)
+
+
+@dataclass(frozen=True)
+class RoutedHistoricalContext:
+    """Served refs from automatic routing; ``routed`` says which path produced them."""
+
+    served_refs: tuple[str, ...]
+    routed: bool
+    routing_evidence: tuple[str, ...]
+    predecessor_ref: str | None = None
+    successor_ref: str | None = None
+    routing_policy_version: str = PREDECESSOR_ROUTING_POLICY_VERSION
+    complete_evidence_attested: bool = False
+    authority_effect: str = "none"
+
+    def __post_init__(self):
+        if (not isinstance(self.served_refs, tuple) or len(set(self.served_refs)) != len(self.served_refs)
+                or (self.predecessor_ref is not None and (not self.routed or self.served_refs[:1] != (self.predecessor_ref,)))
+                or self.complete_evidence_attested is not False or self.authority_effect != "none"):
+            raise ValueError("invalid or authoritative routed historical context")
+
+
 MULTI_ROUTE_RANKING_POLICY = ExplicitCurrentCrossFactRankingPolicy(
     policy_id="multi-route-default",
     route_score_order=(SHARED_EVIDENCE_ROUTE, LEXICAL_ROUTE),
@@ -571,8 +625,11 @@ class ConfiguredCompositionRuntime:
         if successor_ref is not None:
             anchors = [successor_ref]
         else:
+            # Wrong-subject guard (#774 follow-on): an automatic anchor must already
+            # be represented in the governed served budget. A lineage that ranks
+            # below the budget is never pulled in to displace what would be served.
             anchors, seen = [], set()
-            for ref in ranked:
+            for ref in ranked[:budget]:
                 head = self.adapter.lineage_head(ref, context)
                 if head is not None and head not in seen:
                     seen.add(head)
@@ -588,6 +645,32 @@ class ConfiguredCompositionRuntime:
             served = ([predecessor] + [ref for ref in ranked if ref != predecessor])[:budget]
         return HistoricalPredecessorContext(
             served_refs=tuple(served), predecessor_ref=predecessor, successor_ref=successor)
+
+    def routed_historical_context(
+        self,
+        query: str,
+        context: RecallContext,
+        *,
+        budget: int,
+        temporal_intent=None,
+    ) -> RoutedHistoricalContext:
+        """Opt-in (#774): route predecessor-relation questions automatically.
+
+        Routed questions take ``historical_predecessor_context``; every other
+        question is served exactly as ``multi_route_recall`` with the caller's
+        ``temporal_intent`` would serve it. Never routes all historical questions.
+        """
+        decision = predecessor_routing(query)
+        if decision.routed:
+            selected = self.historical_predecessor_context(query, context, budget=budget)
+            return RoutedHistoricalContext(
+                served_refs=selected.served_refs, routed=True, routing_evidence=decision.evidence,
+                predecessor_ref=selected.predecessor_ref, successor_ref=selected.successor_ref)
+        if type(budget) is not int or not 1 <= budget <= 100:
+            raise ValueError("historical predecessor budget must be integer 1..100")
+        result = self.multi_route_recall(query, context, temporal_intent=temporal_intent)
+        return RoutedHistoricalContext(served_refs=tuple(result.ranked_admitted[:budget]), routed=False,
+                                       routing_evidence=decision.evidence)
 
     def projection_admission(self) -> ProjectionAdmission:
         projection = self.projections.store.get(self._projection_id)
