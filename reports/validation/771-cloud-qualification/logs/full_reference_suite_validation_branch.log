@@ -1,0 +1,221 @@
+..............................................................................ss.....................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................{"family_over": {}, "family_short": {"N1": 8, "N10": 8, "N11": 8, "N12": 8, "N13": 8, "N2": 8, "N3": 8, "N4": 8, "N5": 8, "N6": 8, "N7": 8, "N8": 8, "N9": 8, "P1": 12, "P10": 12, "P11": 12, "P12": 12, "P13": 12, "P2": 12, "P3": 12, "P4": 12, "P5": 12, "P6": 12, "P7": 11, "P8": 12, "P9": 12, "R1": 8, "R2": 8, "R3": 8, "R4": 8, "R5": 8, "R6": 8, "R7": 8}}
+rejections: 0
+{"family_over": {}, "family_short": {"N1": 8, "N10": 8, "N11": 8, "N12": 8, "N13": 8, "N2": 8, "N3": 8, "N4": 8, "N5": 8, "N6": 8, "N7": 8, "N8": 8, "N9": 8, "P1": 12, "P10": 12, "P11": 12, "P12": 12, "P13": 12, "P2": 12, "P3": 12, "P4": 12, "P5": 12, "P6": 12, "P7": 11, "P8": 12, "P9": 12, "R1": 8, "R2": 8, "R3": 8, "R4": 8, "R5": 8, "R6": 8, "R7": 8}}
+rejections: 14
+INVALID ATTEMPT: variants.json is missing but part file(s) exist: ['variants_part2.json']
+..........................................................................................................................................................................................................................................................................................................s......................................................................................................F............................./home/user/agent-memory/reference/agentmem_ref/state/sqlite_substrate.py:352: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecac508040>
+  per_bucket = {section: [[] for _ in range(GOVERNANCE_BUCKETS)] for section in GOVERNANCE_MAP_SECTIONS}
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/user/agent-memory/reference/agentmem_ref/state/sqlite_substrate.py:352: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecac5089a0>
+  per_bucket = {section: [[] for _ in range(GOVERNANCE_BUCKETS)] for section in GOVERNANCE_MAP_SECTIONS}
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/user/agent-memory/reference/agentmem_ref/state/sqlite_substrate.py:352: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecac5084f0>
+  per_bucket = {section: [[] for _ in range(GOVERNANCE_BUCKETS)] for section in GOVERNANCE_MAP_SECTIONS}
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/user/agent-memory/reference/agentmem_ref/state/sqlite_substrate.py:352: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecac5086d0>
+  per_bucket = {section: [[] for _ in range(GOVERNANCE_BUCKETS)] for section in GOVERNANCE_MAP_SECTIONS}
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/user/agent-memory/reference/agentmem_ref/state/sqlite_substrate.py:352: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecac5088b0>
+  per_bucket = {section: [[] for _ in range(GOVERNANCE_BUCKETS)] for section in GOVERNANCE_MAP_SECTIONS}
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/user/agent-memory/reference/agentmem_ref/state/sqlite_substrate.py:352: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecac508130>
+  per_bucket = {section: [[] for _ in range(GOVERNANCE_BUCKETS)] for section in GOVERNANCE_MAP_SECTIONS}
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/user/agent-memory/reference/agentmem_ref/state/sqlite_substrate.py:352: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecac50b970>
+  per_bucket = {section: [[] for _ in range(GOVERNANCE_BUCKETS)] for section in GOVERNANCE_MAP_SECTIONS}
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+..../usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecac508c70>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecac508310>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecac508130>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecac508040>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+../usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecac5089a0>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+...../usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecae7a8220>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecac50b970>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+......../home/user/agent-memory/reference/agentmem_ref/state/sqlite_substrate.py:236: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecae7a8220>
+  per_bucket: list[list[str]] = [[] for _ in range(GOVERNANCE_BUCKETS)]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/user/agent-memory/reference/agentmem_ref/state/sqlite_substrate.py:236: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecac5084f0>
+  per_bucket: list[list[str]] = [[] for _ in range(GOVERNANCE_BUCKETS)]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/user/agent-memory/reference/agentmem_ref/state/sqlite_substrate.py:236: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecac50b970>
+  per_bucket: list[list[str]] = [[] for _ in range(GOVERNANCE_BUCKETS)]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/user/agent-memory/reference/agentmem_ref/state/sqlite_substrate.py:236: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecac508040>
+  per_bucket: list[list[str]] = [[] for _ in range(GOVERNANCE_BUCKETS)]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/user/agent-memory/reference/agentmem_ref/state/sqlite_substrate.py:236: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecac509c60>
+  per_bucket: list[list[str]] = [[] for _ in range(GOVERNANCE_BUCKETS)]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/user/agent-memory/reference/agentmem_ref/state/sqlite_substrate.py:236: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecac508130>
+  per_bucket: list[list[str]] = [[] for _ in range(GOVERNANCE_BUCKETS)]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/user/agent-memory/reference/agentmem_ref/state/sqlite_substrate.py:236: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecac5096c0>
+  per_bucket: list[list[str]] = [[] for _ in range(GOVERNANCE_BUCKETS)]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/user/agent-memory/reference/agentmem_ref/state/sqlite_substrate.py:236: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecac509120>
+  per_bucket: list[list[str]] = [[] for _ in range(GOVERNANCE_BUCKETS)]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+../tmp/claude-0/venv/lib/python3.13/site-packages/jsonschema/_keywords.py:309: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecae7a8220>
+  yield ValidationError(f"{property!r} is a required property")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/tmp/claude-0/venv/lib/python3.13/site-packages/jsonschema/_keywords.py:309: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecac509120>
+  yield ValidationError(f"{property!r} is a required property")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/tmp/claude-0/venv/lib/python3.13/site-packages/jsonschema/_keywords.py:309: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecac508130>
+  yield ValidationError(f"{property!r} is a required property")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+...................................................sssssss..........................................................................................[
+  {
+    "run_id": "124",
+    "destination": "/tmp/tmp5mx7un3t/out/amb-precisionmembench-retrieval-v1/agent-memory-cccccccccccc",
+    "row_id": "agent-memory-public-facade",
+    "native_summary": {
+      "accuracy": 0.025974025974025976,
+      "active_passes": 2,
+      "active_total": 43,
+      "answer_llm": null,
+      "correct": 2,
+      "id_resolution": {
+        "source_id": 231
+      },
+      "ingested_docs": 35,
+      "ingestion_time_ms": 12.5,
+      "judge_llm": null,
+      "mean_precision": 0.5,
+      "mean_recall": 1.0,
+      "mean_retrieve_ms": 10.0,
+      "shape_note": "recomputed from results[].meta exactly as the frozen harness's summarize_run does; active_passes/active_total is the upstream-comparable number",
+      "structural_passes": 0,
+      "structural_total": 25,
+      "total_passes": 2,
+      "total_queries": 77,
+      "trivially_empty_passes": 0,
+      "trivially_empty_total": 9
+    }
+  }
+]
+.[
+  {
+    "run_id": "123",
+    "destination": "/tmp/tmp07f9gk1u/out/amb-precisionmembench-retrieval-v1/mem0-explicit-bbbbbbbbbbbb",
+    "row_id": "mem0-oss-2.2.1-explicit-memory",
+    "native_summary": {
+      "accuracy": 0.05194805194805195,
+      "active_passes": 4,
+      "active_total": 43,
+      "answer_llm": null,
+      "correct": 4,
+      "id_resolution": {
+        "source_id": 231
+      },
+      "ingested_docs": 35,
+      "ingestion_time_ms": 12.5,
+      "judge_llm": null,
+      "mean_precision": 0.5,
+      "mean_recall": 1.0,
+      "mean_retrieve_ms": 10.0,
+      "shape_note": "recomputed from results[].meta exactly as the frozen harness's summarize_run does; active_passes/active_total is the upstream-comparable number",
+      "structural_passes": 0,
+      "structural_total": 25,
+      "total_passes": 4,
+      "total_queries": 77,
+      "trivially_empty_passes": 0,
+      "trivially_empty_total": 9
+    }
+  }
+]
+..[
+  {
+    "run_id": "301",
+    "destination": "/tmp/tmp9qteksmv/out/amb-precisionmembench-retrieval-v2/agent-memory-eeeeeeeeeeee",
+    "row_id": "agent-memory-public-facade",
+    "native_summary": {
+      "accuracy": 0.03896103896103896,
+      "active_passes": 3,
+      "active_total": 43,
+      "answer_llm": null,
+      "correct": 3,
+      "id_resolution": {
+        "source_id": 231
+      },
+      "ingested_docs": 35,
+      "ingestion_time_ms": 12.5,
+      "judge_llm": null,
+      "mean_precision": 0.5,
+      "mean_recall": 1.0,
+      "mean_retrieve_ms": 10.0,
+      "shape_note": "recomputed from results[].meta exactly as the frozen harness's summarize_run does; active_passes/active_total is the upstream-comparable number",
+      "structural_passes": 0,
+      "structural_total": 25,
+      "total_passes": 3,
+      "total_queries": 77,
+      "trivially_empty_passes": 0,
+      "trivially_empty_total": 9
+    }
+  }
+]
+................../usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecacd787c0>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecac4a36a0>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecac4a1c60>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecac4a1e40>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+............................/usr/lib/python3.13/json/encoder.py:105: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecacd787c0>
+  def __init__(self, *, skipkeys=False, ensure_ascii=True,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:105: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecac4a1e40>
+  def __init__(self, *, skipkeys=False, ensure_ascii=True,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:105: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecac4a1c60>
+  def __init__(self, *, skipkeys=False, ensure_ascii=True,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:105: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecac4a36a0>
+  def __init__(self, *, skipkeys=False, ensure_ascii=True,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:105: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecac4a06d0>
+  def __init__(self, *, skipkeys=False, ensure_ascii=True,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:105: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fecac4a1030>
+  def __init__(self, *, skipkeys=False, ensure_ascii=True,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+........................................................................................................................................................................................................................sss......................................................................................................................................................................................................................................................................................................................................................ssss..............................................Runtime Baseline equivalence: PASS; baseline=agent-memory-runtime-baseline-v1; frozen=4560e4d838e56d9a679a3c842e91d5deadb83e02; candidate=HEAD; explicit non-runtime exclusions=reference/agentmem_ref/evaluation
+.............................................................................................................................................................................................................sssssssss.................................................................................................................................................inventory mechanical fields differ from the workflow YAML; run --write
+.............................................................................................................................<unknown>:79: SyntaxWarning: invalid escape sequence '\+'
+............................................................................................................................................................................
+======================================================================
+FAIL: test_real_agent_memory_public_facade_qualifies_first_durability_slice (tests.test_gauntlet_durability.DurabilityRecoveryGauntletTests.test_real_agent_memory_public_facade_qualifies_first_durability_slice)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_gauntlet_durability.py", line 79, in test_real_agent_memory_public_facade_qualifies_first_durability_slice
+    self.assertEqual(cases[case_id]["behavioral_outcome"], "pass", cases[case_id])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'blocked' != 'pass'
+- blocked
++ pass
+ : {'authority_effect': 'none', 'behavioral_outcome': 'blocked', 'capability': 'restart_recovery', 'case_id': 'DUR-REC-001', 'evidence_qualification': 'insufficient', 'expected_boundary': {'record_visible_after_recover': True}, 'note': 'setup/recovery operation did not complete', 'post_state': {'returned_ids': [], 'visible_after_recover': False}, 'pre_state': {'record_id': 'dur:recover:001', 'visible_before_recover': False}, 'transition': {'operation': 'recover', 'status': 'adapter_error', 'surface': None}}
+
+----------------------------------------------------------------------
+Ran 2559 tests in 135.574s
+
+FAILED (failures=1, skipped=26)
+exit=1

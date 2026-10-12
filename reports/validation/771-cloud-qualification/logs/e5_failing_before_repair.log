@@ -1,0 +1,14 @@
+E
+======================================================================
+ERROR: test_rank_one_must_be_the_answer_not_merely_supporting_evidence (tests.test_served_memory_validation_771.EvaluatorDefectsRound2.test_rank_one_must_be_the_answer_not_merely_supporting_evidence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/tests/test_served_memory_validation_771.py", line 101, in test_rank_one_must_be_the_answer_not_merely_supporting_evidence
+    self.assertFalse(row["top1_critical"])
+                     ~~~^^^^^^^^^^^^^^^^^
+KeyError: 'top1_critical'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (errors=1)

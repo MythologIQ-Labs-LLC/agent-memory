@@ -87,6 +87,21 @@ class EvaluatorDefects(unittest.TestCase):
         self.assertEqual(report["P2_context_utility"]["macro_relevant_recall_at_budget"], 1.0)
 
 
+class EvaluatorDefectsRound2(unittest.TestCase):
+    """Found on the holdout after the first repair; failed before its repair."""
+
+    def test_rank_one_must_be_the_answer_not_merely_supporting_evidence(self):
+        # E5: top1_relevant accepts any grade>=2 memory, so strong supporting
+        # evidence at rank 1 with the actual answer at rank 2 counted as a
+        # correct top-1 (holdout H02: pgver-16 ahead of the asked-for pgver-15).
+        case = _case("A", {"answer": 3, "support": 2, "z": 0}, [["answer"]])
+        report = score(_doc(case), _run(A=["support", "answer"]))
+        row = report["per_case"][0]
+        self.assertTrue(row["top1_relevant"])
+        self.assertFalse(row["top1_critical"])
+        self.assertEqual(report["P1_served_correctness"]["top1_critical_rate"], 0.0)
+
+
 class AdversarialControls(unittest.TestCase):
     """Held on the candidate; pinned so later repairs cannot regress them."""
 
