@@ -780,6 +780,10 @@ class GovernedMemoryAdapter:
             return None
         if any(source_ref in self._tombstones for source_ref in fact.episode_uuids):
             return None
+        # #776: an earlier version of a deleted memory (or a fact derived from
+        # one) is as unreadable here as it is at recall admission.
+        if self._deleted_lineage_reason(fact) is not None:
+            return None
         return fact if self.domain_eligible(fact, context) else None
 
     def write_semantics(self, fact_uuid: str, context: RecallContext) -> dict | None:
@@ -1241,19 +1245,13 @@ class GovernedMemoryAdapter:
         # Scope is checked before exposing this reason. A record whose
         # logical memory was not reliably bound is NOT assumed to share
         # deletion state based on matching words or other guesses.
-        if self._tombstones:
-            deleted_memories = self.tombstoned_ids()
-            memory_id = self._fact_memory.get(fact.uuid)
-            if memory_id is not None and memory_id in deleted_memories:
-                scope_refusal = self._domain_eligibility_refusal(fact, context)
-                return scope_refusal or "logical_memory_deleted"
-            # Derived facts may reference an earlier version rather than the
-            # tombstoned head. Preserve the existing source-ref protection
-            # for all canonical fact IDs whose provenance remains bound.
-            if any(self._fact_memory.get(ref) in deleted_memories
-                   for ref in fact.episode_uuids):
-                scope_refusal = self._domain_eligibility_refusal(fact, context)
-                return scope_refusal or "derived_from_deleted_logical_memory"
+        #
+        # The deleted lineage is the set of facts bound to the memory when it
+        # was deleted (indexed, so the check is O(1) per candidate); a later
+        # governed re-creation of the same memory id is a new lineage.
+        deleted_reason = self._deleted_lineage_reason(fact)
+        if deleted_reason is not None:
+            return self._domain_eligibility_refusal(fact, context) or deleted_reason
         if fact.is_event_invalid:
             historical = self._historical_evidence_refusal(fact, mode, target_seconds)
             if historical is not None:
@@ -1494,6 +1492,70 @@ class GovernedMemoryAdapter:
     def tombstoned_ids(self) -> set[str]:
         return {record["memory_id"] for record in self._tombstones.values()}
 
+    def _deleted_lineage(self) -> dict[str, str]:
+        """#776: fact uuid -> deleted memory for every fact a governed deletion covers.
+
+        Built once per tombstone-set change, so admission is O(1) per candidate
+        however many deletions exist. Tombstones are never removed, and restore
+        replaces the dicts, which the cache key observes.
+        """
+        key = (id(self._tombstones), len(self._tombstones), id(self._fact_memory))
+        cached = getattr(self, "_deleted_lineage_cache", None)
+        if cached is not None and cached[0] == key:
+            return cached[1]
+        index: dict[str, str] = {}
+        for tombstone_ref, record in self._tombstones.items():
+            memory_id = record.get("memory_id")
+            index[tombstone_ref] = memory_id
+            lineage = record.get("deleted_fact_uuids")
+            if lineage is None:
+                lineage = self._legacy_deleted_lineage(tombstone_ref, record)
+            for ref in lineage:
+                index[str(ref)] = memory_id
+        self._deleted_lineage_cache = (key, index)
+        return index
+
+    def _legacy_deleted_lineage(self, tombstone_ref: str, record: Mapping) -> list[str]:
+        """A pre-#776 tombstone names only the deleted fact. Fail closed: when it deleted the
+        memory's head (a fact never replaced), every fact bound to that memory and written
+        no later than the deletion belongs to the deleted lineage. A deleted superseded
+        version (it has a replacement record) covers only itself."""
+
+        memory_id = record.get("memory_id")
+        if memory_id is None or self.replacement_record(tombstone_ref) is not None:
+            return [tombstone_ref]
+        deleted_at = record.get("deleted_at")
+        lineage = [tombstone_ref]
+        for ref, bound in self._fact_memory.items():
+            if bound != memory_id or ref == tombstone_ref:
+                continue
+            fact = self._substrate.get_fact(ref)
+            created = getattr(fact, "created_at", None)
+            if not deleted_at or not created or created <= deleted_at:
+                lineage.append(ref)
+        return lineage
+
+    def _deleted_lineage_reason(self, fact: Fact) -> str | None:
+        if not self._tombstones:
+            return None
+        deleted = self._deleted_lineage()
+        if fact.uuid in deleted:
+            return "logical_memory_deleted"
+        if any(ref in deleted for ref in fact.episode_uuids):
+            return "derived_from_deleted_logical_memory"
+        return None
+
+    def _lineage_for_deletion(self, memory_id: str, fact_uuid: str) -> list[str]:
+        """Deleting a memory's head deletes its whole live lineage; deleting a superseded
+        version deletes only that version. Facts of an earlier deleted lineage are excluded
+        so a later deletion never changes how an earlier one was governed."""
+
+        if self._current_fact_by_memory.get(memory_id) != fact_uuid:
+            return [fact_uuid]
+        already = self._deleted_lineage() if self._tombstones else {}
+        return sorted({fact_uuid} | {
+            ref for ref, bound in self._fact_memory.items() if bound == memory_id and ref not in already})
+
     def record_correction(self, memory_id: str) -> int:
         """A correction advances canonical version; dependents become stale by relation."""
         self._state_version[memory_id] = self._state_version.get(memory_id, 0) + 1
@@ -1578,6 +1640,11 @@ class GovernedMemoryAdapter:
         before_state = f"v{self._state_version.get(proposal.target_reference, 0)}"
 
         if committed:
+            # #776: deletion belongs to the logical memory -- record the lineage it covers.
+            lineage = self._lineage_for_deletion(proposal.target_reference, fact_uuid)
+            cached = getattr(self, "_deleted_lineage_cache", None)
+            fresh = cached is not None and cached[0] == (
+                id(self._tombstones), len(self._tombstones), id(self._fact_memory))
             self._tombstones[fact_uuid] = {
                 "memory_id": proposal.target_reference,
                 "fact_uuid": fact_uuid,
@@ -1585,11 +1652,21 @@ class GovernedMemoryAdapter:
                 "declared_derived_refs": list(derived_refs),
                 "mode": proposal.operation,
                 "reversible": proposal.operation != "permanent_deletion",
+                "deleted_fact_uuids": lineage,
             }
+            if fresh:  # extend the index in place instead of rebuilding it per deletion
+                cached[1].update(dict.fromkeys((fact_uuid, *lineage), proposal.target_reference))
+                self._deleted_lineage_cache = (
+                    (id(self._tombstones), len(self._tombstones), id(self._fact_memory)), cached[1])
             # Pruning removes from active recall and keeps the content recoverable;
-            # only permanent deletion reaches the substrate's physical delete.
+            # only permanent deletion reaches the substrate's physical delete, and
+            # it removes every version in the deleted lineage, not just the head.
             if proposal.operation == "permanent_deletion":
-                self._substrate.delete_fact(fact_uuid)
+                for ref in lineage:
+                    self._substrate.delete_fact(ref)
+                for bucket in (self._semantic_slot_index or {}).values():
+                    for ref in lineage:
+                        bucket.pop(ref, None)
             if self._current_fact_by_memory.get(proposal.target_reference) == fact_uuid:
                 self._current_fact_by_memory.pop(proposal.target_reference, None)
             self._state_version[proposal.target_reference] = self._state_version.get(proposal.target_reference, 0) + 1
