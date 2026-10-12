@@ -82,8 +82,11 @@ A second, separately frozen input/gold pair is now available:
 
 The input corpus has seven distinct memory writes, two project scopes,
 five concrete questions (current endpoint, compound evidence, historical
-release reason, unavailable owner, and current release), explicit return
-budgets, and no relevance/answer labels. The gold is in a DIFFERENT file and
+release reason, unavailable owner, and current release), caller-declared
+temporal intent, explicit return budgets, and no relevance/answer labels.
+The composed runner passes the declared temporal intent to the actual
+recall applicability policy, distinguishing current, historical, and
+atemporal/unspecified requests without passing any expected answer. The gold is in a DIFFERENT file and
 is never loaded by the runtime runner.
 
 The runner executes ConfiguredCompositionRuntime.retain (real governed
@@ -96,10 +99,12 @@ is not proof of a downstream user-facing response or a future production
 facade's exact return behavior.
 
 The optional backend --backend governed-lexical calls the canonical adapter's
-governed lexical recall instead of the composed multi-route planner. It is
-a distinct diagnostic profile and **not guaranteed comparable for historical
-intent**, where temporal admission/ranking may differ. Compare within the
-same scenario only with an explicit protocol-compatibility decision.
+governed lexical recall instead of the composed multi-route planner. It does
+not accept caller-declared temporal intent as an input, unlike the composed
+planner. Therefore it is a distinct diagnostic profile, **not a matched
+historical-intent comparator**. Historical-intent scored differences between
+these paths are descriptive, not an accepted same-protocol frontier.
+Compare with explicit profile identity and a reviewer ruling on eligibility.
 
 The alignment step refuses score laundering: every written source must have
 a label in every query case, every out-of-project source must be prohibited,
