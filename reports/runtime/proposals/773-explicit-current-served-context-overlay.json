@@ -1,0 +1,35 @@
+{
+  "schema_version": "773-post-v7-served-context-overlay-v1",
+  "issue": 773,
+  "stage": "protected_runtime_candidate_UNQUALIFIED",
+  "base_commit": "9b025f945e7ec4a1e349e56bba251e3122413e88",
+  "base_lineage": "frozen #770 implementation; not the published main",
+  "source_changes": [
+    {
+      "path": "reference/agentmem_ref/runtime/runtime_composition.py",
+      "blob": "bbf12bf390fbf071ceba8d58a40eaccb35dc4137"
+    }
+  ],
+  "new_tests": [
+    {
+      "path": "reference/tests/test_773_current_served_context.py",
+      "blob": "44e257711e02c1a012ab1cb15733a3ae61866d70",
+      "methods": 10
+    }
+  ],
+  "frozen_v7_declaration_unchanged": true,
+  "frozen_v6_and_v7_evidence_unchanged": true,
+  "default_recall_path_unchanged_by_design": true,
+  "selection_policy_version": "0.1.0",
+  "requires_explicit_caller_time": true,
+  "positive_stops_enabled": false,
+  "output_attestation": "none",
+  "complete_enumeration_attested": false,
+  "qualification_status": "NOT_EXECUTED",
+  "known_limits": [
+    "This opt-in selector only filters established non-current temporal applicability from already governed admitted/ranked candidates. It does not supply a relevance floor or an answer-level refusal decision.",
+    "It intentionally does not rewrite canonical admission or historical recall; current time is supplied by the caller and is not authenticated as current wall-clock time.",
+    "There is no source proof that all relevant memories were enumerated and returned, and unknown temporal validity remains unknown.",
+    "A new sanctioned post-v7 successor declaration, exact-SHA execution, old/second holdout comparison, frozen original lane replays, privacy, and independent adversarial review are required."
+  ]
+}
