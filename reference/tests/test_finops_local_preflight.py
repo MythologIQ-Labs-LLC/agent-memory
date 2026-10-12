@@ -19,7 +19,8 @@ class LocalFinOpsPreflightTests(unittest.TestCase):
         quick = preflight.test_commands("quick")
         full = preflight.test_commands("full")
         self.assertEqual([x[0] for x in quick], [
-            "workflow_policy_and_retention", "focused_workflow_policy_tests"
+            "workflow_policy_and_retention", "focused_workflow_policy_tests",
+            "local_preflight_self_tests"
         ])
         self.assertEqual([x[0] for x in full], [
             "workflow_policy_and_retention", "complete_reference_regression",
