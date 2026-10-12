@@ -1232,6 +1232,28 @@ class GovernedMemoryAdapter:
             return "tombstoned"
         if any(source_ref in self._tombstones for source_ref in fact.episode_uuids):
             return "derived_from_tombstoned_source"
+        # #776 P0: the tombstone is recorded against the *current fact*,
+        # but deletion belongs to the durable logical memory. Historical
+        # state-change predecessors have different fact UUIDs; without
+        # checking their canonical fact->memory binding, explicit historical
+        # admission could resurrect previously deleted memory contents.
+        #
+        # Scope is checked before exposing this reason. A record whose
+        # logical memory was not reliably bound is NOT assumed to share
+        # deletion state based on matching words or other guesses.
+        if self._tombstones:
+            deleted_memories = self.tombstoned_ids()
+            memory_id = self._fact_memory.get(fact.uuid)
+            if memory_id is not None and memory_id in deleted_memories:
+                scope_refusal = self._domain_eligibility_refusal(fact, context)
+                return scope_refusal or "logical_memory_deleted"
+            # Derived facts may reference an earlier version rather than the
+            # tombstoned head. Preserve the existing source-ref protection
+            # for all canonical fact IDs whose provenance remains bound.
+            if any(self._fact_memory.get(ref) in deleted_memories
+                   for ref in fact.episode_uuids):
+                scope_refusal = self._domain_eligibility_refusal(fact, context)
+                return scope_refusal or "derived_from_deleted_logical_memory"
         if fact.is_event_invalid:
             historical = self._historical_evidence_refusal(fact, mode, target_seconds)
             if historical is not None:
