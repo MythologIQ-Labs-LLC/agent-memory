@@ -1,0 +1,845 @@
+{
+  "brightwater": {
+    "evaluator": {
+      "clean": true,
+      "commit": "4aba9a4c2f27ebcbb27ab8268015a82746ae2d3b"
+    },
+    "paraphrase_resolution": {
+      "B08": {
+        "caller": [
+          "Kessel Road pumping station"
+        ],
+        "original": null,
+        "paraphrase": null
+      },
+      "B09": {
+        "caller": [
+          "reservoir outlet chlorine target"
+        ],
+        "original": [
+          "reservoir outlet chlorine target"
+        ],
+        "paraphrase": null
+      }
+    },
+    "resolver_exact_agreement": "4/12",
+    "resolver_unresolved": [
+      "B01",
+      "B03",
+      "B04",
+      "B07",
+      "B08",
+      "B10",
+      "B11",
+      "B12"
+    ],
+    "runtime": {
+      "clean": true,
+      "commit": "9b025f945e7ec4a1e349e56bba251e3122413e88",
+      "loaded_module": "reference/agentmem_ref/runtime/runtime_composition.py",
+      "loaded_module_blob": "65a39d5e3d3f052f03985cafa4751ad1ce3d4817",
+      "protected_tree": "7b87b4dbef5e0c9dbf24a1392c6571007bc801d0"
+    },
+    "variants": {
+      "E1 caller scope": {
+        "allcrit_after": 8,
+        "allcrit_before": 8,
+        "answerable": 10,
+        "critical_lost": [],
+        "lost_context": 0,
+        "lost_legitimate": [],
+        "no_answer_items_after": 4,
+        "no_answer_items_before": 4,
+        "no_qualified_evidence_answerable": [],
+        "no_qualified_evidence_no_answer": [],
+        "top1_after": 5,
+        "top1_before": 4,
+        "withheld_irrelevant": 11
+      },
+      "E1-half identity": {
+        "allcrit_after": 8,
+        "allcrit_before": 8,
+        "answerable": 10,
+        "critical_lost": [],
+        "lost_context": 0,
+        "lost_legitimate": [],
+        "no_answer_items_after": 4,
+        "no_answer_items_before": 4,
+        "no_qualified_evidence_answerable": [],
+        "no_qualified_evidence_no_answer": [],
+        "top1_after": 4,
+        "top1_before": 4,
+        "withheld_irrelevant": 2
+      },
+      "E1-wrong scope": {
+        "allcrit_after": 0,
+        "allcrit_before": 8,
+        "answerable": 10,
+        "critical_lost": [
+          "B01",
+          "B02",
+          "B04",
+          "B06",
+          "B07",
+          "B08",
+          "B09",
+          "B10"
+        ],
+        "lost_context": 4,
+        "lost_legitimate": [
+          "B01:pumps-4",
+          "B01:pumps-3",
+          "B02:chl-07",
+          "B02:chl-05",
+          "B03:scada-i83",
+          "B04:bill-2m",
+          "B04:bill-q",
+          "B06:sap",
+          "B07:why-bill",
+          "B08:pumps-4",
+          "B09:chl-07",
+          "B10:leak",
+          "B12:scada-i80"
+        ],
+        "no_answer_items_after": 0,
+        "no_answer_items_before": 4,
+        "no_qualified_evidence_answerable": [
+          "B01",
+          "B02",
+          "B03",
+          "B04",
+          "B07",
+          "B08",
+          "B09",
+          "B10",
+          "B12"
+        ],
+        "no_qualified_evidence_no_answer": [
+          "B05",
+          "B11"
+        ],
+        "top1_after": 0,
+        "top1_before": 4,
+        "withheld_irrelevant": 14
+      },
+      "E2 lexical resolver": {
+        "allcrit_after": 8,
+        "allcrit_before": 8,
+        "answerable": 10,
+        "critical_lost": [],
+        "lost_context": 0,
+        "lost_legitimate": [],
+        "no_answer_items_after": 4,
+        "no_answer_items_before": 4,
+        "no_qualified_evidence_answerable": [],
+        "no_qualified_evidence_no_answer": [],
+        "top1_after": 4,
+        "top1_before": 4,
+        "withheld_irrelevant": 4
+      }
+    }
+  },
+  "cedarline": {
+    "evaluator": {
+      "clean": true,
+      "commit": "4aba9a4c2f27ebcbb27ab8268015a82746ae2d3b"
+    },
+    "paraphrase_resolution": {
+      "C01": {
+        "caller": [
+          "river-sensor archive"
+        ],
+        "original": [
+          "river-sensor archive"
+        ],
+        "paraphrase": null
+      },
+      "C14": {
+        "caller": [
+          "raw telemetry retention"
+        ],
+        "original": [
+          "raw telemetry retention"
+        ],
+        "paraphrase": null
+      }
+    },
+    "resolver_exact_agreement": "7/23",
+    "resolver_unresolved": [
+      "C02",
+      "C03",
+      "C04",
+      "C06",
+      "C07",
+      "C08",
+      "C09",
+      "C10",
+      "C11",
+      "C15",
+      "C16",
+      "C18",
+      "C21",
+      "C22",
+      "C23",
+      "C24"
+    ],
+    "runtime": {
+      "clean": true,
+      "commit": "9b025f945e7ec4a1e349e56bba251e3122413e88",
+      "loaded_module": "reference/agentmem_ref/runtime/runtime_composition.py",
+      "loaded_module_blob": "65a39d5e3d3f052f03985cafa4751ad1ce3d4817",
+      "protected_tree": "7b87b4dbef5e0c9dbf24a1392c6571007bc801d0"
+    },
+    "variants": {
+      "E1 caller scope": {
+        "allcrit_after": 14,
+        "allcrit_before": 14,
+        "answerable": 20,
+        "critical_lost": [],
+        "lost_context": 0,
+        "lost_legitimate": [
+          "C09:uplink-512"
+        ],
+        "no_answer_items_after": 0,
+        "no_answer_items_before": 8,
+        "no_qualified_evidence_answerable": [],
+        "no_qualified_evidence_no_answer": [
+          "C11",
+          "C21",
+          "C22",
+          "C23"
+        ],
+        "top1_after": 14,
+        "top1_before": 14,
+        "withheld_irrelevant": 29
+      },
+      "E1-half identity": {
+        "allcrit_after": 14,
+        "allcrit_before": 14,
+        "answerable": 20,
+        "critical_lost": [],
+        "lost_context": 0,
+        "lost_legitimate": [],
+        "no_answer_items_after": 5,
+        "no_answer_items_before": 8,
+        "no_qualified_evidence_answerable": [],
+        "no_qualified_evidence_no_answer": [
+          "C21"
+        ],
+        "top1_after": 14,
+        "top1_before": 14,
+        "withheld_irrelevant": 12
+      },
+      "E1-wrong scope": {
+        "allcrit_after": 0,
+        "allcrit_before": 14,
+        "answerable": 20,
+        "critical_lost": [
+          "C01",
+          "C03",
+          "C04",
+          "C05",
+          "C06",
+          "C08",
+          "C09",
+          "C10",
+          "C12",
+          "C14",
+          "C15",
+          "C16",
+          "C18",
+          "C19"
+        ],
+        "lost_context": 1,
+        "lost_legitimate": [
+          "C01:catalog-delta",
+          "C02:catalog-delta",
+          "C03:why-parquet",
+          "C03:catalog-csv",
+          "C03:catalog-parquet",
+          "C04:why-delta",
+          "C04:catalog-delta",
+          "C05:offset-3mm-correct",
+          "C06:owner-integrity",
+          "C07:owner-integrity",
+          "C08:heartbeat-10",
+          "C09:uplink-512",
+          "C09:why-compress",
+          "C10:uplink-512",
+          "C10:why-compress",
+          "C12:incident-root",
+          "C13:incident-root",
+          "C14:retain-3y",
+          "C15:retain-1y",
+          "C15:retain-3y",
+          "C16:mission-mesa7",
+          "C18:priority-new",
+          "C18:why-priority",
+          "C19:index-guide",
+          "C24:offset-3mm-correct"
+        ],
+        "no_answer_items_after": 0,
+        "no_answer_items_before": 8,
+        "no_qualified_evidence_answerable": [
+          "C01",
+          "C02",
+          "C03",
+          "C04",
+          "C05",
+          "C06",
+          "C07",
+          "C08",
+          "C09",
+          "C10",
+          "C12",
+          "C13",
+          "C14",
+          "C15",
+          "C16",
+          "C17",
+          "C18",
+          "C19",
+          "C24"
+        ],
+        "no_qualified_evidence_no_answer": [
+          "C11",
+          "C21",
+          "C22",
+          "C23"
+        ],
+        "top1_after": 1,
+        "top1_before": 14,
+        "withheld_irrelevant": 33
+      },
+      "E2 lexical resolver": {
+        "allcrit_after": 14,
+        "allcrit_before": 14,
+        "answerable": 20,
+        "critical_lost": [],
+        "lost_context": 0,
+        "lost_legitimate": [],
+        "no_answer_items_after": 8,
+        "no_answer_items_before": 8,
+        "no_qualified_evidence_answerable": [],
+        "no_qualified_evidence_no_answer": [],
+        "top1_after": 14,
+        "top1_before": 14,
+        "withheld_irrelevant": 10
+      }
+    }
+  },
+  "fenmoor": {
+    "evaluator": {
+      "clean": true,
+      "commit": "4aba9a4c2f27ebcbb27ab8268015a82746ae2d3b"
+    },
+    "paraphrase_resolution": {
+      "F01": {
+        "caller": [
+          "makerspace 3D printer"
+        ],
+        "original": null,
+        "paraphrase": [
+          "makerspace 3D printer"
+        ]
+      },
+      "F02": {
+        "caller": [
+          "reading room"
+        ],
+        "original": [
+          "reading room"
+        ],
+        "paraphrase": [
+          "reading room"
+        ]
+      },
+      "F14": {
+        "caller": [
+          "makerspace 3D printer"
+        ],
+        "original": null,
+        "paraphrase": null
+      }
+    },
+    "resolver_exact_agreement": "8/16",
+    "resolver_unresolved": [
+      "F01",
+      "F03",
+      "F04",
+      "F05",
+      "F06",
+      "F07",
+      "F14",
+      "F16"
+    ],
+    "runtime": {
+      "clean": true,
+      "commit": "9b025f945e7ec4a1e349e56bba251e3122413e88",
+      "loaded_module": "reference/agentmem_ref/runtime/runtime_composition.py",
+      "loaded_module_blob": "65a39d5e3d3f052f03985cafa4751ad1ce3d4817",
+      "protected_tree": "7b87b4dbef5e0c9dbf24a1392c6571007bc801d0"
+    },
+    "variants": {
+      "E1 caller scope": {
+        "allcrit_after": 12,
+        "allcrit_before": 12,
+        "answerable": 12,
+        "critical_lost": [],
+        "lost_context": 0,
+        "lost_legitimate": [],
+        "no_answer_items_after": 3,
+        "no_answer_items_before": 10,
+        "no_qualified_evidence_answerable": [],
+        "no_qualified_evidence_no_answer": [
+          "F12"
+        ],
+        "top1_after": 9,
+        "top1_before": 9,
+        "withheld_irrelevant": 16
+      },
+      "E1-half identity": {
+        "allcrit_after": 12,
+        "allcrit_before": 12,
+        "answerable": 12,
+        "critical_lost": [],
+        "lost_context": 0,
+        "lost_legitimate": [],
+        "no_answer_items_after": 3,
+        "no_answer_items_before": 10,
+        "no_qualified_evidence_answerable": [],
+        "no_qualified_evidence_no_answer": [
+          "F12"
+        ],
+        "top1_after": 9,
+        "top1_before": 9,
+        "withheld_irrelevant": 13
+      },
+      "E1-wrong scope": {
+        "allcrit_after": 0,
+        "allcrit_before": 12,
+        "answerable": 12,
+        "critical_lost": [
+          "F01",
+          "F02",
+          "F03",
+          "F04",
+          "F05",
+          "F06",
+          "F07",
+          "F08",
+          "F13",
+          "F14",
+          "F15",
+          "F16"
+        ],
+        "lost_context": 8,
+        "lost_legitimate": [
+          "F01:printer-petg",
+          "F01:printer-asa",
+          "F02:hours-830",
+          "F02:hours-9",
+          "F03:loan-14",
+          "F03:loan-21",
+          "F04:wifi-open",
+          "F04:wifi-guest",
+          "F05:printer-petg",
+          "F05:printer-asa",
+          "F06:printer-pla",
+          "F07:why-loan",
+          "F07:loan-21",
+          "F08:laser",
+          "F13:fine-25",
+          "F13:fine-20",
+          "F14:printer-asa",
+          "F15:archive",
+          "F16:wifi-open",
+          "F16:wifi-guest"
+        ],
+        "no_answer_items_after": 1,
+        "no_answer_items_before": 10,
+        "no_qualified_evidence_answerable": [
+          "F01",
+          "F03",
+          "F04",
+          "F05",
+          "F06",
+          "F07",
+          "F08",
+          "F13",
+          "F14"
+        ],
+        "no_qualified_evidence_no_answer": [
+          "F10",
+          "F11",
+          "F12"
+        ],
+        "top1_after": 0,
+        "top1_before": 9,
+        "withheld_irrelevant": 13
+      },
+      "E2 lexical resolver": {
+        "allcrit_after": 12,
+        "allcrit_before": 12,
+        "answerable": 12,
+        "critical_lost": [],
+        "lost_context": 0,
+        "lost_legitimate": [],
+        "no_answer_items_after": 3,
+        "no_answer_items_before": 10,
+        "no_qualified_evidence_answerable": [],
+        "no_qualified_evidence_no_answer": [
+          "F12"
+        ],
+        "top1_after": 9,
+        "top1_before": 9,
+        "withheld_irrelevant": 12
+      }
+    }
+  },
+  "halcyon": {
+    "evaluator": {
+      "clean": true,
+      "commit": "4aba9a4c2f27ebcbb27ab8268015a82746ae2d3b"
+    },
+    "paraphrase_resolution": {
+      "H01": {
+        "caller": [
+          "ledger database"
+        ],
+        "original": null,
+        "paraphrase": null
+      },
+      "H07": {
+        "caller": [
+          "public payments API"
+        ],
+        "original": [
+          "public payments API"
+        ],
+        "paraphrase": null
+      }
+    },
+    "resolver_exact_agreement": "6/23",
+    "resolver_unresolved": [
+      "H01",
+      "H02",
+      "H03",
+      "H04",
+      "H05",
+      "H09",
+      "H10",
+      "H11",
+      "H13",
+      "H14",
+      "H15",
+      "H16",
+      "H17",
+      "H20",
+      "H21",
+      "H22",
+      "H23"
+    ],
+    "runtime": {
+      "clean": true,
+      "commit": "9b025f945e7ec4a1e349e56bba251e3122413e88",
+      "loaded_module": "reference/agentmem_ref/runtime/runtime_composition.py",
+      "loaded_module_blob": "65a39d5e3d3f052f03985cafa4751ad1ce3d4817",
+      "protected_tree": "7b87b4dbef5e0c9dbf24a1392c6571007bc801d0"
+    },
+    "variants": {
+      "E1 caller scope": {
+        "allcrit_after": 17,
+        "allcrit_before": 19,
+        "answerable": 21,
+        "critical_lost": [
+          "H10",
+          "H23"
+        ],
+        "lost_context": 1,
+        "lost_legitimate": [
+          "H10:inc-2207",
+          "H23:inc-2207"
+        ],
+        "no_answer_items_after": 0,
+        "no_answer_items_before": 9,
+        "no_qualified_evidence_answerable": [],
+        "no_qualified_evidence_no_answer": [
+          "H17",
+          "H18",
+          "H19"
+        ],
+        "top1_after": 14,
+        "top1_before": 13,
+        "withheld_irrelevant": 34
+      },
+      "E1-half identity": {
+        "allcrit_after": 19,
+        "allcrit_before": 19,
+        "answerable": 21,
+        "critical_lost": [],
+        "lost_context": 1,
+        "lost_legitimate": [],
+        "no_answer_items_after": 6,
+        "no_answer_items_before": 9,
+        "no_qualified_evidence_answerable": [],
+        "no_qualified_evidence_no_answer": [],
+        "top1_after": 14,
+        "top1_before": 13,
+        "withheld_irrelevant": 18
+      },
+      "E1-wrong scope": {
+        "allcrit_after": 1,
+        "allcrit_before": 19,
+        "answerable": 21,
+        "critical_lost": [
+          "H01",
+          "H02",
+          "H03",
+          "H05",
+          "H06",
+          "H07",
+          "H08",
+          "H09",
+          "H10",
+          "H11",
+          "H12",
+          "H13",
+          "H14",
+          "H15",
+          "H16",
+          "H21",
+          "H22",
+          "H23"
+        ],
+        "lost_context": 5,
+        "lost_legitimate": [
+          "H01:pgver-16",
+          "H02:pgver-16",
+          "H02:pgver-15",
+          "H03:adr-db-v1",
+          "H04:adr-db-v1",
+          "H05:bus-why",
+          "H06:oncall-lrt",
+          "H07:ratelimit",
+          "H08:authz-5s",
+          "H09:deploy-days",
+          "H10:migration-rule",
+          "H10:inc-2207",
+          "H11:money-repr",
+          "H12:fx-why",
+          "H12:fx-fetch",
+          "H13:region-eu-us",
+          "H14:region-eu",
+          "H14:region-eu-us",
+          "H15:pci",
+          "H16:webhook-retry",
+          "H21:bus",
+          "H22:ratelimit",
+          "H23:migration-rule",
+          "H23:inc-2207"
+        ],
+        "no_answer_items_after": 1,
+        "no_answer_items_before": 9,
+        "no_qualified_evidence_answerable": [
+          "H02",
+          "H03",
+          "H04",
+          "H05",
+          "H06",
+          "H07",
+          "H08",
+          "H09",
+          "H10",
+          "H11",
+          "H12",
+          "H13",
+          "H14",
+          "H15",
+          "H16",
+          "H20",
+          "H21",
+          "H22",
+          "H23"
+        ],
+        "no_qualified_evidence_no_answer": [
+          "H18",
+          "H19"
+        ],
+        "top1_after": 1,
+        "top1_before": 13,
+        "withheld_irrelevant": 34
+      },
+      "E2 lexical resolver": {
+        "allcrit_after": 19,
+        "allcrit_before": 19,
+        "answerable": 21,
+        "critical_lost": [],
+        "lost_context": 1,
+        "lost_legitimate": [],
+        "no_answer_items_after": 3,
+        "no_answer_items_before": 9,
+        "no_qualified_evidence_answerable": [],
+        "no_qualified_evidence_no_answer": [
+          "H18",
+          "H19"
+        ],
+        "top1_after": 13,
+        "top1_before": 13,
+        "withheld_irrelevant": 9
+      }
+    }
+  },
+  "northgate": {
+    "evaluator": {
+      "clean": true,
+      "commit": "4aba9a4c2f27ebcbb27ab8268015a82746ae2d3b"
+    },
+    "paraphrase_resolution": {
+      "N01": {
+        "caller": [
+          "Hilltop Clinic"
+        ],
+        "original": [
+          "Hilltop Clinic"
+        ],
+        "paraphrase": null
+      },
+      "N05": {
+        "caller": [
+          "Hilltop Clinic"
+        ],
+        "original": [
+          "Hilltop Clinic"
+        ],
+        "paraphrase": null
+      },
+      "N14": {
+        "caller": [
+          "Hilltop Clinic"
+        ],
+        "original": [
+          "Hilltop Clinic"
+        ],
+        "paraphrase": null
+      }
+    },
+    "resolver_exact_agreement": "10/15",
+    "resolver_unresolved": [
+      "N02",
+      "N04",
+      "N08",
+      "N10",
+      "N11"
+    ],
+    "runtime": {
+      "clean": true,
+      "commit": "9b025f945e7ec4a1e349e56bba251e3122413e88",
+      "loaded_module": "reference/agentmem_ref/runtime/runtime_composition.py",
+      "loaded_module_blob": "65a39d5e3d3f052f03985cafa4751ad1ce3d4817",
+      "protected_tree": "7b87b4dbef5e0c9dbf24a1392c6571007bc801d0"
+    },
+    "variants": {
+      "E1 caller scope": {
+        "allcrit_after": 10,
+        "allcrit_before": 10,
+        "answerable": 11,
+        "critical_lost": [],
+        "lost_context": 1,
+        "lost_legitimate": [],
+        "no_answer_items_after": 2,
+        "no_answer_items_before": 10,
+        "no_qualified_evidence_answerable": [],
+        "no_qualified_evidence_no_answer": [
+          "N06",
+          "N07",
+          "N13"
+        ],
+        "top1_after": 9,
+        "top1_before": 8,
+        "withheld_irrelevant": 12
+      },
+      "E1-half identity": {
+        "allcrit_after": 10,
+        "allcrit_before": 10,
+        "answerable": 11,
+        "critical_lost": [],
+        "lost_context": 0,
+        "lost_legitimate": [],
+        "no_answer_items_after": 8,
+        "no_answer_items_before": 10,
+        "no_qualified_evidence_answerable": [],
+        "no_qualified_evidence_no_answer": [],
+        "top1_after": 8,
+        "top1_before": 8,
+        "withheld_irrelevant": 3
+      },
+      "E1-wrong scope": {
+        "allcrit_after": 2,
+        "allcrit_before": 10,
+        "answerable": 11,
+        "critical_lost": [
+          "N01",
+          "N02",
+          "N03",
+          "N05",
+          "N08",
+          "N10",
+          "N11",
+          "N14"
+        ],
+        "lost_context": 1,
+        "lost_legitimate": [
+          "N01:hl-hours",
+          "N02:rv-hours",
+          "N03:hl-ehr-why",
+          "N05:hl-lead",
+          "N08:rv-park",
+          "N10:rv-xray",
+          "N11:phlebotomy",
+          "N14:hl-ehr"
+        ],
+        "no_answer_items_after": 2,
+        "no_answer_items_before": 10,
+        "no_qualified_evidence_answerable": [
+          "N01",
+          "N02",
+          "N03",
+          "N04",
+          "N05",
+          "N08",
+          "N10",
+          "N11",
+          "N14"
+        ],
+        "no_qualified_evidence_no_answer": [
+          "N07",
+          "N13",
+          "N16"
+        ],
+        "top1_after": 2,
+        "top1_before": 8,
+        "withheld_irrelevant": 18
+      },
+      "E2 lexical resolver": {
+        "allcrit_after": 10,
+        "allcrit_before": 10,
+        "answerable": 11,
+        "critical_lost": [],
+        "lost_context": 1,
+        "lost_legitimate": [],
+        "no_answer_items_after": 2,
+        "no_answer_items_before": 10,
+        "no_qualified_evidence_answerable": [],
+        "no_qualified_evidence_no_answer": [
+          "N06",
+          "N07",
+          "N13"
+        ],
+        "top1_after": 9,
+        "top1_before": 8,
+        "withheld_irrelevant": 11
+      }
+    }
+  }
+}
