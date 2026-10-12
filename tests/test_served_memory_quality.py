@@ -114,6 +114,28 @@ class ServedMemoryQualityTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             score(self.cases, altered)
 
+    def test_context_delivery_is_not_proof_of_answer_abstention(self):
+        # Q03/Q06 have no permissible complete answer. Serving neutral context
+        # does not establish that an answer was attempted or refused.
+        altered = copy.deepcopy(self.good)
+        altered["rows"][2]["returned"] = ["owner-guess"]
+        report = score(self.cases, altered)
+        row = next(item for item in report["per_case"] if item["id"] == "Q03")
+        self.assertFalse(row["empty_delivery"])
+        self.assertFalse(row["safely_answerable"])
+        self.assertIsNone(row["answer_abstention_verified"])
+        self.assertNotIn("abstention_correct", row)
+        self.assertNotIn("correct_abstention_rate", report["P1_served_correctness"])
+        self.assertEqual(report["P1_served_correctness"]["answer_abstention_status"],
+                         "not_measured_without_answering_layer")
+        self.assertEqual(report["P1_served_correctness"]["no_safe_answer_with_context_count"], 1)
+
+    def test_empty_delivery_does_not_verify_correct_answer_abstention(self):
+        report = score(self.cases, self.good)
+        self.assertIsNone(report["P1_served_correctness"]["answer_abstention_verified"])
+        self.assertEqual(report["P1_served_correctness"]["no_safe_answer_empty_context_count"], 2)
+        self.assertEqual(report["P1_served_correctness"]["empty_delivery_on_answerable_count"], 0)
+
     def test_resource_metrics_remain_explicitly_unmeasured(self):
         report = score(self.cases, self.bad)
         self.assertEqual(report["P3_efficiency"]["status"], "not_measured_in_quality_scorer")
