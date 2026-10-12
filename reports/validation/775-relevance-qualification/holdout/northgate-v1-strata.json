@@ -1,0 +1,18 @@
+{
+  "N01": "shared-attribute",
+  "N02": "paraphrase",
+  "N03": "shared-reason-wrong-subject",
+  "N04": "synonym-answer",
+  "N05": "shared-attribute",
+  "N06": "no-answer-missing-entity",
+  "N07": "no-answer-other-project",
+  "N08": "shared-attribute",
+  "N09": "no-answer-wrong-subject",
+  "N10": "synonym-answer",
+  "N11": "synonym-answer",
+  "N12": "shared-fact-both-entities",
+  "N13": "no-answer-wrong-subject",
+  "N14": "shared-attribute-same-value",
+  "N15": "paraphrase",
+  "N16": "no-answer-missing-attribute"
+}

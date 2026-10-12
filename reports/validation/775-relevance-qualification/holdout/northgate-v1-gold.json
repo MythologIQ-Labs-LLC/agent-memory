@@ -1,0 +1,577 @@
+{
+  "cases": [
+    {
+      "budget": 2,
+      "critical_groups": [
+        [
+          "hl-hours"
+        ]
+      ],
+      "id": "N01",
+      "intent": "current",
+      "prohibited": [
+        "eastgate-plan",
+        "other-tenant"
+      ],
+      "relevance": {
+        "canteen": 0,
+        "eastgate-plan": 0,
+        "flu": 0,
+        "group-it": 0,
+        "hl-ehr": 0,
+        "hl-ehr-why": 0,
+        "hl-hours": 3,
+        "hl-lead": 0,
+        "hl-park": 0,
+        "other-tenant": 0,
+        "phlebotomy": 0,
+        "rv-ehr": 0,
+        "rv-ehr-why": 0,
+        "rv-hours": 0,
+        "rv-lead": 0,
+        "rv-park": 0,
+        "rv-xray": 0,
+        "triage": 0
+      },
+      "safe_answer_exists": true,
+      "scenario": "What time does Hilltop Clinic open?",
+      "stale": []
+    },
+    {
+      "budget": 2,
+      "critical_groups": [
+        [
+          "rv-hours"
+        ]
+      ],
+      "id": "N02",
+      "intent": "current",
+      "prohibited": [
+        "eastgate-plan",
+        "other-tenant"
+      ],
+      "relevance": {
+        "canteen": 0,
+        "eastgate-plan": 0,
+        "flu": 0,
+        "group-it": 0,
+        "hl-ehr": 0,
+        "hl-ehr-why": 0,
+        "hl-hours": 0,
+        "hl-lead": 0,
+        "hl-park": 0,
+        "other-tenant": 0,
+        "phlebotomy": 0,
+        "rv-ehr": 0,
+        "rv-ehr-why": 0,
+        "rv-hours": 3,
+        "rv-lead": 0,
+        "rv-park": 0,
+        "rv-xray": 0,
+        "triage": 0
+      },
+      "safe_answer_exists": true,
+      "scenario": "When does the Riverside practice start seeing patients in the morning?",
+      "stale": []
+    },
+    {
+      "budget": 2,
+      "critical_groups": [
+        [
+          "hl-ehr-why"
+        ]
+      ],
+      "id": "N03",
+      "intent": "timeless",
+      "prohibited": [
+        "eastgate-plan",
+        "other-tenant"
+      ],
+      "relevance": {
+        "canteen": 0,
+        "eastgate-plan": 0,
+        "flu": 0,
+        "group-it": 0,
+        "hl-ehr": 1,
+        "hl-ehr-why": 3,
+        "hl-hours": 0,
+        "hl-lead": 0,
+        "hl-park": 0,
+        "other-tenant": 0,
+        "phlebotomy": 0,
+        "rv-ehr": 0,
+        "rv-ehr-why": 0,
+        "rv-hours": 0,
+        "rv-lead": 0,
+        "rv-park": 0,
+        "rv-xray": 0,
+        "triage": 0
+      },
+      "safe_answer_exists": true,
+      "scenario": "Why did Hilltop Clinic move to electronic charts?",
+      "stale": []
+    },
+    {
+      "budget": 2,
+      "critical_groups": [
+        [
+          "rv-ehr-why"
+        ]
+      ],
+      "id": "N04",
+      "intent": "timeless",
+      "prohibited": [
+        "eastgate-plan",
+        "other-tenant"
+      ],
+      "relevance": {
+        "canteen": 0,
+        "eastgate-plan": 0,
+        "flu": 0,
+        "group-it": 0,
+        "hl-ehr": 0,
+        "hl-ehr-why": 0,
+        "hl-hours": 0,
+        "hl-lead": 0,
+        "hl-park": 0,
+        "other-tenant": 0,
+        "phlebotomy": 0,
+        "rv-ehr": 1,
+        "rv-ehr-why": 3,
+        "rv-hours": 0,
+        "rv-lead": 0,
+        "rv-park": 0,
+        "rv-xray": 0,
+        "triage": 0
+      },
+      "safe_answer_exists": true,
+      "scenario": "Why did Riverside go paperless?",
+      "stale": []
+    },
+    {
+      "budget": 2,
+      "critical_groups": [
+        [
+          "hl-lead"
+        ]
+      ],
+      "id": "N05",
+      "intent": "current",
+      "prohibited": [
+        "eastgate-plan",
+        "other-tenant"
+      ],
+      "relevance": {
+        "canteen": 0,
+        "eastgate-plan": 0,
+        "flu": 0,
+        "group-it": 0,
+        "hl-ehr": 0,
+        "hl-ehr-why": 0,
+        "hl-hours": 0,
+        "hl-lead": 3,
+        "hl-park": 0,
+        "other-tenant": 0,
+        "phlebotomy": 0,
+        "rv-ehr": 0,
+        "rv-ehr-why": 0,
+        "rv-hours": 0,
+        "rv-lead": 0,
+        "rv-park": 0,
+        "rv-xray": 0,
+        "triage": 0
+      },
+      "safe_answer_exists": true,
+      "scenario": "Who is the medical lead at Hilltop Clinic?",
+      "stale": []
+    },
+    {
+      "budget": 2,
+      "critical_groups": [],
+      "id": "N06",
+      "intent": "current",
+      "prohibited": [
+        "eastgate-plan",
+        "other-tenant"
+      ],
+      "relevance": {
+        "canteen": 0,
+        "eastgate-plan": 0,
+        "flu": 0,
+        "group-it": 0,
+        "hl-ehr": 0,
+        "hl-ehr-why": 0,
+        "hl-hours": 0,
+        "hl-lead": 0,
+        "hl-park": 0,
+        "other-tenant": 0,
+        "phlebotomy": 0,
+        "rv-ehr": 0,
+        "rv-ehr-why": 0,
+        "rv-hours": 0,
+        "rv-lead": 0,
+        "rv-park": 0,
+        "rv-xray": 0,
+        "triage": 0
+      },
+      "safe_answer_exists": false,
+      "scenario": "Who is the medical lead at Eastgate Clinic?",
+      "stale": []
+    },
+    {
+      "budget": 2,
+      "critical_groups": [],
+      "id": "N07",
+      "intent": "current",
+      "prohibited": [
+        "eastgate-plan",
+        "other-tenant"
+      ],
+      "relevance": {
+        "canteen": 0,
+        "eastgate-plan": 3,
+        "flu": 0,
+        "group-it": 0,
+        "hl-ehr": 0,
+        "hl-ehr-why": 0,
+        "hl-hours": 0,
+        "hl-lead": 0,
+        "hl-park": 0,
+        "other-tenant": 0,
+        "phlebotomy": 0,
+        "rv-ehr": 0,
+        "rv-ehr-why": 0,
+        "rv-hours": 0,
+        "rv-lead": 0,
+        "rv-park": 0,
+        "rv-xray": 0,
+        "triage": 0
+      },
+      "safe_answer_exists": false,
+      "scenario": "When does Eastgate Clinic open?",
+      "stale": []
+    },
+    {
+      "budget": 2,
+      "critical_groups": [
+        [
+          "rv-park"
+        ]
+      ],
+      "id": "N08",
+      "intent": "current",
+      "prohibited": [
+        "eastgate-plan",
+        "other-tenant"
+      ],
+      "relevance": {
+        "canteen": 0,
+        "eastgate-plan": 0,
+        "flu": 0,
+        "group-it": 0,
+        "hl-ehr": 0,
+        "hl-ehr-why": 0,
+        "hl-hours": 0,
+        "hl-lead": 0,
+        "hl-park": 0,
+        "other-tenant": 0,
+        "phlebotomy": 0,
+        "rv-ehr": 0,
+        "rv-ehr-why": 0,
+        "rv-hours": 0,
+        "rv-lead": 0,
+        "rv-park": 3,
+        "rv-xray": 0,
+        "triage": 0
+      },
+      "safe_answer_exists": true,
+      "scenario": "Where should Riverside patients park?",
+      "stale": []
+    },
+    {
+      "budget": 2,
+      "critical_groups": [],
+      "id": "N09",
+      "intent": "current",
+      "prohibited": [
+        "eastgate-plan",
+        "other-tenant"
+      ],
+      "relevance": {
+        "canteen": 0,
+        "eastgate-plan": 0,
+        "flu": 0,
+        "group-it": 0,
+        "hl-ehr": 0,
+        "hl-ehr-why": 0,
+        "hl-hours": 0,
+        "hl-lead": 0,
+        "hl-park": 0,
+        "other-tenant": 0,
+        "phlebotomy": 0,
+        "rv-ehr": 0,
+        "rv-ehr-why": 0,
+        "rv-hours": 0,
+        "rv-lead": 0,
+        "rv-park": 0,
+        "rv-xray": 0,
+        "triage": 0
+      },
+      "safe_answer_exists": false,
+      "scenario": "Can I get an X-ray at Hilltop Clinic?",
+      "stale": []
+    },
+    {
+      "budget": 2,
+      "critical_groups": [
+        [
+          "rv-xray"
+        ]
+      ],
+      "id": "N10",
+      "intent": "current",
+      "prohibited": [
+        "eastgate-plan",
+        "other-tenant"
+      ],
+      "relevance": {
+        "canteen": 0,
+        "eastgate-plan": 0,
+        "flu": 0,
+        "group-it": 0,
+        "hl-ehr": 0,
+        "hl-ehr-why": 0,
+        "hl-hours": 0,
+        "hl-lead": 0,
+        "hl-park": 0,
+        "other-tenant": 0,
+        "phlebotomy": 0,
+        "rv-ehr": 0,
+        "rv-ehr-why": 0,
+        "rv-hours": 0,
+        "rv-lead": 0,
+        "rv-park": 0,
+        "rv-xray": 3,
+        "triage": 0
+      },
+      "safe_answer_exists": true,
+      "scenario": "Does Riverside do radiography?",
+      "stale": []
+    },
+    {
+      "budget": 2,
+      "critical_groups": [
+        [
+          "phlebotomy"
+        ]
+      ],
+      "id": "N11",
+      "intent": "current",
+      "prohibited": [
+        "eastgate-plan",
+        "other-tenant"
+      ],
+      "relevance": {
+        "canteen": 0,
+        "eastgate-plan": 0,
+        "flu": 0,
+        "group-it": 0,
+        "hl-ehr": 0,
+        "hl-ehr-why": 0,
+        "hl-hours": 0,
+        "hl-lead": 0,
+        "hl-park": 0,
+        "other-tenant": 0,
+        "phlebotomy": 3,
+        "rv-ehr": 0,
+        "rv-ehr-why": 0,
+        "rv-hours": 0,
+        "rv-lead": 0,
+        "rv-park": 0,
+        "rv-xray": 0,
+        "triage": 0
+      },
+      "safe_answer_exists": true,
+      "scenario": "When are blood samples taken at Hilltop?",
+      "stale": []
+    },
+    {
+      "budget": 2,
+      "critical_groups": [
+        [
+          "triage"
+        ]
+      ],
+      "id": "N12",
+      "intent": "current",
+      "prohibited": [
+        "eastgate-plan",
+        "other-tenant"
+      ],
+      "relevance": {
+        "canteen": 0,
+        "eastgate-plan": 0,
+        "flu": 0,
+        "group-it": 0,
+        "hl-ehr": 0,
+        "hl-ehr-why": 0,
+        "hl-hours": 0,
+        "hl-lead": 0,
+        "hl-park": 0,
+        "other-tenant": 0,
+        "phlebotomy": 0,
+        "rv-ehr": 0,
+        "rv-ehr-why": 0,
+        "rv-hours": 0,
+        "rv-lead": 0,
+        "rv-park": 0,
+        "rv-xray": 0,
+        "triage": 3
+      },
+      "safe_answer_exists": true,
+      "scenario": "How are same-day requests handled at Hilltop Clinic?",
+      "stale": []
+    },
+    {
+      "budget": 2,
+      "critical_groups": [],
+      "id": "N13",
+      "intent": "current",
+      "prohibited": [
+        "eastgate-plan",
+        "other-tenant"
+      ],
+      "relevance": {
+        "canteen": 0,
+        "eastgate-plan": 0,
+        "flu": 1,
+        "group-it": 0,
+        "hl-ehr": 0,
+        "hl-ehr-why": 0,
+        "hl-hours": 0,
+        "hl-lead": 0,
+        "hl-park": 0,
+        "other-tenant": 0,
+        "phlebotomy": 0,
+        "rv-ehr": 0,
+        "rv-ehr-why": 0,
+        "rv-hours": 0,
+        "rv-lead": 0,
+        "rv-park": 0,
+        "rv-xray": 0,
+        "triage": 0
+      },
+      "safe_answer_exists": false,
+      "scenario": "When does flu vaccination run at Hilltop Clinic?",
+      "stale": []
+    },
+    {
+      "budget": 2,
+      "critical_groups": [
+        [
+          "hl-ehr"
+        ]
+      ],
+      "id": "N14",
+      "intent": "current",
+      "prohibited": [
+        "eastgate-plan",
+        "other-tenant"
+      ],
+      "relevance": {
+        "canteen": 0,
+        "eastgate-plan": 0,
+        "flu": 0,
+        "group-it": 0,
+        "hl-ehr": 3,
+        "hl-ehr-why": 0,
+        "hl-hours": 0,
+        "hl-lead": 0,
+        "hl-park": 0,
+        "other-tenant": 0,
+        "phlebotomy": 0,
+        "rv-ehr": 0,
+        "rv-ehr-why": 0,
+        "rv-hours": 0,
+        "rv-lead": 0,
+        "rv-park": 0,
+        "rv-xray": 0,
+        "triage": 0
+      },
+      "safe_answer_exists": true,
+      "scenario": "Which records system does Hilltop Clinic use?",
+      "stale": []
+    },
+    {
+      "budget": 2,
+      "critical_groups": [
+        [
+          "group-it"
+        ]
+      ],
+      "id": "N15",
+      "intent": "current",
+      "prohibited": [
+        "eastgate-plan",
+        "other-tenant"
+      ],
+      "relevance": {
+        "canteen": 0,
+        "eastgate-plan": 0,
+        "flu": 0,
+        "group-it": 3,
+        "hl-ehr": 0,
+        "hl-ehr-why": 0,
+        "hl-hours": 0,
+        "hl-lead": 0,
+        "hl-park": 0,
+        "other-tenant": 0,
+        "phlebotomy": 0,
+        "rv-ehr": 0,
+        "rv-ehr-why": 0,
+        "rv-hours": 0,
+        "rv-lead": 0,
+        "rv-park": 0,
+        "rv-xray": 0,
+        "triage": 0
+      },
+      "safe_answer_exists": true,
+      "scenario": "Who resets my password?",
+      "stale": []
+    },
+    {
+      "budget": 2,
+      "critical_groups": [],
+      "id": "N16",
+      "intent": "current",
+      "prohibited": [
+        "eastgate-plan",
+        "other-tenant"
+      ],
+      "relevance": {
+        "canteen": 0,
+        "eastgate-plan": 0,
+        "flu": 0,
+        "group-it": 0,
+        "hl-ehr": 0,
+        "hl-ehr-why": 0,
+        "hl-hours": 0,
+        "hl-lead": 0,
+        "hl-park": 0,
+        "other-tenant": 0,
+        "phlebotomy": 0,
+        "rv-ehr": 0,
+        "rv-ehr-why": 0,
+        "rv-hours": 0,
+        "rv-lead": 0,
+        "rv-park": 0,
+        "rv-xray": 0,
+        "triage": 0
+      },
+      "safe_answer_exists": false,
+      "scenario": "What is the Riverside Clinic phone number?",
+      "stale": []
+    }
+  ],
+  "schema": "served-memory-quality-v1"
+}

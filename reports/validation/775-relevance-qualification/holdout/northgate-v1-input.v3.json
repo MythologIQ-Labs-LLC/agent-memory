@@ -1,0 +1,217 @@
+{
+  "events": [
+    {
+      "id": "rv-hours",
+      "memory": "rv-hours",
+      "op": "retain",
+      "text": "Riverside Clinic opens at 8 in the morning on weekdays."
+    },
+    {
+      "id": "hl-hours",
+      "memory": "hl-hours",
+      "op": "retain",
+      "text": "Hilltop Clinic opens at 9 in the morning on weekdays."
+    },
+    {
+      "id": "rv-ehr",
+      "memory": "rv-ehr",
+      "op": "retain",
+      "text": "Riverside Clinic keeps patient charts in the Medway electronic records system."
+    },
+    {
+      "id": "hl-ehr",
+      "memory": "hl-ehr",
+      "op": "retain",
+      "text": "Hilltop Clinic keeps patient charts in the Medway electronic records system."
+    },
+    {
+      "id": "rv-ehr-why",
+      "memory": "rv-ehr-why",
+      "op": "retain",
+      "text": "Riverside Clinic switched to electronic charts after a 2021 flood destroyed its paper files."
+    },
+    {
+      "id": "hl-ehr-why",
+      "memory": "hl-ehr-why",
+      "op": "retain",
+      "text": "Hilltop Clinic switched to electronic charts after a regulator audit criticised illegible handwriting."
+    },
+    {
+      "id": "rv-lead",
+      "memory": "rv-lead",
+      "op": "retain",
+      "text": "Dr. Amara Osei is the medical lead at Riverside Clinic."
+    },
+    {
+      "id": "hl-lead",
+      "memory": "hl-lead",
+      "op": "retain",
+      "text": "Dr. Tomasz Wilk is the medical lead at Hilltop Clinic."
+    },
+    {
+      "id": "rv-park",
+      "memory": "rv-park",
+      "op": "retain",
+      "text": "Riverside Clinic has no on-site parking; patients use the Mill Lane car park."
+    },
+    {
+      "id": "hl-park",
+      "memory": "hl-park",
+      "op": "retain",
+      "text": "Hilltop Clinic has twenty free parking spaces behind the building."
+    },
+    {
+      "id": "rv-xray",
+      "memory": "rv-xray",
+      "op": "retain",
+      "text": "Riverside Clinic does not offer X-ray imaging; patients are referred to the county hospital."
+    },
+    {
+      "id": "phlebotomy",
+      "memory": "phlebotomy",
+      "op": "retain",
+      "text": "Blood tests at Hilltop Clinic are drawn by phlebotomists between 8 and 11 each morning."
+    },
+    {
+      "id": "triage",
+      "memory": "triage",
+      "op": "retain",
+      "text": "Both clinics triage same-day requests by telephone before booking an appointment."
+    },
+    {
+      "id": "flu",
+      "memory": "flu",
+      "op": "retain",
+      "text": "Seasonal flu vaccination at Riverside Clinic runs from October to December."
+    },
+    {
+      "id": "group-it",
+      "memory": "group-it",
+      "op": "retain",
+      "text": "The Northgate group help desk handles password resets for both clinics."
+    },
+    {
+      "id": "eastgate-plan",
+      "memory": "eastgate-plan",
+      "op": "retain",
+      "project": "expansion",
+      "text": "The planned Eastgate Clinic will open at 7 in the morning."
+    },
+    {
+      "id": "other-tenant",
+      "memory": "other-tenant",
+      "op": "retain",
+      "tenant": "southbank",
+      "text": "Riverside Clinic opens at 6 in the morning."
+    },
+    {
+      "id": "canteen",
+      "memory": "canteen",
+      "op": "retain",
+      "text": "The Northgate staff canteen serves lunch from noon."
+    }
+  ],
+  "project": "clinics",
+  "purpose": "clinic-operations-assistant",
+  "queries": [
+    {
+      "budget": 2,
+      "id": "N01",
+      "intent": "current",
+      "query": "What time does Hilltop Clinic open?"
+    },
+    {
+      "budget": 2,
+      "id": "N02",
+      "intent": "current",
+      "query": "When does the Riverside practice start seeing patients in the morning?"
+    },
+    {
+      "budget": 2,
+      "id": "N03",
+      "intent": "timeless",
+      "query": "Why did Hilltop Clinic move to electronic charts?"
+    },
+    {
+      "budget": 2,
+      "id": "N04",
+      "intent": "timeless",
+      "query": "Why did Riverside go paperless?"
+    },
+    {
+      "budget": 2,
+      "id": "N05",
+      "intent": "current",
+      "query": "Who is the medical lead at Hilltop Clinic?"
+    },
+    {
+      "budget": 2,
+      "id": "N06",
+      "intent": "current",
+      "query": "Who is the medical lead at Eastgate Clinic?"
+    },
+    {
+      "budget": 2,
+      "id": "N07",
+      "intent": "current",
+      "query": "When does Eastgate Clinic open?"
+    },
+    {
+      "budget": 2,
+      "id": "N08",
+      "intent": "current",
+      "query": "Where should Riverside patients park?"
+    },
+    {
+      "budget": 2,
+      "id": "N09",
+      "intent": "current",
+      "query": "Can I get an X-ray at Hilltop Clinic?"
+    },
+    {
+      "budget": 2,
+      "id": "N10",
+      "intent": "current",
+      "query": "Does Riverside do radiography?"
+    },
+    {
+      "budget": 2,
+      "id": "N11",
+      "intent": "current",
+      "query": "When are blood samples taken at Hilltop?"
+    },
+    {
+      "budget": 2,
+      "id": "N12",
+      "intent": "current",
+      "query": "How are same-day requests handled at Hilltop Clinic?"
+    },
+    {
+      "budget": 2,
+      "id": "N13",
+      "intent": "current",
+      "query": "When does flu vaccination run at Hilltop Clinic?"
+    },
+    {
+      "budget": 2,
+      "id": "N14",
+      "intent": "current",
+      "query": "Which records system does Hilltop Clinic use?"
+    },
+    {
+      "budget": 2,
+      "id": "N15",
+      "intent": "current",
+      "query": "Who resets my password?"
+    },
+    {
+      "budget": 2,
+      "id": "N16",
+      "intent": "current",
+      "query": "What is the Riverside Clinic phone number?"
+    }
+  ],
+  "reference_time": "2026-10-12T12:00:00Z",
+  "schema": "served-memory-lifecycle-v3",
+  "tenant": "northgate"
+}
