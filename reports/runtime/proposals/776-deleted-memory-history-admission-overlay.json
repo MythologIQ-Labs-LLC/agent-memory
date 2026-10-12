@@ -1,0 +1,38 @@
+{
+  "schema_version": "776-post-v7-P0-deletion-overlay-v1",
+  "issue": 776,
+  "stage": "protected_runtime_candidate_UNQUALIFIED",
+  "base_commit": "9b025f945e7ec4a1e349e56bba251e3122413e88",
+  "protected_changes": [
+    {
+      "path": "reference/agentmem_ref/runtime/adapter.py",
+      "blob": "eba0629127ea3ec7f85044390ed41c860019a3da"
+    }
+  ],
+  "tests": [
+    {
+      "path": "reference/tests/test_776_logical_deletion_admission.py",
+      "blob": "8c7314e8bd8c944af1cd62ac634468bbf16614cc",
+      "methods": 5
+    }
+  ],
+  "source_of_observation": {
+    "issue": 774,
+    "review_commit": "985be4230bc7b326859a30344c48d67b14e96ac8",
+    "test": "PreExistingDeletionLeak",
+    "result": "expected failure on frozen v7"
+  },
+  "governance": {
+    "published_v6_unchanged": true,
+    "declared_v7_unchanged": true,
+    "no_activation_or_merge": true,
+    "positive_stop": false,
+    "qualification": "NOT_EXECUTED"
+  },
+  "risks": [
+    "Existing _fact_memory durable binding and tombstoned logical memory IDs must be independently checked after restart, across pruning/permanent deletion and across all recall routes.",
+    "The first-stage derived-source guard applies to references resolvable through canonical fact->memory bindings; unknown/unbound dependency references require independent adversarial audit.",
+    "Tombstone enumeration per evaluated candidate may increase CPU complexity at large deletion counts; indexed identity membership will need separate perf scrutiny.",
+    "This branch is standalone; #773 and #774 also propose protected changes after frozen v7 and must not be silently combined or all designated v8."
+  ]
+}
