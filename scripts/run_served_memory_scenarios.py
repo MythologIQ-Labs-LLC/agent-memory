@@ -122,6 +122,9 @@ def run_scenarios(data, root: Path, *, revision: str, lane_id: str,
     _name(lane_id, "lane id")
     if backend not in ("composed-multiroute", "governed-lexical"):
         raise ValueError("unsupported governed reference backend")
+    root = Path(root)
+    if root.exists() and (not root.is_dir() or any(root.iterdir())):
+        raise ValueError("evaluation requires an empty isolated store; replay would mix corpora")
     runtime = ConfiguredCompositionRuntime.create(
         root, tenant=data["tenant"],
         plan=validate_runtime_configuration(json.loads(CONFIG.read_text(encoding="utf-8"))),
