@@ -41,6 +41,12 @@ def test_commands(mode: str) -> list[tuple[str, list[str]]]:
             [py, "-m", "unittest", "discover", "-s", "reference/tests",
              "-t", "reference", "-p", "test_github_actions_workflow_policy.py", "-v"],
         ))
+    if mode == "quick":
+        steps.append((
+            "local_preflight_self_tests",
+            [py, "-m", "unittest", "discover", "-s", "reference/tests",
+             "-t", "reference", "-p", "test_finops_local_preflight.py", "-v"],
+        ))
     else:
         steps.extend([
             ("complete_reference_regression",
