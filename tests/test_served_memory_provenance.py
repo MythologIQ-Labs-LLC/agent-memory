@@ -6,6 +6,7 @@ They reject protocol drift and source-scope masking before judging results.
 from __future__ import annotations
 
 import copy
+import hashlib
 import json
 import sys
 import unittest
@@ -24,6 +25,11 @@ class ServedQualityProvenanceTests(unittest.TestCase):
         cls.inputs = json.loads((DIR / "served-memory-integration-v1-input.json").read_text())
         cls.gold = json.loads((DIR / "served-memory-integration-v1-gold.json").read_text())
         cls.run = {
+            "input_sha256": hashlib.sha256(json.dumps(
+                cls.inputs, sort_keys=True, separators=(",", ":"),
+                ensure_ascii=False,
+            ).encode("utf-8")).hexdigest(),
+            "execution_backend": "composed-multiroute",
             "schema": "served-memory-run-v1",
             "runtime_revision": "synthetic-not-executed",
             "lane_id": "reference-governed-recall-v1",
@@ -69,6 +75,30 @@ class ServedQualityProvenanceTests(unittest.TestCase):
         src["relevance"] = {"endpoint": 3}
         with self.assertRaises(ValueError):
             qualify(src, copy.deepcopy(self.gold), copy.deepcopy(self.run))
+
+    def test_runtime_run_requires_exact_input_digest_binding(self):
+        for mutation in ("missing", "wrong", "legacy"):
+            run = copy.deepcopy(self.run)
+            if mutation == "missing":
+                run.pop("input_sha256")
+            elif mutation == "wrong":
+                run["input_sha256"] = "0" * 64
+            else:
+                run.pop("execution_backend")
+            with self.subTest(mutation=mutation), self.assertRaises(ValueError):
+                qualify(copy.deepcopy(self.inputs), copy.deepcopy(self.gold), run)
+
+    def test_backend_provenance_is_closed_not_assumed_from_lane_label(self):
+        run = copy.deepcopy(self.run)
+        run["execution_backend"] = "invented-memory-provider"
+        with self.assertRaises(ValueError):
+            qualify(copy.deepcopy(self.inputs), copy.deepcopy(self.gold), run)
+
+    def test_gold_only_change_cannot_modify_runtime_input_fingerprint(self):
+        report = qualify(copy.deepcopy(self.inputs), copy.deepcopy(self.gold),
+                         copy.deepcopy(self.run))
+        self.assertEqual(report["execution_backend"], "composed-multiroute")
+        self.assertEqual(report["input_sha256"], self.run["input_sha256"])
 
     def test_unscored_case_ids_cannot_be_dropped_from_run(self):
         run = copy.deepcopy(self.run)
