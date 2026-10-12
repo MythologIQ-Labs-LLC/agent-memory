@@ -9,6 +9,7 @@ it does not certify delivery by a downstream answering application.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import subprocess
@@ -79,6 +80,15 @@ def validate_inputs(data):
             raise ValueError("duplicate query id")
         seen.add(q["id"])
     return data
+
+
+def canonical_input_digest(data: dict) -> str:
+    """Stable digest of execution-only inputs; not gold or signed attestation."""
+    validate_inputs(data)
+    encoded = json.dumps(
+        data, sort_keys=True, separators=(",", ":"), ensure_ascii=False,
+    ).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
 
 
 def _proposal(tenant, project, label, purpose):
@@ -170,6 +180,8 @@ def run_scenarios(data, root: Path, *, revision: str, lane_id: str,
         "schema": "served-memory-run-v1",
         "runtime_revision": revision,
         "lane_id": lane_id,
+        "execution_backend": backend,
+        "input_sha256": canonical_input_digest(data),
         "rows": rows,
     }
 
