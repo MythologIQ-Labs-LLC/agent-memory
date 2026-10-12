@@ -1,0 +1,131 @@
+{
+  "cedarline-v1.1": [
+    {
+      "budget": 3,
+      "critical": "catalog-parquet",
+      "governed_successor_ranked_above": [
+        "catalog-delta"
+      ],
+      "id": "C02",
+      "lineage_kind": "predecessor_of_catalog-delta",
+      "rank": 7,
+      "served": false
+    },
+    {
+      "budget": 3,
+      "critical": "why-parquet",
+      "governed_successor_ranked_above": [],
+      "id": "C03",
+      "lineage_kind": "independent_memory",
+      "rank": 3,
+      "served": true
+    },
+    {
+      "budget": 3,
+      "critical": "why-delta",
+      "governed_successor_ranked_above": [],
+      "id": "C04",
+      "lineage_kind": "independent_memory",
+      "rank": 2,
+      "served": true
+    },
+    {
+      "budget": 3,
+      "critical": "owner-survey",
+      "governed_successor_ranked_above": [
+        "owner-integrity"
+      ],
+      "id": "C07",
+      "lineage_kind": "predecessor_of_owner-integrity",
+      "rank": 4,
+      "served": false
+    },
+    {
+      "budget": 3,
+      "critical": "incident-root",
+      "governed_successor_ranked_above": [],
+      "id": "C12",
+      "lineage_kind": "independent_memory",
+      "rank": 1,
+      "served": true
+    },
+    {
+      "budget": 3,
+      "critical": "incident-208",
+      "governed_successor_ranked_above": [],
+      "id": "C13",
+      "lineage_kind": "independent_memory",
+      "rank": null,
+      "served": false
+    },
+    {
+      "budget": 3,
+      "critical": "incident-root",
+      "governed_successor_ranked_above": [],
+      "id": "C13",
+      "lineage_kind": "independent_memory",
+      "rank": 1,
+      "served": true
+    },
+    {
+      "budget": 3,
+      "critical": "retain-1y",
+      "governed_successor_ranked_above": [],
+      "id": "C15",
+      "lineage_kind": "same_memory_chain",
+      "rank": 1,
+      "served": true
+    },
+    {
+      "budget": 3,
+      "critical": "why-priority",
+      "governed_successor_ranked_above": [],
+      "id": "C18",
+      "lineage_kind": "independent_memory",
+      "rank": 1,
+      "served": true
+    }
+  ],
+  "halcyon-v1.1": [
+    {
+      "budget": 3,
+      "critical": "pgver-15",
+      "governed_successor_ranked_above": [
+        "pgver-16"
+      ],
+      "id": "H02",
+      "lineage_kind": "predecessor_of_pgver-16",
+      "rank": 2,
+      "served": true
+    },
+    {
+      "budget": 3,
+      "critical": "adr-db-v1",
+      "governed_successor_ranked_above": [],
+      "id": "H03",
+      "lineage_kind": "same_memory_chain",
+      "rank": 1,
+      "served": true
+    },
+    {
+      "budget": 3,
+      "critical": "adr-db-v2",
+      "governed_successor_ranked_above": [],
+      "id": "H04",
+      "lineage_kind": "same_memory_chain",
+      "rank": 14,
+      "served": false
+    },
+    {
+      "budget": 3,
+      "critical": "region-eu",
+      "governed_successor_ranked_above": [
+        "region-eu-us"
+      ],
+      "id": "H14",
+      "lineage_kind": "predecessor_of_region-eu-us",
+      "rank": 2,
+      "served": true
+    }
+  ]
+}

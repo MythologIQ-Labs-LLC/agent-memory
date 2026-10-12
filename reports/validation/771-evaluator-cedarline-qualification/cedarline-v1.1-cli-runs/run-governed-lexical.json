@@ -1,0 +1,191 @@
+{
+  "execution_backend": "governed-lexical",
+  "input_sha256": "b943fbc120bdfac9686ea860f6f30976f635b8b0879b5eb317bcad5be483f34b",
+  "lane_id": "cedarline-v1-1-governed-lexical",
+  "rows": [
+    {
+      "id": "C01",
+      "returned": [
+        "mission-mesa7",
+        "index-guide",
+        "watermark"
+      ]
+    },
+    {
+      "id": "C02",
+      "returned": [
+        "catalog-delta",
+        "why-delta",
+        "why-compress"
+      ]
+    },
+    {
+      "id": "C03",
+      "returned": [
+        "why-parquet",
+        "catalog-delta",
+        "why-delta"
+      ]
+    },
+    {
+      "id": "C04",
+      "returned": [
+        "catalog-delta",
+        "why-delta",
+        "heartbeat-10"
+      ]
+    },
+    {
+      "id": "C05",
+      "returned": [
+        "offset-3mm-correct",
+        "heartbeat-10"
+      ]
+    },
+    {
+      "id": "C06",
+      "returned": [
+        "catalog-delta",
+        "why-parquet"
+      ]
+    },
+    {
+      "id": "C07",
+      "returned": [
+        "owner-integrity",
+        "retain-3y",
+        "why-compress"
+      ]
+    },
+    {
+      "id": "C08",
+      "returned": [
+        "heartbeat-10",
+        "catalog-delta"
+      ]
+    },
+    {
+      "id": "C09",
+      "returned": [
+        "why-compress",
+        "heartbeat-10",
+        "uplink-512"
+      ]
+    },
+    {
+      "id": "C10",
+      "returned": [
+        "why-compress",
+        "offset-3mm-correct",
+        "uplink-512"
+      ]
+    },
+    {
+      "id": "C11",
+      "returned": [
+        "catalog-delta",
+        "why-parquet"
+      ]
+    },
+    {
+      "id": "C12",
+      "returned": [
+        "incident-root",
+        "catalog-delta",
+        "why-parquet"
+      ]
+    },
+    {
+      "id": "C13",
+      "returned": [
+        "incident-root",
+        "catalog-delta",
+        "why-parquet"
+      ]
+    },
+    {
+      "id": "C14",
+      "returned": [
+        "retain-7y-rumor",
+        "retain-3y",
+        "offset-3mm-correct"
+      ]
+    },
+    {
+      "id": "C15",
+      "returned": [
+        "retain-3y",
+        "retain-7y-rumor",
+        "offset-3mm-correct"
+      ]
+    },
+    {
+      "id": "C16",
+      "returned": [
+        "mission-mesa7",
+        "offset-3mm-correct"
+      ]
+    },
+    {
+      "id": "C17",
+      "returned": [
+        "offset-3mm-correct",
+        "owner-integrity"
+      ]
+    },
+    {
+      "id": "C18",
+      "returned": [
+        "why-priority",
+        "offset-3mm-correct",
+        "owner-integrity"
+      ]
+    },
+    {
+      "id": "C19",
+      "returned": [
+        "index-guide",
+        "offset-3mm-correct"
+      ]
+    },
+    {
+      "id": "C20",
+      "returned": [
+        "offset-3mm-correct",
+        "why-priority",
+        "watermark"
+      ]
+    },
+    {
+      "id": "C21",
+      "returned": [
+        "owner-integrity",
+        "retain-3y"
+      ]
+    },
+    {
+      "id": "C22",
+      "returned": [
+        "offset-3mm-correct",
+        "uplink-512"
+      ]
+    },
+    {
+      "id": "C23",
+      "returned": [
+        "offset-3mm-correct",
+        "owner-integrity"
+      ]
+    },
+    {
+      "id": "C24",
+      "returned": [
+        "offset-3mm-correct",
+        "retain-7y-rumor",
+        "why-compress"
+      ]
+    }
+  ],
+  "runtime_revision": "32404f7e0c800110cf7a72ba128479afc8bf0d83",
+  "schema": "served-memory-run-v1"
+}

@@ -1,0 +1,191 @@
+{
+  "execution_backend": "composed-multiroute",
+  "input_sha256": "b943fbc120bdfac9686ea860f6f30976f635b8b0879b5eb317bcad5be483f34b",
+  "lane_id": "cedarline-v1-1-composed-multiroute",
+  "rows": [
+    {
+      "id": "C01",
+      "returned": [
+        "catalog-delta",
+        "watermark",
+        "owner-integrity"
+      ]
+    },
+    {
+      "id": "C02",
+      "returned": [
+        "catalog-delta",
+        "why-delta",
+        "why-compress"
+      ]
+    },
+    {
+      "id": "C03",
+      "returned": [
+        "catalog-parquet",
+        "catalog-csv",
+        "why-parquet"
+      ]
+    },
+    {
+      "id": "C04",
+      "returned": [
+        "catalog-delta",
+        "why-delta",
+        "watermark"
+      ]
+    },
+    {
+      "id": "C05",
+      "returned": [
+        "offset-3mm-correct",
+        "heartbeat-10"
+      ]
+    },
+    {
+      "id": "C06",
+      "returned": [
+        "owner-integrity",
+        "priority-new"
+      ]
+    },
+    {
+      "id": "C07",
+      "returned": [
+        "owner-integrity",
+        "priority-new",
+        "retain-3y"
+      ]
+    },
+    {
+      "id": "C08",
+      "returned": [
+        "heartbeat-10",
+        "priority-new"
+      ]
+    },
+    {
+      "id": "C09",
+      "returned": [
+        "why-compress",
+        "uplink-512",
+        "incident-208"
+      ]
+    },
+    {
+      "id": "C10",
+      "returned": [
+        "why-compress",
+        "uplink-512",
+        "mission-mesa7"
+      ]
+    },
+    {
+      "id": "C11",
+      "returned": [
+        "freeze-expired",
+        "mission-mesa7"
+      ]
+    },
+    {
+      "id": "C12",
+      "returned": [
+        "incident-root",
+        "heartbeat-30",
+        "freeze-expired"
+      ]
+    },
+    {
+      "id": "C13",
+      "returned": [
+        "incident-root",
+        "mission-mesa7",
+        "why-compress"
+      ]
+    },
+    {
+      "id": "C14",
+      "returned": [
+        "retain-7y-rumor",
+        "retain-3y",
+        "heartbeat-10"
+      ]
+    },
+    {
+      "id": "C15",
+      "returned": [
+        "retain-1y",
+        "retain-3y",
+        "retain-7y-rumor"
+      ]
+    },
+    {
+      "id": "C16",
+      "returned": [
+        "mission-mesa7",
+        "field-bookclub"
+      ]
+    },
+    {
+      "id": "C17",
+      "returned": [
+        "why-priority",
+        "offset-3mm-correct"
+      ]
+    },
+    {
+      "id": "C18",
+      "returned": [
+        "why-priority",
+        "priority-new",
+        "offset-2mm"
+      ]
+    },
+    {
+      "id": "C19",
+      "returned": [
+        "index-guide",
+        "offset-3mm-correct"
+      ]
+    },
+    {
+      "id": "C20",
+      "returned": [
+        "watermark",
+        "offset-3mm-correct",
+        "why-priority"
+      ]
+    },
+    {
+      "id": "C21",
+      "returned": [
+        "retain-3y",
+        "owner-integrity"
+      ]
+    },
+    {
+      "id": "C22",
+      "returned": [
+        "offset-3mm-correct",
+        "uplink-512"
+      ]
+    },
+    {
+      "id": "C23",
+      "returned": [
+        "offset-3mm-correct",
+        "why-compress"
+      ]
+    },
+    {
+      "id": "C24",
+      "returned": [
+        "offset-3mm-correct",
+        "why-compress",
+        "retain-7y-rumor"
+      ]
+    }
+  ],
+  "runtime_revision": "32404f7e0c800110cf7a72ba128479afc8bf0d83",
+  "schema": "served-memory-run-v1"
+}

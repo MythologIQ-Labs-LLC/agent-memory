@@ -1,0 +1,361 @@
+[
+  {
+    "beyond_budget": [
+      "catalog-delta",
+      "why-delta",
+      "owner-integrity",
+      "heartbeat-10",
+      "retain-3y",
+      "uplink-512",
+      "why-compress",
+      "incident-208",
+      "field-bookclub"
+    ],
+    "id": "C01",
+    "ranked_admitted_count": 12
+  },
+  {
+    "beyond_budget": [
+      "why-parquet",
+      "heartbeat-10",
+      "retain-7y-rumor",
+      "freeze-expired",
+      "incident-208",
+      "field-bookclub",
+      "priority-new",
+      "why-priority",
+      "watermark"
+    ],
+    "id": "C02",
+    "ranked_admitted_count": 12
+  },
+  {
+    "beyond_budget": [
+      "retain-7y-rumor",
+      "field-bookclub",
+      "priority-new",
+      "heartbeat-10",
+      "why-compress",
+      "freeze-expired",
+      "incident-208",
+      "why-priority",
+      "index-guide",
+      "watermark"
+    ],
+    "id": "C03",
+    "ranked_admitted_count": 13
+  },
+  {
+    "beyond_budget": [
+      "freeze-expired",
+      "incident-208",
+      "field-bookclub",
+      "watermark",
+      "why-parquet",
+      "offset-3mm-correct",
+      "owner-integrity",
+      "retain-3y",
+      "retain-7y-rumor",
+      "why-compress",
+      "mission-mesa7",
+      "priority-new",
+      "why-priority",
+      "index-guide"
+    ],
+    "id": "C04",
+    "ranked_admitted_count": 17
+  },
+  {
+    "beyond_budget": [
+      "retain-7y-rumor",
+      "why-compress",
+      "freeze-expired",
+      "field-bookclub",
+      "priority-new",
+      "why-priority",
+      "watermark",
+      "catalog-delta",
+      "why-parquet",
+      "why-delta",
+      "owner-integrity",
+      "mission-mesa7",
+      "incident-208",
+      "index-guide"
+    ],
+    "id": "C05",
+    "ranked_admitted_count": 16
+  },
+  {
+    "beyond_budget": [
+      "owner-integrity",
+      "priority-new",
+      "why-delta",
+      "heartbeat-10",
+      "retain-7y-rumor",
+      "why-compress",
+      "freeze-expired",
+      "incident-208",
+      "field-bookclub",
+      "why-priority"
+    ],
+    "id": "C06",
+    "ranked_admitted_count": 12
+  },
+  {
+    "beyond_budget": [
+      "priority-new",
+      "watermark"
+    ],
+    "id": "C07",
+    "ranked_admitted_count": 5
+  },
+  {
+    "beyond_budget": [
+      "incident-208",
+      "priority-new",
+      "why-priority",
+      "why-parquet",
+      "why-delta",
+      "offset-3mm-correct",
+      "retain-7y-rumor",
+      "uplink-512",
+      "why-compress",
+      "freeze-expired",
+      "incident-root",
+      "field-bookclub"
+    ],
+    "id": "C08",
+    "ranked_admitted_count": 14
+  },
+  {
+    "beyond_budget": [
+      "mission-mesa7",
+      "incident-208",
+      "index-guide",
+      "watermark",
+      "why-delta",
+      "offset-3mm-correct",
+      "owner-integrity",
+      "freeze-expired",
+      "incident-root",
+      "field-bookclub"
+    ],
+    "id": "C09",
+    "ranked_admitted_count": 13
+  },
+  {
+    "beyond_budget": [
+      "mission-mesa7",
+      "catalog-delta",
+      "owner-integrity",
+      "heartbeat-10",
+      "retain-7y-rumor",
+      "freeze-expired",
+      "incident-208",
+      "incident-root",
+      "field-bookclub",
+      "priority-new",
+      "index-guide",
+      "watermark"
+    ],
+    "id": "C10",
+    "ranked_admitted_count": 15
+  },
+  {
+    "beyond_budget": [
+      "why-delta",
+      "retain-7y-rumor",
+      "why-compress",
+      "freeze-expired",
+      "priority-new",
+      "offset-3mm-correct",
+      "heartbeat-10",
+      "uplink-512",
+      "mission-mesa7",
+      "incident-208",
+      "field-bookclub",
+      "why-priority",
+      "index-guide"
+    ],
+    "id": "C11",
+    "ranked_admitted_count": 15
+  },
+  {
+    "beyond_budget": [
+      "why-delta",
+      "heartbeat-10",
+      "retain-7y-rumor",
+      "why-compress",
+      "freeze-expired",
+      "incident-208",
+      "field-bookclub",
+      "priority-new",
+      "why-priority"
+    ],
+    "id": "C12",
+    "ranked_admitted_count": 12
+  },
+  {
+    "beyond_budget": [
+      "why-delta",
+      "why-compress",
+      "mission-mesa7",
+      "priority-new",
+      "index-guide"
+    ],
+    "id": "C13",
+    "ranked_admitted_count": 8
+  },
+  {
+    "beyond_budget": [
+      "heartbeat-10",
+      "owner-integrity",
+      "why-compress",
+      "mission-mesa7",
+      "freeze-expired",
+      "field-bookclub",
+      "priority-new",
+      "index-guide",
+      "watermark"
+    ],
+    "id": "C14",
+    "ranked_admitted_count": 12
+  },
+  {
+    "beyond_budget": [
+      "index-guide",
+      "owner-integrity",
+      "heartbeat-10",
+      "mission-mesa7",
+      "freeze-expired",
+      "incident-root",
+      "field-bookclub",
+      "why-priority",
+      "watermark"
+    ],
+    "id": "C15",
+    "ranked_admitted_count": 12
+  },
+  {
+    "beyond_budget": [
+      "owner-integrity",
+      "heartbeat-10",
+      "freeze-expired",
+      "field-bookclub",
+      "index-guide",
+      "watermark"
+    ],
+    "id": "C16",
+    "ranked_admitted_count": 8
+  },
+  {
+    "beyond_budget": [
+      "why-priority",
+      "heartbeat-10",
+      "mission-mesa7",
+      "freeze-expired",
+      "field-bookclub",
+      "priority-new",
+      "index-guide",
+      "watermark"
+    ],
+    "id": "C17",
+    "ranked_admitted_count": 10
+  },
+  {
+    "beyond_budget": [
+      "retain-3y",
+      "uplink-512",
+      "mission-mesa7",
+      "incident-root",
+      "priority-new",
+      "index-guide"
+    ],
+    "id": "C18",
+    "ranked_admitted_count": 9
+  },
+  {
+    "beyond_budget": [
+      "heartbeat-10",
+      "retain-7y-rumor",
+      "why-compress",
+      "freeze-expired",
+      "field-bookclub",
+      "catalog-delta",
+      "why-parquet",
+      "why-delta",
+      "owner-integrity",
+      "mission-mesa7",
+      "incident-208",
+      "priority-new",
+      "why-priority",
+      "watermark"
+    ],
+    "id": "C19",
+    "ranked_admitted_count": 16
+  },
+  {
+    "beyond_budget": [
+      "why-delta",
+      "why-compress",
+      "mission-mesa7",
+      "incident-root",
+      "why-watermark"
+    ],
+    "id": "C20",
+    "ranked_admitted_count": 8
+  },
+  {
+    "beyond_budget": [
+      "uplink-512",
+      "mission-mesa7",
+      "index-guide"
+    ],
+    "id": "C21",
+    "ranked_admitted_count": 5
+  },
+  {
+    "beyond_budget": [
+      "owner-integrity",
+      "why-compress",
+      "mission-mesa7",
+      "index-guide",
+      "why-parquet",
+      "heartbeat-10",
+      "retain-3y",
+      "retain-7y-rumor",
+      "freeze-expired",
+      "incident-root",
+      "field-bookclub",
+      "why-priority",
+      "watermark",
+      "why-watermark"
+    ],
+    "id": "C22",
+    "ranked_admitted_count": 16
+  },
+  {
+    "beyond_budget": [
+      "heartbeat-10",
+      "retain-7y-rumor",
+      "why-compress",
+      "mission-mesa7",
+      "freeze-expired",
+      "field-bookclub",
+      "index-guide",
+      "watermark"
+    ],
+    "id": "C23",
+    "ranked_admitted_count": 10
+  },
+  {
+    "beyond_budget": [
+      "catalog-delta",
+      "retain-3y",
+      "mission-mesa7",
+      "watermark"
+    ],
+    "id": "C24",
+    "ranked_admitted_count": 7
+  }
+]

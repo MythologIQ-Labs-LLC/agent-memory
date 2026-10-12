@@ -228,13 +228,13 @@ def _event_proposal(data, event, memory_scope, *, op, version=0):
     return replace(base, operation="permanent_deletion", reversibility="irreversible", **common)
 
 
-def run_scenarios(data, root: Path, *, revision: str, lane_id: str,
-                  backend: str = "composed-multiroute"):
+def build_store(data, root: Path):
+    """Replay the governed lifecycle into a fresh store; return (runtime, fact uuid -> event id).
+
+    Shared by run_scenarios and validation-only comparison adapters so every
+    compared serving path reads the identical governed history.
+    """
     validate_inputs(data)
-    _text(revision, "revision")
-    _name(lane_id, "lane id")
-    if backend not in ("composed-multiroute", "governed-lexical"):
-        raise ValueError("unsupported governed reference backend")
     root = Path(root)
     if root.exists() and (not root.is_dir() or any(root.iterdir())):
         raise ValueError("evaluation requires an empty isolated store; replay would mix corpora")
@@ -287,6 +287,17 @@ def run_scenarios(data, root: Path, *, revision: str, lane_id: str,
             labels[outcome.fact_uuid] = event["id"]
             value[memory] = event["text"]
 
+    return runtime, labels
+
+
+def run_scenarios(data, root: Path, *, revision: str, lane_id: str,
+                  backend: str = "composed-multiroute"):
+    validate_inputs(data)
+    _text(revision, "revision")
+    _name(lane_id, "lane id")
+    if backend not in ("composed-multiroute", "governed-lexical"):
+        raise ValueError("unsupported governed reference backend")
+    runtime, labels = build_store(data, root)
     context = RecallContext(
         target_domain_refs=(data["tenant"], data["project"]),
         principal_ref="agent:quality-evaluation",

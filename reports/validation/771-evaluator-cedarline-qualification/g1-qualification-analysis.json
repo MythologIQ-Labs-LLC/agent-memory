@@ -1,0 +1,40 @@
+{
+  "cedarline-v1.1": {
+    "answerable_questions_emptied": [],
+    "no_answer_questions_emptied": [],
+    "non_discriminative_tokens": [
+      "cedarline"
+    ],
+    "scope_size": 28,
+    "withheld": {
+      "distractor": [
+        "C12:heartbeat-30",
+        "C12:freeze-expired"
+      ],
+      "lost_critical": [],
+      "lost_relevant": [],
+      "no_answer_context": [],
+      "other": []
+    }
+  },
+  "halcyon-v1.1": {
+    "answerable_questions_emptied": [],
+    "no_answer_questions_emptied": [],
+    "non_discriminative_tokens": [
+      "the"
+    ],
+    "scope_size": 27,
+    "withheld": {
+      "distractor": [
+        "H04:bookclub"
+      ],
+      "lost_critical": [],
+      "lost_relevant": [],
+      "no_answer_context": [
+        "H19:bookclub",
+        "H19:room"
+      ],
+      "other": []
+    }
+  }
+}
