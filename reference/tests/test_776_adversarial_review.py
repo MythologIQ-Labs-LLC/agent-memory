@@ -334,6 +334,51 @@ class RestartAndRoutes(unittest.TestCase):
         self.assertIsNone(h.adapter.write_semantics(old, foreign))
 
 
+# ------------------------------------------------------------------ repair compatibility (added with the repair)
+
+class LegacyTombstoneCompatibility(unittest.TestCase):
+    """A tombstone persisted before the lineage field existed must still fail closed."""
+
+    def _strip_lineage_and_recover(self, h):
+        for record in h.adapter._tombstones.values():
+            record.pop("deleted_fact_uuids", None)
+        h.runtime.durable_runtime.checkpoint()
+        return h.recovered()
+
+    def test_legacy_head_tombstone_still_refuses_the_whole_history_after_restart(self):
+        h = _Store(self)
+        ids = h.chain("tram", [("Route 4 trams run every 20 minutes.", None),
+                               ("Route 4 trams run every 15 minutes.", S),
+                               ("Route 4 trams run every 10 minutes.", S)])
+        h.prune("tram")
+        recovered = self._strip_lineage_and_recover(h)
+        self.assertTrue(all("deleted_fact_uuids" not in r for r in recovered.adapter._tombstones.values()))
+        result = h.recall("How often did Route 4 trams run?", runtime=recovered)
+        self.assertFalse(set(ids) & set(result.admitted))
+        self.assertIsNone(recovered.adapter.write_semantics(ids[0], _context()))
+
+    def test_legacy_head_tombstone_with_recreation_keeps_old_lineage_refused(self):
+        h = _Store(self)
+        old, new = h.chain("kiln", KILN)
+        h.prune("kiln")
+        again = h.runtime.retain(h.proposal("kiln", 200), "The kiln firing schedule uses cone 8 glaze.")
+        recovered = self._strip_lineage_and_recover(h)
+        result = h.recall(runtime=recovered)
+        self.assertIn(again.fact_uuid, result.admitted)
+        self.assertFalse({old, new} & set(result.admitted))
+
+    def test_legacy_superseded_version_tombstone_does_not_hide_the_live_memory(self):
+        h = _Store(self)
+        old, new = h.chain("kiln", KILN)
+        h.runtime.durable_runtime.governed_delete(
+            replace(h.proposal("kiln", 97, "pruning", review_satisfied=True, approval_refs=("approval:776r",)),
+                    target_class=policy.M1, proposed_strength="tentative"), old, derived_refs=())
+        recovered = self._strip_lineage_and_recover(h)
+        result = h.recall(mode="current", runtime=recovered)
+        self.assertIn(new, result.admitted)
+        self.assertNotIn(old, h.recall(runtime=recovered).admitted)
+
+
 # ------------------------------------------------------------------ scale
 
 class TombstoneScale(unittest.TestCase):
