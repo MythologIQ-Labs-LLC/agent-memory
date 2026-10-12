@@ -90,7 +90,7 @@ class RoutedRecall(unittest.TestCase):
     def test_routed_question_serves_the_predecessor_first(self):
         h = _History(self, {"kiln": KILN})
         out = h.runtime.routed_historical_context(
-            "What glaze did the kiln firing schedule use before cone 10?", _ctx(), budget=3)
+            "What glaze did the kiln firing schedule use before cone 10?", _ctx(), budget=3, temporal_intent=HIST)
         self.assertTrue(out.routed)
         self.assertEqual(out.served_refs[0], h.ids["kiln"][0])
         self.assertEqual(out.predecessor_ref, h.ids["kiln"][0])
@@ -107,10 +107,26 @@ class RoutedRecall(unittest.TestCase):
                 self.assertIsNone(out.predecessor_ref)
                 self.assertEqual(out.served_refs, tuple(base.ranked_admitted[:3]))
 
+    def test_only_caller_historical_questions_are_routed(self):
+        # v0.1.0 finding (Halcyon H08): "How long before ... times out?" is a CURRENT
+        # question; routing it served a superseded value first (P0 stale). Automatic
+        # routing must never act on current or timeless questions, or when no
+        # historical intent was given.
+        h = _History(self, {"tram": TRAM})
+        query = "How long before the Route 4 tram leaves does boarding close?"
+        self.assertTrue(PredecessorRoutingHelpers.decide(query).routed)  # the cue is present ...
+        for intent in ({"mode": "current"}, {"mode": "atemporal_or_unspecified"}, None):
+            with self.subTest(intent=intent):
+                out = h.runtime.routed_historical_context(query, _ctx(), budget=3, temporal_intent=intent)
+                base = h.runtime.multi_route_recall(query, _ctx(), temporal_intent=intent)
+                self.assertFalse(out.routed)  # ... but only a historical question may be routed
+                self.assertEqual(out.served_refs, tuple(base.ranked_admitted[:3]))
+                self.assertNotIn(h.ids["tram"][0], out.served_refs[:1])
+
     def test_routed_question_without_lineage_keeps_historical_ranking(self):
         h = _History(self, {"crane": CRANE})
         query = "Which checklist form did the dock crane inspection use before?"
-        out = h.runtime.routed_historical_context(query, _ctx(), budget=3)
+        out = h.runtime.routed_historical_context(query, _ctx(), budget=3, temporal_intent=HIST)
         self.assertTrue(out.routed)
         self.assertIsNone(out.predecessor_ref)
         self.assertEqual(out.served_refs, tuple(h.recall(query, "historical").ranked_admitted[:3]))
@@ -119,8 +135,18 @@ class RoutedRecall(unittest.TestCase):
         h = _History(self, {"kiln": KILN})
         h.delete("kiln")
         out = h.runtime.routed_historical_context(
-            "What glaze did the kiln firing schedule use before cone 10?", _ctx(), budget=3)
+            "What glaze did the kiln firing schedule use before cone 10?", _ctx(), budget=3, temporal_intent=HIST)
         self.assertFalse(set(h.ids["kiln"]) & set(out.served_refs))
+
+
+HIST = {"mode": "historical"}
+
+
+class PredecessorRoutingHelpers:
+    @staticmethod
+    def decide(query):
+        from agentmem_ref.runtime_composition import predecessor_routing
+        return predecessor_routing(query)
 
 
 def _ctx():
