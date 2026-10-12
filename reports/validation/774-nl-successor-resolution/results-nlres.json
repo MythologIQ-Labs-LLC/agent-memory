@@ -1,0 +1,1467 @@
+{
+  "decisions": {
+    "Q01": {
+      "ORACLE": "heli-v4",
+      "R0": null,
+      "R1": "heli-v4",
+      "R2": "heli-v4",
+      "R3": "heli-v4",
+      "gold": "heli-v4",
+      "gold_resolution": "unique"
+    },
+    "Q02": {
+      "ORACLE": "heli-v4",
+      "R0": null,
+      "R1": "heli-v4",
+      "R2": "heli-v4",
+      "R3": "heli-v4",
+      "gold": "heli-v4",
+      "gold_resolution": "unique"
+    },
+    "Q03": {
+      "ORACLE": "heli-v2",
+      "R0": null,
+      "R1": "heli-v4",
+      "R2": "heli-v4",
+      "R3": "heli-v4",
+      "gold": "heli-v2",
+      "gold_resolution": "unique"
+    },
+    "Q04": {
+      "ORACLE": null,
+      "R0": null,
+      "R1": "heli-v4",
+      "R2": "heli-v3",
+      "R3": null,
+      "gold": null,
+      "gold_resolution": "ambiguous"
+    },
+    "Q05": {
+      "ORACLE": "heli-v4",
+      "R0": null,
+      "R1": "heli-v4",
+      "R2": "heli-v4",
+      "R3": "heli-v4",
+      "gold": "heli-v4",
+      "gold_resolution": "unique"
+    },
+    "Q06": {
+      "ORACLE": "radio-v5",
+      "R0": null,
+      "R1": "radio-v5",
+      "R2": "radio-v5",
+      "R3": "radio-v5",
+      "gold": "radio-v5",
+      "gold_resolution": "unique"
+    },
+    "Q07": {
+      "ORACLE": "radio-v5",
+      "R0": null,
+      "R1": "radio-v5",
+      "R2": "radio-v5",
+      "R3": "radio-v5",
+      "gold": "radio-v5",
+      "gold_resolution": "unique"
+    },
+    "Q08": {
+      "ORACLE": "radio-v3",
+      "R0": null,
+      "R1": "radio-v5",
+      "R2": null,
+      "R3": null,
+      "gold": "radio-v3",
+      "gold_resolution": "unique"
+    },
+    "Q09": {
+      "ORACLE": null,
+      "R0": null,
+      "R1": "radio-v5",
+      "R2": null,
+      "R3": null,
+      "gold": null,
+      "gold_resolution": "ambiguous"
+    },
+    "Q10": {
+      "ORACLE": "radio-v3",
+      "R0": null,
+      "R1": "radio-v5",
+      "R2": "radio-v5",
+      "R3": "radio-v5",
+      "gold": "radio-v3",
+      "gold_resolution": "unique"
+    },
+    "Q11": {
+      "ORACLE": "dog-radio-v2",
+      "R0": null,
+      "R1": "dog-radio-v2",
+      "R2": null,
+      "R3": null,
+      "gold": "dog-radio-v2",
+      "gold_resolution": "unique"
+    },
+    "Q12": {
+      "ORACLE": null,
+      "R0": null,
+      "R1": "rotstein-fuel-v2",
+      "R2": "rotstein-fuel-v1",
+      "R3": null,
+      "gold": null,
+      "gold_resolution": "ambiguous"
+    },
+    "Q13": {
+      "ORACLE": "schneekar-fuel-v3",
+      "R0": null,
+      "R1": "schneekar-fuel-v3",
+      "R2": "schneekar-fuel-v3",
+      "R3": "schneekar-fuel-v3",
+      "gold": "schneekar-fuel-v3",
+      "gold_resolution": "unique"
+    },
+    "Q14": {
+      "ORACLE": "rotstein-fuel-v2",
+      "R0": null,
+      "R1": "rotstein-fuel-v2",
+      "R2": null,
+      "R3": null,
+      "gold": "rotstein-fuel-v2",
+      "gold_resolution": "unique"
+    },
+    "Q15": {
+      "ORACLE": null,
+      "R0": null,
+      "R1": "schneekar-fuel-v3",
+      "R2": null,
+      "R3": null,
+      "gold": null,
+      "gold_resolution": "no_history"
+    },
+    "Q16": {
+      "ORACLE": null,
+      "R0": null,
+      "R1": "weekend-shift-v2",
+      "R2": null,
+      "R3": null,
+      "gold": null,
+      "gold_resolution": "ambiguous"
+    },
+    "Q17": {
+      "ORACLE": "weekday-shift-v2",
+      "R0": null,
+      "R1": "weekday-shift-v2",
+      "R2": null,
+      "R3": null,
+      "gold": "weekday-shift-v2",
+      "gold_resolution": "unique"
+    },
+    "Q18": {
+      "ORACLE": "weekend-shift-v2",
+      "R0": null,
+      "R1": "weekend-shift-v2",
+      "R2": "weekend-shift-v2",
+      "R3": null,
+      "gold": "weekend-shift-v2",
+      "gold_resolution": "unique"
+    },
+    "Q19": {
+      "ORACLE": "rope-insp-v3",
+      "R0": null,
+      "R1": "rope-insp-v3",
+      "R2": null,
+      "R3": null,
+      "gold": "rope-insp-v3",
+      "gold_resolution": "unique"
+    },
+    "Q20": {
+      "ORACLE": null,
+      "R0": null,
+      "R1": "rope-insp-v3",
+      "R2": null,
+      "R3": null,
+      "gold": null,
+      "gold_resolution": "no_history"
+    },
+    "Q21": {
+      "ORACLE": null,
+      "R0": null,
+      "R1": "pager-v2",
+      "R2": "pager-v2",
+      "R3": "pager-v2",
+      "gold": null,
+      "gold_resolution": "not_visible"
+    },
+    "Q22": {
+      "ORACLE": null,
+      "R0": null,
+      "R1": "rope-insp-v3",
+      "R2": null,
+      "R3": null,
+      "gold": null,
+      "gold_resolution": "no_history"
+    },
+    "Q23": {
+      "ORACLE": "beacon-v2",
+      "R0": null,
+      "R1": "beacon-v2",
+      "R2": "beacon-v2",
+      "R3": null,
+      "gold": "beacon-v2",
+      "gold_resolution": "unique"
+    },
+    "Q24": {
+      "ORACLE": "stretcher-v3",
+      "R0": null,
+      "R1": "stretcher-v3",
+      "R2": "stretcher-v3",
+      "R3": "stretcher-v3",
+      "gold": "stretcher-v3",
+      "gold_resolution": "unique"
+    },
+    "Q25": {
+      "ORACLE": "pager-v2",
+      "R0": null,
+      "R1": "pager-v2",
+      "R2": "pager-v2",
+      "R3": null,
+      "gold": "pager-v2",
+      "gold_resolution": "unique"
+    },
+    "Q26": {
+      "ORACLE": null,
+      "R0": null,
+      "R1": "training-v3",
+      "R2": null,
+      "R3": null,
+      "gold": null,
+      "gold_resolution": "ambiguous"
+    },
+    "Q27": {
+      "ORACLE": "training-v2",
+      "R0": null,
+      "R1": "training-v3",
+      "R2": "training-v2",
+      "R3": "training-v2",
+      "gold": "training-v2",
+      "gold_resolution": "unique"
+    },
+    "Q28": {
+      "ORACLE": "kitcheck-v2",
+      "R0": null,
+      "R1": "kitcheck-v2",
+      "R2": null,
+      "R3": null,
+      "gold": "kitcheck-v2",
+      "gold_resolution": "unique"
+    },
+    "Q29": {
+      "ORACLE": null,
+      "R0": null,
+      "R1": "radio-v5",
+      "R2": "radio-v5",
+      "R3": "radio-v5",
+      "gold": null,
+      "gold_resolution": "not_visible"
+    }
+  },
+  "manifests": {
+    "ORACLE": {
+      "execution_backend": "composed-multiroute",
+      "input_sha256": "c297095b52222f56bf4c8b40e32f3ee63f4f4192fa5d3e3c84d24dae608be3ac",
+      "lane_id": "774-nlres-ORACLE",
+      "provenance": {
+        "evaluator": {
+          "clean": true,
+          "commit": "4aba9a4c2f27ebcbb27ab8268015a82746ae2d3b"
+        },
+        "runtime": {
+          "clean": true,
+          "commit": "4088823898da27a5c32649321a39d7d4ee466345",
+          "loaded_module": "reference/agentmem_ref/runtime/runtime_composition.py",
+          "loaded_module_blob": "5acaf31bd836c1097863d208ffaeb1e831ab48c7",
+          "protected_tree": "d766e59ed3859b1c1bbd901f8c81bab1f7d2f088"
+        }
+      },
+      "reference_time": "2026-10-12T12:00:00Z",
+      "reference_time_applied_to": [
+        "Q30",
+        "Q31",
+        "Q32",
+        "Q35"
+      ],
+      "reference_time_utc": "2026-10-12T12:00:00.000000Z",
+      "rows": [
+        {
+          "id": "Q01",
+          "returned": [
+            "heli-v3"
+          ]
+        },
+        {
+          "id": "Q02",
+          "returned": [
+            "heli-v3"
+          ]
+        },
+        {
+          "id": "Q03",
+          "returned": [
+            "heli-v1"
+          ]
+        },
+        {
+          "id": "Q04",
+          "returned": [
+            "heli-v3"
+          ]
+        },
+        {
+          "id": "Q05",
+          "returned": [
+            "heli-v3"
+          ]
+        },
+        {
+          "id": "Q06",
+          "returned": [
+            "radio-v4"
+          ]
+        },
+        {
+          "id": "Q07",
+          "returned": [
+            "radio-v4"
+          ]
+        },
+        {
+          "id": "Q08",
+          "returned": [
+            "radio-v2"
+          ]
+        },
+        {
+          "id": "Q09",
+          "returned": [
+            "radio-v4"
+          ]
+        },
+        {
+          "id": "Q10",
+          "returned": [
+            "radio-v2"
+          ]
+        },
+        {
+          "id": "Q11",
+          "returned": [
+            "dog-radio-v1"
+          ]
+        },
+        {
+          "id": "Q12",
+          "returned": [
+            "rotstein-fuel-v1"
+          ]
+        },
+        {
+          "id": "Q13",
+          "returned": [
+            "schneekar-fuel-v2"
+          ]
+        },
+        {
+          "id": "Q14",
+          "returned": [
+            "rotstein-fuel-v1"
+          ]
+        },
+        {
+          "id": "Q15",
+          "returned": [
+            "schneekar-fuel-v1"
+          ]
+        },
+        {
+          "id": "Q16",
+          "returned": [
+            "weekend-shift-v1"
+          ]
+        },
+        {
+          "id": "Q17",
+          "returned": [
+            "weekday-shift-v1"
+          ]
+        },
+        {
+          "id": "Q18",
+          "returned": [
+            "weekend-shift-v1"
+          ]
+        },
+        {
+          "id": "Q19",
+          "returned": [
+            "rope-insp-v2"
+          ]
+        },
+        {
+          "id": "Q20",
+          "returned": [
+            "rope-insp-v2"
+          ]
+        },
+        {
+          "id": "Q21",
+          "returned": [
+            "pager-v1"
+          ]
+        },
+        {
+          "id": "Q22",
+          "returned": [
+            "medic-v1"
+          ]
+        },
+        {
+          "id": "Q23",
+          "returned": [
+            "beacon-v1"
+          ]
+        },
+        {
+          "id": "Q24",
+          "returned": [
+            "stretcher-v2"
+          ]
+        },
+        {
+          "id": "Q25",
+          "returned": [
+            "pager-v1"
+          ]
+        },
+        {
+          "id": "Q26",
+          "returned": [
+            "training-v1"
+          ]
+        },
+        {
+          "id": "Q27",
+          "returned": [
+            "training-v1"
+          ]
+        },
+        {
+          "id": "Q28",
+          "returned": [
+            "kitcheck-v1"
+          ]
+        },
+        {
+          "id": "Q29",
+          "returned": [
+            "radio-v4"
+          ]
+        },
+        {
+          "id": "Q30",
+          "returned": [
+            "heli-v4"
+          ]
+        },
+        {
+          "id": "Q31",
+          "returned": [
+            "radio-v5"
+          ]
+        },
+        {
+          "id": "Q32",
+          "returned": [
+            "rope-insp-v3"
+          ]
+        },
+        {
+          "id": "Q33",
+          "returned": [
+            "glacier-rule-v1"
+          ]
+        },
+        {
+          "id": "Q34",
+          "returned": [
+            "stretcher-v1",
+            "stretcher-v2"
+          ]
+        },
+        {
+          "id": "Q35",
+          "returned": [
+            "kitcheck-v2"
+          ]
+        }
+      ],
+      "schema": "served-memory-run-v2"
+    },
+    "R0": {
+      "execution_backend": "composed-multiroute",
+      "input_sha256": "c297095b52222f56bf4c8b40e32f3ee63f4f4192fa5d3e3c84d24dae608be3ac",
+      "lane_id": "774-nlres-R0",
+      "provenance": {
+        "evaluator": {
+          "clean": true,
+          "commit": "4aba9a4c2f27ebcbb27ab8268015a82746ae2d3b"
+        },
+        "runtime": {
+          "clean": true,
+          "commit": "4088823898da27a5c32649321a39d7d4ee466345",
+          "loaded_module": "reference/agentmem_ref/runtime/runtime_composition.py",
+          "loaded_module_blob": "5acaf31bd836c1097863d208ffaeb1e831ab48c7",
+          "protected_tree": "d766e59ed3859b1c1bbd901f8c81bab1f7d2f088"
+        }
+      },
+      "reference_time": "2026-10-12T12:00:00Z",
+      "reference_time_applied_to": [
+        "Q30",
+        "Q31",
+        "Q32",
+        "Q35"
+      ],
+      "reference_time_utc": "2026-10-12T12:00:00.000000Z",
+      "rows": [
+        {
+          "id": "Q01",
+          "returned": [
+            "heli-v1"
+          ]
+        },
+        {
+          "id": "Q02",
+          "returned": [
+            "heli-v4"
+          ]
+        },
+        {
+          "id": "Q03",
+          "returned": [
+            "heli-v1"
+          ]
+        },
+        {
+          "id": "Q04",
+          "returned": [
+            "heli-v3"
+          ]
+        },
+        {
+          "id": "Q05",
+          "returned": [
+            "heli-v4"
+          ]
+        },
+        {
+          "id": "Q06",
+          "returned": [
+            "radio-v1"
+          ]
+        },
+        {
+          "id": "Q07",
+          "returned": [
+            "radio-v5"
+          ]
+        },
+        {
+          "id": "Q08",
+          "returned": [
+            "radio-v3"
+          ]
+        },
+        {
+          "id": "Q09",
+          "returned": [
+            "radio-v4"
+          ]
+        },
+        {
+          "id": "Q10",
+          "returned": [
+            "radio-v5"
+          ]
+        },
+        {
+          "id": "Q11",
+          "returned": [
+            "dog-radio-v2"
+          ]
+        },
+        {
+          "id": "Q12",
+          "returned": [
+            "rotstein-fuel-v1"
+          ]
+        },
+        {
+          "id": "Q13",
+          "returned": [
+            "schneekar-fuel-v3"
+          ]
+        },
+        {
+          "id": "Q14",
+          "returned": [
+            "rotstein-fuel-v2"
+          ]
+        },
+        {
+          "id": "Q15",
+          "returned": [
+            "schneekar-fuel-v1"
+          ]
+        },
+        {
+          "id": "Q16",
+          "returned": [
+            "weekend-shift-v1"
+          ]
+        },
+        {
+          "id": "Q17",
+          "returned": [
+            "weekday-shift-v1"
+          ]
+        },
+        {
+          "id": "Q18",
+          "returned": [
+            "weekend-shift-v2"
+          ]
+        },
+        {
+          "id": "Q19",
+          "returned": [
+            "rope-insp-v2"
+          ]
+        },
+        {
+          "id": "Q20",
+          "returned": [
+            "rope-insp-v2"
+          ]
+        },
+        {
+          "id": "Q21",
+          "returned": [
+            "pager-v1"
+          ]
+        },
+        {
+          "id": "Q22",
+          "returned": [
+            "medic-v1"
+          ]
+        },
+        {
+          "id": "Q23",
+          "returned": [
+            "beacon-v2"
+          ]
+        },
+        {
+          "id": "Q24",
+          "returned": [
+            "stretcher-v3"
+          ]
+        },
+        {
+          "id": "Q25",
+          "returned": [
+            "pager-v2"
+          ]
+        },
+        {
+          "id": "Q26",
+          "returned": [
+            "training-v1"
+          ]
+        },
+        {
+          "id": "Q27",
+          "returned": [
+            "training-v2"
+          ]
+        },
+        {
+          "id": "Q28",
+          "returned": [
+            "kitcheck-v2"
+          ]
+        },
+        {
+          "id": "Q29",
+          "returned": [
+            "radio-v4"
+          ]
+        },
+        {
+          "id": "Q30",
+          "returned": [
+            "heli-v4"
+          ]
+        },
+        {
+          "id": "Q31",
+          "returned": [
+            "radio-v5"
+          ]
+        },
+        {
+          "id": "Q32",
+          "returned": [
+            "rope-insp-v3"
+          ]
+        },
+        {
+          "id": "Q33",
+          "returned": [
+            "glacier-rule-v1"
+          ]
+        },
+        {
+          "id": "Q34",
+          "returned": [
+            "stretcher-v1",
+            "stretcher-v2"
+          ]
+        },
+        {
+          "id": "Q35",
+          "returned": [
+            "kitcheck-v2"
+          ]
+        }
+      ],
+      "schema": "served-memory-run-v2"
+    },
+    "R1": {
+      "execution_backend": "composed-multiroute",
+      "input_sha256": "c297095b52222f56bf4c8b40e32f3ee63f4f4192fa5d3e3c84d24dae608be3ac",
+      "lane_id": "774-nlres-R1",
+      "provenance": {
+        "evaluator": {
+          "clean": true,
+          "commit": "4aba9a4c2f27ebcbb27ab8268015a82746ae2d3b"
+        },
+        "runtime": {
+          "clean": true,
+          "commit": "4088823898da27a5c32649321a39d7d4ee466345",
+          "loaded_module": "reference/agentmem_ref/runtime/runtime_composition.py",
+          "loaded_module_blob": "5acaf31bd836c1097863d208ffaeb1e831ab48c7",
+          "protected_tree": "d766e59ed3859b1c1bbd901f8c81bab1f7d2f088"
+        }
+      },
+      "reference_time": "2026-10-12T12:00:00Z",
+      "reference_time_applied_to": [
+        "Q30",
+        "Q31",
+        "Q32",
+        "Q35"
+      ],
+      "reference_time_utc": "2026-10-12T12:00:00.000000Z",
+      "rows": [
+        {
+          "id": "Q01",
+          "returned": [
+            "heli-v3"
+          ]
+        },
+        {
+          "id": "Q02",
+          "returned": [
+            "heli-v3"
+          ]
+        },
+        {
+          "id": "Q03",
+          "returned": [
+            "heli-v3"
+          ]
+        },
+        {
+          "id": "Q04",
+          "returned": [
+            "heli-v3"
+          ]
+        },
+        {
+          "id": "Q05",
+          "returned": [
+            "heli-v3"
+          ]
+        },
+        {
+          "id": "Q06",
+          "returned": [
+            "radio-v4"
+          ]
+        },
+        {
+          "id": "Q07",
+          "returned": [
+            "radio-v4"
+          ]
+        },
+        {
+          "id": "Q08",
+          "returned": [
+            "radio-v4"
+          ]
+        },
+        {
+          "id": "Q09",
+          "returned": [
+            "radio-v4"
+          ]
+        },
+        {
+          "id": "Q10",
+          "returned": [
+            "radio-v4"
+          ]
+        },
+        {
+          "id": "Q11",
+          "returned": [
+            "dog-radio-v1"
+          ]
+        },
+        {
+          "id": "Q12",
+          "returned": [
+            "rotstein-fuel-v1"
+          ]
+        },
+        {
+          "id": "Q13",
+          "returned": [
+            "schneekar-fuel-v2"
+          ]
+        },
+        {
+          "id": "Q14",
+          "returned": [
+            "rotstein-fuel-v1"
+          ]
+        },
+        {
+          "id": "Q15",
+          "returned": [
+            "schneekar-fuel-v2"
+          ]
+        },
+        {
+          "id": "Q16",
+          "returned": [
+            "weekend-shift-v1"
+          ]
+        },
+        {
+          "id": "Q17",
+          "returned": [
+            "weekday-shift-v1"
+          ]
+        },
+        {
+          "id": "Q18",
+          "returned": [
+            "weekend-shift-v1"
+          ]
+        },
+        {
+          "id": "Q19",
+          "returned": [
+            "rope-insp-v2"
+          ]
+        },
+        {
+          "id": "Q20",
+          "returned": [
+            "rope-insp-v2"
+          ]
+        },
+        {
+          "id": "Q21",
+          "returned": [
+            "pager-v1"
+          ]
+        },
+        {
+          "id": "Q22",
+          "returned": [
+            "rope-insp-v2"
+          ]
+        },
+        {
+          "id": "Q23",
+          "returned": [
+            "beacon-v1"
+          ]
+        },
+        {
+          "id": "Q24",
+          "returned": [
+            "stretcher-v2"
+          ]
+        },
+        {
+          "id": "Q25",
+          "returned": [
+            "pager-v1"
+          ]
+        },
+        {
+          "id": "Q26",
+          "returned": [
+            "training-v2"
+          ]
+        },
+        {
+          "id": "Q27",
+          "returned": [
+            "training-v2"
+          ]
+        },
+        {
+          "id": "Q28",
+          "returned": [
+            "kitcheck-v1"
+          ]
+        },
+        {
+          "id": "Q29",
+          "returned": [
+            "radio-v4"
+          ]
+        },
+        {
+          "id": "Q30",
+          "returned": [
+            "heli-v4"
+          ]
+        },
+        {
+          "id": "Q31",
+          "returned": [
+            "radio-v5"
+          ]
+        },
+        {
+          "id": "Q32",
+          "returned": [
+            "rope-insp-v3"
+          ]
+        },
+        {
+          "id": "Q33",
+          "returned": [
+            "glacier-rule-v1"
+          ]
+        },
+        {
+          "id": "Q34",
+          "returned": [
+            "stretcher-v1",
+            "stretcher-v2"
+          ]
+        },
+        {
+          "id": "Q35",
+          "returned": [
+            "kitcheck-v2"
+          ]
+        }
+      ],
+      "schema": "served-memory-run-v2"
+    },
+    "R2": {
+      "execution_backend": "composed-multiroute",
+      "input_sha256": "c297095b52222f56bf4c8b40e32f3ee63f4f4192fa5d3e3c84d24dae608be3ac",
+      "lane_id": "774-nlres-R2",
+      "provenance": {
+        "evaluator": {
+          "clean": true,
+          "commit": "4aba9a4c2f27ebcbb27ab8268015a82746ae2d3b"
+        },
+        "runtime": {
+          "clean": true,
+          "commit": "4088823898da27a5c32649321a39d7d4ee466345",
+          "loaded_module": "reference/agentmem_ref/runtime/runtime_composition.py",
+          "loaded_module_blob": "5acaf31bd836c1097863d208ffaeb1e831ab48c7",
+          "protected_tree": "d766e59ed3859b1c1bbd901f8c81bab1f7d2f088"
+        }
+      },
+      "reference_time": "2026-10-12T12:00:00Z",
+      "reference_time_applied_to": [
+        "Q30",
+        "Q31",
+        "Q32",
+        "Q35"
+      ],
+      "reference_time_utc": "2026-10-12T12:00:00.000000Z",
+      "rows": [
+        {
+          "id": "Q01",
+          "returned": [
+            "heli-v3"
+          ]
+        },
+        {
+          "id": "Q02",
+          "returned": [
+            "heli-v3"
+          ]
+        },
+        {
+          "id": "Q03",
+          "returned": [
+            "heli-v3"
+          ]
+        },
+        {
+          "id": "Q04",
+          "returned": [
+            "heli-v2"
+          ]
+        },
+        {
+          "id": "Q05",
+          "returned": [
+            "heli-v3"
+          ]
+        },
+        {
+          "id": "Q06",
+          "returned": [
+            "radio-v4"
+          ]
+        },
+        {
+          "id": "Q07",
+          "returned": [
+            "radio-v4"
+          ]
+        },
+        {
+          "id": "Q08",
+          "returned": [
+            "radio-v3"
+          ]
+        },
+        {
+          "id": "Q09",
+          "returned": [
+            "radio-v4"
+          ]
+        },
+        {
+          "id": "Q10",
+          "returned": [
+            "radio-v4"
+          ]
+        },
+        {
+          "id": "Q11",
+          "returned": [
+            "dog-radio-v2"
+          ]
+        },
+        {
+          "id": "Q12",
+          "returned": [
+            "rotstein-fuel-v1"
+          ]
+        },
+        {
+          "id": "Q13",
+          "returned": [
+            "schneekar-fuel-v2"
+          ]
+        },
+        {
+          "id": "Q14",
+          "returned": [
+            "rotstein-fuel-v2"
+          ]
+        },
+        {
+          "id": "Q15",
+          "returned": [
+            "schneekar-fuel-v1"
+          ]
+        },
+        {
+          "id": "Q16",
+          "returned": [
+            "weekend-shift-v1"
+          ]
+        },
+        {
+          "id": "Q17",
+          "returned": [
+            "weekday-shift-v1"
+          ]
+        },
+        {
+          "id": "Q18",
+          "returned": [
+            "weekend-shift-v1"
+          ]
+        },
+        {
+          "id": "Q19",
+          "returned": [
+            "rope-insp-v2"
+          ]
+        },
+        {
+          "id": "Q20",
+          "returned": [
+            "rope-insp-v2"
+          ]
+        },
+        {
+          "id": "Q21",
+          "returned": [
+            "pager-v1"
+          ]
+        },
+        {
+          "id": "Q22",
+          "returned": [
+            "medic-v1"
+          ]
+        },
+        {
+          "id": "Q23",
+          "returned": [
+            "beacon-v1"
+          ]
+        },
+        {
+          "id": "Q24",
+          "returned": [
+            "stretcher-v2"
+          ]
+        },
+        {
+          "id": "Q25",
+          "returned": [
+            "pager-v1"
+          ]
+        },
+        {
+          "id": "Q26",
+          "returned": [
+            "training-v1"
+          ]
+        },
+        {
+          "id": "Q27",
+          "returned": [
+            "training-v1"
+          ]
+        },
+        {
+          "id": "Q28",
+          "returned": [
+            "kitcheck-v2"
+          ]
+        },
+        {
+          "id": "Q29",
+          "returned": [
+            "radio-v4"
+          ]
+        },
+        {
+          "id": "Q30",
+          "returned": [
+            "heli-v4"
+          ]
+        },
+        {
+          "id": "Q31",
+          "returned": [
+            "radio-v5"
+          ]
+        },
+        {
+          "id": "Q32",
+          "returned": [
+            "rope-insp-v3"
+          ]
+        },
+        {
+          "id": "Q33",
+          "returned": [
+            "glacier-rule-v1"
+          ]
+        },
+        {
+          "id": "Q34",
+          "returned": [
+            "stretcher-v1",
+            "stretcher-v2"
+          ]
+        },
+        {
+          "id": "Q35",
+          "returned": [
+            "kitcheck-v2"
+          ]
+        }
+      ],
+      "schema": "served-memory-run-v2"
+    },
+    "R3": {
+      "execution_backend": "composed-multiroute",
+      "input_sha256": "c297095b52222f56bf4c8b40e32f3ee63f4f4192fa5d3e3c84d24dae608be3ac",
+      "lane_id": "774-nlres-R3",
+      "provenance": {
+        "evaluator": {
+          "clean": true,
+          "commit": "4aba9a4c2f27ebcbb27ab8268015a82746ae2d3b"
+        },
+        "runtime": {
+          "clean": true,
+          "commit": "4088823898da27a5c32649321a39d7d4ee466345",
+          "loaded_module": "reference/agentmem_ref/runtime/runtime_composition.py",
+          "loaded_module_blob": "5acaf31bd836c1097863d208ffaeb1e831ab48c7",
+          "protected_tree": "d766e59ed3859b1c1bbd901f8c81bab1f7d2f088"
+        }
+      },
+      "reference_time": "2026-10-12T12:00:00Z",
+      "reference_time_applied_to": [
+        "Q30",
+        "Q31",
+        "Q32",
+        "Q35"
+      ],
+      "reference_time_utc": "2026-10-12T12:00:00.000000Z",
+      "rows": [
+        {
+          "id": "Q01",
+          "returned": [
+            "heli-v3"
+          ]
+        },
+        {
+          "id": "Q02",
+          "returned": [
+            "heli-v3"
+          ]
+        },
+        {
+          "id": "Q03",
+          "returned": [
+            "heli-v3"
+          ]
+        },
+        {
+          "id": "Q04",
+          "returned": [
+            "heli-v3"
+          ]
+        },
+        {
+          "id": "Q05",
+          "returned": [
+            "heli-v3"
+          ]
+        },
+        {
+          "id": "Q06",
+          "returned": [
+            "radio-v4"
+          ]
+        },
+        {
+          "id": "Q07",
+          "returned": [
+            "radio-v4"
+          ]
+        },
+        {
+          "id": "Q08",
+          "returned": [
+            "radio-v3"
+          ]
+        },
+        {
+          "id": "Q09",
+          "returned": [
+            "radio-v4"
+          ]
+        },
+        {
+          "id": "Q10",
+          "returned": [
+            "radio-v4"
+          ]
+        },
+        {
+          "id": "Q11",
+          "returned": [
+            "dog-radio-v2"
+          ]
+        },
+        {
+          "id": "Q12",
+          "returned": [
+            "rotstein-fuel-v1"
+          ]
+        },
+        {
+          "id": "Q13",
+          "returned": [
+            "schneekar-fuel-v2"
+          ]
+        },
+        {
+          "id": "Q14",
+          "returned": [
+            "rotstein-fuel-v2"
+          ]
+        },
+        {
+          "id": "Q15",
+          "returned": [
+            "schneekar-fuel-v1"
+          ]
+        },
+        {
+          "id": "Q16",
+          "returned": [
+            "weekend-shift-v1"
+          ]
+        },
+        {
+          "id": "Q17",
+          "returned": [
+            "weekday-shift-v1"
+          ]
+        },
+        {
+          "id": "Q18",
+          "returned": [
+            "weekend-shift-v2"
+          ]
+        },
+        {
+          "id": "Q19",
+          "returned": [
+            "rope-insp-v2"
+          ]
+        },
+        {
+          "id": "Q20",
+          "returned": [
+            "rope-insp-v2"
+          ]
+        },
+        {
+          "id": "Q21",
+          "returned": [
+            "pager-v1"
+          ]
+        },
+        {
+          "id": "Q22",
+          "returned": [
+            "medic-v1"
+          ]
+        },
+        {
+          "id": "Q23",
+          "returned": [
+            "beacon-v2"
+          ]
+        },
+        {
+          "id": "Q24",
+          "returned": [
+            "stretcher-v2"
+          ]
+        },
+        {
+          "id": "Q25",
+          "returned": [
+            "pager-v2"
+          ]
+        },
+        {
+          "id": "Q26",
+          "returned": [
+            "training-v1"
+          ]
+        },
+        {
+          "id": "Q27",
+          "returned": [
+            "training-v1"
+          ]
+        },
+        {
+          "id": "Q28",
+          "returned": [
+            "kitcheck-v2"
+          ]
+        },
+        {
+          "id": "Q29",
+          "returned": [
+            "radio-v4"
+          ]
+        },
+        {
+          "id": "Q30",
+          "returned": [
+            "heli-v4"
+          ]
+        },
+        {
+          "id": "Q31",
+          "returned": [
+            "radio-v5"
+          ]
+        },
+        {
+          "id": "Q32",
+          "returned": [
+            "rope-insp-v3"
+          ]
+        },
+        {
+          "id": "Q33",
+          "returned": [
+            "glacier-rule-v1"
+          ]
+        },
+        {
+          "id": "Q34",
+          "returned": [
+            "stretcher-v1",
+            "stretcher-v2"
+          ]
+        },
+        {
+          "id": "Q35",
+          "returned": [
+            "kitcheck-v2"
+          ]
+        }
+      ],
+      "schema": "served-memory-run-v2"
+    }
+  }
+}

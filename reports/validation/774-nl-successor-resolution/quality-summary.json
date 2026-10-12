@@ -1,0 +1,267 @@
+{
+ "ORACLE": {
+  "P0_safety": {
+   "cases_with_prohibited_exposure": 0,
+   "cases_with_stale_exposure": 0
+  },
+  "P1_served_correctness": {
+   "all_critical_groups_covered_rate": 1.0,
+   "answer_abstention_status": "not_measured_without_answering_layer",
+   "answer_abstention_verified": null,
+   "answerable_case_count": 25,
+   "empty_delivery_on_answerable_count": 0,
+   "no_safe_answer_case_count": 10,
+   "no_safe_answer_empty_context_count": 0,
+   "no_safe_answer_served_total": 10,
+   "no_safe_answer_with_context_count": 10,
+   "top1_critical_rate": 1.0,
+   "top1_relevant_rate": 1.0
+  },
+  "P2_context_utility": {
+   "irrelevant_served_total": 2,
+   "macro_critical_coverage": 1.0,
+   "macro_ndcg_at_budget": 1.0,
+   "macro_relevant_precision": 0.98,
+   "macro_relevant_recall": 0.62,
+   "macro_relevant_recall_at_budget": 1.0,
+   "macro_scope": "answerable_cases_only"
+  },
+  "P3_efficiency": {
+   "status": "not_measured_in_quality_scorer"
+  },
+  "execution_backend": "composed-multiroute",
+  "gold_sha256": "01fa0565477427ec5153ddb0bdccaf3e1e6a6335b59b8cc514aa7ab0fbcd5ffe",
+  "input_sha256": "c297095b52222f56bf4c8b40e32f3ee63f4f4192fa5d3e3c84d24dae608be3ac",
+  "lane_id": "774-nlres-ORACLE",
+  "not_a_composite_score": true,
+  "provenance": {
+   "evaluator": {
+    "clean": true,
+    "commit": "4aba9a4c2f27ebcbb27ab8268015a82746ae2d3b"
+   },
+   "runtime": {
+    "clean": true,
+    "commit": "4088823898da27a5c32649321a39d7d4ee466345",
+    "loaded_module": "reference/agentmem_ref/runtime/runtime_composition.py",
+    "loaded_module_blob": "5acaf31bd836c1097863d208ffaeb1e831ab48c7",
+    "protected_tree": "d766e59ed3859b1c1bbd901f8c81bab1f7d2f088"
+   }
+  },
+  "quality_case_count": 35,
+  "reference_time": "2026-10-12T12:00:00Z",
+  "runtime_revision": null,
+  "schema": "served-memory-quality-report-v1"
+ },
+ "R0": {
+  "P0_safety": {
+   "cases_with_prohibited_exposure": 0,
+   "cases_with_stale_exposure": 0
+  },
+  "P1_served_correctness": {
+   "all_critical_groups_covered_rate": 0.36,
+   "answer_abstention_status": "not_measured_without_answering_layer",
+   "answer_abstention_verified": null,
+   "answerable_case_count": 25,
+   "empty_delivery_on_answerable_count": 0,
+   "no_safe_answer_case_count": 10,
+   "no_safe_answer_empty_context_count": 0,
+   "no_safe_answer_served_total": 10,
+   "no_safe_answer_with_context_count": 10,
+   "top1_critical_rate": 0.36,
+   "top1_relevant_rate": 0.88
+  },
+  "P2_context_utility": {
+   "irrelevant_served_total": 2,
+   "macro_critical_coverage": 0.36,
+   "macro_ndcg_at_budget": 0.6,
+   "macro_relevant_precision": 0.86,
+   "macro_relevant_recall": 0.56,
+   "macro_relevant_recall_at_budget": 0.88,
+   "macro_scope": "answerable_cases_only"
+  },
+  "P3_efficiency": {
+   "status": "not_measured_in_quality_scorer"
+  },
+  "execution_backend": "composed-multiroute",
+  "gold_sha256": "01fa0565477427ec5153ddb0bdccaf3e1e6a6335b59b8cc514aa7ab0fbcd5ffe",
+  "input_sha256": "c297095b52222f56bf4c8b40e32f3ee63f4f4192fa5d3e3c84d24dae608be3ac",
+  "lane_id": "774-nlres-R0",
+  "not_a_composite_score": true,
+  "provenance": {
+   "evaluator": {
+    "clean": true,
+    "commit": "4aba9a4c2f27ebcbb27ab8268015a82746ae2d3b"
+   },
+   "runtime": {
+    "clean": true,
+    "commit": "4088823898da27a5c32649321a39d7d4ee466345",
+    "loaded_module": "reference/agentmem_ref/runtime/runtime_composition.py",
+    "loaded_module_blob": "5acaf31bd836c1097863d208ffaeb1e831ab48c7",
+    "protected_tree": "d766e59ed3859b1c1bbd901f8c81bab1f7d2f088"
+   }
+  },
+  "quality_case_count": 35,
+  "reference_time": "2026-10-12T12:00:00Z",
+  "runtime_revision": null,
+  "schema": "served-memory-quality-report-v1"
+ },
+ "R1": {
+  "P0_safety": {
+   "cases_with_prohibited_exposure": 0,
+   "cases_with_stale_exposure": 0
+  },
+  "P1_served_correctness": {
+   "all_critical_groups_covered_rate": 0.84,
+   "answer_abstention_status": "not_measured_without_answering_layer",
+   "answer_abstention_verified": null,
+   "answerable_case_count": 25,
+   "empty_delivery_on_answerable_count": 0,
+   "no_safe_answer_case_count": 10,
+   "no_safe_answer_empty_context_count": 0,
+   "no_safe_answer_served_total": 10,
+   "no_safe_answer_with_context_count": 10,
+   "top1_critical_rate": 0.84,
+   "top1_relevant_rate": 0.88
+  },
+  "P2_context_utility": {
+   "irrelevant_served_total": 3,
+   "macro_critical_coverage": 0.84,
+   "macro_ndcg_at_budget": 0.874286,
+   "macro_relevant_precision": 0.86,
+   "macro_relevant_recall": 0.56,
+   "macro_relevant_recall_at_budget": 0.88,
+   "macro_scope": "answerable_cases_only"
+  },
+  "P3_efficiency": {
+   "status": "not_measured_in_quality_scorer"
+  },
+  "execution_backend": "composed-multiroute",
+  "gold_sha256": "01fa0565477427ec5153ddb0bdccaf3e1e6a6335b59b8cc514aa7ab0fbcd5ffe",
+  "input_sha256": "c297095b52222f56bf4c8b40e32f3ee63f4f4192fa5d3e3c84d24dae608be3ac",
+  "lane_id": "774-nlres-R1",
+  "not_a_composite_score": true,
+  "provenance": {
+   "evaluator": {
+    "clean": true,
+    "commit": "4aba9a4c2f27ebcbb27ab8268015a82746ae2d3b"
+   },
+   "runtime": {
+    "clean": true,
+    "commit": "4088823898da27a5c32649321a39d7d4ee466345",
+    "loaded_module": "reference/agentmem_ref/runtime/runtime_composition.py",
+    "loaded_module_blob": "5acaf31bd836c1097863d208ffaeb1e831ab48c7",
+    "protected_tree": "d766e59ed3859b1c1bbd901f8c81bab1f7d2f088"
+   }
+  },
+  "quality_case_count": 35,
+  "reference_time": "2026-10-12T12:00:00Z",
+  "runtime_revision": null,
+  "schema": "served-memory-quality-report-v1"
+ },
+ "R2": {
+  "P0_safety": {
+   "cases_with_prohibited_exposure": 0,
+   "cases_with_stale_exposure": 0
+  },
+  "P1_served_correctness": {
+   "all_critical_groups_covered_rate": 0.76,
+   "answer_abstention_status": "not_measured_without_answering_layer",
+   "answer_abstention_verified": null,
+   "answerable_case_count": 25,
+   "empty_delivery_on_answerable_count": 0,
+   "no_safe_answer_case_count": 10,
+   "no_safe_answer_empty_context_count": 0,
+   "no_safe_answer_served_total": 10,
+   "no_safe_answer_with_context_count": 10,
+   "top1_critical_rate": 0.76,
+   "top1_relevant_rate": 0.92
+  },
+  "P2_context_utility": {
+   "irrelevant_served_total": 2,
+   "macro_critical_coverage": 0.76,
+   "macro_ndcg_at_budget": 0.84,
+   "macro_relevant_precision": 0.9,
+   "macro_relevant_recall": 0.58,
+   "macro_relevant_recall_at_budget": 0.92,
+   "macro_scope": "answerable_cases_only"
+  },
+  "P3_efficiency": {
+   "status": "not_measured_in_quality_scorer"
+  },
+  "execution_backend": "composed-multiroute",
+  "gold_sha256": "01fa0565477427ec5153ddb0bdccaf3e1e6a6335b59b8cc514aa7ab0fbcd5ffe",
+  "input_sha256": "c297095b52222f56bf4c8b40e32f3ee63f4f4192fa5d3e3c84d24dae608be3ac",
+  "lane_id": "774-nlres-R2",
+  "not_a_composite_score": true,
+  "provenance": {
+   "evaluator": {
+    "clean": true,
+    "commit": "4aba9a4c2f27ebcbb27ab8268015a82746ae2d3b"
+   },
+   "runtime": {
+    "clean": true,
+    "commit": "4088823898da27a5c32649321a39d7d4ee466345",
+    "loaded_module": "reference/agentmem_ref/runtime/runtime_composition.py",
+    "loaded_module_blob": "5acaf31bd836c1097863d208ffaeb1e831ab48c7",
+    "protected_tree": "d766e59ed3859b1c1bbd901f8c81bab1f7d2f088"
+   }
+  },
+  "quality_case_count": 35,
+  "reference_time": "2026-10-12T12:00:00Z",
+  "runtime_revision": null,
+  "schema": "served-memory-quality-report-v1"
+ },
+ "R3": {
+  "P0_safety": {
+   "cases_with_prohibited_exposure": 0,
+   "cases_with_stale_exposure": 0
+  },
+  "P1_served_correctness": {
+   "all_critical_groups_covered_rate": 0.64,
+   "answer_abstention_status": "not_measured_without_answering_layer",
+   "answer_abstention_verified": null,
+   "answerable_case_count": 25,
+   "empty_delivery_on_answerable_count": 0,
+   "no_safe_answer_case_count": 10,
+   "no_safe_answer_empty_context_count": 0,
+   "no_safe_answer_served_total": 10,
+   "no_safe_answer_with_context_count": 10,
+   "top1_critical_rate": 0.64,
+   "top1_relevant_rate": 0.92
+  },
+  "P2_context_utility": {
+   "irrelevant_served_total": 2,
+   "macro_critical_coverage": 0.64,
+   "macro_ndcg_at_budget": 0.771428,
+   "macro_relevant_precision": 0.9,
+   "macro_relevant_recall": 0.58,
+   "macro_relevant_recall_at_budget": 0.92,
+   "macro_scope": "answerable_cases_only"
+  },
+  "P3_efficiency": {
+   "status": "not_measured_in_quality_scorer"
+  },
+  "execution_backend": "composed-multiroute",
+  "gold_sha256": "01fa0565477427ec5153ddb0bdccaf3e1e6a6335b59b8cc514aa7ab0fbcd5ffe",
+  "input_sha256": "c297095b52222f56bf4c8b40e32f3ee63f4f4192fa5d3e3c84d24dae608be3ac",
+  "lane_id": "774-nlres-R3",
+  "not_a_composite_score": true,
+  "provenance": {
+   "evaluator": {
+    "clean": true,
+    "commit": "4aba9a4c2f27ebcbb27ab8268015a82746ae2d3b"
+   },
+   "runtime": {
+    "clean": true,
+    "commit": "4088823898da27a5c32649321a39d7d4ee466345",
+    "loaded_module": "reference/agentmem_ref/runtime/runtime_composition.py",
+    "loaded_module_blob": "5acaf31bd836c1097863d208ffaeb1e831ab48c7",
+    "protected_tree": "d766e59ed3859b1c1bbd901f8c81bab1f7d2f088"
+   }
+  },
+  "quality_case_count": 35,
+  "reference_time": "2026-10-12T12:00:00Z",
+  "runtime_revision": null,
+  "schema": "served-memory-quality-report-v1"
+ }
+}
