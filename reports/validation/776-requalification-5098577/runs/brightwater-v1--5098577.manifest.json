@@ -1,0 +1,117 @@
+{
+  "execution_backend": "composed-multiroute",
+  "input_sha256": "323f471fe7dd165cdf2287e47099ddfa956a876558325d5969310d098f173c2f",
+  "lane_id": "776-adopt-memofix",
+  "provenance": {
+    "evaluator": {
+      "clean": true,
+      "commit": "4aba9a4c2f27ebcbb27ab8268015a82746ae2d3b"
+    },
+    "runtime": {
+      "clean": true,
+      "commit": "d393bff14869335b596b793b0291ac7db932c82e",
+      "loaded_module": "reference/agentmem_ref/runtime/runtime_composition.py",
+      "loaded_module_blob": "65a39d5e3d3f052f03985cafa4751ad1ce3d4817",
+      "protected_tree": "4298e8ff6959db168ac8ed61130bf5f1f17f770a"
+    }
+  },
+  "reference_time": "2026-10-12T12:00:00Z",
+  "reference_time_applied_to": [
+    "B08",
+    "B09"
+  ],
+  "reference_time_utc": "2026-10-12T12:00:00.000000Z",
+  "rows": [
+    {
+      "id": "B01",
+      "returned": [
+        "pumps-2",
+        "pumps-4",
+        "pumps-3"
+      ]
+    },
+    {
+      "id": "B02",
+      "returned": [
+        "chl-07",
+        "chl-05",
+        "canteen"
+      ]
+    },
+    {
+      "id": "B03",
+      "returned": [
+        "scada-i83",
+        "canteen",
+        "sap"
+      ]
+    },
+    {
+      "id": "B04",
+      "returned": [
+        "why-bill",
+        "bill-q",
+        "bill-2m"
+      ]
+    },
+    {
+      "id": "B05",
+      "returned": []
+    },
+    {
+      "id": "B06",
+      "returned": [
+        "sap",
+        "why-bill",
+        "canteen"
+      ]
+    },
+    {
+      "id": "B07",
+      "returned": [
+        "sap",
+        "why-bill",
+        "canteen"
+      ]
+    },
+    {
+      "id": "B08",
+      "returned": [
+        "pumps-4",
+        "canteen",
+        "scada-i83"
+      ]
+    },
+    {
+      "id": "B09",
+      "returned": [
+        "chl-07",
+        "canteen"
+      ]
+    },
+    {
+      "id": "B10",
+      "returned": [
+        "leak",
+        "chl-07"
+      ]
+    },
+    {
+      "id": "B11",
+      "returned": [
+        "pumps-2",
+        "pumps-4",
+        "pumps-3"
+      ]
+    },
+    {
+      "id": "B12",
+      "returned": [
+        "scada-i80",
+        "scada-i83",
+        "scada-i81"
+      ]
+    }
+  ],
+  "schema": "served-memory-run-v2"
+}
