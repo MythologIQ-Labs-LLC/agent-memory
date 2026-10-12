@@ -33,7 +33,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 import re
 
-from .adapter import RecallContext, eligible_search
+from .adapter import STATE_CHANGE, RecallContext, eligible_search
 from .configured_restart import ConfigBoundRestartRuntime
 from .contextual_recall_adapter import admission_mode_for_intent, admit_preselected_candidates
 from .projection_governance import ProjectionGovernor
@@ -576,6 +576,30 @@ class ConfiguredCompositionRuntime:
         if (len(result.ranked_admitted) != len(set(result.ranked_admitted))
                 or not set(result.ranked_admitted).issubset(result.admitted)):
             raise RuntimeRecoveryError("ranking violates canonical admission")
+        # validation(773) D773-1: current-state admission has already refused
+        # values superseded by a governed STATE CHANGE. If such an in-scope
+        # value was still the governing one at the reference instant, no
+        # current-state selection can represent that instant: it would serve
+        # the later value (or nothing) as if it applied then. Fail closed and
+        # leave the instant to historical / as-of recall. Error corrections
+        # never held, and out-of-scope candidates are ignored so this check
+        # cannot reveal them.
+        target = parse_time(reference_time)
+        substrate = self.adapter.checkpoint_substrate()
+        for ref, reason in result.refusals.items():
+            if reason != "superseded_not_current":
+                continue
+            fact = substrate.get_fact(ref)
+            if fact is None or not self.adapter.domain_eligible(fact, context):
+                continue
+            record = self.adapter.replacement_record(ref)
+            if not record or record.get("kind") != STATE_CHANGE:
+                continue
+            end = parse_time(record.get("valid_until")) or parse_time(record.get("replaced_at"))
+            if end is None or target < end:
+                raise ValueError(
+                    "reference instant precedes a governed state change; "
+                    "use historical or as-of recall for that instant")
         served: list[str] = []
         known_inapplicable = 0
         unknown = 0
