@@ -1,0 +1,3 @@
+G2-repro               default ['freeze', 'days']  composed-T ['days', 'freeze']  selector-T ['days']
+freeze-still-active?   default ['freeze']  composed-T ['freeze']  selector-T []
+when-did-promo-end?    default ['promo', 'pricing']  composed-T ['pricing', 'promo']  selector-T ['pricing']

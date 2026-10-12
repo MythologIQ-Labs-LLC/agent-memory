@@ -1,0 +1,19 @@
+written at: {'freeze': '2026-01-01T00:00:04Z', 'days': '2026-01-01T00:00:11Z', 'open': '2026-01-01T00:00:18Z'}
+2025-06-01T00:00:00Z             served ['days'] inapp 2 unk 1 {'days': 'unknown_temporal_basis', 'freeze': 'prospectively_applicable', 'open': 'prospectively_applicable'}
+2025-11-25T00:00:00Z             served ['freeze', 'days'] inapp 1 unk 1 {'freeze': 'applicable', 'days': 'unknown_temporal_basis', 'open': 'prospectively_applicable'}
+2025-11-30T23:59:59Z             served ['freeze', 'days'] inapp 1 unk 1 {'freeze': 'applicable', 'days': 'unknown_temporal_basis', 'open': 'prospectively_applicable'}
+2025-12-01T00:00:00Z             served ['days'] inapp 2 unk 1 {'days': 'unknown_temporal_basis', 'freeze': 'outside_target_interval', 'open': 'prospectively_applicable'}
+2025-12-01T01:00:00+01:00        served ['days'] inapp 2 unk 1 {'days': 'unknown_temporal_basis', 'freeze': 'outside_target_interval', 'open': 'prospectively_applicable'}
+2025-11-30T23:30:00-01:00        served ['days'] inapp 2 unk 1 {'days': 'unknown_temporal_basis', 'freeze': 'outside_target_interval', 'open': 'prospectively_applicable'}
+2026-01-01T00:00:00Z             served ['open', 'days'] inapp 1 unk 1 {'open': 'applicable', 'days': 'unknown_temporal_basis', 'freeze': 'outside_target_interval'}
+2026-01-01T00:00:30Z             served ['open', 'days'] inapp 1 unk 1 {'open': 'applicable', 'days': 'unknown_temporal_basis', 'freeze': 'outside_target_interval'}
+2030-01-01T00:00:00Z             served ['open', 'days'] inapp 1 unk 1 {'open': 'applicable', 'days': 'unknown_temporal_basis', 'freeze': 'outside_target_interval'}
+2025-12-01T00:00:00.000001Z      served ['days'] inapp 2 unk 1 {'days': 'unknown_temporal_basis', 'freeze': 'outside_target_interval', 'open': 'prospectively_applicable'}
+rejected 2025-12-01T00:00:00+99:99 ValueError
+rejected 2025-13-01T00:00:00Z ValueError
+rejected 2025-12-01T24:00:00Z ValueError
+ACCEPTED 2025-12-01T00:00:00-00:00 ['days']
+rejected 2025-12-01 00:00:00Z ValueError
+rejected 2025-12-01T00:00:00z ValueError
+ACCEPTED 0001-01-01T00:00:00Z ['days']
+ACCEPTED 9999-12-31T23:59:59Z ['open', 'days']
