@@ -245,6 +245,21 @@ class DeletionPolicies(unittest.TestCase):
         self.assertIn(again.fact_uuid, historical.admitted)
         self.assertFalse({old, new} & set(historical.admitted))
 
+    def test_deleting_one_superseded_version_does_not_hide_the_live_memory(self):
+        # governed_delete accepts any fact bound to the target memory (GAP-SEC-03 LD2).
+        # Deleting a superseded version must not make the live head inadmissible.
+        h = _Store(self)
+        old, new = h.chain("kiln", KILN)
+        out = h.runtime.durable_runtime.governed_delete(
+            replace(h.proposal("kiln", 97, "pruning", review_satisfied=True, approval_refs=("approval:776r",)),
+                    target_class=policy.M1, proposed_strength="tentative"),
+            old, derived_refs=())
+        self.assertTrue(out.committed, out)
+        self.assertEqual(h.adapter.current_fact_uuid("memory:776r:kiln"), new)
+        current = h.recall(mode="current")
+        self.assertIn(new, current.admitted, current.refusals.get(new))
+        self.assertNotIn(old, h.recall().admitted)
+
 
 # ------------------------------------------------------------------ restart and every route
 
