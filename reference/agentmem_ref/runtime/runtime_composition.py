@@ -31,12 +31,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
+import re
 
 from .adapter import RecallContext, eligible_search
 from .configured_restart import ConfigBoundRestartRuntime
 from .contextual_recall_adapter import admission_mode_for_intent, admit_preselected_candidates
 from .projection_governance import ProjectionGovernor
-from .temporal_intent import resolve_intent
+from .temporal_intent import parse_time, resolve_intent
 from .temporal_order_constraints import ExplicitCurrentCrossFactRankingPolicy
 from .vector_retrieval import NativeVectorCandidateRetriever, SEMANTIC_VECTOR_ROUTE
 from ..state.projections import (
@@ -114,6 +115,51 @@ class MultiRouteRecallResult:
 
     def provenance_for(self, candidate_ref: str) -> tuple[RetrievalRouteHit, ...]:
         return tuple(self.route_hits.get(candidate_ref, ()))
+
+
+# Post-v7 experimental opt-in served-context contract (#773).
+# This is NOT part of the frozen #770 v7 declaration or default recall.
+_CURRENT_REFERENCE_TIME = re.compile(
+    r"\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}"
+    r"(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})\\Z"
+)
+_KNOWN_NOT_CURRENT = frozenset((
+    "outside_target_interval",
+    "prospectively_applicable",
+    "limited_by_cross_fact_state_change",
+))
+
+
+@dataclass(frozen=True)
+class CurrentServedContext:
+    """Only a bounded subset of already governed admitted ranked identities.
+
+    This never certifies all available evidence or answer abstention. A known
+    inapplicable item can remain available to a historical read, but must not
+    be represented as current context. Unknown validity is left unknown.
+    """
+
+    served_refs: tuple[str, ...]
+    reference_time: str
+    known_inapplicable_count: int
+    unknown_applicability_count: int
+    complete_evidence_attested: bool = False
+    authority_effect: str = "none"
+    selection_policy_version: str = "0.1.0"
+
+    def __post_init__(self):
+        if (not isinstance(self.served_refs, tuple)
+                or any(type(ref) is not str for ref in self.served_refs)
+                or len(set(self.served_refs)) != len(self.served_refs)
+                or type(self.reference_time) is not str
+                or type(self.known_inapplicable_count) is not int
+                or self.known_inapplicable_count < 0
+                or type(self.unknown_applicability_count) is not int
+                or self.unknown_applicability_count < 0
+                or self.complete_evidence_attested is not False
+                or self.authority_effect != "none"
+                or self.selection_policy_version != "0.1.0"):
+            raise ValueError("invalid or authoritative current context selection")
 
 
 MULTI_ROUTE_RANKING_POLICY = ExplicitCurrentCrossFactRankingPolicy(
@@ -496,6 +542,66 @@ class ConfiguredCompositionRuntime:
             context,
             logical_memory_refs=logical_memory_refs,
             temporal_intent=temporal_intent,
+        )
+
+    def current_served_context(
+        self,
+        query: str,
+        context: RecallContext,
+        *,
+        budget: int,
+        reference_time: str,
+    ) -> CurrentServedContext:
+        """Opt-in bounded current-context selection over governed recall (#773).
+
+        The caller supplies an explicit timezone-aware reference instant.
+        A source with proven out-of-target applicability is not included in
+        the served top-k, but is still allowed through canonical admission
+        and may be recalled historically. Unknown temporal basis remains
+        unproven. This does not assess relevance sufficiency or stopping.
+        """
+        if type(budget) is not int or not 1 <= budget <= 100:
+            raise ValueError("current context budget must be integer 1..100")
+        if (type(reference_time) is not str
+                or not _CURRENT_REFERENCE_TIME.fullmatch(reference_time)
+                or parse_time(reference_time) is None):
+            raise ValueError("current context requires timezone-aware reference instant")
+        result = self.multi_route_recall(
+            query,
+            context,
+            temporal_intent={"mode": "current", "reference_time": reference_time},
+        )
+        if result.authority_effect != "none":
+            raise RuntimeRecoveryError("governed recall asserted unexpected authority")
+        if (len(result.ranked_admitted) != len(set(result.ranked_admitted))
+                or not set(result.ranked_admitted).issubset(result.admitted)):
+            raise RuntimeRecoveryError("ranking violates canonical admission")
+        served: list[str] = []
+        known_inapplicable = 0
+        unknown = 0
+        for ref in result.ranked_admitted:
+            evidence = result.ranking_evidence.get(ref)
+            if type(evidence) is not dict:
+                raise RuntimeRecoveryError("missing governed ranking evidence")
+            applicability = evidence.get("temporal_applicability")
+            if type(applicability) is not str:
+                raise RuntimeRecoveryError("missing explicit temporal applicability")
+            if applicability in _KNOWN_NOT_CURRENT:
+                known_inapplicable += 1
+                continue
+            if applicability not in ("applicable", "unknown_temporal_basis"):
+                # No reference/time or unstated regimes are never equivalent to
+                # a qualified current-context observation.
+                raise RuntimeRecoveryError("unrecognized current temporal applicability")
+            if applicability == "unknown_temporal_basis":
+                unknown += 1
+            if len(served) < budget:
+                served.append(ref)
+        return CurrentServedContext(
+            served_refs=tuple(served),
+            reference_time=reference_time,
+            known_inapplicable_count=known_inapplicable,
+            unknown_applicability_count=unknown,
         )
 
     def projection_admission(self) -> ProjectionAdmission:
