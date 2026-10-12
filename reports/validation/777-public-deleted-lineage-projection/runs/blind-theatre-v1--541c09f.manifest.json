@@ -1,0 +1,193 @@
+{
+  "execution_backend": "composed-multiroute",
+  "input_sha256": "f12dc7ae9ab813ea82961db5a382b1d512f3e1609bb845d462234177aebc3c5a",
+  "lane_id": "776-adopt-memofix",
+  "provenance": {
+    "evaluator": {
+      "clean": true,
+      "commit": "4aba9a4c2f27ebcbb27ab8268015a82746ae2d3b"
+    },
+    "runtime": {
+      "clean": true,
+      "commit": "541c09fc18a0f52f5aa47fb1993b36c0bcc69ca3",
+      "loaded_module": "reference/agentmem_ref/runtime/runtime_composition.py",
+      "loaded_module_blob": "65a39d5e3d3f052f03985cafa4751ad1ce3d4817",
+      "protected_tree": "8e8b7557b7ab5848bb0b315b93f8258ef58f7f6b"
+    }
+  },
+  "reference_time": "2026-10-12T12:00:00Z",
+  "reference_time_applied_to": [
+    "Q10",
+    "Q11",
+    "Q12",
+    "Q23"
+  ],
+  "reference_time_utc": "2026-10-12T12:00:00.000000Z",
+  "rows": [
+    {
+      "id": "Q01",
+      "returned": [
+        "rr-annex",
+        "cs-basement"
+      ]
+    },
+    {
+      "id": "Q02",
+      "returned": [
+        "ls-northern-rig",
+        "signin-policy"
+      ]
+    },
+    {
+      "id": "Q03",
+      "returned": [
+        "sm-priya-ramesh",
+        "sm-tomasz"
+      ]
+    },
+    {
+      "id": "Q04",
+      "returned": [
+        "tp-26",
+        "why-price-28"
+      ]
+    },
+    {
+      "id": "Q05",
+      "returned": [
+        "on-nov-21",
+        "on-nov-20"
+      ]
+    },
+    {
+      "id": "Q06",
+      "returned": [
+        "rr-church-hall",
+        "rr-drill-hall"
+      ]
+    },
+    {
+      "id": "Q07",
+      "returned": [
+        "why-price-28",
+        "ls-brightwell"
+      ]
+    },
+    {
+      "id": "Q08",
+      "returned": [
+        "why-lumen-dropped",
+        "ls-lumen"
+      ]
+    },
+    {
+      "id": "Q09",
+      "returned": [
+        "rr-drill-hall",
+        "why-drill-hall",
+        "rr-church-hall"
+      ]
+    },
+    {
+      "id": "Q10",
+      "returned": [
+        "pp-inkworks"
+      ]
+    },
+    {
+      "id": "Q11",
+      "returned": [
+        "bo-10am"
+      ]
+    },
+    {
+      "id": "Q12",
+      "returned": [
+        "pp-inkworks"
+      ]
+    },
+    {
+      "id": "Q13",
+      "returned": [
+        "signin-policy"
+      ]
+    },
+    {
+      "id": "Q14",
+      "returned": [
+        "sm-priya-ramesh",
+        "sm-tomasz"
+      ]
+    },
+    {
+      "id": "Q15",
+      "returned": [
+        "why-drill-hall",
+        "bo-11am"
+      ]
+    },
+    {
+      "id": "Q16",
+      "returned": [
+        "rr-church-hall",
+        "why-lumen-dropped"
+      ]
+    },
+    {
+      "id": "Q17",
+      "returned": [
+        "ss-brightwell",
+        "signin-policy"
+      ]
+    },
+    {
+      "id": "Q18",
+      "returned": [
+        "rr-church-hall",
+        "rr-drill-hall"
+      ]
+    },
+    {
+      "id": "Q19",
+      "returned": [
+        "tp-24",
+        "tp-28"
+      ]
+    },
+    {
+      "id": "Q20",
+      "returned": [
+        "pp-inkworks",
+        "pp-quayside"
+      ]
+    },
+    {
+      "id": "Q21",
+      "returned": [
+        "studio-b-flood",
+        "cs-room-4"
+      ]
+    },
+    {
+      "id": "Q22",
+      "returned": [
+        "cs-basement",
+        "rr-annex"
+      ]
+    },
+    {
+      "id": "Q23",
+      "returned": [
+        "on-nov-20"
+      ]
+    },
+    {
+      "id": "Q24",
+      "returned": [
+        "tp-28",
+        "tp-24"
+      ]
+    }
+  ],
+  "schema": "served-memory-run-v2"
+}
