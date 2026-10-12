@@ -29,6 +29,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H01"
@@ -38,6 +42,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H02"
@@ -47,6 +55,10 @@
             "relevant_recall_at_budget": [
               null,
               0.5
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H03"
@@ -56,6 +68,10 @@
             "relevant_recall_at_budget": [
               null,
               0.5
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H04"
@@ -65,6 +81,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H05"
@@ -74,6 +94,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H06"
@@ -83,6 +107,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H07"
@@ -92,6 +120,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H08"
@@ -101,6 +133,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H09"
@@ -110,6 +146,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H10"
@@ -119,6 +159,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H11"
@@ -128,6 +172,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H12"
@@ -137,6 +185,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H13"
@@ -146,6 +198,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H14"
@@ -155,6 +211,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H15"
@@ -164,15 +224,50 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H16"
         },
         {
           "changes": {
+            "top1_critical": [
+              null,
+              false
+            ]
+          },
+          "id": "H17"
+        },
+        {
+          "changes": {
+            "top1_critical": [
+              null,
+              false
+            ]
+          },
+          "id": "H18"
+        },
+        {
+          "changes": {
+            "top1_critical": [
+              null,
+              false
+            ]
+          },
+          "id": "H19"
+        },
+        {
+          "changes": {
             "relevant_recall_at_budget": [
               null,
               0.0
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H20"
@@ -182,6 +277,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H21"
@@ -191,6 +290,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H22"
@@ -200,6 +303,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H23"
@@ -209,6 +316,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H24"
@@ -243,6 +354,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H01"
@@ -252,6 +367,10 @@
             "relevant_recall_at_budget": [
               null,
               0.5
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H02"
@@ -261,6 +380,10 @@
             "relevant_recall_at_budget": [
               null,
               0.0
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H03"
@@ -270,6 +393,10 @@
             "relevant_recall_at_budget": [
               null,
               0.5
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H04"
@@ -279,6 +406,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H05"
@@ -288,6 +419,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H06"
@@ -297,6 +432,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H07"
@@ -306,6 +445,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H08"
@@ -315,6 +458,10 @@
             "relevant_recall_at_budget": [
               null,
               0.0
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H09"
@@ -324,6 +471,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H10"
@@ -333,6 +484,10 @@
             "relevant_recall_at_budget": [
               null,
               0.0
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H11"
@@ -342,6 +497,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H12"
@@ -351,6 +510,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H13"
@@ -360,6 +523,10 @@
             "relevant_recall_at_budget": [
               null,
               0.5
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H14"
@@ -369,6 +536,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H15"
@@ -378,15 +549,50 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H16"
         },
         {
           "changes": {
+            "top1_critical": [
+              null,
+              false
+            ]
+          },
+          "id": "H17"
+        },
+        {
+          "changes": {
+            "top1_critical": [
+              null,
+              false
+            ]
+          },
+          "id": "H18"
+        },
+        {
+          "changes": {
+            "top1_critical": [
+              null,
+              false
+            ]
+          },
+          "id": "H19"
+        },
+        {
+          "changes": {
             "relevant_recall_at_budget": [
               null,
               0.0
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H20"
@@ -396,6 +602,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H21"
@@ -405,6 +615,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H22"
@@ -414,6 +628,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H23"
@@ -423,6 +641,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H24"
@@ -457,6 +679,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H01"
@@ -466,6 +692,10 @@
             "relevant_recall_at_budget": [
               null,
               0.5
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H02"
@@ -475,6 +705,10 @@
             "relevant_recall_at_budget": [
               null,
               0.0
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H03"
@@ -484,6 +718,10 @@
             "relevant_recall_at_budget": [
               null,
               0.0
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H04"
@@ -493,6 +731,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H05"
@@ -502,6 +744,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H06"
@@ -511,6 +757,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H07"
@@ -520,6 +770,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H08"
@@ -529,6 +783,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H09"
@@ -538,6 +796,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H10"
@@ -547,6 +809,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H11"
@@ -556,6 +822,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H12"
@@ -565,6 +835,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H13"
@@ -574,6 +848,10 @@
             "relevant_recall_at_budget": [
               null,
               0.5
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H14"
@@ -583,6 +861,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H15"
@@ -592,15 +874,50 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H16"
         },
         {
           "changes": {
+            "top1_critical": [
+              null,
+              false
+            ]
+          },
+          "id": "H17"
+        },
+        {
+          "changes": {
+            "top1_critical": [
+              null,
+              false
+            ]
+          },
+          "id": "H18"
+        },
+        {
+          "changes": {
+            "top1_critical": [
+              null,
+              false
+            ]
+          },
+          "id": "H19"
+        },
+        {
+          "changes": {
             "relevant_recall_at_budget": [
               null,
               0.0
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H20"
@@ -610,6 +927,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H21"
@@ -619,6 +940,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H22"
@@ -628,6 +953,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H23"
@@ -637,6 +966,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H24"
@@ -671,6 +1004,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H01"
@@ -680,6 +1017,10 @@
             "relevant_recall_at_budget": [
               null,
               0.5
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H02"
@@ -689,6 +1030,10 @@
             "relevant_recall_at_budget": [
               null,
               0.0
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H03"
@@ -698,6 +1043,10 @@
             "relevant_recall_at_budget": [
               null,
               0.5
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H04"
@@ -707,6 +1056,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H05"
@@ -716,6 +1069,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H06"
@@ -725,6 +1082,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H07"
@@ -734,6 +1095,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H08"
@@ -743,6 +1108,10 @@
             "relevant_recall_at_budget": [
               null,
               0.0
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H09"
@@ -752,6 +1121,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H10"
@@ -761,6 +1134,10 @@
             "relevant_recall_at_budget": [
               null,
               0.0
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H11"
@@ -770,6 +1147,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H12"
@@ -779,6 +1160,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H13"
@@ -788,6 +1173,10 @@
             "relevant_recall_at_budget": [
               null,
               0.5
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H14"
@@ -797,6 +1186,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H15"
@@ -806,15 +1199,50 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H16"
         },
         {
           "changes": {
+            "top1_critical": [
+              null,
+              false
+            ]
+          },
+          "id": "H17"
+        },
+        {
+          "changes": {
+            "top1_critical": [
+              null,
+              false
+            ]
+          },
+          "id": "H18"
+        },
+        {
+          "changes": {
+            "top1_critical": [
+              null,
+              false
+            ]
+          },
+          "id": "H19"
+        },
+        {
+          "changes": {
             "relevant_recall_at_budget": [
               null,
               0.0
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H20"
@@ -824,6 +1252,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H21"
@@ -833,6 +1265,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "H22"
@@ -842,6 +1278,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H23"
@@ -851,6 +1291,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "H24"
@@ -885,6 +1329,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "Q-current-endpoint"
@@ -894,6 +1342,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "Q-compound"
@@ -903,15 +1355,32 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "Q-release-history"
         },
         {
           "changes": {
+            "top1_critical": [
+              null,
+              false
+            ]
+          },
+          "id": "Q-no-owner"
+        },
+        {
+          "changes": {
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "Q-release-current"
@@ -946,6 +1415,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "Q-current-endpoint"
@@ -955,6 +1428,10 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "Q-compound"
@@ -964,15 +1441,32 @@
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              true
             ]
           },
           "id": "Q-release-history"
         },
         {
           "changes": {
+            "top1_critical": [
+              null,
+              false
+            ]
+          },
+          "id": "Q-no-owner"
+        },
+        {
+          "changes": {
             "relevant_recall_at_budget": [
               null,
               1.0
+            ],
+            "top1_critical": [
+              null,
+              false
             ]
           },
           "id": "Q-release-current"

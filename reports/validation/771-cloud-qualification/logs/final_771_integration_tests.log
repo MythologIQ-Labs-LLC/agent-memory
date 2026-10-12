@@ -1,0 +1,13 @@
+test_bad_inputs_fail_before_any_governed_write (tests.test_771_served_memory_integration.GovernedServedMemoryQualityTests.test_bad_inputs_fail_before_any_governed_write) ... ok
+test_budget_not_leaked_as_fake_stop_or_completeness (tests.test_771_served_memory_integration.GovernedServedMemoryQualityTests.test_budget_not_leaked_as_fake_stop_or_completeness) ... ok
+test_governed_lexical_and_composed_routes_share_the_same_scored_cases (tests.test_771_served_memory_integration.GovernedServedMemoryQualityTests.test_governed_lexical_and_composed_routes_share_the_same_scored_cases) ... ok
+test_labels_do_not_enter_the_runtime_execution_path (tests.test_771_served_memory_integration.GovernedServedMemoryQualityTests.test_labels_do_not_enter_the_runtime_execution_path) ... ok
+test_real_governed_multiroute_evidence_can_be_scored_after_execution (tests.test_771_served_memory_integration.GovernedServedMemoryQualityTests.test_real_governed_multiroute_evidence_can_be_scored_after_execution) ... ok
+test_reuse_of_initialized_store_is_rejected_before_new_writes (tests.test_771_served_memory_integration.GovernedServedMemoryQualityTests.test_reuse_of_initialized_store_is_rejected_before_new_writes) ... ok
+test_unrecognized_backend_fails_before_creating_a_store (tests.test_771_served_memory_integration.GovernedServedMemoryQualityTests.test_unrecognized_backend_fails_before_creating_a_store) ... ok
+test_unrelated_directory_content_blocks_evaluation (tests.test_771_served_memory_integration.GovernedServedMemoryQualityTests.test_unrelated_directory_content_blocks_evaluation) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.373s
+
+OK

@@ -89,6 +89,19 @@ class RuntimeGapReproductions(unittest.TestCase):
         self.assertTrue({"limit", "timeout", "amounts"} <= set(served), served)
 
     @unittest.expectedFailure
+    def test_G6_historical_intent_ranks_the_superseded_value_first(self):
+        # Holdout H02/H14: declared historical intent ADMITS the superseded
+        # state-change value but still ranks the current value above it, with
+        # identical lexical overlap.
+        events = [_retain("pg", "The ledger database runs PostgreSQL 15."),
+                  {"id": "pg16", "op": "update", "memory": "pg", "text": "The ledger database runs PostgreSQL 16."},
+                  _retain("room", "The ledger room is booked for the review.")]
+        served, _ = _serve(events, "Which PostgreSQL version did the ledger database run previously?",
+                           intent="historical")
+        self.assertIn("pg", served)  # admitted: this part already holds
+        self.assertEqual(served[:1], ["pg"])
+
+    @unittest.expectedFailure
     def test_G5_lexical_ties_do_not_depend_on_write_order(self):
         # governed-lexical breaks score ties by insertion-ordered identifiers,
         # so the served top-1 flips when unrelated history is written earlier.

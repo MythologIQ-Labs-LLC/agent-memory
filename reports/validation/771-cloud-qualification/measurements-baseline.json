@@ -6,7 +6,7 @@
           "P3_engineering": {
             "note": "single cold run incl. governed writes; tiny corpora, not a scalability result",
             "queries": 24,
-            "store_build_plus_all_queries_seconds": 0.241
+            "store_build_plus_all_queries_seconds": 0.337
           },
           "diagnostics": [
             {
@@ -494,6 +494,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "changing-fact-current",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -521,6 +522,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "changing-fact-history",
+              "top1_critical": false,
               "top1_relevant": true
             },
             {
@@ -549,6 +551,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "decision-why-history",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -579,6 +582,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "decision-why-history",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -607,6 +611,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "decision-why",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -632,6 +637,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "changing-fact-current",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -660,6 +666,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "unreliable-source",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -685,6 +692,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "correction-current",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -713,6 +721,7 @@
                 "freeze-bf25"
               ],
               "stratum": "expired-window",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -739,6 +748,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "multi-fact-why",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -764,6 +774,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "single-fact",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -790,6 +801,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "decision-why",
+              "top1_critical": false,
               "top1_relevant": true
             },
             {
@@ -817,6 +829,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "changing-fact-current",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -844,6 +857,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "correction-history",
+              "top1_critical": false,
               "top1_relevant": true
             },
             {
@@ -869,6 +883,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "paraphrase",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -894,6 +909,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "single-fact",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -922,6 +938,7 @@
               "safely_answerable": false,
               "stale_served": [],
               "stratum": "no-answer",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -950,6 +967,7 @@
               "safely_answerable": false,
               "stale_served": [],
               "stratum": "no-answer-deleted",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -979,6 +997,7 @@
               "safely_answerable": false,
               "stale_served": [],
               "stratum": "no-answer-cross-project",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -1014,6 +1033,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "multi-fact-current",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -1041,6 +1061,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "unseen-terminology",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -1069,6 +1090,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "contradiction",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -1095,6 +1117,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "decision-why",
+              "top1_critical": false,
               "top1_relevant": true
             },
             {
@@ -1120,6 +1143,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "distractor-domain",
+              "top1_critical": true,
               "top1_relevant": true
             }
           ],
@@ -1138,6 +1162,7 @@
               "no_safe_answer_empty_context_count": 0,
               "no_safe_answer_served_total": 9,
               "no_safe_answer_with_context_count": 3,
+              "top1_critical_rate": 0.571429,
               "top1_relevant_rate": 0.761905
             },
             "P2_context_utility": {
@@ -1343,7 +1368,7 @@
                 ]
               }
             ],
-            "runtime_revision": "478d112ff64fd3d6bdbe8b02c250625891b36661",
+            "runtime_revision": "b2c266c114cb5a9ffe3ffe59e19a8aa7905d3324",
             "schema": "served-memory-run-v1"
           }
         },
@@ -1351,7 +1376,7 @@
           "P3_engineering": {
             "note": "single cold run incl. governed writes; tiny corpora, not a scalability result",
             "queries": 24,
-            "store_build_plus_all_queries_seconds": 0.242
+            "store_build_plus_all_queries_seconds": 0.276
           },
           "diagnostics": [
             {
@@ -1840,6 +1865,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "changing-fact-current",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -1867,6 +1893,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "changing-fact-history",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -1895,6 +1922,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "decision-why-history",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -1922,6 +1950,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "decision-why-history",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -1950,6 +1979,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "decision-why",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -1975,6 +2005,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "changing-fact-current",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -2003,6 +2034,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "unreliable-source",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -2028,6 +2060,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "correction-current",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -2059,6 +2092,7 @@
                 "freeze-bf25"
               ],
               "stratum": "expired-window",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -2085,6 +2119,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "multi-fact-why",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -2113,6 +2148,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "single-fact",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -2139,6 +2175,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "decision-why",
+              "top1_critical": false,
               "top1_relevant": true
             },
             {
@@ -2166,6 +2203,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "changing-fact-current",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -2193,6 +2231,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "correction-history",
+              "top1_critical": false,
               "top1_relevant": true
             },
             {
@@ -2218,6 +2257,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "paraphrase",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -2243,6 +2283,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "single-fact",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -2271,6 +2312,7 @@
               "safely_answerable": false,
               "stale_served": [],
               "stratum": "no-answer",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -2299,6 +2341,7 @@
               "safely_answerable": false,
               "stale_served": [],
               "stratum": "no-answer-deleted",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -2328,6 +2371,7 @@
               "safely_answerable": false,
               "stale_served": [],
               "stratum": "no-answer-cross-project",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -2364,6 +2408,7 @@
                 "freeze-bf25"
               ],
               "stratum": "multi-fact-current",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -2392,6 +2437,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "unseen-terminology",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -2420,6 +2466,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "contradiction",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -2446,6 +2493,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "decision-why",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -2471,6 +2519,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "distractor-domain",
+              "top1_critical": true,
               "top1_relevant": true
             }
           ],
@@ -2489,6 +2538,7 @@
               "no_safe_answer_empty_context_count": 0,
               "no_safe_answer_served_total": 9,
               "no_safe_answer_with_context_count": 3,
+              "top1_critical_rate": 0.47619,
               "top1_relevant_rate": 0.571429
             },
             "P2_context_utility": {
@@ -2694,7 +2744,7 @@
                 ]
               }
             ],
-            "runtime_revision": "478d112ff64fd3d6bdbe8b02c250625891b36661",
+            "runtime_revision": "b2c266c114cb5a9ffe3ffe59e19a8aa7905d3324",
             "schema": "served-memory-run-v1"
           }
         }
@@ -2708,7 +2758,7 @@
           "P3_engineering": {
             "note": "single cold run incl. governed writes; tiny corpora, not a scalability result",
             "queries": 24,
-            "store_build_plus_all_queries_seconds": 0.275
+            "store_build_plus_all_queries_seconds": 0.271
           },
           "diagnostics": [
             {
@@ -3216,6 +3266,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "changing-fact-current",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -3242,6 +3293,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "changing-fact-history",
+              "top1_critical": false,
               "top1_relevant": true
             },
             {
@@ -3269,6 +3321,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "decision-why-history",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -3298,6 +3351,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "decision-why-history",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -3326,6 +3380,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "decision-why",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -3351,6 +3406,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "changing-fact-current",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -3379,6 +3435,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "unreliable-source",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -3404,6 +3461,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "correction-current",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -3432,6 +3490,7 @@
                 "freeze-bf25"
               ],
               "stratum": "expired-window",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -3458,6 +3517,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "multi-fact-why",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -3483,6 +3543,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "single-fact",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -3509,6 +3570,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "decision-why",
+              "top1_critical": false,
               "top1_relevant": true
             },
             {
@@ -3536,6 +3598,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "changing-fact-current",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -3562,6 +3625,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "correction-history",
+              "top1_critical": false,
               "top1_relevant": true
             },
             {
@@ -3587,6 +3651,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "paraphrase",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -3612,6 +3677,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "single-fact",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -3640,6 +3706,7 @@
               "safely_answerable": false,
               "stale_served": [],
               "stratum": "no-answer",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -3668,6 +3735,7 @@
               "safely_answerable": false,
               "stale_served": [],
               "stratum": "no-answer-deleted",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -3697,6 +3765,7 @@
               "safely_answerable": false,
               "stale_served": [],
               "stratum": "no-answer-cross-project",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -3732,6 +3801,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "multi-fact-current",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -3759,6 +3829,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "unseen-terminology",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -3787,6 +3858,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "contradiction",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -3813,6 +3885,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "decision-why",
+              "top1_critical": false,
               "top1_relevant": true
             },
             {
@@ -3838,6 +3911,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "distractor-domain",
+              "top1_critical": true,
               "top1_relevant": true
             }
           ],
@@ -3856,6 +3930,7 @@
               "no_safe_answer_empty_context_count": 0,
               "no_safe_answer_served_total": 9,
               "no_safe_answer_with_context_count": 3,
+              "top1_critical_rate": 0.619048,
               "top1_relevant_rate": 0.809524
             },
             "P2_context_utility": {
@@ -4061,7 +4136,7 @@
                 ]
               }
             ],
-            "runtime_revision": "478d112ff64fd3d6bdbe8b02c250625891b36661",
+            "runtime_revision": "b2c266c114cb5a9ffe3ffe59e19a8aa7905d3324",
             "schema": "served-memory-run-v1"
           }
         },
@@ -4069,7 +4144,7 @@
           "P3_engineering": {
             "note": "single cold run incl. governed writes; tiny corpora, not a scalability result",
             "queries": 24,
-            "store_build_plus_all_queries_seconds": 0.288
+            "store_build_plus_all_queries_seconds": 0.237
           },
           "diagnostics": [
             {
@@ -4558,6 +4633,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "changing-fact-current",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -4585,6 +4661,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "changing-fact-history",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -4613,6 +4690,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "decision-why-history",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -4640,6 +4718,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "decision-why-history",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -4668,6 +4747,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "decision-why",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -4693,6 +4773,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "changing-fact-current",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -4721,6 +4802,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "unreliable-source",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -4746,6 +4828,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "correction-current",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -4777,6 +4860,7 @@
                 "freeze-bf25"
               ],
               "stratum": "expired-window",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -4803,6 +4887,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "multi-fact-why",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -4831,6 +4916,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "single-fact",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -4857,6 +4943,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "decision-why",
+              "top1_critical": false,
               "top1_relevant": true
             },
             {
@@ -4884,6 +4971,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "changing-fact-current",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -4911,6 +4999,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "correction-history",
+              "top1_critical": false,
               "top1_relevant": true
             },
             {
@@ -4936,6 +5025,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "paraphrase",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -4961,6 +5051,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "single-fact",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -4989,6 +5080,7 @@
               "safely_answerable": false,
               "stale_served": [],
               "stratum": "no-answer",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -5017,6 +5109,7 @@
               "safely_answerable": false,
               "stale_served": [],
               "stratum": "no-answer-deleted",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -5046,6 +5139,7 @@
               "safely_answerable": false,
               "stale_served": [],
               "stratum": "no-answer-cross-project",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -5082,6 +5176,7 @@
                 "freeze-bf25"
               ],
               "stratum": "multi-fact-current",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -5110,6 +5205,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "unseen-terminology",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -5138,6 +5234,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "contradiction",
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -5164,6 +5261,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "decision-why",
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -5189,6 +5287,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": "distractor-domain",
+              "top1_critical": true,
               "top1_relevant": true
             }
           ],
@@ -5207,6 +5306,7 @@
               "no_safe_answer_empty_context_count": 0,
               "no_safe_answer_served_total": 9,
               "no_safe_answer_with_context_count": 3,
+              "top1_critical_rate": 0.47619,
               "top1_relevant_rate": 0.571429
             },
             "P2_context_utility": {
@@ -5412,7 +5512,7 @@
                 ]
               }
             ],
-            "runtime_revision": "478d112ff64fd3d6bdbe8b02c250625891b36661",
+            "runtime_revision": "b2c266c114cb5a9ffe3ffe59e19a8aa7905d3324",
             "schema": "served-memory-run-v1"
           }
         }
@@ -5426,7 +5526,7 @@
           "P3_engineering": {
             "note": "single cold run incl. governed writes; tiny corpora, not a scalability result",
             "queries": 5,
-            "store_build_plus_all_queries_seconds": 0.054
+            "store_build_plus_all_queries_seconds": 0.068
           },
           "diagnostics": null,
           "per_query": [
@@ -5456,6 +5556,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": null,
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -5482,6 +5583,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": null,
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -5508,6 +5610,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": null,
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -5534,6 +5637,7 @@
               "safely_answerable": false,
               "stale_served": [],
               "stratum": null,
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -5562,6 +5666,7 @@
                 "release-old"
               ],
               "stratum": null,
+              "top1_critical": true,
               "top1_relevant": true
             }
           ],
@@ -5580,6 +5685,7 @@
               "no_safe_answer_empty_context_count": 0,
               "no_safe_answer_served_total": 2,
               "no_safe_answer_with_context_count": 1,
+              "top1_critical_rate": 1.0,
               "top1_relevant_rate": 1.0
             },
             "P2_context_utility": {
@@ -5637,7 +5743,7 @@
                 ]
               }
             ],
-            "runtime_revision": "478d112ff64fd3d6bdbe8b02c250625891b36661",
+            "runtime_revision": "b2c266c114cb5a9ffe3ffe59e19a8aa7905d3324",
             "schema": "served-memory-run-v1"
           }
         },
@@ -5645,7 +5751,7 @@
           "P3_engineering": {
             "note": "single cold run incl. governed writes; tiny corpora, not a scalability result",
             "queries": 5,
-            "store_build_plus_all_queries_seconds": 0.047
+            "store_build_plus_all_queries_seconds": 0.067
           },
           "diagnostics": null,
           "per_query": [
@@ -5675,6 +5781,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": null,
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -5701,6 +5808,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": null,
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -5727,6 +5835,7 @@
               "safely_answerable": true,
               "stale_served": [],
               "stratum": null,
+              "top1_critical": true,
               "top1_relevant": true
             },
             {
@@ -5753,6 +5862,7 @@
               "safely_answerable": false,
               "stale_served": [],
               "stratum": null,
+              "top1_critical": false,
               "top1_relevant": false
             },
             {
@@ -5781,6 +5891,7 @@
                 "release-old"
               ],
               "stratum": null,
+              "top1_critical": false,
               "top1_relevant": false
             }
           ],
@@ -5799,6 +5910,7 @@
               "no_safe_answer_empty_context_count": 0,
               "no_safe_answer_served_total": 2,
               "no_safe_answer_with_context_count": 1,
+              "top1_critical_rate": 0.75,
               "top1_relevant_rate": 0.75
             },
             "P2_context_utility": {
@@ -5856,7 +5968,7 @@
                 ]
               }
             ],
-            "runtime_revision": "478d112ff64fd3d6bdbe8b02c250625891b36661",
+            "runtime_revision": "b2c266c114cb5a9ffe3ffe59e19a8aa7905d3324",
             "schema": "served-memory-run-v1"
           }
         }
@@ -5866,5 +5978,5 @@
     }
   },
   "label": "baseline",
-  "runtime_revision": "478d112ff64fd3d6bdbe8b02c250625891b36661"
+  "runtime_revision": "b2c266c114cb5a9ffe3ffe59e19a8aa7905d3324"
 }
