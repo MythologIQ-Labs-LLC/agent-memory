@@ -45,6 +45,33 @@ def _gold():
     ]}
 
 
+class LabelIntegrityDefects(unittest.TestCase):
+    """Evaluator-qualification defects; each failed before its repair."""
+
+    def test_R_A1_gold_cannot_credit_an_error_corrected_value(self):
+        # An error correction declares the previous value was never true; the
+        # runtime refuses it as corrected_as_false for every intent. Gold that
+        # makes it the critical answer to a historical question measures the
+        # label, not memory quality (the Halcyon v1 encoding defect).
+        data = copy.deepcopy(INPUTS)
+        self.assertEqual(data["events"][1]["op"], "correct")
+        gold = _gold()
+        hist = gold["cases"][1]
+        self.assertEqual(hist["critical_groups"], [["db-v1"]])
+        facts = lifecycle.lifecycle_facts(data)
+        run = {"schema": "served-memory-run-v1", "runtime_revision": "t", "lane_id": "t",
+               "execution_backend": "composed-multiroute",
+               "input_sha256": lifecycle.canonical_input_digest(data),
+               "rows": [{"id": q["id"], "returned": []} for q in data["queries"]]}
+        self.assertEqual(facts["error_corrected"], ["db-v1"])
+        with self.assertRaisesRegex(ValueError, "error-corrected"):
+            qualify(data, gold, run)
+        # The same history recorded as a STATE CHANGE is legitimate history.
+        data["events"][1]["op"] = "update"
+        run["input_sha256"] = lifecycle.canonical_input_digest(data)
+        qualify(data, _gold(), run)
+
+
 class LifecycleRunnerTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

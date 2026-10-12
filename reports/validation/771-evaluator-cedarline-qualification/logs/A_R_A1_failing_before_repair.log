@@ -1,0 +1,14 @@
+E
+======================================================================
+ERROR: test_R_A1_gold_cannot_credit_an_error_corrected_value (tests.test_served_memory_lifecycle_771.LabelIntegrityDefects.test_R_A1_gold_cannot_credit_an_error_corrected_value)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt3/eval/tests/test_served_memory_lifecycle_771.py", line 66, in test_R_A1_gold_cannot_credit_an_error_corrected_value
+    self.assertEqual(facts["error_corrected"], ["db-v1"])
+                     ~~~~~^^^^^^^^^^^^^^^^^^^
+KeyError: 'error_corrected'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (errors=1)
