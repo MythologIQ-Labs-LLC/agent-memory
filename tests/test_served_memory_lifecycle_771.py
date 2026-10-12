@@ -111,6 +111,18 @@ class LifecycleRunnerTests(unittest.TestCase):
                     lifecycle.run_scenarios(data, store, revision="t", lane_id="l")
                 self.assertFalse(store.exists())
 
+    def test_a_value_corrected_repeatedly_commits_every_step(self):
+        data = copy.deepcopy(INPUTS)
+        data["events"].insert(2, {"id": "db-v3", "op": "correct", "memory": "db",
+                                  "text": "The primary database is PostgreSQL 16"})
+        facts = lifecycle.lifecycle_facts(data)
+        self.assertEqual(facts["superseded"], ["db-v1", "db-v2"])
+        with tempfile.TemporaryDirectory() as tmp:
+            run, _ = lifecycle.run_scenarios(data, Path(tmp), revision="t", lane_id="l")
+        current = next(r for r in run["rows"] if r["id"] == "cur")["returned"]
+        self.assertNotIn("db-v1", current)
+        self.assertNotIn("db-v2", current)
+
     def test_budget_diagnostics_report_relevant_but_late_memories(self):
         for backend, (run, diag) in self.runs.items():
             for row, extra in zip(run["rows"], diag):

@@ -172,25 +172,38 @@ def lifecycle_facts(data: dict) -> dict:
     }
 
 
-def _host_corpus(data: dict) -> TransitionRuleCorpus:
-    rules = []
+def _host_corpora(data: dict) -> dict[str, TransitionRuleCorpus]:
+    """One single-rule corpus per transition event.
+
+    TransitionRuleCorpus keys rules by (target, criterion), so one corpus can
+    adjudicate only ONE correction per memory; a value corrected repeatedly
+    (13 -> 15 -> 16) needs a rule per step.
+    """
+    corpora: dict[str, TransitionRuleCorpus] = {}
     value: dict[str, str] = {}
     for event in data["events"]:
         target = _memory_ref(event["memory"])
         if event["op"] == "retain":
             value[event["memory"]] = event["text"]
         elif event["op"] == "correct":
-            rules.append(TransitionRule(
+            corpora[event["id"]] = TransitionRuleCorpus((TransitionRule(
                 rule_id="rule:" + event["id"], target_reference=target,
                 criterion="value-correction", from_state=value[event["memory"]],
-                permitted_to_values=(event["text"],)))
+                permitted_to_values=(event["text"],)),))
             value[event["memory"]] = event["text"]
         else:
-            rules.append(TransitionRule(
+            corpora[event["id"]] = TransitionRuleCorpus((TransitionRule(
                 rule_id="rule:" + event["id"], target_reference=target,
                 criterion="permanent-deletion", from_state="current",
-                permitted_to_values=("deleted",)))
-    return TransitionRuleCorpus(rules)
+                permitted_to_values=("deleted",)),))
+    return corpora
+
+
+def _host_registry(corpora: dict[str, TransitionRuleCorpus]) -> VerifierRegistry:
+    verifiers = [corpus.verifier() for corpus in corpora.values()]
+    registry = VerifierRegistry()
+    registry.register(TRANSITION_VERIFIER, lambda item: any(v(item) for v in verifiers))
+    return registry
 
 
 def _event_proposal(data, event, memory_scope, *, op, version=0):
@@ -216,9 +229,8 @@ def run_scenarios(data, root: Path, *, revision: str, lane_id: str,
     root = Path(root)
     if root.exists() and (not root.is_dir() or any(root.iterdir())):
         raise ValueError("evaluation requires an empty isolated store; replay would mix corpora")
-    corpus = _host_corpus(data)
-    registry = VerifierRegistry()
-    registry.register(TRANSITION_VERIFIER, corpus.verifier())
+    corpora = _host_corpora(data)
+    registry = _host_registry(corpora)
     runtime = ConfiguredCompositionRuntime.create(
         root, tenant=data["tenant"], verifier_registry=registry,
         plan=validate_runtime_configuration(json.loads(CONFIG.read_text(encoding="utf-8"))),
@@ -244,7 +256,7 @@ def run_scenarios(data, root: Path, *, revision: str, lane_id: str,
                 outcome = adapter.commit_proposal(proposal, event["text"], temporal=temporal)
             version[memory] = 1
         else:
-            evidence = corpus.evidence_for(
+            evidence = corpora[event["id"]].evidence_for(
                 target_reference=_memory_ref(memory),
                 criterion="value-correction" if op == "correct" else "permanent-deletion",
                 pre_state=value[memory] if op == "correct" else "current",
