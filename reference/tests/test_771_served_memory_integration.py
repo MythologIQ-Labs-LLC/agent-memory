@@ -62,6 +62,29 @@ class GovernedServedMemoryQualityTests(unittest.TestCase):
         self.assertEqual(original, replay)
         self.assertNotEqual(self.gold, altered_gold)
 
+    def test_governed_lexical_and_composed_routes_share_the_same_scored_cases(self):
+        with tempfile.TemporaryDirectory() as a, tempfile.TemporaryDirectory() as b:
+            composed = run_scenarios(copy.deepcopy(self.inputs), Path(a),
+                                     revision="same-revision", lane_id="composed-reference-v1")
+            lexical = run_scenarios(copy.deepcopy(self.inputs), Path(b),
+                                    revision="same-revision", lane_id="lexical-reference-v1",
+                                    backend="governed-lexical")
+        self.assertEqual([r["id"] for r in composed["rows"]],
+                         [r["id"] for r in lexical["rows"]])
+        for run in (composed, lexical):
+            observed = score(copy.deepcopy(self.gold), run)
+            self.assertEqual(observed["quality_case_count"], len(self.inputs["queries"]))
+            self.assertEqual(observed["P0_safety"]["cases_with_prohibited_exposure"], 0)
+
+    def test_unrecognized_backend_fails_before_creating_a_store(self):
+        with tempfile.TemporaryDirectory() as root:
+            path = Path(root) / "no-such-store"
+            with self.assertRaises(ValueError):
+                run_scenarios(copy.deepcopy(self.inputs), path,
+                              revision="test-sha", lane_id="unknown",
+                              backend="fake-model")
+            self.assertFalse(path.exists())
+
     def test_budget_not_leaked_as_fake_stop_or_completeness(self):
         with tempfile.TemporaryDirectory() as tmp:
             run = run_scenarios(copy.deepcopy(self.inputs), Path(tmp),
