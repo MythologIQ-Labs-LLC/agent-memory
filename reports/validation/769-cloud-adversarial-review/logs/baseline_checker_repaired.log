@@ -1,0 +1,5 @@
+undeclared protected change: reference/agentmem_ref/competition_diagnostics.py
+undeclared protected change: reference/agentmem_ref/runtime/competition_diagnostics.py
+declared blob mismatch for reference/agentmem_ref/runtime/recall_control.py: declared 5136922f5a23b70399b1b422159a0d14f0fa1312, candidate 77e6ba2761e4abe2ddf54d5d273e4d742f087260
+declared blob mismatch for reference/agentmem_ref/runtime/recall_observation_receipt.py: declared f80d3145d7290c8931b3269c7dcb95585385a45d, candidate 5331fe9e31a181f23ca0d28619c4e9dbfc9957c7
+exit=1

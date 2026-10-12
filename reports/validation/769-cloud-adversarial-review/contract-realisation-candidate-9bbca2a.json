@@ -1,0 +1,566 @@
+{
+  "cases": [
+    {
+      "conservative_divergences": [],
+      "contract_expected": "no_competitor_observed",
+      "group": "hypothetical_attested_clear",
+      "id": "C01",
+      "problems": [],
+      "projected_contract_state": "enumeration_unattested",
+      "realisation": {
+        "not_realisable": [
+          "scope_enumeration=attested_complete"
+        ]
+      },
+      "runtime_diagnosis": "scope_enumeration_unattested",
+      "runtime_receipt_state": "mutable_receipt_match",
+      "verdict": "PASS"
+    },
+    {
+      "conservative_divergences": [
+        "typed_conflict: contract False -> runtime True"
+      ],
+      "contract_expected": "no_competitor_observed",
+      "group": "metamorphic_surface",
+      "id": "C02",
+      "problems": [],
+      "projected_contract_state": "enumeration_unattested",
+      "realisation": {
+        "not_realisable": [
+          "scope_enumeration=attested_complete"
+        ]
+      },
+      "runtime_diagnosis": "typed_values_unresolved",
+      "runtime_receipt_state": "mutable_receipt_match",
+      "verdict": "PASS"
+    },
+    {
+      "conservative_divergences": [
+        "typed_conflict: contract False -> runtime True"
+      ],
+      "contract_expected": "no_competitor_observed",
+      "group": "metamorphic_surface",
+      "id": "C03",
+      "problems": [],
+      "projected_contract_state": "enumeration_unattested",
+      "realisation": {
+        "not_realisable": [
+          "scope_enumeration=attested_complete"
+        ]
+      },
+      "runtime_diagnosis": "typed_values_unresolved",
+      "runtime_receipt_state": "mutable_receipt_match",
+      "verdict": "PASS"
+    },
+    {
+      "conservative_divergences": [],
+      "contract_expected": "no_competitor_observed",
+      "group": "metamorphic_surface",
+      "id": "C04",
+      "problems": [],
+      "projected_contract_state": "enumeration_unattested",
+      "realisation": {
+        "not_realisable": [
+          "scope_enumeration=attested_complete"
+        ]
+      },
+      "runtime_diagnosis": "scope_enumeration_unattested",
+      "runtime_receipt_state": "mutable_receipt_match",
+      "verdict": "PASS"
+    },
+    {
+      "conservative_divergences": [],
+      "contract_expected": "no_competitor_observed",
+      "group": "lexical_nonmatching",
+      "id": "C05",
+      "problems": [],
+      "projected_contract_state": "enumeration_unattested",
+      "realisation": {
+        "not_realisable": [
+          "scope_enumeration=attested_complete"
+        ]
+      },
+      "runtime_diagnosis": "scope_enumeration_unattested",
+      "runtime_receipt_state": "mutable_receipt_match",
+      "verdict": "PASS"
+    },
+    {
+      "conservative_divergences": [],
+      "contract_expected": "untyped_identity_unverified",
+      "group": "untyped_competitor",
+      "id": "C06",
+      "problems": [],
+      "projected_contract_state": "enumeration_unattested",
+      "realisation": {
+        "not_realisable": [
+          "scope_enumeration=attested_complete"
+        ]
+      },
+      "runtime_diagnosis": "untyped_admitted_candidates_observed",
+      "runtime_receipt_state": "mutable_receipt_match",
+      "verdict": "PASS"
+    },
+    {
+      "conservative_divergences": [],
+      "contract_expected": "untyped_identity_unverified",
+      "group": "untyped_competitor",
+      "id": "C07",
+      "problems": [],
+      "projected_contract_state": "enumeration_unattested",
+      "realisation": {
+        "not_realisable": [
+          "scope_enumeration=attested_complete"
+        ]
+      },
+      "runtime_diagnosis": "untyped_admitted_candidates_observed",
+      "runtime_receipt_state": "mutable_receipt_match",
+      "verdict": "PASS"
+    },
+    {
+      "conservative_divergences": [],
+      "contract_expected": "untyped_identity_unverified",
+      "group": "untyped_competitor",
+      "id": "C08",
+      "problems": [],
+      "projected_contract_state": "enumeration_unattested",
+      "realisation": {
+        "not_realisable": [
+          "scope_enumeration=attested_complete"
+        ]
+      },
+      "runtime_diagnosis": "untyped_admitted_candidates_observed",
+      "runtime_receipt_state": "mutable_receipt_match",
+      "verdict": "PASS"
+    },
+    {
+      "conservative_divergences": [],
+      "contract_expected": "untyped_identity_unverified",
+      "group": "untyped_competitor",
+      "id": "C09",
+      "problems": [],
+      "projected_contract_state": "enumeration_unattested",
+      "realisation": {
+        "not_realisable": [
+          "scope_enumeration=attested_complete"
+        ]
+      },
+      "runtime_diagnosis": "untyped_admitted_candidates_observed",
+      "runtime_receipt_state": "mutable_receipt_match",
+      "verdict": "PASS"
+    },
+    {
+      "conservative_divergences": [],
+      "contract_expected": "typed_conflict",
+      "group": "typed_conflict",
+      "id": "C10",
+      "problems": [],
+      "projected_contract_state": "enumeration_unattested",
+      "realisation": {
+        "not_realisable": [
+          "scope_enumeration=attested_complete"
+        ]
+      },
+      "runtime_diagnosis": "typed_values_unresolved",
+      "runtime_receipt_state": "mutable_receipt_match",
+      "verdict": "PASS"
+    },
+    {
+      "conservative_divergences": [],
+      "contract_expected": "typed_conflict",
+      "group": "typed_conflict",
+      "id": "C11",
+      "problems": [],
+      "projected_contract_state": "enumeration_unattested",
+      "realisation": {
+        "not_realisable": [
+          "scope_enumeration=attested_complete"
+        ]
+      },
+      "runtime_diagnosis": "typed_values_unresolved",
+      "runtime_receipt_state": "mutable_receipt_match",
+      "verdict": "PASS"
+    },
+    {
+      "conservative_divergences": [
+        "typed_conflict: contract False -> runtime True"
+      ],
+      "contract_expected": "no_competitor_observed",
+      "group": "coexistence",
+      "id": "C12",
+      "problems": [],
+      "projected_contract_state": "enumeration_unattested",
+      "realisation": {
+        "not_realisable": [
+          "scope_enumeration=attested_complete"
+        ]
+      },
+      "runtime_diagnosis": "typed_value_posture_unresolved",
+      "runtime_receipt_state": "mutable_receipt_match",
+      "verdict": "PASS"
+    },
+    {
+      "conservative_divergences": [
+        "typed_conflict: contract False -> runtime True"
+      ],
+      "contract_expected": "untyped_identity_unverified",
+      "group": "cardinality_unknown",
+      "id": "C13",
+      "problems": [],
+      "projected_contract_state": "enumeration_unattested",
+      "realisation": {
+        "not_realisable": [
+          "scope_enumeration=attested_complete"
+        ]
+      },
+      "runtime_diagnosis": "typed_value_posture_unresolved",
+      "runtime_receipt_state": "mutable_receipt_match",
+      "verdict": "PASS"
+    },
+    {
+      "conservative_divergences": [],
+      "contract_expected": "observation_integrity_unknown",
+      "group": "receipt_failure",
+      "id": "C14",
+      "problems": [],
+      "projected_contract_state": "observation_integrity_unknown",
+      "realisation": {
+        "not_realisable": [
+          "scope_enumeration=attested_complete"
+        ]
+      },
+      "runtime_diagnosis": "recall_observation_unverified",
+      "runtime_receipt_state": "unverified",
+      "verdict": "PASS"
+    },
+    {
+      "conservative_divergences": [],
+      "contract_expected": "observation_integrity_unknown",
+      "group": "receipt_failure",
+      "id": "C15",
+      "problems": [],
+      "projected_contract_state": "observation_integrity_unknown",
+      "realisation": {
+        "not_realisable": [
+          "scope_enumeration=attested_complete"
+        ]
+      },
+      "runtime_diagnosis": "recall_observation_unverified",
+      "runtime_receipt_state": "unverified",
+      "verdict": "PASS"
+    },
+    {
+      "conservative_divergences": [],
+      "contract_expected": "observation_integrity_unknown",
+      "group": "receipt_failure",
+      "id": "C16",
+      "problems": [
+        "receipt: contract stale -> runtime mutable_receipt_match",
+        "state: runtime projection less conservative than contract expectation"
+      ],
+      "projected_contract_state": "enumeration_unattested",
+      "realisation": {
+        "not_realisable": [
+          "scope_enumeration=attested_complete"
+        ]
+      },
+      "runtime_diagnosis": "scope_enumeration_unattested",
+      "runtime_receipt_state": "mutable_receipt_match",
+      "verdict": "FAIL"
+    },
+    {
+      "conservative_divergences": [],
+      "contract_expected": "enumeration_unattested",
+      "group": "enumeration_failure",
+      "id": "C17",
+      "problems": [],
+      "projected_contract_state": "enumeration_unattested",
+      "realisation": {
+        "not_realisable": [
+          "scope_enumeration=partial"
+        ]
+      },
+      "runtime_diagnosis": "scope_enumeration_unattested",
+      "runtime_receipt_state": "mutable_receipt_match",
+      "verdict": "PASS"
+    },
+    {
+      "conservative_divergences": [],
+      "contract_expected": "enumeration_unattested",
+      "group": "enumeration_failure",
+      "id": "C18",
+      "problems": [],
+      "projected_contract_state": "enumeration_unattested",
+      "realisation": {
+        "not_realisable": [
+          "scope_enumeration=unknown"
+        ]
+      },
+      "runtime_diagnosis": "scope_enumeration_unattested",
+      "runtime_receipt_state": "mutable_receipt_match",
+      "verdict": "PASS"
+    },
+    {
+      "conservative_divergences": [],
+      "contract_expected": "enumeration_unattested",
+      "group": "enumeration_failure",
+      "id": "C19",
+      "problems": [],
+      "projected_contract_state": "enumeration_unattested",
+      "realisation": {
+        "not_realisable": []
+      },
+      "runtime_diagnosis": "scope_enumeration_unattested",
+      "runtime_receipt_state": "mutable_receipt_match",
+      "verdict": "PASS"
+    },
+    {
+      "conservative_divergences": [],
+      "contract_expected": "admission_scope_unverified",
+      "group": "admission_failure",
+      "id": "C20",
+      "problems": [],
+      "projected_contract_state": "enumeration_unattested",
+      "realisation": {
+        "not_realisable": [
+          "scope_enumeration=attested_complete",
+          "admission_boundary=unverified"
+        ]
+      },
+      "runtime_diagnosis": "scope_enumeration_unattested",
+      "runtime_receipt_state": "mutable_receipt_match",
+      "verdict": "PASS"
+    },
+    {
+      "conservative_divergences": [],
+      "contract_expected": "no_competitor_observed",
+      "group": "noninterference",
+      "id": "C21",
+      "problems": [],
+      "projected_contract_state": "enumeration_unattested",
+      "realisation": {
+        "hidden_kind": "project",
+        "not_realisable": [
+          "scope_enumeration=attested_complete"
+        ]
+      },
+      "runtime_diagnosis": "scope_enumeration_unattested",
+      "runtime_receipt_state": "mutable_receipt_match",
+      "verdict": "PASS"
+    },
+    {
+      "conservative_divergences": [],
+      "contract_expected": "no_competitor_observed",
+      "group": "noninterference",
+      "id": "C22",
+      "problems": [],
+      "projected_contract_state": "enumeration_unattested",
+      "realisation": {
+        "hidden_kind": "deleted",
+        "not_realisable": [
+          "scope_enumeration=attested_complete"
+        ]
+      },
+      "runtime_diagnosis": "scope_enumeration_unattested",
+      "runtime_receipt_state": "mutable_receipt_match",
+      "verdict": "PASS"
+    },
+    {
+      "conservative_divergences": [],
+      "contract_expected": "no_competitor_observed",
+      "group": "noninterference",
+      "id": "C23",
+      "problems": [],
+      "projected_contract_state": "enumeration_unattested",
+      "realisation": {
+        "hidden_kind": "disputed",
+        "not_realisable": [
+          "scope_enumeration=attested_complete"
+        ]
+      },
+      "runtime_diagnosis": "scope_enumeration_unattested",
+      "runtime_receipt_state": "mutable_receipt_match",
+      "verdict": "PASS"
+    },
+    {
+      "conservative_divergences": [],
+      "contract_expected": "no_competitor_observed",
+      "group": "noninterference",
+      "id": "C24",
+      "problems": [],
+      "projected_contract_state": "enumeration_unattested",
+      "realisation": {
+        "hidden_kind": "foreign",
+        "not_realisable": [
+          "scope_enumeration=attested_complete"
+        ]
+      },
+      "runtime_diagnosis": "scope_enumeration_unattested",
+      "runtime_receipt_state": "mutable_receipt_match",
+      "verdict": "PASS"
+    },
+    {
+      "conservative_divergences": [],
+      "contract_expected": "no_competitor_observed",
+      "group": "support_missing",
+      "id": "C25",
+      "problems": [],
+      "projected_contract_state": "enumeration_unattested",
+      "realisation": {
+        "not_realisable": [
+          "scope_enumeration=attested_complete"
+        ]
+      },
+      "runtime_diagnosis": "scope_enumeration_unattested",
+      "runtime_receipt_state": "mutable_receipt_match",
+      "verdict": "PASS"
+    },
+    {
+      "conservative_divergences": [],
+      "contract_expected": "no_competitor_observed",
+      "group": "support_untrusted",
+      "id": "C26",
+      "problems": [],
+      "projected_contract_state": "enumeration_unattested",
+      "realisation": {
+        "not_realisable": [
+          "scope_enumeration=attested_complete",
+          "support_posture=controller_estimate (controller target=1 supplied; runtime must ignore it)"
+        ]
+      },
+      "runtime_diagnosis": "scope_enumeration_unattested",
+      "runtime_receipt_state": "mutable_receipt_match",
+      "verdict": "PASS"
+    },
+    {
+      "conservative_divergences": [],
+      "contract_expected": "enumeration_unattested",
+      "group": "enumeration_failure",
+      "id": "C27",
+      "problems": [],
+      "projected_contract_state": "enumeration_unattested",
+      "realisation": {
+        "not_realisable": []
+      },
+      "runtime_diagnosis": "typed_values_unresolved",
+      "runtime_receipt_state": "mutable_receipt_match",
+      "verdict": "PASS"
+    },
+    {
+      "conservative_divergences": [],
+      "contract_expected": "observation_integrity_unknown",
+      "group": "receipt_failure",
+      "id": "C28",
+      "problems": [],
+      "projected_contract_state": "observation_integrity_unknown",
+      "realisation": {
+        "not_realisable": [
+          "scope_enumeration=attested_complete"
+        ]
+      },
+      "runtime_diagnosis": "recall_observation_unverified",
+      "runtime_receipt_state": "unverified",
+      "verdict": "PASS"
+    },
+    {
+      "conservative_divergences": [],
+      "contract_expected": "admission_scope_unverified",
+      "group": "admission_failure",
+      "id": "C29",
+      "problems": [],
+      "projected_contract_state": "enumeration_unattested",
+      "realisation": {
+        "not_realisable": [
+          "scope_enumeration=attested_complete",
+          "admission_boundary=unverified"
+        ]
+      },
+      "runtime_diagnosis": "untyped_admitted_candidates_observed",
+      "runtime_receipt_state": "mutable_receipt_match",
+      "verdict": "PASS"
+    },
+    {
+      "conservative_divergences": [],
+      "contract_expected": "no_competitor_observed",
+      "group": "typed_agreement",
+      "id": "C30",
+      "problems": [],
+      "projected_contract_state": "enumeration_unattested",
+      "realisation": {
+        "not_realisable": [
+          "scope_enumeration=attested_complete"
+        ]
+      },
+      "runtime_diagnosis": "scope_enumeration_unattested",
+      "runtime_receipt_state": "mutable_receipt_match",
+      "verdict": "PASS"
+    },
+    {
+      "conservative_divergences": [],
+      "contract_expected": "untyped_identity_unverified",
+      "group": "untyped_competitor",
+      "id": "C31",
+      "problems": [],
+      "projected_contract_state": "enumeration_unattested",
+      "realisation": {
+        "not_realisable": [
+          "scope_enumeration=attested_complete"
+        ]
+      },
+      "runtime_diagnosis": "untyped_admitted_candidates_observed",
+      "runtime_receipt_state": "mutable_receipt_match",
+      "verdict": "PASS"
+    },
+    {
+      "conservative_divergences": [],
+      "contract_expected": "enumeration_unattested",
+      "group": "enumeration_failure",
+      "id": "C32",
+      "problems": [],
+      "projected_contract_state": "enumeration_unattested",
+      "realisation": {
+        "not_realisable": [
+          "scope_enumeration=partial"
+        ]
+      },
+      "runtime_diagnosis": "untyped_admitted_candidates_observed",
+      "runtime_receipt_state": "mutable_receipt_match",
+      "verdict": "PASS"
+    }
+  ],
+  "contract": {
+    "contract_sha": "0c4b47060bfecc4f1d38374925f5f8d81ee89c2a",
+    "evaluator_sha256": "1812beef8a784eb762ce81de7f4a24b5f358ab3aa6fe08a28776c6ad13785261",
+    "fixture_sha256": "801bc1c7b51b4495de81b53af57b9579c187ae2186e5cf63b6666af150dd5292"
+  },
+  "frozen_evaluator_self_check": {
+    "authority_effect": "none",
+    "cases": 32,
+    "contract": "769-observation-contract-v1",
+    "positive_stops": 0,
+    "runtime_qualified": false,
+    "states": {
+      "admission_scope_unverified": 2,
+      "enumeration_unattested": 5,
+      "no_competitor_observed": 13,
+      "observation_integrity_unknown": 4,
+      "typed_conflict": 2,
+      "untyped_identity_unverified": 6
+    }
+  },
+  "runtime_head": "9bbca2a4b01b60ec31da5d3148e02fe56032a6d7",
+  "schema": "769-contract-runtime-realisation-v1",
+  "summary": {
+    "cases": 32,
+    "conservative_divergence_cases": [
+      "C02",
+      "C03",
+      "C12",
+      "C13"
+    ],
+    "fail": [
+      "C16"
+    ],
+    "pass": 31,
+    "positive_stops": 0
+  }
+}

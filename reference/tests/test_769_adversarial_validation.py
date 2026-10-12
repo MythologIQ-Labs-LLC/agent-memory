@@ -208,6 +208,44 @@ class DefectRegressions(unittest.TestCase):
         self.assertEqual(out.admitted_untyped_count, 0)
 
 
+class RepairCoverage(unittest.TestCase):
+    """Added after the repair commit to pin the repaired contract's edges."""
+
+    def test_dispute_after_recall_is_stale(self):
+        store = _Store(self)
+        store.retain("memory:v1", "Aster service endpoint is /v1",
+                     typed_write=_typed("Aster service", "endpoint", "/v1"))
+        competitor = store.retain("memory:v2", "Aster service endpoint is /v2",
+                                  typed_write=_typed("Aster service", "endpoint", "/v2"))
+        result = store.recall()
+        # Durable adapters forbid mark_disputed(); inject committed-dispute state.
+        store.runtime.adapter._disputed.add(competitor)
+        self.assertEqual(store.observe(result).diagnosis, "recall_observation_unverified")
+
+    def test_receipt_issued_by_another_planner_is_refused(self):
+        store = _Store(self)
+        store.retain("memory:v1", "Aster service endpoint is /v1",
+                     typed_write=_typed("Aster service", "endpoint", "/v1"))
+        result = store.recall()
+        other = ControlledRecallPlanner(store.runtime.adapter, controller=store.planner.controller)
+        self.assertEqual(store.observe(result, planner=other).diagnosis, "recall_observation_unverified")
+        self.assertEqual(store.observe(result).receipt_state, "mutable_receipt_match")
+
+    def test_issued_receipt_registry_is_bounded_and_fails_closed(self):
+        from agentmem_ref.runtime import recall_control
+        store = _Store(self)
+        store.retain("memory:v1", "Aster service endpoint is /v1",
+                     typed_write=_typed("Aster service", "endpoint", "/v1"))
+        original = recall_control._ISSUED_RECEIPT_LIMIT
+        recall_control._ISSUED_RECEIPT_LIMIT = 2
+        self.addCleanup(setattr, recall_control, "_ISSUED_RECEIPT_LIMIT", original)
+        first = store.recall()
+        store.planner.recall("unrelated words", _context())
+        store.planner.recall("other unrelated words", _context())
+        self.assertLessEqual(len(store.planner._issued_receipts), 2)
+        self.assertEqual(store.observe(first).diagnosis, "recall_observation_unverified")
+
+
 class AdversarialNonRegressions(unittest.TestCase):
     """Behaviour outside the authored fixtures that already held on the candidate."""
 

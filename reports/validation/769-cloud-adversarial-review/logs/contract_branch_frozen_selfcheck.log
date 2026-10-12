@@ -1,0 +1,23 @@
+----------------------------------------------------------------------
+Ran 6 tests in 0.008s
+
+FAILED (errors=33)
+{
+  "authority_effect": "none",
+  "cases": 32,
+  "contract": "769-observation-contract-v1",
+  "positive_stops": 0,
+  "runtime_qualified": false,
+  "states": {
+    "admission_scope_unverified": 2,
+    "enumeration_unattested": 5,
+    "no_competitor_observed": 13,
+    "observation_integrity_unknown": 4,
+    "typed_conflict": 2,
+    "untyped_identity_unverified": 6
+  }
+}
+0
+
+# Scratch-only check (branch untouched, git status clean): binding assess with staticmethod(...)
+# makes the frozen contract tests pass: Ran 6 tests ... OK. Diff vs 0c4b470: ROOT path + staticmethod wrapper only.
