@@ -11,10 +11,11 @@ weights, and relation density remain non-authoritative candidate evidence.
 
 from __future__ import annotations
 
-from collections import deque
+from collections import OrderedDict, deque
 from dataclasses import dataclass, field, replace
 import math
 import re
+import threading
 from typing import Protocol
 
 from . import typed_proposition as typed
@@ -587,6 +588,25 @@ class ControlledRecallResult:
         return self.recall.candidates
 
 
+_ISSUED_RECEIPT_LIMIT = 4096
+
+
+def _reader_snapshot(context: RecallContext) -> RecallContext | None:
+    """validation(769): one read of each authority field into an exact RecallContext."""
+    try:
+        domains = tuple(context.target_domain_refs)
+        fields = (context.principal_ref, context.project_ref, context.task_ref, context.purpose)
+    except Exception:  # hostile context objects fail closed
+        return None
+    if any(type(item) is not str for item in (*domains, *fields)):
+        return None
+    principal, project, task, purpose = fields
+    return RecallContext(
+        target_domain_refs=domains, principal_ref=principal, project_ref=project,
+        task_ref=task, purpose=purpose,
+    )
+
+
 class ControlledRecallPlanner:
     """Execute controller-selected route budgets, then one governed admission pass."""
 
@@ -608,6 +628,29 @@ class ControlledRecallPlanner:
             raise RuntimeRecoveryError(
                 "controlled recall requires the restart-safe adapter substrate/tenant contract"
             )
+        # validation(769): a receipt is an unkeyed digest any caller can
+        # recompute, and fact identifiers are deterministic per store. The
+        # opt-in diagnostic trusts only receipts THIS planner issued. Bounded,
+        # in-process bookkeeping; it never changes what recall returns.
+        self._issued_receipts: OrderedDict[str, None] = OrderedDict()
+        self._issued_lock = threading.Lock()
+
+    def _record_issued(self, receipt: RecallObservationReceipt) -> None:
+        with self._issued_lock:
+            self._issued_receipts[receipt.content_digest] = None
+            self._issued_receipts.move_to_end(receipt.content_digest)
+            while len(self._issued_receipts) > _ISSUED_RECEIPT_LIMIT:
+                self._issued_receipts.popitem(last=False)
+
+    def _issued_here(self, receipt: object) -> bool:
+        if type(receipt) is not RecallObservationReceipt:
+            return False
+        issued = getattr(self, "_issued_receipts", None)
+        lock = getattr(self, "_issued_lock", None)
+        if issued is None or lock is None:
+            return False
+        with lock:
+            return receipt.content_digest in issued
 
     def recall(
         self,
@@ -870,6 +913,7 @@ class ControlledRecallPlanner:
             plan=plan.to_dict(),
             refusals=recall.refusals,
         )
+        self._record_issued(receipt)
         return ControlledRecallResult(
             plan=plan,
             recall=recall,
@@ -1037,27 +1081,38 @@ class ControlledRecallPlanner:
         # The receipt originally commits the principal, purpose, project,
         # task and reader domains; do not re-read under a caller-substituted
         # authority context, even when membership has not changed.
+        # validation(769): read the caller's context exactly once. Every
+        # governed read below uses this immutable snapshot, so a context
+        # object cannot answer the receipt check and the reads differently.
+        reader_context = _reader_snapshot(context)
         receipt = result.observation_receipt
-        if (not result.observation_unchanged()
+        if (reader_context is None
+                or not self._issued_here(receipt)
+                or not result.observation_unchanged()
                 or not receipt.matches_reader_context(
-                    reader_domain_refs=tuple(context.target_domain_refs),
-                    principal_ref=context.principal_ref,
-                    project_ref=context.project_ref,
-                    purpose=context.purpose,
-                    task_ref=context.task_ref,
+                    reader_domain_refs=reader_context.target_domain_refs,
+                    principal_ref=reader_context.principal_ref,
+                    project_ref=reader_context.project_ref,
+                    purpose=reader_context.purpose,
+                    task_ref=reader_context.task_ref,
                 )):
             return diagnose_competition(receipt_matches=False)
 
         # Reuse the audited typed current-visibility boundary; the slot census
         # is indexed, admission-rechecked, and never certifies completeness.
-        report = self.observe_persisted_typed_coverage(result, context, needs=needs)
+        report = self.observe_persisted_typed_coverage(result, reader_context, needs=needs)
         reader = getattr(self.adapter, "current_governed_typed_claim", None)
         if not callable(reader):
             raise RuntimeRecoveryError("competition diagnostics require governed typed evidence")
         untyped = 0
         for ref in result.recall.admitted:
-            visible, claim = reader(ref, context)
-            if visible and claim is None:
+            visible, claim = reader(ref, reader_context)
+            if not visible:
+                # validation(769), frozen contract C16: an admitted fact that is
+                # no longer currently admitted makes the observation stale.
+                # Report integrity unknown, never a cleaner diagnosis.
+                return diagnose_competition(receipt_matches=False)
+            if claim is None:
                 # This is strictly presence of a currently admitted untyped
                 # read candidate, not identity evidence or contradiction.
                 untyped += 1
