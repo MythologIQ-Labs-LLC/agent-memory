@@ -150,6 +150,49 @@ product memory quality until exact-SHA results have been obtained.
 The authored synthetic corpus is only a baseline/smoke. The independent
 unseen holdout is still a mandatory next lane.
 
+## Measurement-integrity corrections before cloud qualification
+
+### Context delivery is not answer-level abstention
+
+The initial evaluator incorrectly treated `returned=[]` as proof that the
+consumer abstained from answering. **That is not observable in retrieval-only
+data.** A retriever can serve contextual evidence when no answer exists;
+it can return nothing even if a downstream agent will hallucinate an answer.
+The scorer now reports `empty_delivery_on_answerable_count`,
+`no_safe_answer_empty_context_count`, and
+`no_safe_answer_with_context_count` as **delivery observations only**.
+`answer_abstention_verified` remains `null` and
+`answer_abstention_status=not_measured_without_answering_layer`.
+Actual answer correctness/refusal requires a separate downstream answer
+transcript and independent adjudication. Do not publish a "correct answer
+abstention" rate from this evaluator.
+
+### Protect corpus/run identity
+
+Each real execution manifest now carries `input_sha256`, a SHA-256 of the
+canonical JSON representation of its validated **execution-only** corpus,
+and `execution_backend` identifying whether actual recall used
+`composed-multiroute` or `governed-lexical`. These fields are required
+when the post-hoc qualifier scores a *real* run. Legacy synthetic scorer-only
+fixtures remain accepted by the scorer for evaluator tests, but cannot be
+passed through real-run qualification without the binding.
+
+A changed memory text with identical opaque IDs fails real-run validation;
+missing/wrong input digests and unsupported backend values fail closed.
+These are **integrity consistency checks, not cryptographic authentication**:
+a malicious author can recalculate an unkeyed SHA-256. Exact source SHA,
+immutable evidence review and independent runner replay remain required.
+
+The runner now also refuses reused/nonempty SQLite store directories prior to
+any new governed write. A local run may reuse an existing *empty* directory
+(such as `tempfile.TemporaryDirectory()`), but not one with remnants from
+another scenario. This guards against accidentally comparing outputs from
+different corpora.
+
+**No source gold** is ever loaded by the runner. The scenario/gold pair remains
+preregistered and held separate from the default/runtime recall algorithms.
+These corrections are evaluation-only; no protected runtime file changed.
+
 ## Real composed-memory qualification, not synthetic overfitting
 
 Future frozen data must come from scenarios not designed by the runtime author,
