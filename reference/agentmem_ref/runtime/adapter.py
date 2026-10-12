@@ -1642,6 +1642,9 @@ class GovernedMemoryAdapter:
         if committed:
             # #776: deletion belongs to the logical memory -- record the lineage it covers.
             lineage = self._lineage_for_deletion(proposal.target_reference, fact_uuid)
+            cached = getattr(self, "_deleted_lineage_cache", None)
+            fresh = cached is not None and cached[0] == (
+                id(self._tombstones), len(self._tombstones), id(self._fact_memory))
             self._tombstones[fact_uuid] = {
                 "memory_id": proposal.target_reference,
                 "fact_uuid": fact_uuid,
@@ -1651,6 +1654,10 @@ class GovernedMemoryAdapter:
                 "reversible": proposal.operation != "permanent_deletion",
                 "deleted_fact_uuids": lineage,
             }
+            if fresh:  # extend the index in place instead of rebuilding it per deletion
+                cached[1].update(dict.fromkeys((fact_uuid, *lineage), proposal.target_reference))
+                self._deleted_lineage_cache = (
+                    (id(self._tombstones), len(self._tombstones), id(self._fact_memory)), cached[1])
             # Pruning removes from active recall and keeps the content recoverable;
             # only permanent deletion reaches the substrate's physical delete, and
             # it removes every version in the deleted lineage, not just the head.
