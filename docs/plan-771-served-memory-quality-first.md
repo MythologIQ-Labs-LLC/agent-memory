@@ -19,7 +19,7 @@ version as the current answer or leaking a forbidden memory is worse.
 | Tier | Native evidence | Release implication |
 | --- | --- | --- |
 | P0, safety | Forbidden/refused/deleted source exposure, inappropriate stale-version exposure, cross-scope leakage and unauthorized memory-control action | Any verified breach blocks the candidate regardless of retrieval speed |
-| P1, served correctness | Task-critical evidence groups covered under the actual return budget, top-1 task relevance, answerability and correct abstention | Essential product-quality floor; do not hide unsafe or absent answers behind aggregate recall |
+| P1, served correctness | Task-critical evidence groups covered under the actual return budget, top-1 task relevance, answerability and empty-context delivery | Essential product-quality floor; do not hide missing memories behind aggregate recall |
 | P2, context utility | Graded nDCG@budget, macro relevant precision, macro relevant recall, critical coverage, irrelevant/distractor burden | Optimize rankings and useful context without admitting extra evidence |
 | P3, resource performance | Cold/warm p50/p95/p99, indexed scan amplification, memory and ingest/build cost | Independent scalability/reliability constraints, not tradeable against P0/P1 defects |
 
@@ -49,7 +49,7 @@ reproducing source text or scenario content.
 
 **Current fixture is synthetic.** Its "bad" run intentionally serves stale
 and forbidden memories, ranks an irrelevant item first, and misses a critical
-compound-answer slot. Its "good" run serves the right evidence and abstains
+compound-answer slot. Its "good" run serves the right evidence and returns an empty context
 when the only candidate is forbidden. This is an evaluator counterexample,
 **not** evidence of production Agent Memory quality.
 
@@ -164,7 +164,8 @@ including:
 - Real corrections, disputed facts, partial overlap, coexistence, and
   contradicting sources, with appropriate uncertainty.
 - Role/task/project/tenant exclusions, deletion, permitted shared domains and
-  correct abstention when no safe answer exists.
+  empty context when no eligible answer exists. Verifying answer refusal
+  requires a separate downstream answering-layer execution and oracle.
 - Paraphrases, unseen terminology, multiple speakers, quoted claims and
   incremental updates without relying on handwritten lexical cues.
 
@@ -180,7 +181,7 @@ model or scorer asserting its own authority.
 2. Enforce P0 safety and provenance; any verified breach is a blocker.
 3. Compare P1 product correctness with separate strata (current, historical,
    compound, no-answer, correction, source-privacy).
-4. Assess P2 graded context utility, avoiding a win that is just over-abstention.
+4. Assess P2 graded context utility, avoiding a win that is just over-empty-delivery.
 5. Measure P3 scalability/latency separately with the same store and workload.
 6. Independently check cases the implementer has not seen. No benchmark-specific
    code or post-evaluation gold-driven tuning may be introduced into runtime.
