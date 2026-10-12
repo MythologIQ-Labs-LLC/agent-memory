@@ -8,12 +8,16 @@
   "frozen_candidate_baseline": "agent-memory-runtime-baseline-v7",
   "change_scope": [
     {
+      "path": "reference/agentmem_ref/competition_diagnostics.py",
+      "blob": "0347832450acbe8638a50a533fe479e7d075e64b"
+    },
+    {
       "path": "reference/agentmem_ref/runtime/competition_diagnostics.py",
       "blob": "c42e399643a61c767ca8e74b8baac5ccb833d920"
     },
     {
       "path": "reference/agentmem_ref/runtime/recall_control.py",
-      "blob": "ac7a3ef8c5469c406d46abee36b6ad0b6a6a314f"
+      "blob": "77e6ba2761e4abe2ddf54d5d273e4d742f087260"
     },
     {
       "path": "reference/agentmem_ref/runtime/recall_observation_receipt.py",
@@ -25,12 +29,29 @@
   "default_recall_affected": false,
   "stop_recommendation": "abstain",
   "authority_effect": "none",
-  "qualification_status": "NOT_EXECUTED",
+  "qualification_status": "CHANGES_REQUIRED",
   "next_gate": "sanctioned post-v7 successor declaration and independent exact-SHA validation after v7 evidence acceptance",
   "notes": [
     "Blob IDs are Git object blob hashes from the committed candidate; not an attestation, signed report, or accepted baseline.",
     "The current v7 declaration is frozen for already imported #770 evidence; it must not be changed to retrofit this overlay.",
     "Only explicit post-admission diagnostic invocations consume the new observer.",
-    "Receipt reader-context digest binding was added after adversarial review found a substituted-context replay risk. This is also protected runtime change and needs future independent requalification."
-  ]
+    "Receipt reader-context digest binding was added after adversarial review found a substituted-context replay risk. This is also protected runtime change and needs future independent requalification.",
+    "Adopted Claude's failing reproducers and repairs through 892bcb47246d4e882af38f1696c178c0496098db. Historical frozen v7 declaration remains unchanged.",
+    "The repaired code now includes a package compatibility alias and the package-layout registry update; source blobs listed here reflect the adopted state."
+  ],
+  "qualifying_test_report": {
+    "source_branch": "claude/great-johnson-9n6b5i",
+    "head": "264152d5c678764597ff09d02a94848f601b322d",
+    "repair_head": "892bcb47246d4e882af38f1696c178c0496098db",
+    "author_report": "reports/validation/769-cloud-adversarial-review/README.md",
+    "verdict": "CHANGES_REQUIRED",
+    "passed_author_tests": 9,
+    "passed_adversarial_tests": 17,
+    "full_suite_tests": 2733,
+    "full_suite_failures": 5,
+    "protected_identity_failures": 4,
+    "unrelated_base_existing_failure": "adapter_eof",
+    "frozen_contract_cases_repaired": "32/32",
+    "note": "Tests reported by Claude Code, not independently re-executed here"
+  }
 }
