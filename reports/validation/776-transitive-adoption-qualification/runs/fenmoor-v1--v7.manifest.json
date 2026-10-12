@@ -1,0 +1,151 @@
+{
+  "execution_backend": "composed-multiroute",
+  "input_sha256": "6dd2edbfda624b96be0ec786a4623607a7d80b3afd54294b2555031cb1a0df16",
+  "lane_id": "776-adopt-v7",
+  "provenance": {
+    "evaluator": {
+      "clean": true,
+      "commit": "4aba9a4c2f27ebcbb27ab8268015a82746ae2d3b"
+    },
+    "runtime": {
+      "clean": true,
+      "commit": "9b025f945e7ec4a1e349e56bba251e3122413e88",
+      "loaded_module": "reference/agentmem_ref/runtime/runtime_composition.py",
+      "loaded_module_blob": "65a39d5e3d3f052f03985cafa4751ad1ce3d4817",
+      "protected_tree": "7b87b4dbef5e0c9dbf24a1392c6571007bc801d0"
+    }
+  },
+  "reference_time": "2026-10-12T12:00:00Z",
+  "reference_time_applied_to": [
+    "F14"
+  ],
+  "reference_time_utc": "2026-10-12T12:00:00.000000Z",
+  "rows": [
+    {
+      "id": "F01",
+      "returned": [
+        "printer-asa",
+        "printer-pla",
+        "printer-petg"
+      ]
+    },
+    {
+      "id": "F02",
+      "returned": [
+        "hours-9",
+        "hours-830",
+        "chute-n"
+      ]
+    },
+    {
+      "id": "F03",
+      "returned": [
+        "loan-14",
+        "loan-21",
+        "why-loan"
+      ]
+    },
+    {
+      "id": "F04",
+      "returned": [
+        "wifi-open",
+        "fine-25",
+        "wifi-guest"
+      ]
+    },
+    {
+      "id": "F05",
+      "returned": [
+        "printer-petg",
+        "printer-pla",
+        "printer-asa"
+      ]
+    },
+    {
+      "id": "F06",
+      "returned": [
+        "printer-pla",
+        "printer-petg",
+        "printer-asa"
+      ]
+    },
+    {
+      "id": "F07",
+      "returned": [
+        "why-loan",
+        "loan-14",
+        "loan-21"
+      ]
+    },
+    {
+      "id": "F08",
+      "returned": [
+        "laser",
+        "director"
+      ]
+    },
+    {
+      "id": "F09",
+      "returned": [
+        "laser",
+        "why-loan",
+        "fine-25"
+      ]
+    },
+    {
+      "id": "F10",
+      "returned": [
+        "director"
+      ]
+    },
+    {
+      "id": "F11",
+      "returned": [
+        "chute-n",
+        "laser",
+        "why-loan"
+      ]
+    },
+    {
+      "id": "F12",
+      "returned": [
+        "laser",
+        "why-loan",
+        "fine-25"
+      ]
+    },
+    {
+      "id": "F13",
+      "returned": [
+        "fine-25",
+        "fine-20",
+        "laser"
+      ]
+    },
+    {
+      "id": "F14",
+      "returned": [
+        "printer-asa",
+        "laser",
+        "wifi-open"
+      ]
+    },
+    {
+      "id": "F15",
+      "returned": [
+        "archive",
+        "printer-asa",
+        "hours-9"
+      ]
+    },
+    {
+      "id": "F16",
+      "returned": [
+        "wifi-guest",
+        "wifi-open",
+        "laser"
+      ]
+    }
+  ],
+  "schema": "served-memory-run-v2"
+}
