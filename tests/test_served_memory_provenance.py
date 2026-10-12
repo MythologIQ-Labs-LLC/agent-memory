@@ -35,7 +35,8 @@ class ServedQualityProvenanceTests(unittest.TestCase):
                          copy.deepcopy(self.run))
         self.assertEqual(report["quality_case_count"], 5)
         self.assertEqual(report["P1_served_correctness"]["answerable_case_count"], 4)
-        self.assertEqual(report["P1_served_correctness"]["unsafe_empty_on_answerable_count"], 4)
+        self.assertEqual(report["P1_served_correctness"]["empty_delivery_on_answerable_count"], 4)
+        self.assertIsNone(report["P1_served_correctness"]["answer_abstention_verified"])
         self.assertEqual(report["P0_safety"]["cases_with_prohibited_exposure"], 0)
 
     def test_scenario_content_cannot_drift_from_gold(self):
