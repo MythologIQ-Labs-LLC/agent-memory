@@ -17,10 +17,13 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 from run_served_memory_scenarios import canonical_input_digest, validate_inputs  # noqa: E402
 from score_served_memory_quality import score  # noqa: E402
+import run_served_memory_lifecycle_scenarios as lifecycle  # noqa: E402
 
 
 def qualify(inputs: dict, gold: dict, run: dict) -> dict:
     """Reject unannotated sources, changed questions, or undeclared exclusions."""
+    if type(inputs) is dict and inputs.get("schema") == lifecycle.SCHEMA:
+        return _qualify_lifecycle(inputs, gold, run)
     validate_inputs(inputs)
     if type(gold) is not dict or set(gold) != {"schema", "cases"}:
         raise ValueError("invalid gold structure")
@@ -57,6 +60,46 @@ def qualify(inputs: dict, gold: dict, run: dict) -> dict:
             raise ValueError("every persisted source must carry an explicit grade")
         if not excluded_source_ids.issubset(case["prohibited"]):
             raise ValueError("out-of-scope project sources must be prohibited")
+    return score(gold, run)
+
+
+def _qualify_lifecycle(inputs: dict, gold: dict, run: dict) -> dict:
+    """validation(771) v2: gold must agree with the executed lifecycle.
+
+    Deleted and out-of-scope (other project or tenant) facts must be
+    prohibited for every question; values superseded by a governed
+    correction must be stale (or prohibited) for current-intent questions.
+    """
+    facts = lifecycle.lifecycle_facts(inputs)
+    if type(gold) is not dict or set(gold) != {"schema", "cases"}:
+        raise ValueError("invalid gold structure")
+    if type(run) is not dict or set(run) != {
+        "schema", "runtime_revision", "lane_id", "rows",
+        "input_sha256", "execution_backend",
+    }:
+        raise ValueError("real-run provenance requires exact input binding and backend")
+    if run["input_sha256"] != lifecycle.canonical_input_digest(inputs):
+        raise ValueError("run executed with a different input corpus")
+    if run["execution_backend"] not in ("composed-multiroute", "governed-lexical"):
+        raise ValueError("invalid executed retrieval backend")
+    by_query = {q["id"]: q for q in inputs["queries"]}
+    cases = gold["cases"]
+    if type(cases) is not list or set(by_query) != {c.get("id") for c in cases} \
+            or len(cases) != len(by_query):
+        raise ValueError("gold must cover all and only the execution scenarios")
+    must_prohibit = set(facts["deleted"]) | set(facts["out_of_scope"])
+    for case in cases:
+        query = by_query[case["id"]]
+        if (case["scenario"] != query["query"] or case["budget"] != query["budget"]
+                or case["intent"] != query["intent"]):
+            raise ValueError("gold/execution question, intent or budget drift")
+        if set(case["relevance"]) != set(facts["fact_ids"]):
+            raise ValueError("every persisted source must carry an explicit grade")
+        if not must_prohibit.issubset(case["prohibited"]):
+            raise ValueError("deleted and out-of-scope sources must be prohibited")
+        if case["intent"] == "current" and not set(facts["superseded"]).issubset(
+                set(case["stale"]) | set(case["prohibited"])):
+            raise ValueError("superseded values must be stale for current-intent questions")
     return score(gold, run)
 
 
