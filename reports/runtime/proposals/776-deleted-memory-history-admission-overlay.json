@@ -1,12 +1,12 @@
 {
   "schema_version": "776-post-v7-P0-deletion-overlay-v1",
   "issue": 776,
-  "stage": "protected_runtime_candidate_TRANSITIVE_P0_FIX_ADOPTED__NOT_FORMALLY_QUALIFIED",
+  "stage": "protected_runtime_candidate_P0_AND_MEMO_FIX_ADOPTED__QUALIFICATION_PENDING",
   "base_commit": "9b025f945e7ec4a1e349e56bba251e3122413e88",
   "protected_changes": [
     {
       "path": "reference/agentmem_ref/runtime/adapter.py",
-      "blob": "6823eeaff24c5d94892ae2417fd6cfdae95339cb"
+      "blob": "fe25923f70ae03830d1036ad959af62e25fd4b59"
     }
   ],
   "tests": [
@@ -24,6 +24,11 @@
       "path": "reference/tests/test_776_adoption_transitive.py",
       "blob": "4b15ab6f037350a52b050e7c81ea0c48ea570bf8",
       "methods": 3
+    },
+    {
+      "path": "reference/tests/test_776_transitive_traversal_review.py",
+      "blob": "a95aac3b26ac9519a5f55ca849b0ad0169ecf579",
+      "methods": 7
     }
   ],
   "source_of_observation": {
@@ -37,20 +42,21 @@
     "declared_v7_unchanged": true,
     "no_activation_or_merge": true,
     "positive_stop": false,
-    "qualification": "CLOUD_REVIEW_AT_42c218a_PASSED__ADOPTED_COMMIT_SHA_NEEDS_INDEPENDENT_REPLAY"
+    "qualification": "REVIEWED_BLOB_ADOPTED__EXACT_COMMIT_REPLAY_PENDING"
   },
   "risks": [
-    "Transitive derived-memory provenance refusal is implemented with memoized canonical episode/fact lineage. Independently replay at adopted commit, including cycles/unknown references and after restart.",
+    "Memo staleness from future-bound fact refs addressed by including fact-binding identity in cache key; verify cycles, legacy and further binding churn at adoption SHA.",
     "Additional P0 surface: graph_candidate_hits may retain identifiers of refused deleted facts, and surviving relations may refer to deleted fact IDs; assess ID/provenance metadata leakage before full qualification.",
-    "Recreation of the same logical memory ID is allowed as a new lineage; #774's memory-level deleted test must not be combined without revision.",
     "Frozen v7 successor register remains unchanged; this is a separate post-v7 protected candidate and not an activated successor."
   ],
   "independent_review": {
-    "branch": "validation/776-adoption-qualification",
-    "review_head": "8face162dbe1be2e20acbab476cae23ae73451af",
-    "source_blob": "6823eeaff24c5d94892ae2417fd6cfdae95339cb",
-    "result": "26 #776 tests PASS at 42c218a; same five full-suite expected/baseline failures; 0 deleted-content exposures on five measured corpora",
-    "evidence": "reports/validation/776-adoption-qualification/README.md",
-    "caveat": "Tested 42c218a; adopted source/test blobs identical but new tree/commit requires exact SHA replay and successor governance."
+    "branch": "validation/776-transitive-adoption-qualification",
+    "review_head": "b061baab3db8a4e2657529ce2a67220fc1815567",
+    "reviewed_fix_sha": "bd16a7e",
+    "source_blob": "fe25923f70ae03830d1036ad959af62e25fd4b59",
+    "report": "reports/validation/776-transitive-adoption-qualification/README.md",
+    "tests": "33/33 focused passing at reviewed bd16a7e; full suite 4 intentional freeze guards + 1 preexisting durability failure",
+    "quality": "five corpora P0 zero; served lists byte-identical to prior repaired candidate",
+    "caveat": "code-only import commit is different from review SHA; unqualified pending exact SHA replay"
   }
 }
