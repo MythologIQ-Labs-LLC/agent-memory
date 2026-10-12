@@ -88,6 +88,14 @@ class ServedQualityProvenanceTests(unittest.TestCase):
             with self.subTest(mutation=mutation), self.assertRaises(ValueError):
                 qualify(copy.deepcopy(self.inputs), copy.deepcopy(self.gold), run)
 
+    def test_changed_write_text_with_identical_opaque_ids_is_rejected(self):
+        # Equal IDs do not mean equal underlying memory. The run must be
+        # bound to the exact source content, not merely matching row labels.
+        altered = copy.deepcopy(self.inputs)
+        altered["writes"][0]["text"] += " secretly changed"
+        with self.assertRaises(ValueError):
+            qualify(altered, copy.deepcopy(self.gold), copy.deepcopy(self.run))
+
     def test_backend_provenance_is_closed_not_assumed_from_lane_label(self):
         run = copy.deepcopy(self.run)
         run["execution_backend"] = "invented-memory-provider"
