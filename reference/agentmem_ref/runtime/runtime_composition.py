@@ -145,7 +145,7 @@ class CurrentServedContext:
     unknown_applicability_count: int
     complete_evidence_attested: bool = False
     authority_effect: str = "none"
-    selection_policy_version: str = "0.1.0"
+    selection_policy_version: str = "0.2.0"
     # validation(773) D773-2: admitted, ranked, budget-bounded refs whose
     # applicability is KNOWN not to cover the reference instant. Never part
     # of served_refs (never represented as current); kept reachable because
@@ -170,7 +170,7 @@ class CurrentServedContext:
                 or self.unknown_applicability_count < 0
                 or self.complete_evidence_attested is not False
                 or self.authority_effect != "none"
-                or self.selection_policy_version != "0.1.0"):
+                or self.selection_policy_version != "0.2.0"):
             raise ValueError("invalid or authoritative current context selection")
 
 
