@@ -19,7 +19,7 @@ class UntypedCompetitionContractTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.fixture = json.loads(FIXTURE.read_text(encoding="utf-8"))
-        cls.evaluate = runpy.run_path(str(EVALUATOR))["assess"]
+        cls.evaluate = staticmethod(runpy.run_path(str(EVALUATOR))["assess"])
         cls.cases = cls.fixture["cases"]
 
     def test_preregistered_case_contract(self):
