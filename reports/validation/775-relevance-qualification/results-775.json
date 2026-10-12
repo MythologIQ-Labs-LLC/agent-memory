@@ -1,0 +1,384 @@
+{
+  "cedarline-v1.1": {
+    "baseline_runtime": {
+      "clean": true,
+      "commit": "9b025f945e7ec4a1e349e56bba251e3122413e88",
+      "loaded_module": "reference/agentmem_ref/runtime/runtime_composition.py",
+      "loaded_module_blob": "65a39d5e3d3f052f03985cafa4751ad1ce3d4817",
+      "protected_tree": "7b87b4dbef5e0c9dbf24a1392c6571007bc801d0"
+    },
+    "rules": {
+      "R0 none": {
+        "all_critical_after": 14,
+        "all_critical_before": 14,
+        "answerable": 20,
+        "answerable_emptied": [],
+        "critical_lost": [],
+        "lost_context": 0,
+        "lost_legitimate": [],
+        "no_answer_emptied": [],
+        "no_answer_items_after": 8,
+        "no_answer_items_before": 8,
+        "top1_critical_after": 14,
+        "top1_critical_before": 14,
+        "withheld_irrelevant": 0
+      },
+      "R1 discriminative-term": {
+        "all_critical_after": 14,
+        "all_critical_before": 14,
+        "answerable": 20,
+        "answerable_emptied": [],
+        "critical_lost": [],
+        "lost_context": 0,
+        "lost_legitimate": [],
+        "no_answer_emptied": [
+          "C21"
+        ],
+        "no_answer_items_after": 6,
+        "no_answer_items_before": 8,
+        "top1_critical_after": 14,
+        "top1_critical_before": 14,
+        "withheld_irrelevant": 5
+      },
+      "R2 anchored-coverage": {
+        "all_critical_after": 10,
+        "all_critical_before": 14,
+        "answerable": 20,
+        "answerable_emptied": [
+          "C20"
+        ],
+        "critical_lost": [
+          "C03",
+          "C06",
+          "C10",
+          "C14"
+        ],
+        "lost_context": 0,
+        "lost_legitimate": [
+          "C03:why-parquet",
+          "C03:catalog-parquet",
+          "C06:owner-integrity",
+          "C09:uplink-512",
+          "C10:uplink-512",
+          "C14:retain-3y",
+          "C15:retain-3y",
+          "C18:priority-new",
+          "C20:watermark"
+        ],
+        "no_answer_emptied": [],
+        "no_answer_items_after": 6,
+        "no_answer_items_before": 8,
+        "top1_critical_after": 12,
+        "top1_critical_before": 14,
+        "withheld_irrelevant": 20
+      },
+      "R3 entity-anchors": {
+        "all_critical_after": 11,
+        "all_critical_before": 14,
+        "answerable": 20,
+        "answerable_emptied": [
+          "C03"
+        ],
+        "critical_lost": [
+          "C03",
+          "C05",
+          "C12"
+        ],
+        "lost_context": 0,
+        "lost_legitimate": [
+          "C03:why-parquet",
+          "C03:catalog-parquet",
+          "C03:catalog-csv",
+          "C05:offset-3mm-correct",
+          "C12:incident-root"
+        ],
+        "no_answer_emptied": [
+          "C23"
+        ],
+        "no_answer_items_after": 5,
+        "no_answer_items_before": 8,
+        "top1_critical_after": 12,
+        "top1_critical_before": 14,
+        "withheld_irrelevant": 10
+      },
+      "R4 R1+R3": {
+        "all_critical_after": 11,
+        "all_critical_before": 14,
+        "answerable": 20,
+        "answerable_emptied": [
+          "C03",
+          "C12"
+        ],
+        "critical_lost": [
+          "C03",
+          "C05",
+          "C12"
+        ],
+        "lost_context": 0,
+        "lost_legitimate": [
+          "C03:why-parquet",
+          "C03:catalog-parquet",
+          "C03:catalog-csv",
+          "C05:offset-3mm-correct",
+          "C12:incident-root"
+        ],
+        "no_answer_emptied": [
+          "C21",
+          "C23"
+        ],
+        "no_answer_items_after": 3,
+        "no_answer_items_before": 8,
+        "top1_critical_after": 12,
+        "top1_critical_before": 14,
+        "withheld_irrelevant": 15
+      }
+    }
+  },
+  "halcyon-v1.1": {
+    "baseline_runtime": {
+      "clean": true,
+      "commit": "9b025f945e7ec4a1e349e56bba251e3122413e88",
+      "loaded_module": "reference/agentmem_ref/runtime/runtime_composition.py",
+      "loaded_module_blob": "65a39d5e3d3f052f03985cafa4751ad1ce3d4817",
+      "protected_tree": "7b87b4dbef5e0c9dbf24a1392c6571007bc801d0"
+    },
+    "rules": {
+      "R0 none": {
+        "all_critical_after": 19,
+        "all_critical_before": 19,
+        "answerable": 21,
+        "answerable_emptied": [],
+        "critical_lost": [],
+        "lost_context": 0,
+        "lost_legitimate": [],
+        "no_answer_emptied": [],
+        "no_answer_items_after": 9,
+        "no_answer_items_before": 9,
+        "top1_critical_after": 13,
+        "top1_critical_before": 13,
+        "withheld_irrelevant": 0
+      },
+      "R1 discriminative-term": {
+        "all_critical_after": 19,
+        "all_critical_before": 19,
+        "answerable": 21,
+        "answerable_emptied": [],
+        "critical_lost": [],
+        "lost_context": 0,
+        "lost_legitimate": [],
+        "no_answer_emptied": [],
+        "no_answer_items_after": 7,
+        "no_answer_items_before": 9,
+        "top1_critical_after": 13,
+        "top1_critical_before": 13,
+        "withheld_irrelevant": 3
+      },
+      "R2 anchored-coverage": {
+        "all_critical_after": 13,
+        "all_critical_before": 19,
+        "answerable": 21,
+        "answerable_emptied": [
+          "H02"
+        ],
+        "critical_lost": [
+          "H01",
+          "H02",
+          "H08",
+          "H10",
+          "H13",
+          "H22"
+        ],
+        "lost_context": 1,
+        "lost_legitimate": [
+          "H01:pgver-16",
+          "H02:pgver-15",
+          "H02:pgver-16",
+          "H08:authz-5s",
+          "H10:migration-rule",
+          "H13:region-eu-us",
+          "H22:ratelimit"
+        ],
+        "no_answer_emptied": [],
+        "no_answer_items_after": 4,
+        "no_answer_items_before": 9,
+        "top1_critical_after": 11,
+        "top1_critical_before": 13,
+        "withheld_irrelevant": 29
+      },
+      "R3 entity-anchors": {
+        "all_critical_after": 16,
+        "all_critical_before": 19,
+        "answerable": 21,
+        "answerable_emptied": [
+          "H09",
+          "H13",
+          "H23"
+        ],
+        "critical_lost": [
+          "H09",
+          "H13",
+          "H23"
+        ],
+        "lost_context": 1,
+        "lost_legitimate": [
+          "H09:deploy-days",
+          "H13:region-eu-us",
+          "H23:inc-2207",
+          "H23:migration-rule"
+        ],
+        "no_answer_emptied": [
+          "H18"
+        ],
+        "no_answer_items_after": 6,
+        "no_answer_items_before": 9,
+        "top1_critical_after": 12,
+        "top1_critical_before": 13,
+        "withheld_irrelevant": 20
+      },
+      "R4 R1+R3": {
+        "all_critical_after": 16,
+        "all_critical_before": 19,
+        "answerable": 21,
+        "answerable_emptied": [
+          "H09",
+          "H13",
+          "H23"
+        ],
+        "critical_lost": [
+          "H09",
+          "H13",
+          "H23"
+        ],
+        "lost_context": 1,
+        "lost_legitimate": [
+          "H09:deploy-days",
+          "H13:region-eu-us",
+          "H23:inc-2207",
+          "H23:migration-rule"
+        ],
+        "no_answer_emptied": [
+          "H18"
+        ],
+        "no_answer_items_after": 4,
+        "no_answer_items_before": 9,
+        "top1_critical_after": 12,
+        "top1_critical_before": 13,
+        "withheld_irrelevant": 22
+      }
+    }
+  },
+  "northgate-v1 (frozen collision set)": {
+    "baseline_runtime": {
+      "clean": true,
+      "commit": "9b025f945e7ec4a1e349e56bba251e3122413e88",
+      "loaded_module": "reference/agentmem_ref/runtime/runtime_composition.py",
+      "loaded_module_blob": "65a39d5e3d3f052f03985cafa4751ad1ce3d4817",
+      "protected_tree": "7b87b4dbef5e0c9dbf24a1392c6571007bc801d0"
+    },
+    "rules": {
+      "R0 none": {
+        "all_critical_after": 10,
+        "all_critical_before": 10,
+        "answerable": 11,
+        "answerable_emptied": [],
+        "critical_lost": [],
+        "lost_context": 0,
+        "lost_legitimate": [],
+        "no_answer_emptied": [],
+        "no_answer_items_after": 10,
+        "no_answer_items_before": 10,
+        "top1_critical_after": 8,
+        "top1_critical_before": 8,
+        "withheld_irrelevant": 0
+      },
+      "R1 discriminative-term": {
+        "all_critical_after": 10,
+        "all_critical_before": 10,
+        "answerable": 11,
+        "answerable_emptied": [],
+        "critical_lost": [],
+        "lost_context": 0,
+        "lost_legitimate": [],
+        "no_answer_emptied": [],
+        "no_answer_items_after": 9,
+        "no_answer_items_before": 10,
+        "top1_critical_after": 8,
+        "top1_critical_before": 8,
+        "withheld_irrelevant": 1
+      },
+      "R2 anchored-coverage": {
+        "all_critical_after": 7,
+        "all_critical_before": 10,
+        "answerable": 11,
+        "answerable_emptied": [
+          "N14"
+        ],
+        "critical_lost": [
+          "N01",
+          "N02",
+          "N14"
+        ],
+        "lost_context": 0,
+        "lost_legitimate": [
+          "N01:hl-hours",
+          "N02:rv-hours",
+          "N14:hl-ehr"
+        ],
+        "no_answer_emptied": [],
+        "no_answer_items_after": 9,
+        "no_answer_items_before": 10,
+        "top1_critical_after": 7,
+        "top1_critical_before": 8,
+        "withheld_irrelevant": 6
+      },
+      "R3 entity-anchors": {
+        "all_critical_after": 9,
+        "all_critical_before": 10,
+        "answerable": 11,
+        "answerable_emptied": [],
+        "critical_lost": [
+          "N12"
+        ],
+        "lost_context": 1,
+        "lost_legitimate": [
+          "N12:triage"
+        ],
+        "no_answer_emptied": [
+          "N06",
+          "N07",
+          "N09",
+          "N13"
+        ],
+        "no_answer_items_after": 1,
+        "no_answer_items_before": 10,
+        "top1_critical_after": 8,
+        "top1_critical_before": 8,
+        "withheld_irrelevant": 13
+      },
+      "R4 R1+R3": {
+        "all_critical_after": 9,
+        "all_critical_before": 10,
+        "answerable": 11,
+        "answerable_emptied": [],
+        "critical_lost": [
+          "N12"
+        ],
+        "lost_context": 1,
+        "lost_legitimate": [
+          "N12:triage"
+        ],
+        "no_answer_emptied": [
+          "N06",
+          "N07",
+          "N09",
+          "N13"
+        ],
+        "no_answer_items_after": 1,
+        "no_answer_items_before": 10,
+        "top1_critical_after": 8,
+        "top1_critical_before": 8,
+        "withheld_irrelevant": 13
+      }
+    }
+  }
+}
