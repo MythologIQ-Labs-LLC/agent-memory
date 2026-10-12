@@ -32,7 +32,8 @@ class ServedMemoryQualityTests(unittest.TestCase):
         self.assertEqual(report["quality_case_count"], 6)
         self.assertEqual(report["P0_safety"]["cases_with_prohibited_exposure"], 0)
         self.assertEqual(report["P0_safety"]["cases_with_stale_exposure"], 0)
-        self.assertEqual(report["P1_served_correctness"]["correct_abstention_rate"], 1.0)
+        self.assertEqual(report["P1_served_correctness"]["no_safe_answer_empty_context_count"], 2)
+        self.assertIsNone(report["P1_served_correctness"]["answer_abstention_verified"])
         self.assertEqual(report["P1_served_correctness"]["all_critical_groups_covered_rate"], 1.0)
         self.assertTrue(report["not_a_composite_score"])
         self.assertNotIn("overall_score", report)
@@ -47,7 +48,8 @@ class ServedMemoryQualityTests(unittest.TestCase):
         self.assertEqual(by_id["Q04"]["critical_groups_total"], 2)
         self.assertFalse(by_id["Q05"]["top1_relevant"])
         self.assertFalse(by_id["Q02"]["top1_relevant"])
-        self.assertFalse(by_id["Q06"]["abstention_correct"])
+        self.assertFalse(by_id["Q06"]["empty_delivery"])
+        self.assertFalse(by_id["Q06"]["safely_answerable"])
 
     def test_historical_memory_is_not_incorrectly_marked_stale(self):
         report = score(self.cases, self.good)
@@ -62,7 +64,8 @@ class ServedMemoryQualityTests(unittest.TestCase):
 
     def test_top1_and_critical_recall_denominators_are_answerable_cases_only(self):
         report = score(self.cases, self.good)
-        # Four of six cases are answerable. The other two are correct abstentions
+        # Four of six cases are answerable. The other two have empty context,
+        # which alone is NOT evidence of an answer-layer refusal.
         # and must not dilute top-1 ranking/critical-coverage scores.
         self.assertEqual(report["P1_served_correctness"]["top1_relevant_rate"], 1.0)
         self.assertEqual(report["P1_served_correctness"]["all_critical_groups_covered_rate"], 1.0)
