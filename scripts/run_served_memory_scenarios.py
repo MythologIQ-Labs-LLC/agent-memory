@@ -137,7 +137,18 @@ def run_scenarios(data, root: Path, *, revision: str, lane_id: str,
     rows = []
     for q in data["queries"]:
         if backend == "composed-multiroute":
-            result = runtime.multi_route_recall(q["query"], context)
+            # This is the caller's declared temporal QUESTION, not a gold
+            # currentness answer. It must reach the real applicability policy.
+            declared_mode = {
+                "current": "current",
+                "historical": "historical",
+                "timeless": "atemporal_or_unspecified",
+            }[q["intent"]]
+            result = runtime.multi_route_recall(
+                q["query"], context, temporal_intent={"mode": declared_mode},
+            )
+            if result.query_temporal_intent.get("mode") != declared_mode:
+                raise RuntimeError("composed recall did not honor declared temporal intent")
             if result.authority_effect != "none":
                 raise RuntimeError("composed recall claimed authority")
             ranked = result.ranked_admitted
