@@ -1,0 +1,222 @@
+{
+  "events": [
+    {
+      "id": "pumps-2",
+      "memory": "pumps",
+      "op": "retain",
+      "text": "The Kessel Road pumping station operates two duty pumps."
+    },
+    {
+      "id": "pumps-3",
+      "memory": "pumps",
+      "op": "update",
+      "text": "The Kessel Road pumping station now operates three duty pumps after the 2022 expansion."
+    },
+    {
+      "id": "pumps-4",
+      "memory": "pumps",
+      "op": "update",
+      "text": "Kessel Road pumping station operates four duty pumps since the 2025 refit."
+    },
+    {
+      "id": "chl-05",
+      "memory": "chlorine",
+      "op": "retain",
+      "text": "The free chlorine target at the reservoir outlet is 0.5 milligrams per litre."
+    },
+    {
+      "id": "chl-08",
+      "memory": "chlorine",
+      "op": "update",
+      "text": "The free chlorine target at the reservoir outlet was raised to 0.8 milligrams per litre."
+    },
+    {
+      "id": "chl-07",
+      "memory": "chlorine",
+      "op": "correct",
+      "text": "The free chlorine target at the reservoir outlet is 0.7 milligrams per litre; the 0.8 figure was a data-entry mistake."
+    },
+    {
+      "id": "scada-ww",
+      "memory": "scada",
+      "op": "retain",
+      "text": "Telemetry and SCADA run on Wonderware InTouch."
+    },
+    {
+      "id": "scada-i7",
+      "memory": "scada",
+      "op": "update",
+      "text": "Telemetry and SCADA moved to Ignition 7."
+    },
+    {
+      "id": "scada-i80",
+      "memory": "scada",
+      "op": "update",
+      "text": "Telemetry and SCADA were upgraded to Ignition 8.0."
+    },
+    {
+      "id": "scada-i81",
+      "memory": "scada",
+      "op": "update",
+      "text": "Telemetry and SCADA were upgraded to Ignition 8.1."
+    },
+    {
+      "id": "scada-i83",
+      "memory": "scada",
+      "op": "update",
+      "text": "Telemetry and SCADA now run Ignition 8.3."
+    },
+    {
+      "id": "bill-q",
+      "memory": "billing",
+      "op": "retain",
+      "text": "Customers receive water bills every quarter."
+    },
+    {
+      "id": "bill-2m",
+      "memory": "billing",
+      "op": "update",
+      "text": "Customers now receive water bills every two months."
+    },
+    {
+      "id": "why-bill",
+      "memory": "why-billing",
+      "op": "retain",
+      "text": "Billing moved to a two-month cycle because customers complained that quarterly bills were too large to budget for."
+    },
+    {
+      "id": "sap",
+      "memory": "sap",
+      "op": "retain",
+      "text": "The billing system migration to SAP finished in March 2024."
+    },
+    {
+      "id": "meter-arq",
+      "memory": "meter",
+      "op": "retain",
+      "text": "Smart meter readings are collected over the Arqiva network."
+    },
+    {
+      "id": "meter-itron",
+      "memory": "meter",
+      "op": "update",
+      "text": "Smart meter readings are now collected over the Itron mesh network."
+    },
+    {
+      "id": "meter-del",
+      "memory": "meter",
+      "op": "delete"
+    },
+    {
+      "id": "budget-2m",
+      "memory": "budget",
+      "op": "retain",
+      "project": "capital-works",
+      "text": "The Kessel Road pumping station upgrade budget is 2 million pounds."
+    },
+    {
+      "id": "budget-4m",
+      "memory": "budget",
+      "op": "update",
+      "text": "The Kessel Road pumping station upgrade budget is now 4 million pounds."
+    },
+    {
+      "id": "harbour-pumps",
+      "memory": "harbour-pumps",
+      "op": "retain",
+      "tenant": "harbourcity",
+      "text": "The Kessel Road pumping station operates six duty pumps."
+    },
+    {
+      "id": "canteen",
+      "memory": "canteen",
+      "op": "retain",
+      "text": "The Kessel Road depot canteen opens at 7 in the morning."
+    },
+    {
+      "id": "leak",
+      "memory": "leak",
+      "op": "retain",
+      "text": "Leak detection on trunk mains uses acoustic loggers."
+    }
+  ],
+  "project": "operations",
+  "purpose": "utility-operations-assistant",
+  "queries": [
+    {
+      "budget": 3,
+      "id": "B01",
+      "intent": "historical",
+      "query": "How many duty pumps did Kessel Road run before the latest change?"
+    },
+    {
+      "budget": 3,
+      "id": "B02",
+      "intent": "historical",
+      "query": "What was the reservoir outlet chlorine target before the current value?"
+    },
+    {
+      "budget": 3,
+      "id": "B03",
+      "intent": "historical",
+      "query": "Which telemetry platform version preceded the one in use now?"
+    },
+    {
+      "budget": 3,
+      "id": "B04",
+      "intent": "historical",
+      "query": "How often were customers billed before the current cycle?"
+    },
+    {
+      "budget": 3,
+      "id": "B05",
+      "intent": "historical",
+      "query": "Which network collected smart meter readings before?"
+    },
+    {
+      "budget": 3,
+      "id": "B06",
+      "intent": "historical",
+      "query": "What happened with the billing system migration?"
+    },
+    {
+      "budget": 3,
+      "id": "B07",
+      "intent": "historical",
+      "query": "Why did the billing frequency change?"
+    },
+    {
+      "budget": 3,
+      "id": "B08",
+      "intent": "current",
+      "query": "How many duty pumps does Kessel Road operate now?"
+    },
+    {
+      "budget": 2,
+      "id": "B09",
+      "intent": "current",
+      "query": "What is the reservoir outlet chlorine target?"
+    },
+    {
+      "budget": 2,
+      "id": "B10",
+      "intent": "timeless",
+      "query": "How is leak detection done on trunk mains?"
+    },
+    {
+      "budget": 3,
+      "id": "B11",
+      "intent": "historical",
+      "query": "What was the pumping station upgrade budget before?"
+    },
+    {
+      "budget": 3,
+      "id": "B12",
+      "intent": "historical",
+      "query": "Which telemetry platform did Brightwater use before Ignition 8.0?"
+    }
+  ],
+  "reference_time": "2026-10-12T12:00:00Z",
+  "schema": "served-memory-lifecycle-v3",
+  "tenant": "brightwater"
+}

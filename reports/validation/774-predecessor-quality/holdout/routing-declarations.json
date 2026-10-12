@@ -1,0 +1,22 @@
+{
+  "brightwater-v1": [
+    "B01",
+    "B02",
+    "B03",
+    "B04",
+    "B05",
+    "B11",
+    "B12"
+  ],
+  "cedarline-v1.1": [
+    "C02",
+    "C07",
+    "C15"
+  ],
+  "halcyon-v1.1": [
+    "H02",
+    "H14"
+  ],
+  "note": "Caller-declared routing, written before any #774 execution. Declared where the question asks for the value that held before a later value of the same thing. Halcyon/Cedarline entries were declared from question wording before #774 ran on them.",
+  "relationship": "immediate_predecessor"
+}

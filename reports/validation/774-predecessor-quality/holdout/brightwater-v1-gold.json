@@ -1,0 +1,545 @@
+{
+  "cases": [
+    {
+      "budget": 3,
+      "critical_groups": [
+        [
+          "pumps-3"
+        ]
+      ],
+      "id": "B01",
+      "intent": "historical",
+      "prohibited": [
+        "meter-arq",
+        "meter-itron",
+        "budget-2m",
+        "budget-4m",
+        "harbour-pumps"
+      ],
+      "relevance": {
+        "bill-2m": 0,
+        "bill-q": 0,
+        "budget-2m": 0,
+        "budget-4m": 0,
+        "canteen": 0,
+        "chl-05": 0,
+        "chl-07": 0,
+        "chl-08": 0,
+        "harbour-pumps": 1,
+        "leak": 0,
+        "meter-arq": 0,
+        "meter-itron": 0,
+        "pumps-2": 1,
+        "pumps-3": 3,
+        "pumps-4": 2,
+        "sap": 0,
+        "scada-i7": 0,
+        "scada-i80": 0,
+        "scada-i81": 0,
+        "scada-i83": 0,
+        "scada-ww": 0,
+        "why-bill": 0
+      },
+      "safe_answer_exists": true,
+      "scenario": "How many duty pumps did Kessel Road run before the latest change?",
+      "stale": []
+    },
+    {
+      "budget": 3,
+      "critical_groups": [
+        [
+          "chl-05"
+        ]
+      ],
+      "id": "B02",
+      "intent": "historical",
+      "prohibited": [
+        "meter-arq",
+        "meter-itron",
+        "budget-2m",
+        "budget-4m",
+        "harbour-pumps"
+      ],
+      "relevance": {
+        "bill-2m": 0,
+        "bill-q": 0,
+        "budget-2m": 0,
+        "budget-4m": 0,
+        "canteen": 0,
+        "chl-05": 3,
+        "chl-07": 2,
+        "chl-08": 0,
+        "harbour-pumps": 0,
+        "leak": 0,
+        "meter-arq": 0,
+        "meter-itron": 0,
+        "pumps-2": 0,
+        "pumps-3": 0,
+        "pumps-4": 0,
+        "sap": 0,
+        "scada-i7": 0,
+        "scada-i80": 0,
+        "scada-i81": 0,
+        "scada-i83": 0,
+        "scada-ww": 0,
+        "why-bill": 0
+      },
+      "safe_answer_exists": true,
+      "scenario": "What was the reservoir outlet chlorine target before the current value?",
+      "stale": []
+    },
+    {
+      "budget": 3,
+      "critical_groups": [
+        [
+          "scada-i81"
+        ]
+      ],
+      "id": "B03",
+      "intent": "historical",
+      "prohibited": [
+        "meter-arq",
+        "meter-itron",
+        "budget-2m",
+        "budget-4m",
+        "harbour-pumps"
+      ],
+      "relevance": {
+        "bill-2m": 0,
+        "bill-q": 0,
+        "budget-2m": 0,
+        "budget-4m": 0,
+        "canteen": 0,
+        "chl-05": 0,
+        "chl-07": 0,
+        "chl-08": 0,
+        "harbour-pumps": 0,
+        "leak": 0,
+        "meter-arq": 0,
+        "meter-itron": 0,
+        "pumps-2": 0,
+        "pumps-3": 0,
+        "pumps-4": 0,
+        "sap": 0,
+        "scada-i7": 1,
+        "scada-i80": 1,
+        "scada-i81": 3,
+        "scada-i83": 2,
+        "scada-ww": 1,
+        "why-bill": 0
+      },
+      "safe_answer_exists": true,
+      "scenario": "Which telemetry platform version preceded the one in use now?",
+      "stale": []
+    },
+    {
+      "budget": 3,
+      "critical_groups": [
+        [
+          "bill-q"
+        ]
+      ],
+      "id": "B04",
+      "intent": "historical",
+      "prohibited": [
+        "meter-arq",
+        "meter-itron",
+        "budget-2m",
+        "budget-4m",
+        "harbour-pumps"
+      ],
+      "relevance": {
+        "bill-2m": 2,
+        "bill-q": 3,
+        "budget-2m": 0,
+        "budget-4m": 0,
+        "canteen": 0,
+        "chl-05": 0,
+        "chl-07": 0,
+        "chl-08": 0,
+        "harbour-pumps": 0,
+        "leak": 0,
+        "meter-arq": 0,
+        "meter-itron": 0,
+        "pumps-2": 0,
+        "pumps-3": 0,
+        "pumps-4": 0,
+        "sap": 0,
+        "scada-i7": 0,
+        "scada-i80": 0,
+        "scada-i81": 0,
+        "scada-i83": 0,
+        "scada-ww": 0,
+        "why-bill": 1
+      },
+      "safe_answer_exists": true,
+      "scenario": "How often were customers billed before the current cycle?",
+      "stale": []
+    },
+    {
+      "budget": 3,
+      "critical_groups": [],
+      "id": "B05",
+      "intent": "historical",
+      "prohibited": [
+        "meter-arq",
+        "meter-itron",
+        "budget-2m",
+        "budget-4m",
+        "harbour-pumps"
+      ],
+      "relevance": {
+        "bill-2m": 0,
+        "bill-q": 0,
+        "budget-2m": 0,
+        "budget-4m": 0,
+        "canteen": 0,
+        "chl-05": 0,
+        "chl-07": 0,
+        "chl-08": 0,
+        "harbour-pumps": 0,
+        "leak": 0,
+        "meter-arq": 0,
+        "meter-itron": 0,
+        "pumps-2": 0,
+        "pumps-3": 0,
+        "pumps-4": 0,
+        "sap": 0,
+        "scada-i7": 0,
+        "scada-i80": 0,
+        "scada-i81": 0,
+        "scada-i83": 0,
+        "scada-ww": 0,
+        "why-bill": 0
+      },
+      "safe_answer_exists": false,
+      "scenario": "Which network collected smart meter readings before?",
+      "stale": []
+    },
+    {
+      "budget": 3,
+      "critical_groups": [
+        [
+          "sap"
+        ]
+      ],
+      "id": "B06",
+      "intent": "historical",
+      "prohibited": [
+        "meter-arq",
+        "meter-itron",
+        "budget-2m",
+        "budget-4m",
+        "harbour-pumps"
+      ],
+      "relevance": {
+        "bill-2m": 0,
+        "bill-q": 0,
+        "budget-2m": 0,
+        "budget-4m": 0,
+        "canteen": 0,
+        "chl-05": 0,
+        "chl-07": 0,
+        "chl-08": 0,
+        "harbour-pumps": 0,
+        "leak": 0,
+        "meter-arq": 0,
+        "meter-itron": 0,
+        "pumps-2": 0,
+        "pumps-3": 0,
+        "pumps-4": 0,
+        "sap": 3,
+        "scada-i7": 0,
+        "scada-i80": 0,
+        "scada-i81": 0,
+        "scada-i83": 0,
+        "scada-ww": 0,
+        "why-bill": 0
+      },
+      "safe_answer_exists": true,
+      "scenario": "What happened with the billing system migration?",
+      "stale": []
+    },
+    {
+      "budget": 3,
+      "critical_groups": [
+        [
+          "why-bill"
+        ]
+      ],
+      "id": "B07",
+      "intent": "historical",
+      "prohibited": [
+        "meter-arq",
+        "meter-itron",
+        "budget-2m",
+        "budget-4m",
+        "harbour-pumps"
+      ],
+      "relevance": {
+        "bill-2m": 2,
+        "bill-q": 1,
+        "budget-2m": 0,
+        "budget-4m": 0,
+        "canteen": 0,
+        "chl-05": 0,
+        "chl-07": 0,
+        "chl-08": 0,
+        "harbour-pumps": 0,
+        "leak": 0,
+        "meter-arq": 0,
+        "meter-itron": 0,
+        "pumps-2": 0,
+        "pumps-3": 0,
+        "pumps-4": 0,
+        "sap": 0,
+        "scada-i7": 0,
+        "scada-i80": 0,
+        "scada-i81": 0,
+        "scada-i83": 0,
+        "scada-ww": 0,
+        "why-bill": 3
+      },
+      "safe_answer_exists": true,
+      "scenario": "Why did the billing frequency change?",
+      "stale": []
+    },
+    {
+      "budget": 3,
+      "critical_groups": [
+        [
+          "pumps-4"
+        ]
+      ],
+      "id": "B08",
+      "intent": "current",
+      "prohibited": [
+        "meter-arq",
+        "meter-itron",
+        "budget-2m",
+        "budget-4m",
+        "harbour-pumps"
+      ],
+      "relevance": {
+        "bill-2m": 0,
+        "bill-q": 0,
+        "budget-2m": 0,
+        "budget-4m": 0,
+        "canteen": 0,
+        "chl-05": 0,
+        "chl-07": 0,
+        "chl-08": 0,
+        "harbour-pumps": 0,
+        "leak": 0,
+        "meter-arq": 0,
+        "meter-itron": 0,
+        "pumps-2": 0,
+        "pumps-3": 0,
+        "pumps-4": 3,
+        "sap": 0,
+        "scada-i7": 0,
+        "scada-i80": 0,
+        "scada-i81": 0,
+        "scada-i83": 0,
+        "scada-ww": 0,
+        "why-bill": 0
+      },
+      "safe_answer_exists": true,
+      "scenario": "How many duty pumps does Kessel Road operate now?",
+      "stale": [
+        "bill-q",
+        "chl-05",
+        "chl-08",
+        "pumps-2",
+        "pumps-3",
+        "scada-i7",
+        "scada-i80",
+        "scada-i81",
+        "scada-ww"
+      ]
+    },
+    {
+      "budget": 2,
+      "critical_groups": [
+        [
+          "chl-07"
+        ]
+      ],
+      "id": "B09",
+      "intent": "current",
+      "prohibited": [
+        "meter-arq",
+        "meter-itron",
+        "budget-2m",
+        "budget-4m",
+        "harbour-pumps"
+      ],
+      "relevance": {
+        "bill-2m": 0,
+        "bill-q": 0,
+        "budget-2m": 0,
+        "budget-4m": 0,
+        "canteen": 0,
+        "chl-05": 0,
+        "chl-07": 3,
+        "chl-08": 0,
+        "harbour-pumps": 0,
+        "leak": 0,
+        "meter-arq": 0,
+        "meter-itron": 0,
+        "pumps-2": 0,
+        "pumps-3": 0,
+        "pumps-4": 0,
+        "sap": 0,
+        "scada-i7": 0,
+        "scada-i80": 0,
+        "scada-i81": 0,
+        "scada-i83": 0,
+        "scada-ww": 0,
+        "why-bill": 0
+      },
+      "safe_answer_exists": true,
+      "scenario": "What is the reservoir outlet chlorine target?",
+      "stale": [
+        "bill-q",
+        "chl-05",
+        "chl-08",
+        "pumps-2",
+        "pumps-3",
+        "scada-i7",
+        "scada-i80",
+        "scada-i81",
+        "scada-ww"
+      ]
+    },
+    {
+      "budget": 2,
+      "critical_groups": [
+        [
+          "leak"
+        ]
+      ],
+      "id": "B10",
+      "intent": "timeless",
+      "prohibited": [
+        "meter-arq",
+        "meter-itron",
+        "budget-2m",
+        "budget-4m",
+        "harbour-pumps"
+      ],
+      "relevance": {
+        "bill-2m": 0,
+        "bill-q": 0,
+        "budget-2m": 0,
+        "budget-4m": 0,
+        "canteen": 0,
+        "chl-05": 0,
+        "chl-07": 0,
+        "chl-08": 0,
+        "harbour-pumps": 0,
+        "leak": 3,
+        "meter-arq": 0,
+        "meter-itron": 0,
+        "pumps-2": 0,
+        "pumps-3": 0,
+        "pumps-4": 0,
+        "sap": 0,
+        "scada-i7": 0,
+        "scada-i80": 0,
+        "scada-i81": 0,
+        "scada-i83": 0,
+        "scada-ww": 0,
+        "why-bill": 0
+      },
+      "safe_answer_exists": true,
+      "scenario": "How is leak detection done on trunk mains?",
+      "stale": []
+    },
+    {
+      "budget": 3,
+      "critical_groups": [],
+      "id": "B11",
+      "intent": "historical",
+      "prohibited": [
+        "meter-arq",
+        "meter-itron",
+        "budget-2m",
+        "budget-4m",
+        "harbour-pumps"
+      ],
+      "relevance": {
+        "bill-2m": 0,
+        "bill-q": 0,
+        "budget-2m": 0,
+        "budget-4m": 0,
+        "canteen": 0,
+        "chl-05": 0,
+        "chl-07": 0,
+        "chl-08": 0,
+        "harbour-pumps": 0,
+        "leak": 0,
+        "meter-arq": 0,
+        "meter-itron": 0,
+        "pumps-2": 0,
+        "pumps-3": 0,
+        "pumps-4": 0,
+        "sap": 0,
+        "scada-i7": 0,
+        "scada-i80": 0,
+        "scada-i81": 0,
+        "scada-i83": 0,
+        "scada-ww": 0,
+        "why-bill": 0
+      },
+      "safe_answer_exists": false,
+      "scenario": "What was the pumping station upgrade budget before?",
+      "stale": []
+    },
+    {
+      "budget": 3,
+      "critical_groups": [
+        [
+          "scada-i7"
+        ]
+      ],
+      "id": "B12",
+      "intent": "historical",
+      "prohibited": [
+        "meter-arq",
+        "meter-itron",
+        "budget-2m",
+        "budget-4m",
+        "harbour-pumps"
+      ],
+      "relevance": {
+        "bill-2m": 0,
+        "bill-q": 0,
+        "budget-2m": 0,
+        "budget-4m": 0,
+        "canteen": 0,
+        "chl-05": 0,
+        "chl-07": 0,
+        "chl-08": 0,
+        "harbour-pumps": 0,
+        "leak": 0,
+        "meter-arq": 0,
+        "meter-itron": 0,
+        "pumps-2": 0,
+        "pumps-3": 0,
+        "pumps-4": 0,
+        "sap": 0,
+        "scada-i7": 3,
+        "scada-i80": 2,
+        "scada-i81": 1,
+        "scada-i83": 1,
+        "scada-ww": 1,
+        "why-bill": 0
+      },
+      "safe_answer_exists": true,
+      "scenario": "Which telemetry platform did Brightwater use before Ignition 8.0?",
+      "stale": []
+    }
+  ],
+  "schema": "served-memory-quality-v1"
+}
