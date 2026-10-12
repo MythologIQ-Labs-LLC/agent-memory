@@ -125,9 +125,14 @@ class HistoricalEvidenceAdmissionTests(unittest.TestCase):
     def test_tombstoned_superseded_state_stays_refused(self):
         adapter = self.memory.runtime.adapter
         adapter._tombstones[self.old] = {"memory_id": "memory:city", "deleted_at": NOW}
-        recalled = self.memory.recall("Where does Kevin live?", temporal_intent=HISTORICAL, reference_time=NOW)
+        # #777: the canonical (in-process evaluation) record keeps the refusal; the public
+        # projection withholds the deleted identifier entirely.
+        recalled = self.memory._canonical_recall("Where does Kevin live?", temporal_intent=HISTORICAL, reference_time=NOW)
         self.assertNotIn(self.old, recalled["admitted"])
         self.assertEqual(self._admission(recalled, self.old)["refusal"], "tombstoned")
+        public = self.memory.recall("Where does Kevin live?", temporal_intent=HISTORICAL, reference_time=NOW)
+        self.assertNotIn(self.old, public["candidates"])
+        self.assertNotIn(self.old, public["admissions"])
 
     def test_wrong_scope_historical_state_is_never_a_candidate(self):
         self.memory.close()

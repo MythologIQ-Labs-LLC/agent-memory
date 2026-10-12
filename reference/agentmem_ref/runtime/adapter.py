@@ -1522,10 +1522,15 @@ class GovernedMemoryAdapter:
         return max(starts) if starts else None
 
     def public_current_visible(self, memory_id: str, context: RecallContext) -> bool:
-        """Is this memory's current fact admissible to the reader (canonical admission)?"""
+        """May an ordinary reader know this memory exists? Its current fact must be in the
+        reader's tenant/domain scope and outside every deleted lineage. (A disputed or
+        otherwise refused current fact is still a known memory; deletion and scope are the
+        privacy boundary, not admission.)"""
         head = self._current_fact_by_memory.get(memory_id) if isinstance(memory_id, str) else None
         fact = self._substrate.get_fact(head) if head else None
-        return fact is not None and self._admission_refusal(fact, context) is None
+        return (fact is not None and fact.group_id == self._tenant
+                and self._domain_eligibility_refusal(fact, context) is None
+                and self._deleted_lineage_reason(fact) is None and fact.uuid not in self._tombstones)
 
     def _deleted_lineage(self) -> dict[str, str]:
         """#776: fact uuid -> deleted memory for every fact a governed deletion covers.

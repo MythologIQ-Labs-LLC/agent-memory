@@ -177,14 +177,16 @@ class DeveloperFacade(unittest.TestCase):
             seed = memory.remember(TARGET, "temporary release detail")
             forgotten = memory.forget(TARGET, evidence=_skill_evidence())
             self.assertTrue(forgotten["committed"])
-            history = memory.history(TARGET)["history"]
+            history = memory._canonical_history(TARGET)["history"]  # #777: audit record stays internal
             self.assertTrue(history["tombstoned"])
+            self.assertEqual(memory.history(TARGET)["history"],
+                             {"current_fact_uuid": None, "state_version": 0, "tombstoned": False, "events": []})
             memory.close()
 
             recovered = self._open(root)
             recalled = recovered.recall("temporary release detail", logical_memory_refs=(TARGET,))
             self.assertNotIn(seed["fact_uuid"], recalled["admitted"])
-            self.assertTrue(recovered.history(TARGET)["history"]["tombstoned"])
+            self.assertTrue(recovered._canonical_history(TARGET)["history"]["tombstoned"])
             recovered.close()
 
     def test_permanent_delete_is_not_convenience_authorized(self):

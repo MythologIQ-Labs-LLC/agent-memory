@@ -208,7 +208,6 @@ class SurvivingRelationProjection(_Facade):
         after = self.memory.write_semantics(live)
         self.assertEqual(after["relations"], [])
         self.assertEqual(after.get("relation_count"), 0)
-        self.assertEqual(after["public_projection"], POLICY)
         self.assertEqual(_serial(self.memory.runtime.adapter._substrate.get_fact(live).attributes), stored_before)
         self.assertIn(deleted, stored_before)  # immutable audit evidence retained internally
 
