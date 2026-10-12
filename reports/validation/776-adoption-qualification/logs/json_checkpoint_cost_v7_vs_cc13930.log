@@ -1,0 +1,14 @@
+== /tmp/claude-0/wt3/v7
+tombstones=   10 prune=    5.7 ms substrate+governance=  0.04 MB
+tombstones=  100 prune=   12.9 ms substrate+governance=  0.37 MB
+tombstones=  500 prune=   66.0 ms substrate+governance=  1.84 MB
+tombstones= 1000 prune=   93.2 ms substrate+governance=  3.67 MB
+tombstones= 2000 prune=  238.8 ms substrate+governance=  7.37 MB
+== /tmp/claude-0/wt6/a776
+tombstones=   10 prune=    4.7 ms substrate+governance=  0.04 MB
+tombstones=  100 prune=   17.1 ms substrate+governance=  0.38 MB
+tombstones=  500 prune=   48.3 ms substrate+governance=  1.86 MB
+tombstones= 1000 prune=  139.0 ms substrate+governance=  3.71 MB
+tombstones= 2000 prune=  186.8 ms substrate+governance=  7.44 MB
+
+[exited with code 0]

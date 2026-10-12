@@ -1,0 +1,218 @@
+{
+  "execution_backend": "composed-multiroute",
+  "input_sha256": "89129f5d42ee35f29231a5948f7dfb3e394ff2bc080fe77ec78e3ce23862d944",
+  "lane_id": "776-adopt-v7",
+  "provenance": {
+    "evaluator": {
+      "clean": true,
+      "commit": "4aba9a4c2f27ebcbb27ab8268015a82746ae2d3b"
+    },
+    "runtime": {
+      "clean": true,
+      "commit": "9b025f945e7ec4a1e349e56bba251e3122413e88",
+      "loaded_module": "reference/agentmem_ref/runtime/runtime_composition.py",
+      "loaded_module_blob": "65a39d5e3d3f052f03985cafa4751ad1ce3d4817",
+      "protected_tree": "7b87b4dbef5e0c9dbf24a1392c6571007bc801d0"
+    }
+  },
+  "reference_time": "2026-10-12T12:00:00Z",
+  "reference_time_applied_to": [
+    "C01",
+    "C05",
+    "C06",
+    "C08",
+    "C11",
+    "C14",
+    "C17",
+    "C21",
+    "C22",
+    "C23",
+    "C24"
+  ],
+  "reference_time_utc": "2026-10-12T12:00:00.000000Z",
+  "rows": [
+    {
+      "id": "C01",
+      "returned": [
+        "catalog-delta",
+        "watermark",
+        "owner-integrity"
+      ]
+    },
+    {
+      "id": "C02",
+      "returned": [
+        "catalog-delta",
+        "why-delta",
+        "why-compress"
+      ]
+    },
+    {
+      "id": "C03",
+      "returned": [
+        "catalog-parquet",
+        "catalog-csv",
+        "why-parquet"
+      ]
+    },
+    {
+      "id": "C04",
+      "returned": [
+        "catalog-delta",
+        "why-delta",
+        "watermark"
+      ]
+    },
+    {
+      "id": "C05",
+      "returned": [
+        "offset-3mm-correct",
+        "heartbeat-10"
+      ]
+    },
+    {
+      "id": "C06",
+      "returned": [
+        "owner-integrity",
+        "priority-new"
+      ]
+    },
+    {
+      "id": "C07",
+      "returned": [
+        "owner-integrity",
+        "priority-new",
+        "retain-3y"
+      ]
+    },
+    {
+      "id": "C08",
+      "returned": [
+        "heartbeat-10",
+        "priority-new"
+      ]
+    },
+    {
+      "id": "C09",
+      "returned": [
+        "why-compress",
+        "uplink-512",
+        "incident-208"
+      ]
+    },
+    {
+      "id": "C10",
+      "returned": [
+        "why-compress",
+        "uplink-512",
+        "mission-mesa7"
+      ]
+    },
+    {
+      "id": "C11",
+      "returned": [
+        "mission-mesa7",
+        "uplink-512"
+      ]
+    },
+    {
+      "id": "C12",
+      "returned": [
+        "incident-root",
+        "heartbeat-30",
+        "freeze-expired"
+      ]
+    },
+    {
+      "id": "C13",
+      "returned": [
+        "incident-root",
+        "mission-mesa7",
+        "why-compress"
+      ]
+    },
+    {
+      "id": "C14",
+      "returned": [
+        "retain-7y-rumor",
+        "retain-3y",
+        "heartbeat-10"
+      ]
+    },
+    {
+      "id": "C15",
+      "returned": [
+        "retain-1y",
+        "retain-3y",
+        "retain-7y-rumor"
+      ]
+    },
+    {
+      "id": "C16",
+      "returned": [
+        "mission-mesa7",
+        "field-bookclub"
+      ]
+    },
+    {
+      "id": "C17",
+      "returned": [
+        "why-priority",
+        "offset-3mm-correct"
+      ]
+    },
+    {
+      "id": "C18",
+      "returned": [
+        "why-priority",
+        "priority-new",
+        "offset-2mm"
+      ]
+    },
+    {
+      "id": "C19",
+      "returned": [
+        "index-guide",
+        "offset-3mm-correct"
+      ]
+    },
+    {
+      "id": "C20",
+      "returned": [
+        "watermark",
+        "offset-3mm-correct",
+        "why-priority"
+      ]
+    },
+    {
+      "id": "C21",
+      "returned": [
+        "retain-3y",
+        "owner-integrity"
+      ]
+    },
+    {
+      "id": "C22",
+      "returned": [
+        "offset-3mm-correct",
+        "uplink-512"
+      ]
+    },
+    {
+      "id": "C23",
+      "returned": [
+        "offset-3mm-correct",
+        "why-compress"
+      ]
+    },
+    {
+      "id": "C24",
+      "returned": [
+        "offset-3mm-correct",
+        "why-compress",
+        "retain-7y-rumor"
+      ]
+    }
+  ],
+  "schema": "served-memory-run-v2"
+}
