@@ -1,0 +1,14 @@
+test_current_visible_untyped_fact_is_presence_not_proven_conflict (tests.test_769_competition_runtime_observer.CompetitionRuntimeObservationTests.test_current_visible_untyped_fact_is_presence_not_proven_conflict) ... ok
+test_hidden_project_memory_does_not_enter_visible_admitted_count (tests.test_769_competition_runtime_observer.CompetitionRuntimeObservationTests.test_hidden_project_memory_does_not_enter_visible_admitted_count) ... ok
+test_never_mutates_original_recall_membership (tests.test_769_competition_runtime_observer.CompetitionRuntimeObservationTests.test_never_mutates_original_recall_membership) ... ok
+test_no_coverage_does_not_imply_empty_competition (tests.test_769_competition_runtime_observer.CompetitionRuntimeObservationTests.test_no_coverage_does_not_imply_empty_competition) ... ok
+test_observer_is_opt_in_and_default_recall_never_calls_it (tests.test_769_competition_runtime_observer.CompetitionRuntimeObservationTests.test_observer_is_opt_in_and_default_recall_never_calls_it) ... ok
+test_reader_context_must_match_receipt_before_lookup (tests.test_769_competition_runtime_observer.CompetitionRuntimeObservationTests.test_reader_context_must_match_receipt_before_lookup) ... ok
+test_tampered_result_fail_closed_before_any_fact_reads (tests.test_769_competition_runtime_observer.CompetitionRuntimeObservationTests.test_tampered_result_fail_closed_before_any_fact_reads) ... ok
+test_typed_coverage_with_no_competitor_is_still_unattested (tests.test_769_competition_runtime_observer.CompetitionRuntimeObservationTests.test_typed_coverage_with_no_competitor_is_still_unattested) ... ok
+test_verified_typed_competing_values_are_unresolved_not_superseded (tests.test_769_competition_runtime_observer.CompetitionRuntimeObservationTests.test_verified_typed_competing_values_are_unresolved_not_superseded) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.374s
+
+OK

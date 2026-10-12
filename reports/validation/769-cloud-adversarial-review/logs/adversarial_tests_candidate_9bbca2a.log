@@ -1,0 +1,50 @@
+..........FFFF
+======================================================================
+FAIL: test_context_object_cannot_widen_reader_authority_after_receipt_check (tests.test_769_adversarial_validation.DefectRegressions.test_context_object_cannot_widen_reader_authority_after_receipt_check)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_769_adversarial_validation.py", line 158, in test_context_object_cannot_widen_reader_authority_after_receipt_check
+    self.assertIn(out, (baseline, store.observe(result, replace(_context(), purpose="x")).to_dict()))
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'version': '0.1.0', 'diagnosis': 'typed_slot_obstacles_observed', 'receipt_state': 'mutable_receipt_match', 'scope_enumeration': 'read_path_observed', 'complete_enumeration_attested': False, 'admitted_untyped_count': 0, 'untyped_relation_status': 'none_seen', 'typed_coverage_observed': False, 'typed_value_statuses': ['no_eligible_value'], 'stop_recommendation': 'abstain', 'authority_effect': 'none'} not found in ({'version': '0.1.0', 'diagnosis': 'scope_enumeration_unattested', 'receipt_state': 'mutable_receipt_match', 'scope_enumeration': 'read_path_observed', 'complete_enumeration_attested': False, 'admitted_untyped_count': 0, 'untyped_relation_status': 'none_seen', 'typed_coverage_observed': True, 'typed_value_statuses': ['same_value_observed'], 'stop_recommendation': 'abstain', 'authority_effect': 'none'}, {'version': '0.1.0', 'diagnosis': 'recall_observation_unverified', 'receipt_state': 'unverified', 'scope_enumeration': 'read_path_observed', 'complete_enumeration_attested': False, 'admitted_untyped_count': 0, 'untyped_relation_status': 'none_seen', 'typed_coverage_observed': False, 'typed_value_statuses': [], 'stop_recommendation': 'abstain', 'authority_effect': 'none'})
+
+======================================================================
+FAIL: test_cross_store_replay_with_colliding_identifiers_is_unverified (tests.test_769_adversarial_validation.DefectRegressions.test_cross_store_replay_with_colliding_identifiers_is_unverified)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_769_adversarial_validation.py", line 188, in test_cross_store_replay_with_colliding_identifiers_is_unverified
+    self.assertEqual(out.diagnosis, "recall_observation_unverified")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'typed_slot_obstacles_observed' != 'recall_observation_unverified'
+- typed_slot_obstacles_observed
++ recall_observation_unverified
+
+
+======================================================================
+FAIL: test_forged_receipt_from_public_helper_is_not_a_receipt_match (tests.test_769_adversarial_validation.DefectRegressions.test_forged_receipt_from_public_helper_is_not_a_receipt_match)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_769_adversarial_validation.py", line 173, in test_forged_receipt_from_public_helper_is_not_a_receipt_match
+    self.assertEqual(out.diagnosis, "recall_observation_unverified")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'untyped_admitted_candidates_observed' != 'recall_observation_unverified'
+- untyped_admitted_candidates_observed
++ recall_observation_unverified
+
+
+======================================================================
+FAIL: test_governed_deletion_after_recall_is_stale_not_a_cleaner_diagnosis (tests.test_769_adversarial_validation.DefectRegressions.test_governed_deletion_after_recall_is_stale_not_a_cleaner_diagnosis)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_769_adversarial_validation.py", line 206, in test_governed_deletion_after_recall_is_stale_not_a_cleaner_diagnosis
+    self.assertEqual(out.diagnosis, "recall_observation_unverified")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'scope_enumeration_unattested' != 'recall_observation_unverified'
+- scope_enumeration_unattested
++ recall_observation_unverified
+
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.677s
+
+FAILED (failures=4)
