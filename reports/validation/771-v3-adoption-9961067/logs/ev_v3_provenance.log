@@ -1,0 +1,16 @@
+test_manifest_separates_runtime_and_evaluator_identity (test_served_memory_v3_provenance.EndToEnd.test_manifest_separates_runtime_and_evaluator_identity) ... ok
+test_mismatched_instant_or_inputs_are_refused (test_served_memory_v3_provenance.EndToEnd.test_mismatched_instant_or_inputs_are_refused) ... ok
+test_qualification_requires_clean_identity_and_temporal_gold (test_served_memory_v3_provenance.EndToEnd.test_qualification_requires_clean_identity_and_temporal_gold) ... ok
+test_declared_windows_are_evaluated_at_the_declared_instant (test_served_memory_v3_provenance.ReferenceInstant.test_declared_windows_are_evaluated_at_the_declared_instant) ... ok
+test_equivalent_offsets_normalize_to_one_instant (test_served_memory_v3_provenance.ReferenceInstant.test_equivalent_offsets_normalize_to_one_instant) ... ok
+test_strict_zone_aware_instants (test_served_memory_v3_provenance.ReferenceInstant.test_strict_zone_aware_instants) ... ok
+test_v2_meaning_is_never_changed (test_served_memory_v3_provenance.ReferenceInstant.test_v2_meaning_is_never_changed) ... ok
+test_evaluator_commit_cannot_stand_in_for_a_different_runtime (test_served_memory_v3_provenance.RuntimeIdentity.test_evaluator_commit_cannot_stand_in_for_a_different_runtime) ... ok
+test_source_identity_substitution_is_refused (test_served_memory_v3_provenance.RuntimeIdentity.test_source_identity_substitution_is_refused) ... ok
+test_true_identity_verifies (test_served_memory_v3_provenance.RuntimeIdentity.test_true_identity_verifies) ... ok
+test_unknown_unclean_or_malformed_identity_is_refused (test_served_memory_v3_provenance.RuntimeIdentity.test_unknown_unclean_or_malformed_identity_is_refused) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.435s
+
+OK

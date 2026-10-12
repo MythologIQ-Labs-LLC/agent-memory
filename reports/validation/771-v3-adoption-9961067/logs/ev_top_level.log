@@ -1,0 +1,6 @@
+.Deficit audit refuses to overwrite the input ledger.
+...................................................xxxxxx..........................
+----------------------------------------------------------------------
+Ran 84 tests in 1.541s
+
+OK (expected failures=6)
