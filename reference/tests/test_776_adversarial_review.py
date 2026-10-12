@@ -409,6 +409,15 @@ class TombstoneScale(unittest.TestCase):
                 "deleted_at": "2026-01-01T00:00:00Z", "deleted_fact_uuids": [f"synthetic-{k}"]}
         large = per_candidate()
         self.assertLess(large, 10 * small + 50e-6, f"{small * 1e6:.1f}us -> {large * 1e6:.1f}us per candidate")
+        # A further governed deletion extends the index; it must not need a full rebuild
+        # that would make every deletion O(number of tombstones).
+        h.adapter._deleted_lineage()
+        h.chain("tram", [("Route 4 trams run every 20 minutes.", None)])
+        h.prune("tram")  # (its durable commit serializes every tombstone; not measured here)
+        start = time.perf_counter()
+        h.adapter._admission_refusal(facts[0], ctx, "historical")
+        self.assertLess(time.perf_counter() - start, 0.005)
+        self.assertEqual(h.recall("Route 4 trams").refusals.get(h.ids["tram"][0]), "tombstoned")
 
 
 if __name__ == "__main__":
