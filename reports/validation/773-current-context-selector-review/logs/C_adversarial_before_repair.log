@@ -1,0 +1,14 @@
+F......
+======================================================================
+FAIL: test_instant_before_a_state_change_is_refused_not_served_with_the_later_value (tests.test_773_adversarial_review.ReferenceInstantDefects.test_instant_before_a_state_change_is_refused_not_served_with_the_later_value)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt3/sel/reference/tests/test_773_adversarial_review.py", line 80, in test_instant_before_a_state_change_is_refused_not_served_with_the_later_value
+    with self.assertRaisesRegex(ValueError, "precedes a governed state change"):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.175s
+
+FAILED (failures=1)

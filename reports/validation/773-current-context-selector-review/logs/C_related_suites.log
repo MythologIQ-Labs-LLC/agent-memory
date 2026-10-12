@@ -1,0 +1,13 @@
+test_cross_fact_currentness: OK
+test_currentness_generalization: OK
+test_historical_evidence_admission: OK
+test_post_admission_ranking_policy: OK
+test_query_conditioned_applicability: OK
+test_temporal_order_constraints: OK
+test_temporal_query_intent_contract: OK
+test_temporal_query_intent_oracle: OK
+test_temporal_transparency: OK
+test_temporal_currentness_gauntlet: OK
+test_rejected_value_readmission: OK
+test_runtime_composition: OK
+test_recall_control: OK
