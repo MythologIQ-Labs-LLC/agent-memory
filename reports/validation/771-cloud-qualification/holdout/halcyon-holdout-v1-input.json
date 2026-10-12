@@ -1,0 +1,352 @@
+{
+  "events": [
+    {
+      "id": "adr-db-v1",
+      "memory": "adr-db",
+      "op": "retain",
+      "text": "ADR-003, written in 2016: we chose MySQL 5.6 as the ledger database because the team already operated it and its replication was well understood."
+    },
+    {
+      "id": "adr-db-v2",
+      "memory": "adr-db",
+      "op": "correct",
+      "text": "ADR-003 was superseded by ADR-019 in 2021: the ledger moved to PostgreSQL because we needed transactional DDL and native JSON columns."
+    },
+    {
+      "id": "pgver-13",
+      "memory": "pg-version",
+      "op": "retain",
+      "text": "The ledger database runs PostgreSQL 13."
+    },
+    {
+      "id": "pgver-15",
+      "memory": "pg-version",
+      "op": "correct",
+      "text": "The ledger database runs PostgreSQL 15 after the March 2024 upgrade."
+    },
+    {
+      "id": "pgver-16",
+      "memory": "pg-version",
+      "op": "correct",
+      "text": "The ledger database runs PostgreSQL 16 after the January 2026 upgrade."
+    },
+    {
+      "id": "bus",
+      "memory": "bus",
+      "op": "retain",
+      "text": "Payment events are published to the Kafka topic ledger-events, which has 12 partitions."
+    },
+    {
+      "id": "bus-why",
+      "memory": "bus-why",
+      "op": "retain",
+      "text": "In 2019 we picked Kafka over RabbitMQ because auditors require us to replay a full week of payment events."
+    },
+    {
+      "id": "oncall-platform",
+      "memory": "oncall",
+      "op": "retain",
+      "text": "The payments on-call rotation is owned by the Platform team."
+    },
+    {
+      "id": "oncall-lrt",
+      "memory": "oncall",
+      "op": "correct",
+      "text": "Since April 2025 the payments on-call rotation is owned by the Ledger Reliability team."
+    },
+    {
+      "id": "ratelimit",
+      "memory": "ratelimit",
+      "op": "retain",
+      "text": "The public payments API allows 600 requests per minute per merchant."
+    },
+    {
+      "id": "ratelimit-rumor",
+      "memory": "ratelimit-rumor",
+      "op": "retain",
+      "text": "Someone in chat guessed the payments API limit might be 1000 requests per minute; nobody confirmed it."
+    },
+    {
+      "id": "authz-8s",
+      "memory": "authz-timeout",
+      "op": "retain",
+      "text": "Card authorization calls time out after 8 seconds."
+    },
+    {
+      "id": "authz-5s",
+      "memory": "authz-timeout",
+      "op": "correct",
+      "text": "Card authorization calls now time out after 5 seconds to stay inside the processor SLA."
+    },
+    {
+      "id": "freeze-bf25",
+      "memory": "freeze-bf25",
+      "op": "retain",
+      "temporal": {
+        "valid_from": "2025-11-20T00:00:00Z",
+        "valid_until": "2025-12-01T00:00:00Z"
+      },
+      "text": "Deploys to the payments cluster are frozen for the Black Friday window."
+    },
+    {
+      "id": "deploy-days",
+      "memory": "deploy-days",
+      "op": "retain",
+      "text": "Production deploys for payments happen on Tuesdays and Thursdays."
+    },
+    {
+      "id": "stripe-key",
+      "memory": "stripe-key",
+      "op": "retain",
+      "text": "The staging Stripe API key is sk_test_51HalcyonStagingKey."
+    },
+    {
+      "id": "stripe-key-del",
+      "memory": "stripe-key",
+      "op": "delete"
+    },
+    {
+      "id": "inc-2207",
+      "memory": "inc-2207",
+      "op": "retain",
+      "text": "Incident INC-2207 in 2023: a schema migration locked the ledger table for 40 minutes, so ledger migrations must now be online and batched."
+    },
+    {
+      "id": "migration-rule",
+      "memory": "migration-rule",
+      "op": "retain",
+      "text": "Ledger schema changes run through the online migration tool and need a DBA reviewer before merge."
+    },
+    {
+      "id": "mobile-rate",
+      "memory": "mobile-rate",
+      "op": "retain",
+      "project": "mobile",
+      "text": "The mobile app API allows 120 requests per minute per device."
+    },
+    {
+      "id": "mobile-oncall",
+      "memory": "mobile-oncall",
+      "op": "retain",
+      "project": "mobile",
+      "text": "The mobile app on-call rotation is owned by the Apps team."
+    },
+    {
+      "id": "globex-db",
+      "memory": "globex-db",
+      "op": "retain",
+      "tenant": "globex",
+      "text": "The ledger database runs Oracle 19c."
+    },
+    {
+      "id": "room",
+      "memory": "room",
+      "op": "retain",
+      "text": "The Ledger Room on the third floor is booked for the quarterly finance review."
+    },
+    {
+      "id": "bookclub",
+      "memory": "bookclub",
+      "op": "retain",
+      "text": "Book club is reading Kafka's The Trial; we meet on Friday."
+    },
+    {
+      "id": "money-repr",
+      "memory": "money-repr",
+      "op": "retain",
+      "text": "The ledger stores amounts as integer minor units together with an ISO 4217 currency code."
+    },
+    {
+      "id": "fx-fetch",
+      "memory": "fx-fetch",
+      "op": "retain",
+      "text": "Exchange rates are fetched hourly from the ECB feed and cached for 60 minutes."
+    },
+    {
+      "id": "fx-why",
+      "memory": "fx-why",
+      "op": "retain",
+      "text": "We cache exchange rates for an hour because the ECB publishes once per business day and rate-limit errors from the feed broke checkout in 2022."
+    },
+    {
+      "id": "region-eu",
+      "memory": "region",
+      "op": "retain",
+      "text": "The payments service is deployed only in eu-west-1."
+    },
+    {
+      "id": "region-eu-us",
+      "memory": "region",
+      "op": "correct",
+      "text": "Since the 2024 expansion the payments service runs in eu-west-1 and us-east-1."
+    },
+    {
+      "id": "region-draft",
+      "memory": "region-draft",
+      "op": "retain",
+      "text": "A draft proposal suggested adding ap-southeast-2 for payments, but it was never approved."
+    },
+    {
+      "id": "pci",
+      "memory": "pci",
+      "op": "retain",
+      "text": "We never store card numbers; only processor tokens are kept so we stay in PCI SAQ-A scope."
+    },
+    {
+      "id": "webhook-retry",
+      "memory": "webhook-retry",
+      "op": "retain",
+      "text": "Failed webhook deliveries are retried with exponential backoff for up to 24 hours."
+    }
+  ],
+  "project": "halcyon",
+  "purpose": "halcyon-engineering-assistant",
+  "queries": [
+    {
+      "budget": 3,
+      "id": "H01",
+      "intent": "current",
+      "query": "Which PostgreSQL version does the ledger run on right now?"
+    },
+    {
+      "budget": 3,
+      "id": "H02",
+      "intent": "historical",
+      "query": "What PostgreSQL version was the ledger on before the most recent upgrade?"
+    },
+    {
+      "budget": 3,
+      "id": "H03",
+      "intent": "historical",
+      "query": "Why did the team originally choose MySQL for the ledger?"
+    },
+    {
+      "budget": 3,
+      "id": "H04",
+      "intent": "historical",
+      "query": "What motivated the ledger's move away from MySQL?"
+    },
+    {
+      "budget": 3,
+      "id": "H05",
+      "intent": "timeless",
+      "query": "Why do we use Kafka instead of RabbitMQ for payment events?"
+    },
+    {
+      "budget": 2,
+      "id": "H06",
+      "intent": "current",
+      "query": "Who currently owns the payments on-call rotation?"
+    },
+    {
+      "budget": 3,
+      "id": "H07",
+      "intent": "current",
+      "query": "What is the request limit for the public payments API?"
+    },
+    {
+      "budget": 2,
+      "id": "H08",
+      "intent": "current",
+      "query": "How long before a card authorization request times out?"
+    },
+    {
+      "budget": 3,
+      "id": "H09",
+      "intent": "current",
+      "query": "Can we deploy the payments service to production this Thursday?"
+    },
+    {
+      "budget": 3,
+      "id": "H10",
+      "intent": "timeless",
+      "query": "What process must a ledger schema migration follow, and why?"
+    },
+    {
+      "budget": 2,
+      "id": "H11",
+      "intent": "timeless",
+      "query": "How are monetary amounts represented in the ledger?"
+    },
+    {
+      "budget": 3,
+      "id": "H12",
+      "intent": "timeless",
+      "query": "Why are exchange rates cached for an hour?"
+    },
+    {
+      "budget": 3,
+      "id": "H13",
+      "intent": "current",
+      "query": "Which AWS regions run the payments service today?"
+    },
+    {
+      "budget": 3,
+      "id": "H14",
+      "intent": "historical",
+      "query": "Where was the payments service deployed before the 2024 expansion?"
+    },
+    {
+      "budget": 2,
+      "id": "H15",
+      "intent": "timeless",
+      "query": "Do we keep customers' card numbers?"
+    },
+    {
+      "budget": 2,
+      "id": "H16",
+      "intent": "timeless",
+      "query": "For how long do we keep retrying a failed webhook delivery?"
+    },
+    {
+      "budget": 3,
+      "id": "H17",
+      "intent": "current",
+      "query": "Who is the payments team's data protection officer?"
+    },
+    {
+      "budget": 3,
+      "id": "H18",
+      "intent": "current",
+      "query": "What is the staging Stripe API key?"
+    },
+    {
+      "budget": 3,
+      "id": "H19",
+      "intent": "current",
+      "query": "Who owns the mobile app on-call rotation?"
+    },
+    {
+      "budget": 4,
+      "id": "H20",
+      "intent": "current",
+      "query": "For a refund flow, what are the API rate limit, the authorization timeout and the way amounts are stored?"
+    },
+    {
+      "budget": 3,
+      "id": "H21",
+      "intent": "timeless",
+      "query": "What message bus carries money-movement events and how many shards does it have?"
+    },
+    {
+      "budget": 3,
+      "id": "H22",
+      "intent": "current",
+      "query": "Is the payments API limit 1000 requests per minute?"
+    },
+    {
+      "budget": 3,
+      "id": "H23",
+      "intent": "timeless",
+      "query": "Why can't we run a plain ALTER TABLE on the ledger?"
+    },
+    {
+      "budget": 2,
+      "id": "H24",
+      "intent": "timeless",
+      "query": "Where is the quarterly finance review held?"
+    }
+  ],
+  "schema": "served-memory-lifecycle-v2",
+  "tenant": "acme"
+}
