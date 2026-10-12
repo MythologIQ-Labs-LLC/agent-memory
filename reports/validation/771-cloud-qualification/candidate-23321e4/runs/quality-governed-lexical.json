@@ -1,0 +1,131 @@
+{
+  "P0_safety": {
+    "cases_with_prohibited_exposure": 0,
+    "cases_with_stale_exposure": 1
+  },
+  "P1_served_correctness": {
+    "all_critical_groups_covered_rate": 1.0,
+    "answer_abstention_status": "not_measured_without_answering_layer",
+    "answer_abstention_verified": null,
+    "answerable_case_count": 4,
+    "empty_delivery_on_answerable_count": 0,
+    "no_safe_answer_case_count": 1,
+    "no_safe_answer_empty_context_count": 0,
+    "no_safe_answer_with_context_count": 1,
+    "top1_relevant_rate": 0.75
+  },
+  "P2_context_utility": {
+    "irrelevant_served_total": 6,
+    "macro_critical_coverage": 1.0,
+    "macro_ndcg_at_budget": 0.881869,
+    "macro_relevant_precision": 0.4,
+    "macro_relevant_recall": 1.0
+  },
+  "P3_efficiency": {
+    "status": "not_measured_in_quality_scorer"
+  },
+  "execution_backend": "governed-lexical",
+  "input_digests": {
+    "execution_inputs_sha256": "020928fe2531553b273215999d59c763e1624e9071fd1fb8798d29fbd1092c52",
+    "gold_sha256": "da6820ec29e40eb7de6c0917b6a6bc9c6bd3078d3c0ef5dc36d3e08f3e487547",
+    "runs_sha256": "0d30655534e79c28fede6e73a95b9f727cecdab315d6243d1e192994b7fa3ce2"
+  },
+  "input_sha256": "6b99154ea0c0a0a6138a43b1fe1fe00c0682d3d754f687cfe356a51d9f76e2db",
+  "lane_id": "reference-governed-lexical-v1",
+  "not_a_composite_score": true,
+  "per_case": [
+    {
+      "answer_abstention_verified": null,
+      "critical_coverage": 1.0,
+      "critical_groups_met": 1,
+      "critical_groups_total": 1,
+      "empty_delivery": false,
+      "id": "Q-current-endpoint",
+      "intent": "current",
+      "irrelevant_served": 1,
+      "ndcg_at_budget": 0.938506,
+      "prohibited_served": 0,
+      "relevant_precision": 0.333333,
+      "relevant_recall": 1.0,
+      "safely_answerable": true,
+      "served_count": 3,
+      "stale_served": 0,
+      "top1_relevant": true
+    },
+    {
+      "answer_abstention_verified": null,
+      "critical_coverage": 1.0,
+      "critical_groups_met": 2,
+      "critical_groups_total": 2,
+      "empty_delivery": false,
+      "id": "Q-compound",
+      "intent": "current",
+      "irrelevant_served": 1,
+      "ndcg_at_budget": 0.958041,
+      "prohibited_served": 0,
+      "relevant_precision": 0.666667,
+      "relevant_recall": 1.0,
+      "safely_answerable": true,
+      "served_count": 3,
+      "stale_served": 0,
+      "top1_relevant": true
+    },
+    {
+      "answer_abstention_verified": null,
+      "critical_coverage": 1.0,
+      "critical_groups_met": 1,
+      "critical_groups_total": 1,
+      "empty_delivery": false,
+      "id": "Q-release-history",
+      "intent": "historical",
+      "irrelevant_served": 1,
+      "ndcg_at_budget": 1.0,
+      "prohibited_served": 0,
+      "relevant_precision": 0.666667,
+      "relevant_recall": 1.0,
+      "safely_answerable": true,
+      "served_count": 3,
+      "stale_served": 0,
+      "top1_relevant": true
+    },
+    {
+      "answer_abstention_verified": null,
+      "critical_coverage": null,
+      "critical_groups_met": 0,
+      "critical_groups_total": 0,
+      "empty_delivery": false,
+      "id": "Q-no-owner",
+      "intent": "current",
+      "irrelevant_served": 2,
+      "ndcg_at_budget": null,
+      "prohibited_served": 0,
+      "relevant_precision": 0.0,
+      "relevant_recall": null,
+      "safely_answerable": false,
+      "served_count": 2,
+      "stale_served": 0,
+      "top1_relevant": false
+    },
+    {
+      "answer_abstention_verified": null,
+      "critical_coverage": 1.0,
+      "critical_groups_met": 1,
+      "critical_groups_total": 1,
+      "empty_delivery": false,
+      "id": "Q-release-current",
+      "intent": "current",
+      "irrelevant_served": 1,
+      "ndcg_at_budget": 0.63093,
+      "prohibited_served": 0,
+      "relevant_precision": 0.333333,
+      "relevant_recall": 1.0,
+      "safely_answerable": true,
+      "served_count": 3,
+      "stale_served": 1,
+      "top1_relevant": false
+    }
+  ],
+  "quality_case_count": 5,
+  "runtime_revision": "23321e4bc1d8039ea64f8d135aac080fc98806fa",
+  "schema": "served-memory-quality-report-v1"
+}

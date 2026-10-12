@@ -1,0 +1,48 @@
+{
+  "execution_backend": "composed-multiroute",
+  "input_sha256": "6b99154ea0c0a0a6138a43b1fe1fe00c0682d3d754f687cfe356a51d9f76e2db",
+  "lane_id": "reference-composed-multiroute-v1",
+  "rows": [
+    {
+      "id": "Q-current-endpoint",
+      "returned": [
+        "endpoint",
+        "quota",
+        "boreal-quota"
+      ]
+    },
+    {
+      "id": "Q-compound",
+      "returned": [
+        "endpoint",
+        "quota",
+        "boreal-quota"
+      ]
+    },
+    {
+      "id": "Q-release-history",
+      "returned": [
+        "release-old",
+        "release-current",
+        "endpoint"
+      ]
+    },
+    {
+      "id": "Q-no-owner",
+      "returned": [
+        "endpoint",
+        "quota"
+      ]
+    },
+    {
+      "id": "Q-release-current",
+      "returned": [
+        "release-current",
+        "endpoint",
+        "release-old"
+      ]
+    }
+  ],
+  "runtime_revision": "23321e4bc1d8039ea64f8d135aac080fc98806fa",
+  "schema": "served-memory-run-v1"
+}

@@ -1,0 +1,17 @@
+test_context_delivery_is_not_proof_of_answer_abstention (test_served_memory_quality.ServedMemoryQualityTests.test_context_delivery_is_not_proof_of_answer_abstention) ... ok
+test_declared_answerability_must_have_legitimate_critical_evidence (test_served_memory_quality.ServedMemoryQualityTests.test_declared_answerability_must_have_legitimate_critical_evidence) ... ok
+test_empty_delivery_does_not_verify_correct_answer_abstention (test_served_memory_quality.ServedMemoryQualityTests.test_empty_delivery_does_not_verify_correct_answer_abstention) ... ok
+test_forged_grades_and_output_fields_are_rejected (test_served_memory_quality.ServedMemoryQualityTests.test_forged_grades_and_output_fields_are_rejected) ... ok
+test_historical_memory_is_not_incorrectly_marked_stale (test_served_memory_quality.ServedMemoryQualityTests.test_historical_memory_is_not_incorrectly_marked_stale) ... ok
+test_missing_extra_duplicate_query_rows_are_rejected (test_served_memory_quality.ServedMemoryQualityTests.test_missing_extra_duplicate_query_rows_are_rejected) ... ok
+test_resource_metrics_remain_explicitly_unmeasured (test_served_memory_quality.ServedMemoryQualityTests.test_resource_metrics_remain_explicitly_unmeasured) ... ok
+test_return_budget_and_duplicate_references_are_rejected (test_served_memory_quality.ServedMemoryQualityTests.test_return_budget_and_duplicate_references_are_rejected) ... ok
+test_safe_control_has_zero_prohibited_and_stale_exposure (test_served_memory_quality.ServedMemoryQualityTests.test_safe_control_has_zero_prohibited_and_stale_exposure) ... ok
+test_top1_and_critical_recall_denominators_are_answerable_cases_only (test_served_memory_quality.ServedMemoryQualityTests.test_top1_and_critical_recall_denominators_are_answerable_cases_only) ... ok
+test_unknown_returned_ref_must_not_be_scored_irrelevant_by_default (test_served_memory_quality.ServedMemoryQualityTests.test_unknown_returned_ref_must_not_be_scored_irrelevant_by_default) ... ok
+test_unsafe_control_exposes_prohibited_stale_and_missing_critical_groups (test_served_memory_quality.ServedMemoryQualityTests.test_unsafe_control_exposes_prohibited_stale_and_missing_critical_groups) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.003s
+
+OK

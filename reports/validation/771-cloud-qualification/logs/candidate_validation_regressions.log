@@ -1,0 +1,56 @@
+test_empty_retrieval_is_never_reported_as_answer_abstention (tests.test_served_memory_validation_771.AdversarialControls.test_empty_retrieval_is_never_reported_as_answer_abstention) ... ok
+test_forbidden_relevant_memory_earns_no_relevance_credit (tests.test_served_memory_validation_771.AdversarialControls.test_forbidden_relevant_memory_earns_no_relevance_credit) ... ok
+test_gold_cannot_mark_a_stale_or_forbidden_memory_critical (tests.test_served_memory_validation_771.AdversarialControls.test_gold_cannot_mark_a_stale_or_forbidden_memory_critical) ... ok
+test_no_composite_score_is_emitted (tests.test_served_memory_validation_771.AdversarialControls.test_no_composite_score_is_emitted) ... ok
+test_old_value_is_credit_for_historical_but_stale_for_current (tests.test_served_memory_validation_771.AdversarialControls.test_old_value_is_credit_for_historical_but_stale_for_current) ... ok
+test_only_one_of_two_required_memories_is_partial_coverage (tests.test_served_memory_validation_771.AdversarialControls.test_only_one_of_two_required_memories_is_partial_coverage) ... ok
+test_over_budget_and_duplicate_outputs_are_refused (tests.test_served_memory_validation_771.AdversarialControls.test_over_budget_and_duplicate_outputs_are_refused) ... ok
+test_supporting_context_at_rank_one_is_not_an_answer (tests.test_served_memory_validation_771.AdversarialControls.test_supporting_context_at_rank_one_is_not_an_answer) ... ok
+test_unlabeled_returned_memory_is_refused_not_scored_irrelevant (tests.test_served_memory_validation_771.AdversarialControls.test_unlabeled_returned_memory_is_refused_not_scored_irrelevant) ... ok
+test_empty_delivery_on_answerable_case_cannot_raise_macro_precision (tests.test_served_memory_validation_771.EvaluatorDefects.test_empty_delivery_on_answerable_case_cannot_raise_macro_precision) ... FAIL
+test_no_safe_answer_context_is_not_mixed_into_answerable_utility (tests.test_served_memory_validation_771.EvaluatorDefects.test_no_safe_answer_context_is_not_mixed_into_answerable_utility) ... FAIL
+test_provenance_suite_does_not_shadow_testcase_run (tests.test_served_memory_validation_771.EvaluatorDefects.test_provenance_suite_does_not_shadow_testcase_run) ... FAIL
+test_recall_is_reported_at_the_actual_served_budget (tests.test_served_memory_validation_771.EvaluatorDefects.test_recall_is_reported_at_the_actual_served_budget) ... ERROR
+
+======================================================================
+ERROR: test_recall_is_reported_at_the_actual_served_budget (tests.test_served_memory_validation_771.EvaluatorDefects.test_recall_is_reported_at_the_actual_served_budget)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/tests/test_served_memory_validation_771.py", line 86, in test_recall_is_reported_at_the_actual_served_budget
+    self.assertEqual(report["per_case"][0]["relevant_recall_at_budget"], 1.0)
+                     ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'relevant_recall_at_budget'
+
+======================================================================
+FAIL: test_empty_delivery_on_answerable_case_cannot_raise_macro_precision (tests.test_served_memory_validation_771.EvaluatorDefects.test_empty_delivery_on_answerable_case_cannot_raise_macro_precision)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/tests/test_served_memory_validation_771.py", line 65, in test_empty_delivery_on_answerable_case_cannot_raise_macro_precision
+    self.assertLessEqual(starved["P2_context_utility"]["macro_relevant_precision"],
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         full["P2_context_utility"]["macro_relevant_precision"])
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1.0 not less than or equal to 0.5
+
+======================================================================
+FAIL: test_no_safe_answer_context_is_not_mixed_into_answerable_utility (tests.test_served_memory_validation_771.EvaluatorDefects.test_no_safe_answer_context_is_not_mixed_into_answerable_utility)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/tests/test_served_memory_validation_771.py", line 77, in test_no_safe_answer_context_is_not_mixed_into_answerable_utility
+    self.assertEqual(alone["P2_context_utility"][key], mixed["P2_context_utility"][key], key)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0.5 != 0.25 : macro_relevant_precision
+
+======================================================================
+FAIL: test_provenance_suite_does_not_shadow_testcase_run (tests.test_served_memory_validation_771.EvaluatorDefects.test_provenance_suite_does_not_shadow_testcase_run)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/tests/test_served_memory_validation_771.py", line 50, in test_provenance_suite_does_not_shadow_testcase_run
+    self.assertIs(cls.run, unittest.TestCase.run)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'input_sha256': '6b99154ea0c0a0a6138a43b1fe1fe00c0682d3d754f687cfe356a51d9f76e2db', 'execution_backend': 'composed-multiroute', 'schema': 'served-memory-run-v1', 'runtime_revision': 'synthetic-not-executed', 'lane_id': 'reference-governed-recall-v1', 'rows': [{'id': 'Q-current-endpoint', 'returned': []}, {'id': 'Q-compound', 'returned': []}, {'id': 'Q-release-history', 'returned': []}, {'id': 'Q-no-owner', 'returned': []}, {'id': 'Q-release-current', 'returned': []}]} is not <function TestCase.run at 0x7fd336435440>
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.199s
+
+FAILED (failures=3, errors=1)
