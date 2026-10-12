@@ -1,12 +1,12 @@
 {
   "schema_version": "776-post-v7-P0-deletion-overlay-v1",
   "issue": 776,
-  "stage": "protected_runtime_candidate_REPAIRS_ADOPTED_UNQUALIFIED",
+  "stage": "protected_runtime_candidate_TRANSITIVE_P0_FIX_ADOPTED__NOT_FORMALLY_QUALIFIED",
   "base_commit": "9b025f945e7ec4a1e349e56bba251e3122413e88",
   "protected_changes": [
     {
       "path": "reference/agentmem_ref/runtime/adapter.py",
-      "blob": "251972b0f85a4bdc286db9d58f23f35cf7479d6c"
+      "blob": "6823eeaff24c5d94892ae2417fd6cfdae95339cb"
     }
   ],
   "tests": [
@@ -19,6 +19,11 @@
       "path": "reference/tests/test_776_adversarial_review.py",
       "blob": "412b0e5182a2ca58c20ec2e1274d618b6e34aaec",
       "methods": 18
+    },
+    {
+      "path": "reference/tests/test_776_adoption_transitive.py",
+      "blob": "4b15ab6f037350a52b050e7c81ea0c48ea570bf8",
+      "methods": 3
     }
   ],
   "source_of_observation": {
@@ -32,20 +37,20 @@
     "declared_v7_unchanged": true,
     "no_activation_or_merge": true,
     "positive_stop": false,
-    "qualification": "INDEPENDENT_REVIEW_SHA_VALIDATED__ADOPTED_SHA_NOT_RERUN"
+    "qualification": "CLOUD_REVIEW_AT_42c218a_PASSED__ADOPTED_COMMIT_SHA_NEEDS_INDEPENDENT_REPLAY"
   },
   "risks": [
+    "Transitive derived-memory provenance refusal is implemented with memoized canonical episode/fact lineage. Independently replay at adopted commit, including cycles/unknown references and after restart.",
     "Additional P0 surface: graph_candidate_hits may retain identifiers of refused deleted facts, and surviving relations may refer to deleted fact IDs; assess ID/provenance metadata leakage before full qualification.",
-    "Derived-source blocking is currently one hop, consistent with legacy tombstone behavior; independently test transitive derived content.",
     "Recreation of the same logical memory ID is allowed as a new lineage; #774's memory-level deleted test must not be combined without revision.",
     "Frozen v7 successor register remains unchanged; this is a separate post-v7 protected candidate and not an activated successor."
   ],
   "independent_review": {
-    "branch": "validation/776-deletion-safety-review",
-    "review_head": "6b58dce254f8dd19f0cdf5fd4d1b35664ef99d3e",
-    "source_blob": "251972b0f85a4bdc286db9d58f23f35cf7479d6c",
-    "result": "23 focused tests pass; four frozen benchmark corpora measured; four v7 guard failures plus one pre-existing durability failure in full suite",
-    "evidence": "reports/validation/776-deletion-safety-review/README.md",
-    "caveat": "GitHub code-only adoption has a distinct commit SHA; source and regression blobs identical, exact adopted commit has not been rerun."
+    "branch": "validation/776-adoption-qualification",
+    "review_head": "8face162dbe1be2e20acbab476cae23ae73451af",
+    "source_blob": "6823eeaff24c5d94892ae2417fd6cfdae95339cb",
+    "result": "26 #776 tests PASS at 42c218a; same five full-suite expected/baseline failures; 0 deleted-content exposures on five measured corpora",
+    "evidence": "reports/validation/776-adoption-qualification/README.md",
+    "caveat": "Tested 42c218a; adopted source/test blobs identical but new tree/commit requires exact SHA replay and successor governance."
   }
 }
