@@ -82,14 +82,22 @@ Conservative divergences: the runtime reports `typed_values_unresolved` for valu
 
 ## Observer overhead (durable SQLite, `benchmark_observer_overhead.py`)
 
-Corpus written through governed `retain`:
+Corpus (scales 1k and 3k; 10k not reached, see below) written through governed `retain`:
 
 - 0.4 % typed facts in the target slot, 0.4 % untyped mentions of the target, 33 % typed facts in other slots (about N/4 distinct subjects), 5 % hidden-project facts, the rest filler.
 - Each store is then recovered from disk.
 - Cold = first call after recovery, with a fresh SQLite connection and empty in-process caches. The OS page cache was not dropped, so cold numbers are a lower bound.
 - Warm = median of 15 calls.
 
-BENCH_TABLE
+| Memories | Head | Store build (governed `retain`) | Default recall cold / warm median (ms) | Observer cold / warm median / p90 (ms) | Observer `get_fact` rows per call | Full-table scans per call (cold / warm) | Rows read per admitted ref (warm) |
+|---|---|---|---|---|---|---|---|
+| 1,000 | candidate `9bbca2a` | 45.4 s | 8.95 / 7.04 | 4.05 / 1.80 / 3.04 | 88 | 1 (1,000 rows) / 0 | 4.4 |
+| 1,000 | repaired | 46.3 s | 5.33 / 4.57 | 4.53 / 1.79 / 1.91 | 88 | 1 (1,000 rows) / 0 | 4.4 |
+| 3,000 | candidate `9bbca2a` | 390.7 s | 11.9 / 12.95 | 13.17 / 4.75 / 5.02 | 104 | 1 (3,000 rows) / 0 | 5.2 |
+| 3,000 | repaired | 389.2 s | 19.06 / 18.34 | 14.36 / 4.97 / 5.10 | 104 | 1 (3,000 rows) / 0 | 5.2 |
+| 10,000 | both | **not reached**: stopped after more than 60 CPU-minutes, still inside store construction | – | – | – | – | – |
+
+The two heads ran at the same time on 4 shared vCPUs, so the default-recall columns are noisy between heads. The observer's read counts are identical, as expected: the repair adds no reads. The 10k point was abandoned deliberately. Governed `retain` is roughly quadratic (3× the memories cost about 8.5× the build time), so a 10k store would take more than an hour to build before any observer measurement. That build cost is a separate scalability finding. The observer data available show **no full-store scan per warm call** and a row count that is almost flat (88 to 104 for 3× the store). Warm latency still grows roughly in proportion to the number of distinct slots (1.8 ms to 5.0 ms), because of the O(slots) key walk described below. Extrapolating that key walk to about 2,500 slots at 10k suggests roughly 15 ms warm. That is an estimate, not a measurement. Raw per-scale JSON lines are in `logs/benchmark_*.log`.
 
 **Read amplification:**
 
