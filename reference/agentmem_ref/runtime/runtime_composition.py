@@ -116,6 +116,42 @@ class MultiRouteRecallResult:
         return tuple(self.route_hits.get(candidate_ref, ()))
 
 
+# Post-v7 experimental opt-in historical predecessor contract (#774).
+# NOT part of the frozen #770 v7 declaration or default recall.
+PREDECESSOR_RELATION = "immediate_state_change_predecessor"
+
+
+@dataclass(frozen=True)
+class HistoricalPredecessorContext:
+    """Bounded historical context with one lineage-identified predecessor first.
+
+    ``predecessor_ref`` comes only from governed replacement lineage and
+    canonical historical admission. It states WHICH value held before, never
+    WHY it changed. Never a completeness, stop or authority claim.
+    """
+
+    served_refs: tuple[str, ...]
+    predecessor_ref: str | None
+    successor_ref: str | None
+    relation: str = PREDECESSOR_RELATION
+    complete_evidence_attested: bool = False
+    authority_effect: str = "none"
+    selection_policy_version: str = "0.1.0"
+
+    def __post_init__(self):
+        refs = self.served_refs
+        if (not isinstance(refs, tuple) or any(type(r) is not str for r in refs)
+                or len(set(refs)) != len(refs)
+                or self.relation != PREDECESSOR_RELATION
+                or (self.predecessor_ref is None) != (self.successor_ref is None)
+                or (self.predecessor_ref is not None
+                    and (self.predecessor_ref == self.successor_ref or refs[:1] != (self.predecessor_ref,)))
+                or self.complete_evidence_attested is not False
+                or self.authority_effect != "none"
+                or self.selection_policy_version != "0.1.0"):
+            raise ValueError("invalid or authoritative historical predecessor selection")
+
+
 MULTI_ROUTE_RANKING_POLICY = ExplicitCurrentCrossFactRankingPolicy(
     policy_id="multi-route-default",
     route_score_order=(SHARED_EVIDENCE_ROUTE, LEXICAL_ROUTE),
@@ -497,6 +533,61 @@ class ConfiguredCompositionRuntime:
             logical_memory_refs=logical_memory_refs,
             temporal_intent=temporal_intent,
         )
+
+    def historical_predecessor_context(
+        self,
+        query: str,
+        context: RecallContext,
+        *,
+        budget: int,
+        successor_ref: str | None = None,
+    ) -> HistoricalPredecessorContext:
+        """Opt-in (#774): serve the governed immediate predecessor first.
+
+        The CALLER declares the relationship by invoking this method; nothing
+        is inferred from query wording. Historical recall runs unchanged. The
+        anchor is the caller-declared ``successor_ref`` (which must be
+        visible to this reader) or else the CURRENT governed version of the
+        memory of the highest-ranked admitted candidate whose current version
+        has a governed state-change predecessor. Exactly one item -- that
+        predecessor -- is moved to rank 1; every other item keeps its
+        governed order. No predecessor means unchanged ranking. Versions of a
+        memory with a deletion tombstone are never served by this method,
+        even when plain historical recall still admits them.
+        """
+        if type(budget) is not int or not 1 <= budget <= 100:
+            raise ValueError("historical predecessor budget must be integer 1..100")
+        if successor_ref is not None and (type(successor_ref) is not str
+                                          or not self.adapter.lineage_visible(successor_ref, context)):
+            raise ValueError("declared successor is not visible to this reader")
+        result = self.multi_route_recall(query, context, temporal_intent={"mode": "historical"})
+        if result.authority_effect != "none":
+            raise RuntimeRecoveryError("governed recall asserted unexpected authority")
+        ranked = list(result.ranked_admitted)
+        if len(ranked) != len(set(ranked)) or not set(ranked).issubset(result.admitted):
+            raise RuntimeRecoveryError("ranking violates canonical admission")
+        ranked = [ref for ref in ranked if not self.adapter.memory_deleted(ref)]
+        predecessor = successor = None
+        if successor_ref is not None:
+            anchors = [successor_ref]
+        else:
+            anchors, seen = [], set()
+            for ref in ranked:
+                head = self.adapter.lineage_head(ref, context)
+                if head is not None and head not in seen:
+                    seen.add(head)
+                    anchors.append(head)
+        for anchor in anchors:
+            found = self.adapter.governed_state_change_predecessor(anchor, context)
+            if found is not None:
+                predecessor, successor = found, anchor
+                break
+        if predecessor is None:
+            served = ranked[:budget]
+        else:
+            served = ([predecessor] + [ref for ref in ranked if ref != predecessor])[:budget]
+        return HistoricalPredecessorContext(
+            served_refs=tuple(served), predecessor_ref=predecessor, successor_ref=successor)
 
     def projection_admission(self) -> ProjectionAdmission:
         projection = self.projections.store.get(self._projection_id)

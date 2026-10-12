@@ -1265,6 +1265,71 @@ class GovernedMemoryAdapter:
         record = (self.extension_state.get(REPLACEMENT_RECORDS_KEY) or {}).get(fact_uuid)
         return dict(record) if record else None
 
+    def lineage_visible(self, fact_uuid: str, context: RecallContext) -> bool:
+        """#774: may this reader see the fact as current OR as historical evidence?"""
+        fact = self._substrate.get_fact(fact_uuid) if isinstance(fact_uuid, str) and fact_uuid else None
+        if fact is None or not isinstance(context, RecallContext):
+            return False
+        return (self._admission_refusal(fact, context) is None
+                or self._admission_refusal(fact, context, HISTORICAL_EVIDENCE_ADMISSION, None) is None)
+
+    def lineage_head(self, fact_uuid: str, context: RecallContext) -> str | None:
+        """#774: the current governed version of this fact's memory, if visible.
+
+        None when the memory was deleted, has no current version, or the
+        reader may not see it.
+        """
+        memory = self._fact_memory.get(fact_uuid) if isinstance(fact_uuid, str) else None
+        if memory is None or memory in self.tombstoned_ids():
+            return None
+        head = self._current_fact_by_memory.get(memory)
+        return head if head is not None and self.lineage_visible(head, context) else None
+
+    def memory_deleted(self, fact_uuid: str) -> bool:
+        """#774: does this fact belong to a memory with a deletion tombstone?"""
+        memory = self._fact_memory.get(fact_uuid) if isinstance(fact_uuid, str) else None
+        return memory is not None and memory in self.tombstoned_ids()
+
+    def governed_state_change_predecessor(self, fact_uuid: str, context: RecallContext) -> str | None:
+        """#774: the immediate predecessor of ``fact_uuid`` through governed lineage.
+
+        Walks the fact's logical memory backwards in governed write order.
+        A version replaced by an ERROR correction never held and is skipped.
+        The first version replaced by a STATE CHANGE is the immediate
+        predecessor, returned only if canonical historical admission admits
+        it to this reader; otherwise nothing is returned (never an older
+        version instead). A memory with a deletion tombstone yields nothing.
+        This is lineage only: no causal or explanatory relation is implied.
+        """
+        if not self.lineage_visible(fact_uuid, context):
+            return None
+        memory = self._fact_memory.get(fact_uuid)
+        if memory is None or memory in self.tombstoned_ids():
+            return None
+        versions = []
+        for uuid, owner in self._fact_memory.items():
+            if owner != memory:
+                continue
+            fact = self._substrate.get_fact(uuid)
+            if fact is None:
+                return None  # a physically removed version: lineage cannot be trusted
+            versions.append((parse_time(fact.created_at), uuid))
+        if any(when is None for when, _ in versions):
+            return None
+        versions.sort()
+        order = [uuid for _, uuid in versions]
+        for uuid in reversed(order[:order.index(fact_uuid)]):
+            record = self.replacement_record(uuid)
+            if record is None:
+                return None  # an earlier version that was never replaced: inconsistent lineage
+            if record.get("kind") == ERROR_CORRECTION:
+                continue
+            fact = self._substrate.get_fact(uuid)
+            if self._admission_refusal(fact, context, HISTORICAL_EVIDENCE_ADMISSION, None) is not None:
+                return None
+            return uuid
+        return None
+
     def _historical_evidence_refusal(self, fact: Fact, mode: str, target_seconds: float | None) -> str | None:
         """#549: an event-invalid fact is admissible only as historical evidence of a
         governed state change, under explicit historical/as-of admission, inside its
