@@ -1,0 +1,23 @@
+.......EE
+======================================================================
+ERROR: test_known_not_current_evidence_is_reachable_but_never_served_as_current (tests.test_773_adversarial_review.UsefulnessDefects.test_known_not_current_evidence_is_reachable_but_never_served_as_current)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt3/sel/reference/tests/test_773_adversarial_review.py", line 100, in test_known_not_current_evidence_is_reachable_but_never_served_as_current
+    self.assertEqual(selected.known_inapplicable_refs, (freeze,))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'CurrentServedContext' object has no attribute 'known_inapplicable_refs'. Did you mean: 'known_inapplicable_count'?
+
+======================================================================
+ERROR: test_known_not_current_refs_are_bounded_admitted_and_ranked (tests.test_773_adversarial_review.UsefulnessDefects.test_known_not_current_refs_are_bounded_admitted_and_ranked)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt3/sel/reference/tests/test_773_adversarial_review.py", line 111, in test_known_not_current_refs_are_bounded_admitted_and_ranked
+    self.assertEqual(len(selected.known_inapplicable_refs), 2)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'CurrentServedContext' object has no attribute 'known_inapplicable_refs'. Did you mean: 'known_inapplicable_count'?
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.244s
+
+FAILED (errors=2)

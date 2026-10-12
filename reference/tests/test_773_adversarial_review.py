@@ -83,6 +83,37 @@ class ReferenceInstantDefects(unittest.TestCase):
         self.assertIn(later, store.select(QUERY, NOW).served_refs)
 
 
+class UsefulnessDefects(unittest.TestCase):
+    """D773-2: excluded evidence that answers a question about NOW is unreachable."""
+
+    def test_known_not_current_evidence_is_reachable_but_never_served_as_current(self):
+        # "Is it still in effect?" is answered by the window that ENDED. The
+        # selector removed it and reported only a count, leaving an empty
+        # context and no way to say "it ended on 1 December" without a
+        # second unconstrained recall.
+        store = _Store(self)
+        freeze = store.retain("freeze", "Field firmware deployments were frozen during the winter window.",
+                              validity={"valid_from": "2025-11-01T00:00:00Z",
+                                        "valid_until": "2025-12-01T00:00:00Z"})
+        selected = store.select("Is the winter firmware freeze still in effect?", NOW, budget=2)
+        self.assertEqual(selected.served_refs, ())
+        self.assertEqual(selected.known_inapplicable_refs, (freeze,))
+        self.assertNotIn(freeze, selected.served_refs)
+
+    def test_known_not_current_refs_are_bounded_admitted_and_ranked(self):
+        store = _Store(self)
+        window = {"valid_from": "2025-11-01T00:00:00Z", "valid_until": "2025-12-01T00:00:00Z"}
+        refs = [store.retain(f"w{i}", f"Winter firmware freeze note {i}.", validity=window) for i in range(5)]
+        store.retain("hidden", "Winter firmware freeze note hidden.", project="project-beta", validity=window)
+        ranked = store.runtime.multi_route_recall("winter firmware freeze", _context(),
+                                                  temporal_intent={"mode": "current", "reference_time": NOW})
+        selected = store.select("winter firmware freeze", NOW, budget=2)
+        self.assertEqual(len(selected.known_inapplicable_refs), 2)
+        self.assertEqual(list(selected.known_inapplicable_refs),
+                         [r for r in ranked.ranked_admitted if r in refs][:2])
+        self.assertEqual(selected.known_inapplicable_count, 5)
+
+
 class SelectorControls(unittest.TestCase):
     def test_error_correction_after_the_instant_does_not_refuse(self):
         # An error correction declares the old value never held, so the
