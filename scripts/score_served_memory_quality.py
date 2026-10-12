@@ -116,13 +116,24 @@ def _case_result(case, served):
         "stale_served": sum(ref in stale for ref in served),
         "irrelevant_served": sum(relevance[ref] == 0 and ref not in prohibited and ref not in stale
                                  for ref in served),
-        "relevant_precision": round(quality_hits / len(served), 6) if served else None,
+        # validation(771): empty delivery on an answerable case is a precision
+        # failure, not an undefined value that drops out of the macro mean.
+        "relevant_precision": (round(quality_hits / len(served), 6) if served
+                               else 0.0 if case["safe_answer_exists"] else None),
         "relevant_recall": round(quality_hits / len(safe_relevant), 6) if safe_relevant else None,
+        # validation(771): recall against what the declared budget could hold.
+        "relevant_recall_at_budget": (
+            round(quality_hits / min(len(safe_relevant), case["budget"]), 6)
+            if safe_relevant else None),
         "critical_groups_met": group_hits,
         "critical_groups_total": len(case["critical_groups"]),
         "critical_coverage": round(group_hits / len(case["critical_groups"]), 6)
                              if case["critical_groups"] else None,
         "top1_relevant": bool(served and served[0] in safe_relevant),
+        # validation(771): rank 1 is an answer only if it satisfies a
+        # task-critical evidence group, not merely strong supporting context.
+        "top1_critical": bool(served and any(served[0] in group
+                                             for group in case["critical_groups"])),
         "ndcg_at_budget": round(_dcg(served_grades) / dcg_denom, 6)
                           if dcg_denom else None,
         # Empty retrieval is a delivery observation, not a downstream
@@ -175,7 +186,10 @@ def score(cases_doc, runs_doc):
         return (round(sum(bool(predicate(row)) for row in selected) / len(selected), 6)
                 if selected else None)
     def mean(name):
-        nums = [row[name] for row in evaluated if row[name] is not None]
+        # validation(771): P2 context utility is measured over answerable
+        # cases only; context served on no-safe-answer cases is reported
+        # separately so it cannot dilute or inflate answerable utility.
+        nums = [row[name] for row in answerable if row[name] is not None]
         return round(sum(nums) / len(nums), 6) if nums else None
     return {
         "schema": "served-memory-quality-report-v1",
@@ -192,6 +206,7 @@ def score(cases_doc, runs_doc):
             "answerable_case_count": len(answerable),
             "no_safe_answer_case_count": size - len(answerable),
             "top1_relevant_rate": rate(lambda r: r["top1_relevant"], answerable),
+            "top1_critical_rate": rate(lambda r: r["top1_critical"], answerable),
             "all_critical_groups_covered_rate": rate(
                 lambda r: r["critical_groups_met"] == r["critical_groups_total"],
                 answerable),
@@ -203,10 +218,14 @@ def score(cases_doc, runs_doc):
                 not r["safely_answerable"] and not r["empty_delivery"] for r in evaluated),
             "empty_delivery_on_answerable_count": sum(
                 r["safely_answerable"] and r["empty_delivery"] for r in evaluated),
+            "no_safe_answer_served_total": sum(
+                r["served_count"] for r in evaluated if not r["safely_answerable"]),
         },
         "P2_context_utility": {
             "macro_relevant_precision": mean("relevant_precision"),
             "macro_relevant_recall": mean("relevant_recall"),
+            "macro_relevant_recall_at_budget": mean("relevant_recall_at_budget"),
+            "macro_scope": "answerable_cases_only",
             "macro_critical_coverage": mean("critical_coverage"),
             "macro_ndcg_at_budget": mean("ndcg_at_budget"),
             "irrelevant_served_total": sum(r["irrelevant_served"] for r in evaluated),
