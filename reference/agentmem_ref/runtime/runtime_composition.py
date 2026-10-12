@@ -156,7 +156,7 @@ class HistoricalPredecessorContext:
 # evidence (no new lexicon): a predecessor-relation cue routes unless an origin
 # cue ("the first value") or a prospective cue is also present. Declined spans
 # (quoted or metalinguistic mentions) carry no evidence and never route.
-PREDECESSOR_ROUTING_POLICY_VERSION = "0.1.0"
+PREDECESSOR_ROUTING_POLICY_VERSION = "0.2.0"
 PREDECESSOR_RELATION_CUES = frozenset({
     "historical:low:before", "historical:high:previously", "historical:high:used to",
     "historical:high:formerly", "historical:high:prior to", "historical:low:earlier",
@@ -659,9 +659,16 @@ class ConfiguredCompositionRuntime:
         Routed questions take ``historical_predecessor_context``; every other
         question is served exactly as ``multi_route_recall`` with the caller's
         ``temporal_intent`` would serve it. Never routes all historical questions.
+
+        Policy 0.2.0: only a question the caller sent with HISTORICAL intent may be
+        routed. A current, timeless or unspecified question is never routed, even
+        when a predecessor cue is present ("how long before X times out"), so an
+        automatic route can never serve a superseded value first for it.
         """
         decision = predecessor_routing(query)
-        if decision.routed:
+        caller_mode = (temporal_intent or {}).get("mode") if isinstance(temporal_intent, dict) else getattr(
+            temporal_intent, "mode", None)
+        if decision.routed and caller_mode == "historical":
             selected = self.historical_predecessor_context(query, context, budget=budget)
             return RoutedHistoricalContext(
                 served_refs=selected.served_refs, routed=True, routing_evidence=decision.evidence,
