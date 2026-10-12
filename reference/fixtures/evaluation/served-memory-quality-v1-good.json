@@ -1,0 +1,41 @@
+{
+  "schema": "served-memory-run-v1",
+  "runtime_revision": "synthetic-control-only",
+  "lane_id": "quality-contract-fixture-v1",
+  "rows": [
+    {
+      "id": "Q01",
+      "returned": [
+        "endpoint-current"
+      ]
+    },
+    {
+      "id": "Q02",
+      "returned": [
+        "endpoint-prior"
+      ]
+    },
+    {
+      "id": "Q03",
+      "returned": []
+    },
+    {
+      "id": "Q04",
+      "returned": [
+        "endpoint-current",
+        "quota-current"
+      ]
+    },
+    {
+      "id": "Q05",
+      "returned": [
+        "policy-canonical",
+        "policy-context"
+      ]
+    },
+    {
+      "id": "Q06",
+      "returned": []
+    }
+  ]
+}
