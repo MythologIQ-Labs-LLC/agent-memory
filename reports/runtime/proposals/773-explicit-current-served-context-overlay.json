@@ -7,7 +7,7 @@
   "source_changes": [
     {
       "path": "reference/agentmem_ref/runtime/runtime_composition.py",
-      "blob": "bbf12bf390fbf071ceba8d58a40eaccb35dc4137"
+      "blob": "86b3bc292d11c9e81eccbb404cdabe2a34145567"
     }
   ],
   "new_tests": [
@@ -15,21 +15,39 @@
       "path": "reference/tests/test_773_current_served_context.py",
       "blob": "44e257711e02c1a012ab1cb15733a3ae61866d70",
       "methods": 10
+    },
+    {
+      "path": "reference/tests/test_773_adversarial_review.py",
+      "blob": "626f9502a7e3ed29d47f62a3fe4954b3e7e037fa",
+      "methods": 9
     }
   ],
   "frozen_v7_declaration_unchanged": true,
   "frozen_v6_and_v7_evidence_unchanged": true,
   "default_recall_path_unchanged_by_design": true,
-  "selection_policy_version": "0.1.0",
+  "selection_policy_version": "0.2.0",
   "requires_explicit_caller_time": true,
   "positive_stops_enabled": false,
   "output_attestation": "none",
   "complete_enumeration_attested": false,
-  "qualification_status": "NOT_EXECUTED",
+  "qualification_status": "CHANGES_REQUIRED__CODE_REPAIRS_ADOPTED__NEW_BASELINE_UNDECLARED",
   "known_limits": [
     "This opt-in selector only filters established non-current temporal applicability from already governed admitted/ranked candidates. It does not supply a relevance floor or an answer-level refusal decision.",
     "It intentionally does not rewrite canonical admission or historical recall; current time is supplied by the caller and is not authenticated as current wall-clock time.",
     "There is no source proof that all relevant memories were enumerated and returned, and unknown temporal validity remains unknown.",
-    "A new sanctioned post-v7 successor declaration, exact-SHA execution, old/second holdout comparison, frozen original lane replays, privacy, and independent adversarial review are required."
-  ]
+    "A new sanctioned post-v7 successor declaration, exact-SHA execution, old/second holdout comparison, frozen original lane replays, privacy, and independent adversarial review are required.",
+    "In original Halcyon and Cedarline v1.1 comparisons, v7 recall with the same caller-supplied reference instant returned identical selected contexts. No measured rank-one or coverage gain is attributable to this selector.",
+    "The added known_inapplicable_refs are not served-as-current facts and are not a completed answer; the caller must not surface them as current."
+  ],
+  "independent_review": {
+    "branch": "validation/773-current-context-selector-review",
+    "sha": "d56665ec5bde2d494dc05319cf7f356cb6fe7e4e",
+    "status": "CHANGES_REQUIRED",
+    "defects_adopted": [
+      "D773-1",
+      "D773-2"
+    ],
+    "tested_source_blob": "0d5c5da1f4484e5c4c5c6d8fe88544305f2f82a6",
+    "note": "candidate now changes version to 0.2.0 so exact final blob requires retest"
+  }
 }
