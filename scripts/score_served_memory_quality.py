@@ -157,8 +157,11 @@ def score(cases_doc, runs_doc):
         raise ValueError("missing or extra run rows")
     evaluated = [_case_result(case, observed[case["id"]]) for case in cases]
     size = len(evaluated)
-    def rate(predicate):
-        return round(sum(bool(predicate(row)) for row in evaluated) / size, 6)
+    answerable = [row for row in evaluated if row["safely_answerable"]]
+    def rate(predicate, group=None):
+        selected = evaluated if group is None else group
+        return (round(sum(bool(predicate(row)) for row in selected) / len(selected), 6)
+                if selected else None)
     def mean(name):
         nums = [row[name] for row in evaluated if row[name] is not None]
         return round(sum(nums) / len(nums), 6) if nums else None
@@ -172,10 +175,12 @@ def score(cases_doc, runs_doc):
             "cases_with_stale_exposure": sum(bool(row["stale_served"]) for row in evaluated),
         },
         "P1_served_correctness": {
-            "top1_relevant_rate": rate(lambda r: r["top1_relevant"]),
+            "answerable_case_count": len(answerable),
+            "no_safe_answer_case_count": size - len(answerable),
+            "top1_relevant_rate": rate(lambda r: r["top1_relevant"], answerable),
             "all_critical_groups_covered_rate": rate(
-                lambda r: r["safely_answerable"]
-                and r["critical_groups_met"] == r["critical_groups_total"]),
+                lambda r: r["critical_groups_met"] == r["critical_groups_total"],
+                answerable),
             "correct_abstention_rate": rate(lambda r: r["abstention_correct"]),
             "unsafe_empty_on_answerable_count": sum(r["safely_answerable"] and r["abstained"]
                                                     for r in evaluated),
