@@ -1541,9 +1541,48 @@ class GovernedMemoryAdapter:
         deleted = self._deleted_lineage()
         if fact.uuid in deleted:
             return "logical_memory_deleted"
-        if any(ref in deleted for ref in fact.episode_uuids):
+        if any(self._derives_from_deleted(ref, deleted) for ref in fact.episode_uuids):
             return "derived_from_deleted_logical_memory"
         return None
+
+    def _derives_from_deleted(self, ref: str, deleted: Mapping[str, str]) -> bool:
+        """Is ``ref`` a deleted fact, or a fact whose provenance (``episode_uuids``) leads to one?
+
+        Transitive over canonical fact references, so a derivation of a derivation of a
+        deleted version is refused too. Facts are immutable and deletions only add to the
+        index, so results are memoised per index state; refs that are not facts
+        (external evidence identifiers) carry no deletion state.
+        """
+        memo_key = getattr(self, "_deleted_lineage_cache", (None,))[0]
+        memo = getattr(self, "_derived_taint_memo", None)
+        if memo is None or memo[0] != memo_key:
+            memo = (memo_key, {})
+            self._derived_taint_memo = memo
+        taint = memo[1]
+        if ref in taint:
+            return taint[ref]
+        stack, path, seen = [ref], [], set()
+        result = False
+        while stack:
+            current = stack.pop()
+            if current in seen:
+                continue
+            seen.add(current)
+            if current in deleted or taint.get(current):
+                result = True
+                break
+            if current in taint:
+                continue
+            path.append(current)
+            fact = self._substrate.get_fact(current)
+            if fact is not None:
+                stack.extend(fact.episode_uuids)
+        if result:
+            taint[ref] = True  # only the queried root is known tainted on an early exit
+        else:
+            for item in path:
+                taint[item] = False
+        return result
 
     def _lineage_for_deletion(self, memory_id: str, fact_uuid: str) -> list[str]:
         """Deleting a memory's head deletes its whole live lineage; deleting a superseded
