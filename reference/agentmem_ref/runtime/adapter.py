@@ -1553,7 +1553,11 @@ class GovernedMemoryAdapter:
         index, so results are memoised per index state; refs that are not facts
         (external evidence identifiers) carry no deletion state.
         """
-        memo_key = getattr(self, "_deleted_lineage_cache", (None,))[0]
+        # A negative answer can go stale without a new deletion: provenance may cite an id
+        # before that fact exists, and a later write can bind it to a deleted source. Every
+        # governed write binds a fact, so the fact-binding count is part of the key.
+        memo_key = (getattr(self, "_deleted_lineage_cache", (None,))[0],
+                    id(self._fact_memory), len(self._fact_memory))
         memo = getattr(self, "_derived_taint_memo", None)
         if memo is None or memo[0] != memo_key:
             memo = (memo_key, {})
