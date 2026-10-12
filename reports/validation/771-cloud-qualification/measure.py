@@ -99,6 +99,7 @@ def measure(label, revision):
                     "id": row["id"], "stratum": strata.get(row["id"]), "intent": case["intent"],
                     "budget": case["budget"], "returned": row["returned"],
                     "top1_relevant": scored["top1_relevant"],
+                    "top1_critical": scored["top1_critical"],
                     "critical": f'{scored["critical_groups_met"]}/{scored["critical_groups_total"]}',
                     "critical_ranked_beyond_budget": late,
                     "prohibited_served": [r for r in row["returned"] if r in case["prohibited"]],

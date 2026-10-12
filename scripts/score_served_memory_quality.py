@@ -130,6 +130,10 @@ def _case_result(case, served):
         "critical_coverage": round(group_hits / len(case["critical_groups"]), 6)
                              if case["critical_groups"] else None,
         "top1_relevant": bool(served and served[0] in safe_relevant),
+        # validation(771): rank 1 is an answer only if it satisfies a
+        # task-critical evidence group, not merely strong supporting context.
+        "top1_critical": bool(served and any(served[0] in group
+                                             for group in case["critical_groups"])),
         "ndcg_at_budget": round(_dcg(served_grades) / dcg_denom, 6)
                           if dcg_denom else None,
         # Empty retrieval is a delivery observation, not a downstream
@@ -202,6 +206,7 @@ def score(cases_doc, runs_doc):
             "answerable_case_count": len(answerable),
             "no_safe_answer_case_count": size - len(answerable),
             "top1_relevant_rate": rate(lambda r: r["top1_relevant"], answerable),
+            "top1_critical_rate": rate(lambda r: r["top1_critical"], answerable),
             "all_critical_groups_covered_rate": rate(
                 lambda r: r["critical_groups_met"] == r["critical_groups_total"],
                 answerable),

@@ -24,7 +24,8 @@ def main():
             ("P0 cases with prohibited exposure", lambda x: x["P0_safety"]["cases_with_prohibited_exposure"]),
             ("P0 cases with stale exposure", lambda x: x["P0_safety"]["cases_with_stale_exposure"]),
             ("P1 answerable / no-safe-answer cases", lambda x: f'{x["P1_served_correctness"]["answerable_case_count"]} / {x["P1_served_correctness"]["no_safe_answer_case_count"]}'),
-            ("P1 correct memory at rank 1 (answerable)", lambda x: _pct(x["P1_served_correctness"]["top1_relevant_rate"])),
+            ("P1 answer (critical evidence) at rank 1", lambda x: _pct(x["P1_served_correctness"]["top1_critical_rate"])),
+            ("P1 strong evidence (grade>=2) at rank 1", lambda x: _pct(x["P1_served_correctness"]["top1_relevant_rate"])),
             ("P1 all critical evidence groups covered", lambda x: _pct(x["P1_served_correctness"]["all_critical_groups_covered_rate"])),
             ("P1 empty context on answerable", lambda x: x["P1_served_correctness"]["empty_delivery_on_answerable_count"]),
             ("P1 no-safe-answer: empty / with context (items)", lambda x: f'{x["P1_served_correctness"]["no_safe_answer_empty_context_count"]} / {x["P1_served_correctness"]["no_safe_answer_with_context_count"]} ({x["P1_served_correctness"]["no_safe_answer_served_total"]})'),
@@ -46,7 +47,8 @@ def main():
                 lines.append("| {id} | {st} | {intent} | {budget} | {ret} | {t1} | {crit} | {stale} | {proh} | {dis} | {late} | {perm} |".format(
                     id=q["id"], st=q["stratum"] or "", intent=q["intent"], budget=q["budget"],
                     ret=", ".join(q["returned"]) or "∅",
-                    t1=("✓" if q["top1_relevant"] else "✗") if q["safely_answerable"] else "n/a (no safe answer)",
+                    t1=("answer" if q["top1_critical"] else "support" if q["top1_relevant"] else "✗")
+                    if q["safely_answerable"] else "n/a (no safe answer)",
                     crit=q["critical"], stale=", ".join(q["stale_served"]) or "–",
                     proh=", ".join(q["prohibited_served"]) or "–",
                     dis=len(q["distractors_served"]), late=", ".join(q["critical_ranked_beyond_budget"]) or "–",
