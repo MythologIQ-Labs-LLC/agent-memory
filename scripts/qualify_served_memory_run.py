@@ -15,7 +15,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from run_served_memory_scenarios import validate_inputs  # noqa: E402
+from run_served_memory_scenarios import canonical_input_digest, validate_inputs  # noqa: E402
 from score_served_memory_quality import score  # noqa: E402
 
 
@@ -26,8 +26,13 @@ def qualify(inputs: dict, gold: dict, run: dict) -> dict:
         raise ValueError("invalid gold structure")
     if type(run) is not dict or set(run) != {
         "schema", "runtime_revision", "lane_id", "rows",
+        "input_sha256", "execution_backend",
     }:
-        raise ValueError("invalid run structure")
+        raise ValueError("real-run provenance requires exact input binding and backend")
+    if run["input_sha256"] != canonical_input_digest(inputs):
+        raise ValueError("run executed with a different input corpus")
+    if run["execution_backend"] not in ("composed-multiroute", "governed-lexical"):
+        raise ValueError("invalid executed retrieval backend")
     scenarios = inputs["queries"]
     cases = gold["cases"]
     if type(cases) is not list or len(cases) != len(scenarios):
