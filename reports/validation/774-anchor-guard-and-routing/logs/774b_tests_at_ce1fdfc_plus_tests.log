@@ -1,0 +1,237 @@
+EEEEEEEEEEEEEEEEEEEEEE..F
+======================================================================
+ERROR: test_other_historical_questions_do_not_route (tests.test_774_anchor_guard_and_routing.PredecessorRouting.test_other_historical_questions_do_not_route) (query='What did the catalogue originally run on?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 79, in test_other_historical_questions_do_not_route
+    self.assertFalse(self.decide(query).routed)
+                     ~~~~~~~~~~~^^^^^^^
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 52, in decide
+    from agentmem_ref.runtime_composition import predecessor_routing
+ImportError: cannot import name 'predecessor_routing' from 'agentmem_ref.runtime.runtime_composition' (/tmp/claude-0/wt5/s774b/reference/agentmem_ref/runtime/runtime_composition.py)
+
+======================================================================
+ERROR: test_other_historical_questions_do_not_route (tests.test_774_anchor_guard_and_routing.PredecessorRouting.test_other_historical_questions_do_not_route) (query='Which form did the inspection initially use?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 79, in test_other_historical_questions_do_not_route
+    self.assertFalse(self.decide(query).routed)
+                     ~~~~~~~~~~~^^^^^^^
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 52, in decide
+    from agentmem_ref.runtime_composition import predecessor_routing
+ImportError: cannot import name 'predecessor_routing' from 'agentmem_ref.runtime.runtime_composition' (/tmp/claude-0/wt5/s774b/reference/agentmem_ref/runtime/runtime_composition.py)
+
+======================================================================
+ERROR: test_other_historical_questions_do_not_route (tests.test_774_anchor_guard_and_routing.PredecessorRouting.test_other_historical_questions_do_not_route) (query='What was the schedule at first?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 79, in test_other_historical_questions_do_not_route
+    self.assertFalse(self.decide(query).routed)
+                     ~~~~~~~~~~~^^^^^^^
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 52, in decide
+    from agentmem_ref.runtime_composition import predecessor_routing
+ImportError: cannot import name 'predecessor_routing' from 'agentmem_ref.runtime.runtime_composition' (/tmp/claude-0/wt5/s774b/reference/agentmem_ref/runtime/runtime_composition.py)
+
+======================================================================
+ERROR: test_other_historical_questions_do_not_route (tests.test_774_anchor_guard_and_routing.PredecessorRouting.test_other_historical_questions_do_not_route) (query='Why did the billing frequency change?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 79, in test_other_historical_questions_do_not_route
+    self.assertFalse(self.decide(query).routed)
+                     ~~~~~~~~~~~^^^^^^^
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 52, in decide
+    from agentmem_ref.runtime_composition import predecessor_routing
+ImportError: cannot import name 'predecessor_routing' from 'agentmem_ref.runtime.runtime_composition' (/tmp/claude-0/wt5/s774b/reference/agentmem_ref/runtime/runtime_composition.py)
+
+======================================================================
+ERROR: test_other_historical_questions_do_not_route (tests.test_774_anchor_guard_and_routing.PredecessorRouting.test_other_historical_questions_do_not_route) (query='What happened with the billing migration?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 79, in test_other_historical_questions_do_not_route
+    self.assertFalse(self.decide(query).routed)
+                     ~~~~~~~~~~~^^^^^^^
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 52, in decide
+    from agentmem_ref.runtime_composition import predecessor_routing
+ImportError: cannot import name 'predecessor_routing' from 'agentmem_ref.runtime.runtime_composition' (/tmp/claude-0/wt5/s774b/reference/agentmem_ref/runtime/runtime_composition.py)
+
+======================================================================
+ERROR: test_other_historical_questions_do_not_route (tests.test_774_anchor_guard_and_routing.PredecessorRouting.test_other_historical_questions_do_not_route) (query='What did the team decide in the past about retention?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 79, in test_other_historical_questions_do_not_route
+    self.assertFalse(self.decide(query).routed)
+                     ~~~~~~~~~~~^^^^^^^
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 52, in decide
+    from agentmem_ref.runtime_composition import predecessor_routing
+ImportError: cannot import name 'predecessor_routing' from 'agentmem_ref.runtime.runtime_composition' (/tmp/claude-0/wt5/s774b/reference/agentmem_ref/runtime/runtime_composition.py)
+
+======================================================================
+ERROR: test_other_historical_questions_do_not_route (tests.test_774_anchor_guard_and_routing.PredecessorRouting.test_other_historical_questions_do_not_route) (query='How often do Route 4 trams run?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 79, in test_other_historical_questions_do_not_route
+    self.assertFalse(self.decide(query).routed)
+                     ~~~~~~~~~~~^^^^^^^
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 52, in decide
+    from agentmem_ref.runtime_composition import predecessor_routing
+ImportError: cannot import name 'predecessor_routing' from 'agentmem_ref.runtime.runtime_composition' (/tmp/claude-0/wt5/s774b/reference/agentmem_ref/runtime/runtime_composition.py)
+
+======================================================================
+ERROR: test_other_historical_questions_do_not_route (tests.test_774_anchor_guard_and_routing.PredecessorRouting.test_other_historical_questions_do_not_route) (query="Which version will we deploy before next week's freeze?")
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 79, in test_other_historical_questions_do_not_route
+    self.assertFalse(self.decide(query).routed)
+                     ~~~~~~~~~~~^^^^^^^
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 52, in decide
+    from agentmem_ref.runtime_composition import predecessor_routing
+ImportError: cannot import name 'predecessor_routing' from 'agentmem_ref.runtime.runtime_composition' (/tmp/claude-0/wt5/s774b/reference/agentmem_ref/runtime/runtime_composition.py)
+
+======================================================================
+ERROR: test_other_historical_questions_do_not_route (tests.test_774_anchor_guard_and_routing.PredecessorRouting.test_other_historical_questions_do_not_route) (query="What does the word 'before' mean in the runbook?")
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 79, in test_other_historical_questions_do_not_route
+    self.assertFalse(self.decide(query).routed)
+                     ~~~~~~~~~~~^^^^^^^
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 52, in decide
+    from agentmem_ref.runtime_composition import predecessor_routing
+ImportError: cannot import name 'predecessor_routing' from 'agentmem_ref.runtime.runtime_composition' (/tmp/claude-0/wt5/s774b/reference/agentmem_ref/runtime/runtime_composition.py)
+
+======================================================================
+ERROR: test_predecessor_relation_cues_route (tests.test_774_anchor_guard_and_routing.PredecessorRouting.test_predecessor_relation_cues_route) (query='What was the glaze before the current one?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 63, in test_predecessor_relation_cues_route
+    decision = self.decide(query)
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 52, in decide
+    from agentmem_ref.runtime_composition import predecessor_routing
+ImportError: cannot import name 'predecessor_routing' from 'agentmem_ref.runtime.runtime_composition' (/tmp/claude-0/wt5/s774b/reference/agentmem_ref/runtime/runtime_composition.py)
+
+======================================================================
+ERROR: test_predecessor_relation_cues_route (tests.test_774_anchor_guard_and_routing.PredecessorRouting.test_predecessor_relation_cues_route) (query='Which engine did the catalogue previously run on?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 63, in test_predecessor_relation_cues_route
+    decision = self.decide(query)
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 52, in decide
+    from agentmem_ref.runtime_composition import predecessor_routing
+ImportError: cannot import name 'predecessor_routing' from 'agentmem_ref.runtime.runtime_composition' (/tmp/claude-0/wt5/s774b/reference/agentmem_ref/runtime/runtime_composition.py)
+
+======================================================================
+ERROR: test_predecessor_relation_cues_route (tests.test_774_anchor_guard_and_routing.PredecessorRouting.test_predecessor_relation_cues_route) (query='How often did the trams used to run?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 63, in test_predecessor_relation_cues_route
+    decision = self.decide(query)
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 52, in decide
+    from agentmem_ref.runtime_composition import predecessor_routing
+ImportError: cannot import name 'predecessor_routing' from 'agentmem_ref.runtime.runtime_composition' (/tmp/claude-0/wt5/s774b/reference/agentmem_ref/runtime/runtime_composition.py)
+
+======================================================================
+ERROR: test_predecessor_relation_cues_route (tests.test_774_anchor_guard_and_routing.PredecessorRouting.test_predecessor_relation_cues_route) (query='Which host formerly ran the builds?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 63, in test_predecessor_relation_cues_route
+    decision = self.decide(query)
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 52, in decide
+    from agentmem_ref.runtime_composition import predecessor_routing
+ImportError: cannot import name 'predecessor_routing' from 'agentmem_ref.runtime.runtime_composition' (/tmp/claude-0/wt5/s774b/reference/agentmem_ref/runtime/runtime_composition.py)
+
+======================================================================
+ERROR: test_predecessor_relation_cues_route (tests.test_774_anchor_guard_and_routing.PredecessorRouting.test_predecessor_relation_cues_route) (query='What was the fee prior to the change?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 63, in test_predecessor_relation_cues_route
+    decision = self.decide(query)
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 52, in decide
+    from agentmem_ref.runtime_composition import predecessor_routing
+ImportError: cannot import name 'predecessor_routing' from 'agentmem_ref.runtime.runtime_composition' (/tmp/claude-0/wt5/s774b/reference/agentmem_ref/runtime/runtime_composition.py)
+
+======================================================================
+ERROR: test_predecessor_relation_cues_route (tests.test_774_anchor_guard_and_routing.PredecessorRouting.test_predecessor_relation_cues_route) (query='Which form did we use earlier?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 63, in test_predecessor_relation_cues_route
+    decision = self.decide(query)
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 52, in decide
+    from agentmem_ref.runtime_composition import predecessor_routing
+ImportError: cannot import name 'predecessor_routing' from 'agentmem_ref.runtime.runtime_composition' (/tmp/claude-0/wt5/s774b/reference/agentmem_ref/runtime/runtime_composition.py)
+
+======================================================================
+ERROR: test_routing_is_query_only_and_deterministic (tests.test_774_anchor_guard_and_routing.PredecessorRouting.test_routing_is_query_only_and_deterministic)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 82, in test_routing_is_query_only_and_deterministic
+    a = self.decide("What was the glaze before the current one?")
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 52, in decide
+    from agentmem_ref.runtime_composition import predecessor_routing
+ImportError: cannot import name 'predecessor_routing' from 'agentmem_ref.runtime.runtime_composition' (/tmp/claude-0/wt5/s774b/reference/agentmem_ref/runtime/runtime_composition.py)
+
+======================================================================
+ERROR: test_routed_deleted_memory_serves_nothing_of_it (tests.test_774_anchor_guard_and_routing.RoutedRecall.test_routed_deleted_memory_serves_nothing_of_it)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 121, in test_routed_deleted_memory_serves_nothing_of_it
+    out = h.runtime.routed_historical_context(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ConfiguredCompositionRuntime' object has no attribute 'routed_historical_context'
+
+======================================================================
+ERROR: test_routed_question_serves_the_predecessor_first (tests.test_774_anchor_guard_and_routing.RoutedRecall.test_routed_question_serves_the_predecessor_first)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 92, in test_routed_question_serves_the_predecessor_first
+    out = h.runtime.routed_historical_context(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ConfiguredCompositionRuntime' object has no attribute 'routed_historical_context'
+
+======================================================================
+ERROR: test_routed_question_without_lineage_keeps_historical_ranking (tests.test_774_anchor_guard_and_routing.RoutedRecall.test_routed_question_without_lineage_keeps_historical_ranking)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 113, in test_routed_question_without_lineage_keeps_historical_ranking
+    out = h.runtime.routed_historical_context(query, _ctx(), budget=3)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ConfiguredCompositionRuntime' object has no attribute 'routed_historical_context'
+
+======================================================================
+ERROR: test_unrouted_question_is_identical_to_unchanged_recall (tests.test_774_anchor_guard_and_routing.RoutedRecall.test_unrouted_question_is_identical_to_unchanged_recall) (query='What did Route 4 trams originally run?', intent={'mode': 'historical'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 104, in test_unrouted_question_is_identical_to_unchanged_recall
+    out = h.runtime.routed_historical_context(query, _ctx(), budget=3, temporal_intent=intent)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ConfiguredCompositionRuntime' object has no attribute 'routed_historical_context'
+
+======================================================================
+ERROR: test_unrouted_question_is_identical_to_unchanged_recall (tests.test_774_anchor_guard_and_routing.RoutedRecall.test_unrouted_question_is_identical_to_unchanged_recall) (query='How often do Route 4 trams run?', intent={'mode': 'current'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 104, in test_unrouted_question_is_identical_to_unchanged_recall
+    out = h.runtime.routed_historical_context(query, _ctx(), budget=3, temporal_intent=intent)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ConfiguredCompositionRuntime' object has no attribute 'routed_historical_context'
+
+======================================================================
+ERROR: test_unrouted_question_is_identical_to_unchanged_recall (tests.test_774_anchor_guard_and_routing.RoutedRecall.test_unrouted_question_is_identical_to_unchanged_recall) (query='How often do Route 4 trams run?', intent=None)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 104, in test_unrouted_question_is_identical_to_unchanged_recall
+    out = h.runtime.routed_historical_context(query, _ctx(), budget=3, temporal_intent=intent)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ConfiguredCompositionRuntime' object has no attribute 'routed_historical_context'
+
+======================================================================
+FAIL: test_unrelated_lineage_outside_the_served_budget_is_never_promoted (tests.test_774_anchor_guard_and_routing.WrongSubjectAnchorGuard.test_unrelated_lineage_outside_the_served_budget_is_never_promoted)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt5/s774b/reference/tests/test_774_anchor_guard_and_routing.py", line 29, in test_unrelated_lineage_outside_the_served_budget_is_never_promoted
+    self.assertIsNone(out.predecessor_ref)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'ref-0011' is not None
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.181s
+
+FAILED (failures=1, errors=22)
