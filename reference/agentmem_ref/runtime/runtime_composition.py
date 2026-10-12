@@ -146,8 +146,20 @@ class CurrentServedContext:
     complete_evidence_attested: bool = False
     authority_effect: str = "none"
     selection_policy_version: str = "0.1.0"
+    # validation(773) D773-2: admitted, ranked, budget-bounded refs whose
+    # applicability is KNOWN not to cover the reference instant. Never part
+    # of served_refs (never represented as current); kept reachable because
+    # "is it still in effect?" is answered by the window that ended.
+    known_inapplicable_refs: tuple[str, ...] = ()
 
     def __post_init__(self):
+        if (not isinstance(self.known_inapplicable_refs, tuple)
+                or any(type(ref) is not str for ref in self.known_inapplicable_refs)
+                or len(set(self.known_inapplicable_refs)) != len(self.known_inapplicable_refs)
+                or set(self.known_inapplicable_refs) & set(self.served_refs)
+                or type(self.known_inapplicable_count) is not int
+                or len(self.known_inapplicable_refs) > self.known_inapplicable_count):
+            raise ValueError("invalid known-not-current selection")
         if (not isinstance(self.served_refs, tuple)
                 or any(type(ref) is not str for ref in self.served_refs)
                 or len(set(self.served_refs)) != len(self.served_refs)
@@ -601,6 +613,7 @@ class ConfiguredCompositionRuntime:
                     "reference instant precedes a governed state change; "
                     "use historical or as-of recall for that instant")
         served: list[str] = []
+        not_current: list[str] = []
         known_inapplicable = 0
         unknown = 0
         for ref in result.ranked_admitted:
@@ -612,6 +625,8 @@ class ConfiguredCompositionRuntime:
                 raise RuntimeRecoveryError("missing explicit temporal applicability")
             if applicability in _KNOWN_NOT_CURRENT:
                 known_inapplicable += 1
+                if len(not_current) < budget:
+                    not_current.append(ref)
                 continue
             if applicability not in ("applicable", "unknown_temporal_basis"):
                 # No reference/time or unstated regimes are never equivalent to
@@ -626,6 +641,7 @@ class ConfiguredCompositionRuntime:
             reference_time=reference_time,
             known_inapplicable_count=known_inapplicable,
             unknown_applicability_count=unknown,
+            known_inapplicable_refs=tuple(not_current),
         )
 
     def projection_admission(self) -> ProjectionAdmission:
