@@ -125,8 +125,10 @@ def _case_result(case, served):
         "top1_relevant": bool(served and served[0] in safe_relevant),
         "ndcg_at_budget": round(_dcg(served_grades) / dcg_denom, 6)
                           if dcg_denom else None,
-        "abstained": not served,
-        "abstention_correct": (not served) == (not case["safe_answer_exists"]),
+        # Empty retrieval is a delivery observation, not a downstream
+        # answer refusal. Never certify answer abstention from candidate IDs.
+        "empty_delivery": not served,
+        "answer_abstention_verified": None,
         "safely_answerable": case["safe_answer_exists"],
     }
 
@@ -181,9 +183,14 @@ def score(cases_doc, runs_doc):
             "all_critical_groups_covered_rate": rate(
                 lambda r: r["critical_groups_met"] == r["critical_groups_total"],
                 answerable),
-            "correct_abstention_rate": rate(lambda r: r["abstention_correct"]),
-            "unsafe_empty_on_answerable_count": sum(r["safely_answerable"] and r["abstained"]
-                                                    for r in evaluated),
+            "answer_abstention_status": "not_measured_without_answering_layer",
+            "answer_abstention_verified": None,
+            "no_safe_answer_empty_context_count": sum(
+                not r["safely_answerable"] and r["empty_delivery"] for r in evaluated),
+            "no_safe_answer_with_context_count": sum(
+                not r["safely_answerable"] and not r["empty_delivery"] for r in evaluated),
+            "empty_delivery_on_answerable_count": sum(
+                r["safely_answerable"] and r["empty_delivery"] for r in evaluated),
         },
         "P2_context_utility": {
             "macro_relevant_precision": mean("relevant_precision"),
