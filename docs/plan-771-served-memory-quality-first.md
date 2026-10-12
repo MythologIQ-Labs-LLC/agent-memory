@@ -69,6 +69,82 @@ python scripts/score_served_memory_quality.py \
 There is **no GitHub Actions workflow** for this tranche. Do not claim tests
 executed until a trusted runner does so and records the exact SHA.
 
+## Implemented reference-composition execution lane (next slice)
+
+A second, separately frozen input/gold pair is now available:
+
+- Input corpus: reference/fixtures/evaluation/served-memory-integration-v1-input.json
+- Relevance gold: reference/fixtures/evaluation/served-memory-integration-v1-gold.json
+- Live runner: scripts/run_served_memory_scenarios.py
+- Independent alignment and scoring: scripts/qualify_served_memory_run.py
+- New tests: reference/tests/test_771_served_memory_integration.py and
+  tests/test_served_memory_provenance.py
+
+The input corpus has seven distinct memory writes, two project scopes,
+five concrete questions (current endpoint, compound evidence, historical
+release reason, unavailable owner, and current release), explicit return
+budgets, and no relevance/answer labels. The gold is in a DIFFERENT file and
+is never loaded by the runtime runner.
+
+The runner executes ConfiguredCompositionRuntime.retain (real governed
+canonical commits) and ConfiguredCompositionRuntime.multi_route_recall
+(actual composed ranking and admission). The evaluator applies an explicit
+top-k return budget to the ranked admitted identities and maps fact UUIDs
+back to stable opaque corpus IDs. Those are the facts a bounded reference
+context would receive. It does not fabricate an LLM-generated answer and
+is not proof of a downstream user-facing response or a future production
+facade's exact return behavior.
+
+The optional backend --backend governed-lexical calls the canonical adapter's
+governed lexical recall instead of the composed multi-route planner. It is
+a distinct diagnostic profile and **not guaranteed comparable for historical
+intent**, where temporal admission/ranking may differ. Compare within the
+same scenario only with an explicit protocol-compatibility decision.
+
+The alignment step refuses score laundering: every written source must have
+a label in every query case, every out-of-project source must be prohibited,
+and query identity, wording, intent and budget must match gold exactly.
+It rejects unannotated returned facts rather than calling them irrelevant.
+
+### Execute with a clean, full Git checkout (Claude Code local or cloud)
+
+The CLI refuses execution on a dirty checkout and records actual git HEAD
+as the candidate revision. Use fresh output/store paths. No Actions workflow
+is needed.
+
+~~~sh
+python -m unittest discover -s tests -p 'test_served_memory_*.py'
+python -m unittest discover -s reference/tests -t reference \
+  -p 'test_771_served_memory_integration.py'
+
+python scripts/run_served_memory_scenarios.py \
+  --inputs reference/fixtures/evaluation/served-memory-integration-v1-input.json \
+  --store /tmp/am-771-composed-store \
+  --lane-id reference-composed-v1 \
+  --backend composed-multiroute \
+  --output /tmp/am-771-composed-run.json
+
+python scripts/qualify_served_memory_run.py \
+  --inputs reference/fixtures/evaluation/served-memory-integration-v1-input.json \
+  --gold reference/fixtures/evaluation/served-memory-integration-v1-gold.json \
+  --runs /tmp/am-771-composed-run.json \
+  --output /tmp/am-771-composed-quality.json
+~~~
+
+For the canonical lexical path, use an independent empty store/output
+and --backend governed-lexical with --lane-id reference-lexical-v1.
+
+The qualification output has the source/input/gold/run SHA-256 digests,
+per-question P0/P1/P2 results, and explicitly no weighted overall score.
+A third-party run must show source SHA, actual returned IDs, status and
+any ordinary-refusal decisions separately before being called accepted.
+
+This slice is a **REAL executable reference evaluation path but not yet
+an executed measurement**. It must not be called evidence of improved
+product memory quality until exact-SHA results have been obtained.
+The authored synthetic corpus is only a baseline/smoke. The independent
+unseen holdout is still a mandatory next lane.
+
 ## Real composed-memory qualification, not synthetic overfitting
 
 Future frozen data must come from scenarios not designed by the runtime author,
