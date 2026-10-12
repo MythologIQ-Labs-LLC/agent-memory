@@ -95,6 +95,23 @@ class GovernedServedMemoryQualityTests(unittest.TestCase):
         self.assertNotIn("authority_effect", run)
         self.assertNotIn("stop_recommendation", run)
 
+    def test_reuse_of_initialized_store_is_rejected_before_new_writes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            store = Path(tmp)
+            run_scenarios(copy.deepcopy(self.inputs), store,
+                          revision="repeatable", lane_id="composed-reference-v1")
+            with self.assertRaises(ValueError):
+                run_scenarios(copy.deepcopy(self.inputs), store,
+                              revision="repeatable", lane_id="composed-reference-v1")
+
+    def test_unrelated_directory_content_blocks_evaluation(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            store = Path(tmp)
+            (store / "foreign.txt").write_text("not this evaluation", encoding="utf-8")
+            with self.assertRaises(ValueError):
+                run_scenarios(copy.deepcopy(self.inputs), store,
+                              revision="test-sha", lane_id="quality-v1")
+
     def test_bad_inputs_fail_before_any_governed_write(self):
         for mode in ("duplicate_id", "empty_query", "budget_zero", "extra_gold"):
             data = copy.deepcopy(self.inputs)
