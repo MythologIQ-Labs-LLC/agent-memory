@@ -1,0 +1,17 @@
+test_plain_historical_recall_does_not_serve_a_deleted_memorys_history (tests.test_774_governed_predecessor.PreExistingDeletionLeak.test_plain_historical_recall_does_not_serve_a_deleted_memorys_history) ... expected failure
+test_default_current_and_historical_recall_are_unchanged (tests.test_774_governed_predecessor.PredecessorSelection.test_default_current_and_historical_recall_are_unchanged) ... ok
+test_deleted_memory_history_is_never_targeted (tests.test_774_governed_predecessor.PredecessorSelection.test_deleted_memory_history_is_never_targeted) ... ok
+test_error_corrected_values_are_never_predecessors (tests.test_774_governed_predecessor.PredecessorSelection.test_error_corrected_values_are_never_predecessors) ... ok
+test_five_revisions_walks_one_step_from_the_declared_successor (tests.test_774_governed_predecessor.PredecessorSelection.test_five_revisions_walks_one_step_from_the_declared_successor) ... ok
+test_no_causal_or_authority_claims_and_budget_respected (tests.test_774_governed_predecessor.PredecessorSelection.test_no_causal_or_authority_claims_and_budget_respected) ... ok
+test_no_lineage_leaves_historical_ranking_unchanged (tests.test_774_governed_predecessor.PredecessorSelection.test_no_lineage_leaves_historical_ranking_unchanged) ... ok
+test_only_one_lineage_predecessor_moves_and_other_order_is_preserved (tests.test_774_governed_predecessor.PredecessorSelection.test_only_one_lineage_predecessor_moves_and_other_order_is_preserved) ... ok
+test_other_project_lineage_is_neither_targeted_nor_revealed (tests.test_774_governed_predecessor.PredecessorSelection.test_other_project_lineage_is_neither_targeted_nor_revealed) ... ok
+test_predecessor_with_no_word_overlap_is_found_through_lineage (tests.test_774_governed_predecessor.PredecessorSelection.test_predecessor_with_no_word_overlap_is_found_through_lineage) ... ok
+test_three_revisions_selects_the_immediate_not_the_oldest (tests.test_774_governed_predecessor.PredecessorSelection.test_three_revisions_selects_the_immediate_not_the_oldest) ... ok
+test_two_revisions_serves_the_predecessor_at_rank_one (tests.test_774_governed_predecessor.PredecessorSelection.test_two_revisions_serves_the_predecessor_at_rank_one) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.368s
+
+OK (expected failures=1)

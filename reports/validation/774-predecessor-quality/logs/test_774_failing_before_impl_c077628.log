@@ -1,0 +1,184 @@
+xEEEEEEEEEEEEEEE
+======================================================================
+ERROR: test_default_current_and_historical_recall_are_unchanged (tests.test_774_governed_predecessor.PredecessorSelection.test_default_current_and_historical_recall_are_unchanged)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt4/s774/reference/tests/test_774_governed_predecessor.py", line 188, in test_default_current_and_historical_recall_are_unchanged
+    h.select(q)
+    ~~~~~~~~^^^
+  File "/tmp/claude-0/wt4/s774/reference/tests/test_774_governed_predecessor.py", line 80, in select
+    return self.runtime.historical_predecessor_context(query, _context(project), budget=budget,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ConfiguredCompositionRuntime' object has no attribute 'historical_predecessor_context'
+
+======================================================================
+ERROR: test_deleted_memory_history_is_never_targeted (tests.test_774_governed_predecessor.PredecessorSelection.test_deleted_memory_history_is_never_targeted)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt4/s774/reference/tests/test_774_governed_predecessor.py", line 141, in test_deleted_memory_history_is_never_targeted
+    out = h.select("What glaze did the kiln firing schedule use before cone 10?")
+  File "/tmp/claude-0/wt4/s774/reference/tests/test_774_governed_predecessor.py", line 80, in select
+    return self.runtime.historical_predecessor_context(query, _context(project), budget=budget,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ConfiguredCompositionRuntime' object has no attribute 'historical_predecessor_context'
+
+======================================================================
+ERROR: test_error_corrected_values_are_never_predecessors (tests.test_774_governed_predecessor.PredecessorSelection.test_error_corrected_values_are_never_predecessors)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt4/s774/reference/tests/test_774_governed_predecessor.py", line 128, in test_error_corrected_values_are_never_predecessors
+    out = h.select("What was the sensor sample rate before?")
+  File "/tmp/claude-0/wt4/s774/reference/tests/test_774_governed_predecessor.py", line 80, in select
+    return self.runtime.historical_predecessor_context(query, _context(project), budget=budget,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ConfiguredCompositionRuntime' object has no attribute 'historical_predecessor_context'
+
+======================================================================
+ERROR: test_five_revisions_walks_one_step_from_the_declared_successor (tests.test_774_governed_predecessor.PredecessorSelection.test_five_revisions_walks_one_step_from_the_declared_successor) (successor=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt4/s774/reference/tests/test_774_governed_predecessor.py", line 118, in test_five_revisions_walks_one_step_from_the_declared_successor
+    self.assertEqual(h.select("Which catalogue engine version?", successor_ref=ids[k],
+                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                              budget=5).predecessor_ref, ids[k - 1])
+                              ^^^^^^^^^
+  File "/tmp/claude-0/wt4/s774/reference/tests/test_774_governed_predecessor.py", line 80, in select
+    return self.runtime.historical_predecessor_context(query, _context(project), budget=budget,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ConfiguredCompositionRuntime' object has no attribute 'historical_predecessor_context'
+
+======================================================================
+ERROR: test_five_revisions_walks_one_step_from_the_declared_successor (tests.test_774_governed_predecessor.PredecessorSelection.test_five_revisions_walks_one_step_from_the_declared_successor) (successor=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt4/s774/reference/tests/test_774_governed_predecessor.py", line 118, in test_five_revisions_walks_one_step_from_the_declared_successor
+    self.assertEqual(h.select("Which catalogue engine version?", successor_ref=ids[k],
+                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                              budget=5).predecessor_ref, ids[k - 1])
+                              ^^^^^^^^^
+  File "/tmp/claude-0/wt4/s774/reference/tests/test_774_governed_predecessor.py", line 80, in select
+    return self.runtime.historical_predecessor_context(query, _context(project), budget=budget,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ConfiguredCompositionRuntime' object has no attribute 'historical_predecessor_context'
+
+======================================================================
+ERROR: test_five_revisions_walks_one_step_from_the_declared_successor (tests.test_774_governed_predecessor.PredecessorSelection.test_five_revisions_walks_one_step_from_the_declared_successor) (successor=3)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt4/s774/reference/tests/test_774_governed_predecessor.py", line 118, in test_five_revisions_walks_one_step_from_the_declared_successor
+    self.assertEqual(h.select("Which catalogue engine version?", successor_ref=ids[k],
+                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                              budget=5).predecessor_ref, ids[k - 1])
+                              ^^^^^^^^^
+  File "/tmp/claude-0/wt4/s774/reference/tests/test_774_governed_predecessor.py", line 80, in select
+    return self.runtime.historical_predecessor_context(query, _context(project), budget=budget,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ConfiguredCompositionRuntime' object has no attribute 'historical_predecessor_context'
+
+======================================================================
+ERROR: test_five_revisions_walks_one_step_from_the_declared_successor (tests.test_774_governed_predecessor.PredecessorSelection.test_five_revisions_walks_one_step_from_the_declared_successor) (successor=4)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt4/s774/reference/tests/test_774_governed_predecessor.py", line 118, in test_five_revisions_walks_one_step_from_the_declared_successor
+    self.assertEqual(h.select("Which catalogue engine version?", successor_ref=ids[k],
+                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                              budget=5).predecessor_ref, ids[k - 1])
+                              ^^^^^^^^^
+  File "/tmp/claude-0/wt4/s774/reference/tests/test_774_governed_predecessor.py", line 80, in select
+    return self.runtime.historical_predecessor_context(query, _context(project), budget=budget,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ConfiguredCompositionRuntime' object has no attribute 'historical_predecessor_context'
+
+======================================================================
+ERROR: test_five_revisions_walks_one_step_from_the_declared_successor (tests.test_774_governed_predecessor.PredecessorSelection.test_five_revisions_walks_one_step_from_the_declared_successor)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt4/s774/reference/tests/test_774_governed_predecessor.py", line 120, in test_five_revisions_walks_one_step_from_the_declared_successor
+    self.assertIsNone(h.select("Which catalogue engine version?", successor_ref=ids[0]).predecessor_ref)
+                      ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/claude-0/wt4/s774/reference/tests/test_774_governed_predecessor.py", line 80, in select
+    return self.runtime.historical_predecessor_context(query, _context(project), budget=budget,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ConfiguredCompositionRuntime' object has no attribute 'historical_predecessor_context'
+
+======================================================================
+ERROR: test_no_causal_or_authority_claims_and_budget_respected (tests.test_774_governed_predecessor.PredecessorSelection.test_no_causal_or_authority_claims_and_budget_respected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt4/s774/reference/tests/test_774_governed_predecessor.py", line 195, in test_no_causal_or_authority_claims_and_budget_respected
+    out = h.select("What glaze did the kiln firing schedule use before cone 10?", budget=1)
+  File "/tmp/claude-0/wt4/s774/reference/tests/test_774_governed_predecessor.py", line 80, in select
+    return self.runtime.historical_predecessor_context(query, _context(project), budget=budget,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ConfiguredCompositionRuntime' object has no attribute 'historical_predecessor_context'
+
+======================================================================
+ERROR: test_no_lineage_leaves_historical_ranking_unchanged (tests.test_774_governed_predecessor.PredecessorSelection.test_no_lineage_leaves_historical_ranking_unchanged)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt4/s774/reference/tests/test_774_governed_predecessor.py", line 180, in test_no_lineage_leaves_historical_ranking_unchanged
+    out = h.select(query)
+  File "/tmp/claude-0/wt4/s774/reference/tests/test_774_governed_predecessor.py", line 80, in select
+    return self.runtime.historical_predecessor_context(query, _context(project), budget=budget,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ConfiguredCompositionRuntime' object has no attribute 'historical_predecessor_context'
+
+======================================================================
+ERROR: test_only_one_lineage_predecessor_moves_and_other_order_is_preserved (tests.test_774_governed_predecessor.PredecessorSelection.test_only_one_lineage_predecessor_moves_and_other_order_is_preserved)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt4/s774/reference/tests/test_774_governed_predecessor.py", line 160, in test_only_one_lineage_predecessor_moves_and_other_order_is_preserved
+    out = h.select(query, budget=10)
+  File "/tmp/claude-0/wt4/s774/reference/tests/test_774_governed_predecessor.py", line 80, in select
+    return self.runtime.historical_predecessor_context(query, _context(project), budget=budget,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ConfiguredCompositionRuntime' object has no attribute 'historical_predecessor_context'
+
+======================================================================
+ERROR: test_other_project_lineage_is_neither_targeted_nor_revealed (tests.test_774_governed_predecessor.PredecessorSelection.test_other_project_lineage_is_neither_targeted_nor_revealed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt4/s774/reference/tests/test_774_governed_predecessor.py", line 148, in test_other_project_lineage_is_neither_targeted_nor_revealed
+    out = h.select("What glaze did the kiln firing schedule use before cone 10?")
+  File "/tmp/claude-0/wt4/s774/reference/tests/test_774_governed_predecessor.py", line 80, in select
+    return self.runtime.historical_predecessor_context(query, _context(project), budget=budget,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ConfiguredCompositionRuntime' object has no attribute 'historical_predecessor_context'
+
+======================================================================
+ERROR: test_predecessor_with_no_word_overlap_is_found_through_lineage (tests.test_774_governed_predecessor.PredecessorSelection.test_predecessor_with_no_word_overlap_is_found_through_lineage)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt4/s774/reference/tests/test_774_governed_predecessor.py", line 172, in test_predecessor_with_no_word_overlap_is_found_through_lineage
+    out = h.select("Which continuous integration did we use before hosted runners?")
+  File "/tmp/claude-0/wt4/s774/reference/tests/test_774_governed_predecessor.py", line 80, in select
+    return self.runtime.historical_predecessor_context(query, _context(project), budget=budget,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ConfiguredCompositionRuntime' object has no attribute 'historical_predecessor_context'
+
+======================================================================
+ERROR: test_three_revisions_selects_the_immediate_not_the_oldest (tests.test_774_governed_predecessor.PredecessorSelection.test_three_revisions_selects_the_immediate_not_the_oldest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt4/s774/reference/tests/test_774_governed_predecessor.py", line 107, in test_three_revisions_selects_the_immediate_not_the_oldest
+    out = h.select("How often did Route 4 trams run before the current timetable?")
+  File "/tmp/claude-0/wt4/s774/reference/tests/test_774_governed_predecessor.py", line 80, in select
+    return self.runtime.historical_predecessor_context(query, _context(project), budget=budget,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ConfiguredCompositionRuntime' object has no attribute 'historical_predecessor_context'
+
+======================================================================
+ERROR: test_two_revisions_serves_the_predecessor_at_rank_one (tests.test_774_governed_predecessor.PredecessorSelection.test_two_revisions_serves_the_predecessor_at_rank_one)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt4/s774/reference/tests/test_774_governed_predecessor.py", line 99, in test_two_revisions_serves_the_predecessor_at_rank_one
+    out = h.select("What glaze did the kiln firing schedule use before cone 10?")
+  File "/tmp/claude-0/wt4/s774/reference/tests/test_774_governed_predecessor.py", line 80, in select
+    return self.runtime.historical_predecessor_context(query, _context(project), budget=budget,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ConfiguredCompositionRuntime' object has no attribute 'historical_predecessor_context'
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.313s
+
+FAILED (errors=15, expected failures=1)
