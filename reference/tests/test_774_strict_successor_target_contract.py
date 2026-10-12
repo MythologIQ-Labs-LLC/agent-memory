@@ -10,6 +10,7 @@ import unittest
 
 from tests.test_774_governed_predecessor import _History, S
 from tests.test_runtime_composition import _context
+from agentmem_ref.runtime_composition import predecessor_routing
 
 PRICES = [
     ("Arbor museum membership used monthly dues of 12 credits.", None),
@@ -47,6 +48,9 @@ class StrictHistoricalSuccessorTargets(unittest.TestCase):
     def test_no_auto_predecessor_promotion_for_ambiguous_historical_target(self):
         h = _History(self, {"membership": PRICES})
         query = "What were the membership dues before an earlier increase?"
+        # This is a true positive lexical route cue, but it has no governed
+        # identity for *which* later price version the user meant.
+        self.assertTrue(predecessor_routing(query).routed)
         selected = h.runtime.routed_historical_context(
             query, _context(), budget=3, temporal_intent={"mode": "historical"},
         )
