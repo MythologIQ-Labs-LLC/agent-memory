@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "baseline_id": "agent-memory-runtime-baseline-v8",
+  "predecessor_baseline_id": "agent-memory-runtime-baseline-v7",
+  "issue": 773,
+  "declared_changes": [
+    {
+      "path": "reference/agentmem_ref/runtime/runtime_composition.py",
+      "blob": "86b3bc292d11c9e81eccbb404cdabe2a34145567"
+    }
+  ],
+  "identity_deltas": [],
+  "pyproject_change": null,
+  "acceptance_evidence_required": [
+    {
+      "kind": "public_gauntlet",
+      "ref": "gauntlet-orchestration-retrieval-probe-v1"
+    },
+    {
+      "kind": "lane",
+      "ref": "amb-precisionmembench-retrieval-v8"
+    },
+    {
+      "kind": "lane",
+      "ref": "longmemeval-s-retrieval-parity-v8"
+    },
+    {
+      "kind": "replay",
+      "ref": "current-served-context-opt-in-noninterference-v1"
+    },
+    {
+      "kind": "replay",
+      "ref": "reader-domain-admission-and-historical-lifecycle-v1"
+    }
+  ]
+}
