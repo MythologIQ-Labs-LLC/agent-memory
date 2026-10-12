@@ -104,11 +104,14 @@ def _proposal(tenant, project, label, purpose):
     )
 
 
-def run_scenarios(data, root: Path, *, revision: str, lane_id: str):
+def run_scenarios(data, root: Path, *, revision: str, lane_id: str,
+                  backend: str = "composed-multiroute"):
     """Real governed commits and recall; revision is a label until CLI verifies it."""
     validate_inputs(data)
     _text(revision, "revision")
     _name(lane_id, "lane id")
+    if backend not in ("composed-multiroute", "governed-lexical"):
+        raise ValueError("unsupported governed reference backend")
     runtime = ConfiguredCompositionRuntime.create(
         root, tenant=data["tenant"],
         plan=validate_runtime_configuration(json.loads(CONFIG.read_text(encoding="utf-8"))),
@@ -133,10 +136,18 @@ def run_scenarios(data, root: Path, *, revision: str, lane_id: str):
     )
     rows = []
     for q in data["queries"]:
-        result = runtime.multi_route_recall(q["query"], context)
-        if result.authority_effect != "none":
-            raise RuntimeError("governed recall claimed authority")
-        ranked = result.ranked_admitted
+        if backend == "composed-multiroute":
+            result = runtime.multi_route_recall(q["query"], context)
+            if result.authority_effect != "none":
+                raise RuntimeError("composed recall claimed authority")
+            ranked = result.ranked_admitted
+        else:
+            # The baseline governed adapter admits canonical lexical results
+            # in retrieval order, without multi-route ranking/currentness.
+            # This is a separate diagnostic protocol, not interchangeable
+            # with as-of historical or vector-enabled retrieval.
+            result = runtime.recall(q["query"], context)
+            ranked = result.admitted
         if (len(ranked) != len(set(ranked))
                 or not set(ranked).issubset(result.admitted)):
             raise RuntimeError("ranking violates governed admission")
@@ -175,13 +186,16 @@ def main():
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--store", required=True, type=Path)
     parser.add_argument("--lane-id", default="reference-governed-recall-v1")
+    parser.add_argument("--backend", choices=("composed-multiroute", "governed-lexical"),
+                        default="composed-multiroute")
     args = parser.parse_args()
     if args.output.exists() or args.store.exists():
         parser.error("output and store paths must not preexist")
     data = json.loads(args.inputs.read_text(encoding="utf-8"))
     validate_inputs(data)
     sha = _verified_revision()
-    result = run_scenarios(data, args.store, revision=sha, lane_id=args.lane_id)
+    result = run_scenarios(data, args.store, revision=sha,
+                           lane_id=args.lane_id, backend=args.backend)
     args.output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n",
                            encoding="utf-8")
 
