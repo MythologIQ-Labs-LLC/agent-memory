@@ -114,6 +114,41 @@ class CurrentServedContextTests(unittest.TestCase):
                         budget=budget, reference_time="2026-10-12T12:00:00Z",
                     )
 
+    def test_timezone_equivalent_instants_have_identical_served_membership(self):
+        self.retain("tz-window", "Cedarline field maintenance window",
+                    validity={"valid_from":"2025-11-01T00:00:00Z",
+                              "valid_until":"2025-12-01T00:00:00Z"})
+        utc = self.runtime.current_served_context(
+            "Cedarline field maintenance", _context(), budget=3,
+            reference_time="2025-11-15T12:00:00Z",
+        )
+        eastern = self.runtime.current_served_context(
+            "Cedarline field maintenance", _context(), budget=3,
+            reference_time="2025-11-15T07:00:00-05:00",
+        )
+        self.assertEqual(utc.served_refs, eastern.served_refs)
+        self.assertEqual(utc.known_inapplicable_count,
+                         eastern.known_inapplicable_count)
+
+    def test_observer_does_not_change_original_recall_or_persisted_facts(self):
+        ref = self.retain("persist", "Cedarline current observations are stored")
+        before = self.runtime.multi_route_recall(
+            "Cedarline observations", _context(),
+            temporal_intent={"mode":"current", "reference_time":"2026-10-12T12:00:00Z"},
+        )
+        observed = self.runtime.current_served_context(
+            "Cedarline observations", _context(), budget=2,
+            reference_time="2026-10-12T12:00:00Z",
+        )
+        after = self.runtime.multi_route_recall(
+            "Cedarline observations", _context(),
+            temporal_intent={"mode":"current", "reference_time":"2026-10-12T12:00:00Z"},
+        )
+        self.assertEqual(before.ranked_admitted, after.ranked_admitted)
+        self.assertEqual(before.admitted, after.admitted)
+        self.assertIn(ref, observed.served_refs)
+        self.assertFalse(observed.complete_evidence_attested)
+
     def test_historical_recall_remains_able_to_admit_past_window(self):
         former = self.retain(
             "old-window", "Cedarline deployment freeze was active",
