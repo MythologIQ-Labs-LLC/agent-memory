@@ -16,7 +16,7 @@ INPUTS = {
     "schema": lifecycle.SCHEMA, "tenant": "tenant-a", "project": "proj-a", "purpose": "lifecycle-test",
     "events": [
         {"id": "db-v1", "op": "retain", "memory": "db", "text": "The primary database is MySQL 5.7"},
-        {"id": "db-v2", "op": "correct", "memory": "db", "text": "The primary database is PostgreSQL 15"},
+        {"id": "db-v2", "op": "update", "memory": "db", "text": "The primary database is PostgreSQL 15"},
         {"id": "secret", "op": "retain", "memory": "secret", "text": "The primary database password is hunter2"},
         {"id": "secret-del", "op": "delete", "memory": "secret"},
         {"id": "beta", "op": "retain", "memory": "beta", "text": "The primary database is Oracle", "project": "proj-b"},
@@ -54,7 +54,7 @@ class LabelIntegrityDefects(unittest.TestCase):
         # makes it the critical answer to a historical question measures the
         # label, not memory quality (the Halcyon v1 encoding defect).
         data = copy.deepcopy(INPUTS)
-        self.assertEqual(data["events"][1]["op"], "correct")
+        data["events"][1]["op"] = "correct"
         gold = _gold()
         hist = gold["cases"][1]
         self.assertEqual(hist["critical_groups"], [["db-v1"]])

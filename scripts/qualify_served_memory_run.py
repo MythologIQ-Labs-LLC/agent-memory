@@ -97,6 +97,12 @@ def _qualify_lifecycle(inputs: dict, gold: dict, run: dict) -> dict:
             raise ValueError("every persisted source must carry an explicit grade")
         if not must_prohibit.issubset(case["prohibited"]):
             raise ValueError("deleted and out-of-scope sources must be prohibited")
+        # validation(771) R-A1: an error-corrected value was never true, so no
+        # intent may credit it as answer-level evidence (grade >= 2 eligible).
+        unsafe = set(case["stale"]) | set(case["prohibited"])
+        if any(case["relevance"][ref] >= 2 and ref not in unsafe
+               for ref in facts["error_corrected"]):
+            raise ValueError("error-corrected values cannot be credited as evidence")
         if case["intent"] == "current" and not set(facts["superseded"]).issubset(
                 set(case["stale"]) | set(case["prohibited"])):
             raise ValueError("superseded values must be stale for current-intent questions")

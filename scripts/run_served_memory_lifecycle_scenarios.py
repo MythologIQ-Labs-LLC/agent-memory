@@ -150,6 +150,7 @@ def lifecycle_facts(data: dict) -> dict:
     versions: dict[str, list[str]] = {}
     creators: dict[str, dict] = {}
     deleted_memories: set[str] = set()
+    error_corrected: set[str] = set()
     for event in data["events"]:
         memory = event["memory"]
         if event["op"] in ("retain", *_REPLACES):
@@ -159,6 +160,9 @@ def lifecycle_facts(data: dict) -> dict:
             }
             creators[event["id"]] = {"project": scope["project"], "tenant": scope["tenant"],
                                      "memory": memory}
+            if event["op"] == "correct":
+                # An error correction declares the replaced value was never true.
+                error_corrected.add(current[memory])
             versions.setdefault(memory, []).append(event["id"])
             current[memory] = event["id"]
         else:
@@ -172,6 +176,7 @@ def lifecycle_facts(data: dict) -> dict:
         "fact_ids": sorted(creators),
         "superseded": sorted(superseded - deleted),
         "deleted": sorted(deleted),
+        "error_corrected": sorted(error_corrected - deleted),
         "out_of_scope": sorted(foreign),
     }
 
