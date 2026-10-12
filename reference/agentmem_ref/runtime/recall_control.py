@@ -184,7 +184,9 @@ class NativeTypedGraphCandidateRetriever:
         *,
         group_id: str,
         candidate_limit: int,
+        exclude=None,
     ) -> list[GraphCandidateHit]:
+        """``exclude`` (#777): nodes that may neither be reported nor traversed through."""
         if candidate_limit < 0:
             raise ValueError("graph candidate_limit must be non-negative")
         if candidate_limit == 0 or not seed_refs:
@@ -196,7 +198,7 @@ class NativeTypedGraphCandidateRetriever:
         for seed_ref in tuple(dict.fromkeys(seed_refs)):
             if substrate.get_fact(seed_ref) is None:
                 continue
-            for hit in self._traverse_seed(substrate, seed_ref, group_id=group_id):
+            for hit in self._traverse_seed(substrate, seed_ref, group_id=group_id, exclude=exclude):
                 existing = best_by_candidate.get(hit.candidate_ref)
                 if existing is None or self._hit_key(hit) < self._hit_key(existing):
                     best_by_candidate[hit.candidate_ref] = hit
@@ -210,6 +212,7 @@ class NativeTypedGraphCandidateRetriever:
         seed_ref: str,
         *,
         group_id: str,
+        exclude=None,
     ) -> list[GraphCandidateHit]:
         queue = deque(
             [
@@ -258,6 +261,8 @@ class NativeTypedGraphCandidateRetriever:
                     continue
                 if substrate.get_fact(next_ref) is None:
                     continue
+                if exclude is not None and exclude(next_ref):
+                    continue  # a deleted generation confers no reachability and is never reported
                 prior_score = best_score_by_node.get(next_ref)
                 if prior_score is not None and next_score <= prior_score:
                     continue
@@ -724,8 +729,15 @@ class ControlledRecallPlanner:
                 group_id=tenant,
                 candidate_limit=graph_budget.candidate_limit,
             )
-            for graph_hit in graph_results:
+            # #777: canonical candidates (above) are unchanged; the REPORTED paths come from
+            # a traversal that neither reports nor passes through deleted generations.
+            withheld = getattr(self.adapter, "public_identifier_withheld", None)
+            reported = graph_results if withheld is None else self.graph_retriever.search(
+                substrate, tuple(graph_seed_refs), group_id=tenant,
+                candidate_limit=graph_budget.candidate_limit, exclude=withheld)
+            for graph_hit in reported:
                 graph_candidate_hits[graph_hit.candidate_ref] = graph_hit
+            for graph_hit in graph_results:
                 hits.append(
                     RetrievalRouteHit(
                         route_id=TYPED_GRAPH_ROUTE,

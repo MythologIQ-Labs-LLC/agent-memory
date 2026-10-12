@@ -435,6 +435,29 @@
           "const": "none"
         }
       }
+    },
+    "public_projection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "policy_id",
+        "policy_version",
+        "deleted_lineage"
+      ],
+      "description": "#777 public read projection (additive, optional; policy-versioned independently of contract_version, which is pinned by the frozen v7 baseline identity). Deleted-generation identifiers, deletion refusal reasons and counts derived from them are withheld from ordinary caller-facing reads; canonical admission and internal audit records are unchanged.",
+      "properties": {
+        "policy_id": {
+          "const": "public-deleted-lineage-redaction"
+        },
+        "policy_version": {
+          "enum": [
+            "1.0.0"
+          ]
+        },
+        "deleted_lineage": {
+          "const": "withheld"
+        }
+      }
     }
   }
 }

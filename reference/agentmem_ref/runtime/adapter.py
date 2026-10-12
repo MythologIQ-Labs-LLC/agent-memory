@@ -1492,6 +1492,41 @@ class GovernedMemoryAdapter:
     def tombstoned_ids(self) -> set[str]:
         return {record["memory_id"] for record in self._tombstones.values()}
 
+    # -- #777 public read projection (identifiers only; admission and audit unchanged) --
+
+    def public_identifier_withheld(self, ref: object) -> bool:
+        """Must an ordinary caller-facing read withhold this fact identifier?
+
+        True for every fact of a deleted generation (head, earlier versions, erased
+        versions) and for facts whose provenance leads to one. Canonical admission,
+        tombstones and audit events are not changed by this projection.
+        """
+        if not isinstance(ref, str) or not ref or not self._tombstones:
+            return False
+        if ref in self._tombstones or ref in self._deleted_lineage():
+            return True
+        fact = self._substrate.get_fact(ref) if ref in self._fact_memory else None
+        return fact is not None and self._deleted_lineage_reason(fact) is not None
+
+    def public_memory_withheld(self, memory_id: object) -> bool:
+        """A logical memory id with deletion history and no live generation."""
+        return (isinstance(memory_id, str) and bool(self._tombstones)
+                and self._current_fact_by_memory.get(memory_id) is None
+                and memory_id in self.tombstoned_ids())
+
+    def public_generation_start(self, memory_id: str) -> str | None:
+        """When the live generation of ``memory_id`` began: the latest whole-generation
+        (head) deletion time, or None if it never had one."""
+        starts = [str(record.get("deleted_at") or "") for key, record in self._tombstones.items()
+                  if record.get("memory_id") == memory_id and self.replacement_record(key) is None]
+        return max(starts) if starts else None
+
+    def public_current_visible(self, memory_id: str, context: RecallContext) -> bool:
+        """Is this memory's current fact admissible to the reader (canonical admission)?"""
+        head = self._current_fact_by_memory.get(memory_id) if isinstance(memory_id, str) else None
+        fact = self._substrate.get_fact(head) if head else None
+        return fact is not None and self._admission_refusal(fact, context) is None
+
     def _deleted_lineage(self) -> dict[str, str]:
         """#776: fact uuid -> deleted memory for every fact a governed deletion covers.
 

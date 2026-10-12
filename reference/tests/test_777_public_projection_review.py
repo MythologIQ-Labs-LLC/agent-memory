@@ -106,7 +106,10 @@ class RecallProjection(_Facade):
                     if deleted:
                         m.remember("memory:a", "Orrin gateway region is Oslo", proposition=_prop("Oslo"))
                         self.assertTrue(m.forget("memory:a")["committed"])
-                    views.append(m.recall("Orrin gateway region Oslo", temporal_intent=HIST))
+                    view = m.recall("Orrin gateway region Oslo", temporal_intent=HIST)
+                    if view.get("recall_control"):  # controller wall-clock only; computed from the query
+                        view["recall_control"]["usage"].pop("elapsed_ms", None)
+                    views.append(view)
                     m.close()
                 self.assertEqual(_serial(views[0]), _serial(views[1]))
 
