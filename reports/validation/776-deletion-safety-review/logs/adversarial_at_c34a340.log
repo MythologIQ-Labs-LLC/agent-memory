@@ -1,0 +1,87 @@
+test_semantic_proposals_do_not_reference_a_deleted_memorys_earlier_version (tests.test_776_adversarial_review.DeletedHistoryNotDisclosedThroughSemantics.test_semantic_proposals_do_not_reference_a_deleted_memorys_earlier_version) ... FAIL
+test_semantics_of_a_fact_derived_from_an_earlier_version_is_withheld (tests.test_776_adversarial_review.DeletedHistoryNotDisclosedThroughSemantics.test_semantics_of_a_fact_derived_from_an_earlier_version_is_withheld) ... FAIL
+test_unrelated_memory_semantics_remain_available (tests.test_776_adversarial_review.DeletedHistoryNotDisclosedThroughSemantics.test_unrelated_memory_semantics_remain_available) ... ok
+test_write_semantics_of_an_earlier_version_is_withheld_after_forget (tests.test_776_adversarial_review.DeletedHistoryNotDisclosedThroughSemantics.test_write_semantics_of_an_earlier_version_is_withheld_after_forget) ... FAIL
+test_write_semantics_of_an_earlier_version_is_withheld_after_restart (tests.test_776_adversarial_review.DeletedHistoryNotDisclosedThroughSemantics.test_write_semantics_of_an_earlier_version_is_withheld_after_restart) ... FAIL
+test_permanent_deletion_physically_removes_every_version (tests.test_776_adversarial_review.DeletionPolicies.test_permanent_deletion_physically_removes_every_version) ... FAIL
+test_pruning_keeps_every_version_recoverable_but_inadmissible (tests.test_776_adversarial_review.DeletionPolicies.test_pruning_keeps_every_version_recoverable_but_inadmissible) ... ok
+test_recreating_a_deleted_memory_is_admitted_without_its_deleted_history (tests.test_776_adversarial_review.DeletionPolicies.test_recreating_a_deleted_memory_is_admitted_without_its_deleted_history) ... FAIL
+test_plain_historical_recall_does_not_serve_a_deleted_memorys_history (tests.test_776_adversarial_review.PreExistingDeletionLeakReproduction.test_plain_historical_recall_does_not_serve_a_deleted_memorys_history) ... ok
+test_exact_identity_lexical_vector_and_composed_routes_share_admission (tests.test_776_adversarial_review.RestartAndRoutes.test_exact_identity_lexical_vector_and_composed_routes_share_admission) ... ok
+test_out_of_scope_reader_never_learns_of_the_deletion (tests.test_776_adversarial_review.RestartAndRoutes.test_out_of_scope_reader_never_learns_of_the_deletion) ... ok
+test_restart_cannot_resurrect_history (tests.test_776_adversarial_review.RestartAndRoutes.test_restart_cannot_resurrect_history) ... ok
+test_admission_cost_does_not_grow_with_the_number_of_tombstones (tests.test_776_adversarial_review.TombstoneScale.test_admission_cost_does_not_grow_with_the_number_of_tombstones) ... FAIL
+
+======================================================================
+FAIL: test_semantic_proposals_do_not_reference_a_deleted_memorys_earlier_version (tests.test_776_adversarial_review.DeletedHistoryNotDisclosedThroughSemantics.test_semantic_proposals_do_not_reference_a_deleted_memorys_earlier_version)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt5/r776/reference/tests/test_776_adversarial_review.py", line 201, in test_semantic_proposals_do_not_reference_a_deleted_memorys_earlier_version
+    self.assertEqual([p for p in self.memory.semantic_proposals() if p["target_reference"] == "memory:a"], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [{'application_path': "AgentMemory.correct[552 chars]om'}] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+{'application_path': "AgentMemory.correct(replacement_kind='state_change') under PAMA", 'applied': False, 'authority_effect': 'none', 'effective_no_later_than': None, 'operation': 'correction', 'proposal_id': 'semantic-proposal:7fcde80a1e87dea06da0e3a9f38e4eab', 'replacement_kind': 'state_change', 'replacement_text': 'The Kestrel standup now meets in room Borealis.', 'source_fact_uuid': 'ref-0011', 'target_fact_uuid': 'ref-0004', 'target_reference': 'memory:a', 'status': 'stale', 'classification': 'state_change_candidate', 'basis': 'typed_slot', 'slot': 'typed:kestrel standup|meeting room'}
+
+Diff is 690 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_semantics_of_a_fact_derived_from_an_earlier_version_is_withheld (tests.test_776_adversarial_review.DeletedHistoryNotDisclosedThroughSemantics.test_semantics_of_a_fact_derived_from_an_earlier_version_is_withheld)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt5/r776/reference/tests/test_776_adversarial_review.py", line 191, in test_semantics_of_a_fact_derived_from_an_earlier_version_is_withheld
+    self.assertIsNone(self.memory.write_semantics(derived["fact_uuid"]))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'interpreter': {'ref': 'agent-memory-deterministic-write-semantics', 'version': '1.1.0'}, 'classifier': {'version': '1.0.0'}, 'authority_effect': 'none', 'proposition': {'status': 'unknown', 'basis': 'none'}, 'cardinality': {'class': 'unknown', 'basis': 'none'}, 'self_validity': {'status': 'none'}, 'markers': {'aspect': {'past_habitual': ['used to']}, 'change': ['used to']}, 'ended_values': [], 'relations': [], 'relation_count': 0, 'clause_count': 1, 'proposal_ineligible_reasons': ['proposition_unknown']} is not None
+
+======================================================================
+FAIL: test_write_semantics_of_an_earlier_version_is_withheld_after_forget (tests.test_776_adversarial_review.DeletedHistoryNotDisclosedThroughSemantics.test_write_semantics_of_an_earlier_version_is_withheld_after_forget)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt5/r776/reference/tests/test_776_adversarial_review.py", line 175, in test_write_semantics_of_an_earlier_version_is_withheld_after_forget
+    self.assertIsNone(self.memory.write_semantics(old))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'interpreter': {'ref': 'agent-memory-deterministic-write-semantics', 'version': '1.1.0'}, 'classifier': {'version': '1.1.0'}, 'authority_effect': 'none', 'proposition': {'status': 'unknown', 'basis': 'none'}, 'cardinality': {'class': 'unknown', 'basis': 'none'}, 'self_validity': {'status': 'none'}, 'markers': {}, 'ended_values': [], 'relations': [], 'relation_count': 0, 'clause_count': 0, 'proposal_ineligible_reasons': ['proposition_unknown'], 'typed_proposition': {'assertion': 'state', 'attribute': 'region', 'basis': 'caller_declared', 'cardinality': 'single', 'flags': {'attributed_to_other': False, 'coexistent': False, 'conditional': False, 'hedged': False, 'joke_or_sarcasm': False, 'negated': False, 'quoted_or_forwarded': False}, 'replaces_value': None, 'slot': 'typed:orrin gateway|region', 'subject': 'Orrin gateway', 'value': 'Oslo'}, 'typed_ineligible_reasons': []} is not None
+
+======================================================================
+FAIL: test_write_semantics_of_an_earlier_version_is_withheld_after_restart (tests.test_776_adversarial_review.DeletedHistoryNotDisclosedThroughSemantics.test_write_semantics_of_an_earlier_version_is_withheld_after_restart)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt5/r776/reference/tests/test_776_adversarial_review.py", line 181, in test_write_semantics_of_an_earlier_version_is_withheld_after_restart
+    self.assertIsNone(self.memory.write_semantics(old))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'interpreter': {'ref': 'agent-memory-deterministic-write-semantics', 'version': '1.1.0'}, 'classifier': {'version': '1.1.0'}, 'authority_effect': 'none', 'proposition': {'status': 'unknown', 'basis': 'none'}, 'cardinality': {'class': 'unknown', 'basis': 'none'}, 'self_validity': {'status': 'none'}, 'markers': {}, 'ended_values': [], 'relations': [], 'relation_count': 0, 'clause_count': 0, 'proposal_ineligible_reasons': ['proposition_unknown'], 'typed_proposition': {'assertion': 'state', 'attribute': 'region', 'basis': 'caller_declared', 'cardinality': 'single', 'flags': {'attributed_to_other': False, 'coexistent': False, 'conditional': False, 'hedged': False, 'joke_or_sarcasm': False, 'negated': False, 'quoted_or_forwarded': False}, 'replaces_value': None, 'slot': 'typed:orrin gateway|region', 'subject': 'Orrin gateway', 'value': 'Oslo'}, 'typed_ineligible_reasons': []} is not None
+
+======================================================================
+FAIL: test_permanent_deletion_physically_removes_every_version (tests.test_776_adversarial_review.DeletionPolicies.test_permanent_deletion_physically_removes_every_version)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt5/r776/reference/tests/test_776_adversarial_review.py", line 220, in test_permanent_deletion_physically_removes_every_version
+    self.assertIsNone(substrate.get_fact(old))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Fact(uuid='ref-0004', fact_text='The kiln firing schedule uses cone 6 glaze.', group_id='tenant-acme', episode_uuids=('evidence:proposal:776r:kiln:0',), valid_at='2026-01-01T00:00:03Z', invalid_at='2026-01-01T00:00:10Z', created_at='2026-01-01T00:00:04Z', expired_at='2026-01-01T00:00:11Z', attributes={'write_provenance': {'version': '1.0.0', 'actor_id': 'agent:composition-test', 'tenant': 'tenant-acme', 'purpose': 'deployment-planning', 'channel': 'caller_observation', 'source_ref': 'actor:agent:composition-test'}, 'write_semantics': {'version': '1.1.0/1.0.0', 'proposition': {'status': 'known', 'entity': 'kiln firing schedule', 'property': 'use', 'value': 'cone 6 glaze'}, 'clause_count': 1}}) is not None
+
+======================================================================
+FAIL: test_recreating_a_deleted_memory_is_admitted_without_its_deleted_history (tests.test_776_adversarial_review.DeletionPolicies.test_recreating_a_deleted_memory_is_admitted_without_its_deleted_history)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt5/r776/reference/tests/test_776_adversarial_review.py", line 243, in test_recreating_a_deleted_memory_is_admitted_without_its_deleted_history
+    self.assertIn(again.fact_uuid, current.admitted, current.refusals.get(again.fact_uuid))
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'ref-0021' not found in [] : logical_memory_deleted
+
+======================================================================
+FAIL: test_admission_cost_does_not_grow_with_the_number_of_tombstones (tests.test_776_adversarial_review.TombstoneScale.test_admission_cost_does_not_grow_with_the_number_of_tombstones)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/wt5/r776/reference/tests/test_776_adversarial_review.py", line 324, in test_admission_cost_does_not_grow_with_the_number_of_tombstones
+    self.assertLess(large, 10 * small + 50e-6, f"{small * 1e6:.1f}us -> {large * 1e6:.1f}us per candidate")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0.003354302350001603 not less than 7.470549998179194e-05 : 2.5us -> 3354.3us per candidate
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.978s
+
+FAILED (failures=7)

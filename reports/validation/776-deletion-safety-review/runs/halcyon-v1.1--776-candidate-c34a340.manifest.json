@@ -1,0 +1,223 @@
+{
+  "execution_backend": "composed-multiroute",
+  "input_sha256": "1a09066b4bd138ebe259c5748b3b500ba126ecbd24a352a5bb374e7fa55ec614",
+  "lane_id": "776-776-candidate-c34a340",
+  "provenance": {
+    "evaluator": {
+      "clean": true,
+      "commit": "9961067d020c4f1a1817f222f5a29af76884b4b2"
+    },
+    "runtime": {
+      "clean": true,
+      "commit": "c34a340fc25cc21df3aa9d987d7712712f00caa6",
+      "loaded_module": "reference/agentmem_ref/runtime/runtime_composition.py",
+      "loaded_module_blob": "65a39d5e3d3f052f03985cafa4751ad1ce3d4817",
+      "protected_tree": "0bc81b7e01cd0e9ee427814423b730a65517f862"
+    }
+  },
+  "reference_time": "2026-10-12T12:00:00Z",
+  "reference_time_applied_to": [
+    "H01",
+    "H06",
+    "H07",
+    "H08",
+    "H09",
+    "H13",
+    "H17",
+    "H18",
+    "H19",
+    "H20",
+    "H22"
+  ],
+  "reference_time_utc": "2026-10-12T12:00:00.000000Z",
+  "rows": [
+    {
+      "id": "H01",
+      "returned": [
+        "bus",
+        "migration-rule",
+        "pgver-16"
+      ]
+    },
+    {
+      "id": "H02",
+      "returned": [
+        "pgver-16",
+        "pgver-15",
+        "adr-db-v2"
+      ]
+    },
+    {
+      "id": "H03",
+      "returned": [
+        "adr-db-v1",
+        "oncall-lrt",
+        "oncall-platform"
+      ]
+    },
+    {
+      "id": "H04",
+      "returned": [
+        "bookclub",
+        "adr-db-v1",
+        "fx-fetch"
+      ]
+    },
+    {
+      "id": "H05",
+      "returned": [
+        "bus-why",
+        "bus",
+        "bookclub"
+      ]
+    },
+    {
+      "id": "H06",
+      "returned": [
+        "oncall-lrt",
+        "deploy-days"
+      ]
+    },
+    {
+      "id": "H07",
+      "returned": [
+        "ratelimit",
+        "ratelimit-rumor",
+        "oncall-lrt"
+      ]
+    },
+    {
+      "id": "H08",
+      "returned": [
+        "authz-5s",
+        "migration-rule"
+      ]
+    },
+    {
+      "id": "H09",
+      "returned": [
+        "deploy-days",
+        "region-eu-us",
+        "adr-db-v2"
+      ]
+    },
+    {
+      "id": "H10",
+      "returned": [
+        "inc-2207",
+        "migration-rule",
+        "region-draft"
+      ]
+    },
+    {
+      "id": "H11",
+      "returned": [
+        "money-repr",
+        "bus"
+      ]
+    },
+    {
+      "id": "H12",
+      "returned": [
+        "fx-fetch",
+        "fx-why",
+        "money-repr"
+      ]
+    },
+    {
+      "id": "H13",
+      "returned": [
+        "region-eu-us",
+        "bus",
+        "migration-rule"
+      ]
+    },
+    {
+      "id": "H14",
+      "returned": [
+        "region-eu-us",
+        "region-eu",
+        "region-draft"
+      ]
+    },
+    {
+      "id": "H15",
+      "returned": [
+        "pci",
+        "authz-5s"
+      ]
+    },
+    {
+      "id": "H16",
+      "returned": [
+        "webhook-retry",
+        "pci"
+      ]
+    },
+    {
+      "id": "H17",
+      "returned": [
+        "oncall-lrt",
+        "bookclub",
+        "room"
+      ]
+    },
+    {
+      "id": "H18",
+      "returned": [
+        "ratelimit",
+        "ratelimit-rumor",
+        "bookclub"
+      ]
+    },
+    {
+      "id": "H19",
+      "returned": [
+        "oncall-lrt",
+        "bookclub",
+        "room"
+      ]
+    },
+    {
+      "id": "H20",
+      "returned": [
+        "fx-why",
+        "ratelimit-rumor",
+        "fx-fetch",
+        "inc-2207"
+      ]
+    },
+    {
+      "id": "H21",
+      "returned": [
+        "bus",
+        "region-draft",
+        "ratelimit-rumor"
+      ]
+    },
+    {
+      "id": "H22",
+      "returned": [
+        "ratelimit-rumor",
+        "ratelimit",
+        "fx-why"
+      ]
+    },
+    {
+      "id": "H23",
+      "returned": [
+        "migration-rule",
+        "inc-2207",
+        "bookclub"
+      ]
+    },
+    {
+      "id": "H24",
+      "returned": [
+        "room",
+        "bookclub"
+      ]
+    }
+  ],
+  "schema": "served-memory-run-v2"
+}

@@ -1,0 +1,4 @@
+tombstones=     0 admission_check=      3.0 us/candidate  recall(40 facts)=     3.6 ms
+tombstones=  1000 admission_check=     17.0 us/candidate  recall(40 facts)=     3.1 ms
+tombstones= 10000 admission_check=    125.4 us/candidate  recall(40 facts)=     3.2 ms
+tombstones=100000 admission_check=    902.3 us/candidate  recall(40 facts)=     2.6 ms
