@@ -1,0 +1,24 @@
+{"schema": "served-memory-strata-v1",
+ "corpus": "kestrel-ridge-vineyard/harvest-2026",
+ "strata": {
+  "predecessor-of-latest": ["Q01", "Q02", "Q03", "Q04", "Q08", "Q11"],
+  "predecessor-of-older-named": ["Q05", "Q06", "Q07", "Q09", "Q10"],
+  "predecessor-no-safe-answer": ["Q12", "Q13", "Q14", "Q15", "Q16"],
+  "predecessor-deleted": ["Q12"],
+  "predecessor-other-project": ["Q13"],
+  "predecessor-other-tenant": ["Q15"],
+  "predecessor-never-changed": ["Q14", "Q15", "Q16"],
+  "predecessor-through-correction": ["Q03", "Q09"],
+  "duplicate-subject-trap": ["Q11", "Q16"],
+  "cross-project-wording-trap": ["Q05", "Q13"],
+  "predecessor-without-word-before": ["Q02", "Q04", "Q06", "Q07", "Q09", "Q10"],
+  "origin": ["Q17"],
+  "why": ["Q18", "Q19", "Q25"],
+  "current": ["Q20", "Q21", "Q24"],
+  "current-with-before-wording": ["Q21"],
+  "timeless": ["Q22"],
+  "timeless-with-before-wording": ["Q22"],
+  "one-off-event": ["Q23"]
+ },
+ "chain_lengths": {"press-house": 5, "bottling-contractor": 4, "harvest-manager": 4, "picker-wage": 3, "harvest-start": 3, "barrel-supplier": 2, "tasting-room-hours": 2, "tank-7-north": 2, "consultant-fee": 2, "rose-trial-press-house": 2, "copper-spray-policy": 1, "must-lab": 1, "tank-7-south": 1, "hollowbrook-bottling-contractor": 1, "hilltop-hail-incident": 1, "bottling-switch-rationale": 1, "picker-wage-rationale": 1, "mobile-press-rationale": 1}
+}

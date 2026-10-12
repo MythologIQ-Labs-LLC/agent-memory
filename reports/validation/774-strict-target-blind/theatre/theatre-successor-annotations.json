@@ -1,0 +1,28 @@
+{"annotator_note": "Blind annotation from theatre-input.v3.json texts only. successor = event id stating the later value the question measures back from. Origin, why, current, timeless and one-off event questions are not predecessor questions (asks_predecessor false, successor null). Predecessor questions about a deleted memory, another project's memory, or a memory that never changed get successor null with confidence ambiguous.",
+ "annotations": {
+  "Q01": {"asks_predecessor": true, "successor": "rr-annex", "as_of": null, "confidence": "certain", "rationale": "Later value named: the rehearsal annex behind the Playhouse (rr-annex, also the latest rehearsal-room version)."},
+  "Q02": {"asks_predecessor": true, "successor": "ls-northern-rig", "as_of": null, "confidence": "certain", "rationale": "'Which company did Northern Rig replace' measures back from the Northern Rig Co. lighting-supplier update."},
+  "Q03": {"asks_predecessor": true, "successor": "sm-tomasz", "as_of": null, "confidence": "certain", "rationale": "Later value named: Tomasz Wilk as stage manager (sm-tomasz)."},
+  "Q04": {"asks_predecessor": true, "successor": "tp-26", "as_of": null, "confidence": "certain", "rationale": "'until it dropped to 26 pounds' names the later value, which is tp-26."},
+  "Q05": {"asks_predecessor": true, "successor": "on-nov-20", "as_of": null, "confidence": "certain", "rationale": "'before it got moved to the 20th' names on-nov-20 as the later value."},
+  "Q06": {"asks_predecessor": false, "successor": null, "as_of": null, "confidence": "certain", "rationale": "Asks for the original rehearsal location, not the value right before a later one."},
+  "Q07": {"asks_predecessor": false, "successor": null, "as_of": null, "confidence": "certain", "rationale": "Asks for the very first lighting supplier, which is an origin question."},
+  "Q08": {"asks_predecessor": false, "successor": null, "as_of": null, "confidence": "certain", "rationale": "Asks why Lumen was dropped, which a rationale memory answers. Not a predecessor question."},
+  "Q09": {"asks_predecessor": false, "successor": null, "as_of": null, "confidence": "certain", "rationale": "Asks why the Drill Hall was chosen, which is a rationale question."},
+  "Q10": {"asks_predecessor": false, "successor": null, "as_of": null, "confidence": "certain", "rationale": "Asks for the current rehearsal location."},
+  "Q11": {"asks_predecessor": false, "successor": null, "as_of": null, "confidence": "certain", "rationale": "Asks for the current box-office closing time. 'before curtain up' is the content of the value, not a predecessor relation."},
+  "Q12": {"asks_predecessor": false, "successor": null, "as_of": null, "confidence": "certain", "rationale": "Asks for the current stage manager."},
+  "Q13": {"asks_predecessor": false, "successor": null, "as_of": null, "confidence": "certain", "rationale": "Asks about a standing sign-in policy that does not change over time. 'before the half' is policy content."},
+  "Q14": {"asks_predecessor": true, "successor": "sm-priya-ramesh", "as_of": null, "confidence": "certain", "rationale": "Measures back from Priya taking over as stage manager. The correction sm-priya-ramesh is the valid statement of that value; sm-priya-raman was a mistake. The predecessor is Felix Grant."},
+  "Q15": {"asks_predecessor": true, "successor": null, "as_of": null, "confidence": "ambiguous", "rationale": "The later value is the raise (fee-1050), but the lead-actor-fee memory was deleted (fee-delete), so no visible successor exists."},
+  "Q16": {"asks_predecessor": true, "successor": null, "as_of": null, "confidence": "ambiguous", "rationale": "The later value is the spring-tour move to the church hall (st-rehearsal-church-hall), but that memory belongs to the spring-tour project and the reader cannot see it."},
+  "Q17": {"asks_predecessor": true, "successor": null, "as_of": null, "confidence": "ambiguous", "rationale": "The sound supplier was always Brightwell (ss-brightwell never changed), so no predecessor exists. Brightwell's lighting switch (ls-brightwell) belongs to a different memory and is a trap."},
+  "Q18": {"asks_predecessor": true, "successor": "rr-drill-hall", "as_of": null, "confidence": "certain", "rationale": "Older named value: the Drill Hall (rr-drill-hall). The answer is Studio B."},
+  "Q19": {"asks_predecessor": true, "successor": "tp-28", "as_of": null, "confidence": "certain", "rationale": "Older named value: the price rise to 28 (tp-28). The answer is 24."},
+  "Q20": {"asks_predecessor": true, "successor": "pp-inkworks", "as_of": null, "confidence": "certain", "rationale": "'up until we went with InkWorks' names pp-inkworks as the later value."},
+  "Q21": {"asks_predecessor": false, "successor": null, "as_of": null, "confidence": "certain", "rationale": "Asks about the one-off Studio B flood event."},
+  "Q22": {"asks_predecessor": true, "successor": "cs-basement", "as_of": null, "confidence": "certain", "rationale": "'prior to the move to the Playhouse basement' names cs-basement as the later value."},
+  "Q23": {"asks_predecessor": false, "successor": null, "as_of": null, "confidence": "certain", "rationale": "Asks for the current opening night date."},
+  "Q24": {"asks_predecessor": false, "successor": null, "as_of": null, "confidence": "certain", "rationale": "Asks why the price went to 28, which is a rationale question."}
+ }
+}
