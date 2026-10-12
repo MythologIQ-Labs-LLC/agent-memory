@@ -1,0 +1,218 @@
+{
+  "execution_backend": "composed-multiroute",
+  "input_sha256": "89129f5d42ee35f29231a5948f7dfb3e394ff2bc080fe77ec78e3ce23862d944",
+  "lane_id": "v3-s773-cedarline",
+  "provenance": {
+    "evaluator": {
+      "clean": true,
+      "commit": "9249fcad6d4dfd4f5568524de36c0c0c6a49b08e"
+    },
+    "runtime": {
+      "clean": true,
+      "commit": "6e00f42f2dc2e81ec137eeecc2ca68f9d1c160e6",
+      "loaded_module": "reference/agentmem_ref/runtime/runtime_composition.py",
+      "loaded_module_blob": "86b3bc292d11c9e81eccbb404cdabe2a34145567",
+      "protected_tree": "b59b16402b2f4179be7c7799288aaa1ca703faa9"
+    }
+  },
+  "reference_time": "2026-10-12T12:00:00Z",
+  "reference_time_applied_to": [
+    "C01",
+    "C05",
+    "C06",
+    "C08",
+    "C11",
+    "C14",
+    "C17",
+    "C21",
+    "C22",
+    "C23",
+    "C24"
+  ],
+  "reference_time_utc": "2026-10-12T12:00:00.000000Z",
+  "rows": [
+    {
+      "id": "C01",
+      "returned": [
+        "catalog-delta",
+        "watermark",
+        "owner-integrity"
+      ]
+    },
+    {
+      "id": "C02",
+      "returned": [
+        "catalog-delta",
+        "why-delta",
+        "why-compress"
+      ]
+    },
+    {
+      "id": "C03",
+      "returned": [
+        "catalog-parquet",
+        "catalog-csv",
+        "why-parquet"
+      ]
+    },
+    {
+      "id": "C04",
+      "returned": [
+        "catalog-delta",
+        "why-delta",
+        "watermark"
+      ]
+    },
+    {
+      "id": "C05",
+      "returned": [
+        "offset-3mm-correct",
+        "heartbeat-10"
+      ]
+    },
+    {
+      "id": "C06",
+      "returned": [
+        "owner-integrity",
+        "priority-new"
+      ]
+    },
+    {
+      "id": "C07",
+      "returned": [
+        "owner-integrity",
+        "priority-new",
+        "retain-3y"
+      ]
+    },
+    {
+      "id": "C08",
+      "returned": [
+        "heartbeat-10",
+        "priority-new"
+      ]
+    },
+    {
+      "id": "C09",
+      "returned": [
+        "why-compress",
+        "uplink-512",
+        "incident-208"
+      ]
+    },
+    {
+      "id": "C10",
+      "returned": [
+        "why-compress",
+        "uplink-512",
+        "mission-mesa7"
+      ]
+    },
+    {
+      "id": "C11",
+      "returned": [
+        "mission-mesa7",
+        "uplink-512"
+      ]
+    },
+    {
+      "id": "C12",
+      "returned": [
+        "incident-root",
+        "heartbeat-30",
+        "freeze-expired"
+      ]
+    },
+    {
+      "id": "C13",
+      "returned": [
+        "incident-root",
+        "mission-mesa7",
+        "why-compress"
+      ]
+    },
+    {
+      "id": "C14",
+      "returned": [
+        "retain-7y-rumor",
+        "retain-3y",
+        "heartbeat-10"
+      ]
+    },
+    {
+      "id": "C15",
+      "returned": [
+        "retain-1y",
+        "retain-3y",
+        "retain-7y-rumor"
+      ]
+    },
+    {
+      "id": "C16",
+      "returned": [
+        "mission-mesa7",
+        "field-bookclub"
+      ]
+    },
+    {
+      "id": "C17",
+      "returned": [
+        "why-priority",
+        "offset-3mm-correct"
+      ]
+    },
+    {
+      "id": "C18",
+      "returned": [
+        "why-priority",
+        "priority-new",
+        "offset-2mm"
+      ]
+    },
+    {
+      "id": "C19",
+      "returned": [
+        "index-guide",
+        "offset-3mm-correct"
+      ]
+    },
+    {
+      "id": "C20",
+      "returned": [
+        "watermark",
+        "offset-3mm-correct",
+        "why-priority"
+      ]
+    },
+    {
+      "id": "C21",
+      "returned": [
+        "retain-3y",
+        "owner-integrity"
+      ]
+    },
+    {
+      "id": "C22",
+      "returned": [
+        "offset-3mm-correct",
+        "uplink-512"
+      ]
+    },
+    {
+      "id": "C23",
+      "returned": [
+        "offset-3mm-correct",
+        "why-compress"
+      ]
+    },
+    {
+      "id": "C24",
+      "returned": [
+        "offset-3mm-correct",
+        "why-compress",
+        "retain-7y-rumor"
+      ]
+    }
+  ],
+  "schema": "served-memory-run-v2"
+}
