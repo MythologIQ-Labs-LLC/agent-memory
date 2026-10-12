@@ -1,0 +1,121 @@
+{
+  "schema": "served-memory-quality-v1",
+  "cases": [
+    {
+      "id": "Q01",
+      "scenario": "Current endpoint question with one stale historical value",
+      "intent": "current",
+      "budget": 3,
+      "relevance": {
+        "endpoint-current": 3,
+        "endpoint-prior": 3,
+        "service-misc": 0,
+        "service-context": 1
+      },
+      "critical_groups": [
+        [
+          "endpoint-current"
+        ]
+      ],
+      "prohibited": [],
+      "stale": [
+        "endpoint-prior"
+      ],
+      "safe_answer_exists": true
+    },
+    {
+      "id": "Q02",
+      "scenario": "Historical endpoint question where the previous value is correct for the time",
+      "intent": "historical",
+      "budget": 2,
+      "relevance": {
+        "endpoint-prior": 3,
+        "endpoint-current": 1,
+        "service-misc": 0
+      },
+      "critical_groups": [
+        [
+          "endpoint-prior"
+        ]
+      ],
+      "prohibited": [],
+      "stale": [],
+      "safe_answer_exists": true
+    },
+    {
+      "id": "Q03",
+      "scenario": "No currently known authorized owner",
+      "intent": "current",
+      "budget": 2,
+      "relevance": {
+        "hidden-owner": 3,
+        "owner-guess": 0
+      },
+      "critical_groups": [],
+      "prohibited": [
+        "hidden-owner"
+      ],
+      "stale": [],
+      "safe_answer_exists": false
+    },
+    {
+      "id": "Q04",
+      "scenario": "Compound question requiring endpoint and quota memories",
+      "intent": "current",
+      "budget": 3,
+      "relevance": {
+        "endpoint-current": 3,
+        "quota-current": 3,
+        "service-context": 1,
+        "service-misc": 0
+      },
+      "critical_groups": [
+        [
+          "endpoint-current"
+        ],
+        [
+          "quota-current"
+        ]
+      ],
+      "prohibited": [],
+      "stale": [],
+      "safe_answer_exists": true
+    },
+    {
+      "id": "Q05",
+      "scenario": "Safe answer available but a lexical distraction appears first",
+      "intent": "timeless",
+      "budget": 3,
+      "relevance": {
+        "policy-canonical": 3,
+        "unrelated-title": 0,
+        "policy-context": 2
+      },
+      "critical_groups": [
+        [
+          "policy-canonical",
+          "policy-context"
+        ]
+      ],
+      "prohibited": [],
+      "stale": [],
+      "safe_answer_exists": true
+    },
+    {
+      "id": "Q06",
+      "scenario": "No eligible current value after a governed deletion",
+      "intent": "current",
+      "budget": 1,
+      "relevance": {
+        "deleted-owner": 3,
+        "unrelated-owner": 0
+      },
+      "critical_groups": [],
+      "prohibited": [
+        "deleted-owner"
+      ],
+      "stale": [],
+      "safe_answer_exists": false
+    }
+  ]
+}
