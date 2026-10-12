@@ -76,9 +76,9 @@ class _History:
             review_satisfied=True, approval_refs=("approval:774",)))
         self.t.assertTrue(out.committed, out)
 
-    def select(self, query, *, budget=3, successor_ref=None, project=PROJECT):
+    def select(self, query, *, budget=3, successor_ref=None, project=PROJECT, as_of_target=None):
         return self.runtime.historical_predecessor_context(query, _context(project), budget=budget,
-                                                            successor_ref=successor_ref)
+                                                            successor_ref=successor_ref, as_of_target=as_of_target)
 
     def recall(self, query, mode):
         return self.runtime.multi_route_recall(query, _context(), temporal_intent={"mode": mode})
@@ -96,7 +96,7 @@ class PredecessorSelection(unittest.TestCase):
     def test_two_revisions_serves_the_predecessor_at_rank_one(self):
         h = _History(self, {"kiln": KILN})
         old, new = h.ids["kiln"]
-        out = h.select("What glaze did the kiln firing schedule use before cone 10?")
+        out = h.select("What glaze did the kiln firing schedule use before cone 10?", successor_ref=new)  # strict 0.2.0
         self.assertEqual(out.served_refs[:2], (old, new))
         self.assertEqual((out.predecessor_ref, out.successor_ref), (old, new))
         self.assertEqual(out.relation, "immediate_state_change_predecessor")
@@ -104,7 +104,7 @@ class PredecessorSelection(unittest.TestCase):
     def test_three_revisions_selects_the_immediate_not_the_oldest(self):
         h = _History(self, {"tram": TRAM})
         v1, v2, v3 = h.ids["tram"]
-        out = h.select("How often did Route 4 trams run before the current timetable?")
+        out = h.select("How often did Route 4 trams run before the current timetable?", successor_ref=v3)  # strict 0.2.0
         self.assertEqual(out.predecessor_ref, v2)
         self.assertEqual(out.served_refs[0], v2)
         declared = h.select("How often did Route 4 trams run?", successor_ref=v2)
@@ -125,12 +125,12 @@ class PredecessorSelection(unittest.TestCase):
                                      ("The sensor sample rate is 50 hertz.", S),
                                      ("The sensor sample rate is 20 hertz.", E)]})
         v1, v2, v3 = h.ids["dose"]
-        out = h.select("What was the sensor sample rate before?")
+        out = h.select("What was the sensor sample rate before?", successor_ref=v3)  # strict 0.2.0
         self.assertEqual(out.predecessor_ref, v1)
         self.assertNotIn(v2, out.served_refs)
         # v1 -correct-> v2: v1 never held, so there is no valid predecessor.
         h2 = _History(self, {"fee": [("The late fee is 9 dollars.", None), ("The late fee is 6 dollars.", E)]})
-        out2 = h2.select("What was the late fee before?")
+        out2 = h2.select("What was the late fee before?", successor_ref=h2.ids["fee"][1])  # strict 0.2.0
         self.assertIsNone(out2.predecessor_ref)
         self.assertNotIn(h2.ids["fee"][0], out2.served_refs)
 
@@ -157,7 +157,7 @@ class PredecessorSelection(unittest.TestCase):
         h.runtime.retain(h._proposal("note", 0), "The kiln room schedule is posted by the door.")
         query = "What glaze did the kiln firing schedule use before cone 10?"
         base = list(h.recall(query, "historical").ranked_admitted)
-        out = h.select(query, budget=10)
+        out = h.select(query, budget=10, successor_ref=h.ids["kiln"][1])  # strict 0.2.0
         moved = out.predecessor_ref
         self.assertEqual([r for r in out.served_refs if r != moved],
                          [r for r in base if r != moved][:9])
@@ -169,7 +169,7 @@ class PredecessorSelection(unittest.TestCase):
         h = _History(self, {"host": [("Builds ran on Jenkins agents.", None),
                                      ("Continuous integration now runs on hosted runners.", S)]})
         old, new = h.ids["host"]
-        out = h.select("Which continuous integration did we use before hosted runners?")
+        out = h.select("Which continuous integration did we use before hosted runners?", successor_ref=new)  # strict 0.2.0
         self.assertEqual(out.served_refs[0], old)
 
     def test_no_lineage_leaves_historical_ranking_unchanged(self):
@@ -192,7 +192,8 @@ class PredecessorSelection(unittest.TestCase):
 
     def test_no_causal_or_authority_claims_and_budget_respected(self):
         h = _History(self, {"kiln": KILN})
-        out = h.select("What glaze did the kiln firing schedule use before cone 10?", budget=1)
+        out = h.select("What glaze did the kiln firing schedule use before cone 10?", budget=1,
+                       successor_ref=h.ids["kiln"][1])  # strict 0.2.0
         self.assertEqual(out.served_refs, (h.ids["kiln"][0],))
         self.assertFalse(out.complete_evidence_attested)
         self.assertEqual(out.authority_effect, "none")

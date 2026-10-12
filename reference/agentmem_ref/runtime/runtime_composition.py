@@ -121,6 +121,11 @@ class MultiRouteRecallResult:
 PREDECESSOR_RELATION = "immediate_state_change_predecessor"
 
 
+TARGET_RESOLVED = "resolved"
+TARGET_UNRESOLVED = "unresolved"
+STRICT_SELECTION_POLICY_VERSION = "0.2.0"
+
+
 @dataclass(frozen=True)
 class HistoricalPredecessorContext:
     """Bounded historical context with one lineage-identified predecessor first.
@@ -136,27 +141,50 @@ class HistoricalPredecessorContext:
     relation: str = PREDECESSOR_RELATION
     complete_evidence_attested: bool = False
     authority_effect: str = "none"
-    selection_policy_version: str = "0.1.0"
+    #: 0.2.0 (strict, caller-targeted): ``unresolved`` means the caller identified no
+    #: successor that resolves for this reader -- it is NOT a claim that no predecessor
+    #: existed. ``resolved`` with no predecessor means the identified successor has no
+    #: governed state-change predecessor in its lineage.
+    target_resolution: str = TARGET_UNRESOLVED
+    selection_policy_version: str = STRICT_SELECTION_POLICY_VERSION
 
     def __post_init__(self):
         refs = self.served_refs
         if (not isinstance(refs, tuple) or any(type(r) is not str for r in refs)
                 or len(set(refs)) != len(refs)
                 or self.relation != PREDECESSOR_RELATION
-                or (self.predecessor_ref is None) != (self.successor_ref is None)
+                or self.target_resolution not in (TARGET_RESOLVED, TARGET_UNRESOLVED)
+                or (self.target_resolution == TARGET_UNRESOLVED
+                    and (self.predecessor_ref is not None or self.successor_ref is not None))
+                or (self.target_resolution == TARGET_RESOLVED and self.successor_ref is None)
                 or (self.predecessor_ref is not None
                     and (self.predecessor_ref == self.successor_ref or refs[:1] != (self.predecessor_ref,)))
                 or self.complete_evidence_attested is not False
                 or self.authority_effect != "none"
-                or self.selection_policy_version != "0.1.0"):
+                or self.selection_policy_version != STRICT_SELECTION_POLICY_VERSION):
             raise ValueError("invalid or authoritative historical predecessor selection")
+
+
+@dataclass(frozen=True)
+class AsOfTarget:
+    """A governed as-of successor target: the version of ``memory_ref`` in effect at ``instant``."""
+
+    memory_ref: str
+    instant: str
+
+    def __post_init__(self):
+        from .temporal_intent import parse_time
+        if not isinstance(self.memory_ref, str) or not self.memory_ref.strip():
+            raise ValueError("as-of target requires a logical memory reference")
+        if not isinstance(self.instant, str) or parse_time(self.instant) is None:
+            raise ValueError("as-of target requires an ISO-8601 instant")
 
 
 # #774 automatic routing. Built ONLY on the frozen temporal-cue interpreter's own
 # evidence (no new lexicon): a predecessor-relation cue routes unless an origin
 # cue ("the first value") or a prospective cue is also present. Declined spans
 # (quoted or metalinguistic mentions) carry no evidence and never route.
-PREDECESSOR_ROUTING_POLICY_VERSION = "0.2.0"
+PREDECESSOR_ROUTING_POLICY_VERSION = "0.3.0"
 PREDECESSOR_RELATION_CUES = frozenset({
     "historical:low:before", "historical:high:previously", "historical:high:used to",
     "historical:high:formerly", "historical:high:prior to", "historical:low:earlier",
@@ -595,22 +623,25 @@ class ConfiguredCompositionRuntime:
         *,
         budget: int,
         successor_ref: str | None = None,
+        as_of_target: AsOfTarget | None = None,
     ) -> HistoricalPredecessorContext:
-        """Opt-in (#774): serve the governed immediate predecessor first.
+        """Opt-in (#774), strict policy 0.2.0: the CALLER identifies the successor.
 
-        The CALLER declares the relationship by invoking this method; nothing
-        is inferred from query wording. Historical recall runs unchanged. The
-        anchor is the caller-declared ``successor_ref`` (which must be
-        visible to this reader) or else the CURRENT governed version of the
-        memory of the highest-ranked admitted candidate whose current version
-        has a governed state-change predecessor. Exactly one item -- that
-        predecessor -- is moved to rank 1; every other item keeps its
-        governed order. No predecessor means unchanged ranking. Versions of a
-        memory with a deletion tombstone are never served by this method,
-        even when plain historical recall still admits them.
+        The successor is either ``successor_ref`` (an authorized, visible fact reference;
+        otherwise ``ValueError``, identical for unknown and hidden refs) or ``as_of_target``
+        (the version of a named logical memory in effect at an instant, resolved under
+        canonical admission). Nothing is inferred from query wording or ranking: with no
+        resolvable target the result is ``unresolved`` -- no asserted predecessor, and the
+        unchanged historical ranking is served. Exactly one item, the governed immediate
+        state-change predecessor of the resolved successor, moves to rank 1. Versions of a
+        deleted memory are never served by this method.
         """
         if type(budget) is not int or not 1 <= budget <= 100:
             raise ValueError("historical predecessor budget must be integer 1..100")
+        if successor_ref is not None and as_of_target is not None:
+            raise ValueError("declare either successor_ref or as_of_target, not both")
+        if as_of_target is not None and not isinstance(as_of_target, AsOfTarget):
+            raise ValueError("as_of_target must be an AsOfTarget")
         if successor_ref is not None and (type(successor_ref) is not str
                                           or not self.adapter.lineage_visible(successor_ref, context)):
             raise ValueError("declared successor is not visible to this reader")
@@ -621,30 +652,20 @@ class ConfiguredCompositionRuntime:
         if len(ranked) != len(set(ranked)) or not set(ranked).issubset(result.admitted):
             raise RuntimeRecoveryError("ranking violates canonical admission")
         ranked = [ref for ref in ranked if not self.adapter.memory_deleted(ref)]
-        predecessor = successor = None
-        if successor_ref is not None:
-            anchors = [successor_ref]
-        else:
-            # Wrong-subject guard (#774 follow-on): an automatic anchor must already
-            # be represented in the governed served budget. A lineage that ranks
-            # below the budget is never pulled in to displace what would be served.
-            anchors, seen = [], set()
-            for ref in ranked[:budget]:
-                head = self.adapter.lineage_head(ref, context)
-                if head is not None and head not in seen:
-                    seen.add(head)
-                    anchors.append(head)
-        for anchor in anchors:
-            found = self.adapter.governed_state_change_predecessor(anchor, context)
-            if found is not None:
-                predecessor, successor = found, anchor
-                break
+        successor = successor_ref
+        if as_of_target is not None:
+            successor = self.adapter.version_in_effect(as_of_target.memory_ref, as_of_target.instant, context)
+        if successor is None:
+            return HistoricalPredecessorContext(served_refs=tuple(ranked[:budget]), predecessor_ref=None,
+                                                successor_ref=None, target_resolution=TARGET_UNRESOLVED)
+        predecessor = self.adapter.governed_state_change_predecessor(successor, context)
         if predecessor is None:
             served = ranked[:budget]
         else:
             served = ([predecessor] + [ref for ref in ranked if ref != predecessor])[:budget]
         return HistoricalPredecessorContext(
-            served_refs=tuple(served), predecessor_ref=predecessor, successor_ref=successor)
+            served_refs=tuple(served), predecessor_ref=predecessor, successor_ref=successor,
+            target_resolution=TARGET_RESOLVED)
 
     def routed_historical_context(
         self,
@@ -653,28 +674,28 @@ class ConfiguredCompositionRuntime:
         *,
         budget: int,
         temporal_intent=None,
+        successor_ref: str | None = None,
+        as_of_target: AsOfTarget | None = None,
     ) -> RoutedHistoricalContext:
-        """Opt-in (#774): route predecessor-relation questions automatically.
+        """Opt-in (#774), routing policy 0.3.0: promotion requires a caller-identified target.
 
-        Routed questions take ``historical_predecessor_context``; every other
-        question is served exactly as ``multi_route_recall`` with the caller's
-        ``temporal_intent`` would serve it. Never routes all historical questions.
-
-        Policy 0.2.0: only a question the caller sent with HISTORICAL intent may be
-        routed. A current, timeless or unspecified question is never routed, even
-        when a predecessor cue is present ("how long before X times out"), so an
-        automatic route can never serve a superseded value first for it.
+        A lexical predecessor cue alone never promotes (it does not say WHICH successor).
+        Only a caller-historical question with a declared ``successor_ref`` or
+        ``as_of_target`` that RESOLVES is routed to the governed selector; everything else
+        is served exactly as ``multi_route_recall`` with the caller's intent would serve it.
         """
         decision = predecessor_routing(query)
         caller_mode = (temporal_intent or {}).get("mode") if isinstance(temporal_intent, dict) else getattr(
             temporal_intent, "mode", None)
-        if decision.routed and caller_mode == "historical":
-            selected = self.historical_predecessor_context(query, context, budget=budget)
-            return RoutedHistoricalContext(
-                served_refs=selected.served_refs, routed=True, routing_evidence=decision.evidence,
-                predecessor_ref=selected.predecessor_ref, successor_ref=selected.successor_ref)
         if type(budget) is not int or not 1 <= budget <= 100:
             raise ValueError("historical predecessor budget must be integer 1..100")
+        if caller_mode == "historical" and (successor_ref is not None or as_of_target is not None):
+            selected = self.historical_predecessor_context(
+                query, context, budget=budget, successor_ref=successor_ref, as_of_target=as_of_target)
+            if selected.target_resolution == TARGET_RESOLVED:
+                return RoutedHistoricalContext(
+                    served_refs=selected.served_refs, routed=True, routing_evidence=decision.evidence,
+                    predecessor_ref=selected.predecessor_ref, successor_ref=selected.successor_ref)
         result = self.multi_route_recall(query, context, temporal_intent=temporal_intent)
         return RoutedHistoricalContext(served_refs=tuple(result.ranked_admitted[:budget]), routed=False,
                                        routing_evidence=decision.evidence)

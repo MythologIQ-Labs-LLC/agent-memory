@@ -37,7 +37,9 @@ class WrongSubjectAnchorGuard(unittest.TestCase):
         base = list(h.recall(query, "historical").ranked_admitted)
         old, new = h.ids["kiln"]
         self.assertIn(new, base[:3])
-        out = h.select(query, budget=3)
+        # strict 0.2.0: the lineage is promoted only when the caller identifies its successor
+        self.assertIsNone(h.select(query, budget=3).predecessor_ref)
+        out = h.select(query, budget=3, successor_ref=new)
         self.assertEqual((out.predecessor_ref, out.served_refs[0]), (old, old))
 
     def test_declared_successor_is_not_gated(self):
@@ -90,7 +92,8 @@ class RoutedRecall(unittest.TestCase):
     def test_routed_question_serves_the_predecessor_first(self):
         h = _History(self, {"kiln": KILN})
         out = h.runtime.routed_historical_context(
-            "What glaze did the kiln firing schedule use before cone 10?", _ctx(), budget=3, temporal_intent=HIST)
+            "What glaze did the kiln firing schedule use before cone 10?", _ctx(), budget=3, temporal_intent=HIST,
+            successor_ref=h.ids["kiln"][1])  # routing 0.3.0: a resolved caller target is required
         self.assertTrue(out.routed)
         self.assertEqual(out.served_refs[0], h.ids["kiln"][0])
         self.assertEqual(out.predecessor_ref, h.ids["kiln"][0])
@@ -126,17 +129,25 @@ class RoutedRecall(unittest.TestCase):
     def test_routed_question_without_lineage_keeps_historical_ranking(self):
         h = _History(self, {"crane": CRANE})
         query = "Which checklist form did the dock crane inspection use before?"
-        out = h.runtime.routed_historical_context(query, _ctx(), budget=3, temporal_intent=HIST)
-        self.assertTrue(out.routed)
+        out = h.runtime.routed_historical_context(query, _ctx(), budget=3, temporal_intent=HIST,
+                                                  successor_ref=h.ids["crane"][0])
+        self.assertTrue(out.routed)  # resolved target, no governed predecessor
         self.assertIsNone(out.predecessor_ref)
         self.assertEqual(out.served_refs, tuple(h.recall(query, "historical").ranked_admitted[:3]))
 
     def test_routed_deleted_memory_serves_nothing_of_it(self):
         h = _History(self, {"kiln": KILN})
         h.delete("kiln")
+        # A deleted successor is not a visible target (same error as an unknown one).
+        with self.assertRaises(ValueError):
+            h.runtime.routed_historical_context(
+                "What glaze did the kiln firing schedule use before cone 10?", _ctx(), budget=3, temporal_intent=HIST,
+                successor_ref=h.ids["kiln"][1])
+        # Untargeted: not routed. (Plain historical recall of the deleted memory's history
+        # is the separate #776 P0 repair; this uncombined branch does not include it.)
         out = h.runtime.routed_historical_context(
             "What glaze did the kiln firing schedule use before cone 10?", _ctx(), budget=3, temporal_intent=HIST)
-        self.assertFalse(set(h.ids["kiln"]) & set(out.served_refs))
+        self.assertFalse(out.routed)
 
 
 HIST = {"mode": "historical"}

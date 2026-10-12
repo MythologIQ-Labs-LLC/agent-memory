@@ -1290,6 +1290,38 @@ class GovernedMemoryAdapter:
         memory = self._fact_memory.get(fact_uuid) if isinstance(fact_uuid, str) else None
         return memory is not None and memory in self.tombstoned_ids()
 
+    def version_in_effect(self, memory_id: str, instant: str, context: RecallContext) -> str | None:
+        """#774 strict as-of target: the version of ``memory_id`` in effect at ``instant``.
+
+        Considers only versions this reader may see as current or historical evidence,
+        in governed write order. The version in effect is the last one written at or before
+        the instant; a version later corrected as false never held, so it resolves nothing.
+        Unknown, out-of-scope or deleted memories and instants before the memory existed
+        resolve to None -- indistinguishably.
+        """
+        target = parse_time(instant) if isinstance(instant, str) else None
+        if target is None or not isinstance(memory_id, str):
+            return None
+        versions = []
+        for uuid, owner in self._fact_memory.items():
+            if owner != memory_id or self.memory_deleted(uuid):
+                continue
+            fact = self._substrate.get_fact(uuid)
+            if fact is None or not self.lineage_visible(uuid, context):
+                return None if fact is None else None
+            when = parse_time(fact.created_at)
+            if when is None:
+                return None
+            versions.append((when, uuid))
+        in_effect = [uuid for when, uuid in sorted(versions) if when <= target]
+        if not in_effect:
+            return None
+        chosen = in_effect[-1]
+        record = self.replacement_record(chosen)
+        if record is not None and record.get("kind") == ERROR_CORRECTION:
+            return None
+        return chosen
+
     def governed_state_change_predecessor(self, fact_uuid: str, context: RecallContext) -> str | None:
         """#774: the immediate predecessor of ``fact_uuid`` through governed lineage.
 
