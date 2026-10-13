@@ -34,7 +34,7 @@ class BlindPacketTests(unittest.TestCase):
                 rows.append({"query_id":"case-%02d"%i,"query":"Question %d?"%i,
                     "gold_answers":["gold-SECRET-%d"%i],
                     "correct":i%(4 if system=="agent_memory" else 5)==0,
-                    "context":"context-%d-%s\nno gold here"%(i,system)})
+                    "context":"context-%d-%s\nno gold here"%(i,"left" if system=="agent_memory" else "right")})
             doc={"dataset":"precisionmembench","split":"single-turn","mode":"retrieval",
                  "total_queries":77,"correct":sum(x["correct"] for x in rows),"results":rows}
             path="reports/benchmarks/amb/v6/%s/single-turn.json"%system
