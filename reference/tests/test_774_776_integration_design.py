@@ -1,7 +1,7 @@
-"""Design verification (#774 x #776): no predecessor traversal may cross a deleted generation.
+"""#774 x #776 generation-boundary review: no predecessor traversal may cross a deleted generation.
 
-Adversarial cases beyond the four preregistered contract tests. Executed against a
-DISPOSABLE combination only; this is evidence for a design, not a candidate.
+Seven adversarial cases beyond the four preregistered contract tests, authored by the
+independent #774 x #776 review and adopted here against the integrated runtime.
 """
 from __future__ import annotations
 
@@ -80,7 +80,8 @@ class GenerationBoundary(unittest.TestCase):
         ad = h.runtime.adapter
         self.assertEqual(ad.governed_state_change_predecessor(n2, _context()), n1)
         self.assertIsNone(ad.governed_state_change_predecessor(n1, _context()))  # never crosses into old
-        out = h.select(Q, budget=5)
+        # strict contract (selection 0.2.0): the caller identifies the successor
+        out = h.select(Q, budget=5, successor_ref=n2)
         self.assertEqual((out.predecessor_ref, out.successor_ref), (n1, n2))
         self.assertFalse(old & set(out.served_refs))
         self.assertFalse(old & set(h.recall(Q, "historical").admitted))
@@ -99,9 +100,10 @@ class GenerationBoundary(unittest.TestCase):
         self.assertIsNone(ad.governed_state_change_predecessor(v3, _context()))  # not v1
         self.assertEqual(ad.lineage_head(v1, _context()), v3)
         self.assertIsNone(ad.lineage_head(v2, _context()))
-        sel = h.select("How often did Route 4 trams run before?", budget=5)
+        sel = h.select("How often did Route 4 trams run before?", budget=5, successor_ref=v3)
+        self.assertEqual(sel.target_resolution, "resolved")
         self.assertNotIn(v2, sel.served_refs)
-        self.assertIsNone(sel.predecessor_ref)
+        self.assertIsNone(sel.predecessor_ref)  # the deleted version is a barrier, v1 is not promoted
 
     def test_declared_deleted_successor_is_refused_like_an_unknown_one(self):
         h = _History(self, {"kiln": KILN})
@@ -145,7 +147,8 @@ class GenerationBoundary(unittest.TestCase):
         self.assertEqual(ad.lineage_head(n1, _context()), n2)
         self.assertEqual(ad.governed_state_change_predecessor(n2, _context()), n1)
         self.assertIsNone(ad.governed_state_change_predecessor(n1, _context()))
-        out = rec.historical_predecessor_context(Q, _context(), budget=5)
+        out = rec.historical_predecessor_context(Q, _context(), budget=5, successor_ref=n2)
+        self.assertEqual((out.predecessor_ref, out.successor_ref), (n1, n2))
         self.assertFalse(old & set(out.served_refs))
 
 

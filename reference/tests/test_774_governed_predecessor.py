@@ -207,11 +207,10 @@ class PredecessorSelection(unittest.TestCase):
 
 
 class PreExistingDeletionLeak(unittest.TestCase):
-    @unittest.expectedFailure
     def test_plain_historical_recall_does_not_serve_a_deleted_memorys_history(self):
-        # Pre-existing v7 behaviour, NOT changed by #774: governed deletion
-        # tombstones only the current fact, so earlier versions remain
-        # admissible to historical recall. Needs its own slice.
+        # Was pre-existing v7 behaviour (governed deletion tombstoned only the current
+        # fact). Repaired at canonical admission by #776, which this branch carries, so
+        # the former expectedFailure is now an ordinary invariant.
         h = _History(self, {"kiln": KILN})
         old, _ = h.ids["kiln"]
         h.delete("kiln")

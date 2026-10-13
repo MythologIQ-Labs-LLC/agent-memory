@@ -1299,16 +1299,48 @@ class GovernedMemoryAdapter:
         None when the memory was deleted, has no current version, or the
         reader may not see it.
         """
+        # #774 x #776 integration: a generation is fact identity plus deletion membership,
+        # never the memory id alone (a re-created id starts a new, admissible lineage). A
+        # fact in a deleted generation has no head; a live fact's head is its memory's
+        # current fact, which is necessarily in the same live generation.
         memory = self._fact_memory.get(fact_uuid) if isinstance(fact_uuid, str) else None
-        if memory is None or memory in self.tombstoned_ids():
+        if memory is None or self.memory_deleted(fact_uuid):
             return None
         head = self._current_fact_by_memory.get(memory)
-        return head if head is not None and self.lineage_visible(head, context) else None
+        if head is None or self.memory_deleted(head):
+            return None
+        return head if self.lineage_visible(head, context) else None
 
     def memory_deleted(self, fact_uuid: str) -> bool:
-        """#774: does this fact belong to a memory with a deletion tombstone?"""
-        memory = self._fact_memory.get(fact_uuid) if isinstance(fact_uuid, str) else None
-        return memory is not None and memory in self.tombstoned_ids()
+        """#774: is this fact covered by a governed deletion (#776 lineage semantics)?
+
+        The same canonical decision admission and ``write_semantics`` use: the fact itself,
+        its deleted generation, or a provenance chain to one. A physically erased fact is
+        deleted iff a deletion record covers it.
+        """
+        if not isinstance(fact_uuid, str) or not fact_uuid:
+            return False
+        if fact_uuid in self._tombstones:
+            return True
+        fact = self._substrate.get_fact(fact_uuid)
+        if fact is None:
+            return fact_uuid in self._deleted_lineage() if self._tombstones else False
+        return self._deleted_lineage_reason(fact) is not None
+
+    def _erased_generation_members(self, memory: str) -> set[str]:
+        """Facts covered by a HEAD deletion of ``memory`` (a whole generation).
+
+        A head was never replaced, so its tombstone key has no replacement record; a
+        superseded-version deletion's key does. Only whole generations can be dropped
+        from ordering safely, because a re-creation always follows them.
+        """
+        members: set[str] = set()
+        for key, record in self._tombstones.items():
+            if record.get("memory_id") != memory or self.replacement_record(key) is not None:
+                continue
+            members.add(key)
+            members.update(str(ref) for ref in record.get("deleted_fact_uuids") or ())
+        return members
 
     def version_in_effect(self, memory_id: str, instant: str, context: RecallContext) -> str | None:
         """#774 strict as-of target: the version of ``memory_id`` in effect at ``instant``.
@@ -1356,21 +1388,26 @@ class GovernedMemoryAdapter:
         if not self.lineage_visible(fact_uuid, context):
             return None
         memory = self._fact_memory.get(fact_uuid)
-        if memory is None or memory in self.tombstoned_ids():
+        if memory is None or self.memory_deleted(fact_uuid):
             return None
         versions = []
+        erased_generations = self._erased_generation_members(memory)
         for uuid, owner in self._fact_memory.items():
             if owner != memory:
                 continue
             fact = self._substrate.get_fact(uuid)
             if fact is None:
-                return None  # a physically removed version: lineage cannot be trusted
+                if uuid in erased_generations:
+                    continue  # an erased EARLIER generation: entirely before any live fact
+                return None  # erased superseded version or unexplained gap: no barrier can be placed
             versions.append((parse_time(fact.created_at), uuid))
         if any(when is None for when, _ in versions):
             return None
         versions.sort()
         order = [uuid for _, uuid in versions]
         for uuid in reversed(order[:order.index(fact_uuid)]):
+            if self.memory_deleted(uuid):
+                return None  # generation boundary or deleted version: never cross, never skip
             record = self.replacement_record(uuid)
             if record is None:
                 return None  # an earlier version that was never replaced: inconsistent lineage
