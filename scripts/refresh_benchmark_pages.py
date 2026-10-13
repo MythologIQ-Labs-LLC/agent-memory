@@ -52,7 +52,12 @@ def _digest(data: bytes) -> str:
 
 
 def _file_hash(path: Path) -> str:
-    return _digest(path.read_bytes())
+    # The repository enforces text=auto eol=lf; canonicalize Windows writes so
+    # the committed manifest agrees with clean checkouts on every platform.
+    content = path.read_bytes()
+    if path.suffix.lower() in (".json", ".md"):
+        content = content.replace(b"\r\n", b"\n")
+    return _digest(content)
 
 
 def _json(path: Path):
