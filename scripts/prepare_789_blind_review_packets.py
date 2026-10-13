@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+from datetime import datetime, timedelta
 import os
 import re
 import secrets
@@ -82,6 +83,7 @@ def initial_review_forms(packet: dict) -> list[dict]:
             "blind_arm": item["blind_arm"],
             "reviewer_id": "REPLACE_WITH_INDEPENDENT_HUMAN_ID",
             "reviewer_kind": "human",
+            "reviewed_at_utc": None,
             "locked": False,
             "benchmark_outcome_visible": False,
             "source_trace": item["source_trace"],
@@ -335,6 +337,22 @@ def verify_reviews(dossier: dict, packet: dict, key: dict, reviews: list[dict]) 
         # inspection so malformed/incomplete dimensions fail with typed errors.
         from scripts.check_789_qualitative_review import validate_review
         validate_review(review, set(key["frozen_target_case_ids"]))
+        # A review with a copied sample identity or no timestamp cannot be
+        # independently sequenced against the coordinator's unblinding event.
+        if review["reviewer_kind"] == "human":
+            ident_text = review["reviewer_id"].strip()
+            require(ident_text != "REPLACE_WITH_INDEPENDENT_HUMAN_ID" and
+                    not ident_text.upper().startswith(("REPLACE_", "EXAMPLE_", "TEST_")),
+                    "unfinished reviewer identity in locked form")
+            stamp = review.get("reviewed_at_utc")
+            require(isinstance(stamp, str) and stamp.endswith("Z"),
+                    "human review requires explicit UTC lock timestamp")
+            try:
+                recorded = datetime.fromisoformat(stamp.replace("Z", "+00:00"))
+            except ValueError as exc:
+                raise PacketError("invalid reviewer lock timestamp") from exc
+            require(recorded.utcoffset() == timedelta(0),
+                    "reviewer lock timestamp is not UTC")
         verify_citations(review, records[ident])
     result = review_coverage(dossier, reviews)
     result["packet_integrity"] = "matched"
@@ -349,12 +367,19 @@ def verify_reviews(dossier: dict, packet: dict, key: dict, reviews: list[dict]) 
     return result
 
 
+def load_review_file(path: Path) -> list[dict]:
+    data = json.loads(path.read_text(encoding="utf-8"))
+    require(isinstance(data, list), "review submission must be a JSON list")
+    return data
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     action = parser.add_mutually_exclusive_group(required=True)
     action.add_argument("--output-dir", type=Path)
     action.add_argument("--verify-reviews", type=Path, metavar="PRIVATE_KEY_JSON")
-    parser.add_argument("--reviews", type=Path, help="locked reviewer submissions (verify mode)")
+    parser.add_argument("--reviews", type=Path, nargs="+",
+                        help="one or more independently completed reviewer JSON arrays")
     parser.add_argument("--packet", type=Path, help="private reviewer packet (verify mode)")
     parser.add_argument("--accept-private-material", action="store_true",
                         help="explicitly acknowledge that source contexts must not be committed/shared")
@@ -374,7 +399,8 @@ def main() -> int:
                 dossier,
                 json.loads(args.packet.read_text(encoding="utf-8")),
                 json.loads(args.verify_reviews.read_text(encoding="utf-8")),
-                json.loads(args.reviews.read_text(encoding="utf-8")),
+                [review for source in args.reviews
+                 for review in load_review_file(source)],
             )
         print(json.dumps(report, indent=2))
         return 0
