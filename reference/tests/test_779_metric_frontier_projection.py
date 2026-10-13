@@ -140,6 +140,22 @@ class FrontierProjectionTests(unittest.TestCase):
                 self.assertEqual(row["ranking_state"], "non_comparable")
                 self.assertIsNone(row["gap_to_leader_native"])
 
+    def test_missing_native_metadata_refuses_ranking(self):
+        for change in (
+            {"unit": None}, {"unit": ""}, {"population": None},
+            {"population": ""}, {"denominator": None},
+            {"denominator": 0}, {"denominator": -1},
+            {"denominator": True}, {"denominator": float("nan")},
+        ):
+            with self.subTest(change=change):
+                obj = fixture()
+                observations = obj["comparison_sets"][0]["dimensions"]["retrieval"]["rows"][0]["systems"]
+                observations["mem0-oss"].update(change)
+                row = build_frontier_leaderboard(obj)["leaderboards"][0]
+                self.assertEqual(row["ranking_state"], "non_comparable")
+                self.assertIsNone(row["gap_to_leader_native"])
+                self.assertIsNone(row["leader"])
+
     def test_descriptive_metric_never_ranks(self):
         row = build_frontier_leaderboard(
             fixture(direction="descriptive", am=1, peer=0)
