@@ -790,9 +790,10 @@ class JsonRuntimeStateStore:
         self.lock_path = self.root / ".runtime-checkpoint.lock"
         self._observed_generation: int | None = None
         self._observed_manifest_digest: str | None = None
-        # (#772) the journal prefix this instance has already walked: its byte length and
-        # line count, a running SHA-256 of those bytes, and the last record it validated.
-        self._journal_cache: tuple[int, int, "hashlib._Hash", dict] | None = None
+        # (#772) the journal prefix this instance has already walked: its byte length, line
+        # count and record count, a running SHA-256 of those bytes, and the last record it
+        # validated. Lines number parser errors, records number chain errors, as in a cold walk.
+        self._journal_cache: tuple[int, int, int, "hashlib._Hash", dict] | None = None
 
     def exists(self) -> bool:
         # A journal without a manifest is evidence of an incomplete/corrupt
@@ -823,23 +824,25 @@ class JsonRuntimeStateStore:
             raise RuntimeRecoveryError("checkpoint generation journal cannot be read") from exc
         cached = self._journal_cache
         if cached is not None:
-            prefix_length, prefix_lines, prefix_hash, last = cached
+            prefix_length, prefix_lines, prefix_records, prefix_hash, last = cached
             if (len(raw) >= prefix_length
                     and hashlib.sha256(raw[:prefix_length]).digest() == prefix_hash.digest()):
                 tail = raw[prefix_length:]
+                tail_records = _parse_generation_journal(tail, first_index=prefix_lines + 1)
                 latest = _validate_generation_journal(
-                    _parse_generation_journal(tail, first_index=prefix_lines + 1),
-                    previous=last, first_index=prefix_lines + 1)
+                    tail_records, previous=last, first_index=prefix_records + 1)
                 if latest is None:
                     latest = last
                 if tail.endswith(b"\n"):
                     running = prefix_hash.copy()
                     running.update(tail)
-                    self._journal_cache = (len(raw), prefix_lines + tail.count(b"\n"), running, dict(latest))
+                    self._journal_cache = (len(raw), prefix_lines + tail.count(b"\n"),
+                                           prefix_records + len(tail_records), running, dict(latest))
                 return dict(latest)
-        latest = _validate_generation_journal(_parse_generation_journal(raw))
+        records = _parse_generation_journal(raw)
+        latest = _validate_generation_journal(records)
         if latest is not None and raw.endswith(b"\n"):
-            self._journal_cache = (len(raw), raw.count(b"\n"), hashlib.sha256(raw), dict(latest))
+            self._journal_cache = (len(raw), raw.count(b"\n"), len(records), hashlib.sha256(raw), dict(latest))
         else:
             self._journal_cache = None
         return latest
@@ -868,11 +871,11 @@ class JsonRuntimeStateStore:
         record = _journal_record(manifest, previous_digest)
         payload = _append_json_line(self.journal_path, record)
         cached = self._journal_cache
-        if cached is not None and cached[3].get("record_digest") == previous_digest:
+        if cached is not None and cached[4].get("record_digest") == previous_digest:
             # (#772) extend the walked prefix by the record this instance just appended.
-            running = cached[2].copy()
+            running = cached[3].copy()
             running.update(payload)
-            self._journal_cache = (cached[0] + len(payload), cached[1] + 1, running, dict(record))
+            self._journal_cache = (cached[0] + len(payload), cached[1] + 1, cached[2] + 1, running, dict(record))
         else:
             self._journal_cache = None
         return record

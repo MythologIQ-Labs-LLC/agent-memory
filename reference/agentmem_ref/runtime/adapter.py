@@ -1542,21 +1542,33 @@ class GovernedMemoryAdapter:
         Only a reader who could have read the deleted head: the same tenant, and
         domain/project/task-eligible for the scope that head was written in (the canonical
         ``_fact_scope`` survives pruning and permanent deletion, so the check never needs
-        the deleted content). A memory with a live generation is not deleted; a reader who
-        is out of scope learns nothing, exactly as for a memory that never existed. The
-        answer is one boolean: no deleted-generation identifier, timestamp or event is
-        served with it (#777).
+        the deleted content). A reader who is out of scope learns nothing, exactly as for
+        a memory that never existed. The answer is one boolean: no deleted-generation
+        identifier, timestamp or event is served with it (#777).
+
+        The answer depends only on deletions of heads this reader could read, never on
+        whether the id currently carries a live generation: a later generation written by
+        another scope is invisible to this reader, so its creation and deletion must not
+        flip this reader's view (a caller that can read the live head never reaches this
+        question; see ``public_current_visible``).
         """
+        return self.public_deleted_version(memory_id, context) is not None
+
+    def public_deleted_version(self, memory_id: object, context: RecallContext) -> int | None:
+        """The canonical state version recorded by the latest head deletion this reader could
+        have read, or None when no such deletion exists. Recorded at deletion time so the
+        value is stable under later activity by other scopes; a pre-recording tombstone
+        reads as 0."""
         if not isinstance(memory_id, str) or not memory_id or not self._tombstones:
-            return False
-        if self._current_fact_by_memory.get(memory_id) is not None:
-            return False
+            return None
+        versions: list[int] = []
         for ref, record in self._tombstones.items():
             if record.get("memory_id") != memory_id or self.replacement_record(ref) is not None:
                 continue
             if self._domain_identity_refusal(ref, self._tenant, context) is None:
-                return True
-        return False
+                recorded = record.get("state_version")
+                versions.append(int(recorded) if isinstance(recorded, int) and not isinstance(recorded, bool) else 0)
+        return max(versions) if versions else None
 
     def _deleted_lineage(self) -> dict[str, str]:
         """#776: fact uuid -> deleted memory for every fact a governed deletion covers.
@@ -1779,6 +1791,8 @@ class GovernedMemoryAdapter:
             if self._current_fact_by_memory.get(proposal.target_reference) == fact_uuid:
                 self._current_fact_by_memory.pop(proposal.target_reference, None)
             self._state_version[proposal.target_reference] = self._state_version.get(proposal.target_reference, 0) + 1
+            # the version this deletion produced, for the owner's reader-stable history view
+            self._tombstones[fact_uuid]["state_version"] = self._state_version[proposal.target_reference]
 
         receipt_id = self._ids.next()
         receipt = receipts.build_receipt(

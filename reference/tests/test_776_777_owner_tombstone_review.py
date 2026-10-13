@@ -247,3 +247,41 @@ class NoDeletionProjectionIsIdentity(_Facade):
         public = self.memory.recall("Orrin gateway", temporal_intent=HIST)
         canonical = self.memory._canonical_recall("Orrin gateway", temporal_intent=HIST)
         self.assertLess(len(public["candidates"]), len(canonical["candidates"]))
+
+
+class OwnerViewIsStableUnderOtherScopes(_Facade):
+    """Independent review finding (P1): the owner's history of its deleted memory must not
+    change when another project re-creates and deletes the same memory id. The memory-wide
+    state counter and the live-head check both leaked that lifecycle; the owner now reads the
+    version its own deletion recorded, and only deletions of heads it could read count."""
+
+    def test_other_projects_recreation_and_deletion_do_not_flip_the_owner_view(self):
+        self.state_changed()
+        self.assertTrue(self.memory.forget("memory:a")["committed"])
+        before = _serial(self.memory.history("memory:a"))
+        self.assertTrue(self.memory.history("memory:a")["history"]["tombstoned"])
+        self.reopen("project:b")
+        self.assertEqual(self.memory.history("memory:a")["history"], _blank())
+        again = self.memory.remember("memory:a", "Orrin gateway region is Turku", proposition=_prop("Turku"))
+        self.assertTrue(again["committed"], again)
+        self.reopen("project:a")
+        self.assertEqual(_serial(self.memory.history("memory:a")), before)
+        self.reopen("project:b")
+        self.assertTrue(self.memory.forget("memory:a")["committed"])
+        self.reopen("project:a")
+        self.assertEqual(_serial(self.memory.history("memory:a")), before)
+        self.reopen()
+        self.assertEqual(_serial(self.memory.history("memory:a")), before)
+
+    def test_recorded_deletion_version_is_served_not_the_live_counter(self):
+        self.state_changed()  # v1 -> v2: canonical state version 2
+        self.assertTrue(self.memory.forget("memory:a")["committed"])  # 3
+        self.assertEqual(self.memory.history("memory:a")["history"]["state_version"], 3)
+        self.reopen("project:b")
+        self.memory.remember("memory:a", "Orrin gateway region is Turku", proposition=_prop("Turku"))
+        self.memory.correct("memory:a", "Orrin gateway region is Narvik", evidence=_evidence(), risk_class="low",
+                            replacement_kind="state_change")
+        self.assertGreater(self.memory._canonical_history("memory:a")["history"]["state_version"], 3)
+        self.reopen("project:a")
+        self.assertEqual(self.memory.history("memory:a")["history"]["state_version"], 3)
+        self.assertTrue(self.memory.history("memory:a")["history"]["tombstoned"])
