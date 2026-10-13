@@ -11,6 +11,7 @@ executes a benchmark and never grants runtime authority.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import subprocess
 import sys
@@ -52,14 +53,47 @@ def _git_revision(spec: str) -> str | None:
     return value or None
 
 
-def _source_identity() -> dict[str, str] | None:
+def _git_blob_from_bytes(payload: bytes) -> str:
+    """Git clean-filter blob ID of current bytes under *.json text=auto eol=lf.
+
+    Windows Python text-mode writes can emit CRLF before Git stages the file.
+    Fingerprint the same LF-normalized bytes that Git records in its index.
+    """
+    normalized = payload.replace(b"\r\n", b"\n")
+    return hashlib.sha1(b"blob " + str(len(normalized)).encode("ascii") + b"\0" + normalized).hexdigest()
+
+
+def _working_tree_identity(folder: Path) -> str:
+    """Flat normalized JSON tree, with the same Git tree identity as a commit.
+
+    The normalized scorecard output is a flat directory of generated *.json
+    blobs. Refuse other children instead of silently losing their provenance.
+    """
+    children = sorted(folder.iterdir(), key=lambda p: p.name.encode("utf-8"))
+    if not children or any(not p.is_file() or not p.name.endswith(".json") for p in children):
+        raise ValueError("normalized evidence tree must contain only JSON files")
+    entries = bytearray()
+    for p in children:
+        entries.extend(b"100644 " + p.name.encode("utf-8") + b"\0")
+        entries.extend(bytes.fromhex(_git_blob_from_bytes(p.read_bytes())))
+    data = bytes(entries)
+    return hashlib.sha1(b"tree " + str(len(data)).encode("ascii") + b"\0" + data).hexdigest()
+
+
+def _source_identity() -> dict[str, str]:
+    """Bind projections to current source bytes even before companion commit.
+
+    Using HEAD:<path> here silently pins a pre-refresh scorecard/normalized
+    tree during post-commit regeneration. Once the companion commit lands,
+    --check would find different source identities and report false staleness.
+    """
     values = {
-        "dashboard": _git_revision("HEAD:reports/benchmarks/dashboard/current.json"),
-        "diagnostics": _git_revision("HEAD:reports/benchmarks/replays/594-post-550-semantic-qualification/phase-b-score-v1.json"),
-        "scorecards": _git_revision("HEAD:reports/benchmarks/scorecards/scorecards.json"),
-        "normalized": _git_revision("HEAD:reports/benchmarks/normalized"),
+        "dashboard": _git_blob_from_bytes(DASHBOARD.read_bytes()),
+        "diagnostics": _git_blob_from_bytes(DIAGNOSTIC_SOURCES[0].read_bytes()),
+        "scorecards": _git_blob_from_bytes(SCORECARDS.read_bytes()),
+        "normalized": _working_tree_identity(NORMALIZED),
     }
-    return None if any(value is None for value in values.values()) else {key: str(value) for key, value in values.items()}
+    return values
 
 
 def build() -> dict:

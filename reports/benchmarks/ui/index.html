@@ -75,6 +75,9 @@ code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.82
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 footer{color:var(--muted);font-size:.9rem;margin-top:24px}
 
+.refresh-status{padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--panel-2);margin-top:12px}
+.refresh-status strong{display:block}
+.refresh-status small{display:block;color:var(--muted)}
 .viability-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:14px 0}
 .viability-stat{background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:12px}
 .viability-stat strong{display:block;font-size:1.35rem;font-variant-numeric:tabular-nums}
@@ -116,6 +119,7 @@ footer{color:var(--muted);font-size:.9rem;margin-top:24px}
   <label>Open a generated projection file <input type="file" id="upload" accept=".json,application/json"></label>
   <div id="error" role="alert" class="error"></div>
   <div id="stale" class="notice"></div>
+  <div id="refresh-status" class="refresh-status" role="status" aria-live="polite">Evidence refresh status unavailable in this snapshot.</div>
 </section>
 
 <section class="card" aria-labelledby="sum-h">
@@ -244,6 +248,8 @@ const $ = (id) => document.getElementById(id);
 const safe = (s) => String(s ?? "");
 const isNum = (n) => typeof n === "number" && Number.isFinite(n);
 let dataset = null;
+let refreshStatus = null;
+let refreshStatusError = null;
 let rowsAll = [];
 let expanded = new Set();
 let writtenHash = null;
@@ -323,7 +329,7 @@ function accept(data) {
   const other = data.metric_coverage.filter((x) => !covered.has(x.metric_key)).map((x) => ({ ...x, ranking_state: "coverage_only", reasons: ["no comparison row in the accepted catalog"], currency: { state: "current" }, objectives: [], competitive_state: null, leader: null, agent_memory: null, ranking: [] }));
   rowsAll = [...list, ...other];
   expanded = new Set();
-  renderSnapshot(); renderCounts(); populateFilters(); readHash(); renderObjectives(); renderPublished(); render();
+  renderSnapshot(); renderCounts(); renderRefreshStatus(); populateFilters(); readHash(); renderObjectives(); renderPublished(); render();
   $("error").textContent = "";
 }
 
@@ -733,6 +739,38 @@ fetch("./historical-amb-v6.json",{cache:"no-store"})
   .then(r=>{if(!r.ok)throw Error("Historical diagnostic JSON unavailable");return r.json();})
   .then(d=>renderHistorical(validateHistorical(d)))
   .catch(e=>{$("historical-error").textContent=safe(e.message);$("historical-summary").textContent="Historical diagnostic not available; no numerical claims rendered.";});
+
+
+/* Separate freshness control: presentation does not certify remote state. */
+function renderRefreshStatus() {
+  const box = $("refresh-status"); box.replaceChildren();
+  if (!dataset) { box.textContent = "Awaiting benchmark projection."; return; }
+  if (!refreshStatus) {
+    box.appendChild(el("strong", { text: "Refresh manifest unavailable" }));
+    box.appendChild(el("small", { text: refreshStatusError || "This page cannot verify that recorded evidence was refreshed." }));
+    return;
+  }
+  if (refreshStatus.schema_version !== "benchmark-refresh-status/1" ||
+      refreshStatus.authority_effect !== "none" ||
+      refreshStatus.accepted_evidence_only_in_rankings !== true ||
+      refreshStatus.catalog_snapshot_id !== dataset.snapshot_id ||
+      !Number.isInteger(refreshStatus.unregistered_source_count) ||
+      refreshStatus.unregistered_source_count < 0) {
+    box.appendChild(el("strong", { text: "STALE or invalid refresh manifest" }));
+    box.appendChild(el("small", { text: "Source and leaderboard projections do not share the required snapshot identity. Do not infer current performance." }));
+    return;
+  }
+  const awaiting=refreshStatus.unregistered_source_count;
+  box.appendChild(el("strong", { text: "Recorded-evidence projection: matching source manifest" }));
+  box.appendChild(el("small", { text: "Source JSON records fingerprinted: " + safe(refreshStatus.source_count) + " · Unregistered raw benchmark candidates: " + awaiting + " (unranked pending qualification)" }));
+  box.appendChild(el("small", { text: "This confirms projection consistency within this published artifact set, not live GitHub freshness, human review, or current production runtime quality." }));
+  const link = el("a", { href: "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/benchmark-evidence-refresh-governance.md", rel: "noopener noreferrer", text: "Refresh governance contract" });
+  box.appendChild(link);
+}
+fetch("./refresh-status.json", {cache:"no-store"})
+  .then(r=>{if(!r.ok)throw Error("No evidence refresh manifest is published beside this viewer.");return r.json();})
+  .then(r=>{refreshStatus=r;refreshStatusError=null;renderRefreshStatus();})
+  .catch(e=>{refreshStatus=null;refreshStatusError=safe(e.message);renderRefreshStatus();});
 
 /* ---------- wiring ---------- */
 for (const id of FILTER_IDS) $(id).addEventListener($(id).type === "search" ? "input" : "change", render);

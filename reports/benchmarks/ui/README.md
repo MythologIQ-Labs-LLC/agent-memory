@@ -70,3 +70,15 @@ Use `--write` to intentionally regenerate the **derived UI JSON only**. This is 
 The page shows exact native case pass rates (Agent Memory 15/77; Mem0 OSS 10/77; BM25 8/77), the 6/1/9/61 paired matrix, and per-metric **defined-value denominators** (precision 67/68/70; recall 43/43/43), plus categorical zero-pass gaps. It labels the qualitative review as **zero of 96 independent human forms**, not performed. Native strict-scorer failures are **not** human judgments, causal conclusions or demonstrated production limitations. Full case-level evidence and review acceptance remain in draft PR #793, with the separate source-audit repair branch.
 
 The distinct external peer counter uses `frontier-leaderboards.json.external_competitors.same_harness_measured` directly. Historical BM25 is a control; never count it as a memory product. The external cohort target is at least six distinct products under #789. Accepted same-harness rankings remain bound to their own snapshot and never silently include this historical v6 panel.
+
+## Automatic no-CI evidence refresh (governance)
+
+Every local/Claude workspace that records benchmarks should install the repository-native hooks:
+
+```bash
+python scripts/install_benchmark_refresh_hooks.py --install
+```
+
+After an evidence-bearing commit, the post-commit hook runs `scripts/refresh_benchmark_pages.py --write`, regenerates normalized scorecards, the catalog, leaderboard, historical diagnostics and `refresh-status.json`, then creates a companion reporting commit only when derived files changed. A local pre-push hook calls `--check` and blocks stale or invalid projections. No benchmark execution, inference, CI or GitHub Actions is part of this refresh.
+
+The page reads `refresh-status.json` as a separate projection-consistency signal. It reports raw pending/unregistered benchmark sources without ranking them and refuses mismatched projection snapshot identities. It does **not** assert that the static deployed website is current with the latest remote commit. Remote GitHub API changes and PR merges bypass local hooks; an authorized independent webhook executor is necessary for an unconditional remote event guarantee. See [refresh governance](../../../docs/benchmark-evidence-refresh-governance.md) for scope, qualification and operational limitations.
