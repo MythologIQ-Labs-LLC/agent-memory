@@ -106,6 +106,43 @@ class SourceIdentityGateTests(unittest.TestCase):
             ("case-a",),
         )
 
+    def test_empty_ingestion_map_is_refused_not_scored_zero(self):
+        # No document was ingested: an empty provider response must not become a
+        # scorable zero row (README negative control 5: ingestion failure and empty
+        # retrieval are distinguished; issue #789: no zeros for unsupported operations).
+        with self.assertRaisesRegex(ValueError, "cover every allowed document"):
+            attribute_hits([], source_handles={}, allowed_document_ids=ALLOW, top_k=5)
+
+    def test_partial_ingestion_map_is_refused_before_attribution(self):
+        partial = {"provider:11": "case-a", "provider:12": "case-b"}  # case-c never ingested
+        with self.assertRaisesRegex(ValueError, "cover every allowed document"):
+            attribute_hits(
+                [{"source_handles": ["provider:11"]}],
+                source_handles=partial, allowed_document_ids=ALLOW, top_k=5,
+            )
+
+    def test_full_ingestion_map_with_aliases_is_accepted(self):
+        value = map_it([])
+        self.assertEqual(value.status, "attributed")
+
+    def test_handle_that_names_a_different_allowed_document_is_refused(self):
+        # A swapped ingestion map: the native handle IS an allowed document id but is
+        # mapped to another document. Crediting it would score the wrong document.
+        swapped = {"case-b": "case-a", "case-a": "case-b", "provider:13": "case-c"}
+        with self.assertRaisesRegex(ValueError, "must map to itself"):
+            attribute_hits(
+                [{"source_handles": ["case-b"]}],
+                source_handles=swapped, allowed_document_ids=ALLOW, top_k=5,
+            )
+
+    def test_identity_handles_remain_valid(self):
+        identity = {"case-a": "case-a", "case-b": "case-b", "case-c": "case-c"}
+        value = attribute_hits(
+            [{"source_handles": ["case-b"]}],
+            source_handles=identity, allowed_document_ids=ALLOW, top_k=5,
+        )
+        self.assertEqual(value.ranked_for_scoring(), ("case-b",))
+
 
 if __name__ == "__main__":
     unittest.main()

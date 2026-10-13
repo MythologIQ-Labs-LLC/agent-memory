@@ -6,11 +6,15 @@
 
 | System | Inspected exact source | Package at pin | License inspected | Profile outcome |
 | --- | --- | --- | --- | --- |
-| Graphiti OSS | [getzep/graphiti@b2ff2ea](https://github.com/getzep/graphiti/tree/b2ff2eadd9a6b75a261a5cf0b19557883a13f752) | `graphiti-core 0.29.3` | Apache-2.0 | source-qualified only, candidate temporal graph retrieval |
+| Graphiti OSS | [getzep/graphiti@021d3a5 (tag v0.29.3)](https://github.com/getzep/graphiti/tree/021d3a57d511f21b10adaf7fa923bd5c1fce5e9d) | `graphiti-core 0.29.3` | Apache-2.0 | source-qualified only, candidate temporal graph retrieval |
 | Cognee OSS | [topoteretes/cognee@4b9dd36](https://github.com/topoteretes/cognee/tree/4b9dd362625dfd3621c344e571a86f5bc7a55ee8) | `cognee 1.4.2` | Apache-2.0 | source-qualified only, candidate CHUNKS retrieval or separate graph QA |
 | Hindsight OSS | [vectorize-io/hindsight@2e8c221](https://github.com/vectorize-io/hindsight/tree/2e8c221c54b1dd2f6cc003f63accf3a01a077332) | exact install version not yet pinned | MIT | **#640 owns integration**, source cross-checked only |
 
 Machine-readable exact identities: `reference/comparators/source_qualification_789.json`.
+
+### Pin correction (2026-10-13, independent qualification)
+
+The Graphiti pin was moved from `b2ff2ea` (a 2026-08-13 post-release commit on `main`) to the `v0.29.3` tag commit `021d3a57`, because the PyPI wheel `graphiti_core-0.29.3` is tree-identical to the tag (159/159 files) but differs from `b2ff2ea` in `graphiti_core/search/search.py` (cross-encoder reranker candidate selection). The blobs cited below for `edges.py`, `graphiti.py`, `LICENSE` and `pyproject.toml` are identical at both commits. The Cognee pin `4b9dd36` is tree-identical to tag `v1.4.2` (`b0ea53e9`) and to the PyPI wheel for the `cognee/` package (1973/1973 files), so it stands; its release tag is now recorded beside it.
 
 ### Real issue: native source provenance, not install instructions
 
@@ -71,9 +75,9 @@ The next executable priority after #640 is **Graphiti native provenance feasibil
 
 ## Direct upstream Graphiti source-provenance feasibility finding
 
-At the pinned `getzep/graphiti@b2ff2ea` SHA, `graphiti_core/edges.py` (Git blob `28c170355e02a569b60c5e070f019572889ace82`) defines `EntityEdge.episodes: list[str]` as the source episode references. `graphiti_core/graphiti.py` (blob `7555a1f828c4b94970911876bfd257aaa4577d4c`) accepts an optional caller-defined `uuid` for `add_episode` and `search(..., num_results=...)` returns `list[EntityEdge]`.
+At the pinned `getzep/graphiti@b2ff2ea` SHA, `graphiti_core/edges.py` (Git blob `28c170355e02a569b60c5e070f019572889ace82`) defines `EntityEdge.episodes: list[str]` as the source episode references. `graphiti_core/graphiti.py` (blob `7555a1f828c4b94970911876bfd257aaa4577d4c`) has an optional `uuid` parameter on `add_episode`, but at this revision it **looks up an existing episode** (`EpisodicNode.get_by_uuid`, `NodeNotFoundError` for an unknown uuid) rather than assigning a caller id; the native ingestion handle is therefore `AddEpisodeResults.episode.uuid` returned by `add_episode`, recorded beside the benchmark id in the adapter sidecar. `search(..., num_results=...)` returns `list[EntityEdge]`.
 
-This is a **source-level path to exact-item attribution**, not speculation about whether graphs can expose provenance. A candidate runner can record the successfully ingested episode UUID next to its benchmark source ID, pass actual `edge.episodes` lists to `attribute_graphiti_edges()`, and decline to credit edges whose provenance spans multiple benchmark sources.
+This is a **source-level path to exact-item attribution**, not speculation about whether graphs can expose provenance. A candidate runner can record the returned episode UUID next to its benchmark source ID, pass actual `edge.episodes` lists to `attribute_graphiti_edges()`, and decline to credit edges whose provenance spans multiple benchmark sources. Observed 2026-10-13 on graphiti-core 0.29.3 with an in-process Kuzu store and stub clients (not product ingestion): `search()` returns edges with their `episodes` lists intact, and the gate refused the multi-source, foreign-handle and empty-provenance edges while crediting the single-source ones.
 
 The implementation adds `reference/comparators/graphiti_source_probe.py` and five focused tests covering valid native edges, multi-source ambiguity, foreign episodes, empty provenance and duplicate source credit. **19 contract tests passed in isolated local Python prototypes**, without using the Graphiti SDK. The exact committed test suite requires a fresh PR-checkout run before any review promotion.
 

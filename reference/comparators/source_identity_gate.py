@@ -51,6 +51,8 @@ def attribute_hits(
     Input per hit: {"source_handles": [<native_handle>, ...]}. A hit may
     contribute to ranking only when ALL its native handles resolve to exactly
     ONE allowed ingested document. Unknown/mixed provenance is never guessed.
+    The ingestion map must cover every allowed document: a corpus that was not
+    fully ingested is refused rather than scored as misses.
 
     This function does not interpret gold answers, source text, or fuzzy
     similarity as source identity. The provider's native rank order is retained.
@@ -66,6 +68,13 @@ def attribute_hits(
             raise ValueError("source mapping must use nonempty strings")
         if doc_id not in allowed_document_ids:
             raise ValueError("ingestion map includes an out-of-scope document ID")
+        if handle in allowed_document_ids and handle != doc_id:
+            raise ValueError("a native handle that names an allowed document ID must map to itself")
+    if allowed_document_ids - set(source_handles.values()):
+        # An un-ingested document can never be retrieved, so scoring it would turn an
+        # ingestion failure into a scored miss. The adapter must record ingestion
+        # failure as a typed outcome instead of calling the gate.
+        raise ValueError("ingestion map must cover every allowed document ID")
 
     ranked: list[str] = []
     seen: set[str] = set()

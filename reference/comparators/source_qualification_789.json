@@ -25,7 +25,7 @@
       "system_id": "graphiti-oss",
       "vendor": "getzep",
       "repository": "https://github.com/getzep/graphiti",
-      "exact_source_revision": "b2ff2eadd9a6b75a261a5cf0b19557883a13f752",
+      "exact_source_revision": "021d3a57d511f21b10adaf7fa923bd5c1fce5e9d",
       "source_qualification": "source_inspected",
       "source_license": "Apache-2.0",
       "license_git_blob": "5feb0d9d299a1107adfa8331306b13cc0eff2d78",
@@ -46,7 +46,18 @@
       "profile_caveat": "OSS Graphiti is not the proprietary Zep cloud service.",
       "source_edge_model_git_blob": "28c170355e02a569b60c5e070f019572889ace82",
       "source_graphiti_api_git_blob": "7555a1f828c4b94970911876bfd257aaa4577d4c",
-      "source_id_evidence": "EntityEdge.episodes:list[str] references source episode UUIDs; Graphiti.add_episode accepts optional caller UUID; Graphiti.search returns EntityEdge[]"
+      "source_id_evidence": "EntityEdge.episodes:list[str] (graphiti_core/edges.py) references source episode UUIDs; Graphiti.search returns list[EntityEdge]; observed at 0.29.3 on an in-process Kuzu store that search() returns edges with their episodes lists intact. Graphiti.add_episode(uuid=...) and add_episode_bulk(RawEpisode.uuid) look up an EXISTING episode by uuid (NodeNotFoundError for an unknown uuid) and do not assign a caller id.",
+      "release_tag": "v0.29.3",
+      "release_tag_commit": "021d3a57d511f21b10adaf7fa923bd5c1fce5e9d",
+      "source_revision_rule": "release tag v0.29.3 commit; the PyPI wheel graphiti_core-0.29.3-py3-none-any.whl is tree-identical to it (159/159 package files). The earlier pin b2ff2eadd9a6b75a261a5cf0b19557883a13f752 (2026-08-13, post-release main) differs from the wheel in graphiti_core/search/search.py (blob 51c65d21 vs cfe07669) and is not the source of the installable package; its edges.py/graphiti.py/LICENSE/pyproject blobs are unchanged.",
+      "typed_state_789": "source_qualified",
+      "ingestion_handle_rule": "Record AddEpisodeResults.episode.uuid returned by add_episode for each benchmark item as the native handle; map handle -> benchmark id in the adapter sidecar. Do not pass the benchmark id as uuid= (lookup semantics, not assignment).",
+      "runtime_findings_2026_10_13": [
+        "pip install graphiti-core==0.29.3 resolves openai 3.29.0, which depends on httpx2 not httpx; graphiti_core/llm_client/client.py imports httpx unconditionally and graphiti-core does not declare it, so `import graphiti_core` fails with ModuleNotFoundError until httpx is installed separately",
+        "Graphiti() with the default clients raises OpenAIError at construction when OPENAI_API_KEY is unset; add_episode always calls the LLM client (extract_nodes) even with a stub embedder, so product ingestion is impossible without an LLM",
+        "KuzuDriver (deprecated upstream) never sets _database, so add_episode(group_id=<non-None>) raises AttributeError; and Graphiti.build_indices_and_constraints() is a no-op on Kuzu, so search() fails with 'Table RelatesToNode_ doesn't have an index with name edge_name_and_fact' until driver.graph_ops.build_indices_and_constraints(driver) is called directly",
+        "GRAPHITI_TELEMETRY_ENABLED=false is required to stop PostHog telemetry from the benchmark host"
+      ]
     },
     {
       "system_id": "cognee-oss",
@@ -74,7 +85,18 @@
       "source_retriever_model_git_blob": "72fed7ca5db2a7d7aa2da2d339181882f6570d9e",
       "source_chunk_model_git_blob": "4637c458644fc347cf376dc88cbf73f69b48bd0d",
       "source_references_git_blob": "b0efd708612accae76d4ffdf6d4e861d519bc725",
-      "source_id_evidence": "DocumentChunk has optional document_id sourced from parent Document.id; standard TextChunker sets document_id=str(self.document.id); ChunksRetriever returns found_chunk.payload; built-in references extracts payload.document_id as data_id; use only this native UUID and verify against recorded ingestion IDs."
+      "source_id_evidence": "DocumentChunk has optional document_id sourced from parent Document.id; standard TextChunker sets document_id=str(self.document.id); ChunksRetriever returns found_chunk.payload; built-in references extracts payload.document_id as data_id; use only this native UUID and verify against recorded ingestion IDs.",
+      "release_tag": "v1.4.2",
+      "release_tag_commit": "b0ea53e95caa7bfebf373ffabfbafb44f9fff922",
+      "source_revision_rule": "post-release commit on main (2026-08-10, 'fix(mcp): Ship cognee 1.4.2 in the MCP image (#4422)'); the cognee/ package tree, pyproject.toml and LICENSE are identical to release tag v1.4.2 and to the PyPI wheel cognee-1.4.2-py3-none-any.whl (1973/1973 package files); only cognee-mcp/pyproject.toml differs.",
+      "typed_state_789": "source_qualified",
+      "ingestion_handle_rule": "Pass cognee.tasks.ingestion.data_item.DataItem(data=<text>, data_id=<uuid5 of the benchmark id>) to cognee.add; the native handle is str(Data.id) which chunkers copy into DocumentChunk.document_id. Without data_id, Data.id is uuid5 over the content hash plus user/tenant (cognee/modules/data/methods/get_unique_data_id.py), so identical texts collapse to one handle.",
+      "runtime_findings_2026_10_13": [
+        "cognee.add runs an LLM completion and an embedding call as a first-run connection test before ingesting; with no LLM key it raises LLMAPIKeyNotSetError (422). COGNEE_SKIP_CONNECTION_TEST=true is the product's documented bypass",
+        "cognee.add -> resolve_data_directories imports s3fs whenever AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY are present in the environment (S3Config reads them from env/.env); s3fs ships only in the `aws` extra, so on a host with those variables set (as in the qualification sandbox, where they are proxy placeholders) a plain `pip install cognee==1.4.2` fails to add data with ModuleNotFoundError: s3fs. Unset the variables or install the extra; record which was done",
+        "defaults are sqlite + lancedb + ladybug (all in-process); embeddings default to openai/text-embedding-3-large through litellm; a local embedder requires the fastembed extra or an openai_compatible/ollama endpoint",
+        "TELEMETRY_DISABLED=1 is required to stop product telemetry from the benchmark host"
+      ]
     },
     {
       "system_id": "hindsight-oss",
@@ -98,7 +120,8 @@
       "compatibility_status": "delegated_to_640",
       "next_gate": "Do not duplicate #640. Pin exact install/model/runtime in its existing workstream; require a new lane freeze before any accepted numeric row.",
       "identity_risk": "Extracted facts can combine/transform source documents and break exact-ID retrieval scoring.",
-      "profile_caveat": "Vendor LongMemEval QA references are not same-harness retrieval measurements."
+      "profile_caveat": "Vendor LongMemEval QA references are not same-harness retrieval measurements.",
+      "typed_state_789": "not_started"
     }
   ]
 }
