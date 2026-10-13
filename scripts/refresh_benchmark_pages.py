@@ -76,14 +76,35 @@ def source_inventory(root: Path) -> dict[str, str]:
     benchmark_root = root / "reports/benchmarks"
     excluded = {"ui", "normalized", "scorecards"}
     if benchmark_root.exists():
-        sources.update(p for p in benchmark_root.rglob("*.json")
-                       if p.relative_to(benchmark_root).parts[0] not in excluded)
-    for folder in (root / "reference/agentmem_ref/evaluation/lanes",):
+        # A benchmark record includes identities, sidecars, SHA inventories,
+        # human review, fixture metadata and log/CSV/NDJSON source artifacts.
+        # Restricting this inventory to JSON silently loses recorded changes.
+        sources.update(p for p in benchmark_root.rglob("*")
+                       if p.is_file() and p.relative_to(benchmark_root).parts[0] not in excluded)
+    for folder in (
+        root / "reference/agentmem_ref/evaluation/lanes",
+        root / "reference/agentmem_ref/evaluation/integrations",
+    ):
         if folder.exists():
-            sources.update(folder.rglob("*.json"))
-    objective = root / "data/benchmark-frontier-objectives.json"
-    if objective.exists():
-        sources.add(objective)
+            sources.update(p for p in folder.rglob("*") if p.is_file())
+    for rel in (
+        "data/benchmark-frontier-objectives.json",
+        "scripts/build_benchmark_scorecards.py",
+        "scripts/build_benchmark_ui_catalog.py",
+        "scripts/build_benchmark_frontier_leaderboards.py",
+        "scripts/build_789_historical_ui.py",
+        "scripts/refresh_benchmark_pages.py",
+        "reference/agentmem_ref/evaluation/ui_catalog.py",
+        "reference/agentmem_ref/evaluation/ui_frontier_leaderboard.py",
+        "reference/agentmem_ref/evaluation/normalize.py",
+        "reference/agentmem_ref/evaluation/scorecard.py",
+    ):
+        path = root / rel
+        if path.is_file():
+            sources.add(path)
+    schema_dir = root / "schemas"
+    if schema_dir.exists():
+        sources.update(p for p in schema_dir.glob("*benchmark*.json") if p.is_file())
     if not (root / "reports/benchmarks/normalized").is_dir():
         raise RefreshError("missing normalized evidence directory")
     # SOURCE_PATHS are mandatory, while dataset-specific folders may be absent.
