@@ -18,28 +18,28 @@ There are separate states:
 
 After making the evidence-bearing commit:
 
-\`\`\`bash
+```bash
 python scripts/refresh_benchmark_pages.py --write
 python scripts/refresh_benchmark_pages.py --check
 git add reports/benchmarks/normalized reports/benchmarks/scorecards reports/benchmarks/ui
 git commit -m "chore(benchmarks): refresh recorded evidence projections [skip ci]"
-\`\`\`
+```
 
-The refresh runs four **existing** generators in strict order: scorecards/normalized, F1 catalog, F2 frontier leaderboard, and the separate historical-v6 diagnostic. The manifest \`reports/benchmarks/ui/refresh-status.json\` fingerprints all discovered source JSONs and derived outputs. \`--check\` is read-only and fails if any projection, source hash or manifest changes. No generic source glob is promoted into rankings: scorecard source registration and dashboard admission remain explicit reviewer decisions.
+The refresh runs four **existing** generators in strict order: scorecards/normalized, F1 catalog, F2 frontier leaderboard, and the separate historical-v6 diagnostic. The manifest `reports/benchmarks/ui/refresh-status.json` fingerprints all discovered raw benchmark source files (including non-JSON sidecars and checksums), benchmark descriptors and projection producers, plus derived outputs. `--check` is read-only and fails if any projection, source hash or manifest changes. No generic source glob is promoted into rankings: scorecard source registration and dashboard admission remain explicit reviewer decisions.
 
-The manifest exposes **unregistered \`evidence.json\` candidates** under any benchmark source family as paths, not competitor wins. This is intentional: new results must become visible as pending even when protocol qualification is incomplete. Raw \`single-turn.json\` files also affect its source digest; the inventory covers every benchmark family, not just AMB and LongMemEval. The static page reads the manifest for evidence coverage; it does not confuse an updated repository projection with confirmed deployment freshness.
+The manifest exposes **unregistered `evidence.json` candidates** under any benchmark source family as paths, not competitor wins. This is intentional: new results must become visible as pending even when protocol qualification is incomplete. Raw `single-turn.json`, checksum inventories and other recorded source artifacts affect its source digest across all benchmark families, not just AMB and LongMemEval. The static page reads the manifest for evidence coverage; it does not confuse an updated repository projection with confirmed deployment freshness.
 
 ## Opt-in per-workspace automatic Git hooks
 
-\`\`\`bash
+```bash
 python scripts/install_benchmark_refresh_hooks.py --install
 git config --local --get core.hooksPath
-\`\`\`
+```
 
-- \`.githooks/post-commit\` detects new committed benchmark source evidence, lane definition, dashboard decisions or source registration; if the workspace is clean, it invokes the refresh and writes **one companion projection commit** without running any benchmark. It will not stage unrelated work or rewrite frozen raw evidence.
-- \`.githooks/pre-push\` requires \`--check\` to pass before local pushes. It rejects stale output even when the post-commit hook could not execute.
-- The installer refuses to override any existing \`core.hooksPath\`. Git for Windows supports shell hooks when using the included Git shell. Each Claude/local workspace must install hooks separately.
-- Commit messages include \`[skip ci]\`; this is not a guarantee that arbitrary repository workflows will ignore pushes. Avoid pushing repeatedly and explicitly inspect the project's workflows and Pages publishing configuration.
+- `.githooks/post-commit` detects new committed benchmark source evidence, lane definition, dashboard decisions, source registration, or projection-generator changes; if the workspace is clean, it invokes the refresh and writes **one companion projection commit** without running any benchmark. It will not stage unrelated work or rewrite frozen raw evidence.
+- `.githooks/pre-push` checks the entire pushed revision range against its remote ancestor (or common `main` ancestor for new branches). It requires `--check` only when evidence-bearing inputs changed, rejecting stale output without obstructing unrelated runtime and documentation pushes.
+- The installer refuses to override any existing `core.hooksPath`. Git for Windows supports shell hooks when using the included Git shell. Each Claude/local workspace must install hooks separately.
+- Commit messages include `[skip ci]`; this is not a guarantee that arbitrary repository workflows will ignore pushes. Avoid pushing repeatedly and explicitly inspect the project's workflows and Pages publishing configuration.
 
 **Failure behavior:** If validation, packaging dependencies, an existing dirty tree or generated output disagrees, the hook reports a blocker. Post-commit cannot undo the already written source commit, so pre-push blocks publication until a clean, separately recorded repair. No fallback to bypass gates or publish partially regenerated outputs.
 
@@ -49,10 +49,10 @@ Git hooks **do not run on GitHub's remote server**, API commits, PR merge endpoi
 
 ## Validation gate
 
-\`\`\`bash
+```bash
 python -m unittest discover -s reference/tests -t reference -p test_benchmark_refresh_governance.py -v
 python scripts/refresh_benchmark_pages.py --write
 python scripts/refresh_benchmark_pages.py --check
-\`\`\`
+```
 
 Check source tampering, duplicate case detection in native builder, unregistered candidate flagging, rejected stale projection, idempotent second run, accepted-versus-unaccepted rankings unchanged, exact head, browser manifest read and zero Actions consumption. This governance is not accepted until the complete checkout passes these tests and the installer is run on every authorized evidence-recording workspace.
