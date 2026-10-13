@@ -1285,6 +1285,150 @@ class GovernedMemoryAdapter:
         record = (self.extension_state.get(REPLACEMENT_RECORDS_KEY) or {}).get(fact_uuid)
         return dict(record) if record else None
 
+    def lineage_visible(self, fact_uuid: str, context: RecallContext) -> bool:
+        """#774: may this reader see the fact as current OR as historical evidence?"""
+        fact = self._substrate.get_fact(fact_uuid) if isinstance(fact_uuid, str) and fact_uuid else None
+        if fact is None or not isinstance(context, RecallContext):
+            return False
+        return (self._admission_refusal(fact, context) is None
+                or self._admission_refusal(fact, context, HISTORICAL_EVIDENCE_ADMISSION, None) is None)
+
+    def lineage_head(self, fact_uuid: str, context: RecallContext) -> str | None:
+        """#774: the current governed version of this fact's memory, if visible.
+
+        None when the memory was deleted, has no current version, or the
+        reader may not see it.
+        """
+        # #774 x #776 integration: a generation is fact identity plus deletion membership,
+        # never the memory id alone (a re-created id starts a new, admissible lineage). A
+        # fact in a deleted generation has no head; a live fact's head is its memory's
+        # current fact, which is necessarily in the same live generation.
+        memory = self._fact_memory.get(fact_uuid) if isinstance(fact_uuid, str) else None
+        if memory is None or self.memory_deleted(fact_uuid):
+            return None
+        head = self._current_fact_by_memory.get(memory)
+        if head is None or self.memory_deleted(head):
+            return None
+        return head if self.lineage_visible(head, context) else None
+
+    def memory_deleted(self, fact_uuid: str) -> bool:
+        """#774: is this fact covered by a governed deletion (#776 lineage semantics)?
+
+        The same canonical decision admission and ``write_semantics`` use: the fact itself,
+        its deleted generation, or a provenance chain to one. A physically erased fact is
+        deleted iff a deletion record covers it.
+        """
+        if not isinstance(fact_uuid, str) or not fact_uuid:
+            return False
+        if fact_uuid in self._tombstones:
+            return True
+        fact = self._substrate.get_fact(fact_uuid)
+        if fact is None:
+            return fact_uuid in self._deleted_lineage() if self._tombstones else False
+        return self._deleted_lineage_reason(fact) is not None
+
+    def _erased_generation_members(self, memory: str) -> set[str]:
+        """Facts covered by a HEAD deletion of ``memory`` (a whole generation).
+
+        A head was never replaced, so its tombstone key has no replacement record; a
+        superseded-version deletion's key does. Only whole generations can be dropped
+        from ordering safely, because a re-creation always follows them.
+        """
+        members: set[str] = set()
+        for key, record in self._tombstones.items():
+            if record.get("memory_id") != memory or self.replacement_record(key) is not None:
+                continue
+            members.add(key)
+            members.update(str(ref) for ref in record.get("deleted_fact_uuids") or ())
+        return members
+
+    def version_in_effect(self, memory_id: str, instant: str, context: RecallContext) -> str | None:
+        """#774 strict as-of target: the version of ``memory_id`` in effect at ``instant``.
+
+        Versions are placed in governed write order; the version in effect is the last one
+        written at or before the instant. It resolves only when that version is visible to
+        this reader as current or historical evidence. A version later corrected as false
+        never held, so it resolves nothing (the other versions still do); a deleted version
+        is a barrier, so an instant at which it was in effect resolves nothing rather than
+        an older version (the same rule as the predecessor walk). Unknown, out-of-scope or
+        deleted memories and instants before the memory existed resolve to None,
+        indistinguishably; an erased superseded version fails closed.
+        """
+        target = parse_time(instant) if isinstance(instant, str) else None
+        if target is None or not isinstance(memory_id, str):
+            return None
+        versions = []
+        erased_generations = self._erased_generation_members(memory_id)
+        for uuid, owner in self._fact_memory.items():
+            if owner != memory_id:
+                continue
+            fact = self._substrate.get_fact(uuid)
+            if fact is None:
+                if uuid in erased_generations:
+                    continue  # an erased EARLIER generation: entirely before any live fact
+                return None  # erased superseded version or unexplained gap: cannot place a barrier
+            when = parse_time(fact.created_at)
+            if when is None:
+                return None
+            deleted = self.memory_deleted(uuid)
+            record = self.replacement_record(uuid)
+            never_held = record is not None and record.get("kind") == ERROR_CORRECTION
+            if not deleted and not never_held and not self.lineage_visible(uuid, context):
+                return None
+            versions.append((when, uuid, deleted, never_held))
+        in_effect = [entry for entry in sorted(versions) if entry[0] <= target]
+        if not in_effect:
+            return None
+        _when, chosen, deleted, never_held = in_effect[-1]
+        if deleted or never_held:
+            return None
+        return chosen
+
+    def governed_state_change_predecessor(self, fact_uuid: str, context: RecallContext) -> str | None:
+        """#774: the immediate predecessor of ``fact_uuid`` through governed lineage.
+
+        Walks the fact's logical memory backwards in governed write order.
+        A version replaced by an ERROR correction never held and is skipped.
+        The first version replaced by a STATE CHANGE is the immediate
+        predecessor, returned only if canonical historical admission admits
+        it to this reader; otherwise nothing is returned (never an older
+        version instead). A memory with a deletion tombstone yields nothing.
+        This is lineage only: no causal or explanatory relation is implied.
+        """
+        if not self.lineage_visible(fact_uuid, context):
+            return None
+        memory = self._fact_memory.get(fact_uuid)
+        if memory is None or self.memory_deleted(fact_uuid):
+            return None
+        versions = []
+        erased_generations = self._erased_generation_members(memory)
+        for uuid, owner in self._fact_memory.items():
+            if owner != memory:
+                continue
+            fact = self._substrate.get_fact(uuid)
+            if fact is None:
+                if uuid in erased_generations:
+                    continue  # an erased EARLIER generation: entirely before any live fact
+                return None  # erased superseded version or unexplained gap: no barrier can be placed
+            versions.append((parse_time(fact.created_at), uuid))
+        if any(when is None for when, _ in versions):
+            return None
+        versions.sort()
+        order = [uuid for _, uuid in versions]
+        for uuid in reversed(order[:order.index(fact_uuid)]):
+            if self.memory_deleted(uuid):
+                return None  # generation boundary or deleted version: never cross, never skip
+            record = self.replacement_record(uuid)
+            if record is None:
+                return None  # an earlier version that was never replaced: inconsistent lineage
+            if record.get("kind") == ERROR_CORRECTION:
+                continue
+            fact = self._substrate.get_fact(uuid)
+            if self._admission_refusal(fact, context, HISTORICAL_EVIDENCE_ADMISSION, None) is not None:
+                return None
+            return uuid
+        return None
+
     def _historical_evidence_refusal(self, fact: Fact, mode: str, target_seconds: float | None) -> str | None:
         """#549: an event-invalid fact is admissible only as historical evidence of a
         governed state change, under explicit historical/as-of admission, inside its
