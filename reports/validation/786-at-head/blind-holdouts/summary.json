@@ -59,7 +59,7 @@
       "protected_tree": "22ebb560e8adc17045fd21abc9ead3df1569872b"
     }
   },
-  "theatre/786-8d7ed43f/composed": {
+  "theatre/786-a7a81c45/composed": {
     "P0_safety": {
       "cases_with_prohibited_exposure": 0,
       "cases_with_stale_exposure": 0
@@ -83,13 +83,13 @@
     "input_sha256": "f12dc7ae9ab813ea82961db5a382b1d512f3e1609bb845d462234177aebc3c5a",
     "runtime": {
       "clean": true,
-      "commit": "8d7ed43f3e7e042310781788d2eff72a6cf65763",
+      "commit": "a7a81c45a06620b1c376fba40e4c6753add621ae",
       "loaded_module": "reference/agentmem_ref/runtime/runtime_composition.py",
       "loaded_module_blob": "5acaf31bd836c1097863d208ffaeb1e831ab48c7",
-      "protected_tree": "decba97b8cf2cfdf36edf242603268e7186c0762"
+      "protected_tree": "7767ebb362a06786509e7bd11e81c1b838264d2b"
     }
   },
-  "theatre/786-8d7ed43f/strict-target": {
+  "theatre/786-a7a81c45/strict-target": {
     "P0_safety": {
       "cases_with_prohibited_exposure": 0,
       "cases_with_stale_exposure": 0
@@ -113,10 +113,10 @@
     "input_sha256": "f12dc7ae9ab813ea82961db5a382b1d512f3e1609bb845d462234177aebc3c5a",
     "runtime": {
       "clean": true,
-      "commit": "8d7ed43f3e7e042310781788d2eff72a6cf65763",
+      "commit": "a7a81c45a06620b1c376fba40e4c6753add621ae",
       "loaded_module": "reference/agentmem_ref/runtime/runtime_composition.py",
       "loaded_module_blob": "5acaf31bd836c1097863d208ffaeb1e831ab48c7",
-      "protected_tree": "decba97b8cf2cfdf36edf242603268e7186c0762"
+      "protected_tree": "7767ebb362a06786509e7bd11e81c1b838264d2b"
     }
   },
   "vineyard/784-060e7cd/composed": {
@@ -179,7 +179,7 @@
       "protected_tree": "22ebb560e8adc17045fd21abc9ead3df1569872b"
     }
   },
-  "vineyard/786-8d7ed43f/composed": {
+  "vineyard/786-a7a81c45/composed": {
     "P0_safety": {
       "cases_with_prohibited_exposure": 0,
       "cases_with_stale_exposure": 0
@@ -203,13 +203,13 @@
     "input_sha256": "e0bf0303043e4c566100cd0cd2e522b28098169263d136963a21e5c6696e0908",
     "runtime": {
       "clean": true,
-      "commit": "8d7ed43f3e7e042310781788d2eff72a6cf65763",
+      "commit": "a7a81c45a06620b1c376fba40e4c6753add621ae",
       "loaded_module": "reference/agentmem_ref/runtime/runtime_composition.py",
       "loaded_module_blob": "5acaf31bd836c1097863d208ffaeb1e831ab48c7",
-      "protected_tree": "decba97b8cf2cfdf36edf242603268e7186c0762"
+      "protected_tree": "7767ebb362a06786509e7bd11e81c1b838264d2b"
     }
   },
-  "vineyard/786-8d7ed43f/strict-target": {
+  "vineyard/786-a7a81c45/strict-target": {
     "P0_safety": {
       "cases_with_prohibited_exposure": 0,
       "cases_with_stale_exposure": 0
@@ -233,10 +233,10 @@
     "input_sha256": "e0bf0303043e4c566100cd0cd2e522b28098169263d136963a21e5c6696e0908",
     "runtime": {
       "clean": true,
-      "commit": "8d7ed43f3e7e042310781788d2eff72a6cf65763",
+      "commit": "a7a81c45a06620b1c376fba40e4c6753add621ae",
       "loaded_module": "reference/agentmem_ref/runtime/runtime_composition.py",
       "loaded_module_blob": "5acaf31bd836c1097863d208ffaeb1e831ab48c7",
-      "protected_tree": "decba97b8cf2cfdf36edf242603268e7186c0762"
+      "protected_tree": "7767ebb362a06786509e7bd11e81c1b838264d2b"
     }
   }
 }
