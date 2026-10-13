@@ -80,6 +80,22 @@ class SystemOneContractTests(unittest.TestCase):
             gateway.decide("q", choices=("defer", "apply"), purpose="test")
         self.assertEqual(transport.calls, [])
 
+    def test_mismatched_model_and_malformed_response_are_rejected(self):
+        class WrongModelTransport:
+            def post_json(self, endpoint, body):
+                return {"model": "unexpected-checkpoint", "answers": {}}
+        class MissingAnswerTransport:
+            def post_json(self, endpoint, body):
+                return {"model": body["model"], "answers": {}}
+        for transport in (WrongModelTransport(), MissingAnswerTransport()):
+            gateway = DecisionGateway(
+                context_port(),
+                SystemOneProvider("fastino", "fastino/glide", transport),
+                HostPolicyStub(),
+            )
+            with self.subTest(transport=type(transport).__name__), self.assertRaises(DecisionContractError):
+                gateway.decide("q", choices=("defer", "apply"), purpose="test")
+
     def test_invalid_vendor_refused(self):
         with self.assertRaises(ValueError):
             SystemOneProvider("unlisted", "model", TransportStub())
