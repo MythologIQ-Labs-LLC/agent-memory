@@ -101,7 +101,10 @@ def _result(
             populations = {row["population"] for row in eligible}
             denominators = {row["denominator"] for row in eligible}
             if (len(directions) != 1 or len(units) != 1
-                    or len(populations) != 1 or len(denominators) != 1):
+                    or len(populations) != 1 or len(denominators) != 1
+                    or any(row["unit"] in (None, "") or row["population"] in (None, "")
+                           or not _number(row["denominator"]) or row["denominator"] <= 0
+                           for row in eligible)):
                 ranking_state = "non_comparable"
             else:
                 metric_dir = next(iter(directions))
