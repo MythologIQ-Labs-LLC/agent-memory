@@ -1,0 +1,68 @@
+{
+  "audit": "sha256_verified_from_committed_utf8_artifact_bytes",
+  "source_main_sha": "3eebb6d54e2a218c4fd10cf53c52acac8384c3e6",
+  "algorithm_self_test": "abc:PASS",
+  "scope": "Only LongMemEval v6 primary report.json, not compressed per-row report.rows.json.gz or full scorer replay.",
+  "items": [
+    {
+      "variant": "lane:longmemeval-s-retrieval-parity-v6:agent_memory:session",
+      "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/agent_memory-session-24048d55e26d/evidence.json",
+      "primary_artifact": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/agent_memory-session-24048d55e26d/report.json",
+      "expected_sha256": "ad54923e92b7593d47261027b1eb571dc8fff1708136d8520433253e66dd0b33",
+      "computed_sha256": "ad54923e92b7593d47261027b1eb571dc8fff1708136d8520433253e66dd0b33",
+      "byte_verified": true,
+      "raw_blob_sha": "7d9f617774bda32d72e99bf443f3889be6e94651",
+      "source_run_id": "37718255173"
+    },
+    {
+      "variant": "lane:longmemeval-s-retrieval-parity-v6:agent_memory:turn",
+      "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/agent_memory-turn-24048d55e26d/evidence.json",
+      "primary_artifact": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/agent_memory-turn-24048d55e26d/report.json",
+      "expected_sha256": "b994b946cb6862b4149e2d6a2ab7f2b9c8ccd794dd0d21fc4fb06f367ff5ff7e",
+      "computed_sha256": "b994b946cb6862b4149e2d6a2ab7f2b9c8ccd794dd0d21fc4fb06f367ff5ff7e",
+      "byte_verified": true,
+      "raw_blob_sha": "5a221f3bff1ac24cfb67378a0c686aff2dc72a64",
+      "source_run_id": "37718257278"
+    },
+    {
+      "variant": "lane:longmemeval-s-retrieval-parity-v6:lexical_overlap:session",
+      "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/lexical_overlap-session-24048d55e26d/evidence.json",
+      "primary_artifact": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/lexical_overlap-session-24048d55e26d/report.json",
+      "expected_sha256": "665e5c8ec3d6acd4d7dab339aca58c289aef2821bec38c905efb8d25682b5123",
+      "computed_sha256": "665e5c8ec3d6acd4d7dab339aca58c289aef2821bec38c905efb8d25682b5123",
+      "byte_verified": true,
+      "raw_blob_sha": "108d8c74f9a232819c9b4dcc03e29645d8d7bb26",
+      "source_run_id": "37718259916"
+    },
+    {
+      "variant": "lane:longmemeval-s-retrieval-parity-v6:lexical_overlap:turn",
+      "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/lexical_overlap-turn-24048d55e26d/evidence.json",
+      "primary_artifact": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/lexical_overlap-turn-24048d55e26d/report.json",
+      "expected_sha256": "a3946691d2ae906172fb4a0acb2a3fb57b1e71e217879f9abb79b7f91f851d0b",
+      "computed_sha256": "a3946691d2ae906172fb4a0acb2a3fb57b1e71e217879f9abb79b7f91f851d0b",
+      "byte_verified": true,
+      "raw_blob_sha": "ca81869076989b994fe6b72000a19008ec13636f",
+      "source_run_id": "37718262620"
+    },
+    {
+      "variant": "lane:longmemeval-s-retrieval-parity-v6:mem0_explicit:session",
+      "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/mem0_explicit-session-24048d55e26d/evidence.json",
+      "primary_artifact": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/mem0_explicit-session-24048d55e26d/report.json",
+      "expected_sha256": "58dc7e75c3d48d7997382f4eac3ac941c8e7631121362a349383f10bdf6aba01",
+      "computed_sha256": "58dc7e75c3d48d7997382f4eac3ac941c8e7631121362a349383f10bdf6aba01",
+      "byte_verified": true,
+      "raw_blob_sha": "98adfcc8ef1ba149c606ee6eac4e71b849f56386",
+      "source_run_id": "37718265216"
+    },
+    {
+      "variant": "lane:longmemeval-s-retrieval-parity-v6:mem0_explicit:turn",
+      "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/mem0_explicit-turn-24048d55e26d/evidence.json",
+      "primary_artifact": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/mem0_explicit-turn-24048d55e26d/report.json",
+      "expected_sha256": "74c81bb828d71026fa8dff73042633d1a50f599162f36b122fb000be72439aff",
+      "computed_sha256": "74c81bb828d71026fa8dff73042633d1a50f599162f36b122fb000be72439aff",
+      "byte_verified": true,
+      "raw_blob_sha": "56a1a75b01d84acc44b8864d94c7dd104307ba14",
+      "source_run_id": "37718267521"
+    }
+  ]
+}
