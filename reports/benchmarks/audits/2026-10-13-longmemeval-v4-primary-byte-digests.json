@@ -1,0 +1,68 @@
+{
+  "audit": "sha256_committed_utf8_primary_artifacts",
+  "source_main_sha": "3eebb6d54e2a218c4fd10cf53c52acac8384c3e6",
+  "sha256_test_vector": "abc:PASS",
+  "scope": "All LongMemEval v4 ordinary primary report.json artifacts. Compressed per-row data, shadow variant, scorer replay not verified.",
+  "items": [
+    {
+      "variant": "lane:longmemeval-s-retrieval-parity-v4:agent_memory:session",
+      "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v4/agent_memory-session-f5a79d230a31/evidence.json",
+      "artifact": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v4/agent_memory-session-f5a79d230a31/report.json",
+      "expected_sha256": "55f5d824c8a6ce61d13942669e2d2d3c7935a87f99401110e20871b314705786",
+      "computed_sha256": "55f5d824c8a6ce61d13942669e2d2d3c7935a87f99401110e20871b314705786",
+      "byte_verified": true,
+      "git_blob": "a617a00db4803cad37650e1e5c8254eb2c3e5de3",
+      "run_id": "37661817540"
+    },
+    {
+      "variant": "lane:longmemeval-s-retrieval-parity-v4:agent_memory:turn",
+      "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v4/agent_memory-turn-f5a79d230a31/evidence.json",
+      "artifact": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v4/agent_memory-turn-f5a79d230a31/report.json",
+      "expected_sha256": "0ca90d7126e4f09d8193076f57159e026309266dbed1e901ea50265b6abc1d72",
+      "computed_sha256": "0ca90d7126e4f09d8193076f57159e026309266dbed1e901ea50265b6abc1d72",
+      "byte_verified": true,
+      "git_blob": "20305fd63f951f38b5975f74ceae87e5dd775679",
+      "run_id": "37661822050"
+    },
+    {
+      "variant": "lane:longmemeval-s-retrieval-parity-v4:lexical_overlap:session",
+      "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v4/lexical_overlap-session-f5a79d230a31/evidence.json",
+      "artifact": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v4/lexical_overlap-session-f5a79d230a31/report.json",
+      "expected_sha256": "7f8948c2c9622dee1fef077ec6d7475b2c57d1d93bc23909a8ba467b7ba2a493",
+      "computed_sha256": "7f8948c2c9622dee1fef077ec6d7475b2c57d1d93bc23909a8ba467b7ba2a493",
+      "byte_verified": true,
+      "git_blob": "5212de0e7023ab32e3739f86e7fad38b746b6bf8",
+      "run_id": "37661836571"
+    },
+    {
+      "variant": "lane:longmemeval-s-retrieval-parity-v4:lexical_overlap:turn",
+      "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v4/lexical_overlap-turn-f5a79d230a31/evidence.json",
+      "artifact": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v4/lexical_overlap-turn-f5a79d230a31/report.json",
+      "expected_sha256": "b05ff951e26a1bf3c2bf2b6d73f27d6779d4a98ca621d55b628598dbfad6559d",
+      "computed_sha256": "b05ff951e26a1bf3c2bf2b6d73f27d6779d4a98ca621d55b628598dbfad6559d",
+      "byte_verified": true,
+      "git_blob": "aecd0bd1d0f262c4732455ac8cbb63b1d3769202",
+      "run_id": "37661841174"
+    },
+    {
+      "variant": "lane:longmemeval-s-retrieval-parity-v4:mem0_explicit:session",
+      "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v4/mem0_explicit-session-f5a79d230a31/evidence.json",
+      "artifact": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v4/mem0_explicit-session-f5a79d230a31/report.json",
+      "expected_sha256": "79b21da57b37cecb4cf8e6a90177cb5d2f0e797a728e5ce30ee6d665704fbd9a",
+      "computed_sha256": "79b21da57b37cecb4cf8e6a90177cb5d2f0e797a728e5ce30ee6d665704fbd9a",
+      "byte_verified": true,
+      "git_blob": "e9120135f280444af7f0eb147833550092aa4ef0",
+      "run_id": "37661846810"
+    },
+    {
+      "variant": "lane:longmemeval-s-retrieval-parity-v4:mem0_explicit:turn",
+      "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v4/mem0_explicit-turn-f5a79d230a31/evidence.json",
+      "artifact": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v4/mem0_explicit-turn-f5a79d230a31/report.json",
+      "expected_sha256": "69ade1682da9fb08ac679706f88551ea1d3669e4673955fcfbe4b1cd13525f35",
+      "computed_sha256": "69ade1682da9fb08ac679706f88551ea1d3669e4673955fcfbe4b1cd13525f35",
+      "byte_verified": true,
+      "git_blob": "4068e588247b868b58f4c2fb8efb7026157bdd8b",
+      "run_id": "37661851657"
+    }
+  ]
+}
