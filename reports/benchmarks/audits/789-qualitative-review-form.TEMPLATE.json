@@ -1,0 +1,46 @@
+{
+  "schema_version": "competitive-qualitative-review/1",
+  "case_id": "REPLACE_WITH_ONE_OF_24_FROZEN_CASE_IDS",
+  "blind_arm": "A_OR_B",
+  "reviewer_id": "REPLACE_WITH_VERIFIED_INDEPENDENT_REVIEWER",
+  "reviewer_kind": "human",
+  "locked": false,
+  "benchmark_outcome_visible": false,
+  "source_trace": "REPLACE_WITH_EXACT_RAW_OUTPUT_AND_QUERY_ID",
+  "dimensions": {
+    "task_utility": {
+      "rating": "not_applicable",
+      "rationale": "REPLACE_WITH_ANCHORED_OBSERVATION_OR_VALID_REASON_FOR_NA",
+      "evidence_refs": []
+    },
+    "source_accuracy": {
+      "rating": "not_applicable",
+      "rationale": "REPLACE_WITH_ANCHORED_OBSERVATION_OR_VALID_REASON_FOR_NA",
+      "evidence_refs": []
+    },
+    "temporal_correctness": {
+      "rating": "not_applicable",
+      "rationale": "REPLACE_WITH_ANCHORED_OBSERVATION_OR_VALID_REASON_FOR_NA",
+      "evidence_refs": []
+    },
+    "selection_precision": {
+      "rating": "not_applicable",
+      "rationale": "REPLACE_WITH_ANCHORED_OBSERVATION_OR_VALID_REASON_FOR_NA",
+      "evidence_refs": []
+    },
+    "safe_absence": {
+      "rating": "not_applicable",
+      "rationale": "REPLACE_WITH_ANCHORED_OBSERVATION_OR_VALID_REASON_FOR_NA",
+      "evidence_refs": []
+    },
+    "workflow_recoverability": {
+      "rating": "not_applicable",
+      "rationale": "REPLACE_WITH_ANCHORED_OBSERVATION_OR_VALID_REASON_FOR_NA",
+      "evidence_refs": []
+    }
+  },
+  "safety_flags": {
+    "unauthorized_exposure": false,
+    "deleted_data_exposure": false
+  }
+}
