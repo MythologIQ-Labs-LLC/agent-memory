@@ -1345,32 +1345,42 @@ class GovernedMemoryAdapter:
     def version_in_effect(self, memory_id: str, instant: str, context: RecallContext) -> str | None:
         """#774 strict as-of target: the version of ``memory_id`` in effect at ``instant``.
 
-        Considers only versions this reader may see as current or historical evidence,
-        in governed write order. The version in effect is the last one written at or before
-        the instant; a version later corrected as false never held, so it resolves nothing.
-        Unknown, out-of-scope or deleted memories and instants before the memory existed
-        resolve to None -- indistinguishably.
+        Versions are placed in governed write order; the version in effect is the last one
+        written at or before the instant. It resolves only when that version is visible to
+        this reader as current or historical evidence. A version later corrected as false
+        never held, so it resolves nothing (the other versions still do); a deleted version
+        is a barrier, so an instant at which it was in effect resolves nothing rather than
+        an older version (the same rule as the predecessor walk). Unknown, out-of-scope or
+        deleted memories and instants before the memory existed resolve to None,
+        indistinguishably; an erased superseded version fails closed.
         """
         target = parse_time(instant) if isinstance(instant, str) else None
         if target is None or not isinstance(memory_id, str):
             return None
         versions = []
+        erased_generations = self._erased_generation_members(memory_id)
         for uuid, owner in self._fact_memory.items():
-            if owner != memory_id or self.memory_deleted(uuid):
+            if owner != memory_id:
                 continue
             fact = self._substrate.get_fact(uuid)
-            if fact is None or not self.lineage_visible(uuid, context):
-                return None if fact is None else None
+            if fact is None:
+                if uuid in erased_generations:
+                    continue  # an erased EARLIER generation: entirely before any live fact
+                return None  # erased superseded version or unexplained gap: cannot place a barrier
             when = parse_time(fact.created_at)
             if when is None:
                 return None
-            versions.append((when, uuid))
-        in_effect = [uuid for when, uuid in sorted(versions) if when <= target]
+            deleted = self.memory_deleted(uuid)
+            record = self.replacement_record(uuid)
+            never_held = record is not None and record.get("kind") == ERROR_CORRECTION
+            if not deleted and not never_held and not self.lineage_visible(uuid, context):
+                return None
+            versions.append((when, uuid, deleted, never_held))
+        in_effect = [entry for entry in sorted(versions) if entry[0] <= target]
         if not in_effect:
             return None
-        chosen = in_effect[-1]
-        record = self.replacement_record(chosen)
-        if record is not None and record.get("kind") == ERROR_CORRECTION:
+        _when, chosen, deleted, never_held = in_effect[-1]
+        if deleted or never_held:
             return None
         return chosen
 
