@@ -3,9 +3,11 @@
 set -eu
 cd "$(git rev-parse --show-toplevel)"
 . .githooks/benchmark-refresh-paths.sh
-if git rev-parse --verify HEAD^ >/dev/null 2>&1; then
+# post-merge supplies ORIG_HEAD; a plain commit compares with its first parent.
+base="${BENCHMARK_REFRESH_BASE:-HEAD^}"
+if git rev-parse --verify "$base" >/dev/null 2>&1; then
   # First-parent diff works for normal commits AND merges.
-  changed="$(git diff --name-only HEAD^ HEAD)"
+  changed="$(git diff --name-only "$base" HEAD)"
 else
   changed="$(git diff-tree --root --no-commit-id --name-only -r HEAD)"
 fi
@@ -25,5 +27,10 @@ fi
 }
 git add -- reports/benchmarks/normalized reports/benchmarks/scorecards reports/benchmarks/ui
 if ! git diff --cached --quiet; then
-  git -c core.hooksPath=/dev/null commit -m "chore(benchmarks): refresh recorded evidence projections [skip ci]"
+  # Plumbing, not `git commit`: inside post-merge MERGE_HEAD still exists and
+  # porcelain would record a second merge of the same branch. Record exactly
+  # one parent (HEAD); no hooks run for the companion commit.
+  tree="$(git write-tree)"
+  commit="$(git commit-tree "$tree" -p HEAD -m "chore(benchmarks): refresh recorded evidence projections [skip ci]")"
+  git update-ref -m "benchmark refresh companion commit" HEAD "$commit"
 fi

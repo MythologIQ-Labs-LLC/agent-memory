@@ -42,7 +42,7 @@
       "total": 77,
       "mean_precision": 0.1049,
       "precision_denominator": 68,
-      "mean_recall": 1,
+      "mean_recall": 1.0,
       "recall_denominator": 43
     },
     "bm25_control": {
