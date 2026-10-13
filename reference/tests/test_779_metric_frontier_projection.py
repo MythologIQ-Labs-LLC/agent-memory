@@ -428,6 +428,80 @@ class FrontierProjectionTests(unittest.TestCase):
         self.assertEqual(row["leader"]["role"], "control")
         self.assertAlmostEqual(row["gap_to_leader_native"], 0.2)
 
+    # --- review: run-system identity, co-leader roles, zero-target domain ----
+
+    def test_run_recorded_for_another_system_id_is_not_credited(self):
+        obj = fixture()
+        run = next(r for r in obj["runs"] if r["run_id"] == "r-mem0")
+        run["system"]["id"] = "someone-else"  # same revision, same benchmark identity
+        row = build_frontier_leaderboard(obj)["leaderboards"][0]
+        self.assertNotEqual(row["ranking_state"], "ranked")
+        self.assertIn("run_system_mismatch:mem0-oss:id", row["reasons"])
+        self.assertIsNone(row["gap_to_leader_native"])
+        self.assertIsNone(row["competitive_state"])
+        mem0 = next(s for s in row["systems_observed"] if s["system_id"] == "mem0-oss")
+        self.assertFalse(mem0["eligible"])
+
+    def test_run_recorded_for_another_system_kind_is_not_credited(self):
+        obj = fixture()
+        run = next(r for r in obj["runs"] if r["run_id"] == "r-mem0")
+        run["system"]["kind"] = "lexical"  # same id and revision, different kind
+        row = build_frontier_leaderboard(obj)["leaderboards"][0]
+        self.assertNotEqual(row["ranking_state"], "ranked")
+        self.assertIn("run_system_mismatch:mem0-oss:kind", row["reasons"])
+        self.assertIsNone(row["gap_to_leader_native"])
+
+    def test_external_and_control_co_leaders_classify_as_behind_external(self):
+        for control_id in ("aaa-control", "zzz-control"):
+            with self.subTest(control_id=control_id):
+                obj = fixture(am=0.5, peer=0.9)
+                add_system(obj, control_id, "lexical", 0.9)
+                row = build_frontier_leaderboard(obj)["leaderboards"][0]
+                self.assertEqual(row["competitive_state"], "behind_external")
+                self.assertEqual(sorted(row["co_leaders"]), sorted(["mem0-oss", control_id]))
+                self.assertEqual(row["leader"]["system_id"], "mem0-oss")
+                self.assertEqual(row["leader_state"], "tied")
+                self.assertAlmostEqual(row["gap_to_leader_native"], 0.4)
+
+    def test_co_leader_classification_is_stable_under_insertion_order(self):
+        first = fixture(am=0.5, peer=0.9)
+        add_system(first, "aaa-control", "lexical", 0.9)
+        second = fixture(am=0.5, peer=0.9)
+        add_system(second, "aaa-control", "lexical", 0.9)
+        comp = second["comparison_sets"][0]
+        comp["systems"].reverse()
+        second["runs"].reverse()
+        rows = comp["dimensions"]["retrieval"]["rows"][0]
+        rows["systems"] = dict(reversed(list(rows["systems"].items())))
+        a = build_frontier_leaderboard(first)["leaderboards"][0]
+        b = build_frontier_leaderboard(second)["leaderboards"][0]
+        for key in ("competitive_state", "co_leaders", "leader", "ranking", "gap_to_leader_native"):
+            self.assertEqual(a[key], b[key], key)
+
+    def test_control_only_co_leaders_remain_behind_control(self):
+        obj = fixture(am=0.5, peer=0.4)
+        add_system(obj, "bm25", "lexical", 0.9)
+        add_system(obj, "no-memory", "lexical", 0.9)
+        row = build_frontier_leaderboard(obj)["leaderboards"][0]
+        self.assertEqual(row["competitive_state"], "behind_control")
+        self.assertEqual(sorted(row["co_leaders"]), ["bm25", "no-memory"])
+
+    def test_negative_zero_target_value_is_refused(self):
+        obj = fixture(direction="zero_target", am=-0.1, peer=0.2)
+        for system in observations(obj).values():
+            system["unit"] = "seconds"
+        row = build_frontier_leaderboard(obj)["leaderboards"][0]
+        self.assertNotEqual(row["ranking_state"], "ranked")
+        self.assertIn("invalid_observation:agent-memory:zero_target_negative_value", row["reasons"])
+        self.assertIsNone(row["gap_to_leader_native"])
+        self.assertIsNone(row["competitive_state"])
+        ok = fixture(direction="zero_target", am=0.0, peer=0.2)
+        for system in observations(ok).values():
+            system["unit"] = "seconds"
+        good = build_frontier_leaderboard(ok)["leaderboards"][0]
+        self.assertEqual(good["ranking_state"], "ranked")
+        self.assertEqual(good["agent_memory"]["rank"], 1)
+
     # --- repeated runs and chronology -------------------------------------
 
     def _lineage_fixture(self):

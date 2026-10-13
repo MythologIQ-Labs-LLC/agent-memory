@@ -148,6 +148,12 @@ def _verify_run(
     for name, observed, expected in checks:
         if observed is None or str(observed) != str(expected):
             problems.append(f"run_identity_mismatch:{system_id}:{name}")
+    # The run must be this system's own: a complete run for a different system
+    # or kind carrying the same revision is never credited to this competitor.
+    if run_system.get("id") != system_id:
+        problems.append(f"run_system_mismatch:{system_id}:id")
+    if run_system.get("kind") != config.get("kind"):
+        problems.append(f"run_system_mismatch:{system_id}:kind")
     revision = config.get("revision")
     if not _text(revision) or run_system.get("revision") != revision:
         problems.append(f"run_revision_mismatch:{system_id}")
@@ -186,6 +192,10 @@ def _observation_state(observation: Mapping[str, Any]) -> tuple[str, str | None]
         return "measured_non_numeric", "non_finite_or_non_numeric_value"
     if observation.get("unit") == "ratio" and not 0.0 <= value <= 1.0:
         return "invalid", "ratio_out_of_range"
+    if observation.get("direction") == "zero_target" and value < 0:
+        # zero_target ranks ascending as distance from zero, which is only a valid
+        # order on a nonnegative domain; a negative native value cannot be placed.
+        return "invalid", "zero_target_negative_value"
     return "numeric", None
 
 
@@ -355,9 +365,14 @@ def _result(
                             rank = index
                         last = row["value"]
                         ranking.append({**row, "rank": rank})
-                    leader = dict(ranking[0])
-                    co_leaders = [row["system_id"] for row in ranking if row["rank"] == 1]
+                    leaders = [row for row in ranking if row["rank"] == 1]
+                    co_leaders = [row["system_id"] for row in leaders]
                     leader_state = "tied" if len(co_leaders) > 1 else "sole"
+                    # The representative leader is chosen by role, not by identifier order:
+                    # an external competitor among the co-leaders is the market reference.
+                    role_order = {"external_competitor": 0, "control": 1, "subject": 2, "unclassified": 3}
+                    leader = dict(sorted(leaders, key=lambda row: (role_order[row["role"]], row["system_id"]))[0])
+                    leader_roles = {row["role"] for row in leaders}
                     agent_memory = next(
                         dict(row) for row in ranking if row["system_id"] == agent_id
                     )
@@ -374,8 +389,8 @@ def _result(
                         competitive_state = "leading_vs_external"
                     elif agent_memory["rank"] == 1:
                         competitive_state = "leading_vs_controls_only"
-                    elif leader["role"] == "external_competitor":
-                        competitive_state = "behind_external"
+                    elif "external_competitor" in leader_roles:
+                        competitive_state = "behind_external"  # any external co-leader counts
                     else:
                         competitive_state = "behind_control"
 

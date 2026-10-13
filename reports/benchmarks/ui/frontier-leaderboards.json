@@ -24324,30 +24324,30 @@
         "evidence": [
           {
             "kind": "normalized_run",
-            "uri": "reports/benchmarks/normalized/longmemeval-longmemeval-s-retrieval-parity-v1-session-agent_memory-0b0449a8aa2b.json"
+            "uri": "reports/benchmarks/normalized/longmemeval-longmemeval-s-retrieval-parity-v1-session-lexical_overlap-0b0449a8aa2b.json"
           },
           {
             "artifact_id": "native-report",
             "kind": "artifact",
-            "sha256": "208fca7e38ab2b16a0c17a53627fee7c2f2837282f07680a313976696d2d2d09",
-            "uri": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/agent_memory-session-0b0449a8aa2b/report.json"
+            "sha256": "0054efde8f4dd37d6bd153c516f5f6e5f64d6164837565b1836478a9c4b5ae51",
+            "uri": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/lexical_overlap-session-0b0449a8aa2b/report.json"
           },
           {
             "artifact_id": "rows",
             "kind": "artifact",
-            "sha256": "50596e3ebb189b30fee5d99982a52cc784e1f9bdedc006bd53925ca11547eba7",
-            "uri": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/agent_memory-session-0b0449a8aa2b/report.rows.json.gz"
+            "sha256": "87ca4335b6e206173b8cb4e1f227f494518b474627089ae119322893e329acaf",
+            "uri": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/lexical_overlap-session-0b0449a8aa2b/report.rows.json.gz"
           },
           {
             "artifact_id": "execution-identity",
             "kind": "artifact",
-            "sha256": "fc29d7e5ce239dd00a87c919367c5f582780423974c538a90a1c9066ccbfabae",
-            "uri": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/agent_memory-session-0b0449a8aa2b/execution-identity.json"
+            "sha256": "ac0941a7584f896a1a2aa610c23312bc543aebff956dee1ff1a95677c654634d",
+            "uri": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/lexical_overlap-session-0b0449a8aa2b/execution-identity.json"
           },
           {
             "artifact_id": "lane-evidence-record",
             "kind": "artifact",
-            "uri": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/agent_memory-session-0b0449a8aa2b/evidence.json"
+            "uri": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/lexical_overlap-session-0b0449a8aa2b/evidence.json"
           }
         ],
         "population": "knowledge-update questions with gold on >=2 distinct dates",
@@ -24359,21 +24359,21 @@
           "dataset_id": "xiaowu0162/longmemeval-cleaned:longmemeval_s_cleaned.json",
           "dataset_revision": "unrecorded",
           "revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
-          "run_id": "longmemeval:longmemeval-s-retrieval-parity-v1:session:agent_memory:0b0449a8aa2b",
+          "run_id": "longmemeval:longmemeval-s-retrieval-parity-v1:session:lexical_overlap:0b0449a8aa2b",
           "run_status": "complete",
           "seed": null,
           "selection_method": "all",
           "source_revision": "9e0b455f4ef0e2ab8f2e582289761153549043fc",
           "source_url": "https://github.com/xiaowu0162/LongMemEval",
-          "started_at": "2026-10-06T05:59:42.134577+00:00",
+          "started_at": "2026-10-06T05:59:56.700642+00:00",
           "verified": true
         },
         "rank": 1,
         "revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
-        "role": "subject",
-        "run_id": "longmemeval:longmemeval-s-retrieval-parity-v1:session:agent_memory:0b0449a8aa2b",
-        "system_id": "agent-memory",
-        "system_kind": "agent_memory",
+        "role": "control",
+        "run_id": "longmemeval:longmemeval-s-retrieval-parity-v1:session:lexical_overlap:0b0449a8aa2b",
+        "system_id": "lexical_overlap",
+        "system_kind": "lexical",
         "unit": "ratio",
         "value": 0.457143
       },
@@ -36399,30 +36399,30 @@
         "evidence": [
           {
             "kind": "normalized_run",
-            "uri": "reports/benchmarks/normalized/longmemeval-longmemeval-s-retrieval-parity-v2-session-agent_memory-ca0f9a748b3b.json"
+            "uri": "reports/benchmarks/normalized/longmemeval-longmemeval-s-retrieval-parity-v2-session-lexical_overlap-ca0f9a748b3b.json"
           },
           {
             "artifact_id": "native-report",
             "kind": "artifact",
-            "sha256": "31698609867ed28e050d3e35b185175811140b87e5b5e8e32503b651618eaf0f",
-            "uri": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/agent_memory-session-ca0f9a748b3b/report.json"
+            "sha256": "927b737e3da93dcb35d131e0c08f703eb370546c7dc76adac2cdb8571e0954fa",
+            "uri": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/lexical_overlap-session-ca0f9a748b3b/report.json"
           },
           {
             "artifact_id": "rows",
             "kind": "artifact",
-            "sha256": "805485dddd1b6eacb811847a7bd8dbe83d1af6303cc830a002004358fa79ce8f",
-            "uri": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/agent_memory-session-ca0f9a748b3b/report.rows.json.gz"
+            "sha256": "464e0ee61e73dad903bbc439872f2228ff5dba5c5b73eb84bab9a694252164cb",
+            "uri": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/lexical_overlap-session-ca0f9a748b3b/report.rows.json.gz"
           },
           {
             "artifact_id": "execution-identity",
             "kind": "artifact",
-            "sha256": "b68d9d10575b7cc96cf26c27fca49b5cb2c34d93467dfe5ec811bdcba342fc07",
-            "uri": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/agent_memory-session-ca0f9a748b3b/execution-identity.json"
+            "sha256": "770339366e744c2686fbd5d3b32debcc2a14fb3720eb4310ed44173f8b15e69c",
+            "uri": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/lexical_overlap-session-ca0f9a748b3b/execution-identity.json"
           },
           {
             "artifact_id": "lane-evidence-record",
             "kind": "artifact",
-            "uri": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/agent_memory-session-ca0f9a748b3b/evidence.json"
+            "uri": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/lexical_overlap-session-ca0f9a748b3b/evidence.json"
           }
         ],
         "population": "knowledge-update questions with gold on >=2 distinct dates",
@@ -36434,21 +36434,21 @@
           "dataset_id": "xiaowu0162/longmemeval-cleaned:longmemeval_s_cleaned.json",
           "dataset_revision": "unrecorded",
           "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
-          "run_id": "longmemeval:longmemeval-s-retrieval-parity-v2:session:agent_memory:ca0f9a748b3b",
+          "run_id": "longmemeval:longmemeval-s-retrieval-parity-v2:session:lexical_overlap:ca0f9a748b3b",
           "run_status": "complete",
           "seed": null,
           "selection_method": "all",
           "source_revision": "9e0b455f4ef0e2ab8f2e582289761153549043fc",
           "source_url": "https://github.com/xiaowu0162/LongMemEval",
-          "started_at": "2026-10-06T22:55:21.543020+00:00",
+          "started_at": "2026-10-06T22:55:57.756952+00:00",
           "verified": true
         },
         "rank": 1,
         "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
-        "role": "subject",
-        "run_id": "longmemeval:longmemeval-s-retrieval-parity-v2:session:agent_memory:ca0f9a748b3b",
-        "system_id": "agent-memory",
-        "system_kind": "agent_memory",
+        "role": "control",
+        "run_id": "longmemeval:longmemeval-s-retrieval-parity-v2:session:lexical_overlap:ca0f9a748b3b",
+        "system_id": "lexical_overlap",
+        "system_kind": "lexical",
         "unit": "ratio",
         "value": 0.457143
       },
