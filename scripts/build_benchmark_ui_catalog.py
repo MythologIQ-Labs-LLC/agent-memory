@@ -55,7 +55,7 @@ def _git_revision(spec: str) -> str | None:
 
 def _git_blob_from_bytes(payload: bytes) -> str:
     """Git blob object ID of actual working-tree bytes, not stale HEAD."""
-    return hashlib.sha1(b"blob " + str(len(payload)).encode("ascii") + b"\\0" + payload).hexdigest()
+    return hashlib.sha1(b"blob " + str(len(payload)).encode("ascii") + b"\0" + payload).hexdigest()
 
 
 def _working_tree_identity(folder: Path) -> str:
@@ -69,10 +69,10 @@ def _working_tree_identity(folder: Path) -> str:
         raise ValueError("normalized evidence tree must contain only JSON files")
     entries = bytearray()
     for p in children:
-        entries.extend(b"100644 " + p.name.encode("utf-8") + b"\\0")
+        entries.extend(b"100644 " + p.name.encode("utf-8") + b"\0")
         entries.extend(bytes.fromhex(_git_blob_from_bytes(p.read_bytes())))
     data = bytes(entries)
-    return hashlib.sha1(b"tree " + str(len(data)).encode("ascii") + b"\\0" + data).hexdigest()
+    return hashlib.sha1(b"tree " + str(len(data)).encode("ascii") + b"\0" + data).hexdigest()
 
 
 def _source_identity() -> dict[str, str]:
