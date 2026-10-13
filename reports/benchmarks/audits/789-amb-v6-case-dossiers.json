@@ -34,7 +34,8 @@
     "all_case_ids_matched": true,
     "all_prompt_and_gold_arrays_matched": true,
     "all_native_verdicts_preserved": true,
-    "no_gold_or_response_content_embedded": true
+    "no_gold_or_response_content_embedded": true,
+    "complete_native_meta_failures_used": true
   },
   "summary": {
     "count": 77,
@@ -2247,7 +2248,7 @@
           "passed_native_scorer": false,
           "diagnostic_flags": {
             "unexpected_belief": true,
-            "missing_expected_belief": false,
+            "missing_expected_belief": true,
             "pass": false
           },
           "context_tokens": 1069,
@@ -2715,7 +2716,7 @@
           "passed_native_scorer": false,
           "diagnostic_flags": {
             "unexpected_belief": true,
-            "missing_expected_belief": false,
+            "missing_expected_belief": true,
             "pass": false
           },
           "context_tokens": 989,
