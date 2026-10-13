@@ -91,3 +91,35 @@ Thus the normalizer source selection follows the intended **subject + lexical co
 Each of the eight v3–v6 frozen lane files also declares `frozen_before_any_score: true` and supplies `frozen_on` dates (v3–v5: 2026-10-07; v6: 2026-10-08), with accepted row `status_reason` fields citing the same date and respective run ID. These are self-declared chronology records; independent immutable freeze-commit timing relative to external workflow execution was **not** yet cross-verified.
 
 **Narrowed remaining checks before canonical 12-lane registration:** (a) immutable freeze-before-execution commit/timestamp evidence; (b) raw artifact SHA-256 bytes, importer manifest and normalized output reproduction; (c) runtime successor declaration and exact bridge/scorer configuration per generation; (d) deterministic `current.json` -> F1 catalog -> #785 projection regeneration with fail-closed tests. No independent rank update has been authorized.
+
+
+## Byte-level integrity and exact freeze ancestry (follow-up)
+
+**Completed 2026-10-13, independently using authenticated GitHub source reads, a SHA-256 implementation self-tested against the known `abc` vector, and stored source reports.**
+
+**All 36/36 ordinary v3–v6 primary result JSON artifacts independently re-hash to the exact 64-hex SHA-256 in each accepted source report's `files` inventory:**
+
+| Generation | AMB `single-turn.json` | LongMemEval `report.json` | Total |
+| --- | ---: | ---: | ---: |
+| v3 | 3/3 | 6/6 | 9/9 |
+| v4 | 3/3 | 6/6 | 9/9 |
+| v5 | 3/3 | 6/6 | 9/9 |
+| v6 | 3/3 | 6/6 | 9/9 |
+| **Total** | **12/12** | **24/24** | **36/36** |
+
+Source paths, computed hashes, expected hashes and exact Git blob identities are recorded in eight `2026-10-13-{amb,longmemeval}-vN-primary-byte-digests.json` manifests plus `2026-10-13-primary-artifact-integrity-rollup.json`. **No original normalized run, evidence blob, or frozen source was changed.**
+
+**Freeze and declaration ancestry verified across all four later generations:** The exact Agent Memory runtime source revision recorded in the accepted AMB control evidence is the **Git merge commit that introduced that generation's frozen lane definitions**. At that same commit, `reports/runtime/baseline-vN-declaration.json` has the **same Git blob SHA** recorded in the accepted control evidence as `system.runtime_baseline.declaration_blob`, and its recorded successor is vN with `state: TRANSITION`:
+
+| Generation | Freeze PR | Merge/execution revision | Frozen successor declaration Git blob |
+| --- | --- | --- | --- |
+| v3 | #709 | `04bb286f90f1` | `593fee135b8f` |
+| v4 | #716 | `f5a79d230a31` | `ac1e498c6690` |
+| v5 | #729 | `e6f9db7f1db5` | `e93f4a2d245d` |
+| v6 | #743 | `24048d55e26d` | `1ac4d7d87b6b` |
+
+This proves the **frozen lane and relevant declaration existed in the exact executing repository revision**, rather than being inferred from a later Markdown statement. GitHub workflow job records were also retrieved for one AMB and one LongMemEval control run per generation; these were `completed/success`, but the connector does not expose job start timestamps. We therefore do **not** claim independent wall-clock chronology outside what the frozen source revision proves.
+
+**Important residual limitations:** Full SHA-256 checks of compressed LongMemEval `report.rows.json.gz` data and all auxiliary files, independent scorecard/normalizer rebuild, executable same-harness comparison acceptance checks, and explicit owner approval of canonical `current.json` amendments are still not complete. The current dashboard must stay unchanged until these remaining gates are resolved.
+
+**Recommendation strengthened:** Reconciliation of all eight missing v3–v6 lanes is now supported by *completed integration acceptance entries, 41/41 matched binding reports, 36/36 exact normalizer sources, 36/36 byte-verified primary result artifacts, and 4/4 freeze/declaration ancestry proofs*. The highest-value remaining work is verifying compressed/auxiliary bytes and running the deterministic rebuild/acceptance checks, not creating additional synthetic leaderboard examples. Keep each version/plane and comparator identity distinct.
