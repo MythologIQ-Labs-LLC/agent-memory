@@ -280,10 +280,36 @@ def verify_reviews(dossier: dict, packet: dict, key: dict, reviews: list[dict]) 
     require(packet.get("benchmark_outcomes_visible") is False and
             packet.get("gold_answers_visible") is False, "unblinding before reviewer lock")
     expected = {(x["case_id"], x["blind_arm"]): x["source_trace"] for x in key["assignments"]}
-    require(len(expected) == 48 and len(set(expected.values())) == 48,
-            "invalid/colliding blinded assignment traces")
+    require(len(expected) == 48 and len(key["assignments"]) == 48 and
+            len(set(expected.values())) == 48, "invalid/colliding blinded assignment traces")
+    # The private coordinator key is a separate authority boundary. Even if a
+    # packet and its digest are both rewritten, each of the preregistered case
+    # arms must still map to exactly one pinned real product/source.
+    cases = dossier["review_selection"]["target_case_ids"]
+    required_pairs = {(cid, label) for cid in cases for label in ("A", "B")}
+    require(set(expected) == required_pairs, "packet includes missing/foreign frozen cases")
+    sources = {x["arm"]: x for x in dossier["source_reports"]}
+    require(set(sources) == {"agent_memory", "mem0_oss", "bm25_control"},
+            "frozen source roster mismatch")
+    providers_by_case = {cid: set() for cid in cases}
+    for assignment in key["assignments"]:
+        provider = assignment.get("provider_id")
+        require(provider in ARMS, "unrecognized product in blind coordinator key")
+        source = sources[provider]
+        require(assignment.get("source_path") == source["path"] and
+                assignment.get("source_git_blob") == source["git_blob_sha"],
+                "coordinator source identity conflicts with frozen dossier")
+        providers_by_case[assignment["case_id"]].add(provider)
+    require(all(providers == set(ARMS) for providers in providers_by_case.values()),
+            "case arms must contain exactly one of each measured product")
     actual = {(x["case_id"], x["blind_arm"]): x["source_trace"] for x in packet["records"]}
     require(actual == expected and len(packet["records"]) == 48, "packet assignment altered")
+    by_case = {}
+    for item in packet["records"]:
+        by_case.setdefault(item["case_id"], []).append(item["task_prompt"])
+    require(all(len(prompts) == 2 and prompts[0] == prompts[1]
+                for prompts in by_case.values()),
+            "case prompts must match across blind product arms")
     require(key.get("frozen_target_case_ids") == dossier["review_selection"]["target_case_ids"],
             "key is not bound to the frozen selection")
     require(key.get("dossier_sha256") == digest(stable_bytes(dossier)),
@@ -334,7 +360,10 @@ def main() -> int:
                         help="explicitly acknowledge that source contexts must not be committed/shared")
     args = parser.parse_args()
     try:
-        dossier = json.loads((ROOT / DOSSIER).read_text(encoding="utf-8"))
+        dossier_bytes = (ROOT / DOSSIER).read_bytes()
+        require(git_blob(dossier_bytes) == FROZEN_DOSSIER_BLOB,
+                "frozen study dossier has changed since preregistration")
+        dossier = json.loads(dossier_bytes)
         if args.output_dir:
             require(args.accept_private_material, "explicit --accept-private-material required")
             report = prepare(ROOT, args.output_dir)
