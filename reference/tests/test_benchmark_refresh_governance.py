@@ -61,6 +61,17 @@ class RefreshGovernanceTests(unittest.TestCase):
         self.assertEqual(result["unregistered_source_count"],0)
         self.assertEqual(result["measured_external_system_ids"],["mem0-oss"])
 
+    def test_refuses_accepted_lane_without_registered_normalized_source(self):
+        dashboard=self.root/"reports/benchmarks/dashboard/current.json"
+        dashboard.write_text(json.dumps({
+            "competitive_evidence":{"frozen_lanes":[{
+                "lane_id":"v-next", "status":"accepted",
+                "normalized_runs":["reports/benchmarks/normalized/not-recorded.json"]
+            }]}
+        }), encoding="utf-8")
+        with self.assertRaisesRegex(RefreshError,"accepted lane missing normalized evidence"):
+            compute_status(self.root,registered=set())
+
     def test_refuses_historical_auto_promotion(self):
         p=self.root/"reports/benchmarks/ui/historical-amb-v6.json"
         p.write_text(json.dumps({"evidence_status":"historical_source_bound_not_promoted",
