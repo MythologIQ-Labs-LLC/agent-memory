@@ -38,11 +38,13 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--catalog", type=Path, default=CATALOG)
     parser.add_argument("--output", type=Path, default=None)
+    parser.add_argument("--write", action="store_true",
+                        help="write canonical generated frontier-leaderboards.json")
     parser.add_argument("--check", action="store_true",
                         help="verify canonical generated artifact against exact F1 catalog")
     args = parser.parse_args()
-    if args.check and args.output is not None:
-        parser.error("--check cannot be combined with --output")
+    if sum(bool(v) for v in (args.check, args.write, args.output is not None)) > 1:
+        parser.error("--check, --write and --output are mutually exclusive")
     catalog = json.loads(args.catalog.read_text(encoding="utf-8"))
     result = build_frontier_leaderboard(catalog)
     serialized = json.dumps(result, sort_keys=True, indent=2, ensure_ascii=False, allow_nan=False) + "\n"
@@ -52,8 +54,8 @@ def main() -> int:
         if json.loads(GENERATED.read_text(encoding="utf-8")) != result:
             parser.error("frontier projection is stale for this accepted evidence snapshot")
         print("frontier projection is current")
-    elif args.output is not None:
-        target = _output_target(args.output)
+    elif args.write or args.output is not None:
+        target = _output_target(GENERATED if args.write else args.output)
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(serialized, encoding="utf-8")
         print(target)
