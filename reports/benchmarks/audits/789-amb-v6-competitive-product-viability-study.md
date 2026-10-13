@@ -98,3 +98,23 @@ An investment-grade evidence story needs **both**:
 At present, AMB v6 offers a meaningful narrow relative comparison but **does not establish absolute product quality**. A prudent next milestone is improving selection precision, relevance/abstention and scope correctness against independent frozen cases while broadening external competition. Do not raise a leaderboard banner proclaiming product viability based on 15/77 correct or a single competitor.
 
 **Release relevance:** PR #788's cross-scope security repair is independently tracked and not published as a successor. Historical v6 results should not be represented as the performance of that newer runtime. #787's canonical-dashboard lane reconciliation remains a separate acceptance gate.
+
+
+## Executable qualitative-review acceptance guard
+
+`scripts/check_789_qualitative_review.py` and `reference/tests/test_789_qualitative_review_contract.py` are executable, pure-Python guards. The **14 negative/positive contract tests passed in a local reconstructed checkout** without external inference; the exact full-repository test command still needs a repo checkout run:
+
+```bash
+python -m unittest discover -s reference/tests -p test_789_qualitative_review_contract.py -v
+python scripts/check_789_qualitative_review.py \
+  reports/benchmarks/audits/789-amb-v6-case-dossiers.json \
+  reports/benchmarks/audits/789-qualitative-reviews.PENDING.json
+```
+
+Current expected output is `incomplete_not_publishable`: the pending review ledger is `[]`, **zero human evaluations exist**, and no qualitative preference scores are asserted. A nonaccepted, unlocked example input is `789-qualitative-review-form.TEMPLATE.json`.
+
+Each locked review must identify the frozen case, blinded arm A/B, independently verified reviewer, source trace, all six anchored rating dimensions (0–3 or justified `not_applicable`), evidence citations, and explicit categorical P0 privacy flags. Reviewers cannot indicate they saw the native scoring outcome before review lock. A value of `true` is never accepted as a numeric rating, and all-dimensions-`not_applicable` submissions are rejected. At least **two distinct human reviewers per blind case/arm** are required to advance from `incomplete_not_publishable` to `ready_for_independent_adjudication`; this latter status is **not publication approval**. The checker reports rater disagreements and any P0 flags separately, never averages away safety and never assigns a model-to-case winner.
+
+A study coordinator must independently verify reviewer identities, true output blinding, original source provenance, lack of outcome leakage, adjudication notes, and completion of the qualitative evidence package. The checker alone cannot prove those organizational facts or make a commercial claim.
+
+For 24 selected cases × 2 measured product arms × 2 human raters, full human coverage requires **96 locked review forms**. The third BM25 control remains quantitatively recorded but is not a product arm in this initial human study. This is intentionally a substantial evidence gate, not a nominal checkbox.
