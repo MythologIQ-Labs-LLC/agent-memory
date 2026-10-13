@@ -10,7 +10,7 @@
     },
     {
       "path": "reference/agentmem_ref/api/surface.py",
-      "blob": "eb95340ff6768fa50306e09379de581edf1e01f2"
+      "blob": "7efa416077af6428599be68b6b8d6ceea32487ad"
     },
     {
       "path": "reference/agentmem_ref/evidence_sufficiency.py",
@@ -26,7 +26,7 @@
     },
     {
       "path": "reference/agentmem_ref/runtime/adapter.py",
-      "blob": "6567bdd695c81a0f3f08c4b72b3ce70ce7d33263"
+      "blob": "2ba953cf0c7522d9cc7091df29390ae24c0dc672"
     },
     {
       "path": "reference/agentmem_ref/runtime/evidence_sufficiency.py",
@@ -43,6 +43,10 @@
     {
       "path": "reference/agentmem_ref/runtime/recall_observation_receipt.py",
       "blob": "f80d3145d7290c8931b3269c7dcb95585385a45d"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/restart_runtime.py",
+      "blob": "a79b7d10cdea9298244829ef7bd42f61490c4eba"
     }
   ],
   "identity_deltas": [
