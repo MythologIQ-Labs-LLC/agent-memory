@@ -150,8 +150,6 @@ def refresh(root: Path = ROOT, *, check: bool = False, registered: set[str] | No
         for name, _, check_args in COMMANDS:
             _run(root, name, check_args)
         expected = compute_status(root, registered=registered)
-        if not STATUS.is_relative_to(ROOT):
-            raise RefreshError("invalid status path")
         status = root / "reports/benchmarks/ui/refresh-status.json"
         if not status.is_file() or _json(status) != expected:
             raise RefreshError("benchmark refresh manifest stale; record a governed refresh")
