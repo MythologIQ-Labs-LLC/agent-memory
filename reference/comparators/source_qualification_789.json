@@ -25,7 +25,7 @@
       "system_id": "graphiti-oss",
       "vendor": "getzep",
       "repository": "https://github.com/getzep/graphiti",
-      "exact_source_revision": "b2ff2eadd9a6b75a261a5cf0b19557883a13f752",
+      "exact_source_revision": "021d3a57d511f21b10adaf7fa923bd5c1fce5e9d",
       "source_qualification": "source_inspected",
       "source_license": "Apache-2.0",
       "license_git_blob": "5feb0d9d299a1107adfa8331306b13cc0eff2d78",
@@ -46,7 +46,11 @@
       "profile_caveat": "OSS Graphiti is not the proprietary Zep cloud service.",
       "source_edge_model_git_blob": "28c170355e02a569b60c5e070f019572889ace82",
       "source_graphiti_api_git_blob": "7555a1f828c4b94970911876bfd257aaa4577d4c",
-      "source_id_evidence": "EntityEdge.episodes:list[str] references source episode UUIDs; Graphiti.add_episode accepts optional caller UUID; Graphiti.search returns EntityEdge[]"
+      "source_id_evidence": "EntityEdge.episodes:list[str] references source episode UUIDs; Graphiti.add_episode accepts optional caller UUID; Graphiti.search returns EntityEdge[]",
+      "release_tag": "v0.29.3",
+      "release_tag_commit": "021d3a57d511f21b10adaf7fa923bd5c1fce5e9d",
+      "source_revision_rule": "release tag v0.29.3 commit; the PyPI wheel graphiti_core-0.29.3-py3-none-any.whl is tree-identical to it (159/159 package files). The earlier pin b2ff2eadd9a6b75a261a5cf0b19557883a13f752 (2026-08-13, post-release main) differs from the wheel in graphiti_core/search/search.py (blob 51c65d21 vs cfe07669) and is not the source of the installable package; its edges.py/graphiti.py/LICENSE/pyproject blobs are unchanged.",
+      "typed_state_789": "source_qualified"
     },
     {
       "system_id": "cognee-oss",
@@ -74,7 +78,11 @@
       "source_retriever_model_git_blob": "72fed7ca5db2a7d7aa2da2d339181882f6570d9e",
       "source_chunk_model_git_blob": "4637c458644fc347cf376dc88cbf73f69b48bd0d",
       "source_references_git_blob": "b0efd708612accae76d4ffdf6d4e861d519bc725",
-      "source_id_evidence": "DocumentChunk has optional document_id sourced from parent Document.id; standard TextChunker sets document_id=str(self.document.id); ChunksRetriever returns found_chunk.payload; built-in references extracts payload.document_id as data_id; use only this native UUID and verify against recorded ingestion IDs."
+      "source_id_evidence": "DocumentChunk has optional document_id sourced from parent Document.id; standard TextChunker sets document_id=str(self.document.id); ChunksRetriever returns found_chunk.payload; built-in references extracts payload.document_id as data_id; use only this native UUID and verify against recorded ingestion IDs.",
+      "release_tag": "v1.4.2",
+      "release_tag_commit": "b0ea53e95caa7bfebf373ffabfbafb44f9fff922",
+      "source_revision_rule": "post-release commit on main (2026-08-10, 'fix(mcp): Ship cognee 1.4.2 in the MCP image (#4422)'); the cognee/ package tree, pyproject.toml and LICENSE are identical to release tag v1.4.2 and to the PyPI wheel cognee-1.4.2-py3-none-any.whl (1973/1973 package files); only cognee-mcp/pyproject.toml differs.",
+      "typed_state_789": "source_qualified"
     },
     {
       "system_id": "hindsight-oss",
@@ -98,7 +106,8 @@
       "compatibility_status": "delegated_to_640",
       "next_gate": "Do not duplicate #640. Pin exact install/model/runtime in its existing workstream; require a new lane freeze before any accepted numeric row.",
       "identity_risk": "Extracted facts can combine/transform source documents and break exact-ID retrieval scoring.",
-      "profile_caveat": "Vendor LongMemEval QA references are not same-harness retrieval measurements."
+      "profile_caveat": "Vendor LongMemEval QA references are not same-harness retrieval measurements.",
+      "typed_state_789": "not_started"
     }
   ]
 }

@@ -6,11 +6,15 @@
 
 | System | Inspected exact source | Package at pin | License inspected | Profile outcome |
 | --- | --- | --- | --- | --- |
-| Graphiti OSS | [getzep/graphiti@b2ff2ea](https://github.com/getzep/graphiti/tree/b2ff2eadd9a6b75a261a5cf0b19557883a13f752) | `graphiti-core 0.29.3` | Apache-2.0 | source-qualified only, candidate temporal graph retrieval |
+| Graphiti OSS | [getzep/graphiti@021d3a5 (tag v0.29.3)](https://github.com/getzep/graphiti/tree/021d3a57d511f21b10adaf7fa923bd5c1fce5e9d) | `graphiti-core 0.29.3` | Apache-2.0 | source-qualified only, candidate temporal graph retrieval |
 | Cognee OSS | [topoteretes/cognee@4b9dd36](https://github.com/topoteretes/cognee/tree/4b9dd362625dfd3621c344e571a86f5bc7a55ee8) | `cognee 1.4.2` | Apache-2.0 | source-qualified only, candidate CHUNKS retrieval or separate graph QA |
 | Hindsight OSS | [vectorize-io/hindsight@2e8c221](https://github.com/vectorize-io/hindsight/tree/2e8c221c54b1dd2f6cc003f63accf3a01a077332) | exact install version not yet pinned | MIT | **#640 owns integration**, source cross-checked only |
 
 Machine-readable exact identities: `reference/comparators/source_qualification_789.json`.
+
+### Pin correction (2026-10-13, independent qualification)
+
+The Graphiti pin was moved from `b2ff2ea` (a 2026-08-13 post-release commit on `main`) to the `v0.29.3` tag commit `021d3a57`, because the PyPI wheel `graphiti_core-0.29.3` is tree-identical to the tag (159/159 files) but differs from `b2ff2ea` in `graphiti_core/search/search.py` (cross-encoder reranker candidate selection). The blobs cited below for `edges.py`, `graphiti.py`, `LICENSE` and `pyproject.toml` are identical at both commits. The Cognee pin `4b9dd36` is tree-identical to tag `v1.4.2` (`b0ea53e9`) and to the PyPI wheel for the `cognee/` package (1973/1973 files), so it stands; its release tag is now recorded beside it.
 
 ### Real issue: native source provenance, not install instructions
 
