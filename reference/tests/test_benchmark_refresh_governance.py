@@ -120,7 +120,9 @@ class RefreshGovernanceTests(unittest.TestCase):
         one=refresh(self.root,registered=set())
         two=refresh(self.root,check=True,registered=set())
         self.assertEqual(one,two)
-        self.assertEqual(mock_run.call_count,8)
+        # --write runs 4 generators, then re-runs their 4 --check verifications
+        # before publishing the manifest; --check runs the 4 verifications again.
+        self.assertEqual(mock_run.call_count,12)
 
     @patch("scripts.refresh_benchmark_pages._run")
     def test_failed_generator_refuses_publish(self,mock_run):
