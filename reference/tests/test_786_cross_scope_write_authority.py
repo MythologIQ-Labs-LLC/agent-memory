@@ -782,10 +782,12 @@ class SecondReviewFindings(_TwoProjects):
         self.assertEqual(self.memory.history("memory:a")["history"], b_view)
 
 
-def _skill(scope, version=1, skill_id="deploy"):
+def _skill(scope, version=1, skill_id="deploy", domains=None, required=None):
+    domains = domains if domains is not None else (TENANT, scope)
+    required = required if required is not None else domains
     return pm.SkillArtifact(
         skill_id=skill_id, version=version, purpose="c786", scope=scope,
-        isolation_domain_refs=(TENANT, scope), required_isolation_domain_refs=(TENANT, scope),
+        isolation_domain_refs=domains, required_isolation_domain_refs=required,
         procedure_markdown="# v\nok", provenance_refs=("evidence:c786",))
 
 
@@ -857,6 +859,99 @@ class ReplayV2Findings(_TwoProjects):
         self.assertIsNotNone(self.fact(self.b1))
 
 
+class ThirdReviewFindings(_TwoProjects):
+    """Reproductions from the third independent adversarial review (of the final runtime
+    a7a81c45): F-R3-1 narrowing capture of a multi-holder memory, F-R3-3 the composition
+    runtime's delete_current answering an exception for "no head" and a refusal for "foreign
+    head", F-R3-6 the shadow recall_control's route provenance disclosing a foreign live head."""
+
+    WIDE = {"isolation_domain_refs": [TENANT, "project:a", "project:b"], "required_isolation_domain_refs": [TENANT], "project_ref": ""}
+
+    @staticmethod
+    def _narrow(scope):
+        return {"isolation_domain_refs": [TENANT, scope], "required_isolation_domain_refs": [TENANT, scope], "project_ref": ""}
+
+    def _view(self, memory="memory:w"):
+        h = self.memory.history(memory)["history"]
+        return (self.memory.recall(QUERY)["admitted"], h["current_fact_uuid"], h["state_version"], h["tombstoned"])
+
+    def test_fr3_1_a_holder_cannot_narrow_a_shared_memory_out_of_the_other_holders_reach(self):
+        for capturer, victim in (("project:b", "project:a"), ("project:a", "project:b")):
+            with self.subTest(capturer=capturer):
+                self.memory.close()
+                tmp = tempfile.TemporaryDirectory(); self.addCleanup(tmp.cleanup)
+                self.root = tmp.name + "/m"; self.memory = self.open("project:a")
+                w1 = self.memory.remember("memory:w", f"{QUERY} is Oslo", proposition=_prop("Oslo"), overrides=self.WIDE)
+                self.assertTrue(w1["committed"])
+                self.reopen(victim); before = self._view()
+                self.assertEqual(before[0], [w1["fact_uuid"]])
+                self.reopen(capturer)
+                out = self.memory.correct("memory:w", f"{QUERY} is Bergen", evidence=_evidence(capturer, TENANT), risk_class="low",
+                                          replacement_kind="error_correction", overrides=self._narrow(capturer))
+                self.assertFalse(out["committed"], "a single holder narrowed the shared memory into its own scope")
+                self.assertEqual(self.adapter.current_fact_uuid("memory:w"), w1["fact_uuid"])
+                # the same holder superseding under the head's own scope still commits (positive control)
+                kept = self.memory.correct("memory:w", f"{QUERY} is Narvik", evidence=_evidence(capturer, TENANT), risk_class="low",
+                                           replacement_kind="error_correction", overrides=self.WIDE)
+                self.assertTrue(kept["committed"], kept.get("refusal"))
+                self.reopen(victim)
+                after = self._view()
+                self.assertEqual((after[1], after[2], after[3]), (kept["fact_uuid"], 2, False))
+                self.assertEqual(after[0], [kept["fact_uuid"]])
+
+    def test_fr3_1_adapter_single_route_holder_cannot_narrow_a_two_domain_memory(self):
+        adapter = GovernedMemoryAdapter(InMemoryTemporalGraph(), tenant=TENANT, clock=Clock())
+        first = adapter.commit_proposal(_proposal(scope="d1", isolation_domain_refs=("d1", "d2"), target_reference="mem:two"), "window is Thursday")
+        self.assertTrue(first.committed)
+        narrowed = adapter.commit_proposal(_proposal(proposal_id="p2", actor_id="agent:d1", scope="d1", isolation_domain_refs=("d1",),
+                                                     required_isolation_domain_refs=("d1",), target_reference="mem:two"), "window is Friday")
+        self.assertFalse(narrowed.committed)
+        self.assertEqual(adapter.current_fact_uuid("mem:two"), first.fact_uuid)
+        same = adapter.commit_proposal(_proposal(proposal_id="p3", actor_id="agent:d1", scope="d1", isolation_domain_refs=("d1", "d2"),
+                                                 target_reference="mem:two"), "window is Friday")
+        self.assertTrue(same.committed, same.refusal)
+
+    def test_fr3_3_delete_current_answers_the_same_not_found_with_and_without_a_foreign_generation(self):
+        rows = []
+        for recreated in (False, True):
+            self.memory.close()
+            tmp = tempfile.TemporaryDirectory(); self.addCleanup(tmp.cleanup)
+            self.root = tmp.name + "/m"; self.memory = self.open("project:a")
+            self.seed()
+            self.assertTrue(self.memory.forget("memory:a")["committed"])
+            if recreated:
+                self.reopen("project:b")
+                self.assertTrue(self.memory.remember("memory:a", f"{QUERY} is Turku", proposition=_prop("Turku"))["committed"])
+                self.reopen("project:a")
+            for permanent in (False, True):
+                env = self.memory._proposal(target_reference="memory:a", operation="permanent_deletion" if permanent else "pruning",
+                                            current_strength="reinforced", proposed_strength="not_applicable" if permanent else "archived",
+                                            reversibility="irreversible" if permanent else "reversible", risk_class="low")
+                out = self.memory.runtime.delete_current(contract.proposal_from_envelope(env), evidence=_evidence("project:a", TENANT))
+                rows.append((recreated, permanent, out.committed, out.refusal, out.receipt["before_state"], out.receipt["after_state"]))
+        control = [r[2:] for r in rows if not r[0]]; probed = [r[2:] for r in rows if r[0]]
+        self.assertEqual(probed, control)
+        self.assertEqual(control[0][1], "fact_not_found")
+
+    def test_fr3_6_shadow_recall_control_route_provenance_does_not_reveal_a_foreign_live_head(self):
+        live = self.seed("memory:live", "Oslo")
+        self.seed("memory:del", "Bergen")
+        self.assertTrue(self.memory.forget("memory:del")["committed"])
+        self.memory.close()
+        self.memory = self.open("project:b", recall_control="shadow")
+        routes = {}
+        for mem in ("memory:never", "memory:del", "memory:live"):
+            out = self.memory.recall(QUERY, logical_memory_refs=[mem])
+            self.assertEqual(out["admitted"], []); self.assertEqual(out["candidates"], [])
+            self.assertNotIn(live, _serial(out))
+            routes[mem] = out["recall_control"].get("routes_executed")
+        self.assertEqual(routes["memory:live"], routes["memory:never"], routes)
+        self.assertEqual(routes["memory:del"], routes["memory:never"], routes)
+        self.memory.close()
+        self.memory = self.open("project:a", recall_control="shadow")
+        self.assertEqual(self.memory.recall(QUERY, logical_memory_refs=["memory:live"])["admitted"], [live])
+
+
 class ProceduralReviewFindings(unittest.TestCase):
     def setUp(self):
         from agentmem_ref.capabilities import ComponentRegistry
@@ -874,17 +969,42 @@ class ProceduralReviewFindings(unittest.TestCase):
             self.runtime.propose_skill(_skill("project:b", version=3, skill_id="fresh"), actor_id="agent:b")
         self.assertEqual(str(a.exception), str(b.exception))
 
+    def test_fr3_4_revoking_a_foreign_skill_reads_exactly_like_an_unknown_skill(self):
+        self.assertTrue(self.runtime.commit_skill(self.runtime.propose_skill(_skill("project:a"), actor_id="agent:a")).commit.committed)
+        outcomes = {}
+        for skill_id in ("deploy", "unknown"):
+            try:
+                out = self.runtime.revoke_skill(skill_id, actor_id="agent:b", evidence_refs=("evidence:b",), scope="project:b",
+                                                isolation_domain_refs=(TENANT, "project:b"), required_isolation_domain_refs=(TENANT, "project:b"), purpose="c786")
+                outcomes[skill_id] = ("result", out.commit.committed, out.commit.refusal, out.fact_uuid, out.physical_content_retained)
+            except ValueError as exc:
+                outcomes[skill_id] = ("ValueError", str(exc).replace(repr(skill_id), "<id>"))
+        self.assertEqual(outcomes["deploy"], outcomes["unknown"], outcomes)
+        self.assertNotIn("ref-", _serial(outcomes))
+
+    def test_fr3_5_a_member_can_advance_a_skill_bound_only_to_a_shared_domain(self):
+        self.adapter.set_shared_domain_members("shared:x", ("agent:alice", "agent:bob"))
+        v1 = self.runtime.commit_skill(self.runtime.propose_skill(
+            _skill("shared:x", domains=("shared:x",), required=()), actor_id="agent:alice")).commit
+        self.assertTrue(v1.committed, v1.refusal)
+        proposal = self.runtime.propose_skill(  # raised "current=v0, proposed=v2" before the fix
+            _skill("shared:x", version=2, domains=("shared:x",), required=()), actor_id="agent:alice")
+        v2 = self.runtime.commit_skill(proposal).commit
+        self.assertIsNone(v2.refusal)  # a correction parks under policy (require_review); it is not refused
+        with self.assertRaises(ValueError):  # a non-member still resolves the version as 0 and may not advance it
+            self.runtime.propose_skill(_skill("shared:x", version=3, domains=("shared:x",), required=()), actor_id="agent:stranger")
+
     def test_f4_revocation_carries_the_callers_scope_not_the_targets(self):
         head = self.runtime.commit_skill(self.runtime.propose_skill(_skill("project:a"), actor_id="agent:a")).commit.fact_uuid
         other = self.runtime.propose_skill(_skill("project:b"), actor_id="agent:b")
         self.assertFalse(self.runtime.commit_skill(other).commit.committed)
-        bare = self.runtime.revoke_skill("deploy", actor_id="agent:b", evidence_refs=("ev:b",))
-        self.assertFalse(bare.commit.committed)
-        wrong = self.runtime.revoke_skill("deploy", actor_id="agent:b", evidence_refs=("ev:b",), scope="project:b",
-                                          isolation_domain_refs=(TENANT, "project:b"),
-                                          required_isolation_domain_refs=(TENANT, "project:b"), purpose="c786")
-        self.assertFalse(wrong.commit.committed)
-        self.assertEqual(wrong.commit.refusal, "fact_not_found")
+        # fail closed: a bare or wrong-scope revocation reads like an unknown skill (third review F-R3-4)
+        with self.assertRaises(ValueError):
+            self.runtime.revoke_skill("deploy", actor_id="agent:b", evidence_refs=("ev:b",))
+        with self.assertRaises(ValueError):
+            self.runtime.revoke_skill("deploy", actor_id="agent:b", evidence_refs=("ev:b",), scope="project:b",
+                                      isolation_domain_refs=(TENANT, "project:b"),
+                                      required_isolation_domain_refs=(TENANT, "project:b"), purpose="c786")
         self.assertEqual(self.adapter.current_fact_uuid("skill:deploy"), head)
         owner = self.runtime.revoke_skill("deploy", actor_id="agent:a", evidence_refs=("ev:a",), scope="project:a",
                                           isolation_domain_refs=(TENANT, "project:a"),

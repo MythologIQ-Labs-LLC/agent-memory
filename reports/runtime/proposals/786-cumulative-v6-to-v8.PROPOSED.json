@@ -22,7 +22,7 @@
     },
     {
       "path": "reference/agentmem_ref/memory/procedural_memory.py",
-      "blob": "f94ca5b277744523b442f039dc2cf8ef8978f75c"
+      "blob": "d5c25f431dd9860587fc2514fabe649828fc1b07"
     },
     {
       "path": "reference/agentmem_ref/recall_observation_receipt.py",
@@ -30,7 +30,7 @@
     },
     {
       "path": "reference/agentmem_ref/runtime/adapter.py",
-      "blob": "2fb8aebf1a62646ba75890e2d79712007a429587"
+      "blob": "66a216fda9ecdf86d64f5bd0b4d13a43d9b102bf"
     },
     {
       "path": "reference/agentmem_ref/runtime/evidence_sufficiency.py",
@@ -54,7 +54,7 @@
     },
     {
       "path": "reference/agentmem_ref/runtime/runtime_composition.py",
-      "blob": "5acaf31bd836c1097863d208ffaeb1e831ab48c7"
+      "blob": "5f0a8666dfc2e3362f347ec1f23cd489a6da9475"
     }
   ],
   "identity_deltas": [

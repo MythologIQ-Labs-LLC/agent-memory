@@ -143,6 +143,32 @@ deletions, escalations and disputes commit as before; same-text unrelated memori
 independent; the other project's generation and its history are byte-identical before and
 after every former-owner attempt.
 
+## Third independent adversarial review of the final runtime (`a7a81c45`)
+
+A third independent subagent probed the final runtime through `AgentMemory.open`, the composition
+runtime and the adapter (new probes only; 13 probe families, scripts recorded in the review log).
+Six findings; five fixed in the runtime with a failing regression first (`ThirdReviewFindings`,
+`ProceduralReviewFindings.test_fr3_*`), one recorded for the owner:
+
+| # | finding | severity | disposition |
+|---|---|---|---|
+| F-R3-1 | scope continuity stopped widening but not **narrowing capture**: the head's scope read as one context admitted a writer through any single route, so a holder of one domain could supersede a multi-holder memory with a narrower scope (a dropped domain, an added required domain), lock every other holder out and occupy the id; shown at the adapter and through the facade (`overrides`) | P1 integrity | FIXED: a supersession keeps the head's scope **exactly** (domains, required domains, project, task); any difference is `scope_widened` or `scope_narrowed`. Re-scoping a shared memory is not a write; the other holders keep their read and their write, and a governed deletion remains the only act that closes a generation (and leaves them a tombstoned view and an open id) |
+| F-R3-2 | citing a guessed fact uuid as `evidence_refs` is an oracle for that uuid's deleted-generation membership in *any* scope: a write deriving from a deleted source is withheld (`derived_from_tombstoned_source`), a dispute citing one is scrubbed from the citer's own history, and a canary citing a live foreign uuid vanishes when that uuid is deleted; uuids are sequential | P2 disclosure | RECORDED for the owner, not changed: this is #776/#777's deletion-completeness rule (content derived from a deleted source is withheld tenant-wide, whoever cites it) and the two goals conflict; scoping the taint to the citer's own scope would let a cross-scope derivation of deleted content survive. Mitigations to decide: opaque (non-sequential) fact identifiers, or refusing cross-scope `evidence_refs` at proposal time |
+| F-R3-3 | `ConfiguredCompositionRuntime.delete_current` raised `RuntimeRecoveryError` for an id with no current fact but returned `fact_not_found` for a head the writer may not act on, an oracle for a re-creation below the facade | P2 disclosure | FIXED: no current fact is forwarded to the adapter as the empty uuid and refused `fact_not_found` with `v0` states, exactly as a foreign head |
+| F-R3-4 | `revoke_skill` returned a refused result carrying the foreign head's `fact_uuid` and `physical_content_retained`, while an unknown skill raised `ValueError` | P2 disclosure | FIXED: a head the caller may not act on raises the unknown-skill `ValueError`; no uuid leaves |
+| F-R3-5 | (regression of F5) `_visible_version` built its context without the principal, so a skill bound only to a shared domain read `v0` to its own members and could never be advanced | P2 availability | FIXED: the proposing principal is part of the context; members advance, strangers still read `v0` |
+| F-R3-6 | in the opt-in `recall_control="shadow"` mode, `routes_executed` listed `shared_evidence_neighbor` only when a `logical_memory_refs` id had a live head in another scope (candidates and admitted were empty either way) | P2 disclosure (read path) | FIXED: the shared-evidence route is seeded only from heads eligible in the caller's context; never-written, deleted and foreign-live ids now produce the same provenance |
+| noted | `isolation_domain_refs` naming another project's domain derives `project_ref` for `revoke_skill`; the module-level `surface.history(adapter, env)` is the unprojected host-level record | pre-existing | same "host-declared scope / host-level API" class as `overrides`; recorded |
+
+Probes that found nothing: torn corrections under PAMA block (with restart); every former-owner
+and third-project facade observable with and without a re-creation (only `remember` differs, the
+documented disclosure); escalation of an own tombstone under a foreign generation with restart
+and with `derived_refs` naming the foreign fact; crafted `state_snapshot` values through every
+boundary; stale handles behind the generation; plain `recall(logical_memory_refs=...)`,
+`history`, `write_semantics`, `semantic_proposals` for never / live / pruned / permanently
+deleted ids; shared-membership declarations; task/project narrowing; 40 shared-member observer
+observables.
+
 ## What remains disclosed, and why
 
 - A refused `promotion` tells the writer that the id is unavailable to it. Under tenant-wide
@@ -151,6 +177,7 @@ after every former-owner attempt.
 - (Closed by the second slice.) B re-creating A's deleted id used to receive a receipt with
   `before_state` = the memory-wide version counter (`v3`) while its `history()` read `0`;
   versions are now generation-relative (see the owner-review section).
+- A cited fact uuid's membership in a deleted generation of any scope is observable through the citer's own withheld derivation (third review F-R3-2); the owner decides between opaque identifiers, refusing cross-scope evidence refs, or accepting it as the price of tenant-wide deletion completeness.
 - `cross_tenant_delete` / `cross_tenant_dispute` still name a foreign fact's existence for a
   guessed uuid across adapters sharing one substrate (test-only configuration); pre-existing.
 

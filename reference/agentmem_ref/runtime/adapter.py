@@ -352,13 +352,23 @@ class GovernedMemoryAdapter:
         # no widening either (second review F-F): a supersession may not open a route the
         # holders did not admit (a new domain, a dropped required domain, a cleared project or
         # task), or a shared memory would escape its membership gate
-        if not set(domain_refs) <= set(current.get("domain_refs", ())):
-            return "scope_widened"
-        if not set(current.get("required_domain_refs", ())) <= set(new_scope["required_domain_refs"]):
+        old_domains, new_domains = set(current.get("domain_refs", ())), set(domain_refs)
+        old_required, new_required = set(current.get("required_domain_refs", ())), set(new_scope["required_domain_refs"])
+        if not new_domains <= old_domains or not old_required <= new_required:
             return "scope_widened"
         for key in ("project_ref", "task_ref"):
             if current.get(key) and not new_scope[key]:
                 return "scope_widened"
+        # and no narrowing (third review F-R3-1): the holder context above admits the writer
+        # through any one of the head's routes, so a single-route holder could otherwise store a
+        # head the other holders cannot read (a dropped domain, an added required domain or a
+        # project/task they do not carry) and occupy the id. A supersession keeps the head's
+        # scope exactly; re-scoping a shared memory is a governed act of its own, not a write.
+        if not old_domains <= new_domains or not new_required <= old_required:
+            return "scope_narrowed"
+        for key in ("project_ref", "task_ref"):
+            if (new_scope[key] or "") != (current.get(key) or ""):
+                return "scope_narrowed"
         return None
 
     def write_target_refusal(self, proposal: policy.Proposal) -> str | None:

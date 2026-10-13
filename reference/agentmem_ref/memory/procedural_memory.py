@@ -263,7 +263,7 @@ class ProceduralMemoryRuntime:
         actor_id: str,
         proposal_id: str | None = None,
     ) -> SkillProposal:
-        current_version = self._visible_version(artifact)
+        current_version = self._visible_version(artifact, actor_id)
         if artifact.version != current_version + 1:
             raise ValueError(
                 f"skill version must advance current state exactly once: current=v{current_version}, "
@@ -478,15 +478,17 @@ class ProceduralMemoryRuntime:
             action_proposals=tuple(actions),
         )
 
-    def _visible_version(self, artifact: SkillArtifact) -> int:
+    def _visible_version(self, artifact: SkillArtifact, actor_id: str = "") -> int:
         """The skill's state version as the artifact's own scope may see it (#786, review F5):
         a live head outside that scope contributes nothing, so the version rule neither
-        discloses another scope's version nor admits a write the adapter will refuse."""
+        discloses another scope's version nor admits a write the adapter will refuse. The
+        proposing principal is part of that context (third review F-R3-5): a skill bound only
+        to a shared domain is visible to its members, and only to them."""
         memory_ref = artifact.memory_reference
         head = self.adapter.current_fact_uuid(memory_ref)
         if head is not None:
             context = self.adapter.writer_context(
-                isolation_domain_refs=artifact.isolation_domain_refs, scope=artifact.scope,
+                isolation_domain_refs=artifact.isolation_domain_refs, scope=artifact.scope, actor_id=actor_id,
                 project_ref=_project_ref(artifact.isolation_domain_refs), purpose=artifact.purpose)
             if not self.adapter.fact_eligible_in_context(head, context):
                 return 0
@@ -534,7 +536,11 @@ class ProceduralMemoryRuntime:
         else:
             scope_fields = {"scope": "procedural-memory"}
             visible = False
-        current_version = self.adapter.state_version(memory_ref) if visible else 0
+        if not visible:
+            # #786 (third review F-R3-4): a head the caller may not act on reads exactly like a
+            # skill that does not exist -- the same error, and no uuid or retention detail
+            raise ValueError(f"no current procedural skill exists for {skill_id!r}")
+        current_version = self.adapter.state_version(memory_ref)
         proposal = policy.Proposal(
             proposal_id=proposal_id or f"proposal:revoke:{skill_id}:v{current_version}",
             actor_id=actor_id,
