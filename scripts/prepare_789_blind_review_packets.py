@@ -68,6 +68,52 @@ def locked_write(path: Path, payload: bytes) -> None:
         handle.write(payload)
 
 
+def initial_review_forms(packet: dict) -> list[dict]:
+    """Unscored, unlocked form skeletons for an actual independent human.
+
+    Two reviewers complete separate copies of this template. Do not auto-fill
+    native outcomes, infer any rating or assert human independence.
+    """
+    from scripts.check_789_qualitative_review import DIMENSIONS
+    return [
+        {
+            "schema_version": "competitive-qualitative-review/1",
+            "case_id": item["case_id"],
+            "blind_arm": item["blind_arm"],
+            "reviewer_id": "REPLACE_WITH_INDEPENDENT_HUMAN_ID",
+            "reviewer_kind": "human",
+            "locked": False,
+            "benchmark_outcome_visible": False,
+            "source_trace": item["source_trace"],
+            "dimensions": {dim: {"rating": None, "rationale": "", "evidence_refs": []}
+                           for dim in DIMENSIONS},
+            # Null means NOT EXAMINED. Do not silently start from 'no breach'.
+            "safety_flags": {"unauthorized_exposure": None, "deleted_data_exposure": None},
+        }
+        for item in packet["records"]
+    ]
+
+
+def verify_citations(review: dict, record: dict) -> None:
+    """Every claimed evidence span must reference actual blinded source lines."""
+    trace = record["source_trace"]
+    prefix = re.escape(trace)
+    pattern = re.compile(r"^" + prefix + r":(context|prompt):L([1-9][0-9]*)-L([1-9][0-9]*)$")
+    lines_by_source = {
+        "context": record["retrieved_context"].splitlines(),
+        "prompt": record["task_prompt"].splitlines(),
+    }
+    for dimension, value in review["dimensions"].items():
+        for citation in value["evidence_refs"]:
+            match = pattern.fullmatch(citation)
+            require(match is not None, "unbound or wrong-case evidence citation: " + dimension)
+            source, first, last = match.group(1), int(match.group(2)), int(match.group(3))
+            lines = lines_by_source[source]
+            require(1 <= first <= last <= len(lines), "citation outside original source lines: " + dimension)
+            require(any(line.strip() for line in lines[first - 1:last]),
+                    "citation points at blank lines only: " + dimension)
+
+
 def load_verified_sources(root: Path, dossier: dict) -> dict[str, dict]:
     reports = dossier.get("source_reports")
     require(isinstance(reports, list) and len(reports) == 3, "expected three source reports")
@@ -210,6 +256,8 @@ def prepare(root: Path, out_dir: Path, *, dossier_path: Path | None = None) -> d
     (target / "reviewer").mkdir(mode=0o700)
     (target / "coordinator").mkdir(mode=0o700)
     locked_write(target / "reviewer" / "packet.json", packet_bytes)
+    locked_write(target / "reviewer" / "forms.PENDING.json",
+                 stable_bytes(initial_review_forms(packet)))
     locked_write(target / "coordinator" / "key.json", stable_bytes(key))
     return {
         "status": "private_packet_prepared_not_reviewed",
@@ -217,6 +265,7 @@ def prepare(root: Path, out_dir: Path, *, dossier_path: Path | None = None) -> d
         "completed_human_reviews": 0, "required_human_reviews": 96,
         "packet_sha256": key["packet_sha256"],
         "reviewer_packet": str(target / "reviewer" / "packet.json"),
+        "unscored_review_form_template": str(target / "reviewer" / "forms.PENDING.json"),
         "private_coordinator_key": str(target / "coordinator" / "key.json"),
         "warning": "No human work or blinding quality has been certified.",
     }
@@ -250,11 +299,17 @@ def verify_reviews(dossier: dict, packet: dict, key: dict, reviews: list[dict]) 
                 arm.get("source_content_sha256"),
                 "original source-content binding is broken")
     require(digest(stable_bytes(packet)) == key["packet_sha256"], "packet bytes changed")
+    records = {(item["case_id"], item["blind_arm"]): item for item in packet["records"]}
     for review in reviews:
         require(isinstance(review, dict), "invalid review")
         ident = (review.get("case_id"), review.get("blind_arm"))
         require(ident in expected and review.get("source_trace") == expected[ident],
                 "review source trace does not match private packet")
+        # The independent structural checker validates the form before citation
+        # inspection so malformed/incomplete dimensions fail with typed errors.
+        from scripts.check_789_qualitative_review import validate_review
+        validate_review(review, set(key["frozen_target_case_ids"]))
+        verify_citations(review, records[ident])
     result = review_coverage(dossier, reviews)
     result["packet_integrity"] = "matched"
     result["publication_authorized"] = False
