@@ -39,6 +39,22 @@ def read_json(path: Path) -> dict[str, Any]:
     return data
 
 
+def resolve_output_path(root: Path, output: Path) -> Path:
+    """Permit an optional report only OUTSIDE the evidence source checkout.
+
+    Resolving both sides also rejects relative-path, dot-dot and existing
+    symlink aliases into the checkout. This is an operator error guard, not
+    a defense against hostile concurrent filesystem namespace changes.
+    """
+    source = root.resolve()
+    destination = output.resolve()
+    if destination == source or source in destination.parents:
+        raise FrontierEvidenceError(
+            "frontier projection output must be outside the source repository"
+        )
+    return destination
+
+
 def _number(value: object) -> bool:
     return type(value) in (int, float)
 
@@ -233,8 +249,9 @@ def main() -> int:
     if args.output is None:
         print(result, end="")
     else:
-        args.output.parent.mkdir(parents=True, exist_ok=True)
-        args.output.write_text(result, encoding="utf-8")
+        output = resolve_output_path(root, args.output)
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(result, encoding="utf-8")
     return 0
 
 
