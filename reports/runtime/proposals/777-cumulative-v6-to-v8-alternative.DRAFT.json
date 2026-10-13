@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "baseline_id": "agent-memory-runtime-baseline-v8",
+  "predecessor_baseline_id": "agent-memory-runtime-baseline-v6",
+  "issue": 777,
+  "declared_changes": [
+    {
+      "path": "reference/agentmem_ref/api/contract.py",
+      "blob": "6345ecf151a156ff203ae19a6d973464da36f272"
+    },
+    {
+      "path": "reference/agentmem_ref/api/surface.py",
+      "blob": "eb95340ff6768fa50306e09379de581edf1e01f2"
+    },
+    {
+      "path": "reference/agentmem_ref/evidence_sufficiency.py",
+      "blob": "55edbc614bf86c8f1ffd0d46369a8738712ff5b3"
+    },
+    {
+      "path": "reference/agentmem_ref/governed_transition_witness.py",
+      "blob": "c638210619d661db2d57490ed684df2b80e9db19"
+    },
+    {
+      "path": "reference/agentmem_ref/recall_observation_receipt.py",
+      "blob": "cfeeb6948f38cae0e04a87ed6e61c1344548509c"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/adapter.py",
+      "blob": "6567bdd695c81a0f3f08c4b72b3ce70ce7d33263"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/evidence_sufficiency.py",
+      "blob": "3ca2d2d9ad8cbf364c4575aa05fe49fea6c3f1eb"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/governed_transition_witness.py",
+      "blob": "6deb69083617bc0f3c229d6870e3f52a8545756c"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/recall_control.py",
+      "blob": "c049d23f178f5ea6d12dcec8cd02c47e704fcef9"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/recall_observation_receipt.py",
+      "blob": "f80d3145d7290c8931b3269c7dcb95585385a45d"
+    }
+  ],
+  "identity_deltas": [
+    {
+      "identity_path": "identity.public_contract_version",
+      "from": "1.6.0",
+      "to": "1.7.0"
+    }
+  ],
+  "pyproject_change": null,
+  "acceptance_evidence_required": [
+    {
+      "kind": "public_gauntlet",
+      "ref": "gauntlet-orchestration-retrieval-probe-v1"
+    },
+    {
+      "kind": "replay",
+      "ref": "typed-sufficiency-noninterference-and-negative-controls-v1"
+    },
+    {
+      "kind": "replay",
+      "ref": "governed-persisted-typed-slot-sufficiency-admission-recheck-v1"
+    },
+    {
+      "kind": "replay",
+      "ref": "governed-admitted-typed-value-coherence-v1"
+    },
+    {
+      "kind": "replay",
+      "ref": "committed-governed-transition-witness-v1"
+    },
+    {
+      "kind": "replay",
+      "ref": "same-slot-safety-counterevidence-and-immutable-stop-gate-v1"
+    },
+    {
+      "kind": "replay",
+      "ref": "public-redaction-v1-7-0-api-compatibility-and-audit-boundary-v1"
+    },
+    {
+      "kind": "replay",
+      "ref": "deleted-lineage-transitive-cache-and-recreation-security-v1"
+    },
+    {
+      "kind": "replay",
+      "ref": "subject-domain-historical-currentness-noninterference-v1"
+    },
+    {
+      "kind": "lane",
+      "ref": "amb-precisionmembench-retrieval-v8"
+    },
+    {
+      "kind": "lane",
+      "ref": "longmemeval-s-retrieval-parity-v8"
+    }
+  ]
+}
