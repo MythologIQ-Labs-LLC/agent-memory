@@ -14,35 +14,11 @@
     },
     {
       "path": "reference/agentmem_ref/runtime/adapter.py",
-      "blob": "501203697977033f2dee52bb6392075fc2d1faa6"
+      "blob": "6567bdd695c81a0f3f08c4b72b3ce70ce7d33263"
     },
     {
       "path": "reference/agentmem_ref/runtime/recall_control.py",
       "blob": "c049d23f178f5ea6d12dcec8cd02c47e704fcef9"
-    },
-    {
-      "path": "schemas/api-action-envelope.schema.json",
-      "blob": "1e306682d09f708847d8b1846a4c6e97fc0595fe"
-    },
-    {
-      "path": "schemas/api-execution-observation.schema.json",
-      "blob": "ec009ec12c307fd64248249e7f769f05238fcea4"
-    },
-    {
-      "path": "schemas/api-proposal-envelope.schema.json",
-      "blob": "bde77036b5a8e9833d9010877dbb4ebcaa3b92ce"
-    },
-    {
-      "path": "schemas/api-recall-context.schema.json",
-      "blob": "11f5535f58faef924051089960744a28eee6e820"
-    },
-    {
-      "path": "schemas/api-result-envelope.schema.json",
-      "blob": "a99b96921b2bf404fb54da97d25064ab2d9285c8"
-    },
-    {
-      "path": "schemas/api-target-envelope.schema.json",
-      "blob": "214a265ba3fed669a88203005e8acdddd8890248"
     }
   ],
   "identity_deltas": [
