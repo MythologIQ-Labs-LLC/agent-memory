@@ -1,0 +1,3197 @@
+{
+  "schema_version": "competitive-case-dossier/1",
+  "audit_date": "2026-10-13",
+  "source_main_sha": "3eebb6d54e2a218c4fd10cf53c52acac8384c3e6",
+  "benchmark": "AMB PrecisionMemBench single-turn",
+  "frozen_lane": "amb-precisionmembench-retrieval-v6",
+  "source_class": "completed_integration_reports__canonical_dashboard_reconciliation_pending",
+  "qualitative_review_status": "not_started",
+  "accepted_score_update": false,
+  "source_reports": [
+    {
+      "arm": "agent_memory",
+      "path": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v6/agent-memory-24048d55e26d/single-turn.json",
+      "git_blob_sha": "ea40e74850e2621ff39c65926c5ede89768e1a43",
+      "run_name": "agent-memory-24048d55e26d",
+      "total_queries": 77
+    },
+    {
+      "arm": "mem0_oss",
+      "path": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v6/mem0-explicit-24048d55e26d/single-turn.json",
+      "git_blob_sha": "426a2f3c69220efcf5e461aef54aa593b4b82155",
+      "run_name": "mem0-explicit-24048d55e26d",
+      "total_queries": 77
+    },
+    {
+      "arm": "bm25_control",
+      "path": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v6/bm25-24048d55e26d/single-turn.json",
+      "git_blob_sha": "4a7b779a2aed19dc4ef71d4fa5493b83220e6c92",
+      "run_name": "bm25-24048d55e26d",
+      "total_queries": 77
+    }
+  ],
+  "guards": {
+    "all_case_ids_matched": true,
+    "all_prompt_and_gold_arrays_matched": true,
+    "all_native_verdicts_preserved": true,
+    "no_gold_or_response_content_embedded": true
+  },
+  "summary": {
+    "count": 77,
+    "correct": {
+      "agent_memory": 15,
+      "mem0_oss": 10,
+      "bm25_control": 8
+    },
+    "native_accuracy": {
+      "agent_memory": 0.19480519480519481,
+      "mem0_oss": 0.12987012987012986,
+      "bm25_control": 0.1038961038961039
+    },
+    "native_mean_precision": {
+      "agent_memory": 0.1806,
+      "mem0_oss": 0.1049,
+      "bm25_control": 0.0536
+    },
+    "native_mean_recall": {
+      "agent_memory": 0.9535,
+      "mem0_oss": 1,
+      "bm25_control": 0.9651
+    },
+    "pair_outcomes": {
+      "agent_only": 6,
+      "mem0_only": 1,
+      "both_pass": 9,
+      "both_fail": 61
+    },
+    "category_breakdown": [
+      {
+        "category": "Alias resolution",
+        "case_count": 23,
+        "agent_pass": 3,
+        "mem0_pass": 0,
+        "bm25_pass": 0
+      },
+      {
+        "category": "Budget eviction and capacity",
+        "case_count": 5,
+        "agent_pass": 3,
+        "mem0_pass": 3,
+        "bm25_pass": 3
+      },
+      {
+        "category": "Cold start behavior",
+        "case_count": 1,
+        "agent_pass": 1,
+        "mem0_pass": 1,
+        "bm25_pass": 0
+      },
+      {
+        "category": "Counter-signal retrieval",
+        "case_count": 2,
+        "agent_pass": 0,
+        "mem0_pass": 0,
+        "bm25_pass": 0
+      },
+      {
+        "category": "Cross-user isolation",
+        "case_count": 1,
+        "agent_pass": 1,
+        "mem0_pass": 1,
+        "bm25_pass": 1
+      },
+      {
+        "category": "Design boundary cases",
+        "case_count": 6,
+        "agent_pass": 2,
+        "mem0_pass": 2,
+        "bm25_pass": 2
+      },
+      {
+        "category": "Fuzzy matching and prefix guards",
+        "case_count": 7,
+        "agent_pass": 3,
+        "mem0_pass": 0,
+        "bm25_pass": 0
+      },
+      {
+        "category": "Persona prelude content",
+        "case_count": 4,
+        "agent_pass": 1,
+        "mem0_pass": 1,
+        "bm25_pass": 1
+      },
+      {
+        "category": "Ranking stability",
+        "case_count": 3,
+        "agent_pass": 1,
+        "mem0_pass": 1,
+        "bm25_pass": 1
+      },
+      {
+        "category": "Relation expansion",
+        "case_count": 4,
+        "agent_pass": 0,
+        "mem0_pass": 0,
+        "bm25_pass": 0
+      },
+      {
+        "category": "Scope disambiguation",
+        "case_count": 12,
+        "agent_pass": 0,
+        "mem0_pass": 0,
+        "bm25_pass": 0
+      },
+      {
+        "category": "Supersession chain exclusion",
+        "case_count": 3,
+        "agent_pass": 0,
+        "mem0_pass": 0,
+        "bm25_pass": 0
+      },
+      {
+        "category": "Type routing and open questions",
+        "case_count": 6,
+        "agent_pass": 0,
+        "mem0_pass": 1,
+        "bm25_pass": 0
+      }
+    ],
+    "mcnemar_exact_two_sided_agent_vs_mem0": 0.125,
+    "interpretation": "Historical frozen AMB v6 source, retrieval-mode native exact case verdict; no answer-generation quality or human judgments. Paired n=77, 6 vs 1 discordant; exact two-sided McNemar p=0.125 (unadjusted exploratory), not statistically demonstrated superiority."
+  },
+  "review_selection": {
+    "method": "All seven discordant Agent Memory-versus-Mem0 cases; then lexicographically first previously unselected case per benchmark category; then lexicographically first remaining cases until 24 total. Deliberately oversamples discordant/coverage, not representative. All 77 rows remain in entries.",
+    "target_case_ids": [
+      "alias-base-class-retrieves-composition",
+      "alias-dlq-abbreviation-resolves",
+      "alias-exceptions-retrieves-error-handling",
+      "alias-gha-resolves",
+      "alias-kube-resolves",
+      "alias-mongo-resolves",
+      "budget-ceiling-evicts-relevant-beliefs",
+      "cold-start-user-no-beliefs",
+      "conflict-mongodb-supersedes-sqlalchemy",
+      "conflict-scope-disambiguation-redis-code",
+      "counter-signal-jest-surfaces-vitest",
+      "edge-empty-query",
+      "edge-short-query-raw-passthrough",
+      "edge-short-query-score-clears",
+      "filter-resolved-at-excluded",
+      "fuzzy-abbreviation-prefix-blind-spot",
+      "fuzzy-prefix-blocks-transitive-match",
+      "fuzzy-scope-filter-discriminates-after-fuzzy-fires",
+      "fuzzy-single-edit-fires-non-pinned",
+      "isolation-user-scoping",
+      "multi-scope-prelude-uses-primary-scope-only",
+      "questions-pinned-active-only",
+      "ranking-canonical-name-over-content",
+      "relation-does-not-appear-as-entity"
+    ]
+  },
+  "entries": [
+    {
+      "case_id": "alias-base-class-retrieves-composition",
+      "benchmark_category": "Alias resolution",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1191,
+          "retrieval_ms": 31.1
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 394,
+          "retrieval_ms": 12.4
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1048,
+          "retrieval_ms": 5.8
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "alias-base-class-retrieves-composition"
+    },
+    {
+      "case_id": "alias-dlq-abbreviation-resolves",
+      "benchmark_category": "Alias resolution",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1208,
+          "retrieval_ms": 31.6
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 242,
+          "retrieval_ms": 12.1
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1065,
+          "retrieval_ms": 4.5
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "alias-dlq-abbreviation-resolves"
+    },
+    {
+      "case_id": "alias-exceptions-retrieves-error-handling",
+      "benchmark_category": "Alias resolution",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 186,
+          "retrieval_ms": 27.5
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 306,
+          "retrieval_ms": 12.1
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 984,
+          "retrieval_ms": 3.2
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "alias-exceptions-retrieves-error-handling"
+    },
+    {
+      "case_id": "alias-gha-resolves",
+      "benchmark_category": "Alias resolution",
+      "outcome": "agent_only",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": true,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": false,
+            "pass": true
+          },
+          "context_tokens": 74,
+          "retrieval_ms": 26.9
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 147,
+          "retrieval_ms": 11.7
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 985,
+          "retrieval_ms": 7.1
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "alias-gha-resolves"
+    },
+    {
+      "case_id": "alias-kube-resolves",
+      "benchmark_category": "Alias resolution",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 250,
+          "retrieval_ms": 26.4
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 303,
+          "retrieval_ms": 13.9
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 985,
+          "retrieval_ms": 4.2
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "alias-kube-resolves"
+    },
+    {
+      "case_id": "alias-mongo-resolves",
+      "benchmark_category": "Alias resolution",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1201,
+          "retrieval_ms": 30
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 868,
+          "retrieval_ms": 12.7
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1055,
+          "retrieval_ms": 3.5
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "alias-mongo-resolves"
+    },
+    {
+      "case_id": "alias-pov-shift-resolves",
+      "benchmark_category": "Alias resolution",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 728,
+          "retrieval_ms": 28.8
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 911,
+          "retrieval_ms": 11.2
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1016,
+          "retrieval_ms": 4.1
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "alias-pov-shift-resolves"
+    },
+    {
+      "case_id": "alias-protagonist-resolves",
+      "benchmark_category": "Alias resolution",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1221,
+          "retrieval_ms": 31.9
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 985,
+          "retrieval_ms": 13.6
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1057,
+          "retrieval_ms": 5.9
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "alias-protagonist-resolves"
+    },
+    {
+      "case_id": "alias-reactjs-resolves",
+      "benchmark_category": "Alias resolution",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 301,
+          "retrieval_ms": 28.2
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 480,
+          "retrieval_ms": 12.5
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 992,
+          "retrieval_ms": 6.2
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "alias-reactjs-resolves"
+    },
+    {
+      "case_id": "alias-ts-resolves",
+      "benchmark_category": "Alias resolution",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 343,
+          "retrieval_ms": 27.7
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 778,
+          "retrieval_ms": 12.5
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 972,
+          "retrieval_ms": 5.8
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "alias-ts-resolves"
+    },
+    {
+      "case_id": "alias-two-word-shingle-dead-letter",
+      "benchmark_category": "Alias resolution",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 755,
+          "retrieval_ms": 29.7
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 722,
+          "retrieval_ms": 12.3
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1039,
+          "retrieval_ms": 4
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "alias-two-word-shingle-dead-letter"
+    },
+    {
+      "case_id": "budget-ceiling-evicts-relevant-beliefs",
+      "benchmark_category": "Budget eviction and capacity",
+      "outcome": "both_pass",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": true,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": false,
+            "pass": true
+          },
+          "context_tokens": 122,
+          "retrieval_ms": 30.3
+        },
+        "mem0_oss": {
+          "passed_native_scorer": true,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": false,
+            "pass": true
+          },
+          "context_tokens": 133,
+          "retrieval_ms": 11.9
+        },
+        "bm25_control": {
+          "passed_native_scorer": true,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": false,
+            "pass": true
+          },
+          "context_tokens": 106,
+          "retrieval_ms": 3.7
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "budget-ceiling-evicts-relevant-beliefs"
+    },
+    {
+      "case_id": "budget-one-pinned-wins-over-relevant",
+      "benchmark_category": "Budget eviction and capacity",
+      "outcome": "both_pass",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": true,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": false,
+            "pass": true
+          },
+          "context_tokens": 62,
+          "retrieval_ms": 30
+        },
+        "mem0_oss": {
+          "passed_native_scorer": true,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": false,
+            "pass": true
+          },
+          "context_tokens": 62,
+          "retrieval_ms": 10.8
+        },
+        "bm25_control": {
+          "passed_native_scorer": true,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": false,
+            "pass": true
+          },
+          "context_tokens": 54,
+          "retrieval_ms": 3.3
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "budget-one-pinned-wins-over-relevant"
+    },
+    {
+      "case_id": "budget-zero-graceful-empty",
+      "benchmark_category": "Budget eviction and capacity",
+      "outcome": "both_pass",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": true,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": false,
+            "pass": true
+          },
+          "context_tokens": 67,
+          "retrieval_ms": 29.8
+        },
+        "mem0_oss": {
+          "passed_native_scorer": true,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": false,
+            "pass": true
+          },
+          "context_tokens": 611,
+          "retrieval_ms": 11.3
+        },
+        "bm25_control": {
+          "passed_native_scorer": true,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": false,
+            "pass": true
+          },
+          "context_tokens": 972,
+          "retrieval_ms": 3.2
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "budget-zero-graceful-empty"
+    },
+    {
+      "case_id": "canonical-name-match-mara",
+      "benchmark_category": "Alias resolution",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 521,
+          "retrieval_ms": 28.4
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 239,
+          "retrieval_ms": 12.6
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 982,
+          "retrieval_ms": 6.7
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "canonical-name-match-mara"
+    },
+    {
+      "case_id": "cap-stress-compound-six-entities",
+      "benchmark_category": "Alias resolution",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1176,
+          "retrieval_ms": 32.8
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1207,
+          "retrieval_ms": 15.3
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1033,
+          "retrieval_ms": 4.8
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "cap-stress-compound-six-entities"
+    },
+    {
+      "case_id": "cap-stress-kitchen-sink-exceeds-twelve",
+      "benchmark_category": "Alias resolution",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1201,
+          "retrieval_ms": 32.7
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1178,
+          "retrieval_ms": 16
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1055,
+          "retrieval_ms": 5.3
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "cap-stress-kitchen-sink-exceeds-twelve"
+    },
+    {
+      "case_id": "cap-stress-late-position-entity-at-risk",
+      "benchmark_category": "Alias resolution",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1193,
+          "retrieval_ms": 33.4
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1194,
+          "retrieval_ms": 16.7
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1048,
+          "retrieval_ms": 5.7
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "cap-stress-late-position-entity-at-risk"
+    },
+    {
+      "case_id": "cold-start-user-no-beliefs",
+      "benchmark_category": "Cold start behavior",
+      "outcome": "both_pass",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": true,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": false,
+            "pass": true
+          },
+          "context_tokens": 6,
+          "retrieval_ms": 27.6
+        },
+        "mem0_oss": {
+          "passed_native_scorer": true,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": false,
+            "pass": true
+          },
+          "context_tokens": 6,
+          "retrieval_ms": 11.3
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 992,
+          "retrieval_ms": 4.2
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "cold-start-user-no-beliefs"
+    },
+    {
+      "case_id": "conflict-mongodb-supersedes-sqlalchemy",
+      "benchmark_category": "Supersession chain exclusion",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 67,
+          "retrieval_ms": 26.6
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 768,
+          "retrieval_ms": 12.7
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 972,
+          "retrieval_ms": 5.1
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "conflict-mongodb-supersedes-sqlalchemy"
+    },
+    {
+      "case_id": "conflict-scope-disambiguation-redis-code",
+      "benchmark_category": "Scope disambiguation",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 813,
+          "retrieval_ms": 28.2
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 505,
+          "retrieval_ms": 12.5
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 989,
+          "retrieval_ms": 3.8
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "conflict-scope-disambiguation-redis-code"
+    },
+    {
+      "case_id": "conflict-scope-disambiguation-redis-writing",
+      "benchmark_category": "Scope disambiguation",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 773,
+          "retrieval_ms": 29.1
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 683,
+          "retrieval_ms": 11.7
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1036,
+          "retrieval_ms": 3.8
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "conflict-scope-disambiguation-redis-writing"
+    },
+    {
+      "case_id": "counter-signal-jest-surfaces-vitest",
+      "benchmark_category": "Counter-signal retrieval",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 796,
+          "retrieval_ms": 29.9
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 534,
+          "retrieval_ms": 12.4
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1027,
+          "retrieval_ms": 2.7
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "counter-signal-jest-surfaces-vitest"
+    },
+    {
+      "case_id": "cross-scope-non-user-edited-blocked",
+      "benchmark_category": "Scope disambiguation",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 186,
+          "retrieval_ms": 29.1
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 131,
+          "retrieval_ms": 11.1
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 972,
+          "retrieval_ms": 3.6
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "cross-scope-non-user-edited-blocked"
+    },
+    {
+      "case_id": "cross-scope-one-empty-domain-does-not-degrade",
+      "benchmark_category": "Scope disambiguation",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 813,
+          "retrieval_ms": 31.5
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 505,
+          "retrieval_ms": 12
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 989,
+          "retrieval_ms": 4.3
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "cross-scope-one-empty-domain-does-not-degrade"
+    },
+    {
+      "case_id": "edge-empty-query",
+      "benchmark_category": "Design boundary cases",
+      "outcome": "both_pass",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": true,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": false,
+            "pass": true
+          },
+          "context_tokens": 6,
+          "retrieval_ms": 0
+        },
+        "mem0_oss": {
+          "passed_native_scorer": true,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": false,
+            "pass": true
+          },
+          "context_tokens": 6,
+          "retrieval_ms": 0
+        },
+        "bm25_control": {
+          "passed_native_scorer": true,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": false,
+            "pass": true
+          },
+          "context_tokens": 6,
+          "retrieval_ms": 0
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "edge-empty-query"
+    },
+    {
+      "case_id": "edge-short-query-raw-passthrough",
+      "benchmark_category": "Alias resolution",
+      "outcome": "agent_only",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": true,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": false,
+            "pass": true
+          },
+          "context_tokens": 54,
+          "retrieval_ms": 26.9
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 414,
+          "retrieval_ms": 11.2
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 972,
+          "retrieval_ms": 2
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "edge-short-query-raw-passthrough"
+    },
+    {
+      "case_id": "edge-short-query-score-clears",
+      "benchmark_category": "Alias resolution",
+      "outcome": "agent_only",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": true,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": false,
+            "pass": true
+          },
+          "context_tokens": 67,
+          "retrieval_ms": 27.3
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 208,
+          "retrieval_ms": 11.1
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 972,
+          "retrieval_ms": 4.3
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "edge-short-query-score-clears"
+    },
+    {
+      "case_id": "edge-whitespace-query",
+      "benchmark_category": "Design boundary cases",
+      "outcome": "both_pass",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": true,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": false,
+            "pass": true
+          },
+          "context_tokens": 6,
+          "retrieval_ms": 0
+        },
+        "mem0_oss": {
+          "passed_native_scorer": true,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": false,
+            "pass": true
+          },
+          "context_tokens": 6,
+          "retrieval_ms": 0
+        },
+        "bm25_control": {
+          "passed_native_scorer": true,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": false,
+            "pass": true
+          },
+          "context_tokens": 6,
+          "retrieval_ms": 0
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "edge-whitespace-query"
+    },
+    {
+      "case_id": "empty-alias-belief-content-path-only",
+      "benchmark_category": "Design boundary cases",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1156,
+          "retrieval_ms": 32.2
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 176,
+          "retrieval_ms": 12.2
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1069,
+          "retrieval_ms": 4.8
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "empty-alias-belief-content-path-only"
+    },
+    {
+      "case_id": "filter-resolved-at-excluded",
+      "benchmark_category": "Type routing and open questions",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1212,
+          "retrieval_ms": 30.7
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 134,
+          "retrieval_ms": 13.1
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1083,
+          "retrieval_ms": 5
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "filter-resolved-at-excluded"
+    },
+    {
+      "case_id": "fuzzy-abbreviation-prefix-blind-spot",
+      "benchmark_category": "Fuzzy matching and prefix guards",
+      "outcome": "agent_only",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": true,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": false,
+            "pass": true
+          },
+          "context_tokens": 6,
+          "retrieval_ms": 27.5
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 202,
+          "retrieval_ms": 11.4
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 972,
+          "retrieval_ms": 4.6
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "fuzzy-abbreviation-prefix-blind-spot"
+    },
+    {
+      "case_id": "fuzzy-prefix-blocks-transitive-match",
+      "benchmark_category": "Fuzzy matching and prefix guards",
+      "outcome": "agent_only",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": true,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": false,
+            "pass": true
+          },
+          "context_tokens": 6,
+          "retrieval_ms": 27.1
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 67,
+          "retrieval_ms": 10.8
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 972,
+          "retrieval_ms": 4.1
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "fuzzy-prefix-blocks-transitive-match"
+    },
+    {
+      "case_id": "fuzzy-scope-filter-discriminates-after-fuzzy-fires",
+      "benchmark_category": "Fuzzy matching and prefix guards",
+      "outcome": "agent_only",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": true,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": false,
+            "pass": true
+          },
+          "context_tokens": 64,
+          "retrieval_ms": 28.1
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 342,
+          "retrieval_ms": 11.1
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 972,
+          "retrieval_ms": 3.7
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "fuzzy-scope-filter-discriminates-after-fuzzy-fires"
+    },
+    {
+      "case_id": "fuzzy-single-edit-fires-non-pinned",
+      "benchmark_category": "Fuzzy matching and prefix guards",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 177,
+          "retrieval_ms": 29.4
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1057,
+          "retrieval_ms": 11.2
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 974,
+          "retrieval_ms": 3.2
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "fuzzy-single-edit-fires-non-pinned"
+    },
+    {
+      "case_id": "fuzzy-single-term-only-signal",
+      "benchmark_category": "Fuzzy matching and prefix guards",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": true,
+            "pass": false
+          },
+          "context_tokens": 6,
+          "retrieval_ms": 28.1
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 390,
+          "retrieval_ms": 10.9
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 972,
+          "retrieval_ms": 4
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "fuzzy-single-term-only-signal"
+    },
+    {
+      "case_id": "fuzzy-two-edit-transposition-blocked",
+      "benchmark_category": "Fuzzy matching and prefix guards",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": true,
+            "pass": false
+          },
+          "context_tokens": 6,
+          "retrieval_ms": 27.8
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 827,
+          "retrieval_ms": 11.8
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 972,
+          "retrieval_ms": 3.4
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "fuzzy-two-edit-transposition-blocked"
+    },
+    {
+      "case_id": "happy-alias-match-kubernetes",
+      "benchmark_category": "Alias resolution",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 135,
+          "retrieval_ms": 28.2
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 529,
+          "retrieval_ms": 16.5
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 985,
+          "retrieval_ms": 3.8
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "happy-alias-match-kubernetes"
+    },
+    {
+      "case_id": "happy-stack-repository-layer",
+      "benchmark_category": "Type routing and open questions",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 251,
+          "retrieval_ms": 29.6
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 369,
+          "retrieval_ms": 14.5
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 992,
+          "retrieval_ms": 4.3
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "happy-stack-repository-layer"
+    },
+    {
+      "case_id": "happy-writing-scope",
+      "benchmark_category": "Scope disambiguation",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1194,
+          "retrieval_ms": 31
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 441,
+          "retrieval_ms": 12
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1047,
+          "retrieval_ms": 5.7
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "happy-writing-scope"
+    },
+    {
+      "case_id": "isolation-user-scoping",
+      "benchmark_category": "Cross-user isolation",
+      "outcome": "both_pass",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": true,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": false,
+            "pass": true
+          },
+          "context_tokens": 566,
+          "retrieval_ms": 28.3
+        },
+        "mem0_oss": {
+          "passed_native_scorer": true,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": false,
+            "pass": true
+          },
+          "context_tokens": 469,
+          "retrieval_ms": 11.9
+        },
+        "bm25_control": {
+          "passed_native_scorer": true,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": false,
+            "pass": true
+          },
+          "context_tokens": 972,
+          "retrieval_ms": 4.1
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "isolation-user-scoping"
+    },
+    {
+      "case_id": "long-query-rambling-kubernetes",
+      "benchmark_category": "Alias resolution",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1206,
+          "retrieval_ms": 33.5
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 608,
+          "retrieval_ms": 27
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1081,
+          "retrieval_ms": 4.4
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "long-query-rambling-kubernetes"
+    },
+    {
+      "case_id": "messy-all-caps-case-insensitive",
+      "benchmark_category": "Alias resolution",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 234,
+          "retrieval_ms": 29.3
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 862,
+          "retrieval_ms": 11.4
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 974,
+          "retrieval_ms": 5.2
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "messy-all-caps-case-insensitive"
+    },
+    {
+      "case_id": "messy-compound-surfaces-two-beliefs",
+      "benchmark_category": "Alias resolution",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 539,
+          "retrieval_ms": 29.5
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 690,
+          "retrieval_ms": 12.6
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 982,
+          "retrieval_ms": 4.1
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "messy-compound-surfaces-two-beliefs"
+    },
+    {
+      "case_id": "messy-filler-heavy-extraction",
+      "benchmark_category": "Alias resolution",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1241,
+          "retrieval_ms": 33.4
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 516,
+          "retrieval_ms": 16.9
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1105,
+          "retrieval_ms": 5.4
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "messy-filler-heavy-extraction"
+    },
+    {
+      "case_id": "messy-negation-surfaces-topic",
+      "benchmark_category": "Alias resolution",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 884,
+          "retrieval_ms": 30
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 612,
+          "retrieval_ms": 13.9
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1028,
+          "retrieval_ms": 5.1
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "messy-negation-surfaces-topic"
+    },
+    {
+      "case_id": "messy-typo-blind-spot",
+      "benchmark_category": "Fuzzy matching and prefix guards",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 97,
+          "retrieval_ms": 28.2
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 510,
+          "retrieval_ms": 13.1
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 972,
+          "retrieval_ms": 4.6
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "messy-typo-blind-spot"
+    },
+    {
+      "case_id": "multi-hop-supersession-chain-all-excluded",
+      "benchmark_category": "Supersession chain exclusion",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1165,
+          "retrieval_ms": 31.5
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 762,
+          "retrieval_ms": 12.4
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1026,
+          "retrieval_ms": 3.8
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "multi-hop-supersession-chain-all-excluded"
+    },
+    {
+      "case_id": "multi-scope-code-writing-dedup-no-double-surface",
+      "benchmark_category": "Scope disambiguation",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 73,
+          "retrieval_ms": 29.9
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 612,
+          "retrieval_ms": 11
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 972,
+          "retrieval_ms": 4.3
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "multi-scope-code-writing-dedup-no-double-surface"
+    },
+    {
+      "case_id": "multi-scope-prelude-uses-primary-scope-only",
+      "benchmark_category": "Persona prelude content",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 908,
+          "retrieval_ms": 29.6
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 391,
+          "retrieval_ms": 12.8
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1037,
+          "retrieval_ms": 2.8
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "multi-scope-prelude-uses-primary-scope-only"
+    },
+    {
+      "case_id": "multi-scope-redis-both-surfaces",
+      "benchmark_category": "Scope disambiguation",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 195,
+          "retrieval_ms": 27.2
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 581,
+          "retrieval_ms": 11.9
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 989,
+          "retrieval_ms": 4.5
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "multi-scope-redis-both-surfaces"
+    },
+    {
+      "case_id": "narrator-voice-pinned-in-own-scope",
+      "benchmark_category": "Persona prelude content",
+      "outcome": "both_pass",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": true,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": false,
+            "pass": true
+          },
+          "context_tokens": 6,
+          "retrieval_ms": 0
+        },
+        "mem0_oss": {
+          "passed_native_scorer": true,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": false,
+            "pass": true
+          },
+          "context_tokens": 6,
+          "retrieval_ms": 0
+        },
+        "bm25_control": {
+          "passed_native_scorer": true,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": false,
+            "pass": true
+          },
+          "context_tokens": 6,
+          "retrieval_ms": 0
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "narrator-voice-pinned-in-own-scope"
+    },
+    {
+      "case_id": "negation-query-still-surfaces-rejected-tool",
+      "benchmark_category": "Design boundary cases",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1109,
+          "retrieval_ms": 31.9
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 534,
+          "retrieval_ms": 12
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1069,
+          "retrieval_ms": 2.8
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "negation-query-still-surfaces-rejected-tool"
+    },
+    {
+      "case_id": "negative-guidance-mongoose",
+      "benchmark_category": "Counter-signal retrieval",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1188,
+          "retrieval_ms": 31.3
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 634,
+          "retrieval_ms": 12.6
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1044,
+          "retrieval_ms": 3.8
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "negative-guidance-mongoose"
+    },
+    {
+      "case_id": "out-of-scope-coin-collecting",
+      "benchmark_category": "Scope disambiguation",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1092,
+          "retrieval_ms": 32.3
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 198,
+          "retrieval_ms": 19.1
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1044,
+          "retrieval_ms": 5.2
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "out-of-scope-coin-collecting"
+    },
+    {
+      "case_id": "persona-prelude-content-present",
+      "benchmark_category": "Persona prelude content",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 67,
+          "retrieval_ms": 27.7
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 611,
+          "retrieval_ms": 11.6
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 972,
+          "retrieval_ms": 4.7
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "persona-prelude-content-present"
+    },
+    {
+      "case_id": "pinned-plus-resolved-excluded-from-questions",
+      "benchmark_category": "Type routing and open questions",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 649,
+          "retrieval_ms": 30.3
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 313,
+          "retrieval_ms": 11.8
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 996,
+          "retrieval_ms": 5
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "pinned-plus-resolved-excluded-from-questions"
+    },
+    {
+      "case_id": "preference-flood-relevant-entity-survives",
+      "benchmark_category": "Budget eviction and capacity",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 189,
+          "retrieval_ms": 29.2
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 371,
+          "retrieval_ms": 12.3
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 378,
+          "retrieval_ms": 3.2
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "preference-flood-relevant-entity-survives"
+    },
+    {
+      "case_id": "questions-pinned-active-only",
+      "benchmark_category": "Type routing and open questions",
+      "outcome": "mem0_only",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 189,
+          "retrieval_ms": 27
+        },
+        "mem0_oss": {
+          "passed_native_scorer": true,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": false,
+            "pass": true
+          },
+          "context_tokens": 6,
+          "retrieval_ms": 11.1
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 989,
+          "retrieval_ms": 5.1
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "questions-pinned-active-only"
+    },
+    {
+      "case_id": "ranking-canonical-name-over-content",
+      "benchmark_category": "Ranking stability",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1199,
+          "retrieval_ms": 31.1
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 500,
+          "retrieval_ms": 12
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1044,
+          "retrieval_ms": 3.2
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "ranking-canonical-name-over-content"
+    },
+    {
+      "case_id": "ranking-orderedbefore-alias-beats-content",
+      "benchmark_category": "Ranking stability",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 931,
+          "retrieval_ms": 30.8
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 720,
+          "retrieval_ms": 11.3
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1015,
+          "retrieval_ms": 2.8
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "ranking-orderedbefore-alias-beats-content"
+    },
+    {
+      "case_id": "recency-tiebreak-reinforcement",
+      "benchmark_category": "Ranking stability",
+      "outcome": "both_pass",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": true,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": false,
+            "pass": true
+          },
+          "context_tokens": 6,
+          "retrieval_ms": 0
+        },
+        "mem0_oss": {
+          "passed_native_scorer": true,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": false,
+            "pass": true
+          },
+          "context_tokens": 6,
+          "retrieval_ms": 0
+        },
+        "bm25_control": {
+          "passed_native_scorer": true,
+          "diagnostic_flags": {
+            "unexpected_belief": false,
+            "missing_expected_belief": false,
+            "pass": true
+          },
+          "context_tokens": 6,
+          "retrieval_ms": 0
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "recency-tiebreak-reinforcement"
+    },
+    {
+      "case_id": "relation-does-not-appear-as-entity",
+      "benchmark_category": "Relation expansion",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 250,
+          "retrieval_ms": 29.1
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 536,
+          "retrieval_ms": 11.8
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 989,
+          "retrieval_ms": 4
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "relation-does-not-appear-as-entity"
+    },
+    {
+      "case_id": "relation-expansion-respects-scope-filter",
+      "benchmark_category": "Relation expansion",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 317,
+          "retrieval_ms": 30.2
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 560,
+          "retrieval_ms": 11.3
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 990,
+          "retrieval_ms": 5.9
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "relation-expansion-respects-scope-filter"
+    },
+    {
+      "case_id": "relation-participant-open-question-routes-correctly",
+      "benchmark_category": "Relation expansion",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 192,
+          "retrieval_ms": 28.6
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 545,
+          "retrieval_ms": 11.2
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 989,
+          "retrieval_ms": 4.5
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "relation-participant-open-question-routes-correctly"
+    },
+    {
+      "case_id": "relation-type-expands-participants",
+      "benchmark_category": "Relation expansion",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1221,
+          "retrieval_ms": 32.6
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 505,
+          "retrieval_ms": 12.6
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1047,
+          "retrieval_ms": 3.9
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "relation-type-expands-participants"
+    },
+    {
+      "case_id": "scope-bleed-questions-code-excludes-writing",
+      "benchmark_category": "Scope disambiguation",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 677,
+          "retrieval_ms": 29.1
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 657,
+          "retrieval_ms": 12.3
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1033,
+          "retrieval_ms": 4.2
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "scope-bleed-questions-code-excludes-writing"
+    },
+    {
+      "case_id": "score-boundary-weak-match-filtered",
+      "benchmark_category": "Design boundary cases",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1172,
+          "retrieval_ms": 31.2
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 365,
+          "retrieval_ms": 12.4
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1032,
+          "retrieval_ms": 3.5
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "score-boundary-weak-match-filtered"
+    },
+    {
+      "case_id": "subtype-expertise-retrieval",
+      "benchmark_category": "Type routing and open questions",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1248,
+          "retrieval_ms": 33
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 823,
+          "retrieval_ms": 12.3
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1070,
+          "retrieval_ms": 3.8
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "subtype-expertise-retrieval"
+    },
+    {
+      "case_id": "superseded-chain-query-terminal-only",
+      "benchmark_category": "Supersession chain exclusion",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 259,
+          "retrieval_ms": 29.9
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 560,
+          "retrieval_ms": 11.3
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 980,
+          "retrieval_ms": 3.4
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "superseded-chain-query-terminal-only"
+    },
+    {
+      "case_id": "type-isolation-open-question-not-in-relevant",
+      "benchmark_category": "Type routing and open questions",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 61,
+          "retrieval_ms": 28
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 342,
+          "retrieval_ms": 11.4
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 972,
+          "retrieval_ms": 5
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "type-isolation-open-question-not-in-relevant"
+    },
+    {
+      "case_id": "universal-scope-belief-content-in-persona-prelude",
+      "benchmark_category": "Persona prelude content",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1092,
+          "retrieval_ms": 30.9
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 198,
+          "retrieval_ms": 13.9
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1044,
+          "retrieval_ms": 3.5
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "universal-scope-belief-content-in-persona-prelude"
+    },
+    {
+      "case_id": "universal-scope-explicit-query-no-relevant",
+      "benchmark_category": "Scope disambiguation",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 803,
+          "retrieval_ms": 31
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 215,
+          "retrieval_ms": 11.9
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1039,
+          "retrieval_ms": 3.1
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "universal-scope-explicit-query-no-relevant"
+    },
+    {
+      "case_id": "user-edited-absent-without-flag",
+      "benchmark_category": "Scope disambiguation",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 253,
+          "retrieval_ms": 29
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 813,
+          "retrieval_ms": 11.3
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 989,
+          "retrieval_ms": 3.4
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "user-edited-absent-without-flag"
+    },
+    {
+      "case_id": "user-edited-cross-scope-surfaces",
+      "benchmark_category": "Scope disambiguation",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 61,
+          "retrieval_ms": 27.9
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 323,
+          "retrieval_ms": 12
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 972,
+          "retrieval_ms": 4.5
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "user-edited-cross-scope-surfaces"
+    },
+    {
+      "case_id": "why-it-matters-not-indexed-blind-spot",
+      "benchmark_category": "Design boundary cases",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 115,
+          "retrieval_ms": 30.1
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 525,
+          "retrieval_ms": 11.5
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 977,
+          "retrieval_ms": 3.1
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "why-it-matters-not-indexed-blind-spot"
+    },
+    {
+      "case_id": "zero-reinforcement-fresh-belief-surfaces",
+      "benchmark_category": "Budget eviction and capacity",
+      "outcome": "both_fail",
+      "arms": {
+        "agent_memory": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 696,
+          "retrieval_ms": 31.1
+        },
+        "mem0_oss": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 708,
+          "retrieval_ms": 12
+        },
+        "bm25_control": {
+          "passed_native_scorer": false,
+          "diagnostic_flags": {
+            "unexpected_belief": true,
+            "missing_expected_belief": false,
+            "pass": false
+          },
+          "context_tokens": 1046,
+          "retrieval_ms": 5.6
+        }
+      },
+      "human_review": "not_started",
+      "source_row_key": "zero-reinforcement-fresh-belief-surfaces"
+    }
+  ]
+}
