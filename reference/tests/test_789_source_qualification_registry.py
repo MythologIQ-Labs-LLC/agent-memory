@@ -62,6 +62,20 @@ class SourceQualificationRegistryTests(unittest.TestCase):
         for system in self.doc["systems"]:
             self.assertIn(system["typed_state_789"], TYPED_STATES, system["system_id"])
 
+    def test_graphiti_ingestion_handle_is_the_returned_episode_uuid(self):
+        # Verified against graphiti_core/graphiti.py @ 0.29.3: add_episode(uuid=...) and
+        # add_episode_bulk(RawEpisode.uuid) LOOK UP an existing episode (NodeNotFoundError
+        # otherwise); they never assign a caller id. The native handle is the uuid of
+        # AddEpisodeResults.episode returned by add_episode.
+        graphiti = self.systems["graphiti-oss"]
+        self.assertIn("AddEpisodeResults.episode.uuid", graphiti["ingestion_handle_rule"])
+        self.assertNotIn("accepts optional caller UUID", graphiti["source_id_evidence"])
+
+    def test_cognee_ingestion_handle_is_the_data_id(self):
+        cognee = self.systems["cognee-oss"]
+        self.assertIn("DataItem(", cognee["ingestion_handle_rule"])
+        self.assertIn("data_id=", cognee["ingestion_handle_rule"])
+
 
 if __name__ == "__main__":
     unittest.main()
