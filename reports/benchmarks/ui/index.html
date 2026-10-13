@@ -762,7 +762,7 @@ function renderRefreshStatus() {
   }
   const awaiting=refreshStatus.unregistered_source_count;
   box.appendChild(el("strong", { text: "Recorded-evidence projection: matching source manifest" }));
-  box.appendChild(el("small", { text: "Source JSON records fingerprinted: " + safe(refreshStatus.source_count) + " · Unregistered AMB/LongMemEval candidate sources: " + awaiting + " (unranked pending qualification)" }));
+  box.appendChild(el("small", { text: "Source JSON records fingerprinted: " + safe(refreshStatus.source_count) + " · Unregistered raw benchmark candidates: " + awaiting + " (unranked pending qualification)" }));
   box.appendChild(el("small", { text: "This confirms projection consistency within this published artifact set, not live GitHub freshness, human review, or current production runtime quality." }));
   const link = el("a", { href: "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/benchmark-evidence-refresh-governance.md", rel: "noopener noreferrer", text: "Refresh governance contract" });
   box.appendChild(link);
