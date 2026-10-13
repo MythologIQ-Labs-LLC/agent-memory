@@ -42,6 +42,12 @@ class FixtureIntegrity(unittest.TestCase):
     def test_contract_sources_hash_at_the_recorded_base_commit(self):
         for replay_id in runner.REPLAYS:
             fx = fixture(replay_id)
+            present = subprocess.run(["git", "cat-file", "-e", f"{fx['base_commit']}^{{commit}}"], cwd=ROOT,
+                                     capture_output=True).returncode == 0
+            if not present:
+                # a shallow checkout (e.g. the hosted validate workflow) does not carry the base
+                # commit; the check needs the full clone and is reported as skipped, not passed
+                self.skipTest(f"base commit {fx['base_commit'][:8]} is not in this checkout (shallow clone)")
             for source in fx["contract_sources"]:
                 blob = subprocess.run(["git", "show", f"{fx['base_commit']}:{source['path']}"], cwd=ROOT,
                                       capture_output=True, check=True).stdout
