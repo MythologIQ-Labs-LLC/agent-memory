@@ -55,3 +55,18 @@ Current snapshot facts (`as_of` 2026-10-07, evidence revision `ca0f9a74`): six a
 - AMB run records carry no `started_at`, so AMB v1/v2 chronology is reported as undetermined rather than guessed.
 - Adequacy targets remain unestablished; the deficit ledger's textual targets are not machine-readable thresholds and are not projected.
 - The viewer is an engineering preview qualified locally, not an approved public deployment.
+
+## Historical product-viability panel (unaccepted retrospective report)
+
+The benchmark page independently loads `historical-amb-v6.json` beneath its accepted frontier coverage counts. This **does not change F1 catalog, frontier rankings, eligibility, acceptance or adequacy**. The source is the frozen AMB PrecisionMemBench v6 single-turn native retrieval evidence, three immutable original source blobs from commit `3eebb6d`, 77 matching queries. It includes all 77 case IDs and native pass/fail/diagnostic flags but intentionally embeds no original prompt, gold answers, or retrieved context.
+
+Run from repository root:
+```bash
+python scripts/build_789_historical_ui.py --check
+python -m unittest discover -s reference/tests -t reference -p test_789_historical_ui.py -v
+```
+Use `--write` to intentionally regenerate the **derived UI JSON only**. This is not an authorization to rerun competitors, update accepted frontier projection, or mutate source runs. The viewer refuses invalid source identities, sample counts and mismatched verdict/summary/category/failure aggregates.
+
+The page shows exact native case pass rates (Agent Memory 15/77; Mem0 OSS 10/77; BM25 8/77), the 6/1/9/61 paired matrix, and per-metric **defined-value denominators** (precision 67/68/70; recall 43/43/43), plus categorical zero-pass gaps. It labels the qualitative review as **zero of 96 independent human forms**, not performed. Native strict-scorer failures are **not** human judgments, causal conclusions or demonstrated production limitations. Full case-level evidence and review acceptance remain in draft PR #793, with the separate source-audit repair branch.
+
+The distinct external peer counter uses `frontier-leaderboards.json.external_competitors.same_harness_measured` directly. Historical BM25 is a control; never count it as a memory product. The external cohort target is at least six distinct products under #789. Accepted same-harness rankings remain bound to their own snapshot and never silently include this historical v6 panel.

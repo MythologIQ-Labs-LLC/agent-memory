@@ -74,6 +74,15 @@ code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.82
 .ref:first-of-type{border-top:0}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 footer{color:var(--muted);font-size:.9rem;margin-top:24px}
+
+.viability-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:14px 0}
+.viability-stat{background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:12px}
+.viability-stat strong{display:block;font-size:1.35rem;font-variant-numeric:tabular-nums}
+.viability-stat small{display:block;color:var(--muted)}
+.viability-meta{font-size:.87rem;color:var(--muted)}
+.viability-table td,.viability-table th{font-size:.9rem}
+.viability-table tr:focus-within{background:var(--panel-2)}
+#historical-cases{max-height:430px;overflow:auto}
 @media(max-width:760px){
   main{padding:14px}
   header.page{flex-direction:column}
@@ -113,6 +122,23 @@ footer{color:var(--muted);font-size:.9rem;margin-top:24px}
   <h2 id="sum-h">Frontier coverage counts</h2>
   <p class="muted">Counts with denominators. Not a score and not an average across metrics.</p>
   <ul class="counts" id="counts" aria-label="Coverage counts"></ul>
+</section>
+
+
+<section class="card" aria-labelledby="quality-h" id="historical-quality">
+  <h2 id="quality-h">Historical product-viability comparison</h2>
+  <p>PrecisionMemBench v6, 77 identical single-turn retrieval cases. This diagnostic report is <strong>historical, source-bound and not admitted to the accepted leaderboard</strong>. It cannot establish overall product superiority, real-world task completion or current-runtime performance.</p>
+  <div id="historical-error" class="error" role="status"></div>
+  <div id="historical-summary" aria-live="polite"><p class="muted">Loading historical diagnostic evidence…</p></div>
+  <div id="historical-categories"></div>
+  <details id="historical-case-inspector">
+    <summary>Inspect all 77 paired cases and their native outcomes</summary>
+    <p class="viability-meta">These are benchmark-native case verdicts and diagnostic flags, not human quality assessments. Prompts, responses and gold identifiers are not embedded in this page.</p>
+    <label>Case outcome <select id="historical-case-filter"><option value="">All cases</option><option value="agent_only">Agent Memory only</option><option value="mem0_only">Mem0 only</option><option value="both_pass">Both pass</option><option value="both_fail">Both fail</option></select></label>
+    <div class="table-wrap" id="historical-cases"></div>
+  </details>
+  <p class="viability-meta">Human review: <strong>0 / 96</strong> required blinded review forms completed. Independently reviewed qualitative claims are not yet available. Neither a retrospective case pass nor high recall alone proves usable, correctly selected memory.</p>
+  <p class="viability-meta">Evidence and review: <a href="https://github.com/MythologIQ-Labs-LLC/agent-memory/pull/793">Case-level study PR #793</a> · <a href="https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/775">Selection-quality issue #775</a> · <a href="https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/789">External cohort expansion #789</a>.</p>
 </section>
 
 <section class="card" aria-labelledby="nav-h">
@@ -331,6 +357,16 @@ function renderCounts() {
   for (const key of Object.keys(COMP_LABEL)) item(COMP_LABEL[key][0] + " (of ranked)", ranked.filter((r) => r.competitive_state === key).length, ranked.length);
   item("Ranked rows with stale or unordered evidence", ranked.filter((r) => r.currency.state !== "current").length, ranked.length);
   item("Adequacy threshold established", rowsAll.filter((r) => r.adequacy && r.adequacy.target !== null && r.adequacy.target !== undefined).length, total);
+  const peers=dataset.external_competitors && dataset.external_competitors.same_harness_measured;
+  if(Array.isArray(peers)){
+    // Count only peers with a ranked, eligible observation, not mere registry presence.
+    const eligible=new Set(rowsAll.filter(r=>r.ranking_state==="ranked")
+      .flatMap(r=>(r.ranking||[]).filter(x=>x.role==="external_competitor").map(x=>x.system_id)));
+    const valid=[...new Set(peers.filter(x=>typeof x==="string"&&eligible.has(x)))];
+    ul.appendChild(el("li",{},[el("span",{class:"n",text:String(valid.length)}),
+      el("span",{class:"d",text:"Distinct same-harness external memory systems measured · expansion target ≥6 (controls excluded)"})]));
+  }
+
 }
 
 /* ---------- filters ---------- */
@@ -596,6 +632,107 @@ function renderPublished() {
     box.appendChild(d);
   }
 }
+
+
+/* Historical AMB v6 is an independent, non-rankable diagnostic source. */
+let historical = null;
+const HISTORICAL_BLOBS = {
+  agent_memory: "ea40e74850e2621ff39c65926c5ede89768e1a43",
+  mem0_oss: "426a2f3c69220efcf5e461aef54aa593b4b82155",
+  bm25_control: "4a7b779a2aed19dc4ef71d4fa5493b83220e6c92",
+};
+function requireHistoric(ok, message) { if (!ok) throw Error("Historical diagnostic refused: " + message); }
+function validateHistorical(d) {
+  requireHistoric(d && d.schema_version === "historical-amb-v6-ui/1" &&
+    d.evidence_status === "historical_source_bound_not_promoted" &&
+    d.eligible_for_frontier_rankings === false && d.authority_effect === "none", "wrong schema or evidence status");
+  requireHistoric(d.source_main_sha === "3eebb6d54e2a218c4fd10cf53c52acac8384c3e6", "unrecognized native source revision");
+  const arms = Object.keys(HISTORICAL_BLOBS);
+  requireHistoric(Array.isArray(d.source_reports) && d.source_reports.length === 3 &&
+    arms.every(id => d.source_reports.some(x => x.arm === id && x.git_blob_sha === HISTORICAL_BLOBS[id])), "source-blob identity");
+  requireHistoric(Array.isArray(d.cases) && d.cases.length === 77 && new Set(d.cases.map(x => x.case_id)).size === 77, "case population");
+  requireHistoric(Array.isArray(d.categories) && d.categories.length >= 1, "category population");
+  requireHistoric(d.review && d.review.status === "not_started" && d.review.completed_forms === 0 &&
+    d.review.required_forms === 96 && d.review.selected_cases === 24, "qualitative gate");
+  const outcomes = {agent_only:0,mem0_only:0,both_pass:0,both_fail:0}, counts = Object.fromEntries(arms.map(id => [id,0]));
+  const categories = {};
+  const diag = {unexpected_only:0,missing_only:0,both:0,neither:0};
+  for (const c of d.cases) {
+    requireHistoric(typeof c.case_id === "string" && c.case_id.length > 0 && typeof c.category === "string" &&
+      Object.keys(c.systems || {}).length === 3, "malformed case");
+    const a = c.systems.agent_memory, m = c.systems.mem0_oss;
+    const status = a.pass ? (m.pass ? "both_pass":"agent_only") : (m.pass ? "mem0_only":"both_fail");
+    requireHistoric(c.outcome === status && arms.every(id => {
+      const x = c.systems[id]; return x && typeof x.pass === "boolean" && typeof x.unexpected === "boolean" &&
+       typeof x.missing === "boolean" && Number.isInteger(x.context_tokens) && x.context_tokens >= 0;
+    }), "case verdict or metadata");
+    outcomes[status]++;
+    if (!categories[c.category]) categories[c.category] = {total:0,...Object.fromEntries(arms.map(id=>[id,0]))};
+    categories[c.category].total++;
+    for (const id of arms) {counts[id] += Number(c.systems[id].pass);categories[c.category][id]+=Number(c.systems[id].pass);}
+    if (!a.pass) diag[a.unexpected?(a.missing?"both":"unexpected_only"):(a.missing?"missing_only":"neither")]++;
+  }
+  requireHistoric(Object.keys(outcomes).every(k=>d.pair_outcomes[k]===outcomes[k]) &&
+    arms.every(id => {const x=d.systems[id];return x&&x.pass===counts[id]&&x.total===77 &&
+      Number.isInteger(x.precision_denominator)&&x.precision_denominator>0&&x.precision_denominator<=77 &&
+      Number.isInteger(x.recall_denominator)&&x.recall_denominator>0&&x.recall_denominator<=77 &&
+      isNum(x.mean_precision)&&x.mean_precision>=0&&x.mean_precision<=1&&isNum(x.mean_recall)&&x.mean_recall>=0&&x.mean_recall<=1;}),
+    "metric counts or means");
+  requireHistoric(d.categories.length===Object.keys(categories).length && d.categories.every(c=>{
+    const s=categories[c.category];return s&&c.total===s.total&&arms.every(id=>c[id]===s[id]);}), "category totals");
+  requireHistoric(Object.keys(diag).every(k=>d.agent_failure_diagnostics[k]===diag[k]), "failure diagnostics");
+  return d;
+}
+function historicalTable(headers, lines) {
+  const wrap=el("div",{class:"table-wrap"});
+  const table=el("table",{class:"viability-table"});
+  const head=el("thead"),h=el("tr");headers.forEach(v=>h.appendChild(el("th",{scope:"col",text:v})));head.appendChild(h);table.appendChild(head);
+  const body=el("tbody");
+  for(const line of lines){const tr=el("tr");line.forEach(v=>tr.appendChild(el("td",{text:safe(v)})));body.appendChild(tr);}
+  table.appendChild(body);wrap.appendChild(table);return wrap;
+}
+function renderHistorical(d) {
+  historical=d;
+  const box=$("historical-summary");box.replaceChildren();
+  const cards=el("div",{class:"viability-grid"});
+  const labels={agent_memory:"Agent Memory",mem0_oss:"Mem0 OSS",bm25_control:"BM25 control"};
+  for(const id of Object.keys(labels)){
+    const m=d.systems[id],card=el("div",{class:"viability-stat"});
+    card.appendChild(el("strong",{text:m.pass+" / "+m.total+" exact cases"}));
+    card.appendChild(el("span",{text:labels[id]}));
+    card.appendChild(el("small",{text:"Precision "+(m.mean_precision*100).toFixed(2)+"% (defined "+m.precision_denominator+"/77)"}));
+    card.appendChild(el("small",{text:"Recall "+(m.mean_recall*100).toFixed(2)+"% (defined "+m.recall_denominator+"/77)"}));
+    cards.appendChild(card);
+  }
+  box.appendChild(cards);
+  box.appendChild(el("p",{text:"Matched Agent Memory / Mem0: both pass "+d.pair_outcomes.both_pass+
+    " · Agent Memory only "+d.pair_outcomes.agent_only+" · Mem0 only "+d.pair_outcomes.mem0_only+
+    " · both fail "+d.pair_outcomes.both_fail+" of 77. Exploratory two-sided exact McNemar p = 0.125; superiority not statistically established."}));
+  box.appendChild(el("p",{class:"viability-meta",text:"Agent Memory native failure flags: "+
+    d.agent_failure_diagnostics.unexpected_only+" unexpected-memory-only; "+
+    d.agent_failure_diagnostics.missing_only+" missing-expected-only. These are structural scorer diagnostics, not causal or human task-success labels."}));
+  box.appendChild(el("p",{class:"viability-meta",text:"Critical denominator: Agent Memory mean recall uses 43 defined cases, not all 77 queries. No undefined recall was scored as zero or success. Published frontier rankings above remain on their own accepted evidence revision."}));
+  const categoryBox=$("historical-categories");categoryBox.replaceChildren();
+  categoryBox.appendChild(el("h3",{text:"Failure distribution by native category"}));
+  categoryBox.appendChild(historicalTable(["Category","Cases","Agent Memory pass","Mem0 pass","BM25 pass"],d.categories.map(x=>[
+    x.category,String(x.total),x.agent_memory+"/"+x.total,x.mem0_oss+"/"+x.total,x.bm25_control+"/"+x.total])));
+  showHistoricalCases();
+}
+function showHistoricalCases() {
+  if(!historical)return;
+  const filter=$("historical-case-filter").value;
+  const selected=historical.cases.filter(x=>!filter||x.outcome===filter);
+  const labels={agent_only:"Agent Memory only",mem0_only:"Mem0 only",both_fail:"Both fail",both_pass:"Both pass"};
+  $("historical-cases").replaceChildren(historicalTable(["Case ID","Category","Paired verdict","Agent flags","Mem0 flags"],selected.map(x=>{
+    const flags=id=>{const y=x.systems[id];return y.pass?"pass":(y.unexpected?"unexpected ":"")+(y.missing?"missing":"");};
+    return [x.case_id,x.category,labels[x.outcome],flags("agent_memory"),flags("mem0_oss")];
+  })));
+}
+$("historical-case-filter").addEventListener("change",showHistoricalCases);
+fetch("./historical-amb-v6.json",{cache:"no-store"})
+  .then(r=>{if(!r.ok)throw Error("Historical diagnostic JSON unavailable");return r.json();})
+  .then(d=>renderHistorical(validateHistorical(d)))
+  .catch(e=>{$("historical-error").textContent=safe(e.message);$("historical-summary").textContent="Historical diagnostic not available; no numerical claims rendered.";});
 
 /* ---------- wiring ---------- */
 for (const id of FILTER_IDS) $(id).addEventListener($(id).type === "search" ? "input" : "change", render);
