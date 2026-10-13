@@ -75,6 +75,13 @@ class QualitativeGuardTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             validate_review(x, {"case-1"})
 
+    def test_all_dimensions_not_applicable_rejected(self):
+        x = record()
+        for d in DIMENSIONS:
+            x["dimensions"][d] = {"rating": "not_applicable", "rationale": "Not measurable", "evidence_refs": []}
+        with self.assertRaises(ValueError):
+            validate_review(x, {"case-1"})
+
     def test_disagreement_and_P0_flag_stay_visible(self):
         a = record("p1", "A")
         b = record("p2", "A")
