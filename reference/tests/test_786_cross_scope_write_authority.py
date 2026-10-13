@@ -23,7 +23,7 @@ from pathlib import Path
 
 from agentmem_ref import AgentMemory, policy
 from agentmem_ref.memory import procedural_memory as pm
-from agentmem_ref.api import contract
+from agentmem_ref.api import contract, surface
 from agentmem_ref.runtime.adapter import Clock, GovernedMemoryAdapter
 from agentmem_ref.runtime.restart_runtime import RuntimeCheckpointConflict, RuntimeRecoveryError
 from agentmem_ref.substrate import Episode, InMemoryTemporalGraph
@@ -601,11 +601,260 @@ class ReviewFindings(_TwoProjects):
         self.assertEqual(self.fact(self.canonical_head()).fact_text, f"{QUERY} is Oslo")
 
 
+class SecondReviewFindings(_TwoProjects):
+    """Reproductions from the second independent adversarial review (of b70ff58a), kept as
+    regressions: F-A/F-B version disclosure through refused or snapshot-probing proposals on a
+    tombstoned id, F-C re-deletion rewriting a tombstone, F-D/F-E deletion and dispute moving
+    another scope's live generation, F-F widening on supersession."""
+
+    def _deleted_owner_generation(self, permanent=False):
+        self.seed()
+        self.correct("memory:a", "Bergen")
+        kw = {"permanent": True, "evidence": _evidence("project:a", TENANT), "risk_class": "low"} if permanent else {}
+        self.assertTrue(self.memory.forget("memory:a", **kw)["committed"])
+        self.assertEqual(self.memory.history("memory:a")["history"]["state_version"], 3)
+
+    def _delete_version(self, memory, fact_uuid, snapshot=None):
+        env = self.memory._proposal(target_reference=memory, operation="pruning", current_strength="reinforced",
+                                    proposed_strength="archived", reversibility="reversible", risk_class="low")
+        if snapshot is not None:
+            env = dict(env, state_snapshot=snapshot)
+        with self.memory.runtime.serialization_lock:
+            return self.memory.runtime.durable_runtime.governed_delete(contract.proposal_from_envelope(env), fact_uuid)
+
+    def test_fa_parked_or_refused_proposals_on_a_tombstoned_id_report_v0_only(self):
+        for permanent in (False, True):
+            with self.subTest(permanent=permanent):
+                self.setUp()
+                self._deleted_owner_generation(permanent)
+                self.reopen("project:b")
+                for risk in ("medium", "high"):
+                    out = self.memory.remember("memory:a", f"{QUERY} is Turku", overrides={"risk_class": risk})
+                    self.assertFalse(out["committed"], out)
+                    r = out["receipt"]
+                    self.assertEqual((r["state_snapshot"], r["before_state"], r["after_state"]), ("v0", "v0", "v0"), risk)
+                    self.assertNotIn("v3", _serial(out))
+                self.assertEqual(self.memory.history("memory:a")["history"]["state_version"], 0)
+
+    def test_fb_module_level_commit_cannot_probe_the_former_count_through_state_snapshot(self):
+        self._deleted_owner_generation()
+        self.reopen("project:b")
+        results = {}
+        for snap in ("v1", "v2", "v3"):
+            env = dict(self.memory._proposal(target_reference="memory:a", operation="promotion",
+                                             fact_text=f"{QUERY} is Turku {snap}"), state_snapshot=snap)
+            with self.memory.runtime.serialization_lock:
+                out = surface.commit(self.adapter, env, f"{QUERY} is Turku {snap}")
+            results[snap] = (out["committed"], out.get("refusal"), out["receipt"]["before_state"], out["receipt"]["after_state"])
+        for snap, (committed, _refusal, before, after) in results.items():
+            self.assertFalse(committed, snap)  # only the public v0 binds on a no-head id
+            self.assertEqual((before, after), ("v0", "v0"), (snap, results[snap]))
+        self.assertEqual(len({r[:2] for r in results.values()}), 1, results)
+
+    def test_fc_re_pruning_a_deleted_head_is_refused_and_the_generation_stays_deleted(self):
+        a1 = self.seed()
+        a2 = self.correct("memory:a", "Bergen")["fact_uuid"]
+        when1 = self.fact(a1).created_at
+        self.assertTrue(self.memory.forget("memory:a")["committed"])
+        tombstone = dict(self.adapter.tombstone(a2))
+        self.assertEqual(sorted(tombstone["deleted_fact_uuids"]), sorted([a1, a2]))
+        out = self._delete_version("memory:a", a2)
+        self.assertFalse(out.committed)
+        self.assertEqual(out.refusal, "already_deleted")
+        self.assertEqual(dict(self.adapter.tombstone(a2)), tombstone)
+        member = self._delete_version("memory:a", a1)
+        self.assertEqual((member.committed, member.refusal), (False, "already_deleted"))
+        self.reopen("project:a")
+        ctx = self.memory._handle_recall_context()
+        with self.memory.runtime.serialization_lock:
+            self.assertEqual(self.memory.recall(QUERY, temporal_intent=HIST)["admitted"], [])
+            self.assertIsNone(self.memory.write_semantics(a1))
+            self.assertIsNone(self.adapter.version_in_effect("memory:a", when1, ctx))
+            self.assertTrue(self.adapter.memory_deleted(a1))
+        self.assertEqual(self.memory.history("memory:a")["history"]["state_version"], 3)
+
+    def test_fc_pruning_escalates_to_permanent_deletion_without_rewriting_the_generation(self):
+        a1 = self.seed()
+        a2 = self.correct("memory:a", "Bergen")["fact_uuid"]
+        self.assertTrue(self.memory.forget("memory:a")["committed"])
+        before = dict(self.adapter.tombstone(a2))
+        env = self.memory._proposal(target_reference="memory:a", operation="permanent_deletion", current_strength="reinforced",
+                                    proposed_strength="not_applicable", reversibility="irreversible", risk_class="low")
+        with self.memory.runtime.serialization_lock:
+            out = self.memory.runtime.durable_runtime.governed_delete(
+                contract.proposal_from_envelope(env), a2, evidence=_evidence("project:a", TENANT))
+        self.assertTrue(out.committed, out.refusal)
+        after = dict(self.adapter.tombstone(a2))
+        self.assertEqual((after["mode"], after["reversible"]), ("permanent_deletion", False))
+        for key in ("deleted_at", "state_version", "deleted_fact_uuids"):
+            self.assertEqual(after[key], before[key], key)
+        self.assertIsNone(self.fact(a1)); self.assertIsNone(self.fact(a2))
+        self.reopen("project:a")
+        self.assertEqual(self.memory.history("memory:a")["history"]["state_version"], 3)
+
+    def test_fd_fe_former_owner_cannot_move_the_live_generation_through_delete_or_dispute(self):
+        a1 = self.seed()
+        self.assertTrue(self.memory.forget("memory:a")["committed"])
+        a_tombstone = dict(self.adapter.tombstone(a1))
+        self.reopen("project:b")
+        b1 = self.memory.remember("memory:a", f"{QUERY} is Turku", proposition=_prop("Turku"))["fact_uuid"]
+        b_view = self.memory.history("memory:a")["history"]
+        self.assertEqual(b_view["state_version"], 1)
+        self.reopen("project:a")
+        for snap in (None, "v1"):
+            out = self._delete_version("memory:a", a1, snapshot=snap)
+            self.assertFalse(out.committed, snap)
+            self.assertEqual((out.receipt["before_state"], out.receipt["after_state"]), ("v0", "v0"))
+        env = dict(self.memory._proposal(target_reference="memory:a", operation="other", current_strength="reinforced",
+                                         proposed_strength="blocked", risk_class="low", evidence_refs=(f"fact:{a1}",)),
+                   state_snapshot="v1")
+        with self.memory.runtime.serialization_lock:
+            disputed = self.memory.runtime.dispute(contract.proposal_from_envelope(env), a1, evidence=_evidence("project:a", TENANT))
+        self.assertFalse(disputed.committed)
+        self.assertEqual((disputed.receipt["before_state"], disputed.receipt["after_state"]), ("v0", "v0"))
+        for _ in range(3):
+            out = self.memory.dispute("memory:a", fact_uuid=a1, **self.DISPUTE)
+            self.assertFalse(out["committed"])
+            self.assertNotIn(b1, _serial(out)); self.assertNotIn("Turku", _serial(out))
+        self.assertEqual(dict(self.adapter.tombstone(a1)), a_tombstone)
+        self.reopen("project:b")
+        self.assertEqual(self.memory.history("memory:a")["history"], b_view)
+        self.assertEqual(self.memory.recall(QUERY)["admitted"], [b1])
+        self.assertTrue(self.memory.forget("memory:a")["committed"])
+        b_deleted = self.memory.history("memory:a")["history"]
+        self.reopen("project:a")
+        out = self.memory.dispute("memory:a", fact_uuid=a1, **self.DISPUTE)
+        self.assertFalse(out["committed"])
+        self.assertNotIn((out.get("receipt") or {}).get("before_state"), ("v2", "v3"))
+        self.reopen("project:b")
+        self.assertEqual(self.memory.history("memory:a")["history"], b_deleted)
+
+    def test_ff_supersession_cannot_widen_a_shared_or_guarded_memory(self):
+        def proposal(**overrides):
+            base = dict(proposal_id="p1", actor_id="alice", charter_version="c", target_reference="mem:s",
+                        target_class=policy.M2, scope="shared:x", operation="promotion", current_strength="reinforced",
+                        proposed_strength="promoted", downstream_authority=policy.A1, reversibility="reversible",
+                        risk_class="low", evidence_refs=("ev:1",), tenant_ref=TENANT, purpose="assist",
+                        isolation_domain_refs=("shared:x",), required_isolation_domain_refs=(), project_ref="", task_ref="")
+            base.update(overrides)
+            return policy.Proposal(**base)
+        from agentmem_ref.runtime.adapter import RecallContext
+        adapter = GovernedMemoryAdapter(InMemoryTemporalGraph(), tenant=TENANT, clock=Clock())
+        adapter.set_shared_domain_members("shared:x", ("alice", "bob"))
+        first = adapter.commit_proposal(proposal(), "window is Thursday")
+        self.assertTrue(first.committed)
+        stranger = RecallContext(target_domain_refs=("project:a",), principal_ref="carol", purpose="assist")
+        widen = adapter.commit_proposal(proposal(proposal_id="p2", isolation_domain_refs=("shared:x", "project:a")), "window is Friday")
+        self.assertEqual((widen.committed, widen.refusal), (False, "target_unavailable"))
+        self.assertFalse(adapter.fact_eligible_in_context(adapter.current_fact_uuid("mem:s"), stranger))
+        same = adapter.commit_proposal(proposal(proposal_id="p3"), "window is Friday")
+        self.assertTrue(same.committed, same.refusal)
+        other = GovernedMemoryAdapter(InMemoryTemporalGraph(), tenant=TENANT, clock=Clock())
+        guarded = other.commit_proposal(proposal(scope=TENANT, isolation_domain_refs=(TENANT, "project:a"),
+                                                 required_isolation_domain_refs=("project:a",), project_ref="project:a"), "x")
+        self.assertTrue(guarded.committed)
+        dropped = other.commit_proposal(proposal(proposal_id="p2", scope=TENANT, isolation_domain_refs=(TENANT, "project:a"),
+                                                 required_isolation_domain_refs=(), project_ref="project:a"), "y")
+        self.assertFalse(dropped.committed)
+        wide_reader = RecallContext(target_domain_refs=(TENANT,), principal_ref="carol", purpose="assist")
+        self.assertFalse(other.fact_eligible_in_context(other.current_fact_uuid("mem:s"), wide_reader))
+
+    def test_tombstone_recorded_versions_are_stable_under_a_third_generation(self):
+        self.seed(); self.correct("memory:a", "Bergen")
+        self.assertTrue(self.memory.forget("memory:a")["committed"])
+        a_view = self.memory.history("memory:a")["history"]
+        self.reopen("project:b")
+        self.memory.remember("memory:a", f"{QUERY} is Turku", proposition=_prop("Turku"))
+        self.assertTrue(self.memory.forget("memory:a")["committed"])
+        b_view = self.memory.history("memory:a")["history"]
+        self.assertEqual((b_view["tombstoned"], b_view["state_version"]), (True, 2))
+        self.reopen("project:a")
+        self.assertEqual(self.memory.history("memory:a")["history"], a_view)
+        third = self.memory.remember("memory:a", f"{QUERY} is Narvik", proposition=_prop("Narvik"))
+        self.assertEqual((third["receipt"]["before_state"], third["receipt"]["after_state"]), ("v0", "v1"))
+        self.reopen("project:b")
+        self.assertEqual(self.memory.history("memory:a")["history"], b_view)
+        self.reopen("project:a")
+        self.correct("memory:a", "Tromso")
+        self.assertTrue(self.memory.forget("memory:a")["committed"])
+        self.assertEqual(self.memory.history("memory:a")["history"]["state_version"], 3)
+        self.reopen("project:b")
+        self.assertEqual(self.memory.history("memory:a")["history"], b_view)
+
+
 def _skill(scope, version=1, skill_id="deploy"):
     return pm.SkillArtifact(
         skill_id=skill_id, version=version, purpose="c786", scope=scope,
         isolation_domain_refs=(TENANT, scope), required_isolation_domain_refs=(TENANT, scope),
         procedure_markdown="# v\nok", provenance_refs=("evidence:c786",))
+
+
+class ReplayV2Findings(_TwoProjects):
+    """Reproductions from the first execution of the superseding -v2 security replays
+    (W7c): refusal ordering at the governed delete and dispute boundaries read a foreign
+    live generation before the writer's own tombstone, so a former owner could tell whether
+    its deleted id had been re-created by another project. The control is the same act
+    with no re-creation: every observable the former owner gets must be identical."""
+
+    def _delete(self, memory, fact_uuid, *, permanent=False):
+        if permanent:
+            env = self.memory._proposal(target_reference=memory, operation="permanent_deletion", current_strength="reinforced",
+                                        proposed_strength="not_applicable", reversibility="irreversible", risk_class="low")
+        else:
+            env = self.memory._proposal(target_reference=memory, operation="pruning", current_strength="reinforced",
+                                        proposed_strength="archived", reversibility="reversible", risk_class="low")
+        with self.memory.runtime.serialization_lock:
+            return self.memory.runtime.durable_runtime.governed_delete(
+                contract.proposal_from_envelope(env), fact_uuid, evidence=_evidence("project:a", TENANT))
+
+    def _dispute(self, memory, fact_uuid):
+        env = self.memory._proposal(target_reference=memory, operation="other", current_strength="reinforced",
+                                    proposed_strength="blocked", risk_class="low", evidence_refs=(f"fact:{fact_uuid}",))
+        with self.memory.runtime.serialization_lock:
+            return self.memory.runtime.dispute(contract.proposal_from_envelope(env), fact_uuid, evidence=_evidence("project:a", TENANT))
+
+    def _former_owner_view(self, recreated: bool, *, permanent_escalation: bool) -> tuple:
+        """Observables the former owner collects on its own deleted generation, in a fresh store."""
+        self.memory.close()
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        self.root = tmp.name + "/m"
+        self.memory = self.open()
+        a1 = self.seed()
+        self.assertTrue(self.memory.forget("memory:a")["committed"])
+        if recreated:
+            self.reopen("project:b")
+            self.b1 = self.memory.remember("memory:a", f"{QUERY} is Turku", proposition=_prop("Turku"))["fact_uuid"]
+            self.b_view = self.memory.history("memory:a")["history"]
+            self.reopen("project:a")
+        rows = []
+        for act in (lambda: self._delete("memory:a", a1), lambda: self._dispute("memory:a", a1),
+                    lambda: self._delete("memory:a", a1, permanent=permanent_escalation)):
+            out = act()
+            rows.append((out.committed, out.refusal, out.receipt["before_state"], out.receipt["after_state"]))
+        rows.append(self.memory.history("memory:a")["history"]["state_version"])
+        rows.append(tuple(sorted(self.adapter.tombstone(a1).items())) if self.adapter.tombstone(a1) else None)
+        return tuple(rows)
+
+    def test_fg_re_deletion_and_dispute_refusals_do_not_disclose_a_foreign_re_creation(self):
+        control = self._former_owner_view(False, permanent_escalation=False)
+        self.assertEqual(control[0][1], "already_deleted"); self.assertEqual(control[1][1], "already_deleted")
+        probed = self._former_owner_view(True, permanent_escalation=False)
+        self.assertEqual(probed, control)
+        self.reopen("project:b")
+        self.assertEqual(self.memory.history("memory:a")["history"], self.b_view)
+        self.assertEqual(self.memory.recall(QUERY)["admitted"], [self.b1])
+
+    def test_fh_escalation_of_the_owners_own_tombstone_is_the_same_under_a_foreign_generation(self):
+        control = self._former_owner_view(False, permanent_escalation=True)
+        self.assertTrue(control[2][0], control[2])
+        self.assertEqual(control[2][2:], ("v0", "v2"))  # the deletion's own recorded version
+        probed = self._former_owner_view(True, permanent_escalation=True)
+        self.assertEqual(probed, control)
+        self.reopen("project:b")
+        self.assertEqual(self.memory.history("memory:a")["history"], self.b_view)
+        self.assertEqual(self.memory.recall(QUERY)["admitted"], [self.b1])
+        self.assertIsNotNone(self.fact(self.b1))
 
 
 class ProceduralReviewFindings(unittest.TestCase):

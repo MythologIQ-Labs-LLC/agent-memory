@@ -582,6 +582,11 @@ class AgentMemory:
         head = adapter.current_fact_uuid(target_reference)
         if head is None or not adapter.fact_eligible_in_context(head, self._writer_context(envelope)):
             return None
+        if str(envelope.get("operation")) in ("promotion", "correction"):
+            probe = {**envelope, "proposal_id": "probe", "state_snapshot": "",
+                     "evidence_refs": list(envelope.get("evidence_refs") or ["probe"])}
+            if adapter.write_target_refusal(contract.proposal_from_envelope(probe)) is not None:
+                return None  # a write the head's holders could not read (scope continuity) is not a visible target
         return head
 
     def _state_snapshot(self, target_reference: str, envelope: Mapping[str, Any]) -> str:

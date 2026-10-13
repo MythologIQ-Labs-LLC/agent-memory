@@ -47,6 +47,11 @@ FIXTURE_DIR = REFERENCE / "fixtures" / "786-security-replays"
 DEFAULT_OUTPUT = ROOT / "reports" / "validation" / "786-security-replays"
 OUTPUT_REL = "reports/validation/786-security-replays/"
 REPLAYS = (
+    "cross-scope-write-authority-denial-v2",
+    "deleted-lineage-generations-and-restart-v2",
+    "public-tombstone-redaction-and-observer-separation-v2",
+)
+SUPERSEDED = (  # frozen -v1 fixtures, kept for provenance; superseded, never edited
     "cross-scope-write-authority-denial-v1",
     "deleted-lineage-generations-and-restart-v1",
     "public-tombstone-redaction-and-observer-separation-v1",
@@ -180,6 +185,7 @@ class Scenario:
             return
         m = self.use(scope)
         result: dict
+        out = None
         if kind == "remember":
             kw: dict = {}
             if "prop" in op:
@@ -255,6 +261,9 @@ class Scenario:
         else:
             raise ReplayError(f"unknown operation {kind}")
         if name:
+            # the full result is kept for ``op_mentions`` (second review: a 7-field shape could
+            # never show a disclosed identifier); ``op_result`` reads the summary fields
+            result["full"] = out
             self.ops[name] = result
         if op.get("require_committed") and not result.get("committed"):
             raise ReplayError(f"{kind} {op.get('ref')} as {scope} did not commit: {result}")
@@ -309,6 +318,10 @@ class Scenario:
                 kw["logical_memory_refs"] = tuple(spec["logical_refs"])
             out = m.recall(spec["query"], **kw)
             return [self.label(x) for x in out["admitted"]]
+        if kind == "recall_candidates":
+            m = self.use(scope)
+            kw = {"temporal_intent": HIST} if spec.get("historical") else {}
+            return [self.label(x) for x in m.recall(spec["query"], **kw)["candidates"]]
         if kind == "recall_mentions":
             m = self.use(scope)
             kw = {"temporal_intent": HIST} if spec.get("historical") else {}
@@ -351,7 +364,10 @@ class Scenario:
         if kind == "op_result":
             return self.ops.get(spec["name"], {}).get(spec["field"])
         if kind == "op_mentions":
-            serial = json.dumps(self.ops.get(spec["name"], {}), sort_keys=True, default=str)
+            op = self.ops.get(spec["name"], {})
+            full = op.get("full")
+            serial = json.dumps(full if full is not None else {k: v for k, v in op.items() if k != "full"},
+                                sort_keys=True, default=str)
             return [t for t in spec["tokens"] if self.labels.get(t, t) in serial]
         raise ReplayError(f"unknown probe {kind}")
 
@@ -488,7 +504,7 @@ def write_outputs(report: dict, output_dir: Path, command: str) -> dict:
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument("--replay", choices=REPLAYS)
+    group.add_argument("--replay", choices=REPLAYS + SUPERSEDED)
     group.add_argument("--all", action="store_true")
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--fixture-dir", type=Path, default=FIXTURE_DIR)
