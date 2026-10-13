@@ -99,6 +99,25 @@ class BlindPacketTests(unittest.TestCase):
         with self.assertRaisesRegex(PacketError,"already exists"):
             prepare(self.root,self.dest)
 
+    def test_changed_frozen_dossier_is_refused(self):
+        self.dossier.write_text('{"tampered":true}', encoding="utf-8")
+        with self.assertRaisesRegex(PacketError,"pinned preregistered dossier"):
+            prepare(self.root,self.dest)
+        self.assertFalse(self.dest.exists())
+
+    def test_wrong_frozen_main_revision_is_refused(self):
+        with patch("scripts.prepare_789_blind_review_packets.FROZEN_MAIN","f"*40):
+            with self.assertRaisesRegex(PacketError,"frozen main evidence revision"):
+                prepare(self.root,self.dest)
+        self.assertFalse(self.dest.exists())
+
+    def test_key_dossier_binding_is_checked_before_human_coverage(self):
+        prepare(self.root,self.dest)
+        key=self.key()
+        key["dossier_sha256"]="0"*64
+        with self.assertRaisesRegex(PacketError,"does not match the case dossier"):
+            verify_reviews(json.loads(self.dossier.read_text()),self.packet(),key,[])
+
     def test_bad_pinned_source_refused_without_output(self):
         self.sources["agent_memory"].write_text("{}")
         with self.assertRaisesRegex(PacketError,"source blob mismatch"):
