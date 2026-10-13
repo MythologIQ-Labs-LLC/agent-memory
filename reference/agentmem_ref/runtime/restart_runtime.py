@@ -446,11 +446,18 @@ class CheckpointableGovernedMemoryAdapter(GovernedMemoryAdapter):
 
 
 def _canonical_bytes(value: object) -> bytes:
+    """Canonical JSON bytes of ``value``; bytes are taken as already canonical (#772)."""
+    if isinstance(value, bytes):
+        return value
     return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
 
 
 def _digest(value: object) -> str:
-    return "sha256:" + hashlib.sha256(_canonical_bytes(value)).hexdigest()
+    return _digest_bytes(_canonical_bytes(value))
+
+
+def _digest_bytes(canonical: bytes) -> str:
+    return "sha256:" + hashlib.sha256(canonical).hexdigest()
 
 
 def _read_json(path: Path) -> dict:
@@ -481,7 +488,8 @@ def _fsync_directory(path: Path) -> None:
         os.close(descriptor)
 
 
-def _atomic_json_write(path: Path, value: dict) -> None:
+def _atomic_json_write(path: Path, value: dict | bytes) -> None:
+    """Write ``value`` as one canonical JSON line, atomically; ``bytes`` are written as given."""
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_name(f".{path.name}.tmp")
     payload = _canonical_bytes(value) + b"\n"
@@ -493,7 +501,8 @@ def _atomic_json_write(path: Path, value: dict) -> None:
     _fsync_directory(path.parent)
 
 
-def _append_json_line(path: Path, value: dict) -> None:
+def _append_json_line(path: Path, value: dict) -> bytes:
+    """Append one canonical line and return the bytes written."""
     path.parent.mkdir(parents=True, exist_ok=True)
     payload = _canonical_bytes(value) + b"\n"
     with path.open("ab") as handle:
@@ -501,6 +510,7 @@ def _append_json_line(path: Path, value: dict) -> None:
         handle.flush()
         os.fsync(handle.fileno())
     _fsync_directory(path.parent)
+    return payload
 
 
 @contextmanager
@@ -549,11 +559,20 @@ def _read_generation_journal(path: Path) -> list[dict]:
     if not path.exists():
         return []
     try:
-        lines = path.read_text(encoding="utf-8").splitlines()
-    except (OSError, UnicodeDecodeError) as exc:
+        raw = path.read_bytes()
+    except OSError as exc:
+        raise RuntimeRecoveryError("checkpoint generation journal cannot be read") from exc
+    return _parse_generation_journal(raw)
+
+
+def _parse_generation_journal(raw: bytes, *, first_index: int = 1) -> list[dict]:
+    """Parse journal lines; ``first_index`` numbers the first line for error messages."""
+    try:
+        lines = raw.decode("utf-8").splitlines()
+    except UnicodeDecodeError as exc:
         raise RuntimeRecoveryError("checkpoint generation journal cannot be read") from exc
     records: list[dict] = []
-    for index, line in enumerate(lines, start=1):
+    for index, line in enumerate(lines, start=first_index):
         if not line.strip():
             continue
         try:
@@ -570,9 +589,14 @@ def _read_generation_journal(path: Path) -> list[dict]:
     return records
 
 
-def _validate_generation_journal(records: Iterable[Mapping[str, object]]) -> dict | None:
-    previous: dict | None = None
-    for index, raw in enumerate(records, start=1):
+def _validate_generation_journal(
+    records: Iterable[Mapping[str, object]], *, previous: Mapping[str, object] | None = None,
+    first_index: int = 1,
+) -> dict | None:
+    """Walk the chain and return its last record. ``previous`` continues a walk from an
+    already validated record (the store's warm path); the checks are the same either way."""
+    previous = None if previous is None else dict(previous)
+    for index, raw in enumerate(records, start=first_index):
         if raw.get("schema_version") != JOURNAL_SCHEMA_VERSION:
             raise RuntimeRecoveryError("unsupported checkpoint generation journal schema")
         if raw.get("transaction_protocol") != TRANSACTION_PROTOCOL:
@@ -766,15 +790,63 @@ class JsonRuntimeStateStore:
         self.lock_path = self.root / ".runtime-checkpoint.lock"
         self._observed_generation: int | None = None
         self._observed_manifest_digest: str | None = None
+        # (#772) the journal prefix this instance has already walked: its byte length and
+        # line count, a running SHA-256 of those bytes, and the last record it validated.
+        self._journal_cache: tuple[int, int, "hashlib._Hash", dict] | None = None
 
     def exists(self) -> bool:
         # A journal without a manifest is evidence of an incomplete/corrupt
         # runtime, not permission to initialize a new runtime over the top.
         return self.manifest_path.exists() or self.journal_path.exists()
 
+    def _validated_journal_tail(self) -> dict | None:
+        """The journal's last record after validating the whole chain from its first link.
+
+        (#772) Every call still validates every record; what changes is the cost. The
+        instance remembers the byte length, line count, running SHA-256 and last record of
+        the prefix it has already walked. On the next call the prefix bytes are re-hashed
+        (no JSON parse, no per-record digest) and, when they are unchanged, only the appended
+        lines are parsed and chained from the remembered record. The two walks reach the same
+        verdict: validation is a pure function of the bytes, and the remembered record is the
+        record a full walk would have reached at that point. Any change to the prefix bytes,
+        a prefix that does not end at a line boundary, or a shorter file falls back to the
+        full walk, so tampering, truncation and torn writes are reported exactly as before.
+        Without this a checkpoint cost O(generations), and a store built through the
+        governed write path grew quadratically.
+        """
+        if not self.journal_path.exists():
+            self._journal_cache = None
+            return None
+        try:
+            raw = self.journal_path.read_bytes()
+        except OSError as exc:
+            raise RuntimeRecoveryError("checkpoint generation journal cannot be read") from exc
+        cached = self._journal_cache
+        if cached is not None:
+            prefix_length, prefix_lines, prefix_hash, last = cached
+            if (len(raw) >= prefix_length
+                    and hashlib.sha256(raw[:prefix_length]).digest() == prefix_hash.digest()):
+                tail = raw[prefix_length:]
+                latest = _validate_generation_journal(
+                    _parse_generation_journal(tail, first_index=prefix_lines + 1),
+                    previous=last, first_index=prefix_lines + 1)
+                if latest is None:
+                    latest = last
+                if tail.endswith(b"\n"):
+                    running = prefix_hash.copy()
+                    running.update(tail)
+                    self._journal_cache = (len(raw), prefix_lines + tail.count(b"\n"), running, dict(latest))
+                return dict(latest)
+        latest = _validate_generation_journal(_parse_generation_journal(raw))
+        if latest is not None and raw.endswith(b"\n"):
+            self._journal_cache = (len(raw), raw.count(b"\n"), hashlib.sha256(raw), dict(latest))
+        else:
+            self._journal_cache = None
+        return latest
+
     def _current_manifest_and_journal(self) -> tuple[dict | None, dict | None]:
         manifest = _read_json(self.manifest_path) if self.manifest_path.exists() else None
-        latest = _validate_generation_journal(_read_generation_journal(self.journal_path))
+        latest = self._validated_journal_tail()
         if manifest is None:
             if latest is not None:
                 raise RuntimeRecoveryError(
@@ -794,7 +866,15 @@ class JsonRuntimeStateStore:
     ) -> dict:
         previous_digest = "" if previous is None else str(previous["record_digest"])
         record = _journal_record(manifest, previous_digest)
-        _append_json_line(self.journal_path, record)
+        payload = _append_json_line(self.journal_path, record)
+        cached = self._journal_cache
+        if cached is not None and cached[3].get("record_digest") == previous_digest:
+            # (#772) extend the walked prefix by the record this instance just appended.
+            running = cached[2].copy()
+            running.update(payload)
+            self._journal_cache = (cached[0] + len(payload), cached[1] + 1, running, dict(record))
+        else:
+            self._journal_cache = None
         return record
 
     def checkpoint(
@@ -851,12 +931,16 @@ class JsonRuntimeStateStore:
                 profile=profile,
                 visibility_snapshots=visibility_snapshots,
             )
-            substrate_digest = _digest(substrate)
-            governance_digest = _digest(governance)
+            # (#772) serialize each payload once: the digest is over the same canonical
+            # bytes the file receives, so the written bytes and digests are unchanged.
+            substrate_bytes = _canonical_bytes(substrate)
+            governance_bytes = _canonical_bytes(governance)
+            substrate_digest = _digest_bytes(substrate_bytes)
+            governance_digest = _digest_bytes(governance_bytes)
             generation = current_generation + 1
 
-            _atomic_json_write(self.substrate_path, substrate)
-            _atomic_json_write(self.governance_path, governance)
+            _atomic_json_write(self.substrate_path, substrate_bytes)
+            _atomic_json_write(self.governance_path, governance_bytes)
             manifest = {
                 "schema_version": SCHEMA_VERSION,
                 "durability_profile": DURABILITY_PROFILE,
