@@ -15,6 +15,10 @@ class SourceFingerprintTests(unittest.TestCase):
         expect=hashlib.sha1(b"blob "+str(len(sample)).encode()+b"\0"+sample).hexdigest()
         self.assertEqual(_git_blob_from_bytes(sample), expect)
 
+    def test_blob_sha_is_eol_stable_for_windows_workspaces(self):
+        self.assertEqual(_git_blob_from_bytes(b'{"a":1}\r\n'),
+                         _git_blob_from_bytes(b'{"a":1}\n'))
+
     def test_worktree_matches_real_git_tree_sha(self):
         with tempfile.TemporaryDirectory() as td:
             root=Path(td)
