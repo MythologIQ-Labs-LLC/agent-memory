@@ -23,6 +23,8 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 DOSSIER = "reports/benchmarks/audits/789-amb-v6-case-dossiers.json"
+FROZEN_DOSSIER_BLOB = "4b0c4e37c28211fa71254fe888030ff8514e2410"
+FROZEN_MAIN = "3eebb6d54e2a218c4fd10cf53c52acac8384c3e6"
 PROTOCOL = "competitive-qualitative-blind-packet/1"
 ARMS = ("agent_memory", "mem0_oss")
 VENDOR_MARKERS = re.compile(r"\b(?:agent[\s_-]?memory|mem0|bm25)\b", re.IGNORECASE)
@@ -107,7 +109,12 @@ def prepare(root: Path, out_dir: Path, *, dossier_path: Path | None = None) -> d
     require(not target.exists(), "destination already exists; refuse overwrite")
     require(target.parent.is_dir(), "destination parent must already exist")
     dossier_path = dossier_path or (root / DOSSIER)
-    dossier = json.loads(dossier_path.read_text(encoding="utf-8"))
+    dossier_bytes = dossier_path.read_bytes()
+    require(git_blob(dossier_bytes) == FROZEN_DOSSIER_BLOB,
+            "pinned preregistered dossier changed; a new study version is required")
+    dossier = json.loads(dossier_bytes)
+    require(dossier.get("source_main_sha") == FROZEN_MAIN,
+            "frozen main evidence revision was changed")
     require(dossier.get("schema_version") == "competitive-case-dossier/1" and
             dossier.get("accepted_score_update") is False and
             dossier.get("qualitative_review_status") == "not_started",
@@ -123,6 +130,8 @@ def prepare(root: Path, out_dir: Path, *, dossier_path: Path | None = None) -> d
             "qualitative case selection not in 77-case dossier")
     source = load_verified_sources(root, dossier)
     require(set(source["agent_memory"]) == set(indexed), "dossier and source cases differ")
+    require(len({x["case_id"] for x in entries}) == 77,
+            "duplicate dossier case identity")
     for cid, row in indexed.items():
         for arm in ARMS:
             require(source[arm][cid]["correct"] is row["arms"][arm]["passed_native_scorer"],
@@ -136,6 +145,8 @@ def prepare(root: Path, out_dir: Path, *, dossier_path: Path | None = None) -> d
         b = source["mem0_oss"][cid]
         prompt = a["query"]
         require(isinstance(prompt, str), "missing task prompt: " + cid)
+        require(VENDOR_MARKERS.search(prompt) is None,
+                "explicit provider name in task prompt: " + cid)
         flipped = bool(secrets.randbits(1))
         for label, system in zip(("A", "B"), (ARMS[::-1] if flipped else ARMS)):
             row = source[system][cid]
@@ -187,7 +198,7 @@ def prepare(root: Path, out_dir: Path, *, dossier_path: Path | None = None) -> d
         "schema_version": "competitive-qualitative-assignment-key/1",
         "packet_protocol": PROTOCOL,
         "packet_sha256": digest(packet_bytes),
-        "dossier_sha256": digest(dossier_path.read_bytes()),
+        "dossier_sha256": digest(dossier_bytes),
         "source_main_sha": dossier.get("source_main_sha"),
         "frozen_target_case_ids": target_ids,
         "assignments": assignments,
