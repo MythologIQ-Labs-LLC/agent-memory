@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Agent Memory · Benchmark Frontier</title>
+<style>
+:root{color-scheme:dark;--bg:#0c1422;--panel:#142136;--border:#304057;--text:#f2f5fb;--muted:#b0bfd1;--accent:#91c3ff;--warn:#ffd58f}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,sans-serif}
+main{max-width:1350px;margin:auto;padding:clamp(16px,3vw,40px)}header{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
+h1{font-size:clamp(1.5rem,2.8vw,2.4rem);margin:0}h2{font-size:1.25rem}p,.muted{color:var(--muted)}a{color:var(--accent)}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;margin:18px 0}
+.filters{display:flex;gap:12px;flex-wrap:wrap}.filters label{display:flex;flex-direction:column;gap:4px;min-width:190px;flex:1}
+input,select,button{background:#111d30;color:var(--text);border:1px solid #637a99;border-radius:7px;padding:10px;font:inherit}
+button{cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:820px}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--border);vertical-align:top}th{color:var(--muted);font-weight:600}
+tbody tr:hover{background:#233651}.empty{padding:24px;color:var(--muted)}.pill{border:1px solid #8091a9;border-radius:20px;padding:2px 8px;white-space:nowrap;font-size:.82rem}
+.score{font-variant-numeric:tabular-nums}.gap{height:8px;background:#354960;border-radius:8px;overflow:hidden;min-width:90px}.gap>span{display:block;height:100%;background:#8bbcff}
+details{margin:7px 0}summary{cursor:pointer;color:var(--accent)}code{overflow-wrap:anywhere} .notice{color:var(--warn)}
+@media(max-width:680px){main{padding:14px}.filters label{min-width:100%}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body><main>
+<header><div><h1>Agent Memory · Benchmark Frontier</h1><p>Measured same-harness leaders, native gaps, and unmeasured capability coverage. No aggregate score.</p></div><div id="snapshot" class="muted" aria-live="polite">Loading evidence…</div></header>
+<section class="card" aria-label="Evidence source"><strong>Read-only evidence snapshot</strong>
+<p>This viewer ranks only exact eligible comparisons. A local file may be selected when browsing without a web server. Published/vendor reference scores never enter the ranking.</p>
+<label>Open generated frontier-leaderboards.json <input type="file" id="upload" accept=".json,application/json"></label>
+<div id="error" role="alert" class="notice"></div></section>
+<section class="card"><h2>Find a metric</h2><div class="filters">
+<label>Benchmark or metric<input id="search" type="search" placeholder="Search benchmark, profile, metric"></label>
+<label>Ranking status<select id="status"><option value="">All evidence states</option><option value="ranked">Ranked</option><option value="no_peer">No comparable peer</option><option value="agent_memory_missing">Agent Memory missing</option><option value="non_comparable">Non-comparable</option><option value="not_measured">Not measured</option><option value="not_rankable">Not rankable</option><option value="coverage_only">Coverage only</option></select></label>
+</div><p id="counts" role="status"></p></section>
+<section class="card"><h2>Native metric leaderboard</h2><div class="table-wrap"><table><thead><tr><th>Benchmark / metric</th><th>Best measured</th><th>Agent Memory</th><th>Deficit to leader</th><th>Status and evidence</th></tr></thead><tbody id="rows"></tbody></table></div></section>
+<footer class="muted">A local same-harness lead is not an independently verified global market lead. Adequacy thresholds remain unknown unless separately qualified.</footer>
+</main><script>
+"use strict";
+let dataset=null;
+const $=id=>document.getElementById(id);
+const safe=s=>String(s??"");
+const format=(n,unit)=> typeof n==="number"&&Number.isFinite(n)?(unit==="ratio"?(n*100).toFixed(2)+"%":n.toLocaleString(undefined,{maximumFractionDigits:6})+" "+safe(unit)): "—";
+function addCell(tr,value){const td=document.createElement("td");if(value!==undefined)td.textContent=value;tr.appendChild(td);return td}
+function render(){
+ if(!dataset)return;
+ const list=Array.isArray(dataset.leaderboards)?dataset.leaderboards:[];
+ const covered=new Set(list.map(x=>x.metric_key));
+ const other=(dataset.metric_coverage||[]).filter(x=>!covered.has(x.metric_key)).map(x=>({...x,ranking_state:"coverage_only"}));
+ const all=[...list,...other];const term=$("search").value.trim().toLowerCase(),status=$("status").value;
+ const selected=all.filter(x=>(!status||x.ranking_state===status)&&(!term||[x.benchmark_id,x.task_profile,x.dimension,x.metric_id,x.metric_key].some(v=>safe(v).toLowerCase().includes(term))));
+ $("counts").textContent=selected.length+" of "+all.length+" metric contexts shown · "+list.filter(x=>x.ranking_state==="ranked").length+" ranked comparisons · "+other.length+" coverage-only definitions";
+ const body=$("rows");body.replaceChildren();
+ for(const r of selected){
+  const tr=document.createElement("tr");
+  const name=addCell(tr,safe(r.benchmark_id||r.benchmark_profile_id)+" / "+safe(r.task_profile||r.dimension)+" / "+safe(r.metric_id));
+  const key=document.createElement("div");key.className="muted";key.textContent=safe(r.metric_key);name.appendChild(key);
+  const leader=r.leader,am=r.agent_memory;
+  addCell(tr,leader?safe(leader.system_id)+" · "+format(leader.value,r.unit):"Not established");
+  addCell(tr,am?format(am.value,r.unit)+(am.rank?" · rank "+am.rank:""):"Unavailable");
+  const gap=addCell(tr, r.ranking_state==="ranked" && typeof r.gap_to_leader_native==="number" ?format(r.gap_to_leader_native,r.unit==="ratio"?"ratio":r.unit):"Unknown");
+  if(r.ranking_state==="ranked"&&am&&leader&&typeof r.gap_to_leader_native==="number"){
+    const bar=document.createElement("div");bar.className="gap";bar.setAttribute("role","img");
+    bar.setAttribute("aria-label","Native deficit "+format(r.gap_to_leader_native,r.unit));
+    const fill=document.createElement("span");const denom=Math.abs(leader.value)||1;
+    fill.style.width=Math.min(100,Math.max(0,100*r.gap_to_leader_native/denom))+"%";bar.appendChild(fill);gap.appendChild(bar);
+  }
+  const statusCell=addCell(tr,"");
+  const pill=document.createElement("span");pill.className="pill";pill.textContent=safe(r.ranking_state).replaceAll("_"," ");statusCell.appendChild(pill);
+  if(r.comparison_set_id){
+    const details=document.createElement("details"),summary=document.createElement("summary");summary.textContent="Evidence and comparability";details.appendChild(summary);
+    const lines=["Set: "+r.comparison_set_id,"Class: "+safe(r.evidence_class),"Input: "+safe(r.input_sha256),"Selection: "+safe(r.selection_id),"Sample: "+safe(r.sample_count),"Direction: "+safe(r.direction),"Adequacy: "+safe(r.adequacy?.state)];
+    for(const item of r.ranking||[])lines.push(safe(item.system_id)+" · run "+safe(item.run_id)+" · revision "+safe(item.revision)+" · evidence "+JSON.stringify(item.evidence||[]));
+    const pre=document.createElement("pre");pre.style.whiteSpace="pre-wrap";pre.style.fontSize=".8rem";pre.textContent=lines.join("\n");details.appendChild(pre);statusCell.appendChild(details);
+  }
+  body.appendChild(tr);
+ }
+ if(!selected.length){const tr=document.createElement("tr"),td=addCell(tr,"No matching metrics");td.colSpan=5;body.appendChild(tr)}
+}
+function accept(data){
+ if(!data||!Array.isArray(data.leaderboards)||!Array.isArray(data.metric_coverage)||typeof data.snapshot_id!=="string"||typeof data.schema_version!=="string")throw Error("Invalid or unsupported frontier projection.");
+ dataset=data;$("snapshot").textContent="Snapshot "+data.snapshot_id+" · schema "+data.schema_version;$("error").textContent="";render();
+}
+$("search").addEventListener("input",render);$("status").addEventListener("change",render);
+$("upload").addEventListener("change",async e=>{const file=e.target.files?.[0];if(!file)return;try{accept(JSON.parse(await file.text()))}catch(err){$("error").textContent=safe(err.message)}});
+fetch("./frontier-leaderboards.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw Error("No generated projection found. Build it first or select the JSON file above.");return r.json()}).then(accept).catch(err=>{$("snapshot").textContent="No projection loaded";$("error").textContent=safe(err.message)});
+</script></body></html>
