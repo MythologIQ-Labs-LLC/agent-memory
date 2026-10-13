@@ -1,0 +1,38 @@
+{
+  "audit": "sha256_verified_from_committed_utf8_artifact_bytes",
+  "source_main_sha": "3eebb6d54e2a218c4fd10cf53c52acac8384c3e6",
+  "algorithm_self_test": "abc:PASS",
+  "scope": "Only the AMB v6 primary JSON result artifacts, not all auxiliary files or independent scorer execution.",
+  "items": [
+    {
+      "variant": "lane:amb-precisionmembench-retrieval-v6:agent-memory",
+      "source_report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v6/agent-memory-24048d55e26d/evidence.json",
+      "primary_artifact": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v6/agent-memory-24048d55e26d/single-turn.json",
+      "expected_sha256": "37e9cf121294ac018305bdf6cf3041da06143e87ed2365f1f60185720117b8f7",
+      "computed_sha256": "37e9cf121294ac018305bdf6cf3041da06143e87ed2365f1f60185720117b8f7",
+      "byte_verified": true,
+      "raw_blob_sha": "ea40e74850e2621ff39c65926c5ede89768e1a43",
+      "source_run_id": "37718270129"
+    },
+    {
+      "variant": "lane:amb-precisionmembench-retrieval-v6:bm25",
+      "source_report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v6/bm25-24048d55e26d/evidence.json",
+      "primary_artifact": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v6/bm25-24048d55e26d/single-turn.json",
+      "expected_sha256": "9ba0f81a988baacf16a1c1666214888a8ceb5d1bcad21b9415a53d7b23d844db",
+      "computed_sha256": "9ba0f81a988baacf16a1c1666214888a8ceb5d1bcad21b9415a53d7b23d844db",
+      "byte_verified": true,
+      "raw_blob_sha": "4a7b779a2aed19dc4ef71d4fa5493b83220e6c92",
+      "source_run_id": "37718272612"
+    },
+    {
+      "variant": "lane:amb-precisionmembench-retrieval-v6:mem0-explicit",
+      "source_report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v6/mem0-explicit-24048d55e26d/evidence.json",
+      "primary_artifact": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v6/mem0-explicit-24048d55e26d/single-turn.json",
+      "expected_sha256": "9453d7c1057516e29349e6676dfc22e1760ea91254201a73400f606c7816d2f8",
+      "computed_sha256": "9453d7c1057516e29349e6676dfc22e1760ea91254201a73400f606c7816d2f8",
+      "byte_verified": true,
+      "raw_blob_sha": "426a2f3c69220efcf5e461aef54aa593b4b82155",
+      "source_run_id": "37718275682"
+    }
+  ]
+}
