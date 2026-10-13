@@ -77,3 +77,17 @@ These identities are sufficient to establish that later accepted integration-des
 **Recommendation:** approve a distinct, gated *canonical evidence registry reconciliation* for the eight omitted lanes after the four residual checks above. Keep historical generations separated, include the five diagnostic variants solely as measured reference rows rather than extra independent competitors, and only then rebuild `catalog.json`, `frontier-leaderboards.json`, and the static viewer snapshot. Do not alter PR #785 itself merely to force an optimistic newer leaderboard.
 
 This follow-up is read-only. Its checks were performed through GitHub source reads and parsed metadata comparisons; **no Python test suite, importer replay, independent external scorer, or CI execution is claimed**.
+
+## Normalizer and freeze cross-check (additional source checks)
+
+`scripts/build_benchmark_scorecards.py` at source blob `f49ed14b79cfb12e4c46bc2f1019e44a9f47c602` lists **36 distinct v3–v6 raw report sources**, exactly nine per lane generation (3 AMB + 6 LongMemEval session/turn). Comparing these literal source paths against the 41 `status: complete` integration history entries gives **36/36 matched and zero unbound scorecard sources**. The five completed and deliberately omitted variants are:
+
+1. AMB v4 `agent-memory-shadow`;
+2. LongMemEval v3 `agent_memory_semantic` session and turn;
+3. LongMemEval v4 `agent_memory_shadow` session and turn.
+
+Thus the normalizer source selection follows the intended **subject + lexical control + external competitor** population and does not count Agent Memory's semantic/shadow variants as separate market competitors. The existence of normalizer source configuration does not, on its own, prove its last derived JSON was regenerated and validated.
+
+Each of the eight v3–v6 frozen lane files also declares `frozen_before_any_score: true` and supplies `frozen_on` dates (v3–v5: 2026-10-07; v6: 2026-10-08), with accepted row `status_reason` fields citing the same date and respective run ID. These are self-declared chronology records; independent immutable freeze-commit timing relative to external workflow execution was **not** yet cross-verified.
+
+**Narrowed remaining checks before canonical 12-lane registration:** (a) immutable freeze-before-execution commit/timestamp evidence; (b) raw artifact SHA-256 bytes, importer manifest and normalized output reproduction; (c) runtime successor declaration and exact bridge/scorer configuration per generation; (d) deterministic `current.json` -> F1 catalog -> #785 projection regeneration with fail-closed tests. No independent rank update has been authorized.
