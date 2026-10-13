@@ -75,6 +75,19 @@ class FrontierViewerBrowserTests(unittest.TestCase):
         cls.projection = build_frontier_leaderboard(catalog)
         (cls.tmp / "frontier-leaderboards.json").write_text(
             json.dumps(cls.projection, sort_keys=True), encoding="utf-8")
+        # The static viewer also loads read-only historical and refresh-status
+        # projections; browser tests must not treat a missing fixture (404)
+        # as a production console error.
+        shutil.copy(UI_DIR / "historical-amb-v6.json", cls.tmp / "historical-amb-v6.json")
+        (cls.tmp / "refresh-status.json").write_text(json.dumps({
+            "schema_version": "benchmark-refresh-status/1",
+            "authority_effect": "none",
+            "accepted_evidence_only_in_rankings": True,
+            "catalog_snapshot_id": cls.projection["snapshot_id"],
+            "source_count": 0,
+            "unregistered_source_count": 0,
+        }), encoding="utf-8")
+
         cls.draft = build_frontier_leaderboard(
             catalog, objectives=_draft_registry(), objectives_status="draft",
             objectives_source="synthetic draft registry")
@@ -113,6 +126,16 @@ class FrontierViewerBrowserTests(unittest.TestCase):
 
     def _shot(self, page, name, full=True):
         page.screenshot(path=str(self.evidence / name), full_page=full)
+
+    def test_refresh_and_historical_panels_are_separate_from_frontier(self):
+        page = self._page()
+        page.wait_for_function("document.getElementById('refresh-status').innerText.includes('matching source manifest')")
+        self.assertIn("Unregistered raw benchmark candidates: 0", page.locator("#refresh-status").inner_text())
+        page.wait_for_function("document.getElementById('historical-summary').innerText.includes('15 / 77 exact cases')")
+        self.assertIn("Mem0 OSS", page.locator("#historical-summary").inner_text())
+        self.assertIn("61", page.locator("#historical-summary").inner_text())
+        self.assertIn("0 / 96", page.locator("#historical-quality").inner_text())
+        self.assertEqual(self.errors, [])
 
     def test_desktop_renders_real_snapshot_and_known_rows(self):
         page = self._page(fragment="#profile=longmemeval-s-retrieval-parity-v2%3Aturn&metric=recall_all%4050")
