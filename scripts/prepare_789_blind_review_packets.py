@@ -198,7 +198,8 @@ def prepare(root: Path, out_dir: Path, *, dossier_path: Path | None = None) -> d
         "schema_version": "competitive-qualitative-assignment-key/1",
         "packet_protocol": PROTOCOL,
         "packet_sha256": digest(packet_bytes),
-        "dossier_sha256": digest(dossier_bytes),
+        "dossier_sha256": digest(stable_bytes(dossier)),
+        "dossier_git_blob_sha": git_blob(dossier_bytes),
         "source_main_sha": dossier.get("source_main_sha"),
         "frozen_target_case_ids": target_ids,
         "assignments": assignments,
@@ -236,6 +237,18 @@ def verify_reviews(dossier: dict, packet: dict, key: dict, reviews: list[dict]) 
     require(actual == expected and len(packet["records"]) == 48, "packet assignment altered")
     require(key.get("frozen_target_case_ids") == dossier["review_selection"]["target_case_ids"],
             "key is not bound to the frozen selection")
+    require(key.get("dossier_sha256") == digest(stable_bytes(dossier)),
+            "coordinator key does not match the case dossier")
+    require(key.get("dossier_git_blob_sha") == FROZEN_DOSSIER_BLOB and
+            key.get("source_main_sha") == dossier.get("source_main_sha"),
+            "coordinator key does not match frozen source identity")
+    mapping = {(x["case_id"], x["blind_arm"]): x for x in key["assignments"]}
+    for item in packet["records"]:
+        arm = mapping[(item["case_id"], item["blind_arm"])]
+        require(digest(stable_bytes({"query": item["task_prompt"],
+                                     "context": item["retrieved_context"]})) ==
+                arm.get("source_content_sha256"),
+                "original source-content binding is broken")
     require(digest(stable_bytes(packet)) == key["packet_sha256"], "packet bytes changed")
     for review in reviews:
         require(isinstance(review, dict), "invalid review")
