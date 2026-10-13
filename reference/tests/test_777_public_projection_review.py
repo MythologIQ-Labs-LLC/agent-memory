@@ -127,12 +127,18 @@ class HistoryProjection(_Facade):
         self.assertEqual(self.memory.history("memory:live")["history"], self._blank())
         self.assertEqual(self.memory.history("memory:never")["history"], self._blank())
 
-    def test_same_project_deleted_memory_reads_as_unknown(self):
+    def test_same_project_deleted_memory_reads_as_tombstoned_without_identifiers(self):
+        # The deleting scope may know its memory is tombstoned (docs/44; durability profile
+        # DUR-DEL-001). It still receives no deleted-generation identifier, event or value.
         self.state_changed()
+        old_head = self.memory._canonical_history("memory:a")["history"]["current_fact_uuid"]
         self.assertTrue(self.memory.forget("memory:a")["committed"])
-        self.assertEqual(self.memory.history("memory:a")["history"], self._blank())
+        record = self.memory.history("memory:a")["history"]
+        self.assertEqual((record["current_fact_uuid"], record["tombstoned"], record["events"]), (None, True, []))
+        self.assertNotIn(old_head, json.dumps(self.memory.history("memory:a")))
         rejected = self.memory.history("memory:a", fact_text="Orrin gateway region is Oslo")["history"]
         self.assertEqual(rejected.get("rejected_values", []), [])
+        self.assertTrue(rejected["tombstoned"])
 
     def test_recreated_memory_history_shows_only_the_live_generation(self):
         self.state_changed()

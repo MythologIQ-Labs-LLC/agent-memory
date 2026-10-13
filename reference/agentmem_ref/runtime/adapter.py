@@ -1532,6 +1532,28 @@ class GovernedMemoryAdapter:
                 and self._domain_eligibility_refusal(fact, context) is None
                 and self._deleted_lineage_reason(fact) is None and fact.uuid not in self._tombstones)
 
+    def public_deleted_visible(self, memory_id: object, context: RecallContext) -> bool:
+        """May an ordinary reader know this memory was governed-deleted (docs/44 ``tombstoned``)?
+
+        Only a reader who could have read the deleted head: the same tenant, and
+        domain/project/task-eligible for the scope that head was written in (the canonical
+        ``_fact_scope`` survives pruning and permanent deletion, so the check never needs
+        the deleted content). A memory with a live generation is not deleted; a reader who
+        is out of scope learns nothing, exactly as for a memory that never existed. The
+        answer is one boolean: no deleted-generation identifier, timestamp or event is
+        served with it (#777).
+        """
+        if not isinstance(memory_id, str) or not memory_id or not self._tombstones:
+            return False
+        if self._current_fact_by_memory.get(memory_id) is not None:
+            return False
+        for ref, record in self._tombstones.items():
+            if record.get("memory_id") != memory_id or self.replacement_record(ref) is not None:
+                continue
+            if self._domain_identity_refusal(ref, self._tenant, context) is None:
+                return True
+        return False
+
     def _deleted_lineage(self) -> dict[str, str]:
         """#776: fact uuid -> deleted memory for every fact a governed deletion covers.
 

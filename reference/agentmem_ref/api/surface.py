@@ -1118,11 +1118,19 @@ class AgentMemory:
         if "history" not in raw:
             return raw
         # #777: an ordinary handle sees only a memory whose current fact it may read, and only
-        # that live generation's events. Deleted or out-of-scope memories read as unknown.
+        # that live generation's events. An out-of-scope memory reads as unknown. A memory this
+        # handle could have read and that is now governed-deleted reads as ``tombstoned`` with
+        # nothing else (docs/44; durability profile DUR-DEL-001): the deletion is the reader's
+        # own lifecycle fact, while the deleted generation's identifiers, timestamps, events
+        # and rejected values stay internal audit records.
         adapter = self.runtime.adapter
         record = raw["history"]
-        if not adapter.public_current_visible(target_reference, self._handle_recall_context()):
-            projected = {"current_fact_uuid": None, "state_version": 0, "tombstoned": False, "events": []}
+        context = self._handle_recall_context()
+        if not adapter.public_current_visible(target_reference, context):
+            deleted = adapter.public_deleted_visible(target_reference, context)
+            projected = {"current_fact_uuid": None,
+                         "state_version": record["state_version"] if deleted else 0,
+                         "tombstoned": deleted, "events": []}
             if fact_text is not None:
                 projected["rejected_values"] = []
         else:
