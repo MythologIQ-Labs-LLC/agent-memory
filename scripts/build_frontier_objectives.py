@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 from collections import Counter
 import json
+import math
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -32,8 +33,21 @@ class FrontierEvidenceError(ValueError):
     """Object identity, comparability or coverage invariants were violated."""
 
 
+def _require_finite_json(value: Any, path: Path) -> None:
+    """Reject non-JSON NaN/Infinity and overflowed floats anywhere in evidence."""
+    if type(value) is float and not math.isfinite(value):
+        raise FrontierEvidenceError(f"{path}: non-finite numeric evidence")
+    if type(value) is list:
+        for item in value:
+            _require_finite_json(item, path)
+    elif type(value) is dict:
+        for item in value.values():
+            _require_finite_json(item, path)
+
+
 def read_json(path: Path) -> dict[str, Any]:
     data = json.loads(path.read_text(encoding="utf-8"))
+    _require_finite_json(data, path)
     if type(data) is not dict:
         raise FrontierEvidenceError(f"{path}: expected JSON object")
     return data
@@ -56,7 +70,7 @@ def resolve_output_path(root: Path, output: Path) -> Path:
 
 
 def _number(value: object) -> bool:
-    return type(value) in (int, float)
+    return type(value) is int or (type(value) is float and math.isfinite(value))
 
 
 def observed_peer_position(row: Mapping[str, Any]) -> str:
