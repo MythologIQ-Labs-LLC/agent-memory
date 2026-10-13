@@ -171,6 +171,17 @@ Candidates, admissions, admitted, returned and ranking evidence are identical wi
 
 **Compatibility.** Additive minor. `1.0.0`–`1.5.0` envelopes remain `current`. A facade without a declaration or an extractor writes and returns what it did under `1.5.0`, under contract version `1.6.0`.
 
+## Write-target authority (#786; contract `1.7.0` unchanged in code, `1.8.0` bump recommended)
+
+A governed write that names a logical memory with a **live current fact** is admitted only when the writer is eligible for that fact under the same tenant, isolation-domain, shared-membership, project and task gates recall applies. The decision is the adapter's (`write_target_refusal`, `_delete_refusal`, `_dispute_refusal`); the facade only keeps the result shape non-disclosing:
+
+- `remember` onto a live head outside the writer's scope: `committed: false`, `refusal: "target_unavailable"`, receipt `before_state`/`after_state` `v0`, `state_snapshot` `v0`. Nothing is written, no episode is retained, no version moves.
+- `correct`, `forget`, `dispute` on such a memory: the bare `fact_not_found` result, byte-identical to the result for an id nobody wrote.
+- An id with no live head (never written or governed-deleted) is open to any writer in the tenant: creation and the #776 re-creation of a deleted id as a fresh generation are unchanged.
+- `overrides` re-declares the proposal's scope and is judged under that scope, exactly as a handle opened with it would be; it does not widen a partial claim (a `project_ref` without its isolation domain, or domains without the project, are refused).
+
+Because new refusal tokens reach callers (`target_unavailable` on `remember`; `fact_not_found` on operations that previously committed), this is a behavioural change of the public surface and should be recorded as contract `1.8.0` in the successor declaration (the six versioned envelope schemas then accept `1.8.0`, as `docs/777-public-contract-1-7-successor-qualification.md` did for `1.7.0`). The code on the #786 branch leaves `CONTRACT_VERSION` at `1.7.0` so the security repair stays auditable on its own; the bump is an owner decision listed in the v8 successor proposal.
+
 ## Action authority and execution evidence (contract `1.2.0`, ADR-038)
 
 An action is authorized by an ordinary PAMA decision on a proposal whose operation is `action_execution` (`docs/33` gives it four cells: low `allow_with_ledger`, medium and high `require_review`, critical `require_external_verification`). `memory/action_authority.py` hosts the path with the runtime adapter as an injected collaborator; the adapter learns nothing about actions.

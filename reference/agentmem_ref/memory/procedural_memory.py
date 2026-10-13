@@ -492,13 +492,31 @@ class ProceduralMemoryRuntime:
         if not fact_uuid:
             raise ValueError(f"no current procedural skill exists for {skill_id!r}")
         current_version = self.adapter.state_version(memory_ref)
+        # #786: a governed deletion is held to the targeted head's tenant/domain/project
+        # eligibility, so the revocation declares the scope the retained skill was written
+        # under (the same declaration ``propose_skill`` made), never a bare component label.
+        scope_fields: dict = {"scope": "procedural-memory"}
+        retained = self.substrate.get_fact(fact_uuid)
+        if retained is not None:
+            try:
+                artifact = SkillArtifact.from_text(retained.fact_text)
+            except (ValueError, KeyError, TypeError, json.JSONDecodeError):
+                artifact = None
+            if artifact is not None:
+                scope_fields = {
+                    "scope": artifact.scope,
+                    "tenant_ref": artifact.scope,
+                    "purpose": artifact.purpose,
+                    "isolation_domain_refs": artifact.isolation_domain_refs,
+                    "required_isolation_domain_refs": artifact.required_isolation_domain_refs,
+                    "project_ref": _project_ref(artifact.isolation_domain_refs),
+                }
         proposal = policy.Proposal(
             proposal_id=proposal_id or f"proposal:revoke:{skill_id}:v{current_version}",
             actor_id=actor_id,
             charter_version="procedural-memory-v1",
             target_reference=memory_ref,
             target_class=policy.M3,
-            scope="procedural-memory",
             operation="pruning",
             current_strength="promoted",
             proposed_strength="archived",
@@ -507,6 +525,7 @@ class ProceduralMemoryRuntime:
             risk_class="low",
             evidence_refs=evidence_refs,
             state_snapshot=f"v{current_version}",
+            **scope_fields,
         )
         result = self.adapter.governed_delete(proposal, fact_uuid)
         residue = tuple(self.adapter.undeclared_residue(fact_uuid))

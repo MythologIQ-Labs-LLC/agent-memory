@@ -172,6 +172,12 @@ def eligible_search(substrate, query: str, tenant: str, eligible, eligible_ident
         return [(fact, score) for fact, score in substrate.search(query, group_ids=[tenant]) if eligible(fact)]
 
 
+#: #786: one refusal for every governed write whose target has a live head outside the
+#: writer's scope. It names neither the reason nor the memory, and is never "stale" or
+#: "rejected", so the refused writer learns nothing about the protected memory's state.
+WRITE_TARGET_REFUSAL = "target_unavailable"
+
+
 @dataclass(frozen=True)
 class RecallContext:
     """Authority context for one governed recall request.
@@ -282,6 +288,57 @@ class GovernedMemoryAdapter:
             return policy.evaluate_with_external_verification(proposal, attestation)
         return policy.evaluate(proposal)
 
+    # -- #786 write-target authority -------------------------------------
+
+    def writer_context(self, *, isolation_domain_refs=(), scope: str = "", actor_id: str = "",
+                       project_ref: str = "", task_ref: str = "", purpose: str = "") -> RecallContext:
+        """The authority context a governed write carries: the same five fields recall binds.
+
+        Derived exactly as ``_write_scope`` derives the scope a new fact is stored under, so a
+        writer is held to the eligibility its own writes would carry. Public so a facade can
+        resolve its state snapshot under the same context the adapter will judge.
+        """
+        domain_refs = tuple(isolation_domain_refs) or ((scope,) if scope else (self._tenant,))
+        return RecallContext(target_domain_refs=domain_refs, principal_ref=actor_id,
+                             project_ref=project_ref, task_ref=task_ref, purpose=purpose)
+
+    def _writer_context(self, proposal: policy.Proposal) -> RecallContext:
+        return self.writer_context(
+            isolation_domain_refs=proposal.isolation_domain_refs, scope=proposal.scope,
+            actor_id=proposal.actor_id, project_ref=proposal.project_ref, task_ref=proposal.task_ref,
+            purpose=proposal.purpose)
+
+    def fact_eligible_for_writer(self, fact_uuid: str, proposal: policy.Proposal) -> bool:
+        """#786: may this proposal's writer act on ``fact_uuid``? The same tenant, isolation
+        domain, shared-membership, project and task gates recall applies (``_domain_identity_refusal``).
+        A fact without recorded scope is ineligible (fail closed, as on read)."""
+        return self.fact_eligible_in_context(fact_uuid, self._writer_context(proposal))
+
+    def fact_eligible_in_context(self, fact_uuid: str, context: RecallContext) -> bool:
+        fact = self._substrate.get_fact(fact_uuid)
+        group_id = fact.group_id if fact is not None else self._tenant
+        return self._domain_identity_refusal(fact_uuid, group_id, context) is None
+
+    def write_target_refusal(self, proposal: policy.Proposal) -> str | None:
+        """#786: a write that targets a logical memory with a live current fact must be
+        authorized for that fact's canonical scope.
+
+        No live head (never written, or governed-deleted) means the id is open: creation and
+        the #776 re-creation of a deleted id as a fresh generation are unchanged. A live head
+        outside the writer's scope refuses -- ``WRITE_TARGET_REFUSAL`` for a promotion, else the
+        same ``fact_not_found`` deletion and dispute report, naming neither the reason nor the
+        memory it protected -- before staleness,
+        readmission or the rejected-value registry are consulted, so nothing about the
+        protected memory reaches the refused writer.
+        """
+        head = self._current_fact_by_memory.get(proposal.target_reference)
+        if head is None or self.fact_eligible_for_writer(head, proposal):
+            return None
+        # an operation that presupposes an existing fact (correction, ...) reads as "no such
+        # fact", exactly as governed deletion and dispute do; a promotion onto a protected id
+        # cannot claim absence, so it reports only that the id is unavailable to this writer
+        return WRITE_TARGET_REFUSAL if proposal.operation == "promotion" else "fact_not_found"
+
     def commit_proposal(
         self,
         proposal: policy.Proposal,
@@ -332,8 +389,10 @@ class GovernedMemoryAdapter:
         only and grants nothing; PAMA decides exactly as without it.
         """
         correlation = self._ids.next()
-        if episode is not None:
-            self._substrate.add_episode(episode)
+        # #786: the target's live head decides whether this writer may act on it at all. The
+        # optional episode is retained only by a committed write (below); a refused proposal
+        # leaves no episodic content behind.
+        target_refusal = self.write_target_refusal(proposal)
         propose_event = self._event("memory.propose", proposal.target_reference, correlation)
 
         if evidence:
@@ -364,15 +423,23 @@ class GovernedMemoryAdapter:
         )
         events = [propose_event, authorize_event]
 
-        stale = self._is_stale(proposal)
-        readmission_blocked = self._readmission_blocked(proposal, fact_text, attestation)
-        selected = self._select_action(
-            decision,
-            proposal,
-            blocked_by_stale=stale or readmission_blocked,
-        )
-        commits = selected == proposal.operation
-        before_state = f"v{self._state_version.get(proposal.target_reference, 0)}"
+        if target_refusal is not None:
+            # the protected memory's version, staleness and rejected values are not this
+            # writer's to learn: the write is blocked exactly as a stale one is
+            stale, readmission_blocked = False, False
+            selected = self._select_action(decision, proposal, blocked_by_stale=True)
+            commits = False
+            before_state = "v0"
+        else:
+            stale = self._is_stale(proposal)
+            readmission_blocked = self._readmission_blocked(proposal, fact_text, attestation)
+            selected = self._select_action(
+                decision,
+                proposal,
+                blocked_by_stale=stale or readmission_blocked,
+            )
+            commits = selected == proposal.operation
+            before_state = f"v{self._state_version.get(proposal.target_reference, 0)}"
 
         if readmission_blocked:
             events.append(
@@ -387,6 +454,8 @@ class GovernedMemoryAdapter:
 
         fact_uuid = None
         if commits:
+            if episode is not None:
+                self._substrate.add_episode(episode)
             if proposal.operation == "correction":
                 self._supersede_current(proposal, replacement_kind, temporal)
                 self._rejected_values.readmit(
@@ -412,7 +481,7 @@ class GovernedMemoryAdapter:
                     policy_version=decision.policy_version,
                 )
             )
-        after_state = f"v{self._state_version.get(proposal.target_reference, 0)}"
+        after_state = "v0" if target_refusal is not None else f"v{self._state_version.get(proposal.target_reference, 0)}"
 
         receipt_id = self._ids.next()
         receipt = receipts.build_receipt(
@@ -444,10 +513,10 @@ class GovernedMemoryAdapter:
         )
         self.events.extend(events)
 
-        refusal = None
-        if stale:
+        refusal = target_refusal
+        if refusal is None and stale:
             refusal = "stale_authorization"
-        elif readmission_blocked:
+        elif refusal is None and readmission_blocked:
             refusal = "rejected_value_requires_reconciliation"
 
         return CommitResult(
@@ -1509,6 +1578,8 @@ class GovernedMemoryAdapter:
             return "fact_not_found"
         if fact.group_id != self._tenant:
             return "cross_tenant_dispute"
+        if not self.fact_eligible_for_writer(fact_uuid, proposal):
+            return "fact_not_found"  # #786: indistinguishable from a fact that does not exist
         bound_memory = self._fact_memory.get(fact_uuid)
         if bound_memory is None:
             return "target_binding_unknown"
@@ -1555,18 +1626,19 @@ class GovernedMemoryAdapter:
         events = [propose_event, authorize_event]
 
         refusal = self._dispute_refusal(proposal, fact_uuid)
-        stale = self._is_stale(proposal)
-        selected = self._select_action(decision, proposal, blocked_by_stale=stale)
+        stale = refusal is None and self._is_stale(proposal)
+        selected = self._select_action(decision, proposal, blocked_by_stale=stale or refusal is not None)
         committed = refusal is None and selected == proposal.operation
         if refusal is None and stale:
             refusal = "stale_decision"
-        before_state = f"v{self._state_version.get(proposal.target_reference, 0)}"
+        # #786: a refused dispute reports no version of a memory the writer may not act on
+        before_state = "v0" if refusal is not None else f"v{self._state_version.get(proposal.target_reference, 0)}"
 
         if committed:
             self._disputed.add(fact_uuid)
             self._state_version[proposal.target_reference] = self._state_version.get(proposal.target_reference, 0) + 1
 
-        after_state = f"v{self._state_version.get(proposal.target_reference, 0)}"
+        after_state = before_state if refusal is not None else f"v{self._state_version.get(proposal.target_reference, 0)}"
         receipt_id = self._ids.next()
         receipt = receipts.build_receipt(
             receipt_id=receipt_id,
@@ -1840,6 +1912,10 @@ class GovernedMemoryAdapter:
             return "fact_not_found"
         if fact.group_id != self._tenant:
             return "cross_tenant_delete"
+        if not self.fact_eligible_for_writer(fact_uuid, proposal):
+            # #786: a fact outside the writer's scope reads as absent, before the binding map
+            # could confirm it exists. Ordered after the tenant check so LD4 still holds.
+            return "fact_not_found"
         bound_memory = self._fact_memory.get(fact_uuid)
         if bound_memory is None:
             # Unknown provenance is not permission -- same stance as Loop 3's
@@ -1897,12 +1973,13 @@ class GovernedMemoryAdapter:
         # fact must not report a tenant error, and a foreign fact must not report
         # a binding error.
         refusal = self._delete_refusal(proposal, fact_uuid)
-        stale = self._is_stale(proposal)
-        selected = self._select_action(decision, proposal, blocked_by_stale=stale)
+        stale = refusal is None and self._is_stale(proposal)
+        selected = self._select_action(decision, proposal, blocked_by_stale=stale or refusal is not None)
         committed = refusal is None and selected == proposal.operation
         if refusal is None and stale:
             refusal = "stale_decision"
-        before_state = f"v{self._state_version.get(proposal.target_reference, 0)}"
+        # #786: a refused deletion reports no version of a memory the writer may not act on
+        before_state = "v0" if refusal is not None else f"v{self._state_version.get(proposal.target_reference, 0)}"
 
         if committed:
             # #776: deletion belongs to the logical memory -- record the lineage it covers.
@@ -1947,7 +2024,7 @@ class GovernedMemoryAdapter:
             selection_mode=self._selector.mode if selected != receipts.NO_ACTION else "none",
             timestamp=self._clock.now(),
             before_state=before_state,
-            after_state=f"v{self._state_version.get(proposal.target_reference, 0)}",
+            after_state=before_state if refusal is not None else f"v{self._state_version.get(proposal.target_reference, 0)}",
         )
         pama_decision = receipts.build_pama_decision(
             proposal, decision, selected, self._selector.mode if selected != receipts.NO_ACTION else None, receipt_id

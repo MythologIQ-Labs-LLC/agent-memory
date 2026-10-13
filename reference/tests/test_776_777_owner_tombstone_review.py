@@ -171,10 +171,14 @@ class PermanentDeletionVisibility(unittest.TestCase):
         corpus = corpus_for(rule(rule_id=f"rule:777r:{memory}:purge", target=memory,
                                  criterion="permanent-deletion", from_state="current", to_values=("deleted",)))
         self._verifiers.append(corpus.verifier())
+        # the purge is the owner's: it carries the handle's own scope (#786 holds every write,
+        # deletion included, to the targeted head's tenant/domain/project eligibility)
         proposal = replace(_proposal(f"proposal:777r:{memory}:purge", operation="permanent_deletion",
                                      project_ref=self.PROJECT),
                            target_reference=memory, review_satisfied=True, approval_refs=("approval:dpo",),
-                           reversibility="irreversible")
+                           reversibility="irreversible", scope=self.PROJECT, tenant_ref=self.TENANT,
+                           isolation_domain_refs=(self.TENANT, self.PROJECT),
+                           required_isolation_domain_refs=(self.TENANT, self.PROJECT), purpose="c644")
         with memory_handle.runtime.serialization_lock:
             out = memory_handle.runtime.delete_current(
                 proposal, evidence=corpus.evidence_for(target_reference=memory, criterion="permanent-deletion",

@@ -559,6 +559,40 @@ class AgentMemory:
     def _domain_refs(self) -> tuple[str, ...]:
         return tuple(dict.fromkeys((self.tenant, self.scope)))
 
+    def _writer_context(self, envelope: Mapping[str, Any]):
+        """#786: the authority context of one proposal envelope, overrides applied: a host
+        that declares another scope through ``overrides`` is judged under that scope, exactly
+        as the adapter will judge the proposal."""
+        return self.runtime.adapter.writer_context(
+            isolation_domain_refs=tuple(envelope.get("isolation_domain_refs") or ()),
+            scope=str(envelope.get("scope") or ""), actor_id=self.actor_id,
+            project_ref=str(envelope.get("project_ref") or ""), task_ref=str(envelope.get("task_ref") or ""),
+            purpose=str(envelope.get("purpose") or ""))
+
+    def _visible_head(self, target_reference: str, envelope: Mapping[str, Any]) -> str | None:
+        """#786: the target's current fact if this proposal's writer may act on it, else None.
+
+        A live head outside the writer's scope is reported exactly as no head at all, so a
+        correction, forget or dispute from another project reads as ``fact_not_found`` --
+        indistinguishable from an id nobody ever wrote. The canonical refusal lives in the
+        adapter (``write_target_refusal``, ``_delete_refusal``, ``_dispute_refusal``); this
+        only keeps the facade result shape identical to the unknown-id case.
+        """
+        adapter = self.runtime.adapter
+        head = adapter.current_fact_uuid(target_reference)
+        if head is None or not adapter.fact_eligible_in_context(head, self._writer_context(envelope)):
+            return None
+        return head
+
+    def _state_snapshot(self, target_reference: str, envelope: Mapping[str, Any]) -> str:
+        """The state version this proposal's authority is resolved against. A live head the
+        writer may not act on contributes nothing (#786): the proposal, its id and its receipt
+        then carry ``v0`` rather than the protected memory's version."""
+        adapter = self.runtime.adapter
+        if adapter.current_fact_uuid(target_reference) is not None and self._visible_head(target_reference, envelope) is None:
+            return "v0"
+        return f"v{adapter.state_version(target_reference)}"
+
     def _proposal(
         self,
         *,
@@ -579,22 +613,8 @@ class AgentMemory:
         self._require_open()
         if not target_reference:
             raise ValueError("target_reference must be non-empty")
-        state_snapshot = f"v{self.runtime.adapter.state_version(target_reference)}"
-        refs = tuple(evidence_refs) or ((_content_ref(fact_text),) if fact_text else (f"state:{state_snapshot}",))
-        material = {
-            "actor_id": self.actor_id,
-            "charter_version": self.charter_version,
-            "target_reference": target_reference,
-            "operation": operation,
-            "state_snapshot": state_snapshot,
-            "scope": self.scope,
-            "tenant_ref": self.tenant,
-            "fact_ref": _content_ref(fact_text) if fact_text else "",
-            "risk_class": risk_class,
-        }
         envelope: dict[str, object] = {
             "contract_version": contract.CONTRACT_VERSION,
-            "proposal_id": "facade:" + hashlib.sha256(_canonical_bytes(material)).hexdigest(),
             "actor_id": self.actor_id,
             "charter_version": self.charter_version,
             "target_reference": target_reference,
@@ -606,8 +626,6 @@ class AgentMemory:
             "downstream_authority": downstream_authority,
             "reversibility": reversibility,
             "risk_class": risk_class,
-            "evidence_refs": list(refs),
-            "state_snapshot": state_snapshot,
             "tenant_ref": self.tenant,
             "purpose": self.purpose if purpose is None else purpose,
             "isolation_domain_refs": list(self._domain_refs()),
@@ -622,6 +640,24 @@ class AgentMemory:
             if attempted:
                 raise ValueError(f"facade proposal overrides may not replace protected fields: {sorted(attempted)}")
             envelope.update(dict(overrides))
+        # #786: the snapshot is resolved under the proposal's effective scope (overrides applied)
+        state_snapshot = self._state_snapshot(target_reference, envelope)
+        refs = tuple(evidence_refs) or ((_content_ref(fact_text),) if fact_text else (f"state:{state_snapshot}",))
+        material = {
+            "actor_id": self.actor_id,
+            "charter_version": self.charter_version,
+            "target_reference": target_reference,
+            "operation": operation,
+            "state_snapshot": state_snapshot,
+            "scope": self.scope,
+            "tenant_ref": self.tenant,
+            "fact_ref": _content_ref(fact_text) if fact_text else "",
+            "risk_class": risk_class,
+        }
+        envelope["proposal_id"] = "facade:" + hashlib.sha256(_canonical_bytes(material)).hexdigest()
+        envelope["state_snapshot"] = state_snapshot
+        if "evidence_refs" not in (overrides or {}):
+            envelope["evidence_refs"] = list(refs)
         contract.validate_proposal_envelope(envelope)
         return envelope
 
@@ -762,8 +798,18 @@ class AgentMemory:
         )
         if replacement_kind not in REPLACEMENT_KINDS:
             raise ValueError(f"unknown replacement_kind {replacement_kind!r}")
-        current = self.runtime.adapter.current_fact_uuid(target_reference)
-        if current is None:
+        envelope = self._proposal(
+            target_reference=target_reference,
+            fact_text=fact_text,
+            operation="correction",
+            current_strength="reinforced",
+            proposed_strength="reinforced",
+            risk_class=risk_class,
+            evidence_refs=evidence_refs,
+            purpose=purpose,
+            overrides=overrides,
+        )
+        if self._visible_head(target_reference, envelope) is None:
             return contract.result(
                 "commit",
                 contract.CURRENT,
@@ -771,19 +817,7 @@ class AgentMemory:
                 fact_uuid=None,
                 refusal="fact_not_found",
             )
-        proposal = contract.proposal_from_envelope(
-            self._proposal(
-                target_reference=target_reference,
-                fact_text=fact_text,
-                operation="correction",
-                current_strength="reinforced",
-                proposed_strength="reinforced",
-                risk_class=risk_class,
-                evidence_refs=evidence_refs,
-                purpose=purpose,
-                overrides=overrides,
-            )
-        )
+        proposal = contract.proposal_from_envelope(envelope)
         outcome = self.runtime.correct(
             proposal,
             fact_text,
@@ -894,18 +928,9 @@ class AgentMemory:
         separate from correction/supersession and grants no truth or currentness authority.
         """
         self._require_open()
-        target_fact = fact_uuid or self.runtime.adapter.current_fact_uuid(target_reference)
-        if not target_fact:
-            return contract.result(
-                "commit",
-                contract.CURRENT,
-                committed=False,
-                fact_uuid=None,
-                refusal="fact_not_found",
-            )
-        refs = tuple(dict.fromkeys((f"fact:{target_fact}", *tuple(evidence_refs))))
-        proposal = contract.proposal_from_envelope(
-            self._proposal(
+
+        def envelope_for(refs):
+            return self._proposal(
                 target_reference=target_reference,
                 operation="other",
                 current_strength="reinforced",
@@ -915,7 +940,21 @@ class AgentMemory:
                 purpose=purpose,
                 overrides=overrides,
             )
-        )
+
+        probe = envelope_for(tuple(evidence_refs))
+        target_fact = fact_uuid or self._visible_head(target_reference, probe)
+        if target_fact and not self.runtime.adapter.fact_eligible_in_context(target_fact, self._writer_context(probe)):
+            target_fact = None  # #786: a named fact outside the writer's scope reads as absent
+        if not target_fact:
+            return contract.result(
+                "commit",
+                contract.CURRENT,
+                committed=False,
+                fact_uuid=None,
+                refusal="fact_not_found",
+            )
+        refs = tuple(dict.fromkeys((f"fact:{target_fact}", *tuple(evidence_refs))))
+        proposal = contract.proposal_from_envelope(envelope_for(refs))
         outcome = self.runtime.dispute(
             proposal,
             target_fact,
@@ -1088,7 +1127,19 @@ class AgentMemory:
     ) -> dict:
         """Tombstone by default; permanent deletion remains a stricter explicit request."""
         self._require_open()
-        if self.runtime.adapter.current_fact_uuid(target_reference) is None:
+        operation = "permanent_deletion" if permanent else "pruning"
+        envelope = self._proposal(
+            target_reference=target_reference,
+            operation=operation,
+            current_strength="reinforced",
+            proposed_strength="not_applicable" if permanent else "archived",
+            reversibility="irreversible" if permanent else "reversible",
+            risk_class=risk_class or ("high" if permanent else "low"),
+            evidence_refs=evidence_refs,
+            purpose=purpose,
+            overrides=overrides,
+        )
+        if self._visible_head(target_reference, envelope) is None:
             return contract.result(
                 "forget",
                 contract.CURRENT,
@@ -1096,20 +1147,7 @@ class AgentMemory:
                 fact_uuid=None,
                 refusal="fact_not_found",
             )
-        operation = "permanent_deletion" if permanent else "pruning"
-        proposal = contract.proposal_from_envelope(
-            self._proposal(
-                target_reference=target_reference,
-                operation=operation,
-                current_strength="reinforced",
-                proposed_strength="not_applicable" if permanent else "archived",
-                reversibility="irreversible" if permanent else "reversible",
-                risk_class=risk_class or ("high" if permanent else "low"),
-                evidence_refs=evidence_refs,
-                purpose=purpose,
-                overrides=overrides,
-            )
-        )
+        proposal = contract.proposal_from_envelope(envelope)
         outcome = self.runtime.delete_current(
             proposal,
             evidence=list(evidence) or None,
