@@ -1,0 +1,19 @@
+# 1000 fresh remember() calls, SQLite facade, three A/B alternations under one filesystem (060e7cd7 vs 8d7ed43f)
+== 060e7cd
+writes   750- 1000:    1.49s  (   6.0 ms/write)  cumulative    6.11s
+recall: 155.0 ms
+== 8d7ed43f
+writes   750- 1000:    1.57s  (   6.3 ms/write)  cumulative    6.10s
+recall: 144.8 ms
+== 060e7cd
+writes   750- 1000:    1.59s  (   6.3 ms/write)  cumulative    6.41s
+recall: 153.5 ms
+== 8d7ed43f
+writes   750- 1000:    1.61s  (   6.5 ms/write)  cumulative    6.64s
+recall: 192.7 ms
+== 060e7cd
+writes   750- 1000:    1.43s  (   5.7 ms/write)  cumulative    6.01s
+recall: 208.6 ms
+== 8d7ed43f
+writes   750- 1000:    1.51s  (   6.1 ms/write)  cumulative    6.02s
+recall: 151.1 ms

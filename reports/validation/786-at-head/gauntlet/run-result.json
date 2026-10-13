@@ -1,26 +1,26 @@
 {
   "adapter": {
     "id": "agent-memory-runtime-baseline-v7-stdio",
-    "revision": "git-blob:aebef4b9a3b75b68775abefaf964840d4fc44fc4",
+    "revision": "git-blob:dcaad08a063f83b56176c3f23e5a0b96fe96bf00",
     "transport": "stdio",
     "version": "0.1.0"
   },
   "artifacts": {
     "adapter_manifest": {
-      "path": "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/gauntlet-36a6ef4/gauntlet-gauntlet-orchestration-retrieval-probe-v1-agent-memory-runtime-candidate-36a6ef4d-8690d8f8fedf/adapter-manifest.json",
-      "sha256": "41c8e50503de77fef8dbd83616a59631b476b915b8238b9610ffd5500ea2fa26"
+      "path": "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/gauntlet-8d7ed43f/gauntlet-gauntlet-orchestration-retrieval-probe-v1-agent-memory-runtime-candidate-8d7ed43f3e7e042310781788d2eff-605bc404c265/adapter-manifest.json",
+      "sha256": "5bdb628522aba31b0717bc9c42052f432ec7b32c81ff7c87212499e993c058c0"
     },
     "native_results": {
-      "path": "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/gauntlet-36a6ef4/gauntlet-gauntlet-orchestration-retrieval-probe-v1-agent-memory-runtime-candidate-36a6ef4d-8690d8f8fedf/native-results.json",
-      "sha256": "7dccf91138f10e33cb9a049c0f743b774f9b2bf3b02325f4e1c5e4e41761100f"
+      "path": "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/gauntlet-8d7ed43f/gauntlet-gauntlet-orchestration-retrieval-probe-v1-agent-memory-runtime-candidate-8d7ed43f3e7e042310781788d2eff-605bc404c265/native-results.json",
+      "sha256": "7cbd11817400bf5224424165b4b2099a109e1013a7197f889929b5bf83f5ef89"
     },
     "normalized_run": {
-      "path": "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/gauntlet-36a6ef4/gauntlet-gauntlet-orchestration-retrieval-probe-v1-agent-memory-runtime-candidate-36a6ef4d-8690d8f8fedf/normalized-run.json",
-      "sha256": "055ef5112f3f05f325c7cbafaaad7952de137881e0d50a5b29d869ccf292b1dd"
+      "path": "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/gauntlet-8d7ed43f/gauntlet-gauntlet-orchestration-retrieval-probe-v1-agent-memory-runtime-candidate-8d7ed43f3e7e042310781788d2eff-605bc404c265/normalized-run.json",
+      "sha256": "a953890f8de8e3744a80b683bebc1f66a3132416abad5f56cda5726a4df55b66"
     },
     "qualification": {
-      "path": "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/gauntlet-36a6ef4/gauntlet-gauntlet-orchestration-retrieval-probe-v1-agent-memory-runtime-candidate-36a6ef4d-8690d8f8fedf/qualification.json",
-      "sha256": "3016431cb9407e10ad70d93d8559292ec0034b4707c67aab39b90a07b708e828"
+      "path": "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/gauntlet-8d7ed43f/gauntlet-gauntlet-orchestration-retrieval-probe-v1-agent-memory-runtime-candidate-8d7ed43f3e7e042310781788d2eff-605bc404c265/qualification.json",
+      "sha256": "05df6e8121ed44d7925c0f886f1d2cd7d1868afe452018bbb60652869cfaed6c"
     }
   },
   "authority_effect": "none",
@@ -34,13 +34,13 @@
     "reproducibility": "measured",
     "retrieval": "measured"
   },
-  "manifest_digest_sha256": "41c8e50503de77fef8dbd83616a59631b476b915b8238b9610ffd5500ea2fa26",
+  "manifest_digest_sha256": "5bdb628522aba31b0717bc9c42052f432ec7b32c81ff7c87212499e993c058c0",
   "negotiation": {
     "adapter_id": "agent-memory-runtime-baseline-v7-stdio",
     "authority_effect": "none",
     "contract_family": "agent-memory-gauntlet-capability-negotiation",
     "contract_version": "0.1.0",
-    "manifest_digest": "41c8e50503de77fef8dbd83616a59631b476b915b8238b9610ffd5500ea2fa26",
+    "manifest_digest": "5bdb628522aba31b0717bc9c42052f432ec7b32c81ff7c87212499e993c058c0",
     "optional": [
       {
         "accepted_support": [
@@ -98,19 +98,19 @@
         "state": "satisfied"
       }
     ],
-    "system_id": "agent-memory-runtime-candidate-36a6ef4d"
+    "system_id": "agent-memory-runtime-candidate-8d7ed43f3e7e042310781788d2eff"
   },
   "profile": {
     "description": "Deterministic three-record retrieval probe used to qualify Gauntlet orchestration, adapter transport, evidence normalization, and failure attribution. It is not an external efficacy benchmark.",
     "kind": "baseline_or_probe",
     "profile_id": "gauntlet-orchestration-retrieval-probe-v1"
   },
-  "run_id": "gauntlet-gauntlet-orchestration-retrieval-probe-v1-agent-memory-runtime-candidate-36a6ef4d-8690d8f8fedf",
+  "run_id": "gauntlet-gauntlet-orchestration-retrieval-probe-v1-agent-memory-runtime-candidate-8d7ed43f3e7e042310781788d2eff-605bc404c265",
   "schema_version": "0.1.0",
   "status": "complete",
   "system": {
-    "id": "agent-memory-runtime-candidate-36a6ef4d",
+    "id": "agent-memory-runtime-candidate-8d7ed43f3e7e042310781788d2eff",
     "kind": "agent_memory",
-    "revision": "git-commit:36a6ef4d"
+    "revision": "git-commit:8d7ed43f3e7e042310781788d2eff72a6cf65763"
   }
 }

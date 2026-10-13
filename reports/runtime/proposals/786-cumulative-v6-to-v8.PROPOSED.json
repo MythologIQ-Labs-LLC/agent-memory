@@ -10,7 +10,7 @@
     },
     {
       "path": "reference/agentmem_ref/api/surface.py",
-      "blob": "851e7db6a437d0deb91cb84c928acd345965b89b"
+      "blob": "ab3a250c29ec76ac1c1a7ec157339387e0a523cd"
     },
     {
       "path": "reference/agentmem_ref/evidence_sufficiency.py",
@@ -22,7 +22,7 @@
     },
     {
       "path": "reference/agentmem_ref/memory/procedural_memory.py",
-      "blob": "df52cdc8e52f1fe7d040ec6de46584dae2f63dad"
+      "blob": "f94ca5b277744523b442f039dc2cf8ef8978f75c"
     },
     {
       "path": "reference/agentmem_ref/recall_observation_receipt.py",
@@ -30,7 +30,7 @@
     },
     {
       "path": "reference/agentmem_ref/runtime/adapter.py",
-      "blob": "e0421e4494fb51f8cfbef0157dfc523f30a96b20"
+      "blob": "3b932bfb33e3dfcd8c2f1bf205bb69563813a36a"
     },
     {
       "path": "reference/agentmem_ref/runtime/evidence_sufficiency.py",

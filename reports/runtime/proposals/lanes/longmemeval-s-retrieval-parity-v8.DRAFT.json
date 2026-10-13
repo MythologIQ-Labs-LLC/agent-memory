@@ -205,7 +205,7 @@
           "predecessor": "agent-memory-runtime-baseline-v6",
           "declared_successor": "agent-memory-runtime-baseline-v8",
           "declaration": "reports/runtime/proposals/786-cumulative-v6-to-v8.PROPOSED.json",
-          "declaration_blob": "450116091c04185e2e8fcbd59e382d36b3f355a4",
+          "declaration_blob": "1d8a4fa7bbb654b25ddfb6fffd283ab8ef42da17",
           "checker_state_required": [
             "PASS",
             "TRANSITION"
@@ -264,7 +264,7 @@
           "predecessor": "agent-memory-runtime-baseline-v6",
           "declared_successor": "agent-memory-runtime-baseline-v8",
           "declaration": "reports/runtime/proposals/786-cumulative-v6-to-v8.PROPOSED.json",
-          "declaration_blob": "450116091c04185e2e8fcbd59e382d36b3f355a4",
+          "declaration_blob": "1d8a4fa7bbb654b25ddfb6fffd283ab8ef42da17",
           "checker_state_required": [
             "PASS",
             "TRANSITION"
@@ -442,7 +442,7 @@
           "predecessor": "agent-memory-runtime-baseline-v6",
           "declared_successor": "agent-memory-runtime-baseline-v8",
           "declaration": "reports/runtime/proposals/786-cumulative-v6-to-v8.PROPOSED.json",
-          "declaration_blob": "450116091c04185e2e8fcbd59e382d36b3f355a4",
+          "declaration_blob": "1d8a4fa7bbb654b25ddfb6fffd283ab8ef42da17",
           "checker_state_required": [
             "PASS",
             "TRANSITION"
