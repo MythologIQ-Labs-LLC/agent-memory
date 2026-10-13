@@ -90,3 +90,21 @@ result = gateway.decide(
 **Critical cross-dependency:** #777 requires deleted-lineage identifier redaction before ordinary caller-facing read projections. #691's consumer package must not bypass that by reading an unfiltered substrate and returning `Fact.fact_text`. The interim host-reader binding here is suitable only for locally held, already-authorized synthetic evidence; it is not a substitute for a privileged read API. A correct production solution will need a governed same-snapshot text projection and an explicit outbound data classification/egress policy.
 
 **Local isolated test evidence:** 16 offline unit tests passed on Python 3.13 in an isolated code snapshot (7 original context port tests + 9 gateway tests); Python compilation passed. This is **not** the full-repository test suite or end-to-end Jev/GLiDE performance validation. The public-facade integration test requires the repository's full dependencies and remains unexecuted in this environment. No hosted CI was started.
+
+
+## Shared System One transport mapping: GLiDE and Jev
+
+`reference/agentmem_ref/system_one.py` implements the **same typed question/answer wire mapping** for two supported hosted System One endpoints. This is an offline-tested *transport adapter*, not a live deployment.
+
+First-party protocol references checked 2026-10-13:
+
+- Fastino GLiDE launch/API example: https://fastino.ai/blog/introducing-glide-the-first-thinking-decision-model
+- TypeSafe Jev OpenAPI/ReDoc: https://api.typesafe.ai/redoc
+
+Both accept `POST /v1/systemone` with `model`, `state`, and named `questions`. A choice question uses `type: choice`, `instructions`, and `criteria`; the response has a named `answers` record with choice/probabilities. The provider adapter uses the single name `decision` and will refuse mismatched model identifiers or incompatible response types. It **does not** silently resolve drifting model aliases: use a pinned available model where possible, and verify actual model discovery with authorized API access.
+
+The projected outbound state contains only `purpose`, the context completeness flag, and bounded evidence `text` with neutral `e1` etc. labels. It intentionally omits internal memory UUIDs, tenant/scope refs, provenance refs and hashes. No model call is authorized by a model's confidence or output.
+
+**No built-in HTTP implementation:** `SystemOneProvider(vendor, model, transport)` requires a trusted, host-injected `post_json()` transport plus `DecisionGateway(..., egress_authorizer=...)`. Authentication, TLS verification, timeouts, retries, connection policy, credential storage, privacy/data retention, live model discovery, and spend limits remain external host obligations and are NOT qualified here. Provider-result request binding is at the synchronous trusted transport layer, not a cryptographic proof of the vendor response.
+
+**Offline evidence:** 20 isolated unit tests now pass: seven core context-port checks, nine decision-gateway checks, and four shared System One adapter checks. These are mocked and do not establish API availability, real model quality or beneficiary value. The public facade integration test has **not** run here because the full repository and dependencies were unavailable. No hosted GitHub Actions or paid model inference was run.
