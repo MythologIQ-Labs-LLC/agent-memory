@@ -30,6 +30,20 @@ class DecisionRequest:
     provider_ref: str
 
 
+@dataclass(frozen=True)
+class EgressDecision:
+    """Host policy outcome bound to the exact model request and provider."""
+
+    request_ref: str
+    provider_ref: str
+    permitted: bool
+    authorization_ref: str
+
+
+class EgressAuthorizer(Protocol):
+    def authorize(self, request: DecisionRequest) -> EgressDecision: ...
+
+
 class DecisionProvider(Protocol):
     provider_ref: str
     remote: bool
@@ -41,6 +55,7 @@ class DecisionProvider(Protocol):
 class DecisionGateway:
     context_port: DecisionContextPort
     provider: DecisionProvider
+    egress_authorizer: EgressAuthorizer | None = None
 
     def decide(
         self,
@@ -50,7 +65,6 @@ class DecisionGateway:
         purpose: str,
         max_items: int = 8,
         max_chars: int = 4000,
-        remote_egress_authorization_ref: str | None = None,
     ) -> dict:
         if not isinstance(question, str) or not question.strip():
             raise DecisionContractError("decision question must be non-empty")
@@ -64,10 +78,9 @@ class DecisionGateway:
             raise DecisionContractError("provider identity must be explicit")
         if not isinstance(self.provider.remote, bool):
             raise DecisionContractError("provider remote/local posture must be explicit")
-        if self.provider.remote and not remote_egress_authorization_ref:
+        if self.provider.remote and self.egress_authorizer is None:
             # Check BEFORE any recall/resolution, not merely before transport.
-            # An authorization ref is host-asserted here; the host must verify it.
-            raise DecisionContractError("remote egress requires an explicit host authorization reference")
+            raise DecisionContractError("remote egress requires a host policy authorizer")
         context = self.context_port.assemble(question, purpose=purpose, max_items=max_items, max_chars=max_chars)
         if context.get("kind") != "decision_context" or context.get("authority_effect") != "none":
             raise DecisionContractError("context contract is invalid")
@@ -85,6 +98,16 @@ class DecisionGateway:
         canonical = json.dumps(envelope, sort_keys=True, ensure_ascii=False, separators=(",", ":"), allow_nan=False)
         ref = "sha256:" + sha256(canonical.encode("utf-8")).hexdigest()
         request = DecisionRequest(ref, question, choices, context, self.provider.provider_ref)
+        if self.provider.remote:
+            decision = self.egress_authorizer.authorize(request)
+            if not isinstance(decision, EgressDecision) or not (
+                decision.permitted is True
+                and decision.request_ref == ref
+                and decision.provider_ref == self.provider.provider_ref
+                and isinstance(decision.authorization_ref, str)
+                and decision.authorization_ref.strip()
+            ):
+                raise DecisionContractError("host egress authorization refused or mismatched")
         response = self.provider.decide(request)
         if not isinstance(response, Mapping):
             raise DecisionContractError("provider must return a mapping")
