@@ -45,3 +45,35 @@ Source repository: `MythologIQ-Labs-LLC/agent-memory`, `main` at `3eebb6d54e2a21
 **Engineering impact:** The current 58 qualified leaderboard rows represent historical v1/v2 evidence. This should be disclosed prominently until the canonical dashboard and source evidence are reconciled, even though newer runtime measurements appear present.
 
 This artifact is intentionally separate from Claude's runtime and leaderboard implementation branches, so it can be independently reviewed or discarded without affecting either.
+
+
+## Follow-up: verified integration-descriptor report bindings
+
+This follow-up is materially stronger than mere lane-file discovery. Using authenticated GitHub contents reads against **the same exact main SHA** above, the audit loaded both registered integration descriptors:
+
+- AMB: `reference/agentmem_ref/evaluation/integrations/amb-precisionmembench-retrieval-v1.json` at blob `8caa765175192e87aca6875b9282fac46d6d6865` (descriptor admission state `evidence_partial` because unexecuted variants remain blocked).
+- LongMemEval: `reference/agentmem_ref/evaluation/integrations/agent-memory-longmemeval-retrieval-currentness-v1.json` at blob `888708408d96a2f3bf5d4ad527961530fe4d6137` (also `evidence_partial`).
+
+**Every one of 41 `status: complete` records in v3–v6 was followed to its actual committed `report` JSON**, parsed, and checked against the descriptor's `variant`, `input_sha256`, and `system_revision`. All 41 passed. Additional checks: exact report `lane_id`, `authority_effect: none`, full selection (AMB `execution.full_selection: true`; LongMemEval `execution.subset_size: "0"`), and correct session/turn plane for LongMemEval. Each record's Git blob SHA and workflow run ID was captured below, not inferred from filenames.
+
+| Frozen generation | AMB complete | LongMemEval complete | Subject/control/comparator ordinary runs | Extra Agent Memory variant runs |
+| --- | ---: | ---: | ---: | ---: |
+| v3 | 3 | 8 | 9 | 2 semantic variants |
+| v4 | 4 | 8 | 9 | 3 shadow variants |
+| v5 | 3 | 6 | 9 | 0 |
+| v6 | 3 | 6 | 9 | 0 |
+| **v3–v6 total** | **13** | **28** | **36** | **5** |
+
+Three exact-source machine-readable inventories are included in this PR:
+
+- [AMB v3–v6 bindings](2026-10-13-amb-v3-v6-source-bindings.json): 13 report identities.
+- [LongMemEval v3–v4 bindings](2026-10-13-longmemeval-v3-v4-source-bindings.json): 16 report identities.
+- [LongMemEval v5–v6 bindings](2026-10-13-longmemeval-v5-v6-source-bindings.json): 12 report identities.
+
+These identities are sufficient to establish that later accepted integration-descriptor entries **exist** and bind to concrete same-lane, same-input, same-revision, full-selection source reports. They are stronger than a Markdown claim or a lane `status` string. The original four-record `frozen_lanes` inventory plainly has an unreflected acceptance history.
+
+**Still not independently verified:** source `files` SHA-256 bytes against the repository objects, full importer/normalizer re-execution, exact declaration blob validity and freeze-before-scoring chronology for every row, and resulting derived F1 catalog scorecard equivalence. The raw reports continue to describe their own evidence class as `same_harness_external_candidate`; the integration descriptor's completed acceptance is a separate governance event. Do not collapse those statuses.
+
+**Recommendation:** approve a distinct, gated *canonical evidence registry reconciliation* for the eight omitted lanes after the four residual checks above. Keep historical generations separated, include the five diagnostic variants solely as measured reference rows rather than extra independent competitors, and only then rebuild `catalog.json`, `frontier-leaderboards.json`, and the static viewer snapshot. Do not alter PR #785 itself merely to force an optimistic newer leaderboard.
+
+This follow-up is read-only. Its checks were performed through GitHub source reads and parsed metadata comparisons; **no Python test suite, importer replay, independent external scorer, or CI execution is claimed**.
