@@ -68,6 +68,8 @@ def attribute_hits(
             raise ValueError("source mapping must use nonempty strings")
         if doc_id not in allowed_document_ids:
             raise ValueError("ingestion map includes an out-of-scope document ID")
+        if handle in allowed_document_ids and handle != doc_id:
+            raise ValueError("a native handle that names an allowed document ID must map to itself")
     if allowed_document_ids - set(source_handles.values()):
         # An un-ingested document can never be retrieved, so scoring it would turn an
         # ingestion failure into a scored miss. The adapter must record ingestion
