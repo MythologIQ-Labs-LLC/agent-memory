@@ -68,10 +68,11 @@ def source_inventory(root: Path) -> dict[str, str]:
     sources = set()
     for rel in SOURCE_PATHS:
         sources.add(root / rel)
-    for sub in ("amb", "longmemeval", "replays", "dashboard"):
-        folder = root / "reports/benchmarks" / sub
-        if folder.exists():
-            sources.update(folder.rglob("*.json"))
+    benchmark_root = root / "reports/benchmarks"
+    excluded = {"ui", "normalized", "scorecards"}
+    if benchmark_root.exists():
+        sources.update(p for p in benchmark_root.rglob("*.json")
+                       if p.relative_to(benchmark_root).parts[0] not in excluded)
     for folder in (root / "reference/agentmem_ref/evaluation/lanes",):
         if folder.exists():
             sources.update(folder.rglob("*.json"))
@@ -98,8 +99,7 @@ def compute_status(root: Path = ROOT, *, registered: set[str] | None = None) -> 
     inventory = source_inventory(root)
     registered = registered_evidence() if registered is None else registered
     candidates = sorted(path for path in inventory
-                        if path.endswith("/evidence.json") and
-                        path.startswith(("reports/benchmarks/amb/", "reports/benchmarks/longmemeval/")) and
+                        if path.endswith("/evidence.json") and path.startswith("reports/benchmarks/") and
                         path not in registered)
     for rel in GENERATED:
         if not (root / rel).is_file():
