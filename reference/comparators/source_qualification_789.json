@@ -36,14 +36,17 @@
       "api_surface": "Graphiti.add_episode and Graphiti.search; public temporal-graph source",
       "candidate_task_profile": "longmemeval-s-retrieval-parity",
       "adapter_semantics": "Episode ingestion; edge provenance may identify one or multiple episodes. Native search hits must be traced to benchmark source episodes; graph association alone is not exact-source attribution.",
-      "source_id_status": "unproven",
+      "source_id_status": "source_level_feasible_unverified_runtime",
       "required_backend": "Neo4j/FalkorDB or other configured supported graph database",
       "model_requirement": "LLM+embedder provider for graph construction; default uses OpenAI, local OpenAI-compatible may be attempted as a separate pinned profile",
       "cost_authorization": "no_paid_provider",
       "compatibility_status": "not_run",
-      "next_gate": "Run dependency/install smoke, inspect native edge source provenance, verify strictly one-to-one or explicitly ambiguous mapping in full retrieval; freeze local provider models, configs and dataset before execution.",
+      "next_gate": "Execute real Graphiti add_episode(uuid=...) -> search() with pinned graph DB/LLM/embedder and verify every EntityEdge.episodes handle resolves to an actual same-input episode, with mixed-source edges excluded from exact-source credit.",
       "identity_risk": "An edge may be supported by several source episodes; assigning it arbitrarily to a benchmark item is a false positive.",
-      "profile_caveat": "OSS Graphiti is not the proprietary Zep cloud service."
+      "profile_caveat": "OSS Graphiti is not the proprietary Zep cloud service.",
+      "source_edge_model_git_blob": "28c170355e02a569b60c5e070f019572889ace82",
+      "source_graphiti_api_git_blob": "7555a1f828c4b94970911876bfd257aaa4577d4c",
+      "source_id_evidence": "EntityEdge.episodes:list[str] references source episode UUIDs; Graphiti.add_episode accepts optional caller UUID; Graphiti.search returns EntityEdge[]"
     },
     {
       "system_id": "cognee-oss",
