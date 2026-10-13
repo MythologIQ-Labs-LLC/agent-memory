@@ -177,6 +177,23 @@ class FrontierProjectionTests(unittest.TestCase):
         self.assertIsNone(unranked[0]["gap_to_leader_native"])
         self.assertEqual(out["aggregate_score"], None)
 
+    def test_ineligible_same_harness_does_not_claim_accepted_coverage(self):
+        obj = fixture()
+        comparison = obj["comparison_sets"][0]
+        comparison["comparison_state"] = "incompatible_protocol"
+        out = build_frontier_leaderboard(obj)
+        self.assertEqual(out["leaderboards"][0]["ranking_state"], "non_comparable")
+        self.assertEqual(out["metric_coverage"][0]["state"], "no_accepted_comparison")
+        self.assertIsNone(out["metric_coverage"][0]["gap_to_leader_native"])
+
+    def test_missing_agent_or_peer_does_not_claim_ranked_coverage(self):
+        for excluded in ("agent-memory", "mem0-oss"):
+            with self.subTest(excluded=excluded):
+                obj = fixture()
+                del obj["comparison_sets"][0]["dimensions"]["retrieval"]["rows"][0]["systems"][excluded]
+                out = build_frontier_leaderboard(obj)
+                self.assertEqual(out["metric_coverage"][0]["state"], "no_accepted_comparison")
+
     def test_deterministic_and_does_not_change_catalog(self):
         obj = fixture()
         before = deepcopy(obj)
