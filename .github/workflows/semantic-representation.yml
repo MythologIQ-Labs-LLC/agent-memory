@@ -34,7 +34,7 @@ jobs:
           python -m pip install --disable-pip-version-check -r reference/requirements.txt
           python -m pip install --disable-pip-version-check -r reference/requirements-semantic.txt
       - name: Restore pinned model
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: .representation
           key: semantic-minilm-b207367-${{ hashFiles('reference/agentmem_ref/runtime/representation_onnx.py') }}
