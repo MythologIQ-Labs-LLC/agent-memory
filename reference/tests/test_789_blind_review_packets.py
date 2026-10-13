@@ -5,6 +5,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from scripts.prepare_789_blind_review_packets import (
     PacketError, prepare, verify_reviews, git_blob, stable_bytes, digest,
@@ -56,6 +57,13 @@ class BlindPacketTests(unittest.TestCase):
         p.parent.mkdir(parents=True,exist_ok=True)
         p.write_bytes(stable_bytes(dossier))
         self.dossier=p
+        self.fake_main=patch("scripts.prepare_789_blind_review_packets.FROZEN_MAIN","a"*40)
+        self.fake_main.start()
+        self.addCleanup(self.fake_main.stop)
+        self.fake_blob=patch("scripts.prepare_789_blind_review_packets.FROZEN_DOSSIER_BLOB",
+                             git_blob(p.read_bytes()))
+        self.fake_blob.start()
+        self.addCleanup(self.fake_blob.stop)
 
     def packet(self):
         return json.loads((self.dest/"reviewer/packet.json").read_text(encoding="utf-8"))
@@ -106,8 +114,10 @@ class BlindPacketTests(unittest.TestCase):
         dossier=json.loads(self.dossier.read_text())
         next(s for s in dossier["source_reports"] if s["arm"]=="mem0_oss")["git_blob_sha"]=git_blob(raw)
         self.dossier.write_bytes(stable_bytes(dossier))
-        with self.assertRaisesRegex(PacketError,"source query/gold conflict"):
-            prepare(self.root,self.dest)
+        with patch("scripts.prepare_789_blind_review_packets.FROZEN_DOSSIER_BLOB",
+                   git_blob(self.dossier.read_bytes())):
+            with self.assertRaisesRegex(PacketError,"source query/gold conflict"):
+                prepare(self.root,self.dest)
 
     def test_obvious_provider_deblinding_refused(self):
         p=self.sources["agent_memory"]
@@ -118,8 +128,10 @@ class BlindPacketTests(unittest.TestCase):
         dossier=json.loads(self.dossier.read_text())
         next(s for s in dossier["source_reports"] if s["arm"]=="agent_memory")["git_blob_sha"]=git_blob(raw)
         self.dossier.write_bytes(stable_bytes(dossier))
-        with self.assertRaisesRegex(PacketError,"explicit provider name"):
-            prepare(self.root,self.dest)
+        with patch("scripts.prepare_789_blind_review_packets.FROZEN_DOSSIER_BLOB",
+                   git_blob(self.dossier.read_bytes())):
+            with self.assertRaisesRegex(PacketError,"explicit provider name"):
+                prepare(self.root,self.dest)
 
     def test_review_wrong_trace_or_tampered_packet_refused(self):
         prepare(self.root,self.dest)
