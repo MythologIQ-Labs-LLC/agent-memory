@@ -552,6 +552,36 @@ class ReviewFindings(_TwoProjects):
         self.reopen("project:a")
         self.assertEqual(len(self.memory.history("memory:c")["history"]["events"]), 4)
 
+    def test_p2_gate_a_recreated_generation_starts_its_own_version_counter(self):
+        """Owner's P2 gate (PR #788 review): the re-creating writer's proposal, receipt and the
+        new generation's history must not carry the former generation's memory-wide count,
+        before and after restart; the former owner's deleted view keeps its recorded version."""
+        self.seed()
+        self.correct("memory:a", "Bergen")
+        self.assertTrue(self.memory.forget("memory:a")["committed"])  # A's deletion records v3
+        owner_view = self.memory.history("memory:a")["history"]
+        self.assertEqual((owner_view["tombstoned"], owner_view["state_version"]), (True, 3))
+        for round_, label in enumerate(("live", "after restart")):
+            with self.subTest(label):
+                self.reopen("project:b")
+                view = self.memory.history("memory:a")["history"]
+                # round 0: A's deletion is invisible to B (0, not tombstoned); round 1: B's own
+                # deletion of its previous generation (recorded v3, tombstoned), never A's
+                self.assertEqual((view["state_version"], view["tombstoned"]), (0, False) if round_ == 0 else (3, True))
+                out = self.memory.remember("memory:a", f"{QUERY} is Turku", proposition=_prop("Turku"))
+                self.assertTrue(out["committed"], out)
+                self.assertEqual((out["receipt"]["state_snapshot"], out["receipt"]["before_state"],
+                                  out["receipt"]["after_state"]), ("v0", "v0", "v1"))
+                self.assertNotIn("v3", _serial(out))
+                self.assertEqual(self.memory.history("memory:a")["history"]["state_version"], 1)
+                again = self.correct("memory:a", "Narvik")
+                self.assertTrue(again["committed"], again)
+                self.assertEqual((again["receipt"]["before_state"], again["receipt"]["after_state"]), ("v1", "v2"))
+                self.assertTrue(self.memory.forget("memory:a")["committed"])
+                self.assertEqual(self.memory.history("memory:a")["history"]["state_version"], 3)
+                self.reopen("project:a")
+                self.assertEqual(self.memory.history("memory:a")["history"], owner_view)
+
     def test_f6_disposition_a_handle_behind_the_generation_reads_an_unknown_id(self):
         """DISPOSITION (pre-existing, unchanged): a second owner handle opened before another
         handle's write has no in-memory view of that memory; its correct/forget/dispute read

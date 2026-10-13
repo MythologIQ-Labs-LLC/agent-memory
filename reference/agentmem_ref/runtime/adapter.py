@@ -476,7 +476,7 @@ class GovernedMemoryAdapter:
                 blocked_by_stale=stale or readmission_blocked,
             )
             commits = selected == proposal.operation
-            before_state = f"v{self._state_version.get(proposal.target_reference, 0)}"
+            before_state = f"v{self.public_state_version(proposal.target_reference)}"
 
         if readmission_blocked:
             events.append(
@@ -491,6 +491,10 @@ class GovernedMemoryAdapter:
 
         fact_uuid = None
         if commits:
+            if before_state == "v0" and self._state_version.get(proposal.target_reference, 0):
+                # a new generation of a governed-deleted id: its counter starts at zero
+                # (the deletion's own version stays recorded in the tombstone)
+                self._state_version[proposal.target_reference] = 0
             if episode is not None:
                 self._substrate.add_episode(episode)
             if proposal.operation == "correction":
@@ -567,11 +571,17 @@ class GovernedMemoryAdapter:
         )
 
     def _is_stale(self, proposal: policy.Proposal) -> bool:
-        """Authority binds to the state it was resolved against."""
+        """Authority binds to the state it was resolved against.
+
+        A memory with no live head after a governed deletion has two faithful names for
+        the same state: the public ``v0`` a new generation starts from (#786 P2 gate) and the
+        retired counter the deletion left behind; either binds. With a live head both agree.
+        """
         if not proposal.state_snapshot:
             return False
-        current = f"v{self._state_version.get(proposal.target_reference, 0)}"
-        return proposal.state_snapshot != current
+        target = proposal.target_reference
+        faithful = {f"v{self._state_version.get(target, 0)}", f"v{self.public_state_version(target)}"}
+        return proposal.state_snapshot not in faithful
 
     def _readmission_blocked(
         self,
@@ -1747,6 +1757,21 @@ class GovernedMemoryAdapter:
     def state_version(self, memory_id: str) -> int:
         return self._state_version.get(memory_id, 0)
 
+    def public_state_version(self, memory_id: str) -> int:
+        """The version a writer resolves its authority against and a receipt reports.
+
+        #786 (independent review, P2 gate): versions are generation-relative. A memory with
+        a live head reports its counter; a memory whose head was governed-deleted reports
+        ``0`` -- the next generation starts fresh, so neither the re-creating writer's
+        proposal nor its receipt nor the new generation's history carries the former
+        generation's count. The deleted generation's own view keeps the version its
+        deletion recorded (``public_deleted_version``).
+        """
+        if self._current_fact_by_memory.get(memory_id) is None and self.has_governed_deletions() \
+                and memory_id in self.tombstoned_ids():
+            return 0
+        return self._state_version.get(memory_id, 0)
+
     def current_fact_uuid(self, memory_id: str) -> str | None:
         return self._current_fact_by_memory.get(memory_id)
 
@@ -1825,14 +1850,19 @@ class GovernedMemoryAdapter:
         reads as 0."""
         if not isinstance(memory_id, str) or not memory_id or not self._tombstones:
             return None
-        versions: list[int] = []
+        deletions: list[tuple[str, int]] = []
         for ref, record in self._tombstones.items():
             if record.get("memory_id") != memory_id or self.replacement_record(ref) is not None:
                 continue
             if self._domain_identity_refusal(ref, self._tenant, context) is None:
                 recorded = record.get("state_version")
-                versions.append(int(recorded) if isinstance(recorded, int) and not isinstance(recorded, bool) else 0)
-        return max(versions) if versions else None
+                version = int(recorded) if isinstance(recorded, int) and not isinstance(recorded, bool) else 0
+                deletions.append((str(record.get("deleted_at") or ""), version))
+        if not deletions:
+            return None
+        # the latest deletion this reader could read: versions are generation-relative (#786
+        # P2 gate), so the newest generation's recorded version, not the largest, is served
+        return max(deletions)[1]
 
     def _deleted_lineage(self) -> dict[str, str]:
         """#776: fact uuid -> deleted memory for every fact a governed deletion covers.

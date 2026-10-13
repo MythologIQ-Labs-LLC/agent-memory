@@ -86,12 +86,15 @@ class OwnerTombstoneVisibility(_Facade):
         self.assertFalse(record["tombstoned"])
         self.assertNotIn("memory.delete", {e["event_type"] for e in record["events"]})
         self.assertFalse(set(old_ids) & {e.get("fact_uuid") for e in record["events"]})
-        # deleting the new generation reads as tombstoned again; the version only advances
+        # deleting the new generation reads as tombstoned again with that generation's own
+        # version (#786 P2 gate: a generation's counter starts at zero, so the second deletion
+        # of a one-fact generation records v2 whatever the first generation counted)
         self.assertTrue(self.memory.forget("memory:a")["committed"])
         record = self.memory.history("memory:a")["history"]
         self.assertTrue(record["tombstoned"])
         self.assertIsNone(record["current_fact_uuid"])
-        self.assertGreater(record["state_version"], version_after_first_delete)
+        self.assertEqual(record["state_version"], 2)
+        self.assertEqual(version_after_first_delete, 3)
         serial = _serial(self.memory.history("memory:a"))
         for fact_uuid in (*old_ids, again["fact_uuid"]):
             self.assertNotIn(fact_uuid, serial)
@@ -285,7 +288,8 @@ class OwnerViewIsStableUnderOtherScopes(_Facade):
         self.memory.remember("memory:a", "Orrin gateway region is Turku", proposition=_prop("Turku"))
         self.memory.correct("memory:a", "Orrin gateway region is Narvik", evidence=_evidence(), risk_class="low",
                             replacement_kind="state_change")
-        self.assertGreater(self.memory._canonical_history("memory:a")["history"]["state_version"], 3)
+        # the other project's generation counts from zero (#786 P2 gate): create 1, correct 2
+        self.assertEqual(self.memory._canonical_history("memory:a")["history"]["state_version"], 2)
         self.reopen("project:a")
         self.assertEqual(self.memory.history("memory:a")["history"]["state_version"], 3)
         self.assertTrue(self.memory.history("memory:a")["history"]["tombstoned"])

@@ -591,7 +591,7 @@ class AgentMemory:
         adapter = self.runtime.adapter
         if adapter.current_fact_uuid(target_reference) is not None and self._visible_head(target_reference, envelope) is None:
             return "v0"
-        return f"v{adapter.state_version(target_reference)}"
+        return f"v{adapter.public_state_version(target_reference)}"
 
     def _proposal(
         self,
