@@ -49,6 +49,25 @@ class RefreshGovernanceTests(unittest.TestCase):
         after=source_inventory(self.root)
         self.assertNotEqual(before,after)
 
+    def test_nonjson_native_sidecar_also_changes_snapshot(self):
+        path=self.root/"reports/benchmarks/amb/v7/new-native/sha256.txt"
+        path.write_text("sha-1\\n", encoding="utf-8")
+        before=source_inventory(self.root)
+        path.write_text("sha-2\\n", encoding="utf-8")
+        after=source_inventory(self.root)
+        self.assertIn("reports/benchmarks/amb/v7/new-native/sha256.txt",after)
+        self.assertNotEqual(before,after)
+
+    def test_evaluation_descriptor_and_generator_are_source_fingerprinted(self):
+        for rel in ("reference/agentmem_ref/evaluation/integrations/sample.json",
+                    "scripts/build_benchmark_ui_catalog.py"):
+            p=self.root/rel
+            p.parent.mkdir(parents=True,exist_ok=True)
+            p.write_text("initial",encoding="utf-8")
+            initial=source_inventory(self.root)
+            p.write_text("modified",encoding="utf-8")
+            self.assertNotEqual(initial,source_inventory(self.root),rel)
+
     def test_unregistered_evidence_visible_without_ranking(self):
         result=compute_status(self.root,registered=set())
         self.assertEqual(result["unregistered_source_count"],1)
