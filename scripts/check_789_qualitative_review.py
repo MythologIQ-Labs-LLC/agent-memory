@@ -48,6 +48,8 @@ def validate_review(r: object, target_ids: set[str]) -> tuple[str, str, str]:
             raise ValueError("invalid evidence refs: " + name)
         if value != "not_applicable" and not refs:
             raise ValueError("scored rating without supporting evidence: " + name)
+    if all(dims[name]["rating"] == "not_applicable" for name in DIMENSIONS):
+        raise ValueError("review cannot mark every dimension not_applicable")
     safety = r.get("safety_flags")
     if not isinstance(safety, dict) or set(safety) != {"unauthorized_exposure", "deleted_data_exposure"}:
         raise ValueError("explicit P0 safety flags required")
