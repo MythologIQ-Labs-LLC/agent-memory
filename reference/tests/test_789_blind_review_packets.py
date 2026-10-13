@@ -87,6 +87,13 @@ class BlindPacketTests(unittest.TestCase):
         self.assertEqual(digest((self.dest/"reviewer/packet.json").read_bytes()),
                          self.key()["packet_sha256"])
         self.assertEqual(len(self.key()["assignments"]),48)
+        forms=json.loads((self.dest/"reviewer/forms.PENDING.json").read_text(encoding="utf-8"))
+        self.assertEqual(len(forms),48)
+        self.assertTrue(all(not form["locked"] for form in forms))
+        self.assertTrue(all(form["reviewer_id"] == "REPLACE_WITH_INDEPENDENT_HUMAN_ID" for form in forms))
+        self.assertTrue(all(all(x["rating"] is None for x in form["dimensions"].values()) for form in forms))
+        self.assertTrue(all(all(value is None for value in form["safety_flags"].values()) for form in forms))
+        self.assertTrue(all(form["source_trace"].startswith("trace-") for form in forms)
         self.assertEqual(verify_reviews(json.loads(self.dossier.read_text()),packet,
                                         self.key(),[])["release_gate"],"incomplete_human_coverage")
 
@@ -166,6 +173,60 @@ class BlindPacketTests(unittest.TestCase):
                 "source_trace":"forged", "locked":True}
         with self.assertRaisesRegex(PacketError,"review source trace"):
             verify_reviews(dossier,packet,key,[review])
+
+    def valid_private_review(self):
+        packet=self.packet()
+        record=packet["records"][0]
+        forms=json.loads((self.dest/"reviewer/forms.PENDING.json").read_text(encoding="utf-8"))
+        form=next(x for x in forms if (x["case_id"],x["blind_arm"]) ==
+                  (record["case_id"],record["blind_arm"]))
+        form["reviewer_id"]="reviewer-verified-by-coordinator"
+        form["locked"]=True
+        form["safety_flags"]={"unauthorized_exposure":False,"deleted_data_exposure":False}
+        for name,dim in form["dimensions"].items():
+            dim.update(rating=2,rationale="Reviewer-observed information",
+                       evidence_refs=[record["source_trace"]+":context:L1-L1"])
+        return form
+
+    def test_real_context_line_citations_valid(self):
+        prepare(self.root,self.dest)
+        review=self.valid_private_review()
+        result=verify_reviews(json.loads(self.dossier.read_text()),
+                              self.packet(),self.key(),[review])
+        self.assertEqual(result["received_reviews"],1)
+        self.assertFalse(result["publication_authorized"])
+
+    def test_incorrect_case_citation_rejected(self):
+        prepare(self.root,self.dest)
+        review=self.valid_private_review()
+        review["dimensions"]["task_utility"]["evidence_refs"]=["trace-"+"0"*32+":context:L1-L1"]
+        with self.assertRaisesRegex(PacketError,"unbound or wrong-case evidence citation"):
+            verify_reviews(json.loads(self.dossier.read_text()),
+                           self.packet(),self.key(),[review])
+
+    def test_nonexistent_line_citation_rejected(self):
+        prepare(self.root,self.dest)
+        review=self.valid_private_review()
+        review["dimensions"]["task_utility"]["evidence_refs"]=[
+            review["source_trace"]+":context:L9999-L9999"]
+        with self.assertRaisesRegex(PacketError,"citation outside original source lines"):
+            verify_reviews(json.loads(self.dossier.read_text()),
+                           self.packet(),self.key(),[review])
+
+    def test_unspecified_p0_decision_cannot_be_locked(self):
+        prepare(self.root,self.dest)
+        review=self.valid_private_review()
+        review["safety_flags"]["deleted_data_exposure"]=None
+        with self.assertRaisesRegex(ValueError,"safety flags must be booleans"):
+            verify_reviews(json.loads(self.dossier.read_text()),
+                           self.packet(),self.key(),[review])
+
+    def test_unfilled_template_cannot_be_submitted(self):
+        prepare(self.root,self.dest)
+        reviews=json.loads((self.dest/"reviewer/forms.PENDING.json").read_text())
+        with self.assertRaisesRegex(ValueError,"review must declare reviewer type and be locked"):
+            verify_reviews(json.loads(self.dossier.read_text()),
+                           self.packet(),self.key(),[reviews[0]])
 
     def test_empty_review_preserves_zero_qualitative_claim(self):
         prepare(self.root,self.dest)
