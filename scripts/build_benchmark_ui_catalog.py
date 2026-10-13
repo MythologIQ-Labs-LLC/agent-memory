@@ -54,8 +54,13 @@ def _git_revision(spec: str) -> str | None:
 
 
 def _git_blob_from_bytes(payload: bytes) -> str:
-    """Git blob object ID of actual working-tree bytes, not stale HEAD."""
-    return hashlib.sha1(b"blob " + str(len(payload)).encode("ascii") + b"\0" + payload).hexdigest()
+    """Git clean-filter blob ID of current bytes under *.json text=auto eol=lf.
+
+    Windows Python text-mode writes can emit CRLF before Git stages the file.
+    Fingerprint the same LF-normalized bytes that Git records in its index.
+    """
+    normalized = payload.replace(b"\r\n", b"\n")
+    return hashlib.sha1(b"blob " + str(len(normalized)).encode("ascii") + b"\0" + normalized).hexdigest()
 
 
 def _working_tree_identity(folder: Path) -> str:
