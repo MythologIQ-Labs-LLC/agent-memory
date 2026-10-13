@@ -2,7 +2,7 @@
 from __future__ import annotations
 import unittest
 from agentmem_ref.decision_context import DecisionContextPort, ResolvedEvidence
-from agentmem_ref.decision_gateway import DecisionGateway, DecisionContractError
+from agentmem_ref.decision_gateway import DecisionGateway, DecisionContractError, EgressDecision
 
 class Memory:
     tenant = 'tenant:a'
@@ -51,7 +51,21 @@ class DecisionGatewayTests(unittest.TestCase):
             execute(g)
         self.assertEqual(m.calls,0)
         self.assertEqual(p.calls,0)
-        self.assertEqual(execute(g,remote_egress_authorization_ref='approval:fixture')['status'],'complete')
+        class AllowPolicy:
+            def authorize(self, req):
+                return EgressDecision(req.request_ref, req.provider_ref, True, 'approval:fixture')
+        authorized = DecisionGateway(g.context_port, p, AllowPolicy())
+        self.assertEqual(execute(authorized)['status'], 'complete')
+
+    def test_remote_host_egress_policy_must_bind_exact_request(self):
+        class WrongPolicy:
+            def authorize(self, req):
+                return EgressDecision('another-request', req.provider_ref, True, 'approval:fake')
+        g,m,p=gateway(provider=Provider(remote=True))
+        g=DecisionGateway(g.context_port,p,WrongPolicy())
+        with self.assertRaisesRegex(DecisionContractError, 'egress authorization'):
+            execute(g)
+        self.assertEqual(p.calls,0)
 
     def test_missing_context_does_not_call_provider(self):
         g,m,p=gateway(resolver=lambda _:None)
