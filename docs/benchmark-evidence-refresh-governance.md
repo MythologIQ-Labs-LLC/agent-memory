@@ -27,7 +27,7 @@ git commit -m "chore(benchmarks): refresh recorded evidence projections [skip ci
 
 The refresh runs four **existing** generators in strict order: scorecards/normalized, F1 catalog, F2 frontier leaderboard, and the separate historical-v6 diagnostic. The manifest \`reports/benchmarks/ui/refresh-status.json\` fingerprints all discovered source JSONs and derived outputs. \`--check\` is read-only and fails if any projection, source hash or manifest changes. No generic source glob is promoted into rankings: scorecard source registration and dashboard admission remain explicit reviewer decisions.
 
-The manifest exposes **unregistered \`evidence.json\` candidates** under AMB/LongMemEval as paths, not competitor wins. This is intentional: new results must become visible as pending even when protocol qualification is incomplete. Raw \`single-turn.json\` files also affect its source digest. The static page reads the manifest for evidence coverage; it does not confuse an updated repository projection with confirmed deployment freshness.
+The manifest exposes **unregistered \`evidence.json\` candidates** under any benchmark source family as paths, not competitor wins. This is intentional: new results must become visible as pending even when protocol qualification is incomplete. Raw \`single-turn.json\` files also affect its source digest; the inventory covers every benchmark family, not just AMB and LongMemEval. The static page reads the manifest for evidence coverage; it does not confuse an updated repository projection with confirmed deployment freshness.
 
 ## Opt-in per-workspace automatic Git hooks
 
