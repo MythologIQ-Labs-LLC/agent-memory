@@ -1,0 +1,116 @@
+{
+  "adapter": {
+    "id": "agent-memory-runtime-baseline-v7-stdio",
+    "revision": "git-blob:aebef4b9a3b75b68775abefaf964840d4fc44fc4",
+    "transport": "stdio",
+    "version": "0.1.0"
+  },
+  "artifacts": {
+    "adapter_manifest": {
+      "path": "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/gauntlet-36a6ef4/gauntlet-gauntlet-orchestration-retrieval-probe-v1-agent-memory-runtime-candidate-36a6ef4d-8690d8f8fedf/adapter-manifest.json",
+      "sha256": "41c8e50503de77fef8dbd83616a59631b476b915b8238b9610ffd5500ea2fa26"
+    },
+    "native_results": {
+      "path": "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/gauntlet-36a6ef4/gauntlet-gauntlet-orchestration-retrieval-probe-v1-agent-memory-runtime-candidate-36a6ef4d-8690d8f8fedf/native-results.json",
+      "sha256": "7dccf91138f10e33cb9a049c0f743b774f9b2bf3b02325f4e1c5e4e41761100f"
+    },
+    "normalized_run": {
+      "path": "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/gauntlet-36a6ef4/gauntlet-gauntlet-orchestration-retrieval-probe-v1-agent-memory-runtime-candidate-36a6ef4d-8690d8f8fedf/normalized-run.json",
+      "sha256": "055ef5112f3f05f325c7cbafaaad7952de137881e0d50a5b29d869ccf292b1dd"
+    },
+    "qualification": {
+      "path": "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/gauntlet-36a6ef4/gauntlet-gauntlet-orchestration-retrieval-probe-v1-agent-memory-runtime-candidate-36a6ef4d-8690d8f8fedf/qualification.json",
+      "sha256": "3016431cb9407e10ad70d93d8559292ec0034b4707c67aab39b90a07b708e828"
+    }
+  },
+  "authority_effect": "none",
+  "benchmark_integration": null,
+  "coverage": {
+    "currentness": "not_applicable",
+    "efficiency": "measured",
+    "evaluator_integrity": "measured",
+    "governance": "not_measured",
+    "reasoning": "not_applicable",
+    "reproducibility": "measured",
+    "retrieval": "measured"
+  },
+  "manifest_digest_sha256": "41c8e50503de77fef8dbd83616a59631b476b915b8238b9610ffd5500ea2fa26",
+  "negotiation": {
+    "adapter_id": "agent-memory-runtime-baseline-v7-stdio",
+    "authority_effect": "none",
+    "contract_family": "agent-memory-gauntlet-capability-negotiation",
+    "contract_version": "0.1.0",
+    "manifest_digest": "41c8e50503de77fef8dbd83616a59631b476b915b8238b9610ffd5500ea2fa26",
+    "optional": [
+      {
+        "accepted_support": [
+          "native",
+          "mapped",
+          "derived"
+        ],
+        "capability": "health",
+        "declared_support": "mapped",
+        "state": "satisfied"
+      }
+    ],
+    "outcome": "eligible",
+    "profile_id": "gauntlet-orchestration-retrieval-probe-v1",
+    "reason": "required and declared optional capabilities satisfy the profile",
+    "required": [
+      {
+        "accepted_support": [
+          "native",
+          "mapped",
+          "derived"
+        ],
+        "capability": "describe",
+        "declared_support": "mapped",
+        "state": "satisfied"
+      },
+      {
+        "accepted_support": [
+          "native",
+          "mapped",
+          "derived"
+        ],
+        "capability": "recall",
+        "declared_support": "native",
+        "state": "satisfied"
+      },
+      {
+        "accepted_support": [
+          "native",
+          "mapped",
+          "derived"
+        ],
+        "capability": "remember",
+        "declared_support": "native",
+        "state": "satisfied"
+      },
+      {
+        "accepted_support": [
+          "native",
+          "mapped",
+          "derived"
+        ],
+        "capability": "reset",
+        "declared_support": "mapped",
+        "state": "satisfied"
+      }
+    ],
+    "system_id": "agent-memory-runtime-candidate-36a6ef4d"
+  },
+  "profile": {
+    "description": "Deterministic three-record retrieval probe used to qualify Gauntlet orchestration, adapter transport, evidence normalization, and failure attribution. It is not an external efficacy benchmark.",
+    "kind": "baseline_or_probe",
+    "profile_id": "gauntlet-orchestration-retrieval-probe-v1"
+  },
+  "run_id": "gauntlet-gauntlet-orchestration-retrieval-probe-v1-agent-memory-runtime-candidate-36a6ef4d-8690d8f8fedf",
+  "schema_version": "0.1.0",
+  "status": "complete",
+  "system": {
+    "id": "agent-memory-runtime-candidate-36a6ef4d",
+    "kind": "agent_memory",
+    "revision": "git-commit:36a6ef4d"
+  }
+}
