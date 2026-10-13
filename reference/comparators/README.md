@@ -67,3 +67,16 @@ No GitHub Actions or vendor-cloud paid provider. For any non-free LLM/embedder r
 ## Owner decision
 
 The next executable priority after #640 is **Graphiti native provenance feasibility first**, then Cognee. If source linkage cannot be made exact without adapter invention, do not contort the frozen retrieval evaluator: use a different benchmark-native QA/temporal evaluation in a separately frozen lane and disclose that these systems are not directly rank-comparable on exact-source metrics.
+
+
+## Direct upstream Graphiti source-provenance feasibility finding
+
+At the pinned `getzep/graphiti@b2ff2ea` SHA, `graphiti_core/edges.py` (Git blob `28c170355e02a569b60c5e070f019572889ace82`) defines `EntityEdge.episodes: list[str]` as the source episode references. `graphiti_core/graphiti.py` (blob `7555a1f828c4b94970911876bfd257aaa4577d4c`) accepts an optional caller-defined `uuid` for `add_episode` and `search(..., num_results=...)` returns `list[EntityEdge]`.
+
+This is a **source-level path to exact-item attribution**, not speculation about whether graphs can expose provenance. A candidate runner can record the successfully ingested episode UUID next to its benchmark source ID, pass actual `edge.episodes` lists to `attribute_graphiti_edges()`, and decline to credit edges whose provenance spans multiple benchmark sources.
+
+The implementation adds `reference/comparators/graphiti_source_probe.py` and five focused tests covering valid native edges, multi-source ambiguity, foreign episodes, empty provenance and duplicate source credit. **19 contract tests passed in isolated local Python prototypes**, without using the Graphiti SDK. The exact committed test suite requires a fresh PR-checkout run before any review promotion.
+
+Critical unproven conditions: whether the installed Graphiti revision on the selected backend returns complete `episodes` on every searched edge; whether real ingestion/retrieval preserves caller UUIDs across model extraction and restart; and whether exact-source attribution is sufficiently complete to provide a meaningful parity comparison. Until those are runtime-observed, `graphiti-oss` remains `not_run` and has no accepted score.
+
+The Cognee `ChunksRetriever` at its pinned revision returns `found_chunk.payload` from `DocumentChunk_text`. The public `SearchResult` wrapper carries `search_result`, `dataset_id` and `dataset_name`, **not** a guaranteed original input document ID. Before a Cognee exact-source bridge is defensible, establish native `chunk_uuid -> ingested Data/document ID` lineage via its own source data/graph model. Do not derive IDs from chunk text or assume a dataset is itself one benchmark document.
