@@ -90,6 +90,7 @@ class BlindPacketTests(unittest.TestCase):
         forms=json.loads((self.dest/"reviewer/forms.PENDING.json").read_text(encoding="utf-8"))
         self.assertEqual(len(forms),48)
         self.assertTrue(all(not form["locked"] for form in forms))
+        self.assertTrue(all(form["reviewed_at_utc"] is None for form in forms))
         self.assertTrue(all(form["reviewer_id"] == "REPLACE_WITH_INDEPENDENT_HUMAN_ID" for form in forms))
         self.assertTrue(all(all(x["rating"] is None for x in form["dimensions"].values()) for form in forms))
         self.assertTrue(all(all(value is None for value in form["safety_flags"].values()) for form in forms))
@@ -181,6 +182,7 @@ class BlindPacketTests(unittest.TestCase):
         form=next(x for x in forms if (x["case_id"],x["blind_arm"]) ==
                   (record["case_id"],record["blind_arm"]))
         form["reviewer_id"]="reviewer-verified-by-coordinator"
+        form["reviewed_at_utc"]="2026-10-13T22:30:00Z"
         form["locked"]=True
         form["safety_flags"]={"unauthorized_exposure":False,"deleted_data_exposure":False}
         for name,dim in form["dimensions"].items():
@@ -227,6 +229,30 @@ class BlindPacketTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"review must declare reviewer type and be locked"):
             verify_reviews(json.loads(self.dossier.read_text()),
                            self.packet(),self.key(),[reviews[0]])
+
+    def test_review_lock_timestamp_required(self):
+        prepare(self.root,self.dest)
+        review=self.valid_private_review()
+        review.pop("reviewed_at_utc")
+        with self.assertRaisesRegex(PacketError,"UTC lock timestamp"):
+            verify_reviews(json.loads(self.dossier.read_text()),
+                           self.packet(),self.key(),[review])
+
+    def test_malformed_timestamp_refused(self):
+        prepare(self.root,self.dest)
+        review=self.valid_private_review()
+        review["reviewed_at_utc"]="yesterdayZ"
+        with self.assertRaisesRegex(PacketError,"invalid reviewer lock timestamp"):
+            verify_reviews(json.loads(self.dossier.read_text()),
+                           self.packet(),self.key(),[review])
+
+    def test_pending_reviewer_identity_refused_after_lock(self):
+        prepare(self.root,self.dest)
+        review=self.valid_private_review()
+        review["reviewer_id"]="REPLACE_WITH_INDEPENDENT_HUMAN_ID"
+        with self.assertRaisesRegex(PacketError,"unfinished reviewer identity"):
+            verify_reviews(json.loads(self.dossier.read_text()),
+                           self.packet(),self.key(),[review])
 
     def test_forged_private_product_assignment_refused(self):
         prepare(self.root,self.dest)
