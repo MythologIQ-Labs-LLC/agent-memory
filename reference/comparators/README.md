@@ -80,3 +80,19 @@ The implementation adds `reference/comparators/graphiti_source_probe.py` and fiv
 Critical unproven conditions: whether the installed Graphiti revision on the selected backend returns complete `episodes` on every searched edge; whether real ingestion/retrieval preserves caller UUIDs across model extraction and restart; and whether exact-source attribution is sufficiently complete to provide a meaningful parity comparison. Until those are runtime-observed, `graphiti-oss` remains `not_run` and has no accepted score.
 
 The Cognee `ChunksRetriever` at its pinned revision returns `found_chunk.payload` from `DocumentChunk_text`. The public `SearchResult` wrapper carries `search_result`, `dataset_id` and `dataset_name`, **not** a guaranteed original input document ID. Before a Cognee exact-source bridge is defensible, establish native `chunk_uuid -> ingested Data/document ID` lineage via its own source data/graph model. Do not derive IDs from chunk text or assume a dataset is itself one benchmark document.
+
+
+## Source-qualified Cognee document attribution path (2026-10-13)
+
+Further inspection of exact `topoteretes/cognee@4b9dd36` exposed the native document lineage that was previously only a hypothesis.
+
+- `cognee/modules/chunking/models/DocumentChunk.py` (blob `4637c458644fc347cf376dc88cbf73f69b48bd0d`): `DocumentChunk.is_part_of` references the source document and `document_id` is an optional original document identifier.
+- Standard chunkers, including `TextChunker`, assign `document_id=str(document.id)` at ingestion. That must be checked against actual input records, not guessed from the document name.
+- `cognee/modules/retrieval/chunks_retriever.py` (blob `72fed7ca5db2a7d7aa2da2d339181882f6570d9e`) returns the vector engine's original `found_chunk.payload`, rather than an LLM-generated answer, for `SearchType.CHUNKS`.
+- Cognee's own `cognee/modules/retrieval/utils/references.py` (blob `b0efd708612accae76d4ffdf6d4e861d519bc725`) explicitly interprets `payload.get("document_id")` as the ingested data identifier for citation purposes.
+
+Implemented `reference/comparators/cognee_source_probe.py` to extract **only** `payload.document_id` and pass it through the common trusted-ingestion-map gate. It never credits names, text, dataset IDs, completion answers or missing/unknown documents. Eleven deterministic tests cover native order, multiple chunks per document, unknown and cross-scope IDs, missing source IDs, generated answers, partial provenance, bad shapes, and empty retrieval. Those tests **passed against a locally reconstructed isolated contract implementation**; no Cognee SDK or vendor server was installed, so the exact committed PR-head checkout and real product output remain unqualified.
+
+This updates Cognee's status from `unproven source-id representation` to **`source_level_feasible_unverified_runtime`**, but its evaluation status stays `not_run`. A faithful vendor run still needs to prove the returned `document_id` equals the recorded ingested Data.id across the exact benchmark fixture, namespaces, changes, and restart, without changing the frozen evaluator or importing nonreproducible scores.
+
+Graphiti and Cognee now both have plausible **native** source lineage routes. That does not establish which architecture performs better, and creates no extra numeric bar in Pages.
