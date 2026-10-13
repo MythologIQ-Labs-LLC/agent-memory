@@ -63,14 +63,18 @@
       "api_surface": "cognee.add + cognify + search(query_text, query_type=SearchType.CHUNKS, datasets=..., top_k=...); source inspected in cognee/api/v1/search/search.py",
       "candidate_task_profile": "amb-precisionmembench-retrieval or longmemeval-s-retrieval-parity",
       "adapter_semantics": "Do not score generated GRAPH_COMPLETION text as a retrieved source ID; raw CHUNKS may require source_data_id linking back to ingested data documents. Mapping unverified at this revision.",
-      "source_id_status": "unproven",
+      "source_id_status": "source_level_feasible_unverified_runtime",
       "required_backend": "Local Cognee data/vector/graph backend with per-case namespace isolation and reset proof",
       "model_requirement": "LLM and embedding model for cognify; package includes remote-provider dependencies and local options, which must be pinned separately",
       "cost_authorization": "no_paid_provider",
       "compatibility_status": "not_run",
-      "next_gate": "Determine whether CHUNKS returns a lossless verified ingest source linkage. If not, refuse exact-source lane and choose a protocol in which graph completion is evaluated as QA with a frozen answer judge.",
+      "next_gate": "Execute actual Cognee add -> cognify -> search(query_type=CHUNKS) using pinned local LLM/embedder/backends; prove returned payload.document_id is exact ingested Data/document UUID across chunks, sessions and restarts. Reject any missing or unknown document_id without content guessing.",
       "identity_risk": "Chunk content or graph answer is not a valid alias for a frozen benchmark item ID.",
-      "profile_caveat": "Graph completion QA and CHUNKS retrieval measure different protocols."
+      "profile_caveat": "Graph completion QA and CHUNKS retrieval measure different protocols.",
+      "source_retriever_model_git_blob": "72fed7ca5db2a7d7aa2da2d339181882f6570d9e",
+      "source_chunk_model_git_blob": "4637c458644fc347cf376dc88cbf73f69b48bd0d",
+      "source_references_git_blob": "b0efd708612accae76d4ffdf6d4e861d519bc725",
+      "source_id_evidence": "DocumentChunk has optional document_id sourced from parent Document.id; standard TextChunker sets document_id=str(self.document.id); ChunksRetriever returns found_chunk.payload; built-in references extracts payload.document_id as data_id; use only this native UUID and verify against recorded ingestion IDs."
     },
     {
       "system_id": "hindsight-oss",
