@@ -1,0 +1,377 @@
+{
+  "schema_version": "review-proposal-1",
+  "no_authority": true,
+  "source_main_sha": "3eebb6d54e2a218c4fd10cf53c52acac8384c3e6",
+  "as_of": "2026-10-13",
+  "scope": "Preflight proposal for reconciling omitted v3-v6 frozen lane registrations. NOT a canonical evidence declaration, not a scoreboard input, not baseline qualification.",
+  "source_integration_descriptors": [
+    {
+      "path": "reference/agentmem_ref/evaluation/integrations/amb-precisionmembench-retrieval-v1.json",
+      "git_blob_sha": "8caa765175192e87aca6875b9282fac46d6d6865"
+    },
+    {
+      "path": "reference/agentmem_ref/evaluation/integrations/agent-memory-longmemeval-retrieval-currentness-v1.json",
+      "git_blob_sha": "888708408d96a2f3bf5d4ad527961530fe4d6137"
+    }
+  ],
+  "scorecard_source_file": {
+    "path": "scripts/build_benchmark_scorecards.py",
+    "git_blob_sha": "f49ed14b79cfb12e4c46bc2f1019e44a9f47c602"
+  },
+  "acceptance_tests_pending": [
+    "Verify compressed row archives and auxiliary SHA-256 inventories",
+    "Execute deterministic normalizer rebuild and same-harness catalog/projection checks",
+    "Review runtime successor and comparator configuration per exact lane/plane",
+    "Approve canonical dashboard update via separate PR"
+  ],
+  "lanes": [
+    {
+      "lane_id": "amb-precisionmembench-retrieval-v3",
+      "frozen_file": "reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v3.json",
+      "git_blob_sha": "7d3d48ff249add9eacc44acca010b811d227fd49",
+      "frozen_on": "2026-10-07",
+      "frozen_before_any_score": true,
+      "status": "accepted",
+      "category": "AMB PrecisionMemBench",
+      "scorecard_rows": [
+        {
+          "variant": "lane:amb-precisionmembench-retrieval-v3:agent-memory",
+          "source_report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v3/agent-memory-04bb286f90f1/evidence.json",
+          "source_revision": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+          "frozen_input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd"
+        },
+        {
+          "variant": "lane:amb-precisionmembench-retrieval-v3:bm25",
+          "source_report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v3/bm25-04bb286f90f1/evidence.json",
+          "source_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+          "frozen_input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd"
+        },
+        {
+          "variant": "lane:amb-precisionmembench-retrieval-v3:mem0-explicit",
+          "source_report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v3/mem0-explicit-04bb286f90f1/evidence.json",
+          "source_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+          "frozen_input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd"
+        }
+      ],
+      "diagnostic_only": [],
+      "governance_state": "acceptance_record_exists__canonical_registration_pending"
+    },
+    {
+      "lane_id": "longmemeval-s-retrieval-parity-v3",
+      "frozen_file": "reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v3.json",
+      "git_blob_sha": "e122c3818af8fe2dce84d9c38cdc13afada19d2e",
+      "frozen_on": "2026-10-07",
+      "frozen_before_any_score": true,
+      "status": "accepted",
+      "category": "LongMemEval_S",
+      "scorecard_rows": [
+        {
+          "variant": "lane:longmemeval-s-retrieval-parity-v3:agent_memory:session",
+          "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v3/agent_memory-session-04bb286f90f1/evidence.json",
+          "source_revision": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+          "frozen_input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+        },
+        {
+          "variant": "lane:longmemeval-s-retrieval-parity-v3:agent_memory:turn",
+          "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v3/agent_memory-turn-04bb286f90f1/evidence.json",
+          "source_revision": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+          "frozen_input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+        },
+        {
+          "variant": "lane:longmemeval-s-retrieval-parity-v3:lexical_overlap:session",
+          "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v3/lexical_overlap-session-04bb286f90f1/evidence.json",
+          "source_revision": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+          "frozen_input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+        },
+        {
+          "variant": "lane:longmemeval-s-retrieval-parity-v3:lexical_overlap:turn",
+          "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v3/lexical_overlap-turn-04bb286f90f1/evidence.json",
+          "source_revision": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+          "frozen_input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+        },
+        {
+          "variant": "lane:longmemeval-s-retrieval-parity-v3:mem0_explicit:session",
+          "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v3/mem0_explicit-session-04bb286f90f1/evidence.json",
+          "source_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+          "frozen_input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+        },
+        {
+          "variant": "lane:longmemeval-s-retrieval-parity-v3:mem0_explicit:turn",
+          "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v3/mem0_explicit-turn-04bb286f90f1/evidence.json",
+          "source_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+          "frozen_input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+        }
+      ],
+      "diagnostic_only": [
+        {
+          "variant": "lane:longmemeval-s-retrieval-parity-v3:agent_memory_semantic:session",
+          "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v3/agent_memory_semantic-session-04bb286f90f1/evidence.json",
+          "reason": "not a separate independent competitor"
+        },
+        {
+          "variant": "lane:longmemeval-s-retrieval-parity-v3:agent_memory_semantic:turn",
+          "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v3/agent_memory_semantic-turn-04bb286f90f1/evidence.json",
+          "reason": "not a separate independent competitor"
+        }
+      ],
+      "governance_state": "acceptance_record_exists__canonical_registration_pending"
+    },
+    {
+      "lane_id": "amb-precisionmembench-retrieval-v4",
+      "frozen_file": "reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v4.json",
+      "git_blob_sha": "15b0bc55e047c4872810aab86ae3e040088815c7",
+      "frozen_on": "2026-10-07",
+      "frozen_before_any_score": true,
+      "status": "accepted",
+      "category": "AMB PrecisionMemBench",
+      "scorecard_rows": [
+        {
+          "variant": "lane:amb-precisionmembench-retrieval-v4:agent-memory",
+          "source_report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v4/agent-memory-f5a79d230a31/evidence.json",
+          "source_revision": "f5a79d230a315829b456b9eef1bf0e77df30a902",
+          "frozen_input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd"
+        },
+        {
+          "variant": "lane:amb-precisionmembench-retrieval-v4:bm25",
+          "source_report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v4/bm25-f5a79d230a31/evidence.json",
+          "source_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+          "frozen_input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd"
+        },
+        {
+          "variant": "lane:amb-precisionmembench-retrieval-v4:mem0-explicit",
+          "source_report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v4/mem0-explicit-f5a79d230a31/evidence.json",
+          "source_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+          "frozen_input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd"
+        }
+      ],
+      "diagnostic_only": [
+        {
+          "variant": "lane:amb-precisionmembench-retrieval-v4:agent-memory-shadow",
+          "source_report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v4/agent-memory-shadow-f5a79d230a31/evidence.json",
+          "reason": "not a separate independent competitor"
+        }
+      ],
+      "governance_state": "acceptance_record_exists__canonical_registration_pending"
+    },
+    {
+      "lane_id": "longmemeval-s-retrieval-parity-v4",
+      "frozen_file": "reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v4.json",
+      "git_blob_sha": "e1dfaf1a20c4d1f3b773a40b78cf2915bdbb3559",
+      "frozen_on": "2026-10-07",
+      "frozen_before_any_score": true,
+      "status": "accepted",
+      "category": "LongMemEval_S",
+      "scorecard_rows": [
+        {
+          "variant": "lane:longmemeval-s-retrieval-parity-v4:agent_memory:session",
+          "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v4/agent_memory-session-f5a79d230a31/evidence.json",
+          "source_revision": "f5a79d230a315829b456b9eef1bf0e77df30a902",
+          "frozen_input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+        },
+        {
+          "variant": "lane:longmemeval-s-retrieval-parity-v4:agent_memory:turn",
+          "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v4/agent_memory-turn-f5a79d230a31/evidence.json",
+          "source_revision": "f5a79d230a315829b456b9eef1bf0e77df30a902",
+          "frozen_input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+        },
+        {
+          "variant": "lane:longmemeval-s-retrieval-parity-v4:lexical_overlap:session",
+          "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v4/lexical_overlap-session-f5a79d230a31/evidence.json",
+          "source_revision": "f5a79d230a315829b456b9eef1bf0e77df30a902",
+          "frozen_input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+        },
+        {
+          "variant": "lane:longmemeval-s-retrieval-parity-v4:lexical_overlap:turn",
+          "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v4/lexical_overlap-turn-f5a79d230a31/evidence.json",
+          "source_revision": "f5a79d230a315829b456b9eef1bf0e77df30a902",
+          "frozen_input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+        },
+        {
+          "variant": "lane:longmemeval-s-retrieval-parity-v4:mem0_explicit:session",
+          "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v4/mem0_explicit-session-f5a79d230a31/evidence.json",
+          "source_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+          "frozen_input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+        },
+        {
+          "variant": "lane:longmemeval-s-retrieval-parity-v4:mem0_explicit:turn",
+          "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v4/mem0_explicit-turn-f5a79d230a31/evidence.json",
+          "source_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+          "frozen_input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+        }
+      ],
+      "diagnostic_only": [
+        {
+          "variant": "lane:longmemeval-s-retrieval-parity-v4:agent_memory_shadow:session",
+          "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v4/agent_memory_shadow-session-f5a79d230a31/evidence.json",
+          "reason": "not a separate independent competitor"
+        },
+        {
+          "variant": "lane:longmemeval-s-retrieval-parity-v4:agent_memory_shadow:turn",
+          "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v4/agent_memory_shadow-turn-f5a79d230a31/evidence.json",
+          "reason": "not a separate independent competitor"
+        }
+      ],
+      "governance_state": "acceptance_record_exists__canonical_registration_pending"
+    },
+    {
+      "lane_id": "amb-precisionmembench-retrieval-v5",
+      "frozen_file": "reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v5.json",
+      "git_blob_sha": "1cc19f3c053fe5b1e41564a647fdb1ff799b62d6",
+      "frozen_on": "2026-10-07",
+      "frozen_before_any_score": true,
+      "status": "accepted",
+      "category": "AMB PrecisionMemBench",
+      "scorecard_rows": [
+        {
+          "variant": "lane:amb-precisionmembench-retrieval-v5:agent-memory",
+          "source_report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v5/agent-memory-e6f9db7f1db5/evidence.json",
+          "source_revision": "e6f9db7f1db571e56d81511c20c93768987b35d7",
+          "frozen_input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd"
+        },
+        {
+          "variant": "lane:amb-precisionmembench-retrieval-v5:bm25",
+          "source_report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v5/bm25-e6f9db7f1db5/evidence.json",
+          "source_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+          "frozen_input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd"
+        },
+        {
+          "variant": "lane:amb-precisionmembench-retrieval-v5:mem0-explicit",
+          "source_report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v5/mem0-explicit-e6f9db7f1db5/evidence.json",
+          "source_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+          "frozen_input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd"
+        }
+      ],
+      "diagnostic_only": [],
+      "governance_state": "acceptance_record_exists__canonical_registration_pending"
+    },
+    {
+      "lane_id": "longmemeval-s-retrieval-parity-v5",
+      "frozen_file": "reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v5.json",
+      "git_blob_sha": "3bc8137cf2d0afd556ffe41cae6806a417db03d3",
+      "frozen_on": "2026-10-07",
+      "frozen_before_any_score": true,
+      "status": "accepted",
+      "category": "LongMemEval_S",
+      "scorecard_rows": [
+        {
+          "variant": "lane:longmemeval-s-retrieval-parity-v5:agent_memory:session",
+          "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v5/agent_memory-session-e6f9db7f1db5/evidence.json",
+          "source_revision": "e6f9db7f1db571e56d81511c20c93768987b35d7",
+          "frozen_input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+        },
+        {
+          "variant": "lane:longmemeval-s-retrieval-parity-v5:agent_memory:turn",
+          "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v5/agent_memory-turn-e6f9db7f1db5/evidence.json",
+          "source_revision": "e6f9db7f1db571e56d81511c20c93768987b35d7",
+          "frozen_input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+        },
+        {
+          "variant": "lane:longmemeval-s-retrieval-parity-v5:lexical_overlap:session",
+          "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v5/lexical_overlap-session-e6f9db7f1db5/evidence.json",
+          "source_revision": "e6f9db7f1db571e56d81511c20c93768987b35d7",
+          "frozen_input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+        },
+        {
+          "variant": "lane:longmemeval-s-retrieval-parity-v5:lexical_overlap:turn",
+          "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v5/lexical_overlap-turn-e6f9db7f1db5/evidence.json",
+          "source_revision": "e6f9db7f1db571e56d81511c20c93768987b35d7",
+          "frozen_input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+        },
+        {
+          "variant": "lane:longmemeval-s-retrieval-parity-v5:mem0_explicit:session",
+          "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v5/mem0_explicit-session-e6f9db7f1db5/evidence.json",
+          "source_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+          "frozen_input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+        },
+        {
+          "variant": "lane:longmemeval-s-retrieval-parity-v5:mem0_explicit:turn",
+          "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v5/mem0_explicit-turn-e6f9db7f1db5/evidence.json",
+          "source_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+          "frozen_input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+        }
+      ],
+      "diagnostic_only": [],
+      "governance_state": "acceptance_record_exists__canonical_registration_pending"
+    },
+    {
+      "lane_id": "amb-precisionmembench-retrieval-v6",
+      "frozen_file": "reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v6.json",
+      "git_blob_sha": "f25355d0c0f3462c148d40da1dfb7812943f90e5",
+      "frozen_on": "2026-10-08",
+      "frozen_before_any_score": true,
+      "status": "accepted",
+      "category": "AMB PrecisionMemBench",
+      "scorecard_rows": [
+        {
+          "variant": "lane:amb-precisionmembench-retrieval-v6:agent-memory",
+          "source_report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v6/agent-memory-24048d55e26d/evidence.json",
+          "source_revision": "24048d55e26d7db27715e78b24a8b795433a5e16",
+          "frozen_input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd"
+        },
+        {
+          "variant": "lane:amb-precisionmembench-retrieval-v6:bm25",
+          "source_report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v6/bm25-24048d55e26d/evidence.json",
+          "source_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+          "frozen_input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd"
+        },
+        {
+          "variant": "lane:amb-precisionmembench-retrieval-v6:mem0-explicit",
+          "source_report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v6/mem0-explicit-24048d55e26d/evidence.json",
+          "source_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+          "frozen_input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd"
+        }
+      ],
+      "diagnostic_only": [],
+      "governance_state": "acceptance_record_exists__canonical_registration_pending"
+    },
+    {
+      "lane_id": "longmemeval-s-retrieval-parity-v6",
+      "frozen_file": "reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v6.json",
+      "git_blob_sha": "1c0f9b93d451a43e032c9e2fd09bf45c451699e6",
+      "frozen_on": "2026-10-08",
+      "frozen_before_any_score": true,
+      "status": "accepted",
+      "category": "LongMemEval_S",
+      "scorecard_rows": [
+        {
+          "variant": "lane:longmemeval-s-retrieval-parity-v6:agent_memory:session",
+          "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/agent_memory-session-24048d55e26d/evidence.json",
+          "source_revision": "24048d55e26d7db27715e78b24a8b795433a5e16",
+          "frozen_input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+        },
+        {
+          "variant": "lane:longmemeval-s-retrieval-parity-v6:agent_memory:turn",
+          "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/agent_memory-turn-24048d55e26d/evidence.json",
+          "source_revision": "24048d55e26d7db27715e78b24a8b795433a5e16",
+          "frozen_input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+        },
+        {
+          "variant": "lane:longmemeval-s-retrieval-parity-v6:lexical_overlap:session",
+          "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/lexical_overlap-session-24048d55e26d/evidence.json",
+          "source_revision": "24048d55e26d7db27715e78b24a8b795433a5e16",
+          "frozen_input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+        },
+        {
+          "variant": "lane:longmemeval-s-retrieval-parity-v6:lexical_overlap:turn",
+          "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/lexical_overlap-turn-24048d55e26d/evidence.json",
+          "source_revision": "24048d55e26d7db27715e78b24a8b795433a5e16",
+          "frozen_input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+        },
+        {
+          "variant": "lane:longmemeval-s-retrieval-parity-v6:mem0_explicit:session",
+          "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/mem0_explicit-session-24048d55e26d/evidence.json",
+          "source_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+          "frozen_input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+        },
+        {
+          "variant": "lane:longmemeval-s-retrieval-parity-v6:mem0_explicit:turn",
+          "source_report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/mem0_explicit-turn-24048d55e26d/evidence.json",
+          "source_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+          "frozen_input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+        }
+      ],
+      "diagnostic_only": [],
+      "governance_state": "acceptance_record_exists__canonical_registration_pending"
+    }
+  ]
+}
