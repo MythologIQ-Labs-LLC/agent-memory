@@ -1,7 +1,7 @@
 # PRD-002 extension: benchmark-native leaderboards and distance to frontier
 
 **Issue:** #779. **Parents:** #696 / #700. **Evidence foundation:** #698 (PR #708, merged). **Competitor qualification:** #600, #601, #640. **Deficit ownership:** #574, #668, #719, #768.  
-**Status:** DESIGN ONLY. Not a deployed UI, not a benchmark execution, not a runtime source change.
+**Status:** IMPLEMENTED AND LOCALLY QUALIFIED as an engineering preview (projection schema 0.2.0, static viewer, browser evidence). Not a benchmark execution, not a runtime source change, not an approved public deployment. See the qualification record at the end of this document.
 
 ## Product North Star
 
@@ -117,3 +117,22 @@ Fail-closed projection requirements:
 6. Independent execution and falsification in Claude Code cloud/local, no GitHub Actions/CI use for this branch. Separate actual score execution under #601 and #640 governance.
 
 **Launch acceptance:** A user can go from any benchmark and native metric to its strongest eligible measured competitor, Agent Memory rank, measurable gap, absolute adequacy target (or absent state), and immutable evidence/owner without consulting raw files. The UI prominently says what is *not* known.
+
+## Qualification record (local, no CI)
+
+Projection `reference/agentmem_ref/evaluation/ui_frontier_leaderboard.py` (schema `0.2.0`), builder `scripts/build_benchmark_frontier_leaderboards.py`, viewer `reports/benchmarks/ui/index.html`, generated artifact `reports/benchmarks/ui/frontier-leaderboards.json`, browser evidence `reports/benchmarks/ui/evidence/`.
+
+Rules added beyond the original fail-closed list, each exposed by the accepted catalog or by an adversarial fixture:
+
+- Every ranked value must resolve to a complete run record whose benchmark id, input digest, selection id, sample count, task profile and system revision equal the comparison identity; otherwise the row is non-comparable with a `provenance_missing`, `run_identity_mismatch`, `run_revision_mismatch` or `run_not_complete` reason.
+- A ratio outside `[0, 1]` invalidates the row; a value whose state is not `measured` is never a score even when numeric.
+- Boolean measurements are `not_rankable`, distinct from `not_measured`.
+- Ties expose `leader_state: tied` and `co_leaders`; the alphabetically first system is never presented as a sole leader.
+- Peers are typed as `subject`, `external_competitor` (`external_memory`) or `control` (`lexical`, `no_memory`); the competitive state distinguishes *leading vs external*, *tied*, *leads controls only*, *behind external* and *behind control*. A lead over controls alone is not a market position.
+- Repeated runs are grouped into a structural lineage (benchmark, input, selection, sample, system kinds, metric metadata; labels are never parsed) and ordered by the Agent Memory run start time: `current`, `superseded`, `newer_unaccepted_evidence`, or `undetermined` when start times are absent.
+- The snapshot block carries `as_of`, `evidence_revision` and `repository_is_newer` for historical identification.
+- Published references and the external-competitor registry are emitted separately and never ranked; the frontier objectives registry is `absent`, `draft` or `canonical`, preserves families A–I, and links ownership only as a labelled match.
+- The viewer refuses projections with an aggregate score, an authority claim or an unsupported schema, and renders any internally inconsistent row as "Invalid row, refused" without numbers.
+
+Known evidence gaps surfaced: `reports/benchmarks/dashboard/current.json` lists four accepted frozen lanes while `current.md` describes twelve, so lane generations v3–v6 project as `same_profile` and never rank; AMB run records have no start time, so AMB v1/v2 chronology is undetermined; no machine-readable adequacy threshold exists for any metric.
+
