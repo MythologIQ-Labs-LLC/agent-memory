@@ -86,12 +86,15 @@ class OwnerTombstoneVisibility(_Facade):
         self.assertFalse(record["tombstoned"])
         self.assertNotIn("memory.delete", {e["event_type"] for e in record["events"]})
         self.assertFalse(set(old_ids) & {e.get("fact_uuid") for e in record["events"]})
-        # deleting the new generation reads as tombstoned again; the version only advances
+        # deleting the new generation reads as tombstoned again with that generation's own
+        # version (#786 P2 gate: a generation's counter starts at zero, so the second deletion
+        # of a one-fact generation records v2 whatever the first generation counted)
         self.assertTrue(self.memory.forget("memory:a")["committed"])
         record = self.memory.history("memory:a")["history"]
         self.assertTrue(record["tombstoned"])
         self.assertIsNone(record["current_fact_uuid"])
-        self.assertGreater(record["state_version"], version_after_first_delete)
+        self.assertEqual(record["state_version"], 2)
+        self.assertEqual(version_after_first_delete, 3)
         serial = _serial(self.memory.history("memory:a"))
         for fact_uuid in (*old_ids, again["fact_uuid"]):
             self.assertNotIn(fact_uuid, serial)
@@ -171,10 +174,14 @@ class PermanentDeletionVisibility(unittest.TestCase):
         corpus = corpus_for(rule(rule_id=f"rule:777r:{memory}:purge", target=memory,
                                  criterion="permanent-deletion", from_state="current", to_values=("deleted",)))
         self._verifiers.append(corpus.verifier())
+        # the purge is the owner's: it carries the handle's own scope (#786 holds every write,
+        # deletion included, to the targeted head's tenant/domain/project eligibility)
         proposal = replace(_proposal(f"proposal:777r:{memory}:purge", operation="permanent_deletion",
                                      project_ref=self.PROJECT),
                            target_reference=memory, review_satisfied=True, approval_refs=("approval:dpo",),
-                           reversibility="irreversible")
+                           reversibility="irreversible", scope=self.PROJECT, tenant_ref=self.TENANT,
+                           isolation_domain_refs=(self.TENANT, self.PROJECT),
+                           required_isolation_domain_refs=(self.TENANT, self.PROJECT), purpose="c644")
         with memory_handle.runtime.serialization_lock:
             out = memory_handle.runtime.delete_current(
                 proposal, evidence=corpus.evidence_for(target_reference=memory, criterion="permanent-deletion",
@@ -281,7 +288,8 @@ class OwnerViewIsStableUnderOtherScopes(_Facade):
         self.memory.remember("memory:a", "Orrin gateway region is Turku", proposition=_prop("Turku"))
         self.memory.correct("memory:a", "Orrin gateway region is Narvik", evidence=_evidence(), risk_class="low",
                             replacement_kind="state_change")
-        self.assertGreater(self.memory._canonical_history("memory:a")["history"]["state_version"], 3)
+        # the other project's generation counts from zero (#786 P2 gate): create 1, correct 2
+        self.assertEqual(self.memory._canonical_history("memory:a")["history"]["state_version"], 2)
         self.reopen("project:a")
         self.assertEqual(self.memory.history("memory:a")["history"]["state_version"], 3)
         self.assertTrue(self.memory.history("memory:a")["history"]["tombstoned"])

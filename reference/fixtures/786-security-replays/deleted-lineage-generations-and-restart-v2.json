@@ -1,0 +1,1082 @@
+{
+ "replay_id": "deleted-lineage-generations-and-restart-v2",
+ "fixture_version": 1,
+ "dsl_version": "786-security-replay-dsl/1",
+ "owning_issue": 786,
+ "frozen_on": "2026-10-13",
+ "status": "supersedes_v1",
+ "supersession_reason": "The -v1 fixtures (frozen at b70ff58a) are superseded, not edited. The second independent review read them against their contract sources and found: op_mentions could only scan a 7-field outcome shape (the runner now scans the full result); W3 and L3 probed only `committed` after restart; the documented superset forget/dispute admission and the forged-complete-scope commit were unpinned; refused or parked proposals on a tombstoned id (docs/44 'reports 0 to any writer') were untested and falsified (review F-A); re-deletion of a deleted head/version (review F-C/F-D) and a former owner's dispute attempts (review F-E) were untested and falsified; R1's owner view cites docs/plan-776-777-772-exact-head-qualification.md, which v1 did not list; L2's 'content recoverable after a pruning' is implementation evidence, now labelled so. Every v1 case is carried forward unchanged in substance.",
+ "development_history": "v1 was executed once with --allow-dirty before its freeze; its single corrected expectation (fixture 1, W5: a disputed head is withheld from the owner's own admission, docs/44) is carried into v2. v2 expectations were written from the contracts and the second review's findings before v2 was first executed. That first execution (on the working tree after the second review's remediation) failed four probes: W7c `a_del_refusal` was a runtime finding (a former owner's re-deletion or dispute of its own deleted generation answered `fact_not_found` once another scope held the live head and `already_deleted` otherwise, disclosing the re-creation; repaired at the governed delete/dispute boundary, pytest ReplayV2Findings), and three were expectation errors corrected to the owner-only control behaviour: W4b `k2_owner_recall` (a second remember onto an owner-visible head appends a version, both stay admitted), W5 `owner_candidates` (candidates carry the owner's superseded version; admission withholds the disputed head) and R6b `other_history` (the writer's own parked proposal precedes its commit in its own history). No expectation was changed to match a refusal string.",
+ "base_commit": "560785a8",
+ "independence": "Expected outcomes were written from the contract documents listed in contract_sources by the session that implemented the #786 repair, before this fixture was first executed by the runner. They are therefore preregistered but not independent of the implementer; an independent reviewer must read them against the contracts before any acceptance. A failing expectation is a finding, never a reason to edit this fixture; a corrected expectation requires a superseding fixture version with a recorded reason. No frozen holdout phrase or #644 fixture vocabulary is used.",
+ "stop_lines": [
+  "no fixture edit after first execution; supersede with -v2 and record why",
+  "no expectation weakened to obtain PASS",
+  "no runtime change motivated by a replay outcome without a preregistered reproducer",
+  "a replay verdict is evidence, not successor acceptance; acceptance requires independent review"
+ ],
+ "title": "A governed deletion withholds its whole generation; re-creation is a fresh, isolated generation; deleted versions are as-of barriers",
+ "contract_sources": [
+  {
+   "path": "docs/774-776-lineage-integration-contract.md",
+   "sha256_at_base": "d6c5ba694e75da1f761eb000e2f17842c9a25dff7baedb17425cbfbf1c814e10"
+  },
+  {
+   "path": "docs/774-strict-successor-target-policy.md",
+   "sha256_at_base": "fe910667ffa9769d67d5b4faeb68d824ce31cb7951755288b3e3379a01ecd7be"
+  },
+  {
+   "path": "docs/786-cross-scope-write-authority.md",
+   "sha256_at_base": "77b5145a94afbf1d55318c5478bdffebf8abbda426840aa438da182a7623a298"
+  }
+ ],
+ "invariants": [
+  {
+   "id": "L1",
+   "statement": "After a governed deletion no version of the deleted generation is admitted to current or historical recall, nor by logical reference, and the owner's history reads tombstoned with no events, live and after restart.",
+   "falsified_by": "any deleted version admitted or any event served"
+  },
+  {
+   "id": "L2",
+   "statement": "The owner's re-creation is visible only as its own generation: old versions are withheld from recall, history and write_semantics. (The probe that a pruned version's content remains physically present is implementation evidence of the pruning/permanent-deletion distinction, docs/786 table, not a clause of the cited lineage contract.)",
+   "falsified_by": "an old version or its text surfacing"
+  },
+  {
+   "id": "L3",
+   "statement": "Another project's re-creation is isolated both ways: the former owner reads nothing of it and cannot write, correct, delete or dispute it; the new generation reads nothing of the former.",
+   "falsified_by": "any cross-generation read or an admitted former-owner write"
+  },
+  {
+   "id": "L4",
+   "statement": "Every deleted version is an as-of barrier for every reader, and a live generation resolves only for its owner, only from its own start.",
+   "falsified_by": "version_in_effect resolving a deleted version, or resolving the live generation for a non-owner"
+  },
+  {
+   "id": "L5",
+   "statement": "A governed deletion of one superseded version withholds only that version; a deleted head or lineage member cannot be deleted again (already_deleted), so a recorded generation is never rewritten or shrunk, live and after restart.",
+   "falsified_by": "the deleted version admitted, a sibling version withheld, or a re-deletion committed or a former version resurfacing after restart"
+  },
+  {
+   "id": "L6",
+   "statement": "A permanent deletion removes every version of the lineage from the substrate and no byte of their content reaches a public read; the owner still reads tombstoned.",
+   "falsified_by": "a surviving fact, a surviving byte of content, or a non-tombstoned owner view"
+  }
+ ],
+ "cases": [
+  {
+   "id": "L1-deletion-withholds-live",
+   "invariants": [
+    "L1"
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:f",
+     "text": "Quillon ferry schedule departure is dawn",
+     "prop": {
+      "s": "Quillon ferry schedule",
+      "a": "departure",
+      "v": "dawn",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    },
+    {
+     "op": "correct",
+     "ref": "memory:f",
+     "text": "Quillon ferry schedule departure is noon",
+     "kind": "state_change",
+     "require_committed": true
+    },
+    {
+     "op": "forget",
+     "ref": "memory:f",
+     "require_committed": true
+    }
+   ],
+   "probes": {
+    "current": {
+     "probe": "recall_admitted",
+     "query": "Quillon ferry schedule departure"
+    },
+    "historical": {
+     "probe": "recall_admitted",
+     "query": "Quillon ferry schedule departure",
+     "historical": true
+    },
+    "by_ref_unknown": {
+     "probe": "recall_same_as_unknown",
+     "query": "Quillon ferry schedule departure",
+     "ref": "memory:f"
+    },
+    "owner_history": {
+     "probe": "history",
+     "ref": "memory:f"
+    },
+    "mentions": {
+     "probe": "recall_mentions",
+     "query": "Quillon ferry schedule departure",
+     "historical": true,
+     "tokens": [
+      "memory:f",
+      "memory:f@2",
+      "dawn",
+      "noon"
+     ]
+    }
+   },
+   "expect": {
+    "current": {
+     "eq": []
+    },
+    "historical": {
+     "eq": []
+    },
+    "by_ref_unknown": {
+     "eq": true
+    },
+    "mentions": {
+     "eq": []
+    },
+    "owner_history": {
+     "eq": {
+      "current": null,
+      "state_version": 3,
+      "tombstoned": true,
+      "events": []
+     }
+    }
+   }
+  },
+  {
+   "id": "L1-deletion-withholds-after-restart",
+   "invariants": [
+    "L1"
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:f",
+     "text": "Quillon ferry schedule departure is dawn",
+     "prop": {
+      "s": "Quillon ferry schedule",
+      "a": "departure",
+      "v": "dawn",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    },
+    {
+     "op": "correct",
+     "ref": "memory:f",
+     "text": "Quillon ferry schedule departure is noon",
+     "kind": "state_change",
+     "require_committed": true
+    },
+    {
+     "op": "forget",
+     "ref": "memory:f",
+     "require_committed": true
+    },
+    {
+     "op": "reopen"
+    }
+   ],
+   "probes": {
+    "current": {
+     "probe": "recall_admitted",
+     "query": "Quillon ferry schedule departure"
+    },
+    "historical": {
+     "probe": "recall_admitted",
+     "query": "Quillon ferry schedule departure",
+     "historical": true
+    },
+    "by_ref_unknown": {
+     "probe": "recall_same_as_unknown",
+     "query": "Quillon ferry schedule departure",
+     "ref": "memory:f"
+    },
+    "owner_history": {
+     "probe": "history",
+     "ref": "memory:f"
+    }
+   },
+   "expect": {
+    "current": {
+     "eq": []
+    },
+    "historical": {
+     "eq": []
+    },
+    "by_ref_unknown": {
+     "eq": true
+    },
+    "owner_history": {
+     "eq": {
+      "current": null,
+      "state_version": 3,
+      "tombstoned": true,
+      "events": []
+     }
+    }
+   }
+  },
+  {
+   "id": "L2-owner-recreation",
+   "invariants": [
+    "L2"
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:f",
+     "text": "Quillon ferry schedule departure is dawn",
+     "prop": {
+      "s": "Quillon ferry schedule",
+      "a": "departure",
+      "v": "dawn",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    },
+    {
+     "op": "correct",
+     "ref": "memory:f",
+     "text": "Quillon ferry schedule departure is noon",
+     "kind": "state_change",
+     "require_committed": true
+    },
+    {
+     "op": "forget",
+     "ref": "memory:f",
+     "require_committed": true
+    },
+    {
+     "op": "remember",
+     "ref": "memory:f",
+     "text": "Quillon ferry schedule departure is dusk",
+     "prop": {
+      "s": "Quillon ferry schedule",
+      "a": "departure",
+      "v": "dusk",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "label": "gen2",
+     "require_committed": true
+    },
+    {
+     "op": "reopen"
+    }
+   ],
+   "probes": {
+    "owner_history": {
+     "probe": "history",
+     "ref": "memory:f"
+    },
+    "historical": {
+     "probe": "recall_admitted",
+     "query": "Quillon ferry schedule departure",
+     "historical": true
+    },
+    "mentions": {
+     "probe": "recall_mentions",
+     "query": "Quillon ferry schedule departure",
+     "historical": true,
+     "tokens": [
+      "memory:f",
+      "memory:f@2",
+      "dawn",
+      "noon"
+     ]
+    },
+    "old_semantics": {
+     "probe": "write_semantics_present",
+     "fact": "memory:f"
+    },
+    "new_semantics": {
+     "probe": "write_semantics_present",
+     "fact": "gen2"
+    },
+    "old_exists": {
+     "probe": "fact_exists",
+     "fact": "memory:f"
+    }
+   },
+   "expect": {
+    "owner_history": {
+     "eq": {
+      "current": "gen2",
+      "state_version": 1,
+      "tombstoned": false,
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ]
+     }
+    },
+    "historical": {
+     "eq": [
+      "gen2"
+     ]
+    },
+    "mentions": {
+     "eq": []
+    },
+    "old_semantics": {
+     "eq": false
+    },
+    "new_semantics": {
+     "eq": true
+    },
+    "old_exists": {
+     "eq": true
+    }
+   }
+  },
+  {
+   "id": "L3-other-project-recreation-is-isolated",
+   "invariants": [
+    "L3"
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:f",
+     "text": "Quillon ferry schedule departure is dawn",
+     "prop": {
+      "s": "Quillon ferry schedule",
+      "a": "departure",
+      "v": "dawn",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    },
+    {
+     "op": "correct",
+     "ref": "memory:f",
+     "text": "Quillon ferry schedule departure is noon",
+     "kind": "state_change",
+     "require_committed": true
+    },
+    {
+     "op": "forget",
+     "ref": "memory:f",
+     "require_committed": true
+    },
+    {
+     "op": "remember",
+     "ref": "memory:f",
+     "text": "Quillon ferry schedule departure is dusk",
+     "prop": {
+      "s": "Quillon ferry schedule",
+      "a": "departure",
+      "v": "dusk",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "as": "project:b",
+     "label": "gen-b",
+     "require_committed": true
+    },
+    {
+     "op": "reopen"
+    },
+    {
+     "op": "remember",
+     "ref": "memory:f",
+     "text": "Quillon ferry schedule departure is midnight",
+     "prop": {
+      "s": "Quillon ferry schedule",
+      "a": "departure",
+      "v": "midnight",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "name": "a_rem"
+    },
+    {
+     "op": "correct",
+     "ref": "memory:f",
+     "text": "Quillon ferry schedule departure is midnight",
+     "kind": "state_change",
+     "name": "a_cor"
+    },
+    {
+     "op": "forget",
+     "ref": "memory:f",
+     "name": "a_del"
+    },
+    {
+     "op": "dispute",
+     "ref": "memory:f",
+     "name": "a_disp"
+    }
+   ],
+   "probes": {
+    "owner_historical": {
+     "probe": "recall_admitted",
+     "query": "Quillon ferry schedule departure",
+     "historical": true
+    },
+    "owner_mentions": {
+     "probe": "recall_mentions",
+     "query": "Quillon ferry schedule departure",
+     "historical": true,
+     "tokens": [
+      "gen-b",
+      "dusk"
+     ]
+    },
+    "owner_history": {
+     "probe": "history",
+     "ref": "memory:f"
+    },
+    "other_mentions": {
+     "probe": "recall_mentions",
+     "query": "Quillon ferry schedule departure",
+     "historical": true,
+     "as": "project:b",
+     "tokens": [
+      "memory:f",
+      "memory:f@2",
+      "dawn",
+      "noon"
+     ]
+    },
+    "other_history": {
+     "probe": "history",
+     "ref": "memory:f",
+     "as": "project:b"
+    },
+    "a_rem": {
+     "probe": "op_result",
+     "name": "a_rem",
+     "field": "committed"
+    },
+    "a_rem_refusal": {
+     "probe": "op_result",
+     "name": "a_rem",
+     "field": "refusal"
+    },
+    "a_rem_after": {
+     "probe": "op_result",
+     "name": "a_rem",
+     "field": "after_state"
+    },
+    "a_cor": {
+     "probe": "op_result",
+     "name": "a_cor",
+     "field": "committed"
+    },
+    "a_cor_refusal": {
+     "probe": "op_result",
+     "name": "a_cor",
+     "field": "refusal"
+    },
+    "a_del": {
+     "probe": "op_result",
+     "name": "a_del",
+     "field": "committed"
+    },
+    "a_del_refusal": {
+     "probe": "op_result",
+     "name": "a_del",
+     "field": "refusal"
+    },
+    "a_disp": {
+     "probe": "op_result",
+     "name": "a_disp",
+     "field": "committed"
+    },
+    "a_disp_refusal": {
+     "probe": "op_result",
+     "name": "a_disp",
+     "field": "refusal"
+    },
+    "a_mentions": {
+     "probe": "op_mentions",
+     "name": "a_rem",
+     "tokens": [
+      "gen-b",
+      "dusk",
+      "v1"
+     ]
+    },
+    "head": {
+     "probe": "canonical_head",
+     "ref": "memory:f"
+    }
+   },
+   "expect": {
+    "owner_historical": {
+     "eq": []
+    },
+    "owner_mentions": {
+     "eq": []
+    },
+    "owner_history": {
+     "eq": {
+      "current": null,
+      "state_version": 3,
+      "tombstoned": true,
+      "events": []
+     }
+    },
+    "other_mentions": {
+     "eq": []
+    },
+    "other_history": {
+     "eq": {
+      "current": "gen-b",
+      "state_version": 1,
+      "tombstoned": false,
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ]
+     }
+    },
+    "a_rem": {
+     "eq": false
+    },
+    "a_rem_refusal": {
+     "eq": "target_unavailable"
+    },
+    "a_rem_after": {
+     "eq": "v0"
+    },
+    "a_cor": {
+     "eq": false
+    },
+    "a_cor_refusal": {
+     "eq": "fact_not_found"
+    },
+    "a_del": {
+     "eq": false
+    },
+    "a_del_refusal": {
+     "eq": "fact_not_found"
+    },
+    "a_disp": {
+     "eq": false
+    },
+    "a_disp_refusal": {
+     "eq": "fact_not_found"
+    },
+    "a_mentions": {
+     "eq": []
+    },
+    "head": {
+     "eq": "gen-b"
+    }
+   }
+  },
+  {
+   "id": "L5b-a-deleted-head-or-version-cannot-be-deleted-again",
+   "invariants": [
+    "L5",
+    "L1"
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:f",
+     "text": "Quillon ferry schedule departure is dawn",
+     "prop": {
+      "s": "Quillon ferry schedule",
+      "a": "departure",
+      "v": "dawn",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    },
+    {
+     "op": "correct",
+     "ref": "memory:f",
+     "text": "Quillon ferry schedule departure is noon",
+     "kind": "state_change",
+     "require_committed": true
+    },
+    {
+     "op": "forget",
+     "ref": "memory:f",
+     "require_committed": true
+    },
+    {
+     "op": "delete_version",
+     "ref": "memory:f",
+     "fact": "memory:f@2",
+     "name": "again_head"
+    },
+    {
+     "op": "delete_version",
+     "ref": "memory:f",
+     "fact": "memory:f",
+     "name": "again_member"
+    },
+    {
+     "op": "reopen"
+    }
+   ],
+   "probes": {
+    "again_head": {
+     "probe": "op_result",
+     "name": "again_head",
+     "field": "committed"
+    },
+    "again_head_refusal": {
+     "probe": "op_result",
+     "name": "again_head",
+     "field": "refusal"
+    },
+    "again_member": {
+     "probe": "op_result",
+     "name": "again_member",
+     "field": "committed"
+    },
+    "again_member_refusal": {
+     "probe": "op_result",
+     "name": "again_member",
+     "field": "refusal"
+    },
+    "historical": {
+     "probe": "recall_admitted",
+     "query": "Quillon ferry schedule departure",
+     "historical": true
+    },
+    "old_semantics": {
+     "probe": "write_semantics_present",
+     "fact": "memory:f"
+    },
+    "at_v1": {
+     "probe": "version_in_effect",
+     "ref": "memory:f",
+     "at": "memory:f"
+    },
+    "owner_history": {
+     "probe": "history",
+     "ref": "memory:f"
+    }
+   },
+   "expect": {
+    "again_head": {
+     "eq": false
+    },
+    "again_head_refusal": {
+     "eq": "already_deleted"
+    },
+    "again_member": {
+     "eq": false
+    },
+    "again_member_refusal": {
+     "eq": "already_deleted"
+    },
+    "historical": {
+     "eq": []
+    },
+    "old_semantics": {
+     "eq": false
+    },
+    "at_v1": {
+     "eq": null
+    },
+    "owner_history": {
+     "eq": {
+      "current": null,
+      "state_version": 3,
+      "tombstoned": true,
+      "events": []
+     }
+    }
+   }
+  },
+  {
+   "id": "L4-three-generations-as-of-barriers",
+   "invariants": [
+    "L4",
+    "L3"
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:f",
+     "text": "Quillon ferry schedule departure is dawn",
+     "prop": {
+      "s": "Quillon ferry schedule",
+      "a": "departure",
+      "v": "dawn",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    },
+    {
+     "op": "correct",
+     "ref": "memory:f",
+     "text": "Quillon ferry schedule departure is noon",
+     "kind": "state_change",
+     "require_committed": true
+    },
+    {
+     "op": "forget",
+     "ref": "memory:f",
+     "require_committed": true
+    },
+    {
+     "op": "remember",
+     "ref": "memory:f",
+     "text": "Quillon ferry schedule departure is dusk",
+     "prop": {
+      "s": "Quillon ferry schedule",
+      "a": "departure",
+      "v": "dusk",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "as": "project:b",
+     "label": "gen-b",
+     "require_committed": true
+    },
+    {
+     "op": "forget",
+     "ref": "memory:f",
+     "as": "project:b",
+     "require_committed": true
+    },
+    {
+     "op": "remember",
+     "ref": "memory:f",
+     "text": "Quillon ferry schedule departure is midnight",
+     "prop": {
+      "s": "Quillon ferry schedule",
+      "a": "departure",
+      "v": "midnight",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "label": "gen3",
+     "require_committed": true
+    },
+    {
+     "op": "reopen"
+    },
+    {
+     "op": "remember",
+     "ref": "memory:f",
+     "text": "Quillon ferry schedule departure is twilight",
+     "prop": {
+      "s": "Quillon ferry schedule",
+      "a": "departure",
+      "v": "twilight",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "as": "project:b",
+     "name": "b_back"
+    }
+   ],
+   "probes": {
+    "owner_at_gen3": {
+     "probe": "version_in_effect",
+     "ref": "memory:f",
+     "at": "gen3"
+    },
+    "other_at_gen3": {
+     "probe": "version_in_effect",
+     "ref": "memory:f",
+     "at": "gen3",
+     "as": "project:b"
+    },
+    "owner_at_v1": {
+     "probe": "version_in_effect",
+     "ref": "memory:f",
+     "at": "memory:f"
+    },
+    "owner_at_v2": {
+     "probe": "version_in_effect",
+     "ref": "memory:f",
+     "at": "memory:f@2"
+    },
+    "owner_at_genb": {
+     "probe": "version_in_effect",
+     "ref": "memory:f",
+     "at": "gen-b"
+    },
+    "other_at_genb": {
+     "probe": "version_in_effect",
+     "ref": "memory:f",
+     "at": "gen-b",
+     "as": "project:b"
+    },
+    "other_at_v2": {
+     "probe": "version_in_effect",
+     "ref": "memory:f",
+     "at": "memory:f@2",
+     "as": "project:b"
+    },
+    "head": {
+     "probe": "canonical_head",
+     "ref": "memory:f"
+    },
+    "b_back": {
+     "probe": "op_result",
+     "name": "b_back",
+     "field": "committed"
+    },
+    "other_history": {
+     "probe": "history",
+     "ref": "memory:f",
+     "as": "project:b"
+    }
+   },
+   "expect": {
+    "owner_at_gen3": {
+     "eq": "gen3"
+    },
+    "other_at_gen3": {
+     "eq": null
+    },
+    "owner_at_v1": {
+     "eq": null
+    },
+    "owner_at_v2": {
+     "eq": null
+    },
+    "owner_at_genb": {
+     "eq": null
+    },
+    "other_at_genb": {
+     "eq": null
+    },
+    "other_at_v2": {
+     "eq": null
+    },
+    "head": {
+     "eq": "gen3"
+    },
+    "b_back": {
+     "eq": false
+    },
+    "other_history": {
+     "eq": {
+      "current": null,
+      "state_version": 2,
+      "tombstoned": true,
+      "events": []
+     }
+    }
+   }
+  },
+  {
+   "id": "L5-partial-deletion-withholds-only-that-version",
+   "invariants": [
+    "L5"
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:f",
+     "text": "Quillon ferry schedule departure is dawn",
+     "prop": {
+      "s": "Quillon ferry schedule",
+      "a": "departure",
+      "v": "dawn",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    },
+    {
+     "op": "correct",
+     "ref": "memory:f",
+     "text": "Quillon ferry schedule departure is noon",
+     "kind": "state_change",
+     "require_committed": true
+    },
+    {
+     "op": "correct",
+     "ref": "memory:f",
+     "text": "Quillon ferry schedule departure is dusk",
+     "kind": "state_change",
+     "require_committed": true
+    },
+    {
+     "op": "delete_version",
+     "ref": "memory:f",
+     "fact": "memory:f@2",
+     "name": "d1"
+    }
+   ],
+   "probes": {
+    "d1": {
+     "probe": "op_result",
+     "name": "d1",
+     "field": "committed"
+    },
+    "deleted_mentions": {
+     "probe": "recall_mentions",
+     "query": "Quillon ferry schedule departure",
+     "historical": true,
+     "tokens": [
+      "memory:f@2",
+      "noon"
+     ]
+    },
+    "kept_mentions": {
+     "probe": "recall_mentions",
+     "query": "Quillon ferry schedule departure",
+     "historical": true,
+     "tokens": [
+      "memory:f",
+      "memory:f@3"
+     ]
+    },
+    "head": {
+     "probe": "canonical_head",
+     "ref": "memory:f"
+    },
+    "current": {
+     "probe": "recall_admitted",
+     "query": "Quillon ferry schedule departure"
+    }
+   },
+   "expect": {
+    "d1": {
+     "eq": true
+    },
+    "deleted_mentions": {
+     "eq": []
+    },
+    "kept_mentions": {
+     "eq": [
+      "memory:f",
+      "memory:f@3"
+     ]
+    },
+    "head": {
+     "eq": "memory:f@3"
+    },
+    "current": {
+     "eq": [
+      "memory:f@3"
+     ]
+    }
+   }
+  },
+  {
+   "id": "L6-permanent-deletion-erases",
+   "invariants": [
+    "L6"
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:f",
+     "text": "Quillon ferry schedule departure is dawn",
+     "prop": {
+      "s": "Quillon ferry schedule",
+      "a": "departure",
+      "v": "dawn",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    },
+    {
+     "op": "correct",
+     "ref": "memory:f",
+     "text": "Quillon ferry schedule departure is noon",
+     "kind": "state_change",
+     "require_committed": true
+    },
+    {
+     "op": "forget",
+     "ref": "memory:f",
+     "permanent": true,
+     "name": "p1"
+    },
+    {
+     "op": "reopen"
+    }
+   ],
+   "probes": {
+    "p1": {
+     "probe": "op_result",
+     "name": "p1",
+     "field": "committed"
+    },
+    "v1_exists": {
+     "probe": "fact_exists",
+     "fact": "memory:f"
+    },
+    "v2_exists": {
+     "probe": "fact_exists",
+     "fact": "memory:f@2"
+    },
+    "owner_history": {
+     "probe": "history",
+     "ref": "memory:f"
+    },
+    "mentions": {
+     "probe": "recall_mentions",
+     "query": "Quillon ferry schedule departure",
+     "historical": true,
+     "tokens": [
+      "memory:f",
+      "memory:f@2",
+      "dawn",
+      "noon"
+     ]
+    },
+    "other_unknown": {
+     "probe": "history_same_as_unknown",
+     "ref": "memory:f",
+     "as": "project:b"
+    },
+    "old_semantics": {
+     "probe": "write_semantics_present",
+     "fact": "memory:f"
+    }
+   },
+   "expect": {
+    "p1": {
+     "eq": true
+    },
+    "v1_exists": {
+     "eq": false
+    },
+    "v2_exists": {
+     "eq": false
+    },
+    "mentions": {
+     "eq": []
+    },
+    "other_unknown": {
+     "eq": true
+    },
+    "old_semantics": {
+     "eq": false
+    },
+    "owner_history": {
+     "eq": {
+      "current": null,
+      "state_version": 3,
+      "tombstoned": true,
+      "events": []
+     }
+    }
+   }
+  }
+ ]
+}

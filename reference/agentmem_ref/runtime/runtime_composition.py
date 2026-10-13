@@ -316,6 +316,11 @@ class DeterministicMultiRouteRecallPlanner:
                     logical_memory_ref=logical_ref,
                 )
             )
+            # #786 (third review F-R3-6): a head outside the caller's scope seeds nothing, so the
+            # route provenance (``routes_executed``) reads the same for a never-written id and a
+            # live id the caller may not see; admission already withheld the hit itself
+            if not self.adapter.domain_eligible_identity(current, tenant, context):
+                continue
             seed_pairs.append((logical_ref, current))
 
         if (
@@ -791,9 +796,10 @@ class ConfiguredCompositionRuntime:
 
     def delete_current(self, proposal, *, evidence=None, external_verification=None):
         """ADR-037 step 4b-2, DoD 20: forwards the deletion channels."""
-        current = self.adapter.current_fact_uuid(proposal.target_reference)
-        if current is None:
-            raise RuntimeRecoveryError("cannot delete memory with no current canonical fact")
+        # #786 (third review F-R3-3): an id with no current fact is refused by the adapter as
+        # ``fact_not_found`` with ``v0`` states -- the same answer a head the writer may not
+        # act on gets -- instead of raising, so the two cases are indistinguishable here too
+        current = self.adapter.current_fact_uuid(proposal.target_reference) or ""
         return self.durable_runtime.governed_delete(
             proposal,
             current,

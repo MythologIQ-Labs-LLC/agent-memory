@@ -172,6 +172,14 @@ def eligible_search(substrate, query: str, tenant: str, eligible, eligible_ident
         return [(fact, score) for fact, score in substrate.search(query, group_ids=[tenant]) if eligible(fact)]
 
 
+#: #786: one refusal for every governed write whose target has a live head outside the
+#: writer's scope. It names neither the reason nor the memory, and is never "stale" or
+#: "rejected", so the refused writer learns nothing about the protected memory's state.
+WRITE_TARGET_REFUSAL = "target_unavailable"
+#: authority ref the authorize event of a write-target-refused proposal carries
+WRITE_TARGET_REFUSED_REF = "write-target:refused"
+
+
 @dataclass(frozen=True)
 class RecallContext:
     """Authority context for one governed recall request.
@@ -282,6 +290,110 @@ class GovernedMemoryAdapter:
             return policy.evaluate_with_external_verification(proposal, attestation)
         return policy.evaluate(proposal)
 
+    # -- #786 write-target authority -------------------------------------
+
+    def writer_context(self, *, isolation_domain_refs=(), scope: str = "", actor_id: str = "",
+                       project_ref: str = "", task_ref: str = "", purpose: str = "") -> RecallContext:
+        """The authority context a governed write carries: the same five fields recall binds.
+
+        Derived exactly as ``_write_scope`` derives the scope a new fact is stored under, so a
+        writer is held to the eligibility its own writes would carry. Public so a facade can
+        resolve its state snapshot under the same context the adapter will judge.
+        """
+        domain_refs = tuple(isolation_domain_refs) or ((scope,) if scope else (self._tenant,))
+        return RecallContext(target_domain_refs=domain_refs, principal_ref=actor_id,
+                             project_ref=project_ref, task_ref=task_ref, purpose=purpose)
+
+    def _writer_context(self, proposal: policy.Proposal) -> RecallContext:
+        return self.writer_context(
+            isolation_domain_refs=proposal.isolation_domain_refs, scope=proposal.scope,
+            actor_id=proposal.actor_id, project_ref=proposal.project_ref, task_ref=proposal.task_ref,
+            purpose=proposal.purpose)
+
+    def fact_eligible_for_writer(self, fact_uuid: str, proposal: policy.Proposal) -> bool:
+        """#786: may this proposal's writer act on ``fact_uuid``? The same tenant, isolation
+        domain, shared-membership, project and task gates recall applies (``_domain_identity_refusal``).
+        A fact without recorded scope is ineligible (fail closed, as on read)."""
+        return self.fact_eligible_in_context(fact_uuid, self._writer_context(proposal))
+
+    def fact_eligible_in_context(self, fact_uuid: str, context: RecallContext) -> bool:
+        fact = self._substrate.get_fact(fact_uuid)
+        group_id = fact.group_id if fact is not None else self._tenant
+        return self._domain_identity_refusal(fact_uuid, group_id, context) is None
+
+    def _scope_continuity_refusal(self, head: str, proposal: policy.Proposal) -> str | None:
+        """#786 (review F2): a write that replaces a live head must leave the memory readable
+        by the scope that holds it. The head's own scope, read as a context (with the writer's
+        principal, so shared membership is still the writer's), must be eligible for the scope
+        the new fact would be stored under; otherwise the write would move the memory out of
+        its holders' reach (an orphaned head nobody can read, or a private capture of a shared
+        one). Deletion and dispute store no new scope and need no continuity check."""
+        current = self._fact_scope.get(head)
+        if current is None:
+            return "unknown_scope"
+        holder = RecallContext(
+            target_domain_refs=tuple(current.get("domain_refs", ())),
+            principal_ref=proposal.actor_id,
+            project_ref=str(current.get("project_ref") or ""),
+            task_ref=str(current.get("task_ref") or ""),
+            purpose=str(current.get("purpose") or ""),
+        )
+        domain_refs = tuple(proposal.isolation_domain_refs) or (
+            (proposal.scope,) if proposal.scope else (self._tenant,))
+        new_scope = {
+            "domain_refs": domain_refs,
+            "required_domain_refs": tuple(dict.fromkeys(proposal.required_isolation_domain_refs)),
+            "project_ref": proposal.project_ref,
+            "task_ref": proposal.task_ref,
+        }
+        refusal = self._scope_refusal(new_scope, holder)
+        if refusal is not None:
+            return refusal
+        # no widening either (second review F-F): a supersession may not open a route the
+        # holders did not admit (a new domain, a dropped required domain, a cleared project or
+        # task), or a shared memory would escape its membership gate
+        old_domains, new_domains = set(current.get("domain_refs", ())), set(domain_refs)
+        old_required, new_required = set(current.get("required_domain_refs", ())), set(new_scope["required_domain_refs"])
+        if not new_domains <= old_domains or not old_required <= new_required:
+            return "scope_widened"
+        for key in ("project_ref", "task_ref"):
+            if current.get(key) and not new_scope[key]:
+                return "scope_widened"
+        # and no narrowing (third review F-R3-1): the holder context above admits the writer
+        # through any one of the head's routes, so a single-route holder could otherwise store a
+        # head the other holders cannot read (a dropped domain, an added required domain or a
+        # project/task they do not carry) and occupy the id. A supersession keeps the head's
+        # scope exactly; re-scoping a shared memory is a governed act of its own, not a write.
+        if not old_domains <= new_domains or not new_required <= old_required:
+            return "scope_narrowed"
+        for key in ("project_ref", "task_ref"):
+            if (new_scope[key] or "") != (current.get(key) or ""):
+                return "scope_narrowed"
+        return None
+
+    def write_target_refusal(self, proposal: policy.Proposal) -> str | None:
+        """#786: a write that targets a logical memory with a live current fact must be
+        authorized for that fact's canonical scope, and must keep the memory within reach of
+        the scope that holds it.
+
+        No live head (never written, or governed-deleted) means the id is open: creation and
+        the #776 re-creation of a deleted id as a fresh generation are unchanged. A live head
+        outside the writer's scope refuses -- ``WRITE_TARGET_REFUSAL`` for a promotion, else the
+        same ``fact_not_found`` deletion and dispute report, naming neither the reason nor the
+        memory it protected -- before staleness,
+        readmission or the rejected-value registry are consulted, so nothing about the
+        protected memory reaches the refused writer.
+        """
+        head = self._current_fact_by_memory.get(proposal.target_reference)
+        if head is None:
+            return None
+        if self.fact_eligible_for_writer(head, proposal) and self._scope_continuity_refusal(head, proposal) is None:
+            return None
+        # an operation that presupposes an existing fact (correction, ...) reads as "no such
+        # fact", exactly as governed deletion and dispute do; a promotion onto a protected id
+        # cannot claim absence, so it reports only that the id is unavailable to this writer
+        return WRITE_TARGET_REFUSAL if proposal.operation == "promotion" else "fact_not_found"
+
     def commit_proposal(
         self,
         proposal: policy.Proposal,
@@ -332,8 +444,10 @@ class GovernedMemoryAdapter:
         only and grants nothing; PAMA decides exactly as without it.
         """
         correlation = self._ids.next()
-        if episode is not None:
-            self._substrate.add_episode(episode)
+        # #786: the target's live head decides whether this writer may act on it at all. The
+        # optional episode is retained only by a committed write (below); a refused proposal
+        # leaves no episodic content behind.
+        target_refusal = self.write_target_refusal(proposal)
         propose_event = self._event("memory.propose", proposal.target_reference, correlation)
 
         if evidence:
@@ -350,29 +464,42 @@ class GovernedMemoryAdapter:
             decision = policy.evaluate_with_external_verification(proposal, attestation)
         else:
             decision = policy.evaluate(proposal)
+        authority = {
+            "permitted_actions": list(decision.permitted_actions),
+            "prohibited_actions": list(decision.prohibited_actions),
+            "selection_mode": "none",
+        }
+        if target_refusal is not None:
+            # the audit record names the write-target refusal; the public history projection
+            # withholds the whole correlation from the memory's readers (review F7)
+            authority["authority_refs"] = [WRITE_TARGET_REFUSED_REF]
         authorize_event = self._event(
             "memory.authorize",
             proposal.target_reference,
             correlation,
             causation_id=propose_event["event_id"],
             policy_version=decision.policy_version,
-            authority={
-                "permitted_actions": list(decision.permitted_actions),
-                "prohibited_actions": list(decision.prohibited_actions),
-                "selection_mode": "none",
-            },
+            authority=authority,
         )
         events = [propose_event, authorize_event]
 
-        stale = self._is_stale(proposal)
-        readmission_blocked = self._readmission_blocked(proposal, fact_text, attestation)
-        selected = self._select_action(
-            decision,
-            proposal,
-            blocked_by_stale=stale or readmission_blocked,
-        )
-        commits = selected == proposal.operation
-        before_state = f"v{self._state_version.get(proposal.target_reference, 0)}"
+        if target_refusal is not None:
+            # the protected memory's version, staleness and rejected values are not this
+            # writer's to learn: the write is blocked exactly as a stale one is
+            stale, readmission_blocked = False, False
+            selected = self._select_action(decision, proposal, blocked_by_stale=True)
+            commits = False
+            before_state = "v0"
+        else:
+            stale = self._is_stale(proposal)
+            readmission_blocked = self._readmission_blocked(proposal, fact_text, attestation)
+            selected = self._select_action(
+                decision,
+                proposal,
+                blocked_by_stale=stale or readmission_blocked,
+            )
+            commits = selected == proposal.operation
+            before_state = f"v{self.public_state_version(proposal.target_reference)}"
 
         if readmission_blocked:
             events.append(
@@ -387,6 +514,8 @@ class GovernedMemoryAdapter:
 
         fact_uuid = None
         if commits:
+            if episode is not None:
+                self._substrate.add_episode(episode)
             if proposal.operation == "correction":
                 self._supersede_current(proposal, replacement_kind, temporal)
                 self._rejected_values.readmit(
@@ -412,7 +541,7 @@ class GovernedMemoryAdapter:
                     policy_version=decision.policy_version,
                 )
             )
-        after_state = f"v{self._state_version.get(proposal.target_reference, 0)}"
+        after_state = "v0" if target_refusal is not None else f"v{self.public_state_version(proposal.target_reference)}"
 
         receipt_id = self._ids.next()
         receipt = receipts.build_receipt(
@@ -444,10 +573,10 @@ class GovernedMemoryAdapter:
         )
         self.events.extend(events)
 
-        refusal = None
-        if stale:
+        refusal = target_refusal
+        if refusal is None and stale:
             refusal = "stale_authorization"
-        elif readmission_blocked:
+        elif refusal is None and readmission_blocked:
             refusal = "rejected_value_requires_reconciliation"
 
         return CommitResult(
@@ -461,11 +590,22 @@ class GovernedMemoryAdapter:
         )
 
     def _is_stale(self, proposal: policy.Proposal) -> bool:
-        """Authority binds to the state it was resolved against."""
+        """Authority binds to the state it was resolved against (the generation-relative
+        public version: a governed head deletion retires the counter, so a no-head id is
+        ``v0`` to every writer and no former count can be probed through a snapshot)."""
         if not proposal.state_snapshot:
             return False
-        current = f"v{self._state_version.get(proposal.target_reference, 0)}"
-        return proposal.state_snapshot != current
+        return proposal.state_snapshot != f"v{self.visible_state_version(proposal)}"
+
+    def visible_state_version(self, proposal: policy.Proposal) -> int:
+        """The public version as this writer may see it: a memory whose live head the writer
+        may not act on reads ``0`` to that writer (the same ``v0`` its facade snapshot
+        resolves), so neither a staleness verdict nor a receipt on the writer's own deleted
+        generation can disclose that another scope holds a live generation (#786 v2 replay)."""
+        head = self._current_fact_by_memory.get(proposal.target_reference)
+        if head is not None and not self.fact_eligible_for_writer(head, proposal):
+            return 0
+        return self.public_state_version(proposal.target_reference)
 
     def _readmission_blocked(
         self,
@@ -481,7 +621,14 @@ class GovernedMemoryAdapter:
         attestation. The two inputs remain separate: evidence supports the
         proposition; the attestation supplies reversal authority.
         """
-        if self._rejected_values.active(proposal.target_reference, fact_text) is None:
+        record = self._rejected_values.active(proposal.target_reference, fact_text)
+        if record is None:
+            return False
+        # #786 (review F1): a rejection belongs to the generation whose fact it superseded. A
+        # deleted generation's rejections neither block a fresh generation of the id nor
+        # disclose themselves to it through the refusal.
+        if self._current_fact_by_memory.get(proposal.target_reference) is None or self.memory_deleted(
+                record.superseded_fact_uuid):
             return False
         approved_reversal = (
             proposal.operation == "correction"
@@ -1466,7 +1613,11 @@ class GovernedMemoryAdapter:
             # by the JS runtime, which already refuses this case:
             # integrations/agent-memory-runtime/src/index.mjs:114.
             return "unknown_scope"
+        return self._scope_refusal(scope, context)
 
+    def _scope_refusal(self, scope: Mapping, context: RecallContext) -> str | None:
+        """The five scope gates (isolation domains, required domains, shared membership,
+        project, task) applied to one recorded scope under one context."""
         memory_domains = set(scope["domain_refs"])
         required_domains = set(scope.get("required_domain_refs", ()))
         target_domains = set(context.target_domain_refs)
@@ -1509,11 +1660,21 @@ class GovernedMemoryAdapter:
             return "fact_not_found"
         if fact.group_id != self._tenant:
             return "cross_tenant_dispute"
+        if not self.fact_eligible_for_writer(fact_uuid, proposal):
+            return "fact_not_found"  # #786: indistinguishable from a fact that does not exist
         bound_memory = self._fact_memory.get(fact_uuid)
         if bound_memory is None:
             return "target_binding_unknown"
         if bound_memory != proposal.target_reference:
             return "target_binding_mismatch"
+        if fact_uuid in self._tombstones or (self._tombstones and fact_uuid in self._deleted_lineage()):
+            # a deleted generation is closed to further governed acts; decided before any live
+            # head is consulted so the answer is the same whether or not another scope has
+            # re-created the id (#786 v2 replay W7c)
+            return "already_deleted"
+        head = self._current_fact_by_memory.get(proposal.target_reference)
+        if head is not None and head != fact_uuid and not self.fact_eligible_for_writer(head, proposal):
+            return "fact_not_found"  # #786 (second review F-E): never moves another scope's live generation
         if fact_uuid in self._disputed:
             return "already_disputed"
         return None
@@ -1540,33 +1701,38 @@ class GovernedMemoryAdapter:
         correlation = self._ids.next()
         propose_event = self._event("memory.propose", proposal.target_reference, correlation)
         decision = self.evaluate_proposal(proposal, evidence=evidence, attestation=attestation)
+        refusal = self._dispute_refusal(proposal, fact_uuid)
+        authority = {
+            "permitted_actions": list(decision.permitted_actions),
+            "prohibited_actions": list(decision.prohibited_actions),
+            "selection_mode": "none",
+        }
+        if refusal is not None:
+            # a refused dispute is an audit record; the public history projection withholds its
+            # correlation from the memory's readers (#786, second review F-E)
+            authority["authority_refs"] = [WRITE_TARGET_REFUSED_REF]
         authorize_event = self._event(
             "memory.authorize",
             proposal.target_reference,
             correlation,
             causation_id=propose_event["event_id"],
             policy_version=decision.policy_version,
-            authority={
-                "permitted_actions": list(decision.permitted_actions),
-                "prohibited_actions": list(decision.prohibited_actions),
-                "selection_mode": "none",
-            },
+            authority=authority,
         )
         events = [propose_event, authorize_event]
-
-        refusal = self._dispute_refusal(proposal, fact_uuid)
-        stale = self._is_stale(proposal)
-        selected = self._select_action(decision, proposal, blocked_by_stale=stale)
+        stale = refusal is None and self._is_stale(proposal)
+        selected = self._select_action(decision, proposal, blocked_by_stale=stale or refusal is not None)
         committed = refusal is None and selected == proposal.operation
         if refusal is None and stale:
             refusal = "stale_decision"
-        before_state = f"v{self._state_version.get(proposal.target_reference, 0)}"
+        # #786: a refused dispute reports no version of a memory the writer may not act on
+        before_state = "v0" if refusal is not None else f"v{self.visible_state_version(proposal)}"
 
         if committed:
             self._disputed.add(fact_uuid)
             self._state_version[proposal.target_reference] = self._state_version.get(proposal.target_reference, 0) + 1
 
-        after_state = f"v{self._state_version.get(proposal.target_reference, 0)}"
+        after_state = before_state if refusal is not None else f"v{self._state_version.get(proposal.target_reference, 0)}"
         receipt_id = self._ids.next()
         receipt = receipts.build_receipt(
             receipt_id=receipt_id,
@@ -1625,6 +1791,18 @@ class GovernedMemoryAdapter:
     # -- canonical state accessors --------------------------------------
 
     def state_version(self, memory_id: str) -> int:
+        return self._state_version.get(memory_id, 0)
+
+    def public_state_version(self, memory_id: str) -> int:
+        """The version a writer resolves its authority against and a receipt reports.
+
+        #786 (independent review, P2 gate): versions are generation-relative. A memory with
+        a live head reports its counter; a memory whose head was governed-deleted reports
+        ``0`` -- the next generation starts fresh, so neither the re-creating writer's
+        proposal nor its receipt nor the new generation's history carries the former
+        generation's count. The deleted generation's own view keeps the version its
+        deletion recorded (``public_deleted_version``).
+        """
         return self._state_version.get(memory_id, 0)
 
     def current_fact_uuid(self, memory_id: str) -> str | None:
@@ -1705,14 +1883,19 @@ class GovernedMemoryAdapter:
         reads as 0."""
         if not isinstance(memory_id, str) or not memory_id or not self._tombstones:
             return None
-        versions: list[int] = []
+        deletions: list[tuple[str, int]] = []
         for ref, record in self._tombstones.items():
             if record.get("memory_id") != memory_id or self.replacement_record(ref) is not None:
                 continue
             if self._domain_identity_refusal(ref, self._tenant, context) is None:
                 recorded = record.get("state_version")
-                versions.append(int(recorded) if isinstance(recorded, int) and not isinstance(recorded, bool) else 0)
-        return max(versions) if versions else None
+                version = int(recorded) if isinstance(recorded, int) and not isinstance(recorded, bool) else 0
+                deletions.append((str(record.get("deleted_at") or ""), version))
+        if not deletions:
+            return None
+        # the latest deletion this reader could read: versions are generation-relative (#786
+        # P2 gate), so the newest generation's recorded version, not the largest, is served
+        return max(deletions)[1]
 
     def _deleted_lineage(self) -> dict[str, str]:
         """#776: fact uuid -> deleted memory for every fact a governed deletion covers.
@@ -1840,6 +2023,10 @@ class GovernedMemoryAdapter:
             return "fact_not_found"
         if fact.group_id != self._tenant:
             return "cross_tenant_delete"
+        if not self.fact_eligible_for_writer(fact_uuid, proposal):
+            # #786: a fact outside the writer's scope reads as absent, before the binding map
+            # could confirm it exists. Ordered after the tenant check so LD4 still holds.
+            return "fact_not_found"
         bound_memory = self._fact_memory.get(fact_uuid)
         if bound_memory is None:
             # Unknown provenance is not permission -- same stance as Loop 3's
@@ -1847,6 +2034,26 @@ class GovernedMemoryAdapter:
             return "target_binding_unknown"
         if bound_memory != proposal.target_reference:
             return "target_binding_mismatch"
+        existing = self._tombstones.get(fact_uuid)
+        if existing is not None and not (existing.get("reversible", True) and proposal.operation == "permanent_deletion"):
+            # #786 (second review F-C): a governed-deleted fact is deleted; re-deleting it would
+            # rewrite its tombstone and shrink the recorded lineage. Only the escalation of a
+            # reversible pruning to a permanent deletion is a further governed act.
+            return "already_deleted"
+        if existing is None and self._tombstones and fact_uuid in self._deleted_lineage():
+            return "already_deleted"  # a member of a deleted lineage, not its head
+        if existing is not None:
+            # the escalation of the writer's own deleted head: it touches only that generation's
+            # tombstone and lineage, never the memory's live head, so no live head is consulted
+            # (#786 v2 replay W7c: consulting it first told a former owner whether its deleted
+            # id had been re-created by another scope)
+            return None
+        head = self._current_fact_by_memory.get(proposal.target_reference)
+        if head is not None and head != fact_uuid and not self.fact_eligible_for_writer(head, proposal):
+            # #786 (second review F-D): a deletion inside a memory whose live head belongs to a
+            # scope the writer may not act on would move that generation's version and
+            # lifecycle; it reads as absent exactly as a write onto that head does
+            return "fact_not_found"
         return None
 
     def governed_delete(
@@ -1897,28 +2104,43 @@ class GovernedMemoryAdapter:
         # fact must not report a tenant error, and a foreign fact must not report
         # a binding error.
         refusal = self._delete_refusal(proposal, fact_uuid)
-        stale = self._is_stale(proposal)
-        selected = self._select_action(decision, proposal, blocked_by_stale=stale)
+        stale = refusal is None and self._is_stale(proposal)
+        selected = self._select_action(decision, proposal, blocked_by_stale=stale or refusal is not None)
         committed = refusal is None and selected == proposal.operation
         if refusal is None and stale:
             refusal = "stale_decision"
-        before_state = f"v{self._state_version.get(proposal.target_reference, 0)}"
+        # #786: a refused deletion reports no version of a memory the writer may not act on,
+        # and a committed one only the version visible to its writer
+        before_state = "v0" if refusal is not None else f"v{self.visible_state_version(proposal)}"
 
+        escalation = committed and fact_uuid in self._tombstones
         if committed:
             # #776: deletion belongs to the logical memory -- record the lineage it covers.
             lineage = self._lineage_for_deletion(proposal.target_reference, fact_uuid)
             cached = getattr(self, "_deleted_lineage_cache", None)
             fresh = cached is not None and cached[0] == (
                 id(self._tombstones), len(self._tombstones), id(self._fact_memory))
-            self._tombstones[fact_uuid] = {
-                "memory_id": proposal.target_reference,
-                "fact_uuid": fact_uuid,
-                "deleted_at": self._clock.now(),
-                "declared_derived_refs": list(derived_refs),
-                "mode": proposal.operation,
-                "reversible": proposal.operation != "permanent_deletion",
-                "deleted_fact_uuids": lineage,
-            }
+            if escalation:
+                # pruning -> permanent deletion of an already deleted head: the recorded
+                # generation (its lineage, start and version) is kept; only the mode changes
+                # and the content is erased (#786, second review F-C)
+                record = self._tombstones[fact_uuid]
+                lineage = sorted(set(record.get("deleted_fact_uuids", ())) | set(lineage))
+                # reassigned, not mutated in place: the durable maps track changes by key
+                self._tombstones[fact_uuid] = {
+                    **record,
+                    "declared_derived_refs": sorted(set(record.get("declared_derived_refs", ())) | set(derived_refs)),
+                    "mode": proposal.operation, "reversible": False, "deleted_fact_uuids": lineage}
+            else:
+                self._tombstones[fact_uuid] = {
+                    "memory_id": proposal.target_reference,
+                    "fact_uuid": fact_uuid,
+                    "deleted_at": self._clock.now(),
+                    "declared_derived_refs": list(derived_refs),
+                    "mode": proposal.operation,
+                    "reversible": proposal.operation != "permanent_deletion",
+                    "deleted_fact_uuids": lineage,
+                }
             if fresh:  # extend the index in place instead of rebuilding it per deletion
                 cached[1].update(dict.fromkeys((fact_uuid, *lineage), proposal.target_reference))
                 self._deleted_lineage_cache = (
@@ -1932,11 +2154,21 @@ class GovernedMemoryAdapter:
                 for bucket in (self._semantic_slot_index or {}).values():
                     for ref in lineage:
                         bucket.pop(ref, None)
-            if self._current_fact_by_memory.get(proposal.target_reference) == fact_uuid:
+            head_deleted = self._current_fact_by_memory.get(proposal.target_reference) == fact_uuid
+            if head_deleted:
                 self._current_fact_by_memory.pop(proposal.target_reference, None)
-            self._state_version[proposal.target_reference] = self._state_version.get(proposal.target_reference, 0) + 1
-            # the version this deletion produced, for the owner's reader-stable history view
-            self._tombstones[fact_uuid]["state_version"] = self._state_version[proposal.target_reference]
+            if not escalation:
+                self._state_version[proposal.target_reference] = self._state_version.get(proposal.target_reference, 0) + 1
+                # the version this deletion produced, for the owner's reader-stable history view
+                self._tombstones[fact_uuid]["state_version"] = self._state_version[proposal.target_reference]
+            after_state = f"v{self._tombstones[fact_uuid]['state_version']}" if (head_deleted or escalation) \
+                else f"v{self._state_version[proposal.target_reference]}"
+            if head_deleted:
+                # #786 (P2 gate): a governed head deletion retires the counter; the deletion's
+                # own version is recorded in the tombstone and the next generation starts at 0
+                self._state_version[proposal.target_reference] = 0
+        else:
+            after_state = before_state
 
         receipt_id = self._ids.next()
         receipt = receipts.build_receipt(
@@ -1947,7 +2179,7 @@ class GovernedMemoryAdapter:
             selection_mode=self._selector.mode if selected != receipts.NO_ACTION else "none",
             timestamp=self._clock.now(),
             before_state=before_state,
-            after_state=f"v{self._state_version.get(proposal.target_reference, 0)}",
+            after_state=after_state,
         )
         pama_decision = receipts.build_pama_decision(
             proposal, decision, selected, self._selector.mode if selected != receipts.NO_ACTION else None, receipt_id

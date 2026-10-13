@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "companion_of": "reports/runtime/proposals/786-cumulative-v6-to-v8.PROPOSED.json",
+  "baseline_id": "agent-memory-runtime-baseline-v8",
+  "issue": 786,
+  "status": "PROPOSED",
+  "note": "Required acceptance evidence of the 786-security-replay-dsl/1 family for the cumulative v6 -> v8 candidate. Kept beside the declaration because schemas/runtime-baseline-declaration.schema.json (#674 governance tooling, owner-held) enumerates only public_gauntlet / replay / lane evidence kinds; extending that enum is an owner decision. scripts/verify_786_security_replays.py reads the ids from this file by default. Listing here is a proposal, not acceptance.",
+  "acceptance_evidence_required": [
+    {
+      "kind": "security_replay",
+      "ref": "cross-scope-write-authority-denial-v2"
+    },
+    {
+      "kind": "security_replay",
+      "ref": "deleted-lineage-generations-and-restart-v2"
+    },
+    {
+      "kind": "security_replay",
+      "ref": "public-tombstone-redaction-and-observer-separation-v2"
+    }
+  ]
+}

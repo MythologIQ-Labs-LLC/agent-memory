@@ -56,20 +56,22 @@ def runtime_changed_since(commit: str) -> bool:
     return changed or bool(untracked)
 
 
-def declared_replays(declaration: Path) -> list[str]:
+def declared_replays(declaration: Path, kind: str = "replay") -> list[str]:
     record = json.loads(declaration.read_text(encoding="utf-8"))
-    ids = [x["ref"] for x in record.get("acceptance_evidence_required", []) if x.get("kind") == "replay"]
+    ids = [x["ref"] for x in record.get("acceptance_evidence_required", []) if x.get("kind") == kind]
     if not ids or len(ids) != len(set(ids)) or any("/" in i or ".." in i for i in ids):
         raise ValueError("replay declarations missing, duplicated or unsafe")
     return ids
 
 
-def observations_digest(report: dict) -> str:
+def observations_digest(report: dict, runner=runner) -> str:
     return runner.sha256_bytes(runner.canonical(
         [{k: c[k] for k in ("id", "outcome", "checks", "recorded", "observations")} for c in report["cases"]]))
 
 
-def verify_one(replay_id: str, evidence_root: Path, fixture_dir: Path, reexecute: bool) -> dict:
+def verify_one(replay_id: str, evidence_root: Path, fixture_dir: Path, reexecute: bool, runner=runner) -> dict:
+    """``runner`` is the replay family's runner module (the v7 runner by default); the #786
+    security family verifies through the same logic with its own runner, fixtures and evidence."""
     problems: list[str] = []
     base = evidence_root / replay_id
     manifest_path, report_path = base / "manifest.json", base / "report.json"
@@ -130,7 +132,7 @@ def verify_one(replay_id: str, evidence_root: Path, fixture_dir: Path, reexecute
             outcome = "pass" if all(c["holds"] for c in case.get("checks", [])) else "fail"
             if case.get("outcome") != outcome:
                 problems.append(f"{case['id']}: outcome does not recompute")
-    if observations_digest(report) != report.get("observations_sha256") or report.get("observations_sha256") != manifest.get("observations_sha256"):
+    if observations_digest(report, runner) != report.get("observations_sha256") or report.get("observations_sha256") != manifest.get("observations_sha256"):
         problems.append("observations digest does not recompute")
     any_fail = any(c.get("outcome") != "pass" for c in report_cases)
     expected_verdict = "FAIL" if any_fail else ("BLOCKED" if prov.get("dirty_paths") else "PASS")
@@ -153,8 +155,8 @@ def verify_one(replay_id: str, evidence_root: Path, fixture_dir: Path, reexecute
 
 
 def verify(evidence_root: Path = EVIDENCE_ROOT, declaration: Path = DECLARATION,
-           fixture_dir: Path = runner.FIXTURE_DIR, reexecute: bool = False) -> dict:
-    rows = [verify_one(r, evidence_root, fixture_dir, reexecute) for r in declared_replays(declaration)]
+           fixture_dir: Path = runner.FIXTURE_DIR, reexecute: bool = False, *, runner=runner, kind: str = "replay") -> dict:
+    rows = [verify_one(r, evidence_root, fixture_dir, reexecute, runner) for r in declared_replays(declaration, kind)]
     complete = all(r["status"] == "VERIFIED" and r["verdict"] == "PASS" for r in rows)
     return {"replays": rows, "evidence_verified": complete,
             "acceptance": "NOT GRANTED: requires an independent reviewer's decision recorded in META_LEDGER"}
