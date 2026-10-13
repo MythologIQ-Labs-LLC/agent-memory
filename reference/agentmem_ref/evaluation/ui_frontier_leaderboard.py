@@ -193,8 +193,11 @@ def build_frontier_leaderboard(catalog: Mapping[str, Any]) -> dict[str, Any]:
                 raise FrontierProjectionError("malformed scorecard dimension")
             for metric in sorted(content.get("rows", []), key=lambda x: x["metric_id"]):
                 rows.append(_result(comparison, dimension, metric, runs))
+    # Coverage must reflect actual numeric eligibility, not merely the
+    # presence of a record labelled same_harness. An invalid or missing
+    # comparison is a gap, never a completed comparison.
     represented = {
-        row["metric_key"] for row in rows if row["evidence_class"] == "same_harness"
+        row["metric_key"] for row in rows if row["ranking_state"] == "ranked"
     }
     coverage = []
     for metric in sorted(catalog.get("metrics", []), key=lambda x: x["metric_key"]):
