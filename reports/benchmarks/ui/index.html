@@ -54,10 +54,10 @@ function render(){
   const leader=r.leader,am=r.agent_memory;
   addCell(tr,leader?safe(leader.system_id)+" · "+format(leader.value,r.unit):"Not established");
   addCell(tr,am?format(am.value,r.unit)+(am.rank?" · rank "+am.rank:""):"Unavailable");
-  const gap=addCell(tr, r.ranking_state==="ranked" && typeof r.gap_to_leader_native==="number" ?format(r.gap_to_leader_native,r.unit==="ratio"?"ratio":r.unit):"Unknown");
+  const gap=addCell(tr, r.ranking_state==="ranked" && typeof r.gap_to_leader_native==="number" ?(r.unit==="ratio"?(r.gap_to_leader_native*100).toFixed(2)+" pp":format(r.gap_to_leader_native,r.unit)):"Unknown");
   if(r.ranking_state==="ranked"&&am&&leader&&typeof r.gap_to_leader_native==="number"){
     const bar=document.createElement("div");bar.className="gap";bar.setAttribute("role","img");
-    bar.setAttribute("aria-label","Native deficit "+format(r.gap_to_leader_native,r.unit));
+    bar.setAttribute("aria-label","Native deficit "+(r.unit==="ratio"?(r.gap_to_leader_native*100).toFixed(2)+" percentage points":format(r.gap_to_leader_native,r.unit)));
     const fill=document.createElement("span");const denom=Math.abs(leader.value)||1;
     fill.style.width=Math.min(100,Math.max(0,100*r.gap_to_leader_native/denom))+"%";bar.appendChild(fill);gap.appendChild(bar);
   }
