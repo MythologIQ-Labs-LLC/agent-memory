@@ -3,7 +3,12 @@
 # Companion commit has no benchmarking and bypasses only this hook, not review.
 set -eu
 cd "$(git rev-parse --show-toplevel)"
-changed="$(git diff-tree --root --no-commit-id --name-only -r HEAD)"
+if git rev-parse --verify HEAD^ >/dev/null 2>&1; then
+  # Compare merge commits to their first parent; diff-tree -r alone omits merges.
+  changed="$(git diff --name-only HEAD^ HEAD)"
+else
+  changed="$(git diff-tree --root --no-commit-id --name-only -r HEAD)"
+fi
 printf '%s\n' "$changed" \
   | grep -E '^(reports/benchmarks/|data/benchmark-frontier-objectives[.]json$|reference/agentmem_ref/evaluation/lanes/|scripts/build_benchmark_scorecards[.]py$)' \
   | grep -Ev '^reports/benchmarks/(ui|normalized|scorecards)/' >/dev/null || exit 0
