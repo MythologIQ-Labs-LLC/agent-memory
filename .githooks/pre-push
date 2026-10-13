@@ -1,0 +1,10 @@
+#!/bin/sh
+# No hosted CI: check that every evidence-bearing pushed revision has refreshed views.
+set -eu
+cd "$(git rev-parse --show-toplevel)"
+PYTHON="$(command -v python3 || command -v python || true)"
+if [ -z "$PYTHON" ]; then echo "benchmark publication BLOCKED: Python missing" >&2; exit 1; fi
+"$PYTHON" scripts/refresh_benchmark_pages.py --check || {
+  echo "benchmark publication BLOCKED: generated views stale or evidence invalid; run governed refresh and commit output." >&2
+  exit 1
+}

@@ -1,0 +1,21 @@
+#!/bin/sh
+# Local event-driven evidence refresh; installed deliberately with core.hooksPath.
+# Companion commit has no benchmarking and bypasses only this hook, not review.
+set -eu
+cd "$(git rev-parse --show-toplevel)"
+changed="$(git diff-tree --root --no-commit-id --name-only -r HEAD)"
+printf '%s\n' "$changed" | grep -Eq '^(reports/benchmarks/(amb|longmemeval|replays|dashboard)/|data/benchmark-frontier-objectives[.]json$|reference/agentmem_ref/evaluation/lanes/|scripts/build_benchmark_scorecards[.]py$)' || exit 0
+if [ -n "$(git status --porcelain)" ]; then
+  echo "benchmark refresh BLOCKED: working tree not clean; run python scripts/refresh_benchmark_pages.py --write then record projection separately" >&2
+  exit 1
+fi
+PYTHON="$(command -v python3 || command -v python || true)"
+if [ -z "$PYTHON" ]; then echo "benchmark refresh BLOCKED: Python missing" >&2; exit 1; fi
+"$PYTHON" scripts/refresh_benchmark_pages.py --write || {
+  echo "benchmark refresh BLOCKED: projection not committed. Fix input/qualification and retry manually." >&2
+  exit 1
+}
+git add -- reports/benchmarks/normalized reports/benchmarks/scorecards reports/benchmarks/ui
+if ! git diff --cached --quiet; then
+  git -c core.hooksPath=/dev/null commit -m "chore(benchmarks): refresh recorded evidence projections [skip ci]" || exit 1
+fi
