@@ -176,6 +176,8 @@ def eligible_search(substrate, query: str, tenant: str, eligible, eligible_ident
 #: writer's scope. It names neither the reason nor the memory, and is never "stale" or
 #: "rejected", so the refused writer learns nothing about the protected memory's state.
 WRITE_TARGET_REFUSAL = "target_unavailable"
+#: authority ref the authorize event of a write-target-refused proposal carries
+WRITE_TARGET_REFUSED_REF = "write-target:refused"
 
 
 @dataclass(frozen=True)
@@ -319,9 +321,37 @@ class GovernedMemoryAdapter:
         group_id = fact.group_id if fact is not None else self._tenant
         return self._domain_identity_refusal(fact_uuid, group_id, context) is None
 
+    def _scope_continuity_refusal(self, head: str, proposal: policy.Proposal) -> str | None:
+        """#786 (review F2): a write that replaces a live head must leave the memory readable
+        by the scope that holds it. The head's own scope, read as a context (with the writer's
+        principal, so shared membership is still the writer's), must be eligible for the scope
+        the new fact would be stored under; otherwise the write would move the memory out of
+        its holders' reach (an orphaned head nobody can read, or a private capture of a shared
+        one). Deletion and dispute store no new scope and need no continuity check."""
+        current = self._fact_scope.get(head)
+        if current is None:
+            return "unknown_scope"
+        holder = RecallContext(
+            target_domain_refs=tuple(current.get("domain_refs", ())),
+            principal_ref=proposal.actor_id,
+            project_ref=str(current.get("project_ref") or ""),
+            task_ref=str(current.get("task_ref") or ""),
+            purpose=str(current.get("purpose") or ""),
+        )
+        domain_refs = tuple(proposal.isolation_domain_refs) or (
+            (proposal.scope,) if proposal.scope else (self._tenant,))
+        new_scope = {
+            "domain_refs": domain_refs,
+            "required_domain_refs": tuple(dict.fromkeys(proposal.required_isolation_domain_refs)),
+            "project_ref": proposal.project_ref,
+            "task_ref": proposal.task_ref,
+        }
+        return self._scope_refusal(new_scope, holder)
+
     def write_target_refusal(self, proposal: policy.Proposal) -> str | None:
         """#786: a write that targets a logical memory with a live current fact must be
-        authorized for that fact's canonical scope.
+        authorized for that fact's canonical scope, and must keep the memory within reach of
+        the scope that holds it.
 
         No live head (never written, or governed-deleted) means the id is open: creation and
         the #776 re-creation of a deleted id as a fresh generation are unchanged. A live head
@@ -332,7 +362,9 @@ class GovernedMemoryAdapter:
         protected memory reaches the refused writer.
         """
         head = self._current_fact_by_memory.get(proposal.target_reference)
-        if head is None or self.fact_eligible_for_writer(head, proposal):
+        if head is None:
+            return None
+        if self.fact_eligible_for_writer(head, proposal) and self._scope_continuity_refusal(head, proposal) is None:
             return None
         # an operation that presupposes an existing fact (correction, ...) reads as "no such
         # fact", exactly as governed deletion and dispute do; a promotion onto a protected id
@@ -409,17 +441,22 @@ class GovernedMemoryAdapter:
             decision = policy.evaluate_with_external_verification(proposal, attestation)
         else:
             decision = policy.evaluate(proposal)
+        authority = {
+            "permitted_actions": list(decision.permitted_actions),
+            "prohibited_actions": list(decision.prohibited_actions),
+            "selection_mode": "none",
+        }
+        if target_refusal is not None:
+            # the audit record names the write-target refusal; the public history projection
+            # withholds the whole correlation from the memory's readers (review F7)
+            authority["authority_refs"] = [WRITE_TARGET_REFUSED_REF]
         authorize_event = self._event(
             "memory.authorize",
             proposal.target_reference,
             correlation,
             causation_id=propose_event["event_id"],
             policy_version=decision.policy_version,
-            authority={
-                "permitted_actions": list(decision.permitted_actions),
-                "prohibited_actions": list(decision.prohibited_actions),
-                "selection_mode": "none",
-            },
+            authority=authority,
         )
         events = [propose_event, authorize_event]
 
@@ -550,7 +587,14 @@ class GovernedMemoryAdapter:
         attestation. The two inputs remain separate: evidence supports the
         proposition; the attestation supplies reversal authority.
         """
-        if self._rejected_values.active(proposal.target_reference, fact_text) is None:
+        record = self._rejected_values.active(proposal.target_reference, fact_text)
+        if record is None:
+            return False
+        # #786 (review F1): a rejection belongs to the generation whose fact it superseded. A
+        # deleted generation's rejections neither block a fresh generation of the id nor
+        # disclose themselves to it through the refusal.
+        if self._current_fact_by_memory.get(proposal.target_reference) is None or self.memory_deleted(
+                record.superseded_fact_uuid):
             return False
         approved_reversal = (
             proposal.operation == "correction"
@@ -1535,7 +1579,11 @@ class GovernedMemoryAdapter:
             # by the JS runtime, which already refuses this case:
             # integrations/agent-memory-runtime/src/index.mjs:114.
             return "unknown_scope"
+        return self._scope_refusal(scope, context)
 
+    def _scope_refusal(self, scope: Mapping, context: RecallContext) -> str | None:
+        """The five scope gates (isolation domains, required domains, shared membership,
+        project, task) applied to one recorded scope under one context."""
         memory_domains = set(scope["domain_refs"])
         required_domains = set(scope.get("required_domain_refs", ()))
         target_domains = set(context.target_domain_refs)

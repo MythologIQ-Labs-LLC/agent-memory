@@ -29,7 +29,7 @@ from typing import Any, Callable, Mapping, Sequence
 from ..core import policy
 from ..memory import action_authority
 from ..runtime import doctor
-from ..runtime.adapter import REPLACEMENT_KINDS, GovernedMemoryAdapter
+from ..runtime.adapter import REPLACEMENT_KINDS, WRITE_TARGET_REFUSED_REF, GovernedMemoryAdapter
 from ..runtime.temporal_intent import declared_temporal, resolve_intent
 from . import contract
 
@@ -640,6 +640,12 @@ class AgentMemory:
             if attempted:
                 raise ValueError(f"facade proposal overrides may not replace protected fields: {sorted(attempted)}")
             envelope.update(dict(overrides))
+            required = set(envelope.get("required_isolation_domain_refs") or ())
+            if not required.issubset(set(envelope.get("isolation_domain_refs") or ())):
+                # #786 (review F3): an internally inconsistent scope is a malformed proposal,
+                # refused before any target is resolved -- it is neither judged against the
+                # target nor allowed to learn the target's version through a PAMA block
+                raise ValueError("required isolation domains must also be bound isolation domains")
         # #786: the snapshot is resolved under the proposal's effective scope (overrides applied)
         state_snapshot = self._state_snapshot(target_reference, envelope)
         refs = tuple(evidence_refs) or ((_content_ref(fact_text),) if fact_text else (f"state:{state_snapshot}",))
@@ -1199,9 +1205,19 @@ class AgentMemory:
             hidden = {e.get("correlation_id") for e in record["events"]
                       if e.get("event_type") == "memory.delete"
                       or (start is not None and str(e.get("timestamp", "")) <= start)}
+            # a write-target-refused attempt by another scope is an audit record, not the
+            # memory's lifecycle: its whole correlation is withheld (#786, review F7)
+            hidden |= {e.get("correlation_id") for e in record["events"]
+                       if WRITE_TARGET_REFUSED_REF in (e.get("authority") or {}).get("authority_refs", ())}
             events = [e for e in record["events"]
                       if (start is None or str(e.get("timestamp", "")) > start) and e.get("correlation_id") not in hidden]
             projected = dict(record, tombstoned=False, events=_scrub(events, withheld))
+            if "rejected_values" in projected:
+                # a deleted generation's rejections stay internal audit records (#786, review F1)
+                projected["rejected_values"] = [
+                    row for row in projected["rejected_values"]
+                    if not adapter.memory_deleted(str(row.get("superseded_fact_uuid", "")))
+                    and not _mentions(row, withheld)]
         raw = dict(raw, history=projected, public_projection=dict(_PUBLIC_PROJECTION))
         from ..core import receipts
         receipts.validate(contract.RESULT_SCHEMA, raw)

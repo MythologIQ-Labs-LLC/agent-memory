@@ -1,7 +1,7 @@
 # #786 cross-scope write authority: a live logical memory is writable only by its scope
 
 **Status:** IMPLEMENTED and TESTED on `claude/eager-dirac-bftkfg-786-write-authority`
-(stacked on PR #784 @ `060e7cd`); INDEPENDENTLY REVIEWED per the section below; NOT DECLARED
+(stacked on PR #784 @ `060e7cd`); INDEPENDENTLY REVIEWED at `36a6ef4d` with every confirmed finding remediated (section below); NOT DECLARED
 (protected change outside the published v6 and frozen v7 declarations), NOT QUALIFIED as a
 baseline successor, NOT MERGED.
 
@@ -81,11 +81,30 @@ decision is the adapter's):
 | three generations across two scopes | #774 barriers | barriers hold for both contexts; B's own view is its DUR-DEL-001 tombstone |
 | wrong-scope correction after restart (x2) | commits | refused; `_fact_scope` survives every restart |
 | concurrent second handle / racing threads | B's write commits through its own handle | B never commits; A's head intact; a handle behind the generation gets the designed `RuntimeCheckpointConflict` |
-| forged partial scope (`project_ref` only, domains only, `tenant_ref`) | commits | refused (`required_isolation_domain_missing` / `project_scope_mismatch` internally; nothing disclosed) |
+| forged partial scope (`project_ref` only, `tenant_ref`) | commits | refused (`required_isolation_domain_missing` / `project_scope_mismatch` internally; nothing disclosed) |
+| override leaving `required ⊄ domains` (domains only, or domains + project) | commits or PAMA-blocks with a version-bearing receipt | malformed proposal, `ValueError` before any target is resolved (review F3) |
+| override with a superset of domains + the owner's project | commits, orphans the head | `remember`/`correct` refused by scope continuity (review F2); `forget`/`dispute` admitted as an eligible reader's |
 | forged **complete** scope via `overrides` | commits | commits (documented: `overrides` is the host re-declaring scope exactly as `AgentMemory.open(scope=...)` would; existing fixtures depend on it; the facade is not an authentication boundary) |
 | denied proposal carrying an episode (cross-project and `require_review`) | episode persisted and recoverable after restart | no episode; committed proposals keep theirs |
 | same text in unrelated memories of two projects | independent | independent (positive control) |
 | shared-domain member / non-member, task-scoped head (adapter level) | any same-tenant writer | member and same-task writers commit; others refused as above |
+
+## Independent adversarial review of `36a6ef4d` and its remediation
+
+An independent reviewer (separate worktree, 39 probe tests, `reference/tests/test_zz_786_review.py`
+in its worktree; the confirmed ones are ported into `test_786_cross_scope_write_authority.py::ReviewFindings`
+and `::ProceduralReviewFindings`) reported seven findings. Dispositions:
+
+| # | finding | severity | disposition |
+|---|---|---|---|
+| F1 | a deleted generation's rejected values blocked a fresh generation of the id (`rejected_value_requires_reconciliation`, a content oracle) and were served to it through `history(fact_text=...)` | P0 confidentiality / P1 availability | FIXED: `_readmission_blocked` ignores rejections whose superseded fact is deleted or when the id has no live head; the public `history` projection drops rejected values of deleted generations |
+| F2 | an override declaring a *superset* of domains plus the owner's `project_ref` passed the eligibility gates and stored a head with `required_domain_refs` the owner does not hold: the memory became unreadable by everyone | P1 integrity (owner lockout) | FIXED: `write_target_refusal` now also requires **scope continuity** -- the head's own scope, read as a context, must be eligible for the scope the new fact would be stored under. A write cannot move a live memory out of its holders' reach (orphaning, or private capture of a tenant-wide or shared memory). Deletion and dispute store no scope and need no continuity check; a superset-domain writer is an eligible reader and may delete or dispute (documented) |
+| F3 | an internally inconsistent override (`required ⊄ domains`) was judged visible, then blocked by PAMA, and its receipt carried the protected version | P1 confidentiality | FIXED: the facade refuses such a proposal as malformed (`ValueError`, identical for any target) before any target is resolved |
+| F4 | `revoke_skill` copied the *target's* scope into the revocation, making the gate vacuous there | P1 design bypass | FIXED: the caller declares its scope (`scope`, `isolation_domain_refs`, `required_isolation_domain_refs`, `purpose`); no declaration proposes under the bare component label and fails closed; callers updated |
+| F5 | `propose_skill`'s version rule disclosed another scope's version in its `ValueError` | P2 disclosure | FIXED: the version is resolved as the artifact's scope may see it (`_visible_version`) |
+| F6 | an owner handle behind the generation gets `fact_not_found` from correct/forget/dispute instead of a conflict | P2 | DISPOSITION, unchanged: pre-existing multi-handle semantics (the stale handle has no in-memory view of the memory; before #786 it read `fact_not_found` too); a write that reaches the checkpoint still raises `RuntimeCheckpointConflict`; nothing commits |
+| F7 | a refused `remember` left propose/authorize/receipt events on the target id that the other scope's `history()` served | P2 audit disclosure | FIXED: the authorize event of a write-target-refused proposal carries `authority_refs: ["write-target:refused"]` (schema-valid) and the public history projection withholds that correlation; `_canonical_history` keeps it as audit |
+| ctx | `recall(query, target_domain_refs=..., project_ref=...)` widens a handle's scope | pre-existing | the same "facade is not an authentication boundary" class as `overrides`; recorded, not changed |
 
 ## What remains disclosed, and why
 

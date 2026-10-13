@@ -22,10 +22,12 @@ import unittest
 from pathlib import Path
 
 from agentmem_ref import AgentMemory, policy
+from agentmem_ref.memory import procedural_memory as pm
 from agentmem_ref.api import contract
 from agentmem_ref.runtime.adapter import Clock, GovernedMemoryAdapter
 from agentmem_ref.runtime.restart_runtime import RuntimeCheckpointConflict, RuntimeRecoveryError
 from agentmem_ref.substrate import Episode, InMemoryTemporalGraph
+import re
 from tests.test_644_combined_independent import _evidence, _prop
 
 TENANT = "tenant:c786"
@@ -70,8 +72,9 @@ class _TwoProjects(unittest.TestCase):
     DISPUTE = {"evidence": _evidence("project:a", TENANT), "risk_class": "low"}
 
     def correct(self, memory, value, **kwargs) -> dict:
+        kind = kwargs.pop("replacement_kind", "state_change")
         return self.memory.correct(memory, f"{QUERY} is {value}", evidence=_evidence("project:a", TENANT),
-                                   risk_class="low", replacement_kind="state_change", **kwargs)
+                                   risk_class="low", replacement_kind=kind, **kwargs)
 
     @property
     def adapter(self):
@@ -259,9 +262,8 @@ class ForgedScopeMetadata(_TwoProjects):
         self.reopen("project:b")
         out = self.memory.remember("memory:a", f"{QUERY} is Turku", overrides={"project_ref": "project:a"})
         self.assertFalse(out["committed"], out)
-        out = self.memory.remember("memory:a", f"{QUERY} is Turku",
-                                   overrides={"isolation_domain_refs": [TENANT, "project:a"]})
-        self.assertFalse(out["committed"], out)
+        with self.assertRaises(ValueError):  # the handle's required domains no longer bound: malformed
+            self.memory.remember("memory:a", f"{QUERY} is Turku", overrides={"isolation_domain_refs": [TENANT, "project:a"]})
         out = self.memory.remember("memory:a", f"{QUERY} is Turku", overrides={"tenant_ref": "tenant:other"})
         self.assertFalse(out["committed"], out)
         self.assertEqual(self.canonical_head(), first)
@@ -445,6 +447,170 @@ class DeniedProposalWithEpisode(_TwoProjects):
         self.assertIsNotNone(self.adapter._substrate.get_episode("episode:kept"))
         self.reopen("project:a")
         self.assertIsNotNone(self.adapter._substrate.get_episode("episode:kept"))
+
+
+# ====================================================================== independent review findings (36a6ef4d)
+
+def _normalised(value, *, memory: str = "memory:a") -> str:
+    """Byte comparison after folding volatile identifiers and the target id."""
+    text = _serial(value).replace(memory, NEVER)
+    text = re.sub(r"ref-\d+", "ref-X", text)
+    text = re.sub(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z", "T", text)
+    return re.sub(r"facade:[0-9a-f]{64}", "facade:H", text)
+
+
+class ReviewFindings(_TwoProjects):
+    """Reproductions from the independent adversarial review of 36a6ef4d, kept as regressions."""
+
+    PARTIAL = {"isolation_domain_refs": [TENANT, "project:a"], "project_ref": "project:a"}
+    SUPERSET = {"isolation_domain_refs": [TENANT, "project:a", "project:b"], "project_ref": "project:a"}
+
+    def test_f1_deleted_generations_rejected_values_neither_block_nor_reach_a_new_generation(self):
+        self.seed()
+        self.assertTrue(self.correct("memory:a", "Bergen", replacement_kind="error_correction")["committed"])
+        self.assertTrue(self.memory.forget("memory:a")["committed"])
+        self.reopen("project:b")
+        again = self.memory.remember("memory:a", f"{QUERY} is Oslo", proposition=_prop("Oslo"))
+        self.assertTrue(again["committed"], again)  # A's rejection of "Oslo" belongs to A's deleted generation
+        view = self.memory.history("memory:a", fact_text=f"{QUERY} is Oslo")["history"]
+        self.assertEqual(view["rejected_values"], [])
+        self.assertNotIn("project:a", _serial(view))
+        # the owner's own rejections still govern the owner's live generation
+        self.reopen("project:a")
+        self.seed("memory:c", "Oslo")
+        self.assertTrue(self.correct("memory:c", "Bergen", replacement_kind="error_correction")["committed"])
+        blocked = self.memory.remember("memory:c", f"{QUERY} is Oslo", proposition=_prop("Oslo"))
+        self.assertEqual(blocked.get("refusal"), "rejected_value_requires_reconciliation")
+
+    def test_f2_superset_domain_override_cannot_move_the_head_out_of_its_holders_reach(self):
+        first = self.seed()
+        before = self.snapshot()
+        self.reopen("project:b")
+        out = self.memory.remember("memory:a", f"{QUERY} is Turku", proposition=_prop("Turku"), overrides=self.SUPERSET)
+        self.assertFalse(out["committed"], out)
+        self.assertEqual((out["receipt"]["before_state"], out["receipt"]["after_state"]), ("v0", "v0"))
+        self.assertFalse(self.correct("memory:a", "Turku", overrides=self.SUPERSET)["committed"])
+        self.reopen("project:a")
+        self.assertEqual(self.snapshot(), before)
+        self.assertEqual(self.memory.history("memory:a")["history"]["current_fact_uuid"], first)
+        self.assertEqual(self.memory.recall(QUERY)["admitted"], [first])
+        self.assertTrue(self.correct("memory:a", "Bergen")["committed"])
+        # DISPOSITION: a writer whose declared domains include the owner's project and whose
+        # project_ref is the owner's is an eligible reader of the head; a deletion or dispute
+        # stores no new scope, so it is admitted exactly as the owner's would be. Only writes
+        # that would store a scope the holder cannot read (remember, correct) are refused.
+        self.reopen("project:b")
+        self.assertTrue(self.memory.dispute("memory:a", overrides=self.SUPERSET, **self.DISPUTE)["committed"])
+
+    def test_f2_a_project_writer_cannot_capture_a_tenant_wide_memory(self):
+        """Adapter level: a fact every project may read (domains (tenant,), no project) stays
+        that way. A writer that would store it under one project is refused; a writer that
+        keeps the tenant-wide scope supersedes it in place."""
+        adapter = GovernedMemoryAdapter(InMemoryTemporalGraph(), tenant=TENANT, clock=Clock())
+        wide = dict(scope=TENANT, isolation_domain_refs=(TENANT,), required_isolation_domain_refs=(), project_ref="")
+        first = adapter.commit_proposal(_proposal(target_reference="mem:w", **wide), "window is Thursday")
+        self.assertTrue(first.committed)
+        capture = adapter.commit_proposal(_proposal(proposal_id="p2", target_reference="mem:w", scope=TENANT,
+                                                    isolation_domain_refs=(TENANT, "project:b"),
+                                                    required_isolation_domain_refs=(TENANT, "project:b"),
+                                                    project_ref="project:b"), "window is Friday")
+        self.assertFalse(capture.committed)
+        self.assertEqual(capture.refusal, "target_unavailable")
+        kept = adapter.commit_proposal(_proposal(proposal_id="p3", target_reference="mem:w", **wide), "window is Friday")
+        self.assertTrue(kept.committed, kept.refusal)
+        self.assertEqual(adapter.current_fact_uuid("mem:w"), kept.fact_uuid)
+
+    def test_f3_inconsistent_partial_override_is_malformed_before_any_target_is_resolved(self):
+        self.seed()
+        self.correct("memory:a", "Bergen")
+        self.reopen("project:b")
+        for target in ("memory:a", NEVER):
+            for op in (lambda m: self.memory.remember(m, f"{QUERY} is Turku", overrides=self.PARTIAL),
+                       lambda m: self.correct(m, "Turku", overrides=self.PARTIAL),
+                       lambda m: self.memory.forget(m, overrides=self.PARTIAL),
+                       lambda m: self.memory.dispute(m, overrides=self.PARTIAL, **self.DISPUTE)):
+                with self.subTest(target=target), self.assertRaises(ValueError) as caught:
+                    op(target)
+                self.assertNotIn("v2", str(caught.exception))
+
+    def test_f7_another_scopes_refused_attempts_never_reach_the_live_generations_history(self):
+        self.seed()
+        self.assertTrue(self.memory.forget("memory:a")["committed"])
+        self.reopen("project:b")
+        self.memory.remember("memory:a", f"{QUERY} is Turku", proposition=_prop("Turku"))
+        self.reopen("project:a")
+        self.assertFalse(self.memory.remember("memory:a", f"{QUERY} is Narvik")["committed"])
+        self.reopen("project:b")
+        events = self.memory.history("memory:a")["history"]["events"]
+        self.assertEqual([e["event_type"] for e in events],
+                         ["memory.propose", "memory.authorize", "memory.commit", "memory.receipt"])
+        # the owner of a live memory likewise sees no trace of another scope's attempt
+        self.reopen("project:a")
+        self.seed("memory:c")
+        self.reopen("project:b")
+        self.memory.remember("memory:c", f"{QUERY} is Turku")
+        self.reopen("project:a")
+        self.assertEqual(len(self.memory.history("memory:c")["history"]["events"]), 4)
+
+    def test_f6_disposition_a_handle_behind_the_generation_reads_an_unknown_id(self):
+        """DISPOSITION (pre-existing, unchanged): a second owner handle opened before another
+        handle's write has no in-memory view of that memory; its correct/forget/dispute read
+        ``fact_not_found`` exactly as before #786, while a write that reaches the checkpoint
+        raises ``RuntimeCheckpointConflict``. Nothing commits."""
+        self.memory.close()
+        h1, h2 = self.open(), self.open()
+        try:
+            self.assertTrue(h1.remember("memory:a", f"{QUERY} is Oslo")["committed"])
+            self.assertEqual(h2.correct("memory:a", f"{QUERY} is Bergen", evidence=_evidence("project:a", TENANT),
+                                        risk_class="low").get("refusal"), "fact_not_found")
+            with self.assertRaises(RuntimeCheckpointConflict):
+                h2.remember("memory:a", f"{QUERY} is Bergen")
+        finally:
+            h1.close(); h2.close()
+        self.memory = self.open()
+        self.assertEqual(self.fact(self.canonical_head()).fact_text, f"{QUERY} is Oslo")
+
+
+def _skill(scope, version=1, skill_id="deploy"):
+    return pm.SkillArtifact(
+        skill_id=skill_id, version=version, purpose="c786", scope=scope,
+        isolation_domain_refs=(TENANT, scope), required_isolation_domain_refs=(TENANT, scope),
+        procedure_markdown="# v\nok", provenance_refs=("evidence:c786",))
+
+
+class ProceduralReviewFindings(unittest.TestCase):
+    def setUp(self):
+        from agentmem_ref.capabilities import ComponentRegistry
+        self.substrate = InMemoryTemporalGraph()
+        self.adapter = GovernedMemoryAdapter(self.substrate, tenant=TENANT, clock=Clock())
+        registry = ComponentRegistry()
+        registry.register(pm.reference_procedural_component())
+        self.runtime = pm.ProceduralMemoryRuntime(adapter=self.adapter, substrate=self.substrate, registry=registry)
+
+    def test_f5_propose_skill_does_not_disclose_another_scopes_version(self):
+        self.assertTrue(self.runtime.commit_skill(self.runtime.propose_skill(_skill("project:a"), actor_id="agent:a")).commit.committed)
+        with self.assertRaises(ValueError) as a:
+            self.runtime.propose_skill(_skill("project:b", version=3), actor_id="agent:b")
+        with self.assertRaises(ValueError) as b:
+            self.runtime.propose_skill(_skill("project:b", version=3, skill_id="fresh"), actor_id="agent:b")
+        self.assertEqual(str(a.exception), str(b.exception))
+
+    def test_f4_revocation_carries_the_callers_scope_not_the_targets(self):
+        head = self.runtime.commit_skill(self.runtime.propose_skill(_skill("project:a"), actor_id="agent:a")).commit.fact_uuid
+        other = self.runtime.propose_skill(_skill("project:b"), actor_id="agent:b")
+        self.assertFalse(self.runtime.commit_skill(other).commit.committed)
+        bare = self.runtime.revoke_skill("deploy", actor_id="agent:b", evidence_refs=("ev:b",))
+        self.assertFalse(bare.commit.committed)
+        wrong = self.runtime.revoke_skill("deploy", actor_id="agent:b", evidence_refs=("ev:b",), scope="project:b",
+                                          isolation_domain_refs=(TENANT, "project:b"),
+                                          required_isolation_domain_refs=(TENANT, "project:b"), purpose="c786")
+        self.assertFalse(wrong.commit.committed)
+        self.assertEqual(wrong.commit.refusal, "fact_not_found")
+        self.assertEqual(self.adapter.current_fact_uuid("skill:deploy"), head)
+        owner = self.runtime.revoke_skill("deploy", actor_id="agent:a", evidence_refs=("ev:a",), scope="project:a",
+                                          isolation_domain_refs=(TENANT, "project:a"),
+                                          required_isolation_domain_refs=(TENANT, "project:a"), purpose="c786")
+        self.assertTrue(owner.commit.committed, owner.commit.refusal)
 
 
 # ====================================================================== adapter boundary

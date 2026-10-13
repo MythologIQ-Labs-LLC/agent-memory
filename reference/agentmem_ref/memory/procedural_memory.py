@@ -263,7 +263,7 @@ class ProceduralMemoryRuntime:
         actor_id: str,
         proposal_id: str | None = None,
     ) -> SkillProposal:
-        current_version = self.adapter.state_version(artifact.memory_reference)
+        current_version = self._visible_version(artifact)
         if artifact.version != current_version + 1:
             raise ValueError(
                 f"skill version must advance current state exactly once: current=v{current_version}, "
@@ -478,6 +478,20 @@ class ProceduralMemoryRuntime:
             action_proposals=tuple(actions),
         )
 
+    def _visible_version(self, artifact: SkillArtifact) -> int:
+        """The skill's state version as the artifact's own scope may see it (#786, review F5):
+        a live head outside that scope contributes nothing, so the version rule neither
+        discloses another scope's version nor admits a write the adapter will refuse."""
+        memory_ref = artifact.memory_reference
+        head = self.adapter.current_fact_uuid(memory_ref)
+        if head is not None:
+            context = self.adapter.writer_context(
+                isolation_domain_refs=artifact.isolation_domain_refs, scope=artifact.scope,
+                project_ref=_project_ref(artifact.isolation_domain_refs), purpose=artifact.purpose)
+            if not self.adapter.fact_eligible_in_context(head, context):
+                return 0
+        return self.adapter.state_version(memory_ref)
+
     def revoke_skill(
         self,
         skill_id: str,
@@ -485,32 +499,42 @@ class ProceduralMemoryRuntime:
         actor_id: str,
         evidence_refs: tuple[str, ...],
         proposal_id: str | None = None,
+        scope: str | None = None,
+        isolation_domain_refs: tuple[str, ...] = (),
+        required_isolation_domain_refs: tuple[str, ...] = (),
+        purpose: str = "",
     ) -> RevocationResult:
+        """Revoke the current skill under the **caller's** declared scope.
+
+        #786 (review F4): a governed deletion is held to the targeted head's tenant / domain /
+        project eligibility, and that authority is the caller's to declare -- exactly as
+        ``propose_skill`` declares the artifact's. ``scope`` and ``isolation_domain_refs``
+        name the revoking principal's scope; a caller that declares none proposes under the
+        bare component label, which no retained skill's scope admits (fail closed). The
+        retained artifact's own scope is never copied into the proposal.
+        """
         self.resolve_capability()
         memory_ref = f"skill:{skill_id}"
         fact_uuid = self.adapter.current_fact_uuid(memory_ref)
         if not fact_uuid:
             raise ValueError(f"no current procedural skill exists for {skill_id!r}")
-        current_version = self.adapter.state_version(memory_ref)
-        # #786: a governed deletion is held to the targeted head's tenant/domain/project
-        # eligibility, so the revocation declares the scope the retained skill was written
-        # under (the same declaration ``propose_skill`` made), never a bare component label.
-        scope_fields: dict = {"scope": "procedural-memory"}
-        retained = self.substrate.get_fact(fact_uuid)
-        if retained is not None:
-            try:
-                artifact = SkillArtifact.from_text(retained.fact_text)
-            except (ValueError, KeyError, TypeError, json.JSONDecodeError):
-                artifact = None
-            if artifact is not None:
-                scope_fields = {
-                    "scope": artifact.scope,
-                    "tenant_ref": artifact.scope,
-                    "purpose": artifact.purpose,
-                    "isolation_domain_refs": artifact.isolation_domain_refs,
-                    "required_isolation_domain_refs": artifact.required_isolation_domain_refs,
-                    "project_ref": _project_ref(artifact.isolation_domain_refs),
-                }
+        if scope:
+            scope_fields = {
+                "scope": scope,
+                "tenant_ref": scope,
+                "purpose": purpose,
+                "isolation_domain_refs": tuple(isolation_domain_refs),
+                "required_isolation_domain_refs": tuple(required_isolation_domain_refs),
+                "project_ref": _project_ref(tuple(isolation_domain_refs)),
+            }
+            caller = self.adapter.writer_context(
+                isolation_domain_refs=scope_fields["isolation_domain_refs"], scope=scope,
+                actor_id=actor_id, project_ref=scope_fields["project_ref"], purpose=purpose)
+            visible = self.adapter.fact_eligible_in_context(fact_uuid, caller)
+        else:
+            scope_fields = {"scope": "procedural-memory"}
+            visible = False
+        current_version = self.adapter.state_version(memory_ref) if visible else 0
         proposal = policy.Proposal(
             proposal_id=proposal_id or f"proposal:revoke:{skill_id}:v{current_version}",
             actor_id=actor_id,
