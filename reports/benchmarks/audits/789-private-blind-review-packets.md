@@ -20,6 +20,7 @@ The command verifies all 77 case IDs, both source reports' Git blob IDs, profile
 
 It writes:
 - `reviewer/packet.json`: 48 source queries and raw retrieval contexts in random order, with **per-case randomly flipped A/B labels** and unpredictable trace tokens. No product names, native pass/fail labels, numerical scores, gold answer arrays, raw source paths, or BM25 controls are deliberately included.
+- `reviewer/forms.PENDING.json`: 48 **unscored, unlocked** form skeletons with exact case/arm/source traces. Every rating is `null` and both P0 privacy findings start `null` (UNEXAMINED, not false). Give **separate private copies** to two real independent humans. They must complete every field, provide case-local evidence citations, set P0 decisions explicitly and lock their own forms. The generated template is not a human submission.
 - `coordinator/key.json`: **SECRET** arm-to-provider mapping, exact source paths/blob SHAs, trace hashes and packet SHA-256. Keep it inaccessible to reviewers until both human ratings are locked.
 
 Files are created with private permissions (0700 dirs / 0600 files where supported); machine and storage permissions are still the study coordinator's responsibility. Even label-blind source contexts may reveal identifying styles or answer content. A coordinator MUST inspect the entire reviewer packet privately for vendor/source leakage, personal data and eligibility before distributing it. The program blocks explicit `Agent Memory`, `Mem0` and `BM25` vendor-name strings in contexts; it **does not prove complete blinding**.
@@ -28,7 +29,7 @@ Files are created with private permissions (0700 dirs / 0600 files where support
 
 ## After genuine independent ratings
 
-Each reviewer must submit one fully locked `competitive-qualitative-review/1` form for each case/arm, including its exact packet `source_trace`. Two *independent verified humans* per arm/case are needed, a maximum expected 96 forms. Store submitted forms securely outside the repository until rights, privacy and evidence review are satisfied.
+Each reviewer must submit one fully locked `competitive-qualitative-review/1` form for each case/arm, including its exact packet `source_trace`. **Every evidence reference must point to actual, nonblank case-local lines** using `trace-<token>:context:L3-L5` or `trace-<token>:prompt:L1-L1` (replace `trace-<token>` with the complete source trace emitted in the private packet). Synthetic or out-of-range line references are rejected; a valid line reference is necessary but not sufficient evidence of a justified score. Two *independent verified humans* per arm/case are needed, a maximum expected 96 forms. Store submitted forms securely outside the repository until rights, privacy and evidence review are satisfied.
 
 Verify source-trace alignment to the original private packet and run the original #793 structural evaluator:
 
@@ -39,7 +40,7 @@ python scripts/prepare_789_blind_review_packets.py \
   --reviews /private/secure-review/reviews.json
 ```
 
-It **does not** verify whether the identities are truly independent humans, whether reviewers saw privileged labels outside the packet, or whether final adjudication is correct. It never publishes scores, averages multiple quality dimensions, or authorizes a product ranking. P0 privacy flags remain explicit blockers requiring separate safety adjudication.
+It validates source-trace and line-citation integrity. It **does not** verify whether the identities are truly independent humans, whether reviewers saw privileged labels outside the packet, or whether final adjudication is correct. It never publishes scores, averages multiple quality dimensions, or authorizes a product ranking. P0 privacy flags remain explicit blockers requiring separate safety adjudication.
 
 ## Not part of the benchmark-refresh pipeline
 
