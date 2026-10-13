@@ -1,0 +1,279 @@
+#!/usr/bin/env python3
+"""Prepare private, source-verified, label-blinded AMB v6 qualitative packets.
+
+No benchmark executions, scores, provider calls or GitHub Actions. All raw
+prompts/contexts and the unblinding key stay OUTSIDE the git checkout.
+
+python scripts/prepare_789_blind_review_packets.py --output-dir /private/path/study-001 --accept-private-material
+python scripts/prepare_789_blind_review_packets.py --verify-reviews /private/path/study-001/coordinator/key.json --reviews /private/path/reviews.json
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+import re
+import secrets
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+DOSSIER = "reports/benchmarks/audits/789-amb-v6-case-dossiers.json"
+PROTOCOL = "competitive-qualitative-blind-packet/1"
+ARMS = ("agent_memory", "mem0_oss")
+VENDOR_MARKERS = re.compile(r"\b(?:agent[\s_-]?memory|mem0|bm25)\b", re.IGNORECASE)
+
+
+class PacketError(ValueError):
+    pass
+
+
+def require(condition: bool, reason: str) -> None:
+    if not condition:
+        raise PacketError(reason)
+
+
+def stable_bytes(document: dict) -> bytes:
+    return (json.dumps(document, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
+
+
+def digest(payload: bytes) -> str:
+    return hashlib.sha256(payload).hexdigest()
+
+
+def git_blob(payload: bytes) -> str:
+    # Repository .gitattributes: text=auto eol=lf.
+    content = payload.replace(b"\r\n", b"\n")
+    return hashlib.sha1(b"blob " + str(len(content)).encode("ascii") + b"\0" + content).hexdigest()
+
+
+def safe_source(root: Path, path: str) -> Path:
+    require(isinstance(path, str) and path.startswith("reports/benchmarks/amb/") and
+            path.endswith("/single-turn.json"), "source path outside frozen AMB scope")
+    target = (root / path).resolve()
+    require(target.is_relative_to(root.resolve()) and target.is_file(), "invalid source path")
+    return target
+
+
+def locked_write(path: Path, payload: bytes) -> None:
+    """Never overwrite, follow a symlink or make reviewer material world-readable."""
+    fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
+    with os.fdopen(fd, "wb") as handle:
+        handle.write(payload)
+
+
+def load_verified_sources(root: Path, dossier: dict) -> dict[str, dict]:
+    reports = dossier.get("source_reports")
+    require(isinstance(reports, list) and len(reports) == 3, "expected three source reports")
+    source = {x.get("arm"): x for x in reports if isinstance(x, dict)}
+    require(set(source) == {"agent_memory", "mem0_oss", "bm25_control"},
+            "incomplete/duplicate named benchmark sources")
+    out = {}
+    for arm in ARMS:
+        record = source[arm]
+        path = safe_source(root, record.get("path"))
+        content = path.read_bytes()
+        require(git_blob(content) == record.get("git_blob_sha"), "pinned source blob mismatch: " + arm)
+        data = json.loads(content)
+        require(data.get("dataset") == "precisionmembench" and
+                data.get("split") == "single-turn" and data.get("mode") == "retrieval",
+                "incorrect source profile: " + arm)
+        rows = data.get("results")
+        require(isinstance(rows, list) and len(rows) == 77 and data.get("total_queries") == 77,
+                "incorrect original case population: " + arm)
+        ids = [r.get("query_id") for r in rows]
+        require(all(isinstance(x, str) and x for x in ids) and len(set(ids)) == 77,
+                "duplicate or missing query identities: " + arm)
+        require(sum(row.get("correct") is True for row in rows) == data.get("correct"),
+                "native pass total mismatch: " + arm)
+        out[arm] = {r["query_id"]: r for r in rows}
+    require(set(out["agent_memory"]) == set(out["mem0_oss"]), "source case IDs differ")
+    for cid in out["agent_memory"]:
+        a = out["agent_memory"][cid]
+        b = out["mem0_oss"][cid]
+        require(a.get("query") == b.get("query") and a.get("gold_answers") == b.get("gold_answers"),
+                "source query/gold conflict: " + cid)
+    return out
+
+
+def prepare(root: Path, out_dir: Path, *, dossier_path: Path | None = None) -> dict:
+    root = root.resolve()
+    target = out_dir.resolve()
+    require(not target.is_relative_to(root), "private materials must be outside repository")
+    require(not target.exists(), "destination already exists; refuse overwrite")
+    require(target.parent.is_dir(), "destination parent must already exist")
+    dossier_path = dossier_path or (root / DOSSIER)
+    dossier = json.loads(dossier_path.read_text(encoding="utf-8"))
+    require(dossier.get("schema_version") == "competitive-case-dossier/1" and
+            dossier.get("accepted_score_update") is False and
+            dossier.get("qualitative_review_status") == "not_started",
+            "unaccepted frozen source dossier required")
+    target_ids = dossier.get("review_selection", {}).get("target_case_ids")
+    require(isinstance(target_ids, list) and len(target_ids) == 24 and
+            len(set(target_ids)) == 24 and all(isinstance(x, str) for x in target_ids),
+            "the 24 preregistered cases must remain frozen")
+    entries = dossier.get("entries")
+    require(isinstance(entries, list) and len(entries) == 77, "77-case dossier required")
+    indexed = {x.get("case_id"): x for x in entries}
+    require(len(indexed) == 77 and set(target_ids) <= set(indexed),
+            "qualitative case selection not in 77-case dossier")
+    source = load_verified_sources(root, dossier)
+    require(set(source["agent_memory"]) == set(indexed), "dossier and source cases differ")
+    for cid, row in indexed.items():
+        for arm in ARMS:
+            require(source[arm][cid]["correct"] is row["arms"][arm]["passed_native_scorer"],
+                    "dossier/native verdict mismatch: " + cid + ":" + arm)
+
+    trace_seen: set[str] = set()
+    bundle: list[dict] = []
+    assignments: list[dict] = []
+    for cid in target_ids:
+        a = source["agent_memory"][cid]
+        b = source["mem0_oss"][cid]
+        prompt = a["query"]
+        require(isinstance(prompt, str), "missing task prompt: " + cid)
+        flipped = bool(secrets.randbits(1))
+        for label, system in zip(("A", "B"), (ARMS[::-1] if flipped else ARMS)):
+            row = source[system][cid]
+            context = row.get("context")
+            require(isinstance(context, str) and len(context) <= 200000,
+                    "invalid raw retrieval context: " + cid)
+            # A vendor-name marker in the submitted context is a direct label leak.
+            # Other stylistic/factual deblinding risks still need manual inspection.
+            require(VENDOR_MARKERS.search(context) is None,
+                    "explicit provider name in raw context: " + cid)
+            token = "trace-" + secrets.token_hex(16)
+            require(token not in trace_seen, "trace collision")
+            trace_seen.add(token)
+            bundle.append({
+                "case_id": cid,
+                "blind_arm": label,
+                "task_prompt": prompt,
+                "retrieved_context": context,
+                "source_trace": token,
+            })
+            assignments.append({
+                "case_id": cid,
+                "blind_arm": label,
+                "provider_id": system,
+                "source_path": next(x["path"] for x in dossier["source_reports"] if x["arm"] == system),
+                "source_git_blob": next(x["git_blob_sha"] for x in dossier["source_reports"] if x["arm"] == system),
+                "source_trace": token,
+                "source_content_sha256": digest(stable_bytes({"query": prompt, "context": context})),
+            })
+    secrets.SystemRandom().shuffle(bundle)
+    packet = {
+        "schema_version": PROTOCOL,
+        "source_class": "historical_retrieval_context_not_task_answer",
+        "benchmark_outcomes_visible": False,
+        "gold_answers_visible": False,
+        "blinding": "per_case_randomized_labels_only_unverified_stylistic_blinding",
+        "required_human_reviewers": 2,
+        "locked_form_schema": "competitive-qualitative-review/1",
+        "note": (
+            "24 purposively chosen cases, two retrieval-only product arms, 48 individual blind "
+            "case/arm contexts. No model answers or user task success provided. Reviewers "
+            "must mark genuinely unobservable dimensions not_applicable and justify them. "
+            "Raw output format may still reveal identity: coordinator must inspect privately."
+        ),
+        "records": bundle,
+    }
+    packet_bytes = stable_bytes(packet)
+    key = {
+        "schema_version": "competitive-qualitative-assignment-key/1",
+        "packet_protocol": PROTOCOL,
+        "packet_sha256": digest(packet_bytes),
+        "dossier_sha256": digest(dossier_path.read_bytes()),
+        "source_main_sha": dossier.get("source_main_sha"),
+        "frozen_target_case_ids": target_ids,
+        "assignments": assignments,
+        "note": "PRIVATE COORDINATOR ONLY. Never commit or share before independent reviewer lock.",
+    }
+    # Create only AFTER verifying every source and all 48 expected rows.
+    target.mkdir(mode=0o700)
+    (target / "reviewer").mkdir(mode=0o700)
+    (target / "coordinator").mkdir(mode=0o700)
+    locked_write(target / "reviewer" / "packet.json", packet_bytes)
+    locked_write(target / "coordinator" / "key.json", stable_bytes(key))
+    return {
+        "status": "private_packet_prepared_not_reviewed",
+        "cases": 24, "arms_per_case": 2, "records": len(bundle),
+        "completed_human_reviews": 0, "required_human_reviews": 96,
+        "packet_sha256": key["packet_sha256"],
+        "reviewer_packet": str(target / "reviewer" / "packet.json"),
+        "private_coordinator_key": str(target / "coordinator" / "key.json"),
+        "warning": "No human work or blinding quality has been certified.",
+    }
+
+
+def verify_reviews(dossier: dict, packet: dict, key: dict, reviews: list[dict]) -> dict:
+    """Proof that submitted source_trace tokens match this locked local packet."""
+    from scripts.check_789_qualitative_review import review_coverage
+    require(key.get("schema_version") == "competitive-qualitative-assignment-key/1" and
+            packet.get("schema_version") == PROTOCOL and
+            digest(stable_bytes(packet)) == key.get("packet_sha256"), "review packet/key mismatch")
+    require(packet.get("benchmark_outcomes_visible") is False and
+            packet.get("gold_answers_visible") is False, "unblinding before reviewer lock")
+    expected = {(x["case_id"], x["blind_arm"]): x["source_trace"] for x in key["assignments"]}
+    require(len(expected) == 48 and len(set(expected.values())) == 48,
+            "invalid/colliding blinded assignment traces")
+    actual = {(x["case_id"], x["blind_arm"]): x["source_trace"] for x in packet["records"]}
+    require(actual == expected and len(packet["records"]) == 48, "packet assignment altered")
+    require(key.get("frozen_target_case_ids") == dossier["review_selection"]["target_case_ids"],
+            "key is not bound to the frozen selection")
+    require(digest(stable_bytes(packet)) == key["packet_sha256"], "packet bytes changed")
+    for review in reviews:
+        require(isinstance(review, dict), "invalid review")
+        ident = (review.get("case_id"), review.get("blind_arm"))
+        require(ident in expected and review.get("source_trace") == expected[ident],
+                "review source trace does not match private packet")
+    result = review_coverage(dossier, reviews)
+    result["packet_integrity"] = "matched"
+    result["publication_authorized"] = False
+    result["human_identity_and_true_blinding_verified"] = False
+    result["release_gate"] = (
+        "p0_safety_adjudication_required" if result["cases_with_reported_P0_flags"]
+        else "human_independence_and_adjudication_required"
+        if result["status"] == "ready_for_independent_adjudication"
+        else "incomplete_human_coverage"
+    )
+    return result
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    action = parser.add_mutually_exclusive_group(required=True)
+    action.add_argument("--output-dir", type=Path)
+    action.add_argument("--verify-reviews", type=Path, metavar="PRIVATE_KEY_JSON")
+    parser.add_argument("--reviews", type=Path, help="locked reviewer submissions (verify mode)")
+    parser.add_argument("--packet", type=Path, help="private reviewer packet (verify mode)")
+    parser.add_argument("--accept-private-material", action="store_true",
+                        help="explicitly acknowledge that source contexts must not be committed/shared")
+    args = parser.parse_args()
+    try:
+        dossier = json.loads((ROOT / DOSSIER).read_text(encoding="utf-8"))
+        if args.output_dir:
+            require(args.accept_private_material, "explicit --accept-private-material required")
+            report = prepare(ROOT, args.output_dir)
+        else:
+            require(args.packet is not None and args.reviews is not None,
+                    "--verify-reviews requires --packet and --reviews")
+            report = verify_reviews(
+                dossier,
+                json.loads(args.packet.read_text(encoding="utf-8")),
+                json.loads(args.verify_reviews.read_text(encoding="utf-8")),
+                json.loads(args.reviews.read_text(encoding="utf-8")),
+            )
+        print(json.dumps(report, indent=2))
+        return 0
+    except (PacketError, OSError, ValueError, KeyError, TypeError) as exc:
+        print("BLIND QUALITATIVE GATE REFUSED: " + str(exc), file=sys.stderr)
+        return 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
