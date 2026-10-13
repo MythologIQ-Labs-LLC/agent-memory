@@ -5,7 +5,9 @@ The same verification the #644 v7 replay evidence receives (``scripts/verify_644
 applied to the separate #786 family: ``reference/run_786_security_replays.py``, the fixtures under
 ``reference/fixtures/786-security-replays/`` and the evidence under
 ``reports/validation/786-security-replays/``. The replays it verifies are the ones the given
-declaration lists with ``kind: security_replay`` (default: the prepared cumulative v8 proposal).
+declaration lists with ``kind: security_replay`` (default: the companion acceptance file of the
+prepared cumulative v8 proposal, ``786-security-replay-acceptance.PROPOSED.json``; the #674 declaration
+schema enumerates only ``public_gauntlet`` / ``replay`` / ``lane``, so the family is declared beside it).
 VERIFIED is reproducible, untampered evidence for a reviewer; it is not acceptance.
 """
 from __future__ import annotations
@@ -21,7 +23,7 @@ sys.path.insert(0, str(ROOT / "reference"))
 import run_786_security_replays as runner  # noqa: E402
 
 v7 = runpy.run_path(str(ROOT / "scripts/verify_644_v7_replays.py"))
-DECLARATION = ROOT / "reports/runtime/proposals/786-cumulative-v6-to-v8.PROPOSED.json"
+DECLARATION = ROOT / "reports/runtime/proposals/786-security-replay-acceptance.PROPOSED.json"
 EVIDENCE_ROOT = ROOT / "reports/validation/786-security-replays"
 
 

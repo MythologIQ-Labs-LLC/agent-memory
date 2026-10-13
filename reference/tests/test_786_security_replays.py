@@ -20,7 +20,7 @@ sys.path.insert(0, str(ROOT / "reference"))
 import run_786_security_replays as runner  # noqa: E402
 
 verifier = runpy.run_path(str(ROOT / "scripts/verify_786_security_replays.py"))
-PROPOSAL = ROOT / "reports/runtime/proposals/786-cumulative-v6-to-v8.PROPOSED.json"
+PROPOSAL = ROOT / "reports/runtime/proposals/786-security-replay-acceptance.PROPOSED.json"
 
 
 def fixture(replay_id: str) -> dict:

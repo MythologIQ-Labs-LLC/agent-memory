@@ -67,13 +67,13 @@ packages produced at that revision. None of that is done here.
 | public_gauntlet | `gauntlet-orchestration-retrieval-probe-v1` | executed through the public facade with a scratch contestant: complete, 3/3 (`reports/validation/786-at-head/gauntlet/`); a committed `-v8` contestant and manifest are still to be produced at the published revision |
 | replay x5 | the five #644 v7 replay contracts | re-executed and VERIFIED/PASS at `a7a81c45` (`reports/validation/786-at-head/replays/`); inventory BLOCKED by design pending an independent reviewer's ledger decision |
 | lane | `amb-precisionmembench-retrieval-v8`, `longmemeval-s-retrieval-parity-v8` | DRAFT definitions only; not frozen, not executed (no new benchmark runs were initiated in this tranche) |
-| security_replay x3 | `cross-scope-write-authority-denial-v2`, `deleted-lineage-generations-and-restart-v2`, `public-tombstone-redaction-and-observer-separation-v2` (`786-security-replay-dsl/1`, separate runner and verifier; 28 cases, superseding the frozen `-v1` set) | executed and VERIFIED/PASS at `a7a81c45` (`reports/validation/786-security-replays/`); expectations preregistered by the implementing session before first execution (that execution's one runtime finding and three expectation corrections are recorded in each fixture's `development_history`), independent read still required |
+| security_replay x3 (companion file `786-security-replay-acceptance.PROPOSED.json`, not in the declaration: the #674 declaration schema admits only `public_gauntlet` / `replay` / `lane`; extending it is an owner decision) | `cross-scope-write-authority-denial-v2`, `deleted-lineage-generations-and-restart-v2`, `public-tombstone-redaction-and-observer-separation-v2` (`786-security-replay-dsl/1`, separate runner and verifier; 28 cases, superseding the frozen `-v1` set) | executed and VERIFIED/PASS at `a7a81c45` (`reports/validation/786-security-replays/`); expectations preregistered by the implementing session before first execution (that execution's one runtime finding and three expectation corrections are recorded in each fixture's `development_history`), independent read still required |
 | regression (not a declaration kind) | `reference/tests/test_776_*`, `test_777_*`, `test_772_*`, `test_774_*`, `test_786_*` | pass at the current head |
 | privacy / quality holdouts | blind theatre and vineyard, evaluator v3 @ `9961067` | P0 = 0, quality identical to `060e7cd7` (`reports/validation/786-at-head/blind-holdouts/`) |
 
 ## Blockers (each assigned)
 
-1. Owner: route decision (cumulative v8 vs amended v7), register pointer, contract `1.8.0` decision.
+1. Owner: route decision (cumulative v8 vs amended v7), register pointer, contract `1.8.0` decision, and whether the declaration schema gains a `security_replay` evidence kind (until then the family is declared in the companion file).
 2. Independent review (owner or #787 track): the three `786-security-replay-dsl/1` contracts
    were authored by the implementing session; their expectations need an independent read
    against the contract documents before they count as acceptance evidence.

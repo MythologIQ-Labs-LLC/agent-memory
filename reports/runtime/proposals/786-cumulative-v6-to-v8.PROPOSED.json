@@ -97,18 +97,6 @@
     {
       "kind": "lane",
       "ref": "longmemeval-s-retrieval-parity-v8"
-    },
-    {
-      "kind": "security_replay",
-      "ref": "cross-scope-write-authority-denial-v2"
-    },
-    {
-      "kind": "security_replay",
-      "ref": "deleted-lineage-generations-and-restart-v2"
-    },
-    {
-      "kind": "security_replay",
-      "ref": "public-tombstone-redaction-and-observer-separation-v2"
     }
   ]
 }
