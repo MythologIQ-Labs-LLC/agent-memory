@@ -24,7 +24,7 @@ def main():
     if not args.install:
         print("Configured:", existing or "(none)", " | run --install to enable local event-driven refresh")
         return
-    for name in ("post-commit","pre-push"):
+    for name in ("post-commit","post-merge","pre-push"):
         path=ROOT/EXPECTED/name
         if not path.is_file():
             raise SystemExit("REFUSED: missing hook "+str(path))

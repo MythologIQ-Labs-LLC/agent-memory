@@ -68,6 +68,49 @@ class BenchmarkHookTests(unittest.TestCase):
             self.assertNotEqual(result.returncode,0)
             self.assertIn("benchmark publication BLOCKED",result.stderr)
 
+    def test_git_merge_of_source_change_writes_companion_commit(self):
+        """`git merge` runs post-merge, not post-commit; a merged source change must still refresh."""
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            subprocess.run(["git","init","-q","-b","main",str(root)],check=True)
+            (root/".githooks").mkdir()
+            for name in HOOKS.iterdir():
+                if name.is_file():
+                    target=root/".githooks"/name.name
+                    target.write_bytes(name.read_bytes())
+                    target.chmod(0o755)
+            (root/"scripts").mkdir()
+            (root/"scripts/refresh_benchmark_pages.py").write_text(
+                "import pathlib,sys\n"
+                "out=pathlib.Path('reports/benchmarks/ui'); out.mkdir(parents=True, exist_ok=True)\n"
+                "(out/'refresh-status.json').write_text('{\"stub\": true}\\n')\n", encoding="utf-8")
+            def cmd(*args):
+                return subprocess.run(["git","-C",str(root),"-c","user.email=test@example.invalid","-c","user.name=Tester",*args],
+                                      text=True,capture_output=True,check=True).stdout.strip()
+            (root/"README.md").write_text("hello\n")
+            # The hook stages the three generated trees; seed them as the real repository has them.
+            for seed in ("reports/benchmarks/normalized/seed.json","reports/benchmarks/scorecards/seed.md"):
+                (root/seed).parent.mkdir(parents=True,exist_ok=True)
+                (root/seed).write_text("seed\n")
+            cmd("add",".")
+            cmd("commit","-qm","base")
+            cmd("config","core.hooksPath",".githooks")
+            cmd("checkout","-q","-b","evidence")
+            (root/"reports/benchmarks/amb/v9").mkdir(parents=True)
+            (root/"reports/benchmarks/amb/v9/evidence.json").write_text("{}\n")
+            cmd("add",".")
+            cmd("-c","core.hooksPath=/dev/null","commit","-qm","record evidence elsewhere")
+            cmd("checkout","-q","main")
+            (root/"README.md").write_text("diverged\n")
+            cmd("add",".")
+            cmd("commit","-qm","docs")
+            cmd("merge","--no-ff","-q","-m","merge evidence","evidence")
+            subject=cmd("log","-1","--format=%s")
+            self.assertEqual(subject,"chore(benchmarks): refresh recorded evidence projections [skip ci]",
+                             cmd("log","--oneline","-5"))
+            self.assertEqual(cmd("show","--format=","--name-only","HEAD"),"reports/benchmarks/ui/refresh-status.json")
+            self.assertEqual(cmd("status","--porcelain"),"")
+
 
 if __name__=="__main__":
     unittest.main()

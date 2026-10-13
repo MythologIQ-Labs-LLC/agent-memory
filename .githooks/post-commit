@@ -3,9 +3,11 @@
 set -eu
 cd "$(git rev-parse --show-toplevel)"
 . .githooks/benchmark-refresh-paths.sh
-if git rev-parse --verify HEAD^ >/dev/null 2>&1; then
+# post-merge supplies ORIG_HEAD; a plain commit compares with its first parent.
+base="${BENCHMARK_REFRESH_BASE:-HEAD^}"
+if git rev-parse --verify "$base" >/dev/null 2>&1; then
   # First-parent diff works for normal commits AND merges.
-  changed="$(git diff --name-only HEAD^ HEAD)"
+  changed="$(git diff --name-only "$base" HEAD)"
 else
   changed="$(git diff-tree --root --no-commit-id --name-only -r HEAD)"
 fi
