@@ -11,7 +11,7 @@ def fixture():
         correct = arm != "mem0_oss"
         rows[arm] = {"query_id": "case-a", "query": "Which decision?", "gold_answers": ["id-a"],
                      "correct": correct, "context_tokens": 8, "retrieve_time_ms": 1.5,
-                     "meta": {"category": "Example", "failures": [] if correct else ["missing expected belief: id-a"]}}
+                     "meta": {"category": "Example", "failures": [] if correct else ["missing expected belief: id-a"], "retrieval_precision": 0.5, "retrieval_recall": 1.0}}
     reports = {arm: {"dataset": "precisionmembench", "split": "single-turn", "mode": "retrieval",
                      "run_name": arm, "total_queries": 1, "correct": int(rows[arm]["correct"]),
                      "accuracy": float(rows[arm]["correct"]), "mean_precision": 0.5, "mean_recall": 1.0,
@@ -28,6 +28,7 @@ def fixture():
                     "native_accuracy": {arm: reports[arm]["accuracy"] for arm in arms},
                     "native_mean_precision": {arm: 0.5 for arm in arms},
                     "native_mean_recall": {arm: 1.0 for arm in arms},
+                    "metric_denominators": {"native_mean_precision": {arm: 1 for arm in arms}, "native_mean_recall": {arm: 1 for arm in arms}},
                     "pair_outcomes": {"agent_only": 1},
                     "category_breakdown": [{"category": "Example", "case_count": 1, "agent_pass": 1, "mem0_pass": 0, "bm25_pass": 1}],
                     "mcnemar_exact_two_sided_agent_vs_mem0": 1.0},
@@ -74,6 +75,18 @@ class ReplayTests(unittest.TestCase):
         d, r = fixture()
         d["summary"]["correct"]["agent_memory"] = 0
         with self.assertRaisesRegex(ValueError, "summary pass"):
+            validate_dossier(d, r, expected_count=1, review_count=1)
+
+    def test_metric_denominator_must_match_native_rows(self):
+        d, r = fixture()
+        d["summary"]["metric_denominators"]["native_mean_recall"]["agent_memory"] = 77
+        with self.assertRaisesRegex(ValueError, "metric denominator"):
+            validate_dossier(d, r, expected_count=1, review_count=1)
+
+    def test_metric_aggregation_must_match_native_rows(self):
+        d, r = fixture()
+        r["agent_memory"]["results"][0]["meta"]["retrieval_precision"] = 0.75
+        with self.assertRaisesRegex(ValueError, "native metric aggregation"):
             validate_dossier(d, r, expected_count=1, review_count=1)
 
     def test_substituted_sample_rejected(self):

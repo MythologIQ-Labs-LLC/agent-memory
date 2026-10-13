@@ -35,7 +35,8 @@
     "all_prompt_and_gold_arrays_matched": true,
     "all_native_verdicts_preserved": true,
     "no_gold_or_response_content_embedded": true,
-    "complete_native_meta_failures_used": true
+    "complete_native_meta_failures_used": true,
+    "native_metric_denominators_replayed": true
   },
   "summary": {
     "count": 77,
@@ -159,7 +160,19 @@
       }
     ],
     "mcnemar_exact_two_sided_agent_vs_mem0": 0.125,
-    "interpretation": "Historical frozen AMB v6 source, retrieval-mode native exact case verdict; no answer-generation quality or human judgments. Paired n=77, 6 vs 1 discordant; exact two-sided McNemar p=0.125 (unadjusted exploratory), not statistically demonstrated superiority."
+    "interpretation": "Historical frozen AMB v6 source, retrieval-mode native exact case verdict; no answer-generation quality or human judgments. Paired n=77, 6 vs 1 discordant; exact two-sided McNemar p=0.125 (unadjusted exploratory), not statistically demonstrated superiority.",
+    "metric_denominators": {
+      "native_mean_precision": {
+        "agent_memory": 67,
+        "mem0_oss": 68,
+        "bm25_control": 70
+      },
+      "native_mean_recall": {
+        "agent_memory": 43,
+        "mem0_oss": 43,
+        "bm25_control": 43
+      }
+    }
   },
   "review_selection": {
     "method": "All seven discordant Agent Memory-versus-Mem0 cases; then lexicographically first previously unselected case per benchmark category; then lexicographically first remaining cases until 24 total. Deliberately oversamples discordant/coverage, not representative. All 77 rows remain in entries.",

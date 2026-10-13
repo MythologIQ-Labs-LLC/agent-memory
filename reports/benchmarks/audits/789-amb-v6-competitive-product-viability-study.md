@@ -16,6 +16,18 @@ Frozen AMB PrecisionMemBench `single-turn`, retrieval-mode v6. All three accepte
 
 **Native verdicts** are from the already recorded benchmark scorer. These are not human task-success or answer-quality ratings. The passing threshold is the benchmark's own exact case contract, not a claim that 19.5% of real customer tasks succeed.
 
+### Denominators: why 95% recall does not mean 95% of 77 queries
+
+Mean recall is defined for only **43 of the 77 cases** for each arm; 34 cases have `retrieval_recall = null` in each native report. On those 43 cases, Agent Memory is 41/43 with recall 1.0 and 2/43 with recall 0, giving 95.35%. Mem0 is 43/43; BM25's native recall values average 96.51%. Do **not** apply those means to all 77 questions or treat undefined as a scored zero or success.
+
+| Native metric and denominator | Agent Memory | Mem0 OSS | BM25 control |
+| --- | ---: | ---: | ---: |
+| Exact-case passes | 15/77 | 10/77 | 8/77 |
+| Mean retrieval precision (cases defined) | 18.06% (67/77) | 10.49% (68/77) | 5.36% (70/77) |
+| Mean retrieval recall (cases defined) | 95.35% (43/77) | 100.00% (43/77) | 96.51% (43/77) |
+
+The new source replay guard checks both the denominators and the per-case reaggregated means to tolerance for four-decimal source rounding. These measures are not downstream answer quality. Case flags from the complete `meta.failures` show **60 of 62 Agent Memory failures flagged unexpected beliefs only, two missing expected beliefs only**. This native structural error profile is evidence to investigate relevance, selection and safe exclusion, not proof of the causal failure mode in end-to-end use.
+
 ### Paired Agent Memory versus Mem0 results
 
 | Matched case outcome | Number |

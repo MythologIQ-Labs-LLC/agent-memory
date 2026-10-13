@@ -118,8 +118,11 @@ def validate_dossier(dossier: dict, reports: dict, *, expected_count: int = 77, 
         raw = reports[arm]
         require(summary["correct"][arm] == raw["correct"], "summary pass " + arm)
         require(math.isclose(summary["native_accuracy"][arm], raw["accuracy"], abs_tol=1e-10), "summary accuracy " + arm)
-        for label, source_field in (("native_mean_precision", "mean_precision"), ("native_mean_recall", "mean_recall")):
+        for label, source_field, case_field in (("native_mean_precision", "mean_precision", "retrieval_precision"), ("native_mean_recall", "mean_recall", "retrieval_recall")):
             require(math.isclose(summary[label][arm], raw[source_field], abs_tol=1e-10), "summary " + label + "/" + arm)
+            defined = [x["meta"][case_field] for x in raw["results"] if type(x["meta"].get(case_field)) in (int, float)]
+            require(len(defined) > 0 and len(defined) == summary["metric_denominators"][label][arm], "metric denominator " + label + "/" + arm)
+            require(math.isclose(sum(defined) / len(defined), raw[source_field], abs_tol=0.000051), "native metric aggregation " + label + "/" + arm)
     discordant = pair["agent_only"] + pair["mem0_only"]
     p = min(1.0, 2 * sum(math.comb(discordant, i) for i in range(min(pair["agent_only"], pair["mem0_only"]) + 1)) / (2 ** discordant))
     require(math.isclose(summary["mcnemar_exact_two_sided_agent_vs_mem0"], p, abs_tol=1e-10), "paired significance")
