@@ -5,7 +5,7 @@ No benchmark executions, scores, provider calls or GitHub Actions. All raw
 prompts/contexts and the unblinding key stay OUTSIDE the git checkout.
 
 python scripts/prepare_789_blind_review_packets.py --output-dir /private/path/study-001 --accept-private-material
-python scripts/prepare_789_blind_review_packets.py --verify-reviews /private/path/study-001/coordinator/key.json --reviews /private/path/reviews.json
+python scripts/prepare_789_blind_review_packets.py --verify-reviews /private/path/study-001/coordinator/key.json --packet /private/path/study-001/reviewer/packet.json --reviews /private/path/reviewer1.json /private/path/reviewer2.json
 """
 from __future__ import annotations
 
