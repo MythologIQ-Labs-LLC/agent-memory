@@ -359,7 +359,10 @@ function renderCounts() {
   item("Adequacy threshold established", rowsAll.filter((r) => r.adequacy && r.adequacy.target !== null && r.adequacy.target !== undefined).length, total);
   const peers=dataset.external_competitors && dataset.external_competitors.same_harness_measured;
   if(Array.isArray(peers)){
-    const valid=[...new Set(peers.filter(x=>typeof x==="string"&&x.trim()))];
+    // Count only peers with a ranked, eligible observation, not mere registry presence.
+    const eligible=new Set(rowsAll.filter(r=>r.ranking_state==="ranked")
+      .flatMap(r=>(r.ranking||[]).filter(x=>x.role==="external_competitor").map(x=>x.system_id)));
+    const valid=[...new Set(peers.filter(x=>typeof x==="string"&&eligible.has(x)))];
     ul.appendChild(el("li",{},[el("span",{class:"n",text:String(valid.length)}),
       el("span",{class:"d",text:"Distinct same-harness external memory systems measured · expansion target ≥6 (controls excluded)"})]));
   }
