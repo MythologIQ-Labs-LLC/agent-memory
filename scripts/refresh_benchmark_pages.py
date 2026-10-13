@@ -109,6 +109,25 @@ def compute_status(root: Path = ROOT, *, registered: set[str] | None = None) -> 
     for rel in GENERATED:
         if not (root / rel).is_file():
             raise RefreshError("derived output missing: " + rel)
+    dashboard = _json(root / "reports/benchmarks/dashboard/current.json")
+    frozen_lanes = dashboard.get("competitive_evidence", {}).get("frozen_lanes", [])
+    if not isinstance(frozen_lanes, list):
+        raise RefreshError("invalid accepted lane registry")
+    seen_lanes = set()
+    for lane in frozen_lanes:
+        if not isinstance(lane, dict) or not isinstance(lane.get("lane_id"), str):
+            raise RefreshError("invalid accepted lane identity")
+        if lane["lane_id"] in seen_lanes:
+            raise RefreshError("duplicate accepted lane: " + lane["lane_id"])
+        seen_lanes.add(lane["lane_id"])
+        if lane.get("status") != "accepted":
+            continue
+        files = lane.get("normalized_runs")
+        if not isinstance(files, list) or not files:
+            raise RefreshError("accepted lane lacks normalized evidence: " + lane["lane_id"])
+        for rel in files:
+            if not isinstance(rel, str) or not rel.startswith("reports/benchmarks/normalized/") or ".." in Path(rel).parts or not (root / rel).is_file():
+                raise RefreshError("accepted lane missing normalized evidence: " + lane["lane_id"])
     catalog = _json(root / "reports/benchmarks/ui/catalog.json")
     frontier = _json(root / "reports/benchmarks/ui/frontier-leaderboards.json")
     historical = _json(root / "reports/benchmarks/ui/historical-amb-v6.json")
