@@ -9,15 +9,15 @@
  "replay_id": "cross-scope-write-authority-denial-v2",
  "report": {
   "path": "report.json",
-  "sha256": "babe2cbe5bda4a7c7e35bebe16754f1b8ba2645aef9863c9d1bcf6461ed16e17"
+  "sha256": "e82de7cd021de6f907db25d27c573444d00bac7c3e27bc6ba25bb80b3ca9ee76"
  },
  "runner": {
   "path": "reference/run_786_security_replays.py",
   "sha256": "21db05148c369815fa154bfa83db0b3b35f6c4712596ec0f137002a6611d8269",
   "version": "786-security-replay-runner/1"
  },
- "runtime_tree": "7767ebb362a06786509e7bd11e81c1b838264d2b",
+ "runtime_tree": "b5970c58971f35bb3cc97f645c764f68acba6501",
  "schema": "786-security-replay-manifest/1",
- "source_commit": "a7a81c45a06620b1c376fba40e4c6753add621ae",
+ "source_commit": "9c4e91788f945ddc14f2811fef0eb8e1130212ce",
  "verdict": "PASS"
 }
