@@ -109,6 +109,8 @@ class BenchmarkHookTests(unittest.TestCase):
             self.assertEqual(subject,"chore(benchmarks): refresh recorded evidence projections [skip ci]",
                              cmd("log","--oneline","-5"))
             self.assertEqual(cmd("show","--format=","--name-only","HEAD"),"reports/benchmarks/ui/refresh-status.json")
+            # post-merge runs while MERGE_HEAD still exists; the companion must not become a second merge.
+            self.assertEqual(len(cmd("rev-list","--parents","-n1","HEAD").split()),2,"companion commit must have exactly one parent")
             self.assertEqual(cmd("status","--porcelain"),"")
 
 
