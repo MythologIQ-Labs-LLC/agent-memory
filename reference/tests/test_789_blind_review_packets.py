@@ -228,6 +228,43 @@ class BlindPacketTests(unittest.TestCase):
             verify_reviews(json.loads(self.dossier.read_text()),
                            self.packet(),self.key(),[reviews[0]])
 
+    def test_forged_private_product_assignment_refused(self):
+        prepare(self.root,self.dest)
+        key=self.key()
+        key["assignments"][0]["provider_id"]="unknown-provider"
+        with self.assertRaisesRegex(PacketError,"unrecognized product"):
+            verify_reviews(json.loads(self.dossier.read_text()),
+                           self.packet(),key,[])
+
+    def test_wrong_product_to_source_identity_refused(self):
+        prepare(self.root,self.dest)
+        key=self.key()
+        key["assignments"][0]["source_git_blob"]="0"*40
+        with self.assertRaisesRegex(PacketError,"source identity conflicts"):
+            verify_reviews(json.loads(self.dossier.read_text()),
+                           self.packet(),key,[])
+
+    def test_duplicate_provider_across_a_and_b_refused(self):
+        prepare(self.root,self.dest)
+        key=self.key()
+        cid=key["assignments"][0]["case_id"]
+        items=[x for x in key["assignments"] if x["case_id"]==cid]
+        one,two=items
+        two["provider_id"]=one["provider_id"]
+        two["source_git_blob"]=one["source_git_blob"]
+        two["source_path"]=one["source_path"]
+        with self.assertRaisesRegex(PacketError,"exactly one of each measured product"):
+            verify_reviews(json.loads(self.dossier.read_text()),
+                           self.packet(),key,[])
+
+    def test_reviewer_form_cannot_claim_unpinned_case(self):
+        prepare(self.root,self.dest)
+        key=self.key()
+        key["assignments"][0]["case_id"]="fabricated_case"
+        with self.assertRaisesRegex(PacketError,"missing/foreign frozen cases"):
+            verify_reviews(json.loads(self.dossier.read_text()),
+                           self.packet(),key,[])
+
     def test_empty_review_preserves_zero_qualitative_claim(self):
         prepare(self.root,self.dest)
         result=verify_reviews(json.loads(self.dossier.read_text()),
