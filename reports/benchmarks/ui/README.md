@@ -7,7 +7,7 @@ Read-only local-first UI for [#779](https://github.com/MythologIQ-Labs-LLC/agent
 From repository root, in a locally authorized environment (no GitHub Actions):
 
 ```bash
-PYTHONPATH=reference python -m unittest reference.tests.test_779_metric_frontier_projection
+python -m unittest discover -s reference/tests -t reference -p 'test_779_metric_frontier_projection.py'
 python scripts/build_benchmark_frontier_leaderboards.py --write
 python scripts/build_benchmark_frontier_leaderboards.py --check
 python -m http.server 8765 --directory reports/benchmarks/ui
