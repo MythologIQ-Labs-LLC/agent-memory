@@ -6,6 +6,16 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
+import sys
+from pathlib import Path
+
+# `scripts` is a repository-root package: make the root importable regardless of the
+# invoking entry point (`python -m unittest discover` from the root puts the cwd on
+# sys.path; `python reference/run_conformance.py` puts `reference/` there instead).
+_ROOT = Path(__file__).resolve().parents[2]
+if str(_ROOT) not in sys.path:
+    sys.path.insert(0, str(_ROOT))
+
 from scripts.refresh_benchmark_pages import RefreshError, compute_status, source_inventory, refresh
 
 

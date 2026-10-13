@@ -6,6 +6,16 @@ import tempfile
 import unittest
 from pathlib import Path
 
+import sys
+from pathlib import Path
+
+# `scripts` is a repository-root package: make the root importable regardless of the
+# invoking entry point (`python -m unittest discover` from the root puts the cwd on
+# sys.path; `python reference/run_conformance.py` puts `reference/` there instead).
+_ROOT = Path(__file__).resolve().parents[2]
+if str(_ROOT) not in sys.path:
+    sys.path.insert(0, str(_ROOT))
+
 from scripts.build_benchmark_ui_catalog import _git_blob_from_bytes, _working_tree_identity
 
 
