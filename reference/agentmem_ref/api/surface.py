@@ -67,7 +67,14 @@ _DELETION_REFUSALS = frozenset({
 })
 
 
+def _never(value: str) -> bool:
+    """The predicate for a store with no governed deletion: nothing can be withheld."""
+    return False
+
+
 def _withheld_predicate(adapter) -> Callable[[str], bool]:
+    if not adapter.has_governed_deletions():
+        return _never
     cache: dict[str, bool] = {}
 
     def withheld(value: str) -> bool:
@@ -88,8 +95,19 @@ def _mentions(value: Any, withheld: Callable[[str], bool]) -> bool:
     return False
 
 
+def _normalize(value: Any) -> Any:
+    """What ``_scrub`` returns when nothing is withheld: a copy with sequences as lists."""
+    if isinstance(value, dict):
+        return {key: _normalize(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_normalize(item) for item in value]
+    return value
+
+
 def _scrub(value: Any, withheld: Callable[[str], bool]) -> Any:
     """Drop list items and mapping entries that name a withheld identifier; blank scalar refs."""
+    if withheld is _never:
+        return _normalize(value)  # same result, one traversal, no per-value lookups
     if isinstance(value, dict):
         out = {}
         for key, item in value.items():

@@ -212,3 +212,38 @@ class PermanentDeletionVisibility(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class NoDeletionProjectionIsIdentity(_Facade):
+    """With no governed deletion the public projection is the canonical document (#777 cost)."""
+
+    def test_scrub_without_withholding_equals_the_general_path(self):
+        from agentmem_ref.api import surface
+        value = {"a": [("x", "y"), {"b": ("c",), "d": [1, 2, (3, 4)]}], "e": ("f",), "g": "h", "i": None}
+        self.assertEqual(surface._scrub(value, surface._never), surface._scrub(value, lambda v: False))
+        self.assertEqual(surface._scrub(value, surface._never), surface._normalize(value))
+        self.assertIsNot(surface._scrub(value, surface._never)["a"], value["a"])
+
+    def test_public_recall_equals_canonical_recall_until_a_deletion_exists(self):
+        self.state_changed()
+        self.memory.remember("memory:live", "Orrin gateway owner is Team Kite")
+        self.assertFalse(self.memory.runtime.adapter.has_governed_deletions())
+        public = self.memory.recall("Orrin gateway", temporal_intent=HIST)
+        canonical = self.memory._canonical_recall("Orrin gateway", temporal_intent=HIST)
+        self.assertEqual(public["public_projection"]["deleted_lineage"], "withheld")
+        volatile = {"decision_id", "receipt_id", "evaluated_at", "receipt_ref", "correlation_id", "timestamp", "elapsed_ms"}
+
+        def stable(value):  # each recall mints its own receipt id and clock reading
+            if isinstance(value, dict):
+                return {k: stable(v) for k, v in value.items() if k not in volatile}
+            if isinstance(value, (list, tuple)):
+                return [stable(v) for v in value]
+            return value
+
+        for key in ("candidates", "admitted", "admissions", "returned", "return_policy", "candidate_policy"):
+            self.assertEqual(_serial(stable(public[key])), _serial(stable(canonical[key])), key)
+        self.assertTrue(self.memory.forget("memory:a")["committed"])
+        self.assertTrue(self.memory.runtime.adapter.has_governed_deletions())
+        public = self.memory.recall("Orrin gateway", temporal_intent=HIST)
+        canonical = self.memory._canonical_recall("Orrin gateway", temporal_intent=HIST)
+        self.assertLess(len(public["candidates"]), len(canonical["candidates"]))

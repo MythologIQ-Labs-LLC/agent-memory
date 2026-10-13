@@ -1494,6 +1494,10 @@ class GovernedMemoryAdapter:
 
     # -- #777 public read projection (identifiers only; admission and audit unchanged) --
 
+    def has_governed_deletions(self) -> bool:
+        """Whether any governed deletion exists, so a public projection may need to withhold."""
+        return bool(self._tombstones)
+
     def public_identifier_withheld(self, ref: object) -> bool:
         """Must an ordinary caller-facing read withhold this fact identifier?
 
