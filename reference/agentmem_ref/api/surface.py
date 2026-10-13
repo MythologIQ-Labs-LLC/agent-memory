@@ -1145,10 +1145,12 @@ class AgentMemory:
         record = raw["history"]
         context = self._handle_recall_context()
         if not adapter.public_current_visible(target_reference, context):
-            deleted = adapter.public_deleted_visible(target_reference, context)
+            # the version recorded by the deletion itself, never the live memory-wide counter,
+            # which another scope's later generation would move
+            deleted_version = adapter.public_deleted_version(target_reference, context)
             projected = {"current_fact_uuid": None,
-                         "state_version": record["state_version"] if deleted else 0,
-                         "tombstoned": deleted, "events": []}
+                         "state_version": deleted_version if deleted_version is not None else 0,
+                         "tombstoned": deleted_version is not None, "events": []}
             if fact_text is not None:
                 projected["rejected_values"] = []
         else:

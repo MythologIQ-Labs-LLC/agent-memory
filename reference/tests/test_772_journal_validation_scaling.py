@@ -196,3 +196,65 @@ class JournalValidationScaling(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class WarmPathNumbersRecordsLikeTheColdWalk(JournalValidationScaling):
+    """Independent review finding (P2): with blank or whitespace-only lines in the walked
+    prefix, a tampered appended record must be reported with the same record index as a cold
+    recovery (records number the chain; lines number parser errors)."""
+
+    def _forge(self):
+        rows = self._rows()
+        forged = dict(rows[-1], generation=rows[-1]["generation"] + 1,
+                      previous_record_digest=rows[-1]["record_digest"], record_digest="sha256:" + "0" * 64)
+        with self.journal.open("ab") as handle:
+            handle.write(json.dumps(forged, sort_keys=True, separators=(",", ":")).encode() + b"\n")
+
+    def _rows(self):
+        return [json.loads(row) for row in self.journal.read_text(encoding="utf-8").splitlines() if row.strip()]
+
+    def _verdicts(self, runtime):
+        warm = cold = None
+        try:
+            runtime.checkpoint()
+        except RuntimeRecoveryError as exc:
+            warm = str(exc)
+        try:
+            RestartSafeRuntime.recover(self.root, profile=self.profile)
+        except RuntimeRecoveryError as exc:
+            cold = str(exc)
+        return warm, cold
+
+    def test_blank_line_in_prefix_then_forged_record(self):
+        runtime = self._runtime()
+        runtime.checkpoint()
+        with self.journal.open("ab") as handle:
+            handle.write(b"\n")
+        runtime.checkpoint()  # the warm path now carries the blank line in its prefix
+        self._forge()
+        warm, cold = self._verdicts(runtime)
+        self.assertIsNotNone(cold)
+        self.assertEqual(warm, cold)
+        self.assertIn("record 4 digest mismatch", cold)
+
+    def test_whitespace_lines_in_prefix_then_forged_record(self):
+        runtime = self._runtime()
+        with self.journal.open("ab") as handle:
+            handle.write(b"   \n\n")
+        runtime.checkpoint()
+        self._forge()
+        warm, cold = self._verdicts(runtime)
+        self.assertIsNotNone(cold)
+        self.assertEqual(warm, cold)
+        self.assertIn("record 3 digest mismatch", cold)
+
+    def test_blank_prefix_then_corrupt_line_keeps_line_numbering(self):
+        runtime = self._runtime()
+        with self.journal.open("ab") as handle:
+            handle.write(b"\n")
+        runtime.checkpoint()
+        with self.journal.open("ab") as handle:
+            handle.write(b"{not json\n")
+        warm, cold = self._verdicts(runtime)
+        self.assertEqual(warm, cold)
+        self.assertIn("corrupt at record 4", cold)
