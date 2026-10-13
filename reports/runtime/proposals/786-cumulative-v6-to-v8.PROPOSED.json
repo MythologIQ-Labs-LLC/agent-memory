@@ -10,7 +10,7 @@
     },
     {
       "path": "reference/agentmem_ref/api/surface.py",
-      "blob": "ab3a250c29ec76ac1c1a7ec157339387e0a523cd"
+      "blob": "b568b965b72fbdd7c9f23cfa4211f8f7536aa878"
     },
     {
       "path": "reference/agentmem_ref/evidence_sufficiency.py",
@@ -30,7 +30,7 @@
     },
     {
       "path": "reference/agentmem_ref/runtime/adapter.py",
-      "blob": "3b932bfb33e3dfcd8c2f1bf205bb69563813a36a"
+      "blob": "f43710866a28da0f1b18e883cb7052a507829be0"
     },
     {
       "path": "reference/agentmem_ref/runtime/evidence_sufficiency.py",
@@ -97,6 +97,18 @@
     {
       "kind": "lane",
       "ref": "longmemeval-s-retrieval-parity-v8"
+    },
+    {
+      "kind": "security_replay",
+      "ref": "cross-scope-write-authority-denial-v1"
+    },
+    {
+      "kind": "security_replay",
+      "ref": "deleted-lineage-generations-and-restart-v1"
+    },
+    {
+      "kind": "security_replay",
+      "ref": "public-tombstone-redaction-and-observer-separation-v1"
     }
   ]
 }

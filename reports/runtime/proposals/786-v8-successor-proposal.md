@@ -67,15 +67,16 @@ packages produced at that revision. None of that is done here.
 | public_gauntlet | `gauntlet-orchestration-retrieval-probe-v1` | executed through the public facade with a scratch contestant: complete, 3/3 (`reports/validation/786-at-head/gauntlet/`); a committed `-v8` contestant and manifest are still to be produced at the published revision |
 | replay x5 | the five #644 v7 replay contracts | re-executed and VERIFIED/PASS at `8d7ed43f` (`reports/validation/786-at-head/replays/`); inventory BLOCKED by design pending an independent reviewer's ledger decision |
 | lane | `amb-precisionmembench-retrieval-v8`, `longmemeval-s-retrieval-parity-v8` | DRAFT definitions only; not frozen, not executed (no new benchmark runs were initiated in this tranche) |
-| regression (not a declaration kind) | `reference/tests/test_776_*`, `test_777_*`, `test_772_*`, `test_774_*`, `test_786_*` | pass at `8d7ed43f` |
+| security_replay x3 | `cross-scope-write-authority-denial-v1`, `deleted-lineage-generations-and-restart-v1`, `public-tombstone-redaction-and-observer-separation-v1` (`786-security-replay-dsl/1`, separate runner and verifier) | executed and VERIFIED/PASS at the head named in `reports/validation/786-security-replays/`; expectations preregistered by the implementing session, independent read still required |
+| regression (not a declaration kind) | `reference/tests/test_776_*`, `test_777_*`, `test_772_*`, `test_774_*`, `test_786_*` | pass at the current head |
 | privacy / quality holdouts | blind theatre and vineyard, evaluator v3 @ `9961067` | P0 = 0, quality identical to `060e7cd7` (`reports/validation/786-at-head/blind-holdouts/`) |
 
 ## Blockers (each assigned)
 
 1. Owner: route decision (cumulative v8 vs amended v7), register pointer, contract `1.8.0` decision.
-2. Runtime track (this branch): replay contracts for #776 deleted-lineage recreation security,
-   #777 public redaction audit boundary and #786 cross-scope write authority do not exist as
-   `644-v7-replay-dsl/1` contracts; the regression suites stand in until they are authored.
+2. Independent review (owner or #787 track): the three `786-security-replay-dsl/1` contracts
+   were authored by the implementing session; their expectations need an independent read
+   against the contract documents before they count as acceptance evidence.
 3. Evidence governance (ChatGPT track, #787): freezing and executing the `-v8` lanes, and the
    independent reviewer decision the replay inventory requires.
 4. Runtime track: a committed `-v8` Gauntlet contestant pinned to the published revision

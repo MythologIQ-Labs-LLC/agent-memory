@@ -106,14 +106,27 @@ and `::ProceduralReviewFindings`) reported seven findings. Dispositions:
 | F7 | a refused `remember` left propose/authorize/receipt events on the target id that the other scope's `history()` served | P2 audit disclosure | FIXED: the authorize event of a write-target-refused proposal carries `authority_refs: ["write-target:refused"]` (schema-valid) and the public history projection withholds that correlation; `_canonical_history` keeps it as audit |
 | ctx | `recall(query, target_domain_refs=..., project_ref=...)` widens a handle's scope | pre-existing | the same "facade is not an authentication boundary" class as `overrides`; recorded, not changed |
 
+## Owner review of PR #788 (`dd467789`) and the second slice
+
+The owner's source-boundary review verified the 13 declared blobs at `dd467789` and asked
+for a reversible runtime slice before any publication decision. Dispositions:
+
+| ask | disposition |
+|---|---|
+| separate replay-DSL security contracts for #776, #777 and #786, preserving the five v7 contracts | DONE: a separate family, `786-security-replay-dsl/1` (`reference/run_786_security_replays.py`, `reference/fixtures/786-security-replays/`, `scripts/verify_786_security_replays.py`, evidence `reports/validation/786-security-replays/`); the v7 runner, fixtures, evidence and verifier are byte-untouched. Three fixtures, 22 cases, driven through the public facade with preregistered negative controls (`reference/tests/test_786_security_replays.py` proves falsifiability and tamper detection). The expectations were written by the implementing session from the contracts and executed once before freezing (one corrected expectation recorded in `development_history`); they are not independent of the implementer and need an independent read. |
+| P2 privacy gate: the cross-project re-creation receipt carried the memory-wide version counter (`before_state v3` while public history read 0) | REMEDIATED, not excepted: versions are **generation-relative**. `GovernedMemoryAdapter.public_state_version` reports `0` for an id whose head was governed-deleted; the facade resolves `state_snapshot` from it; a re-creating write resets the counter, so its receipt reads `v0 -> v1` and the new generation's history counts from 1; `_is_stale` accepts either faithful name of the no-head state (the public `v0` or the retired counter) so adapter-level callers that read the canonical counter keep binding; `public_deleted_version` serves the *latest* readable deletion's recorded version (not the largest), so the owner of a deleted generation still reads the version its own deletion recorded. Tested live and after restart (`test_p2_gate_a_recreated_generation_starts_its_own_version_counter`, replay cases W8, R3, R5, R6). Residual: none of the former generation's count reaches the new generation through proposals, receipts or history. |
+| contract 1.8.0 | unchanged in code (`1.7.0`); the recommendation stands and the declaration is regenerated whenever a protected blob moves (`786-v8-successor-proposal.md`) |
+| preserve `main`, v7, lanes; new cumulative declaration; fresh evidence and contestant; no activation | held: declaration regenerated at the new head, evidence re-run, register and v7 untouched; the `-v8` Gauntlet contestant stays a post-publication item |
+| adversarial review of the final exact head (overrides, shared membership, deleted-generation leakage, scope continuity, multi-handle restart) | run on the final head; findings and dispositions in the PR |
+
 ## What remains disclosed, and why
 
 - A refused `promotion` tells the writer that the id is unavailable to it. Under tenant-wide
   ids there is no refusal that cannot be distinguished from a successful creation; the
   alternative (scope-qualified ids) is a canonical keying change outside this slice.
-- B re-creating A's deleted id receives a receipt with `before_state` = the memory-wide
-  version counter (e.g. `v3`), while its `history()` reads `0`. Pre-existing (#777 projected
-  `history`, not receipts); not widened here.
+- (Closed by the second slice.) B re-creating A's deleted id used to receive a receipt with
+  `before_state` = the memory-wide version counter (`v3`) while its `history()` read `0`;
+  versions are now generation-relative (see the owner-review section).
 - `cross_tenant_delete` / `cross_tenant_dispute` still name a foreign fact's existence for a
   guessed uuid across adapters sharing one substrate (test-only configuration); pre-existing.
 

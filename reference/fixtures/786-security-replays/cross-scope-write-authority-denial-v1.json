@@ -1,0 +1,1156 @@
+{
+ "replay_id": "cross-scope-write-authority-denial-v1",
+ "fixture_version": 1,
+ "dsl_version": "786-security-replay-dsl/1",
+ "owning_issue": 786,
+ "frozen_on": "2026-10-13",
+ "status": "frozen_after_one_development_run",
+ "development_history": "Executed once with --allow-dirty before freezing. 21 of 22 cases held as written. One expectation was corrected before the freeze, not after: W5 expected the owner's recall to admit a head the owner had just disputed; docs/44 records that a disputed fact is withheld from admission, so the expectation now requires the disputed mark and an empty admission. No runtime change was motivated by the run.",
+ "base_commit": "dd4677890afa15d2a7462c3ebc0270e571b52de3",
+ "independence": "Expected outcomes were written from the contract documents listed in contract_sources by the session that implemented the #786 repair, before this fixture was first executed by the runner. They are therefore preregistered but not independent of the implementer; an independent reviewer must read them against the contracts before any acceptance. A failing expectation is a finding, never a reason to edit this fixture; a corrected expectation requires a superseding fixture version with a recorded reason. No frozen holdout phrase or #644 fixture vocabulary is used.",
+ "stop_lines": [
+  "no fixture edit after first execution; supersede with -v2 and record why",
+  "no expectation weakened to obtain PASS",
+  "no runtime change motivated by a replay outcome without a preregistered reproducer",
+  "a replay verdict is evidence, not successor acceptance; acceptance requires independent review"
+ ],
+ "title": "A live logical memory is writable only by a writer eligible for its scope; refusals change and disclose nothing",
+ "contract_sources": [
+  {
+   "path": "docs/786-cross-scope-write-authority.md",
+   "sha256_at_base": "7ef724ee922686b3f2be0d8249109f7e0fa8be8f45bde5a429d33e63ee2ebee3"
+  },
+  {
+   "path": "docs/44-public-api-contract.md",
+   "sha256_at_base": "24248afc1431836c99a009d7f41cdae2e50104a2bdac761c4a98050ebde4758a"
+  }
+ ],
+ "invariants": [
+  {
+   "id": "W1",
+   "statement": "A promotion from another project onto a live head is refused with target_unavailable, reports v0/v0 and a v0 snapshot, and leaves head, version, recall and history of the owner byte-identical.",
+   "falsified_by": "a commit, any other refusal token, a non-v0 state, or any owner-side change"
+  },
+  {
+   "id": "W2",
+   "statement": "correct, forget, permanent forget and dispute from another project read byte-identically (ids and timestamps folded) to the same call on an id nobody wrote, and change nothing.",
+   "falsified_by": "any difference from the unknown-id result, a tombstone, a dispute mark or an invalidated head"
+  },
+  {
+   "id": "W3",
+   "statement": "The refusal holds after every restart; the scope binding is durable.",
+   "falsified_by": "a commit after a reopen"
+  },
+  {
+   "id": "W4",
+   "statement": "An override leaving required isolation domains outside the bound domains is a malformed proposal (ValueError) for any target; an override declaring a superset of domains plus the owner's project cannot replace or correct the head.",
+   "falsified_by": "a result instead of ValueError, a ValueError that differs by target, or a commit under the superset override"
+  },
+  {
+   "id": "W5",
+   "statement": "The owner's own remember, correct and dispute stay admitted (a disputed head is recorded as disputed and, as documented, withheld from the owner's own admission), and the same text in an unrelated memory of another project is independent.",
+   "falsified_by": "an owner operation refused, or either project's recall admitting the other's fact"
+  },
+  {
+   "id": "W6",
+   "statement": "A proposal refused for its target, and one parked by policy review, persist no episode, live and after restart; a committed proposal keeps its episode.",
+   "falsified_by": "an episode retrievable after a refusal or review park, or absent after a commit"
+  },
+  {
+   "id": "W7",
+   "statement": "A refused attempt by another project leaves no event in the owner's public history, and the other project's history of the memory stays blank.",
+   "falsified_by": "any extra event in the owner's history or a non-blank view for the other project"
+  },
+  {
+   "id": "W8",
+   "statement": "A re-created generation of a governed-deleted id starts its own version counter (snapshot v0, before v0, after v1, history 1) and the former owner's view keeps the version its deletion recorded and cannot write the id back while the new generation is live.",
+   "falsified_by": "the former count in the re-creating writer's receipt or history, a changed former-owner view, or a former-owner write admitted"
+  }
+ ],
+ "cases": [
+  {
+   "id": "W1-remember-over-live-head",
+   "invariants": [
+    "W1"
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dawn",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dawn",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "name": "a1",
+     "require_committed": true
+    },
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dusk",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dusk",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "as": "project:b",
+     "name": "b1"
+    }
+   ],
+   "probes": {
+    "b1_committed": {
+     "probe": "op_result",
+     "name": "b1",
+     "field": "committed"
+    },
+    "b1_refusal": {
+     "probe": "op_result",
+     "name": "b1",
+     "field": "refusal"
+    },
+    "b1_before": {
+     "probe": "op_result",
+     "name": "b1",
+     "field": "before_state"
+    },
+    "b1_after": {
+     "probe": "op_result",
+     "name": "b1",
+     "field": "after_state"
+    },
+    "b1_snapshot": {
+     "probe": "op_result",
+     "name": "b1",
+     "field": "state_snapshot"
+    },
+    "b1_mentions": {
+     "probe": "op_mentions",
+     "name": "b1",
+     "tokens": [
+      "memory:k",
+      "project:a",
+      "dawn",
+      "v1"
+     ]
+    },
+    "head": {
+     "probe": "canonical_head",
+     "ref": "memory:k"
+    },
+    "owner_history": {
+     "probe": "history",
+     "ref": "memory:k"
+    },
+    "owner_recall": {
+     "probe": "recall_admitted",
+     "query": "Marrow lighthouse keeper shift"
+    },
+    "other_recall": {
+     "probe": "recall_admitted",
+     "query": "Marrow lighthouse keeper shift",
+     "as": "project:b"
+    },
+    "other_history_unknown": {
+     "probe": "history_same_as_unknown",
+     "ref": "memory:k",
+     "as": "project:b"
+    }
+   },
+   "expect": {
+    "b1_committed": {
+     "eq": false
+    },
+    "b1_refusal": {
+     "eq": "target_unavailable"
+    },
+    "b1_before": {
+     "eq": "v0"
+    },
+    "b1_after": {
+     "eq": "v0"
+    },
+    "b1_snapshot": {
+     "eq": "v0"
+    },
+    "b1_mentions": {
+     "eq": []
+    },
+    "head": {
+     "eq": "memory:k"
+    },
+    "owner_history": {
+     "eq": {
+      "current": "memory:k",
+      "state_version": 1,
+      "tombstoned": false,
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ]
+     }
+    },
+    "owner_recall": {
+     "eq": [
+      "memory:k"
+     ]
+    },
+    "other_recall": {
+     "eq": []
+    },
+    "other_history_unknown": {
+     "eq": true
+    }
+   }
+  },
+  {
+   "id": "W2-correct-forget-dispute-by-other",
+   "invariants": [
+    "W2"
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dawn",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dawn",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    }
+   ],
+   "probes": {
+    "correct_unknown": {
+     "probe": "op_same_as_unknown",
+     "op": "correct",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dusk",
+     "as": "project:b"
+    },
+    "forget_unknown": {
+     "probe": "op_same_as_unknown",
+     "op": "forget",
+     "ref": "memory:k",
+     "as": "project:b"
+    },
+    "permanent_unknown": {
+     "probe": "op_same_as_unknown",
+     "op": "forget",
+     "ref": "memory:k",
+     "permanent": true,
+     "as": "project:b"
+    },
+    "dispute_unknown": {
+     "probe": "op_same_as_unknown",
+     "op": "dispute",
+     "ref": "memory:k",
+     "as": "project:b"
+    },
+    "tombstones": {
+     "probe": "tombstoned_ids"
+    },
+    "disputed": {
+     "probe": "disputed"
+    },
+    "head": {
+     "probe": "canonical_head",
+     "ref": "memory:k"
+    },
+    "valid": {
+     "probe": "fact_valid",
+     "fact": "memory:k"
+    },
+    "owner_recall": {
+     "probe": "recall_admitted",
+     "query": "Marrow lighthouse keeper shift"
+    }
+   },
+   "expect": {
+    "correct_unknown": {
+     "eq": true
+    },
+    "forget_unknown": {
+     "eq": true
+    },
+    "permanent_unknown": {
+     "eq": true
+    },
+    "dispute_unknown": {
+     "eq": true
+    },
+    "tombstones": {
+     "eq": []
+    },
+    "disputed": {
+     "eq": []
+    },
+    "head": {
+     "eq": "memory:k"
+    },
+    "valid": {
+     "eq": true
+    },
+    "owner_recall": {
+     "eq": [
+      "memory:k"
+     ]
+    }
+   }
+  },
+  {
+   "id": "W3-refusal-survives-restart",
+   "invariants": [
+    "W3",
+    "W1"
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dawn",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dawn",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    },
+    {
+     "op": "correct",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is noon",
+     "kind": "state_change",
+     "require_committed": true
+    },
+    {
+     "op": "reopen"
+    },
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dusk",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dusk",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "as": "project:b",
+     "name": "b1"
+    },
+    {
+     "op": "correct",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dusk",
+     "kind": "state_change",
+     "as": "project:b",
+     "name": "b2"
+    },
+    {
+     "op": "reopen"
+    },
+    {
+     "op": "forget",
+     "ref": "memory:k",
+     "as": "project:b",
+     "name": "b3"
+    },
+    {
+     "op": "dispute",
+     "ref": "memory:k",
+     "as": "project:b",
+     "name": "b4"
+    }
+   ],
+   "probes": {
+    "b1": {
+     "probe": "op_result",
+     "name": "b1",
+     "field": "committed"
+    },
+    "b2": {
+     "probe": "op_result",
+     "name": "b2",
+     "field": "committed"
+    },
+    "b3": {
+     "probe": "op_result",
+     "name": "b3",
+     "field": "committed"
+    },
+    "b4": {
+     "probe": "op_result",
+     "name": "b4",
+     "field": "committed"
+    },
+    "head": {
+     "probe": "canonical_head",
+     "ref": "memory:k"
+    },
+    "owner_history": {
+     "probe": "history",
+     "ref": "memory:k"
+    },
+    "owner_recall": {
+     "probe": "recall_admitted",
+     "query": "Marrow lighthouse keeper shift"
+    }
+   },
+   "expect": {
+    "b1": {
+     "eq": false
+    },
+    "b2": {
+     "eq": false
+    },
+    "b3": {
+     "eq": false
+    },
+    "b4": {
+     "eq": false
+    },
+    "head": {
+     "eq": "memory:k@2"
+    },
+    "owner_history": {
+     "eq": {
+      "current": "memory:k@2",
+      "state_version": 2,
+      "tombstoned": false,
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt",
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ]
+     }
+    },
+    "owner_recall": {
+     "eq": [
+      "memory:k@2"
+     ]
+    }
+   }
+  },
+  {
+   "id": "W4-overrides",
+   "invariants": [
+    "W4"
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dawn",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dawn",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    },
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dusk",
+     "as": "project:b",
+     "overrides": {
+      "isolation_domain_refs": [
+       "tenant:s786",
+       "project:a"
+      ]
+     },
+     "name": "bad_target"
+    },
+    {
+     "op": "remember",
+     "ref": "memory:never",
+     "text": "Marrow lighthouse keeper shift is dusk",
+     "as": "project:b",
+     "overrides": {
+      "isolation_domain_refs": [
+       "tenant:s786",
+       "project:a"
+      ]
+     },
+     "name": "bad_unknown"
+    },
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dusk",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dusk",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "as": "project:b",
+     "overrides": {
+      "isolation_domain_refs": [
+       "tenant:s786",
+       "project:a",
+       "project:b"
+      ],
+      "project_ref": "project:a"
+     },
+     "name": "sup_rem"
+    },
+    {
+     "op": "correct",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dusk",
+     "kind": "state_change",
+     "as": "project:b",
+     "overrides": {
+      "isolation_domain_refs": [
+       "tenant:s786",
+       "project:a",
+       "project:b"
+      ],
+      "project_ref": "project:a"
+     },
+     "name": "sup_cor"
+    }
+   ],
+   "probes": {
+    "bad_target": {
+     "probe": "op_result",
+     "name": "bad_target",
+     "field": "raised"
+    },
+    "bad_unknown": {
+     "probe": "op_result",
+     "name": "bad_unknown",
+     "field": "raised"
+    },
+    "sup_rem_committed": {
+     "probe": "op_result",
+     "name": "sup_rem",
+     "field": "committed"
+    },
+    "sup_rem_refusal": {
+     "probe": "op_result",
+     "name": "sup_rem",
+     "field": "refusal"
+    },
+    "sup_rem_before": {
+     "probe": "op_result",
+     "name": "sup_rem",
+     "field": "before_state"
+    },
+    "sup_cor_committed": {
+     "probe": "op_result",
+     "name": "sup_cor",
+     "field": "committed"
+    },
+    "head": {
+     "probe": "canonical_head",
+     "ref": "memory:k"
+    },
+    "valid": {
+     "probe": "fact_valid",
+     "fact": "memory:k"
+    },
+    "owner_recall": {
+     "probe": "recall_admitted",
+     "query": "Marrow lighthouse keeper shift"
+    },
+    "tombstones": {
+     "probe": "tombstoned_ids"
+    }
+   },
+   "expect": {
+    "bad_target": {
+     "eq": "ValueError"
+    },
+    "bad_unknown": {
+     "eq": "ValueError"
+    },
+    "sup_rem_committed": {
+     "eq": false
+    },
+    "sup_rem_refusal": {
+     "eq": "target_unavailable"
+    },
+    "sup_rem_before": {
+     "eq": "v0"
+    },
+    "sup_cor_committed": {
+     "eq": false
+    },
+    "head": {
+     "eq": "memory:k"
+    },
+    "valid": {
+     "eq": true
+    },
+    "owner_recall": {
+     "eq": [
+      "memory:k"
+     ]
+    },
+    "tombstones": {
+     "eq": []
+    }
+   }
+  },
+  {
+   "id": "W5-positive-controls-and-unrelated-same-text",
+   "invariants": [
+    "W5"
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dawn",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dawn",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "name": "a1"
+    },
+    {
+     "op": "correct",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is noon",
+     "kind": "state_change",
+     "name": "a2"
+    },
+    {
+     "op": "dispute",
+     "ref": "memory:k",
+     "name": "a3"
+    },
+    {
+     "op": "remember",
+     "ref": "memory:other",
+     "text": "Marrow lighthouse keeper shift is noon",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "noon",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "as": "project:b",
+     "label": "other",
+     "name": "b1"
+    }
+   ],
+   "probes": {
+    "a1": {
+     "probe": "op_result",
+     "name": "a1",
+     "field": "committed"
+    },
+    "a2": {
+     "probe": "op_result",
+     "name": "a2",
+     "field": "committed"
+    },
+    "a3": {
+     "probe": "op_result",
+     "name": "a3",
+     "field": "committed"
+    },
+    "b1": {
+     "probe": "op_result",
+     "name": "b1",
+     "field": "committed"
+    },
+    "owner_recall": {
+     "probe": "recall_admitted",
+     "query": "Marrow lighthouse keeper shift"
+    },
+    "disputed": {
+     "probe": "disputed"
+    },
+    "head": {
+     "probe": "canonical_head",
+     "ref": "memory:k"
+    },
+    "other_recall": {
+     "probe": "recall_admitted",
+     "query": "Marrow lighthouse keeper shift",
+     "as": "project:b"
+    },
+    "other_view_of_k": {
+     "probe": "history_same_as_unknown",
+     "ref": "memory:k",
+     "as": "project:b"
+    },
+    "owner_view_of_other": {
+     "probe": "history_same_as_unknown",
+     "ref": "memory:other"
+    }
+   },
+   "expect": {
+    "a1": {
+     "eq": true
+    },
+    "a2": {
+     "eq": true
+    },
+    "a3": {
+     "eq": true
+    },
+    "b1": {
+     "eq": true
+    },
+    "owner_recall": {
+     "eq": []
+    },
+    "disputed": {
+     "eq": [
+      "memory:k@2"
+     ]
+    },
+    "head": {
+     "eq": "memory:k@2"
+    },
+    "other_recall": {
+     "eq": [
+      "other"
+     ]
+    },
+    "other_view_of_k": {
+     "eq": true
+    },
+    "owner_view_of_other": {
+     "eq": true
+    }
+   }
+  },
+  {
+   "id": "W6-denied-proposals-persist-no-episode",
+   "invariants": [
+    "W6"
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dawn",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dawn",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    },
+    {
+     "op": "commit_with_episode",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dusk",
+     "episode": "episode:denied",
+     "as": "project:b",
+     "name": "denied"
+    },
+    {
+     "op": "commit_with_episode",
+     "ref": "memory:parked",
+     "text": "Marrow lighthouse keeper shift is noon",
+     "episode": "episode:parked",
+     "risk": "high",
+     "name": "parked"
+    },
+    {
+     "op": "commit_with_episode",
+     "ref": "memory:kept",
+     "text": "Marrow lighthouse keeper shift is night",
+     "episode": "episode:kept",
+     "name": "kept"
+    },
+    {
+     "op": "reopen"
+    }
+   ],
+   "probes": {
+    "denied_committed": {
+     "probe": "op_result",
+     "name": "denied",
+     "field": "committed"
+    },
+    "denied_refusal": {
+     "probe": "op_result",
+     "name": "denied",
+     "field": "refusal"
+    },
+    "denied_before": {
+     "probe": "op_result",
+     "name": "denied",
+     "field": "before_state"
+    },
+    "parked_committed": {
+     "probe": "op_result",
+     "name": "parked",
+     "field": "committed"
+    },
+    "kept_committed": {
+     "probe": "op_result",
+     "name": "kept",
+     "field": "committed"
+    },
+    "episode_denied": {
+     "probe": "episode_present",
+     "episode": "episode:denied"
+    },
+    "episode_parked": {
+     "probe": "episode_present",
+     "episode": "episode:parked"
+    },
+    "episode_kept": {
+     "probe": "episode_present",
+     "episode": "episode:kept"
+    },
+    "head": {
+     "probe": "canonical_head",
+     "ref": "memory:k"
+    },
+    "parked_head": {
+     "probe": "canonical_head",
+     "ref": "memory:parked"
+    }
+   },
+   "expect": {
+    "denied_committed": {
+     "eq": false
+    },
+    "denied_refusal": {
+     "eq": "target_unavailable"
+    },
+    "denied_before": {
+     "eq": "v0"
+    },
+    "parked_committed": {
+     "eq": false
+    },
+    "kept_committed": {
+     "eq": true
+    },
+    "episode_denied": {
+     "eq": false
+    },
+    "episode_parked": {
+     "eq": false
+    },
+    "episode_kept": {
+     "eq": true
+    },
+    "head": {
+     "eq": "memory:k"
+    },
+    "parked_head": {
+     "eq": null
+    }
+   }
+  },
+  {
+   "id": "W7-refused-attempt-leaves-no-public-trace",
+   "invariants": [
+    "W7"
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dawn",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dawn",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    },
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dusk",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dusk",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "as": "project:b",
+     "name": "b1"
+    },
+    {
+     "op": "correct",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is noon",
+     "kind": "state_change",
+     "require_committed": true
+    }
+   ],
+   "probes": {
+    "b1": {
+     "probe": "op_result",
+     "name": "b1",
+     "field": "committed"
+    },
+    "owner_history": {
+     "probe": "history",
+     "ref": "memory:k"
+    },
+    "other_history_unknown": {
+     "probe": "history_same_as_unknown",
+     "ref": "memory:k",
+     "as": "project:b"
+    },
+    "canonical_version": {
+     "probe": "canonical_version",
+     "ref": "memory:k"
+    }
+   },
+   "expect": {
+    "b1": {
+     "eq": false
+    },
+    "other_history_unknown": {
+     "eq": true
+    },
+    "canonical_version": {
+     "eq": 2
+    },
+    "owner_history": {
+     "eq": {
+      "current": "memory:k@2",
+      "state_version": 2,
+      "tombstoned": false,
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt",
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "id": "W8-recreated-generation-starts-its-own-counter",
+   "invariants": [
+    "W8"
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dawn",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dawn",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    },
+    {
+     "op": "correct",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is noon",
+     "kind": "state_change",
+     "require_committed": true
+    },
+    {
+     "op": "forget",
+     "ref": "memory:k",
+     "name": "a_del",
+     "require_committed": true
+    },
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dusk",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dusk",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "as": "project:b",
+     "label": "gen-b",
+     "name": "b1"
+    },
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is night",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "night",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "name": "a_back"
+    },
+    {
+     "op": "reopen"
+    },
+    {
+     "op": "correct",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is midnight",
+     "kind": "state_change",
+     "as": "project:b",
+     "label": "gen-b@2",
+     "name": "b2"
+    }
+   ],
+   "probes": {
+    "b1_snapshot": {
+     "probe": "op_result",
+     "name": "b1",
+     "field": "state_snapshot"
+    },
+    "b1_before": {
+     "probe": "op_result",
+     "name": "b1",
+     "field": "before_state"
+    },
+    "b1_after": {
+     "probe": "op_result",
+     "name": "b1",
+     "field": "after_state"
+    },
+    "b1_mentions": {
+     "probe": "op_mentions",
+     "name": "b1",
+     "tokens": [
+      "v3",
+      "memory:k",
+      "memory:k@2",
+      "dawn",
+      "noon"
+     ]
+    },
+    "b2_before": {
+     "probe": "op_result",
+     "name": "b2",
+     "field": "before_state"
+    },
+    "b2_after": {
+     "probe": "op_result",
+     "name": "b2",
+     "field": "after_state"
+    },
+    "a_back": {
+     "probe": "op_result",
+     "name": "a_back",
+     "field": "committed"
+    },
+    "a_back_refusal": {
+     "probe": "op_result",
+     "name": "a_back",
+     "field": "refusal"
+    },
+    "owner_history": {
+     "probe": "history",
+     "ref": "memory:k"
+    },
+    "other_history": {
+     "probe": "history",
+     "ref": "memory:k",
+     "as": "project:b"
+    },
+    "head": {
+     "probe": "canonical_head",
+     "ref": "memory:k"
+    }
+   },
+   "expect": {
+    "b1_snapshot": {
+     "eq": "v0"
+    },
+    "b1_before": {
+     "eq": "v0"
+    },
+    "b1_after": {
+     "eq": "v1"
+    },
+    "b1_mentions": {
+     "eq": []
+    },
+    "b2_before": {
+     "eq": "v1"
+    },
+    "b2_after": {
+     "eq": "v2"
+    },
+    "a_back": {
+     "eq": false
+    },
+    "a_back_refusal": {
+     "eq": "target_unavailable"
+    },
+    "owner_history": {
+     "eq": {
+      "current": null,
+      "state_version": 3,
+      "tombstoned": true,
+      "events": []
+     }
+    },
+    "other_history": {
+     "eq": {
+      "current": "gen-b@2",
+      "state_version": 2,
+      "tombstoned": false,
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt",
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ]
+     }
+    },
+    "head": {
+     "eq": "gen-b@2"
+    }
+   }
+  }
+ ]
+}
