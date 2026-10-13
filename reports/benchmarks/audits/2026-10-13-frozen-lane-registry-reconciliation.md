@@ -123,3 +123,14 @@ This proves the **frozen lane and relevant declaration existed in the exact exec
 **Important residual limitations:** Full SHA-256 checks of compressed LongMemEval `report.rows.json.gz` data and all auxiliary files, independent scorecard/normalizer rebuild, executable same-harness comparison acceptance checks, and explicit owner approval of canonical `current.json` amendments are still not complete. The current dashboard must stay unchanged until these remaining gates are resolved.
 
 **Recommendation strengthened:** Reconciliation of all eight missing v3–v6 lanes is now supported by *completed integration acceptance entries, 41/41 matched binding reports, 36/36 exact normalizer sources, 36/36 byte-verified primary result artifacts, and 4/4 freeze/declaration ancestry proofs*. The highest-value remaining work is verifying compressed/auxiliary bytes and running the deterministic rebuild/acceptance checks, not creating additional synthetic leaderboard examples. Keep each version/plane and comparator identity distinct.
+
+
+## Reconciliation proposal ready for review
+
+A new machine-readable **non-authoritative** proposal is available at `reports/benchmarks/audits/2026-10-13-v3-v6-registration-review-proposal.json`. It binds exactly **eight omitted lane IDs**, **36** scorecard-eligible Agent Memory/lexical/Mem0 report sources, **five** separately accepted experimental Agent Memory semantic/shadow variant sources, their individual integration-source reports, and the exact frozen lane Git blob identity. Every proposal row comes from an already committed integration descriptor with `status: complete`; none contains a hand-entered score.
+
+The proposal intentionally sets `no_authority: true` and `governance_state: acceptance_record_exists__canonical_registration_pending`. It is not a replacement `current.json`, it does not alter F1 acceptance, and it must not be imported into the leaderboard as an authoritative scorecard.
+
+**Compressed-data gate:** The authenticated GitHub contents reader cannot decode `.gz` blobs as UTF-8 (an attempted read of `report.rows.json.gz` failed with `UnicodeDecodeError`). That interface is not capable of byte-level verification of compressed row archives. Those files need a local/cloud execution environment with raw-byte access, e.g. a script run by the evaluation owner. The audit explicitly keeps that gate open, rather than treating the `files` manifest digest itself as independent verification.
+
+**Release decision:** Strong support now exists for a separate, owner-reviewed 12-lane canonical inventory reconciliation. Do not conflate this with the runtime v7/v8 succession or count the 36 historic v3–v6 runs as fresh competitor results at the new runtime head. Reconcile source identities first, then regenerate only the derived UI/scorecard projections and execute consistency tests. No main, runtime, or frozen evidence changed.
