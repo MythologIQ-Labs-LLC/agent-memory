@@ -219,6 +219,7 @@ scripts/validate_fixtures.py             Python standard library only
 scripts/validate_schemas.py              jsonschema permitted/required
 scripts/validate_markdown_links.py       Python standard library only
 scripts/validate_doctrine_boundaries.py  Python standard library only
+scripts/validate_architecture_index.py   Python standard library only; invokes git ls-files
 scripts/generate_calibration_report.py   Python standard library only
 reference/ governed/interoperability     pinned dependencies in reference/requirements.txt
 other validation dependencies            require explicit justification in the PR

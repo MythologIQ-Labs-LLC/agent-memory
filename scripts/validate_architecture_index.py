@@ -18,7 +18,8 @@ SHELVES = ("F", "G", "L", "R", "S", "I", "E", "X")
 NUMBERED_PATH = re.compile(r"^docs/[0-9]{2}-[^/]+\.md$")
 SHELF_HEADING = re.compile(r"^### ([A-Z]) · ")
 REGISTER = re.compile(r"^\*\*Numbered-document register \(([0-9]+)\):\*\* (.*)$")
-DOCUMENT_LINK = re.compile(r"\[[^\]]+\]\(([0-9]{2}-[^)]+\.md)\)")
+# A register entry may carry an optional #fragment or "title"; the registered path is the .md target only.
+DOCUMENT_LINK = re.compile(r"\[[^\]]+\]\(([0-9]{2}-[^)#\s]+\.md)(?:#[^)\s]*)?(?:\s+\"[^\"]*\")?\)")
 
 
 def validate_catalog(text: str, tracked_paths: set[str]) -> list[str]:

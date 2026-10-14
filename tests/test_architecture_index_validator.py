@@ -57,6 +57,11 @@ class ArchitectureCatalogValidationTests(unittest.TestCase):
         text, paths = catalog(omit="S")
         self.assertTrue(any("no shelf" in x for x in module.validate_catalog(text, paths)))
 
+    def test_fragment_or_title_on_register_link_still_registers(self):
+        text, paths = catalog()
+        text = text.replace("[F](00-f.md)", '[F](00-f.md#purpose "Shelf F")')
+        self.assertEqual(module.validate_catalog(text, paths), [])
+
     def test_untracked_index_entry_is_detected(self):
         text, paths = catalog()
         paths.remove("docs/00-f.md")
