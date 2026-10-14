@@ -8,6 +8,19 @@ The governing repository relationship is documented in [`docs/REPOSITORY_OPERATI
 
 The canonical current portfolio view is [`reports/benchmarks/dashboard/current.md`](reports/benchmarks/dashboard/current.md). Historical generated scorecards remain revision-bound snapshots and are not the current-state dashboard.
 
+## Start here
+
+| If you are | Go to |
+|---|---|
+| Inspecting current accepted evidence, deltas, and non-numeric states | [`reports/benchmarks/dashboard/current.md`](reports/benchmarks/dashboard/current.md) (canonical), `current.json` (machine-readable) |
+| Checking which memory capabilities are measured, partial, or white space | [`docs/BENCHMARK_COVERAGE_ATLAS.md`](docs/BENCHMARK_COVERAGE_ATLAS.md) |
+| Bringing a memory system or a benchmark | [`docs/CONTRIBUTOR_ARCHITECTURE.md`](docs/CONTRIBUTOR_ARCHITECTURE.md), then [`docs/GAUNTLET_EXTERNAL_CONTESTANT_QUICKSTART.md`](docs/GAUNTLET_EXTERNAL_CONTESTANT_QUICKSTART.md) |
+| Running controlled same-harness comparisons | [`docs/65-independent-amb-competitive-profile.md`](docs/65-independent-amb-competitive-profile.md), [`docs/69-agentmembench-mesa-formal-baseline.md`](docs/69-agentmembench-mesa-formal-baseline.md), lane files under `reference/agentmem_ref/evaluation/lanes/` |
+| Following per-metric leaderboard and evidence-freshness work | issues [#779](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/779), [#789](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/789), [#795](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/795); the console contract is [`docs/benchmark-evidence-console-catalog.md`](docs/benchmark-evidence-console-catalog.md) |
+| Reading how findings become bounded remediation | [`docs/56-benchmark-gauntlet-remediation-evidence.md`](docs/56-benchmark-gauntlet-remediation-evidence.md), [`docs/72-benchmark-neutral-remediation-loop.md`](docs/72-benchmark-neutral-remediation-loop.md) |
+
+The numbers quoted in the portfolio sections below are revision-bound highlights recorded when each section was written. Where this page and the dashboard disagree, the dashboard is current and this page is historical; do not maintain a second score table here.
+
 ## Governing benchmark rules
 
 ```text

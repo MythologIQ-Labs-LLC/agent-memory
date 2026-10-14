@@ -1,6 +1,6 @@
 # Independent AMB competitive profile
 
-Status: **IMPLEMENTED BRIDGES / FIRST SAME-HARNESS LANE FROZEN (#640) / NO ROW EXECUTED OR ACCEPTED**  
+**Status:** Revision-bound profile. The original bridge-only / unexecuted status is **superseded by subsequently accepted same-harness rows documented below** (starting 2026-10-05); see the [canonical current benchmark dashboard](../reports/benchmarks/dashboard/current.md) for latest acceptance, coverage, and limitations.  
 Owner: #601  
 Parent maturity program: #600  
 External harness: `vectorize-io/agent-memory-benchmark` (AMB)  
