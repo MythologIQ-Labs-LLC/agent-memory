@@ -1,0 +1,2258 @@
+{
+  "replay_id": "same-slot-safety-counterevidence-and-immutable-stop-gate-v1",
+  "fixture_version": 1,
+  "dsl_version": "644-v7-replay-dsl/1",
+  "owning_issue": 644,
+  "frozen_on": "2026-10-10",
+  "status": "frozen_before_execution",
+  "base_commit": "c4827f9fef055b0bc2a9bd94b28adba22bfc42d0",
+  "independence": "Expected outcomes were written from the contract documents listed in contract_sources before any replay runner existed or executed. They are not derived from running the implementation under test. The original 126-case independent holdout (heldout_bench.py, sha256 25ce88eb...) and its vocabulary were not used. A failing expectation is a finding, never a reason to edit this fixture; a corrected expectation requires a superseding fixture version with a recorded reason.",
+  "stop_lines": [
+    "no fixture edit after first execution; supersede with -v2 and record why",
+    "no expectation weakened to obtain PASS",
+    "no runtime change motivated by a replay outcome without a preregistered reproducer",
+    "a replay verdict is evidence, not v7 acceptance; acceptance requires independent review"
+  ],
+  "title": "Same-slot counter-evidence blocks clean coverage, the recall receipt detects tampering without conferring authority, and no stop is ever proposed",
+  "contract_sources": [
+    {
+      "path": "docs/79-independent-644-qualification-reconciliation.md",
+      "sha256_at_base": "a957b70cfe69e3567c585010575a21ae3de6bd8b24d26343e092bfc27339fe12"
+    },
+    {
+      "path": "docs/81-indexed-slot-audit-qualification.md",
+      "sha256_at_base": "ba56c43900559e8487af20c8e61fc0f73225024d9e81fdb5a882f7168227fba2"
+    },
+    {
+      "path": "docs/META_LEDGER.md",
+      "sha256_at_base": "ff09c028d57f2997e78fa9e5f4201ed70d9d9a61fa26d294e31e3ffd9509daf9"
+    }
+  ],
+  "contract_note": "Receipt semantics are taken from META_LEDGER Entry #125 and the module contract of runtime/recall_observation_receipt.py (docstring only).",
+  "invariants": [
+    {
+      "id": "S1",
+      "statement": "No observation ever proposes a stop or attests one, including fully agreeing typed coverage.",
+      "falsified_by": "review_stop or stop_attested true"
+    },
+    {
+      "id": "S2",
+      "statement": "Same-slot counter-evidence (extracted, negated, hedged change, attributed, non-retrieved, budget-capped, temporally bounded) prevents a clean coverage diagnosis.",
+      "falsified_by": "coverage_observed_unattested in any such case"
+    },
+    {
+      "id": "S3",
+      "statement": "Every controlled recall carries a captured receipt that is immutable and internally consistent with the untampered result.",
+      "falsified_by": "missing receipt, assignable fields, or a fresh result failing verification"
+    },
+    {
+      "id": "S4",
+      "statement": "Any post-capture mutation of candidates, admitted, ranked, route counts, query, controller plan, refusals or policy is detected, and the observer then never reports clean coverage.",
+      "falsified_by": "verification true after mutation, or a clean diagnosis"
+    },
+    {
+      "id": "S5",
+      "statement": "A result with no receipt never reads as clean coverage.",
+      "falsified_by": "coverage_observed_unattested"
+    },
+    {
+      "id": "S6",
+      "statement": "The receipt is change detection, not authentication: a caller can re-mint a matching receipt over altered contents, so a matching receipt never confers stop authority.",
+      "falsified_by": "a re-minted receipt failing to verify (the limitation would be mis-described) or any stop"
+    },
+    {
+      "id": "S7",
+      "statement": "The receipt claims no state revision, snapshot or slot-closure attestation and no stop authority; forging those claims is refused.",
+      "falsified_by": "any such claim present or accepted"
+    },
+    {
+      "id": "S8",
+      "statement": "Receipt public serialization discloses no refused or hidden candidate identity.",
+      "falsified_by": "a refused identity in the serialization"
+    },
+    {
+      "id": "S9",
+      "statement": "Missing or corrupted slot enumeration fails closed with an exception, never a clean report.",
+      "falsified_by": "a report produced"
+    },
+    {
+      "id": "S10",
+      "statement": "A controller plan claiming authority is refused before recall.",
+      "falsified_by": "recall proceeding"
+    },
+    {
+      "id": "S11",
+      "statement": "Malformed or hostile mutable inputs make receipt verification return false, never raise.",
+      "falsified_by": "an exception or true"
+    },
+    {
+      "id": "S12",
+      "statement": "F6 (untyped same-slot competitor) remains unresolved: the replay records whether it is detected but requires only that no stop is proposed.",
+      "falsified_by": "a stop proposal"
+    }
+  ],
+  "cases": [
+    {
+      "id": "S1-agreeing-coverage-never-stops",
+      "invariants": [
+        "S1"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s2",
+          "text": "Tamarack site power feed confirmed grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "needs": [
+        {
+          "s": "Tamarack site",
+          "a": "power feed"
+        }
+      ],
+      "expect": {
+        "mechanical_coverage_met": {
+          "eq": true
+        },
+        "diagnosis": {
+          "eq": "coverage_observed_unattested"
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "S2-extracted",
+      "invariants": [
+        "S2",
+        "S1"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "retain_extracted",
+          "ref": "memory:s2",
+          "text": "Tamarack site power feed is diesel",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "diesel",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "needs": [
+        {
+          "s": "Tamarack site",
+          "a": "power feed"
+        }
+      ],
+      "expect": {
+        "diagnosis": {
+          "not_in": [
+            "coverage_observed_unattested",
+            "mechanical_coverage_observed"
+          ]
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "S2-negated",
+      "invariants": [
+        "S2",
+        "S1"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s2",
+          "text": "Tamarack site power feed is not grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single",
+            "flags": {
+              "negated": true
+            }
+          }
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "needs": [
+        {
+          "s": "Tamarack site",
+          "a": "power feed"
+        }
+      ],
+      "expect": {
+        "diagnosis": {
+          "not_in": [
+            "coverage_observed_unattested",
+            "mechanical_coverage_observed"
+          ]
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "S2-hedged-change",
+      "invariants": [
+        "S2",
+        "S1"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s2",
+          "text": "Tamarack site power feed may have moved to solar",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "solar",
+            "assertion": "change",
+            "cardinality": "single",
+            "flags": {
+              "hedged": true
+            }
+          }
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "needs": [
+        {
+          "s": "Tamarack site",
+          "a": "power feed"
+        }
+      ],
+      "expect": {
+        "diagnosis": {
+          "not_in": [
+            "coverage_observed_unattested",
+            "mechanical_coverage_observed"
+          ]
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "S2-attributed",
+      "invariants": [
+        "S2",
+        "S1"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s2",
+          "text": "Contractors claim Tamarack site power feed is diesel",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "diesel",
+            "assertion": "state",
+            "cardinality": "single",
+            "flags": {
+              "attributed_to_other": true
+            }
+          }
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "needs": [
+        {
+          "s": "Tamarack site",
+          "a": "power feed"
+        }
+      ],
+      "expect": {
+        "diagnosis": {
+          "not_in": [
+            "coverage_observed_unattested",
+            "mechanical_coverage_observed"
+          ]
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "S2-non-retrieved",
+      "invariants": [
+        "S2",
+        "S1"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s2",
+          "text": "Since the outage the substation runs on battery",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "battery",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "needs": [
+        {
+          "s": "Tamarack site",
+          "a": "power feed"
+        }
+      ],
+      "expect": {
+        "diagnosis": {
+          "not_in": [
+            "coverage_observed_unattested",
+            "mechanical_coverage_observed"
+          ]
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "S2-budget-capped",
+      "invariants": [
+        "S2",
+        "S1"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s2",
+          "text": "Tamarack site power feed is battery",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "battery",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "needs": [
+        {
+          "s": "Tamarack site",
+          "a": "power feed"
+        }
+      ],
+      "lexical_limit": 1,
+      "expect": {
+        "diagnosis": {
+          "not_in": [
+            "coverage_observed_unattested",
+            "mechanical_coverage_observed"
+          ]
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "S2-expired",
+      "invariants": [
+        "S2",
+        "S1"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s2",
+          "text": "Tamarack site power feed was diesel",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "diesel",
+            "assertion": "state",
+            "cardinality": "single"
+          },
+          "valid_from": "2010-01-01",
+          "valid_until": "2010-06-01"
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "needs": [
+        {
+          "s": "Tamarack site",
+          "a": "power feed"
+        }
+      ],
+      "expect": {
+        "diagnosis": {
+          "not_in": [
+            "coverage_observed_unattested",
+            "mechanical_coverage_observed"
+          ]
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "S2-prospective",
+      "invariants": [
+        "S2",
+        "S1"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s2",
+          "text": "Tamarack site power feed will be solar",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "solar",
+            "assertion": "state",
+            "cardinality": "single"
+          },
+          "valid_from": "2099-01-01"
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "needs": [
+        {
+          "s": "Tamarack site",
+          "a": "power feed"
+        }
+      ],
+      "expect": {
+        "diagnosis": {
+          "not_in": [
+            "coverage_observed_unattested",
+            "mechanical_coverage_observed"
+          ]
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "S3-receipt-captured-immutable",
+      "invariants": [
+        "S3",
+        "S7"
+      ],
+      "kind": "receipt",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s2",
+          "text": "Tamarack site power feed confirmed grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "expect": {
+        "receipt_present": {
+          "eq": true
+        },
+        "receipt_unchanged": {
+          "eq": true
+        },
+        "receipt_assignment_refused": {
+          "eq": true
+        },
+        "receipt_state_revision": {
+          "eq": null
+        },
+        "receipt_snapshot_attested": {
+          "eq": false
+        },
+        "receipt_slot_closure_attested": {
+          "eq": false
+        },
+        "receipt_can_stop": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "S4-mutation-drop_candidate",
+      "invariants": [
+        "S4"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s2",
+          "text": "Tamarack site power feed confirmed grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s9",
+          "text": "Tamarack site power feed was diesel",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "diesel",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "forget",
+          "ref": "memory:s9"
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "needs": [
+        {
+          "s": "Tamarack site",
+          "a": "power feed"
+        }
+      ],
+      "mutations": [
+        {
+          "m": "drop_candidate"
+        }
+      ],
+      "expect": {
+        "receipt_unchanged": {
+          "eq": false
+        },
+        "diagnosis": {
+          "not_in": [
+            "coverage_observed_unattested",
+            "mechanical_coverage_observed"
+          ]
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "S4-mutation-drop_admitted",
+      "invariants": [
+        "S4"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s2",
+          "text": "Tamarack site power feed confirmed grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s9",
+          "text": "Tamarack site power feed was diesel",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "diesel",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "forget",
+          "ref": "memory:s9"
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "needs": [
+        {
+          "s": "Tamarack site",
+          "a": "power feed"
+        }
+      ],
+      "mutations": [
+        {
+          "m": "drop_admitted"
+        }
+      ],
+      "expect": {
+        "receipt_unchanged": {
+          "eq": false
+        },
+        "diagnosis": {
+          "not_in": [
+            "coverage_observed_unattested",
+            "mechanical_coverage_observed"
+          ]
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "S4-mutation-reverse_ranked",
+      "invariants": [
+        "S4"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s2",
+          "text": "Tamarack site power feed confirmed grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s9",
+          "text": "Tamarack site power feed was diesel",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "diesel",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "forget",
+          "ref": "memory:s9"
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "needs": [
+        {
+          "s": "Tamarack site",
+          "a": "power feed"
+        }
+      ],
+      "mutations": [
+        {
+          "m": "reverse_ranked"
+        }
+      ],
+      "expect": {
+        "receipt_unchanged": {
+          "eq": false
+        },
+        "diagnosis": {
+          "not_in": [
+            "coverage_observed_unattested",
+            "mechanical_coverage_observed"
+          ]
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "S4-mutation-zero_route_counts",
+      "invariants": [
+        "S4"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s2",
+          "text": "Tamarack site power feed confirmed grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s9",
+          "text": "Tamarack site power feed was diesel",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "diesel",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "forget",
+          "ref": "memory:s9"
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "needs": [
+        {
+          "s": "Tamarack site",
+          "a": "power feed"
+        }
+      ],
+      "mutations": [
+        {
+          "m": "zero_route_counts"
+        }
+      ],
+      "expect": {
+        "receipt_unchanged": {
+          "eq": false
+        },
+        "diagnosis": {
+          "not_in": [
+            "coverage_observed_unattested",
+            "mechanical_coverage_observed"
+          ]
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "S4-mutation-change_query",
+      "invariants": [
+        "S4"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s2",
+          "text": "Tamarack site power feed confirmed grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s9",
+          "text": "Tamarack site power feed was diesel",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "diesel",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "forget",
+          "ref": "memory:s9"
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "needs": [
+        {
+          "s": "Tamarack site",
+          "a": "power feed"
+        }
+      ],
+      "mutations": [
+        {
+          "m": "change_query"
+        }
+      ],
+      "expect": {
+        "receipt_unchanged": {
+          "eq": false
+        },
+        "diagnosis": {
+          "not_in": [
+            "coverage_observed_unattested",
+            "mechanical_coverage_observed"
+          ]
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "S4-mutation-change_plan",
+      "invariants": [
+        "S4"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s2",
+          "text": "Tamarack site power feed confirmed grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s9",
+          "text": "Tamarack site power feed was diesel",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "diesel",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "forget",
+          "ref": "memory:s9"
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "needs": [
+        {
+          "s": "Tamarack site",
+          "a": "power feed"
+        }
+      ],
+      "mutations": [
+        {
+          "m": "change_plan"
+        }
+      ],
+      "expect": {
+        "receipt_unchanged": {
+          "eq": false
+        },
+        "diagnosis": {
+          "not_in": [
+            "coverage_observed_unattested",
+            "mechanical_coverage_observed"
+          ]
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "S4-mutation-clear_refusals",
+      "invariants": [
+        "S4"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s2",
+          "text": "Tamarack site power feed confirmed grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s9",
+          "text": "Tamarack site power feed was diesel",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "diesel",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "forget",
+          "ref": "memory:s9"
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "needs": [
+        {
+          "s": "Tamarack site",
+          "a": "power feed"
+        }
+      ],
+      "mutations": [
+        {
+          "m": "clear_refusals"
+        }
+      ],
+      "expect": {
+        "receipt_unchanged": {
+          "eq": false
+        },
+        "diagnosis": {
+          "not_in": [
+            "coverage_observed_unattested",
+            "mechanical_coverage_observed"
+          ]
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "S4-mutation-change_policy",
+      "invariants": [
+        "S4"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s2",
+          "text": "Tamarack site power feed confirmed grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s9",
+          "text": "Tamarack site power feed was diesel",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "diesel",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "forget",
+          "ref": "memory:s9"
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "needs": [
+        {
+          "s": "Tamarack site",
+          "a": "power feed"
+        }
+      ],
+      "mutations": [
+        {
+          "m": "change_policy"
+        }
+      ],
+      "expect": {
+        "receipt_unchanged": {
+          "eq": false
+        },
+        "diagnosis": {
+          "not_in": [
+            "coverage_observed_unattested",
+            "mechanical_coverage_observed"
+          ]
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "S4-mutation-change_admission_mode",
+      "invariants": [
+        "S4"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s2",
+          "text": "Tamarack site power feed confirmed grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s9",
+          "text": "Tamarack site power feed was diesel",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "diesel",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "forget",
+          "ref": "memory:s9"
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "needs": [
+        {
+          "s": "Tamarack site",
+          "a": "power feed"
+        }
+      ],
+      "mutations": [
+        {
+          "m": "change_admission_mode"
+        }
+      ],
+      "expect": {
+        "receipt_unchanged": {
+          "eq": false
+        },
+        "diagnosis": {
+          "not_in": [
+            "coverage_observed_unattested",
+            "mechanical_coverage_observed"
+          ]
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "S4-mutation-change_evaluated_at",
+      "invariants": [
+        "S4"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s2",
+          "text": "Tamarack site power feed confirmed grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s9",
+          "text": "Tamarack site power feed was diesel",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "diesel",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "forget",
+          "ref": "memory:s9"
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "needs": [
+        {
+          "s": "Tamarack site",
+          "a": "power feed"
+        }
+      ],
+      "mutations": [
+        {
+          "m": "change_evaluated_at"
+        }
+      ],
+      "expect": {
+        "receipt_unchanged": {
+          "eq": false
+        },
+        "diagnosis": {
+          "not_in": [
+            "coverage_observed_unattested",
+            "mechanical_coverage_observed"
+          ]
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "S5-missing-receipt",
+      "invariants": [
+        "S5"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s2",
+          "text": "Tamarack site power feed confirmed grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "needs": [
+        {
+          "s": "Tamarack site",
+          "a": "power feed"
+        }
+      ],
+      "mutations": [
+        {
+          "m": "remove_receipt"
+        }
+      ],
+      "expect": {
+        "receipt_unchanged": {
+          "eq": false
+        },
+        "diagnosis": {
+          "not_in": [
+            "coverage_observed_unattested",
+            "mechanical_coverage_observed"
+          ]
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "S6-reminted-receipt-is-not-authentication",
+      "invariants": [
+        "S6",
+        "S1"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s2",
+          "text": "Tamarack site power feed confirmed grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "needs": [
+        {
+          "s": "Tamarack site",
+          "a": "power feed"
+        }
+      ],
+      "mutations": [
+        {
+          "m": "drop_admitted"
+        },
+        {
+          "m": "remint_receipt"
+        }
+      ],
+      "expect": {
+        "receipt_unchanged": {
+          "eq": true
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "S7-forged-receipt-can_stop",
+      "invariants": [
+        "S7"
+      ],
+      "kind": "forge_receipt",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "field": "can_stop",
+      "value": true,
+      "expect": {
+        "raises": {
+          "eq": "ValueError"
+        }
+      }
+    },
+    {
+      "id": "S7-forged-receipt-snapshot_attested",
+      "invariants": [
+        "S7"
+      ],
+      "kind": "forge_receipt",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "field": "snapshot_attested",
+      "value": true,
+      "expect": {
+        "raises": {
+          "eq": "ValueError"
+        }
+      }
+    },
+    {
+      "id": "S7-forged-receipt-slot_closure_attested",
+      "invariants": [
+        "S7"
+      ],
+      "kind": "forge_receipt",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "field": "slot_closure_attested",
+      "value": true,
+      "expect": {
+        "raises": {
+          "eq": "ValueError"
+        }
+      }
+    },
+    {
+      "id": "S7-forged-receipt-state_revision",
+      "invariants": [
+        "S7"
+      ],
+      "kind": "forge_receipt",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "field": "state_revision",
+      "value": "rev-1",
+      "expect": {
+        "raises": {
+          "eq": "ValueError"
+        }
+      }
+    },
+    {
+      "id": "S7-forged-receipt-authority_effect",
+      "invariants": [
+        "S7"
+      ],
+      "kind": "forge_receipt",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "field": "authority_effect",
+      "value": "stop",
+      "expect": {
+        "raises": {
+          "eq": "ValueError"
+        }
+      }
+    },
+    {
+      "id": "S8-receipt-hides-refused-identities",
+      "invariants": [
+        "S8"
+      ],
+      "kind": "receipt",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s2",
+          "text": "Tamarack site power feed confirmed grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s9",
+          "text": "Tamarack site power feed was diesel",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "diesel",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "forget",
+          "ref": "memory:s9"
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "expect": {
+        "refused_identities_present": {
+          "eq": true
+        },
+        "refused_identities_disclosed": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "S9-enumeration-fault-no_census_reader",
+      "invariants": [
+        "S9"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s2",
+          "text": "Tamarack site power feed confirmed grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "needs": [
+        {
+          "s": "Tamarack site",
+          "a": "power feed"
+        }
+      ],
+      "fault": "no_census_reader",
+      "expect": {
+        "raises_any": {
+          "eq": true
+        }
+      }
+    },
+    {
+      "id": "S9-enumeration-fault-no_substrate_enumeration",
+      "invariants": [
+        "S9"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s2",
+          "text": "Tamarack site power feed confirmed grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "needs": [
+        {
+          "s": "Tamarack site",
+          "a": "power feed"
+        }
+      ],
+      "fault": "no_substrate_enumeration",
+      "expect": {
+        "raises_any": {
+          "eq": true
+        }
+      }
+    },
+    {
+      "id": "S9-enumeration-fault-corrupt_index_key",
+      "invariants": [
+        "S9"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s2",
+          "text": "Tamarack site power feed confirmed grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "needs": [
+        {
+          "s": "Tamarack site",
+          "a": "power feed"
+        }
+      ],
+      "fault": "corrupt_index_key",
+      "expect": {
+        "raises_any": {
+          "eq": true
+        }
+      }
+    },
+    {
+      "id": "S10-controller-authority-claim",
+      "invariants": [
+        "S10"
+      ],
+      "kind": "controller_authority",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "expect": {
+        "raises_any": {
+          "eq": true
+        }
+      }
+    },
+    {
+      "id": "S11-hostile-input-hostile_route_counts",
+      "invariants": [
+        "S11"
+      ],
+      "kind": "receipt",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s2",
+          "text": "Tamarack site power feed confirmed grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "mutations": [
+        {
+          "m": "hostile_route_counts"
+        }
+      ],
+      "expect": {
+        "receipt_unchanged": {
+          "eq": false
+        },
+        "verification_raised": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "S11-hostile-input-hostile_refusals",
+      "invariants": [
+        "S11"
+      ],
+      "kind": "receipt",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s2",
+          "text": "Tamarack site power feed confirmed grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "mutations": [
+        {
+          "m": "hostile_refusals"
+        }
+      ],
+      "expect": {
+        "receipt_unchanged": {
+          "eq": false
+        },
+        "verification_raised": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "S11-hostile-input-plan_object",
+      "invariants": [
+        "S11"
+      ],
+      "kind": "receipt",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s2",
+          "text": "Tamarack site power feed confirmed grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "mutations": [
+        {
+          "m": "plan_object"
+        }
+      ],
+      "expect": {
+        "receipt_unchanged": {
+          "eq": false
+        },
+        "verification_raised": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "S11-hostile-input-recall_none",
+      "invariants": [
+        "S11"
+      ],
+      "kind": "receipt",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s2",
+          "text": "Tamarack site power feed confirmed grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "mutations": [
+        {
+          "m": "recall_none"
+        }
+      ],
+      "expect": {
+        "receipt_unchanged": {
+          "eq": false
+        },
+        "verification_raised": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "S11-hostile-input-receipt_garbage",
+      "invariants": [
+        "S11"
+      ],
+      "kind": "receipt",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s2",
+          "text": "Tamarack site power feed confirmed grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "mutations": [
+        {
+          "m": "receipt_garbage"
+        }
+      ],
+      "expect": {
+        "receipt_unchanged": {
+          "eq": false
+        },
+        "verification_raised": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "S11-hostile-input-counts_bool",
+      "invariants": [
+        "S11"
+      ],
+      "kind": "receipt",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s2",
+          "text": "Tamarack site power feed confirmed grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "mutations": [
+        {
+          "m": "counts_bool"
+        }
+      ],
+      "expect": {
+        "receipt_unchanged": {
+          "eq": false
+        },
+        "verification_raised": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "S12-F6-untyped-competitor",
+      "invariants": [
+        "S12",
+        "S1"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:s1",
+          "text": "Tamarack site power feed is grid north",
+          "prop": {
+            "s": "Tamarack site",
+            "a": "power feed",
+            "v": "grid north",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:s2",
+          "text": "Tamarack site power feed is diesel"
+        }
+      ],
+      "query": "Tamarack site power feed",
+      "needs": [
+        {
+          "s": "Tamarack site",
+          "a": "power feed"
+        }
+      ],
+      "record": [
+        "diagnosis"
+      ],
+      "expect": {
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    }
+  ]
+}

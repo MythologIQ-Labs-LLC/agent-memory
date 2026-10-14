@@ -51,7 +51,7 @@ class DeveloperFacade(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             memory = self._open(root)
-            self.assertEqual(memory.contract_version, "1.6.0")
+            self.assertEqual(memory.contract_version, "1.7.0")
             retained = memory.remember(TARGET, "release branch main")
             self.assertTrue(retained["committed"])
             self.assertEqual(retained["stage"], "commit")
@@ -179,6 +179,12 @@ class DeveloperFacade(unittest.TestCase):
             self.assertTrue(forgotten["committed"])
             history = memory.history(TARGET)["history"]
             self.assertTrue(history["tombstoned"])
+            # #777: the owner's own deletion is visible as one boolean; the deleted
+            # generation's identifiers and events stay internal audit records.
+            self.assertEqual(history["events"], [])
+            self.assertIsNone(history["current_fact_uuid"])
+            self.assertNotIn(seed["fact_uuid"], json.dumps(memory.history(TARGET)))
+            self.assertTrue(memory._canonical_history(TARGET)["history"]["tombstoned"])
             memory.close()
 
             recovered = self._open(root)

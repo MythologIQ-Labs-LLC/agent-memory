@@ -82,7 +82,8 @@ class _Store(unittest.TestCase):
         return [uuid for _, uuid in sorted(scored)]
 
     def recall(self, query: str, context: RecallContext) -> dict:
-        return self.memory.recall(query, target_domain_refs=list(context.target_domain_refs),
+        # #777: candidate formation is asserted on the canonical record (in-process evaluation).
+        return self.memory._canonical_recall(query, target_domain_refs=list(context.target_domain_refs),
                                   principal_ref=context.principal_ref, project_ref=context.project_ref,
                                   task_ref=context.task_ref or None)
 

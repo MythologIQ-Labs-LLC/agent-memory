@@ -1,0 +1,31 @@
+{
+  "baseline": "agent-memory-runtime-baseline-v7",
+  "qualification": "BLOCKED",
+  "replays": [
+    {
+      "reason": "manifest exists; independent execution and validation required",
+      "replay": "typed-sufficiency-noninterference-and-negative-controls-v1",
+      "status": "UNVERIFIED"
+    },
+    {
+      "reason": "manifest exists; independent execution and validation required",
+      "replay": "governed-persisted-typed-slot-sufficiency-admission-recheck-v1",
+      "status": "UNVERIFIED"
+    },
+    {
+      "reason": "manifest exists; independent execution and validation required",
+      "replay": "governed-admitted-typed-value-coherence-v1",
+      "status": "UNVERIFIED"
+    },
+    {
+      "reason": "manifest exists; independent execution and validation required",
+      "replay": "committed-governed-transition-witness-v1",
+      "status": "UNVERIFIED"
+    },
+    {
+      "reason": "manifest exists; independent execution and validation required",
+      "replay": "same-slot-safety-counterevidence-and-immutable-stop-gate-v1",
+      "status": "UNVERIFIED"
+    }
+  ]
+}

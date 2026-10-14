@@ -1,0 +1,23 @@
+{
+ "attestation": "none: hashes bind contents for review; they are not signatures and confer no acceptance",
+ "command": "python reference/run_644_v7_replays.py --all",
+ "fixture": {
+  "path": "reference/fixtures/644-v7-replays/typed-sufficiency-noninterference-and-negative-controls-v1.json",
+  "sha256": "6b1ea7fcb7dd526c3c9e91e11f9eff834013e78f32b7e29f4dd03ca8e207547e"
+ },
+ "observations_sha256": "907ab4730737deb0c116e73a30538adbf8a2b54953ddd66e37e2035d27a29de7",
+ "replay_id": "typed-sufficiency-noninterference-and-negative-controls-v1",
+ "report": {
+  "path": "report.json",
+  "sha256": "b63b7f27e7ac747e9a05680a5945b58d8e572f472b734c317b04f86db5d5b33f"
+ },
+ "runner": {
+  "path": "reference/run_644_v7_replays.py",
+  "sha256": "941a0dc6860e932531d77eb65c1f305f84feeab3366cacd39953dae160cf0def",
+  "version": "644-v7-replay-runner/1"
+ },
+ "runtime_tree": "f9ccd0472e32cb68a5caf988a017078a73425cc5",
+ "schema": "644-v7-replay-manifest/1",
+ "source_commit": "76632295163a4b80cf7c153d9297a788c59d1b95",
+ "verdict": "PASS"
+}

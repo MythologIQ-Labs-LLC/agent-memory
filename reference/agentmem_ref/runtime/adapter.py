@@ -780,6 +780,10 @@ class GovernedMemoryAdapter:
             return None
         if any(source_ref in self._tombstones for source_ref in fact.episode_uuids):
             return None
+        # #776: an earlier version of a deleted memory (or a fact derived from
+        # one) is as unreadable here as it is at recall admission.
+        if self._deleted_lineage_reason(fact) is not None:
+            return None
         return fact if self.domain_eligible(fact, context) else None
 
     def write_semantics(self, fact_uuid: str, context: RecallContext) -> dict | None:
@@ -788,6 +792,221 @@ class GovernedMemoryAdapter:
             return None
         value = semantics.expanded_form((fact.attributes or {}).get(semantics.WRITE_SEMANTICS_KEY))
         return json.loads(json.dumps(value)) if value is not None else None
+
+    def current_governed_typed_claim(
+        self, fact_uuid: str, context: RecallContext,
+    ) -> tuple[bool, dict | None]:
+        """Current admission recheck plus eligible persisted typed value evidence.
+
+        This is a read-only capability for downstream mechanical diagnostics.
+        The boolean is current admission visibility, NOT truth or retained
+        source authority. A typed slot is descriptive write evidence only.
+        Historical/as-of facts are conservatively omitted from this method;
+        a future temporal sufficiency observer needs an explicit admission
+        mode and separate qualification before recognizing them.
+        """
+        if not isinstance(context, RecallContext) or not isinstance(fact_uuid, str) or not fact_uuid:
+            raise TypeError("fact identity and recall context are required")
+        fact = self._substrate.get_fact(fact_uuid)
+        if (fact is None or fact.is_transaction_expired
+                or self._admission_refusal(fact, context) is not None):
+            return False, None
+        # A second visibility gate is intentional; read-only semantics must
+        # respect source tombstones, tenant/project/task and shared membership.
+        stored = self.write_semantics(fact_uuid, context)
+        if not isinstance(stored, dict):
+            return True, None
+        record = stored.get("typed_proposition")
+        if not isinstance(record, dict) or record.get("basis") != typed.CALLER_DECLARED:
+            return True, None
+        if stored.get("typed_ineligible_reasons"):
+            return True, None
+        fields = (
+            "subject", "attribute", "value", "assertion", "cardinality",
+            "flags", "replaces_value",
+        )
+        if not all(field in record for field in (*fields, "slot")):
+            return True, None
+        try:
+            validated = typed.validate({field: record[field] for field in fields})
+            if any(validated["flags"].values()):
+                return True, None
+            slot = typed.typed_slot(validated["subject"], validated["attribute"])
+        except (ValueError, TypeError, KeyError):
+            return True, None
+        if slot != record.get("slot"):
+            return True, None
+        return True, {
+            "slot": slot,
+            "value": validated["value"],
+            "cardinality": validated["cardinality"],
+            "assertion": validated["assertion"],
+        }
+
+    def current_typed_slot_obstacles(
+        self, slots: tuple[str, ...], admitted_refs: tuple[str, ...],
+        context: RecallContext,
+    ) -> dict[str, dict[str, int]]:
+        """Read-only census of *currently admissible* typed-slot blockers.
+
+        Eligibility for supporting a claim is intentionally different from
+        visibility as counter-evidence. Excluded/extracted/hedged typed claims
+        cannot confer support but may prevent a false completeness conclusion.
+        Scan all current admissible facts, not merely the retrieval top-k.
+        Unknown untyped competitors remain outside the typed slot census,
+        therefore this probe NEVER certifies closed-world sufficiency.
+        """
+        if (type(slots) is not tuple or type(admitted_refs) is not tuple
+                or not isinstance(context, RecallContext)
+                or any(type(item) is not str or not item for item in slots + admitted_refs)):
+            raise TypeError("typed slot audit requires typed identifiers and recall context")
+        selected = set(slots)
+        admitted = set(admitted_refs)
+        if len(selected) != len(slots) or len(admitted) != len(admitted_refs):
+            raise ValueError("typed slot audit does not accept duplicate identities")
+        counters: dict[str, dict[str, int]] = {
+            key: {
+                "eligible_unretrieved": 0,
+                "qualified_counter_evidence": 0,
+                "declared_temporal_boundary": 0,
+            }
+            for key in sorted(selected)
+        }
+        reader = getattr(self._substrate, "all_facts", None)
+        if not callable(reader):
+            raise RuntimeError("cannot audit typed slot without complete substrate enumeration")
+        # The write-maintained semantic index maps a scoped canonical slot
+        # to persisted fact IDs. Iterating all_facts() here forced SQLite to
+        # deserialize the entire database on EVERY observation, even when only
+        # one slot was requested. The index is only a candidate generator:
+        # independently recheck each indexed fact against current admission.
+        for scoped_key, indexed in self._semantic_index().items():
+            try:
+                indexed_slot = json.loads(scoped_key)[0]
+            except (TypeError, ValueError, IndexError, KeyError):
+                # An index whose key cannot be interpreted is not a reliable
+                # proof of completeness. Refuse to synthesize a clean audit.
+                raise RuntimeError("malformed semantic slot index key")
+            if indexed_slot not in selected:
+                continue
+            for fact_uuid in indexed:
+                fact = self._substrate.get_fact(fact_uuid)
+                if (fact is None or fact.is_transaction_expired
+                        or self._admission_refusal(fact, context) is not None):
+                    continue
+                stored = self.write_semantics(fact.uuid, context)
+                if not isinstance(stored, dict):
+                    continue
+                record = stored.get("typed_proposition")
+                if not isinstance(record, dict) or record.get("slot") != indexed_slot:
+                    continue
+                # An ineligible stored proposition cannot support a value,
+                # but still remains counter-evidence for the same slot.
+                declared = (fact.attributes or {}).get(DECLARED_TEMPORAL_KEY) or {}
+                valid_from = parse_time(declared.get("valid_from"))
+                created_at = parse_time(fact.created_at)
+                if (declared.get("valid_until")
+                        or (declared.get("valid_from") and
+                            (valid_from is None or created_at is None
+                             or valid_from > created_at))):
+                    counters[indexed_slot]["declared_temporal_boundary"] += 1
+                if (record.get("basis") != typed.CALLER_DECLARED
+                        or stored.get("typed_ineligible_reasons")
+                        or not isinstance(record.get("flags"), dict)
+                        or any(record["flags"].values())):
+                    counters[indexed_slot]["qualified_counter_evidence"] += 1
+                if fact.uuid not in admitted:
+                    counters[indexed_slot]["eligible_unretrieved"] += 1
+        return counters
+
+    def current_governed_typed_slot(
+        self, fact_uuid: str, context: RecallContext,
+    ) -> tuple[bool, str | None]:
+        """Compatibility reader: no extra reads and no policy bypass."""
+        permitted, claim = self.current_governed_typed_claim(fact_uuid, context)
+        return permitted, claim["slot"] if claim is not None else None
+
+    def governed_applied_transition_witnesses(
+        self, admitted_fact_uuids: Sequence[str], context: RecallContext,
+    ) -> tuple["GovernedTransitionWitness", ...]:
+        """Read-only #644 committed-correction witnesses for visible admitted facts.
+
+        This does not establish query membership for a caller-tampered list,
+        interpret competing value meanings, or identify immediate successors.
+        Only source and current replacement facts that still pass CURRENT
+        admission and belong to the supplied admitted set are considered.
+        The prior invalid fact is inspected only within the same reader scope,
+        and its text/value is never returned.
+        """
+        from .governed_transition_witness import (
+            GovernedTransitionWitness, inspect_committed_replacement,
+        )
+
+        if not isinstance(context, RecallContext):
+            raise TypeError("governed transition inspection requires a recall context")
+        if not isinstance(admitted_fact_uuids, (tuple, list)) or any(
+            not isinstance(ref, str) for ref in admitted_fact_uuids
+        ):
+            raise TypeError("governed transition inspection requires admitted fact identities")
+        if len(set(admitted_fact_uuids)) != len(admitted_fact_uuids):
+            raise ValueError("duplicate admitted fact reference")
+        admitted = set(admitted_fact_uuids)
+        witnesses: dict[tuple[str, str], GovernedTransitionWitness] = {}
+        for source_ref in sorted(admitted):
+            source_visible, source_claim = self.current_governed_typed_claim(source_ref, context)
+            if not source_visible or source_claim is None or source_claim["assertion"] != "change":
+                continue
+            source_memory = self._fact_memory.get(source_ref)
+            if not source_memory or self._current_fact_by_memory.get(source_memory) != source_ref:
+                continue
+            source_semantics = self.write_semantics(source_ref, context) or {}
+            for relation in source_semantics.get("relations", ()):
+                if not isinstance(relation, dict):
+                    continue
+                prior_ref = relation.get("other_fact_uuid")
+                proposal = relation.get("proposal")
+                if not isinstance(prior_ref, str) or not isinstance(proposal, dict):
+                    continue
+                # The old fact is invalid, so CURRENT admission cannot be used
+                # to access it. Require the identical tenant/domain/task scope,
+                # no tombstone/dispute, and an actual event-invalid prior.
+                prior = self._semantics_visible(prior_ref, context)
+                if (prior is None or prior.group_id != self._tenant
+                        or not prior.is_event_invalid or prior_ref in self._disputed
+                        or not self._same_semantic_scope(
+                            self._fact_scope.get(source_ref), self._fact_scope.get(prior_ref)
+                        )):
+                    continue
+                target_memory = self._fact_memory.get(prior_ref)
+                if not target_memory or target_memory != proposal.get("target_reference"):
+                    continue
+                current_target_ref = self._current_fact_by_memory.get(target_memory)
+                # Current target must be present in the original admitted list:
+                # the observer cannot silently discover and export hidden facts.
+                if current_target_ref not in admitted:
+                    continue
+                successor = self._substrate.get_fact(current_target_ref)
+                if (successor is None or successor.is_transaction_expired
+                        or self._admission_refusal(successor, context) is not None
+                        or not self._same_semantic_scope(
+                            self._fact_scope.get(prior_ref),
+                            self._fact_scope.get(current_target_ref),
+                        )):
+                    continue
+                record = self.replacement_record(prior_ref)
+                if not record:
+                    continue
+                witness = inspect_committed_replacement(
+                    source_fact_ref=source_ref,
+                    prior_fact_ref=prior_ref,
+                    current_target_fact_ref=current_target_ref,
+                    source_slot=source_claim["slot"],
+                    relation=relation,
+                    replacement=record,
+                )
+                if witness is not None:
+                    witnesses[(witness.proposal_ref, witness.prior_fact_ref)] = witness
+        return tuple(witnesses[key] for key in sorted(witnesses))
 
     def semantic_proposals(self, context: RecallContext) -> list[dict]:
         """Every write-time ``state_change`` proposal with its status derived now.
@@ -1017,6 +1236,22 @@ class GovernedMemoryAdapter:
             return "tombstoned"
         if any(source_ref in self._tombstones for source_ref in fact.episode_uuids):
             return "derived_from_tombstoned_source"
+        # #776 P0: the tombstone is recorded against the *current fact*,
+        # but deletion belongs to the durable logical memory. Historical
+        # state-change predecessors have different fact UUIDs; without
+        # checking their canonical fact->memory binding, explicit historical
+        # admission could resurrect previously deleted memory contents.
+        #
+        # Scope is checked before exposing this reason. A record whose
+        # logical memory was not reliably bound is NOT assumed to share
+        # deletion state based on matching words or other guesses.
+        #
+        # The deleted lineage is the set of facts bound to the memory when it
+        # was deleted (indexed, so the check is O(1) per candidate); a later
+        # governed re-creation of the same memory id is a new lineage.
+        deleted_reason = self._deleted_lineage_reason(fact)
+        if deleted_reason is not None:
+            return self._domain_eligibility_refusal(fact, context) or deleted_reason
         if fact.is_event_invalid:
             historical = self._historical_evidence_refusal(fact, mode, target_seconds)
             if historical is not None:
@@ -1257,6 +1492,191 @@ class GovernedMemoryAdapter:
     def tombstoned_ids(self) -> set[str]:
         return {record["memory_id"] for record in self._tombstones.values()}
 
+    # -- #777 public read projection (identifiers only; admission and audit unchanged) --
+
+    def has_governed_deletions(self) -> bool:
+        """Whether any governed deletion exists, so a public projection may need to withhold."""
+        return bool(self._tombstones)
+
+    def public_identifier_withheld(self, ref: object) -> bool:
+        """Must an ordinary caller-facing read withhold this fact identifier?
+
+        True for every fact of a deleted generation (head, earlier versions, erased
+        versions) and for facts whose provenance leads to one. Canonical admission,
+        tombstones and audit events are not changed by this projection.
+        """
+        if not isinstance(ref, str) or not ref or not self._tombstones:
+            return False
+        if ref in self._tombstones or ref in self._deleted_lineage():
+            return True
+        fact = self._substrate.get_fact(ref) if ref in self._fact_memory else None
+        return fact is not None and self._deleted_lineage_reason(fact) is not None
+
+    def public_memory_withheld(self, memory_id: object) -> bool:
+        """A logical memory id with deletion history and no live generation."""
+        return (isinstance(memory_id, str) and bool(self._tombstones)
+                and self._current_fact_by_memory.get(memory_id) is None
+                and memory_id in self.tombstoned_ids())
+
+    def public_generation_start(self, memory_id: str) -> str | None:
+        """When the live generation of ``memory_id`` began: the latest whole-generation
+        (head) deletion time, or None if it never had one."""
+        starts = [str(record.get("deleted_at") or "") for key, record in self._tombstones.items()
+                  if record.get("memory_id") == memory_id and self.replacement_record(key) is None]
+        return max(starts) if starts else None
+
+    def public_current_visible(self, memory_id: str, context: RecallContext) -> bool:
+        """May an ordinary reader know this memory exists? Its current fact must be in the
+        reader's tenant/domain scope and outside every deleted lineage. (A disputed or
+        otherwise refused current fact is still a known memory; deletion and scope are the
+        privacy boundary, not admission.)"""
+        head = self._current_fact_by_memory.get(memory_id) if isinstance(memory_id, str) else None
+        fact = self._substrate.get_fact(head) if head else None
+        return (fact is not None and fact.group_id == self._tenant
+                and self._domain_eligibility_refusal(fact, context) is None
+                and self._deleted_lineage_reason(fact) is None and fact.uuid not in self._tombstones)
+
+    def public_deleted_visible(self, memory_id: object, context: RecallContext) -> bool:
+        """May an ordinary reader know this memory was governed-deleted (docs/44 ``tombstoned``)?
+
+        Only a reader who could have read the deleted head: the same tenant, and
+        domain/project/task-eligible for the scope that head was written in (the canonical
+        ``_fact_scope`` survives pruning and permanent deletion, so the check never needs
+        the deleted content). A reader who is out of scope learns nothing, exactly as for
+        a memory that never existed. The answer is one boolean: no deleted-generation
+        identifier, timestamp or event is served with it (#777).
+
+        The answer depends only on deletions of heads this reader could read, never on
+        whether the id currently carries a live generation: a later generation written by
+        another scope is invisible to this reader, so its creation and deletion must not
+        flip this reader's view (a caller that can read the live head never reaches this
+        question; see ``public_current_visible``).
+        """
+        return self.public_deleted_version(memory_id, context) is not None
+
+    def public_deleted_version(self, memory_id: object, context: RecallContext) -> int | None:
+        """The canonical state version recorded by the latest head deletion this reader could
+        have read, or None when no such deletion exists. Recorded at deletion time so the
+        value is stable under later activity by other scopes; a pre-recording tombstone
+        reads as 0."""
+        if not isinstance(memory_id, str) or not memory_id or not self._tombstones:
+            return None
+        versions: list[int] = []
+        for ref, record in self._tombstones.items():
+            if record.get("memory_id") != memory_id or self.replacement_record(ref) is not None:
+                continue
+            if self._domain_identity_refusal(ref, self._tenant, context) is None:
+                recorded = record.get("state_version")
+                versions.append(int(recorded) if isinstance(recorded, int) and not isinstance(recorded, bool) else 0)
+        return max(versions) if versions else None
+
+    def _deleted_lineage(self) -> dict[str, str]:
+        """#776: fact uuid -> deleted memory for every fact a governed deletion covers.
+
+        Built once per tombstone-set change, so admission is O(1) per candidate
+        however many deletions exist. Tombstones are never removed, and restore
+        replaces the dicts, which the cache key observes.
+        """
+        key = (id(self._tombstones), len(self._tombstones), id(self._fact_memory))
+        cached = getattr(self, "_deleted_lineage_cache", None)
+        if cached is not None and cached[0] == key:
+            return cached[1]
+        index: dict[str, str] = {}
+        for tombstone_ref, record in self._tombstones.items():
+            memory_id = record.get("memory_id")
+            index[tombstone_ref] = memory_id
+            lineage = record.get("deleted_fact_uuids")
+            if lineage is None:
+                lineage = self._legacy_deleted_lineage(tombstone_ref, record)
+            for ref in lineage:
+                index[str(ref)] = memory_id
+        self._deleted_lineage_cache = (key, index)
+        return index
+
+    def _legacy_deleted_lineage(self, tombstone_ref: str, record: Mapping) -> list[str]:
+        """A pre-#776 tombstone names only the deleted fact. Fail closed: when it deleted the
+        memory's head (a fact never replaced), every fact bound to that memory and written
+        no later than the deletion belongs to the deleted lineage. A deleted superseded
+        version (it has a replacement record) covers only itself."""
+
+        memory_id = record.get("memory_id")
+        if memory_id is None or self.replacement_record(tombstone_ref) is not None:
+            return [tombstone_ref]
+        deleted_at = record.get("deleted_at")
+        lineage = [tombstone_ref]
+        for ref, bound in self._fact_memory.items():
+            if bound != memory_id or ref == tombstone_ref:
+                continue
+            fact = self._substrate.get_fact(ref)
+            created = getattr(fact, "created_at", None)
+            if not deleted_at or not created or created <= deleted_at:
+                lineage.append(ref)
+        return lineage
+
+    def _deleted_lineage_reason(self, fact: Fact) -> str | None:
+        if not self._tombstones:
+            return None
+        deleted = self._deleted_lineage()
+        if fact.uuid in deleted:
+            return "logical_memory_deleted"
+        if any(self._derives_from_deleted(ref, deleted) for ref in fact.episode_uuids):
+            return "derived_from_deleted_logical_memory"
+        return None
+
+    def _derives_from_deleted(self, ref: str, deleted: Mapping[str, str]) -> bool:
+        """Is ``ref`` a deleted fact, or a fact whose provenance (``episode_uuids``) leads to one?
+
+        Transitive over canonical fact references, so a derivation of a derivation of a
+        deleted version is refused too. Facts are immutable and deletions only add to the
+        index, so results are memoised per index state; refs that are not facts
+        (external evidence identifiers) carry no deletion state.
+        """
+        # A negative answer can go stale without a new deletion: provenance may cite an id
+        # before that fact exists, and a later write can bind it to a deleted source. Every
+        # governed write binds a fact, so the fact-binding count is part of the key.
+        memo_key = (getattr(self, "_deleted_lineage_cache", (None,))[0],
+                    id(self._fact_memory), len(self._fact_memory))
+        memo = getattr(self, "_derived_taint_memo", None)
+        if memo is None or memo[0] != memo_key:
+            memo = (memo_key, {})
+            self._derived_taint_memo = memo
+        taint = memo[1]
+        if ref in taint:
+            return taint[ref]
+        stack, path, seen = [ref], [], set()
+        result = False
+        while stack:
+            current = stack.pop()
+            if current in seen:
+                continue
+            seen.add(current)
+            if current in deleted or taint.get(current):
+                result = True
+                break
+            if current in taint:
+                continue
+            path.append(current)
+            fact = self._substrate.get_fact(current)
+            if fact is not None:
+                stack.extend(fact.episode_uuids)
+        if result:
+            taint[ref] = True  # only the queried root is known tainted on an early exit
+        else:
+            for item in path:
+                taint[item] = False
+        return result
+
+    def _lineage_for_deletion(self, memory_id: str, fact_uuid: str) -> list[str]:
+        """Deleting a memory's head deletes its whole live lineage; deleting a superseded
+        version deletes only that version. Facts of an earlier deleted lineage are excluded
+        so a later deletion never changes how an earlier one was governed."""
+
+        if self._current_fact_by_memory.get(memory_id) != fact_uuid:
+            return [fact_uuid]
+        already = self._deleted_lineage() if self._tombstones else {}
+        return sorted({fact_uuid} | {
+            ref for ref, bound in self._fact_memory.items() if bound == memory_id and ref not in already})
+
     def record_correction(self, memory_id: str) -> int:
         """A correction advances canonical version; dependents become stale by relation."""
         self._state_version[memory_id] = self._state_version.get(memory_id, 0) + 1
@@ -1341,6 +1761,11 @@ class GovernedMemoryAdapter:
         before_state = f"v{self._state_version.get(proposal.target_reference, 0)}"
 
         if committed:
+            # #776: deletion belongs to the logical memory -- record the lineage it covers.
+            lineage = self._lineage_for_deletion(proposal.target_reference, fact_uuid)
+            cached = getattr(self, "_deleted_lineage_cache", None)
+            fresh = cached is not None and cached[0] == (
+                id(self._tombstones), len(self._tombstones), id(self._fact_memory))
             self._tombstones[fact_uuid] = {
                 "memory_id": proposal.target_reference,
                 "fact_uuid": fact_uuid,
@@ -1348,14 +1773,26 @@ class GovernedMemoryAdapter:
                 "declared_derived_refs": list(derived_refs),
                 "mode": proposal.operation,
                 "reversible": proposal.operation != "permanent_deletion",
+                "deleted_fact_uuids": lineage,
             }
+            if fresh:  # extend the index in place instead of rebuilding it per deletion
+                cached[1].update(dict.fromkeys((fact_uuid, *lineage), proposal.target_reference))
+                self._deleted_lineage_cache = (
+                    (id(self._tombstones), len(self._tombstones), id(self._fact_memory)), cached[1])
             # Pruning removes from active recall and keeps the content recoverable;
-            # only permanent deletion reaches the substrate's physical delete.
+            # only permanent deletion reaches the substrate's physical delete, and
+            # it removes every version in the deleted lineage, not just the head.
             if proposal.operation == "permanent_deletion":
-                self._substrate.delete_fact(fact_uuid)
+                for ref in lineage:
+                    self._substrate.delete_fact(ref)
+                for bucket in (self._semantic_slot_index or {}).values():
+                    for ref in lineage:
+                        bucket.pop(ref, None)
             if self._current_fact_by_memory.get(proposal.target_reference) == fact_uuid:
                 self._current_fact_by_memory.pop(proposal.target_reference, None)
             self._state_version[proposal.target_reference] = self._state_version.get(proposal.target_reference, 0) + 1
+            # the version this deletion produced, for the owner's reader-stable history view
+            self._tombstones[fact_uuid]["state_version"] = self._state_version[proposal.target_reference]
 
         receipt_id = self._ids.next()
         receipt = receipts.build_receipt(

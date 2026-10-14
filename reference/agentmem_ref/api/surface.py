@@ -24,7 +24,7 @@ import importlib.resources
 import json
 import os
 from pathlib import Path
-from typing import Any, Mapping, Sequence
+from typing import Any, Callable, Mapping, Sequence
 
 from ..core import policy
 from ..memory import action_authority
@@ -45,6 +45,99 @@ __all__ = [
     "authorize",
     "witness",
 ]
+
+
+# -- #777 public read projection ------------------------------------------------------
+# Applied to ordinary caller-facing responses only, AFTER canonical governance decided the
+# read. It never retrieves hidden text, never broadens admission, and never rewrites stored
+# semantics, tombstones or audit events. Detailed deletion records stay internal.
+
+
+
+_PUBLIC_PROJECTION = {
+    "policy_id": "public-deleted-lineage-redaction",
+    "policy_version": "1.0.0",
+    "deleted_lineage": "withheld",
+}
+
+#: Refusal reasons that would disclose a deletion relationship to an ordinary reader.
+_DELETION_REFUSALS = frozenset({
+    "tombstoned", "derived_from_tombstoned_source",
+    "logical_memory_deleted", "derived_from_deleted_logical_memory",
+})
+
+
+def _never(value: str) -> bool:
+    """The predicate for a store with no governed deletion: nothing can be withheld."""
+    return False
+
+
+def _withheld_predicate(adapter) -> Callable[[str], bool]:
+    if not adapter.has_governed_deletions():
+        return _never
+    cache: dict[str, bool] = {}
+
+    def withheld(value: str) -> bool:
+        if value not in cache:
+            cache[value] = bool(adapter.public_identifier_withheld(value) or adapter.public_memory_withheld(value))
+        return cache[value]
+
+    return withheld
+
+
+def _mentions(value: Any, withheld: Callable[[str], bool]) -> bool:
+    if isinstance(value, str):
+        return withheld(value)
+    if isinstance(value, dict):
+        return any(withheld(k) or _mentions(v, withheld) for k, v in value.items())
+    if isinstance(value, (list, tuple)):
+        return any(_mentions(v, withheld) for v in value)
+    return False
+
+
+def _normalize(value: Any) -> Any:
+    """What ``_scrub`` returns when nothing is withheld: a copy with sequences as lists."""
+    if isinstance(value, dict):
+        return {key: _normalize(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_normalize(item) for item in value]
+    return value
+
+
+def _scrub(value: Any, withheld: Callable[[str], bool]) -> Any:
+    """Drop list items and mapping entries that name a withheld identifier; blank scalar refs."""
+    if withheld is _never:
+        return _normalize(value)  # same result, one traversal, no per-value lookups
+    if isinstance(value, dict):
+        out = {}
+        for key, item in value.items():
+            if withheld(key):
+                continue
+            if isinstance(item, str) and withheld(item):
+                out[key] = ""
+                continue
+            out[key] = _scrub(item, withheld)
+        return out
+    if isinstance(value, (list, tuple)):
+        return [_scrub(item, withheld) for item in value if not _mentions(item, withheld)]
+    return value
+
+
+def _withheld_candidates(candidates, refusals, withheld: Callable[[str], bool]) -> set[str]:
+    return {c for c in candidates if refusals.get(c) in _DELETION_REFUSALS or withheld(c)}
+
+
+def _project_semantics(document: dict | None, withheld: Callable[[str], bool]) -> dict | None:
+    if document is None:
+        return None
+    relations = [r for r in document.get("relations", ()) if not _mentions(r, withheld)]
+    out = dict(document)
+    if "relations" in document:
+        out["relations"] = relations
+    if "relation_count" in document:
+        # count-only relations are not materialised; subtract only what was withheld
+        out["relation_count"] = document["relation_count"] - (len(document.get("relations", ())) - len(relations))
+    return out
 
 
 def _gate(envelope: Mapping[str, Any], validator, stage: str):
@@ -105,10 +198,16 @@ def recall(memory: GovernedMemoryAdapter, query: str, context_envelope: Mapping[
     # admission order; the budget is policy applied after admission, never authority.
     returned, return_policy = contract.apply_return_budget(
         admission.admitted, (validated.get("budget") or {}).get("k"))
-    return contract.result("recall", compat, candidates=list(admission.candidates),
-                           admitted=list(admission.admitted), admissions=dict(admission.decisions),
+    # #777: the public projection withholds deleted-generation identifiers after admission.
+    withheld = _withheld_predicate(memory)
+    hidden = _withheld_candidates(admission.candidates, admission.refusals, withheld)
+    candidates = [c for c in admission.candidates if c not in hidden]
+    admissions = _scrub({c: d for c, d in admission.decisions.items() if c not in hidden}, withheld)
+    return contract.result("recall", compat, candidates=candidates,
+                           admitted=list(admission.admitted), admissions=admissions,
                            candidate_policy=dict(admission.candidate_policy),
-                           returned=returned, return_policy=return_policy)
+                           returned=returned, return_policy=return_policy,
+                           public_projection=dict(_PUBLIC_PROJECTION))
 
 
 def forget(memory: GovernedMemoryAdapter, envelope: Mapping[str, Any], *,
@@ -704,7 +803,10 @@ class AgentMemory:
         ``authority_effect: none``; nothing in it refuses, supersedes, or mutates.
         """
         self._require_open()
-        return self.runtime.adapter.write_semantics(fact_uuid, self._handle_recall_context())
+        adapter = self.runtime.adapter
+        return _project_semantics(
+            adapter.write_semantics(fact_uuid, self._handle_recall_context()),
+            _withheld_predicate(adapter))
 
     @_serialized
     def semantic_proposals(self, *, status: str | None = None) -> list[dict]:
@@ -823,10 +925,24 @@ class AgentMemory:
         return self._commit_result(outcome)
 
     @_serialized
-    def recall(
+    def recall(self, query: str, **kwargs) -> dict:
+        """Ordinary caller-facing recall (#777 public projection applied); see ``_recall_document``."""
+        self._require_open()
+        return self._recall_document(query, public=True, **kwargs)
+
+    @_serialized
+    def _canonical_recall(self, query: str, **kwargs) -> dict:
+        """IN-PROCESS EVALUATION ONLY, not part of the public contract (#777): the canonical
+        recall document including deleted-lineage refusals, for governance evaluators that
+        already hold the runtime. Ordinary callers use ``recall``."""
+        self._require_open()
+        return self._recall_document(query, public=False, **kwargs)
+
+    def _recall_document(
         self,
         query: str,
         *,
+        public: bool = True,
         logical_memory_refs: Sequence[str] = (),
         target_domain_refs: Sequence[str] | None = None,
         principal_ref: str | None = None,
@@ -875,8 +991,13 @@ class AgentMemory:
             temporal_intent=intent,
         )
         rank = {candidate: index + 1 for index, candidate in enumerate(result.ranked_admitted)}
+        # #777: ordinary readers never see deleted-generation identifiers, refusal reasons
+        # that disclose a deletion, or counts/stop reasons derived from them.
+        withheld = _withheld_predicate(self.runtime.adapter) if public else (lambda value: False)
+        hidden = _withheld_candidates(result.candidates, result.refusals, withheld) if public else set()
+        public_candidates = [c for c in result.candidates if c not in hidden]
         admissions: dict[str, dict] = {}
-        for candidate in result.candidates:
+        for candidate in public_candidates:
             decision = dict(result.decisions.get(candidate, {}))
             decision["route_provenance"] = [hit.to_dict() for hit in result.provenance_for(candidate)]
             basis = getattr(result, "admission_basis", {}).get(candidate)
@@ -894,20 +1015,23 @@ class AgentMemory:
             result.ranked_admitted, (validated.get("budget") or {}).get("k"))
         recall_control = None
         if self._recall_control == "shadow":
-            recall_control = self._shadow_recall_control(query, tuple(logical_memory_refs), result, validated)
+            recall_control = self._shadow_recall_control(query, tuple(logical_memory_refs), result, validated,
+                                                         public_candidates)
         return contract.result(
             "recall",
             contract.CURRENT,
-            candidates=list(result.candidates),
+            candidates=public_candidates,
             admitted=list(result.ranked_admitted),
-            admissions=admissions,
+            admissions=_scrub(admissions, withheld) if public else admissions,
+            public_projection=dict(_PUBLIC_PROJECTION) if public else None,
             candidate_policy=dict(getattr(result, "candidate_policy", {}) or {}) or None,
             returned=returned,
             return_policy=return_policy,
             recall_control=recall_control,
         )
 
-    def _shadow_recall_control(self, query: str, logical_memory_refs: tuple[str, ...], result, envelope) -> dict:
+    def _shadow_recall_control(self, query: str, logical_memory_refs: tuple[str, ...], result, envelope,
+                               public_candidates=None) -> dict:
         """Plan in shadow beside the executed recall (#644 T-controller S2-S4).
 
         Runs after ``multi_route_recall`` returned; reads only the result and the route
@@ -928,8 +1052,9 @@ class AgentMemory:
             host_caps[SEMANTIC_VECTOR_ROUTE] = SEMANTIC_CANDIDATE_LIMIT
         if isinstance(substrate, EvidenceNeighborTemporalGraphPort):
             available.append(SHARED_EVIDENCE_ROUTE)
+        visible = list(result.candidates) if public_candidates is None else list(public_candidates)
         counts: dict[str, int] = {}
-        for candidate in result.candidates:
+        for candidate in visible:
             for route in {hit.route_id for hit in result.provenance_for(candidate)}:
                 counts[route] = counts.get(route, 0) + 1
         return shadow_control_report(
@@ -940,7 +1065,7 @@ class AgentMemory:
             routes_executed=tuple(result.routes_executed),
             route_counts=counts,
             host_caps=host_caps,
-            candidate_count=len(result.candidates),
+            candidate_count=len(visible),
             policy_context={
                 "tenant_scope_ref": f"{self.tenant}#{envelope.get('project_ref') or self.scope}",
                 "recall_policy_ref": str(result.policy_version),
@@ -993,13 +1118,56 @@ class AgentMemory:
         return self._commit_result(outcome, stage="forget")
 
     @_serialized
+    def _canonical_history(self, target_reference: str, *, fact_text: str | None = None) -> dict:
+        """IN-PROCESS EVALUATION ONLY (#777): the unprojected history record."""
+        self._require_open()
+        return history(self.runtime.adapter,
+                       {"contract_version": contract.CONTRACT_VERSION, "target_reference": target_reference},
+                       fact_text=fact_text)
+
+    @_serialized
     def history(self, target_reference: str, *, fact_text: str | None = None) -> dict:
         self._require_open()
-        return history(
+        raw = history(
             self.runtime.adapter,
             {"contract_version": contract.CONTRACT_VERSION, "target_reference": target_reference},
             fact_text=fact_text,
         )
+        if "history" not in raw:
+            return raw
+        # #777: an ordinary handle sees only a memory whose current fact it may read, and only
+        # that live generation's events. An out-of-scope memory reads as unknown. A memory this
+        # handle could have read and that is now governed-deleted reads as ``tombstoned`` with
+        # nothing else (docs/44; durability profile DUR-DEL-001): the deletion is the reader's
+        # own lifecycle fact, while the deleted generation's identifiers, timestamps, events
+        # and rejected values stay internal audit records.
+        adapter = self.runtime.adapter
+        record = raw["history"]
+        context = self._handle_recall_context()
+        if not adapter.public_current_visible(target_reference, context):
+            # the version recorded by the deletion itself, never the live memory-wide counter,
+            # which another scope's later generation would move
+            deleted_version = adapter.public_deleted_version(target_reference, context)
+            projected = {"current_fact_uuid": None,
+                         "state_version": deleted_version if deleted_version is not None else 0,
+                         "tombstoned": deleted_version is not None, "events": []}
+            if fact_text is not None:
+                projected["rejected_values"] = []
+        else:
+            start = adapter.public_generation_start(target_reference)
+            withheld = _withheld_predicate(adapter)
+            # Deletion records are audit metadata: every deletion correlation is omitted, as is
+            # every correlation that began in an earlier (deleted) generation.
+            hidden = {e.get("correlation_id") for e in record["events"]
+                      if e.get("event_type") == "memory.delete"
+                      or (start is not None and str(e.get("timestamp", "")) <= start)}
+            events = [e for e in record["events"]
+                      if (start is None or str(e.get("timestamp", "")) > start) and e.get("correlation_id") not in hidden]
+            projected = dict(record, tombstoned=False, events=_scrub(events, withheld))
+        raw = dict(raw, history=projected, public_projection=dict(_PUBLIC_PROJECTION))
+        from ..core import receipts
+        receipts.validate(contract.RESULT_SCHEMA, raw)
+        return raw
 
     @_serialized
     def posture(self) -> dict:

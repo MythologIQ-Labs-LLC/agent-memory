@@ -184,7 +184,7 @@ def run_scenario(agent_memory_revision: str) -> dict:
 
         correction_parked = memory.correct(PRIMARY, PRIMARY_CORRECTED)
         correction_committed = memory.correct(PRIMARY, PRIMARY_CORRECTED, evidence=evidence)
-        corrected_history = memory.history(PRIMARY)
+        corrected_history = getattr(memory, "_canonical_history", memory.history)(PRIMARY)
         corrected_recall = memory.recall(
             "release branch main",
             logical_memory_refs=(PRIMARY,),
@@ -211,7 +211,7 @@ def run_scenario(agent_memory_revision: str) -> dict:
             logical_memory_refs=(PRIMARY,),
         )
         forgotten = first_recovery.forget(SECONDARY, evidence=evidence)
-        forgotten_history = first_recovery.history(SECONDARY)
+        forgotten_history = getattr(first_recovery, "_canonical_history", first_recovery.history)(SECONDARY)
         forgotten_recall = first_recovery.recall(
             SECONDARY_VALUE,
             logical_memory_refs=(SECONDARY,),
@@ -226,8 +226,8 @@ def run_scenario(agent_memory_revision: str) -> dict:
             purpose=PURPOSE,
         )
         posture_restart_2 = second_recovery.posture()
-        final_primary_history = second_recovery.history(PRIMARY)
-        final_secondary_history = second_recovery.history(SECONDARY)
+        final_primary_history = getattr(second_recovery, "_canonical_history", second_recovery.history)(PRIMARY)
+        final_secondary_history = getattr(second_recovery, "_canonical_history", second_recovery.history)(SECONDARY)
         final_primary_recall = second_recovery.recall(
             "release branch main",
             logical_memory_refs=(PRIMARY,),
