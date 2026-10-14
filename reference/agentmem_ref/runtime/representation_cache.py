@@ -20,6 +20,7 @@ import math
 import os
 import re
 import sqlite3
+import stat
 import struct
 from pathlib import Path
 from typing import Callable, Mapping
@@ -49,58 +50,125 @@ def _content_sha256(text: str) -> str:
 
 
 _VECTOR_FILE = re.compile(r"^vectors-([0-9a-f]{16})\.sqlite$")
+_REQUIRED_COLUMNS = frozenset({"fact_uuid", "content_sha256", "vector", "row_sha256"})
 
 
 class DerivedCacheReconciliationError(RuntimeError):
-    """The canonical operation can commit even when sidecar cleanup fails."""
+    """Derived sidecar cleanup is incomplete after the canonical operation already committed.
 
-    def __init__(self, message: str, *, fact_uuid: str | None = None) -> None:
+    ``canonical_committed`` is True when a permanent deletion committed canonically and
+    residue may remain in a derived store; ``report`` is the reconciliation report and
+    ``result`` the canonical commit result, so neither the receipt nor the disposition is
+    lost to the caller. Reopening the root retries the reconciliation deterministically.
+    """
+
+    def __init__(self, message: str, *, fact_uuid: str | None = None, report: dict | None = None,
+                 result: dict | None = None) -> None:
         super().__init__(message)
         self.canonical_committed = fact_uuid is not None
         self.fact_uuid = fact_uuid
+        self.report = report
+        self.result = result
+
+
+def _invalid_store(connection: sqlite3.Connection, bare_digest: str) -> str | None:
+    """Why this file is not a derived store of ours, or None when its identity checks out."""
+    tables = {row[0] for row in connection.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
+    if not {"meta", "vectors"} <= tables:
+        return "missing meta or vectors table"
+    meta = dict(connection.execute("SELECT key, value FROM meta"))
+    digest = str(meta.get("config_digest", "")).split(":", 1)[-1]
+    columns = {row[1] for row in connection.execute("PRAGMA table_info(vectors)")}
+    if meta.get("format") != STORE_FORMAT:
+        return "unknown store format"
+    if not digest.startswith(bare_digest):
+        return "config_digest does not match the file name"
+    if not str(meta.get("dimensions", "")).isdigit():
+        return "invalid dimensions"
+    if not _REQUIRED_COLUMNS <= columns:
+        return "vectors schema is incomplete"
+    return None
 
 
 def reconcile_derived_vector_stores(
     root: str | Path, canonical_texts: Mapping[str, str], *,
     deleted_fact_uuid: str | None = None,
 ) -> dict:
-    """Remove orphan/stale rows across known persistent stores without an embedding provider.
+    """Remove rows no canonical fact accounts for, across every persistent sidecar, with no provider.
 
-    Caller must hold the recovered canonical runtime serialization lock.
-    SQLite row deletion is NOT a forensic erasure claim about WALs or backups.
+    Derived stores are rebuildable and never authority, so this is a cleanup of what
+    canonical state no longer physically retains: a row survives only when its
+    ``(fact_uuid, sha256(text))`` matches a canonical fact in ``canonical_texts``.
+    Pruned (tombstoned) and superseded facts are still canonical rows, so their vectors
+    stay; a permanently deleted lineage is gone from both.
+
+    The function never raises for the state of an individual sidecar; it reports:
+
+    * ``stores_checked`` / ``rows_purged``: valid stores reconciled and rows removed;
+    * ``stores_discarded``: regular files under our name pattern that are not readable
+      derived stores (corrupt, foreign schema, wrong identity). They are unlinked, the
+      same disposition ``DerivedVectorStore`` applies to its own damaged file, because
+      an unreadable store cannot be reconciled and discarding it is the only way to
+      remove whatever residue it holds;
+    * ``unsafe``: entries never touched or followed (symlinks, non-regular files, a
+      ``derived`` path that is not a directory);
+    * ``failed``: stores that could not be reconciled (locked, read-only, I/O error);
+    * ``status``: ``"complete"`` when nothing is unsafe or failed, else ``"incomplete"``.
+
+    Callers decide the disposition: authorized permanent deletion treats anything but
+    ``"complete"`` as residue to report, recovery records it and keeps the canonical
+    runtime available. The caller holds the canonical runtime serialization lock.
+    SQLite row deletion (with ``secure_delete``) is not a forensic erasure claim about
+    rollback journals, backups, snapshots or the filesystem.
     """
     if deleted_fact_uuid is not None and (
         not isinstance(deleted_fact_uuid, str) or not deleted_fact_uuid
     ):
         raise ValueError("deleted_fact_uuid must be a non-empty string or None")
+    report: dict = {"status": "complete", "stores_checked": 0, "rows_purged": 0,
+                    "stores_discarded": [], "unsafe": [], "failed": []}
     directory = Path(root) / "derived"
-    if directory.is_symlink():
-        raise DerivedCacheReconciliationError("derived store directory is a symlink")
     if not directory.exists():
-        return {"stores_checked": 0, "rows_purged": 0}
+        return report
     if not directory.is_dir():
-        raise DerivedCacheReconciliationError("derived store path is not a directory")
+        report["unsafe"].append(str(directory))
+        report["status"] = "incomplete"
+        return report
     allowed = {
         (str(uuid), _content_sha256(text))
         for uuid, text in canonical_texts.items()
     }
-    inspected, purged = 0, 0
     for path in sorted(directory.glob("vectors-*.sqlite")):
         match = _VECTOR_FILE.fullmatch(path.name)
-        if match is None or path.is_symlink() or not path.is_file():
-            raise DerivedCacheReconciliationError(f"unsafe derived vector store: {path}")
-        connection = sqlite3.connect(path.resolve().as_uri() + "?mode=rw", uri=True, timeout=5.0)
+        if match is None:
+            continue  # not a store of ours; never touched
         try:
-            meta = dict(connection.execute("SELECT key, value FROM meta"))
-            digest = str(meta.get("config_digest", "")).split(":", 1)[-1]
-            columns = {row[1] for row in connection.execute("PRAGMA table_info(vectors)")}
-            if (
-                meta.get("format") != STORE_FORMAT
-                or not digest.startswith(match.group(1))
-                or not str(meta.get("dimensions", "")).isdigit()
-                or not {"fact_uuid", "content_sha256", "vector", "row_sha256"} <= columns
-            ):
-                raise DerivedCacheReconciliationError(f"invalid derived cache identity/schema: {path}")
+            status = os.lstat(path)
+        except OSError as exc:
+            report["failed"].append([str(path), f"{type(exc).__name__}: {exc}"])
+            continue
+        if stat.S_ISLNK(status.st_mode) or not stat.S_ISREG(status.st_mode):
+            report["unsafe"].append(str(path))
+            continue
+        try:
+            # ``mode=rw`` never creates a file; the absolute (not resolved) path keeps a
+            # symlink swapped in after the lstat from being followed by name resolution.
+            connection = sqlite3.connect(path.absolute().as_uri() + "?mode=rw", uri=True, timeout=5.0)
+        except sqlite3.Error as exc:
+            report["failed"].append([str(path), f"{type(exc).__name__}: {exc}"])
+            continue
+        try:
+            try:
+                reason = _invalid_store(connection, match.group(1))
+            except sqlite3.DatabaseError as exc:
+                if isinstance(exc, sqlite3.OperationalError):
+                    raise  # locked, I/O, permissions: a valid store we cannot read right now
+                reason = f"unreadable: {exc}"
+            if reason is not None:
+                connection.close()
+                path.unlink()
+                report["stores_discarded"].append([str(path), reason])
+                continue
             connection.execute("PRAGMA secure_delete=ON")
             rows = connection.execute("SELECT fact_uuid, content_sha256 FROM vectors").fetchall()
             stale = [
@@ -113,15 +181,20 @@ def reconcile_derived_vector_stores(
                     "DELETE FROM vectors WHERE fact_uuid = ? AND content_sha256 = ?",
                     stale,
                 )
-            connection.commit()
-            inspected += 1
-            purged += len(stale)
-        except Exception:
-            connection.rollback()
-            raise
+                connection.commit()
+            report["stores_checked"] += 1
+            report["rows_purged"] += len(stale)
+        except (sqlite3.Error, OSError) as exc:
+            try:
+                connection.rollback()
+            except sqlite3.Error:
+                pass
+            report["failed"].append([str(path), f"{type(exc).__name__}: {exc}"])
         finally:
             connection.close()
-    return {"stores_checked": inspected, "rows_purged": purged}
+    if report["unsafe"] or report["failed"]:
+        report["status"] = "incomplete"
+    return report
 
 
 class DerivedVectorStore:
@@ -152,6 +225,8 @@ class DerivedVectorStore:
         os.chmod(self.path, 0o600)
         connection = sqlite3.connect(self.path, check_same_thread=False)
         try:
+            # Freed cells (replaced rows, purged orphans) are zeroed inside the file (#802).
+            connection.execute("PRAGMA secure_delete=ON")
             connection.execute("CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT NOT NULL)")
             connection.execute(
                 "CREATE TABLE IF NOT EXISTS vectors (fact_uuid TEXT NOT NULL, content_sha256 TEXT NOT NULL, "

@@ -8,6 +8,7 @@ import stat
 import sys
 import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -119,13 +120,13 @@ class DerivedVectorStoreTests(unittest.TestCase):
             result = reconcile_derived_vector_stores(
                 self.root, {"live": "public text"}, deleted_fact_uuid="gone"
             )
-            self.assertEqual(result, {"stores_checked": 2, "rows_purged": 2})
+            self.assertEqual(
+                (result["status"], result["stores_checked"], result["rows_purged"]), ("complete", 2, 2)
+            )
             self.assertEqual(self.store.row_count(), 1)
             self.assertEqual(alternate.row_count(), 1)
-            self.assertEqual(
-                reconcile_derived_vector_stores(self.root, {"live": "public text"}),
-                {"stores_checked": 2, "rows_purged": 0},
-            )
+            again = reconcile_derived_vector_stores(self.root, {"live": "public text"})
+            self.assertEqual((again["status"], again["stores_checked"], again["rows_purged"]), ("complete", 2, 0))
         finally:
             alternate.close()
 
@@ -134,7 +135,7 @@ class DerivedVectorStoreTests(unittest.TestCase):
         self.store.vector_for("live", "new", self.embed)
         self.store.close()
         result = reconcile_derived_vector_stores(self.root, {"live": "new"})
-        self.assertEqual(result, {"stores_checked": 1, "rows_purged": 1})
+        self.assertEqual((result["stores_checked"], result["rows_purged"]), (1, 1))
         self.store = DerivedVectorStore(self.root, DIGEST, 3)
         self.assertEqual(self.store.row_count(), 1)
 
@@ -142,7 +143,7 @@ class DerivedVectorStoreTests(unittest.TestCase):
         self.store.vector_for("orphan", "old value", self.embed)
         relative = Path(os.path.relpath(self.root, Path.cwd()))
         result = reconcile_derived_vector_stores(relative, {})
-        self.assertEqual(result, {"stores_checked": 1, "rows_purged": 1})
+        self.assertEqual((result["stores_checked"], result["rows_purged"]), (1, 1))
         self.assertEqual(self.store.row_count(), 0)
 
     def test_reconcile_derived_root_rejects_symlink_without_touching_target(self):
@@ -150,18 +151,64 @@ class DerivedVectorStoreTests(unittest.TestCase):
         target.write_bytes(b"not an agent-memory store")
         link = Path(self.root) / "derived" / ("vectors-" + "cc" * 8 + ".sqlite")
         link.symlink_to(target)
-        with self.assertRaises(DerivedCacheReconciliationError):
-            reconcile_derived_vector_stores(self.root, {})
+        report = reconcile_derived_vector_stores(self.root, {})
+        self.assertEqual(report["status"], "incomplete")
+        self.assertEqual(report["unsafe"], [str(link)])
+        self.assertEqual(report["stores_discarded"], [])
+        self.assertTrue(link.is_symlink())
         self.assertEqual(target.read_bytes(), b"not an agent-memory store")
         link.unlink()
 
-    def test_reconcile_derived_root_refuses_corrupt_identity_without_mutating_rows(self):
+    def test_reconcile_derived_root_discards_unreadable_or_foreign_stores_and_reports(self):
         self.store.vector_for("orphan", "stale text", self.embed)
         self.store._connection.execute("UPDATE meta SET value = 'invalid' WHERE key = 'format'")
         self.store._connection.commit()
-        with self.assertRaises(DerivedCacheReconciliationError):
-            reconcile_derived_vector_stores(self.root, {})
+        self.store.close()
+        garbage = Path(self.root) / "derived" / ("vectors-" + "dd" * 8 + ".sqlite")
+        garbage.write_bytes(b"\x00garbage" * 128)
+        foreign = Path(self.root) / "derived" / ("vectors-" + "ee" * 8 + ".sqlite")
+        sqlite3.connect(foreign).execute("CREATE TABLE other (x)").connection.close()
+        stray = Path(self.root) / "derived" / "vectors-not-ours.sqlite"
+        stray.write_bytes(b"stray")
+        report = reconcile_derived_vector_stores(self.root, {})
+        # An unreadable derived store cannot be reconciled: it is discarded (rebuildable,
+        # never authority) so its residue goes with it; a stray name is not ours and stays.
+        self.assertEqual(report["status"], "complete")
+        self.assertEqual(report["stores_checked"], 0)
+        self.assertEqual(
+            sorted(path for path, _reason in report["stores_discarded"]),
+            sorted(str(path) for path in (self.store.path, garbage, foreign)),
+        )
+        for path in (self.store.path, garbage, foreign):
+            self.assertFalse(path.exists())
+        self.assertEqual(stray.read_bytes(), b"stray")
+        self.store = DerivedVectorStore(self.root, DIGEST, 3)
+        self.assertEqual(self.store.row_count(), 0)
+
+    def test_reconcile_reports_a_store_it_cannot_write_without_discarding_it(self):
+        self.store.vector_for("orphan", "stale text", self.embed)
+        real_connect = sqlite3.connect
+
+        def readonly_connect(database, *args, **kwargs):
+            if isinstance(database, str) and database.startswith("file:"):
+                raise sqlite3.OperationalError("attempt to write a readonly database")
+            return real_connect(database, *args, **kwargs)
+
+        with mock.patch.object(sqlite3, "connect", readonly_connect):
+            report = reconcile_derived_vector_stores(self.root, {})
+        self.assertEqual(report["status"], "incomplete")
+        self.assertEqual(report["failed"][0][0], str(self.store.path))
+        self.assertIn("readonly", report["failed"][0][1])
+        self.assertEqual(report["stores_discarded"], [])
         self.assertEqual(self.store.row_count(), 1)
+
+    def test_secure_delete_is_on_for_the_store_connection(self):
+        self.assertEqual(self.store._connection.execute("PRAGMA secure_delete").fetchone()[0], 1)
+        self.store.vector_for("gone", "secret text", self.embed)
+        self.store.verify({}, self.embed, rebuild=True)
+        self.store.close()
+        self.assertNotIn(b"gone", self.store.path.read_bytes())
+        self.store = DerivedVectorStore(self.root, DIGEST, 3)
 
     def test_file_mode_is_0600_and_name_has_no_colon(self):
         mode = stat.S_IMODE(os.stat(self.store.path).st_mode)
