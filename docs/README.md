@@ -12,7 +12,7 @@ The product intent is governed, hierarchical, heterogeneous multi-system memory 
 
 | Entry point | For | Start | Then |
 |---|---|---|---|
-| **Theory** | researchers studying memory architecture and governance | [`01-layer-model.md`](01-layer-model.md) | [`adr/README.md`](adr/README.md) (canonical doctrine-status ledger), [`pama/README.md`](pama/README.md), [`24-determinism-probability-and-governed-uncertainty.md`](24-determinism-probability-and-governed-uncertainty.md) |
+| **Theory** | researchers studying memory architecture and governance | [`ARCHITECTURE_INDEX.md`](ARCHITECTURE_INDEX.md), the single architecture catalog and filing policy | [`AGENTIC_MEMORY_SYSTEMS_CANONICAL_ARCHITECTURE.md`](AGENTIC_MEMORY_SYSTEMS_CANONICAL_ARCHITECTURE.md) (architectural explanation), [`adr/README.md`](adr/README.md) (accepted decisions), [`pama/README.md`](pama/README.md) |
 | **Benchmarks** | evaluators running controlled comparisons, inspecting evidence, or bringing a system or a benchmark | [`../BENCHMARKS.md`](../BENCHMARKS.md) | [`../reports/benchmarks/dashboard/current.md`](../reports/benchmarks/dashboard/current.md), [`BENCHMARK_COVERAGE_ATLAS.md`](BENCHMARK_COVERAGE_ATLAS.md), [`CONTRIBUTOR_ARCHITECTURE.md`](CONTRIBUTOR_ARCHITECTURE.md) |
 | **Runtime** | builders integrating governed memory | [`47-developer-facade-and-local-open-path.md`](47-developer-facade-and-local-open-path.md) | [`45-agent-memory-rc1-implementation-profile.md`](45-agent-memory-rc1-implementation-profile.md), [`43-substrate-inventory-and-maturity.md`](43-substrate-inventory-and-maturity.md), [`future/distributed-runtime-roadmap.md`](future/distributed-runtime-roadmap.md) (proposed, not implemented) |
 
@@ -27,7 +27,7 @@ For current state, use the sources that own it: [`BACKLOG.md`](BACKLOG.md) (work
 | Goal | Start here | Continue with |
 |---|---|---|
 | Use Agent Memory as a local runtime | [`47-developer-facade-and-local-open-path.md`](47-developer-facade-and-local-open-path.md) | [`45-agent-memory-rc1-implementation-profile.md`](45-agent-memory-rc1-implementation-profile.md), [`46-state-checkpoint-contract.md`](46-state-checkpoint-contract.md), [`43-substrate-inventory-and-maturity.md`](43-substrate-inventory-and-maturity.md) |
-| Understand the architecture | [`01-layer-model.md`](01-layer-model.md) | `11`, `13`, `18`, `22`, `24`, `42`, ADR index |
+| Understand the architecture | [`ARCHITECTURE_INDEX.md`](ARCHITECTURE_INDEX.md) | [`AGENTIC_MEMORY_SYSTEMS_CANONICAL_ARCHITECTURE.md`](AGENTIC_MEMORY_SYSTEMS_CANONICAL_ARCHITECTURE.md), [`01-layer-model.md`](01-layer-model.md), ADR index |
 | Understand current RC/governance state | [`BACKLOG.md`](BACKLOG.md), [`SYSTEM_STATE.md`](SYSTEM_STATE.md) | issues #410, #668, #636; current benchmark dashboard; [`64-current-governance-and-benchmark-dashboard.md`](64-current-governance-and-benchmark-dashboard.md) for the historical #594 reconciliation |
 | Understand lifecycle/currentness | [`02-lifecycle-state-machine.md`](02-lifecycle-state-machine.md) | [`18-temporal-causality-layer.md`](18-temporal-causality-layer.md), [`60-temporal-currentness-qualification-gauntlet.md`](60-temporal-currentness-qualification-gauntlet.md), [`61-write-time-proposition-semantics.md`](61-write-time-proposition-semantics.md) |
 | Understand governance / PAMA | [`pama/README.md`](pama/README.md) | `04`, `17`, `33`, `34`, [`../GOVERNANCE.md`](../GOVERNANCE.md) |
@@ -93,6 +93,8 @@ Gauntlet and project-model documents:
 
 ## Product and RC documentation
 
+Audience navigation for the Runtime entry point. The authoritative shelf assignment for each document is [`ARCHITECTURE_INDEX.md`](ARCHITECTURE_INDEX.md) (shelf I); this table only routes.
+
 | Document | Purpose |
 |---|---|
 | [`43-substrate-inventory-and-maturity.md`](43-substrate-inventory-and-maturity.md) | Substrate inventory, qualification and maturity boundaries |
@@ -118,6 +120,8 @@ Gauntlet and project-model documents:
 A working runtime is not production 1.0. The qualified persistence posture remains deliberately bounded to single-host SQLite; the distributed roadmap above is a proposal, not a capability. Historical status lines inside older documents (for example public contract `1.2.0` in [`45-agent-memory-rc1-implementation-profile.md`](45-agent-memory-rc1-implementation-profile.md)) record the state at their publication; the current contract version is declared by `reference/agentmem_ref/api/contract.py` and summarised in [`44-public-api-contract.md`](44-public-api-contract.md).
 
 ## Evaluation and benchmark documentation
+
+Audience navigation for the Benchmarks entry point. The authoritative shelf assignment is [`ARCHITECTURE_INDEX.md`](ARCHITECTURE_INDEX.md) (shelf E); this table only routes.
 
 | Document | Purpose |
 |---|---|
@@ -162,26 +166,9 @@ This index does not restate the active policy version, RC sequence, or follow-on
 
 ADR-039 stays Proposed, and PR #587 / #583 stays DRAFT/HOLD, until the ADR index or the owning issue says otherwise.
 
-## Canonical architecture spine
+## Architecture library
 
-The `00` through `42` series contains the canonical architecture and operational-contract corpus. Key starting points:
-
-- [`00-glossary.md`](00-glossary.md)
-- [`01-layer-model.md`](01-layer-model.md)
-- [`02-lifecycle-state-machine.md`](02-lifecycle-state-machine.md)
-- [`04-governance-and-pama.md`](04-governance-and-pama.md)
-- [`05-repo-implementation-map.md`](05-repo-implementation-map.md)
-- [`13-system-composition-boundaries.md`](13-system-composition-boundaries.md)
-- [`15-memory-threat-model.md`](15-memory-threat-model.md)
-- [`18-temporal-causality-layer.md`](18-temporal-causality-layer.md)
-- [`21-forgetting-consolidation-and-memory-metabolism.md`](21-forgetting-consolidation-and-memory-metabolism.md)
-- [`24-determinism-probability-and-governed-uncertainty.md`](24-determinism-probability-and-governed-uncertainty.md)
-- [`26-governed-recall-planner.md`](26-governed-recall-planner.md)
-- [`33-pama-decision-table.md`](33-pama-decision-table.md)
-- [`41-memory-isolation-domains-and-governed-crossing.md`](41-memory-isolation-domains-and-governed-crossing.md)
-- [`42-governed-mutable-memory-fabric.md`](42-governed-mutable-memory-fabric.md)
-
-The full series runs `00` through `42`. [`10-memory-unit-examples.md`](10-memory-unit-examples.md) and [`12-concept-segmentation-matrix.md`](12-concept-segmentation-matrix.md) are reference material; [`07-integration-roadmap.md`](07-integration-roadmap.md) and [`14-expanded-scope-recommendations.md`](14-expanded-scope-recommendations.md) are early-phase roadmap material, and the current execution posture is [`68-baseline-first-complete-architecture-execution.md`](68-baseline-first-complete-architecture-execution.md) plus [`BACKLOG.md`](BACKLOG.md).
+[`ARCHITECTURE_INDEX.md`](ARCHITECTURE_INDEX.md) is the single catalog for the architecture corpus: it files every numbered `docs/NN-*.md` document on exactly one shelf with a named owner, lists the non-numbered entry points and collections, and states the filing rule for new architectural documents. This page does not keep a second copy of that catalog. [`AGENTIC_MEMORY_SYSTEMS_CANONICAL_ARCHITECTURE.md`](AGENTIC_MEMORY_SYSTEMS_CANONICAL_ARCHITECTURE.md) is the governing architectural narrative; individual ADRs, schemas, code, and accepted evidence keep factual authority for their own claims.
 
 ## Architecture Decision Records
 

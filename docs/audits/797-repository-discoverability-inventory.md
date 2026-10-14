@@ -44,12 +44,13 @@ Length is therefore not the discoverability problem. The problems found were: (a
 | `docs/AGENT_MEMORY_PROJECT_MODEL.md` | proposed project model (five layers) under #554/#556 | self-declared "Proposed… authority effect: none" | **KEEP**; section 12 now records the #565 reconciliation instead of calling it pending |
 | `BENCHMARKS.md` | canonical evaluation entry point, but its numbers are historical | self-declares the dashboard as current authority | **KEEP**; start-here block added; numbers left untouched and labelled revision-bound |
 | `reports/benchmarks/dashboard/current.md` / `.json` | canonical current evidence | docs/64 "Documentation authority" | **KEEP**; owned by #785/#794/#796 pipeline, not edited |
-| `docs/64-current-governance-and-benchmark-dashboard.md` | historical reconciliation at the #591/#594 boundary (`691251c`); its "canonical current-state" self-description is era-bound | self-declared; owner review on PR #798 | **KEEP as historical evidence; SUPERSEDE as a "current" pointer**: README and docs index now label it historical and point current-state readers at code constants, BACKLOG, docs/43, the baseline register, and SYSTEM_STATE |
+| `docs/64-current-governance-and-benchmark-dashboard.md` | historical reconciliation at the #591/#594 boundary (`691251c`); its own status line now says HISTORICAL (owner commit `c9eb258`, merged) | self-declared; owner review on PR #798 | **KEEP as historical evidence; SUPERSEDE as a "current" pointer**: README and docs index label it historical and point current-state readers at code constants, BACKLOG, docs/43, the baseline register, and SYSTEM_STATE |
 | `docs/66-pre-1.0-maturity-and-runtime-qualification.md` | addendum at the #600-#602 boundary (`b50d6d1`) | self-declared "canonical current-state addendum" | **KEEP**, indexed with its boundary named; same era-bound caveat as docs/64 |
 | `docs/43-substrate-inventory-and-maturity.md` | canonical substrate maturity | section 12 maintenance rule | **KEEP**; the README substrate table now defers to it |
 | `docs/BENCHMARK_COVERAGE_ATLAS.md` | governance artifact under #554 | vocabulary bound to `schemas/memory-benchmark-integration.schema.json` | **KEEP** |
 | `docs/CONTRIBUTOR_ARCHITECTURE.md` | canonical contributor contract v1 (#652) | self-declared; CI-backed | **KEEP** |
-| `docs/adr/README.md` | canonical doctrine-status ledger | GOVERNANCE | **KEEP**; see stale row in section 3 (owner-only edit) |
+| `docs/adr/README.md` | canonical doctrine-status ledger | GOVERNANCE | **KEEP**; extended to ADR-043 by the owner's reconciliation branch, merged into PR #798 |
+| `docs/ARCHITECTURE_INDEX.md` | single architecture catalog and filing policy (owner branch `docs/797-single-architecture-index-no-ci`, `41893a2`, merged into PR #798) | self-declared; README and docs index Theory entry point now start there | **KEEP**; docs index no longer carries a second per-domain architecture inventory |
 | `docs/GOVERNANCE_INDEX.md`, `docs/SYSTEM_STATE.md`, `docs/FEATURE_INDEX.md`, `docs/CONCEPT.md`, `docs/ARCHITECTURE_PLAN.md`, `docs/BACKLOG.md` | Qor-logic maintenance ledgers | each carries its own "last reconciled" boundary | **KEEP**; `BACKLOG.md` is current (2026-10-08); the others are 2026-09-12 to 09-24 and have Tier 1 drift (section 3) |
 | `docs/META_LEDGER.md`, `docs/SHADOW_GENOME.md`, `docs/PROCESS_SHADOW_GENOME.md` | append-only ledgers | hash-chained / event log | **KEEP**, never trim |
 | `docs/49-rc1-evidence-closeout.md` | historical (earlier RC closeout) | docs index says "earlier" | **KEEP** as historical evidence |
@@ -97,23 +98,23 @@ All 369 pre-existing Markdown files pass the local link validator; no broken rel
 | Evidence-class taxonomy | README, docs/README, REPOSITORY_OPERATING_MODEL, AGENT_MEMORY_PROJECT_MODEL §9, BENCHMARK_COVERAGE_ATLAS §4, CONTRIBUTOR_ARCHITECTURE §5 | REPOSITORY_OPERATING_MODEL (repository classes) and Atlas §4 (benchmark provenance classes) | README reduced to one sentence; the rest are vocabulary definitions in their own contexts, **KEEP** |
 | Same-number documents | `47-developer-facade…` / `47-transactional-checkpoint-generations`; `50-keyed-rebinding…` / `50-swe-contextbench…`; `52-governed-cognitive-classification` / `52-harvest-closeout-final`; `66-pre-1.0-maturity…` / `66-rust-runtime-qualification…` | n/a | **REQUIRES OWNER DECISION**: renumbering breaks incoming links (47-transactional has 2, 66-pre-1.0 now 2); recommended: leave filenames, add a one-line disambiguation to the docs index (done for 66 pair), never renumber ADR-style evidence |
 
-## 5. Unlinked documents (99 at boundary; 81 after this PR)
+## 5. Unlinked documents (99 at boundary; 80 after this PR including the merged owner branches)
 
 Full list produced by the method in section 0. Dispositions:
 
 | Group | Count | Disposition |
 |---|---:|---|
 | Current-state docs that should be reachable: `65`, `66` ×2, `67`, `68`, `69`, `72`, `73`, `GAUNTLET_EXECUTION_ROADMAP`, `GAUNTLET_EXTERNAL_BENCHMARK_QUALIFICATION_2026-09-26`, `benchmark-evidence-console-catalog`, `CONFIGURATION`, `RUNTIME_IDENTITY_NAMING_BRIEF`, `prd/README`, `rfcs/README`, `explorations/*/README`, `programs/*/README`, `future/*`, `47-transactional…`, `50-keyed…`, `52-governed…`, `07`, `10`, `12`, `14` | 19 | ✅ **KEEP**, now linked from `docs/README.md` (the `07`/`14` status-line question in the row below remains an owner decision; linking them is navigation, not a status change) |
-| ADR-040 … ADR-043, ADR-003, ADR-007, ADR-028 Rust note | 7 | **REQUIRES OWNER DECISION**: ADR index is owner-only; ADR-003/007 are Accepted doctrine that the index's family narrative never cites |
+| ADR-003, ADR-007, ADR-028 Rust note | 3 | **REQUIRES OWNER DECISION**: ADR-003/007 are Accepted doctrine that the index's family narrative never cites; ADR-040 … ADR-043 are now listed by the owner's refreshed ADR index (merged) |
 | `docs/audits/**` (13 files at boundary) | 13 | **KEEP** as point-in-time evidence; reachable via the docs index "audits/" directory row; the doctrine validator deliberately excludes this directory |
 | `docs/profiles/*` (14 unlinked of 32) | 14 | **KEEP**: profiles are referenced by workflows/runners, not prose; a generated `docs/profiles/README.md` index is a CONSOLIDATE candidate for the evaluation lane |
 | `docs/programs/**` leaf pages (18) | 18 | **KEEP**; their program READMEs are linked from the docs index; leaf pages are reachable one hop down |
 | `docs/explorations/memory-architectures/*` leaf pages (6) | 6 | **KEEP**; README now linked |
-| `docs/plan-sprint2a…2n` (14), `plan-sprint3a`, `plan-sprint3d`, `plan-669-semantic-vector-route`, `research-brief-sprint3b/3c/3d/4/4c` | 21 | **ARCHIVE CANDIDATE** (see migration proposal A). Every one is referenced from `docs/META_LEDGER.md` entries by name, so they are provenance, not dead weight |
+| `docs/plan-sprint2a…2n` (14), `plan-sprint3a`, `plan-sprint3d`, `plan-669-semantic-vector-route`, `research-brief-sprint3b/3c/3d/4/4c`, plus three plans whose only link was the retired GOVERNANCE_INDEX Tier 4 table | 24 | **ARCHIVE CANDIDATE** (see migration proposal A). Every one is referenced from `docs/META_LEDGER.md` entries by name, so they are provenance, not dead weight; `ARCHITECTURE_INDEX.md` §3 files the whole `plan-*` / `research-brief-*` family as a collection |
 | `docs/07-integration-roadmap.md`, `14-expanded-scope-recommendations.md` | 2 | **REQUIRES OWNER DECISION** on their status lines: both read as early-phase roadmap/recommendations whose execution posture now lives in docs/68 and BACKLOG. Linked from the spine section with that wording; no status line was edited |
 | `docs/50-keyed-rebinding-currentness-benchmark.md`, `52-governed-cognitive-classification.md` | 2 | **KEEP**: implementation profiles for #483 and #490/#500 whose runners (`reference/run_keyed_rebinding_benchmark.py`, `contracts/cognitive_classification.py`) do not cite the document path; ✅ now indexed with same-number disambiguation |
 
-The 81 files still unlinked after this PR are exactly the ADR (7), audit (13), exploration-leaf (6), plan/brief (21), profile (14), program-leaf (18), and `docs/research/` leaf (2 of 6; the directory is linked) rows above, all intentionally left for owner decision or generated-index work. A directory link counts as reachable for humans but not for this script, which only follows file links.
+The 80 files still unlinked on the merged tree are exactly the ADR (3), audit (13), exploration-leaf (6), plan/brief (24), profile (14), program-leaf (18), and `docs/research/` leaf (2 of 6; the directory is linked) rows above, all intentionally left for owner decision or generated-index work. `ARCHITECTURE_INDEX.md` §3 registers every one of those directories as a collection with a retention rule, so each is reachable one hop from the catalog even where no page links the individual file. A directory link counts as reachable for humans but not for this script, which only follows file links.
 
 ## 6. Migration proposals (before / after, with incoming links verified)
 
@@ -139,6 +140,23 @@ No proposal below is executed in this PR.
 
 - **Before:** index narrative stops at ADR-039.
 - **After:** the same owner branch extends the index to ADR-043. No other file references change.
+
+## 6a. Cross-branch reconciliation and merge order
+
+Three docs-only branches touch the #797 front door. Measured at `3eebb6d`:
+
+| Branch | Head | Files | Overlap with the others |
+|---|---|---|---|
+| `claude/happy-mayer-q1l40c` (PR #798) | this PR | `README.md`, `BENCHMARKS.md`, `docs/README.md`, `docs/REPOSITORY_OPERATING_MODEL.md`, `docs/AGENT_MEMORY_PROJECT_MODEL.md`, `docs/future/distributed-runtime-roadmap.md`, two audits | none |
+| `docs/797-canonical-state-reconciliation-no-ci` (owner) | `c9eb258` | `docs/SYSTEM_STATE.md`, `docs/GOVERNANCE_INDEX.md`, `docs/FEATURE_INDEX.md`, `docs/adr/README.md`, `docs/CONCEPT.md`, `docs/64`, `docs/65` | none |
+| `docs/797-single-architecture-index-no-ci` (owner) | `41893a2` | `docs/ARCHITECTURE_INDEX.md` (new), one pointer in `docs/AGENTIC_MEMORY_SYSTEMS_CANONICAL_ARCHITECTURE.md` | none |
+
+Both owner branches were merged into PR #798 with ordinary merge commits (no rebase, no rewrite of owner commits) so the three could be validated as one tree: the front door now links `ARCHITECTURE_INDEX.md`, which only exists on the index branch, and the "current state" pointers resolve to the refreshed `SYSTEM_STATE.md`. Any of these landing orders is clean:
+
+1. Land PR #798 as is; it carries both owner branches as merge commits with their authorship intact. Simplest, one review.
+2. Land the two owner branches first (either order, they do not touch each other), then PR #798; its merge commits become no-ops.
+
+What must not happen: landing PR #798 without the index branch, which would leave the Theory entry point pointing at a missing file.
 
 ## 7. Validation performed and what CI does not cover
 
@@ -183,9 +201,9 @@ Neither formulation supersedes the other. The layers refine the roles; the roles
 
 ## 10. Owner decisions requested
 
-1. ~~ADR index: add ADR-040 … ADR-043 (Proposal D).~~ In progress on `docs/797-canonical-state-reconciliation-no-ci`.
-2. ~~Maintenance ledgers: one Tier 1 reconciliation commit (Proposal C).~~ In progress on the same branch.
-3. `CONTRIBUTING.md` line 3 and `wiki-src/Home.md` line 7 framing sentence (now also out of step with the #636 product-intent sentence the README carries).
+1. ~~ADR index: add ADR-040 … ADR-043 (Proposal D).~~ Done on `docs/797-canonical-state-reconciliation-no-ci`, merged into PR #798.
+2. ~~Maintenance ledgers: one Tier 1 reconciliation commit (Proposal C).~~ Done on the same branch, merged into PR #798.
+3. `CONTRIBUTING.md` line 3 and `wiki-src/Home.md` line 7 framing sentence (now also out of step with the #636 product-intent sentence the README and `CONCEPT.md` carry).
 4. Whether to open a tracking issue for the distributed-runtime roadmap, or leave it as a `docs/future/` proposal until a stage is funded.
 5. Same-number documents: accept index disambiguation instead of renumbering.
 6. `docs/07` and `docs/14` status lines: mark historical or keep as spine.
