@@ -6,15 +6,24 @@ by ``(fact_uuid, sha256(fact_text))`` and bound to one representation
 every vector is recomputed deterministically from canonical facts on demand.
 
 Integrity: the store lives inside the durable root's trust boundary (the same as the
-canonical SQLite file) and is created with mode 0600. Each row carries
+canonical SQLite file) and is created with mode 0600 inside a ``derived`` directory the
+runtime creates with mode 0700. Every open pins the directory and the file by descriptor
+(``O_NOFOLLOW``, ``openat``, ``fchmod``) and then verifies, through the process descriptor
+table where the platform exposes one, that the file SQLite opened is that pinned inode:
+SQLite resolves paths by name and offers no no-follow open through this binding, so the
+verification, not the open, is what keeps a swapped-in link from being acted on. The
+trust assumptions this needs are stated on ``_pin_entry``. Each row carries
 ``row_sha256 = sha256(config_digest | fact_uuid | content_sha256 | vector bytes)``. A
 row that fails its checksum is treated as a miss, recomputed and rewritten, and is
 counted. ``verify`` recomputes every row against the provider. A ``meta`` row binds
-the full ``config_digest``; any mismatch discards the file and starts over.
+the full ``config_digest``; a store of this format whose identity does not match is
+discarded and started over (our own rebuildable state), while a readable database of
+another format or version at our path is refused and never touched (``ForeignDerivedStore``).
 """
 
 from __future__ import annotations
 
+import errno
 import hashlib
 import math
 import os
@@ -51,6 +60,170 @@ def _content_sha256(text: str) -> str:
 
 _VECTOR_FILE = re.compile(r"^vectors-([0-9a-f]{16})\.sqlite$")
 _REQUIRED_COLUMNS = frozenset({"fact_uuid", "content_sha256", "vector", "row_sha256"})
+_STORE_FAMILY = STORE_FORMAT.rsplit("/", 1)[0] + "/"
+_O_NOFOLLOW = getattr(os, "O_NOFOLLOW", 0)
+_O_CLOEXEC = getattr(os, "O_CLOEXEC", 0)
+_O_DIRECTORY = getattr(os, "O_DIRECTORY", 0)
+#: Where this process can enumerate its own open descriptors (Linux, macOS, the BSDs).
+_DESCRIPTOR_TABLE = next((p for p in ("/proc/self/fd", "/dev/fd") if os.path.isdir(p)), None)
+_OPENAT = os.open in getattr(os, "supports_dir_fd", set())
+
+
+class UnsafeDerivedEntry(ValueError):
+    """A derived cache directory or file that must not be opened, read, written or unlinked.
+
+    Raised before any I/O through the entry: the directory or file is a symbolic link,
+    not a directory or regular file, owned by another user, or SQLite demonstrably opened
+    a different inode than the one pinned by descriptor.
+    """
+
+
+class ForeignDerivedStore(ValueError):
+    """A readable SQLite database under our name that is not a store of this format.
+
+    Another ``agent-memory-derived-vectors`` version, an unknown format or a foreign
+    schema. It is never initialised, reconciled or discarded by this runtime: it may be
+    another version's data, so the disposition is the owner's, and it is reported.
+    """
+
+
+def _descriptors_matching(identity: tuple[int, int]) -> set[int] | None:
+    """The descriptors of this process open on ``(st_dev, st_ino)``; None without a table."""
+    if _DESCRIPTOR_TABLE is None:
+        return None
+    matching: set[int] = set()
+    try:
+        names = os.listdir(_DESCRIPTOR_TABLE)
+    except OSError:
+        return None
+    for name in names:
+        try:
+            number = int(name)
+            status = os.fstat(number)
+        except (ValueError, OSError):
+            continue
+        if (status.st_dev, status.st_ino) == identity:
+            matching.add(number)
+    return matching
+
+
+def _pin_directory(directory: Path, *, create: bool) -> int:
+    """Open ``derived`` itself without following a link, and check it is ours.
+
+    Trust assumptions, stated rather than closed: the runtime root is the trust
+    boundary (the canonical SQLite file lives beside this directory). A principal who
+    can write to the root can swap ``derived`` for a link to a directory they own; the
+    ownership check below refuses a directory owned by another user, and the
+    descriptor-table verification in ``_connect_pinned`` refuses a file SQLite opened
+    that is not the pinned inode. Only a swap to a directory and file owned by the
+    runtime user itself, inside the root, remains indistinguishable from the real
+    cache, and that principal already owns the canonical database.
+    """
+    if directory.is_symlink():
+        raise UnsafeDerivedEntry(f"refusing symlinked derived vector cache directory: {directory}")
+    if create and not directory.exists():
+        try:
+            os.mkdir(directory, 0o700)
+        except FileExistsError:
+            pass
+    flags = os.O_RDONLY | _O_NOFOLLOW | _O_DIRECTORY | _O_CLOEXEC
+    try:
+        dir_fd = os.open(directory, flags)
+    except OSError as exc:
+        raise UnsafeDerivedEntry(f"refusing derived vector cache directory {directory}: {exc.strerror or exc}") from exc
+    try:
+        status = os.fstat(dir_fd)
+        if not stat.S_ISDIR(status.st_mode):
+            raise UnsafeDerivedEntry(f"refusing derived vector cache directory {directory}: not a directory")
+        if hasattr(os, "geteuid") and status.st_uid != os.geteuid():
+            raise UnsafeDerivedEntry(
+                f"refusing derived vector cache directory {directory}: owned by uid {status.st_uid}, "
+                f"not the runtime user {os.geteuid()}"
+            )
+        if stat.S_IMODE(status.st_mode) & 0o022 and hasattr(os, "fchmod"):
+            os.fchmod(dir_fd, 0o700)  # ours, and writable by others: tighten
+    except BaseException:
+        os.close(dir_fd)
+        raise
+    return dir_fd
+
+
+def _pin_entry(directory: Path, name: str, *, create: bool) -> tuple[int, os.stat_result]:
+    """Open ``directory/name`` as a regular file by descriptor, never through a link.
+
+    The directory is pinned first (``_pin_directory``) and the file is opened relative
+    to that descriptor with ``O_NOFOLLOW`` (``openat``), so neither component may be a
+    link at the moment of the open. With ``create`` the file is created ``0600`` and,
+    whether new or not, ``fchmod``-ed to ``0600`` through the descriptor (never through
+    the path). Returns the descriptor, which pins the inode against reuse, and its
+    ``fstat``.
+    """
+    dir_fd = _pin_directory(directory, create=create)
+    try:
+        flags = os.O_RDWR | _O_NOFOLLOW | _O_CLOEXEC | (os.O_CREAT if create else 0)
+        try:
+            if _OPENAT:
+                fd = os.open(name, flags, 0o600, dir_fd=dir_fd)
+            else:
+                fd = os.open(directory / name, flags, 0o600)
+        except OSError as exc:
+            if exc.errno in (getattr(errno, "ELOOP", None), getattr(errno, "EMLINK", None)):
+                raise UnsafeDerivedEntry(f"refusing a symlinked derived vector store: {directory / name}") from exc
+            raise
+    finally:
+        os.close(dir_fd)
+    try:
+        status = os.fstat(fd)
+        if not stat.S_ISREG(status.st_mode):
+            raise UnsafeDerivedEntry(f"refusing a derived vector store that is not a regular file: {directory / name}")
+        if create and hasattr(os, "fchmod"):
+            os.fchmod(fd, 0o600)
+    except BaseException:
+        os.close(fd)
+        raise
+    return fd, status
+
+
+def _connect_pinned(path: Path, status: os.stat_result, **connect_kwargs) -> sqlite3.Connection:
+    """Connect SQLite to ``path`` and verify it opened the pinned inode, before any I/O.
+
+    SQLite resolves the path by name. Where the process can enumerate its descriptors,
+    the connection is accepted only if a descriptor on the pinned ``(st_dev, st_ino)``
+    appeared during the connect: a link swapped in before the open, even one swapped
+    back out immediately after, leaves SQLite on another inode and is refused with the
+    connection closed and nothing read or written. Without a descriptor table the
+    fallback is the directory entry after the open: that detects a link still in place
+    but not one swapped in and back out, which is then covered only by the trust
+    assumptions on ``_pin_directory``. (A second thread of this process opening the
+    same store during the same instant could mask the check; both are this runtime.)
+    """
+    identity = (status.st_dev, status.st_ino)
+    before = _descriptors_matching(identity)
+    connection = sqlite3.connect(**connect_kwargs)
+    if before is not None:
+        after = _descriptors_matching(identity)
+        if after is not None and after - before:
+            return connection
+        if after is not None:
+            connection.close()
+            raise UnsafeDerivedEntry(f"SQLite opened a different file than the pinned derived store: {path}")
+    try:
+        entry = os.lstat(path)
+    except OSError as exc:
+        connection.close()
+        raise UnsafeDerivedEntry(f"derived store entry vanished during the open: {path}") from exc
+    if stat.S_ISLNK(entry.st_mode) or not stat.S_ISREG(entry.st_mode) or (entry.st_dev, entry.st_ino) != identity:
+        connection.close()
+        raise UnsafeDerivedEntry(f"derived store entry changed during the open: {path}")
+    return connection
+
+
+def _same_entry(path: Path, status: os.stat_result) -> bool:
+    try:
+        entry = os.lstat(path)
+    except OSError:
+        return False
+    return stat.S_ISREG(entry.st_mode) and (entry.st_dev, entry.st_ino) == (status.st_dev, status.st_ino)
 
 
 class DerivedCacheReconciliationError(RuntimeError):
@@ -71,23 +244,39 @@ class DerivedCacheReconciliationError(RuntimeError):
         self.result = result
 
 
-def _invalid_store(connection: sqlite3.Connection, bare_digest: str) -> str | None:
-    """Why this file is not a derived store of ours, or None when its identity checks out."""
+def _classify_store(connection: sqlite3.Connection, bare_digest: str) -> tuple[str, str | None]:
+    """``("ours", None)``, ``("discard", why)`` or ``("foreign", why)`` for an open database.
+
+    Reads only ``sqlite_master``, ``meta`` and ``PRAGMA table_info``; writes nothing.
+    ``discard`` is a damaged store of this format (or an empty, never initialised file):
+    rebuildable derived state of ours. ``foreign`` is a readable database that
+    identifies itself as something else: another ``agent-memory-derived-vectors``
+    version, an unknown format, or a schema without our tables. Foreign data is never
+    initialised, reconciled or unlinked by this runtime.
+    """
     tables = {row[0] for row in connection.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
+    if not tables:
+        return "discard", "empty database"
     if not {"meta", "vectors"} <= tables:
-        return "missing meta or vectors table"
+        return "foreign", "schema without meta and vectors tables"
+    columns = {row[1] for row in connection.execute("PRAGMA table_info(meta)")}
+    if not {"key", "value"} <= columns:
+        return "foreign", "meta schema is not ours"
     meta = dict(connection.execute("SELECT key, value FROM meta"))
+    fmt = str(meta.get("format", ""))
+    if fmt != STORE_FORMAT:
+        if fmt.startswith(_STORE_FAMILY):
+            return "foreign", f"store format {fmt!r} of another runtime version"
+        return "foreign", f"unknown store format {fmt!r}"
     digest = str(meta.get("config_digest", "")).split(":", 1)[-1]
-    columns = {row[1] for row in connection.execute("PRAGMA table_info(vectors)")}
-    if meta.get("format") != STORE_FORMAT:
-        return "unknown store format"
     if not digest.startswith(bare_digest):
-        return "config_digest does not match the file name"
+        return "discard", "config_digest does not match the file name"
     if not str(meta.get("dimensions", "")).isdigit():
-        return "invalid dimensions"
+        return "discard", "invalid dimensions"
+    columns = {row[1] for row in connection.execute("PRAGMA table_info(vectors)")}
     if not _REQUIRED_COLUMNS <= columns:
-        return "vectors schema is incomplete"
-    return None
+        return "discard", "vectors schema is incomplete"
+    return "ours", None
 
 
 def reconcile_derived_vector_stores(
@@ -105,15 +294,22 @@ def reconcile_derived_vector_stores(
     The function never raises for the state of an individual sidecar; it reports:
 
     * ``stores_checked`` / ``rows_purged``: valid stores reconciled and rows removed;
-    * ``stores_discarded``: regular files under our name pattern that are not readable
-      derived stores (corrupt, foreign schema, wrong identity). They are unlinked, the
-      same disposition ``DerivedVectorStore`` applies to its own damaged file, because
-      an unreadable store cannot be reconciled and discarding it is the only way to
-      remove whatever residue it holds;
+    * ``stores_discarded``: regular files under our name pattern that are damaged
+      stores of this format or not readable as a database at all (corrupt, empty,
+      wrong identity). They are unlinked, the same disposition ``DerivedVectorStore``
+      applies to its own damaged file, because such a store cannot be reconciled and
+      discarding it is the only way to remove whatever residue it holds;
+    * ``foreign``: readable databases under our name pattern that identify themselves
+      as something else (another ``agent-memory-derived-vectors`` version, an unknown
+      format, a schema without our tables). They are never initialised, reconciled or
+      unlinked: the data may be another version's, so the disposition is the owner's.
+      Residue cannot be ruled out there, so the status is ``"incomplete"``;
     * ``unsafe``: entries never touched or followed (symlinks, non-regular files, a
-      ``derived`` path that is not a directory);
+      ``derived`` path that is not a directory or not owned by the runtime user, a
+      file SQLite demonstrably opened other than the pinned one);
     * ``failed``: stores that could not be reconciled (locked, read-only, I/O error);
-    * ``status``: ``"complete"`` when nothing is unsafe or failed, else ``"incomplete"``.
+    * ``status``: ``"complete"`` when nothing is unsafe, foreign or failed, else
+      ``"incomplete"``.
 
     Callers decide the disposition: authorized permanent deletion treats anything but
     ``"complete"`` as residue to report, recovery records it and keeps the canonical
@@ -126,7 +322,7 @@ def reconcile_derived_vector_stores(
     ):
         raise ValueError("deleted_fact_uuid must be a non-empty string or None")
     report: dict = {"status": "complete", "stores_checked": 0, "rows_purged": 0,
-                    "stores_discarded": [], "unsafe": [], "failed": []}
+                    "stores_discarded": [], "foreign": [], "unsafe": [], "failed": []}
     directory = Path(root) / "derived"
     # An existing link to an external directory is not an Agent Memory cache root.
     # Check before exists(): dangling symlinks would otherwise look like no cache.
@@ -136,86 +332,91 @@ def reconcile_derived_vector_stores(
         return report
     if not directory.exists():
         return report
-    if not directory.is_dir():
+    try:
+        dir_fd = _pin_directory(directory, create=False)
+    except UnsafeDerivedEntry:
         report["unsafe"].append(str(directory))
         report["status"] = "incomplete"
         return report
+    try:
+        names = sorted(os.listdir(dir_fd) if os.listdir in os.supports_fd else os.listdir(directory))
+    finally:
+        os.close(dir_fd)
     allowed = {
         (str(uuid), _content_sha256(text))
         for uuid, text in canonical_texts.items()
     }
-    for path in sorted(directory.glob("vectors-*.sqlite")):
-        match = _VECTOR_FILE.fullmatch(path.name)
+    for name in names:
+        match = _VECTOR_FILE.fullmatch(name)
         if match is None:
             continue  # not a store of ours; never touched
+        path = directory / name
         try:
-            status = os.lstat(path)
-        except OSError as exc:
-            report["failed"].append([str(path), f"{type(exc).__name__}: {exc}"])
-            continue
-        if stat.S_ISLNK(status.st_mode) or not stat.S_ISREG(status.st_mode):
+            fd, status = _pin_entry(directory, name, create=False)
+        except UnsafeDerivedEntry:
             report["unsafe"].append(str(path))
             continue
-        try:
-            # ``mode=rw`` never creates a file. The open itself still follows a symlink
-            # swapped in between the lstat above and this call: SQLite resolves the path by
-            # name and exposes no no-follow option through the URI or this binding.
-            connection = sqlite3.connect(path.absolute().as_uri() + "?mode=rw", uri=True, timeout=5.0)
-        except sqlite3.Error as exc:
-            report["failed"].append([str(path), f"{type(exc).__name__}: {exc}"])
-            continue
-        # Re-check the directory entry now that the connection exists. An entry that is no
-        # longer the same regular file (a link swapped in before the open) is never read,
-        # purged or unlinked: the connection is closed and the entry reported unsafe. A
-        # swap in and back out between the open and this check is not detected; that
-        # window is inside the root's trust boundary and is documented, not claimed closed.
-        try:
-            after = os.lstat(path)
         except OSError as exc:
-            connection.close()
             report["failed"].append([str(path), f"{type(exc).__name__}: {exc}"])
-            continue
-        if (stat.S_ISLNK(after.st_mode) or not stat.S_ISREG(after.st_mode)
-                or (after.st_dev, after.st_ino, after.st_ctime_ns) != (status.st_dev, status.st_ino, status.st_ctime_ns)):
-            connection.close()
-            report["unsafe"].append(str(path))
             continue
         try:
             try:
-                reason = _invalid_store(connection, match.group(1))
-            except sqlite3.DatabaseError as exc:
-                if isinstance(exc, sqlite3.OperationalError):
-                    raise  # locked, I/O, permissions: a valid store we cannot read right now
-                reason = f"unreadable: {exc}"
-            if reason is not None:
-                connection.close()
-                path.unlink()
-                report["stores_discarded"].append([str(path), reason])
-                continue
-            connection.execute("PRAGMA secure_delete=ON")
-            rows = connection.execute("SELECT fact_uuid, content_sha256 FROM vectors").fetchall()
-            stale = [
-                (uuid, digest)
-                for uuid, digest in rows
-                if (uuid, digest) not in allowed or uuid == deleted_fact_uuid
-            ]
-            if stale:
-                connection.executemany(
-                    "DELETE FROM vectors WHERE fact_uuid = ? AND content_sha256 = ?",
-                    stale,
+                # ``mode=rw`` only keeps SQLite from creating a file; it does not stop the
+                # open from following a link. ``_connect_pinned`` verifies the inode.
+                connection = _connect_pinned(
+                    path, status,
+                    database=path.absolute().as_uri() + "?mode=rw", uri=True, timeout=5.0,
                 )
-                connection.commit()
-            report["stores_checked"] += 1
-            report["rows_purged"] += len(stale)
-        except (sqlite3.Error, OSError) as exc:
+            except UnsafeDerivedEntry:
+                report["unsafe"].append(str(path))
+                continue
+            except sqlite3.Error as exc:
+                report["failed"].append([str(path), f"{type(exc).__name__}: {exc}"])
+                continue
             try:
-                connection.rollback()
-            except sqlite3.Error:
-                pass
-            report["failed"].append([str(path), f"{type(exc).__name__}: {exc}"])
+                try:
+                    disposition, reason = _classify_store(connection, match.group(1))
+                except sqlite3.DatabaseError as exc:
+                    if isinstance(exc, sqlite3.OperationalError):
+                        raise  # locked, I/O, permissions: a valid store we cannot read right now
+                    disposition, reason = "discard", f"unreadable: {exc}"
+                if disposition == "foreign":
+                    report["foreign"].append([str(path), reason])
+                    continue
+                if disposition == "discard":
+                    connection.close()
+                    if _same_entry(path, status):
+                        path.unlink()
+                        report["stores_discarded"].append([str(path), reason])
+                    else:
+                        report["unsafe"].append(str(path))
+                    continue
+                connection.execute("PRAGMA secure_delete=ON")
+                rows = connection.execute("SELECT fact_uuid, content_sha256 FROM vectors").fetchall()
+                stale = [
+                    (uuid, digest)
+                    for uuid, digest in rows
+                    if (uuid, digest) not in allowed or uuid == deleted_fact_uuid
+                ]
+                if stale:
+                    connection.executemany(
+                        "DELETE FROM vectors WHERE fact_uuid = ? AND content_sha256 = ?",
+                        stale,
+                    )
+                    connection.commit()
+                report["stores_checked"] += 1
+                report["rows_purged"] += len(stale)
+            except (sqlite3.Error, OSError) as exc:
+                try:
+                    connection.rollback()
+                except sqlite3.Error:
+                    pass
+                report["failed"].append([str(path), f"{type(exc).__name__}: {exc}"])
+            finally:
+                connection.close()
         finally:
-            connection.close()
-    if report["unsafe"] or report["failed"]:
+            os.close(fd)
+    if report["unsafe"] or report["foreign"] or report["failed"]:
         report["status"] = "incomplete"
     return report
 
@@ -228,17 +429,9 @@ class DerivedVectorStore:
             raise ValueError("a derived vector store needs a config_digest and positive dimensions")
         self.config_digest = config_digest
         self.dimensions = dimensions
-        directory = Path(root) / "derived"
-        # Active retrieval constructs the cache before recovery reconciliation.
-        # Refuse a linked cache directory here too: checking only the database
-        # leaf would allow os.chmod() and sqlite3.connect() outside this root.
-        if directory.is_symlink():
-            raise ValueError(f"refusing symlinked derived vector cache directory: {directory}")
-        directory.mkdir(parents=True, exist_ok=True)
-        if directory.is_symlink():
-            raise ValueError(f"refusing symlinked derived vector cache directory: {directory}")
+        self.directory = Path(root) / "derived"
         bare = config_digest.split(":", 1)[-1]
-        self.path = directory / f"vectors-{bare[:16]}.sqlite"
+        self.path = self.directory / f"vectors-{bare[:16]}.sqlite"
         self.checksum_failures = 0
         self.rows_written = 0
         self._connection = self._open()
@@ -246,37 +439,63 @@ class DerivedVectorStore:
     # lifecycle ------------------------------------------------------------------
 
     def _open(self) -> sqlite3.Connection:
-        if self.path.is_symlink():
-            raise ValueError(f"refusing a symlinked derived vector store: {self.path}")
-        existed = self.path.exists()
-        if not existed:
-            fd = os.open(self.path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
-            os.close(fd)
-        os.chmod(self.path, 0o600)
-        connection = sqlite3.connect(self.path, check_same_thread=False)
+        """Open or create the store by pinned descriptor; never initialise foreign data.
+
+        Raises ``UnsafeDerivedEntry`` (the directory or file is a link, not ours, or
+        SQLite opened another inode) and ``ForeignDerivedStore`` (a readable database of
+        another format at our path) before any write. Both are ``ValueError``; the
+        facade degrades the semantic route in ``auto`` mode and refuses in ``required``.
+        """
+        fd, status = _pin_entry(self.directory, self.path.name, create=True)
         try:
-            # Freed cells (replaced rows, purged orphans) are zeroed inside the file (#802).
+            connection = _connect_pinned(self.path, status, database=str(self.path), check_same_thread=False)
+        finally:
+            os.close(fd)
+        try:
+            try:
+                disposition, reason = _classify_store(connection, self.path.name[len("vectors-"):-len(".sqlite")])
+            except sqlite3.DatabaseError as exc:
+                if isinstance(exc, sqlite3.OperationalError):
+                    raise
+                disposition, reason = "discard", f"unreadable: {exc}"
+            if disposition == "foreign":
+                raise ForeignDerivedStore(f"refusing to touch a foreign derived store at {self.path}: {reason}")
+            if disposition == "discard" and reason != "empty database":
+                connection.close()
+                return self._discard_and_reopen(status)
+            if disposition == "ours":
+                meta = dict(connection.execute("SELECT key, value FROM meta").fetchall())
+                expected = {"format": STORE_FORMAT, "config_digest": self.config_digest,
+                            "dimensions": str(self.dimensions)}
+                if meta != expected:
+                    connection.close()
+                    return self._discard_and_reopen(status)
+            else:  # an empty, never initialised file of ours
+                # Freed cells (replaced rows, purged orphans) are zeroed inside the file (#802).
+                connection.execute("PRAGMA secure_delete=ON")
+                connection.execute("CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT NOT NULL)")
+                connection.execute(
+                    "CREATE TABLE vectors (fact_uuid TEXT NOT NULL, content_sha256 TEXT NOT NULL, "
+                    "vector BLOB NOT NULL, row_sha256 TEXT NOT NULL, PRIMARY KEY (fact_uuid, content_sha256))"
+                )
+                connection.executemany(
+                    "INSERT INTO meta (key, value) VALUES (?, ?)",
+                    sorted({"format": STORE_FORMAT, "config_digest": self.config_digest,
+                            "dimensions": str(self.dimensions)}.items()),
+                )
+                connection.commit()
             connection.execute("PRAGMA secure_delete=ON")
-            connection.execute("CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT NOT NULL)")
-            connection.execute(
-                "CREATE TABLE IF NOT EXISTS vectors (fact_uuid TEXT NOT NULL, content_sha256 TEXT NOT NULL, "
-                "vector BLOB NOT NULL, row_sha256 TEXT NOT NULL, PRIMARY KEY (fact_uuid, content_sha256))"
-            )
-            meta = dict(connection.execute("SELECT key, value FROM meta").fetchall())
-        except sqlite3.DatabaseError:
+        except BaseException:
             connection.close()
-            return self._discard_and_reopen()
-        expected = {"format": STORE_FORMAT, "config_digest": self.config_digest, "dimensions": str(self.dimensions)}
-        if meta and meta != expected:
-            connection.close()
-            return self._discard_and_reopen()
-        if not meta:
-            connection.executemany("INSERT INTO meta (key, value) VALUES (?, ?)", sorted(expected.items()))
-            connection.commit()
+            raise
         return connection
 
-    def _discard_and_reopen(self) -> sqlite3.Connection:
-        self.path.unlink(missing_ok=True)
+    def _discard_and_reopen(self, status: os.stat_result) -> sqlite3.Connection:
+        """Unlink our own damaged store (only while the entry is still that inode) and recreate it."""
+        if _same_entry(self.path, status):
+            self.path.unlink(missing_ok=True)
+        else:
+            raise UnsafeDerivedEntry(f"derived store entry changed during the open: {self.path}")
         return self._open()
 
     def close(self) -> None:
@@ -394,4 +613,5 @@ class DerivedVectorStore:
         }
 
 
-__all__ = ["DerivedVectorStore", "STORE_FORMAT", "float32_canonical", "reconcile_derived_vector_stores", "DerivedCacheReconciliationError"]
+__all__ = ["DerivedVectorStore", "STORE_FORMAT", "float32_canonical", "reconcile_derived_vector_stores",
+           "DerivedCacheReconciliationError", "UnsafeDerivedEntry", "ForeignDerivedStore"]

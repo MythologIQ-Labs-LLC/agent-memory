@@ -15,8 +15,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from agentmem_ref.runtime.representation_cache import (  # noqa: E402
-    DerivedVectorStore, DerivedCacheReconciliationError, float32_canonical,
-    reconcile_derived_vector_stores,
+    DerivedVectorStore, DerivedCacheReconciliationError, ForeignDerivedStore, UnsafeDerivedEntry,
+    float32_canonical, reconcile_derived_vector_stores,
 )
 
 DIGEST = "sha256:" + "ab" * 32
@@ -242,31 +242,175 @@ class DerivedVectorStoreTests(unittest.TestCase):
         self.assertEqual(target.read_bytes(), b"not an agent-memory store")
         link.unlink()
 
-    def test_reconcile_derived_root_discards_unreadable_or_foreign_stores_and_reports(self):
+    def test_reconcile_discards_unreadable_stores_and_keeps_foreign_ones_reported(self):
+        """Damaged or unreadable files under our name are ours to discard (rebuildable); a
+        readable database of another format or version is never touched: it may be another
+        version's data, so it is reported ``foreign`` and the status is incomplete."""
         self.store.vector_for("orphan", "stale text", self.embed)
         self.store._connection.execute("UPDATE meta SET value = 'invalid' WHERE key = 'format'")
         self.store._connection.commit()
         self.store.close()
+        tampered_bytes = self.store.path.read_bytes()
         garbage = Path(self.root) / "derived" / ("vectors-" + "dd" * 8 + ".sqlite")
         garbage.write_bytes(b"\x00garbage" * 128)
         foreign = Path(self.root) / "derived" / ("vectors-" + "ee" * 8 + ".sqlite")
         sqlite3.connect(foreign).execute("CREATE TABLE other (x)").connection.close()
+        foreign_bytes = foreign.read_bytes()
         stray = Path(self.root) / "derived" / "vectors-not-ours.sqlite"
         stray.write_bytes(b"stray")
         report = reconcile_derived_vector_stores(self.root, {})
-        # An unreadable derived store cannot be reconciled: it is discarded (rebuildable,
-        # never authority) so its residue goes with it; a stray name is not ours and stays.
-        self.assertEqual(report["status"], "complete")
+        self.assertEqual(report["status"], "incomplete")
         self.assertEqual(report["stores_checked"], 0)
+        self.assertEqual(report["stores_discarded"], [[str(garbage), "unreadable: file is not a database"]])
+        self.assertFalse(garbage.exists())
         self.assertEqual(
-            sorted(path for path, _reason in report["stores_discarded"]),
-            sorted(str(path) for path in (self.store.path, garbage, foreign)),
+            sorted(report["foreign"]),
+            sorted([[str(self.store.path), "unknown store format 'invalid'"],
+                    [str(foreign), "schema without meta and vectors tables"]]),
         )
-        for path in (self.store.path, garbage, foreign):
-            self.assertFalse(path.exists())
+        self.assertEqual(report["unsafe"], [])
+        self.assertEqual(self.store.path.read_bytes(), tampered_bytes)
+        self.assertEqual(foreign.read_bytes(), foreign_bytes)
         self.assertEqual(stray.read_bytes(), b"stray")
+        # The active store does not discard foreign data at its own path either.
+        with self.assertRaises(ForeignDerivedStore):
+            DerivedVectorStore(self.root, DIGEST, 3)
+        self.assertEqual(self.store.path.read_bytes(), tampered_bytes)
+        self.store.path.unlink()
         self.store = DerivedVectorStore(self.root, DIGEST, 3)
         self.assertEqual(self.store.row_count(), 0)
+
+    def test_reconcile_keeps_another_runtime_versions_store_and_reports_it_foreign(self):
+        other = Path(self.root) / "derived" / ("vectors-" + "ff" * 8 + ".sqlite")
+        connection = sqlite3.connect(other)
+        connection.execute("CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT NOT NULL)")
+        connection.execute("CREATE TABLE vectors (fact_uuid TEXT, content_sha256 TEXT, vector BLOB, "
+                           "row_sha256 TEXT, extra TEXT)")
+        connection.executemany("INSERT INTO meta VALUES (?, ?)", [
+            ("format", "agent-memory-derived-vectors/2.0.0"), ("config_digest", "sha256:" + "ff" * 32),
+            ("dimensions", "3")])
+        connection.execute("INSERT INTO vectors VALUES ('newer-fact', 'x', X'00', 'y', 'z')")
+        connection.commit()
+        connection.close()
+        before = other.read_bytes()
+        report = reconcile_derived_vector_stores(self.root, {})
+        self.assertEqual(report["status"], "incomplete")
+        self.assertEqual(report["foreign"],
+                         [[str(other), "store format 'agent-memory-derived-vectors/2.0.0' of another runtime version"]])
+        self.assertEqual(report["stores_discarded"], [])
+        self.assertEqual(report["rows_purged"], 0)
+        self.assertEqual(other.read_bytes(), before)
+
+    def test_active_store_never_initialises_a_readable_foreign_database_at_its_path(self):
+        self.store.close()
+        self.store.path.unlink()
+        connection = sqlite3.connect(self.store.path)
+        connection.execute("CREATE TABLE other (x)")
+        connection.execute("INSERT INTO other VALUES (1)")
+        connection.commit()
+        connection.close()
+        before = self.store.path.read_bytes()
+        with self.assertRaisesRegex(ForeignDerivedStore, "schema without meta and vectors tables"):
+            DerivedVectorStore(self.root, DIGEST, 3)
+        self.assertEqual(self.store.path.read_bytes(), before)
+        check = sqlite3.connect(self.store.path)
+        try:
+            self.assertEqual([r[0] for r in check.execute("SELECT name FROM sqlite_master")], ["other"])
+        finally:
+            check.close()
+        self.store.path.unlink()
+        self.store = DerivedVectorStore(self.root, DIGEST, 3)
+
+    def test_reconcile_refuses_parent_directory_swapped_in_and_back_out_around_the_open(self):
+        """The directory entry is intact before and after the open; only during SQLite's own
+        open does ``derived`` point at an external cache directory. The leaf inode's change
+        time never moves, so an entry re-check cannot see it: the descriptor-table
+        verification must, and nothing may be read, purged or unlinked outside the root."""
+        import sqlite3 as _sqlite3
+        from agentmem_ref.runtime import representation_cache as module
+        self.store.vector_for("mine", "own text", self.embed)
+        self.store.close()
+        with tempfile.TemporaryDirectory() as other_root:
+            outside = DerivedVectorStore(other_root, DIGEST, 3)
+            outside.vector_for("foreign-fact", "external payload", self.embed)
+            outside.close()
+            derived = Path(self.root) / "derived"
+            real_connect = _sqlite3.connect
+
+            def swap_around_connect(*args, **kwargs):
+                os.rename(derived, derived.with_name("derived.real"))
+                derived.symlink_to(Path(other_root) / "derived", target_is_directory=True)
+                try:
+                    return real_connect(*args, **kwargs)
+                finally:
+                    derived.unlink()
+                    os.rename(derived.with_name("derived.real"), derived)
+
+            with patch.object(module.sqlite3, "connect", side_effect=swap_around_connect):
+                report = reconcile_derived_vector_stores(self.root, {})
+            self.assertEqual(report["status"], "incomplete")
+            self.assertEqual(report["unsafe"], [str(self.store.path)])
+            self.assertEqual(report["rows_purged"], 0)
+            self.assertEqual(report["stores_discarded"], [])
+            check = real_connect(outside.path)
+            try:
+                self.assertEqual(check.execute("SELECT fact_uuid FROM vectors").fetchall(), [("foreign-fact",)])
+            finally:
+                check.close()
+        self.store = DerivedVectorStore(self.root, DIGEST, 3)
+        self.assertEqual(self.store.row_count(), 1)
+
+    def test_active_store_open_refuses_a_leaf_link_swapped_in_around_the_open_without_chmod_or_writes(self):
+        """A link to an external database swapped in while SQLite opens the active store
+        must be refused before any statement: no table is created in the external file,
+        and its mode is not changed (chmod goes through the pinned descriptor only)."""
+        import sqlite3 as _sqlite3
+        from agentmem_ref.runtime import representation_cache as module
+        self.store.close()
+        with tempfile.TemporaryDirectory() as other_root:
+            external = Path(other_root) / "external.sqlite"
+            connection = _sqlite3.connect(external)
+            connection.execute("CREATE TABLE other (x)")
+            connection.commit()
+            connection.close()
+            os.chmod(external, 0o644)
+            before = external.read_bytes()
+            real_connect = _sqlite3.connect
+            victim = self.store.path
+
+            def swap_then_connect(*args, **kwargs):
+                victim.unlink()
+                victim.symlink_to(external)
+                return real_connect(*args, **kwargs)
+
+            with patch.object(module.sqlite3, "connect", side_effect=swap_then_connect):
+                with self.assertRaises(UnsafeDerivedEntry):
+                    DerivedVectorStore(self.root, DIGEST, 3)
+            self.assertEqual(external.read_bytes(), before)
+            self.assertEqual(stat.S_IMODE(os.stat(external).st_mode), 0o644)
+            self.assertTrue(victim.is_symlink())
+            victim.unlink()
+        self.store = DerivedVectorStore(self.root, DIGEST, 3)
+
+    @unittest.skipUnless(hasattr(os, "geteuid") and os.geteuid() == 0, "needs root to chown")
+    def test_reconcile_and_open_refuse_a_derived_directory_owned_by_another_user(self):
+        self.store.vector_for("mine", "own text", self.embed)
+        self.store.close()
+        derived = Path(self.root) / "derived"
+        os.chown(derived, 65534, 65534)
+        try:
+            report = reconcile_derived_vector_stores(self.root, {})
+            self.assertEqual(report["status"], "incomplete")
+            self.assertEqual(report["unsafe"], [str(derived)])
+            with self.assertRaisesRegex(UnsafeDerivedEntry, "owned by uid 65534"):
+                DerivedVectorStore(self.root, DIGEST, 3)
+        finally:
+            os.chown(derived, os.geteuid(), os.getegid())
+        self.store = DerivedVectorStore(self.root, DIGEST, 3)
+        self.assertEqual(self.store.row_count(), 1)
+
+    def test_derived_directory_is_created_private(self):
+        self.assertEqual(stat.S_IMODE(os.stat(Path(self.root) / "derived").st_mode), 0o700)
 
     def test_reconcile_reports_a_store_it_cannot_write_without_discarding_it(self):
         self.store.vector_for("orphan", "stale text", self.embed)

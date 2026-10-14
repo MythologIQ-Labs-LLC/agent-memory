@@ -369,11 +369,12 @@ class SemanticSidecarLifecycleTests(unittest.TestCase):
             derived = root / "derived"
             garbage = derived / ("vectors-" + "11" * 8 + ".sqlite")
             garbage.write_bytes(b"not a sqlite database " * 64)
-            bad_meta = DerivedVectorStore(root, "sha256:" + "22" * 32, 3)
-            bad_meta.vector_for(deleted_ref, "The dog is Biscuit.", _OfflineRepresentation().embed)
-            bad_meta._connection.execute("UPDATE meta SET value = 'tampered' WHERE key = 'format'")
-            bad_meta._connection.commit()
-            bad_meta.close()
+            stale = DerivedVectorStore(root, "sha256:" + "22" * 32, 3)
+            stale.vector_for(deleted_ref, "The dog is Biscuit.", _OfflineRepresentation().embed)
+            stale._connection.execute("UPDATE meta SET value = 'sha256:' || ? WHERE key = 'config_digest'",
+                                      ("99" * 32,))
+            stale._connection.commit()
+            stale.close()
             stray = derived / "vectors-not-a-digest.sqlite"
             stray.write_bytes(b"stray")
             # An unrelated derived file must never block the canonical runtime.
@@ -381,14 +382,74 @@ class SemanticSidecarLifecycleTests(unittest.TestCase):
                 self.assertIn(control_ref, recovered.recall("budget")["admitted"])
                 report = recovered.semantic_retrieval_posture()["derived_reconciliation"]
                 self.assertEqual(report["status"], "complete")
+                self.assertEqual(report["foreign"], [])
                 _authorized_permanent_forget(recovered)
                 self.assertEqual(_stored_fact_refs(cache_path), {control_ref})
-            # Unreadable derived stores are discarded: they are rebuildable, never authority,
-            # and discarding them is the only way their residue can be removed.
+            # Unreadable or mis-identified stores of our own format are discarded: they are
+            # rebuildable, never authority, and discarding them removes their residue.
             self.assertFalse(garbage.exists())
-            self.assertFalse(bad_meta.path.exists())
-            # A stray file that is not a derived store of ours is left alone and reported.
+            self.assertFalse(stale.path.exists())
+            # A stray file that is not a derived store of ours is left alone.
             self.assertEqual(stray.read_bytes(), b"stray")
+
+    def test_another_versions_sidecar_is_kept_and_permanent_deletion_is_loud(self) -> None:
+        """A readable store of another ``agent-memory-derived-vectors`` version (or any
+        foreign format) under our name is never discarded or reconciled: recovery stays
+        available and reports it, and an authorized permanent forget raises because
+        residue in that file cannot be ruled out. Nothing in it changes."""
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            with _provider(), _open(root) as memory:
+                deleted_ref, control_ref, cache_path = _seed_cached_facts(memory)
+            newer = DerivedVectorStore(root, "sha256:" + "22" * 32, 3)
+            newer.vector_for(deleted_ref, "The dog is Biscuit.", _OfflineRepresentation().embed)
+            newer._connection.execute("UPDATE meta SET value = 'agent-memory-derived-vectors/2.0.0' WHERE key = 'format'")
+            newer._connection.commit()
+            newer.close()
+            before = newer.path.read_bytes()
+            with _provider(), _open(root) as recovered:
+                self.assertIn(control_ref, recovered.recall("budget")["admitted"])
+                report = recovered.semantic_retrieval_posture()["derived_reconciliation"]
+                self.assertEqual(report["status"], "incomplete")
+                self.assertEqual(report["foreign"], [[str(newer.path),
+                                 "store format 'agent-memory-derived-vectors/2.0.0' of another runtime version"]])
+                with self.assertRaises(DerivedCacheReconciliationError) as caught:
+                    _authorized_permanent_forget(recovered)
+                self.assertTrue(caught.exception.canonical_committed)
+                self.assertEqual(caught.exception.report["foreign"][0][0], str(newer.path))
+                self.assertEqual(_canonical_fact_refs(root), {control_ref})
+                self.assertEqual(_stored_fact_refs(cache_path), {control_ref})
+            self.assertEqual(newer.path.read_bytes(), before)
+
+    def test_symlinked_derived_directory_degrades_auto_and_refuses_required_before_external_io(self) -> None:
+        """The active route constructs the store before recovery reconciliation. A linked
+        ``derived`` directory is refused at construction, before any chmod, open or write
+        in the external directory: ``auto`` keeps the canonical runtime on the lexical route
+        and records why; ``required`` raises, as it does for a missing model."""
+        with tempfile.TemporaryDirectory() as folder, tempfile.TemporaryDirectory() as other:
+            root, other_root = Path(folder), Path(other)
+            with _provider(), _open(other_root) as external:
+                _seed_cached_facts(external)
+                external_path = Path(external.semantic_retrieval_posture()["store"]["path"])
+            external_bytes = external_path.read_bytes()
+            external_mode = os.stat(external_path).st_mode
+            with _provider(), _open(root, semantic_retrieval="off") as memory:
+                memory.remember(TARGET, "The dog is Biscuit.")
+                control_ref = memory.remember(CONTROL, "The budget has been approved.")["fact_uuid"]
+            (root / "derived").symlink_to(other_root / "derived", target_is_directory=True)
+            with self.assertRaisesRegex(ValueError, "symlinked derived vector cache directory"), _provider():
+                _open(root, semantic_retrieval="required")
+            with _provider(), _open(root, semantic_retrieval="auto") as degraded:
+                posture = degraded.semantic_retrieval_posture()
+                self.assertEqual(posture["status"], "disabled")
+                self.assertIn("derived store refused", posture["reason"])
+                self.assertIn("symlinked derived vector cache directory", posture["reason"])
+                self.assertIn(control_ref, degraded.recall("budget")["admitted"])
+                self.assertEqual(posture["derived_reconciliation"]["status"], "incomplete")
+                self.assertEqual(posture["derived_reconciliation"]["unsafe"], [str(root / "derived")])
+            self.assertEqual(external_path.read_bytes(), external_bytes)
+            self.assertEqual(os.stat(external_path).st_mode, external_mode)
+            self.assertEqual(sorted(p.name for p in (other_root / "derived").iterdir()), [external_path.name])
 
     def test_symlinked_sidecar_is_never_followed_and_deletion_reports_residue(self) -> None:
         with tempfile.TemporaryDirectory() as folder:

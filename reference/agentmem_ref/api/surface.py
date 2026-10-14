@@ -374,7 +374,16 @@ def _semantic_route(root: Path, mode: str, representation_dir: str | Path | None
         if mode == "required":
             raise
         return {"status": "disabled", "mode": mode, "reason": f"unavailable: {exc}", "retriever": None}
-    store = DerivedVectorStore(root, provider.spec.config_digest, provider.spec.dimensions)
+    try:
+        store = DerivedVectorStore(root, provider.spec.config_digest, provider.spec.dimensions)
+    except ValueError as exc:
+        # #802/#804: the derived cache directory or file is refused before any I/O through
+        # it (a link, another owner, a foreign database, an inode SQLite did not pin).
+        # Derived state is never authority: ``auto`` keeps the canonical runtime and the
+        # lexical route and records why; ``required`` refuses, as it does for the model.
+        if mode == "required":
+            raise
+        return {"status": "disabled", "mode": mode, "reason": f"derived store refused: {exc}", "retriever": None}
     retriever = NativeVectorCandidateRetriever(
         provider, minimum_similarity=SEMANTIC_MINIMUM_SIMILARITY, store=store
     )
@@ -430,7 +439,7 @@ class AgentMemory:
         self._proposition_extractor = _checked_extractor(proposition_extractor)
         # #802: the latest derived-sidecar reconciliation report (recovery or deletion).
         self._derived_reconciliation: dict = {"status": "complete", "stores_checked": 0, "rows_purged": 0,
-                                              "stores_discarded": [], "unsafe": [], "failed": [], "pending": []}
+                                              "stores_discarded": [], "foreign": [], "unsafe": [], "failed": [], "pending": []}
 
     @classmethod
     def open(
@@ -539,7 +548,7 @@ class AgentMemory:
             reconciliation = cls._reconcile_cached_representations(root, runtime)
         except Exception as exc:  # unexpected: the report, not the exception, carries it
             reconciliation = {"status": "incomplete", "stores_checked": 0, "rows_purged": 0,
-                              "stores_discarded": [], "unsafe": [],
+                              "stores_discarded": [], "foreign": [], "unsafe": [],
                               "failed": [[str(root / "derived"), f"{type(exc).__name__}: {exc}"]]}
         reconciliation["pending"] = []
         handle = cls(
@@ -1211,7 +1220,7 @@ class AgentMemory:
             except Exception as exc:
                 cause = exc
                 report = {"status": "incomplete", "stores_checked": 0, "rows_purged": 0,
-                          "stores_discarded": [], "unsafe": [],
+                          "stores_discarded": [], "foreign": [], "unsafe": [],
                           "failed": [[str(self.root / "derived"), f"{type(exc).__name__}: {exc}"]]}
             complete = report["status"] == "complete"
             report["pending"] = [] if complete else [outcome.fact_uuid]
