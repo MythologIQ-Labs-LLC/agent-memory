@@ -1,6 +1,6 @@
 # LongMemEval Retrieval and Currentness Profile
 
-Status: bounded external benchmark profile for #516 under #498/#519.
+Status: **REVISION-BOUND** bounded external benchmark profile for #516 under #498/#519, first executed 2026-09-25. The run-status and scores below refer to that original execution boundary; for later accepted LongMemEval_S/M evidence, consult the [current benchmark dashboard](../../reports/benchmarks/dashboard/current.md).
 
 ## Source binding
 
@@ -100,14 +100,16 @@ PYTHONPATH=reference python reference/run_longmemeval.py \
 
 `external_frozen` only means that the supplied artifact is treated as a frozen external input. It does not claim paper-result reproduction or QA parity.
 
-## Execution status
+## Execution status at the original 2026-09-25 boundary (historical)
+
+Later accepted LongMemEval_M execution is recorded in the canonical [dashboard](../../reports/benchmarks/dashboard/current.md). It is **not** `NOT RUN` in the current portfolio. Do not mistake this historical table for a live status register.
 
 | Run | Status |
 | --- | --- |
 | Synthetic smoke | COMPLETE (conformance only) |
 | LongMemEval_S deterministic subset (50) | COMPLETE (integration shakedown; not the headline) |
 | LongMemEval_S full (500) | **COMPLETE** |
-| LongMemEval_M | NOT RUN |
+| LongMemEval_M | NOT RUN **at this original execution boundary only**; later completed, see dashboard |
 | Upstream QA (model-judged) | NOT RUN (no reader/judge credentials provisioned) |
 | Store size on disk | NOT MEASURED (per-question stores are temporary) |
 

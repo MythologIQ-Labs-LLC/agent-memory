@@ -162,4 +162,4 @@ Anything else leaves the active queue and is reopened when it becomes executable
 
 ---
 
-_Last reconciled against `main` `2d852d3814333a998aec40113c71f29b26ad8aa4` on 2026-10-07._
+_Queue wording and v4 qualification contradiction last reconciled 2026-10-14 against `main` `38f6a7dcc358e8ee50a38d703b0addb9d8e660d7`; open-issue status still belongs to GitHub. Historical owner rulings are not re-dated._

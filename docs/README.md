@@ -16,7 +16,7 @@ The product intent is governed, hierarchical, heterogeneous multi-system memory 
 | **Benchmarks** | evaluators running controlled comparisons, inspecting evidence, or bringing a system or a benchmark | [`../BENCHMARKS.md`](../BENCHMARKS.md) | [`../reports/benchmarks/dashboard/current.md`](../reports/benchmarks/dashboard/current.md), [`BENCHMARK_COVERAGE_ATLAS.md`](BENCHMARK_COVERAGE_ATLAS.md), [`CONTRIBUTOR_ARCHITECTURE.md`](CONTRIBUTOR_ARCHITECTURE.md) |
 | **Runtime** | builders integrating governed memory | [`47-developer-facade-and-local-open-path.md`](47-developer-facade-and-local-open-path.md) | [`45-agent-memory-rc1-implementation-profile.md`](45-agent-memory-rc1-implementation-profile.md), [`43-substrate-inventory-and-maturity.md`](43-substrate-inventory-and-maturity.md), [`future/distributed-runtime-roadmap.md`](future/distributed-runtime-roadmap.md) (proposed, not implemented) |
 
-The entry points are the repository's three operational roles. The project is also partitioned into a five-layer model; the two are reconciled in [#565](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/565) and summarised under "Repository operating model" below.
+The entry points are the repository's three operational roles. The proposed five-layer project partition has a different purpose, reconciled in [#565](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/565). The owning explanations are [REPOSITORY_OPERATING_MODEL.md](REPOSITORY_OPERATING_MODEL.md) and [AGENT_MEMORY_PROJECT_MODEL.md](AGENT_MEMORY_PROJECT_MODEL.md); this navigation index does not maintain a third summary.
 
 Start with [`REPOSITORY_OPERATING_MODEL.md`](REPOSITORY_OPERATING_MODEL.md) if you are unsure which role a document, issue, or contribution belongs to.
 
