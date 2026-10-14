@@ -2,7 +2,7 @@
 
 **[Conformance and Evidence](Conformance-and-Evidence)** describes the evidence ladder. This page records where Agent Memory actually stands on it.
 
-The distinction this page exists to protect: a repository can validate perfectly and still have demonstrated nothing about runtime behavior. Everything below is labelled by what it genuinely establishes.
+The distinction this page exists to protect: a repository can validate perfectly and still have demonstrated nothing about runtime behavior. The examples below are **revision-bound evidence**, not a current-product qualification or a continuously maintained maturity ledger. For live claims use the [runtime baseline register](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/runtime/baseline-register.json) and [current benchmark dashboard](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/dashboard/current.md).
 
 ## The evidence bar
 
@@ -50,7 +50,7 @@ Stated plainly, because a partial result presented as a complete one is worse th
 - The reference adapter remains a narrow evidence vehicle rather than a production Agent Memory implementation.
 - Retrieval-quality calibration, production trust discovery, universal key/revocation infrastructure, and physical-media erasure are not established by P4/P4.5.
 - P4.5 does not establish upstream AgenTrust integration acceptance or multi-implementation interoperability beyond the pinned comparators exercised locally.
-- ADR-020, ADR-021, and ADR-022 remain independently maturity-gated. Executing supporting evidence does not accept them automatically.
+- ADR-020 and ADR-022 are Accepted doctrine, while ADR-021 remains Proposed at this historical evidence boundary. None of those statuses, by itself, establishes production qualification.
 
 ## Why the tests are built to fail
 

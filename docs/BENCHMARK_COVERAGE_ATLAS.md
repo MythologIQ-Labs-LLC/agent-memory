@@ -299,7 +299,7 @@ The common run schema may continue to normalize to high-level dimensions such as
 
 ## 8. Currently registered executable external profiles
 
-The evaluation registry is the set of committed benchmark integration descriptors under `reference/agentmem_ref/evaluation/integrations/`; each declares its `admission_state` and `benchmark.provenance_class` from the vocabularies above, and `agent-memory benchmark list` projects them. The registry currently contains these formal external profiles (the `golden-keyed-retrieval-v1` contributor demonstration is `baseline_or_probe` and is listed, not counted, here).
+The evaluation registry is the set of committed benchmark integration descriptors under `reference/agentmem_ref/evaluation/integrations/`; each declares its `admission_state` and `benchmark.provenance_class` from the vocabularies above, and `agent-memory benchmark list` projects them. **The table describes profile integration/admission state at its registry revision, not whether a benchmark has subsequently executed and produced accepted evidence.** For example, an integration row can say LongMemEval_M `not run` while newer accepted run evidence exists. Execution and result acceptance are owned exclusively by [the generated current benchmark dashboard](../reports/benchmarks/dashboard/current.md), not this manually maintained table. The registry at this original section's boundary contains these formal external profiles (the `golden-keyed-retrieval-v1` contributor demonstration is `baseline_or_probe` and is listed, not counted, here).
 
 | Profile | Status | Primary pressure |
 | --- | --- | --- |
