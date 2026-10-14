@@ -196,17 +196,25 @@ def test_amb_derived_index_is_atomically_replaced_and_private(tmp_path, monkeypa
         assert stat.S_IMODE(path.stat().st_mode) == 0o600
     before = path.read_bytes()
     original_replace = bridge.os.replace
+    replaced_target = []
 
-    def fail_replace(_source, _destination):
-        raise OSError("simulated failure before atomic replace")
+    def fail_only_index_replace(source, destination):
+        if destination == path:
+            replaced_target.append(destination)
+            raise OSError("simulated failure before atomic replace")
+        return original_replace(source, destination)
 
-    monkeypatch.setattr(bridge.os, "replace", fail_replace)
+    monkeypatch.setattr(bridge.os, "replace", fail_only_index_replace)
+    # Exercise the actual bridge-index publication rather than injecting a
+    # failure in an unrelated canonical SQLite write/restart checkpoint.
+    provider._by_fact["simulated:new"] = {"id": "doc:2", "content": "private willow"}
     try:
-        provider.ingest([FakeDocument(id="doc:2", content="private willow", user_id="user:1")])
+        provider._save_index()
     except OSError as exc:
         assert "simulated failure" in str(exc)
     else:
-        raise AssertionError("failed sidecar publication must fail the ingest")
+        raise AssertionError("failed sidecar publication must fail the save")
+    assert replaced_target == [path]
     assert path.read_bytes() == before
     assert not list(root.glob(".agent-memory-amb-index-*.tmp"))
     assert json.loads(path.read_text(encoding="utf-8"))["bridge_version"] == bridge.BRIDGE_VERSION
