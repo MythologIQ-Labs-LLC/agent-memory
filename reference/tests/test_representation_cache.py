@@ -138,6 +138,13 @@ class DerivedVectorStoreTests(unittest.TestCase):
         self.store = DerivedVectorStore(self.root, DIGEST, 3)
         self.assertEqual(self.store.row_count(), 1)
 
+    def test_root_reconciliation_accepts_relative_root(self):
+        self.store.vector_for("orphan", "old value", self.embed)
+        relative = Path(os.path.relpath(self.root, Path.cwd()))
+        result = reconcile_derived_vector_stores(relative, {})
+        self.assertEqual(result, {"stores_checked": 1, "rows_purged": 1})
+        self.assertEqual(self.store.row_count(), 0)
+
     def test_reconcile_derived_root_rejects_symlink_without_touching_target(self):
         target = Path(self.root) / "outside.sqlite"
         target.write_bytes(b"not an agent-memory store")

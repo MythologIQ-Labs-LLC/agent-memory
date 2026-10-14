@@ -89,7 +89,7 @@ def reconcile_derived_vector_stores(
         match = _VECTOR_FILE.fullmatch(path.name)
         if match is None or path.is_symlink() or not path.is_file():
             raise DerivedCacheReconciliationError(f"unsafe derived vector store: {path}")
-        connection = sqlite3.connect(path.as_uri() + "?mode=rw", uri=True, timeout=5.0)
+        connection = sqlite3.connect(path.resolve().as_uri() + "?mode=rw", uri=True, timeout=5.0)
         try:
             meta = dict(connection.execute("SELECT key, value FROM meta"))
             digest = str(meta.get("config_digest", "")).split(":", 1)[-1]
