@@ -78,6 +78,35 @@ class DerivedVectorStoreTests(unittest.TestCase):
         self.assertEqual(self.store.verify({"f1": "hello"}, self.embed)["mismatched"], [])
         self.assertEqual(self.store.row_count(), 1)
 
+    def test_purge_fact_removes_all_content_versions_and_keeps_other_facts(self):
+        self.store.vector_for("deleted", "first version", self.embed)
+        self.store.vector_for("deleted", "second version", self.embed)
+        retained = self.store.vector_for("retained", "other data", self.embed)
+        self.assertEqual(self.store.row_count(), 3)
+        self.assertEqual(self.store.purge_fact("deleted"), 2)
+        self.assertEqual(self.store.row_count(), 1)
+        self.assertEqual(self.store.purge_fact("deleted"), 0)
+        self.assertEqual(self.store.vector_for("retained", "other data", self.embed), retained)
+        self.assertEqual(self.store.row_count(), 1)
+
+    def test_purge_fact_is_durable_across_reopen_without_representation_provider(self):
+        self.store.vector_for("deleted", "delete me", self.embed)
+        self.store.vector_for("retained", "keep me", self.embed)
+        self.assertEqual(self.store.purge_fact("deleted"), 1)
+        self.store.close()
+        self.store = DerivedVectorStore(self.root, DIGEST, 3)
+        rows = self.store._connection.execute(
+            "SELECT fact_uuid FROM vectors ORDER BY fact_uuid"
+        ).fetchall()
+        self.assertEqual(rows, [("retained",)])
+
+    def test_purge_fact_rejects_invalid_identity_without_changing_rows(self):
+        self.store.vector_for("retained", "keep me", self.embed)
+        for invalid in ("", None, 0):
+            with self.subTest(invalid=invalid), self.assertRaises(ValueError):
+                self.store.purge_fact(invalid)
+        self.assertEqual(self.store.row_count(), 1)
+
     def test_file_mode_is_0600_and_name_has_no_colon(self):
         mode = stat.S_IMODE(os.stat(self.store.path).st_mode)
         self.assertEqual(mode, 0o600)

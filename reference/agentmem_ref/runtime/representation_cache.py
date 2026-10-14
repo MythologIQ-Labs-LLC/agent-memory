@@ -137,6 +137,24 @@ class DerivedVectorStore:
         self.rows_written += 1
         return vector
 
+
+    def purge_fact(self, fact_uuid: str) -> int:
+        """Delete every cached representation row for a fact, with no model call.
+
+        This is a *derived-store primitive*, not a governance decision or a
+        complete permanent-deletion guarantee. The authorized caller owns the
+        decision, recovery journal and disposition of other sidecar identities.
+        Never use this to infer that canonical data or filesystem remnants have
+        been securely erased. It is intentionally idempotent.
+        """
+        if not isinstance(fact_uuid, str) or not fact_uuid:
+            raise ValueError("fact_uuid must be a non-empty string")
+        cursor = self._connection.execute(
+            "DELETE FROM vectors WHERE fact_uuid = ?", (fact_uuid,)
+        )
+        self._connection.commit()
+        return int(cursor.rowcount)
+
     def row_count(self) -> int:
         return int(self._connection.execute("SELECT COUNT(*) FROM vectors").fetchone()[0])
 
