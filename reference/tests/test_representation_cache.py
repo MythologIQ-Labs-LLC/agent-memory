@@ -146,6 +146,28 @@ class DerivedVectorStoreTests(unittest.TestCase):
         self.assertEqual((result["stores_checked"], result["rows_purged"]), (1, 1))
         self.assertEqual(self.store.row_count(), 0)
 
+    def test_reconcile_refuses_symlinked_derived_directory_and_preserves_external_rows(self):
+        with tempfile.TemporaryDirectory() as other_root:
+            outside = DerivedVectorStore(other_root, "sha256:" + "cc" * 32, 3)
+            try:
+                outside.vector_for("foreign-fact", "external payload", self.embed)
+                internal = Path(self.root) / "other-workspace"
+                internal.mkdir()
+                (internal / "derived").symlink_to(
+                    Path(other_root) / "derived", target_is_directory=True
+                )
+                report = reconcile_derived_vector_stores(internal, {})
+                self.assertEqual(report["status"], "incomplete")
+                self.assertIn(str(internal / "derived"), report["unsafe"])
+                self.assertEqual(report["stores_checked"], 0)
+                self.assertEqual(outside.row_count(), 1)
+                self.assertEqual(
+                    outside._connection.execute("SELECT fact_uuid FROM vectors").fetchone()[0],
+                    "foreign-fact",
+                )
+            finally:
+                outside.close()
+
     def test_reconcile_derived_root_rejects_symlink_without_touching_target(self):
         target = Path(self.root) / "outside.sqlite"
         target.write_bytes(b"not an agent-memory store")

@@ -128,6 +128,12 @@ def reconcile_derived_vector_stores(
     report: dict = {"status": "complete", "stores_checked": 0, "rows_purged": 0,
                     "stores_discarded": [], "unsafe": [], "failed": []}
     directory = Path(root) / "derived"
+    # An existing link to an external directory is not an Agent Memory cache root.
+    # Check before exists(): dangling symlinks would otherwise look like no cache.
+    if directory.is_symlink():
+        report["unsafe"].append(str(directory))
+        report["status"] = "incomplete"
+        return report
     if not directory.exists():
         return report
     if not directory.is_dir():
