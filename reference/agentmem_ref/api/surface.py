@@ -428,6 +428,9 @@ class AgentMemory:
             raise ValueError(f"recall_control must be one of {RECALL_CONTROL_MODES}")
         self._recall_control = recall_control
         self._proposition_extractor = _checked_extractor(proposition_extractor)
+        # #802: the latest derived-sidecar reconciliation report (recovery or deletion).
+        self._derived_reconciliation: dict = {"status": "complete", "stores_checked": 0, "rows_purged": 0,
+                                              "stores_discarded": [], "unsafe": [], "failed": [], "pending": []}
 
     @classmethod
     def open(
@@ -529,7 +532,17 @@ class AgentMemory:
             raise RuntimeRecoveryError(
                 f"requested tenant {tenant!r} does not match recovered runtime tenant {actual_tenant!r}"
             )
-        return cls(
+        # #802: retry any interrupted sidecar cleanup against the recovered canonical facts,
+        # whatever the semantic mode. A derived cache is never authority, so its state never
+        # refuses the canonical runtime: the outcome is recorded for the posture instead.
+        try:
+            reconciliation = cls._reconcile_cached_representations(root, runtime)
+        except Exception as exc:  # unexpected: the report, not the exception, carries it
+            reconciliation = {"status": "incomplete", "stores_checked": 0, "rows_purged": 0,
+                              "stores_discarded": [], "unsafe": [],
+                              "failed": [[str(root / "derived"), f"{type(exc).__name__}: {exc}"]]}
+        reconciliation["pending"] = []
+        handle = cls(
             root=root,
             config_path=resolved_config,
             qualification_path=resolved_qualification,
@@ -542,6 +555,23 @@ class AgentMemory:
             semantic=semantic,
             recall_control=recall_control,
             proposition_extractor=proposition_extractor,
+        )
+        handle._derived_reconciliation = reconciliation
+        return handle
+
+    @staticmethod
+    def _reconcile_cached_representations(root: Path, runtime, *, deleted_fact_uuid: str | None = None) -> dict:
+        """Close derived sidecar rows no canonical fact accounts for (#802); provider-free.
+
+        Only the recovered canonical facts decide what a sidecar may retain; the caller
+        holds the runtime serialization lock. Returns the reconciliation report.
+        """
+        from ..runtime.representation_cache import reconcile_derived_vector_stores
+
+        substrate = runtime.adapter.checkpoint_substrate()
+        texts = {fact.uuid: fact.fact_text for fact in substrate.all_facts()}
+        return reconcile_derived_vector_stores(
+            root, texts, deleted_fact_uuid=deleted_fact_uuid
         )
 
     @property
@@ -1164,7 +1194,35 @@ class AgentMemory:
             evidence=list(evidence) or None,
             external_verification=attestation,
         )
-        return self._commit_result(outcome, stage="forget")
+        result = self._commit_result(outcome, stage="forget")
+        if permanent and outcome.committed:
+            # #802: the canonical generation is committed; now every persistent sidecar under
+            # this root drops the deleted lineage, whatever the semantic mode. Two SQLite files
+            # are not one transaction: an incomplete cleanup is reported loudly, with the
+            # canonical receipt attached, and retried on the next open. It is never a claim
+            # of full erasure, and the caller's authority is not re-used for anything else.
+            from ..runtime.representation_cache import DerivedCacheReconciliationError
+
+            cause = None
+            try:
+                report = self._reconcile_cached_representations(
+                    self.root, self.runtime, deleted_fact_uuid=outcome.fact_uuid
+                )
+            except Exception as exc:
+                cause = exc
+                report = {"status": "incomplete", "stores_checked": 0, "rows_purged": 0,
+                          "stores_discarded": [], "unsafe": [],
+                          "failed": [[str(self.root / "derived"), f"{type(exc).__name__}: {exc}"]]}
+            complete = report["status"] == "complete"
+            report["pending"] = [] if complete else [outcome.fact_uuid]
+            self._derived_reconciliation = report
+            if not complete:
+                raise DerivedCacheReconciliationError(
+                    "canonical permanent deletion committed, but derived vector cleanup is "
+                    "incomplete; residue may remain and reopen will retry reconciliation",
+                    fact_uuid=outcome.fact_uuid, report=report, result=result,
+                ) from cause
+        return result
 
     @_serialized
     def _canonical_history(self, target_reference: str, *, fact_text: str | None = None) -> dict:
@@ -1263,6 +1321,7 @@ class AgentMemory:
             "candidate_limit": None if retriever is None else SEMANTIC_CANDIDATE_LIMIT,
             "ordering": "subordinate: after every relevance and temporal stage (ranking policy 3.2.0)",
             "store": None if store is None else store.posture(),
+            "derived_reconciliation": dict(self._derived_reconciliation),
             "authority_effect": "none",
         }
 
