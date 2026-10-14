@@ -6,6 +6,8 @@
 
 This directory is the canonical documentation map for Agent Memory as it exists now: **a canonical architecture/governance corpus, an evaluation/benchmark laboratory, and an executable governed memory runtime**.
 
+The product intent is governed, hierarchical, heterogeneous multi-system memory composition (structured/relational state, lexical and vector retrieval, typed graph and GraphRAG-style context, episodic/temporal/procedural memory, Markdown/file projections) under one governance boundary, specified in [#636](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/636). The only qualified canonical persistence profile today is single-host SQLite; see [`43-substrate-inventory-and-maturity.md`](43-substrate-inventory-and-maturity.md).
+
 ## Three entry points
 
 | Entry point | For | Start | Then |
@@ -18,7 +20,7 @@ The entry points are the repository's three operational roles. The project is al
 
 Start with [`REPOSITORY_OPERATING_MODEL.md`](REPOSITORY_OPERATING_MODEL.md) if you are unsure which role a document, issue, or contribution belongs to.
 
-For the current RC/evidence boundary, start with [`64-current-governance-and-benchmark-dashboard.md`](64-current-governance-and-benchmark-dashboard.md), the current work queue in [`BACKLOG.md`](BACKLOG.md), and the canonical dashboard at [`../reports/benchmarks/dashboard/current.md`](../reports/benchmarks/dashboard/current.md).
+For current state, use the sources that own it: [`BACKLOG.md`](BACKLOG.md) (work queue and owner rulings), [`SYSTEM_STATE.md`](SYSTEM_STATE.md) (revision-bound projection), [`43-substrate-inventory-and-maturity.md`](43-substrate-inventory-and-maturity.md) (what is qualified), `../reports/runtime/baseline-register.json` (current Runtime Baseline), the code-declared `POLICY_VERSION` and `CONTRACT_VERSION`, and the canonical dashboard at [`../reports/benchmarks/dashboard/current.md`](../reports/benchmarks/dashboard/current.md). [`64-current-governance-and-benchmark-dashboard.md`](64-current-governance-and-benchmark-dashboard.md) is the historical #591/#594 reconciliation.
 
 ## Choose your path
 
@@ -26,7 +28,7 @@ For the current RC/evidence boundary, start with [`64-current-governance-and-ben
 |---|---|---|
 | Use Agent Memory as a local runtime | [`47-developer-facade-and-local-open-path.md`](47-developer-facade-and-local-open-path.md) | [`45-agent-memory-rc1-implementation-profile.md`](45-agent-memory-rc1-implementation-profile.md), [`46-state-checkpoint-contract.md`](46-state-checkpoint-contract.md), [`43-substrate-inventory-and-maturity.md`](43-substrate-inventory-and-maturity.md) |
 | Understand the architecture | [`01-layer-model.md`](01-layer-model.md) | `11`, `13`, `18`, `22`, `24`, `42`, ADR index |
-| Understand current RC/governance state | [`64-current-governance-and-benchmark-dashboard.md`](64-current-governance-and-benchmark-dashboard.md) | issue #410, current benchmark dashboard |
+| Understand current RC/governance state | [`BACKLOG.md`](BACKLOG.md), [`SYSTEM_STATE.md`](SYSTEM_STATE.md) | issues #410, #668, #636; current benchmark dashboard; [`64-current-governance-and-benchmark-dashboard.md`](64-current-governance-and-benchmark-dashboard.md) for the historical #594 reconciliation |
 | Understand lifecycle/currentness | [`02-lifecycle-state-machine.md`](02-lifecycle-state-machine.md) | [`18-temporal-causality-layer.md`](18-temporal-causality-layer.md), [`60-temporal-currentness-qualification-gauntlet.md`](60-temporal-currentness-qualification-gauntlet.md), [`61-write-time-proposition-semantics.md`](61-write-time-proposition-semantics.md) |
 | Understand governance / PAMA | [`pama/README.md`](pama/README.md) | `04`, `17`, `33`, `34`, [`../GOVERNANCE.md`](../GOVERNANCE.md) |
 | Evaluate / benchmark Agent Memory | [`../BENCHMARKS.md`](../BENCHMARKS.md) | [`53-memory-evaluation-subsystem.md`](53-memory-evaluation-subsystem.md), [`54-memory-evaluation-cli.md`](54-memory-evaluation-cli.md), [`55-memory-evaluation-scorecards.md`](55-memory-evaluation-scorecards.md) |
@@ -103,8 +105,8 @@ Gauntlet and project-model documents:
 | [`58-historical-evidence-admission.md`](58-historical-evidence-admission.md) | Current-state vs explicit historical-evidence admission |
 | [`61-write-time-proposition-semantics.md`](61-write-time-proposition-semantics.md) | Current #550 semantics contract plus #591/#594 qualification results |
 | [`63-post-550-architecture-reconciliation.md`](63-post-550-architecture-reconciliation.md) | Post-#550 architecture reconciliation |
-| [`64-current-governance-and-benchmark-dashboard.md`](64-current-governance-and-benchmark-dashboard.md) | Canonical current RC dependency/governance state after #594 |
-| [`66-pre-1.0-maturity-and-runtime-qualification.md`](66-pre-1.0-maturity-and-runtime-qualification.md) | Pre-1.0 maturity program: competitive comparators (#601) and runtime qualification (#602) |
+| [`64-current-governance-and-benchmark-dashboard.md`](64-current-governance-and-benchmark-dashboard.md) | Historical RC dependency/governance reconciliation at the #591/#594 boundary (`691251c`); not refreshed |
+| [`66-pre-1.0-maturity-and-runtime-qualification.md`](66-pre-1.0-maturity-and-runtime-qualification.md) | Pre-1.0 maturity program as reconciled at the #600-#602 boundary (`b50d6d1`): competitive comparators (#601) and runtime qualification (#602) |
 | [`66-rust-runtime-qualification-current-state.md`](66-rust-runtime-qualification-current-state.md) | Rust shadow-kernel state; Python remains the qualified runtime |
 | [`67-runtime-baseline-succession.md`](67-runtime-baseline-succession.md) | How a runtime change passes the Runtime Baseline mechanism (`reports/runtime/baseline-register.json`) |
 | [`68-baseline-first-complete-architecture-execution.md`](68-baseline-first-complete-architecture-execution.md) | Owner execution posture: formal external baseline first, then complete runtime architecture |
@@ -131,7 +133,7 @@ A working runtime is not production 1.0. The qualified persistence posture remai
 | [`59-orthogonal-temporal-gauntlet-qualification.md`](59-orthogonal-temporal-gauntlet-qualification.md) | Which temporal gauntlets can/cannot falsify ADR-039 claims |
 | [`60-temporal-currentness-qualification-gauntlet.md`](60-temporal-currentness-qualification-gauntlet.md) | Frozen repository-owned temporal/currentness gauntlet |
 | [`62-lessons-learned-evidence-and-currentness.md`](62-lessons-learned-evidence-and-currentness.md) | Lessons from the temporal/currentness arc |
-| [`64-current-governance-and-benchmark-dashboard.md`](64-current-governance-and-benchmark-dashboard.md) | Current dashboard interpretation and RC sequencing |
+| [`64-current-governance-and-benchmark-dashboard.md`](64-current-governance-and-benchmark-dashboard.md) | Dashboard interpretation and RC sequencing as of #594 (historical) |
 | [`65-independent-amb-competitive-profile.md`](65-independent-amb-competitive-profile.md) | Independent AgentMemBench same-harness profile (#601/#640); its status line is historical, the dashboard carries accepted rows |
 | [`69-agentmembench-mesa-formal-baseline.md`](69-agentmembench-mesa-formal-baseline.md) | Formal AgentMemBench/MESA baseline protocol and results (#694) |
 | [`72-benchmark-neutral-remediation-loop.md`](72-benchmark-neutral-remediation-loop.md) | Benchmark-neutral evidence-to-remediation loop and read-only deficit audit (#722) |
@@ -153,10 +155,10 @@ The repository intentionally does **not** define a universal memory-health score
 
 This index does not restate the active policy version, RC sequence, or follow-on issue list; they move faster than a navigation page. Read them in order from:
 
-1. [`64-current-governance-and-benchmark-dashboard.md`](64-current-governance-and-benchmark-dashboard.md) for the RC dependency order and the load-bearing invariants;
-2. [`BACKLOG.md`](BACKLOG.md) for the current work queue and owner rulings;
+1. `reference/agentmem_ref/runtime/temporal_order_constraints.py` (`POLICY_VERSION`) and `reference/agentmem_ref/api/contract.py` (`CONTRACT_VERSION`) for the versions the code actually declares;
+2. [`BACKLOG.md`](BACKLOG.md) for the current work queue and owner rulings, and [`SYSTEM_STATE.md`](SYSTEM_STATE.md) for the revision-bound projection;
 3. [`61-write-time-proposition-semantics.md`](61-write-time-proposition-semantics.md) and [`63-post-550-architecture-reconciliation.md`](63-post-550-architecture-reconciliation.md) for the semantic contract;
-4. `reference/agentmem_ref/runtime/temporal_order_constraints.py` (`POLICY_VERSION`) and `reference/agentmem_ref/api/contract.py` (`CONTRACT_VERSION`) for the versions the code actually declares.
+4. [`64-current-governance-and-benchmark-dashboard.md`](64-current-governance-and-benchmark-dashboard.md) only for the historical #591/#594 reconciliation and its invariant list as of that boundary.
 
 ADR-039 stays Proposed, and PR #587 / #583 stays DRAFT/HOLD, until the ADR index or the owning issue says otherwise.
 

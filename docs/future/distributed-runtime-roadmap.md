@@ -23,7 +23,7 @@ storage technology           != Agent Memory substrate
 
 ## Why the direction is still right
 
-The architecture already separates canonical state (the temporal/canonical substrate behind `TemporalGraphPort`), governed admission and mutation authority (PAMA), and derived state (projections, candidate routes, representation caches). That separation is what makes a multi-substrate runtime possible without changing memory semantics: a substrate earns a profile by satisfying the same correctness obligations, not by being a popular database. "No single shape of memory is best for everything" is therefore a design direction the current code can honour, not a feature it has shipped.
+The architecture already separates canonical state (the temporal/canonical substrate behind `TemporalGraphPort`), governed admission and mutation authority (PAMA), and derived state (projections, candidate routes, representation caches). That separation is what makes a multi-substrate runtime possible without changing memory semantics: a substrate earns a profile by satisfying the same correctness obligations, not by being a popular database. "No single shape of memory is best for everything" is therefore a design direction the current code can honour, not a feature it has shipped. The composition program that would prove it, representation by representation, is issue [#636](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/636); this roadmap covers only the persistence-topology axis of that program.
 
 ## Proposed stages
 

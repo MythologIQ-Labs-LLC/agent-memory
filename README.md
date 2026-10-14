@@ -29,9 +29,13 @@ A canonical memory architecture and doctrine corpus, a reproducible evaluation l
 >
 > The qualified runtime posture is deliberately bounded to the single-host SQLite profile. Distributed or multi-host persistence is not established, and no substrate other than `SQLiteTemporalGraph` is production-qualified. RC composition remains governed by issue [#410](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/410); the current work queue is [`docs/BACKLOG.md`](docs/BACKLOG.md); the canonical benchmark view is [`reports/benchmarks/dashboard/current.md`](reports/benchmarks/dashboard/current.md).
 
+## What Agent Memory is
+
+Agent Memory's defining intent is **governed, hierarchical, heterogeneous multi-system memory composition**: canonical structured/relational state, lexical and vector retrieval, typed graph and GraphRAG-style derived context, episodic, temporal and procedural memory, and inspectable Markdown/file projections, each chosen for demonstrable task and lifecycle value and all held under one governance boundary where no representation, route score, or projection acquires authority. That composition program is specified in issue [#636](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/636) and is an executable hypothesis, not a shipped capability. Today the **only qualified canonical persistence profile is single-host SQLite** (`sqlite_single_host_v1`); Postgres, Markdown, GraphRAG, and distributed persistence are design intent, experiments, or proposals, never production-qualified substrates.
+
 ## Start here
 
-Agent Memory serves three audiences through three entry points. Pick the one that matches what you came to do.
+Agent Memory serves three audiences through three entry points. They are visitor routes into the project above, not a substitute product definition. Pick the one that matches what you came to do.
 
 | Entry point | For | What it is | Current maturity | Start | Then |
 |---|---|---|---|---|---|
@@ -67,7 +71,7 @@ recency != authority
 benchmark score != memory authority
 ```
 
-The complete current invariant list, the write/read architecture, and the active policy boundary are maintained in one place: [`docs/64-current-governance-and-benchmark-dashboard.md`](docs/64-current-governance-and-benchmark-dashboard.md). Doctrine itself lives in the numbered architecture corpus (`docs/00` through `docs/42`), [PAMA](docs/pama/README.md), [`docs/04-governance-and-pama.md`](docs/04-governance-and-pama.md), and the [ADR index](docs/adr/README.md), which is the canonical doctrine-status ledger. Implementation or benchmark evidence never silently promotes, supersedes, or rejects an ADR.
+Doctrine lives in the numbered architecture corpus (`docs/00` through `docs/42`), [PAMA](docs/pama/README.md), [`docs/04-governance-and-pama.md`](docs/04-governance-and-pama.md), and the [ADR index](docs/adr/README.md), which is the canonical doctrine-status ledger. Implementation or benchmark evidence never silently promotes, supersedes, or rejects an ADR. The active policy and contract versions are owned by code, not prose: `reference/agentmem_ref/runtime/temporal_order_constraints.py` (`POLICY_VERSION`) and `reference/agentmem_ref/api/contract.py` (`CONTRACT_VERSION`). The longer invariant list in [`docs/64-current-governance-and-benchmark-dashboard.md`](docs/64-current-governance-and-benchmark-dashboard.md) is the **historical #591/#594 reconciliation** and reads as of that boundary.
 
 Research briefs, explorations, and ancestry harvests are evidence and provenance, not doctrine; see [`docs/40-aligned-projects-and-intellectual-lineage.md`](docs/40-aligned-projects-and-intellectual-lineage.md) and [`docs/SOURCE_RIGHTS_POLICY.md`](docs/SOURCE_RIGHTS_POLICY.md).
 
@@ -132,7 +136,7 @@ The facade is a convenience layer over the versioned public contract ([`docs/44-
 
 ### Where the runtime stands
 
-Current RC dependency order, follow-on issues, and known limitations are maintained in [`docs/64-current-governance-and-benchmark-dashboard.md`](docs/64-current-governance-and-benchmark-dashboard.md), [`docs/66-pre-1.0-maturity-and-runtime-qualification.md`](docs/66-pre-1.0-maturity-and-runtime-qualification.md), [`docs/BACKLOG.md`](docs/BACKLOG.md), and issue [#410](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/410). Two boundaries hold regardless of the evidence inside them:
+Current state has source-backed owners, in this order: the code-declared versions above; [`docs/43-substrate-inventory-and-maturity.md`](docs/43-substrate-inventory-and-maturity.md) for what is qualified; `reports/runtime/baseline-register.json` for the current Runtime Baseline; [`docs/BACKLOG.md`](docs/BACKLOG.md) for the work queue and owner rulings; [`docs/SYSTEM_STATE.md`](docs/SYSTEM_STATE.md) for the revision-bound projection; and issues [#410](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/410), [#668](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/668), and [#636](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/636) for live execution state. [`docs/64`](docs/64-current-governance-and-benchmark-dashboard.md) and [`docs/66`](docs/66-pre-1.0-maturity-and-runtime-qualification.md) are reconciliations at the #594 and #600-#602 boundaries respectively; they keep their original claims and are not refreshed. Two boundaries hold regardless of the evidence inside them:
 
 - the qualified persistence claim is bounded single-host SQLite;
 - production 1.0 is not claimed. RC1 is an explicit governed declaration decision.

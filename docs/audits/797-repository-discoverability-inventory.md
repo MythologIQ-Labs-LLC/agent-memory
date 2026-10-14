@@ -44,8 +44,8 @@ Length is therefore not the discoverability problem. The problems found were: (a
 | `docs/AGENT_MEMORY_PROJECT_MODEL.md` | proposed project model (five layers) under #554/#556 | self-declared "Proposed… authority effect: none" | **KEEP**; section 12 now records the #565 reconciliation instead of calling it pending |
 | `BENCHMARKS.md` | canonical evaluation entry point, but its numbers are historical | self-declares the dashboard as current authority | **KEEP**; start-here block added; numbers left untouched and labelled revision-bound |
 | `reports/benchmarks/dashboard/current.md` / `.json` | canonical current evidence | docs/64 "Documentation authority" | **KEEP**; owned by #785/#794/#796 pipeline, not edited |
-| `docs/64-current-governance-and-benchmark-dashboard.md` | canonical current-state reconciliation after #594 | self-declared; docs index | **KEEP** |
-| `docs/66-pre-1.0-maturity-and-runtime-qualification.md` | canonical addendum after #600-#602 | self-declared "canonical current-state addendum" | **KEEP**; was unlinked, now indexed |
+| `docs/64-current-governance-and-benchmark-dashboard.md` | historical reconciliation at the #591/#594 boundary (`691251c`); its "canonical current-state" self-description is era-bound | self-declared; owner review on PR #798 | **KEEP as historical evidence; SUPERSEDE as a "current" pointer**: README and docs index now label it historical and point current-state readers at code constants, BACKLOG, docs/43, the baseline register, and SYSTEM_STATE |
+| `docs/66-pre-1.0-maturity-and-runtime-qualification.md` | addendum at the #600-#602 boundary (`b50d6d1`) | self-declared "canonical current-state addendum" | **KEEP**, indexed with its boundary named; same era-bound caveat as docs/64 |
 | `docs/43-substrate-inventory-and-maturity.md` | canonical substrate maturity | section 12 maintenance rule | **KEEP**; the README substrate table now defers to it |
 | `docs/BENCHMARK_COVERAGE_ATLAS.md` | governance artifact under #554 | vocabulary bound to `schemas/memory-benchmark-integration.schema.json` | **KEEP** |
 | `docs/CONTRIBUTOR_ARCHITECTURE.md` | canonical contributor contract v1 (#652) | self-declared; CI-backed | **KEEP** |
@@ -70,10 +70,10 @@ Fixed in this PR are marked ✅. Everything else is listed with its owner so nob
 | `docs/README.md` (before) | "policy 3.1.0 is active" | 3.4.0 | ✅ section replaced with pointers to the owning sources |
 | `docs/AGENT_MEMORY_PROJECT_MODEL.md` §12 | reconciliation "should be" done | #565 ruling exists; README/docs index/operating model now carry it | ✅ recorded |
 | `docs/REPOSITORY_OPERATING_MODEL.md` | no mention of entry points or five layers | README now uses Theory/Benchmarks/Runtime | ✅ subsection added |
-| `docs/adr/README.md` | "Current doctrine state" lists ADR-001 through ADR-039 | `docs/adr/` holds ADR-040 (Accepted), ADR-041, ADR-042, ADR-043 (Proposed); none are linked from any file | **REQUIRES OWNER DECISION** (`docs/adr/` is out of scope for this lane; the index is the doctrine-status ledger) |
-| `docs/GOVERNANCE_INDEX.md` Tier 1/3 | "#427 active RC gate; production-qualified canonical substrates = 0"; "ADR-001 through ADR-038"; "#440 active" | #427 closed 2026-09-23 (PR #452); SQLite qualified; ADR-043 exists; #440 closed 2026-09-24 per BACKLOG | **CONSOLIDATE** into a reconciliation pass owned by the ledger maintainer; the file's own Drift Contract calls this a Tier 1 drift bug |
-| `docs/SYSTEM_STATE.md` | "Public API Contract 1.2.0"; "Production-qualified canonical substrates 0"; reconciled 2026-09-23 | contract 1.6.0; SQLite qualified; Runtime Baseline v6 current | same reconciliation pass |
-| `docs/FEATURE_INDEX.md` | "current contract 1.4.0"; reconciled 2026-09-12 | 1.6.0 | same reconciliation pass |
+| `docs/adr/README.md` | "Current doctrine state" lists ADR-001 through ADR-039 | `docs/adr/` holds ADR-040 (Accepted), ADR-041, ADR-042, ADR-043 (Proposed); none are linked from any file | **Owned by the owner's branch `docs/797-canonical-state-reconciliation-no-ci`**, which extends the index to ADR-043; out of scope for this lane |
+| `docs/GOVERNANCE_INDEX.md` Tier 1/3 | "#427 active RC gate; production-qualified canonical substrates = 0"; "ADR-001 through ADR-038"; "#440 active" | #427 closed 2026-09-23 (PR #452); SQLite qualified; ADR-043 exists; #440 closed 2026-09-24 per BACKLOG | **Owned by the owner's branch `docs/797-canonical-state-reconciliation-no-ci` (`ed9c48f`)**, which rewrites Tier 1/3 against `3eebb6d`; not duplicated here |
+| `docs/SYSTEM_STATE.md` | "Public API Contract 1.2.0"; "Production-qualified canonical substrates 0"; reconciled 2026-09-23 | contract 1.6.0; SQLite qualified; Runtime Baseline v6 current | same owner branch: replaced by a compact revision-bound projection that carries the #636 product intent; README and docs index link it as a current-state owner |
+| `docs/FEATURE_INDEX.md` | "current contract 1.4.0"; reconciled 2026-09-12 | 1.6.0 | same owner branch: relabelled as a bounded historical inventory |
 | `docs/45-agent-memory-rc1-implementation-profile.md`, `docs/47-developer-facade-and-local-open-path.md` | "public contract 1.2.0" | 1.6.0 | **KEEP as published-state wording**; docs index now explains the convention and names the code as the version source. A one-line "current contract: see `api/contract.py`" note is a safe follow-up |
 | `reference/README.md` | "contract `1.2.0`"; "seven subpackages" | 1.6.0; nine subpackages (`harness`, `evaluation` added) and the layout block omits `evaluation/` | **CONSOLIDATE** (reference/ is the runtime lane; propose with the Phase 4 candidates, see companion file) |
 | `CONTRIBUTING.md` line 3, `wiki-src/Home.md` line 7 | "Agent Memory is a reference architecture and research-driven doctrine" | repository also ships a usable runtime and an evaluation lab (README, GOVERNANCE line 3) | **REQUIRES OWNER DECISION**: both are CODEOWNER / published-wiki surfaces; a one-sentence update to match GOVERNANCE.md line 3 is safe but outside the allowed first-PR file list |
@@ -130,15 +130,15 @@ No proposal below is executed in this PR.
 - **Before:** per-benchmark status prose with frozen highlight numbers.
 - **After:** keep "Governing benchmark rules", "Start here", "Contributor contracts", "Rules for benchmark-driven changes", "Evaluator integrity"; replace "Current portfolio" and "Active RC evaluation path" with one paragraph per benchmark naming its profile id, provenance class, and dashboard section. Incoming links to BENCHMARKS.md: README, docs/README, REPOSITORY_OPERATING_MODEL, CONTRIBUTOR_ARCHITECTURE (no anchors), so the section removal breaks nothing. Owner decision because it touches benchmark narrative.
 
-### Proposal C: maintenance ledgers Tier 1 refresh
+### Proposal C: maintenance ledgers Tier 1 refresh (in progress on the owner's branch)
 
 - **Before:** GOVERNANCE_INDEX, SYSTEM_STATE, FEATURE_INDEX carry contradictions listed in section 3.
-- **After:** one reconciliation commit updating the four cells (contract 1.6.0, substrates 1, #427/#440 closed, ADR range 043) and the evidence-boundary hashes, with a META_LEDGER entry per the ledgers' own drift contract. No file moves.
+- **After:** the owner's branch `docs/797-canonical-state-reconciliation-no-ci` (`ed9c48f`, four files, no overlap with PR #798) replaces SYSTEM_STATE with a compact revision-bound projection, relabels FEATURE_INDEX as historical, and rewrites GOVERNANCE_INDEX Tier 1/3 against `3eebb6d`. PR #798's pointers were written to be correct against both the current and the refreshed files; the two should land together so the front door is current.
 
-### Proposal D: ADR index completeness
+### Proposal D: ADR index completeness (in progress on the owner's branch)
 
 - **Before:** index narrative stops at ADR-039.
-- **After:** add ADR-040 (Accepted) to the "Current doctrine state" block and ADR-041/042/043 (Proposed) with one-line family notes. Owner-only; no other file references change.
+- **After:** the same owner branch extends the index to ADR-043. No other file references change.
 
 ## 7. Validation performed and what CI does not cover
 
@@ -176,14 +176,16 @@ Neither formulation supersedes the other. The layers refine the roles; the roles
 | Rust kernel | shadow only; Python qualified | docs/66-rust |
 | Postgres / graph DBs / Markdown / object stores | storage technologies, not substrates | docs/43 §8 |
 | Distributed / multi-host | not established; **proposed** roadmap only | `docs/future/distributed-runtime-roadmap.md` (new) |
+| Product intent vs qualification | README and docs index state the #636 heterogeneous multi-system composition intent above the role navigation and name single-host SQLite as the only qualified canonical persistence profile | README "What Agent Memory is", docs/README intro, #636 |
+| "Current state" pointers | code-declared `POLICY_VERSION` / `CONTRACT_VERSION`, docs/43, baseline register, BACKLOG, SYSTEM_STATE, live issues; docs/64 and docs/66 labelled by their boundary | README "Where the runtime stands", docs/README "Current semantic/temporal state" |
 | Benchmark scores in README | none; dashboard is canonical | README "Benchmarks" |
 | Leaderboard / freshness | linked to #779 / #789 / #795 as in-progress work | README, BENCHMARKS.md |
 
 ## 10. Owner decisions requested
 
-1. ADR index: add ADR-040 … ADR-043 (Proposal D).
-2. Maintenance ledgers: one Tier 1 reconciliation commit (Proposal C).
-3. `CONTRIBUTING.md` line 3 and `wiki-src/Home.md` line 7 framing sentence.
+1. ~~ADR index: add ADR-040 … ADR-043 (Proposal D).~~ In progress on `docs/797-canonical-state-reconciliation-no-ci`.
+2. ~~Maintenance ledgers: one Tier 1 reconciliation commit (Proposal C).~~ In progress on the same branch.
+3. `CONTRIBUTING.md` line 3 and `wiki-src/Home.md` line 7 framing sentence (now also out of step with the #636 product-intent sentence the README carries).
 4. Whether to open a tracking issue for the distributed-runtime roadmap, or leave it as a `docs/future/` proposal until a stage is funded.
 5. Same-number documents: accept index disambiguation instead of renumbering.
 6. `docs/07` and `docs/14` status lines: mark historical or keep as spine.
