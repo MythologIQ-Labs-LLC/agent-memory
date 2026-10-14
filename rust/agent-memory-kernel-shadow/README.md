@@ -2,7 +2,7 @@
 
 Status: **evaluation-only / not runtime-linked**  
 Owner: #602  
-Controlling architecture: ADR-028
+Controlling architecture: ADR-028, [Accepted ADR-040](../../docs/adr/ADR-040-versioned-language-neutral-canonical-json-for-integrity.md) (production activation separate)
 
 This crate asks whether selected deterministic Agent Memory primitives can be reproduced in Rust without changing their semantics.
 
@@ -39,7 +39,7 @@ The current Python canonical-byte helper delegates numeric spelling to CPython's
 
 Therefore persisted integrity parity across languages is **not yet qualified** for floating values.
 
-Issue #609 owns the required language-neutral numeric canonicalization and migration decision. Until #609 is dispositioned, this shadow may prove non-floating canonical-byte parity but may not claim state/integrity parity for surfaces that can contain floats.
+Issue [#609](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/609) is **closed** after language-neutral canonicalization qualification and acceptance of [ADR-040](../../docs/adr/ADR-040-versioned-language-neutral-canonical-json-for-integrity.md). The accepted v2 profile has frozen numeric vectors and independent Python/Rust parity evidence, but this crate's original non-floating shadow fixtures do **not** establish full persistence or lifecycle parity. `bmerkle-v2` and `gsect-v2` remain qualification-only and non-emittable in ordinary production runtime paths. Legacy scheme verification remains required; automatic migration and Rust state/integrity ownership require separate authorization.
 
 ```text
 semantic JSON equality != canonical byte identity
@@ -57,11 +57,10 @@ If later platforms cannot preserve exact parity because transcendental math diff
 
 ## Next slices, only after deterministic primitives qualify
 
-1. complete canonical byte/serialization qualification, with #609 governing floating numbers and persisted-state migration;
-2. candidate prefilter/index hot paths that do not depend on unresolved persisted numeric bytes;
-3. integrity/state primitives only after #609 is resolved;
-4. minimal `open -> remember -> recall -> restart` shadow lifecycle;
-5. matched performance and operational comparison;
-6. only then consider Python FFI or a native Rust runtime profile.
+1. evaluate candidate prefilter/index hot paths with exact cross-language fixtures and no persistence-authority effect;
+2. test matched workloads, including resource and portability costs, against the qualified Python implementation;
+3. independently demonstrate any proposed Rust persisted-state and restart-lifecycle parity against the exact [ADR-040](../../docs/adr/ADR-040-versioned-language-neutral-canonical-json-for-integrity.md) scheme, legacy verifier, and migration constraints;
+4. exercise a controlled `open -> remember -> recall -> restart` shadow lifecycle, then its deletion/correction and isolation negative paths;
+5. request a **separate production/FFI promotion decision** only after those tests and current Runtime Baseline succession requirements are satisfied.
 
 ADR-028 remains unchanged: implementation language is not doctrine.
