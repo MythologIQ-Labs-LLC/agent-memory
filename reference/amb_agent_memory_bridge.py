@@ -41,6 +41,7 @@ import os
 import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 from typing import Any
 
@@ -108,6 +109,43 @@ def _index_document(document: Any) -> dict[str, Any]:
     }
 
 
+
+def _save_amb_index_atomically(path: Path, payload: dict[str, Any]) -> None:
+    """Replace the bridge's derived plaintext index without partial publication.
+
+    The index is *not* canonical memory or a governed context-delivery API.
+    It contains a second copy of source text for the pinned AMB adapter.
+    Owner-controlled files get restrictive permissions where supported.
+    """
+    if path.is_symlink() or (path.exists() and not path.is_file()):
+        raise RuntimeError("refusing unsafe Agent Memory AMB sidecar destination")
+    if path.parent.is_symlink() or not path.parent.is_dir():
+        raise RuntimeError("Agent Memory AMB sidecar parent must be a real directory")
+    temp_path: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="w",
+            encoding="utf-8",
+            dir=path.parent,
+            prefix=".agent-memory-amb-index-",
+            suffix=".tmp",
+            delete=False,
+        ) as handle:
+            temp_path = Path(handle.name)
+            os.chmod(temp_path, 0o600)
+            handle.write(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+        # A symlink installed during serialization must not be replaced silently.
+        if path.is_symlink() or (path.exists() and not path.is_file()):
+            raise RuntimeError("Agent Memory AMB sidecar destination changed unsafely")
+        os.replace(temp_path, path)
+        temp_path = None
+    finally:
+        if temp_path is not None:
+            temp_path.unlink(missing_ok=True)
+
+
 def install_amb_agent_memory_provider(
     amb_root: str | Path,
     *,
@@ -167,6 +205,10 @@ def install_amb_agent_memory_provider(
                 self._index_path.unlink(missing_ok=True)
             self._runtime_root.mkdir(parents=True, exist_ok=True)
             self._by_fact = {}
+            if self._index_path.is_symlink():
+                raise RuntimeError("refusing symlinked Agent Memory AMB sidecar")
+            if self._index_path.exists() and not self._index_path.is_file():
+                raise RuntimeError("refusing non-file Agent Memory AMB sidecar")
             if self._index_path.is_file():
                 payload = json.loads(self._index_path.read_text(encoding="utf-8"))
                 if payload.get("bridge_version") != BRIDGE_VERSION:
@@ -244,10 +286,7 @@ def install_amb_agent_memory_provider(
                 "amb_revision": AMB_REVISION,
                 "records": self._by_fact,
             }
-            self._index_path.write_text(
-                json.dumps(payload, indent=2, sort_keys=True) + "\n",
-                encoding="utf-8",
-            )
+            _save_amb_index_atomically(self._index_path, payload)
 
         def ingest(self, documents: list[Document]) -> None:
             root = self._require_prepared()

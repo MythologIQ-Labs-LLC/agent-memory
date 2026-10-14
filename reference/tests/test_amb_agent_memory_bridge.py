@@ -175,3 +175,80 @@ def test_shadow_provider_refuses_to_retrieve_without_a_sidecar(tmp_path, monkeyp
         assert bridge.SIDECAR_ENV in str(error)
     else:  # pragma: no cover - scores without telemetry are refused (L9)
         raise AssertionError("shadow retrieve without a sidecar must be refused")
+
+def test_amb_derived_index_is_atomically_replaced_and_private(tmp_path, monkeypatch):
+    import json
+    import os
+    import stat
+
+    _install_fake_amb(monkeypatch)
+    provider_type = bridge.install_amb_agent_memory_provider(
+        tmp_path, agent_memory_revision="d" * 40
+    )
+    provider = provider_type()
+    root = tmp_path / "store"
+    provider.prepare(root)
+    provider.ingest([FakeDocument(id="doc:1", content="private lantern", user_id="user:1")])
+    path = root / "agent-memory-amb-index.json"
+    assert path.is_file()
+    assert "private lantern" in path.read_text(encoding="utf-8")
+    if os.name == "posix":
+        assert stat.S_IMODE(path.stat().st_mode) == 0o600
+    before = path.read_bytes()
+    original_replace = bridge.os.replace
+
+    def fail_replace(_source, _destination):
+        raise OSError("simulated failure before atomic replace")
+
+    monkeypatch.setattr(bridge.os, "replace", fail_replace)
+    try:
+        provider.ingest([FakeDocument(id="doc:2", content="private willow", user_id="user:1")])
+    except OSError as exc:
+        assert "simulated failure" in str(exc)
+    else:
+        raise AssertionError("failed sidecar publication must fail the ingest")
+    assert path.read_bytes() == before
+    assert not list(root.glob(".agent-memory-amb-index-*.tmp"))
+    assert json.loads(path.read_text(encoding="utf-8"))["bridge_version"] == bridge.BRIDGE_VERSION
+    monkeypatch.setattr(bridge.os, "replace", original_replace)
+
+
+def test_amb_index_refuses_symlink_and_preserves_external_target(tmp_path, monkeypatch):
+    _install_fake_amb(monkeypatch)
+    provider_type = bridge.install_amb_agent_memory_provider(
+        tmp_path, agent_memory_revision="e" * 40
+    )
+    root = tmp_path / "store"
+    provider = provider_type()
+    provider.prepare(root)
+    index = root / "agent-memory-amb-index.json"
+    outside = tmp_path / "outside.txt"
+    outside.write_text("do not replace", encoding="utf-8")
+    index.symlink_to(outside)
+    try:
+        provider.ingest([FakeDocument(id="doc:1", content="unsafe index", user_id="user:1")])
+    except RuntimeError as exc:
+        assert "sidecar" in str(exc)
+    else:
+        raise AssertionError("symlinked sidecar must not be written")
+    assert outside.read_text(encoding="utf-8") == "do not replace"
+
+
+def test_amb_prepare_resume_refuses_symlinked_index(tmp_path, monkeypatch):
+    _install_fake_amb(monkeypatch)
+    provider_type = bridge.install_amb_agent_memory_provider(
+        tmp_path, agent_memory_revision="f" * 40
+    )
+    root = tmp_path / "store"
+    provider = provider_type()
+    provider.prepare(root)
+    outside = tmp_path / "unrelated.json"
+    outside.write_text('{"records":{}}', encoding="utf-8")
+    (root / "agent-memory-amb-index.json").symlink_to(outside)
+    resumed = provider_type()
+    try:
+        resumed.prepare(root, reset=False)
+    except RuntimeError as exc:
+        assert "symlinked" in str(exc)
+    else:
+        raise AssertionError("resume must not trust a symlinked bridge index")
