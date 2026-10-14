@@ -430,6 +430,19 @@ class AgentMemory:
             raise RuntimeRecoveryError(
                 f"requested tenant {tenant!r} does not match recovered runtime tenant {actual_tenant!r}"
             )
+        try:
+            # Retry interrupted deletion even when semantic retrieval is off.
+            cls._reconcile_cached_representations(root, runtime)
+        except Exception as exc:
+            runtime.close()
+            retriever = semantic.get("retriever")
+            store = getattr(retriever, "store", None) if retriever is not None else None
+            if store is not None:
+                store.close()
+            from ..runtime.representation_cache import DerivedCacheReconciliationError
+            raise DerivedCacheReconciliationError(
+                "derived cache reconciliation failed on recovery; refusing open"
+            ) from exc
         return cls(
             root=root,
             config_path=resolved_config,
@@ -443,6 +456,17 @@ class AgentMemory:
             semantic=semantic,
             recall_control=recall_control,
             proposition_extractor=proposition_extractor,
+        )
+
+    @staticmethod
+    def _reconcile_cached_representations(root: Path, runtime, *, deleted_fact_uuid: str | None = None):
+        """Use only recovered canonical facts to close derived cache orphan rows."""
+        from ..runtime.representation_cache import reconcile_derived_vector_stores
+
+        substrate = runtime.adapter.checkpoint_substrate()
+        texts = {fact.uuid: fact.fact_text for fact in substrate.all_facts()}
+        return reconcile_derived_vector_stores(
+            root, texts, deleted_fact_uuid=deleted_fact_uuid
         )
 
     @property
@@ -990,6 +1014,18 @@ class AgentMemory:
             evidence=list(evidence) or None,
             external_verification=attestation,
         )
+        if permanent and outcome.committed:
+            try:
+                self._reconcile_cached_representations(
+                    self.root, self.runtime, deleted_fact_uuid=outcome.fact_uuid
+                )
+            except Exception as exc:
+                from ..runtime.representation_cache import DerivedCacheReconciliationError
+                raise DerivedCacheReconciliationError(
+                    "canonical permanent deletion committed, but derived vector "
+                    "cleanup is incomplete; reopen will retry reconciliation",
+                    fact_uuid=outcome.fact_uuid,
+                ) from exc
         return self._commit_result(outcome, stage="forget")
 
     @_serialized

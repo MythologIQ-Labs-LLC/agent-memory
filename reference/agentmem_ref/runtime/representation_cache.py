@@ -18,10 +18,11 @@ from __future__ import annotations
 import hashlib
 import math
 import os
+import re
 import sqlite3
 import struct
 from pathlib import Path
-from typing import Callable
+from typing import Callable, Mapping
 
 STORE_FORMAT = "agent-memory-derived-vectors/1.0.0"
 
@@ -44,6 +45,83 @@ def _unpack(blob: bytes) -> tuple[float, ...]:
 
 def _content_sha256(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+
+_VECTOR_FILE = re.compile(r"^vectors-([0-9a-f]{16})\.sqlite$")
+
+
+class DerivedCacheReconciliationError(RuntimeError):
+    """The canonical operation can commit even when sidecar cleanup fails."""
+
+    def __init__(self, message: str, *, fact_uuid: str | None = None) -> None:
+        super().__init__(message)
+        self.canonical_committed = fact_uuid is not None
+        self.fact_uuid = fact_uuid
+
+
+def reconcile_derived_vector_stores(
+    root: str | Path, canonical_texts: Mapping[str, str], *,
+    deleted_fact_uuid: str | None = None,
+) -> dict:
+    """Remove orphan/stale rows across known persistent stores without an embedding provider.
+
+    Caller must hold the recovered canonical runtime serialization lock.
+    SQLite row deletion is NOT a forensic erasure claim about WALs or backups.
+    """
+    if deleted_fact_uuid is not None and (
+        not isinstance(deleted_fact_uuid, str) or not deleted_fact_uuid
+    ):
+        raise ValueError("deleted_fact_uuid must be a non-empty string or None")
+    directory = Path(root) / "derived"
+    if directory.is_symlink():
+        raise DerivedCacheReconciliationError("derived store directory is a symlink")
+    if not directory.exists():
+        return {"stores_checked": 0, "rows_purged": 0}
+    if not directory.is_dir():
+        raise DerivedCacheReconciliationError("derived store path is not a directory")
+    allowed = {
+        (str(uuid), _content_sha256(text))
+        for uuid, text in canonical_texts.items()
+    }
+    inspected, purged = 0, 0
+    for path in sorted(directory.glob("vectors-*.sqlite")):
+        match = _VECTOR_FILE.fullmatch(path.name)
+        if match is None or path.is_symlink() or not path.is_file():
+            raise DerivedCacheReconciliationError(f"unsafe derived vector store: {path}")
+        connection = sqlite3.connect(path.as_uri() + "?mode=rw", uri=True, timeout=5.0)
+        try:
+            meta = dict(connection.execute("SELECT key, value FROM meta"))
+            digest = str(meta.get("config_digest", "")).split(":", 1)[-1]
+            columns = {row[1] for row in connection.execute("PRAGMA table_info(vectors)")}
+            if (
+                meta.get("format") != STORE_FORMAT
+                or not digest.startswith(match.group(1))
+                or not str(meta.get("dimensions", "")).isdigit()
+                or not {"fact_uuid", "content_sha256", "vector", "row_sha256"} <= columns
+            ):
+                raise DerivedCacheReconciliationError(f"invalid derived cache identity/schema: {path}")
+            connection.execute("PRAGMA secure_delete=ON")
+            rows = connection.execute("SELECT fact_uuid, content_sha256 FROM vectors").fetchall()
+            stale = [
+                (uuid, digest)
+                for uuid, digest in rows
+                if (uuid, digest) not in allowed or uuid == deleted_fact_uuid
+            ]
+            if stale:
+                connection.executemany(
+                    "DELETE FROM vectors WHERE fact_uuid = ? AND content_sha256 = ?",
+                    stale,
+                )
+            connection.commit()
+            inspected += 1
+            purged += len(stale)
+        except Exception:
+            connection.rollback()
+            raise
+        finally:
+            connection.close()
+    return {"stores_checked": inspected, "rows_purged": purged}
 
 
 class DerivedVectorStore:
@@ -211,4 +289,4 @@ class DerivedVectorStore:
         }
 
 
-__all__ = ["DerivedVectorStore", "STORE_FORMAT", "float32_canonical"]
+__all__ = ["DerivedVectorStore", "STORE_FORMAT", "float32_canonical", "reconcile_derived_vector_stores", "DerivedCacheReconciliationError"]

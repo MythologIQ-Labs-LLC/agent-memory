@@ -12,7 +12,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from agentmem_ref.runtime.representation_cache import DerivedVectorStore, float32_canonical  # noqa: E402
+from agentmem_ref.runtime.representation_cache import (  # noqa: E402
+    DerivedVectorStore, DerivedCacheReconciliationError, float32_canonical,
+    reconcile_derived_vector_stores,
+)
 
 DIGEST = "sha256:" + "ab" * 32
 
@@ -105,6 +108,52 @@ class DerivedVectorStoreTests(unittest.TestCase):
         for invalid in ("", None, 0):
             with self.subTest(invalid=invalid), self.assertRaises(ValueError):
                 self.store.purge_fact(invalid)
+        self.assertEqual(self.store.row_count(), 1)
+
+    def test_reconcile_derived_root_handles_old_config_and_retains_live_facts(self):
+        alternate = DerivedVectorStore(self.root, "sha256:" + "bb" * 32, 3)
+        try:
+            for store in (self.store, alternate):
+                store.vector_for("gone", "private text", self.embed)
+                store.vector_for("live", "public text", self.embed)
+            result = reconcile_derived_vector_stores(
+                self.root, {"live": "public text"}, deleted_fact_uuid="gone"
+            )
+            self.assertEqual(result, {"stores_checked": 2, "rows_purged": 2})
+            self.assertEqual(self.store.row_count(), 1)
+            self.assertEqual(alternate.row_count(), 1)
+            self.assertEqual(
+                reconcile_derived_vector_stores(self.root, {"live": "public text"}),
+                {"stores_checked": 2, "rows_purged": 0},
+            )
+        finally:
+            alternate.close()
+
+    def test_reconcile_derived_root_cleans_stale_content_after_restart(self):
+        self.store.vector_for("live", "old", self.embed)
+        self.store.vector_for("live", "new", self.embed)
+        self.store.close()
+        result = reconcile_derived_vector_stores(self.root, {"live": "new"})
+        self.assertEqual(result, {"stores_checked": 1, "rows_purged": 1})
+        self.store = DerivedVectorStore(self.root, DIGEST, 3)
+        self.assertEqual(self.store.row_count(), 1)
+
+    def test_reconcile_derived_root_rejects_symlink_without_touching_target(self):
+        target = Path(self.root) / "outside.sqlite"
+        target.write_bytes(b"not an agent-memory store")
+        link = Path(self.root) / "derived" / ("vectors-" + "cc" * 8 + ".sqlite")
+        link.symlink_to(target)
+        with self.assertRaises(DerivedCacheReconciliationError):
+            reconcile_derived_vector_stores(self.root, {})
+        self.assertEqual(target.read_bytes(), b"not an agent-memory store")
+        link.unlink()
+
+    def test_reconcile_derived_root_refuses_corrupt_identity_without_mutating_rows(self):
+        self.store.vector_for("orphan", "stale text", self.embed)
+        self.store._connection.execute("UPDATE meta SET value = 'invalid' WHERE key = 'format'")
+        self.store._connection.commit()
+        with self.assertRaises(DerivedCacheReconciliationError):
+            reconcile_derived_vector_stores(self.root, {})
         self.assertEqual(self.store.row_count(), 1)
 
     def test_file_mode_is_0600_and_name_has_no_colon(self):
