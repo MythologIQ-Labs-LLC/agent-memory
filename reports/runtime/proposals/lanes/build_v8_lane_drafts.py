@@ -25,9 +25,10 @@ declaration = json.loads((root / DECLARATION).read_text(encoding="utf-8"))
 blob = subprocess.run(["git", "hash-object", DECLARATION], cwd=root, capture_output=True, text=True, check=True).stdout.strip()
 n = len(declaration["declared_changes"])
 deltas = ", ".join(f"{d['identity_path'].split('.', 1)[1]} {d['from']} -> {d['to']}" for d in declaration["identity_deltas"]) or "no identity delta"
-CHANGE = (f"the {n} protected blobs {DECLARATION} declares (the cumulative #776/#777/#772/#774/#786 runtime candidate: "
+CHANGE = (f"the {n} protected blobs {DECLARATION} declares (the cumulative #776/#777/#772/#774/#786/#802 runtime candidate: "
           f"fact-level deletion lineage, public deleted-identifier redaction, JSON checkpoint journal scaling, the strict "
-          f"caller-targeted historical predecessor, and cross-scope write-target authority); {deltas}")
+          f"caller-targeted historical predecessor, cross-scope write-target authority, and derived semantic-vector "
+          f"sidecar reconciliation on permanent deletion and recovery); {deltas}")
 DEFERRED_SUFFIX = "; at -v8 (#786 draft): deferral carried forward unchanged; this row is not executed under this lane"
 
 for family in ("amb-precisionmembench-retrieval", "longmemeval-s-retrieval-parity"):
