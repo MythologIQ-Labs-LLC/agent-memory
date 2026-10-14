@@ -1,6 +1,6 @@
 # Contributing to Agent Memory
 
-Agent Memory is a reference architecture and research-driven doctrine for governed agent memory systems.
+Agent Memory is a governed agent-memory runtime, architecture and doctrine corpus, and independent memory-evaluation laboratory. Design goals, implemented behavior, and qualified release claims are distinct.
 
 Contributions are welcome when they sharpen a boundary, add evidence, expose a failure mode, improve a machine-readable contract, or challenge an architectural assumption constructively.
 
@@ -219,6 +219,7 @@ scripts/validate_fixtures.py             Python standard library only
 scripts/validate_schemas.py              jsonschema permitted/required
 scripts/validate_markdown_links.py       Python standard library only
 scripts/validate_doctrine_boundaries.py  Python standard library only
+scripts/validate_architecture_index.py   Python standard library only; invokes git ls-files
 scripts/generate_calibration_report.py   Python standard library only
 reference/ governed/interoperability     pinned dependencies in reference/requirements.txt
 other validation dependencies            require explicit justification in the PR
@@ -227,6 +228,8 @@ other validation dependencies            require explicit justification in the P
 The stdlib-only claim applies to the listed low-cost validator surfaces, not to the entire `reference/` implementation. The stdlib-only validators must stay runnable with no installation step; `jsonschema` is the sanctioned schema-validation exception. Reference/runtime evidence dependencies are declared explicitly in [`reference/requirements.txt`](reference/requirements.txt) so a fresh contributor does not have to reverse-engineer CI to reproduce the supported validation environment.
 
 ## Documentation changes
+
+**Start architectural changes at the [single Architecture Library Index](docs/ARCHITECTURE_INDEX.md).** Identify the existing shelf and claim owner before writing. Edit an authoritative source instead of creating a competing summary. If a new numbered `docs/NN-*.md` document is genuinely needed, register it in exactly one shelf in the same change; record its authority class and why existing sources could not serve. Accepted ADRs, exact schemas, source code, frozen evidence and live issues retain their subject-specific authority. Run `python scripts/validate_architecture_index.py` locally, along with the Markdown and doctrine validators, before proposing a merge. Historical evidence is not rewritten to improve navigation.
 
 Optimize for:
 
