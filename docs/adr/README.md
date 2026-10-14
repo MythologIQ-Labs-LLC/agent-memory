@@ -45,11 +45,17 @@ ADR-036: Accepted
 ADR-037: Accepted
 ADR-038: Accepted
 ADR-039: Proposed
+ADR-040: Accepted
+ADR-041: Proposed
+ADR-042: Proposed
+ADR-043: Proposed
 ```
 
-ADRs 001-020, ADR-022, ADR-024, ADR-028, ADR-030, ADR-031, ADR-032, ADR-033, ADR-034, ADR-035, ADR-036, ADR-037, and ADR-038 have satisfied their doctrine-maturity gates.
+ADRs 001-020, ADR-022, ADR-024, ADR-028, ADR-030, ADR-031, ADR-032, ADR-033, ADR-034, ADR-035, ADR-036, ADR-037, ADR-038, and ADR-040 have satisfied their doctrine-maturity gates.
 
 Several accepted decisions deliberately required stronger-than-documentation evidence. ADR-020 required executable end-to-end governed-consequence evidence and adversarial negative paths. ADR-024 required executable shared-write coordination evidence. ADR-034 required a real procedural-memory vertical slice proving that retained/recalled skills do not become standing execution or metamemory authority. ADR-035 required an executable Cognitive Mesh path plus native first-party Cognitive Metabolism evidence crossing the mesh/PAMA/recall boundary without provider authority laundering.
+
+**Accepted after ADR-039:** [`ADR-040`](ADR-040-versioned-language-neutral-canonical-json-for-integrity.md) defines versioned language-neutral canonical JSON for integrity. This is an Accepted *doctrine* decision, not blanket qualification of all implementations or migrations.
 
 ## Current status policy
 
@@ -315,14 +321,18 @@ Acceptance does not claim a complete brain implementation, universal provider co
 
 ## Remaining Proposed ADRs
 
-The remaining Proposed decisions intentionally stay separate:
+The remaining Proposed decisions intentionally stay separate. Their own ADR files control status; the entries below are a navigation index, not a new acceptance ruling:
 
 - [`ADR-021`](ADR-021-portable-memory-governance-evidence-boundary.md): portable memory-governance evidence with external trust/attestation systems;
 - [`ADR-023`](ADR-023-corrections-are-supersession-not-deletion.md): generalized correction-as-supersession doctrine;
 - [`ADR-025`](ADR-025-durable-decision-overwrites-require-explicit-authority.md): explicit authority for durable decision overwrite;
 - [`ADR-026`](ADR-026-origin-is-provenance-not-evidentiary-authority.md): source-neutral evidence authority;
 - [`ADR-027`](ADR-027-rejected-values-require-governed-readmission.md): governed re-admission of rejected values;
-- [`ADR-029`](ADR-029-governance-projection-is-derived-context-not-authority.md): vendor-neutral governance context projection.
+- [`ADR-029`](ADR-029-governance-projection-is-derived-context-not-authority.md): vendor-neutral governance context projection;
+- [`ADR-039`](ADR-039-recall-ranking-uses-query-conditioned-applicability.md): query-conditioned applicability in recall ordering;
+- [`ADR-041`](ADR-041-benchmark-reporting-read-only-projection.md): read-only benchmark projection with fail-closed comparability;
+- [`ADR-042`](ADR-042-low-risk-state-change-auto-application-requires-pama.md): PAMA-gated low-risk state-change auto-application;
+- [`ADR-043`](ADR-043-benchmark-deficits-require-remediation.md): governed evidence-to-remediation obligation.
 
 These must not be collapsed into a generic "memory safety" claim. Each has its own evidence and acceptance boundary.
 
