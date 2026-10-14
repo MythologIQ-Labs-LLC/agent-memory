@@ -4,7 +4,7 @@
 
 # Agent Memory
 
-**A reference architecture for governed memory in autonomous and agentic systems.**
+**Governed memory architecture, executable reference runtime, and evaluation laboratory for agentic systems.**
 
 Agent Memory is about retained state that can influence future behavior without quietly acquiring truth, scope, permanence, or authority it has not earned.
 
@@ -176,26 +176,9 @@ See **[Governance Projection](Governance-Projection)**, **[Temporal Policy and G
 
 A model may be highly confident and still be wrong. A memory may be highly reinforced and still be unauthorized. A retrieval result may be highly relevant and still belong to another scope. Agent Memory keeps those possibilities representable instead of averaging them into reassurance.
 
-## Current maturity
+## Current maturity and qualification
 
-Agent Memory separates doctrine maturity from implementation evidence so that one cannot impersonate the other.
-
-| Area | Current state |
-|---|---|
-| **Accepted doctrine** | ADR-001 through ADR-020, ADR-022, ADR-024, ADR-028, ADR-030, ADR-031, and ADR-032 are **Accepted**. |
-| **Portable governance evidence** | ADR-021 remains **Proposed** and independently maturity-gated. |
-| **Durable mutation / evidence candidates** | ADR-023 and ADR-025 through ADR-027 remain **Proposed** under their individual evidence gates. |
-| **Implementation portability** | ADR-028 is **Accepted**, preserving a language-neutral core with optional implementation/interoperability profiles. |
-| **Governance Context Projection** | ADR-029 remains **Proposed** and independently evidence-gated. |
-| **Temporal policy compatibility** | ADR-030 is **Accepted**. |
-| **Temporal commitments** | ADR-031 is **Accepted**. |
-| **Governed structural mutability** | ADR-032 is **Accepted**; current PAMA 1.2 remains conservatively review-first for `domain_schema_mutation` until narrower autonomous evidence is implemented. |
-| **External temporal trust evidence** | Signer-trust binding, transparency evidence, and the exact OpenSSL RFC 3161 comparator are merged and repository-validated at their declared boundaries. |
-| **Runtime evidence** | Executable reference paths cover governed mutation, deletion completeness, concurrency, temporal commitments, policy comparators, adversarial behavior, and systems characterization. |
-| **Reference implementation** | A narrow evidence vehicle, not a claim of universal production readiness or higher cumulative conformance. |
-| **Conformance claims** | Governed separately from individual evidence slices. Passing a runtime experiment does not automatically raise a cumulative conformance level. |
-
-See **[Architecture Decisions](Architecture-Decisions)** for doctrine status and **[Runtime Evidence](Runtime-Evidence)** for the executable evidence ledger.
+Maturity claims are revision-bound, not maintained as a second Wiki status table. Consult the [ADR index](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/adr/README.md) for accepted versus proposed decisions, the [runtime baseline register](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/runtime/baseline-register.json) for the qualified version, [substrate maturity](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/43-substrate-inventory-and-maturity.md) for persistent implementations, and the [benchmark dashboard](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/dashboard/current.md) for accepted numeric evidence. This Wiki describes the concepts; these owners establish today's facts.
 
 ## Explore the architecture
 

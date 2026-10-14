@@ -1,7 +1,7 @@
 # Governance Index
 
-**Last Reviewed**: 2026-09-24  
-**Evidence Boundary**: #440 candidate based on `main` `76e929f1e2e0808b73041f05a3618ae856f754b4`
+**Last Reviewed**: 2026-10-13  
+**Evidence Boundary**: `main` `3eebb6d54e2a218c4fd10cf53c52acac8384c3e6`; exact-version source and issue states checked 2026-10-13. This is a snapshot, not a continuously updated status feed.
 
 This is the current map of Agent Memory's governance surfaces and their freshness obligations. It is intentionally **not** an exhaustive hand-maintained list of historical work. Historical plans and research briefs remain evidence; GitHub issue/PR state carries the live execution queue.
 
@@ -14,14 +14,14 @@ These surfaces MUST describe current repository reality. A wrong version, stale 
 | Artifact | Path | Current marker |
 |----------|------|----------------|
 | Meta Ledger | `docs/META_LEDGER.md` | append-only historical decision/session evidence; artifact content is authoritative for ledger state |
-| System State | `docs/SYSTEM_STATE.md` | current state is carried by `main` plus live issue/PR evidence; production substrate qualification remains open |
+| System State | `docs/SYSTEM_STATE.md` | compact revision-bound factual projection; follow code, baseline register, substrate inventory and live GitHub issue/PR state for newer changes |
 | Concept | `docs/CONCEPT.md` | current objective must point to live Backlog/System State/issues rather than retired plans |
-| Backlog | `docs/BACKLOG.md` | current queue under the 2026-10-07 owner direction (docs/68): Phase A formal external baseline (#694), then Phase B complete runtime architecture; five owner rulings recorded (roadmap seq 47-51, Entry #84) |
+| Backlog | `docs/BACKLOG.md` | roadmap and queue inventory; use the live issue/PR state before executing and preserve historical owner rulings |
 | Feature Index | `docs/FEATURE_INDEX.md` | feature inventory; lifecycle state must be reconciled when implementation changes materially |
-| ADR index | `docs/adr/README.md` | ADR-001 through ADR-038; artifact status is authoritative |
-| Package contract | `pyproject.toml` | `agent-memory-reference` 0.2.0; #440 candidate pair is `agent-manifest==0.12.0` + `agentrust-trace==0.10.0`, subject to exact-head qualification before merge |
-| README | `README.md` | current pre-RC product/runtime summary, query-driven retrieval, LoCoMo retrieval-diagnostic boundary, and benchmark limitations |
-| Substrate inventory | `docs/43-substrate-inventory-and-maturity.md` | reference persistence corrected; production-qualified canonical substrates remain 0 |
+| ADR index | `docs/adr/README.md` | ADR-001 through ADR-043, with each source ADR owning its own proposal/acceptance status |
+| Package contract | `pyproject.toml` and `reference/agentmem_ref/api/contract.py` | package 0.2.0; API contract 1.6.0; optional comparator pins `agent-manifest==0.12.0` and `agentrust-trace==0.10.0`; #440 closed 2026-09-24 |
+| README | `README.md` | three-audience entry-point cleanup proposed by draft PR #798; use the bounded product and evidence sources it links |
+| Substrate inventory | `docs/43-substrate-inventory-and-maturity.md` | SQLite single-host canonical substrate RC-qualified under closed #427; PostgreSQL, Markdown, distributed and Graphiti are not qualified equivalent canonical profiles |
 | RC profile | `docs/45-agent-memory-rc1-implementation-profile.md` | bounded implementation/release candidate profile under #410 |
 | Checkpoint contract | `docs/46-state-checkpoint-contract.md` | reference persistence ownership/transaction/recovery contract |
 | Checkpoint behavior profile | `docs/profiles/checkpoint-behavioral-assessment-profile.md` | current evidence-only behavioral conformance profile; no authority effect |
@@ -36,7 +36,7 @@ Stable architectural rules. Changes require explicit doctrine/contract work.
 
 | Artifact family | Path |
 |-----------------|------|
-| Architecture decisions | `docs/adr/README.md`, `docs/adr/ADR-001*` through `ADR-038*` |
+| Architecture decisions | `docs/adr/README.md`, `docs/adr/ADR-001*` through `ADR-043*` |
 | Cognitive-framework architecture | ADR-035 and top-level component/layer/composition documents |
 | PAMA foundation and decision table | `docs/pama/README.md`, `docs/04-governance-and-pama.md`, `docs/33-pama-decision-table.md` |
 | Public API contract | `docs/44-public-api-contract.md`, `reference/agentmem_ref/api/`, `schemas/api-*.schema.json` |
@@ -50,54 +50,27 @@ Stable architectural rules. Changes require explicit doctrine/contract work.
 
 ## Tier 3: Active Initiatives
 
-A Tier 3 row must represent active implementation, a live external/longitudinal gate with an explicit blocker, or a dependency qualification. Work that is merely interesting for later should be closed/deferred and reopened when it becomes executable.
+**Live GitHub issues and PRs own current execution state.** This index records durable responsibilities, not a second manually maintained issue backlog.
 
-| Initiative | Tracking surface | Current state |
-|------------|------------------|---------------|
-| Agent Memory RC1 composition | issue #410 | **active umbrella**; architecture, persistence, multi-memory composition, multi-route/query-driven retrieval are implemented; product/release gates remain |
-| Production canonical substrate | issue #427 | **active RC gate**; reference durability is proven, production-qualified canonical substrates = 0 |
-| Comparator dependency requalification | issue #440 / PR #476 | **active exact-version qualification**; `agent-manifest` 0.12.0 + `agentrust-trace` 0.10.0 are one coordinated candidate pair; non-skippable target-version checks and exact-head workflows must pass before merge |
-| Semantic recall/canonical-truth case study | issue #408 | **longitudinal case study**; next executable gate is T0/failure evidence, not speculative implementation |
-| Live DashClaw conformance | issue #361 | **blocked external** on authorized Cloudflare/DashClaw live traversal; repository-side implementation already merged |
-| Field efficacy benchmark | issue #388 | **longitudinal external evidence**; operator skill merged via PR #389; waits on T1/T2/T3 data |
+| Responsibility | Primary owner | Posture at this evidence boundary |
+|---|---|---|
+| Working governed runtime and bounded release qualification | [#410](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/410) | Open; SQLite and the developer facade exist, but production 1.0 and heterogeneous multi-substrate qualification are not claimed |
+| Public Gauntlet and runtime baseline convergence | [#635](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/635) | Open; exact benchmark-admission and successor-baseline requirements remain separately governed |
+| Hierarchical/heterogeneous multi-representation composition | [#636](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/636) | Open; defining product architecture, with an existing activation gate whose sequencing needs explicit review, not silent removal |
+| Product/runtime/benchmark/architecture North Star | [#668](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/668) | Open; source of the accepted product-intent clarification |
+| Competitive peer breadth | [#789](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/789) | Open; independent same-harness evidence, not vendor headline scores |
+| Documentation discoverability and consolidation | [#797](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/797), draft [PR #798](https://github.com/MythologIQ-Labs-LLC/agent-memory/pull/798) | Active editorial review; this index reconciliation is a separate no-CI slice |
+| External / longitudinal evidence | [#361](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/361), [#388](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/388), [#408](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/408) | Independently gated; not substitutes for current executable runtime work |
 
-### Recently retired from the active queue
-
-- #437: closed completed through PR #449; query-driven relational recall and the LoCoMo-compatible retrieval-evidence diagnostic are now on `main`.
-- PR #438: closed unmerged only because GitHub auto-closed it during a temporary zero-diff reconciliation; PR #449 continued the same branch and landed the corrected implementation.
-- #441: closed completed through PR #448; unique checkpoint-behavior probes were harvested into the current harness layer and the historical branch is deletion-eligible.
-- #364: closed completed after recall/crossing/shared-domain authority remediation.
-- #363: closed completed for the original private-scraping/unlocked-generation persistence audit scope; #427 owns production substrate qualification.
-- #332: closed `not_planned` in Agent Memory because remaining work is live QOR proving-ground execution, not repository implementation.
-- #387: closed `not_planned` for the current cycle; reopen when the Git/document knowledge-profile work becomes executable.
-- #392: closed `not_planned` until DashClaw establishes TransitionRuleCorpus authorship/ownership.
-- PR #389: merged after rechecking its long-standing full-green evidence.
-- PRs #404/#405: closed as structurally incomplete one-file dependency bumps; #440 owns the coordinated exact-version requalification.
+**Closed gates no longer on the active critical path:** [#427](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/427) (SQLite canonical-substrate qualification, closed 2026-09-23) and [#440](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/440) (comparator dependency-pair qualification, closed 2026-09-24). Do not revive their old pending instructions. Historical resolution remains in the original issues and associated evidence.
 
 ## Tier 4: Active or Held Plan Artifacts
 
-Only plans whose lifecycle is still active/held belong here. Completed plans are historical evidence.
+An active plan is authoritative **only within its explicitly pinned issue, source revision and approval boundary**; a completed plan is historical evidence, even if stored alongside current material. Do not maintain a second table of every completed sprint here.
 
-| Artifact | Path | State |
-|----------|------|-------|
-| Sprint 4b JS PAMA plan | `docs/plan-sprint4b-js-pama.md` | **HELD**; direct parity port remains inappropriate without a complete correction/remediation route |
-| Sprint 4b research brief | `docs/research-brief-sprint4b-js-pama-2026-09-07.md` | supporting research for the held plan |
-| RC1 implementation profile | `docs/45-agent-memory-rc1-implementation-profile.md` | **ACTIVE** under #410 |
-| #674 successor-baseline plan | `docs/plan-674-successor-baseline.md` | implemented (PR #676, Entry #64); Step B1 publication of Runtime Baseline v2 at Entry #72; historical evidence |
-| #670 return-budget plan | `docs/plan-670-return-budget.md` | implemented (PR #678, Entry #67); the first declared transition under docs/67; historical evidence |
-| #640 lanes -v2 plan | `docs/plan-640-lanes-v2-return-budget.md` | **COMPLETE**; Gate Tribunal PASS at Entry #69 (iteration 2); Phases 1-2 at Entry #70 (PR #679), Phase 3 acceptance of nine rows at Entry #71 |
-| #669 lanes -v3 plan | `docs/plan-669-lanes-v3.md` | **COMPLETE**; Gate Tribunal PASS at Entry #89 (attempt 4); implementation at Entry #90 (PR #709); acceptance of eleven rows at Entry #91 (D1 equal on every re-executed row; D2 semantic row changed no scored metric) |
-| #644 lanes -v4 plan | `docs/plan-644-lanes-v4.md` | **COMPLETE**; Gate Tribunal PASS at Entry #97 (attempt 4); implementation at Entry #98 (PR #716); acceptance of twelve rows at Entry #101 (L1 control equals -v3; L2 shadow equals control; L9 sidecar joined) |
-| #671 cross-fact currentness plan | `docs/plan-671-cross-fact-currentness.md` | Gate Tribunal PASS at Entry #100 (attempt 7); implemented at Entry #104 (PR #726); MESA M4 solved under the frozen protocol (regression floor); generalization not measured (#732/#733) |
-| #671 C9 evidence plan (-v5 lanes, mesa-formal-v2) | `docs/plan-671-evidence-v5.md` | Gate Tribunal PASS at Entry #105 (attempt 2); freeze at Entry #106 (PR #727); replay at Entry #107 (PR #728); lanes at Entry #108 (PR #729); acceptance at Entry #109 (E1 1000/1000 + 77/77 EQUAL, 0 UNATTRIBUTED) |
-| #732 remediation plan (typed write-time propositions) | `docs/plan-732-remediation.md` | Gate Tribunal PASS at Entry #116 (attempt 3); implemented at Entry #117, implementation Tribunal PASS at Entry #118 (PR #741); Runtime Baseline v6 declared; the typed proposition and extractor path is unaccepted until R6 acceptance |
-| #732 v6 evidence plan (-v6 lanes, mesa-formal-v3) | `docs/plan-732-evidence-v6.md` | Gate Tribunal PASS at Entry #119 (attempt 2); freeze (PR #742); replay and lanes (PR #743); acceptance at Entry #120 (V6-E1 1000/1000 + 77/77 EQUAL to -v5; mesa-formal-v3 reproduces v2); docs/67 B1/B2 follow |
-| #672 tranche 5 plan (harvests into tranches) | `docs/plan-672-tranche-5-harvests.md` | implemented (Entry #82); the closeout as data in `reference/fixtures/harvest-closeout-final-v2.json`, enforced by `reference/tests/test_harvest_closeout_v2.py`; historical evidence |
-| #662 CI-cost plan (Phases 2-4) | `docs/plan-662-ci-cost-phases-2-4.md` | implemented (Entry #78); the estate as data in `data/github-actions-workflow-policy.json`, enforced by `reference/tests/test_github_actions_workflow_policy.py`; historical evidence |
-| North Star research brief | `docs/research-brief-north-star-six-tranches-2026-10-06.md` | supporting research for the #668 roadmap and the #674 plan (Entry #60) |
-| Tranche 5 / CI-cost research brief | `docs/research-brief-tranche-5-harvests-and-ci-cost-2026-10-07.md` | supporting research for #672 (`scope-tranche-5-harvests`) and `prereq-ci-cost` (#662 Phases 2-4) (Entry #74) |
-
-Implemented sprint plans remain in `docs/` as historical evidence. Their continued existence does not mean the work is pending.
+- **Held:** `docs/plan-sprint4b-js-pama.md` and its accompanying research brief remain intentionally held until a correct remediation/discharge path is available.
+- **Current execution:** derive the next accepted work package from [#410](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/410), [#635](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/635), [#636](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/636) and [#668](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/668), checking live dependencies first.
+- **Historical plans:** `docs/plan-*.md` and `docs/research-brief-*.md` preserve decisions and frozen evidence; use `docs/META_LEDGER.md` and `docs/BACKLOG.md` for their provenance and outcomes. Do not relocate these files merely to shorten directory listings.
 
 ## Tier 5: Reference Material
 
@@ -136,14 +109,12 @@ Frozen/provenance-oriented artifacts preserve what was decided, measured, or pla
 
 ## Current Development Sequence
 
-Tier 1 surfaces should agree on this order:
+Do not restate a date-sensitive, manually maintained list of already closed prerequisites here. At this snapshot:
 
-1. **#427:** qualify one production-credible canonical substrate without changing Agent Memory semantics to match a provider.
-2. **RC developer facade:** implement a small ergonomic surface over the existing 1.2.0 contract.
-3. **RC end-to-end fixture:** prove retain/composition/query-driven retrieval/admission/correction/restart/forgetting/history as one usable scenario.
-4. **Public benchmark evidence:** execute the now-implemented LoCoMo retrieval diagnostic against an appropriately obtained external dataset, then add answer-generation/evaluation only under an explicit comparable protocol; LongMemEval remains future release evidence.
-5. **#440:** complete the Agent Manifest + TRACE exact-version qualification with zero skipped qualification checks and exact-head comparator/repository evidence.
-6. Keep #361, #388, and #408 out of the active implementation critical path until their external/longitudinal evidence can move.
+1. **Finish security, deletion/correction, and runtime-succession safety work** under its live issue/PR owners. Correctness remains a prerequisite for any release.
+2. **Prove useful integrated runtime behavior**, including governed composition across appropriate memory representations. [#636](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/636) contains the experiment contract; review its broad #635/external-peer sequencing gate explicitly rather than treating it as an unchangeable product requirement.
+3. **Qualify rather than assume:** use [#635](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/635), [#601](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/601) and the canonical benchmark dashboard for reproducible evaluation, with no benchmark-derived mutation authority.
+4. **Reduce documentation drift** under [#797](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/797): code owns current runtime contracts, actual ADR files own decision status, the substrate inventory owns persistence maturity, and the generated dashboard owns numeric results.
 
 ## Drift Contract
 

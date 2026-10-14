@@ -9,7 +9,7 @@ can be implemented over a temporal-graph substrate that provides no governance o
 Read this section before citing anything in this directory.
 
 - **Not a conformance claim.** The emitted report states conformance level 0 and says why. The doctrine fixture corpus is driven through the adapter's authority enforcement, but doc 06 levels are cumulative and this adapter implements neither decay nor calibrated saturation, so levels 2 and 3 are unmet however well enforcement does. Nothing here substantiates a level, a profile, or ADR-020 by itself.
-- **Not a reference implementation of Agent Memory.** It implements the narrow slices needed to exercise governance paths, portable evidence, shared-write coordination, durable-decision overwrite authority, and bounded interoperability projections, and nothing else.
+- **Not a standalone production-conformance claim for this evidence adapter.** These individual governance harness slices do not establish full conformance. Separately, the packaged `AgentMemory` developer facade provides an executable single-host SQLite reference runtime with its own versioned contract and qualification boundary. Do not confuse the narrow evidence fixture with the full packaged runtime.
 - **Not an endorsement of any substrate, trust infrastructure, governance consumer, distributed-lock implementation, or approval service.** The model reproduces one mapped substrate's verified semantics so the tests have something realistic to push against. The Ed25519 profile proves an evidence boundary, not a universal PKI. The ADR-024 coordinator proves a pre-write coordination boundary, not a universal lock algorithm. The ADR-025 slice proves proposal/authority/PAMA/supersession separation, not one universal human-approval workflow. Agent Manifest, TRACE, cMCP, DashClaw, and Microsoft Agent Governance Toolkit are comparators/interoperability surfaces, not doctrine dependencies.
 
 ## What it does demonstrate
@@ -44,11 +44,11 @@ The Governance Context Projection adds a complementary boundary: remembered cont
 
 ## Public API
 
-Consumers call `agentmem_ref.surface` -- `propose`, `approve`, `commit`, `recall`, `forget`, the read-only `history` and `posture`, and the action stages `authorize` and `witness` (ADR-038: the adapter decides an `action_execution` proposal, binds an executable allow or deny after its ledger exists, and consumes the authorization exactly once when the host's observation is witnessed) -- with schema-backed, versioned envelopes (contract `1.2.0`) (`schemas/api-*.schema.json`; examples under `reference/fixtures/api/`) and get a result envelope naming the contract version, its ADR-030 compatibility state, the stage and the decision. The adapter's dataclasses are not the contract. `docs/44-public-api-contract.md` is the contract's home, including what the surface refuses and why.
+Consumers call `agentmem_ref.surface` -- `propose`, `approve`, `commit`, `recall`, `forget`, the read-only `history` and `posture`, and the action stages `authorize` and `witness` (ADR-038: the adapter decides an `action_execution` proposal, binds an executable allow or deny after its ledger exists, and consumes the authorization exactly once when the host's observation is witnessed) -- with schema-backed, versioned envelopes (current version declared in `reference/agentmem_ref/api/contract.py`; schemas in `schemas/api-*.schema.json`; examples under `reference/fixtures/api/`) and get a result envelope naming the contract version, its ADR-030 compatibility state, the stage and the decision. The adapter's dataclasses are not the contract. `docs/44-public-api-contract.md` is the contract's home, including what the surface refuses and why.
 
 ## Layout
 
-`agentmem_ref` is seven subpackages in dependency order -- a module imports only from its own layer or an earlier one, and `reference/tests/test_package_layout.py` enforces that order as read from `scripts/restructure_package.py`, the script that produced the layout.
+`agentmem_ref` has nine subpackages in dependency order -- a module imports only from its own layer or an earlier one, and `reference/tests/test_package_layout.py` enforces that order as read from `scripts/restructure_package.py`, the script that produced the layout.
 
 ```text
 reference/
@@ -70,10 +70,12 @@ reference/
                                      predictive, procedural, decision_overwrite, structural,
                                      crossing, interchange, temporal, precedent, maintenance,
                                      dashclaw, external/approval/enforcement/telemetry evidence
+    api/                             public developer facade, versioned envelope contracts
     crg/                             Agent Memory's Code Reality Graph; CodeGenome is its
                                      first-party implementation profile (ADR-035, ADR-036)
     harness/                         characterization harnesses, depth probes, comparators,
                                      benchmarks -- leaves
+    evaluation/                      benchmark integrations, lanes, evidence normalization
     <module>.py                      compatibility alias: `agentmem_ref.policy is
                                      agentmem_ref.core.policy` (every old path still works)
   tests/                              model, claim, decision, projection, real-substrate, and interoperability paths

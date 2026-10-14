@@ -15,25 +15,9 @@ ADR status describes **doctrine maturity**, not runtime implementation completen
 
 An Accepted ADR does **not** mean every mapped product implements it. That would be a convenient fiction, but still a fiction.
 
-## Current state
+## Current doctrine status
 
-- **ADR-001 through ADR-020:** Accepted
-- **ADR-021:** Proposed, portable memory-governance evidence boundary
-- **ADR-022:** Accepted, memory isolation domains and controlled boundary crossing
-- **ADR-023:** Proposed, correction as supersession rather than deletion
-- **ADR-024:** Accepted, pre-write coordination for shared-memory mutation
-- **ADR-025:** Proposed, explicit authority for durable decision overwrite
-- **ADR-026:** Proposed, origin is provenance rather than evidentiary authority
-- **ADR-027:** Proposed, governed re-admission for rejected values
-- **ADR-028:** Accepted, language-neutral core with optional implementation/interoperability profiles
-- **ADR-029:** Proposed, Governance Context Projection as derived context rather than authority
-- **ADR-030:** Accepted, versioned compatibility/currentness for temporal-policy projections
-- **ADR-031:** Accepted, deterministic temporal commitments with separate evidence and authority layers
-- **ADR-032:** Accepted, governed mutable memory structure with deterministic or explicit-human canonical structural authority
-- **ADR-033:** Accepted, independent capability maturity and deterministic component/capability composition
-- **ADR-034:** Accepted, procedural/skill memory as retained state rather than standing execution authority
-
-Each Proposed ADR has its own acceptance evidence. A green implementation slice does not silently accept a doctrine decision whose ADR demands broader evidence.
+Do not copy a volatile ADR status list into the Wiki. The single [ADR status index](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/adr/README.md) names the exact Proposed, Accepted, Superseded and historical decisions. Historical explanations below describe the decisions at their original adoption boundaries; a green implementation slice never silently changes an ADR's status.
 
 ## Important decision families
 

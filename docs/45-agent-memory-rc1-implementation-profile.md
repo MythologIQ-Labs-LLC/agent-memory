@@ -1,6 +1,6 @@
 # Agent Memory RC1 Implementation Profile
 
-**Status:** implementation profile; tracked by issue #410
+**Status:** historical RC1 implementation-profile baseline; later contracts and qualification supersede its publication-time status. For the current shipped surface consult `reference/agentmem_ref/api/contract.py`, the runtime baseline register, and [the public contract](44-public-api-contract.md). Tracked by issue #410.
 
 **Architectural authority:** Accepted ADR-035
 

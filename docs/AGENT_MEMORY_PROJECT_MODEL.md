@@ -457,9 +457,9 @@ Instead:
 
 ## 12. Documentation precedence and reconciliation
 
-This document should be reconciled with the broader repository operating-model documentation before either is declared final canonical project identity.
+Reconciliation with the repository operating model is recorded under [#565](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/565) and reflected in `README.md`, [`README.md`](README.md) (documentation index), and [`REPOSITORY_OPERATING_MODEL.md`](REPOSITORY_OPERATING_MODEL.md).
 
-The older three-role framing:
+The three-role framing:
 
 ```text
 product/runtime
@@ -467,7 +467,7 @@ architecture/governance laboratory
 evaluation/benchmark laboratory
 ```
 
-was useful but is now too coarse.
+describes what the repository *does* operationally today, and the root README presents it to visitors as the Theory / Benchmarks / Runtime entry points. This five-layer model describes how the broader project is *partitioned* for community, evaluation, qualification, reference implementation, and future product/licensing boundaries. They are different abstraction levels, not competing architectures, and neither supersedes the other.
 
 The five-layer model makes explicit:
 

@@ -297,25 +297,15 @@ The common run schema may continue to normalize to high-level dimensions such as
 - deterministic replay of evaluator;
 - profile comparability checks.
 
-## 8. Currently registered executable external profiles
+## 8. Registered external benchmark profiles (source-owned)
 
-The evaluation registry is the set of committed benchmark integration descriptors under `reference/agentmem_ref/evaluation/integrations/`; each declares its `admission_state` and `benchmark.provenance_class` from the vocabularies above, and `agent-memory benchmark list` projects them. The registry currently contains these formal external profiles (the `golden-keyed-retrieval-v1` contributor demonstration is `baseline_or_probe` and is listed, not counted, here).
+The executable registry is defined by the committed descriptors in `reference/agentmem_ref/evaluation/integrations/` and inspected with `agent-memory benchmark list | inspect | validate-integration`. These descriptors own the `admission_state` and `benchmark.provenance_class` fields. This Atlas does **not** maintain a second hand-edited status table of executable profiles.
 
-| Profile | Status | Primary pressure |
-| --- | --- | --- |
-| SWE-ContextBench Lite external retrieval | blocked on exact frozen projection/provenance | prior-experience retrieval, ranking, reproducibility |
-| LongMemEval_S full | complete | multi-session retrieval, knowledge-update currentness, efficiency |
-| LongMemEval_M | not run | longer-horizon / larger workload extension |
-| LongMemEval upstream model-judged QA | not run | answer-generation + memory use |
-| AgentMemBench / MemDialogue v2 operational | complete | retrieval, currentness/conflict, isolation, deletion, concurrency, scale |
-| AgentMemBench upstream LLM-judged retrieval | not run | upstream judged retrieval protocol |
-| AgentMemBench M6 portability | not run | model portability |
+**Profile admission != benchmark execution != accepted numeric evidence.** The generated [current evidence dashboard](../reports/benchmarks/dashboard/current.md) owns accepted run/score state, exact revisions, and blocked or unavailable results. The [Gauntlet](GAUNTLET_SYSTEM_ADAPTER_CONTRACT.md) has its separate system/adaptor profile registry. A `baseline_or_probe` demonstration is not an independent benchmark outcome.
 
-This table is registry truth, not a statement that no other internal benchmark harness exists. Gauntlet-native suites (`governance-isolation-deletion-alpha-v1`, `durability-recovery-alpha-v1`) are registered as Gauntlet profiles with `kind: gauntlet_native_gap` and no bound benchmark integration; they appear under `agent-memory gauntlet list`, never in this external table.
+## 9. External-profile coverage matrix (revision-bound taxonomy)
 
-## 9. Current registered-profile coverage matrix
-
-This matrix intentionally reflects the **registered external profiles**, not every repository-local conformance harness.
+This qualitative matrix describes the capabilities materially pressured by selected benchmark protocols at its original Atlas revision. It is **not** a live admission-status or benchmark-execution dashboard and cannot establish whether a profile has since run or has accepted scored evidence. Use the registry and dashboard above for those questions. It intentionally excludes repository-local conformance harnesses.
 
 Legend: `● direct`, `◐ partial`, `△ indirect`, `○ not covered`, `B blocked`.
 

@@ -8,6 +8,19 @@ The governing repository relationship is documented in [`docs/REPOSITORY_OPERATI
 
 The canonical current portfolio view is [`reports/benchmarks/dashboard/current.md`](reports/benchmarks/dashboard/current.md). Historical generated scorecards remain revision-bound snapshots and are not the current-state dashboard.
 
+## Start here
+
+| If you are | Go to |
+|---|---|
+| Inspecting current accepted evidence, deltas, and non-numeric states | [`reports/benchmarks/dashboard/current.md`](reports/benchmarks/dashboard/current.md) (canonical), `current.json` (machine-readable) |
+| Checking which memory capabilities are measured, partial, or white space | [`docs/BENCHMARK_COVERAGE_ATLAS.md`](docs/BENCHMARK_COVERAGE_ATLAS.md) |
+| Bringing a memory system or a benchmark | [`docs/CONTRIBUTOR_ARCHITECTURE.md`](docs/CONTRIBUTOR_ARCHITECTURE.md), then [`docs/GAUNTLET_EXTERNAL_CONTESTANT_QUICKSTART.md`](docs/GAUNTLET_EXTERNAL_CONTESTANT_QUICKSTART.md) |
+| Running controlled same-harness comparisons | [`docs/65-independent-amb-competitive-profile.md`](docs/65-independent-amb-competitive-profile.md), [`docs/69-agentmembench-mesa-formal-baseline.md`](docs/69-agentmembench-mesa-formal-baseline.md), lane files under `reference/agentmem_ref/evaluation/lanes/` |
+| Following per-metric leaderboard and evidence-freshness work | issues [#779](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/779), [#789](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/789), [#795](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/795); the console contract is [`docs/benchmark-evidence-console-catalog.md`](docs/benchmark-evidence-console-catalog.md) |
+| Reading how findings become bounded remediation | [`docs/56-benchmark-gauntlet-remediation-evidence.md`](docs/56-benchmark-gauntlet-remediation-evidence.md), [`docs/72-benchmark-neutral-remediation-loop.md`](docs/72-benchmark-neutral-remediation-loop.md) |
+
+The dashboard is the **only current numeric benchmark portfolio**. This guide intentionally maintains no copied scores or running RC schedule.
+
 ## Governing benchmark rules
 
 ```text
@@ -29,102 +42,20 @@ The benchmark program has three jobs:
 
 There is no universal memory-health aggregate.
 
-## Current portfolio
+## Benchmark coverage and evidence owners
 
-### LongMemEval_S
+The benchmark portfolio changes as accepted results, competitor reproductions, and blocked evaluations change. Inspect the [canonical dashboard](reports/benchmarks/dashboard/current.md) and its [machine-readable evidence](reports/benchmarks/dashboard/current.json) rather than quoting numbers from this file.
 
-Status: **complete frozen external run plus accepted remediation and #594 adapted-evidence replays**.
+| Workload or evidence family | Interpret or reproduce at its owner |
+|---|---|
+| LongMemEval_S and LongMemEval_M | Same-harness/adapted retrieval and temporal evidence in the dashboard; do not confuse retrieval scores with model-judged QA |
+| AgentMemBench / MESA | [Formal MESA baseline](docs/69-agentmembench-mesa-formal-baseline.md) and dashboard; do not equate source retrieval with final answer quality |
+| Natural proposition semantics | [#594 accepted closeout](reports/benchmarks/replays/594-post-550-semantic-qualification/CLOSEOUT.md), with interpretation failure classes preserved |
+| SWE-ContextBench Lite | [Comparison harness](docs/50-swe-contextbench-comparison-harness.md) and [coverage atlas](docs/BENCHMARK_COVERAGE_ATLAS.md); synthetic probes are not protocol-comparable external results |
+| Temporal and internal conformance | [Orthogonal gauntlets](docs/59-orthogonal-temporal-gauntlet-qualification.md), [temporal/currentness program](docs/60-temporal-currentness-qualification-gauntlet.md), and immutable fixture/evidence records |
+| External competitive systems | [AMB independent profile](docs/65-independent-amb-competitive-profile.md), [Gauntlet contestant guide](docs/GAUNTLET_EXTERNAL_CONTESTANT_QUICKSTART.md), and version-pinned same-harness dashboard rows |
 
-Current accepted retrieval/currentness highlights:
-
-- session recall_all@5: **0.823389**;
-- turn recall_all@10: **0.723**;
-- session latest-gold-ranked-first: **0.457**;
-- turn latest-gold-ranked-first: **0.557**;
-- no runtime, ingestion, out-of-corpus, or unmapped-admission failures on the accepted profile.
-
-The pre-remediation `f73b872` artifacts remain immutable. Current evidence exceeds the lexical baseline on the accepted headline retrieval metrics, while currentness remains a deliberately separate weakness rather than being hidden inside one score.
-
-#594 Phase A created a source-anchored adapted-external profile using defensible session timestamps as caller-declared `observed_at`, plus a separate host-declared question-date reference-time diagnostic.
-
-Result: C, P1 and P2 are metric/rank identical. Interpreted self-validity resolves for only 8 session memories and 33 turn memories and reaches no metric-visible demotion case. The correct classification is **EVIDENCE GAP for #550 demotion efficacy on this corpus**, not failure.
-
-The S profile remains retrieval/currentness evidence. It is not the upstream model-judged LongMemEval QA score.
-
-### LongMemEval_M
-
-Status: **complete bounded external run**.
-
-Accepted recall_all@5:
-
-- session: **0.708831**;
-- turn: **0.532220**.
-
-The earlier hold caused by known ingest/per-commit scale cost is historical. M was promoted only after the blocking performance work was bounded; it is no longer `not_run` or `held` in the current portfolio.
-
-### AgentMemBench / MemDialogue
-
-Status: **complete bounded external operational profile plus replayed remediation evidence**.
-
-Current accepted highlights:
-
-- exact-source recall@5: **0.899**;
-- PERSONAL_FACT: **0.962**;
-- TASK_REQUEST: **0.836**;
-- conflict new-fact-first: **0.20**;
-- staleness: **0.80**;
-- cross-user leakage: **0**;
-- audited post-delete absence: **1.0**;
-- concurrency operation/materialization success after runtime-owned serialization: **1.0**.
-
-The pre-remediation `03197cd` evidence stays immutable.
-
-### Proposition-semantics natural qualification (#594 Phase B)
-
-Status: **accepted repository-owned conformance evidence**.
-
-A 268-turn natural-language sample was selected before scoring: 100 random Part R turns plus 168 stratified Part S turns. Five versioned annotation drafts were reviewed without consulting interpreter predictions. Maintainer review `5339771805` accepted v5 as the immutable source for `gold-v1.json`.
-
-First accepted score, unbiased Part R:
-
-| status | precision | recall |
-| --- | ---: | ---: |
-| known | **0.800** | **0.148** |
-| ambiguous | 0.210 | **1.000** |
-| unknown | **1.000** | 0.848 |
-
-The dominant defect is under-recognition / over-ambiguity: 46 of 54 gold-known Part R turns become `ambiguous`.
-
-The property-alias table was frozen empty before scoring. Therefore strict slot/value conformance is an exact-label diagnostic, not semantic synonym precision. #597 owns a pre-score canonicalization contract; aliases are not fitted after seeing failures.
-
-Follow-on defects are tracked as:
-
-- #596 proposition recognition / over-ambiguity;
-- #597 property/value boundary canonicalization;
-- #598 write-time temporal-aspect calibration.
-
-Full disposition: [`reports/benchmarks/replays/594-post-550-semantic-qualification/CLOSEOUT.md`](reports/benchmarks/replays/594-post-550-semantic-qualification/CLOSEOUT.md).
-
-### SWE-ContextBench Lite
-
-The synthetic smoke harness is executable and revision-bound but deliberately **non-comparable** to the external research result.
-
-The protocol-comparable external lane remains blocked on the exact frozen research-compatible past-task projection and provenance required by #467. Do not substitute the synthetic fixture and call it equivalent.
-
-### Internal RC conformance fixtures
-
-Repository-owned deterministic fixtures prove specific architecture behavior such as multi-route recovery, current-state vs historical-evidence admission, lifecycle/restart safety, and temporal/currentness invariants.
-
-These are conformance/falsification evidence, not independent external efficacy.
-
-### Orthogonal temporal gauntlets
-
-[`docs/59-orthogonal-temporal-gauntlet-qualification.md`](docs/59-orthogonal-temporal-gauntlet-qualification.md) qualifies candidate gauntlets:
-
-- Ground Truth First remains blocked on artifact availability;
-- Microsoft RHELM is runnable but cannot falsify the targeted temporal claims.
-
-#580 supplies the repository-owned temporal/currentness qualification surface. #594 adds adapted external natural-data evidence but does not manufacture an external demotion-efficacy case where the corpus has none.
+A profile's integration-admission status is not its evidence-execution or score-acceptance status. Unavailable, blocked, unsupported, non-comparable, and unexecuted are distinct from a numeric zero. Historical results remain accessible in their own revision-bound artifacts.
 
 ## Contributor contracts
 
@@ -171,21 +102,9 @@ Important completed steps include:
 - identity-first candidate materialization performance repair (#591);
 - natural semantic qualification (#594).
 
-## Active RC evaluation path
+## Active remediation and evaluation sequence
 
-```text
-#591 complete
-#594 qualified
-canonical dashboard complete
-  -> #585 query-intent span calibration
-  -> #598 write-time temporal-aspect calibration
-  -> redesigned #583
-  -> final #580 replay
-  -> #584 policy ruling
-  -> RC1 declaration decision
-```
-
-#596/#597 are high-priority interpreter-quality limitations and can be promoted onto the RC critical path if final evidence shows the declared RC contract cannot tolerate them. They are not automatically authority/safety blockers because the dominant current behavior is conservative ambiguity/abstention.
+The live RC/runtime program, completed steps, blockers and implementation owners are maintained in [BACKLOG.md](docs/BACKLOG.md), [SYSTEM_STATE.md](docs/SYSTEM_STATE.md), and [open GitHub issues](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues). Earlier RC dependency chains are preserved in revision-bound evidence, not repeated here as current instructions.
 
 ## Rules for benchmark-driven changes
 

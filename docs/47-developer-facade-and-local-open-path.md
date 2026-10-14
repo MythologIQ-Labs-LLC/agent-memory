@@ -1,6 +1,6 @@
 # Developer Facade and Local Open Path
 
-Status: RC1 developer-facing surface for issue #477 under umbrella #410.
+Status: developer-facade introduction at RC1 (issue #477, umbrella #410). This is an implementation history and usage guide; the diagram's contract version is the original 1.2.0 boundary, **not the current version**. Read the version from `reference/agentmem_ref/api/contract.py` and qualification from the runtime baseline register.
 
 ## Purpose
 
