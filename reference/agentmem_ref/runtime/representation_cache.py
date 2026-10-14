@@ -157,11 +157,28 @@ def reconcile_derived_vector_stores(
             report["unsafe"].append(str(path))
             continue
         try:
-            # ``mode=rw`` never creates a file; the absolute (not resolved) path keeps a
-            # symlink swapped in after the lstat from being followed by name resolution.
+            # ``mode=rw`` never creates a file. The open itself still follows a symlink
+            # swapped in between the lstat above and this call: SQLite resolves the path by
+            # name and exposes no no-follow option through the URI or this binding.
             connection = sqlite3.connect(path.absolute().as_uri() + "?mode=rw", uri=True, timeout=5.0)
         except sqlite3.Error as exc:
             report["failed"].append([str(path), f"{type(exc).__name__}: {exc}"])
+            continue
+        # Re-check the directory entry now that the connection exists. An entry that is no
+        # longer the same regular file (a link swapped in before the open) is never read,
+        # purged or unlinked: the connection is closed and the entry reported unsafe. A
+        # swap in and back out between the open and this check is not detected; that
+        # window is inside the root's trust boundary and is documented, not claimed closed.
+        try:
+            after = os.lstat(path)
+        except OSError as exc:
+            connection.close()
+            report["failed"].append([str(path), f"{type(exc).__name__}: {exc}"])
+            continue
+        if (stat.S_ISLNK(after.st_mode) or not stat.S_ISREG(after.st_mode)
+                or (after.st_dev, after.st_ino, after.st_ctime_ns) != (status.st_dev, status.st_ino, status.st_ctime_ns)):
+            connection.close()
+            report["unsafe"].append(str(path))
             continue
         try:
             try:

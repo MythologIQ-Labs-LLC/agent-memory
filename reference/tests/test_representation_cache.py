@@ -8,6 +8,7 @@ import stat
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 from unittest import mock
 from pathlib import Path
 
@@ -165,6 +166,43 @@ class DerivedVectorStoreTests(unittest.TestCase):
                     outside._connection.execute("SELECT fact_uuid FROM vectors").fetchone()[0],
                     "foreign-fact",
                 )
+            finally:
+                outside.close()
+
+    def test_reconcile_never_acts_through_a_symlink_swapped_in_after_the_check(self):
+        """The lstat passes on a regular file; the entry is replaced by a link to an external
+        store before SQLite opens it. The open follows the link (SQLite has no no-follow
+        option here), so the reconciler must detect the swap after the open and act on
+        nothing: no purge, no unlink, the external rows and the link itself intact."""
+        import sqlite3 as _sqlite3
+        from agentmem_ref.runtime import representation_cache as module
+        with tempfile.TemporaryDirectory() as other_root:
+            outside = DerivedVectorStore(other_root, self.store.config_digest, 3)
+            try:
+                outside.vector_for("foreign-fact", "external payload", self.embed)
+                outside.close()
+                external = next((Path(other_root) / "derived").glob("vectors-*.sqlite"))
+                victim = Path(self.root) / "derived" / external.name
+                victim.write_bytes(external.read_bytes())  # a regular file passes the lstat
+                real_connect = _sqlite3.connect
+
+                def swap_then_connect(*args, **kwargs):
+                    victim.unlink()
+                    victim.symlink_to(external)
+                    return real_connect(*args, **kwargs)
+
+                with patch.object(module.sqlite3, "connect", side_effect=swap_then_connect):
+                    report = reconcile_derived_vector_stores(self.root, {})
+                self.assertIn(str(victim), report["unsafe"])
+                self.assertEqual(report["status"], "incomplete")
+                self.assertEqual(report["rows_purged"], 0)
+                self.assertEqual(report["stores_discarded"], [])
+                self.assertTrue(victim.is_symlink())
+                check = real_connect(external)
+                try:
+                    self.assertEqual(check.execute("SELECT fact_uuid FROM vectors").fetchall(), [("foreign-fact",)])
+                finally:
+                    check.close()
             finally:
                 outside.close()
 
