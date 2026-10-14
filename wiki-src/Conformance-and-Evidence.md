@@ -96,9 +96,9 @@ runtime evidence
 known limitations
 ```
 
-## ADR-020 proof bar
+## ADR-020 accepted doctrine and its historical proof bar
 
-ADR-020 should remain Proposed until at least one real implementation demonstrates the complete chain:
+[ADR-020](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/adr/ADR-020-probabilistic-discovery-deterministic-governance.md) is **Accepted**, as recorded by the [authoritative ADR status register](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/adr/README.md). Its earlier Proposed-stage acceptance bar required an actual implementation demonstrating the complete governed-consequence chain:
 
 ```text
 estimate / proposal
@@ -108,7 +108,7 @@ estimate / proposal
   → committed consequence
 ```
 
-with repeated stochastic trials, cross-scope admission tests, real concurrency behavior, deletion propagation, and reconstructable decision receipts.
+The bar also required repeated stochastic trials, cross-scope admission tests, real concurrency behavior, deletion propagation, and reconstructable decision receipts. Executable evidence toward those conditions supported doctrine acceptance; that decision does **not** grant universal production conformance or authorize probabilistic outcomes to mutate canonical state.
 
 Deletion propagation carries the most hidden weight in that list, because a requirement stated in one clause can rest on vocabulary the architecture has not defined yet. **[Canonical and Derived State](Canonical-and-Derived-State)** sets out what has to be demonstrated — reaching the full transitive closure of derived state, matching an independent residue sweep against what the deletion receipt claimed, and refusing an automatic model-driven rebuild — and says plainly which of those a convincing demonstration would omit.
 

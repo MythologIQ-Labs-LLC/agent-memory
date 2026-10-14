@@ -19,7 +19,7 @@ These surfaces MUST describe current repository reality. A wrong version, stale 
 | Backlog | `docs/BACKLOG.md` | roadmap and queue inventory; use the live issue/PR state before executing and preserve historical owner rulings |
 | Feature Index | `docs/FEATURE_INDEX.md` | feature inventory; lifecycle state must be reconciled when implementation changes materially |
 | ADR index | `docs/adr/README.md` | ADR-001 through ADR-043, with each source ADR owning its own proposal/acceptance status |
-| Package contract | `pyproject.toml` and `reference/agentmem_ref/api/contract.py` | package 0.2.0; API contract 1.6.0; optional comparator pins `agent-manifest==0.12.0` and `agentrust-trace==0.10.0`; #440 closed 2026-09-24 |
+| Package contract | `pyproject.toml` and `reference/agentmem_ref/api/contract.py` | Read package version and optional comparator pins from `pyproject.toml`, public API `CONTRACT_VERSION` from `api/contract.py`. Historical dependency qualification is recorded under #440. This index does not duplicate volatile version strings |
 | README | `README.md` | three-audience entry points and canonical-current-state routing merged by #798; actual feature and qualification status belongs to the linked subject owners |
 | Substrate inventory | `docs/43-substrate-inventory-and-maturity.md` | SQLite single-host canonical substrate RC-qualified under closed #427; PostgreSQL, Markdown, distributed and Graphiti are not qualified equivalent canonical profiles |
 | RC profile | `docs/45-agent-memory-rc1-implementation-profile.md` | bounded implementation/release candidate profile under #410 |
@@ -44,7 +44,7 @@ Stable architectural rules. Changes require explicit doctrine/contract work.
 | Evidence/provenance doctrine | `docs/16-source-trust-and-reputation.md`, `docs/30-memory-observability-and-audit-events.md`, `docs/policies/EVIDENCE_PROMOTION.md` |
 | Lifecycle/correction/deletion doctrine | `docs/02-lifecycle-state-machine.md`, `docs/17-conflict-resolution-engine.md`, `docs/28-retention-deletion-and-tombstones.md`, `docs/31-recovery-rollback-and-replay.md` |
 | Schema contracts | `schemas/*.schema.json`, registry doctrine in `docs/27-schema-registry-and-type-evolution.md` |
-| Runtime Baseline succession | `docs/67-runtime-baseline-succession.md`, `reports/runtime/baseline-register.json` (v1-v5 pinned, v6 current), `reports/runtime/baseline-v6.json`, `schemas/runtime-baseline-declaration.schema.json`, `scripts/check_runtime_baseline_equivalence.py` |
+| Runtime Baseline succession | `docs/67-runtime-baseline-succession.md`, `reports/runtime/baseline-register.json` (authoritative published-version selector), version-specific `reports/runtime/baseline-v*.json`, `schemas/runtime-baseline-declaration.schema.json`, `scripts/check_runtime_baseline_equivalence.py` |
 | Baseline-first execution posture | `docs/68-baseline-first-complete-architecture-execution.md`, `docs/BACKLOG.md`, `.qor/roadmaps/north-star-best-in-class/events.jsonl` (owner rulings seq 47-51) |
 | Project governance | `GOVERNANCE.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, `.github/CODEOWNERS` |
 
