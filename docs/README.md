@@ -36,60 +36,11 @@ For current state, use the sources that own it: [`BACKLOG.md`](BACKLOG.md) (work
 | Review current benchmark results | [`../reports/benchmarks/dashboard/current.md`](../reports/benchmarks/dashboard/current.md) | [`../reports/benchmarks/dashboard/current.json`](../reports/benchmarks/dashboard/current.json), #594 closeout |
 | Contribute code or evidence | [`../CONTRIBUTING.md`](../CONTRIBUTING.md) | [`REPOSITORY_OPERATING_MODEL.md`](REPOSITORY_OPERATING_MODEL.md), [`../GOVERNANCE.md`](../GOVERNANCE.md) |
 | Review source rights / intellectual lineage | [`08-source-material-index.md`](08-source-material-index.md) | [`40-aligned-projects-and-intellectual-lineage.md`](40-aligned-projects-and-intellectual-lineage.md), [`SOURCE_RIGHTS_POLICY.md`](SOURCE_RIGHTS_POLICY.md) |
-| Review UOR/PrismPM/TRACE/AGT lessons for cross-write proposition identity | [`research/cryptographic-proposition-identity-ancestry-2026-10-08.md`](research/cryptographic-proposition-identity-ancestry-2026-10-08.md) | [#757](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/757), [`52-harvest-closeout-final.md`](52-harvest-closeout-final.md) |
-| Examine non-authoritative cross-write identity link safety | [`plan-757-proposition-link-falsification.md`](plan-757-proposition-link-falsification.md) | [#757](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/757); evaluation-only structural adversarial tests |
-| Qualify append-only, unsigned proposition-link evidence replay | [`plan-757-link-evidence-journal.md`](plan-757-link-evidence-journal.md) | [#757](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/757); evaluation-only replay, no semantic or authority claims |
-| Qualify independently pinned Ed25519 evidence-journal checkpoints | [`plan-757-signed-journal-checkpoints.md`](plan-757-signed-journal-checkpoints.md) | [#757](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/757); evaluation only, no issuer/semantic trust |
-| Qualify explicit schema-backed cross-write property identity | [`plan-757-property-registry.md`](plan-757-property-registry.md) | [#757](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/757); evaluation-only candidate, no semantic authority |
 | Review security/privacy | [`15-memory-threat-model.md`](15-memory-threat-model.md) | `16`, `19`, `28`, `29`, `41`, [`../SECURITY.md`](../SECURITY.md) |
 
-## Repository operating model
+## Repository roles and project layers
 
-Agent Memory has three first-class operational roles:
-
-```text
-product / runtime
-architecture / governance laboratory
-evaluation / benchmark laboratory
-```
-
-The roles are connected but authority-separated.
-
-- Product execution makes architecture falsifiable.
-- Architecture gives product behavior principled boundaries.
-- Evaluation pressures both with external and adversarial evidence.
-- Governance prevents benchmark scores, model outputs, implementation shortcuts, or research ancestry from silently granting themselves authority.
-
-Full guidance: [`REPOSITORY_OPERATING_MODEL.md`](REPOSITORY_OPERATING_MODEL.md).
-
-### Three roles and the five-layer project model
-
-[`AGENT_MEMORY_PROJECT_MODEL.md`](AGENT_MEMORY_PROJECT_MODEL.md) partitions the wider project into five layers:
-
-```text
-1. Architecture / Doctrine / Research Commons
-2. Memory Evaluation
-3. Agent Memory Gauntlet
-4. Reference / Conformance Implementation
-5. future Distinct Production Runtime Product
-```
-
-Per the ruling in [#565](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/565), the three roles describe what the repository *does* operationally today, and the five layers describe how the project is *partitioned* for community, evaluation, qualification, reference implementation, and future product/licensing boundaries. Layer 1 is the architecture/governance role; layers 2 and 3 refine the evaluation role into measurement machinery plus the public Gauntlet; layers 4 and 5 refine the product/runtime role into the reference/conformance implementation that exists now plus a future distinct runtime whose identity and licensing are owned by [#556](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/556). Neither formulation supersedes the other.
-
-Gauntlet and project-model documents:
-
-| Document | Purpose |
-|---|---|
-| [`AGENT_MEMORY_PROJECT_MODEL.md`](AGENT_MEMORY_PROJECT_MODEL.md) | Five-layer project/product model (proposed under #554 / #556) |
-| [`GAUNTLET_SYSTEM_ADAPTER_CONTRACT.md`](GAUNTLET_SYSTEM_ADAPTER_CONTRACT.md) | System adapter contract for entering the Gauntlet |
-| [`GAUNTLET_ORCHESTRATION.md`](GAUNTLET_ORCHESTRATION.md) | Gauntlet orchestration and failure attribution |
-| [`GAUNTLET_EXTERNAL_CONTESTANT_QUICKSTART.md`](GAUNTLET_EXTERNAL_CONTESTANT_QUICKSTART.md) | Shortest supported external-contestant path |
-| [`GOVERNANCE_GAUNTLET_SPECIFICATION.md`](GOVERNANCE_GAUNTLET_SPECIFICATION.md) | Governance Gauntlet specification |
-| [`GOVERNANCE_GAUNTLET_ALPHA.md`](GOVERNANCE_GAUNTLET_ALPHA.md) | Governance Gauntlet alpha evidence |
-| [`GAUNTLET_EXECUTION_ROADMAP.md`](GAUNTLET_EXECUTION_ROADMAP.md) | Proposed Gauntlet execution/staging plan |
-| [`GAUNTLET_EXTERNAL_BENCHMARK_QUALIFICATION_2026-09-26.md`](GAUNTLET_EXTERNAL_BENCHMARK_QUALIFICATION_2026-09-26.md) | First-pass external benchmark qualification record (#560) |
-| [`BENCHMARK_COVERAGE_ATLAS.md`](BENCHMARK_COVERAGE_ATLAS.md) | Capability-coverage map and benchmark admission vocabulary |
-| [`RUNTIME_IDENTITY_NAMING_BRIEF.md`](RUNTIME_IDENTITY_NAMING_BRIEF.md) | Naming brief for the future distinct runtime (#556) |
+The authoritative operating explanation is [REPOSITORY_OPERATING_MODEL.md](REPOSITORY_OPERATING_MODEL.md); the distinct proposed five-layer partition and its #565 reconciliation are owned by [AGENT_MEMORY_PROJECT_MODEL.md](AGENT_MEMORY_PROJECT_MODEL.md). The [architecture catalog](ARCHITECTURE_INDEX.md) owns filing and decision location. This navigation page does not maintain a competing architecture or maturity summary.
 
 ## Product and RC documentation
 
@@ -125,7 +76,7 @@ Audience navigation for the Benchmarks entry point. The authoritative shelf assi
 
 | Document | Purpose |
 |---|---|
-| [`../BENCHMARKS.md`](../BENCHMARKS.md) | Current benchmark portfolio, evidence classes and learning-loop rules |
+| [`../BENCHMARKS.md`](../BENCHMARKS.md) | Benchmark methodology and authoritative live-dashboard pointers; no duplicate scores |
 | [`CONTRIBUTOR_ARCHITECTURE.md`](CONTRIBUTOR_ARCHITECTURE.md) | Canonical contributor contract: Runtime vs Memory Evaluation vs Gauntlet, system-author and benchmark-author paths, state decision tree |
 | [`50-swe-contextbench-comparison-harness.md`](50-swe-contextbench-comparison-harness.md) | SWE-ContextBench comparison harness and comparability boundary |
 | [`50-keyed-rebinding-currentness-benchmark.md`](50-keyed-rebinding-currentness-benchmark.md) | Keyed rebinding / stale-value resistance benchmark (#483); distinct from `50-swe-contextbench…` |
