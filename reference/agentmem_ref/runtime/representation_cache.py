@@ -229,7 +229,14 @@ class DerivedVectorStore:
         self.config_digest = config_digest
         self.dimensions = dimensions
         directory = Path(root) / "derived"
+        # Active retrieval constructs the cache before recovery reconciliation.
+        # Refuse a linked cache directory here too: checking only the database
+        # leaf would allow os.chmod() and sqlite3.connect() outside this root.
+        if directory.is_symlink():
+            raise ValueError(f"refusing symlinked derived vector cache directory: {directory}")
         directory.mkdir(parents=True, exist_ok=True)
+        if directory.is_symlink():
+            raise ValueError(f"refusing symlinked derived vector cache directory: {directory}")
         bare = config_digest.split(":", 1)[-1]
         self.path = directory / f"vectors-{bare[:16]}.sqlite"
         self.checksum_failures = 0

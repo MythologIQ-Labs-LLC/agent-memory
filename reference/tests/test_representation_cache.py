@@ -147,6 +147,29 @@ class DerivedVectorStoreTests(unittest.TestCase):
         self.assertEqual((result["stores_checked"], result["rows_purged"]), (1, 1))
         self.assertEqual(self.store.row_count(), 0)
 
+    def test_active_store_refuses_linked_derived_directory_without_touching_external_cache(self):
+        # The active semantic route constructs DerivedVectorStore BEFORE the
+        # facade invokes #802 recovery reconciliation. Refuse the parent link
+        # at construction, not just the later reconciliation path.
+        with tempfile.TemporaryDirectory() as second_root:
+            external = DerivedVectorStore(second_root, DIGEST, 3)
+            try:
+                external.vector_for("private-external", "external content", self.embed)
+                other = Path(self.root) / "linked-runtime"
+                other.mkdir()
+                (other / "derived").symlink_to(
+                    Path(second_root) / "derived", target_is_directory=True
+                )
+                before = external.path.read_bytes()
+                with self.assertRaisesRegex(
+                    ValueError, "symlinked derived vector cache directory"
+                ):
+                    DerivedVectorStore(other, DIGEST, 3)
+                self.assertEqual(external.path.read_bytes(), before)
+                self.assertEqual(external.row_count(), 1)
+            finally:
+                external.close()
+
     def test_reconcile_refuses_symlinked_derived_directory_and_preserves_external_rows(self):
         with tempfile.TemporaryDirectory() as other_root:
             outside = DerivedVectorStore(other_root, "sha256:" + "cc" * 32, 3)
