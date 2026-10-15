@@ -59,19 +59,22 @@ function validateManifest(m,path) {
 }
 function validateSummary(m,path){
   if(!cleanPath(path)||!path.endsWith('.summary.json')||!m||!m.aggregate||
-     m.question_count_preregistered!==50||
+     !Number.isInteger(m.question_count_preregistered)||
+     m.question_count_preregistered<1||m.question_count_preregistered>5000||
      !Number.isInteger(m.question_count_completed)||m.question_count_completed<0||
-     m.question_count_completed>50||
+     m.question_count_completed>m.question_count_preregistered||
      !Number.isInteger(m.aggregate.evaluated_question_count)||
+     m.aggregate.evaluated_question_count<0||
      m.aggregate.evaluated_question_count>m.question_count_completed||
      !Array.isArray(m.missing_question_ids)||
-     m.missing_question_ids.length!==50-m.question_count_completed||
+     m.missing_question_ids.length!==m.question_count_preregistered-m.question_count_completed||
+     new Set(m.missing_question_ids).size!==m.missing_question_ids.length||
      !m.failures||!['runtime_failure_count','ingestion_failure_count','out_of_corpus_returned_count']
        .every(k=>m.failures[k]===0))throw Error('Unqualified partial progress source');
   const match=/^(session|turn)\.([a-zA-Z0-9_-]+)\.summary\.json$/.exec(path.split('/').pop());
   if(!match) throw Error('Unknown partial result filename');
   return {plane:match[1],backend:match[2],completed:m.question_count_completed,
-    scored:m.aggregate.evaluated_question_count,planned:50};
+    scored:m.aggregate.evaluated_question_count,planned:m.question_count_preregistered};
 }
 function extractMetric(report,manifest,identity) {
   if(report?.input?.sha256!==manifest.benchmark.input_sha256||
@@ -116,6 +119,11 @@ function listFiles(tree,config){
 async function jsonFetch(url) {
   const response=await fetch(url,{cache:'no-store',headers:{Accept:'application/vnd.github+json'}});
   if(!response.ok)throw Error('Source API HTTP '+response.status);
+  return response.json();
+}
+async function evidenceJson(sha,path) {
+  const response=await fetch(rawUrl(sha,path),{cache:'no-store'});
+  if(!response.ok)throw Error('Evidence HTTP '+response.status);
   return response.json();
 }
 async function locate(src){
@@ -177,7 +185,7 @@ function createRow(m,path,sha,identity,metric,error) {
 }
 function createPartial(path,sha,info){
   return {kind:'partial',name:nameFor(info.backend),benchmark:'longmemeval-s-retrieval',
-    cohort:'50 input · preregistered subset',plane:info.plane,metric:null,score:null,
+    cohort:info.planned+' input · preregistered evaluation',plane:info.plane,metric:null,score:null,
     coverage:info.completed+'/'+info.planned+' completed · '+
       info.scored+' scored so far · no aggregate',manifestPath:path,runPath:path,
     review:'candidate progress',sha};
@@ -231,9 +239,10 @@ async function refresh(force=false) {
         const files=listFiles(tree,src);
         const cache=new Map();
         const branchRows=[];
+        const sourceErrors=[];
         for(const path of files.manifest) {
           try {
-            const m=await (await fetch(rawUrl(sha,path),{cache:'no-store'})).json();
+            const m=await evidenceJson(sha,path);
             const identity=validateManifest(m,path);
             let record=cache.get(m.normalized_run.uri);
             if(!record) {
@@ -246,15 +255,27 @@ async function refresh(force=false) {
             try {metric=extractMetric(record.data,m,identity);} catch(e){error=e.message;}
             branchRows.push(createRow(m,path,sha,identity,metric,error));
             if(error)problems.push(m.run_id+': '+error);
-          }catch(e){problems.push('Invalid source manifest '+path+': '+e.message);}
+          }catch(e){
+            const note='Invalid source manifest '+path+': '+e.message;
+            sourceErrors.push(note);problems.push(note);
+          }
         }
         for(const path of files.partial){
           try{
-            const m=await (await fetch(rawUrl(sha,path),{cache:'no-store'})).json();
+            const m=await evidenceJson(sha,path);
             const info=validateSummary(m,path);
             branchRows.push(createPartial(path,sha,info));
-          }catch(e){problems.push('Partial source '+path+': '+e.message);}
+          }catch(e){
+            const note='Partial source '+path+': '+e.message;
+            sourceErrors.push(note);problems.push(note);
+          }
         }
+        // A transient report failure on this branch must not pin its latest
+        // SHA as successfully verified. Keep earlier verified data and retry
+        // the exact same source head on the next polling cycle.
+        if(sourceErrors.length)throw Error(
+          'Incomplete candidate source revision; '+sourceErrors.length+
+          ' file(s) withheld. The same source commit will be retried.');
         oldHeads.set(src.branch,sha);
         sourceCache.set(src.branch,branchRows);
         rows.push(...branchRows);

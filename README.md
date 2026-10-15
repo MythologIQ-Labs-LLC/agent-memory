@@ -180,3 +180,16 @@ node tools/test-leaderboard-feed-authority.cjs
 ```
 
 Keep all live scores scoped to the exact evaluator, cohort, native metric, and capability tier. No acceptance authority is conveyed by the data-only feed.
+
+## Dynamic run-population and transient-source recovery (October 15, 2026)
+
+The live manifest-discovery reader now accepts preregistered incomplete runs with any bounded, integer population (1–5000 questions), not only the initial 50-question competitor subset. `*.summary.json` must have internally consistent completed/scored/missing counts, unique missing identifiers, and zero recorded runtime/ingestion/out-of-corpus failures. Only completed native run manifests supply scored leaderboard evidence; all incomplete runs display coverage rather than extrapolated results.
+
+**Critical freshness invariant:** If the latest branch head contains one or more unreadable/invalid manifests or progress summaries, it must **not be cached as a fully verified head**. Keep the last verified branch projection, show the verification problem in the existing status line, and retry the exact same head on the next refresh. This prevents an HTTP 503 or malformed partial report from permanently hiding new competitors until somebody makes another commit.
+
+Local no-Actions regression suites:
+```sh
+node tools/test-run-discovery.cjs
+node tools/test-run-discovery-refresh.cjs
+```
+These validate dynamic sample counts, duplicate missing ID rejection, source-ref retry after transient failure and recovery of a new head while keeping the existing site's presentation unchanged. The primary measured ranking still requires explicit complete, verified records on the `benchmark-public-feed` branch; discovery-only progress has no rank authority.
