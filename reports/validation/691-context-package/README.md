@@ -3,7 +3,7 @@
 | Item | Value |
 |---|---|
 | Branch | `claude/eager-dirac-bftkfg-691-context` |
-| Implementation commit | `f6184d22` |
+| Implementation commits | `f6184d22` (first slice); `6edc28a3` (independent-review repairs; **current**) |
 | Base | #815's head `77c472e6`: the security stack #783 → #784 → #788 → #804 (#805), plus #809. This base carries #786 write authority, #777 deleted-lineage redaction and contract 1.8.0 |
 | Package | Candidate `agent-memory-context/0.1.0`, separately versioned (`schemas/api-context-package.schema.json`) |
 | Contract | Unchanged at 1.8.0. **No acceptance, no successor, no PR, no hosted CI.** |
@@ -16,7 +16,22 @@ is re-checked before its text is read. The result is bounded and carries provena
 explicit item and package states, and an untrusted-evidence policy. `recall()` is unchanged.
 See docs/44, "Context package".
 
-## Executed
+## Executed at `6edc28a3` (after the review repairs)
+
+- `reference/tests/test_context_package.py`: 20 tests pass. That includes 6 regression tests from
+  the review, each failing on `f6184d22`.
+- Demo: all checks passed.
+- Security replays re-executed on a clean tree: all PASS (`security-replays-6edc28a3/`):
+  - #786 v2: 28/28;
+  - #786 v3: 31/31;
+  - #809: 13/13.
+- **Full suite: 3028 tests.** The four failures also fail on the untouched base `77c472e6` in this
+  environment:
+  - the Runtime Baseline guard (by design);
+  - two `test_770` lane-freeze replay-freshness tests;
+  - `test_644_v7_gauntlet_identity`, which depends on detached-worktree ancestry.
+
+## Executed at `f6184d22` (first slice)
 
 1. **`reference/tests/test_context_package.py`: 14 tests, all passing.** They cover:
    - the workflow: remember → recall_context → correct → recall_context → forget → restart →
