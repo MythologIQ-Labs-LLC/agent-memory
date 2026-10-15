@@ -1,0 +1,14 @@
+{
+  "left": "/home/user/ext-exec/reports/benchmarks/runs/mempalace/amb-precisionmembench-single-turn/rep1/single-turn.json",
+  "right": "/home/user/ext-exec/reports/benchmarks/runs/mempalace/amb-precisionmembench-single-turn/rep2/single-turn.json",
+  "left_cases": 77,
+  "right_cases": 77,
+  "ignored_fields": [
+    "avg_retrieve_time_ms",
+    "ingestion_time_ms",
+    "retrieve_time_ms",
+    "run_name"
+  ],
+  "differences": 0,
+  "equal": true
+}

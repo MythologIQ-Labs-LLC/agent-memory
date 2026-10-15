@@ -1,0 +1,39 @@
+
+Dataset: precisionmembench  Split: single-turn  Memory: mempalace-local  Mode: 
+retrieval
+
+Loading queries...
+  77 queries loaded
+Loading documents...
+  35 documents loaded
+Ingesting into mempalace-local...
+  ingested in 10565ms (301.9ms/doc avg)
+
+  Evaluating ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:08
+
+Saved → 
+/tmp/am-bench/runs/810-mempalace-amb/rep2/amb-outputs/precisionmembench/mempalac
+e-local/retrieval/single-turn.json
+        Results —        
+precisionmembench/single-
+turn | mempalace-local | 
+        retrieval        
+┏━━━━━━━━━━━━━━━┳━━━━━━━┓
+┃ Metric        ┃ Value ┃
+┡━━━━━━━━━━━━━━━╇━━━━━━━┩
+│ Total queries │    77 │
+│ Correct       │     9 │
+│ Accuracy      │ 11.7% │
+└───────────────┴───────┘
+             PrecisionMemBench             
+┏━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┓
+┃ Metric                 ┃          Value ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━┩
+│ Active passes          │           0/43 │
+│ Structural passes      │           6/25 │
+│ Trivially-empty passes │            3/9 │
+│ Total passes           │           9/77 │
+│ Mean precision         │           0.06 │
+│ Mean recall            │           1.00 │
+│ ID resolution          │ source_id=1371 │
+└────────────────────────┴────────────────┘

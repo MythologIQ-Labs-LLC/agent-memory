@@ -1,0 +1,45 @@
+amb-retrieval-no-llm-guard {"authority_effect": "none", "guard": "amb_retrieval_no_llm", "guard_version": "1.0.0", "llm_clients_constructed": 0, "patched_symbols": ["memory_bench.cli._resolve_gemini_key", "memory_bench.cli.get_answer_llm", "memory_bench.runner.GeminiJudge"]}
+╭───────────────────── Traceback (most recent call last) ──────────────────────╮
+│ /tmp/agent-memory-benchmark/src/memory_bench/cli.py:65 in run                │
+│                                                                              │
+│    62 │   │   typer.echo(f"Error: unknown split '{split}'. Available: {', '. │
+│    63 │   │   raise typer.Exit(1)                                            │
+│    64 │                                                                      │
+│ ❱  65 │   summary = EvalRunner(output_dir=output_dir).run(                   │
+│    66 │   │   dataset=ds,                                                    │
+│    67 │   │   split=split,                                                   │
+│    68 │   │   memory=get_memory_provider(memory),                            │
+│                                                                              │
+│ /tmp/agent-memory-benchmark/src/memory_bench/runner.py:153 in run            │
+│                                                                              │
+│   150 │   │   │   memory.set_extraction_labels(labels)                       │
+│   151 │   │   │   console.print(f"[dim]Extraction labels: {', '.join(l['key' │
+│   152 │   │                                                                  │
+│ ❱ 153 │   │   memory.prepare(store_dir, unit_ids=unit_ids, reset=not skip_in │
+│   154 │   │                                                                  │
+│   155 │   │   stored_contexts: dict[str, str] = {}                           │
+│   156 │   │   stored_answers: dict[str, str] = {}                            │
+│                                                                              │
+│ /home/user/ext-exec/reference/amb_mempalace_bridge.py:104 in prepare         │
+│                                                                              │
+│   101 │   │   │   self._root: Path | None = None                             │
+│   102 │   │                                                                  │
+│   103 │   │   def prepare(self, store_dir: Path, unit_ids: set[str] | None = │
+│ ❱ 104 │   │   │   refuse_credentials(os.environ)                             │
+│   105 │   │   │   self._python = os.environ["MEMPALACE_PYTHON"]              │
+│   106 │   │   │   self._model_dir = Path(os.environ["MEMPALACE_BENCH_MODEL_D │
+│   107 │   │   │   self._model_identity = verify_model_dir(self._model_dir)   │
+│                                                                              │
+│ /home/user/ext-exec/reference/longmemeval_mempalace_bridge.py:192 in         │
+│ refuse_credentials                                                           │
+│                                                                              │
+│   189 │   if model and model != "minilm":                                    │
+│   190 │   │   present.append(f"MEMPALACE_EMBEDDING_MODEL={model}")           │
+│   191 │   if present:                                                        │
+│ ❱ 192 │   │   raise RuntimeError(f"refusing: credentials or non-default embe │
+│   193                                                                        │
+│   194                                                                        │
+│   195 def tree_sha256(root: Path) -> tuple[str, int]:                        │
+╰──────────────────────────────────────────────────────────────────────────────╯
+RuntimeError: refusing: credentials or non-default embedder set for a no-LLM 
+local profile: ['AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY']
