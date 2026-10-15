@@ -82,6 +82,50 @@
       "semantics_same_bl"
      ],
      "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "Versions are generation-relative: `state_version`, `state_snapshot`, `before_state` and `after_state` count within the live generation of a logical id. After a governed deletion of the head the id reports `0` to any writer, a re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one",
+     "observables": [
+      "committed_bd",
+      "refusal_bd",
+      "before_bd",
+      "after_bd",
+      "committed_bl",
+      "refusal_bl",
+      "before_bl",
+      "after_bl",
+      "committed_bu",
+      "refusal_bu",
+      "before_bu",
+      "after_bu",
+      "committed_bn",
+      "refusal_bn",
+      "before_bn",
+      "after_bn"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "An id with no live head (never written or governed-deleted) is open to any writer in the tenant: creation and the #776 re-creation of a deleted id as a fresh generation are unchanged.",
+     "observables": [
+      "committed_bd",
+      "refusal_bd",
+      "before_bd",
+      "after_bd",
+      "committed_bl",
+      "refusal_bl",
+      "before_bl",
+      "after_bl",
+      "committed_bu",
+      "refusal_bu",
+      "before_bu",
+      "after_bu",
+      "committed_bn",
+      "refusal_bn",
+      "before_bn",
+      "after_bn"
+     ],
+     "source": "docs/44-public-api-contract.md"
     }
    ],
    "expect": {
@@ -378,16 +422,16 @@
        "<ref>"
       ],
       [
-       "alpha",
-       "<case>"
+       "@literal:digest alpha",
+       "digest <case>"
       ],
       [
-       "beta",
-       "<case>"
+       "@literal:digest beta",
+       "digest <case>"
       ],
       [
-       "gamma",
-       "<case>"
+       "@literal:digest gamma",
+       "digest <case>"
       ],
       [
        "bd",
@@ -422,16 +466,16 @@
        "<ref>"
       ],
       [
-       "alpha",
-       "<case>"
+       "@literal:digest alpha",
+       "digest <case>"
       ],
       [
-       "beta",
-       "<case>"
+       "@literal:digest beta",
+       "digest <case>"
       ],
       [
-       "gamma",
-       "<case>"
+       "@literal:digest gamma",
+       "digest <case>"
       ],
       [
        "bd",
@@ -467,16 +511,16 @@
        "<ref>"
       ],
       [
-       "alpha",
-       "<case>"
+       "@literal:digest alpha",
+       "digest <case>"
       ],
       [
-       "beta",
-       "<case>"
+       "@literal:digest beta",
+       "digest <case>"
       ],
       [
-       "gamma",
-       "<case>"
+       "@literal:digest gamma",
+       "digest <case>"
       ],
       [
        "bd",
@@ -512,16 +556,16 @@
        "<ref>"
       ],
       [
-       "alpha",
-       "<case>"
+       "@literal:digest alpha",
+       "digest <case>"
       ],
       [
-       "beta",
-       "<case>"
+       "@literal:digest beta",
+       "digest <case>"
       ],
       [
-       "gamma",
-       "<case>"
+       "@literal:digest gamma",
+       "digest <case>"
       ],
       [
        "bd",
@@ -558,16 +602,16 @@
        "<ref>"
       ],
       [
-       "alpha",
-       "<case>"
+       "@literal:digest alpha",
+       "digest <case>"
       ],
       [
-       "beta",
-       "<case>"
+       "@literal:digest beta",
+       "digest <case>"
       ],
       [
-       "gamma",
-       "<case>"
+       "@literal:digest gamma",
+       "digest <case>"
       ],
       [
        "bd",
@@ -604,16 +648,16 @@
        "<ref>"
       ],
       [
-       "alpha",
-       "<case>"
+       "@literal:digest alpha",
+       "digest <case>"
       ],
       [
-       "beta",
-       "<case>"
+       "@literal:digest beta",
+       "digest <case>"
       ],
       [
-       "gamma",
-       "<case>"
+       "@literal:digest gamma",
+       "digest <case>"
       ],
       [
        "bd",
@@ -688,16 +732,16 @@
        "<ref>"
       ],
       [
-       "alpha",
-       "<case>"
+       "@literal:digest alpha",
+       "digest <case>"
       ],
       [
-       "beta",
-       "<case>"
+       "@literal:digest beta",
+       "digest <case>"
       ],
       [
-       "gamma",
-       "<case>"
+       "@literal:digest gamma",
+       "digest <case>"
       ],
       [
        "bd",
@@ -732,16 +776,16 @@
        "<ref>"
       ],
       [
-       "alpha",
-       "<case>"
+       "@literal:digest alpha",
+       "digest <case>"
       ],
       [
-       "beta",
-       "<case>"
+       "@literal:digest beta",
+       "digest <case>"
       ],
       [
-       "gamma",
-       "<case>"
+       "@literal:digest gamma",
+       "digest <case>"
       ],
       [
        "bd",
@@ -920,6 +964,50 @@
       "semantics_same_bl"
      ],
      "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "Versions are generation-relative: `state_version`, `state_snapshot`, `before_state` and `after_state` count within the live generation of a logical id. After a governed deletion of the head the id reports `0` to any writer, a re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one",
+     "observables": [
+      "committed_bd",
+      "refusal_bd",
+      "before_bd",
+      "after_bd",
+      "committed_bl",
+      "refusal_bl",
+      "before_bl",
+      "after_bl",
+      "committed_bu",
+      "refusal_bu",
+      "before_bu",
+      "after_bu",
+      "committed_bn",
+      "refusal_bn",
+      "before_bn",
+      "after_bn"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "An id with no live head (never written or governed-deleted) is open to any writer in the tenant: creation and the #776 re-creation of a deleted id as a fresh generation are unchanged.",
+     "observables": [
+      "committed_bd",
+      "refusal_bd",
+      "before_bd",
+      "after_bd",
+      "committed_bl",
+      "refusal_bl",
+      "before_bl",
+      "after_bl",
+      "committed_bu",
+      "refusal_bu",
+      "before_bu",
+      "after_bu",
+      "committed_bn",
+      "refusal_bn",
+      "before_bn",
+      "after_bn"
+     ],
+     "source": "docs/44-public-api-contract.md"
     },
     {
      "clause": "| purge | no | intended no recoverable copies | no | required full deletion outcome |",
@@ -1226,16 +1314,16 @@
        "<ref>"
       ],
       [
-       "alpha",
-       "<case>"
+       "@literal:digest alpha",
+       "digest <case>"
       ],
       [
-       "beta",
-       "<case>"
+       "@literal:digest beta",
+       "digest <case>"
       ],
       [
-       "gamma",
-       "<case>"
+       "@literal:digest gamma",
+       "digest <case>"
       ],
       [
        "bd",
@@ -1270,16 +1358,16 @@
        "<ref>"
       ],
       [
-       "alpha",
-       "<case>"
+       "@literal:digest alpha",
+       "digest <case>"
       ],
       [
-       "beta",
-       "<case>"
+       "@literal:digest beta",
+       "digest <case>"
       ],
       [
-       "gamma",
-       "<case>"
+       "@literal:digest gamma",
+       "digest <case>"
       ],
       [
        "bd",
@@ -1315,16 +1403,16 @@
        "<ref>"
       ],
       [
-       "alpha",
-       "<case>"
+       "@literal:digest alpha",
+       "digest <case>"
       ],
       [
-       "beta",
-       "<case>"
+       "@literal:digest beta",
+       "digest <case>"
       ],
       [
-       "gamma",
-       "<case>"
+       "@literal:digest gamma",
+       "digest <case>"
       ],
       [
        "bd",
@@ -1360,16 +1448,16 @@
        "<ref>"
       ],
       [
-       "alpha",
-       "<case>"
+       "@literal:digest alpha",
+       "digest <case>"
       ],
       [
-       "beta",
-       "<case>"
+       "@literal:digest beta",
+       "digest <case>"
       ],
       [
-       "gamma",
-       "<case>"
+       "@literal:digest gamma",
+       "digest <case>"
       ],
       [
        "bd",
@@ -1410,16 +1498,16 @@
        "<ref>"
       ],
       [
-       "alpha",
-       "<case>"
+       "@literal:digest alpha",
+       "digest <case>"
       ],
       [
-       "beta",
-       "<case>"
+       "@literal:digest beta",
+       "digest <case>"
       ],
       [
-       "gamma",
-       "<case>"
+       "@literal:digest gamma",
+       "digest <case>"
       ],
       [
        "bd",
@@ -1456,16 +1544,16 @@
        "<ref>"
       ],
       [
-       "alpha",
-       "<case>"
+       "@literal:digest alpha",
+       "digest <case>"
       ],
       [
-       "beta",
-       "<case>"
+       "@literal:digest beta",
+       "digest <case>"
       ],
       [
-       "gamma",
-       "<case>"
+       "@literal:digest gamma",
+       "digest <case>"
       ],
       [
        "bd",
@@ -1540,16 +1628,16 @@
        "<ref>"
       ],
       [
-       "alpha",
-       "<case>"
+       "@literal:digest alpha",
+       "digest <case>"
       ],
       [
-       "beta",
-       "<case>"
+       "@literal:digest beta",
+       "digest <case>"
       ],
       [
-       "gamma",
-       "<case>"
+       "@literal:digest gamma",
+       "digest <case>"
       ],
       [
        "bd",
@@ -1584,16 +1672,16 @@
        "<ref>"
       ],
       [
-       "alpha",
-       "<case>"
+       "@literal:digest alpha",
+       "digest <case>"
       ],
       [
-       "beta",
-       "<case>"
+       "@literal:digest beta",
+       "digest <case>"
       ],
       [
-       "gamma",
-       "<case>"
+       "@literal:digest gamma",
+       "digest <case>"
       ],
       [
        "bd",
@@ -1928,16 +2016,16 @@
        "<ref>"
       ],
       [
-       "alpha",
-       "<case>"
+       "@literal:digest alpha",
+       "digest <case>"
       ],
       [
-       "beta",
-       "<case>"
+       "@literal:digest beta",
+       "digest <case>"
       ],
       [
-       "gamma",
-       "<case>"
+       "@literal:digest gamma",
+       "digest <case>"
       ],
       [
        "bd",
@@ -1972,16 +2060,16 @@
        "<ref>"
       ],
       [
-       "alpha",
-       "<case>"
+       "@literal:digest alpha",
+       "digest <case>"
       ],
       [
-       "beta",
-       "<case>"
+       "@literal:digest beta",
+       "digest <case>"
       ],
       [
-       "gamma",
-       "<case>"
+       "@literal:digest gamma",
+       "digest <case>"
       ],
       [
        "bd",
@@ -2018,16 +2106,16 @@
        "<ref>"
       ],
       [
-       "alpha",
-       "<case>"
+       "@literal:digest alpha",
+       "digest <case>"
       ],
       [
-       "beta",
-       "<case>"
+       "@literal:digest beta",
+       "digest <case>"
       ],
       [
-       "gamma",
-       "<case>"
+       "@literal:digest gamma",
+       "digest <case>"
       ],
       [
        "bd",
@@ -2064,16 +2152,16 @@
        "<ref>"
       ],
       [
-       "alpha",
-       "<case>"
+       "@literal:digest alpha",
+       "digest <case>"
       ],
       [
-       "beta",
-       "<case>"
+       "@literal:digest beta",
+       "digest <case>"
       ],
       [
-       "gamma",
-       "<case>"
+       "@literal:digest gamma",
+       "digest <case>"
       ],
       [
        "bd",
@@ -2128,16 +2216,16 @@
        "<ref>"
       ],
       [
-       "alpha",
-       "<case>"
+       "@literal:digest alpha",
+       "digest <case>"
       ],
       [
-       "beta",
-       "<case>"
+       "@literal:digest beta",
+       "digest <case>"
       ],
       [
-       "gamma",
-       "<case>"
+       "@literal:digest gamma",
+       "digest <case>"
       ],
       [
        "bd",
@@ -2172,16 +2260,16 @@
        "<ref>"
       ],
       [
-       "alpha",
-       "<case>"
+       "@literal:digest alpha",
+       "digest <case>"
       ],
       [
-       "beta",
-       "<case>"
+       "@literal:digest beta",
+       "digest <case>"
       ],
       [
-       "gamma",
-       "<case>"
+       "@literal:digest gamma",
+       "digest <case>"
       ],
       [
        "bd",
@@ -2290,12 +2378,14 @@
       "disp_d_committed",
       "disp_u_committed",
       "history_same",
-      "op_same"
+      "op_same",
+      "dispute_present_d",
+      "dispute_present_u"
      ],
      "source": "docs/786-cross-scope-write-authority.md"
     },
     {
-     "clause": "A public projection withholds a deleted-generation identifier only from a reader whose own context could have read that generation; to any other reader such a string is its own input and is served back unchanged.",
+     "clause": "A public projection withholds a deleted-generation identifier only from a reader whose own context could have read that generation. To any other reader such a string is an opaque identifier it cannot act on, whether the reader supplied it itself or meets it in a co-holder's audit evidence of a shared memory: citing it binds nothing, disputing it or looking up its write semantics reads exactly as an id nobody wrote, and recall cannot address it.",
      "observables": [
       "history_same"
      ],
@@ -2307,6 +2397,12 @@
      "eq": true
     },
     "disp_u_committed": {
+     "eq": true
+    },
+    "dispute_present_d": {
+     "eq": true
+    },
+    "dispute_present_u": {
      "eq": true
     },
     "history_same": {
@@ -2335,6 +2431,18 @@
      "name": "disp_u",
      "probe": "op_result"
     },
+    "dispute_present_d": {
+     "as": "project:b",
+     "event_type": "memory.dispute",
+     "probe": "history_has_event",
+     "ref": "memory:dd"
+    },
+    "dispute_present_u": {
+     "as": "project:b",
+     "event_type": "memory.dispute",
+     "probe": "history_has_event",
+     "ref": "memory:du"
+    },
     "events_d": {
      "as": "project:b",
      "probe": "history_events",
@@ -2360,12 +2468,12 @@
        "<ref>"
       ],
       [
-       "epsilon",
-       "<case>"
+       "@literal:digest epsilon",
+       "digest <case>"
       ],
       [
-       "zeta",
-       "<case>"
+       "@literal:digest zeta",
+       "digest <case>"
       ],
       [
        "dd",
@@ -2393,12 +2501,12 @@
        "<ref>"
       ],
       [
-       "epsilon",
-       "<case>"
+       "@literal:digest epsilon",
+       "digest <case>"
       ],
       [
-       "zeta",
-       "<case>"
+       "@literal:digest zeta",
+       "digest <case>"
       ],
       [
        "dd",
@@ -3181,6 +3289,13 @@
      "source": "docs/44-public-api-contract.md"
     },
     {
+     "clause": "Versions are generation-relative: `state_version`, `state_snapshot`, `before_state` and `after_state` count within the live generation of a logical id. After a governed deletion of the head the id reports `0` to any writer, a re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one",
+     "observables": [
+      "recreated"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
      "clause": "A write citing a reference outside the writer's scope therefore commits, reads back and stays admitted exactly as a write citing an id nobody wrote: the same receipt, `history`, recall payload and `write_semantics`, live, after a reopen and after a restart, and whether or not the cited fact is later pruned or permanently deleted.",
      "observables": [
       "bf_before"
@@ -3742,11 +3857,11 @@
    "sha256_at_base": "9f1c91f73ef511b68e13988790984e5164670a9d9bafe92a7cf043729b03beda"
   }
  ],
- "development_history": "Authored from the docs/44 clause 'Canonical derivation is bound under the writer's own authority' and the docs/786 F-R3-2 row at base_commit (the repair commit), after the unit-level expectations of reference/tests/test_809_evidence_reference_authorization.py were preregistered at 10a0d70e and executed once on the unmodified tree (29 failed, 9 passed). No case of this fixture was executed before the independent comparison.",
+ "development_history": "Authored from the docs/44 clause 'Canonical derivation is bound under the writer's own authority' and the docs/786 F-R3-2 row at base_commit (the repair commit b932bd2f), after the unit-level expectations of reference/tests/test_809_evidence_reference_authorization.py were preregistered (10a0d70e, superseded after independent review at 53268532 and 8272b38e; three fail-first baselines on the unmodified runtime, the last 36 failed / 14 passed / 82 subtests) and executed once on the repaired runtime (27 passed, 1 xfailed, 106 subtests; reports/validation/809-at-head). The first fixture revision (871d2bbe) was executed once by its own family test inside a full-suite run before its independent review; that run is disclosed, not used as evidence, and its failures were the harness defect the review independently found (RF-1: unfolded clocks and scores in recall). This revision answers that review before the runner's first execution.",
  "dsl_version": "786-security-replay-dsl/3",
  "fixture_version": 1,
  "frozen_on": "2026-10-15",
- "independence": "Expected outcomes were written from the contract documents listed in contract_sources at base_commit, clause by clause (`clauses` on every case), before this fixture was first executed by the runner, and compared to those clauses by a separate reviewer before that first execution. A failing expectation is a finding, never a reason to edit this fixture; a corrected expectation requires a superseding -v2 of this generation with a recorded reason. Observables under `controls` are positive controls expected for falsifiability (a withhold-everything runtime must fail), not derivations of a clause; observables under `implementation_evidence` are recorded, never expected. No frozen holdout phrase, #644 or -v3 fixture vocabulary is used.",
+ "independence": "Expected outcomes were written from the contract documents listed in contract_sources at base_commit, clause by clause (`clauses` on every case), and compared to those clauses by a separate reviewer before the runner's first execution. A failing expectation is a finding, never a reason to edit this fixture; a corrected expectation requires a superseding -v2 of this generation with a recorded reason. This fixture declares no `controls`; observables under `implementation_evidence` are recorded, never expected. No frozen holdout phrase, #644 or -v3 fixture vocabulary is used.",
  "invariants": [
   {
    "falsified_by": "any citation refused, withheld, or differing in any of the four payloads from the unknown citation",
@@ -3779,7 +3894,7 @@
    "statement": "B may re-create A's deleted id; B's derivation of its own new generation follows B's own deletion while B's citation of A's deleted fact stays admitted throughout, live and after reopen; a chain of B's memories rooted in A's deleted fact is admitted end to end."
   }
  ],
- "not_claimed": "Process-level restart (every `reopen` is a handle close and open in one process); shared-domain membership, its revocation and project/task restrictions (no facade operation; unit tests); timing side channels (not measured); erasure beyond the canonical substrate and public reads (docs/28, docs/44).",
+ "not_claimed": "Process-level restart (every `reopen` is a handle close and open in one process); shared-domain membership, its revocation and project/task restrictions (no facade operation); late binding of a reference that names no fact at commit; direct probes of a foreign deleted id (dispute by uuid, write semantics lookup); the owner's provenance audit (undeclared residue); facts persisted before #809 (legacy rows); the owner's view after another scope re-creates the deleted id; co-holder audit evidence in the history of a shared memory; timing side channels (not measured); erasure beyond the canonical substrate and public reads (docs/28, docs/44). Each of these is pinned by the unit module named above.",
  "owning_issue": 809,
  "relation_to_v3": "Additive generation beside the three -v3 fixtures (not a supersession): the -v3 fixtures, their first-execution evidence at 842e5734 and the DSL/1 and DSL/2 runners are byte-frozen. This fixture pins the authorization boundary the #809 repair introduces; it is executed by the DSL/3 runner (reference/run_786_security_replays_dsl3.py), which inherits DSL/2 unchanged.",
  "replay_id": "evidence-reference-authorization-v1",

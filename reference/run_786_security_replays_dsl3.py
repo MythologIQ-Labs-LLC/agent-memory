@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 import tempfile
 from collections.abc import Mapping
@@ -47,6 +48,23 @@ match = base.match
 ReplayError = base.ReplayError
 OWNER = base.OWNER
 _normalised = root_runner._normalised
+_UUID = re.compile(r"^ref-\d+$")
+
+
+def _canonical(item, fold):
+    """Maps keyed by fact uuid become ``[key, value]`` pair lists and lists of fact uuids are
+    sorted, both by their folded text, so that order alone never distinguishes two payloads."""
+    if isinstance(item, dict):
+        if item and all(isinstance(k, str) and _UUID.match(k) for k in item):
+            pairs = [[k, _canonical(v, fold)] for k, v in item.items()]
+            return sorted(pairs, key=fold)
+        return {k: _canonical(v, fold) for k, v in item.items()}
+    if isinstance(item, list):
+        items = [_canonical(v, fold) for v in item]
+        if items and all(isinstance(v, str) and _UUID.match(v) for v in items):
+            return sorted(items, key=fold)
+        return items
+    return item
 
 
 class Scenario(base.Scenario):
@@ -95,8 +113,26 @@ class Scenario(base.Scenario):
         return text
 
     def _shape(self, spec: Mapping, value, *, own_ref: str) -> str:
-        text = _normalised(value, self.labeller).replace(own_ref, "<memory>")
-        return self._placeholders(spec, text)
+        """The folded, placeholder-substituted serialization of one public payload.
+
+        Beyond DSL/1 ``_normalised`` (uuids to labels, ``ref-N``, ISO timestamps, hashes) this
+        folds what the #809 unit module had to fold for the same comparison to be
+        satisfiable (independent-preregistration-review SF-1, replay review RF-1): fractional
+        ISO timestamps, wall-clock ``"seconds"`` of transaction clocks, every ``*score*``
+        float rounded to 1e-6 (an accepted tolerance), and maps keyed by fact uuid and lists
+        of fact uuids anywhere in the payload compared without regard to order (sorted by
+        their folded text, nothing dropped: the citer's other memories are candidates of
+        every recall and rank by the query text, which carries the case token)."""
+
+        def fold(obj) -> str:
+            text = _normalised(obj, self.labeller).replace(own_ref, "<memory>")
+            text = re.sub(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z", "T", text)
+            text = re.sub(r"\"seconds\": [0-9.e+-]+", "\"seconds\": S", text)
+            text = re.sub(r"(\"[a-z_]*score[a-z_]*\": )(-?[0-9]+\.[0-9]+(?:e-?[0-9]+)?)",
+                          lambda m: m.group(1) + format(round(float(m.group(2)), 6), ".6f"), text)
+            return self._placeholders(spec, text)
+
+        return fold(_canonical(value, fold))
 
     def probe(self, spec: Mapping):
         kind = spec["probe"]
@@ -130,6 +166,9 @@ class Scenario(base.Scenario):
         if kind == "history_events":
             m = self.use(scope)
             return [e["event_type"] for e in m.history(spec["ref"])["history"]["events"]]
+        if kind == "history_has_event":
+            m = self.use(scope)
+            return spec["event_type"] in [e["event_type"] for e in m.history(spec["ref"])["history"]["events"]]
         return super().probe(spec)
 
 

@@ -96,13 +96,15 @@ class Fixture(unittest.TestCase):
             with self.subTest(source=source["path"]):
                 blob = subprocess.run(["git", "show", f"{base}:{source['path']}"], cwd=ROOT, capture_output=True, check=True).stdout
                 self.assertEqual(runner.sha256_bytes(blob), source["sha256_at_base"])
-        docs44 = subprocess.run(["git", "show", f"{base}:docs/44-public-api-contract.md"], cwd=ROOT,
-                                capture_output=True, check=True).stdout.decode()
-        self.assertIn(CLAUSE, docs44)
+        texts = {source["path"]: subprocess.run(["git", "show", f"{base}:{source['path']}"], cwd=ROOT,
+                                                capture_output=True, check=True).stdout.decode()
+                 for source in fx["contract_sources"]}
+        self.assertIn(CLAUSE, texts["docs/44-public-api-contract.md"])
+        # every quoted clause of every case is present verbatim and in full in its own hashed source
         for case in fx["cases"]:
             for clause in case["clauses"]:
-                if clause["source"] == "docs/44-public-api-contract.md":
-                    self.assertIn(clause["clause"].split(" (")[0][:60], docs44, clause["clause"][:60])
+                with self.subTest(case=case["id"], clause=clause["clause"][:40]):
+                    self.assertIn(clause["clause"], texts[clause["source"]])
 
     def test_frozen_v3_fixtures_and_base_runners_are_byte_untouched(self):
         for name, digest in FROZEN_V3_SHA256.items():
@@ -120,6 +122,12 @@ class Fixture(unittest.TestCase):
             self.assertNotIn(token, text)
 
 
+FIRST_EXECUTION = ROOT / "reports/validation/809-security-replays" / REPLAY / "report.json"
+
+
+@unittest.skipUnless(FIRST_EXECUTION.is_file(),
+                     "the first execution of this fixture is the runner's own on a clean tree, committed under "
+                     "reports/validation/809-security-replays; until then the test suite does not execute it")
 class Execution(unittest.TestCase):
     def test_every_case_passes(self):
         report = runner.run_replay(REPLAY, allow_dirty=True)

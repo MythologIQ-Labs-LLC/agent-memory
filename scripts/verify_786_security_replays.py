@@ -55,6 +55,22 @@ def verify(evidence_root: Path = EVIDENCE_ROOT, declaration: Path = DECLARATION,
            fixture_dir: Path = runner.FIXTURE_DIR, reexecute: bool = False) -> dict:
     rows = [v7["verify_one"](r, evidence_root, fixture_dir, reexecute, runner_for(r, fixture_dir))
             for r in v7["declared_replays"](declaration, "security_replay")]
+    for row in rows:
+        # a DSL/2 or DSL/3 manifest also binds the runner modules it inherits (runner_base,
+        # runner_root): committed evidence is stale if either moved since it was produced
+        manifest_path = evidence_root / row["replay"] / "manifest.json"
+        if not manifest_path.is_file():
+            continue
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        for key in ("runner_base", "runner_root"):
+            bound = manifest.get(key)
+            if not isinstance(bound, dict):
+                continue
+            current = ROOT / bound.get("path", "")
+            if not current.is_file() or runner.sha256_file(current) != bound.get("sha256"):
+                row["problems"] = list(row.get("problems", ())) + [f"{key} changed since the evidence was produced"]
+                if row["status"] == "VERIFIED":
+                    row["status"] = "STALE"
     complete = all(r["status"] == "VERIFIED" and r["verdict"] == "PASS" for r in rows)
     return {"replays": rows, "evidence_verified": complete,
             "acceptance": "NOT GRANTED: requires an independent reviewer's decision recorded in META_LEDGER"}

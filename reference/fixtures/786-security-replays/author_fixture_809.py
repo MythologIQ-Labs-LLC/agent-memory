@@ -78,7 +78,13 @@ Q_OWN = ("Within the writer's own scope the #776/#777 rule is unchanged: direct 
          "source are withheld tenant-wide, including after the source's payload is physically erased, and a dependency "
          "bound while the writer was a member of a shared domain survives the writer's later revocation.")
 Q_READER = ("A public projection withholds a deleted-generation identifier only from a reader whose own context could have "
-            "read that generation; to any other reader such a string is its own input and is served back unchanged.")
+            "read that generation. To any other reader such a string is an opaque identifier it cannot act on, whether the "
+            "reader supplied it itself or meets it in a co-holder's audit evidence of a shared memory: citing it binds "
+            "nothing, disputing it or looking up its write semantics reads exactly as an id nobody wrote, and recall cannot "
+            "address it.")
+Q_GEN = ("Versions are generation-relative: `state_version`, `state_snapshot`, `before_state` and `after_state` count within "
+         "the live generation of a logical id. After a governed deletion of the head the id reports `0` to any writer, a "
+         "re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one")
 Q_OPEN = ("An id with no live head (never written or governed-deleted) is open to any writer in the tenant: creation and "
           "the #776 re-creation of a deleted id as a fresh generation are unchanged.")
 Q_786_FIX = ("A citation of a foreign deleted, foreign live or unknown id commits, reads and stays admitted identically; "
@@ -95,7 +101,8 @@ DQ = f"{Q} {QA} digest"
 
 # the four citations by B, after A's deletion of memory:q (q1) with memory:q2 (q2) live
 SUBS = [["q1", "<ref>"], ["q2", "<ref>"], [GUESS, "<ref>"],
-        ["alpha", "<case>"], ["beta", "<case>"], ["gamma", "<case>"],
+        ["@literal:digest alpha", "digest <case>"], ["@literal:digest beta", "digest <case>"],
+        ["@literal:digest gamma", "digest <case>"],
         ["bd", "<self>"], ["bl", "<self>"], ["bu", "<self>"]]
 
 
@@ -170,7 +177,8 @@ def four_clauses(*, reopened=False):
     reads = [o for o in all_obs if o.split("_")[0] in ("admitted", "history", "semantics") and "_same_" not in o]
     writes = [o for o in all_obs if o.split("_")[0] in ("committed", "refusal", "before", "after")]
     return [C(D44, Q_SAME, *same, *reads, *writes), C(D44, Q_UNKNOWN, *[o for o in reads if o.startswith("admitted")]),
-            C(D786, Q_786_FIX, *[o for o in all_obs if o.endswith("_bd") or o.endswith("_bl")])]
+            C(D786, Q_786_FIX, *[o for o in all_obs if o.endswith("_bd") or o.endswith("_bl")]),
+            *([C(D44, Q_GEN, *writes), C(D44, Q_OPEN, *writes)] if writes else [])]
 
 
 FIXTURE = {
@@ -188,21 +196,28 @@ FIXTURE = {
     "contract_sources": [doc_hash(D44), doc_hash(D786), doc_hash(D28)],
     "title": "A reference the writer cannot read is an unknown reference: it binds no canonical derivation, withholds nothing and reads identically to an id nobody wrote",
     "development_history": ("Authored from the docs/44 clause 'Canonical derivation is bound under the writer's own authority' "
-                            "and the docs/786 F-R3-2 row at base_commit (the repair commit), after the unit-level expectations of "
-                            "reference/tests/test_809_evidence_reference_authorization.py were preregistered at 10a0d70e and "
-                            "executed once on the unmodified tree (29 failed, 9 passed). No case of this fixture was executed "
-                            "before the independent comparison."),
+                            "and the docs/786 F-R3-2 row at base_commit (the repair commit b932bd2f), after the unit-level "
+                            "expectations of reference/tests/test_809_evidence_reference_authorization.py were preregistered "
+                            "(10a0d70e, superseded after independent review at 53268532 and 8272b38e; three fail-first baselines "
+                            "on the unmodified runtime, the last 36 failed / 14 passed / 82 subtests) and executed once on the "
+                            "repaired runtime (27 passed, 1 xfailed, 106 subtests; reports/validation/809-at-head). The first "
+                            "fixture revision (871d2bbe) was executed once by its own family test inside a full-suite run before "
+                            "its independent review; that run is disclosed, not used as evidence, and its failures were the "
+                            "harness defect the review independently found (RF-1: unfolded clocks and scores in recall). This "
+                            "revision answers that review before the runner's first execution."),
     "independence": ("Expected outcomes were written from the contract documents listed in contract_sources at base_commit, "
-                     "clause by clause (`clauses` on every case), before this fixture was first executed by the runner, and "
-                     "compared to those clauses by a separate reviewer before that first execution. A failing expectation is a "
-                     "finding, never a reason to edit this fixture; a corrected expectation requires a superseding -v2 of this "
-                     "generation with a recorded reason. Observables under `controls` are positive controls expected for "
-                     "falsifiability (a withhold-everything runtime must fail), not derivations of a clause; observables under "
-                     "`implementation_evidence` are recorded, never expected. No frozen holdout phrase, #644 or -v3 fixture "
-                     "vocabulary is used."),
+                     "clause by clause (`clauses` on every case), and compared to those clauses by a separate reviewer before "
+                     "the runner's first execution. A failing expectation is a finding, never a reason to edit this fixture; a "
+                     "corrected expectation requires a superseding -v2 of this generation with a recorded reason. This fixture "
+                     "declares no `controls`; observables under `implementation_evidence` are recorded, never expected. No "
+                     "frozen holdout phrase, #644 or -v3 fixture vocabulary is used."),
     "not_claimed": ("Process-level restart (every `reopen` is a handle close and open in one process); shared-domain "
-                    "membership, its revocation and project/task restrictions (no facade operation; unit tests); timing side "
-                    "channels (not measured); erasure beyond the canonical substrate and public reads (docs/28, docs/44)."),
+                    "membership, its revocation and project/task restrictions (no facade operation); late binding of a "
+                    "reference that names no fact at commit; direct probes of a foreign deleted id (dispute by uuid, write "
+                    "semantics lookup); the owner's provenance audit (undeclared residue); facts persisted before #809 (legacy "
+                    "rows); the owner's view after another scope re-creates the deleted id; co-holder audit evidence in the "
+                    "history of a shared memory; timing side channels (not measured); erasure beyond the canonical substrate "
+                    "and public reads (docs/28, docs/44). Each of these is pinned by the unit module named above."),
     "stop_lines": [
         "no fixture edit after first execution; supersede and record why",
         "no expectation weakened to obtain PASS",
@@ -239,7 +254,8 @@ FIXTURE = {
          "steps": seed() + [forget_q()] + cite_four() + [{"op": "reopen"}],
          "probes": four_probes(reopened=True), "expect": four_expect(reopened=True)},
         {"id": "E3-dispute-citing-the-deleted-foreign-id", "invariants": ["E3"],
-         "clauses": [C(D786, Q_786_FIX, "disp_d_committed", "disp_u_committed", "history_same", "op_same"),
+         "clauses": [C(D786, Q_786_FIX, "disp_d_committed", "disp_u_committed", "history_same", "op_same",
+                       "dispute_present_d", "dispute_present_u"),
                      C(D44, Q_READER, "history_same")],
          "record": ["events_d", "events_u"], "implementation_evidence": ["events_d", "events_u"],
          "steps": seed() + [forget_q(),
@@ -251,13 +267,16 @@ FIXTURE = {
                     "disp_u_committed": {"probe": "op_result", "name": "disp_u", "field": "committed"},
                     "events_d": {"probe": "history_events", "ref": "memory:dd", "as": B},
                     "events_u": {"probe": "history_events", "ref": "memory:du", "as": B},
+                    "dispute_present_d": {"probe": "history_has_event", "ref": "memory:dd", "event_type": "memory.dispute", "as": B},
+                    "dispute_present_u": {"probe": "history_has_event", "ref": "memory:du", "event_type": "memory.dispute", "as": B},
                     "history_same": {"probe": "history_same_as", "ref": "memory:dd", "other": "memory:du", "as": B,
-                                     "substitute": [["q1", "<ref>"], [GUESS2, "<ref>"], ["epsilon", "<case>"], ["zeta", "<case>"],
+                                     "substitute": [["q1", "<ref>"], [GUESS2, "<ref>"], ["@literal:digest epsilon", "digest <case>"], ["@literal:digest zeta", "digest <case>"],
                                                     ["dd", "<self>"], ["du", "<self>"]]},
                     "op_same": {"probe": "op_same_as", "name": "disp_d", "other": "disp_u", "ref": "memory:dd", "other_ref": "memory:du",
-                                "substitute": [["q1", "<ref>"], [GUESS2, "<ref>"], ["epsilon", "<case>"], ["zeta", "<case>"],
+                                "substitute": [["q1", "<ref>"], [GUESS2, "<ref>"], ["@literal:digest epsilon", "digest <case>"], ["@literal:digest zeta", "digest <case>"],
                                                ["dd", "<self>"], ["du", "<self>"]]}},
-         "expect": {"disp_d_committed": EQ(True), "disp_u_committed": EQ(True), "history_same": EQ(True), "op_same": EQ(True)}},
+         "expect": {"disp_d_committed": EQ(True), "disp_u_committed": EQ(True), "history_same": EQ(True), "op_same": EQ(True),
+                    "dispute_present_d": EQ(True), "dispute_present_u": EQ(True)}},
         {"id": "E4-canary-survives-pruning-of-its-source", "invariants": ["E4"],
          "clauses": [C(D786, Q_786_FIX, "admitted", "history"), C(D44, Q_SAME, "admitted", "history")],
          "steps": seed() + [rem("memory:bc", DIGEST("eta"), evidence_refs=["q2"], **{"as": B}, label="bc", require_committed=True),
@@ -310,7 +329,7 @@ FIXTURE = {
                     "bp_history": {"probe": "history", "ref": "memory:bp", "as": B}},
          "expect": {"q1_exists": EQ(False), "late_withheld": EQ([]), "bp_admitted": EQ(["bp"]), "bp_history": EQ(LIVE("bp"))}},
         {"id": "E6-re-creation-by-the-citing-scope", "invariants": ["E6"],
-         "clauses": [C(D44, Q_OPEN, "recreated"), C(D44, Q_SAME, "bf_before", "bf_after", "bf_after_reopen"),
+         "clauses": [C(D44, Q_OPEN, "recreated"), C(D44, Q_GEN, "recreated"), C(D44, Q_SAME, "bf_before", "bf_after", "bf_after_reopen"),
                      C(D44, Q_OWN, "bo_after", "bo_after_reopen"), C(D44, Q_BIND, "bo_before", "bo_after")],
          "steps": seed() + [forget_q(),
                             rem("memory:bf", DIGEST("nu"), evidence_refs=["q1"], **{"as": B}, label="bf", require_committed=True),
@@ -344,7 +363,7 @@ E6 = FIXTURE["cases"][-2]
 assert E6["id"] == "E6-re-creation-by-the-citing-scope"
 before = {k: v for k, v in E6["probes"].items() if k in ("recreated", "bf_before", "bo_before")}
 E6_before = {**E6, "id": "E6-re-creation-by-the-citing-scope", "invariants": ["E6"],
-             "clauses": [C(D44, Q_OPEN, "recreated"), C(D44, Q_SAME, "bf_before"), C(D44, Q_BIND, "bo_before")],
+             "clauses": [C(D44, Q_OPEN, "recreated"), C(D44, Q_GEN, "recreated"), C(D44, Q_SAME, "bf_before"), C(D44, Q_BIND, "bo_before")],
              "probes": before, "expect": {k: E6["expect"][k] for k in before}}
 after_probes = {k: v for k, v in E6["probes"].items() if k in ("bf_after", "bo_after")}
 reopen_probes = {k: v for k, v in E6["probes"].items() if k in ("bf_after_reopen", "bo_after_reopen")}
