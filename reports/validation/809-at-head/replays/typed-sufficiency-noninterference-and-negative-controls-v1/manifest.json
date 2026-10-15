@@ -1,0 +1,23 @@
+{
+ "attestation": "none: hashes bind contents for review; they are not signatures and confer no acceptance",
+ "command": "python reference/run_644_v7_replays.py --all",
+ "fixture": {
+  "path": "reference/fixtures/644-v7-replays/typed-sufficiency-noninterference-and-negative-controls-v1.json",
+  "sha256": "6b1ea7fcb7dd526c3c9e91e11f9eff834013e78f32b7e29f4dd03ca8e207547e"
+ },
+ "observations_sha256": "907ab4730737deb0c116e73a30538adbf8a2b54953ddd66e37e2035d27a29de7",
+ "replay_id": "typed-sufficiency-noninterference-and-negative-controls-v1",
+ "report": {
+  "path": "report.json",
+  "sha256": "5fa36d804c5b60dae21c1922f2718b157e7d19e3eadc0c224ac56c0dc2fd9c31"
+ },
+ "runner": {
+  "path": "reference/run_644_v7_replays.py",
+  "sha256": "941a0dc6860e932531d77eb65c1f305f84feeab3366cacd39953dae160cf0def",
+  "version": "644-v7-replay-runner/1"
+ },
+ "runtime_tree": "6f4205e029d3a42a36b709991efe6ead898a687c",
+ "schema": "644-v7-replay-manifest/1",
+ "source_commit": "c70fe31572e624d0e4f031ab8334b589257cf529",
+ "verdict": "BLOCKED"
+}

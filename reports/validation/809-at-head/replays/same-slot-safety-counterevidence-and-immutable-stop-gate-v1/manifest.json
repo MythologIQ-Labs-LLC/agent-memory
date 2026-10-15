@@ -1,0 +1,23 @@
+{
+ "attestation": "none: hashes bind contents for review; they are not signatures and confer no acceptance",
+ "command": "python reference/run_644_v7_replays.py --all",
+ "fixture": {
+  "path": "reference/fixtures/644-v7-replays/same-slot-safety-counterevidence-and-immutable-stop-gate-v1.json",
+  "sha256": "025cd97f18ce0f40382452dedd7ced819af928e8bf3676650b69ffa3d799e7fe"
+ },
+ "observations_sha256": "8a020753d2e8578645ced240c7c5aa31ea5aa9bca510d4da5e53be9f04d3b787",
+ "replay_id": "same-slot-safety-counterevidence-and-immutable-stop-gate-v1",
+ "report": {
+  "path": "report.json",
+  "sha256": "c0ac7c4be657f28e6df28007489cc6282427b0051c324d631cf3c82a4f561a5b"
+ },
+ "runner": {
+  "path": "reference/run_644_v7_replays.py",
+  "sha256": "941a0dc6860e932531d77eb65c1f305f84feeab3366cacd39953dae160cf0def",
+  "version": "644-v7-replay-runner/1"
+ },
+ "runtime_tree": "6f4205e029d3a42a36b709991efe6ead898a687c",
+ "schema": "644-v7-replay-manifest/1",
+ "source_commit": "c70fe31572e624d0e4f031ab8334b589257cf529",
+ "verdict": "BLOCKED"
+}

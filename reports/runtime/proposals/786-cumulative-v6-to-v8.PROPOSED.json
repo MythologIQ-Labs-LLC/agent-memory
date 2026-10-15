@@ -10,7 +10,7 @@
     },
     {
       "path": "reference/agentmem_ref/api/surface.py",
-      "blob": "34e92bcb4ab2f864a13054703c052574a080fc36"
+      "blob": "565a999f311cba6ca0da357c5836aadc15467a29"
     },
     {
       "path": "reference/agentmem_ref/evidence_sufficiency.py",
@@ -30,7 +30,7 @@
     },
     {
       "path": "reference/agentmem_ref/runtime/adapter.py",
-      "blob": "66a216fda9ecdf86d64f5bd0b4d13a43d9b102bf"
+      "blob": "4a44aa69246114fea5b8cbe46d9cdb9603a94cc0"
     },
     {
       "path": "reference/agentmem_ref/runtime/evidence_sufficiency.py",
