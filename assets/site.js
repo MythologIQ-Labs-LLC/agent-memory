@@ -13,14 +13,17 @@ function renderMetric(){
  if(!profile){$('metricSummary').textContent='No comparable evidence in this profile.';$('leaderRows').replaceChildren();return}
  const metric=profile.metrics.find(m=>m.metric===$('metricSelect').value);
  if(!metric)return;
- const values=[['Best measured non-baseline',pct(metric.best_score),''],['Agent Memory',pct(metric.agent_memory_score),'accent'],['Distance to best',pp(metric.gap_to_best),'']];
+ const peers=metric.rows.filter(r=>r.role==='comparator'&&typeof r.score==='number').sort((a,b)=>b.score-a.score);
+ const peerLeader=peers.length?peers[0]:null;
+ const peerDelta=peerLeader?metric.agent_memory_score-peerLeader.score:null;
+ const values=[['Best accepted external peer',peerLeader?pct(peerLeader.score):'Not measured',''],['Agent Memory',pct(metric.agent_memory_score),'accent'],['Agent Memory vs external peer',peerDelta===null?'No accepted peer':(peerDelta>=0?'+':'')+(100*peerDelta).toFixed(2)+' pp','']];
  $('metricSummary').innerHTML=values.map(([k,v,color])=>'<div class="metric"><div class="k">'+esc(k)+'</div><div class="v '+color+'">'+esc(v)+'</div></div>').join('');
  const rows=[...metric.rows].sort((a,b)=>b.score-a.score);
  $('leaderRows').innerHTML=rows.map(r=>{
  const dist=Math.max(0,metric.best_score-r.score);
  return '<tr><td><strong>'+esc(friendly(r.system))+'</strong></td><td class="role">'+esc(r.role)+'</td><td class="num">'+esc(pct(r.score))+'</td><td class="num">'+(r.sample_count??'—')+'</td><td class="num">'+(r.role==='baseline'?'Baseline':esc(pp(dist)))+'</td><td>'+(r.run_url?'<a href="'+esc(url(r.run_url))+'" target="_blank" rel="noopener noreferrer">Raw run ↗</a>':'Not linked')+'</td></tr>';
  }).join('');
- $('profileNotes').innerHTML='<strong>'+esc(profile.lane_id)+'</strong> / '+esc(profile.plane)+' · accepted '+esc(profile.accepted_on||'date unavailable')+' · inference calls in this lane: '+(profile.llm_calls?'yes':'no')+' · <a href="'+esc(url(profile.benchmark_file))+'" target="_blank" rel="noopener noreferrer">Pinned lane definition ↗</a> · input SHA-256 <code>'+esc(profile.input_sha256)+'</code><p>'+esc(profile.method_note||'The native metric definition and comparator budget control interpretation.')+'</p><p>Only accepted rows reporting this exact native metric are compared. Baselines are displayed, but excluded from the best non-baseline score. No result from another benchmark, plane or vendor-published reference is mixed into this comparison.</p>';
+ $('profileNotes').innerHTML='<strong>'+esc(profile.lane_id)+'</strong> / '+esc(profile.plane)+' · accepted '+esc(profile.accepted_on||'date unavailable')+' · inference calls in this lane: '+(profile.llm_calls?'yes':'no')+' · <a href="'+esc(url(profile.benchmark_file))+'" target="_blank" rel="noopener noreferrer">Pinned lane definition ↗</a> · input SHA-256 <code>'+esc(profile.input_sha256)+'</code><p>'+esc(profile.method_note||'The native metric definition and comparator budget control interpretation.')+'</p><p>Only accepted rows reporting this native metric are compared. The external peer leader excludes Agent Memory and lexical baselines. A positive Agent Memory gap means it leads that peer in this higher-is-better metric; a negative gap means it trails. One measured external product does not establish market-wide rank. No vendor-published reference is mixed into this comparison.</p>';
 }
 function updateMetricOptions(){
  const profile=catalog.profiles.find(p=>p.profile_id===$('profileSelect').value);
@@ -39,7 +42,9 @@ function render(){
  $('snapshot').textContent='Evidence snapshot · '+catalog.source.dashboard_as_of;
  const usable=catalog.profiles.filter(p=>p.metrics.length>0);
  const n=usable.reduce((acc,p)=>acc+p.metrics.length,0);
- $('stats').innerHTML=[[''+usable.length,'Accepted evaluation planes'],[''+n,'Comparable native metrics'],[''+catalog.competitors.filter(c=>c.state==='not_run').length,'Registered, not yet run']].map(([v,k])=>'<div class="stat"><strong>'+esc(v)+'</strong><span>'+esc(k)+'</span></div>').join('');
+ const peers=new Set(usable.flatMap(p=>p.metrics.flatMap(m=>m.rows.filter(r=>r.role==='comparator'&&typeof r.score==='number').map(r=>r.system.toLowerCase().replaceAll('_','-')))));
+ const remaining=Math.max(0,6-peers.size);
+ $('stats').innerHTML=[[''+peers.size,'Accepted external memory products'],[''+remaining,'More products needed for minimum six'],[''+n,'Comparable native metric contexts']].map(([v,k])=>'<div class="stat"><strong>'+esc(v)+'</strong><span>'+esc(k)+'</span></div>').join('');
  setOptions($('profileSelect'),usable.map(p=>({value:p.profile_id,label:friendly(p.lane_id)+' / '+friendly(p.plane)})));
  $('profileSelect').addEventListener('change',updateMetricOptions);
  $('metricSelect').addEventListener('change',renderMetric);
