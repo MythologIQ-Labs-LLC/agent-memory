@@ -1,0 +1,26 @@
+{
+  "argv": [
+    "/tmp/am-bench/graphiti-amb-venv/bin/python",
+    "/home/user/ext-exec/reference/run_amb_external.py",
+    "--amb-root",
+    "/tmp/agent-memory-benchmark",
+    "--",
+    "run",
+    "--dataset",
+    "precisionmembench",
+    "--split",
+    "single-turn",
+    "--memory",
+    "langmem-local",
+    "--mode",
+    "retrieval",
+    "--output-dir",
+    "/tmp/am-bench/runs/813-langmem-amb/rep1/amb-outputs"
+  ],
+  "started_utc": "2026-10-15T20:53:24Z",
+  "wall_seconds": 5767.964,
+  "exit_status": 0,
+  "peak_rss_mib": 1075.9,
+  "source": "converted from execution-identity.json",
+  "credentials_present_in_child": []
+}
