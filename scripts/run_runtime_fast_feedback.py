@@ -8,6 +8,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
+import signal
 import platform
 import subprocess
 import sys
@@ -60,28 +62,41 @@ def _record_suite(root: Path, name: str, timeout: float) -> dict[str, Any]:
     ]
     started = time.monotonic()
     try:
-        p = subprocess.run(
-            argv, cwd=root, capture_output=True, text=True,
-            timeout=timeout, check=False,
-        )
+        # Kill the test's process group on POSIX, not merely unittest's parent.
+        # A timed-out test may have launched children that would otherwise keep
+        # monopolizing the same CPU used by live competitor evaluations.
+        with subprocess.Popen(
+            argv, cwd=root, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+            text=True, start_new_session=os.name == "posix",
+        ) as proc:
+            try:
+                stdout, stderr = proc.communicate(timeout=timeout)
+            except subprocess.TimeoutExpired:
+                if os.name == "posix":
+                    try:
+                        os.killpg(proc.pid, signal.SIGKILL)
+                    except ProcessLookupError:
+                        pass
+                else:
+                    proc.kill()
+                stdout, stderr = proc.communicate()
+                return {
+                    "suite": name,
+                    "status": "timed_out",
+                    "exit_code": None,
+                    "elapsed_seconds": round(time.monotonic() - started, 3),
+                    "command": argv,
+                    "stdout_tail": stdout[-3000:],
+                    "stderr_tail": (stderr[-5000:] + "\ntime budget exhausted").strip(),
+                }
         return {
             "suite": name,
-            "status": "passed" if p.returncode == 0 else "failed",
-            "exit_code": p.returncode,
+            "status": "passed" if proc.returncode == 0 else "failed",
+            "exit_code": proc.returncode,
             "elapsed_seconds": round(time.monotonic() - started, 3),
             "command": argv,
-            "stdout_tail": p.stdout[-3000:],
-            "stderr_tail": p.stderr[-6000:],
-        }
-    except subprocess.TimeoutExpired as exc:
-        return {
-            "suite": name,
-            "status": "timed_out",
-            "exit_code": None,
-            "elapsed_seconds": round(time.monotonic() - started, 3),
-            "command": argv,
-            "stdout_tail": "",
-            "stderr_tail": f"time budget exhausted: {exc.timeout}s",
+            "stdout_tail": stdout[-3000:],
+            "stderr_tail": stderr[-6000:],
         }
     except OSError as exc:
         return {
