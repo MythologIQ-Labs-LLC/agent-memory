@@ -1,0 +1,12 @@
+{"tree": "cand", "store": "without meta notes", "query": "Who is my doctor?", "returned": ["gp"], "semantic": [["gp", 0.542]]}
+{"tree": "cand", "store": "without meta notes", "query": "Which pets do we have?", "returned": [], "semantic": []}
+{"tree": "cand", "store": "without meta notes", "query": "What do the pets eat?", "returned": ["petfood"], "semantic": [["petfood", 0.41]]}
+{"tree": "cand", "store": "with meta notes", "query": "Who is my doctor?", "returned": ["stuff-doc"], "semantic": [["stuff-doc", 0.728]]}
+{"tree": "cand", "store": "with meta notes", "query": "Which pets do we have?", "returned": ["stuff-pets"], "semantic": [["stuff-pets", 0.704]]}
+{"tree": "cand", "store": "with meta notes", "query": "What do the pets eat?", "returned": ["stuff-pets"], "semantic": [["stuff-pets", 0.676]]}
+{"tree": "c4", "store": "without meta notes", "query": "Who is my doctor?", "returned": ["gp"], "semantic": [["gp", 0.542]]}
+{"tree": "c4", "store": "without meta notes", "query": "Which pets do we have?", "returned": ["dog"], "semantic": [["dog", 0.35]]}
+{"tree": "c4", "store": "without meta notes", "query": "What do the pets eat?", "returned": ["petfood", "dog"], "semantic": [["petfood", 0.41], ["dog", 0.323]]}
+{"tree": "c4", "store": "with meta notes", "query": "Who is my doctor?", "returned": ["stuff-doc", "gp"], "semantic": [["stuff-doc", 0.728], ["gp", 0.542]]}
+{"tree": "c4", "store": "with meta notes", "query": "Which pets do we have?", "returned": ["stuff-pets", "dog"], "semantic": [["stuff-pets", 0.704], ["dog", 0.35]]}
+{"tree": "c4", "store": "with meta notes", "query": "What do the pets eat?", "returned": ["stuff-pets", "petfood", "dog"], "semantic": [["stuff-pets", 0.676], ["petfood", 0.41], ["dog", 0.323]]}

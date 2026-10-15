@@ -1,0 +1,2130 @@
+{
+ "scenarios": [
+  {
+   "id": "fin",
+   "category": "reviewer-gen",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "user:fin",
+     "ref": "sub-netflix",
+     "text": "Netflix renews on the 3rd of each month at 15.49."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fin",
+     "ref": "sub-gym",
+     "text": "The climbing gym membership is 62 a month."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fin",
+     "ref": "sub-cloud",
+     "text": "Photo backups go to a 2 TB iCloud plan."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fin",
+     "ref": "sub-news",
+     "text": "The Guardian digital edition costs me 12 a month."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fin",
+     "ref": "mortgage",
+     "text": "Mortgage is fixed at 4.1% until August 2027 with Nationwide."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fin",
+     "ref": "isa",
+     "text": "I put 300 into the stocks and shares ISA on payday."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fin",
+     "ref": "accountant",
+     "text": "Helen Brooks files our self-assessment return each January."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fin",
+     "ref": "pension",
+     "text": "My workplace pension contribution is 8% with a 5% employer match."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fin",
+     "ref": "car-ins",
+     "text": "Admiral renewed the car cover at 540 for the year."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fin",
+     "ref": "home-ins",
+     "text": "Contents insurance is with Aviva and covers the bikes up to 2,000."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fin",
+     "ref": "groceries",
+     "text": "We try to keep groceries under 450 a month."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fin",
+     "ref": "sofa",
+     "text": "The sofa is on 0% finance until next March."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fin",
+     "ref": "crypto",
+     "text": "I sold the last of the Ethereum in 2023."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fin",
+     "ref": "mia-bike",
+     "text": "Mia wants a purple bike for her birthday."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fin",
+     "ref": "fin-n0",
+     "text": "The boiler service is booked for 14 November."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fin",
+     "ref": "fin-n1",
+     "text": "The bathroom tap drips when the hot water is on."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fin",
+     "ref": "fin-n2",
+     "text": "I prefer aisle seats on long flights."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fin",
+     "ref": "fin-n3",
+     "text": "Grandma's birthday is on 2 February."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fin",
+     "ref": "fin-n4",
+     "text": "We get the veg box delivered on Fridays."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fin",
+     "ref": "fin-n5",
+     "text": "The office is closed between Christmas and New Year."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fin",
+     "ref": "fin-n6",
+     "text": "I'm reading a novel about Antarctic explorers."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fin",
+     "ref": "fin-n7",
+     "text": "The hedge needs trimming before the neighbours complain."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fin",
+     "ref": "fin-n8",
+     "text": "Our recycling bins are collected fortnightly."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fin",
+     "ref": "fin-n9",
+     "text": "The dentist reminder came for the 9th."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fin",
+     "ref": "fin-n10",
+     "text": "The loft ladder squeaks and needs oil."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fin",
+     "ref": "fin-n11",
+     "text": "Book club meets at Priya's flat on the last Thursday."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fin",
+     "ref": "fin-n12",
+     "text": "The smoke alarm battery was changed in June."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fin",
+     "ref": "fin-n13",
+     "text": "We left the spare duvet at the holiday cottage."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fin",
+     "ref": "fin-n14",
+     "text": "The blue folder in the study has the warranty papers."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fin",
+     "ref": "fin-n15",
+     "text": "Our street has a summer party every July."
+    }
+   ],
+   "queries": [
+    {
+     "id": "fin-1",
+     "scope": "user:fin",
+     "query": "What subscriptions am I paying for?",
+     "kind": "aggregate",
+     "expect": {
+      "must_include": [
+       "sub-netflix",
+       "sub-gym",
+       "sub-cloud",
+       "sub-news"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "fin-2",
+     "scope": "user:fin",
+     "query": "What do we spend money on every month?",
+     "kind": "aggregate",
+     "expect": {
+      "must_include": [
+       "sub-netflix",
+       "sub-gym",
+       "sub-news",
+       "groceries"
+      ],
+      "may_include": [
+       "sub-cloud",
+       "sofa",
+       "isa",
+       "pension"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "fin-3",
+     "scope": "user:fin",
+     "query": "Who does our taxes?",
+     "kind": "paraphrase",
+     "expect": {
+      "must_include": [
+       "accountant"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "fin-4",
+     "scope": "user:fin",
+     "query": "When does the fixed rate on the house loan end?",
+     "kind": "paraphrase",
+     "expect": {
+      "must_include": [
+       "mortgage"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "fin-5",
+     "scope": "user:fin",
+     "query": "How much does my employer put into my retirement savings?",
+     "kind": "paraphrase",
+     "expect": {
+      "must_include": [
+       "pension"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "fin-6",
+     "scope": "user:fin",
+     "query": "What is my credit card limit?",
+     "kind": "no-answer",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "fin-7",
+     "scope": "user:fin",
+     "query": "How much did the kitchen extension cost?",
+     "kind": "no-answer",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "fin-8",
+     "scope": "user:fin",
+     "query": "Which insurance policies do we have?",
+     "kind": "aggregate",
+     "expect": {
+      "must_include": [
+       "car-ins",
+       "home-ins"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "fin-9",
+     "scope": "user:fin",
+     "query": "Are the bikes insured?",
+     "kind": "distractor",
+     "expect": {
+      "must_include": [
+       "home-ins"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "fam",
+   "category": "reviewer-gen",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "user:fam",
+     "ref": "mia-school",
+     "text": "Mia is in Year 4 at Hillcrest Primary."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fam",
+     "ref": "leo-school",
+     "text": "Leo started at Oakfield Secondary this September."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fam",
+     "ref": "mia-teacher",
+     "text": "Mr. Hughes teaches Mia's class."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fam",
+     "ref": "leo-tutor",
+     "text": "Leo sees a maths tutor, Raj, on Tuesday evenings."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fam",
+     "ref": "mia-allergy",
+     "text": "Mia can't eat peanuts; the office keeps her EpiPen."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fam",
+     "ref": "leo-band",
+     "text": "Leo plays the trumpet in the junior brass band."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fam",
+     "ref": "mia-gym",
+     "text": "Mia does gymnastics on Wednesdays after lessons finish."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fam",
+     "ref": "leo-bus",
+     "text": "The 47 bus picks Leo up at 7:50."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fam",
+     "ref": "mia-pickup",
+     "text": "Grandad collects Mia on Fridays."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fam",
+     "ref": "parents-eve",
+     "text": "Parents' evening is on 21 November at 6pm."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fam",
+     "ref": "blazer",
+     "text": "Leo's blazer needs replacing, he's grown out of it."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fam",
+     "ref": "inset",
+     "text": "There's an inset day on 3 January."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fam",
+     "ref": "mia-friend",
+     "text": "Mia's best friend is Zara from next door."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fam",
+     "ref": "leo-friends",
+     "text": "Leo hangs out with Sam and Kofi from the band."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fam",
+     "ref": "leo-phone",
+     "text": "Leo got his first phone for his twelfth birthday."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fam",
+     "ref": "fam-n0",
+     "text": "We get the veg box delivered on Fridays."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fam",
+     "ref": "fam-n1",
+     "text": "The office is closed between Christmas and New Year."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fam",
+     "ref": "fam-n2",
+     "text": "I'm reading a novel about Antarctic explorers."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fam",
+     "ref": "fam-n3",
+     "text": "The hedge needs trimming before the neighbours complain."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fam",
+     "ref": "fam-n4",
+     "text": "Our recycling bins are collected fortnightly."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fam",
+     "ref": "fam-n5",
+     "text": "The dentist reminder came for the 9th."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fam",
+     "ref": "fam-n6",
+     "text": "The loft ladder squeaks and needs oil."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fam",
+     "ref": "fam-n7",
+     "text": "Book club meets at Priya's flat on the last Thursday."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fam",
+     "ref": "fam-n8",
+     "text": "The smoke alarm battery was changed in June."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fam",
+     "ref": "fam-n9",
+     "text": "We left the spare duvet at the holiday cottage."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fam",
+     "ref": "fam-n10",
+     "text": "The blue folder in the study has the warranty papers."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fam",
+     "ref": "fam-n11",
+     "text": "Our street has a summer party every July."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fam",
+     "ref": "fam-n12",
+     "text": "The neighbour's cat sometimes sleeps in our shed."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fam",
+     "ref": "fam-n13",
+     "text": "I want to learn Portuguese before the trip to Lisbon."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fam",
+     "ref": "fam-n14",
+     "text": "The hallway light switch is wired backwards."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fam",
+     "ref": "fam-n15",
+     "text": "We donated the old pram to the charity shop."
+    },
+    {
+     "op": "correct",
+     "scope": "user:fam",
+     "ref": "mia-teacher",
+     "as": "mia-teacher-new",
+     "text": "Mrs. Adeyemi took over Mia's class after half term."
+    },
+    {
+     "op": "forget",
+     "scope": "user:fam",
+     "ref": "leo-phone",
+     "text": ""
+    }
+   ],
+   "queries": [
+    {
+     "id": "fam-1",
+     "scope": "user:fam",
+     "query": "Who teaches Mia?",
+     "kind": "governance",
+     "expect": {
+      "must_include": [
+       "mia-teacher-new"
+      ],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "mia-teacher",
+        "reason": "superseded"
+       }
+      ]
+     }
+    },
+    {
+     "id": "fam-2",
+     "scope": "user:fam",
+     "query": "What instruments does Leo play?",
+     "kind": "paraphrase",
+     "expect": {
+      "must_include": [
+       "leo-band"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "fam-3",
+     "scope": "user:fam",
+     "query": "What after-school activities do the kids do?",
+     "kind": "aggregate",
+     "expect": {
+      "must_include": [
+       "leo-band",
+       "mia-gym"
+      ],
+      "may_include": [
+       "leo-tutor"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "fam-4",
+     "scope": "user:fam",
+     "query": "Is there any food Mia must avoid?",
+     "kind": "paraphrase",
+     "expect": {
+      "must_include": [
+       "mia-allergy"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "fam-5",
+     "scope": "user:fam",
+     "query": "How does Leo get to school?",
+     "kind": "paraphrase",
+     "expect": {
+      "must_include": [
+       "leo-bus"
+      ],
+      "may_include": [
+       "leo-school"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "fam-6",
+     "scope": "user:fam",
+     "query": "Who are Leo's friends?",
+     "kind": "paraphrase",
+     "expect": {
+      "must_include": [
+       "leo-friends"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "fam-7",
+     "scope": "user:fam",
+     "query": "What did Mia get on her spelling test?",
+     "kind": "no-answer",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "fam-8",
+     "scope": "user:fam",
+     "query": "When is the school trip to the zoo?",
+     "kind": "no-answer",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "fam-9",
+     "scope": "user:fam",
+     "query": "Does Leo have a mobile?",
+     "kind": "governance",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "leo-phone",
+        "reason": "forgotten"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "car",
+   "category": "reviewer-gen",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "user:car",
+     "ref": "car-model",
+     "text": "We drive a grey 2019 Skoda Octavia estate."
+    },
+    {
+     "op": "remember",
+     "scope": "user:car",
+     "ref": "car-mot",
+     "text": "The MOT is due in May."
+    },
+    {
+     "op": "remember",
+     "scope": "user:car",
+     "ref": "tyres",
+     "text": "Front tyres were replaced at Kwik Fit in August."
+    },
+    {
+     "op": "remember",
+     "scope": "user:car",
+     "ref": "charger",
+     "text": "We're getting quotes for a home charger from Pod Point."
+    },
+    {
+     "op": "remember",
+     "scope": "user:car",
+     "ref": "commute",
+     "text": "I cycle to the office on dry days and take the tram when it rains."
+    },
+    {
+     "op": "remember",
+     "scope": "user:car",
+     "ref": "parking",
+     "text": "The station car park costs 6.50 a day."
+    },
+    {
+     "op": "remember",
+     "scope": "user:car",
+     "ref": "bike",
+     "text": "My commuter bike is a Brompton with a dynamo light."
+    },
+    {
+     "op": "remember",
+     "scope": "user:car",
+     "ref": "car-ins",
+     "text": "Admiral covers the car; the excess is 250."
+    },
+    {
+     "op": "remember",
+     "scope": "user:car",
+     "ref": "breakdown",
+     "text": "Green Flag is our breakdown cover."
+    },
+    {
+     "op": "remember",
+     "scope": "user:car",
+     "ref": "garage",
+     "text": "Steve at Hilltop Motors does the servicing."
+    },
+    {
+     "op": "remember",
+     "scope": "user:car",
+     "ref": "mpg",
+     "text": "It averages about 52 miles per gallon on the motorway."
+    },
+    {
+     "op": "remember",
+     "scope": "user:car",
+     "ref": "car-n0",
+     "text": "The boiler service is booked for 14 November."
+    },
+    {
+     "op": "remember",
+     "scope": "user:car",
+     "ref": "car-n1",
+     "text": "The bathroom tap drips when the hot water is on."
+    },
+    {
+     "op": "remember",
+     "scope": "user:car",
+     "ref": "car-n2",
+     "text": "I prefer aisle seats on long flights."
+    },
+    {
+     "op": "remember",
+     "scope": "user:car",
+     "ref": "car-n3",
+     "text": "Grandma's birthday is on 2 February."
+    },
+    {
+     "op": "remember",
+     "scope": "user:car",
+     "ref": "car-n4",
+     "text": "We get the veg box delivered on Fridays."
+    },
+    {
+     "op": "remember",
+     "scope": "user:car",
+     "ref": "car-n5",
+     "text": "The office is closed between Christmas and New Year."
+    },
+    {
+     "op": "remember",
+     "scope": "user:car",
+     "ref": "car-n6",
+     "text": "I'm reading a novel about Antarctic explorers."
+    },
+    {
+     "op": "remember",
+     "scope": "user:car",
+     "ref": "car-n7",
+     "text": "The hedge needs trimming before the neighbours complain."
+    },
+    {
+     "op": "remember",
+     "scope": "user:car",
+     "ref": "car-n8",
+     "text": "Our recycling bins are collected fortnightly."
+    },
+    {
+     "op": "remember",
+     "scope": "user:car",
+     "ref": "car-n9",
+     "text": "The dentist reminder came for the 9th."
+    },
+    {
+     "op": "remember",
+     "scope": "user:car",
+     "ref": "car-n10",
+     "text": "The loft ladder squeaks and needs oil."
+    },
+    {
+     "op": "remember",
+     "scope": "user:car",
+     "ref": "car-n11",
+     "text": "Book club meets at Priya's flat on the last Thursday."
+    },
+    {
+     "op": "remember",
+     "scope": "user:car",
+     "ref": "car-n12",
+     "text": "The smoke alarm battery was changed in June."
+    },
+    {
+     "op": "remember",
+     "scope": "user:car",
+     "ref": "car-n13",
+     "text": "We left the spare duvet at the holiday cottage."
+    },
+    {
+     "op": "remember",
+     "scope": "user:car",
+     "ref": "car-n14",
+     "text": "The blue folder in the study has the warranty papers."
+    },
+    {
+     "op": "remember",
+     "scope": "user:car",
+     "ref": "car-n15",
+     "text": "Our street has a summer party every July."
+    },
+    {
+     "op": "remember",
+     "scope": "user:car",
+     "ref": "car-n16",
+     "text": "The neighbour's cat sometimes sleeps in our shed."
+    },
+    {
+     "op": "remember",
+     "scope": "user:car",
+     "ref": "car-n17",
+     "text": "I want to learn Portuguese before the trip to Lisbon."
+    },
+    {
+     "op": "correct",
+     "scope": "user:car",
+     "ref": "car-model",
+     "as": "car-model-new",
+     "replacement_kind": "state_change",
+     "text": "We sold the Octavia and now drive a white Kia Niro EV."
+    }
+   ],
+   "queries": [
+    {
+     "id": "car-1",
+     "scope": "user:car",
+     "query": "What vehicle do we own?",
+     "kind": "governance",
+     "expect": {
+      "must_include": [
+       "car-model-new"
+      ],
+      "may_include": [
+       "charger"
+      ],
+      "must_exclude": [
+       {
+        "ref": "car-model",
+        "reason": "superseded"
+       }
+      ]
+     }
+    },
+    {
+     "id": "car-2",
+     "scope": "user:car",
+     "query": "Who services the car?",
+     "kind": "paraphrase",
+     "expect": {
+      "must_include": [
+       "garage"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "car-3",
+     "scope": "user:car",
+     "query": "What happens if we break down on the motorway?",
+     "kind": "paraphrase",
+     "expect": {
+      "must_include": [
+       "breakdown"
+      ],
+      "may_include": [
+       "car-ins"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "car-4",
+     "scope": "user:car",
+     "query": "How do I get to work?",
+     "kind": "paraphrase",
+     "expect": {
+      "must_include": [
+       "commute"
+      ],
+      "may_include": [
+       "bike"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "car-5",
+     "scope": "user:car",
+     "query": "How much is parking at the station?",
+     "kind": "lexical",
+     "expect": {
+      "must_include": [
+       "parking"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "car-6",
+     "scope": "user:car",
+     "query": "What is the car's registration number?",
+     "kind": "no-answer",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "car-7",
+     "scope": "user:car",
+     "query": "How much did the Brompton cost?",
+     "kind": "no-answer",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "car-8",
+     "scope": "user:car",
+     "query": "Which car did we have before?",
+     "kind": "historical",
+     "expect": {
+      "must_include": [
+       "car-model"
+      ],
+      "may_include": [
+       "car-model-new"
+      ],
+      "must_exclude": []
+     },
+     "temporal_intent": {
+      "mode": "historical"
+     }
+    },
+    {
+     "id": "car-9",
+     "scope": "user:car",
+     "query": "What do we pay to cover the car?",
+     "kind": "aggregate",
+     "expect": {
+      "must_include": [
+       "car-ins",
+       "breakdown"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "adv",
+   "category": "reviewer-gen",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "work",
+     "text": "Northwind Logistics hired me as head of analytics in 2021."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "dog",
+     "text": "Biscuit, our beagle, is terrified of thunderstorms."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "cat",
+     "text": "The tabby we adopted in March is called Miso."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "petfood",
+     "text": "Miso only eats the salmon pouches, Biscuit gets kibble."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "gp",
+     "text": "Dr. Mensah at the Elm Street surgery is my GP."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "dentist",
+     "text": "My dentist is on Corporation Road."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "stuff-work",
+     "text": "Asked the assistant again: where do I work, and who is my employer?"
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "stuff-work2",
+     "text": "Employer, company, workplace, job: the questions about my work keep coming up."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "stuff-pets",
+     "text": "Asked which pets we have and what the pets eat."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "stuff-doc",
+     "text": "I keep forgetting who my doctor is."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "adv-n0",
+     "text": "The boiler service is booked for 14 November."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "adv-n1",
+     "text": "The bathroom tap drips when the hot water is on."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "adv-n2",
+     "text": "I prefer aisle seats on long flights."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "adv-n3",
+     "text": "Grandma's birthday is on 2 February."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "adv-n4",
+     "text": "We get the veg box delivered on Fridays."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "adv-n5",
+     "text": "The office is closed between Christmas and New Year."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "adv-n6",
+     "text": "I'm reading a novel about Antarctic explorers."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "adv-n7",
+     "text": "The hedge needs trimming before the neighbours complain."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "adv-n8",
+     "text": "Our recycling bins are collected fortnightly."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "adv-n9",
+     "text": "The dentist reminder came for the 9th."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "adv-n10",
+     "text": "The loft ladder squeaks and needs oil."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "adv-n11",
+     "text": "Book club meets at Priya's flat on the last Thursday."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "adv-n12",
+     "text": "The smoke alarm battery was changed in June."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "adv-n13",
+     "text": "We left the spare duvet at the holiday cottage."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "adv-n14",
+     "text": "The blue folder in the study has the warranty papers."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "adv-n15",
+     "text": "Our street has a summer party every July."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "adv-n16",
+     "text": "The neighbour's cat sometimes sleeps in our shed."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "adv-n17",
+     "text": "I want to learn Portuguese before the trip to Lisbon."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "adv-n18",
+     "text": "The hallway light switch is wired backwards."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "adv-n19",
+     "text": "We donated the old pram to the charity shop."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "adv-n20",
+     "text": "The garden tap was lagged for winter."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "adv-n21",
+     "text": "I'm meant to call the council about the pothole."
+    }
+   ],
+   "queries": [
+    {
+     "id": "adv-1",
+     "scope": "user:adv",
+     "query": "Who is my employer?",
+     "kind": "stuffing",
+     "expect": {
+      "must_include": [
+       "work"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "adv-2",
+     "scope": "user:adv",
+     "query": "Where do I work?",
+     "kind": "stuffing",
+     "expect": {
+      "must_include": [
+       "work"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "adv-3",
+     "scope": "user:adv",
+     "query": "Which pets do we have?",
+     "kind": "stuffing",
+     "expect": {
+      "must_include": [
+       "dog",
+       "cat"
+      ],
+      "may_include": [
+       "petfood"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "adv-4",
+     "scope": "user:adv",
+     "query": "Who is my doctor?",
+     "kind": "stuffing",
+     "expect": {
+      "must_include": [
+       "gp"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "adv-5",
+     "scope": "user:adv",
+     "query": "What do the pets eat?",
+     "kind": "stuffing",
+     "expect": {
+      "must_include": [
+       "petfood"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "advctl",
+   "category": "reviewer-gen",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "work",
+     "text": "Northwind Logistics hired me as head of analytics in 2021."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "dog",
+     "text": "Biscuit, our beagle, is terrified of thunderstorms."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "cat",
+     "text": "The tabby we adopted in March is called Miso."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "petfood",
+     "text": "Miso only eats the salmon pouches, Biscuit gets kibble."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "gp",
+     "text": "Dr. Mensah at the Elm Street surgery is my GP."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "dentist",
+     "text": "My dentist is on Corporation Road."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "advctl-n0",
+     "text": "The boiler service is booked for 14 November."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "advctl-n1",
+     "text": "The bathroom tap drips when the hot water is on."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "advctl-n2",
+     "text": "I prefer aisle seats on long flights."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "advctl-n3",
+     "text": "Grandma's birthday is on 2 February."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "advctl-n4",
+     "text": "We get the veg box delivered on Fridays."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "advctl-n5",
+     "text": "The office is closed between Christmas and New Year."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "advctl-n6",
+     "text": "I'm reading a novel about Antarctic explorers."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "advctl-n7",
+     "text": "The hedge needs trimming before the neighbours complain."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "advctl-n8",
+     "text": "Our recycling bins are collected fortnightly."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "advctl-n9",
+     "text": "The dentist reminder came for the 9th."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "advctl-n10",
+     "text": "The loft ladder squeaks and needs oil."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "advctl-n11",
+     "text": "Book club meets at Priya's flat on the last Thursday."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "advctl-n12",
+     "text": "The smoke alarm battery was changed in June."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "advctl-n13",
+     "text": "We left the spare duvet at the holiday cottage."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "advctl-n14",
+     "text": "The blue folder in the study has the warranty papers."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "advctl-n15",
+     "text": "Our street has a summer party every July."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "advctl-n16",
+     "text": "The neighbour's cat sometimes sleeps in our shed."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "advctl-n17",
+     "text": "I want to learn Portuguese before the trip to Lisbon."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "advctl-n18",
+     "text": "The hallway light switch is wired backwards."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "advctl-n19",
+     "text": "We donated the old pram to the charity shop."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "advctl-n20",
+     "text": "The garden tap was lagged for winter."
+    },
+    {
+     "op": "remember",
+     "scope": "user:adv",
+     "ref": "advctl-n21",
+     "text": "I'm meant to call the council about the pothole."
+    }
+   ],
+   "queries": [
+    {
+     "id": "advctl-1",
+     "scope": "user:adv",
+     "query": "Who is my employer?",
+     "kind": "stuffing",
+     "expect": {
+      "must_include": [
+       "work"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "advctl-2",
+     "scope": "user:adv",
+     "query": "Where do I work?",
+     "kind": "stuffing",
+     "expect": {
+      "must_include": [
+       "work"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "advctl-3",
+     "scope": "user:adv",
+     "query": "Which pets do we have?",
+     "kind": "stuffing",
+     "expect": {
+      "must_include": [
+       "dog",
+       "cat"
+      ],
+      "may_include": [
+       "petfood"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "advctl-4",
+     "scope": "user:adv",
+     "query": "Who is my doctor?",
+     "kind": "stuffing",
+     "expect": {
+      "must_include": [
+       "gp"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "advctl-5",
+     "scope": "user:adv",
+     "query": "What do the pets eat?",
+     "kind": "stuffing",
+     "expect": {
+      "must_include": [
+       "petfood"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "home",
+   "category": "reviewer-gen",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "user:home",
+     "ref": "dad-allergy",
+     "text": "Dad is allergic to shellfish."
+    },
+    {
+     "op": "remember",
+     "scope": "user:home",
+     "ref": "ines-veg",
+     "text": "My sister Ines is vegetarian."
+    },
+    {
+     "op": "remember",
+     "scope": "user:home",
+     "ref": "sam-spice",
+     "text": "Sam can't handle very spicy food."
+    },
+    {
+     "op": "remember",
+     "scope": "user:home",
+     "ref": "fav-dish",
+     "text": "The family favourite is my lamb tagine with apricots."
+    },
+    {
+     "op": "remember",
+     "scope": "user:home",
+     "ref": "oven",
+     "text": "The oven runs about 15 degrees hot."
+    },
+    {
+     "op": "remember",
+     "scope": "user:home",
+     "ref": "knife",
+     "text": "The good chef's knife was a wedding present from Aunt Rosa."
+    },
+    {
+     "op": "remember",
+     "scope": "user:home",
+     "ref": "starter",
+     "text": "The sourdough starter lives at the back of the fridge and is called Gerald."
+    },
+    {
+     "op": "remember",
+     "scope": "user:home",
+     "ref": "freezer",
+     "text": "The chest freezer in the garage is full of batch-cooked chilli."
+    },
+    {
+     "op": "remember",
+     "scope": "user:home",
+     "ref": "party",
+     "text": "We're hosting eight people for dinner on 12 December."
+    },
+    {
+     "op": "remember",
+     "scope": "user:home",
+     "ref": "wine",
+     "text": "Ines prefers white wine; Dad only drinks bitter."
+    },
+    {
+     "op": "remember",
+     "scope": "user:home",
+     "ref": "cookbook",
+     "text": "Ottolenghi's Simple is the most used cookbook on the shelf."
+    },
+    {
+     "op": "remember",
+     "scope": "user:home",
+     "ref": "dishwasher",
+     "text": "The dishwasher's rinse aid light is on."
+    },
+    {
+     "op": "remember",
+     "scope": "user:home",
+     "ref": "home-n0",
+     "text": "I prefer aisle seats on long flights."
+    },
+    {
+     "op": "remember",
+     "scope": "user:home",
+     "ref": "home-n1",
+     "text": "Grandma's birthday is on 2 February."
+    },
+    {
+     "op": "remember",
+     "scope": "user:home",
+     "ref": "home-n2",
+     "text": "We get the veg box delivered on Fridays."
+    },
+    {
+     "op": "remember",
+     "scope": "user:home",
+     "ref": "home-n3",
+     "text": "The office is closed between Christmas and New Year."
+    },
+    {
+     "op": "remember",
+     "scope": "user:home",
+     "ref": "home-n4",
+     "text": "I'm reading a novel about Antarctic explorers."
+    },
+    {
+     "op": "remember",
+     "scope": "user:home",
+     "ref": "home-n5",
+     "text": "The hedge needs trimming before the neighbours complain."
+    },
+    {
+     "op": "remember",
+     "scope": "user:home",
+     "ref": "home-n6",
+     "text": "Our recycling bins are collected fortnightly."
+    },
+    {
+     "op": "remember",
+     "scope": "user:home",
+     "ref": "home-n7",
+     "text": "The dentist reminder came for the 9th."
+    },
+    {
+     "op": "remember",
+     "scope": "user:home",
+     "ref": "home-n8",
+     "text": "The loft ladder squeaks and needs oil."
+    },
+    {
+     "op": "remember",
+     "scope": "user:home",
+     "ref": "home-n9",
+     "text": "Book club meets at Priya's flat on the last Thursday."
+    },
+    {
+     "op": "remember",
+     "scope": "user:home",
+     "ref": "home-n10",
+     "text": "The smoke alarm battery was changed in June."
+    },
+    {
+     "op": "remember",
+     "scope": "user:home",
+     "ref": "home-n11",
+     "text": "We left the spare duvet at the holiday cottage."
+    },
+    {
+     "op": "remember",
+     "scope": "user:home",
+     "ref": "home-n12",
+     "text": "The blue folder in the study has the warranty papers."
+    },
+    {
+     "op": "remember",
+     "scope": "user:home",
+     "ref": "home-n13",
+     "text": "Our street has a summer party every July."
+    },
+    {
+     "op": "remember",
+     "scope": "user:home",
+     "ref": "home-n14",
+     "text": "The neighbour's cat sometimes sleeps in our shed."
+    },
+    {
+     "op": "remember",
+     "scope": "user:home",
+     "ref": "home-n15",
+     "text": "I want to learn Portuguese before the trip to Lisbon."
+    },
+    {
+     "op": "remember",
+     "scope": "user:home",
+     "ref": "home-n16",
+     "text": "The hallway light switch is wired backwards."
+    },
+    {
+     "op": "remember",
+     "scope": "user:home",
+     "ref": "home-n17",
+     "text": "We donated the old pram to the charity shop."
+    },
+    {
+     "op": "remember",
+     "scope": "user:home",
+     "ref": "home-n18",
+     "text": "The garden tap was lagged for winter."
+    },
+    {
+     "op": "remember",
+     "scope": "user:home",
+     "ref": "home-n19",
+     "text": "I'm meant to call the council about the pothole."
+    }
+   ],
+   "queries": [
+    {
+     "id": "home-1",
+     "scope": "user:home",
+     "query": "What dietary restrictions should I plan for at the dinner party?",
+     "kind": "aggregate",
+     "expect": {
+      "must_include": [
+       "dad-allergy",
+       "ines-veg",
+       "sam-spice"
+      ],
+      "may_include": [
+       "party",
+       "wine"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "home-2",
+     "scope": "user:home",
+     "query": "Does anyone avoid meat?",
+     "kind": "paraphrase",
+     "expect": {
+      "must_include": [
+       "ines-veg"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "home-3",
+     "scope": "user:home",
+     "query": "What's the name of the bread starter?",
+     "kind": "lexical",
+     "expect": {
+      "must_include": [
+       "starter"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "home-4",
+     "scope": "user:home",
+     "query": "Is the oven accurate?",
+     "kind": "paraphrase",
+     "expect": {
+      "must_include": [
+       "oven"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "home-5",
+     "scope": "user:home",
+     "query": "What should I cook that everyone loves?",
+     "kind": "paraphrase",
+     "expect": {
+      "must_include": [
+       "fav-dish"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "home-6",
+     "scope": "user:home",
+     "query": "What is Sam's favourite dessert?",
+     "kind": "no-answer",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "home-7",
+     "scope": "user:home",
+     "query": "When was the fridge bought?",
+     "kind": "no-answer",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "home-8",
+     "scope": "user:home",
+     "query": "Who gave us the knife?",
+     "kind": "paraphrase",
+     "expect": {
+      "must_include": [
+       "knife"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "home-9",
+     "scope": "user:home",
+     "query": "What drinks do people like?",
+     "kind": "paraphrase",
+     "expect": {
+      "must_include": [
+       "wine"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "fit",
+   "category": "reviewer-gen",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "user:fit",
+     "ref": "race",
+     "text": "I'm training for the Bristol half marathon in April."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fit",
+     "ref": "knee",
+     "text": "My left knee aches after runs longer than 10 km."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fit",
+     "ref": "physio",
+     "text": "Physio sessions with Joanna are on Monday mornings."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fit",
+     "ref": "shoes",
+     "text": "Running shoes are Hoka Clifton 9, replaced every 600 km."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fit",
+     "ref": "med-bp",
+     "text": "I take amlodipine 5 mg each morning for blood pressure."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fit",
+     "ref": "med-hay",
+     "text": "Cetirizine in spring for hay fever."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fit",
+     "ref": "vit-d",
+     "text": "Vitamin D tablets through the winter."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fit",
+     "ref": "sleep",
+     "text": "I've been sleeping badly since the clocks changed."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fit",
+     "ref": "gp",
+     "text": "Dr. Mensah at Elm Street is my GP."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fit",
+     "ref": "bloods",
+     "text": "Blood test results came back normal in September."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fit",
+     "ref": "statin",
+     "text": "I take a statin at night."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fit",
+     "ref": "fit-n0",
+     "text": "The boiler service is booked for 14 November."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fit",
+     "ref": "fit-n1",
+     "text": "The bathroom tap drips when the hot water is on."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fit",
+     "ref": "fit-n2",
+     "text": "I prefer aisle seats on long flights."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fit",
+     "ref": "fit-n3",
+     "text": "Grandma's birthday is on 2 February."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fit",
+     "ref": "fit-n4",
+     "text": "We get the veg box delivered on Fridays."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fit",
+     "ref": "fit-n5",
+     "text": "The office is closed between Christmas and New Year."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fit",
+     "ref": "fit-n6",
+     "text": "I'm reading a novel about Antarctic explorers."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fit",
+     "ref": "fit-n7",
+     "text": "The hedge needs trimming before the neighbours complain."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fit",
+     "ref": "fit-n8",
+     "text": "Our recycling bins are collected fortnightly."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fit",
+     "ref": "fit-n9",
+     "text": "The dentist reminder came for the 9th."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fit",
+     "ref": "fit-n10",
+     "text": "The loft ladder squeaks and needs oil."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fit",
+     "ref": "fit-n11",
+     "text": "Book club meets at Priya's flat on the last Thursday."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fit",
+     "ref": "fit-n12",
+     "text": "The smoke alarm battery was changed in June."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fit",
+     "ref": "fit-n13",
+     "text": "We left the spare duvet at the holiday cottage."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fit",
+     "ref": "fit-n14",
+     "text": "The blue folder in the study has the warranty papers."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fit",
+     "ref": "fit-n15",
+     "text": "Our street has a summer party every July."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fit",
+     "ref": "fit-n16",
+     "text": "The neighbour's cat sometimes sleeps in our shed."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fit",
+     "ref": "fit-n17",
+     "text": "I want to learn Portuguese before the trip to Lisbon."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fit",
+     "ref": "fit-n18",
+     "text": "The hallway light switch is wired backwards."
+    },
+    {
+     "op": "remember",
+     "scope": "user:fit",
+     "ref": "fit-n19",
+     "text": "We donated the old pram to the charity shop."
+    },
+    {
+     "op": "forget",
+     "scope": "user:fit",
+     "ref": "statin",
+     "text": ""
+    }
+   ],
+   "queries": [
+    {
+     "id": "fit-1",
+     "scope": "user:fit",
+     "query": "What medications am I on?",
+     "kind": "aggregate",
+     "expect": {
+      "must_include": [
+       "med-bp",
+       "med-hay"
+      ],
+      "may_include": [
+       "vit-d"
+      ],
+      "must_exclude": [
+       {
+        "ref": "statin",
+        "reason": "forgotten"
+       }
+      ]
+     }
+    },
+    {
+     "id": "fit-2",
+     "scope": "user:fit",
+     "query": "What do I take every day?",
+     "kind": "aggregate",
+     "expect": {
+      "must_include": [
+       "med-bp"
+      ],
+      "may_include": [
+       "vit-d"
+      ],
+      "must_exclude": [
+       {
+        "ref": "statin",
+        "reason": "forgotten"
+       }
+      ]
+     }
+    },
+    {
+     "id": "fit-3",
+     "scope": "user:fit",
+     "query": "Which race am I preparing for?",
+     "kind": "paraphrase",
+     "expect": {
+      "must_include": [
+       "race"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "fit-4",
+     "scope": "user:fit",
+     "query": "Do I have any injuries?",
+     "kind": "paraphrase",
+     "expect": {
+      "must_include": [
+       "knee"
+      ],
+      "may_include": [
+       "physio"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "fit-5",
+     "scope": "user:fit",
+     "query": "When do I see the physiotherapist?",
+     "kind": "paraphrase",
+     "expect": {
+      "must_include": [
+       "physio"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "fit-6",
+     "scope": "user:fit",
+     "query": "What is my resting heart rate?",
+     "kind": "no-answer",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "fit-7",
+     "scope": "user:fit",
+     "query": "How much do I weigh?",
+     "kind": "no-answer",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "fit-8",
+     "scope": "user:fit",
+     "query": "Who is my doctor?",
+     "kind": "paraphrase",
+     "expect": {
+      "must_include": [
+       "gp"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "fit-9",
+     "scope": "user:fit",
+     "query": "Why am I so tired lately?",
+     "kind": "paraphrase",
+     "expect": {
+      "must_include": [
+       "sleep"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    }
+   ]
+  }
+ ]
+}

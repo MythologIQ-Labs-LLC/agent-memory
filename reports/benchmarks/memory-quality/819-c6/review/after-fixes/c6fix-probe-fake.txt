@@ -1,0 +1,9 @@
+{"probe": "H1 historical, forgotten nearest", "current": ["a"], "historical": ["a"], "historical_semantic": [["a", 0.7, null]]}
+{"probe": "H2 historical, error-corrected original nearest", "current": ["job-fixed"], "historical": ["job-fixed"], "historical_semantic": [["job-fixed", 0.7, null]]}
+{"probe": "H3 as_of", "as_of_2025": ["home-york"], "sem_2025": [["home-york", 0.7, null]], "as_of_2023": ["home-leeds"], "sem_2023": [["home-leeds", 0.9, null]]}
+{"probe": "H4 disputed nearest", "dispute_committed": true, "current": ["good"], "historical": ["good"], "historical_semantic": [["good", 0.7, null]]}
+{"probe": "H5 exact tie, 8 fresh stores", "outcomes": [["b", "a"]], "counts": {"('b', 'a')": 8}}
+{"probe": "H6 ranked_prefix semantic on", "ranked_prefix": ["h0", "h1", "h2", "h3", "h4"], "relevance_sufficient": ["h0", "h1", "h2"]}
+{"probe": "H7 empty/forgotten-only", "empty": [], "forgotten_only": [], "forgotten_hist": [], "abstained": false}
+{"probe": "H8 cross-scope/tenant nearest", "other_tenant_write": "refused: RuntimeRecoveryError", "returned": ["mine"], "leaks": [], "semantic": [["mine", 0.6, null]]}
+{"probe": "H9 shadow stop", "counts": {"lexical": 0, "exact_logical_identity": 0, "semantic_vector": 1, "shared_evidence_neighbor": 0}, "stop": {"actual_stop_reason": "frontier_exhausted", "stop_class": "search_space", "controller_recommendation": "abstain", "budget_state": {"host_caps": {"semantic_vector": 16}}}}

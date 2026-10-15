@@ -1,0 +1,4 @@
+{"tree": "cand", "N": 200, "build_s": 1.9, "p50_ms": 61.1, "p95_ms": 67.6, "cpu_p50_ms": 59.8, "mean_returned": 5.3}
+{"tree": "c4", "N": 200, "build_s": 1.9, "p50_ms": 53.1, "p95_ms": 66.1, "cpu_p50_ms": 51.9, "mean_returned": 9.0}
+{"tree": "cand", "N": 200, "build_s": 1.9, "p50_ms": 57.5, "p95_ms": 72.2, "cpu_p50_ms": 55.0, "mean_returned": 5.3}
+{"tree": "c4", "N": 200, "build_s": 2.0, "p50_ms": 57.3, "p95_ms": 68.7, "cpu_p50_ms": 56.5, "mean_returned": 9.0}

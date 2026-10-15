@@ -1,8 +1,8 @@
 {
- "agent_memory_revision": "3d202484d30248e8f1d2fd75ad739dfbe87d36f2",
+ "agent_memory_revision": "fab091305bac2d893c4acdcacface12a56a02a1d",
  "budget": 10,
  "cohort_sha256": "5a296a7541db7864676f61120956fd6e923aa1a98f03cd8a738e9ed2471d8ce7",
- "reference_worktree_dirty": true,
+ "reference_worktree_dirty": false,
  "return_selection": null,
  "runner": "scripts/run_memory_quality_scenarios.py",
  "scenarios": [
@@ -13,7 +13,7 @@
    "queries": [
     {
      "admitted_count": 3,
-     "elapsed_ms": 856.417,
+     "elapsed_ms": 793.278,
      "id": "pets-1",
      "kind": "multi",
      "must_include_count": 3,
@@ -29,7 +29,7 @@
     },
     {
      "admitted_count": 4,
-     "elapsed_ms": 572.478,
+     "elapsed_ms": 1021.897,
      "id": "pets-2",
      "kind": "single",
      "must_include_count": 1,
@@ -44,7 +44,7 @@
     },
     {
      "admitted_count": 24,
-     "elapsed_ms": 605.31,
+     "elapsed_ms": 584.689,
      "id": "pets-3",
      "kind": "single",
      "must_include_count": 1,
@@ -59,7 +59,7 @@
     },
     {
      "admitted_count": 8,
-     "elapsed_ms": 577.156,
+     "elapsed_ms": 542.776,
      "id": "pets-4",
      "kind": "single",
      "must_include_count": 1,
@@ -74,7 +74,7 @@
     },
     {
      "admitted_count": 25,
-     "elapsed_ms": 691.836,
+     "elapsed_ms": 557.603,
      "id": "pets-5",
      "kind": "abstention",
      "must_include_count": 0,
@@ -96,7 +96,7 @@
    "queries": [
     {
      "admitted_count": 7,
-     "elapsed_ms": 829.318,
+     "elapsed_ms": 1123.221,
      "id": "work-1",
      "kind": "single",
      "must_include_count": 1,
@@ -111,7 +111,7 @@
     },
     {
      "admitted_count": 25,
-     "elapsed_ms": 586.587,
+     "elapsed_ms": 886.272,
      "id": "work-2",
      "kind": "multi",
      "must_include_count": 3,
@@ -127,7 +127,7 @@
     },
     {
      "admitted_count": 3,
-     "elapsed_ms": 593.184,
+     "elapsed_ms": 566.354,
      "id": "work-3",
      "kind": "single",
      "must_include_count": 1,
@@ -140,7 +140,7 @@
     },
     {
      "admitted_count": 6,
-     "elapsed_ms": 633.914,
+     "elapsed_ms": 528.847,
      "id": "work-4",
      "kind": "single",
      "must_include_count": 1,
@@ -153,7 +153,7 @@
     },
     {
      "admitted_count": 5,
-     "elapsed_ms": 542.779,
+     "elapsed_ms": 592.393,
      "id": "work-5",
      "kind": "single",
      "must_include_count": 1,
@@ -176,7 +176,7 @@
    "queries": [
     {
      "admitted_count": 3,
-     "elapsed_ms": 765.278,
+     "elapsed_ms": 782.384,
      "id": "health-1",
      "kind": "multi",
      "must_include_count": 3,
@@ -193,7 +193,7 @@
     },
     {
      "admitted_count": 6,
-     "elapsed_ms": 509.362,
+     "elapsed_ms": 516.535,
      "id": "health-2",
      "kind": "single",
      "must_include_count": 1,
@@ -208,7 +208,7 @@
     },
     {
      "admitted_count": 3,
-     "elapsed_ms": 499.105,
+     "elapsed_ms": 581.014,
      "id": "health-3",
      "kind": "single",
      "must_include_count": 1,
@@ -223,7 +223,7 @@
     },
     {
      "admitted_count": 6,
-     "elapsed_ms": 505.726,
+     "elapsed_ms": 520.019,
      "id": "health-4",
      "kind": "abstention",
      "must_include_count": 0,
@@ -236,7 +236,7 @@
     },
     {
      "admitted_count": 5,
-     "elapsed_ms": 501.645,
+     "elapsed_ms": 518.823,
      "id": "health-5",
      "kind": "single",
      "must_include_count": 1,
@@ -258,7 +258,7 @@
    "queries": [
     {
      "admitted_count": 6,
-     "elapsed_ms": 793.17,
+     "elapsed_ms": 823.536,
      "id": "travel-1",
      "kind": "single",
      "must_include_count": 1,
@@ -271,7 +271,7 @@
     },
     {
      "admitted_count": 3,
-     "elapsed_ms": 518.599,
+     "elapsed_ms": 528.152,
      "id": "travel-2",
      "kind": "multi",
      "must_include_count": 2,
@@ -286,7 +286,7 @@
     },
     {
      "admitted_count": 0,
-     "elapsed_ms": 533.401,
+     "elapsed_ms": 579.498,
      "id": "travel-3",
      "kind": "single",
      "must_include_count": 1,
@@ -299,7 +299,7 @@
     },
     {
      "admitted_count": 8,
-     "elapsed_ms": 567.794,
+     "elapsed_ms": 551.135,
      "id": "travel-4",
      "kind": "single",
      "must_include_count": 1,
@@ -312,7 +312,7 @@
     },
     {
      "admitted_count": 24,
-     "elapsed_ms": 556.013,
+     "elapsed_ms": 545.825,
      "id": "travel-5",
      "kind": "abstention",
      "must_include_count": 0,
@@ -334,7 +334,7 @@
    "queries": [
     {
      "admitted_count": 4,
-     "elapsed_ms": 761.011,
+     "elapsed_ms": 713.777,
      "id": "gov-1",
      "kind": "single",
      "must_include_count": 1,
@@ -349,7 +349,7 @@
     },
     {
      "admitted_count": 21,
-     "elapsed_ms": 524.1,
+     "elapsed_ms": 515.47,
      "id": "gov-2",
      "kind": "abstention",
      "must_include_count": 0,
@@ -362,7 +362,7 @@
     },
     {
      "admitted_count": 2,
-     "elapsed_ms": 512.517,
+     "elapsed_ms": 510.656,
      "id": "gov-3",
      "kind": "abstention",
      "must_include_count": 0,
@@ -375,7 +375,7 @@
     },
     {
      "admitted_count": 2,
-     "elapsed_ms": 571.328,
+     "elapsed_ms": 516.197,
      "id": "gov-4",
      "kind": "abstention",
      "must_include_count": 0,
@@ -390,7 +390,7 @@
     },
     {
      "admitted_count": 7,
-     "elapsed_ms": 531.606,
+     "elapsed_ms": 534.469,
      "id": "gov-5",
      "kind": "single",
      "must_include_count": 1,
@@ -412,7 +412,7 @@
    "queries": [
     {
      "admitted_count": 25,
-     "elapsed_ms": 910.634,
+     "elapsed_ms": 791.828,
      "id": "proj-1",
      "kind": "single",
      "must_include_count": 1,
@@ -428,7 +428,7 @@
     },
     {
      "admitted_count": 5,
-     "elapsed_ms": 569.633,
+     "elapsed_ms": 510.259,
      "id": "proj-2",
      "kind": "single",
      "must_include_count": 1,
@@ -441,7 +441,7 @@
     },
     {
      "admitted_count": 25,
-     "elapsed_ms": 523.254,
+     "elapsed_ms": 520.684,
      "id": "proj-3",
      "kind": "multi",
      "must_include_count": 2,
@@ -454,7 +454,7 @@
     },
     {
      "admitted_count": 25,
-     "elapsed_ms": 556.033,
+     "elapsed_ms": 537.924,
      "id": "proj-4",
      "kind": "single",
      "must_include_count": 1,
@@ -469,7 +469,7 @@
     },
     {
      "admitted_count": 1,
-     "elapsed_ms": 580.731,
+     "elapsed_ms": 540.774,
      "id": "proj-5",
      "kind": "single",
      "must_include_count": 1,
@@ -532,7 +532,7 @@
    "queries": 30,
    "safety_violations": 0
   },
-  "recall_latency_ms_p50": 571.328,
-  "recall_latency_ms_p95": 856.417
+  "recall_latency_ms_p50": 551.135,
+  "recall_latency_ms_p95": 1021.897
  }
 }

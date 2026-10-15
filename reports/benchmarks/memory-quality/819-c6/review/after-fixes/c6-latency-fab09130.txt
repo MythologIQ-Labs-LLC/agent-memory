@@ -1,0 +1,4 @@
+wt-c4freeze run1: semantic=required recall p50 69.3 ms p95 124.3 ms cpu/recall 68.1 ms
+wt-c6 run1: semantic=required recall p50 62.3 ms p95 69.6 ms cpu/recall 56.6 ms
+wt-c4freeze run2: semantic=required recall p50 68.1 ms p95 87.4 ms cpu/recall 63.0 ms
+wt-c6 run2: semantic=required recall p50 66.4 ms p95 82.7 ms cpu/recall 60.7 ms
