@@ -18,7 +18,7 @@ function renderMetric(){
  const rows=[...metric.rows].sort((a,b)=>b.score-a.score);
  $('leaderRows').innerHTML=rows.map(r=>{
  const dist=Math.max(0,metric.best_score-r.score);
- return '<tr><td><strong>'+esc(friendly(r.system))+'</strong></td><td class="role">'+esc(r.role)+'</td><td class="num">'+esc(pct(r.score))+'</td><td class="num">'+(r.role==='baseline'?'Baseline':esc(pp(dist)))+'</td><td>'+(r.run_url?'<a href="'+esc(url(r.run_url))+'" target="_blank" rel="noopener noreferrer">Raw run ↗</a>':'Not linked')+'</td></tr>';
+ return '<tr><td><strong>'+esc(friendly(r.system))+'</strong></td><td class="role">'+esc(r.role)+'</td><td class="num">'+esc(pct(r.score))+'</td><td class="num">'+(r.sample_count??'—')+'</td><td class="num">'+(r.role==='baseline'?'Baseline':esc(pp(dist)))+'</td><td>'+(r.run_url?'<a href="'+esc(url(r.run_url))+'" target="_blank" rel="noopener noreferrer">Raw run ↗</a>':'Not linked')+'</td></tr>';
  }).join('');
  $('profileNotes').innerHTML='<strong>'+esc(profile.lane_id)+'</strong> / '+esc(profile.plane)+' · accepted '+esc(profile.accepted_on||'date unavailable')+' · inference calls in this lane: '+(profile.llm_calls?'yes':'no')+' · <a href="'+esc(url(profile.benchmark_file))+'" target="_blank" rel="noopener noreferrer">Pinned lane definition ↗</a> · input SHA-256 <code>'+esc(profile.input_sha256)+'</code><p>'+esc(profile.method_note||'The native metric definition and comparator budget control interpretation.')+'</p><p>Only accepted rows reporting this exact native metric are compared. Baselines are displayed, but excluded from the best non-baseline score. No result from another benchmark, plane or vendor-published reference is mixed into this comparison.</p>';
 }
@@ -52,6 +52,6 @@ fetch('./data/snapshot.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Err
 }).catch(error=>{
  $('snapshot').textContent='Evidence unavailable';
  $('stats').innerHTML='<div class="error">Evidence snapshot could not be loaded. Consult the canonical GitHub dashboard.</div>';
- $('leaderRows').innerHTML='<tr><td colspan="5" class="error">'+esc(error.message)+'</td></tr>';
+ $('leaderRows').innerHTML='<tr><td colspan="6" class="error">'+esc(error.message)+'</td></tr>';
  $('competitorGrid').innerHTML='<p class="error">Registry unavailable. <a href="https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/806">View the evaluation plan.</a></p>';
 });

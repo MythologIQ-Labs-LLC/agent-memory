@@ -18,7 +18,7 @@ Its `profiles` use **only accepted `competitive_evidence.frozen_lanes`** and the
 
 `competitors` separately lists discovery candidates with `not_run` or `published_reference` status. These statuses are not numeric zero and do not imply tested compatibility or comparative superiority. The site never introduces a universal aggregate score.
 
-This snapshot is a **first release seed**, not a replacement for the existing deterministic UI catalog. Follow-up #807 must add a **checked-in deterministic builder with tests** consuming `reports/benchmarks/ui/catalog.json` and the canonical dashboard, and publish site assets only when the projection is validated. Do not hand-edit numbers in the UI or snapshot. Existing snapshots must remain reconstructable from the pinned canonical source, and source identity must be surfaced on the page. GitHub Pages branch history alone is insufficient as an execution provenance manifest.
+This release adds a standalone deterministic builder and synthetic contract tests on the publication branch. The canonical UI catalog remains repository-owned on `main`; migrating this builder into that upstream evidence pipeline is outstanding under #807. Follow-up #807 must add a **checked-in deterministic builder with tests** consuming `reports/benchmarks/ui/catalog.json` and the canonical dashboard, and publish site assets only when the projection is validated. Do not hand-edit numbers in the UI or snapshot. Existing snapshots must remain reconstructable from the pinned canonical source, and source identity must be surfaced on the page. GitHub Pages branch history alone is insufficient as an execution provenance manifest.
 
 ## Reproducibility requirements
 Accepted future runs need a machine-validated run manifest capturing UTC wall time, host hardware/OS, container/build SHA, exact system/adapter/dataset/benchmark revisions and digests, inference and embedding providers/models/parameter values, judge settings, prompts, seeds, retrieval budget, costs/token counts, timeouts/retries, raw results, row-level outcomes, evaluator identity, reviewer, and security/redaction posture. Never publish tokens, private prompts, user memory, secrets or personally identifying information.
@@ -33,3 +33,15 @@ Accepted future runs need a machine-validated run manifest capturing UTC wall ti
 - Do not configure automatic Actions publication while GitHub Actions spend remediation is unresolved.
 - Issue #807 tracks architecture, deterministic rebuild, proof of deployment, UX QA and provenance completeness.
 - Issue #806 tracks TencentDB adapter and real same-harness execution.
+
+## Deterministic rebuild (implemented)
+
+Check out this publication branch with full local access to the main repository's Git objects. From `gh-pages`:
+
+```bash
+git show 38f6a7dcc358e8ee50a38d703b0addb9d8e660d7:reports/benchmarks/dashboard/current.json > /tmp/am-dashboard.json
+node tools/test-site-data.mjs
+node tools/build-site-data.mjs --dashboard /tmp/am-dashboard.json --competitors config/competitors.json --out data/snapshot.json --source-head 38f6a7dcc358e8ee50a38d703b0addb9d8e660d7 --check
+```
+
+The builder pins source/evidence links to that exact immutable revision, computes the dashboard Git blob ID, rejects malformed provenance and out-of-range metrics, and fails when a competitor's `measured` / `not_run` status contradicts the accepted lane inputs. It cannot qualify new benchmarks or publish vendor references as same-harness evidence. Avoid editing `data/snapshot.json` by hand. A new dashboard revision requires a fresh deliberate source-head and rebuilt data. This branch is static and does not fetch data from visitors' browsers beyond its own JSON asset.

@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "systems": [
+    {
+      "id": "agent-memory",
+      "name": "Agent Memory",
+      "state": "measured",
+      "url": "https://github.com/MythologIQ-Labs-LLC/agent-memory",
+      "observed_ids": [
+        "agent-memory",
+        "agent_memory"
+      ]
+    },
+    {
+      "id": "mem0",
+      "name": "Mem0 OSS",
+      "state": "measured",
+      "url": "https://github.com/mem0ai/mem0",
+      "observed_ids": [
+        "mem0-explicit",
+        "mem0_explicit"
+      ]
+    },
+    {
+      "id": "tencentdb-agent-memory",
+      "name": "TencentDB Agent Memory",
+      "state": "not_run",
+      "url": "https://github.com/TencentCloud/TencentDB-Agent-Memory",
+      "observed_ids": []
+    },
+    {
+      "id": "openviking",
+      "name": "OpenViking",
+      "state": "not_run",
+      "url": "https://github.com/volcengine/OpenViking",
+      "observed_ids": []
+    },
+    {
+      "id": "langmem",
+      "name": "LangMem",
+      "state": "not_run",
+      "url": "https://github.com/langchain-ai/langmem",
+      "observed_ids": []
+    },
+    {
+      "id": "supermemory",
+      "name": "Supermemory",
+      "state": "not_run",
+      "url": "https://github.com/supermemoryai/supermemory",
+      "observed_ids": []
+    },
+    {
+      "id": "graphiti",
+      "name": "Graphiti / Zep",
+      "state": "not_run",
+      "url": "https://github.com/getzep/graphiti",
+      "observed_ids": []
+    },
+    {
+      "id": "letta",
+      "name": "Letta",
+      "state": "not_run",
+      "url": "https://github.com/letta-ai/letta",
+      "observed_ids": []
+    },
+    {
+      "id": "hindsight",
+      "name": "Hindsight",
+      "state": "published_reference",
+      "url": "https://github.com/vectorize-io/hindsight",
+      "observed_ids": []
+    },
+    {
+      "id": "cognee",
+      "name": "Cognee",
+      "state": "not_run",
+      "url": "https://github.com/topoteretes/cognee",
+      "observed_ids": []
+    }
+  ]
+}
