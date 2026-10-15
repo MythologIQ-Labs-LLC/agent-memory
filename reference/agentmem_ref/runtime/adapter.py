@@ -790,8 +790,8 @@ class GovernedMemoryAdapter:
         """
         context = self._writer_context(proposal)
         bound: list[str] = []
-        for ref in dict.fromkeys(proposal.evidence_refs):
-            if not isinstance(ref, str) or ref not in self._fact_scope:
+        for ref in dict.fromkeys(ref for ref in proposal.evidence_refs if isinstance(ref, str)):
+            if ref not in self._fact_scope:
                 continue
             if self._domain_identity_refusal(ref, self._tenant, context) is None:
                 bound.append(ref)

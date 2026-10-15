@@ -71,3 +71,10 @@ It does not close the oracle for quarantined edges; it labels the store. It does
 membership from governed membership audit events (possible for stores whose membership changes
 went through `commit_shared_domain_membership_change`; left for a later revision with its own
 preregistration). It does not change the new-write rule, the register, or activation itself.
+
+## 7. Addendum after the independent code review at `0808cb61` (SF-1, L2, L3, SF-4)
+
+- **SF-1** (fixed before any upgrade executes): a checkpoint-migration transformer could add, alter or strip `attributes["canonical_derivation"]` or `write_provenance`; `checkpoint_migration.py` now protects both (`PROTECTED_FACT_ATTRIBUTES`), with a test. The sanctioned legacy upgrade is a governed runtime operation, never a checkpoint transformer, so the protection and the upgrade do not conflict.
+- **L2** (accepted residual, resolved by the upgrade for provable edges): a legacy row that cited not-yet-minted sequential ids binds each when minted, through the fallback, and flips on its deletion (a standing canary). Under rule 2 such edges are `forward_reference` and are unbound by the upgrade.
+- **L3** (accepted residual, resolved by the upgrade): a new write that legitimately binds a legacy row inherits that row's `episode_uuids` taint transitively, so the residual is per chain. After the upgrade the legacy row carries a record and the chain follows bound edges only; for quarantined edges the inheritance persists and is part of why the store reads `legacy_unqualified`.
+- **SF-4**: the Graphiti driver persists no fact attributes; stores on that substrate are outside every #809 claim and outside this decision.
