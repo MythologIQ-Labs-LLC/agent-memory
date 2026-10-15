@@ -412,6 +412,81 @@ class DerivedVectorStoreTests(unittest.TestCase):
     def test_derived_directory_is_created_private(self):
         self.assertEqual(stat.S_IMODE(os.stat(Path(self.root) / "derived").st_mode), 0o700)
 
+    # -- hosts without a descriptor table (Windows and any platform exposing neither /proc/self/fd
+    # nor /dev/fd): the documented fallback and its documented gap (docs/44, PR #805 checkpoint).
+
+    def _external_store(self, other_root):
+        outside = DerivedVectorStore(other_root, DIGEST, 3)
+        outside.vector_for("foreign-fact", "external payload", self.embed)
+        outside.close()
+        return outside
+
+    def test_fallback_without_descriptor_table_still_refuses_a_link_left_in_place_after_the_open(self):
+        """Without a descriptor table the reconciler falls back to re-checking the directory entry
+        after the open: a link swapped in before the open and still in place is detected."""
+        import sqlite3 as _sqlite3
+        from agentmem_ref.runtime import representation_cache as module
+        self.store.vector_for("mine", "own text", self.embed)
+        self.store.close()
+        with tempfile.TemporaryDirectory() as other_root:
+            outside = self._external_store(other_root)
+            victim, real_connect = self.store.path, _sqlite3.connect
+
+            def swap_then_connect(*args, **kwargs):
+                victim.unlink()
+                victim.symlink_to(outside.path)
+                return real_connect(*args, **kwargs)
+
+            with patch.object(module, "_DESCRIPTOR_TABLE", None), \
+                    patch.object(module.sqlite3, "connect", side_effect=swap_then_connect):
+                report = reconcile_derived_vector_stores(self.root, {})
+            self.assertEqual(report["unsafe"], [str(victim)])
+            self.assertEqual(report["rows_purged"], 0)
+            check = real_connect(outside.path)
+            try:
+                self.assertEqual(check.execute("SELECT fact_uuid FROM vectors").fetchall(), [("foreign-fact",)])
+            finally:
+                check.close()
+            victim.unlink()
+        self.store = DerivedVectorStore(self.root, DIGEST, 3)
+
+    def test_fallback_without_descriptor_table_does_not_detect_a_parent_swap_in_and_back_out(self):
+        """The documented gap of the fallback (docs/44 'Accepted trust boundary'): a parent directory
+        swapped in for a link and back out around SQLite's open leaves the entry re-check satisfied,
+        so a host without a descriptor table is outside the adversarial path-swap claim. This test
+        pins that the gap is exactly as documented; it is not a claim of resistance."""
+        import sqlite3 as _sqlite3
+        from agentmem_ref.runtime import representation_cache as module
+        self.store.vector_for("mine", "own text", self.embed)
+        self.store.close()
+        with tempfile.TemporaryDirectory() as other_root:
+            outside = self._external_store(other_root)
+            derived, real_connect = Path(self.root) / "derived", _sqlite3.connect
+
+            def swap_around_connect(*args, **kwargs):
+                os.rename(derived, derived.with_name("derived.real"))
+                derived.symlink_to(Path(other_root) / "derived", target_is_directory=True)
+                try:
+                    return real_connect(*args, **kwargs)
+                finally:
+                    derived.unlink()
+                    os.rename(derived.with_name("derived.real"), derived)
+
+            with patch.object(module, "_DESCRIPTOR_TABLE", None), \
+                    patch.object(module.sqlite3, "connect", side_effect=swap_around_connect):
+                report = reconcile_derived_vector_stores(self.root, {})
+            # the fallback cannot see that SQLite opened the external inode: the external row is purged
+            self.assertEqual(report["status"], "complete")
+            self.assertEqual(report["rows_purged"], 1)
+            check = real_connect(outside.path)
+            try:
+                self.assertEqual(check.execute("SELECT fact_uuid FROM vectors").fetchall(), [])
+            finally:
+                check.close()
+        # with a descriptor table (POSIX hosts) the same swap is refused: the regression above
+        self.assertIsNotNone(module._DESCRIPTOR_TABLE, "this host has a descriptor table; the POSIX path is tested separately")
+        self.store = DerivedVectorStore(self.root, DIGEST, 3)
+
     def test_reconcile_reports_a_store_it_cannot_write_without_discarding_it(self):
         self.store.vector_for("orphan", "stale text", self.embed)
         real_connect = sqlite3.connect

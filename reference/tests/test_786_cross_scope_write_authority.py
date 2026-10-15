@@ -922,6 +922,56 @@ class PayloadLevelSeparation(_TwoProjects):
         self._assert_separated(permanent=True)
 
 
+class EvidenceReferenceOracle(_TwoProjects):
+    """F-R3-2 (third review), investigated as evidence for the owner's disposition (PR #805):
+    a writer that cites a guessed fact uuid as ``evidence_refs`` learns whether that uuid is a
+    member of a deleted generation of ANY scope, because its own derived memory is then withheld
+    from its own recall (#776/#777 tenant-wide deletion completeness), while a citation of a
+    random uuid or of a live fact it cannot read is admitted. These tests pin the observable as
+    it stands; they are documentation of the oracle, not a claim that it is closed. Closing it
+    (opaque identifiers, or treating a reference the writer cannot read as unknown) is a protected
+    runtime change the owner decides (docs/786 'What remains disclosed')."""
+
+    def _cite(self, ref: str | None, label: str) -> tuple[bool, int]:
+        kw = {"evidence_refs": (ref,)} if ref else {}
+        out = self.memory.remember(f"memory:b-{label}", f"{QUERY} digest {label}", **kw)
+        rec = self.memory.recall(f"{QUERY} digest {label}", logical_memory_refs=(f"memory:b-{label}",))
+        return out["committed"], len([u for u in rec["admitted"] if u == out["fact_uuid"]])
+
+    def _oracle(self, *, permanent: bool) -> dict:
+        a1 = self.seed()
+        a2 = self.memory.remember("memory:a2", f"{QUERY} is Bergen", proposition=_prop("Bergen"))["fact_uuid"]
+        if permanent:
+            proposal = self.memory._proposal(target_reference="memory:a", operation="permanent_deletion",
+                                             current_strength="reinforced", proposed_strength="not_applicable",
+                                             reversibility="irreversible", risk_class="high")
+            attestation = policy.ExternalVerification(
+                bound_proposal_id=str(proposal["proposal_id"]), verifier_principal_id="human:786-reviewer",
+                authority_kind=policy.HUMAN_CONFIRMATION, max_risk_class="critical")
+            self.assertTrue(self.memory.forget("memory:a", permanent=True, risk_class="high", attestation=attestation)["committed"])
+        else:
+            self.assertTrue(self.memory.forget("memory:a")["committed"])
+        self.reopen("project:b")
+        return {"deleted": self._cite(a1, "deleted"), "live_foreign": self._cite(a2, "live"),
+                "random": self._cite("fact-guess-" + "9" * 12, "random"), "none": self._cite(None, "none")}
+
+    def test_fr3_2_citing_a_deleted_foreign_uuid_is_observable_to_the_citer(self):
+        for permanent in (False, True):
+            with self.subTest(permanent=permanent):
+                self.memory.close()
+                tmp = tempfile.TemporaryDirectory()
+                self.addCleanup(tmp.cleanup)
+                self.root = tmp.name + "/m"
+                self.memory = self.open()
+                views = self._oracle(permanent=permanent)
+                # every citation commits; the writer is told nothing at write time
+                self.assertTrue(all(committed for committed, _ in views.values()), views)
+                # the oracle: the memory citing the deleted uuid is withheld from its own writer...
+                self.assertEqual(views["deleted"][1], 0, views)
+                # ...while the random and the live-foreign citations are admitted (no existence oracle for live facts)
+                self.assertEqual((views["random"][1], views["live_foreign"][1], views["none"][1]), (1, 1, 1), views)
+
+
 class ThirdReviewFindings(_TwoProjects):
     """Reproductions from the third independent adversarial review (of the final runtime
     a7a81c45): F-R3-1 narrowing capture of a multi-holder memory, F-R3-3 the composition
