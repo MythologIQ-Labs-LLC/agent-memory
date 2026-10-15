@@ -1,0 +1,29 @@
+{
+ "kind": "amb",
+ "plane": null,
+ "paired_n": 77,
+ "base_pass": 15,
+ "cand_pass": 39,
+ "classes": {
+  "improved": 25,
+  "regressed": 1,
+  "unchanged_fail": 37,
+  "unchanged_pass": 14
+ },
+ "mcnemar_exact_p": 1e-06,
+ "delta_pass_rate_ci95": [
+  0.3117,
+  0.2078,
+  0.4156
+ ],
+ "delta_precision_ci95": [
+  0.3355,
+  0.2474,
+  0.4266
+ ],
+ "delta_recall_ci95": [
+  -0.0111,
+  -0.0963,
+  0.0786
+ ]
+}

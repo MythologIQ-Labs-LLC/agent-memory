@@ -1,0 +1,25 @@
+{
+ "kind": "lme",
+ "plane": "session",
+ "paired_n": 419,
+ "base_pass": 361,
+ "cand_pass": 364,
+ "classes": {
+  "improved": 4,
+  "regressed": 1,
+  "unchanged_fail": 54,
+  "unchanged_pass": 360
+ },
+ "mcnemar_exact_p": 0.375,
+ "delta_pass_rate_ci95": [
+  0.0072,
+  -0.0024,
+  0.0191
+ ],
+ "delta_precision_ci95": null,
+ "delta_recall_ci95": [
+  0.0072,
+  -0.0024,
+  0.0191
+ ]
+}
