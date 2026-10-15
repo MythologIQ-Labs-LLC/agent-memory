@@ -149,6 +149,38 @@ class HomographsDoNotCover(_Facade):
         self.assertIn(mark, result["returned"])
 
 
+class CapitalisedHomographs(_Facade):
+    """Independent re-verification at df1190e9: a capitalised homograph does not cover a name."""
+
+    def check(self, homograph, query, about_text, about_ref="memory:about"):
+        about = self.put(about_ref, about_text)
+        self.put("memory:homograph", homograph)
+        for i, text in enumerate(FILLER):
+            self.put(f"memory:x{i}", text)
+        self.assertIn(about, self.memory.recall(query)["returned"], homograph)
+
+    def test_sentence_initial_imperative(self):
+        self.check("Mark the bank transfer limit increase form as urgent.",
+                   "What did Mark recommend for the bank transfer limit increase?", "Mark recommended raising it.")
+
+    def test_all_caps_fact(self):
+        self.check("BANK TRANSFER LIMIT INCREASE FORM: MARK IT URGENT.",
+                   "What did Mark recommend for the bank transfer limit increase?", "Mark recommended raising it.")
+
+    def test_title_case_heading(self):
+        self.check("Bank Transfer Limit Increase - Mark As Urgent",
+                   "What did Mark recommend for the bank transfer limit increase?", "Mark recommended raising it.")
+
+    def test_sentence_initial_modal(self):
+        self.check("Flight booking upgrade is pending. Will confirm later.",
+                   "Which seat does Will want for the flight booking upgrade?", "Will prefers the window seat.")
+
+    def test_possessive_sentence_start_still_covers(self):
+        address = self.put("memory:addr", "Mom's new mailing address is 41 Alder Lane, Ridgefield.")
+        self.put("memory:knit", "Mom loves knitting; Mom's cat Pickles sleeps on Mom's yarn basket.")
+        self.assertEqual(self.memory.recall("What's Mom's mailing address?")["returned"], [address])
+
+
 class RankingConsistency(unittest.TestCase):
     def test_noise_between_primary_facts_is_not_promoted(self):
         texts = {

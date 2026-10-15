@@ -82,7 +82,7 @@ from .ranking_policy import (
     relevance_tokens,
 )
 from .lexical_normalization import normal_form, normalized_text, typo_correction_allowed, typo_matches
-from .query_interpretation import QueryInterpretation, interpret
+from .query_interpretation import QueryInterpretation, interpret, starts_sentence
 from .temporal_intent import TemporalIntent
 
 SELECTION_POLICY_ID = "relevance-sufficient-return-selection"
@@ -210,14 +210,30 @@ def _normal_form_masks(query: str, intent: TemporalIntent, facts: Mapping[str, A
     return masks
 
 
-def _names_mention(text: str, mention: tuple[str, ...]) -> bool:
-    """Whether ``text`` writes a term of ``mention`` as a name (2.3.0): capitalised or as a
-    letter-digit token. A lowercase homograph ("mark it urgent", "will confirm") does not cover
-    the person Mark or Will. ``text`` is the fact's raw text after contraction handling."""
+_POSSESSIVE_AFTER = ("'s", "\u2019s")
 
+
+def _names_mention(text: str, mention: tuple[str, ...]) -> bool:
+    """Whether ``text`` writes a term of ``mention`` as a name (2.3.0), by the query interpreter's
+    orthographic rules: a letter-digit token always; otherwise only where capitals carry
+    information (not an all-caps or title-case text), a capitalised token that does not start a
+    sentence, or that starts one in possessive form ("Mom's new address"). A homograph ("mark it
+    urgent", "Mark the form as urgent", "MARK IT URGENT", "Will confirm later") does not cover
+    the person Mark or Will. ``text`` is the fact's original text."""
+
+    inner = [m.group(0) for m in _WORD.finditer(text)
+             if m.group(0)[0].isalpha() and m.group(0) != "I" and not starts_sentence(text, m.start())]
+    title_case = len(inner) >= 3 and all(word[0].isupper() for word in inner)
+    case_informative = any(c.islower() for c in text) and not title_case
     for match in _WORD.finditer(text):
         token = match.group(0)
-        if normal_form(token.lower()) in mention and (token[0].isupper() or any(c.isdigit() for c in token)):
+        if normal_form(token.lower()) not in mention:
+            continue
+        if any(c.isdigit() for c in token) and any(c.isalpha() for c in token):
+            return True
+        if not case_informative or not token[0].isupper():
+            continue
+        if not starts_sentence(text, match.start()) or text[match.end():match.end() + 2] in _POSSESSIVE_AFTER:
             return True
     return False
 
@@ -360,7 +376,7 @@ def select_relevance_sufficient(
         best_about = max(about[ref] for ref in candidates)
         if any(records[ref]["sufficient"] and about.get(ref, 0.0) >= COVERAGE_FRACTION * best_about
                and _mention_matched(mention, tokens.get(ref, frozenset()))
-               and _names_mention(raw_texts.get(ref, ""), mention) for ref in ranked):
+               and _names_mention(getattr(facts[ref], "fact_text", "") or "", mention) for ref in ranked):
             continue
         chosen = max(candidates, key=lambda ref: (about[ref], -position[ref]))
         if not records[chosen]["sufficient"]:

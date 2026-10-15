@@ -22,3 +22,23 @@ Attacks that held:
 - No other-project or forgotten fact dominates or is named.
 - There is no benchmark-specific behaviour.
 - Corrections are respected, and equal coverage is kept.
+
+## Re-verification at `df1190e9`
+
+- F1, F2, F3, F6 and F7 are fixed. On F6: 0.52 s at 4,000 matching facts (it was 26.8 s); a
+  facade recall over 8,000 admitted facts takes 2.9–3.0 s against C3's 3.3–3.4 s.
+- `ranked_prefix` is byte-identical to C3.
+
+**F5 was only partly fixed.** A capitalised homograph still covered the name: a sentence-initial
+imperative ("Mark the … form as urgent."), an all-caps fact, a title-case heading, and
+"… Will confirm later.".
+
+**Fixed in the next commit.** `_names_mention` now applies the query interpreter's orthographic
+rules to the fact's original text:
+- in all-caps or title-case text, capitals carry no information;
+- a sentence-initial capital counts only in possessive form ("Mom's …").
+
+`CapitalisedHomographs` pins the four cases and the possessive control.
+
+**Accepted note.** A possessive passing mention ("Florist for Mom's anniversary party…") still
+covers Mom. This is erratum 1's conservative reading.
