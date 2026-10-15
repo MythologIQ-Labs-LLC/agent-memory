@@ -1,0 +1,1552 @@
+{
+ "authority_boundary": "A replay verdict is evidence for independent review. It is not successor acceptance, not publication, and not stop authority. sha256 values are integrity bindings, not signatures.",
+ "cases": [
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "b1_committed",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "target_unavailable"
+     },
+     "observable": "b1_refusal",
+     "observed": "target_unavailable"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "b1_before",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "b1_after",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "b1_snapshot",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "b1_mentions",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "memory:k"
+     },
+     "observable": "head",
+     "observed": "memory:k"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": "memory:k",
+       "events": [
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt"
+       ],
+       "state_version": 1,
+       "tombstoned": false
+      }
+     },
+     "observable": "owner_history",
+     "observed": {
+      "current": "memory:k",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       "memory:k"
+      ]
+     },
+     "observable": "owner_recall",
+     "observed": [
+      "memory:k"
+     ]
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "other_recall",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "other_history_unknown",
+     "observed": true
+    }
+   ],
+   "error": null,
+   "id": "W1-remember-over-live-head",
+   "invariants": [
+    "W1"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "b1_after": "v0",
+    "b1_before": "v0",
+    "b1_committed": false,
+    "b1_mentions": [],
+    "b1_refusal": "target_unavailable",
+    "b1_snapshot": "v0",
+    "head": "memory:k",
+    "other_history_unknown": true,
+    "other_recall": [],
+    "owner_history": {
+     "current": "memory:k",
+     "events": [
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt"
+     ],
+     "state_version": 1,
+     "tombstoned": false
+    },
+    "owner_recall": [
+     "memory:k"
+    ]
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "correct_unknown",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "forget_unknown",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "permanent_unknown",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "dispute_unknown",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "tombstones",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "disputed",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "memory:k"
+     },
+     "observable": "head",
+     "observed": "memory:k"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "valid",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       "memory:k"
+      ]
+     },
+     "observable": "owner_recall",
+     "observed": [
+      "memory:k"
+     ]
+    }
+   ],
+   "error": null,
+   "id": "W2-correct-forget-dispute-by-other",
+   "invariants": [
+    "W2"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "correct_unknown": true,
+    "dispute_unknown": true,
+    "disputed": [],
+    "forget_unknown": true,
+    "head": "memory:k",
+    "owner_recall": [
+     "memory:k"
+    ],
+    "permanent_unknown": true,
+    "tombstones": [],
+    "valid": true
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "b1",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "target_unavailable"
+     },
+     "observable": "b1_refusal",
+     "observed": "target_unavailable"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "b1_after",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "b1_mentions",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "b2",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "fact_not_found"
+     },
+     "observable": "b2_refusal",
+     "observed": "fact_not_found"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "b3",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "fact_not_found"
+     },
+     "observable": "b3_refusal",
+     "observed": "fact_not_found"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "b4",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "fact_not_found"
+     },
+     "observable": "b4_refusal",
+     "observed": "fact_not_found"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "memory:k@2"
+     },
+     "observable": "head",
+     "observed": "memory:k@2"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": "memory:k@2",
+       "events": [
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt",
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt"
+       ],
+       "state_version": 2,
+       "tombstoned": false
+      }
+     },
+     "observable": "owner_history",
+     "observed": {
+      "current": "memory:k@2",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt",
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 2,
+      "tombstoned": false
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       "memory:k@2"
+      ]
+     },
+     "observable": "owner_recall",
+     "observed": [
+      "memory:k@2"
+     ]
+    }
+   ],
+   "error": null,
+   "id": "W3-refusal-survives-restart",
+   "invariants": [
+    "W3",
+    "W1"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "b1": false,
+    "b1_after": "v0",
+    "b1_mentions": [],
+    "b1_refusal": "target_unavailable",
+    "b2": false,
+    "b2_refusal": "fact_not_found",
+    "b3": false,
+    "b3_refusal": "fact_not_found",
+    "b4": false,
+    "b4_refusal": "fact_not_found",
+    "head": "memory:k@2",
+    "owner_history": {
+     "current": "memory:k@2",
+     "events": [
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt",
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt"
+     ],
+     "state_version": 2,
+     "tombstoned": false
+    },
+    "owner_recall": [
+     "memory:k@2"
+    ]
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "ValueError"
+     },
+     "observable": "bad_target",
+     "observed": "ValueError"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "ValueError"
+     },
+     "observable": "bad_unknown",
+     "observed": "ValueError"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "sup_rem_committed",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "target_unavailable"
+     },
+     "observable": "sup_rem_refusal",
+     "observed": "target_unavailable"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "sup_rem_before",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "sup_cor_committed",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "memory:k"
+     },
+     "observable": "head",
+     "observed": "memory:k"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "valid",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       "memory:k"
+      ]
+     },
+     "observable": "owner_recall",
+     "observed": [
+      "memory:k"
+     ]
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "tombstones",
+     "observed": []
+    }
+   ],
+   "error": null,
+   "id": "W4-overrides",
+   "invariants": [
+    "W4"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "bad_target": "ValueError",
+    "bad_unknown": "ValueError",
+    "head": "memory:k",
+    "owner_recall": [
+     "memory:k"
+    ],
+    "sup_cor_committed": false,
+    "sup_rem_before": "v0",
+    "sup_rem_committed": false,
+    "sup_rem_refusal": "target_unavailable",
+    "tombstones": [],
+    "valid": true
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "sup_disp",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "sup_forget",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       "memory:k"
+      ]
+     },
+     "observable": "tombstones",
+     "observed": [
+      "memory:k"
+     ]
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "complete",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "complete"
+     },
+     "observable": "k2_head",
+     "observed": "complete"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       "memory:k2",
+       "complete"
+      ]
+     },
+     "observable": "k2_owner_recall",
+     "observed": [
+      "memory:k2",
+      "complete"
+     ]
+    }
+   ],
+   "error": null,
+   "id": "W4b-documented-dispositions-of-complete-and-superset-declarations",
+   "invariants": [
+    "W4"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "complete": true,
+    "k2_head": "complete",
+    "k2_owner_recall": [
+     "memory:k2",
+     "complete"
+    ],
+    "sup_disp": true,
+    "sup_forget": true,
+    "tombstones": [
+     "memory:k"
+    ]
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "a1",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "a2",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "a3",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "b1",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "owner_recall",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       "memory:k",
+       "memory:k@2"
+      ]
+     },
+     "observable": "owner_candidates",
+     "observed": [
+      "memory:k",
+      "memory:k@2"
+     ]
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       "memory:k@2"
+      ]
+     },
+     "observable": "disputed",
+     "observed": [
+      "memory:k@2"
+     ]
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "memory:k@2"
+     },
+     "observable": "head",
+     "observed": "memory:k@2"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       "other"
+      ]
+     },
+     "observable": "other_recall",
+     "observed": [
+      "other"
+     ]
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "other_view_of_k",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "owner_view_of_other",
+     "observed": true
+    }
+   ],
+   "error": null,
+   "id": "W5-positive-controls-and-unrelated-same-text",
+   "invariants": [
+    "W5"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "a1": true,
+    "a2": true,
+    "a3": true,
+    "b1": true,
+    "disputed": [
+     "memory:k@2"
+    ],
+    "head": "memory:k@2",
+    "other_recall": [
+     "other"
+    ],
+    "other_view_of_k": true,
+    "owner_candidates": [
+     "memory:k",
+     "memory:k@2"
+    ],
+    "owner_recall": [],
+    "owner_view_of_other": true
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "denied_committed",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "target_unavailable"
+     },
+     "observable": "denied_refusal",
+     "observed": "target_unavailable"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "denied_before",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "parked_committed",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "kept_committed",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "episode_denied",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "episode_parked",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "episode_kept",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "memory:k"
+     },
+     "observable": "head",
+     "observed": "memory:k"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": null
+     },
+     "observable": "parked_head",
+     "observed": null
+    }
+   ],
+   "error": null,
+   "id": "W6-denied-proposals-persist-no-episode",
+   "invariants": [
+    "W6"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "denied_before": "v0",
+    "denied_committed": false,
+    "denied_refusal": "target_unavailable",
+    "episode_denied": false,
+    "episode_kept": true,
+    "episode_parked": false,
+    "head": "memory:k",
+    "kept_committed": true,
+    "parked_committed": false,
+    "parked_head": null
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "b1",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "other_history_unknown",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": 2
+     },
+     "observable": "canonical_version",
+     "observed": 2
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": "memory:k@2",
+       "events": [
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt",
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt"
+       ],
+       "state_version": 2,
+       "tombstoned": false
+      }
+     },
+     "observable": "owner_history",
+     "observed": {
+      "current": "memory:k@2",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt",
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 2,
+      "tombstoned": false
+     }
+    }
+   ],
+   "error": null,
+   "id": "W7-refused-attempt-leaves-no-public-trace",
+   "invariants": [
+    "W7"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "b1": false,
+    "canonical_version": 2,
+    "other_history_unknown": true,
+    "owner_history": {
+     "current": "memory:k@2",
+     "events": [
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt",
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt"
+     ],
+     "state_version": 2,
+     "tombstoned": false
+    }
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "bd",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "bf",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "bdf",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "other_history_unknown",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": "memory:k",
+       "events": [
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt"
+       ],
+       "state_version": 1,
+       "tombstoned": false
+      }
+     },
+     "observable": "owner_history",
+     "observed": {
+      "current": "memory:k",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    }
+   ],
+   "error": null,
+   "id": "W7b-refused-dispute-and-forget-attempts-leave-no-public-trace",
+   "invariants": [
+    "W7"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "bd": false,
+    "bdf": false,
+    "bf": false,
+    "other_history_unknown": true,
+    "owner_history": {
+     "current": "memory:k",
+     "events": [
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt"
+     ],
+     "state_version": 1,
+     "tombstoned": false
+    }
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "a_rem",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "a_disp",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "a_disp_mentions",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "a_del",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "already_deleted"
+     },
+     "observable": "a_del_refusal",
+     "observed": "already_deleted"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "a_forget",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": "gen-b",
+       "events": [
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt"
+       ],
+       "state_version": 1,
+       "tombstoned": false
+      }
+     },
+     "observable": "other_history",
+     "observed": {
+      "current": "gen-b",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       "gen-b"
+      ]
+     },
+     "observable": "other_recall",
+     "observed": [
+      "gen-b"
+     ]
+    }
+   ],
+   "error": null,
+   "id": "W7c-former-owner-attempts-leave-no-trace-in-the-new-generation",
+   "invariants": [
+    "W7",
+    "W8"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "a_del": false,
+    "a_del_refusal": "already_deleted",
+    "a_disp": false,
+    "a_disp_mentions": [],
+    "a_forget": false,
+    "a_rem": false,
+    "other_history": {
+     "current": "gen-b",
+     "events": [
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt"
+     ],
+     "state_version": 1,
+     "tombstoned": false
+    },
+    "other_recall": [
+     "gen-b"
+    ]
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "parked_b",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "parked_b_states",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "parked_b_after",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "parked_a_after",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "parked_a_snapshot",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "parked_b2_after",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": null,
+       "events": [],
+       "state_version": 0,
+       "tombstoned": false
+      }
+     },
+     "observable": "other_history",
+     "observed": {
+      "current": null,
+      "events": [],
+      "state_version": 0,
+      "tombstoned": false
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": null,
+       "events": [],
+       "state_version": 3,
+       "tombstoned": true
+      }
+     },
+     "observable": "owner_history",
+     "observed": {
+      "current": null,
+      "events": [],
+      "state_version": 3,
+      "tombstoned": true
+     }
+    }
+   ],
+   "error": null,
+   "id": "W8b-refused-and-parked-proposals-on-a-tombstoned-id-report-v0",
+   "invariants": [
+    "W8"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "other_history": {
+     "current": null,
+     "events": [],
+     "state_version": 0,
+     "tombstoned": false
+    },
+    "owner_history": {
+     "current": null,
+     "events": [],
+     "state_version": 3,
+     "tombstoned": true
+    },
+    "parked_a_after": "v0",
+    "parked_a_snapshot": "v0",
+    "parked_b": false,
+    "parked_b2_after": "v0",
+    "parked_b_after": "v0",
+    "parked_b_states": []
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "b1_snapshot",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "b1_before",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v1"
+     },
+     "observable": "b1_after",
+     "observed": "v1"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "b1_mentions",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v1"
+     },
+     "observable": "b2_before",
+     "observed": "v1"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v2"
+     },
+     "observable": "b2_after",
+     "observed": "v2"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "a_back",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "target_unavailable"
+     },
+     "observable": "a_back_refusal",
+     "observed": "target_unavailable"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": null,
+       "events": [],
+       "state_version": 3,
+       "tombstoned": true
+      }
+     },
+     "observable": "owner_history",
+     "observed": {
+      "current": null,
+      "events": [],
+      "state_version": 3,
+      "tombstoned": true
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": "gen-b@2",
+       "events": [
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt",
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt"
+       ],
+       "state_version": 2,
+       "tombstoned": false
+      }
+     },
+     "observable": "other_history",
+     "observed": {
+      "current": "gen-b@2",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt",
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 2,
+      "tombstoned": false
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "gen-b@2"
+     },
+     "observable": "head",
+     "observed": "gen-b@2"
+    }
+   ],
+   "error": null,
+   "id": "W8-recreated-generation-starts-its-own-counter",
+   "invariants": [
+    "W8"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "a_back": false,
+    "a_back_refusal": "target_unavailable",
+    "b1_after": "v1",
+    "b1_before": "v0",
+    "b1_mentions": [],
+    "b1_snapshot": "v0",
+    "b2_after": "v2",
+    "b2_before": "v1",
+    "head": "gen-b@2",
+    "other_history": {
+     "current": "gen-b@2",
+     "events": [
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt",
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt"
+     ],
+     "state_version": 2,
+     "tombstoned": false
+    },
+    "owner_history": {
+     "current": null,
+     "events": [],
+     "state_version": 3,
+     "tombstoned": true
+    }
+   },
+   "outcome": "pass",
+   "recorded": {}
+  }
+ ],
+ "dsl_version": "786-security-replay-dsl/1",
+ "invariants": {
+  "W1": {
+   "cases": [
+    "W1-remember-over-live-head",
+    "W3-refusal-survives-restart"
+   ],
+   "holds": true,
+   "statement": "A promotion from another project onto a live head is refused with target_unavailable, reports v0/v0 and a v0 snapshot, and leaves head, version, recall and history of the owner byte-identical."
+  },
+  "W2": {
+   "cases": [
+    "W2-correct-forget-dispute-by-other"
+   ],
+   "holds": true,
+   "statement": "correct, forget, permanent forget and dispute from another project read byte-identically (ids and timestamps folded) to the same call on an id nobody wrote, and change nothing."
+  },
+  "W3": {
+   "cases": [
+    "W3-refusal-survives-restart"
+   ],
+   "holds": true,
+   "statement": "The refusal holds after every restart; the scope binding is durable."
+  },
+  "W4": {
+   "cases": [
+    "W4-overrides",
+    "W4b-documented-dispositions-of-complete-and-superset-declarations"
+   ],
+   "holds": true,
+   "statement": "An override leaving required isolation domains outside the bound domains is a malformed proposal (ValueError) for any target; an override declaring a superset of domains plus the owner's project cannot replace or correct the head, while (documented) it may delete or dispute it as an eligible reader, and a complete re-declaration of the owner's scope commits as the owner would (the facade is a host-bound trust boundary)."
+  },
+  "W5": {
+   "cases": [
+    "W5-positive-controls-and-unrelated-same-text"
+   ],
+   "holds": true,
+   "statement": "The owner's own remember, correct and dispute stay admitted (a disputed head is recorded as disputed and, as documented, withheld from the owner's own admission), and the same text in an unrelated memory of another project is independent."
+  },
+  "W6": {
+   "cases": [
+    "W6-denied-proposals-persist-no-episode"
+   ],
+   "holds": true,
+   "statement": "A proposal refused for its target, and one parked by policy review, persist no episode, live and after restart; a committed proposal keeps its episode."
+  },
+  "W7": {
+   "cases": [
+    "W7-refused-attempt-leaves-no-public-trace",
+    "W7b-refused-dispute-and-forget-attempts-leave-no-public-trace",
+    "W7c-former-owner-attempts-leave-no-trace-in-the-new-generation"
+   ],
+   "holds": true,
+   "statement": "A refused remember, correct, forget or dispute attempt by another project, and a former owner's attempts on a re-created id, leave no event in the live generation's public history; the refused project's history of the memory stays blank."
+  },
+  "W8": {
+   "cases": [
+    "W7c-former-owner-attempts-leave-no-trace-in-the-new-generation",
+    "W8b-refused-and-parked-proposals-on-a-tombstoned-id-report-v0",
+    "W8-recreated-generation-starts-its-own-counter"
+   ],
+   "holds": true,
+   "statement": "A governed-deleted id reports 0 to any writer: a re-created generation starts its own counter (snapshot v0, before v0, after v1, history 1), a refused or policy-parked proposal on the tombstoned id reports v0/v0, and the former owner's view keeps the version its deletion recorded and cannot write, dispute or re-delete the id while the new generation is live."
+  }
+ },
+ "observations_sha256": "0507a3a89cdf57b32723baade74aa639b814fb0d67172e715f65ba2ef38cd105",
+ "provenance": {
+  "dirty_exclusion": "reports/validation/786-security-replays/",
+  "dirty_paths": [],
+  "fixture": {
+   "path": "reference/fixtures/786-security-replays/cross-scope-write-authority-denial-v2.json",
+   "sha256": "9088c6f7704d221384431ce7ce8cf419691275b66ad05754822398f9528a7fed"
+  },
+  "platform": "Linux-6.18.44-fc-v114-x86_64-with-glibc2.39",
+  "python": "3.13.16",
+  "runner": {
+   "path": "reference/run_786_security_replays.py",
+   "sha256": "21db05148c369815fa154bfa83db0b3b35f6c4712596ec0f137002a6611d8269",
+   "version": "786-security-replay-runner/1"
+  },
+  "runtime_tree": "0c80fbe03145629be98dffd00c72a5a102a592f5",
+  "source_commit": "e13d8c58c3d5521be50c8d32feacf2710c7fc6c5",
+  "sqlite": "3.45.1"
+ },
+ "replay_id": "cross-scope-write-authority-denial-v2",
+ "schema": "786-security-replay-report/1",
+ "summary": {
+  "cases": 12,
+  "errors": 0,
+  "failed": 0,
+  "passed": 12
+ },
+ "verdict": "PASS",
+ "verdict_reasons": [
+  "every expectation held on a clean source tree"
+ ]
+}

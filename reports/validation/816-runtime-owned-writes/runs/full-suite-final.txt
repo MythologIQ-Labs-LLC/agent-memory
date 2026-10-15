@@ -1,0 +1,7 @@
+revision e13d8c58c3d5521be50c8d32feacf2710c7fc6c5; git status --porcelain lines: 0; Python 3.13.16; command: python3 -m unittest discover -s reference/tests -t reference
+FAIL: test_own_checkout_at_frozen_revision_is_served
+FAIL: test_a_runtime_edit_still_makes_replay_evidence_stale
+FAIL: test_lane_records_do_not_make_replay_evidence_stale
+FAIL: test_evaluation_only_change_keeps_runtime_baseline_equivalence
+Ran 3033 tests in 313.030s
+FAILED

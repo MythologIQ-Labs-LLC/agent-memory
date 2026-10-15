@@ -187,3 +187,87 @@ The real scope gap is that the guard is a proxy, "an id is being allocated insid
 - F2 comes from guarding only ids.
 
 The F4 owner token, plus an unpublished-changes check on generation entry (F2 b), would make the docs/47 claims true without changing any supported path.
+
+---
+
+# Re-verification of dc7d3f3f
+
+**Verdict: no BLOCKING findings.** F1, F3 and F4 are fixed. F2, F5, F6 and F7 are now recorded in docs/47 as outside the boundary, and the probes confirm the behaviour matches that wording. I could not break the generation token through any non-privileged path. The two new findings are both NOTEs.
+
+Setup: a fresh worktree at `/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/review-816/fix`, detached at dc7d3f3f.
+- All probes p1–p13 were run there. Output is in `/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/review-816/probes/out-fix.txt`. p10–p13 are new.
+- Focused tests: `tests.test_816_runtime_owned_writes`, `test_restart_safe_runtime`, `test_configured_restart` and `test_checkpoint_migration` all pass (50 tests).
+- Full suite: 3031 tests with 4 failures. They are the same 4 frozen-revision/worktree-identity failures seen at base and at 51452b88. Nothing new fails.
+
+## Status of the earlier findings
+
+| # | Status at dc7d3f3f | Evidence |
+|---|---|---|
+| F1 clock tick on refusal | **FIXED** | p1: `admit_preselected_candidates`, `recall_planner.recall` and the base-class `multi_route_recall` are refused, the adapter export is unchanged (`[]`), and nothing is bound by the next generation. The guard now lives in `Clock.now()`. `restore_checkpoint_state` carries the guard over when it rebuilds the clock: after a rolled-back generation, direct `adapter.now()` / `_clock.now()` are still refused (p10). |
+| F2 silent binding of in-memory seams | **DOCUMENTED, left to the owner** | p1 is unchanged: `record_correction`/`projections.correct`, shared membership, `extension_state` and `events` are not refused and are published by the next generation. docs/47 now states exactly this as an "open owner decision". |
+| F3 visibility snapshot dropped after a binding failure | **FIXED** | p3(a): the snapshot is still in memory, still committed at gen 4, and present after reopen (`['op:probe']`). p3(b), the pre-existing commit-then-bind window for governed operations, is unchanged, as documented. |
+| F4 guard keyed on `in_transaction` | **FIXED** for every non-privileged path | Unlocked thread during a generation: refused, and the next recall reuses no id (p2). A thread holding the lock with no generation open: refused (p10). Worker thread spawned inside a generation: refused (p10). Bare `substrate.transaction()`: refused, store reopens (p7). `KeyboardInterrupt`: the transaction rolls back, `in_transaction=False`, direct calls are refused and the next facade recall works (p5). The token is cleared after a failed generation, after a binding-hook failure, and for a callable deferred past the generation (p10). |
+| F5 docs/44 stages raise | **DOCUMENTED** | p4 is unchanged. docs/47 now names the `run_governed_read` route. Small gap: docs/44 itself still describes only refusal envelopes. |
+| F6 sidecar written on refusal | **DOCUMENTED** | p9 is unchanged (0 → 1 rows). It is derived data only. |
+| F7 second substrate instance | **DOCUMENTED** | p8 is unchanged: not refused, then reopen fails. docs/47 lists a second `SQLiteTemporalGraph` instance as host-privileged. |
+
+## Attacks on the new token that held
+
+- **Reentrancy** (p10):
+  - A nested `checkpoint()` or `run_governed_read` inside an operation raises `RuntimeError: nested SQLite substrate transactions are unsupported` before any BEGIN. The outer generation keeps its token and can still allocate. It commits, and the store reopens.
+  - `transaction()` is entered before `generation_opened()`, so the nested failure never touches the outer token.
+- **Token leaks**: none found. The token is `None` after a successful generation, a failed one, an interrupted one, and a binding-hook failure.
+- **Supported and read-only paths are not refused** (p12; base gives identical results). The run had semantic retrieval `required` with the #802 offline provider and recall control set to `shadow`. These all succeed, and the store reopens:
+  - facade calls: remember, correct, recall (current and historical), history (with and without `fact_text`), `posture()`, `semantic_retrieval_posture()`, `verify_semantic_store()` (with and without `rebuild`), `legacy_upgrade_status()`, `upgrade_canonical_derivation()`, `write_semantics()`, `semantic_proposals()`, dispute, forget, and attested permanent forget
+  - `posture()` is worth singling out: it opens a second recovering runtime on the same root while the handle is open, and that works too
+  - the docs/44 readers `surface.propose`, `approve` and `history`, called directly on the durable adapter
+  - runtime helpers: `historical_predecessor_context`, `routed_historical_context`, `projection_admission`, `rebuild_projection`, `disable_projection_component`, `restore_and_rebuild_projection_component`
+  - durable-runtime calls: `persist_visibility_snapshot`, `checkpoint`, `backup_to`
+- **`recover()` and legacy migration**:
+  - `recover()` restores governance before `__init__` installs the guards, and allocates and ticks nothing.
+  - A legacy full-json-v1 store is migrated by the next generation, which runs inside `_generation()`.
+  - The legacy, attestation, migration and transactional-generation test modules all pass in the full suite.
+  - The facade #809 legacy upgrade runs inside its generation (p12, focused tests).
+- **File-checkpoint profile**: unaffected. `RestartSafeRuntime` installs no clock guard, and in-memory `DeterministicIds.ensure_allocatable` is a no-op. `test_restart_safe_runtime` and `test_configured_restart` pass.
+- **Integrity checks and `close()`** (p6): unchanged. Tampering with facts, `id_counter` ±1, the journal tail, the `runtime_state` generation or a governance-log row still fails recovery. `close()` changes no rows.
+
+## New findings
+
+### N1 (NOTE): the token is a public method on the privileged substrate, so it can be forged
+
+`SQLiteTemporalGraph.generation_opened()` is public and checks only that some transaction is open on the connection. Any holder of the substrate, for example via `adapter.checkpoint_substrate()`, can open a commit that is not a generation:
+
+```python
+with sub.transaction(), sub.generation_opened():
+    adapter.governed_recall(...)
+```
+
+That commit advances the id counter without publishing a generation. The store then fails to reopen with the original #816 error.
+
+Two side effects of the same method:
+- A nested `generation_opened()` inside a real generation clears the outer token to `None`. The outer operation's next allocation is then refused, so this fails closed.
+- Another thread could call `generation_opened()` while a generation is open and take over the token.
+
+Repro: `p11_forged_token_close.py` prints `forged generation: NOT refused, committed` and then `reopen FAILED ... SQLite canonical substrate digest mismatch`. For the nested case, see the p10 row "nested generation_opened".
+
+This sits inside the documented host-privileged layer ("writes through `SQLiteTemporalGraph` methods ... are not refused"), so it is not a boundary violation. A runtime-held capability would close it cheaply. For example:
+- make the marker private (`_generation_opened`), or have it take a secret token that only `SQLiteRestartSafeRuntime` holds;
+- refuse nesting and cross-thread entry, or save and restore the previous owner instead of resetting to `None`.
+
+Assigning `adapter._clock.guard = None` likewise re-enables clock ticks. That is private-attribute tampering in the same category (p10, last row).
+
+### N2 (NOTE): an interrupt during `persist_visibility_snapshot` leaves the uncommitted snapshot in memory, and the next generation publishes it
+
+`persist_visibility_snapshot` still catches only `Exception`. A `KeyboardInterrupt` inside its checkpoint is now rolled back in SQLite (part of the F4 fix), but the in-memory `visibility_snapshots[op]` stays, and the next facade generation publishes it.
+
+Repro: `p13_visibility_interrupt.py`. At dc7d3f3f it prints `in-memory has op:int after rollback: True` and then `recovered visibility ops: ['op:int']`. At base the same interrupt wedged the handle with `nested SQLite substrate transactions are unsupported`, so this is a changed symptom of a pre-existing gap, not a new break.
+
+Fix: use `except BaseException:` in `persist_visibility_snapshot`, keeping the existing "only if `_observed_generation` is unchanged" condition.
+
+## Unchanged scope judgement
+
+The boundary docs/47 now draws matches the code as probed:
+- **Refused:** governed acts, the clock, the planner, a bare transaction, and other threads.
+- **Not refused:** storage-level and in-memory administrative seams, and derived vectors.
+
+The one remaining wording gap is that docs/44 does not yet point durable-adapter callers to `run_governed_read`.
