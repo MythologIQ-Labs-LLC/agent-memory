@@ -1,0 +1,921 @@
+{
+ "config": "default",
+ "reference": "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-c6/reference",
+ "summary": {
+  "aggregate": {
+   "queries": 5,
+   "needed": 13,
+   "returned": 4,
+   "withheld": 4,
+   "refused": 0,
+   "not_discovered": 5,
+   "extra": 2,
+   "excluded_returned": 0,
+   "strict": 0
+  },
+  "paraphrase": {
+   "queries": 13,
+   "needed": 13,
+   "returned": 2,
+   "withheld": 6,
+   "refused": 0,
+   "not_discovered": 5,
+   "extra": 2,
+   "excluded_returned": 1,
+   "strict": 1
+  },
+  "distractor": {
+   "queries": 2,
+   "needed": 2,
+   "returned": 1,
+   "withheld": 1,
+   "refused": 0,
+   "not_discovered": 0,
+   "extra": 0,
+   "excluded_returned": 0,
+   "strict": 1
+  },
+  "abstention": {
+   "queries": 3,
+   "needed": 0,
+   "returned": 0,
+   "withheld": 0,
+   "refused": 0,
+   "not_discovered": 0,
+   "extra": 1,
+   "excluded_returned": 0,
+   "strict": 2
+  },
+  "stuffing": {
+   "queries": 1,
+   "needed": 1,
+   "returned": 1,
+   "withheld": 0,
+   "refused": 0,
+   "not_discovered": 0,
+   "extra": 1,
+   "excluded_returned": 1,
+   "strict": 0
+  },
+  "governance": {
+   "queries": 5,
+   "needed": 2,
+   "returned": 1,
+   "withheld": 1,
+   "refused": 0,
+   "not_discovered": 0,
+   "extra": 1,
+   "excluded_returned": 0,
+   "strict": 3
+  },
+  "ordinary": {
+   "queries": 1,
+   "needed": 1,
+   "returned": 1,
+   "withheld": 0,
+   "refused": 0,
+   "not_discovered": 0,
+   "extra": 0,
+   "excluded_returned": 0,
+   "strict": 1
+  }
+ },
+ "rows": [
+  {
+   "scenario": "pets",
+   "id": "pets-1",
+   "kind": "aggregate",
+   "query": "Which animals live with us?",
+   "stages": {
+    "memory:dog": "not_discovered",
+    "memory:cat": "not_discovered",
+    "memory:fish": "returned"
+   },
+   "refusals_of_needed": {},
+   "routes_of_needed": {
+    "memory:dog": [],
+    "memory:cat": [],
+    "memory:fish": [
+     "lexical"
+    ]
+   },
+   "returned": [
+    "memory:fish",
+    "memory:pets-n8"
+   ],
+   "extra": [
+    "memory:pets-n8"
+   ],
+   "excluded_returned": [],
+   "candidates": 3,
+   "admitted": 3,
+   "recall_ms": 12.69,
+   "dense": {
+    "memory:dog": {
+     "rank": 2,
+     "cosine": 0.28
+    },
+    "memory:cat": {
+     "rank": 5,
+     "cosine": 0.214
+    },
+    "memory:fish": {
+     "rank": 1,
+     "cosine": 0.327
+    }
+   }
+  },
+  {
+   "scenario": "pets",
+   "id": "pets-2",
+   "kind": "paraphrase",
+   "query": "Who gives our pets their vaccinations?",
+   "stages": {
+    "memory:vet": "not_discovered"
+   },
+   "refusals_of_needed": {},
+   "routes_of_needed": {
+    "memory:vet": []
+   },
+   "returned": [],
+   "extra": [],
+   "excluded_returned": [],
+   "candidates": 3,
+   "admitted": 3,
+   "recall_ms": 12.67,
+   "dense": {
+    "memory:vet": {
+     "rank": 1,
+     "cosine": 0.458
+    }
+   }
+  },
+  {
+   "scenario": "pets",
+   "id": "pets-3",
+   "kind": "paraphrase",
+   "query": "What does the kitty refuse to eat?",
+   "stages": {
+    "memory:petfood": "returned"
+   },
+   "refusals_of_needed": {},
+   "routes_of_needed": {
+    "memory:petfood": [
+     "lexical"
+    ]
+   },
+   "returned": [
+    "memory:petfood"
+   ],
+   "extra": [],
+   "excluded_returned": [],
+   "candidates": 24,
+   "admitted": 24,
+   "recall_ms": 20.42,
+   "dense": {
+    "memory:petfood": {
+     "rank": 3,
+     "cosine": 0.348
+    }
+   }
+  },
+  {
+   "scenario": "pets",
+   "id": "pets-4",
+   "kind": "distractor",
+   "query": "Which pet is scared of storms?",
+   "stages": {
+    "memory:dog": "withheld"
+   },
+   "refusals_of_needed": {},
+   "routes_of_needed": {
+    "memory:dog": [
+     "lexical"
+    ]
+   },
+   "returned": [],
+   "extra": [],
+   "excluded_returned": [],
+   "candidates": 8,
+   "admitted": 8,
+   "recall_ms": 10.45,
+   "dense": {
+    "memory:dog": {
+     "rank": 1,
+     "cosine": 0.61
+    }
+   }
+  },
+  {
+   "scenario": "pets",
+   "id": "pets-5",
+   "kind": "abstention",
+   "query": "What is the hamster's name?",
+   "stages": {},
+   "refusals_of_needed": {},
+   "routes_of_needed": {},
+   "returned": [],
+   "extra": [],
+   "excluded_returned": [],
+   "candidates": 25,
+   "admitted": 25,
+   "recall_ms": 16.17,
+   "dense": {}
+  },
+  {
+   "scenario": "work",
+   "id": "work-1",
+   "kind": "paraphrase",
+   "query": "Who is my boss?",
+   "stages": {
+    "memory:manager": "withheld"
+   },
+   "refusals_of_needed": {},
+   "routes_of_needed": {
+    "memory:manager": [
+     "lexical"
+    ]
+   },
+   "returned": [
+    "memory:stuffing"
+   ],
+   "extra": [
+    "memory:stuffing"
+   ],
+   "excluded_returned": [
+    "memory:stuffing"
+   ],
+   "candidates": 7,
+   "admitted": 7,
+   "recall_ms": 10.98,
+   "dense": {
+    "memory:manager": {
+     "rank": 2,
+     "cosine": 0.481
+    }
+   }
+  },
+  {
+   "scenario": "work",
+   "id": "work-2",
+   "kind": "aggregate",
+   "query": "Who are the new people on my team this year?",
+   "stages": {
+    "memory:hire1": "returned",
+    "memory:hire2": "withheld",
+    "memory:hire3": "withheld"
+   },
+   "refusals_of_needed": {},
+   "routes_of_needed": {
+    "memory:hire1": [
+     "lexical"
+    ],
+    "memory:hire2": [
+     "lexical"
+    ],
+    "memory:hire3": [
+     "lexical"
+    ]
+   },
+   "returned": [
+    "memory:hire1",
+    "memory:work-n16"
+   ],
+   "extra": [
+    "memory:work-n16"
+   ],
+   "excluded_returned": [],
+   "candidates": 25,
+   "admitted": 25,
+   "recall_ms": 18.29,
+   "dense": {
+    "memory:hire1": {
+     "rank": 1,
+     "cosine": 0.349
+    },
+    "memory:hire2": {
+     "rank": 4,
+     "cosine": 0.172
+    },
+    "memory:hire3": {
+     "rank": 5,
+     "cosine": 0.133
+    }
+   }
+  },
+  {
+   "scenario": "work",
+   "id": "work-3",
+   "kind": "paraphrase",
+   "query": "Where am I employed?",
+   "stages": {
+    "memory:employer": "withheld"
+   },
+   "refusals_of_needed": {},
+   "routes_of_needed": {
+    "memory:employer": [
+     "lexical"
+    ]
+   },
+   "returned": [],
+   "extra": [],
+   "excluded_returned": [],
+   "candidates": 3,
+   "admitted": 3,
+   "recall_ms": 11.95,
+   "dense": {
+    "memory:employer": {
+     "rank": 2,
+     "cosine": 0.272
+    }
+   }
+  },
+  {
+   "scenario": "work",
+   "id": "work-4",
+   "kind": "paraphrase",
+   "query": "What computer do I use for my job?",
+   "stages": {
+    "memory:laptop": "withheld"
+   },
+   "refusals_of_needed": {},
+   "routes_of_needed": {
+    "memory:laptop": [
+     "lexical"
+    ]
+   },
+   "returned": [],
+   "extra": [],
+   "excluded_returned": [],
+   "candidates": 6,
+   "admitted": 6,
+   "recall_ms": 9.99,
+   "dense": {
+    "memory:laptop": {
+     "rank": 1,
+     "cosine": 0.356
+    }
+   }
+  },
+  {
+   "scenario": "work",
+   "id": "work-5",
+   "kind": "stuffing",
+   "query": "Who do I report to?",
+   "stages": {
+    "memory:manager": "returned"
+   },
+   "refusals_of_needed": {},
+   "routes_of_needed": {
+    "memory:manager": [
+     "lexical"
+    ]
+   },
+   "returned": [
+    "memory:stuffing",
+    "memory:manager"
+   ],
+   "extra": [
+    "memory:stuffing"
+   ],
+   "excluded_returned": [
+    "memory:stuffing"
+   ],
+   "candidates": 5,
+   "admitted": 5,
+   "recall_ms": 10.88,
+   "dense": {
+    "memory:manager": {
+     "rank": 2,
+     "cosine": 0.573
+    }
+   }
+  },
+  {
+   "scenario": "health",
+   "id": "health-1",
+   "kind": "aggregate",
+   "query": "What tablets am I currently taking?",
+   "stages": {
+    "memory:med1": "returned",
+    "memory:med2": "not_discovered",
+    "memory:med3": "not_discovered"
+   },
+   "refusals_of_needed": {},
+   "routes_of_needed": {
+    "memory:med1": [
+     "lexical"
+    ],
+    "memory:med2": [],
+    "memory:med3": []
+   },
+   "returned": [
+    "memory:med1"
+   ],
+   "extra": [],
+   "excluded_returned": [],
+   "candidates": 1,
+   "admitted": 1,
+   "recall_ms": 10.37,
+   "dense": {
+    "memory:med1": {
+     "rank": 1,
+     "cosine": 0.463
+    },
+    "memory:med2": {
+     "rank": 2,
+     "cosine": 0.391
+    },
+    "memory:med3": {
+     "rank": 3,
+     "cosine": 0.273
+    }
+   }
+  },
+  {
+   "scenario": "health",
+   "id": "health-2",
+   "kind": "paraphrase",
+   "query": "Who is my family doctor?",
+   "stages": {
+    "memory:gp": "withheld"
+   },
+   "refusals_of_needed": {},
+   "routes_of_needed": {
+    "memory:gp": [
+     "lexical"
+    ]
+   },
+   "returned": [],
+   "extra": [],
+   "excluded_returned": [],
+   "candidates": 6,
+   "admitted": 6,
+   "recall_ms": 15.54,
+   "dense": {
+    "memory:gp": {
+     "rank": 1,
+     "cosine": 0.401
+    }
+   }
+  },
+  {
+   "scenario": "health",
+   "id": "health-3",
+   "kind": "distractor",
+   "query": "What was my last blood pressure reading?",
+   "stages": {
+    "memory:bp": "returned"
+   },
+   "refusals_of_needed": {},
+   "routes_of_needed": {
+    "memory:bp": [
+     "lexical"
+    ]
+   },
+   "returned": [
+    "memory:bp"
+   ],
+   "extra": [],
+   "excluded_returned": [],
+   "candidates": 3,
+   "admitted": 3,
+   "recall_ms": 9.4,
+   "dense": {
+    "memory:bp": {
+     "rank": 1,
+     "cosine": 0.71
+    }
+   }
+  },
+  {
+   "scenario": "health",
+   "id": "health-4",
+   "kind": "abstention",
+   "query": "What is my cholesterol level?",
+   "stages": {},
+   "refusals_of_needed": {},
+   "routes_of_needed": {},
+   "returned": [],
+   "extra": [],
+   "excluded_returned": [],
+   "candidates": 6,
+   "admitted": 6,
+   "recall_ms": 14.86,
+   "dense": {}
+  },
+  {
+   "scenario": "health",
+   "id": "health-5",
+   "kind": "paraphrase",
+   "query": "What should I do for my sore joint after jogging?",
+   "stages": {
+    "memory:knee": "withheld"
+   },
+   "refusals_of_needed": {},
+   "routes_of_needed": {
+    "memory:knee": [
+     "lexical"
+    ]
+   },
+   "returned": [],
+   "extra": [],
+   "excluded_returned": [],
+   "candidates": 5,
+   "admitted": 5,
+   "recall_ms": 9.7,
+   "dense": {
+    "memory:knee": {
+     "rank": 1,
+     "cosine": 0.436
+    }
+   }
+  },
+  {
+   "scenario": "travel",
+   "id": "travel-1",
+   "kind": "paraphrase",
+   "query": "Where am I staying in Japan?",
+   "stages": {
+    "memory:hotel": "not_discovered"
+   },
+   "refusals_of_needed": {},
+   "routes_of_needed": {
+    "memory:hotel": []
+   },
+   "returned": [],
+   "extra": [],
+   "excluded_returned": [],
+   "candidates": 6,
+   "admitted": 6,
+   "recall_ms": 9.64,
+   "dense": {
+    "memory:hotel": {
+     "rank": 2,
+     "cosine": 0.382
+    }
+   }
+  },
+  {
+   "scenario": "travel",
+   "id": "travel-2",
+   "kind": "aggregate",
+   "query": "What are all my flight times?",
+   "stages": {
+    "memory:flight": "returned",
+    "memory:return": "not_discovered"
+   },
+   "refusals_of_needed": {},
+   "routes_of_needed": {
+    "memory:flight": [
+     "lexical"
+    ],
+    "memory:return": []
+   },
+   "returned": [
+    "memory:flight"
+   ],
+   "extra": [],
+   "excluded_returned": [],
+   "candidates": 3,
+   "admitted": 3,
+   "recall_ms": 12.37,
+   "dense": {
+    "memory:flight": {
+     "rank": 1,
+     "cosine": 0.399
+    },
+    "memory:return": {
+     "rank": 5,
+     "cosine": 0.2
+    }
+   }
+  },
+  {
+   "scenario": "travel",
+   "id": "travel-3",
+   "kind": "paraphrase",
+   "query": "How will I get around between cities?",
+   "stages": {
+    "memory:rail": "not_discovered"
+   },
+   "refusals_of_needed": {},
+   "routes_of_needed": {
+    "memory:rail": []
+   },
+   "returned": [],
+   "extra": [],
+   "excluded_returned": [],
+   "candidates": 0,
+   "admitted": 0,
+   "recall_ms": 8.3,
+   "dense": {
+    "memory:rail": {
+     "rank": 7,
+     "cosine": 0.121
+    }
+   }
+  },
+  {
+   "scenario": "travel",
+   "id": "travel-4",
+   "kind": "paraphrase",
+   "query": "How will I have internet on my phone?",
+   "stages": {
+    "memory:sim": "not_discovered"
+   },
+   "refusals_of_needed": {},
+   "routes_of_needed": {
+    "memory:sim": []
+   },
+   "returned": [],
+   "extra": [],
+   "excluded_returned": [],
+   "candidates": 8,
+   "admitted": 8,
+   "recall_ms": 10.79,
+   "dense": {
+    "memory:sim": {
+     "rank": 3,
+     "cosine": 0.156
+    }
+   }
+  },
+  {
+   "scenario": "travel",
+   "id": "travel-5",
+   "kind": "abstention",
+   "query": "What is the weather forecast for Osaka?",
+   "stages": {},
+   "refusals_of_needed": {},
+   "routes_of_needed": {},
+   "returned": [
+    "memory:flight"
+   ],
+   "extra": [
+    "memory:flight"
+   ],
+   "excluded_returned": [],
+   "candidates": 24,
+   "admitted": 24,
+   "recall_ms": 16.66,
+   "dense": {}
+  },
+  {
+   "scenario": "governance",
+   "id": "gov-1",
+   "kind": "governance",
+   "query": "What vehicle do we own?",
+   "stages": {
+    "memory:car": "withheld"
+   },
+   "refusals_of_needed": {},
+   "routes_of_needed": {
+    "memory:car": [
+     "lexical"
+    ]
+   },
+   "returned": [],
+   "extra": [],
+   "excluded_returned": [],
+   "candidates": 4,
+   "admitted": 4,
+   "recall_ms": 9.87,
+   "dense": {
+    "memory:car": {
+     "rank": 1,
+     "cosine": 0.571
+    }
+   }
+  },
+  {
+   "scenario": "governance",
+   "id": "gov-2",
+   "kind": "governance",
+   "query": "What is the locker combination?",
+   "stages": {},
+   "refusals_of_needed": {},
+   "routes_of_needed": {},
+   "returned": [],
+   "extra": [],
+   "excluded_returned": [],
+   "candidates": 22,
+   "admitted": 21,
+   "recall_ms": 14.41,
+   "dense": {}
+  },
+  {
+   "scenario": "governance",
+   "id": "gov-3",
+   "kind": "governance",
+   "query": "Are any celebrations being planned?",
+   "stages": {},
+   "refusals_of_needed": {},
+   "routes_of_needed": {},
+   "returned": [],
+   "extra": [],
+   "excluded_returned": [],
+   "candidates": 2,
+   "admitted": 2,
+   "recall_ms": 9.67,
+   "dense": {}
+  },
+  {
+   "scenario": "governance",
+   "id": "gov-4",
+   "kind": "governance",
+   "query": "Which animals live with us?",
+   "stages": {},
+   "refusals_of_needed": {},
+   "routes_of_needed": {},
+   "returned": [
+    "memory:gov-n8"
+   ],
+   "extra": [
+    "memory:gov-n8"
+   ],
+   "excluded_returned": [],
+   "candidates": 3,
+   "admitted": 2,
+   "recall_ms": 9.74,
+   "dense": {}
+  },
+  {
+   "scenario": "governance",
+   "id": "gov-5",
+   "kind": "governance",
+   "query": "Where is our home?",
+   "stages": {
+    "memory:oldaddr": "returned"
+   },
+   "refusals_of_needed": {},
+   "routes_of_needed": {
+    "memory:oldaddr": [
+     "lexical"
+    ]
+   },
+   "returned": [
+    "memory:oldaddr"
+   ],
+   "extra": [],
+   "excluded_returned": [],
+   "candidates": 8,
+   "admitted": 7,
+   "recall_ms": 12.56,
+   "dense": {
+    "memory:oldaddr": {
+     "rank": 1,
+     "cosine": 0.54
+    }
+   }
+  },
+  {
+   "scenario": "project",
+   "id": "proj-1",
+   "kind": "paraphrase",
+   "query": "When does the dashboard need to be finished?",
+   "stages": {
+    "memory:deadline": "returned"
+   },
+   "refusals_of_needed": {},
+   "routes_of_needed": {
+    "memory:deadline": [
+     "lexical"
+    ]
+   },
+   "returned": [
+    "memory:deadline",
+    "memory:project-n16"
+   ],
+   "extra": [
+    "memory:project-n16"
+   ],
+   "excluded_returned": [],
+   "candidates": 25,
+   "admitted": 25,
+   "recall_ms": 13.0,
+   "dense": {
+    "memory:deadline": {
+     "rank": 1,
+     "cosine": 0.549
+    }
+   }
+  },
+  {
+   "scenario": "project",
+   "id": "proj-2",
+   "kind": "paraphrase",
+   "query": "What technologies are we building with?",
+   "stages": {
+    "memory:stack": "not_discovered"
+   },
+   "refusals_of_needed": {},
+   "routes_of_needed": {
+    "memory:stack": []
+   },
+   "returned": [],
+   "extra": [],
+   "excluded_returned": [],
+   "candidates": 5,
+   "admitted": 5,
+   "recall_ms": 9.24,
+   "dense": {
+    "memory:stack": {
+     "rank": 9,
+     "cosine": 0.051
+    }
+   }
+  },
+  {
+   "scenario": "project",
+   "id": "proj-3",
+   "kind": "aggregate",
+   "query": "What could cause problems for the project?",
+   "stages": {
+    "memory:risk1": "withheld",
+    "memory:risk2": "withheld"
+   },
+   "refusals_of_needed": {},
+   "routes_of_needed": {
+    "memory:risk1": [
+     "lexical"
+    ],
+    "memory:risk2": [
+     "lexical"
+    ]
+   },
+   "returned": [],
+   "extra": [],
+   "excluded_returned": [],
+   "candidates": 25,
+   "admitted": 25,
+   "recall_ms": 12.84,
+   "dense": {
+    "memory:risk1": {
+     "rank": 4,
+     "cosine": 0.181
+    },
+    "memory:risk2": {
+     "rank": 14,
+     "cosine": 0.054
+    }
+   }
+  },
+  {
+   "scenario": "project",
+   "id": "proj-4",
+   "kind": "paraphrase",
+   "query": "Who do I talk to at the customer?",
+   "stages": {
+    "memory:client": "withheld"
+   },
+   "refusals_of_needed": {},
+   "routes_of_needed": {
+    "memory:client": [
+     "lexical"
+    ]
+   },
+   "returned": [],
+   "extra": [],
+   "excluded_returned": [],
+   "candidates": 25,
+   "admitted": 25,
+   "recall_ms": 13.31,
+   "dense": {
+    "memory:client": {
+     "rank": 1,
+     "cosine": 0.453
+    }
+   }
+  },
+  {
+   "scenario": "project",
+   "id": "proj-5",
+   "kind": "ordinary",
+   "query": "Where does production run?",
+   "stages": {
+    "memory:hosting": "returned"
+   },
+   "refusals_of_needed": {},
+   "routes_of_needed": {
+    "memory:hosting": [
+     "lexical"
+    ]
+   },
+   "returned": [
+    "memory:hosting"
+   ],
+   "extra": [],
+   "excluded_returned": [],
+   "candidates": 1,
+   "admitted": 1,
+   "recall_ms": 8.32,
+   "dense": {
+    "memory:hosting": {
+     "rank": 1,
+     "cosine": 0.541
+    }
+   }
+  }
+ ]
+}

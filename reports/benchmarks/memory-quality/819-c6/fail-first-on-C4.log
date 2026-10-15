@@ -1,0 +1,77 @@
+revision 9942a8a60756bcea974a3234906f3fd423973c42 (runtime = C4 bc2be631); command: python3 -W ignore -m unittest -v tests.test_c6_semantic_discovery
+test_a_forgotten_memory_never_takes_a_slot_or_reaches_the_caller (tests.test_c6_semantic_discovery.Governance.test_a_forgotten_memory_never_takes_a_slot_or_reaches_the_caller) ... ok
+test_a_superseded_statement_is_not_returned_for_a_current_question (tests.test_c6_semantic_discovery.Governance.test_a_superseded_statement_is_not_returned_for_a_current_question) ... ok
+test_an_injected_instruction_gains_nothing_beyond_its_rank (tests.test_c6_semantic_discovery.Governance.test_an_injected_instruction_gains_nothing_beyond_its_rank) ... ok
+test_other_scope_memories_are_never_proposed (tests.test_c6_semantic_discovery.Governance.test_other_scope_memories_are_never_proposed) ... ok
+test_auto_mode_without_a_model_keeps_lexical_recall (tests.test_c6_semantic_discovery.ProviderUnavailable.test_auto_mode_without_a_model_keeps_lexical_recall) ... ok
+test_required_mode_without_a_model_refuses_at_open (tests.test_c6_semantic_discovery.ProviderUnavailable.test_required_mode_without_a_model_refuses_at_open) ... ok
+test_a_query_without_a_strong_semantic_anchor_proposes_nothing (tests.test_c6_semantic_discovery.RankBoundedProposals.test_a_query_without_a_strong_semantic_anchor_proposes_nothing) ... FAIL
+test_a_single_answer_question_proposes_at_most_k_single_and_a_plural_one_up_to_k_set (tests.test_c6_semantic_discovery.RankBoundedProposals.test_a_single_answer_question_proposes_at_most_k_single_and_a_plural_one_up_to_k_set) ... FAIL
+test_an_aggregate_member_below_the_old_floor_is_discovered (tests.test_c6_semantic_discovery.RankBoundedProposals.test_an_aggregate_member_below_the_old_floor_is_discovered) ... FAIL
+test_neighbours_outside_the_margin_are_not_proposed (tests.test_c6_semantic_discovery.RankBoundedProposals.test_neighbours_outside_the_margin_are_not_proposed) ... FAIL
+test_the_route_records_its_policy (tests.test_c6_semantic_discovery.RankBoundedProposals.test_the_route_records_its_policy) ... FAIL
+test_without_the_semantic_route_recall_is_c4s (tests.test_c6_semantic_discovery.SemanticRouteOff.test_without_the_semantic_route_recall_is_c4s) ... ok
+
+======================================================================
+FAIL: test_a_query_without_a_strong_semantic_anchor_proposes_nothing (tests.test_c6_semantic_discovery.RankBoundedProposals.test_a_query_without_a_strong_semantic_anchor_proposes_nothing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-c6/reference/tests/test_c6_semantic_discovery.py", line 146, in test_a_query_without_a_strong_semantic_anchor_proposes_nothing
+    self.assertEqual(self.returned(memory, query), [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['memory:f', 'memory:b', 'memory:c', 'memory:e', 'memory:d', 'memory:a'] != []
+
+First list contains 6 additional elements.
+First extra element 0:
+'memory:f'
+
+- ['memory:f', 'memory:b', 'memory:c', 'memory:e', 'memory:d', 'memory:a']
++ []
+
+======================================================================
+FAIL: test_a_single_answer_question_proposes_at_most_k_single_and_a_plural_one_up_to_k_set (tests.test_c6_semantic_discovery.RankBoundedProposals.test_a_single_answer_question_proposes_at_most_k_single_and_a_plural_one_up_to_k_set)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-c6/reference/tests/test_c6_semantic_discovery.py", line 164, in test_a_single_answer_question_proposes_at_most_k_single_and_a_plural_one_up_to_k_set
+    self.assertEqual(len(self.returned(memory, single)), K_SINGLE)  # C4 returns all five (> 0.30)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 5 != 2
+
+======================================================================
+FAIL: test_an_aggregate_member_below_the_old_floor_is_discovered (tests.test_c6_semantic_discovery.RankBoundedProposals.test_an_aggregate_member_below_the_old_floor_is_discovered)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-c6/reference/tests/test_c6_semantic_discovery.py", line 137, in test_an_aggregate_member_below_the_old_floor_is_discovered
+    self.assertIn("memory:b", returned)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'memory:b' not found in ['memory:a']
+
+======================================================================
+FAIL: test_neighbours_outside_the_margin_are_not_proposed (tests.test_c6_semantic_discovery.RankBoundedProposals.test_neighbours_outside_the_margin_are_not_proposed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-c6/reference/tests/test_c6_semantic_discovery.py", line 154, in test_neighbours_outside_the_margin_are_not_proposed
+    self.assertEqual(self.returned(memory, query), ["memory:a"])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['memory:a', 'memory:b', 'memory:d'] != ['memory:a']
+
+First list contains 2 additional elements.
+First extra element 1:
+'memory:b'
+
+- ['memory:a', 'memory:b', 'memory:d']
++ ['memory:a']
+
+======================================================================
+FAIL: test_the_route_records_its_policy (tests.test_c6_semantic_discovery.RankBoundedProposals.test_the_route_records_its_policy)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-c6/reference/tests/test_c6_semantic_discovery.py", line 174, in test_the_route_records_its_policy
+    self.assertEqual(posture.get("proposal_policy", {}).get("policy_id"), "rank-bounded-semantic-proposals")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != 'rank-bounded-semantic-proposals'
+
+----------------------------------------------------------------------
+Ran 12 tests in 1.799s
+
+FAILED (failures=5)

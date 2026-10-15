@@ -61,8 +61,14 @@ def _evidence(scope: str):
     return pm.evidence_for(skill)
 
 
+# Evaluation-only option (#819 C5): the semantic route posture every handle is opened with.
+# None keeps each runtime's own default (semantic route off).
+SEMANTIC_RETRIEVAL: str | None = None
+
+
 def _open(root: Path, scope: str) -> AgentMemory:
-    return AgentMemory.open(root, tenant=TENANT, actor_id=ACTOR, scope=scope, purpose="memory quality scenario")
+    kwargs = {"semantic_retrieval": SEMANTIC_RETRIEVAL} if SEMANTIC_RETRIEVAL is not None else {}
+    return AgentMemory.open(root, tenant=TENANT, actor_id=ACTOR, scope=scope, purpose="memory quality scenario", **kwargs)
 
 
 def run_scenario(scenario: dict, return_selection: str | None) -> dict:
@@ -173,9 +179,14 @@ def main() -> int:
     parser.add_argument("scenarios", type=Path)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--return-selection", default=None)
+    parser.add_argument("--semantic-retrieval", default=None, choices=("off", "auto", "required"))
     args = parser.parse_args()
+    global SEMANTIC_RETRIEVAL
+    SEMANTIC_RETRIEVAL = args.semantic_retrieval
     raw = args.scenarios.read_bytes()
     cohort = json.loads(raw)
+    if isinstance(cohort, list):  # a bare list of scenarios is the same cohort
+        cohort = {"scenarios": cohort}
     supports = "return_selection" in inspect.signature(AgentMemory.recall).parameters
     if args.return_selection is not None and not supports:
         raise SystemExit("this runtime has no return_selection parameter")
@@ -190,6 +201,7 @@ def main() -> int:
         "cohort_sha256": hashlib.sha256(raw).hexdigest(),
         "budget": BUDGET,
         "return_selection": args.return_selection,
+        "semantic_retrieval": args.semantic_retrieval,
         "summary": summarize(scenarios),
         "scenarios": scenarios,
     }
