@@ -4,14 +4,15 @@
 The same verification the #644 v7 replay evidence receives (``scripts/verify_644_v7_replays.py``),
 applied to the separate #786 family: ``reference/run_786_security_replays.py``, the fixtures under
 ``reference/fixtures/786-security-replays/`` and the evidence under
-``reports/validation/786-security-replays-v3/`` (the -v2 evidence stays under
-``786-security-replays/``, verifiable with ``--evidence-root`` and a declaration naming the -v2
-ids). The replays it verifies are the ones the given declaration lists with
+``reports/validation/809-security-replays/`` (the -v3 first execution at 842e5734 stays under
+``786-security-replays-v3/`` and the -v2 evidence under ``786-security-replays/``, each
+verifiable with ``--evidence-root`` and a declaration naming its ids). The replays it verifies are the ones the given declaration lists with
 ``kind: security_replay`` (default: the prepared cumulative v6 -> v8 declaration,
 ``786-cumulative-v6-to-v8.PROPOSED.json``; ``security_replay`` is a first-class acceptance
 evidence kind of the declaration schema since the owner's checkpoint on PR #805). The runner
 used for each replay is the one its fixture's ``dsl_version`` names (DSL/1: -v1/-v2, DSL/2:
--v3), so either generation's committed evidence verifies against the runner hash it recorded.
+-v3, DSL/3: the #809 evidence-reference-authorization generation), so each generation's
+committed evidence verifies against the runner hash it recorded.
 VERIFIED is reproducible, untampered evidence for a reviewer; it is not acceptance.
 """
 from __future__ import annotations
@@ -27,15 +28,16 @@ sys.path.insert(0, str(ROOT / "reference"))
 import run_786_security_replays as runner  # noqa: E402
 
 import run_786_security_replays_dsl2 as runner_dsl2  # noqa: E402
+import run_786_security_replays_dsl3 as runner_dsl3  # noqa: E402
 
 v7 = runpy.run_path(str(ROOT / "scripts/verify_644_v7_replays.py"))
 DECLARATION = ROOT / "reports/runtime/proposals/786-cumulative-v6-to-v8.PROPOSED.json"
-EVIDENCE_ROOT = ROOT / "reports/validation/786-security-replays-v3"
-RUNNERS = {runner.DSL_VERSION: runner, runner_dsl2.DSL_VERSION: runner_dsl2}
+EVIDENCE_ROOT = ROOT / "reports/validation/809-security-replays"
+RUNNERS = {runner.DSL_VERSION: runner, runner_dsl2.DSL_VERSION: runner_dsl2, runner_dsl3.DSL_VERSION: runner_dsl3}
 
 
 def runner_for(replay_id: str, fixture_dir: Path):
-    """The runner module a fixture declares through ``dsl_version`` (DSL/1 for -v1/-v2, DSL/2 for -v3).
+    """The runner module a fixture declares through ``dsl_version`` (DSL/1 for -v1/-v2, DSL/2 for -v3, DSL/3 for #809).
 
     Each runner is frozen with its DSL, so committed evidence of either generation keeps
     verifying against the runner hash its manifest recorded."""

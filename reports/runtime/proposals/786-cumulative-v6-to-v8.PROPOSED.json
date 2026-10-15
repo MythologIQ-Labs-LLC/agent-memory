@@ -113,6 +113,10 @@
     {
       "kind": "security_replay",
       "ref": "public-tombstone-redaction-and-observer-separation-v3"
+    },
+    {
+      "kind": "security_replay",
+      "ref": "evidence-reference-authorization-v1"
     }
   ]
 }

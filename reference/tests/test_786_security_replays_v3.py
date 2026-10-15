@@ -126,7 +126,15 @@ class SecurityReplayV3Execution(unittest.TestCase):
             evidence = Path(tmp) / "evidence"
             for replay_id in runner.REPLAYS:
                 runner.write_outputs(runner.run_replay(replay_id, allow_dirty=True), evidence, "test")
-            result = verifier["verify"](evidence, DECLARATION)
+            # the declaration also names the #809 generation (DSL/3); this family verifies its own
+            # three ids through a scratch declaration, exactly as the frozen -v2 family does
+            record = json.loads(DECLARATION.read_text(encoding="utf-8"))
+            record["acceptance_evidence_required"] = [
+                e for e in record["acceptance_evidence_required"] if e["kind"] != "security_replay"
+            ] + [{"kind": "security_replay", "ref": r} for r in runner.REPLAYS]
+            scratch = Path(tmp) / "declaration-v3.json"
+            scratch.write_text(json.dumps(record), encoding="utf-8")
+            result = verifier["verify"](evidence, scratch)
             self.assertEqual({r["replay"] for r in result["replays"]}, set(runner.REPLAYS))
             self.assertTrue(all(r["status"] == "VERIFIED" for r in result["replays"]), result)
             self.assertIn("NOT GRANTED", result["acceptance"])
@@ -136,7 +144,7 @@ class SecurityReplayV3Execution(unittest.TestCase):
             report["cases"][0]["checks"][0]["holds"] = True
             report["cases"][0]["checks"][0]["observed"] = "forged"
             target.write_text(json.dumps(report, indent=1, sort_keys=True) + "\n", encoding="utf-8")
-            again = verifier["verify"](evidence, DECLARATION)
+            again = verifier["verify"](evidence, scratch)
             self.assertEqual(next(r for r in again["replays"] if r["replay"] == runner.REPLAYS[0])["status"], "TAMPERED")
 
 
