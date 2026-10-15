@@ -6,7 +6,7 @@
   const STATUSES = Object.freeze({
     not_verified: 'No verified result',
     adapter_present: 'Integration exists; run unverified',
-    external_run: 'Externally executed; not officially published',
+    external_run: 'Upstream harness run · unofficial',
     official_published: 'Official result verified'
   });
   const REQUIRED = ['id', 'name', 'category', 'summary', 'coverage', 'next_step',

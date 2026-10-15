@@ -108,3 +108,7 @@ Only **complete, zero-error, exact-input+selection-verified** 50-question LongMe
 The **accepted** snapshot above is still intentionally frozen until separately reviewed and republished. A future source-bound, budget-free accepted publication workflow may be built after benchmark-governance approval; do not use automated acceptance just because an execution branch pushed rows.
 
 Offline contract testing: `node tools/test-live-evidence.cjs`. Use a browser with JavaScript and public GitHub access for integration QA. Under GitHub API public anonymous rate limits, the manual refresh can be throttled; it makes two unauthenticated branch-ref calls per cycle, not any Actions jobs.
+
+### External directory refresh after first real runs
+
+The October 15 local executions recorded in draft PR #818 have been reflected in `data/external-evaluations.json`: AMB `external_run` for the **77-case upstream native self-run**, and MemoryArena `external_run` for the **one-task bounded exploratory experiment**. Neither is an official listing. Both link to exact evidence at `1df28f84c236f5369b004465252610bd88ae07c9`; AML remains `not_verified` until officially assessed. The source directory's `official_result` fields remain null for all three programs. No accepted evidence table changed.

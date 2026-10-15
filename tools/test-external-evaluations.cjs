@@ -22,7 +22,8 @@ assert.deepEqual(new Set(fixture.programs.map(x => x.id)),
 assert.ok(fixture.programs.every(x => x.official_result === null));
 assert.ok(fixture.programs.every(x => x.status !== 'official_published'));
 assert.ok(fixture.programs.every(x => x.program_url.startsWith('https://')));
-assert.equal(fixture.programs.find(x => x.id === 'amb').status, 'adapter_present');
+assert.equal(fixture.programs.find(x => x.id === 'amb').status, 'external_run');
+assert.equal(fixture.programs.find(x => x.id === 'memoryarena').status, 'external_run');
 assert.equal(fixture.programs.find(x => x.id === 'aml').submission_deadline, '2026-10-31');
 assert.equal(fixture.programs.find(x => x.id === 'aml').submission_timezone, 'UTC+08:00');
 
