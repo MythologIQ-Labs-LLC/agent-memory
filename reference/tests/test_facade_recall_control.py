@@ -155,16 +155,32 @@ class FacadeShadowRecallControlTests(unittest.TestCase):
                 memory.remember(f"memory:pet:{index}", f"Note {index} about a household animal.")
 
         with mock.patch.object(representation_onnx, "OnnxSentenceEmbeddingProvider", _ConstantProvider):
+            # #819 C6: ranked_prefix keeps the unbounded route (floor 0.30, at most 16).
+            outputs = self._recall_both(seed, [("Which pet?", {"return_selection": "ranked_prefix"})],
+                                        semantic_retrieval="required")
+        off, shadow = outputs["off"][0], outputs["shadow"][0]
+        self.assertEqual(json.dumps(_retrieval(off), sort_keys=True), json.dumps(_retrieval(shadow), sort_keys=True))
+        report = shadow["recall_control"]
+        self.assertEqual(report["route_candidate_counts"][SEMANTIC_VECTOR_ROUTE], surface.SEMANTIC_CANDIDATE_LIMIT)
+        self.assertEqual(report["actual_stop"]["actual_stop_reason"], "max_candidates")
+        self.assertEqual(report["actual_stop"]["stop_class"], "resource")
+        self.assertEqual(report["actual_stop"]["budget_state"], {"host_caps": {SEMANTIC_VECTOR_ROUTE: surface.SEMANTIC_CANDIDATE_LIMIT}})
+
+    def test_bounded_semantic_route_is_not_reported_as_a_resource_stop(self):
+        # #819 C6: under relevance_sufficient the proposal policy bounds the route to K; the host cap
+        # stays the route's resource limit, so a policy-bounded route is not a resource stop.
+        def seed(memory):
+            for index in range(20):
+                memory.remember(f"memory:pet:{index}", f"Note {index} about a household animal.")
+
+        with mock.patch.object(representation_onnx, "OnnxSentenceEmbeddingProvider", _ConstantProvider):
             outputs = self._recall_both(seed, [("Which pet?", {})], semantic_retrieval="required")
         off, shadow = outputs["off"][0], outputs["shadow"][0]
         self.assertEqual(json.dumps(_retrieval(off), sort_keys=True), json.dumps(_retrieval(shadow), sort_keys=True))
         report = shadow["recall_control"]
-        # #819 C6: the semantic route's binding cap is its rank-bounded proposal policy's K for this query.
-        cap = vector_retrieval.RankBoundedProposalPolicy().limit("Which pet?")
-        self.assertEqual(report["route_candidate_counts"][SEMANTIC_VECTOR_ROUTE], cap)
-        self.assertEqual(report["actual_stop"]["actual_stop_reason"], "max_candidates")
-        self.assertEqual(report["actual_stop"]["stop_class"], "resource")
-        self.assertEqual(report["actual_stop"]["budget_state"], {"host_caps": {SEMANTIC_VECTOR_ROUTE: cap}})
+        k = vector_retrieval.RankBoundedProposalPolicy().limit("Which pet?")
+        self.assertLessEqual(report["route_candidate_counts"][SEMANTIC_VECTOR_ROUTE], k)
+        self.assertNotEqual(report["actual_stop"]["stop_class"], "resource")
 
     @unittest.skipUnless(os.environ.get("AGENT_MEMORY_REPRESENTATION_DIR") or os.environ.get("AGENT_MEMORY_REQUIRE_REPRESENTATION"),
                          "pinned representation model not provisioned")
@@ -173,12 +189,12 @@ class FacadeShadowRecallControlTests(unittest.TestCase):
             for index in range(24):
                 memory.remember(f"memory:dog:{index}", f"My dog number {index} loves long walks in the park.")
 
-        outputs = self._recall_both(seed, [("Tell me about my dog and its walks", {})], semantic_retrieval="required")
+        outputs = self._recall_both(seed, [("Tell me about my dog and its walks", {"return_selection": "ranked_prefix"})],
+                                    semantic_retrieval="required")
         report = outputs["shadow"][0]["recall_control"]
         self.assertEqual(json.dumps(_retrieval(outputs["off"][0]), sort_keys=True),
                          json.dumps(_retrieval(outputs["shadow"][0]), sort_keys=True))
-        cap = vector_retrieval.RankBoundedProposalPolicy().limit("Tell me about my dog and its walks")
-        self.assertEqual(report["route_candidate_counts"][SEMANTIC_VECTOR_ROUTE], cap)
+        self.assertEqual(report["route_candidate_counts"][SEMANTIC_VECTOR_ROUTE], surface.SEMANTIC_CANDIDATE_LIMIT)
         self.assertEqual(report["actual_stop"]["actual_stop_reason"], "max_candidates")
 
 

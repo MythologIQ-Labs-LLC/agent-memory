@@ -985,10 +985,7 @@ class AgentMemory:
         retriever = self._semantic.get("retriever")
         if retriever is not None and retriever.available_for(substrate):
             available.append(SEMANTIC_VECTOR_ROUTE)
-            # #819 C6: with a proposal policy the route's binding limit is the policy's K for this query.
-            policy = getattr(retriever, "proposal_policy", None)
-            host_caps[SEMANTIC_VECTOR_ROUTE] = (min(SEMANTIC_CANDIDATE_LIMIT, policy.limit(query)) if policy is not None
-                                                else SEMANTIC_CANDIDATE_LIMIT)
+            host_caps[SEMANTIC_VECTOR_ROUTE] = SEMANTIC_CANDIDATE_LIMIT
         if isinstance(substrate, EvidenceNeighborTemporalGraphPort):
             available.append(SHARED_EVIDENCE_ROUTE)
         counts: dict[str, int] = {}
@@ -1097,8 +1094,12 @@ class AgentMemory:
             },
             "minimum_similarity": None if retriever is None else retriever.minimum_similarity,
             "candidate_limit": None if retriever is None else SEMANTIC_CANDIDATE_LIMIT,
+            # #819 C6: under relevance_sufficient the policy replaces minimum_similarity and
+            # candidate_limit; under ranked_prefix those two apply unchanged.
             "proposal_policy": (None if retriever is None or getattr(retriever, "proposal_policy", None) is None
-                                else retriever.proposal_policy.to_dict()),
+                                else {**retriever.proposal_policy.to_dict(),
+                                      "applies_to_return_selection": [RELEVANCE_SUFFICIENT],
+                                      "replaces": ["minimum_similarity", "candidate_limit"]}),
             "ordering": "subordinate: after every relevance and temporal stage (ranking policy 3.2.0)",
             "store": None if store is None else store.posture(),
             "authority_effect": "none",

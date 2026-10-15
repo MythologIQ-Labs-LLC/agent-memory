@@ -1,0 +1,9 @@
+== wt-c4freeze (bc2be631)
+5 passed, 12 deselected in 1.06s
+== wt-c6-80c (80c797d0)
+FAILED tests/test_c6_semantic_discovery.py::HistoricalAndRankedPrefix::test_as_of_recall_does_not_spend_the_slot_on_a_record_outside_the_window
+FAILED tests/test_c6_semantic_discovery.py::HistoricalAndRankedPrefix::test_historical_recall_does_not_spend_the_slot_on_a_disputed_memory
+FAILED tests/test_c6_semantic_discovery.py::HistoricalAndRankedPrefix::test_historical_recall_does_not_spend_the_slot_on_a_forgotten_memory
+FAILED tests/test_c6_semantic_discovery.py::HistoricalAndRankedPrefix::test_historical_recall_does_not_spend_the_slot_on_an_error_corrected_original
+FAILED tests/test_c6_semantic_discovery.py::HistoricalAndRankedPrefix::test_ranked_prefix_keeps_the_unbounded_route
+5 failed, 12 deselected in 1.05s

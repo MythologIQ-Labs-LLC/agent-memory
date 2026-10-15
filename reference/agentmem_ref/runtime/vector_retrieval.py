@@ -114,7 +114,7 @@ class VectorCandidateHit:
 
 
 # #819 C6: rank-bounded proposal policy for the optional semantic discovery route, calibrated on
-# the self-authored development data (reports/benchmarks/memory-quality/819-c6/CALIBRATION.md).
+# the self-authored development data (reports/benchmarks/memory-quality/819-c6/CALIBRATION-AND-RESULTS.md).
 PROPOSAL_POLICY_ID = "rank-bounded-semantic-proposals"
 PROPOSAL_POLICY_VERSION = "1.0.0"
 PROPOSAL_MIN_BEST = 0.40
@@ -215,6 +215,7 @@ class NativeVectorCandidateRetriever:
         candidate_limit: int,
         eligible: Callable[[Fact], bool] | None = None,
         store: "DerivedVectorStoreProtocol | None" = None,
+        bounded: bool = True,
     ) -> list[VectorCandidateHit]:
         """Top cosine candidates among domain-eligible canonical facts.
 
@@ -223,6 +224,8 @@ class NativeVectorCandidateRetriever:
         explicit historical intent still sees invalidated facts. ``store`` supplies
         derived vectors keyed by fact identity and content, so a query embeds only the
         query text and facts not yet cached; without it every fact is embedded.
+        ``bounded=False`` ignores any ``proposal_policy`` (#819 C6): the absolute floor and
+        ``candidate_limit`` apply exactly as before the policy existed.
         """
         if candidate_limit < 0:
             raise ValueError("candidate_limit must be non-negative")
@@ -235,6 +238,7 @@ class NativeVectorCandidateRetriever:
         if self._norm(query_vector) == 0.0:
             return []
 
+        policy = self.proposal_policy if bounded else None
         hits: list[VectorCandidateHit] = []
         for fact in substrate.all_facts():
             if fact.group_id != group_id:
@@ -251,7 +255,7 @@ class NativeVectorCandidateRetriever:
                     self.representation.embed(fact.fact_text)
                 )
             similarity = self._cosine(query_vector, candidate_vector)
-            if self.proposal_policy is None and similarity <= self.minimum_similarity:
+            if policy is None and similarity <= self.minimum_similarity:
                 continue
             hits.append(
                 VectorCandidateHit(
@@ -266,8 +270,8 @@ class NativeVectorCandidateRetriever:
             )
 
         hits.sort(key=lambda item: (-item.similarity, item.candidate_ref))
-        if self.proposal_policy is not None:
-            hits = self.proposal_policy.propose(query, hits)
+        if policy is not None:
+            hits = policy.propose(query, hits)
         return hits[:candidate_limit]
 
     def _validated_vector(self, value: tuple[float, ...]) -> tuple[float, ...]:

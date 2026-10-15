@@ -222,6 +222,76 @@ class Governance(_Store):
         self.assertEqual(self.returned(memory, query), ["memory:a"])
 
 
+
+class HistoricalAndRankedPrefix(_Store):
+    """Review finding 1 (blocking) and finding 4 against 80c797d0; each fails there and passes after the fix.
+
+    In explicit historical and as-of recall the bounded pool must exclude what historical admission
+    refuses, or a refused memory takes the single slot and the answer is never proposed. Under
+    ``ranked_prefix`` the route keeps C4's unbounded proposals.
+    """
+
+    def ids(self, result) -> list[str]:
+        return [self.refs.get(uuid, uuid) for uuid in result["returned"]]
+
+    def test_historical_recall_does_not_spend_the_slot_on_a_forgotten_memory(self):
+        query = "Which animal is scared of storms?"
+        texts = {**FACTS, "memory:old": "Our old beagle used to hide from thunder."}
+        self.geometry(query, {"memory:old": 0.90, "memory:a": 0.70}, texts)
+        memory = self.open()
+        self.seed(memory, texts)
+        self.assertTrue(memory.forget("memory:old", evidence=_evidence())["committed"])
+        result = memory.recall(query, budget=10, temporal_intent={"mode": "historical"})
+        self.assertEqual(self.ids(result), ["memory:a"])
+        self.assertNotIn("used to hide", json.dumps(result))
+
+    def test_historical_recall_does_not_spend_the_slot_on_an_error_corrected_original(self):
+        query = "Where is my workplace?"
+        original, corrected = "I am employed by Contoso Retail.", "Northwind Logistics took me on after Contoso Retail closed."
+        _TableRepresentation.TABLE[query] = {original: 0.90, corrected: 0.70}
+        memory = self.open()
+        self.seed(memory, {"memory:job": original})
+        outcome = memory.correct("memory:job", corrected, evidence=_evidence())
+        self.assertTrue(outcome["committed"], outcome)
+        result = memory.recall(query, budget=10, temporal_intent={"mode": "historical"})
+        self.assertEqual(result["returned"], [outcome["fact_uuid"]])
+
+    def test_as_of_recall_does_not_spend_the_slot_on_a_record_outside_the_window(self):
+        query = "Which city is home?"
+        old, new = "My flat was in Leeds.", "We moved into a house in York."
+        _TableRepresentation.TABLE[query] = {old: 0.90, new: 0.70}
+        memory = self.open()
+        written = memory.remember("memory:home", old, observed_at="2022-01-01T00:00:00Z")
+        self.assertTrue(written["committed"], written)
+        outcome = memory.correct("memory:home", new, evidence=_evidence(), replacement_kind="state_change",
+                                 valid_from="2024-01-01T00:00:00Z")
+        self.assertTrue(outcome["committed"], outcome)
+        result = memory.recall(query, budget=10, temporal_intent={
+            "mode": "as_of", "reference_time": "2025-06-01T00:00:00Z", "target_start": "2025-06-01T00:00:00Z"})
+        self.assertEqual(result["returned"], [outcome["fact_uuid"]])
+        earlier = memory.recall(query, budget=10, temporal_intent={
+            "mode": "as_of", "reference_time": "2023-06-01T00:00:00Z", "target_start": "2023-06-01T00:00:00Z"})
+        self.assertIn(written["fact_uuid"], earlier["returned"])  # inside its window it stays reachable
+
+    def test_historical_recall_does_not_spend_the_slot_on_a_disputed_memory(self):
+        query = "Which animal is scared of storms?"
+        texts = {**FACTS, "memory:bad": "The hamster panics whenever it thunders."}
+        self.geometry(query, {"memory:bad": 0.90, "memory:a": 0.70}, texts)
+        memory = self.open()
+        self.seed(memory, texts)
+        self.assertTrue(memory.dispute("memory:bad", evidence=_evidence())["committed"])
+        result = memory.recall(query, budget=10, temporal_intent={"mode": "historical"})
+        self.assertEqual(self.ids(result), ["memory:a"])
+
+    def test_ranked_prefix_keeps_the_unbounded_route(self):
+        query = "Who looks after the garden?"
+        texts = {f"memory:h{n}": f"Helper {n} visits on day {n}." for n in range(5)}
+        self.geometry(query, {ref: 0.70 - 0.01 * n for n, ref in enumerate(texts)}, texts)
+        memory = self.open()
+        self.seed(memory, texts)
+        result = memory.recall(query, budget=10, return_selection="ranked_prefix")
+        self.assertEqual(self.ids(result), list(texts))  # C4: every proposal above 0.30, up to 16
+
 class ProviderUnavailable(unittest.TestCase):
     def test_auto_mode_without_a_model_keeps_lexical_recall(self):
         with tempfile.TemporaryDirectory() as folder, mock.patch.object(
