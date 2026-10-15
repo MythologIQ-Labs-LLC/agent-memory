@@ -138,6 +138,12 @@ class NativeVectorCandidateRetriever:
         if minimum_similarity < -1.0 or minimum_similarity > 1.0:
             raise ValueError("minimum_similarity must be between -1 and 1")
         self.minimum_similarity = float(minimum_similarity)
+        # The last query's validated vector (#819 C5): selection scores the same query the route
+        # just searched, so it is embedded once per recall. Derived data, never authority.
+        self._last_query: tuple[str, tuple[float, ...]] | None = None
+        # Fact vectors the last search validated, keyed by (fact id, exact text), so selection
+        # does not re-read and re-verify the same derived rows.
+        self._last_vectors: dict[tuple[str, str], tuple[float, ...]] = {}
         # Force validation even for duck-typed providers returning a subclass or
         # proxy object.  Accessing all fields here also makes missing metadata a
         # startup failure rather than a query-time ambiguity.
@@ -179,11 +185,12 @@ class NativeVectorCandidateRetriever:
         if not self.available_for(substrate):
             raise ValueError("substrate does not support canonical fact enumeration")
 
-        query_vector = self._validated_vector(self.representation.embed(query))
+        query_vector = self._query_vector(query)
         if self._norm(query_vector) == 0.0:
             return []
 
         hits: list[VectorCandidateHit] = []
+        self._last_vectors = {}
         for fact in substrate.all_facts():
             if fact.group_id != group_id:
                 continue
@@ -198,6 +205,7 @@ class NativeVectorCandidateRetriever:
                 candidate_vector = self._validated_vector(
                     self.representation.embed(fact.fact_text)
                 )
+            self._last_vectors[(fact.uuid, fact.fact_text)] = candidate_vector
             similarity = self._cosine(query_vector, candidate_vector)
             if similarity <= self.minimum_similarity:
                 continue
@@ -229,16 +237,25 @@ class NativeVectorCandidateRetriever:
         nothing. Vectors come from the derived store when one is configured (derived data, never
         authority), so only the query and facts not yet cached are embedded.
         """
-        query_vector = self._validated_vector(self.representation.embed(query))
+        query_vector = self._query_vector(query)
         if self._norm(query_vector) == 0.0:
             return {ref: 0.0 for ref in texts}
         store = store if store is not None else self.store
         out: dict[str, float] = {}
         for ref, text in texts.items():
-            vector = (store.vector_for(ref, text, self.representation.embed) if store is not None
-                      else self.representation.embed(text))
-            out[ref] = self._cosine(query_vector, self._validated_vector(vector))
+            vector = self._last_vectors.get((ref, text))
+            if vector is None:
+                vector = self._validated_vector(store.vector_for(ref, text, self.representation.embed)
+                                                if store is not None else self.representation.embed(text))
+            out[ref] = self._cosine(query_vector, vector)
         return out
+
+    def _query_vector(self, query: str) -> tuple[float, ...]:
+        if self._last_query is not None and self._last_query[0] == query:
+            return self._last_query[1]
+        vector = self._validated_vector(self.representation.embed(query))
+        self._last_query = (query, vector)
+        return vector
 
     def _validated_vector(self, value: tuple[float, ...]) -> tuple[float, ...]:
         try:
