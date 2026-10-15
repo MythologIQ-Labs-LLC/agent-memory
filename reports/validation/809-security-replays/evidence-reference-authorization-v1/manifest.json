@@ -9,7 +9,7 @@
  "replay_id": "evidence-reference-authorization-v1",
  "report": {
   "path": "report.json",
-  "sha256": "4c756a947f24b995a21f80aeea067d3ae80c94ef3c69114352bcaabf226389ee"
+  "sha256": "68dae241dab2071d17b055e61499d0c4c76f1a2a493714ea15f86e4dc5c59433"
  },
  "runner": {
   "path": "reference/run_786_security_replays_dsl3.py",
@@ -26,8 +26,8 @@
   "sha256": "21db05148c369815fa154bfa83db0b3b35f6c4712596ec0f137002a6611d8269",
   "version": "786-security-replay-runner/1"
  },
- "runtime_tree": "6f4205e029d3a42a36b709991efe6ead898a687c",
+ "runtime_tree": "2a00f31f7ddd9e5677e5c968523def77d186dec5",
  "schema": "786-security-replay-manifest/3",
- "source_commit": "c70fe31572e624d0e4f031ab8334b589257cf529",
+ "source_commit": "03ddaef9c0c497466ae52603a69d51078df0b444",
  "verdict": "PASS"
 }

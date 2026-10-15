@@ -87,6 +87,36 @@ stays privileged.
 9. The v7 replay inventory stays BLOCKED by design; the four freeze guards stay red by design until the register points at this declaration.
 10. **Blind holdouts** were measured at `ee427d80`, not `c70fe315`; the protected tree is identical (`6f4205e0`) and the evaluator records both commits as clean.
 
+## Final head after the owner's checkpoint (`03ddaef9`, protected tree `2a00f31f`)
+
+The owner's checkpoint on PR #815 (review 5527842455) required four items before a new acceptance review. All four are on this branch; the protected tree changed again (code-review fixes `6bdff75b`; legacy upgrade `bd8a67e3`), so the ladder was re-run at the final head.
+
+| item | where | state |
+|---|---|---|
+| independent adversarial code review of the altered production paths | `independent-code-review-0808cb61.md` (verbatim) | sound for new writes as ruled; SF-1 (checkpoint-migration guard), SF-2, SF-3 fixed at `6bdff75b`; L2/L3 residuals and the Graphiti exclusion recorded in docs/786 and the legacy decision |
+| preregistered legacy-upgrade threat and migration decision | `../809-legacy-upgrade/` (decision, three byte-frozen v7-origin stores, three fail-first baselines, two independent review rounds with YES at `ad52cc9b` and `4b18493f`, first execution with two recorded harness findings, second execution 10 passed / 26 subtests) | IMPLEMENTED at `bd8a67e3`: `legacy_upgrade_status()` / `upgrade_canonical_derivation()`; cross-scope and forward-reference stores read `legacy_qualified` with the oracle closed; the shared-membership store reads `legacy_unqualified` with its three edges quarantined (kept bound, reported) |
+| ADR-030 semantic-compatibility assessment | `adr-030-semantic-compatibility-assessment.md` | written; recommends a declared derivation-semantics identity and a minor bump to `1.9.0`, not a major boundary; the owner decides; contract stays `1.8.0` provisional |
+| runtime sharp edge tracked separately | issue #816 | open, not conflated |
+
+| identity | value |
+|---|---|
+| final head | `03ddaef9c0c497466ae52603a69d51078df0b444` (clean tree for every replay and the Gauntlet probe) |
+| protected tree `reference/agentmem_ref` | `2a00f31f7ddd9e5677e5c968523def77d186dec5`; `pyproject.toml` `59e8f97c…` unchanged |
+| declaration | regenerated with the sanctioned tool: 17 declared blobs (`checkpoint_migration.py`, `state/substrate.py`, `state/sqlite_substrate.py` new since `c70fe315`; `adapter.py`, `api/surface.py`, `recall_control.py` moved on); `--register …DEMO.json --candidate HEAD` → `TRANSITION`; real register untouched |
+
+| evidence at `03ddaef9` | outcome |
+|---|---|
+| four security replay contracts (`reports/validation/809-security-replays/`, the `c70fe315` execution preserved byte-for-byte under `809-security-replays-c70fe315/`) | DSL/3 `evidence-reference-authorization-v1` PASS 13/13; `-v3` through DSL/2 PASS 13/13, 10/10, 8/8; verifier `evidence_verified: true`, VERIFIED / PASS / re-executed ×4 on the clean tree |
+| five v7 replay contracts (`final-03ddaef9/replays/`) | VERIFIED / PASS / re-executed ×5; inventory BLOCKED by design |
+| preregistered unit modules | `test_809_evidence_reference_authorization.py` (executed as committed at `8272b38e`) and `test_809_legacy_upgrade.py` (executed as committed at `4b18493f`) pass inside the full suite |
+| public Gauntlet probe (`final-03ddaef9/gauntlet/`) | `status: complete`, `exact_top1 1.0`, `correct_top1 3/3`, `authority_effect none`, frozen revision `03ddaef9` |
+| write latency by citation case (`final-03ddaef9/timing/`) | medians deleted 13282 µs, live 13174 µs, unknown 13262 µs, none 13239 µs (ratios 1.002 / 0.993 / 1.000 / 0.998) |
+| conformance (`final-03ddaef9/conformance-summary.json`) | `derived_state_hard_gate_passed: true`; known failures = the four freeze guards |
+| full reference suite (`final-03ddaef9/full-suite-summary.log`) | 4 failed (the by-design freeze guards), 2979 passed, 35 skipped, 1 xfailed, 2079 subtests (5m02s) |
+| blind theatre and vineyard holdouts (`final-03ddaef9/blind-holdouts/summary.json`) | rate-identical to the pre-repair head on both corpora and both modes (theatre top1_critical 0.4286 / 0.7619, vineyard 0.45 / 0.90); P0 prohibited and stale exposures 0 on every run; both runtimes clean |
+
+Statuses at `03ddaef9`, kept distinct: IMPLEMENTED (repair `b932bd2f`, code-review fixes `6bdff75b`, legacy upgrade `bd8a67e3`); TESTED (locally, this table); INDEPENDENTLY REVIEWED (expectations, replay generation, production diff at `0808cb61`, legacy decision); DECLARED: no (`TRANSITION` under the demo register only); QUALIFIED: no; MERGED: no. The owner's decisions still owed: the legacy-upgrade decision's quarantine reading (a) versus (c), the contract version (ADR-030 assessment), the register pointer. Security acceptance is not claimed.
+
 ## Statuses
 
 IMPLEMENTED (`b932bd2f`); TESTED (locally, at `c70fe315`/`631e9b71`); INDEPENDENTLY REVIEWED

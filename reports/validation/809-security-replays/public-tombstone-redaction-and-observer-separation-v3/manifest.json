@@ -9,7 +9,7 @@
  "replay_id": "public-tombstone-redaction-and-observer-separation-v3",
  "report": {
   "path": "report.json",
-  "sha256": "8c38eb0b272200313c8124432c692039ea908562c5a8eb8496ef46a53a8b8204"
+  "sha256": "d4318b97e32e0ea14112f9ae0916a0e24faf993efe560018c9025faaac89ff20"
  },
  "runner": {
   "path": "reference/run_786_security_replays_dsl2.py",
@@ -21,8 +21,8 @@
   "sha256": "21db05148c369815fa154bfa83db0b3b35f6c4712596ec0f137002a6611d8269",
   "version": "786-security-replay-runner/1"
  },
- "runtime_tree": "6f4205e029d3a42a36b709991efe6ead898a687c",
+ "runtime_tree": "2a00f31f7ddd9e5677e5c968523def77d186dec5",
  "schema": "786-security-replay-manifest/2",
- "source_commit": "c70fe31572e624d0e4f031ab8334b589257cf529",
+ "source_commit": "03ddaef9c0c497466ae52603a69d51078df0b444",
  "verdict": "PASS"
 }
