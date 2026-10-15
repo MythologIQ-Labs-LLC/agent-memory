@@ -208,6 +208,10 @@ def apply_return_selection(
         "abstained": bool(summary["abstained"]),
         "informative_query_term_count": int(summary["informative_query_term_count"]),
         "relative_floor": float(summary["relative_floor"]),
+        **({"set_floor": float(summary["set_floor"])} if "set_floor" in summary else {}),
+        **({"frame_fallback": bool(summary["frame_fallback"])} if "frame_fallback" in summary else {}),
+        **({"information_requirement": dict(summary["information_requirement"])}
+           if "information_requirement" in summary else {}),
         "basis": RETURN_SELECTION_BASIS,
         "authority_effect": "none",
     }

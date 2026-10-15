@@ -355,7 +355,8 @@
             "policy_version": {
               "enum": [
                 "1.0.0",
-                "1.1.0"
+                "1.1.0",
+                "2.0.0"
               ]
             },
             "requested_k": {
@@ -401,6 +402,61 @@
             },
             "authority_effect": {
               "const": "none"
+            },
+            "set_floor": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 1
+            },
+            "frame_fallback": {
+              "type": "boolean"
+            },
+            "information_requirement": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "interpreter_version",
+                "shape",
+                "cues",
+                "topical_term_count",
+                "frame_term_count",
+                "entity_mention_count",
+                "authority_effect"
+              ],
+              "description": "Selection policy 2.0.0 (#819 C3): the deterministic query interpretation that shaped the evidence set. Evidence only.",
+              "properties": {
+                "interpreter_version": {
+                  "type": "string"
+                },
+                "shape": {
+                  "enum": [
+                    "single",
+                    "aggregate",
+                    "relational"
+                  ]
+                },
+                "cues": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "topical_term_count": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "frame_term_count": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "entity_mention_count": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "authority_effect": {
+                  "const": "none"
+                }
+              }
             }
           }
         }

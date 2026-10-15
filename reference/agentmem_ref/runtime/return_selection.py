@@ -27,6 +27,13 @@ This stage asks that question after ranking and before the budget:
   push the top-ranked fact out).
 * If no candidate is sufficient the recall **abstains**: nothing is returned.
 
+Policy 2.0.0 (#819 C3) builds an **evidence set** instead of filtering candidates one by one.
+C2 (1.1.0) lost multi-evidence questions: every fact faced one floor relative to the best, and
+question-frame words ("how many", "total", "months") counted as topical evidence. 2.0.0 reads
+the query first (``query_interpretation``): relevance uses topical terms only, an aggregate or
+relational question admits set evidence down to half the floor, and the fact most about each
+named entity joins the set. Ranking, admission and governance are unchanged.
+
 The stage reads only the admitted, ranked list and its evidence. It never changes candidates,
 admission, refusals, ``admitted`` or the ranked order, and it is never authority: a withheld
 fact is still admitted and still visible to a caller that reads ``admitted`` or asks for the
@@ -40,16 +47,20 @@ import re
 from typing import Any, Callable, Iterable, Mapping, Sequence
 
 from .ranking_policy import _candidate_term_masks, admitted_set_bm25, relevance_tokens
+from .query_interpretation import QueryInterpretation, interpret
 from .temporal_intent import TemporalIntent
 
 SELECTION_POLICY_ID = "relevance-sufficient-return-selection"
-SELECTION_POLICY_VERSION = "1.1.0"
+SELECTION_POLICY_VERSION = "2.0.0"
 SELECTION_BASIS = "post_ranking_relevance_sufficiency_then_ranked_prefix"
 RELATIVE_FLOOR = 0.5
+# 2.0.0: a query that needs several pieces of evidence (aggregate or relational) admits set
+# evidence down to half the single-answer floor.
+SET_FLOOR_FACTOR = 0.5
 RELEVANCE_SUFFICIENT = "relevance_sufficient"
 RANKED_PREFIX = "ranked_prefix"
 RETURN_SELECTIONS = (RELEVANCE_SUFFICIENT, RANKED_PREFIX)
-_SUFFICIENT = frozenset({"exact_identity", "non_lexical_route_evidence", "content_relevance"})
+_SUFFICIENT = frozenset({"exact_identity", "non_lexical_route_evidence", "content_relevance", "set_evidence"})
 
 # Closed-class English function words: articles and determiners, pronouns, auxiliaries and
 # modals, prepositions, conjunctions, wh-words, negation and discourse particles. Grammar only;
@@ -129,6 +140,18 @@ def informative_terms(query: str) -> tuple[str, ...]:
     return tuple(sorted(terms))
 
 
+def interpret_query(query: str) -> QueryInterpretation:
+    """Topic, frame, entity mentions and information requirement of ``query`` (2.0.0)."""
+
+    return interpret(query, function_words=FUNCTION_WORDS, normalize=normalize_contractions,
+                     word_re=_WORD, sentence_start=_SENTENCE_START)
+
+
+def _mention_matched(mention: tuple[str, ...], tokens: frozenset[str]) -> bool:
+    hits = sum(1 for term in mention if term in tokens)
+    return hits == len(mention) if len(mention) <= 2 else hits * 2 >= len(mention)
+
+
 def select_relevance_sufficient(
     ranked: Sequence[str],
     route_ids_by_candidate: Mapping[str, Iterable[str]],
@@ -141,11 +164,22 @@ def select_relevance_sufficient(
     subordinate_routes: Iterable[str] = (),
     relative_floor: float = RELATIVE_FLOOR,
 ) -> tuple[list[str], dict[str, dict[str, Any]], dict[str, Any]]:
-    """Return (sufficient refs in ranked order, per-candidate records, summary).
+    """Return (the evidence set in ranked order, per-candidate records, summary).
 
-    ``ranked`` is the ranked admitted list; ``route_ids_by_candidate`` names the routes that
-    surfaced each candidate. Statistics cover the candidates some primary route found, exactly
-    the ranking stage's lexical scope (#669), so subordinate candidates cannot move a score.
+    Evidence-set construction (2.0.0) over the ranked admitted list:
+
+    1. **Primary evidence**: exact-identity hits, facts a non-lexical route surfaced, and
+       lexical facts whose *topical* relevance (frame words excluded) is at least
+       ``relative_floor`` of the best.
+    2. **Set evidence**: when the query needs several pieces of evidence (aggregate or
+       relational), lexical facts down to ``SET_FLOOR_FACTOR`` times that floor.
+    3. **Ranking consistency**: a fact with topical evidence ranked above a selected fact is
+       selected too.
+    4. **Entity coverage**: each entity the query names that no selected fact covers is
+       covered by its highest-ranked candidate with topical evidence, if any.
+
+    Nothing else is added; if nothing qualifies the recall abstains. Statistics cover the
+    candidates some primary route found (#669), with the ranking stage's #583 masks.
     """
 
     if not 0.0 < relative_floor <= 1.0:
@@ -155,13 +189,28 @@ def select_relevance_sufficient(
     routes = {ref: frozenset(route_ids_by_candidate.get(ref, ())) for ref in ranked}
     facts = {ref: fact_lookup(ref) for ref in ranked}
     lexical_scope = {ref: fact for ref, fact in facts.items() if routes[ref] - subordinate}
-    terms = informative_terms(query)
+    reading = interpret_query(query)
     relevance: dict[str, float] = {}
-    if terms and lexical_scope:
+    tokens: dict[str, frozenset[str]] = {}
+    texts: dict[str, str] = {}
+    masks: dict[str, tuple[str, ...]] = {}
+    evidence_terms = reading.topical_terms
+    frame_fallback = False
+    if lexical_scope and (reading.topical_terms or reading.frame_terms):
         texts = {ref: normalize_contractions(getattr(fact, "fact_text", "") or "") for ref, fact in lexical_scope.items()}
         masks = _candidate_term_masks(query, intent, lexical_scope)
-        relevance = admitted_set_bm25(" ".join(terms), texts, masks)
+        tokens = {ref: frozenset(relevance_tokens(text)) - frozenset(masks.get(ref, ())) for ref, text in texts.items()}
+        if reading.topical_terms:
+            # A query with a topic is answered only by evidence about that topic: when nothing
+            # topical matches, the recall abstains rather than fall back to frame words.
+            relevance = admitted_set_bm25(" ".join(reading.topical_terms), texts, masks)
+        else:
+            # A query that is all frame ("what did I do last week?") has no other topic.
+            evidence_terms = reading.frame_terms
+            frame_fallback = True
+            relevance = admitted_set_bm25(" ".join(evidence_terms), texts, masks)
     best = max(relevance.values(), default=0.0)
+    set_floor = relative_floor * SET_FLOOR_FACTOR if reading.needs_several else relative_floor
 
     records: dict[str, dict[str, Any]] = {}
     for ref in ranked:
@@ -175,6 +224,8 @@ def select_relevance_sufficient(
             basis = "no_informative_term_match"
         elif relative is not None and relative >= relative_floor:
             basis = "content_relevance"
+        elif relative is not None and relative >= set_floor:
+            basis = "set_evidence"
         else:
             basis = "below_relative_floor"
         records[ref] = {
@@ -189,10 +240,28 @@ def select_relevance_sufficient(
     for ref in ranked[:lowest]:
         if records[ref]["basis"] == "below_relative_floor":
             records[ref].update(sufficient=True, basis="ranked_above_sufficient")
+    # Entity coverage: every named entity with topical evidence is represented, by the fact
+    # most about that entity (the mention's own relevance), not merely the highest-ranked one
+    # that mentions it.
+    # The fact most about each named entity is in the evidence set (a passing mention elsewhere
+    # does not stand in for it); ties go to the higher-ranked fact.
+    for mention in reading.entity_mentions:
+        about = admitted_set_bm25(" ".join(mention), texts, masks) if lexical_scope else {}
+        candidates = [ref for ref in ranked
+                      if records[ref]["content_relevance"] > 0.0 and about.get(ref, 0.0) > 0.0
+                      and _mention_matched(mention, tokens.get(ref, frozenset()))]
+        if not candidates:
+            continue
+        chosen = max(candidates, key=lambda ref: (about[ref], -ranked.index(ref)))
+        if not records[chosen]["sufficient"]:
+            records[chosen].update(sufficient=True, basis="entity_coverage")
     selected = [ref for ref in ranked if records[ref]["sufficient"]]
     summary = {
-        "informative_query_term_count": len(terms),
+        "informative_query_term_count": len(evidence_terms),
         "relative_floor": relative_floor,
+        "set_floor": set_floor,
+        "frame_fallback": frame_fallback,
+        "information_requirement": reading.to_dict(),
         "withheld_insufficient_count": len(ranked) - len(selected),
         "abstained": bool(ranked) and not selected,
     }
@@ -203,12 +272,14 @@ __all__ = [
     "FUNCTION_WORDS",
     "RANKED_PREFIX",
     "RELATIVE_FLOOR",
+    "SET_FLOOR_FACTOR",
     "RELEVANCE_SUFFICIENT",
     "RETURN_SELECTIONS",
     "SELECTION_BASIS",
     "SELECTION_POLICY_ID",
     "SELECTION_POLICY_VERSION",
     "informative_terms",
+    "interpret_query",
     "normalize_contractions",
     "select_relevance_sufficient",
 ]
