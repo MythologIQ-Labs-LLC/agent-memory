@@ -29,7 +29,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 RECORDED_ENV = ("HF_HOME", "HF_HUB_OFFLINE", "TRANSFORMERS_OFFLINE", "JEV_MEM_SOURCE_ROOT",
-                "PYTHONHASHSEED", "VIRTUAL_ENV", "OMP_NUM_THREADS")
+                "PYTHONHASHSEED", "VIRTUAL_ENV", "OMP_NUM_THREADS", "HOME")
 SECRETS = ("OPENAI_API_KEY", "ANTHROPIC_API_KEY", "TYPESAFE_API_KEY", "HF_TOKEN", "GEMINI_API_KEY",
            "GOOGLE_API_KEY", "GROQ_API_KEY", "AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY",
            "GH_TOKEN", "GITHUB_TOKEN", "LLM_API_KEY")
@@ -57,7 +57,8 @@ def main(argv: list[str] | None = None) -> int:
     preexec = None
     if args.user:
         record = pwd.getpwnam(args.user)
-        env.update(HOME=record.pw_dir, USER=record.pw_name, LOGNAME=record.pw_name)
+        env.update(USER=record.pw_name, LOGNAME=record.pw_name)
+        env.setdefault("HOME", record.pw_dir)  # an explicit --env HOME=... wins (e.g. a separate pg0 home)
 
         def preexec() -> None:  # drop to the unprivileged user before exec
             os.setgroups([])

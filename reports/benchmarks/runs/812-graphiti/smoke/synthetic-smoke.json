@@ -1,0 +1,331 @@
+{
+  "configuration": {
+    "provider_key": "graphiti-local",
+    "bridge_version": "0.1.0-candidate",
+    "package": "graphiti-core[falkordblite]==0.31.1",
+    "tag": "v0.31.1",
+    "graph_store": "embedded FalkorDB Lite (falkordblite==0.10.0), fresh file per run",
+    "llm": {
+      "client": "OpenAIGenericClient (structured_output_mode=json_schema, Graphiti default)",
+      "model": "qwen2.5-3b-instruct-q4_k_m",
+      "small_model": "qwen2.5-3b-instruct-q4_k_m",
+      "temperature": 0.0,
+      "temperature_note": "Graphiti default is 1.0; 0 declared before execution for reproducibility",
+      "base_url": "http://127.0.0.1:8089/v1"
+    },
+    "embedder": {
+      "client": "OpenAIEmbedder",
+      "model": "nomic-embed-text",
+      "embedding_dim": 768,
+      "base_url": "http://127.0.0.1:8089/v1"
+    },
+    "cross_encoder": "OpenAIRerankerClient(config=<same local LLM config>) (constructed; unused by the default search recipe)",
+    "add": "add_episode(name=uuid5(doc_id), episode_body=document.content, source=EpisodeType.text, source_description='user memory', reference_time=document.timestamp, group_id=user)",
+    "search": "search(query, group_ids=[user], num_results=k) (Graphiti default hybrid edge search, RRF)",
+    "identity_mapping": "edge.episodes -> episode uuid -> AMB document id; one document per supporting episode; cut to k",
+    "concurrency": {
+      "amb": 1,
+      "SEMAPHORE_LIMIT": "1"
+    },
+    "telemetry": "GRAPHITI_TELEMETRY_ENABLED=false",
+    "not_supplied_to_graphiti": [
+      "belief ids",
+      "scope tags",
+      "document.context",
+      "gold",
+      "query category"
+    ]
+  },
+  "checks": {
+    "every_document_ingested": true,
+    "edges_extracted": true,
+    "alice_work_returns_alice_docs": true,
+    "no_cross_user_leak_a": true,
+    "no_cross_user_leak_b": true,
+    "correction_invalidated_old_fact": false,
+    "persistent_after_restart": true
+  },
+  "ingest": [
+    {
+      "doc_id": "s1",
+      "episode_uuid": "679be935-9aa8-4d89-a0ef-f1e1653697eb",
+      "nodes": 3,
+      "edges": 1,
+      "invalidated_edges": 0,
+      "seconds": 389.466
+    },
+    {
+      "doc_id": "s2",
+      "episode_uuid": "dbfdcd5d-cab9-49e7-9304-a3f628e25775",
+      "nodes": 2,
+      "edges": 1,
+      "invalidated_edges": 0,
+      "seconds": 409.474
+    },
+    {
+      "doc_id": "s3",
+      "episode_uuid": "a4f62da6-d5e1-478b-8613-3e9f68a0eab4",
+      "nodes": 3,
+      "edges": 2,
+      "invalidated_edges": 0,
+      "seconds": 516.84
+    },
+    {
+      "doc_id": "s4",
+      "episode_uuid": "0e3bd9eb-9dce-4009-823c-ad7a282cc5aa",
+      "nodes": 2,
+      "edges": 1,
+      "invalidated_edges": 0,
+      "seconds": 293.781
+    }
+  ],
+  "searches": {
+    "alice_work": {
+      "doc_ids": [
+        "s1",
+        "s3",
+        "s3",
+        "s2"
+      ],
+      "facts": [
+        "Alice works as an engineer at Acme Corp in Boston.",
+        "Alice works as an engineer at Acme Corp in Boston.",
+        "Alice left Acme Corp and now works at Globex in Denver.",
+        "Alice uses Vim as her favourite editor."
+      ],
+      "raw": {
+        "provider": "graphiti-local",
+        "bridge_version": "0.1.0-candidate",
+        "amb_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+        "graphiti_version": "0.31.1",
+        "num_results": 10,
+        "search_seconds": 0.1326,
+        "edges": [
+          {
+            "uuid": "5b45653a-6b87-4735-a04d-23e214d895e1",
+            "fact": "Alice works as an engineer at Acme Corp in Boston.",
+            "episodes": [
+              "679be935-9aa8-4d89-a0ef-f1e1653697eb",
+              "a4f62da6-d5e1-478b-8613-3e9f68a0eab4"
+            ],
+            "valid_at": "2025-01-10 09:00:00+00:00",
+            "invalid_at": null,
+            "expired_at": null
+          },
+          {
+            "uuid": "1c74c39f-3d9c-4ee7-ab01-cea3c36bd207",
+            "fact": "Alice left Acme Corp and now works at Globex in Denver.",
+            "episodes": [
+              "a4f62da6-d5e1-478b-8613-3e9f68a0eab4"
+            ],
+            "valid_at": "2025-06-01 09:00:00+00:00",
+            "invalid_at": null,
+            "expired_at": null
+          },
+          {
+            "uuid": "d76adde3-e34a-491e-a9a0-4f472df143f6",
+            "fact": "Alice uses Vim as her favourite editor.",
+            "episodes": [
+              "dbfdcd5d-cab9-49e7-9304-a3f628e25775"
+            ],
+            "valid_at": "2025-02-01 09:00:00+00:00",
+            "invalid_at": null,
+            "expired_at": null
+          }
+        ],
+        "unmapped_edge_count": 0,
+        "returned_document_count": 4
+      }
+    },
+    "alice_editor": {
+      "doc_ids": [
+        "s2",
+        "s1",
+        "s3",
+        "s3"
+      ],
+      "facts": [
+        "Alice uses Vim as her favourite editor.",
+        "Alice works as an engineer at Acme Corp in Boston.",
+        "Alice works as an engineer at Acme Corp in Boston.",
+        "Alice left Acme Corp and now works at Globex in Denver."
+      ],
+      "raw": {
+        "provider": "graphiti-local",
+        "bridge_version": "0.1.0-candidate",
+        "amb_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+        "graphiti_version": "0.31.1",
+        "num_results": 10,
+        "search_seconds": 0.0889,
+        "edges": [
+          {
+            "uuid": "d76adde3-e34a-491e-a9a0-4f472df143f6",
+            "fact": "Alice uses Vim as her favourite editor.",
+            "episodes": [
+              "dbfdcd5d-cab9-49e7-9304-a3f628e25775"
+            ],
+            "valid_at": "2025-02-01 09:00:00+00:00",
+            "invalid_at": null,
+            "expired_at": null
+          },
+          {
+            "uuid": "5b45653a-6b87-4735-a04d-23e214d895e1",
+            "fact": "Alice works as an engineer at Acme Corp in Boston.",
+            "episodes": [
+              "679be935-9aa8-4d89-a0ef-f1e1653697eb",
+              "a4f62da6-d5e1-478b-8613-3e9f68a0eab4"
+            ],
+            "valid_at": "2025-01-10 09:00:00+00:00",
+            "invalid_at": null,
+            "expired_at": null
+          },
+          {
+            "uuid": "1c74c39f-3d9c-4ee7-ab01-cea3c36bd207",
+            "fact": "Alice left Acme Corp and now works at Globex in Denver.",
+            "episodes": [
+              "a4f62da6-d5e1-478b-8613-3e9f68a0eab4"
+            ],
+            "valid_at": "2025-06-01 09:00:00+00:00",
+            "invalid_at": null,
+            "expired_at": null
+          }
+        ],
+        "unmapped_edge_count": 0,
+        "returned_document_count": 4
+      }
+    },
+    "bob_from_a": {
+      "doc_ids": [
+        "s1",
+        "s3",
+        "s3",
+        "s2"
+      ],
+      "facts": [
+        "Alice works as an engineer at Acme Corp in Boston.",
+        "Alice works as an engineer at Acme Corp in Boston.",
+        "Alice left Acme Corp and now works at Globex in Denver.",
+        "Alice uses Vim as her favourite editor."
+      ],
+      "raw": {
+        "provider": "graphiti-local",
+        "bridge_version": "0.1.0-candidate",
+        "amb_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+        "graphiti_version": "0.31.1",
+        "num_results": 10,
+        "search_seconds": 0.0743,
+        "edges": [
+          {
+            "uuid": "5b45653a-6b87-4735-a04d-23e214d895e1",
+            "fact": "Alice works as an engineer at Acme Corp in Boston.",
+            "episodes": [
+              "679be935-9aa8-4d89-a0ef-f1e1653697eb",
+              "a4f62da6-d5e1-478b-8613-3e9f68a0eab4"
+            ],
+            "valid_at": "2025-01-10 09:00:00+00:00",
+            "invalid_at": null,
+            "expired_at": null
+          },
+          {
+            "uuid": "1c74c39f-3d9c-4ee7-ab01-cea3c36bd207",
+            "fact": "Alice left Acme Corp and now works at Globex in Denver.",
+            "episodes": [
+              "a4f62da6-d5e1-478b-8613-3e9f68a0eab4"
+            ],
+            "valid_at": "2025-06-01 09:00:00+00:00",
+            "invalid_at": null,
+            "expired_at": null
+          },
+          {
+            "uuid": "d76adde3-e34a-491e-a9a0-4f472df143f6",
+            "fact": "Alice uses Vim as her favourite editor.",
+            "episodes": [
+              "dbfdcd5d-cab9-49e7-9304-a3f628e25775"
+            ],
+            "valid_at": "2025-02-01 09:00:00+00:00",
+            "invalid_at": null,
+            "expired_at": null
+          }
+        ],
+        "unmapped_edge_count": 0,
+        "returned_document_count": 4
+      }
+    },
+    "bob_from_b": {
+      "doc_ids": [
+        "s4"
+      ],
+      "facts": [
+        "Bob works at Initech."
+      ],
+      "raw": {
+        "provider": "graphiti-local",
+        "bridge_version": "0.1.0-candidate",
+        "amb_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+        "graphiti_version": "0.31.1",
+        "num_results": 10,
+        "search_seconds": 0.0884,
+        "edges": [
+          {
+            "uuid": "0faa7219-ffdd-4634-ad88-c06749e427b9",
+            "fact": "Bob works at Initech.",
+            "episodes": [
+              "0e3bd9eb-9dce-4009-823c-ad7a282cc5aa"
+            ],
+            "valid_at": "2025-03-01 09:00:00+00:00",
+            "invalid_at": null,
+            "expired_at": null
+          }
+        ],
+        "unmapped_edge_count": 0,
+        "returned_document_count": 1
+      }
+    },
+    "alice_work_after_restart": {
+      "raw": {
+        "provider": "graphiti-local",
+        "bridge_version": "0.1.0-candidate",
+        "amb_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+        "graphiti_version": "0.31.1",
+        "num_results": 10,
+        "search_seconds": 0.093,
+        "edges": [
+          {
+            "uuid": "5b45653a-6b87-4735-a04d-23e214d895e1",
+            "fact": "Alice works as an engineer at Acme Corp in Boston.",
+            "episodes": [
+              "679be935-9aa8-4d89-a0ef-f1e1653697eb",
+              "a4f62da6-d5e1-478b-8613-3e9f68a0eab4"
+            ],
+            "valid_at": "2025-01-10 09:00:00+00:00",
+            "invalid_at": null,
+            "expired_at": null
+          },
+          {
+            "uuid": "1c74c39f-3d9c-4ee7-ab01-cea3c36bd207",
+            "fact": "Alice left Acme Corp and now works at Globex in Denver.",
+            "episodes": [
+              "a4f62da6-d5e1-478b-8613-3e9f68a0eab4"
+            ],
+            "valid_at": "2025-06-01 09:00:00+00:00",
+            "invalid_at": null,
+            "expired_at": null
+          },
+          {
+            "uuid": "d76adde3-e34a-491e-a9a0-4f472df143f6",
+            "fact": "Alice uses Vim as her favourite editor.",
+            "episodes": [
+              "dbfdcd5d-cab9-49e7-9304-a3f628e25775"
+            ],
+            "valid_at": "2025-02-01 09:00:00+00:00",
+            "invalid_at": null,
+            "expired_at": null
+          }
+        ],
+        "unmapped_edge_count": 3,
+        "returned_document_count": 3
+      }
+    }
+  },
+  "ingest_seconds": 1612.9
+}

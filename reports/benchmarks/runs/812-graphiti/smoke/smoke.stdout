@@ -1,0 +1,9 @@
+{
+  "every_document_ingested": true,
+  "edges_extracted": true,
+  "alice_work_returns_alice_docs": true,
+  "no_cross_user_leak_a": true,
+  "no_cross_user_leak_b": true,
+  "correction_invalidated_old_fact": false,
+  "persistent_after_restart": true
+}
