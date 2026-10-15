@@ -55,9 +55,9 @@ These are diagnosed from the captured inputs. They are expected to recur on unse
 
 **Chosen:** τ_abs 0.30, δ_single 0.05, τ_set 0.30, δ_set 0.10. Dev 27/48, precision 0.733, recall 0.675, mean returned 1.02.
 
-**Stop condition:** recall ≥ 0.70 is **not met** by any constrained point (maximum 0.675), so C5 stops ().
+**Stop condition:** recall ≥ 0.70 is **not met** by any constrained point (maximum 0.675), so C5 stops (`C5-STOP.md`).
 
 **Run files:**
-- : the constrained grid.
-- : the second unconstrained run.
+- `dev/calibration.json`: the constrained grid.
+- `dev/calibration-run2-unconstrained.json`: the second unconstrained run.
 - The first run's choice is stated in erratum 2.
