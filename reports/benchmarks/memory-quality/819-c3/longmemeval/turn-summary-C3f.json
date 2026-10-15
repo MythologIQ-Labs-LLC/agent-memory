@@ -1,0 +1,260 @@
+{
+  "plane": "turn",
+  "ranked_prefix_reproduces_baseline": {
+    "differing": [],
+    "equal": true,
+    "questions": 500
+  },
+  "runs": {
+    "baseline": {
+      "abstention_diagnostic": {
+        "mean_returned_count": 50.0,
+        "question_count": 30,
+        "returned_any_rate": 1.0,
+        "upstream_metric": false
+      },
+      "agent_memory_configuration": {
+        "budget": "50",
+        "ranking_variant": "default",
+        "recall_control": "off",
+        "semantic_retrieval": "off",
+        "temporal_metadata": "none"
+      },
+      "agent_memory_revision": "1df28f84c236f5369b004465252610bd88ae07c9",
+      "agent_memory_worktree_dirty": false,
+      "by_question_type": {
+        "knowledge-update": {
+          "n": 78,
+          "recall_all@10": 0.935897,
+          "recall_all@5": 0.807692,
+          "recall_any@1": 0.538462
+        },
+        "multi-session": {
+          "n": 133,
+          "recall_all@10": 0.571429,
+          "recall_all@5": 0.413534,
+          "recall_any@1": 0.481203
+        },
+        "single-session-assistant": {
+          "n": 56,
+          "recall_all@10": 0.982143,
+          "recall_all@5": 0.964286,
+          "recall_any@1": 0.053571
+        },
+        "single-session-preference": {
+          "n": 30,
+          "recall_all@10": 0.4,
+          "recall_all@5": 0.3,
+          "recall_any@1": 0.2
+        },
+        "single-session-user": {
+          "n": 70,
+          "recall_all@10": 0.957143,
+          "recall_all@5": 0.928571,
+          "recall_any@1": 0.685714
+        },
+        "temporal-reasoning": {
+          "n": 133,
+          "recall_all@10": 0.75188,
+          "recall_all@5": 0.639098,
+          "recall_any@1": 0.616541
+        }
+      },
+      "evaluated_question_count": 419,
+      "failures": {
+        "ingestion_failure_count": 0,
+        "out_of_corpus_returned_count": 0,
+        "runtime_failure_count": 0
+      },
+      "mean_returned_count": 50.0,
+      "metrics": {
+        "ndcg_any@1": 0.572792,
+        "ndcg_any@10": 0.68156,
+        "ndcg_any@3": 0.617385,
+        "ndcg_any@30": 0.706505,
+        "ndcg_any@5": 0.648611,
+        "ndcg_any@50": 0.711426,
+        "recall_all@1": 0.159905,
+        "recall_all@10": 0.72315,
+        "recall_all@3": 0.508353,
+        "recall_all@30": 0.828162,
+        "recall_all@5": 0.601432,
+        "recall_all@50": 0.859189,
+        "recall_any@1": 0.572792,
+        "recall_any@10": 0.887828,
+        "recall_any@3": 0.787589,
+        "recall_any@30": 0.949881,
+        "recall_any@5": 0.835322,
+        "recall_any@50": 0.959427
+      },
+      "report": "turn-A.json"
+    },
+    "candidate_default": {
+      "abstention_diagnostic": {
+        "mean_returned_count": 11.866667,
+        "question_count": 30,
+        "returned_any_rate": 1.0,
+        "upstream_metric": false
+      },
+      "agent_memory_configuration": {
+        "budget": "50",
+        "ranking_variant": "default",
+        "recall_control": "off",
+        "semantic_retrieval": "off",
+        "temporal_metadata": "none"
+      },
+      "agent_memory_revision": "6a2255c0f46daa1d546758daa93f4402fed14108",
+      "agent_memory_worktree_dirty": false,
+      "by_question_type": {
+        "knowledge-update": {
+          "n": 78,
+          "recall_all@10": 0.948718,
+          "recall_all@5": 0.820513,
+          "recall_any@1": 0.538462
+        },
+        "multi-session": {
+          "n": 133,
+          "recall_all@10": 0.631579,
+          "recall_all@5": 0.451128,
+          "recall_any@1": 0.518797
+        },
+        "single-session-assistant": {
+          "n": 56,
+          "recall_all@10": 0.982143,
+          "recall_all@5": 0.982143,
+          "recall_any@1": 0.053571
+        },
+        "single-session-preference": {
+          "n": 30,
+          "recall_all@10": 0.4,
+          "recall_all@5": 0.3,
+          "recall_any@1": 0.2
+        },
+        "single-session-user": {
+          "n": 70,
+          "recall_all@10": 0.942857,
+          "recall_all@5": 0.914286,
+          "recall_any@1": 0.7
+        },
+        "temporal-reasoning": {
+          "n": 133,
+          "recall_all@10": 0.819549,
+          "recall_all@5": 0.676692,
+          "recall_any@1": 0.616541
+        }
+      },
+      "evaluated_question_count": 419,
+      "failures": {
+        "ingestion_failure_count": 0,
+        "out_of_corpus_returned_count": 0,
+        "runtime_failure_count": 0
+      },
+      "mean_returned_count": 12.35,
+      "metrics": {
+        "ndcg_any@1": 0.587112,
+        "ndcg_any@10": 0.711305,
+        "ndcg_any@3": 0.639543,
+        "ndcg_any@30": 0.724804,
+        "ndcg_any@5": 0.671453,
+        "ndcg_any@50": 0.725638,
+        "recall_all@1": 0.162291,
+        "recall_all@10": 0.763723,
+        "recall_all@3": 0.527446,
+        "recall_all@30": 0.840095,
+        "recall_all@5": 0.627685,
+        "recall_all@50": 0.847255,
+        "recall_any@1": 0.587112,
+        "recall_any@10": 0.916468,
+        "recall_any@3": 0.821002,
+        "recall_any@30": 0.935561,
+        "recall_any@5": 0.863962,
+        "recall_any@50": 0.937947
+      },
+      "report": "turn-C3f.json"
+    },
+    "candidate_ranked_prefix": {
+      "abstention_diagnostic": {
+        "mean_returned_count": 50.0,
+        "question_count": 30,
+        "returned_any_rate": 1.0,
+        "upstream_metric": false
+      },
+      "agent_memory_configuration": {
+        "budget": "50",
+        "ranking_variant": "default",
+        "recall_control": "off",
+        "return_selection": "ranked_prefix",
+        "semantic_retrieval": "off",
+        "temporal_metadata": "none"
+      },
+      "agent_memory_revision": "6a2255c0f46daa1d546758daa93f4402fed14108",
+      "agent_memory_worktree_dirty": false,
+      "by_question_type": {
+        "knowledge-update": {
+          "n": 78,
+          "recall_all@10": 0.935897,
+          "recall_all@5": 0.807692,
+          "recall_any@1": 0.538462
+        },
+        "multi-session": {
+          "n": 133,
+          "recall_all@10": 0.571429,
+          "recall_all@5": 0.413534,
+          "recall_any@1": 0.481203
+        },
+        "single-session-assistant": {
+          "n": 56,
+          "recall_all@10": 0.982143,
+          "recall_all@5": 0.964286,
+          "recall_any@1": 0.053571
+        },
+        "single-session-preference": {
+          "n": 30,
+          "recall_all@10": 0.4,
+          "recall_all@5": 0.3,
+          "recall_any@1": 0.2
+        },
+        "single-session-user": {
+          "n": 70,
+          "recall_all@10": 0.957143,
+          "recall_all@5": 0.928571,
+          "recall_any@1": 0.685714
+        },
+        "temporal-reasoning": {
+          "n": 133,
+          "recall_all@10": 0.75188,
+          "recall_all@5": 0.639098,
+          "recall_any@1": 0.616541
+        }
+      },
+      "evaluated_question_count": 419,
+      "failures": {
+        "ingestion_failure_count": 0,
+        "out_of_corpus_returned_count": 0,
+        "runtime_failure_count": 0
+      },
+      "mean_returned_count": 50.0,
+      "metrics": {
+        "ndcg_any@1": 0.572792,
+        "ndcg_any@10": 0.68156,
+        "ndcg_any@3": 0.617385,
+        "ndcg_any@30": 0.706505,
+        "ndcg_any@5": 0.648611,
+        "ndcg_any@50": 0.711426,
+        "recall_all@1": 0.159905,
+        "recall_all@10": 0.72315,
+        "recall_all@3": 0.508353,
+        "recall_all@30": 0.828162,
+        "recall_all@5": 0.601432,
+        "recall_all@50": 0.859189,
+        "recall_any@1": 0.572792,
+        "recall_any@10": 0.887828,
+        "recall_any@3": 0.787589,
+        "recall_any@30": 0.949881,
+        "recall_any@5": 0.835322,
+        "recall_any@50": 0.959427
+      },
+      "report": "turn-C3frp.json"
+    }
+  }
+}
