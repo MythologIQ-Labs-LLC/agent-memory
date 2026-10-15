@@ -61,6 +61,21 @@ half the best relevance to it is covered; only an uncovered entity brings anothe
 best match is promoted, not ordering noise below it). Each admitted fact's record states the
 requirement served and the query terms and entities it added.
 
+Policy 2.4.0 (#819 C5) adds an **opt-in semantic channel**. The independent C3 review found
+paraphrased and aggregate evidence withheld (aggregate 0/16, paraphrase recall 0.25): a floor relative
+to the best *lexical* match cannot tell "nothing relevant" from "relevant but worded differently",
+and C4 kept that behaviour. When the handle's optional semantic route is enabled, selection receives
+the cosine similarity of the query to each *admitted* candidate (derived vectors, never authority)
+and a candidate is also sufficient when that similarity is at least ``SEMANTIC_ABSOLUTE_FLOOR`` and
+within ``SEMANTIC_SINGLE_MARGIN`` of the best similarity (``semantic_relevance``), or, for an
+aggregate or relational reading, at least ``SEMANTIC_SET_FLOOR`` and within ``SEMANTIC_SET_MARGIN``
+(``semantic_set_evidence``). Candidates the semantic route surfaced are no longer sufficient merely
+because a non-lexical route found them: the route proposes, the floors decide. With no semantic
+evidence above the floors and no lexical evidence, the recall abstains, so abstention rests on low
+similarity rather than on missing words. Lexical evidence, ranking consistency (anchored on lexical,
+identity and relational primary evidence only), entity coverage and lifecycle closure are 2.3.0's.
+Without the semantic route the returned lists are exactly 2.3.0's.
+
 The stage reads only the admitted, ranked list and its evidence. It never changes candidates,
 admission, refusals, ``admitted`` or the ranked order, and it is never authority: a withheld
 fact is still admitted and still visible to a caller that reads ``admitted`` or asks for the
@@ -86,7 +101,7 @@ from .query_interpretation import QueryInterpretation, interpret, starts_sentenc
 from .temporal_intent import TemporalIntent
 
 SELECTION_POLICY_ID = "relevance-sufficient-return-selection"
-SELECTION_POLICY_VERSION = "2.3.0"
+SELECTION_POLICY_VERSION = "2.4.0"
 SELECTION_BASIS = "post_ranking_relevance_sufficiency_then_ranked_prefix"
 RELATIVE_FLOOR = 0.5
 # 2.0.0: a query that needs several pieces of evidence (aggregate or relational) admits set
@@ -98,10 +113,17 @@ MAX_COVERED_MENTIONS = 8
 # 2.3.0: an entity is covered when a selected fact's admitted-set relevance to it is at least this
 # fraction of the best such relevance (the primary floor's relative scale).
 COVERAGE_FRACTION = 0.5
+# 2.4.0 (#819 C5): semantic floors, calibrated on the self-authored development set
+# (reports/benchmarks/memory-quality/819-c5/CALIBRATION.md), never on benchmark or held-out labels.
+SEMANTIC_ABSOLUTE_FLOOR = 0.25
+SEMANTIC_SINGLE_MARGIN = 0.05
+SEMANTIC_SET_FLOOR = 0.25
+SEMANTIC_SET_MARGIN = 0.05
 RELEVANCE_SUFFICIENT = "relevance_sufficient"
 RANKED_PREFIX = "ranked_prefix"
 RETURN_SELECTIONS = (RELEVANCE_SUFFICIENT, RANKED_PREFIX)
-_SUFFICIENT = frozenset({"exact_identity", "non_lexical_route_evidence", "content_relevance", "set_evidence"})
+_SUFFICIENT = frozenset({"exact_identity", "non_lexical_route_evidence", "content_relevance", "set_evidence",
+                         "semantic_relevance", "semantic_set_evidence"})
 _PRIMARY = frozenset({"exact_identity", "non_lexical_route_evidence", "content_relevance"})
 
 # Closed-class English function words: articles and determiners, pronouns, auxiliaries and
@@ -259,6 +281,43 @@ def _mention_matched(mention: tuple[str, ...], tokens: frozenset[str]) -> bool:
     return hits == len(mention) if len(mention) <= 2 else hits * 2 >= len(mention)
 
 
+_WH_PLURAL_LEADS = frozenset({"which", "what", "who"})
+_PLURAL_COPULAS = frozenset({"are", "were"})
+_AUXILIARIES = frozenset("am is are was were do does did have has had can could will would shall should may might must".split())
+_NOT_PLURAL_ENDINGS = ("ss", "us", "is")
+
+
+def _plural(word: str) -> bool:
+    return (len(word) > 3 and word.endswith("s") and not word.endswith(_NOT_PLURAL_ENDINGS)
+            and normal_form(word) != word)
+
+
+def plural_answer(query: str) -> bool:
+    """Whether a wh-question asks for several items by its grammar (2.4.0, semantic channel only).
+
+    "which/what/who are|were ...", "which <plural> ..." ("Which pets do we have?"), or a plural
+    noun-phrase head directly before an auxiliary ("What medications am I on?"). A plural is a
+    word that inflectional normalisation shortens (Porter step 1) and does not end in -ss, -us or
+    -is; a third-person verb after "what" is not read ("What happens next?"). Closed English
+    grammar; no topic vocabulary."""
+
+    words = [word.lower() for word in _WORD.findall(normalize_contractions(query))]
+    if len(words) < 2 or words[0] not in _WH_PLURAL_LEADS:
+        return False
+    if words[1] in _PLURAL_COPULAS:
+        return True
+    if words[0] == "who":
+        return False
+    if words[0] == "which" and _plural(words[1]):
+        return True
+    for index in range(2, min(len(words), 5)):
+        if words[index] in _AUXILIARIES:
+            return words[index - 1] not in FUNCTION_WORDS and _plural(words[index - 1])
+        if words[index] in FUNCTION_WORDS:
+            return False
+    return False
+
+
 def select_relevance_sufficient(
     ranked: Sequence[str],
     route_ids_by_candidate: Mapping[str, Iterable[str]],
@@ -271,6 +330,8 @@ def select_relevance_sufficient(
     subordinate_routes: Iterable[str] = (),
     relative_floor: float = RELATIVE_FLOOR,
     lifecycle_successors: Mapping[str, Iterable[str]] | None = None,
+    semantic_similarity: Mapping[str, float] | None = None,
+    semantic_route: str | None = None,
 ) -> tuple[list[str], dict[str, dict[str, Any]], dict[str, Any]]:
     """Return (the evidence set in ranked order, per-candidate records, summary).
 
@@ -344,6 +405,23 @@ def select_relevance_sufficient(
             relevance = admitted_set_bm25(" ".join(normalize_terms(evidence_terms)), texts, masks)
     best = max(relevance.values(), default=0.0)
     set_floor = relative_floor * SET_FLOOR_FACTOR if reading.needs_several else relative_floor
+    # 2.4.0: the semantic channel, only when the caller's semantic route supplied similarities.
+    semantic = semantic_similarity is not None
+    similarity = {ref: float(semantic_similarity.get(ref, 0.0)) for ref in ranked} if semantic else {}
+    best_similarity = max(similarity.values(), default=0.0)
+    semantic_routes = frozenset({semantic_route}) if semantic and semantic_route else frozenset()
+    # A plural wh-question needs several items even without an aggregate cue (a C4 residual); the
+    # reading applies to the semantic channel only, so lexical selection stays 2.3.0's.
+    several = semantic and (reading.needs_several or plural_answer(query))
+
+    def semantic_basis(ref: str) -> str | None:
+        value = similarity.get(ref, 0.0)
+        if value >= SEMANTIC_ABSOLUTE_FLOOR and value >= best_similarity - SEMANTIC_SINGLE_MARGIN:
+            return "semantic_relevance"
+        if (several and value >= SEMANTIC_SET_FLOOR
+                and value >= best_similarity - SEMANTIC_SET_MARGIN):
+            return "semantic_set_evidence"
+        return None
 
     records: dict[str, dict[str, Any]] = {}
     for ref in ranked:
@@ -351,14 +429,16 @@ def select_relevance_sufficient(
         relative = score / best if best > 0 else None
         if exact_identity_route in routes[ref]:
             basis = "exact_identity"
-        elif routes[ref] - {lexical_route}:
+        elif routes[ref] - {lexical_route} - semantic_routes:
             basis = "non_lexical_route_evidence"
+        elif score > 0.0 and relative is not None and relative >= relative_floor:
+            basis = "content_relevance"
+        elif score > 0.0 and relative is not None and relative >= set_floor:
+            basis = "set_evidence"
+        elif semantic and semantic_basis(ref):
+            basis = semantic_basis(ref)
         elif score <= 0.0:
             basis = "no_informative_term_match"
-        elif relative is not None and relative >= relative_floor:
-            basis = "content_relevance"
-        elif relative is not None and relative >= set_floor:
-            basis = "set_evidence"
         else:
             basis = "below_relative_floor"
         records[ref] = {
@@ -368,6 +448,8 @@ def select_relevance_sufficient(
             "relative_to_best": relative,
             "authority_effect": "none",
         }
+        if semantic:
+            records[ref]["semantic_similarity"] = round(similarity.get(ref, 0.0), 6)
     matched = {ref: frozenset(term for term in query_forms if term in tokens.get(ref, frozenset())) for ref in ranked}
     position = {ref: index for index, ref in enumerate(ranked)}
     # Ranking consistency (2.3.0): a fact with topical evidence that ranking places above the
@@ -435,6 +517,17 @@ def select_relevance_sufficient(
         "withheld_insufficient_count": len(ranked) - len(selected),
         "abstained": bool(ranked) and not selected,
     }
+    if semantic:
+        summary["semantic_channel"] = {
+            "best_similarity": round(best_similarity, 6),
+            "absolute_floor": SEMANTIC_ABSOLUTE_FLOOR,
+            "single_margin": SEMANTIC_SINGLE_MARGIN,
+            "set_floor": SEMANTIC_SET_FLOOR,
+            "set_margin": SEMANTIC_SET_MARGIN,
+            "plural_answer": several and not reading.needs_several,
+            "semantic_selected_count": sum(1 for ref in selected if records[ref]["basis"].startswith("semantic_")),
+            "authority_effect": "none",
+        }
     return selected, records, summary
 
 
@@ -442,6 +535,10 @@ __all__ = [
     "FUNCTION_WORDS",
     "RANKED_PREFIX",
     "RELATIVE_FLOOR",
+    "SEMANTIC_ABSOLUTE_FLOOR",
+    "SEMANTIC_SET_FLOOR",
+    "SEMANTIC_SET_MARGIN",
+    "SEMANTIC_SINGLE_MARGIN",
     "SET_FLOOR_FACTOR",
     "RELEVANCE_SUFFICIENT",
     "RETURN_SELECTIONS",

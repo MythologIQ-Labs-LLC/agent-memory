@@ -250,5 +250,21 @@ class SemanticRouteOff(_Store):
         self.assertEqual(self.returned(memory, "Who is my employer?"), ["memory:job"])
 
 
+
+class PluralAnswerReading(unittest.TestCase):
+    """Erratum 1: the closed-grammar plural reading that enables semantic set evidence."""
+
+    def test_plural_list_questions(self):
+        for query in ("Which pets do we have?", "What medications am I on?", "Who are the new people on my team?",
+                      "What are my flight times?", "Which countries did I visit?", "What flight times are booked?"):
+            with self.subTest(query=query):
+                self.assertTrue(return_selection.plural_answer(query))
+
+    def test_single_answer_questions_and_third_person_verbs(self):
+        for query in ("Which pet gets scared?", "Which bus goes downtown?", "What happens next?", "Who is my boss?",
+                      "What is the status of the order?", "What car do we drive?", "Where do I work?"):
+            with self.subTest(query=query):
+                self.assertFalse(return_selection.plural_answer(query))
+
 if __name__ == "__main__":
     unittest.main()

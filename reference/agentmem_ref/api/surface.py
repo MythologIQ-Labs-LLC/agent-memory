@@ -950,6 +950,15 @@ class AgentMemory:
         # earlier fact -> later facts that change it.
         reader = getattr(self.runtime.adapter, "lifecycle_successors", None)
         successors = reader(list(result.ranked_admitted)) if callable(reader) else {}
+        # 2.4.0 (#819 C5): with the optional semantic route enabled, the similarity of the query to
+        # each admitted fact (derived vectors; never authority). Off, selection is 2.3.0's.
+        from ..runtime.vector_retrieval import SEMANTIC_VECTOR_ROUTE
+
+        retriever = self._semantic.get("retriever")
+        similarity = None
+        if retriever is not None and result.ranked_admitted:
+            texts = {ref: getattr(substrate.get_fact(ref), "fact_text", "") or "" for ref in result.ranked_admitted}
+            similarity = retriever.similarities(query, texts)
         selected, records, summary = select_relevance_sufficient(
             result.ranked_admitted,
             routes,
@@ -960,6 +969,8 @@ class AgentMemory:
             exact_identity_route=EXACT_IDENTITY_ROUTE,
             subordinate_routes=getattr(MULTI_ROUTE_RANKING_POLICY, "subordinate_routes", ()),
             lifecycle_successors=successors,
+            semantic_similarity=similarity,
+            semantic_route=SEMANTIC_VECTOR_ROUTE,
         )
         for ref, record in records.items():
             admissions.setdefault(ref, {})["return_selection"] = record

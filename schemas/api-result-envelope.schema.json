@@ -359,7 +359,8 @@
                 "2.0.0",
                 "2.1.0",
                 "2.2.0",
-                "2.3.0"
+                "2.3.0",
+                "2.4.0"
               ]
             },
             "requested_k": {
@@ -490,6 +491,48 @@
                 },
                 "authority_effect": {
                   "const": "none"
+                }
+              }
+            },
+            "semantic_channel": {
+              "type": "object",
+              "description": "Selection policy 2.4.0 (#819 C5), present only when the optional semantic route is enabled: the semantic floors applied to admitted facts and how many were selected on semantic evidence. Derived similarity, never authority.",
+              "additionalProperties": false,
+              "required": [
+                "best_similarity",
+                "absolute_floor",
+                "single_margin",
+                "set_floor",
+                "set_margin",
+                "semantic_selected_count",
+                "authority_effect",
+                "plural_answer"
+              ],
+              "properties": {
+                "best_similarity": {
+                  "type": "number"
+                },
+                "absolute_floor": {
+                  "type": "number"
+                },
+                "single_margin": {
+                  "type": "number"
+                },
+                "set_floor": {
+                  "type": "number"
+                },
+                "set_margin": {
+                  "type": "number"
+                },
+                "semantic_selected_count": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "authority_effect": {
+                  "const": "none"
+                },
+                "plural_answer": {
+                  "type": "boolean"
                 }
               }
             }

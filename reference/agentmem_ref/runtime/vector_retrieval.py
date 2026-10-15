@@ -21,7 +21,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import math
-from typing import Callable, Iterable, Protocol, runtime_checkable
+from typing import Callable, Iterable, Mapping, Protocol, runtime_checkable
 
 from ..state.substrate import Fact
 
@@ -215,6 +215,30 @@ class NativeVectorCandidateRetriever:
 
         hits.sort(key=lambda item: (-item.similarity, item.candidate_ref))
         return hits[:candidate_limit]
+
+    def similarities(
+        self,
+        query: str,
+        texts: Mapping[str, str],
+        *,
+        store: "DerivedVectorStoreProtocol | None" = None,
+    ) -> dict[str, float]:
+        """Cosine similarity of ``query`` to each given fact text, keyed by fact identity.
+
+        Used by return selection (#819 C5) for facts governance already admitted; it proposes
+        nothing. Vectors come from the derived store when one is configured (derived data, never
+        authority), so only the query and facts not yet cached are embedded.
+        """
+        query_vector = self._validated_vector(self.representation.embed(query))
+        if self._norm(query_vector) == 0.0:
+            return {ref: 0.0 for ref in texts}
+        store = store if store is not None else self.store
+        out: dict[str, float] = {}
+        for ref, text in texts.items():
+            vector = (store.vector_for(ref, text, self.representation.embed) if store is not None
+                      else self.representation.embed(text))
+            out[ref] = self._cosine(query_vector, self._validated_vector(vector))
+        return out
 
     def _validated_vector(self, value: tuple[float, ...]) -> tuple[float, ...]:
         try:
