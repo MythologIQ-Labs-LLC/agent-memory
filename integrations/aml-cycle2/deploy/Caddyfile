@@ -1,0 +1,14 @@
+# TLS termination in front of the service (Caddy obtains the certificate automatically).
+# Replace the hostname; the service itself listens only on loopback or the container network.
+memory.example.org {
+	encode gzip
+	request_body {
+		max_size 16MB
+	}
+	reverse_proxy 127.0.0.1:8080 {
+		transport http {
+			read_timeout 1200s
+			write_timeout 1200s
+		}
+	}
+}

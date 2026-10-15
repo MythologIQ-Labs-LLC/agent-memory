@@ -1,0 +1,15 @@
+{
+  "left": "/home/user/agent-memory/reports/benchmarks/amb/amb-precisionmembench-retrieval-v6/agent-memory-24048d55e26d/single-turn.json",
+  "right": "/tmp/claude-0/-home-user-agent-memory/e3e750d6-aa32-58ce-8a57-ef081d712c0b/scratchpad/evidence-final2/full-agent-memory-rep1/amb-outputs/precisionmembench/agent-memory/retrieval/single-turn.json",
+  "left_cases": 77,
+  "right_cases": 77,
+  "ignored_fields": [
+    "avg_retrieve_time_ms",
+    "ingestion_time_ms",
+    "retrieve_time_ms",
+    "run_name",
+    "raw_response"
+  ],
+  "differences": 0,
+  "equal": true
+}

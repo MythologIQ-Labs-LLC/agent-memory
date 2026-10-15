@@ -1,0 +1,379 @@
+From e74f27e6aabc5a8977e26ba0dda58ec056458af5 Mon Sep 17 00:00:00 2001
+From: local <local@localhost>
+Date: Thu, 15 Oct 2026 05:24:49 +0000
+Subject: [PATCH] local reproduction: none baseline, agent_memory system, task
+ subset, optional imports
+
+---
+ .../phys_task19_agent_memory_local.json       | 46 ++++++++++++
+ .../phys_task19_long_context_local.json       | 46 ++++++++++++
+ .../phys_task19_none_local.json               | 46 ++++++++++++
+ memory/memory_systems/__init__.py             | 74 ++++++++++++++++---
+ memory/memory_systems/agent_memory.py         | 47 ++++++++++++
+ memory/memory_systems/none.py                 | 12 +++
+ memory/server.py                              |  4 +
+ run_math.py                                   |  4 +-
+ 8 files changed, 267 insertions(+), 12 deletions(-)
+ create mode 100644 configs/formal_reasoning_configs/phys_task19_agent_memory_local.json
+ create mode 100644 configs/formal_reasoning_configs/phys_task19_long_context_local.json
+ create mode 100644 configs/formal_reasoning_configs/phys_task19_none_local.json
+ create mode 100644 memory/memory_systems/agent_memory.py
+ create mode 100644 memory/memory_systems/none.py
+
+diff --git a/configs/formal_reasoning_configs/phys_task19_agent_memory_local.json b/configs/formal_reasoning_configs/phys_task19_agent_memory_local.json
+new file mode 100644
+index 0000000..fd8bbd8
+--- /dev/null
++++ b/configs/formal_reasoning_configs/phys_task19_agent_memory_local.json
+@@ -0,0 +1,46 @@
++{
++  "task_name": "phys",
++  "description": "Local reproduction, task 19, memory=agent_memory; same model as agent and judge",
++  "agent": {
++    "model_name": "qwen2.5-3b-instruct-q4_k_m",
++    "temperature": 0.0,
++    "max_tokens": 8192,
++    "backend": "openai",
++    "base_url": ""
++  },
++  "memory": {
++    "session_wise_memory": true,
++    "judge_result_in_memory": false,
++    "memory_system_name": "agent_memory",
++    "base_url": "http://127.0.0.1:8000",
++    "timeout": 300
++  },
++  "env": {
++    "env_name": "math",
++    "base_url": "http://127.0.0.1:8001",
++    "timeout": 300,
++    "env_config": {
++      "model_name": "qwen2.5-3b-instruct-q4_k_m",
++      "temperature": 0.0,
++      "max_tokens": 4096,
++      "backend": "openai",
++      "base_url": "",
++      "max_steps": 10
++    }
++  },
++  "task_specific": {
++    "max_steps": 10,
++    "auto_eval_after_run": false,
++    "dataset": {
++      "hf_dataset": "ZexueHe/memoryarena",
++      "hf_config": "formal_reasoning_phys",
++      "hf_split": "test",
++      "task_ids": [
++        19
++      ]
++    }
++  },
++  "output": {
++    "json_output_dir": "./results/json/phys-local-task19"
++  }
++}
+\ No newline at end of file
+diff --git a/configs/formal_reasoning_configs/phys_task19_long_context_local.json b/configs/formal_reasoning_configs/phys_task19_long_context_local.json
+new file mode 100644
+index 0000000..24a2e7a
+--- /dev/null
++++ b/configs/formal_reasoning_configs/phys_task19_long_context_local.json
+@@ -0,0 +1,46 @@
++{
++  "task_name": "phys",
++  "description": "Local reproduction, task 19, memory=long_context; same model as agent and judge",
++  "agent": {
++    "model_name": "qwen2.5-3b-instruct-q4_k_m",
++    "temperature": 0.0,
++    "max_tokens": 8192,
++    "backend": "openai",
++    "base_url": ""
++  },
++  "memory": {
++    "session_wise_memory": true,
++    "judge_result_in_memory": false,
++    "memory_system_name": "long_context",
++    "base_url": "http://127.0.0.1:8000",
++    "timeout": 300
++  },
++  "env": {
++    "env_name": "math",
++    "base_url": "http://127.0.0.1:8001",
++    "timeout": 300,
++    "env_config": {
++      "model_name": "qwen2.5-3b-instruct-q4_k_m",
++      "temperature": 0.0,
++      "max_tokens": 4096,
++      "backend": "openai",
++      "base_url": "",
++      "max_steps": 10
++    }
++  },
++  "task_specific": {
++    "max_steps": 10,
++    "auto_eval_after_run": false,
++    "dataset": {
++      "hf_dataset": "ZexueHe/memoryarena",
++      "hf_config": "formal_reasoning_phys",
++      "hf_split": "test",
++      "task_ids": [
++        19
++      ]
++    }
++  },
++  "output": {
++    "json_output_dir": "./results/json/phys-local-task19"
++  }
++}
+\ No newline at end of file
+diff --git a/configs/formal_reasoning_configs/phys_task19_none_local.json b/configs/formal_reasoning_configs/phys_task19_none_local.json
+new file mode 100644
+index 0000000..5ff0d00
+--- /dev/null
++++ b/configs/formal_reasoning_configs/phys_task19_none_local.json
+@@ -0,0 +1,46 @@
++{
++  "task_name": "phys",
++  "description": "Local reproduction, task 19, memory=none; same model as agent and judge",
++  "agent": {
++    "model_name": "qwen2.5-3b-instruct-q4_k_m",
++    "temperature": 0.0,
++    "max_tokens": 8192,
++    "backend": "openai",
++    "base_url": ""
++  },
++  "memory": {
++    "session_wise_memory": true,
++    "judge_result_in_memory": false,
++    "memory_system_name": "none",
++    "base_url": "http://127.0.0.1:8000",
++    "timeout": 300
++  },
++  "env": {
++    "env_name": "math",
++    "base_url": "http://127.0.0.1:8001",
++    "timeout": 300,
++    "env_config": {
++      "model_name": "qwen2.5-3b-instruct-q4_k_m",
++      "temperature": 0.0,
++      "max_tokens": 4096,
++      "backend": "openai",
++      "base_url": "",
++      "max_steps": 10
++    }
++  },
++  "task_specific": {
++    "max_steps": 10,
++    "auto_eval_after_run": false,
++    "dataset": {
++      "hf_dataset": "ZexueHe/memoryarena",
++      "hf_config": "formal_reasoning_phys",
++      "hf_split": "test",
++      "task_ids": [
++        19
++      ]
++    }
++  },
++  "output": {
++    "json_output_dir": "./results/json/phys-local-task19"
++  }
++}
+\ No newline at end of file
+diff --git a/memory/memory_systems/__init__.py b/memory/memory_systems/__init__.py
+index a3f14d9..1d7fdd7 100644
+--- a/memory/memory_systems/__init__.py
++++ b/memory/memory_systems/__init__.py
+@@ -1,11 +1,63 @@
+-from .mirix import MirixMemorySystem
+-from .long_context import LongContextMemorySystem
+-from .mem0 import Mem0MemorySystem
+-from .letta import LettaMemorySystem
+-from .rag import RAGMemorySystem
+-from .memorag import MemoRAGMemorySystem
+-from .langchain_graphrag import GraphRAGMemorySystem
+-from .amem import AMemMemorySystem
+-from .lightmem import LightMemMemorySystem
+-from .reasoningbank import ReasoningBankMemorySystem
+-from .zep import ZepMemorySystem
+\ No newline at end of file
++"""Memory systems; a system whose optional dependencies are missing is exported as None."""
++
++try:
++    from .mirix import MirixMemorySystem
++except ImportError:
++    MirixMemorySystem = None
++
++try:
++    from .long_context import LongContextMemorySystem
++except ImportError:
++    LongContextMemorySystem = None
++
++try:
++    from .mem0 import Mem0MemorySystem
++except ImportError:
++    Mem0MemorySystem = None
++
++try:
++    from .letta import LettaMemorySystem
++except ImportError:
++    LettaMemorySystem = None
++
++try:
++    from .rag import RAGMemorySystem
++except ImportError:
++    RAGMemorySystem = None
++
++try:
++    from .memorag import MemoRAGMemorySystem
++except ImportError:
++    MemoRAGMemorySystem = None
++
++try:
++    from .langchain_graphrag import GraphRAGMemorySystem
++except ImportError:
++    GraphRAGMemorySystem = None
++
++try:
++    from .amem import AMemMemorySystem
++except ImportError:
++    AMemMemorySystem = None
++
++try:
++    from .lightmem import LightMemMemorySystem
++except ImportError:
++    LightMemMemorySystem = None
++
++try:
++    from .reasoningbank import ReasoningBankMemorySystem
++except ImportError:
++    ReasoningBankMemorySystem = None
++
++try:
++    from .zep import ZepMemorySystem
++except ImportError:
++    ZepMemorySystem = None
++
++from .none import NoMemorySystem
++
++try:
++    from .agent_memory import AgentMemoryMemorySystem
++except ImportError:
++    AgentMemoryMemorySystem = None
+diff --git a/memory/memory_systems/agent_memory.py b/memory/memory_systems/agent_memory.py
+new file mode 100644
+index 0000000..5511ad9
+--- /dev/null
++++ b/memory/memory_systems/agent_memory.py
+@@ -0,0 +1,47 @@
++"""Agent Memory (github.com/MythologIQ-Labs-LLC/agent-memory) as a MemoryArena memory system.
++
++Mirrors the harness's RAG memory system (same <memory> formatting, same top_k=3) but stores
++and recalls through the public AgentMemory facade: each add_chunk is one governed
++``remember``; wrap_user_prompt is one ``recall(prompt, budget=top_k)`` returning the runtime's
++ranked prefix. One durable runtime per MemoryArena user (task) under a temporary directory.
++"""
++
++import hashlib
++import tempfile
++from typing import Optional
++
++from agentmem_ref import AgentMemory
++
++
++class AgentMemoryMemorySystem:
++    def __init__(self, top_k: int = 3, user_id: Optional[str] = None):
++        self.top_k = top_k
++        self.user_id = user_id
++        self._dir = tempfile.TemporaryDirectory(prefix="memoryarena-agent-memory-")
++        self._memory = AgentMemory.open(self._dir.name, scope="memoryarena:task", purpose="MemoryArena task memory")
++        self._texts: dict[str, str] = {}
++        self._count = 0
++
++    def add_chunk(self, chunk: str):
++        if not chunk.strip():
++            return None
++        reference = "memoryarena:chunk:" + hashlib.sha256(f"{self._count}\x00{chunk}".encode("utf-8")).hexdigest()
++        outcome = self._memory.remember(reference, chunk)
++        if not outcome.get("committed"):
++            raise RuntimeError(f"Agent Memory refused a chunk: {outcome.get('refusal') or outcome.get('outcome')}")
++        self._texts[str(outcome["fact_uuid"])] = chunk
++        self._count += 1
++        return {"fact_uuid": outcome["fact_uuid"]}
++
++    def wrap_user_prompt(self, prompt: str) -> str:
++        lines = ["<memory_context>"]
++        returned = []
++        if self._texts:
++            returned = [str(item) for item in self._memory.recall(prompt, budget=self.top_k).get("returned") or []]
++        if returned:
++            lines.extend(f"<memory>{self._texts[fact]}</memory>" for fact in returned)
++        else:
++            lines.append("None")
++        lines.append("</memory_context>")
++        lines.append(f"User: {prompt}")
++        return "\n".join(lines)
+diff --git a/memory/memory_systems/none.py b/memory/memory_systems/none.py
+new file mode 100644
+index 0000000..ac5bfc6
+--- /dev/null
++++ b/memory/memory_systems/none.py
+@@ -0,0 +1,12 @@
++class NoMemorySystem:
++    """Memory-disabled baseline: stores nothing and wraps every prompt exactly as an empty
++    long_context memory does, so the two arms differ only in remembered content."""
++
++    def __init__(self, user_id=None):
++        self.user_id = user_id
++
++    def add_chunk(self, chunk: str):
++        return None
++
++    def wrap_user_prompt(self, prompt: str) -> str:
++        return "\n".join(["<memory_context>", "None", "</memory_context>", f"User: {prompt}"])
+diff --git a/memory/server.py b/memory/server.py
+index 0c5484f..3179021 100644
+--- a/memory/server.py
++++ b/memory/server.py
+@@ -18,6 +18,8 @@ from memory_systems import (
+     LightMemMemorySystem,
+     ReasoningBankMemorySystem,
+     ZepMemorySystem,
++    NoMemorySystem,
++    AgentMemoryMemorySystem,
+ )
+ 
+ 
+@@ -59,6 +61,8 @@ MEMORY_FACTORIES: Dict[str, Callable[[], object]] = {
+     "lightmem": LightMemMemorySystem,
+     "reasoningbank": ReasoningBankMemorySystem, # You must add user_id when initializing ReasoningBankMemorySystem
+     "zep": ZepMemorySystem,
++    "none": NoMemorySystem,
++    "agent_memory": AgentMemoryMemorySystem,
+ }
+ 
+ 
+diff --git a/run_math.py b/run_math.py
+index 01097ae..fe93daa 100644
+--- a/run_math.py
++++ b/run_math.py
+@@ -242,6 +242,9 @@ def main(json_config):
+     
+  
+     ds = load_dataset("ZexueHe/memoryarena", json_config["task_specific"]["dataset"]["hf_config"], split=json_config["task_specific"]["dataset"]["hf_split"])
++    task_ids = json_config["task_specific"]["dataset"].get("task_ids")
++    if task_ids is not None:
++        ds = ds.filter(lambda row: row["id"] in set(task_ids))
+     
+     """
+     ds[0].keys()
+@@ -298,7 +301,6 @@ if __name__ == "__main__":
+     # take the first arg from command line as json_config, if not  provided, raies warning and say "input json config`"
+     
+     json_config = json.load(open(args.config))
+-    main(json_config)
+     try:
+         main(json_config)
+     except Exception as e:
+-- 
+2.43.0
+

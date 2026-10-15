@@ -1,0 +1,29 @@
+{
+    "overall_average_passrate": 0.0,
+    "avg_progress_score": 0.3333333333333333,
+    "average_session_time": 225.35870138804117,
+    "average_memory_length": 1236.6666666666667,
+    "average_task_time": 676.0761041641235,
+    "memory_length": 1845.0,
+    "min_k": 3,
+    "passrate_at_k": [
+        0.0,
+        1.0,
+        0.0
+    ],
+    "cummulative_passrate_at_k": [
+        0.0,
+        0.5,
+        0.3333333333333333
+    ],
+    "passrate_at_min_k": [
+        0.0,
+        1.0,
+        0.0
+    ],
+    "cummulative_passrate_at_min_k": [
+        0.0,
+        0.5,
+        0.3333333333333333
+    ]
+}
