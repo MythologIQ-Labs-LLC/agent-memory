@@ -13,9 +13,11 @@ from __future__ import annotations
 
 from collections import deque
 from dataclasses import dataclass, field
+import hashlib
+import json
 import math
 import re
-from typing import Protocol
+from typing import Any, Mapping, Protocol
 
 from .adapter import RecallContext, eligible_search
 from .contextual_recall_adapter import admission_mode_for_intent, admit_preselected_candidates
@@ -39,6 +41,14 @@ from ..state.substrate import (
 
 DETERMINISTIC_CONTROLLER_REF = "agent-memory:deterministic-recall-controller"
 DETERMINISTIC_CONTROLLER_VERSION = "1.2.0"
+ADAPTIVE_CONTROLLER_VERSION = "2.0.0"
+ADAPTIVE_ABLATION_PROFILES = (
+    "controller_off",
+    "adaptive_routing_only",
+    "adaptive_budgeting_only",
+    "adaptive_stopping_only",
+    "combined_controller",
+)
 TYPED_GRAPH_ROUTE = "typed_graph"
 GRAPH_OUTGOING = "outgoing"
 GRAPH_INCOMING = "incoming"
@@ -339,10 +349,16 @@ class RecallRouteBudget:
     anchor_limit: int = 0
 
     def __post_init__(self) -> None:
-        if self.candidate_limit < 0:
-            raise ValueError("candidate_limit must be non-negative")
-        if self.anchor_limit < 0:
-            raise ValueError("anchor_limit must be non-negative")
+        if not self.route_id:
+            raise ValueError("route budget requires a route_id")
+        for name in ("candidate_limit", "anchor_limit"):
+            value = getattr(self, name)
+            if isinstance(value, bool) or not isinstance(value, int):
+                raise ValueError(f"{name} must be an integer")
+            if value < 0:
+                raise ValueError(f"{name} must be non-negative")
+        if self.anchor_limit > self.candidate_limit:
+            raise ValueError("anchor_limit cannot exceed candidate_limit")
 
 
 @dataclass(frozen=True)
@@ -391,6 +407,605 @@ class RecallControlPlan:
             "input_projection_ref": self.input_projection_ref,
             "authority_effect": self.authority_effect,
         }
+
+
+
+ADAPTIVE_ROUTE_ORDER = (
+    EXACT_IDENTITY_ROUTE,
+    LEXICAL_ROUTE,
+    SEMANTIC_VECTOR_ROUTE,
+    TYPED_GRAPH_ROUTE,
+    SHARED_EVIDENCE_ROUTE,
+)
+STOP_RECOMMENDATIONS = frozenset(
+    {
+        "evidence_sufficient",
+        "further_retrieval_unhelpful",
+        "continue_retrieval",
+        "budget_exhausted",
+        "frontier_exhausted",
+        "controller_unavailable",
+        "abstain",
+    }
+)
+
+
+def _probability(value: float, *, field_name: str) -> float:
+    value = float(value)
+    if not math.isfinite(value) or value < 0.0 or value > 1.0:
+        raise ValueError(f"{field_name} must be a finite probability between 0 and 1")
+    return value
+
+
+def _non_negative_int(value: int, *, field_name: str) -> int:
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise ValueError(f"{field_name} must be an integer")
+    if value < 0:
+        raise ValueError(f"{field_name} must be non-negative")
+    return value
+
+
+@dataclass(frozen=True)
+class RecallOuterBudget:
+    """Host-owned outer budget for one controller request (#644 T-controller-2)."""
+
+    maximum_controller_decisions: int = 4
+    maximum_candidates: int = 64
+    deadline_ms: int | None = None
+    maximum_nodes: int | None = None
+    maximum_edges: int | None = None
+    maximum_depth: int | None = None
+
+    def __post_init__(self) -> None:
+        _non_negative_int(self.maximum_controller_decisions, field_name="maximum_controller_decisions")
+        _non_negative_int(self.maximum_candidates, field_name="maximum_candidates")
+        for name in ("deadline_ms", "maximum_nodes", "maximum_edges", "maximum_depth"):
+            value = getattr(self, name)
+            if value is not None:
+                _non_negative_int(value, field_name=name)
+
+    def to_dict(self) -> dict[str, int | None]:
+        return {
+            "maximum_controller_decisions": self.maximum_controller_decisions,
+            "maximum_candidates": self.maximum_candidates,
+            "deadline_ms": self.deadline_ms,
+            "maximum_nodes": self.maximum_nodes,
+            "maximum_edges": self.maximum_edges,
+            "maximum_depth": self.maximum_depth,
+        }
+
+
+@dataclass(frozen=True)
+class RecallRouteNeed:
+    """Typed route-usefulness evidence. Probability is evidence, never permission."""
+
+    route_id: str
+    probability: float
+    basis: tuple[str, ...] = ()
+    authority_effect: str = "none"
+
+    def __post_init__(self) -> None:
+        if not self.route_id:
+            raise ValueError("route need requires a route_id")
+        object.__setattr__(self, "probability", _probability(self.probability, field_name="route need"))
+        if self.authority_effect != "none":
+            raise ValueError("route need cannot have authority effect")
+
+    def to_dict(self) -> dict[str, object]:
+        return {
+            "route_id": self.route_id,
+            "probability": self.probability,
+            "basis": list(self.basis),
+            "authority_effect": "none",
+        }
+
+
+@dataclass(frozen=True)
+class EvidenceAssessment:
+    """Four independent System-One evidence propositions from the frozen contract."""
+
+    evidence_sufficient: float
+    continue_useful: float
+    missing_evidence: float
+    contradiction: float
+    basis: tuple[str, ...] = ()
+    authority_effect: str = "none"
+
+    def __post_init__(self) -> None:
+        for name in (
+            "evidence_sufficient",
+            "continue_useful",
+            "missing_evidence",
+            "contradiction",
+        ):
+            object.__setattr__(
+                self,
+                name,
+                _probability(getattr(self, name), field_name=name),
+            )
+        if self.authority_effect != "none":
+            raise ValueError("evidence assessment cannot have authority effect")
+
+    def to_dict(self) -> dict[str, object]:
+        return {
+            "evidence_sufficient": self.evidence_sufficient,
+            "continue_useful": self.continue_useful,
+            "missing_evidence": self.missing_evidence,
+            "contradiction": self.contradiction,
+            "basis": list(self.basis),
+            "authority_effect": "none",
+        }
+
+
+@dataclass(frozen=True)
+class AdaptiveControlDecision:
+    """One inspectable adaptive-control decision, still non-authoritative."""
+
+    route_needs: tuple[RecallRouteNeed, ...]
+    route_budgets: tuple[RecallRouteBudget, ...]
+    assessment: EvidenceAssessment
+    stop_recommendation: str
+    ablation_profile: str = "combined_controller"
+    controller_ref: str = DETERMINISTIC_CONTROLLER_REF
+    controller_version: str = ADAPTIVE_CONTROLLER_VERSION
+    authority_effect: str = "none"
+
+    def __post_init__(self) -> None:
+        if self.stop_recommendation not in STOP_RECOMMENDATIONS:
+            raise ValueError("unsupported stop recommendation")
+        if self.ablation_profile not in ADAPTIVE_ABLATION_PROFILES:
+            raise ValueError("unsupported controller ablation profile")
+        if self.authority_effect != "none":
+            raise ValueError("adaptive control decision cannot have authority effect")
+        routes = [item.route_id for item in self.route_needs]
+        if len(routes) != len(set(routes)):
+            raise ValueError("adaptive control decision contains duplicate route needs")
+        budget_routes = [item.route_id for item in self.route_budgets]
+        if len(budget_routes) != len(set(budget_routes)):
+            raise ValueError("adaptive control decision contains duplicate route budgets")
+        if set(budget_routes) != set(routes):
+            raise ValueError("adaptive control decision route budgets must match route needs")
+
+    def to_dict(self) -> dict[str, object]:
+        return {
+            "controller_identity": {
+                "backend_ref": self.controller_ref,
+                "backend_version": self.controller_version,
+                "model_or_policy_ref": "deterministic-adaptive-rule-policy",
+            },
+            "route_needs": {
+                item.route_id: {
+                    "probability": item.probability,
+                    "basis": list(item.basis),
+                }
+                for item in self.route_needs
+            },
+            "route_budgets": [
+                {
+                    "route_id": item.route_id,
+                    "candidate_limit": item.candidate_limit,
+                    "anchor_limit": item.anchor_limit,
+                }
+                for item in self.route_budgets
+            ],
+            "evidence_assessment": self.assessment.to_dict(),
+            "stop_recommendation": self.stop_recommendation,
+            "ablation_profile": self.ablation_profile,
+            "authority_effect": "none",
+        }
+
+
+def estimate_route_needs(
+    query: str,
+    *,
+    logical_memory_refs: tuple[str, ...],
+    available_routes: tuple[str, ...],
+) -> tuple[RecallRouteNeed, ...]:
+    """Deterministic boundary-valued route evidence.
+
+    Values are intentionally 0.0/1.0 until calibration evidence exists. Calling
+    them 0.73 because it looks more statistical would be theatre, not evidence.
+    """
+
+    terms = _content_terms(query)
+    identities = tuple(dict.fromkeys(logical_memory_refs))
+    available = set(available_routes)
+    unknown = available.difference(ADAPTIVE_ROUTE_ORDER)
+    if unknown:
+        raise ValueError("route need input contains unsupported routes: " + ", ".join(sorted(unknown)))
+
+    needs: list[RecallRouteNeed] = []
+    for route in ADAPTIVE_ROUTE_ORDER:
+        if route not in available:
+            continue
+        if route == EXACT_IDENTITY_ROUTE:
+            active, basis = bool(identities), ("explicit_identity_seed",) if identities else ("no_identity_seed",)
+        elif route in (LEXICAL_ROUTE, SEMANTIC_VECTOR_ROUTE):
+            active, basis = bool(terms), ("content_query",) if terms else ("no_content_terms",)
+        elif route == TYPED_GRAPH_ROUTE:
+            active, basis = bool(identities), ("identity_seed_for_graph",) if identities else ("no_graph_seed",)
+        else:
+            active = bool(terms or identities)
+            basis = ("content_or_identity_seed",) if active else ("no_relational_seed",)
+        needs.append(RecallRouteNeed(route, 1.0 if active else 0.0, basis))
+    return tuple(needs)
+
+
+def allocate_route_budgets(
+    route_needs: tuple[RecallRouteNeed, ...],
+    *,
+    outer_budget: RecallOuterBudget,
+    host_caps: Mapping[str, int],
+    minimum_allocation: int = 1,
+) -> tuple[RecallRouteBudget, ...]:
+    """Allocate one bounded total candidate budget by deterministic largest remainder."""
+
+    if minimum_allocation < 0:
+        raise ValueError("minimum_allocation must be non-negative")
+    needs_by_route = {item.route_id: item for item in route_needs}
+    if len(needs_by_route) != len(route_needs):
+        raise ValueError("duplicate route need")
+    unsupported = set(needs_by_route).difference(host_caps)
+    if unsupported:
+        raise ValueError("route need has no host cap: " + ", ".join(sorted(unsupported)))
+    for route, cap in host_caps.items():
+        _non_negative_int(cap, field_name=f"host cap for {route}")
+
+    active = [
+        route
+        for route in ADAPTIVE_ROUTE_ORDER
+        if route in needs_by_route
+        and needs_by_route[route].probability > 0.0
+        and host_caps.get(route, 0) > 0
+    ]
+    allocations = {route: 0 for route in needs_by_route}
+    remaining = outer_budget.maximum_candidates
+
+    if minimum_allocation:
+        for route in active:
+            if remaining <= 0:
+                break
+            grant = min(minimum_allocation, host_caps[route], remaining)
+            allocations[route] += grant
+            remaining -= grant
+
+    while remaining > 0:
+        eligible = [route for route in active if allocations[route] < host_caps[route]]
+        if not eligible:
+            break
+        total_weight = sum(needs_by_route[route].probability for route in eligible)
+        if total_weight <= 0.0:
+            break
+
+        ideal = {
+            route: remaining * needs_by_route[route].probability / total_weight
+            for route in eligible
+        }
+        progressed = 0
+        for route in eligible:
+            floor_share = int(math.floor(ideal[route]))
+            if floor_share <= 0:
+                continue
+            grant = min(floor_share, host_caps[route] - allocations[route], remaining)
+            allocations[route] += grant
+            remaining -= grant
+            progressed += grant
+            if remaining <= 0:
+                break
+        if remaining <= 0:
+            break
+
+        eligible = [route for route in active if allocations[route] < host_caps[route]]
+        if not eligible:
+            break
+        if progressed == 0:
+            route = min(
+                eligible,
+                key=lambda candidate: (
+                    -(ideal.get(candidate, 0.0) - math.floor(ideal.get(candidate, 0.0))),
+                    ADAPTIVE_ROUTE_ORDER.index(candidate),
+                ),
+            )
+            allocations[route] += 1
+            remaining -= 1
+
+    budgets: list[RecallRouteBudget] = []
+    for route in ADAPTIVE_ROUTE_ORDER:
+        if route not in needs_by_route:
+            continue
+        candidate_limit = allocations[route]
+        anchor_limit = 0
+        if route == SHARED_EVIDENCE_ROUTE and candidate_limit:
+            anchor_limit = min(3, candidate_limit)
+        budgets.append(RecallRouteBudget(route, candidate_limit, anchor_limit=anchor_limit))
+    return tuple(budgets)
+
+
+def assess_evidence(
+    *,
+    candidate_count: int,
+    exact_identity_count: int = 0,
+    corroborated_count: int = 0,
+    routes_remaining: int = 0,
+    resource_exhausted: bool = False,
+    contradiction_detected: bool = False,
+    sufficiency_target: int = 1,
+) -> EvidenceAssessment:
+    """Conservative deterministic four-way evidence assessment.
+
+    Sufficiency requires identity evidence or independent-route corroboration.
+    Candidate quantity alone never means sufficient.
+    """
+
+    for name, value in (
+        ("candidate_count", candidate_count),
+        ("exact_identity_count", exact_identity_count),
+        ("corroborated_count", corroborated_count),
+        ("routes_remaining", routes_remaining),
+    ):
+        if value < 0:
+            raise ValueError(f"{name} must be non-negative")
+    if sufficiency_target < 1:
+        raise ValueError("sufficiency_target must be >= 1")
+
+    sufficient = (
+        exact_identity_count >= sufficiency_target
+        or corroborated_count >= sufficiency_target
+    )
+    missing = candidate_count < sufficiency_target
+    continue_useful = (not sufficient) and routes_remaining > 0 and not resource_exhausted
+    basis: list[str] = []
+    if exact_identity_count >= sufficiency_target:
+        basis.append("exact_identity_target_met")
+    if corroborated_count >= sufficiency_target:
+        basis.append("independent_route_corroboration_target_met")
+    if missing:
+        basis.append("candidate_target_missing")
+    if routes_remaining:
+        basis.append("routes_remaining")
+    if resource_exhausted:
+        basis.append("resource_exhausted")
+    if contradiction_detected:
+        basis.append("contradiction_detected")
+    return EvidenceAssessment(
+        evidence_sufficient=1.0 if sufficient else 0.0,
+        continue_useful=1.0 if continue_useful else 0.0,
+        missing_evidence=1.0 if missing else 0.0,
+        contradiction=1.0 if contradiction_detected else 0.0,
+        basis=tuple(basis),
+    )
+
+
+def stop_recommendation(
+    assessment: EvidenceAssessment,
+    *,
+    routes_remaining: int,
+    resource_exhausted: bool,
+) -> str:
+    """Map independent evidence propositions to one contract stop recommendation."""
+
+    if resource_exhausted:
+        return "budget_exhausted"
+    if assessment.evidence_sufficient == 1.0:
+        return "evidence_sufficient"
+    if assessment.continue_useful == 1.0 and routes_remaining > 0:
+        return "continue_retrieval"
+    if routes_remaining <= 0 and assessment.missing_evidence == 1.0:
+        return "frontier_exhausted"
+    if routes_remaining <= 0:
+        return "further_retrieval_unhelpful"
+    return "abstain"
+
+
+def adaptive_cache_key(
+    *,
+    operation: str,
+    canonical_request_state: Mapping[str, Any],
+    controller_contract_version: str,
+    backend_ref: str,
+    backend_version: str,
+    model_or_policy_ref: str,
+    host_policy_version: str,
+    isolation_namespace: str,
+) -> str:
+    """Version/scope-bound key for derived controller evidence."""
+
+    required = (
+        operation,
+        controller_contract_version,
+        backend_ref,
+        backend_version,
+        model_or_policy_ref,
+        host_policy_version,
+        isolation_namespace,
+    )
+    if any(not value for value in required):
+        raise ValueError("adaptive cache identity fields must be non-empty")
+    material = {
+        "operation": operation,
+        "canonical_request_state": canonical_request_state,
+        "controller_contract_version": controller_contract_version,
+        "backend_ref": backend_ref,
+        "backend_version": backend_version,
+        "model_or_policy_ref": model_or_policy_ref,
+        "host_policy_version": host_policy_version,
+        "isolation_namespace": isolation_namespace,
+    }
+    encoded = json.dumps(material, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+    return "sha256:" + hashlib.sha256(encoded).hexdigest()
+
+
+class ControllerDecisionCache:
+    """Process-local cache of non-authoritative controller evidence.
+
+    Callers provide the identity fields, never a raw cache key. The cache derives
+    the canonical digest itself so contract/backend/policy/isolation binding cannot
+    be bypassed by a convenient caller-supplied string.
+    """
+
+    def __init__(self) -> None:
+        self._values: dict[str, AdaptiveControlDecision] = {}
+
+    @staticmethod
+    def _key(
+        *,
+        operation: str,
+        canonical_request_state: Mapping[str, Any],
+        controller_contract_version: str,
+        backend_ref: str,
+        backend_version: str,
+        model_or_policy_ref: str,
+        host_policy_version: str,
+        isolation_namespace: str,
+    ) -> str:
+        return adaptive_cache_key(
+            operation=operation,
+            canonical_request_state=canonical_request_state,
+            controller_contract_version=controller_contract_version,
+            backend_ref=backend_ref,
+            backend_version=backend_version,
+            model_or_policy_ref=model_or_policy_ref,
+            host_policy_version=host_policy_version,
+            isolation_namespace=isolation_namespace,
+        )
+
+    def get(
+        self,
+        *,
+        operation: str,
+        canonical_request_state: Mapping[str, Any],
+        controller_contract_version: str,
+        backend_ref: str,
+        backend_version: str,
+        model_or_policy_ref: str,
+        host_policy_version: str,
+        isolation_namespace: str,
+    ) -> AdaptiveControlDecision | None:
+        key = self._key(
+            operation=operation,
+            canonical_request_state=canonical_request_state,
+            controller_contract_version=controller_contract_version,
+            backend_ref=backend_ref,
+            backend_version=backend_version,
+            model_or_policy_ref=model_or_policy_ref,
+            host_policy_version=host_policy_version,
+            isolation_namespace=isolation_namespace,
+        )
+        return self._values.get(key)
+
+    def put(
+        self,
+        decision: AdaptiveControlDecision,
+        *,
+        operation: str,
+        canonical_request_state: Mapping[str, Any],
+        controller_contract_version: str,
+        backend_ref: str,
+        backend_version: str,
+        model_or_policy_ref: str,
+        host_policy_version: str,
+        isolation_namespace: str,
+    ) -> str:
+        if decision.authority_effect != "none":
+            raise ValueError("controller cache cannot store authoritative decisions")
+        key = self._key(
+            operation=operation,
+            canonical_request_state=canonical_request_state,
+            controller_contract_version=controller_contract_version,
+            backend_ref=backend_ref,
+            backend_version=backend_version,
+            model_or_policy_ref=model_or_policy_ref,
+            host_policy_version=host_policy_version,
+            isolation_namespace=isolation_namespace,
+        )
+        self._values[key] = decision
+        return key
+
+    def __len__(self) -> int:
+        return len(self._values)
+
+
+class DeterministicAdaptiveRecallController:
+    """Deterministic T-controller-2 estimator baseline.
+
+    This class computes bounded evidence and recommendations. It does not execute
+    retrieval or grant recall admission.
+    """
+
+    controller_ref = DETERMINISTIC_CONTROLLER_REF
+    controller_version = ADAPTIVE_CONTROLLER_VERSION
+
+    def decide(
+        self,
+        query: str,
+        *,
+        logical_memory_refs: tuple[str, ...],
+        available_routes: tuple[str, ...],
+        outer_budget: RecallOuterBudget,
+        host_caps: Mapping[str, int],
+        candidate_count: int = 0,
+        exact_identity_count: int = 0,
+        corroborated_count: int = 0,
+        routes_remaining: int | None = None,
+        resource_exhausted: bool = False,
+        contradiction_detected: bool = False,
+        ablation_profile: str = "combined_controller",
+    ) -> AdaptiveControlDecision:
+        if ablation_profile not in ADAPTIVE_ABLATION_PROFILES:
+            raise ValueError("unsupported controller ablation profile")
+        if outer_budget.maximum_controller_decisions == 0:
+            raise ValueError("controller decision budget exhausted")
+        needs = estimate_route_needs(
+            query,
+            logical_memory_refs=logical_memory_refs,
+            available_routes=available_routes,
+        )
+        if routes_remaining is None:
+            routes_remaining = sum(item.probability > 0.0 for item in needs)
+
+        if ablation_profile in ("controller_off", "adaptive_stopping_only"):
+            # No adaptive route/budget selection. Host caps are copied, then outer-clamped
+            # deterministically so the evidence object still obeys the request budget.
+            neutral_needs = tuple(
+                RecallRouteNeed(item.route_id, 1.0 if host_caps.get(item.route_id, 0) else 0.0, ("host_available",))
+                for item in needs
+            )
+            budgets = allocate_route_budgets(
+                neutral_needs,
+                outer_budget=outer_budget,
+                host_caps=host_caps,
+            )
+        else:
+            budgets = allocate_route_budgets(
+                needs,
+                outer_budget=outer_budget,
+                host_caps=host_caps,
+            )
+
+        assessment = assess_evidence(
+            candidate_count=candidate_count,
+            exact_identity_count=exact_identity_count,
+            corroborated_count=corroborated_count,
+            routes_remaining=routes_remaining,
+            resource_exhausted=resource_exhausted,
+            contradiction_detected=contradiction_detected,
+        )
+        recommendation = (
+            "abstain"
+            if ablation_profile in ("controller_off", "adaptive_routing_only", "adaptive_budgeting_only")
+            else stop_recommendation(
+                assessment,
+                routes_remaining=routes_remaining,
+                resource_exhausted=resource_exhausted,
+            )
+        )
+        return AdaptiveControlDecision(
+            route_needs=needs,
+            route_budgets=budgets,
+            assessment=assessment,
+            stop_recommendation=recommendation,
+            ablation_profile=ablation_profile,
+        )
 
 
 class RecallController(Protocol):
