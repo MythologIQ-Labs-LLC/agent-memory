@@ -2,7 +2,7 @@
   "schema_version": 1,
   "kind": "agent-memory-measured-results-feed",
   "authority_effect": "none",
-  "feed_revision": "2026-10-15-candidate819",
+  "feed_revision": "2026-10-15-independent819-reviewed",
   "profiles": [
     {
       "id": "candidate:longmemeval-s:subset50:session",
@@ -455,6 +455,97 @@
             "baseline",
             "agent_memory_revision"
           ]
+        }
+      ]
+    },
+    {
+      "id": "candidate:819:independent-holdout:176:strict",
+      "title": "Independent hidden holdout · 176 questions · revision comparisons",
+      "family": "runtime-revision-hidden-holdout",
+      "evidence_status": "candidate",
+      "cohort": {
+        "sample_count": 176,
+        "scored_count": 176,
+        "excluded_count": 0,
+        "input_sha256": "8674577ec8e9f467ad1633b302f96f519361942d57becd11325dcb166c14e962",
+        "selection_id": "am-819-holdout-v1"
+      },
+      "evaluator_revision": "805d76b1a4eb61207aefdb527648388f1d68985dcc841720435551ec1a35d365",
+      "protocol": "independently authored hidden holdout; 176 queries across 160 scenarios; public AgentMemory facade, budget 5; aggregate only, hidden questions and gold remain sealed",
+      "metric": "strict_case_success",
+      "method_note": "Independent evaluation #819 verdict: CHANGES REQUIRED for both C1 and C2. Real gains in precision and abstention generalize, but multi-hop bridging evidence is lost, causing accepted LongMemEval depth-recall regression. Baseline 37/176 versus C1 and C2 116/176; no cross-scope, forgotten or stale leaks, and no evaluation failures. Never treat this as a competitive-product rank or accepted successor. Original hidden questions and per-case expected answers remain sealed. Evidence: reports/benchmarks/independent-evaluation/819/REVIEW.md at 08a0755.",
+      "rows": [
+        {
+          "system": "agent_memory_baseline",
+          "label": "Agent Memory · original baseline",
+          "role": "baseline",
+          "status": "candidate",
+          "engine_revision": "7c06468aae1aed0d2115c42f9588fbbe8417657e",
+          "source_commit": "08a0755aec6aee5afe87576faac94833037e7950",
+          "artifact": "reports/benchmarks/independent-evaluation/819/baseline-7c06468/holdout-aggregate/summary.json",
+          "artifact_sha256": "4c230547c746e430db006a118c21024d9835cb582d7a5fdb1c295d62b874ab07",
+          "extract": {
+            "type": "json_count_fraction",
+            "numerator_path": [
+              "summary",
+              "overall",
+              "strict_pass"
+            ],
+            "denominator_path": [
+              "summary",
+              "overall",
+              "queries"
+            ]
+          },
+          "expected_score": 0.21022727272727273
+        },
+        {
+          "system": "agent_memory_c1",
+          "label": "Agent Memory · C1 (unaccepted)",
+          "role": "comparator",
+          "status": "candidate",
+          "engine_revision": "4bd38e6ca9cec9de7a054dd6b970ac26f05fb946",
+          "source_commit": "08a0755aec6aee5afe87576faac94833037e7950",
+          "artifact": "reports/benchmarks/independent-evaluation/819/candidates/c1-4bd38e6/holdout-aggregate/summary.json",
+          "artifact_sha256": "4b3614e32cac02d6c9fbb1864c95aab25fe801f4897c63d105981afebaeb763e",
+          "extract": {
+            "type": "json_count_fraction",
+            "numerator_path": [
+              "summary",
+              "overall",
+              "strict_pass"
+            ],
+            "denominator_path": [
+              "summary",
+              "overall",
+              "queries"
+            ]
+          },
+          "expected_score": 0.6590909090909091
+        },
+        {
+          "system": "agent_memory_c2",
+          "label": "Agent Memory · C2 (unaccepted)",
+          "role": "control",
+          "status": "candidate",
+          "engine_revision": "eaf60e4dd001c02ce00bb36f15f800996bf77da3",
+          "source_commit": "08a0755aec6aee5afe87576faac94833037e7950",
+          "artifact": "reports/benchmarks/independent-evaluation/819/candidates/c2-eaf60e4/holdout-aggregate/summary.json",
+          "artifact_sha256": "1246e268fd03d927d59c02dc114c5ddd04d705e648f762928fc39c8aa3400c50",
+          "extract": {
+            "type": "json_count_fraction",
+            "numerator_path": [
+              "summary",
+              "overall",
+              "strict_pass"
+            ],
+            "denominator_path": [
+              "summary",
+              "overall",
+              "queries"
+            ]
+          },
+          "expected_score": 0.6590909090909091
         }
       ]
     }

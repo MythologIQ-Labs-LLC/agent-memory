@@ -22,3 +22,12 @@ This branch is the read-only public measurement source for Agent Memory's existi
 4. Push only this branch if the existing head has not drifted. The GitHub Pages site reads the new branch commit on refresh/visible-tab polling without a Pages deployment.
 
 Accepted measurements still require the independent governance path and separate canonical accepted snapshot update. Do not infer acceptance from this feed. If source evidence fails, retain the previous score as explicitly historical or show no score rather than fabricating one.
+
+
+## Independent evaluation aggregates: #819
+
+The 176-query independently authored holdout for C1 and C2 has been evaluated, with an explicit **CHANGES REQUIRED** verdict. Only source-pinned **aggregate-only** `summary.json` files are eligible for the public feed. The sealed query text, facts, gold answers and per-case rows must remain unavailable to runtime engineering while subsequent candidates are assessed.
+
+The `runtime-revision-hidden-holdout` profile uses `json_count_fraction` on native `summary.overall.strict_pass / summary.overall.queries` and checks the precommitted SHA-256 of the private cohort and evaluator plus zero recorded evaluation, cross-scope, forgetting and stale-result failures. Baseline **37/176** and C1/C2 **116/176** are independent *unaccepted* candidate evidence, NOT acceptance of either revision as a runtime default. The evidence explicitly reports the broad multi-evidence recall losses, so the gains are not presented as an unconditional product improvement.
+
+Adding additional aggregate-only evaluations to this same feed must preserve source revisions, denominator and holdout privacy. If any contestant's source cannot be verified, the website refuses that entire comparison rather than silently dropping the failed row and changing the rank.
