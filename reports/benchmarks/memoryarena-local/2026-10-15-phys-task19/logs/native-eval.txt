@@ -1,0 +1,92 @@
+2026-10-15 06:23:38,220 | INFO | __main__ | Results found in ./results/json/phys-local-task19
+ Num. of memory systems=3
+2026-10-15 06:23:38,220 | INFO | __main__ | ##Result for method: agent_memory
+Process paper: 0000.0000
+2026-10-15 06:23:38,220 | INFO | __main__ | Max length of logs among papers: 3
+2026-10-15 06:23:38,399 | INFO | __main__ | Paper 0000.0000: Is_Paper_Correct = False, Progress Rate = 0.00 (0/3)
+2026-10-15 06:23:38,400 | INFO | __main__ | Progress Score len=1, Pass Rate@k len=3, Or you can stop at min length k=3)
+2026-10-15 06:23:38,400 | INFO | __main__ | Overall Average Passrate: 0.0000, Avg Progress Score: 0.00, Avg Memory Length: 995.33, Avg Time/session: 229.93638475735983s, Avg Time/task: 689.8091542720795s Max Memory Length: 2003.00
+=========result=============
+overall_average_passrate: 0.0
+
+avg_progress_score: 0.0
+
+average_session_time: 229.93638475735983
+
+average_memory_length: 995.3333333333334
+
+average_task_time: 689.8091542720795
+
+memory_length: 2003.0
+
+min_k: 3
+
+passrate_at_k: [0.0, 0.0, 0.0]
+
+cummulative_passrate_at_k: [0.0, 0.0, 0.0]
+
+passrate_at_min_k: [0.0, 0.0, 0.0]
+
+cummulative_passrate_at_min_k: [0.0, 0.0, 0.0]
+
+============================
+2026-10-15 06:23:38,400 | INFO | __main__ | ##Result for method: none
+Process paper: 0000.0000
+2026-10-15 06:23:38,400 | INFO | __main__ | Max length of logs among papers: 3
+2026-10-15 06:23:38,400 | INFO | __main__ | Paper 0000.0000: Is_Paper_Correct = False, Progress Rate = 0.00 (0/3)
+2026-10-15 06:23:38,400 | INFO | __main__ | Progress Score len=1, Pass Rate@k len=3, Or you can stop at min length k=3)
+2026-10-15 06:23:38,400 | INFO | __main__ | Overall Average Passrate: 0.0000, Avg Progress Score: 0.00, Avg Memory Length: 3.00, Avg Time/session: 170.08013677597046s, Avg Time/task: 510.2404103279114s Max Memory Length: 3.00
+=========result=============
+overall_average_passrate: 0.0
+
+avg_progress_score: 0.0
+
+average_session_time: 170.08013677597046
+
+average_memory_length: 3.0
+
+average_task_time: 510.2404103279114
+
+memory_length: 3.0
+
+min_k: 3
+
+passrate_at_k: [0.0, 0.0, 0.0]
+
+cummulative_passrate_at_k: [0.0, 0.0, 0.0]
+
+passrate_at_min_k: [0.0, 0.0, 0.0]
+
+cummulative_passrate_at_min_k: [0.0, 0.0, 0.0]
+
+============================
+2026-10-15 06:23:38,400 | INFO | __main__ | ##Result for method: long_context_qwen2.5-3b-instruct-q4_k_m
+Process paper: 0000.0000
+2026-10-15 06:23:38,400 | INFO | __main__ | Max length of logs among papers: 3
+2026-10-15 06:23:38,401 | INFO | __main__ | Paper 0000.0000: Is_Paper_Correct = False, Progress Rate = 0.33 (1/3)
+2026-10-15 06:23:38,401 | INFO | __main__ | Progress Score len=1, Pass Rate@k len=3, Or you can stop at min length k=3)
+2026-10-15 06:23:38,401 | INFO | __main__ | Overall Average Passrate: 0.0000, Avg Progress Score: 0.33, Avg Memory Length: 1236.67, Avg Time/session: 225.35870138804117s, Avg Time/task: 676.0761041641235s Max Memory Length: 1845.00
+=========result=============
+overall_average_passrate: 0.0
+
+avg_progress_score: 0.3333333333333333
+
+average_session_time: 225.35870138804117
+
+average_memory_length: 1236.6666666666667
+
+average_task_time: 676.0761041641235
+
+memory_length: 1845.0
+
+min_k: 3
+
+passrate_at_k: [0.0, 1.0, 0.0]
+
+cummulative_passrate_at_k: [0.0, 0.5, 0.3333333333333333]
+
+passrate_at_min_k: [0.0, 1.0, 0.0]
+
+cummulative_passrate_at_min_k: [0.0, 0.5, 0.3333333333333333]
+
+============================
