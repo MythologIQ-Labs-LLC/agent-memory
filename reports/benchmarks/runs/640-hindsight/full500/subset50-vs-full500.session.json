@@ -1,0 +1,23 @@
+{
+  "left": "subset50/hindsight-50.json",
+  "right": "full500/session.hindsight_chunks_onnx.rows.jsonl",
+  "plane": "session",
+  "backend": "hindsight_chunks_onnx",
+  "scope": "intersection",
+  "compared_fields": [
+    "metrics",
+    "status",
+    "runtime_error",
+    "ranked_top",
+    "gold",
+    "question_type"
+  ],
+  "left_questions": 50,
+  "right_questions": 500,
+  "compared_questions": 50,
+  "only_left": 0,
+  "only_right": 450,
+  "differing_questions": 40,
+  "differences": 42,
+  "equal": false
+}
