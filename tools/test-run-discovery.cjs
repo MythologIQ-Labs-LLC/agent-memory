@@ -68,6 +68,12 @@ const t={truncated:false,tree:[
 let discover=d.listFiles(t,config.sources[0]);
 assert.deepEqual(discover.manifest,[pathManifest]);
 assert.deepEqual(discover.partial,[partialPath]);
+// Full-500 progress summaries can exceed 20 KB due to question ID lists.
+const bigPath='reports/benchmarks/runs/fixture500/session.large.summary.json';
+assert.deepEqual(d.listFiles({truncated:false,tree:[
+ {type:'blob',path:bigPath,size:72000}]},config.sources[0]).partial,[bigPath]);
+assert.deepEqual(d.listFiles({truncated:false,tree:[
+ {type:'blob',path:bigPath,size:262145}]},config.sources[0]).partial,[]);
 t.truncated=true;assert.throws(()=>d.listFiles(t,config.sources[0]),/truncated/);
 const row=d.createRow(m,pathManifest,'e'.repeat(40),identity,d.extractMetric(report,m,identity));
 assert.equal(row.score,0.930233);
