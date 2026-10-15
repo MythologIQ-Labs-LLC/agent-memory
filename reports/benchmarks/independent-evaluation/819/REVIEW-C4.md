@@ -89,7 +89,7 @@ Recall at depth falls a little further than in C3. The scored list still changes
 ## Safety and suite
 
 - **Leaks:** none, on either cohort or AMB.
-- **Full suite (2,633 tests):** there is exactly one new failure against A, `test_evaluation_only_change_keeps_runtime_baseline_equivalence`, because the Runtime Baseline successor is not declared. The other four (two Mem0 stub errors and two register-ancestry failures) are identical on A in this environment. See `candidates/c4-bc2be63/unittest/summary.txt`.
+- **Full suite (2,654 tests):** there is exactly one new failure against A, `test_evaluation_only_change_keeps_runtime_baseline_equivalence`, because the Runtime Baseline successor is not declared. The other four (two Mem0 stub errors and two register-ancestry failures) are identical on A in this environment. See `candidates/c4-bc2be63/unittest/summary.txt`.
 
 ## Required changes
 
