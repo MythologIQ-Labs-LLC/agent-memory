@@ -95,6 +95,8 @@ def main(argv: list[str] | None = None) -> int:
     # pinned Hindsight server and is never used unless selected with --memory.
     from amb_hindsight_chunks_bridge import install_amb_hindsight_chunks_provider  # noqa: PLC0415
     install_amb_hindsight_chunks_provider(amb_root)
+    from amb_service_provider import install_amb_service_providers  # noqa: PLC0415
+    install_amb_service_providers(amb_root)  # only when AGENT_MEMORY_AMB_SERVICES is set
 
     # Import after registration so CLI help and provider lookup both see Agent Memory.
     from memory_bench import cli as amb_cli  # type: ignore[import-not-found]  # noqa: PLC0415
