@@ -9,7 +9,7 @@
  "replay_id": "governed-admitted-typed-value-coherence-v1",
  "report": {
   "path": "report.json",
-  "sha256": "6ba79c431b6d26ef711a8592b624b1cca5dafb190e233e5be6b2607b990d50de"
+  "sha256": "60978aa528a25edce12c82ea70c62bc1510acc3c4d0a0bbb341f8a4c3d259d2d"
  },
  "runner": {
   "path": "reference/run_644_v7_replays.py",
@@ -18,6 +18,6 @@
  },
  "runtime_tree": "6f4205e029d3a42a36b709991efe6ead898a687c",
  "schema": "644-v7-replay-manifest/1",
- "source_commit": "c70fe31572e624d0e4f031ab8334b589257cf529",
- "verdict": "BLOCKED"
+ "source_commit": "631e9b71c7fd437364271ccce959f92805795107",
+ "verdict": "PASS"
 }

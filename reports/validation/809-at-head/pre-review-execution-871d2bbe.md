@@ -24,3 +24,19 @@ Not evidence. Recorded so the preregistration history is complete and checkable.
 - Four unrelated failures of that run (`test_benchmark_author_golden_path`, `test_gauntlet_durability`,
   `test_gauntlet_external_example`, `test_keyed_rebinding_benchmark`) were working-directory artefacts of running from
   `reference/`; all four pass from the repository root.
+
+## Raw summary lines of that run (verbatim from its pytest output)
+
+```text
+FAILED tests/test_644_v7_gauntlet_identity.py::ImportedRuntimeIdentity::test_own_checkout_at_frozen_revision_is_served
+FAILED tests/test_770_v7_lane_freeze_independent.py::ReplayEvidenceFreshness::test_a_runtime_edit_still_makes_replay_evidence_stale
+FAILED tests/test_770_v7_lane_freeze_independent.py::ReplayEvidenceFreshness::test_lane_records_do_not_make_replay_evidence_stale
+FAILED tests/test_809_security_replay_v1.py::Execution::test_a_reopened_oracle_would_be_caught
+FAILED tests/test_809_security_replay_v1.py::Execution::test_every_case_passes
+FAILED tests/test_benchmark_author_golden_path.py::BenchmarkAuthorGoldenPathTests::test_gauntlet_bound_profile_runs_baselines_and_external_contestant
+FAILED tests/test_benchmark_integration_contract.py::BenchmarkIntegrationContractTests::test_evaluation_only_change_keeps_runtime_baseline_equivalence
+FAILED tests/test_gauntlet_durability.py::DurabilityRecoveryGauntletTests::test_real_agent_memory_public_facade_qualifies_first_durability_slice
+FAILED tests/test_gauntlet_external_example.py::ExternalGauntletExampleTests::test_external_example_requires_opt_in_and_completes_probe
+FAILED tests/test_keyed_rebinding_benchmark.py::KeyedRebindingBenchmarkTests::test_wave2_harvest_matrix_records_uor_r4_disposition
+exit 1
+```

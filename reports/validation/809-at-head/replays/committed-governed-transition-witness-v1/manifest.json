@@ -9,7 +9,7 @@
  "replay_id": "committed-governed-transition-witness-v1",
  "report": {
   "path": "report.json",
-  "sha256": "38a6bb8c843b81f42649528b9fe4ebef15ddf1798ef4b81c9682c88a8270c821"
+  "sha256": "ed4b2ea8b83589ef1b4bb56dedd38a15a2873d50e8b1dadd871b39cd224f094f"
  },
  "runner": {
   "path": "reference/run_644_v7_replays.py",
@@ -18,6 +18,6 @@
  },
  "runtime_tree": "6f4205e029d3a42a36b709991efe6ead898a687c",
  "schema": "644-v7-replay-manifest/1",
- "source_commit": "c70fe31572e624d0e4f031ab8334b589257cf529",
- "verdict": "BLOCKED"
+ "source_commit": "631e9b71c7fd437364271ccce959f92805795107",
+ "verdict": "PASS"
 }

@@ -9,7 +9,7 @@
  "replay_id": "governed-persisted-typed-slot-sufficiency-admission-recheck-v1",
  "report": {
   "path": "report.json",
-  "sha256": "6e4c3d077e450a339d03d2a4cebdc24e3b6b87a5ed1ee7c29e9e82ca19ce9f5e"
+  "sha256": "0ef147f6b17247523b3b70c343f6fe542561008958fecfe1b2ef25127b771f2b"
  },
  "runner": {
   "path": "reference/run_644_v7_replays.py",
@@ -18,6 +18,6 @@
  },
  "runtime_tree": "6f4205e029d3a42a36b709991efe6ead898a687c",
  "schema": "644-v7-replay-manifest/1",
- "source_commit": "c70fe31572e624d0e4f031ab8334b589257cf529",
- "verdict": "BLOCKED"
+ "source_commit": "631e9b71c7fd437364271ccce959f92805795107",
+ "verdict": "PASS"
 }

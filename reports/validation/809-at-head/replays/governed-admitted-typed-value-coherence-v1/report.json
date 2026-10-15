@@ -1371,17 +1371,7 @@
  "observations_sha256": "5b8edee241e8283ce5b9fc305d1de15dcdd9048d78df181c508618f6c3d0a35c",
  "provenance": {
   "dirty_exclusion": "reports/validation/644-v7-replays/",
-  "dirty_paths": [
-   "eports/runtime/proposals/786-cumulative-v6-to-v8.PROPOSED.json",
-   "reports/validation/809-security-replays/cross-scope-write-authority-denial-v3/manifest.json",
-   "reports/validation/809-security-replays/cross-scope-write-authority-denial-v3/report.json",
-   "reports/validation/809-security-replays/deleted-lineage-generations-and-restart-v3/manifest.json",
-   "reports/validation/809-security-replays/deleted-lineage-generations-and-restart-v3/report.json",
-   "reports/validation/809-security-replays/evidence-reference-authorization-v1/manifest.json",
-   "reports/validation/809-security-replays/evidence-reference-authorization-v1/report.json",
-   "reports/validation/809-security-replays/public-tombstone-redaction-and-observer-separation-v3/manifest.json",
-   "reports/validation/809-security-replays/public-tombstone-redaction-and-observer-separation-v3/report.json"
-  ],
+  "dirty_paths": [],
   "fixture": {
    "path": "reference/fixtures/644-v7-replays/governed-admitted-typed-value-coherence-v1.json",
    "sha256": "f83c9cb3281568e649691b2e2e21ea0ec1d6e569aa4e50df774fbff4039e019b"
@@ -1394,7 +1384,7 @@
    "version": "644-v7-replay-runner/1"
   },
   "runtime_tree": "6f4205e029d3a42a36b709991efe6ead898a687c",
-  "source_commit": "c70fe31572e624d0e4f031ab8334b589257cf529",
+  "source_commit": "631e9b71c7fd437364271ccce959f92805795107",
   "sqlite": "3.45.1"
  },
  "replay_id": "governed-admitted-typed-value-coherence-v1",
@@ -1405,8 +1395,8 @@
   "failed": 0,
   "passed": 16
  },
- "verdict": "BLOCKED",
+ "verdict": "PASS",
  "verdict_reasons": [
-  "source tree is dirty outside the evidence directory"
+  "every expectation held on a clean source tree"
  ]
 }

@@ -875,17 +875,7 @@
  "observations_sha256": "907ab4730737deb0c116e73a30538adbf8a2b54953ddd66e37e2035d27a29de7",
  "provenance": {
   "dirty_exclusion": "reports/validation/644-v7-replays/",
-  "dirty_paths": [
-   "eports/runtime/proposals/786-cumulative-v6-to-v8.PROPOSED.json",
-   "reports/validation/809-security-replays/cross-scope-write-authority-denial-v3/manifest.json",
-   "reports/validation/809-security-replays/cross-scope-write-authority-denial-v3/report.json",
-   "reports/validation/809-security-replays/deleted-lineage-generations-and-restart-v3/manifest.json",
-   "reports/validation/809-security-replays/deleted-lineage-generations-and-restart-v3/report.json",
-   "reports/validation/809-security-replays/evidence-reference-authorization-v1/manifest.json",
-   "reports/validation/809-security-replays/evidence-reference-authorization-v1/report.json",
-   "reports/validation/809-security-replays/public-tombstone-redaction-and-observer-separation-v3/manifest.json",
-   "reports/validation/809-security-replays/public-tombstone-redaction-and-observer-separation-v3/report.json"
-  ],
+  "dirty_paths": [],
   "fixture": {
    "path": "reference/fixtures/644-v7-replays/typed-sufficiency-noninterference-and-negative-controls-v1.json",
    "sha256": "6b1ea7fcb7dd526c3c9e91e11f9eff834013e78f32b7e29f4dd03ca8e207547e"
@@ -898,7 +888,7 @@
    "version": "644-v7-replay-runner/1"
   },
   "runtime_tree": "6f4205e029d3a42a36b709991efe6ead898a687c",
-  "source_commit": "c70fe31572e624d0e4f031ab8334b589257cf529",
+  "source_commit": "631e9b71c7fd437364271ccce959f92805795107",
   "sqlite": "3.45.1"
  },
  "replay_id": "typed-sufficiency-noninterference-and-negative-controls-v1",
@@ -909,8 +899,8 @@
   "failed": 0,
   "passed": 19
  },
- "verdict": "BLOCKED",
+ "verdict": "PASS",
  "verdict_reasons": [
-  "source tree is dirty outside the evidence directory"
+  "every expectation held on a clean source tree"
  ]
 }

@@ -135,3 +135,24 @@ need the `-v8` evidence below.
    independent reviewer decision the replay inventory requires.
 4. Runtime track: a committed `-v8` Gauntlet contestant pinned to the published revision
    (`examples/gauntlet/agent_memory_runtime_baseline_v8_stdio.py` + manifest), only after publication.
+
+## #809 addendum (2026-10-15): the F-R3-2 disposition implemented, evidence at `c70fe315`
+
+The owner decided F-R3-2 under option (b) (PR #805 review 5527079673, issue #809). The repair is
+on branch `claude/eager-dirac-bftkfg-809` (based on `28f257c9`, PR #805's head untouched):
+`b932bd2f` changes two protected blobs (`runtime/adapter.py` `66a216fd → 4a44aa69`,
+`api/surface.py` `34e92bcb → 565a999f`; `reference/agentmem_ref` tree `6f4205e0`), and this
+declaration was regenerated with the sanctioned tool accordingly (14 declared blobs; equivalence
+`TRANSITION` under the demo register). Evidence: `reports/validation/809-at-head/README.md`
+(preregistration, three fail-first baselines, independent reviews, first execution, oracle table,
+side channels, ladder) and `reports/validation/809-security-replays/` (the three frozen `-v3`
+contracts re-executed and the additive `evidence-reference-authorization-v1` contract, DSL/3,
+all VERIFIED / PASS / re-executed at `c70fe315`).
+
+Effect on the table above: step 3 is re-run at `c70fe315` as evidence (not at a published
+revision); step 6 now needs the owner's read of the #809 records, a decision on the withdrawn
+late-binding guarantee (`reports/validation/809-at-head/README.md`, limitation 2) and the contract
+version decision (`1.8.0` provisional); blocker 1 gains those two decisions. Statuses stay distinct:
+IMPLEMENTED, TESTED, INDEPENDENTLY REVIEWED (expectations and replay generation), DECLARED: no,
+QUALIFIED: no, MERGED: no. The register pointer, activation and security acceptance remain the
+owner's and are not touched here.

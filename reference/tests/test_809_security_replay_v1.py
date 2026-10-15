@@ -143,7 +143,7 @@ class Execution(unittest.TestCase):
         """Negative control: flip the deleted-foreign admission of E1 and the case must go red."""
         fx = _fixture()
         case = next(c for c in fx["cases"] if c["id"] == "E1-four-references-after-pruning")
-        case["expect"]["admitted_bd"] = {"eq": []}
+        case["expect"]["admitted_bd"] = {"eq": False}  # the boolean recall_admits probe (reviewer note, section 8)
         with tempfile.TemporaryDirectory() as tmp:
             (Path(tmp) / f"{REPLAY}.json").write_text(json.dumps(fx), encoding="utf-8")
             report = runner.run_replay(REPLAY, fixture_dir=Path(tmp), allow_dirty=True)

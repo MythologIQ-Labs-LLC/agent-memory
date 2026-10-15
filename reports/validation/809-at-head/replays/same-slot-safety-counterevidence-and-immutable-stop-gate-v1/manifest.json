@@ -9,7 +9,7 @@
  "replay_id": "same-slot-safety-counterevidence-and-immutable-stop-gate-v1",
  "report": {
   "path": "report.json",
-  "sha256": "c0ac7c4be657f28e6df28007489cc6282427b0051c324d631cf3c82a4f561a5b"
+  "sha256": "aeeb8759a7c26125f7621ec129e6b810e4eb05e9ff1f32052311d8c9f76753c0"
  },
  "runner": {
   "path": "reference/run_644_v7_replays.py",
@@ -18,6 +18,6 @@
  },
  "runtime_tree": "6f4205e029d3a42a36b709991efe6ead898a687c",
  "schema": "644-v7-replay-manifest/1",
- "source_commit": "c70fe31572e624d0e4f031ab8334b589257cf529",
- "verdict": "BLOCKED"
+ "source_commit": "631e9b71c7fd437364271ccce959f92805795107",
+ "verdict": "PASS"
 }
