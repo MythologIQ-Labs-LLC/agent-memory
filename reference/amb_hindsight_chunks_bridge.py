@@ -19,6 +19,7 @@ AMB's requested k, and the ranked list is projected to k.
 from __future__ import annotations
 
 import hashlib, json, os, sys, time
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any
 
@@ -52,6 +53,13 @@ def install_amb_hindsight_chunks_provider(amb_root: str | Path) -> type:
             self._client = None
             self._bridges: dict[str, Any] = {}
             self._run = None
+            # The pinned client binds its aiohttp session to the loop it first runs on, and AMB
+            # may call the provider from different threads: every client call, including
+            # construction, runs on this one worker thread.
+            self._worker = ThreadPoolExecutor(max_workers=1, thread_name_prefix="hindsight-client")
+
+        def _on_worker(self, fn, *args, **kwargs):
+            return self._worker.submit(fn, *args, **kwargs).result()
 
         def prepare(self, store_dir: Path, unit_ids: set[str] | None = None, reset: bool = True) -> None:
             info = json.loads(Path(os.environ["AGENT_MEMORY_HINDSIGHT_URL_FILE"]).read_text())
@@ -62,7 +70,7 @@ def install_amb_hindsight_chunks_provider(amb_root: str | Path) -> type:
             import hindsight_client  # noqa: PLC0415
             if not str(Path(hindsight_client.__file__).resolve()).startswith(str(Path(client_dir).resolve())):
                 raise RuntimeError("pinned Hindsight client was not loaded")
-            self._client = Hindsight(base_url=info["url"], max_attempts=1)
+            self._client = self._on_worker(Hindsight, base_url=info["url"], max_attempts=1)
             self._bridges = {}
             self._run = hashlib.sha256(f"{store_dir}{time.time()}".encode()).hexdigest()[:12]
 
@@ -71,16 +79,17 @@ def install_amb_hindsight_chunks_provider(amb_root: str | Path) -> type:
             uid = str(user_id) if user_id is not None else DEFAULT_USER_ID
             if uid not in self._bridges:
                 bank_id = f"amb-{self._run}-{hashlib.sha256(uid.encode()).hexdigest()[:16]}"
-                self._client.create_bank(bank_id=bank_id, **EXPECTED_BANK_CONFIG)
+                self._on_worker(self._client.create_bank, bank_id=bank_id, **EXPECTED_BANK_CONFIG)
                 bridge = HindsightRetrievalBridge(client=self._client, bank_id=bank_id)
-                bridge.qualify_bank()
+                self._on_worker(bridge.qualify_bank)
                 self._bridges[uid] = bridge
             return self._bridges[uid]
 
         def ingest(self, documents: list[Document]) -> None:
             from agentmem_ref.evaluation.hindsight_bridge import CorpusDocument  # noqa: PLC0415
             for document in documents:
-                self._bridge(document.user_id).retain(CorpusDocument(str(document.id), str(document.content)))
+                bridge = self._bridge(document.user_id)
+                self._on_worker(bridge.retain, CorpusDocument(str(document.id), str(document.content)))
 
         def retrieve(self, query: str, k: int = 10, user_id: str | None = None,
                      query_timestamp: str | None = None) -> tuple[list[Document], dict | None]:
@@ -88,7 +97,7 @@ def install_amb_hindsight_chunks_provider(amb_root: str | Path) -> type:
             bridge = self._bridge(uid)
             if bridge.ingest_count == 0:
                 return [], {"provider": AMB_PROVIDER_KEY, "returned_count": 0, "empty_bank": True}
-            env = bridge.recall(str(query), top_k=max(1, int(k)), max_tokens=RECALL_MAX_TOKENS, budget=RECALL_BUDGET)
+            env = self._on_worker(bridge.recall, str(query), top_k=max(1, int(k)), max_tokens=RECALL_MAX_TOKENS, budget=RECALL_BUDGET)
             docs = [Document(id=cid, content="", user_id=uid, source_ids=[cid]) for cid in env.mapped_corpus_ids]
             raw = {"provider": AMB_PROVIDER_KEY, "bridge_version": BRIDGE_VERSION, "returned_count": len(docs),
                    "provider_result_count": len(env.raw_native_results),
