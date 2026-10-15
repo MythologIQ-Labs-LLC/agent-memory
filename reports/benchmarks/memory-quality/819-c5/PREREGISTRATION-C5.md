@@ -154,3 +154,23 @@ LongMemEval-S (native runner, both planes) and AMB are diagnostic regression che
   A plural is a word that Porter step 1 shortens and that does not end in -ss, -us or -is.
 - **Scope.** The reading enables *semantic set evidence only*. Lexical selection keeps C4's interpreter, so A6 (semantic off → C4's lists) still holds.
 - **Calibration and tests.** It is recorded in `return_policy.semantic_channel.plural_answer`. Calibration includes it, and unit tests pin the grammar both ways (singular -s verbs such as "Which pet gets scared?" are not plural).
+
+**Erratum 2 (calibration tie-break; recorded here as the review asked, F7).**
+- **First run** (tie-break: higher floors first). It chose (τ_abs 0.40, δ_single 0.05, τ_set 0.40, δ_set 0.05): dev 27/48, precision 0.731, recall 0.575.
+- **Second run** (tie-break: recall first, then precision). It chose (0.25, 0.05, 0.25, 0.05): 27/48, precision 0.715, recall 0.775.
+- **Timing.** The change was made after seeing the first grid. Both runs used only the dev set.
+
+**Erratum 3, recorded before recalibration.** It comes from the independent review of `eaed54ee` (`REVIEW-C5-independent.md`). Structural constraints on the grid:
+
+1. **Floors no lower than the route's discovery floor (review F4).** The semantic floors are now τ ∈ {0.30, …, 0.50}, at or above the semantic route's own discovery floor, `SEMANTIC_MINIMUM_SIMILARITY` = 0.30.
+   - A floor below it made a fact sufficient at a similarity the vector route had rejected.
+   - Whether such a fact was returned then depended on whether the lexical route happened to propose it through a shared function word.
+2. **The set margin is strictly wider than the single margin (review F1).** δ_set ≥ δ_single + 0.05, and τ_set ≤ τ_abs.
+   - With equal values the set channel could never fire, so erratum 1's plural reading changed nothing.
+3. **Plural reading (review F6).** After "which", the plural word must be followed by an auxiliary or function word, or end the question ("Which pets do…" is read as plural; "Which goes first?" is not). The word after "which" must not itself be a function word ("Which does…" is not plural).
+4. **Provider failure (review F5).** A provider failure while scoring falls back to the 2.3.0 treatment, recorded as `semantic_channel.status = "unavailable"`, instead of failing the recall.
+5. **Channel record (review F8).** `semantic_channel` is recorded whenever the route is enabled, including when nothing was admitted.
+
+**Recorded boundary (review F2).** The margin is anchored on the most similar admitted fact. Memory text written to be more similar to the query than the true answer, such as keyword or paraphrase stuffing, can therefore push the true answer out of a narrow single margin.
+- Memory text grants no authority, but it can compete for selection, as it already can for lexical relevance.
+- A wider single margin trades precision for robustness. The recalibrated point and this trade-off are reported in `CALIBRATION.md`.
