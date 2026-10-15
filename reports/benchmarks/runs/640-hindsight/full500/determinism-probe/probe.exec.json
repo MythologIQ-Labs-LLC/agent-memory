@@ -1,0 +1,51 @@
+{
+  "argv": [
+    "/tmp/am-bench/hindsight-venv/bin/python",
+    "hindsight_determinism_probe.py",
+    "--input",
+    "/tmp/agent-memory-benchmark-data/longmemeval_s_cleaned.json",
+    "--question-ids",
+    "/tmp/am-bench/runs/640-hindsight-determinism/question-ids.txt",
+    "--repeats",
+    "3",
+    "--out",
+    "/tmp/am-bench/runs/640-hindsight-determinism/probe.json"
+  ],
+  "cwd": "/home/user/ext-exec/reference",
+  "env": {
+    "HF_HOME": null,
+    "HF_HUB_OFFLINE": "1",
+    "TRANSFORMERS_OFFLINE": null,
+    "JEV_MEM_SOURCE_ROOT": null,
+    "PYTHONHASHSEED": "0",
+    "VIRTUAL_ENV": null,
+    "OMP_NUM_THREADS": null,
+    "HOME": "/tmp/am-bench/pg0-home-amb"
+  },
+  "run_as_user": "benchrun",
+  "host": {
+    "platform": "Linux-6.18.44-fc-v114-x86_64-with-glibc2.39",
+    "cpu_count": 4,
+    "python": "3.13.16"
+  },
+  "started_utc": "2026-10-15T17:10:22Z",
+  "exit_status": 0,
+  "wall_seconds": 794.617,
+  "user_cpu_seconds": 621.799,
+  "system_cpu_seconds": 32.001,
+  "peak_rss_mib": 2487.5,
+  "secrets_present": {
+    "OPENAI_API_KEY": false,
+    "ANTHROPIC_API_KEY": false,
+    "TYPESAFE_API_KEY": false,
+    "HF_TOKEN": false,
+    "GEMINI_API_KEY": false,
+    "GOOGLE_API_KEY": false,
+    "GROQ_API_KEY": false,
+    "AWS_ACCESS_KEY_ID": false,
+    "AWS_SECRET_ACCESS_KEY": false,
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false,
+    "LLM_API_KEY": false
+  }
+}

@@ -1,0 +1,11 @@
+{"question_id": "ef66a6e5", "same_bank_orders_identical": true, "fresh_bank_order_identical": true, "fresh_bank_first_divergence": null}
+{"question_id": "001be529", "same_bank_orders_identical": true, "fresh_bank_order_identical": false, "fresh_bank_first_divergence": 2}
+{"question_id": "06878be2", "same_bank_orders_identical": true, "fresh_bank_order_identical": false, "fresh_bank_first_divergence": 0}
+{"question_id": "1d4da289", "same_bank_orders_identical": true, "fresh_bank_order_identical": false, "fresh_bank_first_divergence": 1}
+{"question_id": "2ebe6c92", "same_bank_orders_identical": true, "fresh_bank_order_identical": false, "fresh_bank_first_divergence": 4}
+{"question_id": "4b24c848", "same_bank_orders_identical": true, "fresh_bank_order_identical": false, "fresh_bank_first_divergence": 7}
+{"question_id": "4baee567", "same_bank_orders_identical": true, "fresh_bank_order_identical": false, "fresh_bank_first_divergence": 2}
+{"question_id": "50635ada", "same_bank_orders_identical": true, "fresh_bank_order_identical": false, "fresh_bank_first_divergence": 4}
+{"question_id": "51c32626", "same_bank_orders_identical": true, "fresh_bank_order_identical": true, "fresh_bank_first_divergence": null}
+{"question_id": "577d4d32", "same_bank_orders_identical": true, "fresh_bank_order_identical": false, "fresh_bank_first_divergence": 0}
+{"questions": 10, "same_bank_all_identical": 10, "fresh_bank_identical": 2, "fresh_bank_same_set": 10, "repeats": 3, "diagnostic_only": true, "authority_effect": "none"}

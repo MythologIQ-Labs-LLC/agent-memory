@@ -1,0 +1,22 @@
+methods: [('semantic', 'experience', 0), ('bm25', 'experience', 0), ('semantic', 'world', 56), ('bm25', 'world', 9), ('semantic', 'observation', 0), ('bm25', 'observation', 0)]
+ef66a6e5 units A/B/common=46/46/46 semantic_rank_changed=0 bm25_rank_changed=5 rrf_score_changed=5
+001be529 units A/B/common=56/56/55 semantic_rank_changed=0 bm25_rank_changed=3 rrf_score_changed=3
+06878be2 units A/B/common=56/56/56 semantic_rank_changed=0 bm25_rank_changed=18 rrf_score_changed=18
+1d4da289 units A/B/common=55/55/54 semantic_rank_changed=1 bm25_rank_changed=17 rrf_score_changed=17
+2ebe6c92 units A/B/common=49/49/49 semantic_rank_changed=0 bm25_rank_changed=11 rrf_score_changed=11
+4b24c848 units A/B/common=51/51/51 semantic_rank_changed=0 bm25_rank_changed=16 rrf_score_changed=16
+4baee567 units A/B/common=58/58/58 semantic_rank_changed=0 bm25_rank_changed=36 rrf_score_changed=36
+50635ada units A/B/common=51/51/51 semantic_rank_changed=0 bm25_rank_changed=9 rrf_score_changed=9
+51c32626 units A/B/common=51/51/51 semantic_rank_changed=0 bm25_rank_changed=2 rrf_score_changed=2
+577d4d32 units A/B/common=51/51/51 semantic_rank_changed=0 bm25_rank_changed=28 rrf_score_changed=28
+questions with any semantic-arm rank change: 1 /10; any bm25-arm rank change: 10 /10
+ef66a6e5 bm25 n 7 distinct scores 2 tied 5 scores equal A/B True texts same set True order same False [0.400000006, 0.400000006, 0.400000006, 0.100000001, 0.100000001, 0.100000001]
+001be529 bm25 n 9 distinct scores 3 tied 6 scores equal A/B True texts same set True order same False [0.5, 0.300000012, 0.100000001, 0.100000001, 0.100000001, 0.100000001]
+06878be2 bm25 n 23 distinct scores 4 tied 19 scores equal A/B True texts same set True order same False [0.600000024, 0.300000012, 0.200000003, 0.200000003, 0.200000003, 0.200000003]
+1d4da289 bm25 n 19 distinct scores 6 tied 13 scores equal A/B False texts same set False order same False [0.600000024, 0.5, 0.5, 0.400000006, 0.400000006, 0.300000012]
+2ebe6c92 bm25 n 18 distinct scores 6 tied 12 scores equal A/B True texts same set True order same False [1.0, 0.600000024, 0.400000006, 0.400000006, 0.400000006, 0.300000012]
+4b24c848 bm25 n 29 distinct scores 11 tied 18 scores equal A/B True texts same set True order same False [1.300000072, 1.100000024, 0.900000036, 0.800000012, 0.699999988, 0.699999988]
+4baee567 bm25 n 40 distinct scores 7 tied 33 scores equal A/B True texts same set True order same False [0.900000036, 0.900000036, 0.699999988, 0.5, 0.5, 0.5]
+50635ada bm25 n 17 distinct scores 5 tied 12 scores equal A/B True texts same set True order same False [1.600000024, 0.600000024, 0.300000012, 0.200000003, 0.200000003, 0.200000003]
+51c32626 bm25 n 8 distinct scores 4 tied 4 scores equal A/B True texts same set True order same False [1.0, 0.900000036, 0.200000003, 0.200000003, 0.100000001, 0.100000001]
+577d4d32 bm25 n 33 distinct scores 8 tied 25 scores equal A/B True texts same set True order same False [0.900000036, 0.699999988, 0.600000024, 0.600000024, 0.5, 0.400000006]
