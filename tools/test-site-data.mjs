@@ -27,3 +27,13 @@ assert.equal(sampleInfo({native:{total_passes:'6/0'}},'amb-precisionmembench-ret
 assert.equal(sampleInfo({native:{total_passes:'78/77'}},'amb-precisionmembench-retrieval-v1').value,null);
 assert.equal(sampleInfo({native:{total_passes:'15/77'}},'unrelated-benchmark-v1').value,null);
 assert.equal(sampleInfo({native:{scored_questions:23}},'longmemeval-parity-v1').value,23);
+
+const reportRow={provider:'mem0_explicit',plane:'turn',evidence:'reports/test/evidence.json',native:{scored_questions:419}};
+const denominatorAudit={records:[{evidence_path:reportRow.evidence,backend:'mem0_explicit',plane:'turn',
+  retrieval_scored_questions:419,knowledge_update_scored_questions:72,
+  latest_gold_applicable_questions:70,report_blob:'a'.repeat(40)}]};
+assert.equal(sampleInfo(reportRow,'longmemeval-parity-v2','recall_all@5',denominatorAudit).value,419);
+assert.equal(sampleInfo(reportRow,'longmemeval-parity-v2','knowledge_update_recall_all@5',denominatorAudit).value,72);
+assert.equal(sampleInfo(reportRow,'longmemeval-parity-v2','latest_gold_ranked_first',denominatorAudit).value,70);
+assert.throws(()=>sampleInfo(reportRow,'longmemeval-parity-v2','knowledge_update_recall_all@5',null),/denominator evidence missing/);
+assert.throws(()=>sampleInfo({...reportRow,native:{scored_questions:420}},'longmemeval-parity-v2','knowledge_update_recall_all@5',denominatorAudit),/mismatched/);

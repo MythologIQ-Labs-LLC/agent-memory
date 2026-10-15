@@ -4,8 +4,21 @@ function norm(x){return String(x||"").trim().toLowerCase().replaceAll("_","-")}
 
 function validatePath(x){if(typeof x!=="string"||x.startsWith("/")||x.includes("..")||!/^[-\w/.]+$/.test(x))throw Error("Untrusted evidence path: "+x);return x}
 
-export function sampleInfo(row,laneId){
+export function sampleInfo(row,laneId,metric,denoms){
  const n=row.native?.scored_questions;
+ if(String(laneId).startsWith("longmemeval-") &&
+    (String(metric).startsWith("knowledge_update_") || metric==="latest_gold_ranked_first")){
+  const record=denoms?.records?.find(x=>x.evidence_path===row.evidence);
+  if(!record || record.plane!==(row.plane||"single-turn") || record.backend!==row.provider ||
+    !Number.isSafeInteger(record.retrieval_scored_questions) ||
+    record.retrieval_scored_questions!==n){
+   throw Error("Pinned LongMemEval denominator evidence missing or mismatched: "+row.evidence);
+  }
+  const count=metric==="latest_gold_ranked_first"?
+     record.latest_gold_applicable_questions:record.knowledge_update_scored_questions;
+  if(!Number.isSafeInteger(count)||count<=0||count>n)throw Error("Invalid native metric-specific denominator");
+  return {value:count,source:"pinned native report "+record.report_blob+" ("+metric+")"};
+ }
  if(Number.isSafeInteger(n)&&n>0)return {value:n,source:"native.scored_questions"};
  if(String(laneId).startsWith("amb-precisionmembench-")){
   const m=/^([0-9]+)\/([0-9]+)$/.exec(String(row.native?.total_passes||""));
@@ -19,11 +32,18 @@ export function sampleInfo(row,laneId){
  return {value:null,source:"not_available_in_dashboard"};
 }
 
-export function makeSnapshot(d,c,o){
+export function makeSnapshot(d,c,o,denoms=null){
  if(!d||d.schema_version!==2||d.authority_effect!=="none"||!d.as_of||!Array.isArray(d.competitive_evidence?.frozen_lanes))throw Error("Canonical dashboard contract mismatch");
  if(!c||c.schema_version!==1||!Array.isArray(c.systems))throw Error("Comparator registry contract mismatch");
  if(!/^[0-9a-f]{40}$/.test(o.head)||!/^[0-9a-f]{40}$/.test(o.blob))throw Error("Immutable source head/blob required");
  const accepted=d.competitive_evidence.frozen_lanes.filter(x=>x.status==="accepted");
+ if(accepted.some(x=>x.lane_id.startsWith("longmemeval-"))){
+  if(denoms?.schema_version!==1||denoms?.authority_effect!=="none"||
+     denoms.source_commit!==o.head||denoms.dashboard_blob!==o.blob||
+     !/^[a-f0-9]{40}$/.test(o.denomBlob||"")||!Array.isArray(denoms.records)){
+   throw Error("Pinned LongMemEval denominator audit required for this exact dashboard");
+  }
+ }
  const observed=new Set(accepted.flatMap(x=>(x.accepted_rows||[]).filter(z=>z.role!=="baseline").map(z=>norm(z.provider))));
  const profiles=[];
  for(const lane of accepted){
@@ -41,7 +61,7 @@ export function makeSnapshot(d,c,o){
     const rows=items.filter(x=>typeof x.native[key]==="number").map(x=>{
      const score=x.native[key];
      if(!Number.isFinite(score)||score<0||score>1)throw Error("Invalid fraction-valued metric "+key);
-     const sample=sampleInfo(x,lane.lane_id);
+     const sample=sampleInfo(x,lane.lane_id,key,denoms);
      return {system:x.provider,role:x.role,score,revision:x.system_revision,run_url:"https://github.com/"+o.repo+"/blob/"+o.head+"/"+validatePath(x.evidence),sample_count:sample.value,sample_count_source:sample.source,workflow_run_id:x.workflow_run_id??null};
     });
     const control=rows.find(x=>x.role==="control");
@@ -65,7 +85,7 @@ export function makeSnapshot(d,c,o){
  }
  if(!ids.has("tencentdb-agent-memory"))throw Error("TencentDB comparator missing");
  const published=(d.published_reference||[]).map(x=>({...x,comparison_state:"published_reference",eligible_for_numeric_delta:false}));
- return {schema_version:1,kind:"static_read_only_benchmark_projection",source:{repository:"https://github.com/"+o.repo,head:o.head,dashboard_path:"reports/benchmarks/dashboard/current.json",dashboard_blob:o.blob,dashboard_as_of:d.as_of,authority_effect:"none"},safety:{same_harness:"Comparisons only within one accepted frozen lane, plane and native metric.",published_reference:"Vendor/research figures are not same-harness results.",not_run:"Not run is not zero.",runtime_qualification:"Benchmark scores are not production readiness, truth or authority.",no_universal_score:true},profiles,competitors,published_reference:published,issues:{competitive:"https://github.com/"+o.repo+"/issues/806",website:"https://github.com/"+o.repo+"/issues/807"}};
+ return {schema_version:1,kind:"static_read_only_benchmark_projection",source:{repository:"https://github.com/"+o.repo,head:o.head,dashboard_path:"reports/benchmarks/dashboard/current.json",dashboard_blob:o.blob,dashboard_as_of:d.as_of,authority_effect:"none",...(denoms?{denominator_audit_path:"data/longmemeval-denominator-audit.json",denominator_audit_blob:o.denomBlob}:{})},safety:{same_harness:"Comparisons only within one accepted frozen lane, plane and native metric.",published_reference:"Vendor/research figures are not same-harness results.",not_run:"Not run is not zero.",runtime_qualification:"Benchmark scores are not production readiness, truth or authority.",no_universal_score:true},profiles,competitors,published_reference:published,issues:{competitive:"https://github.com/"+o.repo+"/issues/806",website:"https://github.com/"+o.repo+"/issues/807"}};
 }
 
 import fs from 'node:fs';
@@ -74,13 +94,15 @@ import {pathToFileURL} from 'node:url';
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
 const flags=Object.fromEntries(process.argv.slice(2).reduce((pairs,arg,i,all)=>{if(arg.startsWith('--')&&arg!=='--check')pairs.push([arg.slice(2),all[i+1]]);return pairs},[]));
 const check=process.argv.includes('--check');
-if(!flags.dashboard||!flags.competitors||!flags.out||!flags['source-head']){console.error('Usage: node tools/build-site-data.mjs --dashboard PATH --competitors config/competitors.json --out data/snapshot.json --source-head COMMIT [--check]');process.exit(2)}
+if(!flags.dashboard||!flags.competitors||!flags.out||!flags['source-head']||!flags.denominators){console.error('Usage: node tools/build-site-data.mjs --dashboard PATH --competitors config/competitors.json --out data/snapshot.json --source-head COMMIT --denominators data/longmemeval-denominator-audit.json [--check]');process.exit(2)}
 if(!/^[0-9a-f]{40}$/.test(flags['source-head']))throw Error('source-head must be full 40-char SHA');
 const dashboardBytes=fs.readFileSync(flags.dashboard);
 const digest=execFileSync('git',['hash-object',flags.dashboard],{encoding:'utf8'}).trim();
 const dash=JSON.parse(dashboardBytes.toString('utf8'));
 const competitors=JSON.parse(fs.readFileSync(flags.competitors,'utf8'));
-const out=JSON.stringify(makeSnapshot(dash,competitors,{repo:'MythologIQ-Labs-LLC/agent-memory',head:flags['source-head'],blob:digest}),null,2)+'\n';
+const denomDoc=JSON.parse(fs.readFileSync(flags.denominators,'utf8'));
+const denomBlob=execFileSync('git',['hash-object',flags.denominators],{encoding:'utf8'}).trim();
+const out=JSON.stringify(makeSnapshot(dash,competitors,{repo:'MythologIQ-Labs-LLC/agent-memory',head:flags['source-head'],blob:digest,denomBlob},denomDoc),null,2)+'\n';
 if(check){if(!fs.existsSync(flags.out)||fs.readFileSync(flags.out,'utf8')!==out){console.error('STALE generated benchmark snapshot: '+flags.out);process.exit(1)}console.log('PASS: snapshot matches pinned canonical dashboard');}
 else{fs.writeFileSync(flags.out,out);console.log('Generated '+flags.out)}
 }

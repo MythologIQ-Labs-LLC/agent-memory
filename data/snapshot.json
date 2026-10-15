@@ -7,7 +7,9 @@
     "dashboard_path": "reports/benchmarks/dashboard/current.json",
     "dashboard_blob": "2acc39d36b3b637a08289aa757919f55da04c54c",
     "dashboard_as_of": "2026-10-07",
-    "authority_effect": "none"
+    "authority_effect": "none",
+    "denominator_audit_path": "data/longmemeval-denominator-audit.json",
+    "denominator_audit_blob": "e115c27288eccb67e38f45987e46e84ac33fcc09"
   },
   "safety": {
     "same_harness": "Comparisons only within one accepted frozen lane, plane and native metric.",
@@ -302,8 +304,8 @@
               "score": 0.972222,
               "revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
               "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/38f6a7dcc358e8ee50a38d703b0addb9d8e660d7/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/agent_memory-session-0b0449a8aa2b/evidence.json",
-              "sample_count": 419,
-              "sample_count_source": "native.scored_questions",
+              "sample_count": 72,
+              "sample_count_source": "pinned native report fd1672be187ecec945ffbe3eeeb2c65b3d512393 (knowledge_update_recall_all@5)",
               "workflow_run_id": "37421243051"
             },
             {
@@ -312,8 +314,8 @@
               "score": 0.916667,
               "revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
               "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/38f6a7dcc358e8ee50a38d703b0addb9d8e660d7/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/lexical_overlap-session-0b0449a8aa2b/evidence.json",
-              "sample_count": 419,
-              "sample_count_source": "native.scored_questions",
+              "sample_count": 72,
+              "sample_count_source": "pinned native report d84b24aaa15dbd7e873515062530024979272dbc (knowledge_update_recall_all@5)",
               "workflow_run_id": "37421248307"
             },
             {
@@ -322,8 +324,8 @@
               "score": 0.902778,
               "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
               "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/38f6a7dcc358e8ee50a38d703b0addb9d8e660d7/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/mem0_explicit-session-0b0449a8aa2b/evidence.json",
-              "sample_count": 419,
-              "sample_count_source": "native.scored_questions",
+              "sample_count": 72,
+              "sample_count_source": "pinned native report 91fddf37efde150b0ad1f812010b066271a824d8 (knowledge_update_recall_all@5)",
               "workflow_run_id": "37421253480"
             }
           ]
@@ -343,8 +345,8 @@
               "score": 0.457143,
               "revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
               "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/38f6a7dcc358e8ee50a38d703b0addb9d8e660d7/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/agent_memory-session-0b0449a8aa2b/evidence.json",
-              "sample_count": 419,
-              "sample_count_source": "native.scored_questions",
+              "sample_count": 70,
+              "sample_count_source": "pinned native report fd1672be187ecec945ffbe3eeeb2c65b3d512393 (latest_gold_ranked_first)",
               "workflow_run_id": "37421243051"
             },
             {
@@ -353,8 +355,8 @@
               "score": 0.457143,
               "revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
               "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/38f6a7dcc358e8ee50a38d703b0addb9d8e660d7/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/lexical_overlap-session-0b0449a8aa2b/evidence.json",
-              "sample_count": 419,
-              "sample_count_source": "native.scored_questions",
+              "sample_count": 70,
+              "sample_count_source": "pinned native report d84b24aaa15dbd7e873515062530024979272dbc (latest_gold_ranked_first)",
               "workflow_run_id": "37421248307"
             },
             {
@@ -363,8 +365,8 @@
               "score": 0.442857,
               "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
               "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/38f6a7dcc358e8ee50a38d703b0addb9d8e660d7/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/mem0_explicit-session-0b0449a8aa2b/evidence.json",
-              "sample_count": 419,
-              "sample_count_source": "native.scored_questions",
+              "sample_count": 70,
+              "sample_count_source": "pinned native report 91fddf37efde150b0ad1f812010b066271a824d8 (latest_gold_ranked_first)",
               "workflow_run_id": "37421253480"
             }
           ]
@@ -561,8 +563,8 @@
               "score": 0.791667,
               "revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
               "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/38f6a7dcc358e8ee50a38d703b0addb9d8e660d7/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/agent_memory-turn-0b0449a8aa2b/evidence.json",
-              "sample_count": 419,
-              "sample_count_source": "native.scored_questions",
+              "sample_count": 72,
+              "sample_count_source": "pinned native report 6d431a365d930c5431ce5ff352ac85b103cc0a73 (knowledge_update_recall_all@5)",
               "workflow_run_id": "37421245382"
             },
             {
@@ -571,8 +573,8 @@
               "score": 0.680556,
               "revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
               "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/38f6a7dcc358e8ee50a38d703b0addb9d8e660d7/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/lexical_overlap-turn-0b0449a8aa2b/evidence.json",
-              "sample_count": 419,
-              "sample_count_source": "native.scored_questions",
+              "sample_count": 72,
+              "sample_count_source": "pinned native report 5ff0b494d4820cf06d581f0fe0937ee16523f4f9 (knowledge_update_recall_all@5)",
               "workflow_run_id": "37421251326"
             },
             {
@@ -581,8 +583,8 @@
               "score": 0.611111,
               "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
               "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/38f6a7dcc358e8ee50a38d703b0addb9d8e660d7/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/mem0_explicit-turn-0b0449a8aa2b/evidence.json",
-              "sample_count": 419,
-              "sample_count_source": "native.scored_questions",
+              "sample_count": 72,
+              "sample_count_source": "pinned native report 18dd95db6e3eeb9ba1132154685fc595feda5f19 (knowledge_update_recall_all@5)",
               "workflow_run_id": "37421255904"
             }
           ]
@@ -602,8 +604,8 @@
               "score": 0.557143,
               "revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
               "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/38f6a7dcc358e8ee50a38d703b0addb9d8e660d7/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/agent_memory-turn-0b0449a8aa2b/evidence.json",
-              "sample_count": 419,
-              "sample_count_source": "native.scored_questions",
+              "sample_count": 70,
+              "sample_count_source": "pinned native report 6d431a365d930c5431ce5ff352ac85b103cc0a73 (latest_gold_ranked_first)",
               "workflow_run_id": "37421245382"
             },
             {
@@ -612,8 +614,8 @@
               "score": 0.614286,
               "revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
               "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/38f6a7dcc358e8ee50a38d703b0addb9d8e660d7/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/lexical_overlap-turn-0b0449a8aa2b/evidence.json",
-              "sample_count": 419,
-              "sample_count_source": "native.scored_questions",
+              "sample_count": 70,
+              "sample_count_source": "pinned native report 5ff0b494d4820cf06d581f0fe0937ee16523f4f9 (latest_gold_ranked_first)",
               "workflow_run_id": "37421251326"
             },
             {
@@ -622,8 +624,8 @@
               "score": 0.485714,
               "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
               "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/38f6a7dcc358e8ee50a38d703b0addb9d8e660d7/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/mem0_explicit-turn-0b0449a8aa2b/evidence.json",
-              "sample_count": 419,
-              "sample_count_source": "native.scored_questions",
+              "sample_count": 70,
+              "sample_count_source": "pinned native report 18dd95db6e3eeb9ba1132154685fc595feda5f19 (latest_gold_ranked_first)",
               "workflow_run_id": "37421255904"
             }
           ]
@@ -915,8 +917,8 @@
               "score": 0.972222,
               "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
               "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/38f6a7dcc358e8ee50a38d703b0addb9d8e660d7/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/agent_memory-session-ca0f9a748b3b/evidence.json",
-              "sample_count": 419,
-              "sample_count_source": "native.scored_questions",
+              "sample_count": 72,
+              "sample_count_source": "pinned native report a6fef1642401a9b8e1a0cb3763e8acebad569043 (knowledge_update_recall_all@5)",
               "workflow_run_id": "37543549261"
             },
             {
@@ -925,8 +927,8 @@
               "score": 0.916667,
               "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
               "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/38f6a7dcc358e8ee50a38d703b0addb9d8e660d7/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/lexical_overlap-session-ca0f9a748b3b/evidence.json",
-              "sample_count": 419,
-              "sample_count_source": "native.scored_questions",
+              "sample_count": 72,
+              "sample_count_source": "pinned native report 8ec3bca83ec372f2416908b9671f37bd03f39452 (knowledge_update_recall_all@5)",
               "workflow_run_id": "37543556285"
             },
             {
@@ -935,8 +937,8 @@
               "score": 0.902778,
               "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
               "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/38f6a7dcc358e8ee50a38d703b0addb9d8e660d7/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/mem0_explicit-session-ca0f9a748b3b/evidence.json",
-              "sample_count": 419,
-              "sample_count_source": "native.scored_questions",
+              "sample_count": 72,
+              "sample_count_source": "pinned native report 1824f208b2e6375f6ce8c0a1e9bdeca9f846f6fc (knowledge_update_recall_all@5)",
               "workflow_run_id": "37543562462"
             }
           ]
@@ -956,8 +958,8 @@
               "score": 0.457143,
               "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
               "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/38f6a7dcc358e8ee50a38d703b0addb9d8e660d7/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/agent_memory-session-ca0f9a748b3b/evidence.json",
-              "sample_count": 419,
-              "sample_count_source": "native.scored_questions",
+              "sample_count": 70,
+              "sample_count_source": "pinned native report a6fef1642401a9b8e1a0cb3763e8acebad569043 (latest_gold_ranked_first)",
               "workflow_run_id": "37543549261"
             },
             {
@@ -966,8 +968,8 @@
               "score": 0.457143,
               "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
               "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/38f6a7dcc358e8ee50a38d703b0addb9d8e660d7/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/lexical_overlap-session-ca0f9a748b3b/evidence.json",
-              "sample_count": 419,
-              "sample_count_source": "native.scored_questions",
+              "sample_count": 70,
+              "sample_count_source": "pinned native report 8ec3bca83ec372f2416908b9671f37bd03f39452 (latest_gold_ranked_first)",
               "workflow_run_id": "37543556285"
             },
             {
@@ -976,8 +978,8 @@
               "score": 0.442857,
               "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
               "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/38f6a7dcc358e8ee50a38d703b0addb9d8e660d7/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/mem0_explicit-session-ca0f9a748b3b/evidence.json",
-              "sample_count": 419,
-              "sample_count_source": "native.scored_questions",
+              "sample_count": 70,
+              "sample_count_source": "pinned native report 1824f208b2e6375f6ce8c0a1e9bdeca9f846f6fc (latest_gold_ranked_first)",
               "workflow_run_id": "37543562462"
             }
           ]
@@ -1174,8 +1176,8 @@
               "score": 0.791667,
               "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
               "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/38f6a7dcc358e8ee50a38d703b0addb9d8e660d7/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/agent_memory-turn-ca0f9a748b3b/evidence.json",
-              "sample_count": 419,
-              "sample_count_source": "native.scored_questions",
+              "sample_count": 72,
+              "sample_count_source": "pinned native report 4f2cdbc61f314f003d00654d501378a06ca64307 (knowledge_update_recall_all@5)",
               "workflow_run_id": "37543552664"
             },
             {
@@ -1184,8 +1186,8 @@
               "score": 0.680556,
               "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
               "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/38f6a7dcc358e8ee50a38d703b0addb9d8e660d7/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/lexical_overlap-turn-ca0f9a748b3b/evidence.json",
-              "sample_count": 419,
-              "sample_count_source": "native.scored_questions",
+              "sample_count": 72,
+              "sample_count_source": "pinned native report 050b14a6ad6f9ff3ab668c87214dff4eeba13276 (knowledge_update_recall_all@5)",
               "workflow_run_id": "37543559580"
             },
             {
@@ -1194,8 +1196,8 @@
               "score": 0.611111,
               "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
               "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/38f6a7dcc358e8ee50a38d703b0addb9d8e660d7/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/mem0_explicit-turn-ca0f9a748b3b/evidence.json",
-              "sample_count": 419,
-              "sample_count_source": "native.scored_questions",
+              "sample_count": 72,
+              "sample_count_source": "pinned native report 0cc663591a538edb5a2b0f427ff1de33a529426e (knowledge_update_recall_all@5)",
               "workflow_run_id": "37543565695"
             }
           ]
@@ -1215,8 +1217,8 @@
               "score": 0.557143,
               "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
               "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/38f6a7dcc358e8ee50a38d703b0addb9d8e660d7/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/agent_memory-turn-ca0f9a748b3b/evidence.json",
-              "sample_count": 419,
-              "sample_count_source": "native.scored_questions",
+              "sample_count": 70,
+              "sample_count_source": "pinned native report 4f2cdbc61f314f003d00654d501378a06ca64307 (latest_gold_ranked_first)",
               "workflow_run_id": "37543552664"
             },
             {
@@ -1225,8 +1227,8 @@
               "score": 0.614286,
               "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
               "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/38f6a7dcc358e8ee50a38d703b0addb9d8e660d7/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/lexical_overlap-turn-ca0f9a748b3b/evidence.json",
-              "sample_count": 419,
-              "sample_count_source": "native.scored_questions",
+              "sample_count": 70,
+              "sample_count_source": "pinned native report 050b14a6ad6f9ff3ab668c87214dff4eeba13276 (latest_gold_ranked_first)",
               "workflow_run_id": "37543559580"
             },
             {
@@ -1235,8 +1237,8 @@
               "score": 0.485714,
               "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
               "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/38f6a7dcc358e8ee50a38d703b0addb9d8e660d7/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/mem0_explicit-turn-ca0f9a748b3b/evidence.json",
-              "sample_count": 419,
-              "sample_count_source": "native.scored_questions",
+              "sample_count": 70,
+              "sample_count_source": "pinned native report 0cc663591a538edb5a2b0f427ff1de33a529426e (latest_gold_ranked_first)",
               "workflow_run_id": "37543565695"
             }
           ]

@@ -41,7 +41,7 @@ Check out this publication branch with full local access to the main repository'
 ```bash
 git show 38f6a7dcc358e8ee50a38d703b0addb9d8e660d7:reports/benchmarks/dashboard/current.json > /tmp/am-dashboard.json
 node tools/test-site-data.mjs
-node tools/build-site-data.mjs --dashboard /tmp/am-dashboard.json --competitors config/competitors.json --out data/snapshot.json --source-head 38f6a7dcc358e8ee50a38d703b0addb9d8e660d7 --check
+node tools/build-site-data.mjs --dashboard /tmp/am-dashboard.json --competitors config/competitors.json --denominators data/longmemeval-denominator-audit.json --out data/snapshot.json --source-head 38f6a7dcc358e8ee50a38d703b0addb9d8e660d7 --check
 ```
 
 The builder pins source/evidence links to that exact immutable revision, computes the dashboard Git blob ID, rejects malformed provenance and out-of-range metrics, and fails when a competitor's `measured` / `not_run` status contradicts the accepted lane inputs. It cannot qualify new benchmarks or publish vendor references as same-harness evidence. Avoid editing `data/snapshot.json` by hand. A new dashboard revision requires a fresh deliberate source-head and rebuilt data. This branch is static and does not fetch data from visitors' browsers beyond its own JSON asset.
@@ -71,3 +71,11 @@ Publication rule: test/review in an isolated branch first; updating the configur
 The initial Pages snapshot omitted `sample_count` for six AMB evidence records. The frozen AMB lane's `native.total_passes` includes a `passes/77` population denominator, and each of the six exact raw evidence files at canonical commit `38f6a7dcc358e8ee50a38d703b0addb9d8e660d7` independently records both `input.query_count=77` and `native_summary.total_queries=77`. `data/amb-query-count-audit.json` pins the six raw Git blob identities and the cross-check. Therefore the deterministic site builder now exposes `sample_count: 77` on its 12 AMB mean precision/recall metric observations, with `sample_count_source` explicitly naming the accepted native denominator. This is **total query population**, not the benchmark's separate active/structural subpopulation. No scores, sample selection, raw evidence or acceptance status were changed.
 
 Future unmatched sample denominators remain null. The builder's additional tests reject malformed, zero and out-of-bounds native count strings and do not apply AMB-specific inferences to other benchmark families.
+
+## Corrected LongMemEval per-metric populations
+
+The initial site builder copied `native.scored_questions=419` to all LongMemEval metrics. That is correct only for general retrieval. A read-only independent inspection of all **12 pinned native `report.json` files** at `38f6a7dc` established that every source has `aggregate.evaluated_question_count=419`, `knowledge_update.evaluated_question_count=72`, and `latest_gold_ranked_first.applicable_question_count=70`. The 12 report paths, source Git blob SHAs, evaluator plane/backend, and all three denominators are recorded in `data/longmemeval-denominator-audit.json`. This is a derived publication audit, not new scoring authority.
+
+The builder now **requires** that exact pinned audit for LongMemEval specialized metrics, verifies its source revision and dashboard blob, and rejects missing/mismatched report identities and invalid subset counts. The regenerated presentation snapshot corrects 24 historical `sample_count` observations from 419 to their actual 72/70 subpopulation. Score values, run identities, input selection and acceptance state are unchanged.
+
+Never use total input queries (500), general retrieval evaluated questions (419), knowledge-update evaluated questions (72), or latest-date eligible questions (70) interchangeably. Review each metric's native denominator and exclusion rule when publishing new runs.

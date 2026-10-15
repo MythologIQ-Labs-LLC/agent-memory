@@ -30,6 +30,8 @@ assert.equal(snapshot.summary.registeredUnmeasured,7);
 assert.equal(snapshot.summary.distinctEvidenceLinks,18);
 assert.equal(snapshot.summary.linksMissingSampleCounts,0);
 assert.equal(snapshot.summary.observedComparatorLinks,6);
+assert.equal(snapshot.metricRows.filter(r=>r.metric==='knowledge_update_recall_all@5'&&r.sample_count!==72).length,0);
+assert.equal(snapshot.metricRows.filter(r=>r.metric==='latest_gold_ranked_first'&&r.sample_count!==70).length,0);
 assert.equal(snapshot.metricRows.filter(r=>r.family==='AMB PrecisionMemBench' && r.sample_count!==77).length,0);
 assert.equal(snapshot.profiles.every(p => p.columns.find(x=>x.id==='mem0').accepted),true);
 assert.equal(snapshot.profiles.some(p => p.columns.find(x=>x.id==='tencentdb-agent-memory').accepted),false);

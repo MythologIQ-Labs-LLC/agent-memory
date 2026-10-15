@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "kind": "immutable_source_metric_population_audit",
+  "authority_effect": "none",
+  "source_commit": "38f6a7dcc358e8ee50a38d703b0addb9d8e660d7",
+  "dashboard_blob": "2acc39d36b3b637a08289aa757919f55da04c54c",
+  "method": "Counts read directly from each pinned native report.json; they are per-metric populations, not total ingested questions.",
+  "records": [
+    {
+      "evidence_path": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/agent_memory-session-0b0449a8aa2b/evidence.json",
+      "report_path": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/agent_memory-session-0b0449a8aa2b/report.json",
+      "report_blob": "fd1672be187ecec945ffbe3eeeb2c65b3d512393",
+      "plane": "session",
+      "backend": "agent_memory",
+      "input_query_count": 500,
+      "retrieval_scored_questions": 419,
+      "knowledge_update_scored_questions": 72,
+      "latest_gold_applicable_questions": 70
+    },
+    {
+      "evidence_path": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/agent_memory-turn-0b0449a8aa2b/evidence.json",
+      "report_path": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/agent_memory-turn-0b0449a8aa2b/report.json",
+      "report_blob": "6d431a365d930c5431ce5ff352ac85b103cc0a73",
+      "plane": "turn",
+      "backend": "agent_memory",
+      "input_query_count": 500,
+      "retrieval_scored_questions": 419,
+      "knowledge_update_scored_questions": 72,
+      "latest_gold_applicable_questions": 70
+    },
+    {
+      "evidence_path": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/lexical_overlap-session-0b0449a8aa2b/evidence.json",
+      "report_path": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/lexical_overlap-session-0b0449a8aa2b/report.json",
+      "report_blob": "d84b24aaa15dbd7e873515062530024979272dbc",
+      "plane": "session",
+      "backend": "lexical_overlap",
+      "input_query_count": 500,
+      "retrieval_scored_questions": 419,
+      "knowledge_update_scored_questions": 72,
+      "latest_gold_applicable_questions": 70
+    },
+    {
+      "evidence_path": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/lexical_overlap-turn-0b0449a8aa2b/evidence.json",
+      "report_path": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/lexical_overlap-turn-0b0449a8aa2b/report.json",
+      "report_blob": "5ff0b494d4820cf06d581f0fe0937ee16523f4f9",
+      "plane": "turn",
+      "backend": "lexical_overlap",
+      "input_query_count": 500,
+      "retrieval_scored_questions": 419,
+      "knowledge_update_scored_questions": 72,
+      "latest_gold_applicable_questions": 70
+    },
+    {
+      "evidence_path": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/mem0_explicit-session-0b0449a8aa2b/evidence.json",
+      "report_path": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/mem0_explicit-session-0b0449a8aa2b/report.json",
+      "report_blob": "91fddf37efde150b0ad1f812010b066271a824d8",
+      "plane": "session",
+      "backend": "mem0_explicit",
+      "input_query_count": 500,
+      "retrieval_scored_questions": 419,
+      "knowledge_update_scored_questions": 72,
+      "latest_gold_applicable_questions": 70
+    },
+    {
+      "evidence_path": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/mem0_explicit-turn-0b0449a8aa2b/evidence.json",
+      "report_path": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/mem0_explicit-turn-0b0449a8aa2b/report.json",
+      "report_blob": "18dd95db6e3eeb9ba1132154685fc595feda5f19",
+      "plane": "turn",
+      "backend": "mem0_explicit",
+      "input_query_count": 500,
+      "retrieval_scored_questions": 419,
+      "knowledge_update_scored_questions": 72,
+      "latest_gold_applicable_questions": 70
+    },
+    {
+      "evidence_path": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/agent_memory-session-ca0f9a748b3b/evidence.json",
+      "report_path": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/agent_memory-session-ca0f9a748b3b/report.json",
+      "report_blob": "a6fef1642401a9b8e1a0cb3763e8acebad569043",
+      "plane": "session",
+      "backend": "agent_memory",
+      "input_query_count": 500,
+      "retrieval_scored_questions": 419,
+      "knowledge_update_scored_questions": 72,
+      "latest_gold_applicable_questions": 70
+    },
+    {
+      "evidence_path": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/agent_memory-turn-ca0f9a748b3b/evidence.json",
+      "report_path": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/agent_memory-turn-ca0f9a748b3b/report.json",
+      "report_blob": "4f2cdbc61f314f003d00654d501378a06ca64307",
+      "plane": "turn",
+      "backend": "agent_memory",
+      "input_query_count": 500,
+      "retrieval_scored_questions": 419,
+      "knowledge_update_scored_questions": 72,
+      "latest_gold_applicable_questions": 70
+    },
+    {
+      "evidence_path": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/lexical_overlap-session-ca0f9a748b3b/evidence.json",
+      "report_path": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/lexical_overlap-session-ca0f9a748b3b/report.json",
+      "report_blob": "8ec3bca83ec372f2416908b9671f37bd03f39452",
+      "plane": "session",
+      "backend": "lexical_overlap",
+      "input_query_count": 500,
+      "retrieval_scored_questions": 419,
+      "knowledge_update_scored_questions": 72,
+      "latest_gold_applicable_questions": 70
+    },
+    {
+      "evidence_path": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/lexical_overlap-turn-ca0f9a748b3b/evidence.json",
+      "report_path": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/lexical_overlap-turn-ca0f9a748b3b/report.json",
+      "report_blob": "050b14a6ad6f9ff3ab668c87214dff4eeba13276",
+      "plane": "turn",
+      "backend": "lexical_overlap",
+      "input_query_count": 500,
+      "retrieval_scored_questions": 419,
+      "knowledge_update_scored_questions": 72,
+      "latest_gold_applicable_questions": 70
+    },
+    {
+      "evidence_path": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/mem0_explicit-session-ca0f9a748b3b/evidence.json",
+      "report_path": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/mem0_explicit-session-ca0f9a748b3b/report.json",
+      "report_blob": "1824f208b2e6375f6ce8c0a1e9bdeca9f846f6fc",
+      "plane": "session",
+      "backend": "mem0_explicit",
+      "input_query_count": 500,
+      "retrieval_scored_questions": 419,
+      "knowledge_update_scored_questions": 72,
+      "latest_gold_applicable_questions": 70
+    },
+    {
+      "evidence_path": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/mem0_explicit-turn-ca0f9a748b3b/evidence.json",
+      "report_path": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/mem0_explicit-turn-ca0f9a748b3b/report.json",
+      "report_blob": "0cc663591a538edb5a2b0f427ff1de33a529426e",
+      "plane": "turn",
+      "backend": "mem0_explicit",
+      "input_query_count": 500,
+      "retrieval_scored_questions": 419,
+      "knowledge_update_scored_questions": 72,
+      "latest_gold_applicable_questions": 70
+    }
+  ]
+}
