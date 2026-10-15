@@ -1,0 +1,165 @@
+{
+  "schema_version": "1.0.0",
+  "run_id": "hindsight-chunks-onnx-full500-session",
+  "normalized_run": {
+    "uri": "session.hindsight_chunks_onnx.summary.json",
+    "sha256": "5eeb204c13ed40ec699107209ba9353538c43d31d00395a228aa68dad3354e68"
+  },
+  "benchmark": {
+    "id": "longmemeval-s-retrieval",
+    "task_profile": "longmemeval-s-retrieval-parity-v1:session",
+    "dataset_revision": "xiaowu0162/longmemeval-cleaned longmemeval_s_cleaned.json",
+    "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+    "selection_id": "all-500:7d738ae585fd4014c9d231088ff824864fded501adc07b0e08c2b97a28210c03",
+    "sample_count": 500,
+    "evaluator_revision": "reference/run_longmemeval.py@38f6a7d",
+    "excluded_count": 81
+  },
+  "system": {
+    "id": "hindsight",
+    "revision": "0.10.2@5fc4ce20917b916240cef27c212c387a177f115b",
+    "adapter_id": "reference/longmemeval_hindsight_bridge.py",
+    "adapter_revision": "git-blob:a14e2eb9db4959b6cf3440a603a4731d66080ec5",
+    "configuration_sha256": "38129e2fb01f5d8d5425f273b8ed72f059ab8512652d7123df082efaf86aff91",
+    "worktree_clean": true,
+    "build_sha256": null
+  },
+  "timing": {
+    "started_at": "2026-10-15T13:15:49Z",
+    "finished_at": "2026-10-15T20:20:17.182000Z",
+    "elapsed_ms": 25468182
+  },
+  "hardware": {
+    "os": "Linux",
+    "os_release": "6.18.44-fc-v114",
+    "architecture": "x86_64",
+    "cpu_model": "Intel(R) Xeon(R) Processor",
+    "cpu_cores": 4,
+    "ram_bytes": 16874930176,
+    "gpus": []
+  },
+  "environment": {
+    "runtime": "CPython",
+    "runtime_version": "3.13.16",
+    "isolation": "cloud_sandbox",
+    "container_digest": null,
+    "dependency_lock_sha256": "c9344cbb6dad368ca39db2f4fc7951b452bc37a3bd3147088bb380e112039ec2",
+    "network_access": "restricted",
+    "notes": [
+      "Self-hosted HindsightServer in-process, embedded PostgreSQL (pg0) on loopback, run as an unprivileged user with an allowlisted environment (no tokens; CA bundle unreadable, so no outbound TLS).",
+      "Embedding call count is a placeholder of 1: per-chunk embedding calls were not instrumented.",
+      "CPU shared with other benchmark processes; latencies are not comparable performance measurements.",
+      "Executed via reference/run_longmemeval_resumable.py (per-question resumable driver), finalized with --finalize; run identity in hindsight-500.exec.json.",
+      "execution.timeout_ms 0 = no runner-level timeout (per-call product timeouts recorded in configuration where they exist)."
+    ]
+  },
+  "inference": {
+    "used": true,
+    "calls": [
+      {
+        "purpose": "embedding",
+        "provider": "onnxruntime (Hindsight onnx embeddings provider)",
+        "model_id": "intfloat/multilingual-e5-small",
+        "model_revision": "03415a4be176a1620747c692ed433219fabc3def",
+        "model_digest": "ca456c06b3a9505ddfd9131408916dd79290368331e7d76bb621f1cba6bc8665",
+        "endpoint_class": "local",
+        "parameters": {
+          "dimensions": 384
+        },
+        "prompt_sha256": null,
+        "count": 1
+      }
+    ]
+  },
+  "execution": {
+    "command_sha256": "5714ddac4fcc57d2db8dcba52df61ac03a152118bdc77361bc69093f79b75f5e",
+    "argv_redacted": [
+      "/tmp/am-bench/hindsight-venv/bin/python",
+      "/tmp/am-bench/am/reference/run_longmemeval_resumable.py",
+      "--input",
+      "/tmp/agent-memory-benchmark-data/longmemeval_s_cleaned.json",
+      "--expected-sha256",
+      "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+      "--granularity",
+      "session",
+      "--granularity",
+      "turn",
+      "--backend",
+      "hindsight_chunks_onnx",
+      "--external-backend",
+      "longmemeval_hindsight_bridge:install_longmemeval_hindsight_backend",
+      "--out",
+      "/tmp/am-bench/runs/640-hindsight-full500"
+    ],
+    "random_seed": 0,
+    "timeout_ms": 0,
+    "retries": 0,
+    "context_budget_tokens": 65536,
+    "retrieval_top_k": 50,
+    "stdout_sha256": "7d9c2858cc533d485b1000bf56cccd1e78dbedbdd44e4fa5e0a5c45031228062",
+    "stderr_sha256": "d6325ae6c257456a9deeb5b8b6ae6a56083200be0452b0fe41d5adf4fb8d51f3",
+    "exit_code": 0,
+    "peak_rss_bytes": 3056808755,
+    "peak_vram_bytes": null,
+    "latency_p50_ms": 13287.0,
+    "latency_p95_ms": 25523.0
+  },
+  "costs": {
+    "status": "not_measured",
+    "currency": "USD",
+    "amount": null,
+    "input_tokens": null,
+    "output_tokens": null,
+    "billing_reference_sha256": null
+  },
+  "artifacts": [
+    {
+      "kind": "evaluator_report",
+      "uri": "session.hindsight_chunks_onnx.summary.json",
+      "sha256": "5eeb204c13ed40ec699107209ba9353538c43d31d00395a228aa68dad3354e68"
+    },
+    {
+      "kind": "row_level_results",
+      "uri": "session.hindsight_chunks_onnx.rows.jsonl",
+      "sha256": "fe56af818ebf9c8b1060dfad861233ed96847eaecacda4e74233f94b21f307b0"
+    },
+    {
+      "kind": "execution_log",
+      "uri": "hindsight-500.exec.json",
+      "sha256": "9e381fceccee03d8b88551d9d3d826b68e003dc9172b7a21d9b273ad107a5dfb"
+    },
+    {
+      "kind": "execution_log",
+      "uri": "hindsight-500.stdout",
+      "sha256": "7d9c2858cc533d485b1000bf56cccd1e78dbedbdd44e4fa5e0a5c45031228062"
+    },
+    {
+      "kind": "execution_log",
+      "uri": "hindsight-500.stderr.gz",
+      "sha256": "d6325ae6c257456a9deeb5b8b6ae6a56083200be0452b0fe41d5adf4fb8d51f3"
+    },
+    {
+      "kind": "other",
+      "uri": "../subset50/hindsight-venv-freeze.txt",
+      "sha256": "c9344cbb6dad368ca39db2f4fc7951b452bc37a3bd3147088bb380e112039ec2"
+    }
+  ],
+  "redaction": {
+    "reviewed": true,
+    "contains_secrets": false,
+    "contains_private_data": false,
+    "note": "Runs used an allowlisted environment with no tokens; argv contains only local paths and flags. Dataset is public LongMemEval-S."
+  },
+  "review": {
+    "status": "candidate",
+    "reviewer": null,
+    "decision_ref": null,
+    "limitations": [
+      "Measures Hindsight as a credential-free chunk retrieval memory, not its LLM fact-extraction / observation product mode.",
+      "Retain passes no timestamp; temporal retrieval is disabled in this profile.",
+      "Candidate: requires independent adapter/protocol review before acceptance."
+    ],
+    "comparison_eligibility": "not_assessed"
+  },
+  "authority_effect": "none"
+}
