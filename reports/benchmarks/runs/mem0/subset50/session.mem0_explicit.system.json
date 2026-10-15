@@ -1,0 +1,39 @@
+{
+ "id": "mem0",
+ "revision": "mem0ai 2.2.1 @ 94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+ "adapter_id": "reference/longmemeval_mem0_explicit_bridge.py (frozen lane v2 configuration)",
+ "adapter_revision": "git-blob:08366b72ac0d76fdc0754a8182e3b6fd61cb1912",
+ "configuration": {
+  "infer": false,
+  "llm": "fail-closed guard",
+  "embedder": "huggingface sentence-transformers/multi-qa-MiniLM-L6-cos-v1@b207367332321f8e44f96e224ef15bc607f4dbf0",
+  "vector_store": "local qdrant",
+  "search_threshold": 0.1,
+  "rerank": false,
+  "pins": "mem0ai==2.2.1 qdrant-client==1.17.0 sentence-transformers==5.2.3 torch==2.10.0"
+ },
+ "calls": [
+  {
+   "purpose": "embedding",
+   "provider": "sentence-transformers (local)",
+   "model_id": "sentence-transformers/multi-qa-MiniLM-L6-cos-v1",
+   "model_revision": "b207367332321f8e44f96e224ef15bc607f4dbf0",
+   "model_digest": null,
+   "endpoint_class": "local",
+   "parameters": {
+    "dimensions": 384
+   },
+   "prompt_sha256": null,
+   "count": 1
+  }
+ ],
+ "network_access": "restricted",
+ "notes": [
+  "Frozen Mem0 explicit-memory lane configuration, unchanged bridge; allowlisted environment (no tokens).",
+  "Embedding call count placeholder 1; per-item embedding calls not instrumented. Model file digest not recorded.",
+  "CPU shared with other benchmark processes; latencies are not performance comparisons."
+ ],
+ "limitations": [
+  "Candidate re-execution on the 50-question subset; the accepted full-set Mem0 rows remain the canonical ones."
+ ]
+}
