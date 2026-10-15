@@ -1,0 +1,125 @@
+{
+ "reference": {
+  "strict": 30,
+  "queries": 78,
+  "needed_recall": 0.6282,
+  "extra": 49,
+  "no_answer_broken": 7,
+  "safety_violations": 0,
+  "recall_p50_ms": 18.0
+ },
+ "chosen": {
+  "point": {
+   "policy_id": "rank-bounded-semantic-proposals",
+   "policy_version": "1.0.0",
+   "min_best": 0.4,
+   "margin": 0.2,
+   "k_single": 1,
+   "k_set": 3,
+   "authority_effect": "none"
+  },
+  "strict": 40,
+  "queries": 78,
+  "needed_recall": 0.5513,
+  "extra": 23,
+  "no_answer_broken": 4,
+  "safety_violations": 0,
+  "recall_p50_ms": 16.9
+ },
+ "next": [
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.2,
+    "k_single": 1,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 40,
+   "queries": 78,
+   "needed_recall": 0.5513,
+   "extra": 23,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 15.6
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.2,
+    "k_single": 1,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 40,
+   "queries": 78,
+   "needed_recall": 0.5513,
+   "extra": 23,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.2
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.1,
+    "k_single": 1,
+    "k_set": 2,
+    "authority_effect": "none"
+   },
+   "strict": 40,
+   "queries": 78,
+   "needed_recall": 0.5256,
+   "extra": 21,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 19.5
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.1,
+    "k_single": 1,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 40,
+   "queries": 78,
+   "needed_recall": 0.5256,
+   "extra": 21,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.6
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.1,
+    "k_single": 1,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 40,
+   "queries": 78,
+   "needed_recall": 0.5256,
+   "extra": 21,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.9
+  }
+ ]
+}
+
+real	6m38.200s
+user	5m35.139s
+sys	0m39.263s

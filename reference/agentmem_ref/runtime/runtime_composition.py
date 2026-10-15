@@ -222,12 +222,23 @@ class DeterministicMultiRouteRecallPlanner:
             and self.vector_retriever.available_for(substrate)
         ):
             routes_executed.append(SEMANTIC_VECTOR_ROUTE)
+            eligible = lambda fact: self.adapter.domain_eligible(fact, context)  # noqa: E731
+            admissible = getattr(self.adapter, "discovery_admissible", None)
+            if getattr(self.vector_retriever, "proposal_policy", None) is not None and callable(admissible):
+                # #819 C6: a rank-bounded route must not spend its K slots on memories current-state
+                # admission refuses on identity (forgotten, superseded, disputed, out of domain);
+                # historical and as-of recalls keep the domain-eligible pool. Grants nothing.
+                mode, _ = admission_mode_for_intent(resolve_intent(query, temporal_intent))
+                if mode == "current_state":
+                    eligible = lambda fact: (self.adapter.domain_eligible(fact, context)  # noqa: E731
+                                             and admissible(fact.uuid, fact.group_id, tuple(fact.episode_uuids),
+                                                            fact.is_event_invalid, context))
             for vector_hit in self.vector_retriever.search(
                 substrate,
                 query,
                 group_id=tenant,
                 candidate_limit=self.vector_candidate_limit,
-                eligible=lambda fact: self.adapter.domain_eligible(fact, context),
+                eligible=eligible,
             ):
                 hits.append(
                     RetrievalRouteHit(

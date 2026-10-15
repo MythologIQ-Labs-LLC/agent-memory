@@ -259,6 +259,47 @@ def _mention_matched(mention: tuple[str, ...], tokens: frozenset[str]) -> bool:
     return hits == len(mention) if len(mention) <= 2 else hits * 2 >= len(mention)
 
 
+_WH_PLURAL_LEADS = frozenset({"which", "what", "who"})
+_PLURAL_COPULAS = frozenset({"are", "were"})
+_AUXILIARIES = frozenset("am is are was were do does did have has had can could will would shall should may might must".split())
+_NOT_PLURAL_ENDINGS = ("ss", "us", "is")
+
+
+def _plural(word: str) -> bool:
+    return (len(word) > 3 and word.endswith("s") and not word.endswith(_NOT_PLURAL_ENDINGS)
+            and normal_form(word) != word)
+
+
+def plural_answer(query: str) -> bool:
+    """Whether a wh-question asks for several items by its grammar (#819 C6: sizes the semantic
+    route's proposals; selection does not read it).
+
+    "which/what/who are|were ...", "which <plural> <auxiliary or function word>|<end>" ("Which
+    pets do we have?"), or a plural noun-phrase head directly before an auxiliary ("What
+    medications am I on?"). A plural is a non-function word that inflectional normalisation
+    shortens (Porter step 1) and does not end in -ss, -us or -is. Third-person verbs are not read
+    ("Which goes first?", "What happens next?", "Which does Alice prefer?"); irregular plurals
+    ("people") and "which of ..." are not read either. Closed English grammar; no topic
+    vocabulary."""
+
+    words = [word.lower() for word in _WORD.findall(normalize_contractions(query))]
+    if len(words) < 2 or words[0] not in _WH_PLURAL_LEADS:
+        return False
+    if words[1] in _PLURAL_COPULAS:
+        return True
+    if words[0] == "who":
+        return False
+    if (words[0] == "which" and words[1] not in FUNCTION_WORDS and _plural(words[1])
+            and (len(words) == 2 or words[2] in FUNCTION_WORDS)):
+        return True
+    for index in range(2, min(len(words), 5)):
+        if words[index] in _AUXILIARIES:
+            return words[index - 1] not in FUNCTION_WORDS and _plural(words[index - 1])
+        if words[index] in FUNCTION_WORDS:
+            return False
+    return False
+
+
 def select_relevance_sufficient(
     ranked: Sequence[str],
     route_ids_by_candidate: Mapping[str, Iterable[str]],
@@ -442,6 +483,7 @@ __all__ = [
     "FUNCTION_WORDS",
     "RANKED_PREFIX",
     "RELATIVE_FLOOR",
+    "plural_answer",
     "SET_FLOOR_FACTOR",
     "RELEVANCE_SUFFICIENT",
     "RETURN_SELECTIONS",

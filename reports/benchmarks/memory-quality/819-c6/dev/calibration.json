@@ -1,0 +1,3280 @@
+{
+ "reference_c4_semantic_on": {
+  "strict": 30,
+  "queries": 78,
+  "needed_recall": 0.6282,
+  "extra": 49,
+  "no_answer_broken": 7,
+  "safety_violations": 0,
+  "recall_p50_ms": 18.0
+ },
+ "reference_per_query": {
+  "diag:pets-1": false,
+  "diag:pets-2": false,
+  "diag:pets-3": false,
+  "diag:pets-4": false,
+  "diag:pets-5": false,
+  "diag:work-1": false,
+  "diag:work-2": false,
+  "diag:work-3": false,
+  "diag:work-4": true,
+  "diag:work-5": false,
+  "diag:health-1": false,
+  "diag:health-2": true,
+  "diag:health-3": false,
+  "diag:health-4": false,
+  "diag:health-5": true,
+  "diag:travel-1": false,
+  "diag:travel-2": false,
+  "diag:travel-3": false,
+  "diag:travel-4": false,
+  "diag:travel-5": false,
+  "diag:gov-1": true,
+  "diag:gov-2": true,
+  "diag:gov-3": true,
+  "diag:gov-4": false,
+  "diag:gov-5": false,
+  "diag:proj-1": false,
+  "diag:proj-2": false,
+  "diag:proj-3": false,
+  "diag:proj-4": true,
+  "diag:proj-5": true,
+  "c5:hh-1": true,
+  "c5:hh-2": false,
+  "c5:hh-3": false,
+  "c5:hh-4": true,
+  "c5:hh-5": true,
+  "c5:hh-6": false,
+  "c5:hh-7": true,
+  "c5:wk-1": true,
+  "c5:wk-2": true,
+  "c5:wk-3": false,
+  "c5:wk-4": false,
+  "c5:wk-5": false,
+  "c5:wk-6": false,
+  "c5:wk-7": false,
+  "c5:wk-8": true,
+  "c5:tr-1": false,
+  "c5:tr-2": true,
+  "c5:tr-3": false,
+  "c5:tr-4": true,
+  "c5:tr-5": false,
+  "c5:tr-6": false,
+  "c5:tr-7": false,
+  "c5:he-1": false,
+  "c5:he-2": true,
+  "c5:he-3": true,
+  "c5:he-4": false,
+  "c5:he-5": true,
+  "c5:he-6": false,
+  "c5:he-7": true,
+  "c5:fa-1": false,
+  "c5:fa-2": false,
+  "c5:fa-3": false,
+  "c5:fa-4": false,
+  "c5:fa-5": false,
+  "c5:fa-6": true,
+  "c5:pr-1": false,
+  "c5:pr-2": false,
+  "c5:pr-3": false,
+  "c5:pr-4": true,
+  "c5:pr-5": false,
+  "c5:pr-6": true,
+  "c5:co-1": true,
+  "c5:co-2": false,
+  "c5:co-3": true,
+  "c5:co-4": true,
+  "c5:sc-1": true,
+  "c5:sc-2": true,
+  "c5:sc-3": true
+ },
+ "grid_size": 176,
+ "chosen": {
+  "point": {
+   "policy_id": "rank-bounded-semantic-proposals",
+   "policy_version": "1.0.0",
+   "min_best": 0.4,
+   "margin": 0.2,
+   "k_single": 1,
+   "k_set": 3,
+   "authority_effect": "none"
+  },
+  "strict": 40,
+  "queries": 78,
+  "needed_recall": 0.5513,
+  "extra": 23,
+  "no_answer_broken": 4,
+  "safety_violations": 0,
+  "recall_p50_ms": 16.9
+ },
+ "grid": [
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.2,
+    "k_single": 1,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 40,
+   "queries": 78,
+   "needed_recall": 0.5513,
+   "extra": 23,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.9
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.2,
+    "k_single": 1,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 40,
+   "queries": 78,
+   "needed_recall": 0.5513,
+   "extra": 23,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 15.6
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.2,
+    "k_single": 1,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 40,
+   "queries": 78,
+   "needed_recall": 0.5513,
+   "extra": 23,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.2
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.1,
+    "k_single": 1,
+    "k_set": 2,
+    "authority_effect": "none"
+   },
+   "strict": 40,
+   "queries": 78,
+   "needed_recall": 0.5256,
+   "extra": 21,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 19.5
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.1,
+    "k_single": 1,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 40,
+   "queries": 78,
+   "needed_recall": 0.5256,
+   "extra": 21,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.6
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.1,
+    "k_single": 1,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 40,
+   "queries": 78,
+   "needed_recall": 0.5256,
+   "extra": 21,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.9
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.1,
+    "k_single": 1,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 40,
+   "queries": 78,
+   "needed_recall": 0.5256,
+   "extra": 21,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.0
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.05,
+    "k_single": 2,
+    "k_set": 2,
+    "authority_effect": "none"
+   },
+   "strict": 40,
+   "queries": 78,
+   "needed_recall": 0.5256,
+   "extra": 21,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.6
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.05,
+    "k_single": 2,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 40,
+   "queries": 78,
+   "needed_recall": 0.5256,
+   "extra": 21,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.6
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.05,
+    "k_single": 2,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 40,
+   "queries": 78,
+   "needed_recall": 0.5256,
+   "extra": 21,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.3
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.05,
+    "k_single": 2,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 40,
+   "queries": 78,
+   "needed_recall": 0.5256,
+   "extra": 21,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.0
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.05,
+    "k_single": 3,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 40,
+   "queries": 78,
+   "needed_recall": 0.5256,
+   "extra": 21,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.5
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.05,
+    "k_single": 3,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 40,
+   "queries": 78,
+   "needed_recall": 0.5256,
+   "extra": 21,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.2
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.05,
+    "k_single": 3,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 40,
+   "queries": 78,
+   "needed_recall": 0.5256,
+   "extra": 21,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.5
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.15,
+    "k_single": 1,
+    "k_set": 2,
+    "authority_effect": "none"
+   },
+   "strict": 40,
+   "queries": 78,
+   "needed_recall": 0.5256,
+   "extra": 22,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.9
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.2,
+    "k_single": 1,
+    "k_set": 2,
+    "authority_effect": "none"
+   },
+   "strict": 40,
+   "queries": 78,
+   "needed_recall": 0.5256,
+   "extra": 22,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.5
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.15,
+    "k_single": 1,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 40,
+   "queries": 78,
+   "needed_recall": 0.5256,
+   "extra": 22,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.2
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.15,
+    "k_single": 1,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 40,
+   "queries": 78,
+   "needed_recall": 0.5256,
+   "extra": 22,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 15.8
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.15,
+    "k_single": 1,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 40,
+   "queries": 78,
+   "needed_recall": 0.5256,
+   "extra": 22,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.8
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.05,
+    "k_single": 1,
+    "k_set": 2,
+    "authority_effect": "none"
+   },
+   "strict": 40,
+   "queries": 78,
+   "needed_recall": 0.5128,
+   "extra": 21,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.6
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.05,
+    "k_single": 1,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 40,
+   "queries": 78,
+   "needed_recall": 0.5128,
+   "extra": 21,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.1
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.05,
+    "k_single": 1,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 40,
+   "queries": 78,
+   "needed_recall": 0.5128,
+   "extra": 21,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.7
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.05,
+    "k_single": 1,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 40,
+   "queries": 78,
+   "needed_recall": 0.5128,
+   "extra": 21,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.4
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.2,
+    "k_single": 1,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 39,
+   "queries": 78,
+   "needed_recall": 0.641,
+   "extra": 36,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.7
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.2,
+    "k_single": 1,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 39,
+   "queries": 78,
+   "needed_recall": 0.6282,
+   "extra": 35,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.9
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.2,
+    "k_single": 1,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 39,
+   "queries": 78,
+   "needed_recall": 0.6026,
+   "extra": 34,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.5
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.15,
+    "k_single": 1,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 39,
+   "queries": 78,
+   "needed_recall": 0.5897,
+   "extra": 33,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.2
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.15,
+    "k_single": 1,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 39,
+   "queries": 78,
+   "needed_recall": 0.5897,
+   "extra": 33,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.2
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.1,
+    "k_single": 1,
+    "k_set": 2,
+    "authority_effect": "none"
+   },
+   "strict": 39,
+   "queries": 78,
+   "needed_recall": 0.5769,
+   "extra": 28,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.9
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.1,
+    "k_single": 1,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 39,
+   "queries": 78,
+   "needed_recall": 0.5769,
+   "extra": 28,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.4
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.1,
+    "k_single": 1,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 39,
+   "queries": 78,
+   "needed_recall": 0.5769,
+   "extra": 28,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.9
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.1,
+    "k_single": 1,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 39,
+   "queries": 78,
+   "needed_recall": 0.5769,
+   "extra": 28,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.3
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.15,
+    "k_single": 1,
+    "k_set": 2,
+    "authority_effect": "none"
+   },
+   "strict": 39,
+   "queries": 78,
+   "needed_recall": 0.5769,
+   "extra": 31,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 19.1
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.2,
+    "k_single": 1,
+    "k_set": 2,
+    "authority_effect": "none"
+   },
+   "strict": 39,
+   "queries": 78,
+   "needed_recall": 0.5769,
+   "extra": 31,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.0
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.15,
+    "k_single": 1,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 39,
+   "queries": 78,
+   "needed_recall": 0.5769,
+   "extra": 33,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.2
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.05,
+    "k_single": 1,
+    "k_set": 2,
+    "authority_effect": "none"
+   },
+   "strict": 39,
+   "queries": 78,
+   "needed_recall": 0.5641,
+   "extra": 28,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.0
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.05,
+    "k_single": 1,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 39,
+   "queries": 78,
+   "needed_recall": 0.5641,
+   "extra": 28,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.9
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.05,
+    "k_single": 1,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 39,
+   "queries": 78,
+   "needed_recall": 0.5641,
+   "extra": 28,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 15.6
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.05,
+    "k_single": 1,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 39,
+   "queries": 78,
+   "needed_recall": 0.5641,
+   "extra": 28,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 19.0
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.1,
+    "k_single": 2,
+    "k_set": 2,
+    "authority_effect": "none"
+   },
+   "strict": 39,
+   "queries": 78,
+   "needed_recall": 0.5385,
+   "extra": 22,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.9
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.1,
+    "k_single": 2,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 39,
+   "queries": 78,
+   "needed_recall": 0.5385,
+   "extra": 22,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.2
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.1,
+    "k_single": 2,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 39,
+   "queries": 78,
+   "needed_recall": 0.5385,
+   "extra": 22,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.1
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.1,
+    "k_single": 2,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 39,
+   "queries": 78,
+   "needed_recall": 0.5385,
+   "extra": 22,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.0
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.1,
+    "k_single": 3,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 39,
+   "queries": 78,
+   "needed_recall": 0.5385,
+   "extra": 22,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.7
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.1,
+    "k_single": 3,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 39,
+   "queries": 78,
+   "needed_recall": 0.5385,
+   "extra": 22,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.6
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.1,
+    "k_single": 3,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 39,
+   "queries": 78,
+   "needed_recall": 0.5385,
+   "extra": 22,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.5
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.05,
+    "k_single": 2,
+    "k_set": 2,
+    "authority_effect": "none"
+   },
+   "strict": 38,
+   "queries": 78,
+   "needed_recall": 0.6154,
+   "extra": 31,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 19.0
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.05,
+    "k_single": 2,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 38,
+   "queries": 78,
+   "needed_recall": 0.6154,
+   "extra": 31,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.5
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.05,
+    "k_single": 2,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 38,
+   "queries": 78,
+   "needed_recall": 0.6154,
+   "extra": 31,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.0
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.05,
+    "k_single": 2,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 38,
+   "queries": 78,
+   "needed_recall": 0.6154,
+   "extra": 31,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.6
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.2,
+    "k_single": 1,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 38,
+   "queries": 78,
+   "needed_recall": 0.6154,
+   "extra": 32,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.7
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.05,
+    "k_single": 3,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 38,
+   "queries": 78,
+   "needed_recall": 0.6154,
+   "extra": 33,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.3
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.05,
+    "k_single": 3,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 38,
+   "queries": 78,
+   "needed_recall": 0.6154,
+   "extra": 33,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.8
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.05,
+    "k_single": 3,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 38,
+   "queries": 78,
+   "needed_recall": 0.6154,
+   "extra": 33,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.8
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.2,
+    "k_single": 1,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 38,
+   "queries": 78,
+   "needed_recall": 0.6026,
+   "extra": 31,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.6
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.2,
+    "k_single": 1,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 38,
+   "queries": 78,
+   "needed_recall": 0.5897,
+   "extra": 30,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.8
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.05,
+    "k_single": 2,
+    "k_set": 2,
+    "authority_effect": "none"
+   },
+   "strict": 38,
+   "queries": 78,
+   "needed_recall": 0.5769,
+   "extra": 28,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.1
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.05,
+    "k_single": 2,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 38,
+   "queries": 78,
+   "needed_recall": 0.5769,
+   "extra": 28,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.9
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.05,
+    "k_single": 2,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 38,
+   "queries": 78,
+   "needed_recall": 0.5769,
+   "extra": 28,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.8
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.05,
+    "k_single": 2,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 38,
+   "queries": 78,
+   "needed_recall": 0.5769,
+   "extra": 28,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.1
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.15,
+    "k_single": 1,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 38,
+   "queries": 78,
+   "needed_recall": 0.5769,
+   "extra": 29,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.2
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.15,
+    "k_single": 1,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 38,
+   "queries": 78,
+   "needed_recall": 0.5769,
+   "extra": 29,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.5
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.05,
+    "k_single": 3,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 38,
+   "queries": 78,
+   "needed_recall": 0.5769,
+   "extra": 29,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 15.6
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.05,
+    "k_single": 3,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 38,
+   "queries": 78,
+   "needed_recall": 0.5769,
+   "extra": 29,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.4
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.05,
+    "k_single": 3,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 38,
+   "queries": 78,
+   "needed_recall": 0.5769,
+   "extra": 29,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.7
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.1,
+    "k_single": 1,
+    "k_set": 2,
+    "authority_effect": "none"
+   },
+   "strict": 38,
+   "queries": 78,
+   "needed_recall": 0.5641,
+   "extra": 26,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.3
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.1,
+    "k_single": 1,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 38,
+   "queries": 78,
+   "needed_recall": 0.5641,
+   "extra": 26,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 15.9
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.1,
+    "k_single": 1,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 38,
+   "queries": 78,
+   "needed_recall": 0.5641,
+   "extra": 26,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.9
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.1,
+    "k_single": 1,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 38,
+   "queries": 78,
+   "needed_recall": 0.5641,
+   "extra": 26,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 14.7
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.15,
+    "k_single": 1,
+    "k_set": 2,
+    "authority_effect": "none"
+   },
+   "strict": 38,
+   "queries": 78,
+   "needed_recall": 0.5641,
+   "extra": 28,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.2
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.2,
+    "k_single": 1,
+    "k_set": 2,
+    "authority_effect": "none"
+   },
+   "strict": 38,
+   "queries": 78,
+   "needed_recall": 0.5641,
+   "extra": 28,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.3
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.15,
+    "k_single": 1,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 38,
+   "queries": 78,
+   "needed_recall": 0.5641,
+   "extra": 29,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.4
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.05,
+    "k_single": 1,
+    "k_set": 2,
+    "authority_effect": "none"
+   },
+   "strict": 38,
+   "queries": 78,
+   "needed_recall": 0.5513,
+   "extra": 26,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.5
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.05,
+    "k_single": 1,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 38,
+   "queries": 78,
+   "needed_recall": 0.5513,
+   "extra": 26,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.3
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.05,
+    "k_single": 1,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 38,
+   "queries": 78,
+   "needed_recall": 0.5513,
+   "extra": 26,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.6
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.05,
+    "k_single": 1,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 38,
+   "queries": 78,
+   "needed_recall": 0.5513,
+   "extra": 26,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.0
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.1,
+    "k_single": 2,
+    "k_set": 2,
+    "authority_effect": "none"
+   },
+   "strict": 37,
+   "queries": 78,
+   "needed_recall": 0.6282,
+   "extra": 32,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.6
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.1,
+    "k_single": 2,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 37,
+   "queries": 78,
+   "needed_recall": 0.6282,
+   "extra": 32,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 19.5
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.1,
+    "k_single": 2,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 37,
+   "queries": 78,
+   "needed_recall": 0.6282,
+   "extra": 32,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.7
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.1,
+    "k_single": 2,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 37,
+   "queries": 78,
+   "needed_recall": 0.6282,
+   "extra": 32,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.8
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.1,
+    "k_single": 3,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 37,
+   "queries": 78,
+   "needed_recall": 0.6282,
+   "extra": 35,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 19.2
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.1,
+    "k_single": 3,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 37,
+   "queries": 78,
+   "needed_recall": 0.6282,
+   "extra": 35,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.2
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.1,
+    "k_single": 3,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 37,
+   "queries": 78,
+   "needed_recall": 0.6282,
+   "extra": 35,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.4
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.1,
+    "k_single": 2,
+    "k_set": 2,
+    "authority_effect": "none"
+   },
+   "strict": 37,
+   "queries": 78,
+   "needed_recall": 0.5897,
+   "extra": 29,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.1
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.1,
+    "k_single": 2,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 37,
+   "queries": 78,
+   "needed_recall": 0.5897,
+   "extra": 29,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 19.8
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.1,
+    "k_single": 2,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 37,
+   "queries": 78,
+   "needed_recall": 0.5897,
+   "extra": 29,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 19.7
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.1,
+    "k_single": 2,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 37,
+   "queries": 78,
+   "needed_recall": 0.5897,
+   "extra": 29,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.4
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.1,
+    "k_single": 3,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 37,
+   "queries": 78,
+   "needed_recall": 0.5897,
+   "extra": 30,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.7
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.1,
+    "k_single": 3,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 37,
+   "queries": 78,
+   "needed_recall": 0.5897,
+   "extra": 30,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.1
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.1,
+    "k_single": 3,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 37,
+   "queries": 78,
+   "needed_recall": 0.5897,
+   "extra": 30,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.8
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.15,
+    "k_single": 2,
+    "k_set": 2,
+    "authority_effect": "none"
+   },
+   "strict": 37,
+   "queries": 78,
+   "needed_recall": 0.5513,
+   "extra": 26,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.3
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.15,
+    "k_single": 2,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 37,
+   "queries": 78,
+   "needed_recall": 0.5513,
+   "extra": 26,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 20.8
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.15,
+    "k_single": 2,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 37,
+   "queries": 78,
+   "needed_recall": 0.5513,
+   "extra": 26,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.7
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.15,
+    "k_single": 2,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 37,
+   "queries": 78,
+   "needed_recall": 0.5513,
+   "extra": 26,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.3
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.15,
+    "k_single": 3,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 37,
+   "queries": 78,
+   "needed_recall": 0.5513,
+   "extra": 27,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.7
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.15,
+    "k_single": 3,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 37,
+   "queries": 78,
+   "needed_recall": 0.5513,
+   "extra": 27,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.1
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.15,
+    "k_single": 3,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 37,
+   "queries": 78,
+   "needed_recall": 0.5513,
+   "extra": 27,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.5
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.2,
+    "k_single": 1,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 36,
+   "queries": 78,
+   "needed_recall": 0.4744,
+   "extra": 21,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.2
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.2,
+    "k_single": 1,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 36,
+   "queries": 78,
+   "needed_recall": 0.4744,
+   "extra": 21,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.8
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.2,
+    "k_single": 1,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 36,
+   "queries": 78,
+   "needed_recall": 0.4744,
+   "extra": 21,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.0
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.1,
+    "k_single": 1,
+    "k_set": 2,
+    "authority_effect": "none"
+   },
+   "strict": 35,
+   "queries": 78,
+   "needed_recall": 0.4487,
+   "extra": 20,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 20.4
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.1,
+    "k_single": 1,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 35,
+   "queries": 78,
+   "needed_recall": 0.4487,
+   "extra": 20,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.9
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.1,
+    "k_single": 1,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 35,
+   "queries": 78,
+   "needed_recall": 0.4487,
+   "extra": 20,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 15.5
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.1,
+    "k_single": 1,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 35,
+   "queries": 78,
+   "needed_recall": 0.4487,
+   "extra": 20,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.9
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.1,
+    "k_single": 2,
+    "k_set": 2,
+    "authority_effect": "none"
+   },
+   "strict": 35,
+   "queries": 78,
+   "needed_recall": 0.4487,
+   "extra": 20,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.2
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.1,
+    "k_single": 2,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 35,
+   "queries": 78,
+   "needed_recall": 0.4487,
+   "extra": 20,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.9
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.1,
+    "k_single": 2,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 35,
+   "queries": 78,
+   "needed_recall": 0.4487,
+   "extra": 20,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.8
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.1,
+    "k_single": 2,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 35,
+   "queries": 78,
+   "needed_recall": 0.4487,
+   "extra": 20,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.1
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.1,
+    "k_single": 3,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 35,
+   "queries": 78,
+   "needed_recall": 0.4487,
+   "extra": 20,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.0
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.1,
+    "k_single": 3,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 35,
+   "queries": 78,
+   "needed_recall": 0.4487,
+   "extra": 20,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.4
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.1,
+    "k_single": 3,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 35,
+   "queries": 78,
+   "needed_recall": 0.4487,
+   "extra": 20,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.9
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.15,
+    "k_single": 1,
+    "k_set": 2,
+    "authority_effect": "none"
+   },
+   "strict": 35,
+   "queries": 78,
+   "needed_recall": 0.4487,
+   "extra": 21,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.0
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.2,
+    "k_single": 1,
+    "k_set": 2,
+    "authority_effect": "none"
+   },
+   "strict": 35,
+   "queries": 78,
+   "needed_recall": 0.4487,
+   "extra": 21,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.1
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.15,
+    "k_single": 1,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 35,
+   "queries": 78,
+   "needed_recall": 0.4487,
+   "extra": 21,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 19.7
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.15,
+    "k_single": 1,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 35,
+   "queries": 78,
+   "needed_recall": 0.4487,
+   "extra": 21,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.0
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.15,
+    "k_single": 1,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 35,
+   "queries": 78,
+   "needed_recall": 0.4487,
+   "extra": 21,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.1
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.05,
+    "k_single": 1,
+    "k_set": 2,
+    "authority_effect": "none"
+   },
+   "strict": 35,
+   "queries": 78,
+   "needed_recall": 0.4359,
+   "extra": 20,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.0
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.05,
+    "k_single": 1,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 35,
+   "queries": 78,
+   "needed_recall": 0.4359,
+   "extra": 20,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.8
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.05,
+    "k_single": 1,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 35,
+   "queries": 78,
+   "needed_recall": 0.4359,
+   "extra": 20,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.1
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.05,
+    "k_single": 1,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 35,
+   "queries": 78,
+   "needed_recall": 0.4359,
+   "extra": 20,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.1
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.05,
+    "k_single": 2,
+    "k_set": 2,
+    "authority_effect": "none"
+   },
+   "strict": 35,
+   "queries": 78,
+   "needed_recall": 0.4359,
+   "extra": 20,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.3
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.05,
+    "k_single": 2,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 35,
+   "queries": 78,
+   "needed_recall": 0.4359,
+   "extra": 20,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.7
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.05,
+    "k_single": 2,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 35,
+   "queries": 78,
+   "needed_recall": 0.4359,
+   "extra": 20,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 19.2
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.05,
+    "k_single": 2,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 35,
+   "queries": 78,
+   "needed_recall": 0.4359,
+   "extra": 20,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.2
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.05,
+    "k_single": 3,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 35,
+   "queries": 78,
+   "needed_recall": 0.4359,
+   "extra": 20,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.5
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.05,
+    "k_single": 3,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 35,
+   "queries": 78,
+   "needed_recall": 0.4359,
+   "extra": 20,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.1
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.05,
+    "k_single": 3,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 35,
+   "queries": 78,
+   "needed_recall": 0.4359,
+   "extra": 20,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.5
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.15,
+    "k_single": 2,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 34,
+   "queries": 78,
+   "needed_recall": 0.6538,
+   "extra": 44,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.9
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.15,
+    "k_single": 2,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 34,
+   "queries": 78,
+   "needed_recall": 0.6538,
+   "extra": 44,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.9
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.15,
+    "k_single": 3,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 34,
+   "queries": 78,
+   "needed_recall": 0.6538,
+   "extra": 51,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 20.1
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.15,
+    "k_single": 3,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 34,
+   "queries": 78,
+   "needed_recall": 0.6538,
+   "extra": 51,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.9
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.15,
+    "k_single": 2,
+    "k_set": 2,
+    "authority_effect": "none"
+   },
+   "strict": 34,
+   "queries": 78,
+   "needed_recall": 0.641,
+   "extra": 42,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.1
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.15,
+    "k_single": 2,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 34,
+   "queries": 78,
+   "needed_recall": 0.641,
+   "extra": 44,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.6
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.15,
+    "k_single": 3,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 34,
+   "queries": 78,
+   "needed_recall": 0.641,
+   "extra": 51,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 15.4
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.15,
+    "k_single": 2,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 34,
+   "queries": 78,
+   "needed_recall": 0.6154,
+   "extra": 38,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.1
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.15,
+    "k_single": 2,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 34,
+   "queries": 78,
+   "needed_recall": 0.6154,
+   "extra": 38,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.7
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.15,
+    "k_single": 3,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 34,
+   "queries": 78,
+   "needed_recall": 0.6154,
+   "extra": 42,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.8
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.15,
+    "k_single": 3,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 34,
+   "queries": 78,
+   "needed_recall": 0.6154,
+   "extra": 42,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.1
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.15,
+    "k_single": 2,
+    "k_set": 2,
+    "authority_effect": "none"
+   },
+   "strict": 34,
+   "queries": 78,
+   "needed_recall": 0.6026,
+   "extra": 37,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.1
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.15,
+    "k_single": 2,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 34,
+   "queries": 78,
+   "needed_recall": 0.6026,
+   "extra": 38,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.8
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.15,
+    "k_single": 3,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 34,
+   "queries": 78,
+   "needed_recall": 0.6026,
+   "extra": 42,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.5
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.2,
+    "k_single": 2,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 34,
+   "queries": 78,
+   "needed_recall": 0.5769,
+   "extra": 30,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 19.2
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.2,
+    "k_single": 2,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 34,
+   "queries": 78,
+   "needed_recall": 0.5769,
+   "extra": 30,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 19.6
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.2,
+    "k_single": 2,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 34,
+   "queries": 78,
+   "needed_recall": 0.5769,
+   "extra": 30,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.2
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.2,
+    "k_single": 3,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 34,
+   "queries": 78,
+   "needed_recall": 0.5769,
+   "extra": 33,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.0
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.2,
+    "k_single": 3,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 34,
+   "queries": 78,
+   "needed_recall": 0.5769,
+   "extra": 33,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.2
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.2,
+    "k_single": 3,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 34,
+   "queries": 78,
+   "needed_recall": 0.5769,
+   "extra": 33,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.6
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.4,
+    "margin": 0.2,
+    "k_single": 2,
+    "k_set": 2,
+    "authority_effect": "none"
+   },
+   "strict": 34,
+   "queries": 78,
+   "needed_recall": 0.5513,
+   "extra": 29,
+   "no_answer_broken": 4,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.8
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.15,
+    "k_single": 2,
+    "k_set": 2,
+    "authority_effect": "none"
+   },
+   "strict": 34,
+   "queries": 78,
+   "needed_recall": 0.4615,
+   "extra": 22,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 15.7
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.15,
+    "k_single": 2,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 34,
+   "queries": 78,
+   "needed_recall": 0.4615,
+   "extra": 22,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 21.8
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.15,
+    "k_single": 2,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 34,
+   "queries": 78,
+   "needed_recall": 0.4615,
+   "extra": 22,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 19.1
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.15,
+    "k_single": 2,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 34,
+   "queries": 78,
+   "needed_recall": 0.4615,
+   "extra": 22,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.4
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.15,
+    "k_single": 3,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 34,
+   "queries": 78,
+   "needed_recall": 0.4615,
+   "extra": 22,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 15.4
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.15,
+    "k_single": 3,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 34,
+   "queries": 78,
+   "needed_recall": 0.4615,
+   "extra": 22,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.8
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.15,
+    "k_single": 3,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 34,
+   "queries": 78,
+   "needed_recall": 0.4615,
+   "extra": 22,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.6
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.2,
+    "k_single": 2,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 32,
+   "queries": 78,
+   "needed_recall": 0.4872,
+   "extra": 25,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.9
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.2,
+    "k_single": 2,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 32,
+   "queries": 78,
+   "needed_recall": 0.4872,
+   "extra": 25,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.7
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.2,
+    "k_single": 2,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 32,
+   "queries": 78,
+   "needed_recall": 0.4872,
+   "extra": 25,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.1
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.2,
+    "k_single": 3,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 32,
+   "queries": 78,
+   "needed_recall": 0.4872,
+   "extra": 26,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.4
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.2,
+    "k_single": 3,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 32,
+   "queries": 78,
+   "needed_recall": 0.4872,
+   "extra": 26,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.4
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.2,
+    "k_single": 3,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 32,
+   "queries": 78,
+   "needed_recall": 0.4872,
+   "extra": 26,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 15.6
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.45,
+    "margin": 0.2,
+    "k_single": 2,
+    "k_set": 2,
+    "authority_effect": "none"
+   },
+   "strict": 31,
+   "queries": 78,
+   "needed_recall": 0.4615,
+   "extra": 25,
+   "no_answer_broken": 3,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.7
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.2,
+    "k_single": 2,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 29,
+   "queries": 78,
+   "needed_recall": 0.7051,
+   "extra": 53,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.3
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.2,
+    "k_single": 3,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 29,
+   "queries": 78,
+   "needed_recall": 0.7051,
+   "extra": 65,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.5
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.2,
+    "k_single": 2,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 29,
+   "queries": 78,
+   "needed_recall": 0.6923,
+   "extra": 52,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.7
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.2,
+    "k_single": 3,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 29,
+   "queries": 78,
+   "needed_recall": 0.6923,
+   "extra": 64,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.2
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.2,
+    "k_single": 2,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 29,
+   "queries": 78,
+   "needed_recall": 0.6667,
+   "extra": 51,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 20.0
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.2,
+    "k_single": 3,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 29,
+   "queries": 78,
+   "needed_recall": 0.6667,
+   "extra": 63,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.4
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.2,
+    "k_single": 2,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 29,
+   "queries": 78,
+   "needed_recall": 0.6538,
+   "extra": 47,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.3
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.2,
+    "k_single": 3,
+    "k_set": 6,
+    "authority_effect": "none"
+   },
+   "strict": 29,
+   "queries": 78,
+   "needed_recall": 0.6538,
+   "extra": 56,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 19.2
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.2,
+    "k_single": 2,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 29,
+   "queries": 78,
+   "needed_recall": 0.641,
+   "extra": 46,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 16.8
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.3,
+    "margin": 0.2,
+    "k_single": 2,
+    "k_set": 2,
+    "authority_effect": "none"
+   },
+   "strict": 29,
+   "queries": 78,
+   "needed_recall": 0.641,
+   "extra": 48,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.0
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.2,
+    "k_single": 3,
+    "k_set": 4,
+    "authority_effect": "none"
+   },
+   "strict": 29,
+   "queries": 78,
+   "needed_recall": 0.641,
+   "extra": 55,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.0
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.2,
+    "k_single": 2,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 29,
+   "queries": 78,
+   "needed_recall": 0.6282,
+   "extra": 45,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.0
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.2,
+    "k_single": 3,
+    "k_set": 3,
+    "authority_effect": "none"
+   },
+   "strict": 29,
+   "queries": 78,
+   "needed_recall": 0.6282,
+   "extra": 54,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 18.7
+  },
+  {
+   "point": {
+    "policy_id": "rank-bounded-semantic-proposals",
+    "policy_version": "1.0.0",
+    "min_best": 0.35,
+    "margin": 0.2,
+    "k_single": 2,
+    "k_set": 2,
+    "authority_effect": "none"
+   },
+   "strict": 29,
+   "queries": 78,
+   "needed_recall": 0.6026,
+   "extra": 43,
+   "no_answer_broken": 7,
+   "safety_violations": 0,
+   "recall_p50_ms": 17.8
+  }
+ ]
+}

@@ -113,6 +113,50 @@ class VectorCandidateHit:
             raise ValueError("vector candidate hits cannot have authority effect")
 
 
+# #819 C6: rank-bounded proposal policy for the optional semantic discovery route, calibrated on
+# the self-authored development data (reports/benchmarks/memory-quality/819-c6/CALIBRATION.md).
+PROPOSAL_POLICY_ID = "rank-bounded-semantic-proposals"
+PROPOSAL_POLICY_VERSION = "1.0.0"
+PROPOSAL_MIN_BEST = 0.40
+PROPOSAL_MARGIN = 0.20
+PROPOSAL_K_SINGLE = 1
+PROPOSAL_K_SET = 3
+
+
+@dataclass(frozen=True)
+class RankBoundedProposalPolicy:
+    """Which semantic neighbours the route proposes (#819 C6).
+
+    Nothing when the best match is below ``min_best`` (no strong semantic anchor); otherwise
+    the top ``k_single`` (``k_set`` for an aggregate, relational or plural question) neighbours
+    within ``margin`` of the best. There is no absolute floor on the proposals themselves, so a
+    top-ranked neighbour below the old 0.30 floor is reachable. Proposals still cross governed
+    admission; similarity is evidence for discovery only and never authority.
+    """
+
+    min_best: float = PROPOSAL_MIN_BEST
+    margin: float = PROPOSAL_MARGIN
+    k_single: int = PROPOSAL_K_SINGLE
+    k_set: int = PROPOSAL_K_SET
+
+    def several(self, query: str) -> bool:
+        from .return_selection import interpret_query, plural_answer
+
+        return interpret_query(query).needs_several or plural_answer(query)
+
+    def propose(self, query: str, ranked: "list[VectorCandidateHit]") -> "list[VectorCandidateHit]":
+        if not ranked or ranked[0].similarity < self.min_best:
+            return []
+        limit = self.k_set if self.several(query) else self.k_single
+        floor = ranked[0].similarity - self.margin
+        return [hit for hit in ranked[:limit] if hit.similarity >= floor]
+
+    def to_dict(self) -> dict:
+        return {"policy_id": PROPOSAL_POLICY_ID, "policy_version": PROPOSAL_POLICY_VERSION,
+                "min_best": self.min_best, "margin": self.margin, "k_single": self.k_single,
+                "k_set": self.k_set, "authority_effect": "none"}
+
+
 class NativeVectorCandidateRetriever:
     """Bounded O(N) cosine candidate route over canonical Agent Memory facts.
 
@@ -129,9 +173,12 @@ class NativeVectorCandidateRetriever:
         *,
         minimum_similarity: float = 0.0,
         store: DerivedVectorStoreProtocol | None = None,
+        proposal_policy: RankBoundedProposalPolicy | None = None,
     ) -> None:
         self.representation = representation
         self.store = store
+        # #819 C6: with a policy, ``minimum_similarity`` is not applied; the policy decides.
+        self.proposal_policy = proposal_policy
         self.spec = representation.spec
         if not math.isfinite(minimum_similarity):
             raise ValueError("minimum_similarity must be finite")
@@ -199,7 +246,7 @@ class NativeVectorCandidateRetriever:
                     self.representation.embed(fact.fact_text)
                 )
             similarity = self._cosine(query_vector, candidate_vector)
-            if similarity <= self.minimum_similarity:
+            if self.proposal_policy is None and similarity <= self.minimum_similarity:
                 continue
             hits.append(
                 VectorCandidateHit(
@@ -214,6 +261,8 @@ class NativeVectorCandidateRetriever:
             )
 
         hits.sort(key=lambda item: (-item.similarity, item.candidate_ref))
+        if self.proposal_policy is not None:
+            hits = self.proposal_policy.propose(query, hits)
         return hits[:candidate_limit]
 
     def _validated_vector(self, value: tuple[float, ...]) -> tuple[float, ...]:

@@ -1,0 +1,244 @@
+{
+ "metrics": {
+  "A": {
+   "strict": 6,
+   "needed_recall": 0.5256,
+   "extra": 313,
+   "no_answer_returning": 13,
+   "mean_precision": 0.1949,
+   "mean_returned": 4.577,
+   "safety_violations": 0
+  },
+  "C4": {
+   "strict": 24,
+   "needed_recall": 0.2821,
+   "extra": 20,
+   "no_answer_returning": 3,
+   "mean_precision": 0.5699,
+   "mean_returned": 0.564,
+   "safety_violations": 0
+  },
+  "C4+sem": {
+   "strict": 30,
+   "needed_recall": 0.6282,
+   "extra": 49,
+   "no_answer_returning": 7,
+   "mean_precision": 0.5948,
+   "mean_returned": 1.295,
+   "safety_violations": 0
+  },
+  "C6": {
+   "strict": 40,
+   "needed_recall": 0.5513,
+   "extra": 23,
+   "no_answer_returning": 4,
+   "mean_precision": 0.7,
+   "mean_returned": 0.872,
+   "safety_violations": 0
+  },
+  "C6-off": {
+   "strict": 24,
+   "needed_recall": 0.2821,
+   "extra": 20,
+   "no_answer_returning": 3,
+   "mean_precision": 0.5699,
+   "mean_returned": 0.564,
+   "safety_violations": 0
+  }
+ },
+ "gate": {
+  "G1 needed recall >= C4 + 0.20": [
+   0.5513,
+   0.4821,
+   true
+  ],
+  "G2 strict >= C4+sem + 3": [
+   40,
+   33,
+   true
+  ],
+  "G3 extra <= 0.75 x C4+sem": [
+   23,
+   36.75,
+   true
+  ],
+  "G4 no-answer returning <= C4+sem": [
+   4,
+   7,
+   true
+  ],
+  "G5 safety violations == 0": [
+   0,
+   0,
+   true
+  ],
+  "G6 C6 off lists == C4 lists": [
+   null,
+   null,
+   true
+  ]
+ },
+ "paired_strict": {
+  "C6 vs A": {
+   "improved": [
+    "c5-dev:co-2",
+    "c5-dev:co-3",
+    "c5-dev:co-4",
+    "c5-dev:fa-1",
+    "c5-dev:fa-6",
+    "c5-dev:he-3",
+    "c5-dev:he-5",
+    "c5-dev:he-6",
+    "c5-dev:he-7",
+    "c5-dev:hh-1",
+    "c5-dev:hh-3",
+    "c5-dev:hh-4",
+    "c5-dev:hh-5",
+    "c5-dev:hh-7",
+    "c5-dev:pr-4",
+    "c5-dev:pr-6",
+    "c5-dev:sc-1",
+    "c5-dev:sc-2",
+    "c5-dev:tr-4",
+    "c5-dev:wk-1",
+    "c5-dev:wk-6",
+    "c5-dev:wk-8",
+    "diag:gov-1",
+    "diag:gov-2",
+    "diag:gov-3",
+    "diag:gov-5",
+    "diag:health-1",
+    "diag:health-2",
+    "diag:health-3",
+    "diag:health-4",
+    "diag:health-5",
+    "diag:pets-2",
+    "diag:pets-3",
+    "diag:pets-4",
+    "diag:proj-4"
+   ],
+   "regressed": [
+    "c5-dev:tr-2"
+   ],
+   "mcnemar_p": 0.0
+  },
+  "C6 vs C4": {
+   "improved": [
+    "c5-dev:fa-1",
+    "c5-dev:he-2",
+    "c5-dev:he-3",
+    "c5-dev:he-5",
+    "c5-dev:he-7",
+    "c5-dev:hh-1",
+    "c5-dev:hh-3",
+    "c5-dev:hh-4",
+    "c5-dev:hh-7",
+    "c5-dev:pr-4",
+    "c5-dev:wk-1",
+    "diag:gov-1",
+    "diag:health-1",
+    "diag:health-2",
+    "diag:health-5",
+    "diag:pets-2",
+    "diag:pets-4",
+    "diag:proj-4"
+   ],
+   "regressed": [
+    "c5-dev:tr-2",
+    "diag:pets-5"
+   ],
+   "mcnemar_p": 0.0004
+  },
+  "C6 vs C4+sem": {
+   "improved": [
+    "c5-dev:co-2",
+    "c5-dev:fa-1",
+    "c5-dev:fa-2",
+    "c5-dev:fa-5",
+    "c5-dev:he-6",
+    "c5-dev:hh-3",
+    "c5-dev:wk-6",
+    "diag:gov-5",
+    "diag:health-1",
+    "diag:health-3",
+    "diag:health-4",
+    "diag:pets-2",
+    "diag:pets-3",
+    "diag:pets-4"
+   ],
+   "regressed": [
+    "c5-dev:co-1",
+    "c5-dev:tr-2",
+    "c5-dev:wk-2",
+    "diag:work-4"
+   ],
+   "mcnemar_p": 0.0309
+  }
+ },
+ "strict_by_kind": {
+  "aggregate": {
+   "A": 0,
+   "C4": 0,
+   "C4+sem": 0,
+   "C6": 1,
+   "C6-off": 0,
+   "n": 5
+  },
+  "paraphrase": {
+   "A": 0,
+   "C4": 1,
+   "C4+sem": 4,
+   "C6": 5,
+   "C6-off": 1,
+   "n": 13
+  },
+  "distractor": {
+   "A": 0,
+   "C4": 1,
+   "C4+sem": 0,
+   "C6": 2,
+   "C6-off": 1,
+   "n": 2
+  },
+  "abstention": {
+   "A": 0,
+   "C4": 2,
+   "C4+sem": 0,
+   "C6": 1,
+   "C6-off": 2,
+   "n": 3
+  },
+  "stuffing": {
+   "A": 0,
+   "C4": 0,
+   "C4+sem": 0,
+   "C6": 0,
+   "C6-off": 0,
+   "n": 1
+  },
+  "governance": {
+   "A": 0,
+   "C4": 3,
+   "C4+sem": 3,
+   "C6": 4,
+   "C6-off": 3,
+   "n": 5
+  },
+  "ordinary": {
+   "A": 1,
+   "C4": 1,
+   "C4+sem": 1,
+   "C6": 1,
+   "C6-off": 1,
+   "n": 1
+  },
+  "c5-dev": {
+   "A": 5,
+   "C4": 16,
+   "C4+sem": 22,
+   "C6": 26,
+   "C6-off": 16,
+   "n": 48
+  }
+ }
+}

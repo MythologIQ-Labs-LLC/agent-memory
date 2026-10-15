@@ -274,7 +274,7 @@ def _semantic_route(root: Path, mode: str, representation_dir: str | Path | None
         return {"status": "disabled", "mode": mode, "reason": "off", "retriever": None}
     from ..runtime.representation_cache import DerivedVectorStore
     from ..runtime.representation_onnx import OnnxSentenceEmbeddingProvider, RepresentationUnavailable
-    from ..runtime.vector_retrieval import NativeVectorCandidateRetriever
+    from ..runtime.vector_retrieval import NativeVectorCandidateRetriever, RankBoundedProposalPolicy
 
     try:
         provider = OnnxSentenceEmbeddingProvider(representation_dir)
@@ -284,7 +284,8 @@ def _semantic_route(root: Path, mode: str, representation_dir: str | Path | None
         return {"status": "disabled", "mode": mode, "reason": f"unavailable: {exc}", "retriever": None}
     store = DerivedVectorStore(root, provider.spec.config_digest, provider.spec.dimensions)
     retriever = NativeVectorCandidateRetriever(
-        provider, minimum_similarity=SEMANTIC_MINIMUM_SIMILARITY, store=store
+        provider, minimum_similarity=SEMANTIC_MINIMUM_SIMILARITY, store=store,
+        proposal_policy=RankBoundedProposalPolicy(),  # #819 C6
     )
     return {"status": "enabled", "mode": mode, "reason": "pinned provider verified", "retriever": retriever}
 
@@ -1093,6 +1094,8 @@ class AgentMemory:
             },
             "minimum_similarity": None if retriever is None else retriever.minimum_similarity,
             "candidate_limit": None if retriever is None else SEMANTIC_CANDIDATE_LIMIT,
+            "proposal_policy": (None if retriever is None or getattr(retriever, "proposal_policy", None) is None
+                                else retriever.proposal_policy.to_dict()),
             "ordering": "subordinate: after every relevance and temporal stage (ranking policy 3.2.0)",
             "store": None if store is None else store.posture(),
             "authority_effect": "none",
