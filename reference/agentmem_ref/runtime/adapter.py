@@ -1982,6 +1982,15 @@ class GovernedMemoryAdapter:
 
     # -- #777 public read projection (identifiers only; admission and audit unchanged) --
 
+    def read_admission_refusal(self, fact: Fact, context: RecallContext, mode: str | None = None) -> str | None:
+        """#691: the admission refusal for reading ``fact`` now, in the admission mode the recall
+        used (default current-state). Read-only; it grants nothing and changes no decision."""
+        return self._admission_refusal(fact, context, mode or CURRENT_STATE_ADMISSION)
+
+    def memory_ref_of(self, fact_uuid: str) -> str | None:
+        """#691: the logical memory reference a fact was written for, if known. Read-only."""
+        return self._fact_memory.get(fact_uuid)
+
     def has_governed_deletions(self) -> bool:
         """Whether any governed deletion exists, so a public projection may need to withhold."""
         return bool(self._tombstones)

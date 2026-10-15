@@ -195,6 +195,24 @@ Because new refusal tokens reach callers (`target_unavailable` on `remember`; `f
 
 **Scope is privileged host input.** `AgentMemory.open(..., tenant, scope)`, the `overrides` of a proposal and the scope keywords of `recall` declare the authority the host asserts for the caller; the facade does not authenticate who submits them. The write-target rules above therefore isolate projects, tasks and shared domains *as declared by the host*: a complete-scope override (replay case W4) is admitted exactly because the host is trusted to declare it. An exposed multi-user service must bind authenticated authority to the scope it submits before the facade sees it; a handle a user controls directly is that user's own authority, not an isolation boundary against them.
 
+## Context package (#691 candidate `agent-memory-context/0.1.0`; contract unchanged)
+
+`AgentMemory.recall_context(query, *, max_items=None, max_chars_per_item=2000, max_total_chars=8000, max_tokens=None, **recall_kwargs)` returns the content of exactly the facts one public recall returned. `recall()` and its identifier-only result are unchanged.
+
+- **What is resolved.** Only the recall's `returned` list, after the #777 public projection. Candidates, refused facts, withheld facts and other identifiers are never resolved, and there is no lookup by identifier.
+- **Consistency.** The recall and the resolution run under one hold of the runtime-owned serialization lock (#530), so no correction, deletion or dispute interleaves.
+  - Each returned fact is re-checked against admission, in the mode the recall used, and against the deleted-lineage withholding predicate before its text is read.
+  - A fact that fails resolves to `unresolved` (`withheld`, `not_found`, `no_longer_admissible` or `content_read_failed`) with no content.
+  - A fact with no text is `unsupported`.
+- **Bounds.**
+  - `max_items` is the recall's return budget.
+  - Content is cut to `max_chars_per_item` and to the smaller of `max_total_chars` and `max_tokens × 4`. The token figure is a deterministic `ceil(chars / 4)` estimate, not a model tokenizer.
+  - An item cut to fit is `truncated`; items past the budget are `omitted_budget` without content.
+  - Package `status` is one of `empty`, `complete`, `truncated`, `budget_exhausted` or `partial_unresolved`.
+- **Provenance receipt per resolved item:** `memory_ref` (withheld for a deleted lineage), `source_ref` and `write_operation` from write provenance, `recorded_at`, the declared `observed_at`/`valid_from`/`valid_until`, `content_sha256` and `content_chars` of the full text, and the recall's `admission_decision_id` and `admission_mode`.
+- **Untrusted evidence.** Every item is `trust: untrusted_memory_text` with `authority_effect: none`, and the package carries `instruction_policy`. Memory text never grants permission or authority.
+- **Schema.** The package validates against `schemas/api-context-package.schema.json`. It is separately versioned and is **not** part of an accepted contract; adopting it needs the owner's decision, a contract or package version decision, and a lane (#691 acceptance).
+
 ## Action authority and execution evidence (contract `1.2.0`, ADR-038)
 
 An action is authorized by an ordinary PAMA decision on a proposal whose operation is `action_execution` (`docs/33` gives it four cells: low `allow_with_ledger`, medium and high `require_review`, critical `require_external_verification`). `memory/action_authority.py` hosts the path with the runtime adapter as an injected collaborator; the adapter learns nothing about actions.
