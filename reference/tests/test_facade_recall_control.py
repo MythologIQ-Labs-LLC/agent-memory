@@ -21,7 +21,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from agentmem_ref import AgentMemory  # noqa: E402
 from agentmem_ref.api import surface  # noqa: E402
-from agentmem_ref.runtime import representation_onnx  # noqa: E402
+from agentmem_ref.runtime import representation_onnx, vector_retrieval  # noqa: E402
 from agentmem_ref.runtime.recall_control import (  # noqa: E402
     ControlledRecallPlanner,
     DeterministicRecallController,
@@ -159,10 +159,12 @@ class FacadeShadowRecallControlTests(unittest.TestCase):
         off, shadow = outputs["off"][0], outputs["shadow"][0]
         self.assertEqual(json.dumps(_retrieval(off), sort_keys=True), json.dumps(_retrieval(shadow), sort_keys=True))
         report = shadow["recall_control"]
-        self.assertEqual(report["route_candidate_counts"][SEMANTIC_VECTOR_ROUTE], surface.SEMANTIC_CANDIDATE_LIMIT)
+        # #819 C6: the semantic route's binding cap is its rank-bounded proposal policy's K for this query.
+        cap = vector_retrieval.RankBoundedProposalPolicy().limit("Which pet?")
+        self.assertEqual(report["route_candidate_counts"][SEMANTIC_VECTOR_ROUTE], cap)
         self.assertEqual(report["actual_stop"]["actual_stop_reason"], "max_candidates")
         self.assertEqual(report["actual_stop"]["stop_class"], "resource")
-        self.assertEqual(report["actual_stop"]["budget_state"], {"host_caps": {SEMANTIC_VECTOR_ROUTE: surface.SEMANTIC_CANDIDATE_LIMIT}})
+        self.assertEqual(report["actual_stop"]["budget_state"], {"host_caps": {SEMANTIC_VECTOR_ROUTE: cap}})
 
     @unittest.skipUnless(os.environ.get("AGENT_MEMORY_REPRESENTATION_DIR") or os.environ.get("AGENT_MEMORY_REQUIRE_REPRESENTATION"),
                          "pinned representation model not provisioned")
@@ -175,7 +177,8 @@ class FacadeShadowRecallControlTests(unittest.TestCase):
         report = outputs["shadow"][0]["recall_control"]
         self.assertEqual(json.dumps(_retrieval(outputs["off"][0]), sort_keys=True),
                          json.dumps(_retrieval(outputs["shadow"][0]), sort_keys=True))
-        self.assertEqual(report["route_candidate_counts"][SEMANTIC_VECTOR_ROUTE], surface.SEMANTIC_CANDIDATE_LIMIT)
+        cap = vector_retrieval.RankBoundedProposalPolicy().limit("Tell me about my dog and its walks")
+        self.assertEqual(report["route_candidate_counts"][SEMANTIC_VECTOR_ROUTE], cap)
         self.assertEqual(report["actual_stop"]["actual_stop_reason"], "max_candidates")
 
 

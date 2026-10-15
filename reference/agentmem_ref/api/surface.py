@@ -985,7 +985,10 @@ class AgentMemory:
         retriever = self._semantic.get("retriever")
         if retriever is not None and retriever.available_for(substrate):
             available.append(SEMANTIC_VECTOR_ROUTE)
-            host_caps[SEMANTIC_VECTOR_ROUTE] = SEMANTIC_CANDIDATE_LIMIT
+            # #819 C6: with a proposal policy the route's binding limit is the policy's K for this query.
+            policy = getattr(retriever, "proposal_policy", None)
+            host_caps[SEMANTIC_VECTOR_ROUTE] = (min(SEMANTIC_CANDIDATE_LIMIT, policy.limit(query)) if policy is not None
+                                                else SEMANTIC_CANDIDATE_LIMIT)
         if isinstance(substrate, EvidenceNeighborTemporalGraphPort):
             available.append(SHARED_EVIDENCE_ROUTE)
         counts: dict[str, int] = {}

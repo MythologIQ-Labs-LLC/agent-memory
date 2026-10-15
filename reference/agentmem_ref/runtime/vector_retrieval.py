@@ -144,10 +144,15 @@ class RankBoundedProposalPolicy:
 
         return interpret_query(query).needs_several or plural_answer(query)
 
+    def limit(self, query: str) -> int:
+        """The most proposals this query can receive (its effective candidate cap)."""
+
+        return self.k_set if self.several(query) else self.k_single
+
     def propose(self, query: str, ranked: "list[VectorCandidateHit]") -> "list[VectorCandidateHit]":
         if not ranked or ranked[0].similarity < self.min_best:
             return []
-        limit = self.k_set if self.several(query) else self.k_single
+        limit = self.limit(query)
         floor = ranked[0].similarity - self.margin
         return [hit for hit in ranked[:limit] if hit.similarity >= floor]
 
