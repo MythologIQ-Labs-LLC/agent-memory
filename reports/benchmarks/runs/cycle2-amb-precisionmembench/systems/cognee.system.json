@@ -1,0 +1,25 @@
+{
+ "id": "cognee",
+ "revision": "1.6.4@f154b32a9e544dac73e7ddf2010327cf9988edcd",
+ "adapter_id": "reference/competitor_service.py (cognee-local) + reference/amb_service_provider.py",
+ "adapter_revision": "git-blob:9d2b5b22642566b80a8c4fd3152d2dba001fa52d + git-blob:32e0e93e0ed410f65487e4c75a6db32df400b710",
+ "configuration": {
+  "package": "cognee[gliner]==1.6.4",
+  "llm": "none (GLiNER local extraction, local embeddings)",
+  "ingest": "remember(DataItem(text, data_id=uuid5 per occurrence, literal_text=True)) into one dataset per AMB user",
+  "recall": "recall(query, datasets=[user dataset], top_k=k)",
+  "reset": "prune_data + prune_system(metadata=True) on prepare"
+ },
+ "calls": [],
+ "network_access": "restricted",
+ "notes": [
+  "CPU (4 vCPU) shared with other benchmark processes; latencies are indicative only, not comparative performance measurements.",
+  "Models (GLiNER, embedder) were cached on first use; HF offline at run time."
+ ],
+ "limitations": [
+  "Measures retrieval only (AMB retrieval mode, no LLM answer or judge); not AMB's LLM-judged QA, not an official AMB leaderboard entry.",
+  "Protocol tier A: query-only provider (supports_filters=False); AMB's structured scope/type filters are not passed.",
+  "Candidate: requires independent adapter/protocol review before acceptance.",
+  "Measures Cognee's documented no-LLM local GLiNER mode, not its LLM cognify graph mode."
+ ]
+}

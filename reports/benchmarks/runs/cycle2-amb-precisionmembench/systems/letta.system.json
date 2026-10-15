@@ -1,0 +1,40 @@
+{
+ "id": "letta",
+ "revision": "0.16.8@1131535716e8a31c9a437f8695e25ac98f203a24",
+ "adapter_id": "reference/competitor_service.py (letta-local) + reference/amb_service_provider.py",
+ "adapter_revision": "git-blob:9d2b5b22642566b80a8c4fd3152d2dba001fa52d + git-blob:32e0e93e0ed410f65487e4c75a6db32df400b710",
+ "configuration": {
+  "server": "letta server 0.16.8, PostgreSQL 18.1 + pgvector 0.8.5, init.sql + alembic head 1c28e167b74f, no Redis",
+  "isolation": "one agent (own archive) per AMB user, deleted on prepare",
+  "insert": "POST /v1/agents/{id}/archival-memory, one call per document (one passage each)",
+  "search": "GET /v1/agents/{id}/archival-memory/search top_k=k, no tags/date filters",
+  "embedding_chunk_size": 300,
+  "llm": "none invoked (llm_config points at a closed loopback port)"
+ },
+ "calls": [
+  {
+   "purpose": "embedding",
+   "provider": "fastembed ONNX via reference/local_embedding_server.py (loopback OpenAI-compatible)",
+   "model_id": "qdrant/bge-small-en-v1.5-onnx-q (BAAI/bge-small-en-v1.5)",
+   "model_revision": "aa8f8b060edb00e03bfdd08813a2949946c8ba55",
+   "model_digest": "51f1bd0addd6e859e42c2c8021a5e5461385bb676a649f4b269aa445449f2431",
+   "endpoint_class": "local",
+   "parameters": {
+    "dimensions": 384
+   },
+   "prompt_sha256": null,
+   "count": 1
+  }
+ ],
+ "network_access": "restricted",
+ "notes": [
+  "CPU (4 vCPU) shared with other benchmark processes; latencies are indicative only, not comparative performance measurements.",
+  "Dependencies resolved with uv --exclude-newer 2026-05-15 (release date); unbounded resolution produced an mcp/pydantic import incompatibility."
+ ],
+ "limitations": [
+  "Measures retrieval only (AMB retrieval mode, no LLM answer or judge); not AMB's LLM-judged QA, not an official AMB leaderboard entry.",
+  "Protocol tier A: query-only provider (supports_filters=False); AMB's structured scope/type filters are not passed.",
+  "Candidate: requires independent adapter/protocol review before acceptance.",
+  "Measures Letta's archival-memory retrieval API, not Letta's end-to-end self-editing stateful agent; per #810 Letta's native tier is agentic and is not claimed here."
+ ]
+}

@@ -51,9 +51,18 @@ def main() -> int:
     p.add_argument("--evaluator-revision", required=True)
     p.add_argument("--latencies-ms", type=Path, help="JSON list of per-question latencies")
     p.add_argument("--uri-root", type=Path, required=True)
+    p.add_argument("--benchmark-id", default="longmemeval-s-retrieval")
+    p.add_argument("--task-profile", help="default: longmemeval-s-retrieval-parity-v1:<plane>")
+    p.add_argument("--dataset-revision", default="xiaowu0162/longmemeval-cleaned longmemeval_s_cleaned.json")
+    p.add_argument("--retrieval-top-k", type=int, default=50)
+    p.add_argument("--redaction-note", default="Runs used an allowlisted environment with no tokens; argv contains only local paths and flags. Dataset is public LongMemEval-S.")
     p.add_argument("--output", type=Path, required=True)
     a = p.parse_args()
     ex = json.loads(a.exec_record.read_text())
+    if ex.get("schema") == "agent-memory-amb-local-execution/1":  # scripts/run_amb_local_evidence.py record
+        ex = {"argv": ex["command"], "exit_status": ex["exit_code"], "wall_seconds": ex["wall_time_s"],
+              "peak_rss_mib": ex["peak_rss_kib"] / 1024,
+              "started_utc": ex["started_utc"].replace("+00:00", "Z")}
     system = json.loads(a.system.read_text())
     config_bytes = json.dumps(system["configuration"], sort_keys=True, separators=(",", ":")).encode()
     lat = json.loads(a.latencies_ms.read_text()) if a.latencies_ms else []
@@ -81,8 +90,8 @@ def main() -> int:
         "schema_version": "1.0.0",
         "run_id": a.run_id,
         "normalized_run": {"uri": rel(a.normalized), "sha256": sha(a.normalized)},
-        "benchmark": {"id": "longmemeval-s-retrieval", "task_profile": f"longmemeval-s-retrieval-parity-v1:{a.plane}",
-                      "dataset_revision": "xiaowu0162/longmemeval-cleaned longmemeval_s_cleaned.json",
+        "benchmark": {"id": a.benchmark_id, "task_profile": a.task_profile or f"longmemeval-s-retrieval-parity-v1:{a.plane}",
+                      "dataset_revision": a.dataset_revision,
                       "input_sha256": a.input_sha256, "selection_id": a.selection_id,
                       "sample_count": a.sample_count, "evaluator_revision": a.evaluator_revision,
                       "excluded_count": a.excluded_count},
@@ -103,7 +112,7 @@ def main() -> int:
         "inference": {"used": bool(system.get("calls")), "calls": system.get("calls", [])},
         "execution": {"command_sha256": hashlib.sha256("\0".join(ex["argv"]).encode()).hexdigest(),
                       "argv_redacted": ex["argv"], "random_seed": 0, "timeout_ms": 0, "retries": 0,
-                      "context_budget_tokens": system.get("context_budget_tokens"), "retrieval_top_k": 50,
+                      "context_budget_tokens": system.get("context_budget_tokens"), "retrieval_top_k": a.retrieval_top_k,
                       "stdout_sha256": sha(a.stdout), "stderr_sha256": sha(a.stderr), "exit_code": ex["exit_status"],
                       "peak_rss_bytes": int(ex["peak_rss_mib"] * 1024 * 1024), "peak_vram_bytes": None,
                       "latency_p50_ms": pct(lat, 0.5), "latency_p95_ms": pct(lat, 0.95)},
@@ -111,7 +120,7 @@ def main() -> int:
                   "output_tokens": None, "billing_reference_sha256": None},
         "artifacts": artifacts,
         "redaction": {"reviewed": True, "contains_secrets": False, "contains_private_data": False,
-                      "note": "Runs used an allowlisted environment with no tokens; argv contains only local paths and flags. Dataset is public LongMemEval-S."},
+                      "note": a.redaction_note},
         "review": {"status": "candidate", "reviewer": None, "decision_ref": None,
                    "limitations": system.get("limitations", []), "comparison_eligibility": "not_assessed"},
         "authority_effect": "none",

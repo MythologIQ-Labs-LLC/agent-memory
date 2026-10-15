@@ -1,0 +1,159 @@
+{
+  "schema_version": "1.0.0",
+  "run_id": "cycle2-amb-letta-amb-rep1",
+  "normalized_run": {
+    "uri": "reports/benchmarks/runs/cycle2-amb-precisionmembench/letta-amb-rep1/single-turn.json",
+    "sha256": "a37d847129d383587262004f41281bce0c522fb3d02ea5cde5fb1c7094d579f2"
+  },
+  "benchmark": {
+    "id": "amb-precisionmembench-retrieval",
+    "task_profile": "amb-precisionmembench-retrieval:single-turn:query-only",
+    "dataset_revision": "vectorize-io/agent-memory-benchmark@03c1d0f fixtures beliefs.seed.json 35659b3b + retrieval.cases.json 09e99f08",
+    "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+    "selection_id": "full upstream precisionmembench single-turn split",
+    "sample_count": 77,
+    "evaluator_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+    "excluded_count": 0
+  },
+  "system": {
+    "id": "letta",
+    "revision": "0.16.8@1131535716e8a31c9a437f8695e25ac98f203a24",
+    "adapter_id": "reference/competitor_service.py (letta-local) + reference/amb_service_provider.py",
+    "adapter_revision": "git-blob:9d2b5b22642566b80a8c4fd3152d2dba001fa52d + git-blob:32e0e93e0ed410f65487e4c75a6db32df400b710",
+    "configuration_sha256": "e894a4ebd49594516eec3981c4a40111e22b32906488ec68a5f3c2ceb6f969bb",
+    "worktree_clean": true,
+    "build_sha256": null
+  },
+  "timing": {
+    "started_at": "2026-10-15T16:33:14Z",
+    "finished_at": "2026-10-15T16:34:13.290000Z",
+    "elapsed_ms": 59290
+  },
+  "hardware": {
+    "os": "Linux",
+    "os_release": "6.18.44-fc-v114",
+    "architecture": "x86_64",
+    "cpu_model": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+    "cpu_cores": 4,
+    "ram_bytes": 16874930176,
+    "gpus": []
+  },
+  "environment": {
+    "runtime": "CPython",
+    "runtime_version": "3.13.16",
+    "isolation": "cloud_sandbox",
+    "container_digest": null,
+    "dependency_lock_sha256": "56baa67ca203b851e2924a7b46616a90241049e90e17011a4be8e13c3dd511a7",
+    "network_access": "restricted",
+    "notes": [
+      "CPU (4 vCPU) shared with other benchmark processes; latencies are indicative only, not comparative performance measurements.",
+      "Dependencies resolved with uv --exclude-newer 2026-05-15 (release date); unbounded resolution produced an mcp/pydantic import incompatibility.",
+      "execution.timeout_ms 0 = no runner-level timeout (per-call product timeouts recorded in configuration where they exist)."
+    ]
+  },
+  "inference": {
+    "used": true,
+    "calls": [
+      {
+        "purpose": "embedding",
+        "provider": "fastembed ONNX via reference/local_embedding_server.py (loopback OpenAI-compatible)",
+        "model_id": "qdrant/bge-small-en-v1.5-onnx-q (BAAI/bge-small-en-v1.5)",
+        "model_revision": "aa8f8b060edb00e03bfdd08813a2949946c8ba55",
+        "model_digest": "51f1bd0addd6e859e42c2c8021a5e5461385bb676a649f4b269aa445449f2431",
+        "endpoint_class": "local",
+        "parameters": {
+          "dimensions": 384
+        },
+        "prompt_sha256": null,
+        "count": 1
+      }
+    ]
+  },
+  "execution": {
+    "command_sha256": "61e87ef3c2a93a6504e1085b76635d27211e4167dd98f65c05fd7930711f0868",
+    "argv_redacted": [
+      "/tmp/c2/amb-venv/bin/python",
+      "/tmp/c2/am/reference/run_amb_external.py",
+      "--amb-root",
+      "/tmp/eval/amb",
+      "--",
+      "run",
+      "--dataset",
+      "precisionmembench",
+      "--split",
+      "single-turn",
+      "--memory",
+      "letta-local",
+      "--mode",
+      "retrieval",
+      "--output-dir",
+      "/tmp/c2/evidence/letta-amb-rep1/amb-outputs"
+    ],
+    "random_seed": 0,
+    "timeout_ms": 0,
+    "retries": 0,
+    "context_budget_tokens": null,
+    "retrieval_top_k": 20,
+    "stdout_sha256": "a84937537d9149bda68b4379d666c62312ec8277c07295319194a21f6b836765",
+    "stderr_sha256": "9ea0ed00529ccc9d60d92fdee807698b83280d1d769f1de4a235b2dd5b486e78",
+    "exit_code": 0,
+    "peak_rss_bytes": 1150431232,
+    "peak_vram_bytes": null,
+    "latency_p50_ms": null,
+    "latency_p95_ms": null
+  },
+  "costs": {
+    "status": "not_measured",
+    "currency": "USD",
+    "amount": null,
+    "input_tokens": null,
+    "output_tokens": null,
+    "billing_reference_sha256": null
+  },
+  "artifacts": [
+    {
+      "kind": "row_level_results",
+      "uri": "reports/benchmarks/runs/cycle2-amb-precisionmembench/letta-amb-rep1/single-turn.json",
+      "sha256": "a37d847129d383587262004f41281bce0c522fb3d02ea5cde5fb1c7094d579f2"
+    },
+    {
+      "kind": "execution_log",
+      "uri": "reports/benchmarks/runs/cycle2-amb-precisionmembench/letta-amb-rep1/execution-identity.json",
+      "sha256": "9ec84a0396850aa266d8f6d2d1aa4b6c44db4898996d34ee69921017c5af9506"
+    },
+    {
+      "kind": "execution_log",
+      "uri": "reports/benchmarks/runs/cycle2-amb-precisionmembench/letta-amb-rep1/stdout.txt",
+      "sha256": "a84937537d9149bda68b4379d666c62312ec8277c07295319194a21f6b836765"
+    },
+    {
+      "kind": "execution_log",
+      "uri": "reports/benchmarks/runs/cycle2-amb-precisionmembench/letta-amb-rep1/stderr.txt",
+      "sha256": "9ea0ed00529ccc9d60d92fdee807698b83280d1d769f1de4a235b2dd5b486e78"
+    },
+    {
+      "kind": "other",
+      "uri": "reports/benchmarks/runs/cycle2-amb-precisionmembench/letta-venv-freeze.txt",
+      "sha256": "56baa67ca203b851e2924a7b46616a90241049e90e17011a4be8e13c3dd511a7"
+    }
+  ],
+  "redaction": {
+    "reviewed": true,
+    "contains_secrets": false,
+    "contains_private_data": false,
+    "note": "Allowlisted environment with no tokens; argv contains only local paths and flags. Dataset is the public AMB PrecisionMemBench fixture."
+  },
+  "review": {
+    "status": "candidate",
+    "reviewer": null,
+    "decision_ref": null,
+    "limitations": [
+      "Measures retrieval only (AMB retrieval mode, no LLM answer or judge); not AMB's LLM-judged QA, not an official AMB leaderboard entry.",
+      "Protocol tier A: query-only provider (supports_filters=False); AMB's structured scope/type filters are not passed.",
+      "Candidate: requires independent adapter/protocol review before acceptance.",
+      "Measures Letta's archival-memory retrieval API, not Letta's end-to-end self-editing stateful agent; per #810 Letta's native tier is agentic and is not claimed here."
+    ],
+    "comparison_eligibility": "not_assessed"
+  },
+  "authority_effect": "none"
+}

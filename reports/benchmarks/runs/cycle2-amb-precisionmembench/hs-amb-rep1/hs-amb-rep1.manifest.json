@@ -1,0 +1,160 @@
+{
+  "schema_version": "1.0.0",
+  "run_id": "cycle2-amb-hs-amb-rep1",
+  "normalized_run": {
+    "uri": "reports/benchmarks/runs/cycle2-amb-precisionmembench/hs-amb-rep1/single-turn.json",
+    "sha256": "1908f40e8629d64576c25d90fc6fa5df15e4463bb43e73b551d08618ec9b7f95"
+  },
+  "benchmark": {
+    "id": "amb-precisionmembench-retrieval",
+    "task_profile": "amb-precisionmembench-retrieval:single-turn:query-only",
+    "dataset_revision": "vectorize-io/agent-memory-benchmark@03c1d0f fixtures beliefs.seed.json 35659b3b + retrieval.cases.json 09e99f08",
+    "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+    "selection_id": "full upstream precisionmembench single-turn split",
+    "sample_count": 77,
+    "evaluator_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+    "excluded_count": 0
+  },
+  "system": {
+    "id": "hindsight",
+    "revision": "0.10.2@5fc4ce20917b916240cef27c212c387a177f115b",
+    "adapter_id": "reference/amb_hindsight_chunks_bridge.py",
+    "adapter_revision": "git-blob:8afb456310cb05bdb1a7715eb1b35e27075efab7",
+    "configuration_sha256": "0d585e0ea81667b8a47f9cb2331a338c250abf80a0ad9f5fb4b2a7cb228db2ab",
+    "worktree_clean": true,
+    "build_sha256": null
+  },
+  "timing": {
+    "started_at": "2026-10-15T15:40:47Z",
+    "finished_at": "2026-10-15T15:41:18.965000Z",
+    "elapsed_ms": 31965
+  },
+  "hardware": {
+    "os": "Linux",
+    "os_release": "6.18.44-fc-v114",
+    "architecture": "x86_64",
+    "cpu_model": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+    "cpu_cores": 4,
+    "ram_bytes": 16874930176,
+    "gpus": []
+  },
+  "environment": {
+    "runtime": "CPython",
+    "runtime_version": "3.13.16",
+    "isolation": "cloud_sandbox",
+    "container_digest": null,
+    "dependency_lock_sha256": "c9344cbb6dad368ca39db2f4fc7951b452bc37a3bd3147088bb380e112039ec2",
+    "network_access": "restricted",
+    "notes": [
+      "CPU (4 vCPU) shared with other benchmark processes; latencies are indicative only, not comparative performance measurements.",
+      "Standalone pinned HindsightServer (reference/hindsight_local_server.py) with embedded PostgreSQL, run as an unprivileged user; see hindsight-server.json.",
+      "Embedding call count is a placeholder of 1: not instrumented.",
+      "execution.timeout_ms 0 = no runner-level timeout (per-call product timeouts recorded in configuration where they exist)."
+    ]
+  },
+  "inference": {
+    "used": true,
+    "calls": [
+      {
+        "purpose": "embedding",
+        "provider": "onnxruntime (Hindsight onnx embeddings provider)",
+        "model_id": "intfloat/multilingual-e5-small",
+        "model_revision": "03415a4be176a1620747c692ed433219fabc3def",
+        "model_digest": "ca456c06b3a9505ddfd9131408916dd79290368331e7d76bb621f1cba6bc8665",
+        "endpoint_class": "local",
+        "parameters": {
+          "dimensions": 384
+        },
+        "prompt_sha256": null,
+        "count": 1
+      }
+    ]
+  },
+  "execution": {
+    "command_sha256": "87f1ae85bbcdbc7381d55b6cde19fad04c567b2774b844ea9026244edc318768",
+    "argv_redacted": [
+      "/tmp/c2/amb-venv/bin/python",
+      "/tmp/c2/am/reference/run_amb_external.py",
+      "--amb-root",
+      "/tmp/eval/amb",
+      "--",
+      "run",
+      "--dataset",
+      "precisionmembench",
+      "--split",
+      "single-turn",
+      "--memory",
+      "hindsight-chunks-local",
+      "--mode",
+      "retrieval",
+      "--output-dir",
+      "/tmp/c2/evidence/hs-amb-rep1/amb-outputs"
+    ],
+    "random_seed": 0,
+    "timeout_ms": 0,
+    "retries": 0,
+    "context_budget_tokens": null,
+    "retrieval_top_k": 20,
+    "stdout_sha256": "0c6fc15659a45c3b3395f69e385cb554ff34d6365860dbac98d8e25f5827a462",
+    "stderr_sha256": "7318db21d4db2d8d0d77b489b7f2d1b0893f52e924d0850f6955962a3a507083",
+    "exit_code": 0,
+    "peak_rss_bytes": 1138950144,
+    "peak_vram_bytes": null,
+    "latency_p50_ms": null,
+    "latency_p95_ms": null
+  },
+  "costs": {
+    "status": "not_measured",
+    "currency": "USD",
+    "amount": null,
+    "input_tokens": null,
+    "output_tokens": null,
+    "billing_reference_sha256": null
+  },
+  "artifacts": [
+    {
+      "kind": "row_level_results",
+      "uri": "reports/benchmarks/runs/cycle2-amb-precisionmembench/hs-amb-rep1/single-turn.json",
+      "sha256": "1908f40e8629d64576c25d90fc6fa5df15e4463bb43e73b551d08618ec9b7f95"
+    },
+    {
+      "kind": "execution_log",
+      "uri": "reports/benchmarks/runs/cycle2-amb-precisionmembench/hs-amb-rep1/execution-identity.json",
+      "sha256": "4ea9c5fcd63a216b2722bb42bf1913224cd57e743643c64c84429b6687506e75"
+    },
+    {
+      "kind": "execution_log",
+      "uri": "reports/benchmarks/runs/cycle2-amb-precisionmembench/hs-amb-rep1/stdout.txt",
+      "sha256": "0c6fc15659a45c3b3395f69e385cb554ff34d6365860dbac98d8e25f5827a462"
+    },
+    {
+      "kind": "execution_log",
+      "uri": "reports/benchmarks/runs/cycle2-amb-precisionmembench/hs-amb-rep1/stderr.txt",
+      "sha256": "7318db21d4db2d8d0d77b489b7f2d1b0893f52e924d0850f6955962a3a507083"
+    },
+    {
+      "kind": "other",
+      "uri": "reports/benchmarks/runs/cycle2-amb-precisionmembench/hindsight-venv-freeze.txt",
+      "sha256": "c9344cbb6dad368ca39db2f4fc7951b452bc37a3bd3147088bb380e112039ec2"
+    }
+  ],
+  "redaction": {
+    "reviewed": true,
+    "contains_secrets": false,
+    "contains_private_data": false,
+    "note": "Allowlisted environment with no tokens; argv contains only local paths and flags. Dataset is the public AMB PrecisionMemBench fixture."
+  },
+  "review": {
+    "status": "candidate",
+    "reviewer": null,
+    "decision_ref": null,
+    "limitations": [
+      "Measures retrieval only (AMB retrieval mode, no LLM answer or judge); not AMB's LLM-judged QA, not an official AMB leaderboard entry.",
+      "Protocol tier A: query-only provider (supports_filters=False); AMB's structured scope/type filters are not passed.",
+      "Candidate: requires independent adapter/protocol review before acceptance.",
+      "Measures Hindsight's credential-free chunk retrieval configuration, NOT its LLM fact-extraction/observation product mode (#810: no substituted no-LLM mode may stand in for the product)."
+    ],
+    "comparison_eligibility": "not_assessed"
+  },
+  "authority_effect": "none"
+}

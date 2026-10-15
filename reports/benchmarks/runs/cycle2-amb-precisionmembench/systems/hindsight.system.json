@@ -1,0 +1,51 @@
+{
+ "id": "hindsight",
+ "revision": "0.10.2@5fc4ce20917b916240cef27c212c387a177f115b",
+ "adapter_id": "reference/amb_hindsight_chunks_bridge.py",
+ "adapter_revision": "git-blob:8afb456310cb05bdb1a7715eb1b35e27075efab7",
+ "configuration": {
+  "bank": {
+   "retain_extraction_mode": "chunks",
+   "enable_observations": false,
+   "enable_text_search": true,
+   "enable_temporal_retrieval": false,
+   "enable_graph_retrieval": false,
+   "enable_reranking": false
+  },
+  "llm_provider": "none",
+  "reranker_provider": "rrf",
+  "recall": {
+   "max_tokens": 65536,
+   "budget": "mid",
+   "projection": "first k distinct documents"
+  },
+  "bank_config_sha256": "363201677244eb9f005d456b7aa40c9b450e197ffe44230c4062308d887dad0e"
+ },
+ "calls": [
+  {
+   "purpose": "embedding",
+   "provider": "onnxruntime (Hindsight onnx embeddings provider)",
+   "model_id": "intfloat/multilingual-e5-small",
+   "model_revision": "03415a4be176a1620747c692ed433219fabc3def",
+   "model_digest": "ca456c06b3a9505ddfd9131408916dd79290368331e7d76bb621f1cba6bc8665",
+   "endpoint_class": "local",
+   "parameters": {
+    "dimensions": 384
+   },
+   "prompt_sha256": null,
+   "count": 1
+  }
+ ],
+ "network_access": "restricted",
+ "notes": [
+  "CPU (4 vCPU) shared with other benchmark processes; latencies are indicative only, not comparative performance measurements.",
+  "Standalone pinned HindsightServer (reference/hindsight_local_server.py) with embedded PostgreSQL, run as an unprivileged user; see hindsight-server.json.",
+  "Embedding call count is a placeholder of 1: not instrumented."
+ ],
+ "limitations": [
+  "Measures retrieval only (AMB retrieval mode, no LLM answer or judge); not AMB's LLM-judged QA, not an official AMB leaderboard entry.",
+  "Protocol tier A: query-only provider (supports_filters=False); AMB's structured scope/type filters are not passed.",
+  "Candidate: requires independent adapter/protocol review before acceptance.",
+  "Measures Hindsight's credential-free chunk retrieval configuration, NOT its LLM fact-extraction/observation product mode (#810: no substituted no-LLM mode may stand in for the product)."
+ ]
+}

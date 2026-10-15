@@ -1,0 +1,22 @@
+{
+ "id": "bm25",
+ "revision": "AMB built-in bm25 provider @ 03c1d0f1d27da63034f0931121c858faba512383 (blob 4c8f0f61)",
+ "adapter_id": "AMB native",
+ "adapter_revision": "amb:03c1d0f1d27da63034f0931121c858faba512383",
+ "configuration": {
+  "provider": "bm25",
+  "mode": "retrieval",
+  "llm": "none"
+ },
+ "calls": [],
+ "network_access": "restricted",
+ "notes": [
+  "CPU (4 vCPU) shared with other benchmark processes; latencies are indicative only, not comparative performance measurements.",
+  "Baseline, not a memory product."
+ ],
+ "limitations": [
+  "Measures retrieval only (AMB retrieval mode, no LLM answer or judge); not AMB's LLM-judged QA, not an official AMB leaderboard entry.",
+  "Protocol tier A: query-only provider (supports_filters=False); AMB's structured scope/type filters are not passed.",
+  "Candidate: requires independent adapter/protocol review before acceptance."
+ ]
+}

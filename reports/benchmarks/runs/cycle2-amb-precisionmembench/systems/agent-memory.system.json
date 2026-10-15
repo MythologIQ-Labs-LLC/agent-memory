@@ -1,0 +1,23 @@
+{
+ "id": "agent_memory",
+ "revision": "runtime-equivalent to 7c06468aae1aed0d2115c42f9588fbbe8417657e (this branch's runtime unchanged)",
+ "adapter_id": "reference/amb_retrieval_no_llm.py + AMB agent-memory provider (bridge blob 3d9ccb3)",
+ "adapter_revision": "git-blob:1d3584f0cfff0ea65dff50b4bcd6bcd57e866f04",
+ "configuration": {
+  "provider": "agent-memory",
+  "mode": "retrieval",
+  "llm": "none",
+  "supports_filters": false
+ },
+ "calls": [],
+ "network_access": "restricted",
+ "notes": [
+  "CPU (4 vCPU) shared with other benchmark processes; latencies are indicative only, not comparative performance measurements.",
+  "Control rerun; 0 case differences from the reproduced #819 baseline."
+ ],
+ "limitations": [
+  "Measures retrieval only (AMB retrieval mode, no LLM answer or judge); not AMB's LLM-judged QA, not an official AMB leaderboard entry.",
+  "Protocol tier A: query-only provider (supports_filters=False); AMB's structured scope/type filters are not passed.",
+  "Candidate: requires independent adapter/protocol review before acceptance."
+ ]
+}
