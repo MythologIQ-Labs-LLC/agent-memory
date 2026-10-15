@@ -16,6 +16,7 @@ from amb_agent_memory_bridge import install_amb_agent_memory_provider  # noqa: F
 from amb_graphiti_bridge import install_amb_graphiti_provider
 from amb_mempalace_bridge import install_amb_mempalace_provider
 from amb_hindsight_bridge import install_amb_hindsight_provider
+from amb_langmem_bridge import install_amb_langmem_provider
 
 
 def main() -> int:
@@ -23,6 +24,7 @@ def main() -> int:
     install_amb_graphiti_provider(amb_root)
     install_amb_mempalace_provider(amb_root)
     install_amb_hindsight_provider(amb_root)
+    install_amb_langmem_provider(amb_root)
     from memory_bench.memory import REGISTRY  # type: ignore[import-not-found]
     from memory_bench.models import Document  # type: ignore[import-not-found]
 

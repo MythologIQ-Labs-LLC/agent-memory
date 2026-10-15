@@ -27,6 +27,7 @@ from pathlib import Path
 from amb_agent_memory_bridge import AMB_REVISION, install_amb_agent_memory_provider, verify_amb_checkout
 from amb_graphiti_bridge import install_amb_graphiti_provider
 from amb_hindsight_bridge import install_amb_hindsight_provider
+from amb_langmem_bridge import install_amb_langmem_provider
 from amb_mempalace_bridge import install_amb_mempalace_provider
 from amb_mem0_explicit_bridge import install_amb_mem0_explicit_provider
 from amb_retrieval_no_llm import install_retrieval_no_llm_guard, requested_mode
@@ -101,6 +102,8 @@ def main(argv: list[str] | None = None) -> int:
     install_amb_mempalace_provider(amb_root)
     # Hindsight chunk-only (#640/#810) runs in its pinned interpreter behind a JSON-lines worker.
     install_amb_hindsight_provider(amb_root)
+    # LangMem (#813) runs in its pinned interpreter behind a JSON-lines worker.
+    install_amb_langmem_provider(amb_root)
 
     # Import after registration so CLI help and provider lookup both see Agent Memory.
     from memory_bench import cli as amb_cli  # type: ignore[import-not-found]  # noqa: PLC0415
