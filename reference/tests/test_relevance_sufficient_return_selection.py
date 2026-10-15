@@ -62,15 +62,33 @@ class InformativeTerms(unittest.TestCase):
     def test_function_words_and_single_letters_are_not_evidence(self):
         self.assertEqual(informative_terms("What's my k8s deploy story?"), ("deploy", "k8s", "story"))
         self.assertEqual(informative_terms("how do I want you to respond to me?"), ("respond", "want"))
-        self.assertEqual(informative_terms("is it the one?"), ())
+        self.assertEqual(informative_terms("is it the one?"), ("one",))
+        self.assertEqual(informative_terms("is it the?"), ())
 
     def test_digits_survive_and_order_is_canonical(self):
         self.assertEqual(informative_terms("rules for chapter 7, chapter 7"), ("7", "chapter", "rules"))
 
     def test_list_is_grammar_only(self):
         # Content words that carry topic must never be function words (no tuning by stoplist).
-        for word in ("deploy", "budget", "database", "redis", "chapter", "pattern", "use", "want", "project"):
+        for word in ("deploy", "budget", "database", "redis", "chapter", "pattern", "use", "want", "project",
+                     "like", "one", "past", "near", "mine", "won", "don"):
             self.assertNotIn(word, FUNCTION_WORDS)
+
+    def test_contractions_do_not_leak_fragments(self):
+        # 1.1.0: "don't" is "do not", not the name "don"; clitics vanish; single letters stay.
+        self.assertEqual(informative_terms("I don't want class hierarchies"), ("class", "hierarchies", "want"))
+        self.assertEqual(informative_terms("what's Mara's backstory? I'm curious"), ("backstory", "curious", "mara"))
+        self.assertEqual(informative_terms("won't they take Vitamin D or plan B"), ("b", "d", "plan", "take", "vitamin"))
+
+    def test_function_words_written_as_names_are_evidence(self):
+        self.assertEqual(informative_terms("Who is Will?"), ("will",))
+        self.assertEqual(informative_terms("Will it rain tomorrow?"), ("rain", "tomorrow"))
+        self.assertEqual(informative_terms("What happened in May?"), ("happened", "may"))
+        self.assertEqual(informative_terms("When did I move to the US?"), ("move", "us"))
+        # Title case and all capitals say nothing about names.
+        self.assertEqual(informative_terms("How Should I Structure My Repository Layer?"),
+                         ("layer", "repository", "structure"))
+        self.assertEqual(informative_terms("WHO IS IT"), ())
 
 
 class SelectionFunction(unittest.TestCase):
@@ -120,6 +138,20 @@ class SelectionFunction(unittest.TestCase):
         selected, _, _ = self._select(texts, {r: ["lexical"] for r in texts}, "alpha beta", ranked=["y", "z", "x"])
         self.assertEqual(selected, ["y", "x"])
 
+    def test_selection_never_drops_a_topical_fact_ranked_above_a_selected_one(self):
+        # 1.1.0 (independent review finding 1): a query-term-stuffed fact may be the content
+        # best, but the fact ranking put above it keeps its place if it has topical evidence.
+        texts = {"canonical": "the production database is postgres", "stuffed": "production database database team"}
+        selected, records, _ = self._select(texts, {r: ["lexical"] for r in texts},
+                                            "production database team", ranked=["canonical", "stuffed"])
+        self.assertEqual(selected, ["canonical", "stuffed"])
+        self.assertEqual(records["canonical"]["basis"], "ranked_above_sufficient")
+        noise = {"noise": "what is this", "topic": "kubernetes helm"}
+        selected, records, _ = self._select(noise, {r: ["lexical"] for r in noise}, "what is kubernetes",
+                                            ranked=["noise", "topic"])
+        self.assertEqual(selected, ["topic"])
+        self.assertEqual(records["noise"]["basis"], "no_informative_term_match")
+
     def test_floor_must_be_a_fraction(self):
         with self.assertRaises(ValueError):
             self._select({"a": "x"}, {"a": ["lexical"]}, "x", relative_floor=0.0)
@@ -151,6 +183,26 @@ class FacadeSelection(_Facade):
         for ref in result["admitted"]:
             self.assertIn("return_selection", result["admissions"][ref])
             self.assertEqual(result["admissions"][ref]["return_selection"]["authority_effect"], "none")
+
+    def test_stuffed_fact_cannot_displace_the_top_ranked_fact(self):
+        # Independent review repro (finding 1), through the facade.
+        canonical = self.memory.remember("memory:db", "The production database is Postgres 15.")
+        self.memory.remember("memory:stuffed",
+                             "Production database database team staging backup migration schema replica: ask Bob.")
+        query = "What production database does the team use?"
+        legacy = self.memory.recall(query, budget=1, return_selection="ranked_prefix")
+        result = self.memory.recall(query, budget=1)
+        self.assertEqual(legacy["returned"], [canonical["fact_uuid"]])
+        self.assertEqual(result["returned"], [canonical["fact_uuid"]])
+
+    def test_names_that_are_function_words_are_recalled(self):
+        # Independent review repro (finding 2): these abstained under policy 1.0.0.
+        will = self.memory.remember("memory:will", "Will is my brother.")
+        may = self.memory.remember("memory:move", "I moved to the US in May.")
+        like = self.memory.remember("memory:music", "I like jazz and blues.")
+        self.assertEqual(self.memory.recall("Who is Will?")["returned"], [will["fact_uuid"]])
+        self.assertIn(may["fact_uuid"], self.memory.recall("What happened in May?")["returned"])
+        self.assertEqual(self.memory.recall("What do I like?")["returned"], [like["fact_uuid"]])
 
     def test_abstains_on_unrelated_query(self):
         self.memory.remember("memory:a", "The team uses a weekly planning meeting on Monday.")

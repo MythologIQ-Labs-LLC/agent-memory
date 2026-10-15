@@ -353,7 +353,10 @@
               "const": "relevance-sufficient-return-selection"
             },
             "policy_version": {
-              "const": "1.0.0"
+              "enum": [
+                "1.0.0",
+                "1.1.0"
+              ]
             },
             "requested_k": {
               "type": [
