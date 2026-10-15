@@ -13,6 +13,7 @@ semantics.
 
 from __future__ import annotations
 
+from contextlib import contextmanager
 from dataclasses import asdict, dataclass
 import hashlib
 import json
@@ -255,6 +256,7 @@ class SQLiteRestartSafeRuntime:
         # published, so from here on a governed act runs only inside ``_transactional_operation``
         # (a direct adapter call on this handle is refused before anything moves, not half-applied).
         substrate.require_runtime_generations()
+        adapter.require_generation_for_durable_effects(substrate.require_generation)
         self._on_generation_published = None
 
     def on_generation_published(self, callback) -> None:
@@ -529,9 +531,16 @@ class SQLiteRestartSafeRuntime:
         if _digest(_assemble_governance(loaded)) != _digest(self._governance_snapshot()):
             raise RuntimeRecoveryError("SQLite governance rows diverged from in-memory governance state")
 
+    @contextmanager
+    def _generation(self):
+        """One SQLite transaction that this runtime publishes as a generation (#816)."""
+
+        with self.substrate.transaction(), self.substrate.generation_opened():
+            yield
+
     def checkpoint(self) -> SQLiteRecoveryEvidence:
         with self._serialization_lock:
-            with self.substrate.transaction():
+            with self._generation():
                 evidence = self._persist_unlocked()
             self._published(evidence)
             return evidence
@@ -564,7 +573,7 @@ class SQLiteRestartSafeRuntime:
         """
         with self._serialization_lock:
             try:
-                with self.substrate.transaction():
+                with self._generation():
                     binding = self.substrate.read_runtime_binding()
                     generation = 0 if binding is None else binding[0]
                     if generation != self._observed_generation:
@@ -574,7 +583,7 @@ class SQLiteRestartSafeRuntime:
                         )
                     result = operation()
                     evidence = self._persist_unlocked()
-            except Exception:
+            except BaseException:
                 self._restore_governance_after_rollback()
                 raise
             self._published(evidence)
@@ -644,11 +653,15 @@ class SQLiteRestartSafeRuntime:
             raise ValueError("visibility snapshot must be a mapping")
         with self._serialization_lock:
             previous = dict(self.visibility_snapshots)
+            generation = self._observed_generation
             self.visibility_snapshots[operation_id] = snapshot
             try:
                 return self.checkpoint()
             except Exception:
-                self.visibility_snapshots = previous
+                # Undo only what did not commit: a failure after the generation committed (the
+                # owner's binding hook, #816 review F3) must not drop a committed snapshot.
+                if self._observed_generation == generation:
+                    self.visibility_snapshots = previous
                 raise
 
     def backup_to(self, destination: str | Path) -> None:

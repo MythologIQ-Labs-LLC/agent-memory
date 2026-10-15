@@ -63,10 +63,15 @@ class Clock:
 
     _EPOCH = datetime(2026, 1, 1, tzinfo=timezone.utc)
 
-    def __init__(self, start: int = 0) -> None:
+    def __init__(self, start: int = 0, guard=None) -> None:
         self._t = start
+        # #816: on a runtime-owned durable store the tick is published governance state, so the
+        # owner may require a generation before it moves.
+        self.guard = guard
 
     def now(self) -> str:
+        if self.guard is not None:
+            self.guard()
         self._t += 1
         return (self._EPOCH + timedelta(seconds=self._t)).strftime("%Y-%m-%dT%H:%M:%SZ")
 
@@ -1383,7 +1388,6 @@ class GovernedMemoryAdapter:
         substrate is trusted to return same-tenant candidates for policy
         evaluation. Candidate presence remains distinct from admission authority.
         """
-        self._ids.ensure_allocatable()  # #816: refuse before the clock or any state moves
         context = context or RecallContext(target_domain_refs=(self._tenant,))
         evaluated_at = self._clock.now()
         result = AdmissionResult(
@@ -2405,11 +2409,16 @@ class GovernedMemoryAdapter:
         self.events.append(event)
         return event
 
+    def require_generation_for_durable_effects(self, guard) -> None:
+        """#816: from here on the clock and the identifier sequence move only when ``guard`` allows
+        (the owning runtime's open generation); otherwise the guard raises before anything moves."""
+
+        self._clock.guard = guard
+
     def mint_id(self) -> str:
         return self._ids.next()
 
     def now(self) -> str:
-        self._ids.ensure_allocatable()  # the clock is published governance state (#816)
         return self._clock.now()
 
     # -- helpers --------------------------------------------------------

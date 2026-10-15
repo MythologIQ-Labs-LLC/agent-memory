@@ -27,6 +27,7 @@ import hashlib
 import json
 from pathlib import Path
 import sqlite3
+import threading
 from typing import Iterable, Mapping
 
 from .substrate import (
@@ -109,9 +110,15 @@ class SqliteDeterministicIds(DeterministicIds):
         self._connection = connection
         self._sqlite_prefix = prefix
         self._generation_owned = False
+        # The thread running the owning runtime's open generation, if any (#816 review F4): an
+        # open SQLite transaction alone is not a generation (another thread, or a bare
+        # ``transaction()`` the runtime never publishes, also opens one).
+        self._generation_thread: int | None = None
 
     def ensure_allocatable(self) -> None:
-        if self._generation_owned and not self._connection.in_transaction:
+        if self._generation_owned and (
+            self._generation_thread != threading.get_ident() or not self._connection.in_transaction
+        ):
             raise UngovernedDurableWrite(UNGOVERNED_WRITE_MESSAGE)
 
     def next(self) -> str:
@@ -585,13 +592,31 @@ class SQLiteTemporalGraph:
     def require_runtime_generations(self) -> None:
         """Bind this store's identifier sequence to a transactional runtime (#816).
 
-        From here on a governed act may allocate an identifier, the first durable effect of
-        every governed act, only inside ``transaction()``, the seam the runtime publishes as one
-        generation; outside it ``UngovernedDurableWrite`` is raised before anything moves.
-        Storage-level writes through this class stay a privileged, ungoverned layer: they are
-        published only by an explicit runtime checkpoint, and recovery refuses them otherwise."""
+        From here on a governed act may allocate an identifier (or, through the adapter's guarded
+        clock, read the clock), the first durable effects of every governed act, only on the
+        thread that runs the owning runtime's open generation (``generation_opened``); anywhere
+        else ``UngovernedDurableWrite`` is raised before anything moves. Storage-level writes
+        through this class stay a privileged, ungoverned layer: they are published only by an
+        explicit runtime checkpoint, and recovery refuses them otherwise."""
 
         self._ids._generation_owned = True
+
+    def require_generation(self) -> None:
+        """Raise ``UngovernedDurableWrite`` unless this thread runs the owning runtime's open generation."""
+
+        self._ids.ensure_allocatable()
+
+    @contextmanager
+    def generation_opened(self):
+        """Mark the calling thread as running the owning runtime's generation; call inside ``transaction()``."""
+
+        if not self._connection.in_transaction:
+            raise RuntimeError("a runtime generation opens inside a SQLite transaction")
+        self._ids._generation_thread = threading.get_ident()
+        try:
+            yield
+        finally:
+            self._ids._generation_thread = None
 
     @property
     def sqlite_version(self) -> str:
@@ -629,7 +654,7 @@ class SQLiteTemporalGraph:
         governance_before = self.governance.cache_snapshot()
         try:
             yield
-        except Exception:
+        except BaseException:  # an interrupt must not leave the transaction (and its locks) open
             self._connection.execute("ROLLBACK")
             # Rows and digest tables roll back together; forget changes that no longer exist.
             self._digest_dirty = dirty_before

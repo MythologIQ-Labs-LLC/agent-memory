@@ -121,19 +121,29 @@ One `AgentMemory` handle may be called from any thread, including worker pools a
 
 ## Runtime-owned writes (#816)
 
-The SQLite database is the durable source of truth only for what a runtime generation published. Once a SQLite runtime owns the store, nothing may change it outside that runtime's transactional seam:
+The SQLite database is the durable source of truth only for what a runtime generation published. A generation is one SQLite transaction that the owning runtime opens, on the thread that holds its serialization lock, and publishes with its journal record.
 
-- **What is refused.** A governed act reached around the facade and the runtime's governed operations raises `UngovernedDurableWrite` (`agentmem_ref.state.sqlite_substrate`) before the identifier sequence, the deterministic clock or any governance state moves. Examples are `handle.runtime.adapter.governed_recall(...)`, `commit_proposal`, `governed_delete`, `governed_dispute`, `mint_id`, `now`, `record_event` and `upgrade_canonical_derivation`.
-- **What still works.** The store stays exactly as the last generation left it, and `close()` followed by `open()` recovers normally.
-- **Storage-level writes are not refused.** Writes through `SQLiteTemporalGraph` methods or raw SQL stay a privileged, ungoverned layer; fixtures and migration tooling use it, publishing with an explicit `checkpoint()`. `close()` never binds such a write, and recovery refuses one that was not published.
-- **Supported paths are unchanged.** These are the facade and the runtime's own governed operations: `handle.runtime.recall`, `retain`, `correct`, `dispute`, `delete_current`, and the durable runtime's `governed_recall`, `commit_proposal`, `governed_delete`, `run_governed_read` and `checkpoint`. Each publishes one generation.
-- **The configuration binding follows every base generation.** It is advanced even when the base SQLite runtime is driven directly.
+- **Governed acts outside a generation are refused.** A governed act reached around the facade and the runtime's governed operations raises `UngovernedDurableWrite` (`agentmem_ref.state.sqlite_substrate`) before the identifier sequence, the deterministic clock or any governance state moves. Examples:
+  - `handle.runtime.adapter.governed_recall(...)`, `commit_proposal`, `governed_delete`, `governed_dispute`, `mint_id`, `now`, `record_event` and `upgrade_canonical_derivation`;
+  - the recall planner and preselected-candidate admission;
+  - the docs/44 module-level stages (`commit`, `recall`, `authorize`, `witness`) when they are called directly on a durable handle. They raise this error instead of returning a refusal envelope, so run them through `durable_runtime.run_governed_read`.
+- **What does not count as a generation.** A bare `substrate.transaction()`, or another thread acting while a generation is open, is refused the same way.
+- **What happens after a refusal.** The store stays exactly as the last generation left it, and `close()` followed by `open()` recovers normally.
+- **Interrupts roll back.** An exception or interrupt (`KeyboardInterrupt`) inside a generation rolls back the transaction and the adapter's governance state.
+- **Supported paths are unchanged.** These are the facade and the runtime's own governed operations: `handle.runtime.recall`, `retain`, `correct`, `dispute`, `delete_current`, and the durable runtime's `governed_recall`, `commit_proposal`, `governed_delete`, `run_governed_read`, `persist_visibility_snapshot` and `checkpoint`. Each publishes one generation.
+- **The configuration binding follows every base generation.** It is advanced even when the base SQLite runtime is driven directly. A binding failure after the commit never drops what the generation committed.
 - **What `close()` does.** It publishes nothing, so a refused or failed act can never be bound into durable state by closing.
-- **Integrity checks are not relaxed.** Out-of-band changes to facts, the identifier sequence or governance rows still fail recovery with a digest mismatch.
+- **Integrity checks are not relaxed.** Out-of-band changes to facts, the identifier sequence, the journal, the runtime state or governance rows still fail recovery.
 
-Before this boundary, such a call advanced the identifier sequence in autocommit. That sequence is covered by the canonical substrate digest, so the next `open` failed with `SQLite canonical substrate digest mismatch`. From a stale handle, the same call also broke recovery of a generation another process had committed.
+**What this boundary does not cover.** These remain host-privileged layers:
 
-One limit remains open. The configuration binding is a separate file written after the SQLite commit. If a process stops between the two, recovery fails closed (`configuration binding does not match recovered base checkpoint`). That window predates #816 and is unchanged by it.
+- **Storage-level writes.** Writes through `SQLiteTemporalGraph` methods, raw SQL or a second `SQLiteTemporalGraph` instance on the same file are not refused. Fixtures and migration tooling use this layer and publish with an explicit `checkpoint()`. `close()` never binds such a write, and recovery refuses one that was not published.
+- **In-memory administrative seams.** `set_shared_domain_members`, `bootstrap_shared_domain_members`, `record_correction` / `projections.correct`, and direct edits to the adapter's `events` or `extension_state` change no durable row. The next generation publishes them, as before #816. Whether they should instead be refused, or confined to governed paths, is an open owner decision.
+- **Derived semantic vectors.** A refused direct planner recall may already have written derived semantic vectors to the sidecar cache. They are derived data, never authority, and deleted facts are not re-added.
+
+**Before this boundary.** A direct call advanced the identifier sequence in autocommit. That sequence is covered by the canonical substrate digest, so the next `open` failed with `SQLite canonical substrate digest mismatch`. From a stale handle, the same call also broke recovery of a generation another process had committed.
+
+**One limit remains open.** The configuration binding is a separate file written after the SQLite commit. If a process stops between the two, recovery fails closed (`configuration binding does not match recovered base checkpoint`). That window predates #816 and is unchanged by it.
 
 ## Boundaries
 

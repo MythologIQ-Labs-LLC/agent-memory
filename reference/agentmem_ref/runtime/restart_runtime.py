@@ -381,7 +381,7 @@ class CheckpointableGovernedMemoryAdapter(GovernedMemoryAdapter):
         # #550: the proposition-slot index is derived; rebuild it from persisted facts.
         self._semantic_slot_index = None
         try:
-            self._clock = Clock(start=int(raw.get("clock_tick", 0)))
+            self._clock = Clock(start=int(raw.get("clock_tick", 0)), guard=getattr(self._clock, "guard", None))
 
             restore_identifier = getattr(self._substrate, "restore_identifier_checkpoint", None)
             current_identifier = getattr(self._substrate, "identifier_checkpoint", None)

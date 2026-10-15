@@ -286,6 +286,95 @@ class CloseAndFailureInjection(_Store):
         self.assertEqual(len(self.open().recall("lunch noon")["returned"]), 1)
 
 
+class ReviewFindings(_Store):
+    """Independent review of 51452b88 (``reports/validation/816-runtime-owned-writes/REVIEW-816.md``)."""
+
+    def test_f1_planner_and_preselected_admission_refuse_before_the_clock_ticks(self):
+        from agentmem_ref.runtime.contextual_recall_adapter import admit_preselected_candidates
+
+        memory = self.open()
+        written = memory.remember("memory:x", "The deploy window is Thursday.")
+        context = memory._handle_recall_context()
+        for name, act in (
+            ("admit_preselected_candidates", lambda: admit_preselected_candidates(
+                memory.runtime.adapter, [written["fact_uuid"]], context, query_label="probe")),
+            ("recall_planner.recall", lambda: memory.runtime.recall_planner.recall("deploy window", context)),
+        ):
+            with self.subTest(act=name):
+                governance, rows = _governance(memory), _rows(self.root)
+                with self.assertRaises(UngovernedDurableWrite):
+                    act()
+                self.assertEqual(_governance(memory), governance)
+                self.assertEqual(_rows(self.root), rows)
+
+    def test_f3_a_binding_failure_after_commit_keeps_the_committed_visibility_snapshot(self):
+        from agentmem_ref.runtime import configured_restart
+
+        memory = self.open()
+        durable = memory.runtime.durable_runtime
+        snapshot = {"operation": {"required_projection_ids": []}}
+        with mock.patch.object(configured_restart.ConfigBindingStore, "checkpoint",
+                               side_effect=OSError("injected binding failure")):
+            with self.assertRaises(OSError):
+                durable.persist_visibility_snapshot("op:816", snapshot)
+        self.assertIn("op:816", durable.base.visibility_snapshots)  # SQLite committed it
+        memory.recall("anything")  # the next generation re-binds and keeps it
+        memory.close()
+        self.assertIn("op:816", self.open().runtime.durable_runtime.base.visibility_snapshots)
+
+    def test_f4_an_open_transaction_is_not_a_generation(self):
+        import threading
+
+        memory = self.open()
+        memory.remember("memory:x", "The deploy window is Thursday.")
+        substrate = memory.runtime.adapter.checkpoint_substrate()
+        # a bare substrate transaction the runtime never publishes
+        with self.assertRaises(UngovernedDurableWrite):
+            with substrate.transaction():
+                memory.runtime.adapter.mint_id()
+        # another thread, not holding the lock, while a generation is open
+        inside, release, seen = threading.Event(), threading.Event(), {}
+
+        def hold():
+            inside.set()
+            release.wait(5)
+            return "held"
+
+        holder = threading.Thread(target=lambda: seen.setdefault("a", memory.runtime.durable_runtime.run_governed_read(hold)))
+        holder.start()
+        inside.wait(5)
+        try:
+            memory.runtime.adapter.governed_recall("deploy window", memory._handle_recall_context())
+            seen["b"] = "not refused"
+        except UngovernedDurableWrite:
+            seen["b"] = "refused"
+        release.set()
+        holder.join()
+        self.assertEqual(seen, {"a": "held", "b": "refused"})
+        memory.close()
+        self.open().close()
+
+    def test_f4_an_interrupt_inside_a_generation_rolls_back(self):
+        memory = self.open()
+        memory.remember("memory:x", "The deploy window is Thursday.")
+        rows, governance = _rows(self.root), _governance(memory)
+
+        def interrupted():
+            memory.runtime.adapter.mint_id()
+            raise KeyboardInterrupt
+
+        with self.assertRaises(KeyboardInterrupt):
+            memory.runtime.durable_runtime.run_governed_read(interrupted)
+        substrate = memory.runtime.adapter.checkpoint_substrate()
+        self.assertFalse(substrate._connection.in_transaction)
+        self.assertEqual((_rows(self.root), _governance(memory)), (rows, governance))
+        with self.assertRaises(UngovernedDurableWrite):
+            memory.runtime.adapter.mint_id()
+        self.assertTrue(memory.recall("deploy window")["returned"])
+        memory.close()
+        self.open().close()
+
+
 _OTHER_PROCESS = textwrap.dedent(
     """
     import sys

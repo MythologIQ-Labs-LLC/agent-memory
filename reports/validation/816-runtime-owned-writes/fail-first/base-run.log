@@ -1,38 +1,15 @@
-revision 77c472e6f91fd292ac90eedd105c272f5cb21aea dirty-files: ?? tests/test_816_runtime_owned_writes.py 
-command: python3 -m unittest -v tests.test_816_runtime_owned_writes
-test_a_failed_publication_rolls_back_and_the_connection_stays_sealed (tests.test_816_runtime_owned_writes.CloseAndFailureInjection.test_a_failed_publication_rolls_back_and_the_connection_stays_sealed) ... /tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/agentmem_ref/state/sqlite_substrate.py:352: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f8723716d40>
-  per_bucket = {section: [[] for _ in range(GOVERNANCE_BUCKETS)] for section in GOVERNANCE_MAP_SECTIONS}
-ResourceWarning: Enable tracemalloc to get the object allocation traceback
-FAIL
-test_a_handle_abandoned_without_close_reopens (tests.test_816_runtime_owned_writes.CloseAndFailureInjection.test_a_handle_abandoned_without_close_reopens) ... /tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/agentmem_ref/state/sqlite_substrate.py:236: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f87237173d0>
-  per_bucket: list[list[str]] = [[] for _ in range(GOVERNANCE_BUCKETS)]
-ResourceWarning: Enable tracemalloc to get the object allocation traceback
-FAIL
-test_if_the_connection_cannot_be_resealed_it_is_closed (tests.test_816_runtime_owned_writes.CloseAndFailureInjection.test_if_the_connection_cannot_be_resealed_it_is_closed) ... FAIL
+base revision 77c472e6f91fd292ac90eedd105c272f5cb21aea; test file = 51452b88:reference/tests/test_816_runtime_owned_writes.py + fail-first/shim.diff (import shim only)
+command: python3 -W ignore -m unittest -v tests.test_816_runtime_owned_writes
+test_a_failed_publication_rolls_back_and_the_guard_still_holds (tests.test_816_runtime_owned_writes.CloseAndFailureInjection.test_a_failed_publication_rolls_back_and_the_guard_still_holds) ... FAIL
+test_a_handle_abandoned_without_close_reopens (tests.test_816_runtime_owned_writes.CloseAndFailureInjection.test_a_handle_abandoned_without_close_reopens) ... FAIL
 test_repeated_close_and_close_after_a_refusal (tests.test_816_runtime_owned_writes.CloseAndFailureInjection.test_repeated_close_and_close_after_a_refusal) ... FAIL
 test_a_stale_handle_cannot_corrupt_another_process_generation (tests.test_816_runtime_owned_writes.CrossProcessStaleHandle.test_a_stale_handle_cannot_corrupt_another_process_generation) ... FAIL
-test_an_identifier_sequence_advanced_out_of_band_fails_recovery (tests.test_816_runtime_owned_writes.IntegrityChecksAreNotRelaxed.test_an_identifier_sequence_advanced_out_of_band_fails_recovery) ... /usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f872368b790>
-  _iterencode = c_make_encoder(
-ResourceWarning: Enable tracemalloc to get the object allocation traceback
-ok
+test_an_identifier_sequence_advanced_out_of_band_fails_recovery (tests.test_816_runtime_owned_writes.IntegrityChecksAreNotRelaxed.test_an_identifier_sequence_advanced_out_of_band_fails_recovery) ... ok
 test_tampered_fact_text_fails_recovery (tests.test_816_runtime_owned_writes.IntegrityChecksAreNotRelaxed.test_tampered_fact_text_fails_recovery) ... ok
 test_tampered_governance_fails_recovery (tests.test_816_runtime_owned_writes.IntegrityChecksAreNotRelaxed.test_tampered_governance_fails_recovery) ... ok
-test_controls_from_the_issue_still_hold (tests.test_816_runtime_owned_writes.IssueReproduction.test_controls_from_the_issue_still_hold) ... /usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f8723716d40>
-  _iterencode = c_make_encoder(
-ResourceWarning: Enable tracemalloc to get the object allocation traceback
-/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f872368ba60>
-  _iterencode = c_make_encoder(
-ResourceWarning: Enable tracemalloc to get the object allocation traceback
-/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f8723716f20>
-  _iterencode = c_make_encoder(
-ResourceWarning: Enable tracemalloc to get the object allocation traceback
-/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f872368b6a0>
-  _iterencode = c_make_encoder(
-ResourceWarning: Enable tracemalloc to get the object allocation traceback
-ok
+test_controls_from_the_issue_still_hold (tests.test_816_runtime_owned_writes.IssueReproduction.test_controls_from_the_issue_still_hold) ... ok
 test_direct_adapter_recall_then_close_leaves_the_store_reopenable (tests.test_816_runtime_owned_writes.IssueReproduction.test_direct_adapter_recall_then_close_leaves_the_store_reopenable) ... FAIL
 test_a_store_that_saw_refused_acts_is_identical_to_one_that_did_not (tests.test_816_runtime_owned_writes.RefusalIsExplicitAndChangesNothing.test_a_store_that_saw_refused_acts_is_identical_to_one_that_did_not) ... FAIL
-test_direct_substrate_writes_and_raw_sql_on_the_owned_connection_are_refused (tests.test_816_runtime_owned_writes.RefusalIsExplicitAndChangesNothing.test_direct_substrate_writes_and_raw_sql_on_the_owned_connection_are_refused) ... FAIL
 test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged (tests.test_816_runtime_owned_writes.RefusalIsExplicitAndChangesNothing.test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged) ... 
   test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged (tests.test_816_runtime_owned_writes.RefusalIsExplicitAndChangesNothing.test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged) (act='governed_recall') ... FAIL
   test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged (tests.test_816_runtime_owned_writes.RefusalIsExplicitAndChangesNothing.test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged) (act='commit_proposal') ... FAIL
@@ -42,39 +19,14 @@ test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged (te
   test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged (tests.test_816_runtime_owned_writes.RefusalIsExplicitAndChangesNothing.test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged) (act='now') ... FAIL
   test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged (tests.test_816_runtime_owned_writes.RefusalIsExplicitAndChangesNothing.test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged) (act='record_event') ... FAIL
   test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged (tests.test_816_runtime_owned_writes.RefusalIsExplicitAndChangesNothing.test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged) (act='upgrade_canonical_derivation') ... FAIL
-/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/agentmem_ref/state/sqlite_substrate.py:352: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f872368bf10>
-  per_bucket = {section: [[] for _ in range(GOVERNANCE_BUCKETS)] for section in GOVERNANCE_MAP_SECTIONS}
-ResourceWarning: Enable tracemalloc to get the object allocation traceback
-/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/agentmem_ref/state/sqlite_substrate.py:352: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f8723716980>
-  per_bucket = {section: [[] for _ in range(GOVERNANCE_BUCKETS)] for section in GOVERNANCE_MAP_SECTIONS}
-ResourceWarning: Enable tracemalloc to get the object allocation traceback
-/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/agentmem_ref/state/sqlite_substrate.py:352: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f8723717100>
-  per_bucket = {section: [[] for _ in range(GOVERNANCE_BUCKETS)] for section in GOVERNANCE_MAP_SECTIONS}
-ResourceWarning: Enable tracemalloc to get the object allocation traceback
-/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/agentmem_ref/state/sqlite_substrate.py:352: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f8723716f20>
-  per_bucket = {section: [[] for _ in range(GOVERNANCE_BUCKETS)] for section in GOVERNANCE_MAP_SECTIONS}
-ResourceWarning: Enable tracemalloc to get the object allocation traceback
-/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/agentmem_ref/state/sqlite_substrate.py:352: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f872357c040>
-  per_bucket = {section: [[] for _ in range(GOVERNANCE_BUCKETS)] for section in GOVERNANCE_MAP_SECTIONS}
-ResourceWarning: Enable tracemalloc to get the object allocation traceback
-/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/agentmem_ref/state/sqlite_substrate.py:352: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f872357c8b0>
-  per_bucket = {section: [[] for _ in range(GOVERNANCE_BUCKETS)] for section in GOVERNANCE_MAP_SECTIONS}
-ResourceWarning: Enable tracemalloc to get the object allocation traceback
-/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/agentmem_ref/state/sqlite_substrate.py:352: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f872357ce50>
-  per_bucket = {section: [[] for _ in range(GOVERNANCE_BUCKETS)] for section in GOVERNANCE_MAP_SECTIONS}
-ResourceWarning: Enable tracemalloc to get the object allocation traceback
-/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/agentmem_ref/state/sqlite_substrate.py:352: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f872357cd60>
-  per_bucket = {section: [[] for _ in range(GOVERNANCE_BUCKETS)] for section in GOVERNANCE_MAP_SECTIONS}
-ResourceWarning: Enable tracemalloc to get the object allocation traceback
 test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged (tests.test_816_runtime_owned_writes.RefusalIsExplicitAndChangesNothing.test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged) ... ERROR
+test_storage_level_writes_stay_privileged_and_are_never_bound_by_close (tests.test_816_runtime_owned_writes.RefusalIsExplicitAndChangesNothing.test_storage_level_writes_stay_privileged_and_are_never_bound_by_close)
+The substrate's storage methods are a privileged, ungoverned layer (fixtures and the ... FAIL
 test_the_refusal_discloses_nothing (tests.test_816_runtime_owned_writes.RefusalIsExplicitAndChangesNothing.test_the_refusal_discloses_nothing) ... FAIL
 test_cross_scope_correction_is_still_refused (tests.test_816_runtime_owned_writes.SecurityRegressions.test_cross_scope_correction_is_still_refused) ... ok
 test_deleted_lineage_stays_deleted_and_a_refused_direct_delete_changes_no_tombstone (tests.test_816_runtime_owned_writes.SecurityRegressions.test_deleted_lineage_stays_deleted_and_a_refused_direct_delete_changes_no_tombstone) ... FAIL
 test_permanent_forget_after_a_refused_direct_act_reconciles_the_sidecar_across_reopen (tests.test_816_runtime_owned_writes.SemanticCacheReconciliation.test_permanent_forget_after_a_refused_direct_act_reconciles_the_sidecar_across_reopen) ... FAIL
-test_facade_lifecycle_across_restarts (tests.test_816_runtime_owned_writes.SupportedPathsStillWork.test_facade_lifecycle_across_restarts) ... /usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f872357c040>
-  _iterencode = c_make_encoder(
-ResourceWarning: Enable tracemalloc to get the object allocation traceback
-ok
+test_facade_lifecycle_across_restarts (tests.test_816_runtime_owned_writes.SupportedPathsStillWork.test_facade_lifecycle_across_restarts) ... ok
 test_the_facade_legacy_upgrade_still_runs_inside_its_generation (tests.test_816_runtime_owned_writes.SupportedPathsStillWork.test_the_facade_legacy_upgrade_still_runs_inside_its_generation) ... ok
 test_the_runtime_governed_operations_publish_and_reopen (tests.test_816_runtime_owned_writes.SupportedPathsStillWork.test_the_runtime_governed_operations_publish_and_reopen) ... ERROR
 
@@ -82,30 +34,30 @@ test_the_runtime_governed_operations_publish_and_reopen (tests.test_816_runtime_
 ERROR: test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged (tests.test_816_runtime_owned_writes.RefusalIsExplicitAndChangesNothing.test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged)
 ----------------------------------------------------------------------
 Traceback (most recent call last):
-  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/tests/test_816_runtime_owned_writes.py", line 158, in test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/tmp.UY3DtdYob7/base/reference/tests/test_816_runtime_owned_writes.py", line 159, in test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged
     self.assertTrue(self.open().recall("deploy window")["returned"])
                     ~~~~~~~~~^^
-  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/tests/test_816_runtime_owned_writes.py", line 95, in open
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/tmp.UY3DtdYob7/base/reference/tests/test_816_runtime_owned_writes.py", line 96, in open
     memory = AgentMemory.open(self.root, tenant=TENANT, actor_id=actor, scope=scope, purpose="816 qualification")
-  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/agentmem_ref/api/surface.py", line 524, in open
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/tmp.UY3DtdYob7/base/reference/agentmem_ref/api/surface.py", line 524, in open
     runtime = SQLiteConfiguredCompositionRuntime.recover(
         root,
     ...<2 lines>...
         vector_retriever=semantic["retriever"],
     )
-  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/agentmem_ref/runtime/sqlite_composition.py", line 43, in recover
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/tmp.UY3DtdYob7/base/reference/agentmem_ref/runtime/sqlite_composition.py", line 43, in recover
     durable = SQLiteConfigBoundRestartRuntime.recover(
         root,
     ...<2 lines>...
         verifier_registry=verifier_registry,
     )
-  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/agentmem_ref/runtime/sqlite_runtime.py", line 677, in recover
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/tmp.UY3DtdYob7/base/reference/agentmem_ref/runtime/sqlite_runtime.py", line 677, in recover
     base = SQLiteRestartSafeRuntime.recover(
         root,
         profile=profile,
         verifier_registry=verifier_registry,
     )
-  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/agentmem_ref/runtime/sqlite_runtime.py", line 343, in recover
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/tmp.UY3DtdYob7/base/reference/agentmem_ref/runtime/sqlite_runtime.py", line 343, in recover
     raise RuntimeRecoveryError("SQLite canonical substrate digest mismatch")
 agentmem_ref.runtime.restart_runtime.RuntimeRecoveryError: SQLite canonical substrate digest mismatch
 
@@ -113,67 +65,58 @@ agentmem_ref.runtime.restart_runtime.RuntimeRecoveryError: SQLite canonical subs
 ERROR: test_the_runtime_governed_operations_publish_and_reopen (tests.test_816_runtime_owned_writes.SupportedPathsStillWork.test_the_runtime_governed_operations_publish_and_reopen)
 ----------------------------------------------------------------------
 Traceback (most recent call last):
-  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/tests/test_816_runtime_owned_writes.py", line 239, in test_the_runtime_governed_operations_publish_and_reopen
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/tmp.UY3DtdYob7/base/reference/tests/test_816_runtime_owned_writes.py", line 239, in test_the_runtime_governed_operations_publish_and_reopen
     self.open().close()
     ~~~~~~~~~^^
-  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/tests/test_816_runtime_owned_writes.py", line 95, in open
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/tmp.UY3DtdYob7/base/reference/tests/test_816_runtime_owned_writes.py", line 96, in open
     memory = AgentMemory.open(self.root, tenant=TENANT, actor_id=actor, scope=scope, purpose="816 qualification")
-  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/agentmem_ref/api/surface.py", line 524, in open
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/tmp.UY3DtdYob7/base/reference/agentmem_ref/api/surface.py", line 524, in open
     runtime = SQLiteConfiguredCompositionRuntime.recover(
         root,
     ...<2 lines>...
         vector_retriever=semantic["retriever"],
     )
-  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/agentmem_ref/runtime/sqlite_composition.py", line 43, in recover
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/tmp.UY3DtdYob7/base/reference/agentmem_ref/runtime/sqlite_composition.py", line 43, in recover
     durable = SQLiteConfigBoundRestartRuntime.recover(
         root,
     ...<2 lines>...
         verifier_registry=verifier_registry,
     )
-  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/agentmem_ref/runtime/sqlite_runtime.py", line 684, in recover
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/tmp.UY3DtdYob7/base/reference/agentmem_ref/runtime/sqlite_runtime.py", line 684, in recover
     evidence = binding_store.recover(
         plan=plan,
         base_evidence=base.recovery_evidence,
         provider_failures=provider_failures,
     )
-  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/agentmem_ref/runtime/configured_restart.py", line 337, in recover
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/tmp.UY3DtdYob7/base/reference/agentmem_ref/runtime/configured_restart.py", line 337, in recover
     raise RuntimeRecoveryError(
         f"configuration binding does not match recovered base checkpoint: {key}"
     )
 agentmem_ref.runtime.restart_runtime.RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation
 
 ======================================================================
-FAIL: test_a_failed_publication_rolls_back_and_the_connection_stays_sealed (tests.test_816_runtime_owned_writes.CloseAndFailureInjection.test_a_failed_publication_rolls_back_and_the_connection_stays_sealed)
+FAIL: test_a_failed_publication_rolls_back_and_the_guard_still_holds (tests.test_816_runtime_owned_writes.CloseAndFailureInjection.test_a_failed_publication_rolls_back_and_the_guard_still_holds)
 ----------------------------------------------------------------------
 Traceback (most recent call last):
-  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/tests/test_816_runtime_owned_writes.py", line 285, in test_a_failed_publication_rolls_back_and_the_connection_stays_sealed
-    self.assertEqual(substrate._connection.execute("PRAGMA query_only").fetchone()[0], 1)
-    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError: 0 != 1
-
-======================================================================
-FAIL: test_a_handle_abandoned_without_close_reopens (tests.test_816_runtime_owned_writes.CloseAndFailureInjection.test_a_handle_abandoned_without_close_reopens)
-----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/tests/test_816_runtime_owned_writes.py", line 266, in test_a_handle_abandoned_without_close_reopens
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/tmp.UY3DtdYob7/base/reference/tests/test_816_runtime_owned_writes.py", line 284, in test_a_failed_publication_rolls_back_and_the_guard_still_holds
     with self.assertRaises(UngovernedDurableWrite):
          ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
 AssertionError: UngovernedDurableWrite not raised
 
 ======================================================================
-FAIL: test_if_the_connection_cannot_be_resealed_it_is_closed (tests.test_816_runtime_owned_writes.CloseAndFailureInjection.test_if_the_connection_cannot_be_resealed_it_is_closed)
+FAIL: test_a_handle_abandoned_without_close_reopens (tests.test_816_runtime_owned_writes.CloseAndFailureInjection.test_a_handle_abandoned_without_close_reopens)
 ----------------------------------------------------------------------
 Traceback (most recent call last):
-  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/tests/test_816_runtime_owned_writes.py", line 311, in test_if_the_connection_cannot_be_resealed_it_is_closed
-    with self.assertRaises(sqlite3.Error):
-         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
-AssertionError: Error not raised
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/tmp.UY3DtdYob7/base/reference/tests/test_816_runtime_owned_writes.py", line 266, in test_a_handle_abandoned_without_close_reopens
+    with self.assertRaises(UngovernedDurableWrite):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: UngovernedDurableWrite not raised
 
 ======================================================================
 FAIL: test_repeated_close_and_close_after_a_refusal (tests.test_816_runtime_owned_writes.CloseAndFailureInjection.test_repeated_close_and_close_after_a_refusal)
 ----------------------------------------------------------------------
 Traceback (most recent call last):
-  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/tests/test_816_runtime_owned_writes.py", line 255, in test_repeated_close_and_close_after_a_refusal
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/tmp.UY3DtdYob7/base/reference/tests/test_816_runtime_owned_writes.py", line 255, in test_repeated_close_and_close_after_a_refusal
     with self.assertRaises(UngovernedDurableWrite):
          ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
 AssertionError: UngovernedDurableWrite not raised
@@ -182,7 +125,7 @@ AssertionError: UngovernedDurableWrite not raised
 FAIL: test_a_stale_handle_cannot_corrupt_another_process_generation (tests.test_816_runtime_owned_writes.CrossProcessStaleHandle.test_a_stale_handle_cannot_corrupt_another_process_generation)
 ----------------------------------------------------------------------
 Traceback (most recent call last):
-  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/tests/test_816_runtime_owned_writes.py", line 341, in test_a_stale_handle_cannot_corrupt_another_process_generation
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/tmp.UY3DtdYob7/base/reference/tests/test_816_runtime_owned_writes.py", line 309, in test_a_stale_handle_cannot_corrupt_another_process_generation
     with self.assertRaises(UngovernedDurableWrite):
          ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
 AssertionError: UngovernedDurableWrite not raised
@@ -191,7 +134,7 @@ AssertionError: UngovernedDurableWrite not raised
 FAIL: test_direct_adapter_recall_then_close_leaves_the_store_reopenable (tests.test_816_runtime_owned_writes.IssueReproduction.test_direct_adapter_recall_then_close_leaves_the_store_reopenable)
 ----------------------------------------------------------------------
 Traceback (most recent call last):
-  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/tests/test_816_runtime_owned_writes.py", line 107, in test_direct_adapter_recall_then_close_leaves_the_store_reopenable
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/tmp.UY3DtdYob7/base/reference/tests/test_816_runtime_owned_writes.py", line 108, in test_direct_adapter_recall_then_close_leaves_the_store_reopenable
     with self.assertRaises(UngovernedDurableWrite):
          ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
 AssertionError: UngovernedDurableWrite not raised
@@ -200,19 +143,10 @@ AssertionError: UngovernedDurableWrite not raised
 FAIL: test_a_store_that_saw_refused_acts_is_identical_to_one_that_did_not (tests.test_816_runtime_owned_writes.RefusalIsExplicitAndChangesNothing.test_a_store_that_saw_refused_acts_is_identical_to_one_that_did_not)
 ----------------------------------------------------------------------
 Traceback (most recent call last):
-  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/tests/test_816_runtime_owned_writes.py", line 179, in test_a_store_that_saw_refused_acts_is_identical_to_one_that_did_not
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/tmp.UY3DtdYob7/base/reference/tests/test_816_runtime_owned_writes.py", line 180, in test_a_store_that_saw_refused_acts_is_identical_to_one_that_did_not
     self.assertEqual(session(Path(treated), True), session(Path(control), False))
                      ~~~~~~~^^^^^^^^^^^^^^^^^^^^^
-  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/tests/test_816_runtime_owned_writes.py", line 167, in session
-    with self.assertRaises(UngovernedDurableWrite):
-         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError: UngovernedDurableWrite not raised
-
-======================================================================
-FAIL: test_direct_substrate_writes_and_raw_sql_on_the_owned_connection_are_refused (tests.test_816_runtime_owned_writes.RefusalIsExplicitAndChangesNothing.test_direct_substrate_writes_and_raw_sql_on_the_owned_connection_are_refused)
-----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/tests/test_816_runtime_owned_writes.py", line 186, in test_direct_substrate_writes_and_raw_sql_on_the_owned_connection_are_refused
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/tmp.UY3DtdYob7/base/reference/tests/test_816_runtime_owned_writes.py", line 168, in session
     with self.assertRaises(UngovernedDurableWrite):
          ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
 AssertionError: UngovernedDurableWrite not raised
@@ -221,7 +155,7 @@ AssertionError: UngovernedDurableWrite not raised
 FAIL: test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged (tests.test_816_runtime_owned_writes.RefusalIsExplicitAndChangesNothing.test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged) (act='governed_recall')
 ----------------------------------------------------------------------
 Traceback (most recent call last):
-  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/tests/test_816_runtime_owned_writes.py", line 151, in test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/tmp.UY3DtdYob7/base/reference/tests/test_816_runtime_owned_writes.py", line 152, in test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged
     with self.assertRaises(UngovernedDurableWrite) as raised:
          ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
 AssertionError: UngovernedDurableWrite not raised
@@ -230,7 +164,7 @@ AssertionError: UngovernedDurableWrite not raised
 FAIL: test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged (tests.test_816_runtime_owned_writes.RefusalIsExplicitAndChangesNothing.test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged) (act='commit_proposal')
 ----------------------------------------------------------------------
 Traceback (most recent call last):
-  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/tests/test_816_runtime_owned_writes.py", line 151, in test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/tmp.UY3DtdYob7/base/reference/tests/test_816_runtime_owned_writes.py", line 152, in test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged
     with self.assertRaises(UngovernedDurableWrite) as raised:
          ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
 AssertionError: UngovernedDurableWrite not raised
@@ -239,7 +173,7 @@ AssertionError: UngovernedDurableWrite not raised
 FAIL: test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged (tests.test_816_runtime_owned_writes.RefusalIsExplicitAndChangesNothing.test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged) (act='governed_delete')
 ----------------------------------------------------------------------
 Traceback (most recent call last):
-  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/tests/test_816_runtime_owned_writes.py", line 151, in test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/tmp.UY3DtdYob7/base/reference/tests/test_816_runtime_owned_writes.py", line 152, in test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged
     with self.assertRaises(UngovernedDurableWrite) as raised:
          ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
 AssertionError: UngovernedDurableWrite not raised
@@ -248,7 +182,7 @@ AssertionError: UngovernedDurableWrite not raised
 FAIL: test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged (tests.test_816_runtime_owned_writes.RefusalIsExplicitAndChangesNothing.test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged) (act='governed_dispute')
 ----------------------------------------------------------------------
 Traceback (most recent call last):
-  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/tests/test_816_runtime_owned_writes.py", line 151, in test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/tmp.UY3DtdYob7/base/reference/tests/test_816_runtime_owned_writes.py", line 152, in test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged
     with self.assertRaises(UngovernedDurableWrite) as raised:
          ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
 AssertionError: UngovernedDurableWrite not raised
@@ -257,7 +191,7 @@ AssertionError: UngovernedDurableWrite not raised
 FAIL: test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged (tests.test_816_runtime_owned_writes.RefusalIsExplicitAndChangesNothing.test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged) (act='mint_id')
 ----------------------------------------------------------------------
 Traceback (most recent call last):
-  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/tests/test_816_runtime_owned_writes.py", line 151, in test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/tmp.UY3DtdYob7/base/reference/tests/test_816_runtime_owned_writes.py", line 152, in test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged
     with self.assertRaises(UngovernedDurableWrite) as raised:
          ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
 AssertionError: UngovernedDurableWrite not raised
@@ -266,7 +200,7 @@ AssertionError: UngovernedDurableWrite not raised
 FAIL: test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged (tests.test_816_runtime_owned_writes.RefusalIsExplicitAndChangesNothing.test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged) (act='now')
 ----------------------------------------------------------------------
 Traceback (most recent call last):
-  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/tests/test_816_runtime_owned_writes.py", line 151, in test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/tmp.UY3DtdYob7/base/reference/tests/test_816_runtime_owned_writes.py", line 152, in test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged
     with self.assertRaises(UngovernedDurableWrite) as raised:
          ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
 AssertionError: UngovernedDurableWrite not raised
@@ -275,7 +209,7 @@ AssertionError: UngovernedDurableWrite not raised
 FAIL: test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged (tests.test_816_runtime_owned_writes.RefusalIsExplicitAndChangesNothing.test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged) (act='record_event')
 ----------------------------------------------------------------------
 Traceback (most recent call last):
-  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/tests/test_816_runtime_owned_writes.py", line 151, in test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/tmp.UY3DtdYob7/base/reference/tests/test_816_runtime_owned_writes.py", line 152, in test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged
     with self.assertRaises(UngovernedDurableWrite) as raised:
          ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
 AssertionError: UngovernedDurableWrite not raised
@@ -284,8 +218,18 @@ AssertionError: UngovernedDurableWrite not raised
 FAIL: test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged (tests.test_816_runtime_owned_writes.RefusalIsExplicitAndChangesNothing.test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged) (act='upgrade_canonical_derivation')
 ----------------------------------------------------------------------
 Traceback (most recent call last):
-  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/tests/test_816_runtime_owned_writes.py", line 151, in test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/tmp.UY3DtdYob7/base/reference/tests/test_816_runtime_owned_writes.py", line 152, in test_each_act_is_refused_and_leaves_rows_governance_and_generation_unchanged
     with self.assertRaises(UngovernedDurableWrite) as raised:
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: UngovernedDurableWrite not raised
+
+======================================================================
+FAIL: test_storage_level_writes_stay_privileged_and_are_never_bound_by_close (tests.test_816_runtime_owned_writes.RefusalIsExplicitAndChangesNothing.test_storage_level_writes_stay_privileged_and_are_never_bound_by_close)
+The substrate's storage methods are a privileged, ungoverned layer (fixtures and the
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/tmp.UY3DtdYob7/base/reference/tests/test_816_runtime_owned_writes.py", line 190, in test_storage_level_writes_stay_privileged_and_are_never_bound_by_close
+    with self.assertRaises(UngovernedDurableWrite):  # the governed identifier sequence is
          ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
 AssertionError: UngovernedDurableWrite not raised
 
@@ -293,7 +237,7 @@ AssertionError: UngovernedDurableWrite not raised
 FAIL: test_the_refusal_discloses_nothing (tests.test_816_runtime_owned_writes.RefusalIsExplicitAndChangesNothing.test_the_refusal_discloses_nothing)
 ----------------------------------------------------------------------
 Traceback (most recent call last):
-  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/tests/test_816_runtime_owned_writes.py", line 202, in test_the_refusal_discloses_nothing
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/tmp.UY3DtdYob7/base/reference/tests/test_816_runtime_owned_writes.py", line 202, in test_the_refusal_discloses_nothing
     with self.assertRaises(UngovernedDurableWrite) as raised:
          ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
 AssertionError: UngovernedDurableWrite not raised
@@ -302,7 +246,7 @@ AssertionError: UngovernedDurableWrite not raised
 FAIL: test_deleted_lineage_stays_deleted_and_a_refused_direct_delete_changes_no_tombstone (tests.test_816_runtime_owned_writes.SecurityRegressions.test_deleted_lineage_stays_deleted_and_a_refused_direct_delete_changes_no_tombstone)
 ----------------------------------------------------------------------
 Traceback (most recent call last):
-  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/tests/test_816_runtime_owned_writes.py", line 396, in test_deleted_lineage_stays_deleted_and_a_refused_direct_delete_changes_no_tombstone
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/tmp.UY3DtdYob7/base/reference/tests/test_816_runtime_owned_writes.py", line 364, in test_deleted_lineage_stays_deleted_and_a_refused_direct_delete_changes_no_tombstone
     with self.assertRaises(UngovernedDurableWrite):
          ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
 AssertionError: UngovernedDurableWrite not raised
@@ -311,12 +255,12 @@ AssertionError: UngovernedDurableWrite not raised
 FAIL: test_permanent_forget_after_a_refused_direct_act_reconciles_the_sidecar_across_reopen (tests.test_816_runtime_owned_writes.SemanticCacheReconciliation.test_permanent_forget_after_a_refused_direct_act_reconciles_the_sidecar_across_reopen)
 ----------------------------------------------------------------------
 Traceback (most recent call last):
-  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-816base/reference/tests/test_816_runtime_owned_writes.py", line 419, in test_permanent_forget_after_a_refused_direct_act_reconciles_the_sidecar_across_reopen
+  File "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/tmp.UY3DtdYob7/base/reference/tests/test_816_runtime_owned_writes.py", line 387, in test_permanent_forget_after_a_refused_direct_act_reconciles_the_sidecar_across_reopen
     with self.assertRaises(UngovernedDurableWrite):
          ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
 AssertionError: UngovernedDurableWrite not raised
 
 ----------------------------------------------------------------------
-Ran 20 tests in 2.766s
+Ran 19 tests in 2.400s
 
-FAILED (failures=19, errors=2)
+FAILED (failures=18, errors=2)
