@@ -23,8 +23,9 @@ VERSIONED = (
 
 
 class Contract17Successor(unittest.TestCase):
-    def test_public_contract_identity_is_exactly_1_7_0(self):
-        self.assertEqual(contract.CONTRACT_VERSION, "1.7.0")
+    def test_public_contract_identity_moved_past_1_7_0(self):
+        # 1.7.0 was the #777 successor; #786 (owner decision on PR #805) moved the identity to 1.8.0.
+        self.assertEqual(contract.CONTRACT_VERSION, "1.8.0")
 
     def test_all_versioned_schemas_accept_1_7_0_and_keep_prior_1_6_0(self):
         for name in VERSIONED:
@@ -34,7 +35,7 @@ class Contract17Successor(unittest.TestCase):
                 self.assertIn("1.7.0", versions)
                 self.assertIn("1.6.0", versions)
                 self.assertEqual(len(versions), len(set(versions)))
-                self.assertEqual(versions[-1], "1.7.0")
+                self.assertEqual(versions[-2], "1.7.0")
 
     def test_older_minor_is_current_and_next_minor_requires_migration(self):
         self.assertEqual(
@@ -47,6 +48,10 @@ class Contract17Successor(unittest.TestCase):
         )
         self.assertEqual(
             contract.compatibility({"contract_version": "1.8.0"}),
+            contract.CURRENT,
+        )
+        self.assertEqual(
+            contract.compatibility({"contract_version": "1.9.0"}),
             contract.MIGRATION_REQUIRED,
         )
         self.assertEqual(
@@ -54,9 +59,9 @@ class Contract17Successor(unittest.TestCase):
             contract.INCOMPATIBLE,
         )
 
-    def test_result_version_is_1_7_0_without_invented_authority(self):
+    def test_result_version_is_the_current_contract_without_invented_authority(self):
         output = contract.result("recall", contract.CURRENT)
-        self.assertEqual(output["contract_version"], "1.7.0")
+        self.assertEqual(output["contract_version"], "1.8.0")
         self.assertEqual(output["stage"], "recall")
         self.assertEqual(output["compatibility"], contract.CURRENT)
 

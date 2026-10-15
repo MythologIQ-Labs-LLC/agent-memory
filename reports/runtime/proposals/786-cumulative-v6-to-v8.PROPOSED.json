@@ -6,7 +6,7 @@
   "declared_changes": [
     {
       "path": "reference/agentmem_ref/api/contract.py",
-      "blob": "6345ecf151a156ff203ae19a6d973464da36f272"
+      "blob": "cadf93763d0ad172e573131ba718da8ca7200a16"
     },
     {
       "path": "reference/agentmem_ref/api/surface.py",
@@ -65,7 +65,7 @@
     {
       "identity_path": "identity.public_contract_version",
       "from": "1.6.0",
-      "to": "1.7.0"
+      "to": "1.8.0"
     }
   ],
   "pyproject_change": null,
@@ -101,6 +101,18 @@
     {
       "kind": "lane",
       "ref": "longmemeval-s-retrieval-parity-v8"
+    },
+    {
+      "kind": "security_replay",
+      "ref": "cross-scope-write-authority-denial-v2"
+    },
+    {
+      "kind": "security_replay",
+      "ref": "deleted-lineage-generations-and-restart-v2"
+    },
+    {
+      "kind": "security_replay",
+      "ref": "public-tombstone-redaction-and-observer-separation-v2"
     }
   ]
 }

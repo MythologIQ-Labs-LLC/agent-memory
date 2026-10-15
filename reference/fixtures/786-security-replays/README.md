@@ -7,9 +7,9 @@ A separate replay family beside the five frozen #644 v7 contracts. Nothing under
 Current fixtures are the `-v2` set (28 cases); the `-v1` set (22 cases, frozen at `b70ff58a`)
 is superseded, kept byte-for-byte for provenance (`status: supersedes_v1` and
 `supersession_reason` in each `-v2` fixture name what the second independent review found
-wanting in v1). The runner still executes a `-v1` id on request; the v8 proposal's companion acceptance file
-(`reports/runtime/proposals/786-security-replay-acceptance.PROPOSED.json`, read by the verifier)
-names only the `-v2` ids.
+wanting in v1). The runner still executes a `-v1` id on request; the cumulative v6 -> v8 declaration
+(`reports/runtime/proposals/786-cumulative-v6-to-v8.PROPOSED.json`, read by the verifier, which lists
+the family under the first-class `security_replay` evidence kind) names only the `-v2` ids.
 
 | replay | contract sources | what it holds |
 |---|---|---|

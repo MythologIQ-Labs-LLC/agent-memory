@@ -52,7 +52,7 @@ class DeveloperFacade(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             memory = self._open(root)
-            self.assertEqual(memory.contract_version, "1.7.0")
+            self.assertEqual(memory.contract_version, "1.8.0")
             retained = memory.remember(TARGET, "release branch main")
             self.assertTrue(retained["committed"])
             self.assertEqual(retained["stage"], "commit")

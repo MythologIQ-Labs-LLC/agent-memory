@@ -92,7 +92,7 @@ class FacadeShadowRecallControlTests(unittest.TestCase):
             memory.remember("memory:a", "The user's dog is called Biscuit.")
             result = memory.recall("What is the dog called?")
         self.assertNotIn("recall_control", result)
-        self.assertEqual(result["contract_version"], "1.7.0")
+        self.assertEqual(result["contract_version"], "1.8.0")
         with self.assertRaises(ValueError):
             AgentMemory.open(tempfile.mkdtemp(), recall_control="deterministic")
 
