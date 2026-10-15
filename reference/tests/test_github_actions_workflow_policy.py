@@ -325,6 +325,28 @@ class WorkflowPolicyTests(unittest.TestCase):
             )
             dump.assert_not_called()
 
+    def test_inventory_summary_aggregates_exactly_cover_all_workflows(self):
+        inventory = json.loads((REPO_ROOT / estate.INVENTORY).read_text(encoding="utf-8"))
+        count = len(inventory["records"])
+        summary = inventory["inventorySummary"]
+        self.assertEqual(summary["workflowCount"], count)
+        for field in ("lifecycleCounts", "dispositionCounts", "consequenceCounts"):
+            with self.subTest(field=field):
+                self.assertEqual(sum(summary[field].values()), count, field)
+
+    def test_inventory_rejects_missing_and_duplicate_workflows(self):
+        inventory = json.loads((REPO_ROOT / estate.INVENTORY).read_text(encoding="utf-8"))
+        import copy
+        for corrupt in ("missing", "duplicate"):
+            with self.subTest(corrupt=corrupt):
+                broken = copy.deepcopy(inventory)
+                if corrupt == "missing":
+                    broken["records"].pop()
+                else:
+                    broken["records"].append(copy.deepcopy(broken["records"][0]))
+                with self.assertRaisesRegex(ValueError, "workflow inventory missing or duplicate"):
+                    estate.sync_inventory(broken, REPO_ROOT)
+
     def test_inventory_mechanical_fields_follow_the_yaml(self):
         inventory = json.loads((REPO_ROOT / estate.INVENTORY).read_text(encoding="utf-8"))
         self.assertEqual(estate.sync_inventory(inventory, REPO_ROOT), inventory, "run scripts/sync_workflow_inventory.py --write")
