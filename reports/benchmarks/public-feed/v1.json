@@ -2,7 +2,7 @@
   "schema_version": 1,
   "kind": "agent-memory-measured-results-feed",
   "authority_effect": "none",
-  "feed_revision": "2026-10-15-cycle2-amb-query-only-peers",
+  "feed_revision": "2026-10-15-cycle2-letta-longmemeval-subset50",
   "profiles": [
     {
       "id": "candidate:longmemeval-s:subset50:session",
@@ -19,7 +19,7 @@
       "evaluator_revision": "git-blob:6b9c237380f1d527e564161c2dac7fe32ada0ef9",
       "protocol": "retrieval-only; same frozen cohort and evaluator",
       "metric": "recall_all@5",
-      "method_note": "43/50 questions scored, 3 abstention and 4 no-user-target excluded. Candidate same-harness retrieval results; no answer generation. Hindsight local ONNX no LLM; Mem0 explicit; Agent Memory query-only.",
+      "method_note": "43/50 questions scored, 3 abstention and 4 no-user-target excluded. Candidate same-harness retrieval results; no answer generation. Hindsight local ONNX no LLM; Mem0 explicit; Agent Memory query-only. Letta (cycle 2): archival-memory REST search, no LLM, run by the resumable driver on the same runner module; report assembled from finalized plane summaries, not re-scored.",
       "rows": [
         {
           "system": "hindsight",
@@ -108,6 +108,28 @@
             ]
           },
           "expected_score": 0.813953
+        },
+        {
+          "system": "letta_archival_local",
+          "label": "Letta 0.16.8 · archival-memory search only, local bge-small (not the stateful agent)",
+          "role": "comparator",
+          "status": "candidate",
+          "source_commit": "caf1f26d0c9da73d068fcd43d43b693244da325e",
+          "artifact": "reports/benchmarks/runs/810-letta/subset50/letta-50.report.json",
+          "artifact_sha256": "9c032f90c4e2c3193f69d3e2575bb80e9fb49ffbbe9ba0a5d90e32749b0129ea",
+          "extract": {
+            "type": "json_path",
+            "path": [
+              "planes",
+              "session",
+              "backends",
+              "letta_archival_local",
+              "aggregate",
+              "headline",
+              "recall_all@5"
+            ]
+          },
+          "expected_score": 0.953488
         }
       ]
     },
@@ -126,7 +148,7 @@
       "evaluator_revision": "git-blob:6b9c237380f1d527e564161c2dac7fe32ada0ef9",
       "protocol": "retrieval-only; same frozen cohort and evaluator",
       "metric": "recall_all@10",
-      "method_note": "43/50 questions scored, 3 abstention and 4 no-user-target excluded. Candidate same-harness retrieval results; no answer generation. Hindsight local ONNX no LLM; Mem0 explicit; Agent Memory query-only.",
+      "method_note": "43/50 questions scored, 3 abstention and 4 no-user-target excluded. Candidate same-harness retrieval results; no answer generation. Hindsight local ONNX no LLM; Mem0 explicit; Agent Memory query-only. Letta (cycle 2): archival-memory REST search, no LLM, run by the resumable driver on the same runner module; report assembled from finalized plane summaries, not re-scored.",
       "rows": [
         {
           "system": "hindsight",
@@ -215,6 +237,28 @@
             ]
           },
           "expected_score": 0.604651
+        },
+        {
+          "system": "letta_archival_local",
+          "label": "Letta 0.16.8 · archival-memory search only, local bge-small (not the stateful agent)",
+          "role": "comparator",
+          "status": "candidate",
+          "source_commit": "caf1f26d0c9da73d068fcd43d43b693244da325e",
+          "artifact": "reports/benchmarks/runs/810-letta/subset50/letta-50.report.json",
+          "artifact_sha256": "9c032f90c4e2c3193f69d3e2575bb80e9fb49ffbbe9ba0a5d90e32749b0129ea",
+          "extract": {
+            "type": "json_path",
+            "path": [
+              "planes",
+              "turn",
+              "backends",
+              "letta_archival_local",
+              "aggregate",
+              "headline",
+              "recall_all@10"
+            ]
+          },
+          "expected_score": 0.813953
         }
       ]
     },
