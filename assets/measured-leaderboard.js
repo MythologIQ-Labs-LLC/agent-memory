@@ -11,7 +11,7 @@ const statusName=s=>s==='accepted'?'Accepted':s==='reviewed_self_run_unofficial'
 const scope=()=>q('measuredScope')?.value||'all';
 const FROZEN='5266568e2e883b64e92e0da632d5e24c3fd61d8a447de7e629ebf93ef26a7339';
 const INPUT='d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442';
-let accepted=null,preview=null,observed=[],current=[],initialized=false;
+let accepted=null,preview=null,observed=[],current=[],publicFeedProfiles=[],initialized=false;
 const SAFE=/^https:\/\/github\.com\/MythologIQ-Labs-LLC\/agent-memory\/blob\/[0-9a-f]{40}\/[a-zA-Z0-9_.\/-]+$/;
 function safeHref(url){return SAFE.test(url||'')&&!url.split('/').includes('..')?url:'#'}
 function validatedPreview(d){
@@ -106,6 +106,12 @@ function profiles(){
   if(!earlier||p.metrics[0].rows.length>=earlier.metrics[0].rows.length)
    candidates.set(p.id,p);
  }
+ // Source-verified public feed supersedes manually curated candidate fallbacks.
+ // It never supplies accepted authority or changes the historical accepted snapshot.
+ for(const p of publicFeedProfiles){
+  if(p&&p.evidence_status!=='accepted'&&Array.isArray(p.metrics))
+    candidates.set(p.id,p);
+ }
  return [...candidates.values(),...acceptedRows];
 }
 function option(el,items,keep,defaultId){
@@ -135,44 +141,53 @@ function render(){
  const m=p?.metrics.find(x=>x.metric===q('measuredMetricSelect').value);
  if(!m)return;
  const rows=m.rows.filter(r=>score(r.score));
- const competitors=rows.filter(r=>r.role!=='baseline');
+ const revision=String(p.family||'').startsWith('runtime-revision-');
+ const competitors=rows.filter(r=>revision||r.role!=='baseline');
  const order=[...competitors].sort((a,b)=>b.score-a.score);
  const am=order.find(r=>r.role==='control');
- const leader=order.find(r=>r.role==='comparator');
+ const leader=revision?order.find(r=>r.system==='agent_memory_baseline'):order.find(r=>r.role==='comparator');
  const rank=am?1+order.filter(r=>r.score>am.score).length:null;
  const best=order.length?order[0].score:null;
  q('measuredMode').textContent=statusName(p.evidence_status);
  q('measuredMode').className='score-mode '+(p.evidence_status==='accepted'?'mode-accepted':'mode-candidate');
  q('measuredKpis').innerHTML=[
-  ['Memory-system leader',order[0]?pretty(order[0].score):'Not measured'],
-  ['Agent Memory',am?pretty(am.score):'Not measured'],
-  ['Agent Memory rank',rank?'#'+rank+' / '+order.length:'Not ranked'],
-  ['Gap to strongest external memory system',leader&&am?
-    ((am.score-leader.score)>=0?'+':'')+((am.score-leader.score)*100).toFixed(2)+' pp':'No external measurement']
+  [revision?'Leading revision':'Memory-system leader',order[0]?pretty(order[0].score):'Not measured'],
+  [revision?'C2 candidate':'Agent Memory',am?pretty(am.score):'Not measured'],
+  [revision?'C2 revision rank':'Agent Memory rank',rank?'#'+rank+' / '+order.length:'Not ranked'],
+  [revision?'C2 vs original baseline':'Gap to strongest external memory system',leader&&am?
+    ((am.score-leader.score)>=0?'+':'')+((am.score-leader.score)*100).toFixed(2)+' pp':revision?'Not measured':'No external measurement']
  ].map(([label,value])=>'<div class="measured-kpi"><span>'+h(label)+
   '</span><strong>'+h(value)+'</strong></div>').join('');
  q('measuredRows').innerHTML=[...rows].sort((a,b)=>b.score-a.score).map(r=>{
   const isBase=r.role==='baseline';
-  const rankLabel=isBase?'Baseline':'#'+(1+order.filter(x=>x.score>r.score).length);
+  const rankLabel=isBase&&!revision?'Baseline':'#'+(1+order.filter(x=>x.score>r.score).length);
   return '<tr'+(r.role==='control'?' class="measured-am"':'')+'>'+
    '<td class="measured-rank">'+h(rankLabel)+'</td>'+
    '<th scope="row">'+h(r.label||r.system)+'</th>'+
    '<td>'+h(r.role)+'</td>'+
    '<td class="measured-num">'+h(pretty(r.score))+'</td>'+
    '<td class="measured-num">'+h(r.sample_count??'Unknown')+'</td>'+
-   '<td>'+h(isBase?'Baseline':best!==null?((best-r.score)*100).toFixed(2)+' pp':'Unknown')+'</td>'+
+   '<td>'+h(isBase&&!revision?'Baseline':best!==null?((best-r.score)*100).toFixed(2)+' pp':'Unknown')+'</td>'+
    '<td><span class="measured-row-state">'+h(statusName(r.status||p.evidence_status))+'</span></td>'+
    '<td><a href="'+h(safeHref(r.run_url))+
     '" target="_blank" rel="noopener noreferrer">Evidence ↗</a></td></tr>';
  }).join('');
  q('measuredProvenance').textContent=p.origin+' · '+p.method_note+
-  ' Rankings exclude baseline-only methods. Never combine different cohorts, evaluator protocols or native metrics.';
+  (revision?' Revision rank is ONLY relative to the two versions shown, not a product market ranking.':
+  ' Rankings exclude baseline-only methods. Never combine different cohorts, evaluator protocols or native metrics.');
 }
 function setup(){
  if(initialized)return;initialized=true;
  q('measuredScope').addEventListener('change',()=>updateProfiles(null));
  q('measuredProfileSelect').addEventListener('change',()=>updateMetrics());
  q('measuredMetricSelect').addEventListener('change',render);
+ root.addEventListener('agent-memory:public-feed',e=>{
+  if(!Array.isArray(e.detail?.profiles))return;
+  publicFeedProfiles=e.detail.profiles;
+  const selected=q('measuredProfileSelect').value,metric=q('measuredMetricSelect').value;
+  updateProfiles(selected);
+  updateMetrics(metric);
+ });
  root.addEventListener('agent-memory:candidate-runs',e=>{
   if(!Array.isArray(e.detail))return;
   observed=e.detail;
@@ -194,6 +209,8 @@ async function start(){
   }
  }
  if(root.AgentMemoryRunDiscovery?.getLastRows)observed=root.AgentMemoryRunDiscovery.getLastRows();
+ if(root.AgentMemoryPublicFeed?.getLastProfiles)
+  publicFeedProfiles=root.AgentMemoryPublicFeed.getLastProfiles();
  updateProfiles('candidate:longmemeval-s:subset50:session');
 }
 root.AgentMemoryMeasuredBoard={validatedPreview,discoveredProfiles,acceptedProfiles,profiles,render,start};
