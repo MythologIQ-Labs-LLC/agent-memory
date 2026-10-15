@@ -1,0 +1,271 @@
+{
+  "schema_version": 1,
+  "kind": "agent-memory-measured-results-feed",
+  "authority_effect": "none",
+  "feed_revision": "2026-10-15-initial",
+  "profiles": [
+    {
+      "id": "candidate:longmemeval-s:subset50:session",
+      "title": "LongMemEval-S · 50 fixed questions · session retrieval",
+      "family": "longmemeval-s-retrieval",
+      "evidence_status": "candidate",
+      "cohort": {
+        "sample_count": 50,
+        "scored_count": 43,
+        "excluded_count": 7,
+        "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+        "selection_id": "sha256(seed || NUL || question_id) ascending|size=50|ids_sha256=5266568e2e883b64e92e0da632d5e24c3fd61d8a447de7e629ebf93ef26a7339"
+      },
+      "evaluator_revision": "git-blob:6b9c237380f1d527e564161c2dac7fe32ada0ef9",
+      "protocol": "retrieval-only; same frozen cohort and evaluator",
+      "metric": "recall_all@5",
+      "method_note": "43/50 questions scored, 3 abstention and 4 no-user-target excluded. Candidate same-harness retrieval results; no answer generation. Hindsight local ONNX no LLM; Mem0 explicit; Agent Memory query-only.",
+      "rows": [
+        {
+          "system": "hindsight",
+          "label": "Hindsight 0.10.2 · local chunks/ONNX",
+          "role": "comparator",
+          "status": "candidate",
+          "source_commit": "05f5a38782a3341eea1c5e731f014f82c3d3e960",
+          "artifact": "reports/benchmarks/runs/640-hindsight/subset50/hindsight-50.json",
+          "artifact_sha256": "40d1ec0f08c3da97263408856eb7299ca9585487832236aa2019e259e3201345",
+          "extract": {
+            "type": "json_path",
+            "path": [
+              "planes",
+              "session",
+              "backends",
+              "hindsight_chunks_onnx",
+              "aggregate",
+              "headline",
+              "recall_all@5"
+            ]
+          },
+          "expected_score": 0.930233
+        },
+        {
+          "system": "mem0",
+          "label": "Mem0 OSS 2.2.1 · explicit",
+          "role": "comparator",
+          "status": "candidate",
+          "source_commit": "05f5a38782a3341eea1c5e731f014f82c3d3e960",
+          "artifact": "reports/benchmarks/runs/mem0/subset50/mem0-50.json.gz",
+          "artifact_sha256": "2228053ff7355464a893b938e43c1a02eb7c49806862e6133b8ca403ad6bc44f",
+          "extract": {
+            "type": "json_path",
+            "path": [
+              "planes",
+              "session",
+              "backends",
+              "mem0_explicit",
+              "aggregate",
+              "headline",
+              "recall_all@5"
+            ]
+          },
+          "expected_score": 0.883721
+        },
+        {
+          "system": "agent_memory",
+          "label": "Agent Memory · frozen control",
+          "role": "control",
+          "status": "candidate",
+          "source_commit": "05f5a38782a3341eea1c5e731f014f82c3d3e960",
+          "artifact": "reports/benchmarks/runs/controls/subset50/controls-50.json.gz",
+          "artifact_sha256": "673236d9229211f8f9b9570a5fde6e26ef81e6128bfb4a2dfed7985b021082f9",
+          "extract": {
+            "type": "json_path",
+            "path": [
+              "planes",
+              "session",
+              "backends",
+              "agent_memory",
+              "aggregate",
+              "headline",
+              "recall_all@5"
+            ]
+          },
+          "expected_score": 0.837209
+        },
+        {
+          "system": "lexical_overlap",
+          "label": "Lexical baseline",
+          "role": "baseline",
+          "status": "candidate",
+          "source_commit": "05f5a38782a3341eea1c5e731f014f82c3d3e960",
+          "artifact": "reports/benchmarks/runs/controls/subset50/controls-50.json.gz",
+          "artifact_sha256": "673236d9229211f8f9b9570a5fde6e26ef81e6128bfb4a2dfed7985b021082f9",
+          "extract": {
+            "type": "json_path",
+            "path": [
+              "planes",
+              "session",
+              "backends",
+              "lexical_overlap",
+              "aggregate",
+              "headline",
+              "recall_all@5"
+            ]
+          },
+          "expected_score": 0.813953
+        }
+      ]
+    },
+    {
+      "id": "candidate:longmemeval-s:subset50:turn",
+      "title": "LongMemEval-S · 50 fixed questions · turn retrieval",
+      "family": "longmemeval-s-retrieval",
+      "evidence_status": "candidate",
+      "cohort": {
+        "sample_count": 50,
+        "scored_count": 43,
+        "excluded_count": 7,
+        "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+        "selection_id": "sha256(seed || NUL || question_id) ascending|size=50|ids_sha256=5266568e2e883b64e92e0da632d5e24c3fd61d8a447de7e629ebf93ef26a7339"
+      },
+      "evaluator_revision": "git-blob:6b9c237380f1d527e564161c2dac7fe32ada0ef9",
+      "protocol": "retrieval-only; same frozen cohort and evaluator",
+      "metric": "recall_all@10",
+      "method_note": "43/50 questions scored, 3 abstention and 4 no-user-target excluded. Candidate same-harness retrieval results; no answer generation. Hindsight local ONNX no LLM; Mem0 explicit; Agent Memory query-only.",
+      "rows": [
+        {
+          "system": "hindsight",
+          "label": "Hindsight 0.10.2 · local chunks/ONNX",
+          "role": "comparator",
+          "status": "candidate",
+          "source_commit": "05f5a38782a3341eea1c5e731f014f82c3d3e960",
+          "artifact": "reports/benchmarks/runs/640-hindsight/subset50/hindsight-50.json",
+          "artifact_sha256": "40d1ec0f08c3da97263408856eb7299ca9585487832236aa2019e259e3201345",
+          "extract": {
+            "type": "json_path",
+            "path": [
+              "planes",
+              "turn",
+              "backends",
+              "hindsight_chunks_onnx",
+              "aggregate",
+              "headline",
+              "recall_all@10"
+            ]
+          },
+          "expected_score": 0.837209
+        },
+        {
+          "system": "mem0",
+          "label": "Mem0 OSS 2.2.1 · explicit",
+          "role": "comparator",
+          "status": "candidate",
+          "source_commit": "05f5a38782a3341eea1c5e731f014f82c3d3e960",
+          "artifact": "reports/benchmarks/runs/mem0/subset50/mem0-50.json.gz",
+          "artifact_sha256": "2228053ff7355464a893b938e43c1a02eb7c49806862e6133b8ca403ad6bc44f",
+          "extract": {
+            "type": "json_path",
+            "path": [
+              "planes",
+              "turn",
+              "backends",
+              "mem0_explicit",
+              "aggregate",
+              "headline",
+              "recall_all@10"
+            ]
+          },
+          "expected_score": 0.651163
+        },
+        {
+          "system": "agent_memory",
+          "label": "Agent Memory · frozen control",
+          "role": "control",
+          "status": "candidate",
+          "source_commit": "05f5a38782a3341eea1c5e731f014f82c3d3e960",
+          "artifact": "reports/benchmarks/runs/controls/subset50/controls-50.json.gz",
+          "artifact_sha256": "673236d9229211f8f9b9570a5fde6e26ef81e6128bfb4a2dfed7985b021082f9",
+          "extract": {
+            "type": "json_path",
+            "path": [
+              "planes",
+              "turn",
+              "backends",
+              "agent_memory",
+              "aggregate",
+              "headline",
+              "recall_all@10"
+            ]
+          },
+          "expected_score": 0.72093
+        },
+        {
+          "system": "lexical_overlap",
+          "label": "Lexical baseline",
+          "role": "baseline",
+          "status": "candidate",
+          "source_commit": "05f5a38782a3341eea1c5e731f014f82c3d3e960",
+          "artifact": "reports/benchmarks/runs/controls/subset50/controls-50.json.gz",
+          "artifact_sha256": "673236d9229211f8f9b9570a5fde6e26ef81e6128bfb4a2dfed7985b021082f9",
+          "extract": {
+            "type": "json_path",
+            "path": [
+              "planes",
+              "turn",
+              "backends",
+              "lexical_overlap",
+              "aggregate",
+              "headline",
+              "recall_all@10"
+            ]
+          },
+          "expected_score": 0.604651
+        }
+      ]
+    },
+    {
+      "id": "candidate:amb:precisionmembench:77:strict",
+      "title": "AMB PrecisionMemBench · 77 cases · strict retrieval success",
+      "family": "precisionmembench",
+      "evidence_status": "reviewed_self_run_unofficial",
+      "cohort": {
+        "sample_count": 77,
+        "scored_count": 77,
+        "excluded_count": 0,
+        "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+        "selection_id": "full upstream precisionmembench single-turn split"
+      },
+      "evaluator_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+      "protocol": "native upstream evaluator; retrieval-only, no LLM; query-only Agent Memory and native BM25",
+      "metric": "strict_case_success",
+      "method_note": "Same native AMB evaluator/77-case split. Hindsight author-published 66/77 uses structured filters and ingestion LLM and is not a controlled comparator. Independently reviewed self-run, not official upstream placement.",
+      "rows": [
+        {
+          "system": "agent_memory",
+          "label": "Agent Memory",
+          "role": "control",
+          "status": "reviewed_self_run_unofficial",
+          "source_commit": "1df28f84c236f5369b004465252610bd88ae07c9",
+          "artifact": "reports/benchmarks/amb-local-execution/2026-10-15-precisionmembench-single-turn/case-outcomes-agent-memory.csv",
+          "artifact_sha256": "ec4bf1af6727e280209adc82408e1a244c2f0e106a779dae6e643aadff98328d",
+          "extract": {
+            "type": "csv_correct_fraction",
+            "column": "correct",
+            "pass_value": "True"
+          },
+          "expected_score": 0.19480519480519481
+        },
+        {
+          "system": "bm25",
+          "label": "BM25 · same native harness",
+          "role": "baseline",
+          "status": "reviewed_self_run_unofficial",
+          "source_commit": "1df28f84c236f5369b004465252610bd88ae07c9",
+          "artifact": "reports/benchmarks/amb-local-execution/2026-10-15-precisionmembench-single-turn/case-outcomes-bm25.csv",
+          "artifact_sha256": "4b8e852fa00b0047adff7a740921a4cdbf9b755205dc186486fd7db63d5555ee",
+          "extract": {
+            "type": "csv_correct_fraction",
+            "column": "correct",
+            "pass_value": "True"
+          },
+          "expected_score": 0.1038961038961039
+        }
+      ]
+    }
+  ]
+}
