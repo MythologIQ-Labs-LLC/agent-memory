@@ -90,6 +90,39 @@ packages produced at that revision. None of that is done here.
 | formal runtime qualification | **not reached** | needs the owner's register pointer to this declaration (or its amended-v7 alternative), the `-v8` lanes frozen and executed, a committed `-v8` Gauntlet contestant at the published revision, and the replay inventory decision in the META_LEDGER |
 | publication / activation | **not done, not requested** | the register, the frozen v7 declaration and the v7 lanes are untouched; nothing here activates v8 |
 
+## Proposed register mutation (prepared, NOT applied; the owner's explicit decision)
+
+The smallest change that turns the freeze gate from FAIL into TRANSITION is one field of
+`reports/runtime/baseline-register.json`, pointing at this declaration exactly as the demo register
+does. It must be applied at the integration candidate's protected tree (`ef8b6cb2`'s blobs, which
+`21570eac` carries unchanged):
+
+```json
+"declared_successor": {
+  "baseline_id": "agent-memory-runtime-baseline-v8",
+  "declaration": "reports/runtime/proposals/786-cumulative-v6-to-v8.PROPOSED.json"
+}
+```
+
+(replacing the current v7 pointer `{"baseline_id": "agent-memory-runtime-baseline-v7", "declaration":
+"reports/runtime/baseline-v7-declaration.json"}`). The v7 declaration file itself is not edited;
+its open declaration is superseded by the cumulative v6 → v8 route the owner prefers. After the
+pointer: `python3 scripts/check_runtime_baseline_equivalence.py --candidate HEAD` prints
+`TRANSITION` (`--pinned-only` stays exit 1 until publication), and the same four freeze guards
+need the `-v8` evidence below.
+
+## Remaining qualification steps (executable, none of them manufactures accepted evidence)
+
+| step | command / artefact | who | state |
+|---|---|---|---|
+| 1. register pointer | the JSON above, committed by the owner | owner | not done |
+| 2. `-v8` Gauntlet contestant at the published revision | `examples/gauntlet/agent_memory_runtime_baseline_v8_stdio.py` + `agent-memory-runtime-baseline-v8.json` (the v7 files with `FROZEN_RUNTIME_REVISION` = the published commit, `PUBLIC_CONTRACT_VERSION = "1.8.0"`), then `PYTHONPATH=reference python3 -m agentmem_ref.console gauntlet run --system examples/gauntlet/agent-memory-runtime-baseline-v8.json --profile gauntlet-orchestration-retrieval-probe-v1 --output-dir reports/validation/644-v8-gauntlet --allow-external-process --allow-destructive-reset --json`; `test_644_v7_gauntlet_identity` turns green only when the contestant pins the served revision | runtime track, after the owner names the published revision | scratch runs complete 3/3 at `1d0d4c75`, `ecbcbf33`; the committed contestant cannot exist before the revision is fixed |
+| 3. `-v8` replay evidence packages | `python3 reference/run_644_v7_replays.py --all --output-dir reports/validation/644-v8-replays` and `python3 reference/run_786_security_replays_dsl2.py --all` (default output `reports/validation/786-security-replays-v3/`, already executed at `842e5734`), then both verifiers `--reexecute`; the two `test_770…ReplayEvidenceFreshness` guards turn green when the packages are recorded at the pinned revision | runtime track, at the pinned revision | v7 replays VERIFIED at `ecbcbf33`; `-v3` security replays VERIFIED at `842e5734`; both re-run at the published revision |
+| 4. replay inventory ledger decision | `python3 scripts/check_644_v7_replay_inventory.py --evidence-root <root>` exits 2 until an independent reviewer records the acceptance decision in `docs/META_LEDGER.md` | independent reviewer (#787 track) | BLOCKED by design |
+| 5. `-v8` lanes frozen and executed | `reports/runtime/proposals/lanes/*-v8.DRAFT.json` → `reference/agentmem_ref/evaluation/lanes/*-v8.json` with `status: frozen`, `frozen_on`, the declaration blob; then the same-harness runs under the lane's own harness revisions (no paid inference; retrieval-only lanes) | evidence governance (#787 track) | DRAFT only; no benchmark run initiated |
+| 6. security acceptance | the owner's read of `reports/validation/805-at-head/independent-replay-review-v3-preexecution.md` (with addendum), the `-v3` evidence README, `f-r3-2-disposition.md` and `filesystem-trust-assessment.md`; a decision on F-R3-2 (recommended: unreadable references are unknown, a protected change that would regenerate `contract.py`-class blobs and re-run steps 2-3) | owner | HOLD |
+| 7. publication | `reports/runtime/baseline-v8.json`, its source boundary and the register entry, rendered by `scripts/render_runtime_baseline.py`; only after 1-6 | owner | not requested |
+
 ## Blockers (each assigned)
 
 1. Owner: register pointer (route preferred: cumulative v8; contract `1.8.0` and the `security_replay` kind are decided and applied), the F-R3-2 disposition, and lifting the PR #805 HOLD once the review record below is read.
