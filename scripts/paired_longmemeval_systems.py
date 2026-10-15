@@ -5,7 +5,10 @@ Each ``--system LABEL=PATH[:BACKEND]`` is a one-shot ``run_longmemeval.py`` outp
 ``.json.gz``; BACKEND required) or a resumable ``<plane>.<backend>.rows.jsonl``. Only questions
 scored by every system are compared, so every mean is over the same question set. Paired counts
 are against ``--reference`` (the first system by default): a "win" is a question the system
-retrieves fully (``recall_all@k == 1``) where the reference does not, a "loss" the reverse.
+retrieves fully (``recall_all@k == 1``) where the reference does not, a "loss" the reverse, and a
+"tie" any other question. Each pair also reports the exact McNemar p-value on those wins/losses,
+the mean per-question delta of ``recall_all@k`` and its paired percentile bootstrap 95% interval
+(10,000 resamples, seed fixed by plane, system and metric, so reruns are identical).
 
 Output is aggregate only: means, per-type means, paired counts, and question ids. It prints no
 gold label, answer, or corpus text. Exits 2 if any system has a runtime error or a question
@@ -16,12 +19,31 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
+import random
 import sys
 from collections import defaultdict
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from compare_longmemeval_rows import load_rows  # noqa: E402
+
+
+def mcnemar_exact(b: int, c: int) -> float:
+    """Two-sided exact McNemar (binomial) p-value for b vs c discordant pairs."""
+    n = b + c
+    if n == 0:
+        return 1.0
+    tail = sum(math.comb(n, i) for i in range(min(b, c) + 1)) / 2 ** n
+    return min(1.0, 2 * tail)
+
+
+def bootstrap_ci(deltas: list[float], seed: str, resamples: int = 10000) -> list[float]:
+    """Paired percentile bootstrap 95% CI of the mean per-question delta (fixed seed)."""
+    rng = random.Random(seed)
+    n = len(deltas)
+    means = sorted(sum(deltas[rng.randrange(n)] for _ in range(n)) / n for _ in range(resamples))
+    return [round(means[int(0.025 * resamples)], 6), round(means[int(0.975 * resamples) - 1], 6)]
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -67,7 +89,13 @@ def main(argv: list[str] | None = None) -> int:
             if label != reference:
                 wins = [q for q in scored if value(label, q, metric) == 1 > value(reference, q, metric)]
                 losses = [q for q in scored if value(reference, q, metric) == 1 > value(label, q, metric)]
-                entry[f"{metric}_paired_vs_{reference}"] = {"wins": len(wins), "losses": len(losses)}
+                deltas = [value(label, q, metric) - value(reference, q, metric) for q in scored]
+                entry[f"{metric}_paired_vs_{reference}"] = {
+                    "wins": len(wins), "losses": len(losses), "ties": len(scored) - len(wins) - len(losses),
+                    "mcnemar_exact_p_full_recall": round(mcnemar_exact(len(wins), len(losses)), 8),
+                    "mean_delta": round(sum(deltas) / len(deltas), 6),
+                    "mean_delta_bootstrap95": bootstrap_ci(deltas, f"{args.plane}:{label}:{metric}"),
+                    "better_questions": sum(d > 0 for d in deltas), "worse_questions": sum(d < 0 for d in deltas)}
         report["systems"][label] = entry
     k = ks[0]
     metric = f"recall_all@{k}"
