@@ -1,0 +1,9 @@
+{"id": "hindsight", "revision": "0.10.2@5fc4ce20917b916240cef27c212c387a177f115b",
+ "adapter_id": "reference/amb_hindsight_bridge.py", "adapter_revision": "0.1.0-candidate",
+ "configuration": {"provider_key": "hindsight-chunks-local", "bank": {"retain_extraction_mode": "chunks", "enable_observations": false, "enable_text_search": true, "enable_temporal_retrieval": false, "enable_graph_retrieval": false, "enable_reranking": false},
+   "llm_provider": "none", "reranker_provider": "rrf", "recall": {"max_tokens": 65536, "budget": "mid", "top_k": "AMB per-case retrieval_limit"}, "isolation": "bank per AMB user", "process": "pinned interpreter behind reference/hindsight_amb_worker.py; separate pg0 home"},
+ "calls": [{"purpose": "embedding", "provider": "onnxruntime (Hindsight onnx embeddings provider)", "model_id": "intfloat/multilingual-e5-small", "model_revision": "03415a4be176a1620747c692ed433219fabc3def",
+   "model_digest": "ca456c06b3a9505ddfd9131408916dd79290368331e7d76bb621f1cba6bc8665", "endpoint_class": "local", "parameters": {"dimensions": 384}, "prompt_sha256": null, "count": 1}],
+ "network_access": "restricted", "context_budget_tokens": 65536,
+ "notes": ["AMB CLI process environment: ../../812-graphiti/graphiti-amb-venv-freeze.txt; product environment: ../subset50/hindsight-venv-freeze.txt.", "Embedding call count is a placeholder of 1.", "Shared 4-vCPU host; timings indicative."],
+ "limitations": ["Measures Hindsight's no-LLM chunk retrieval, not its LLM fact-extraction product mode; not comparable to Hindsight's published 66/77 (LLM ingestion + retrieval_filter).", "Retrieval order varies across fresh banks (27/77 cases) with identical scored outcomes.", "Candidate: requires independent review."]}

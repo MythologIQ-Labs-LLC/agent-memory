@@ -1,0 +1,9 @@
+{"id": "mempalace", "revision": "3.11.0@602d796c699cabba2971982cd9dccbbf46abfe79",
+ "adapter_id": "reference/amb_mempalace_bridge.py", "adapter_revision": "0.1.0-candidate",
+ "configuration": {"provider_key": "mempalace-local", "path": "own MCP stdio server", "add": "mempalace_add_drawer(wing=amb, room=history, verbatim content, opaque source_file)",
+   "search": "mempalace_search(query, limit=k)", "isolation": "palace per AMB user", "embedder": "chroma ONNX all-MiniLM-L6-v2 (pinned)", "rerank": "product default 0.6 vector + 0.4 BM25", "llm": "none"},
+ "calls": [{"purpose": "embedding", "provider": "onnxruntime (chromadb default embedding function)", "model_id": "sentence-transformers/all-MiniLM-L6-v2 (chroma ONNX export)", "model_revision": null,
+   "model_digest": "913d7300ceae3b2dbc2c50d1de4baacab4be7b9380491c27fab7418616a16ec3", "endpoint_class": "local", "parameters": {"dimensions": 384}, "prompt_sha256": null, "count": 1}],
+ "network_access": "restricted", "context_budget_tokens": null,
+ "notes": ["AMB CLI process environment: ../../812-graphiti/graphiti-amb-venv-freeze.txt (AMB lock unchanged); product environment: ../mempalace-venv-freeze.txt.", "Embedding call count is a placeholder of 1: per-drawer embedding calls were not instrumented.", "Shared 4-vCPU host; timings indicative."],
+ "limitations": ["Candidate: requires independent adapter/protocol review before acceptance.", "Protocol A (no retrieval_filter); timestamps not supplied (MemPalace drawers take none)."]}
