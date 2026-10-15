@@ -1,5 +1,0 @@
-src/agentmem_ref/
-dist/
-.dev.vars
-.env
-*.local.json

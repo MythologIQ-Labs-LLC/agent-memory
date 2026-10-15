@@ -1,0 +1,1294 @@
+{
+  "schema_version": 1,
+  "kind": "static_read_only_benchmark_projection",
+  "source": {
+    "repository": "https://github.com/MythologIQ-Labs-LLC/agent-memory",
+    "head": "38f6a7dcc358e8ee50a38d703b0addb9d8e660d7",
+    "dashboard_path": "reports/benchmarks/dashboard/current.json",
+    "dashboard_blob": "2acc39d36b3b637a08289aa757919f55da04c54c",
+    "dashboard_as_of": "2026-10-07",
+    "authority_effect": "none"
+  },
+  "safety": {
+    "same_harness": "Comparisons only within one accepted frozen lane, plane and native metric.",
+    "published_reference": "Vendor/research figures are not same-harness results.",
+    "not_run": "Not run is not zero.",
+    "runtime_qualification": "Benchmark scores are not production readiness, truth or authority.",
+    "no_universal_score": true
+  },
+  "profiles": [
+    {
+      "profile_id": "amb-precisionmembench-retrieval-v1",
+      "lane_id": "amb-precisionmembench-retrieval-v1",
+      "plane": "single-turn",
+      "accepted_on": "2026-10-05",
+      "benchmark_file": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v1.json",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "harness_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+      "llm_calls": false,
+      "method_note": "active_passes/43 is the only number comparable to upstream's Active passes column; total passes include structural and trivially-empty cases a provider returning nothing can satisfy; BM25 is a baseline and Agent Memory the control, never a market claim",
+      "metrics": [
+        {
+          "metric": "mean_precision",
+          "direction": "higher",
+          "metric_unit": "fraction",
+          "best_score": 0.18,
+          "best_system": "agent-memory",
+          "agent_memory_score": 0.18,
+          "gap_to_best": 0,
+          "rows": [
+            {
+              "system": "agent-memory",
+              "role": "control",
+              "score": 0.18,
+              "revision": "703be5ba1c7e558edb16ac38508508e5ef592595",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/amb/amb-precisionmembench-retrieval-v1/agent-memory-703be5ba1c7e/evidence.json",
+              "sample_count": null,
+              "workflow_run_id": "37349431401"
+            },
+            {
+              "system": "bm25",
+              "role": "baseline",
+              "score": 0.05,
+              "revision": "03c1d0f1d27da63034f0931121c858faba512383",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/amb/amb-precisionmembench-retrieval-v1/bm25-703be5ba1c7e/evidence.json",
+              "sample_count": null,
+              "workflow_run_id": "37349435243"
+            },
+            {
+              "system": "mem0-explicit",
+              "role": "comparator",
+              "score": 0.1,
+              "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/amb/amb-precisionmembench-retrieval-v1/mem0-explicit-b38d91631169/evidence.json",
+              "sample_count": null,
+              "workflow_run_id": "37351804149"
+            }
+          ]
+        },
+        {
+          "metric": "mean_recall",
+          "direction": "higher",
+          "metric_unit": "fraction",
+          "best_score": 1,
+          "best_system": "mem0-explicit",
+          "agent_memory_score": 0.95,
+          "gap_to_best": 0.05,
+          "rows": [
+            {
+              "system": "agent-memory",
+              "role": "control",
+              "score": 0.95,
+              "revision": "703be5ba1c7e558edb16ac38508508e5ef592595",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/amb/amb-precisionmembench-retrieval-v1/agent-memory-703be5ba1c7e/evidence.json",
+              "sample_count": null,
+              "workflow_run_id": "37349431401"
+            },
+            {
+              "system": "bm25",
+              "role": "baseline",
+              "score": 0.97,
+              "revision": "03c1d0f1d27da63034f0931121c858faba512383",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/amb/amb-precisionmembench-retrieval-v1/bm25-703be5ba1c7e/evidence.json",
+              "sample_count": null,
+              "workflow_run_id": "37349435243"
+            },
+            {
+              "system": "mem0-explicit",
+              "role": "comparator",
+              "score": 1,
+              "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/amb/amb-precisionmembench-retrieval-v1/mem0-explicit-b38d91631169/evidence.json",
+              "sample_count": null,
+              "workflow_run_id": "37351804149"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profile_id": "longmemeval-s-retrieval-parity-v1:session",
+      "lane_id": "longmemeval-s-retrieval-parity-v1",
+      "plane": "session",
+      "accepted_on": "2026-10-06",
+      "benchmark_file": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v1.json",
+      "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+      "harness_revision": "9e0b455f4ef0e2ab8f2e582289761153549043fc",
+      "llm_calls": false,
+      "method_note": "recall_all@k and ndcg_any@k over the 419 scored questions (upstream abstention and no-user-target exclusions applied); rows compare only within one plane; the Agent Memory control reproduces the accepted longitudinal LongMemEval_S numbers exactly at this revision; lexical_overlap is a profile-local baseline and Agent Memory the control, never a market claim",
+      "metrics": [
+        {
+          "metric": "recall_all@5",
+          "direction": "higher",
+          "metric_unit": "fraction",
+          "best_score": 0.823389,
+          "best_system": "agent_memory",
+          "agent_memory_score": 0.823389,
+          "gap_to_best": 0,
+          "rows": [
+            {
+              "system": "agent_memory",
+              "role": "control",
+              "score": 0.823389,
+              "revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/agent_memory-session-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421243051"
+            },
+            {
+              "system": "lexical_overlap",
+              "role": "baseline",
+              "score": 0.73031,
+              "revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/lexical_overlap-session-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421248307"
+            },
+            {
+              "system": "mem0_explicit",
+              "role": "comparator",
+              "score": 0.809069,
+              "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/mem0_explicit-session-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421253480"
+            }
+          ]
+        },
+        {
+          "metric": "recall_all@10",
+          "direction": "higher",
+          "metric_unit": "fraction",
+          "best_score": 0.892601,
+          "best_system": "agent_memory",
+          "agent_memory_score": 0.892601,
+          "gap_to_best": 0,
+          "rows": [
+            {
+              "system": "agent_memory",
+              "role": "control",
+              "score": 0.892601,
+              "revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/agent_memory-session-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421243051"
+            },
+            {
+              "system": "lexical_overlap",
+              "role": "baseline",
+              "score": 0.825776,
+              "revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/lexical_overlap-session-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421248307"
+            },
+            {
+              "system": "mem0_explicit",
+              "role": "comparator",
+              "score": 0.883055,
+              "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/mem0_explicit-session-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421253480"
+            }
+          ]
+        },
+        {
+          "metric": "ndcg_any@5",
+          "direction": "higher",
+          "metric_unit": "fraction",
+          "best_score": 0.863142,
+          "best_system": "agent_memory",
+          "agent_memory_score": 0.863142,
+          "gap_to_best": 0,
+          "rows": [
+            {
+              "system": "agent_memory",
+              "role": "control",
+              "score": 0.863142,
+              "revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/agent_memory-session-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421243051"
+            },
+            {
+              "system": "lexical_overlap",
+              "role": "baseline",
+              "score": 0.767471,
+              "revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/lexical_overlap-session-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421248307"
+            },
+            {
+              "system": "mem0_explicit",
+              "role": "comparator",
+              "score": 0.825047,
+              "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/mem0_explicit-session-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421253480"
+            }
+          ]
+        },
+        {
+          "metric": "ndcg_any@10",
+          "direction": "higher",
+          "metric_unit": "fraction",
+          "best_score": 0.878274,
+          "best_system": "agent_memory",
+          "agent_memory_score": 0.878274,
+          "gap_to_best": 0,
+          "rows": [
+            {
+              "system": "agent_memory",
+              "role": "control",
+              "score": 0.878274,
+              "revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/agent_memory-session-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421243051"
+            },
+            {
+              "system": "lexical_overlap",
+              "role": "baseline",
+              "score": 0.792944,
+              "revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/lexical_overlap-session-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421248307"
+            },
+            {
+              "system": "mem0_explicit",
+              "role": "comparator",
+              "score": 0.841054,
+              "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/mem0_explicit-session-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421253480"
+            }
+          ]
+        },
+        {
+          "metric": "knowledge_update_recall_all@5",
+          "direction": "higher",
+          "metric_unit": "fraction",
+          "best_score": 0.972222,
+          "best_system": "agent_memory",
+          "agent_memory_score": 0.972222,
+          "gap_to_best": 0,
+          "rows": [
+            {
+              "system": "agent_memory",
+              "role": "control",
+              "score": 0.972222,
+              "revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/agent_memory-session-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421243051"
+            },
+            {
+              "system": "lexical_overlap",
+              "role": "baseline",
+              "score": 0.916667,
+              "revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/lexical_overlap-session-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421248307"
+            },
+            {
+              "system": "mem0_explicit",
+              "role": "comparator",
+              "score": 0.902778,
+              "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/mem0_explicit-session-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421253480"
+            }
+          ]
+        },
+        {
+          "metric": "latest_gold_ranked_first",
+          "direction": "higher",
+          "metric_unit": "fraction",
+          "best_score": 0.457143,
+          "best_system": "agent_memory",
+          "agent_memory_score": 0.457143,
+          "gap_to_best": 0,
+          "rows": [
+            {
+              "system": "agent_memory",
+              "role": "control",
+              "score": 0.457143,
+              "revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/agent_memory-session-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421243051"
+            },
+            {
+              "system": "lexical_overlap",
+              "role": "baseline",
+              "score": 0.457143,
+              "revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/lexical_overlap-session-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421248307"
+            },
+            {
+              "system": "mem0_explicit",
+              "role": "comparator",
+              "score": 0.442857,
+              "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/mem0_explicit-session-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421253480"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profile_id": "longmemeval-s-retrieval-parity-v1:turn",
+      "lane_id": "longmemeval-s-retrieval-parity-v1",
+      "plane": "turn",
+      "accepted_on": "2026-10-06",
+      "benchmark_file": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v1.json",
+      "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+      "harness_revision": "9e0b455f4ef0e2ab8f2e582289761153549043fc",
+      "llm_calls": false,
+      "method_note": "recall_all@k and ndcg_any@k over the 419 scored questions (upstream abstention and no-user-target exclusions applied); rows compare only within one plane; the Agent Memory control reproduces the accepted longitudinal LongMemEval_S numbers exactly at this revision; lexical_overlap is a profile-local baseline and Agent Memory the control, never a market claim",
+      "metrics": [
+        {
+          "metric": "recall_all@5",
+          "direction": "higher",
+          "metric_unit": "fraction",
+          "best_score": 0.601432,
+          "best_system": "agent_memory",
+          "agent_memory_score": 0.601432,
+          "gap_to_best": 0,
+          "rows": [
+            {
+              "system": "agent_memory",
+              "role": "control",
+              "score": 0.601432,
+              "revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/agent_memory-turn-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421245382"
+            },
+            {
+              "system": "lexical_overlap",
+              "role": "baseline",
+              "score": 0.486874,
+              "revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/lexical_overlap-turn-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421251326"
+            },
+            {
+              "system": "mem0_explicit",
+              "role": "comparator",
+              "score": 0.498807,
+              "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/mem0_explicit-turn-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421255904"
+            }
+          ]
+        },
+        {
+          "metric": "recall_all@10",
+          "direction": "higher",
+          "metric_unit": "fraction",
+          "best_score": 0.72315,
+          "best_system": "agent_memory",
+          "agent_memory_score": 0.72315,
+          "gap_to_best": 0,
+          "rows": [
+            {
+              "system": "agent_memory",
+              "role": "control",
+              "score": 0.72315,
+              "revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/agent_memory-turn-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421245382"
+            },
+            {
+              "system": "lexical_overlap",
+              "role": "baseline",
+              "score": 0.587112,
+              "revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/lexical_overlap-turn-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421251326"
+            },
+            {
+              "system": "mem0_explicit",
+              "role": "comparator",
+              "score": 0.673031,
+              "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/mem0_explicit-turn-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421255904"
+            }
+          ]
+        },
+        {
+          "metric": "ndcg_any@5",
+          "direction": "higher",
+          "metric_unit": "fraction",
+          "best_score": 0.648611,
+          "best_system": "agent_memory",
+          "agent_memory_score": 0.648611,
+          "gap_to_best": 0,
+          "rows": [
+            {
+              "system": "agent_memory",
+              "role": "control",
+              "score": 0.648611,
+              "revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/agent_memory-turn-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421245382"
+            },
+            {
+              "system": "lexical_overlap",
+              "role": "baseline",
+              "score": 0.527168,
+              "revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/lexical_overlap-turn-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421251326"
+            },
+            {
+              "system": "mem0_explicit",
+              "role": "comparator",
+              "score": 0.547177,
+              "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/mem0_explicit-turn-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421255904"
+            }
+          ]
+        },
+        {
+          "metric": "ndcg_any@10",
+          "direction": "higher",
+          "metric_unit": "fraction",
+          "best_score": 0.68156,
+          "best_system": "agent_memory",
+          "agent_memory_score": 0.68156,
+          "gap_to_best": 0,
+          "rows": [
+            {
+              "system": "agent_memory",
+              "role": "control",
+              "score": 0.68156,
+              "revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/agent_memory-turn-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421245382"
+            },
+            {
+              "system": "lexical_overlap",
+              "role": "baseline",
+              "score": 0.559738,
+              "revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/lexical_overlap-turn-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421251326"
+            },
+            {
+              "system": "mem0_explicit",
+              "role": "comparator",
+              "score": 0.596012,
+              "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/mem0_explicit-turn-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421255904"
+            }
+          ]
+        },
+        {
+          "metric": "knowledge_update_recall_all@5",
+          "direction": "higher",
+          "metric_unit": "fraction",
+          "best_score": 0.791667,
+          "best_system": "agent_memory",
+          "agent_memory_score": 0.791667,
+          "gap_to_best": 0,
+          "rows": [
+            {
+              "system": "agent_memory",
+              "role": "control",
+              "score": 0.791667,
+              "revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/agent_memory-turn-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421245382"
+            },
+            {
+              "system": "lexical_overlap",
+              "role": "baseline",
+              "score": 0.680556,
+              "revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/lexical_overlap-turn-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421251326"
+            },
+            {
+              "system": "mem0_explicit",
+              "role": "comparator",
+              "score": 0.611111,
+              "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/mem0_explicit-turn-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421255904"
+            }
+          ]
+        },
+        {
+          "metric": "latest_gold_ranked_first",
+          "direction": "higher",
+          "metric_unit": "fraction",
+          "best_score": 0.557143,
+          "best_system": "agent_memory",
+          "agent_memory_score": 0.557143,
+          "gap_to_best": 0,
+          "rows": [
+            {
+              "system": "agent_memory",
+              "role": "control",
+              "score": 0.557143,
+              "revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/agent_memory-turn-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421245382"
+            },
+            {
+              "system": "lexical_overlap",
+              "role": "baseline",
+              "score": 0.614286,
+              "revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/lexical_overlap-turn-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421251326"
+            },
+            {
+              "system": "mem0_explicit",
+              "role": "comparator",
+              "score": 0.485714,
+              "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/mem0_explicit-turn-0b0449a8aa2b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37421255904"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profile_id": "amb-precisionmembench-retrieval-v2",
+      "lane_id": "amb-precisionmembench-retrieval-v2",
+      "plane": "single-turn",
+      "accepted_on": "2026-10-06",
+      "benchmark_file": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v2.json",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "harness_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+      "llm_calls": false,
+      "method_note": "active_passes/43 is the only number comparable to upstream's Active passes column; total passes include structural and trivially-empty cases a provider returning nothing can satisfy; BM25 is a baseline and Agent Memory the control, never a market claim; the v2 control is reported against v1 with the return-shape change named as the only difference",
+      "metrics": [
+        {
+          "metric": "mean_precision",
+          "direction": "higher",
+          "metric_unit": "fraction",
+          "best_score": 0.1806,
+          "best_system": "agent-memory",
+          "agent_memory_score": 0.1806,
+          "gap_to_best": 0,
+          "rows": [
+            {
+              "system": "agent-memory",
+              "role": "control",
+              "score": 0.1806,
+              "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/amb/amb-precisionmembench-retrieval-v2/agent-memory-ca0f9a748b3b/evidence.json",
+              "sample_count": null,
+              "workflow_run_id": "37543540355"
+            },
+            {
+              "system": "bm25",
+              "role": "baseline",
+              "score": 0.0536,
+              "revision": "03c1d0f1d27da63034f0931121c858faba512383",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/amb/amb-precisionmembench-retrieval-v2/bm25-ca0f9a748b3b/evidence.json",
+              "sample_count": null,
+              "workflow_run_id": "37543543416"
+            },
+            {
+              "system": "mem0-explicit",
+              "role": "comparator",
+              "score": 0.1049,
+              "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/amb/amb-precisionmembench-retrieval-v2/mem0-explicit-ca0f9a748b3b/evidence.json",
+              "sample_count": null,
+              "workflow_run_id": "37543546255"
+            }
+          ]
+        },
+        {
+          "metric": "mean_recall",
+          "direction": "higher",
+          "metric_unit": "fraction",
+          "best_score": 1,
+          "best_system": "mem0-explicit",
+          "agent_memory_score": 0.9535,
+          "gap_to_best": 0.0465,
+          "rows": [
+            {
+              "system": "agent-memory",
+              "role": "control",
+              "score": 0.9535,
+              "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/amb/amb-precisionmembench-retrieval-v2/agent-memory-ca0f9a748b3b/evidence.json",
+              "sample_count": null,
+              "workflow_run_id": "37543540355"
+            },
+            {
+              "system": "bm25",
+              "role": "baseline",
+              "score": 0.9651,
+              "revision": "03c1d0f1d27da63034f0931121c858faba512383",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/amb/amb-precisionmembench-retrieval-v2/bm25-ca0f9a748b3b/evidence.json",
+              "sample_count": null,
+              "workflow_run_id": "37543543416"
+            },
+            {
+              "system": "mem0-explicit",
+              "role": "comparator",
+              "score": 1,
+              "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/amb/amb-precisionmembench-retrieval-v2/mem0-explicit-ca0f9a748b3b/evidence.json",
+              "sample_count": null,
+              "workflow_run_id": "37543546255"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profile_id": "longmemeval-s-retrieval-parity-v2:session",
+      "lane_id": "longmemeval-s-retrieval-parity-v2",
+      "plane": "session",
+      "accepted_on": "2026-10-06",
+      "benchmark_file": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v2.json",
+      "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+      "harness_revision": "9e0b455f4ef0e2ab8f2e582289761153549043fc",
+      "llm_calls": false,
+      "method_note": "session rows compare with session rows and turn rows with turn rows; recall_all@50 exists on the turn plane only; lexical_overlap is the profile's baseline and Agent Memory the control, never a market claim; the v2 control's scored metrics are reported against v1's",
+      "metrics": [
+        {
+          "metric": "recall_all@5",
+          "direction": "higher",
+          "metric_unit": "fraction",
+          "best_score": 0.823389,
+          "best_system": "agent_memory",
+          "agent_memory_score": 0.823389,
+          "gap_to_best": 0,
+          "rows": [
+            {
+              "system": "agent_memory",
+              "role": "control",
+              "score": 0.823389,
+              "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/agent_memory-session-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543549261"
+            },
+            {
+              "system": "lexical_overlap",
+              "role": "baseline",
+              "score": 0.73031,
+              "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/lexical_overlap-session-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543556285"
+            },
+            {
+              "system": "mem0_explicit",
+              "role": "comparator",
+              "score": 0.809069,
+              "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/mem0_explicit-session-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543562462"
+            }
+          ]
+        },
+        {
+          "metric": "recall_all@10",
+          "direction": "higher",
+          "metric_unit": "fraction",
+          "best_score": 0.892601,
+          "best_system": "agent_memory",
+          "agent_memory_score": 0.892601,
+          "gap_to_best": 0,
+          "rows": [
+            {
+              "system": "agent_memory",
+              "role": "control",
+              "score": 0.892601,
+              "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/agent_memory-session-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543549261"
+            },
+            {
+              "system": "lexical_overlap",
+              "role": "baseline",
+              "score": 0.825776,
+              "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/lexical_overlap-session-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543556285"
+            },
+            {
+              "system": "mem0_explicit",
+              "role": "comparator",
+              "score": 0.883055,
+              "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/mem0_explicit-session-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543562462"
+            }
+          ]
+        },
+        {
+          "metric": "ndcg_any@5",
+          "direction": "higher",
+          "metric_unit": "fraction",
+          "best_score": 0.863142,
+          "best_system": "agent_memory",
+          "agent_memory_score": 0.863142,
+          "gap_to_best": 0,
+          "rows": [
+            {
+              "system": "agent_memory",
+              "role": "control",
+              "score": 0.863142,
+              "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/agent_memory-session-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543549261"
+            },
+            {
+              "system": "lexical_overlap",
+              "role": "baseline",
+              "score": 0.767471,
+              "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/lexical_overlap-session-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543556285"
+            },
+            {
+              "system": "mem0_explicit",
+              "role": "comparator",
+              "score": 0.825047,
+              "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/mem0_explicit-session-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543562462"
+            }
+          ]
+        },
+        {
+          "metric": "ndcg_any@10",
+          "direction": "higher",
+          "metric_unit": "fraction",
+          "best_score": 0.878274,
+          "best_system": "agent_memory",
+          "agent_memory_score": 0.878274,
+          "gap_to_best": 0,
+          "rows": [
+            {
+              "system": "agent_memory",
+              "role": "control",
+              "score": 0.878274,
+              "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/agent_memory-session-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543549261"
+            },
+            {
+              "system": "lexical_overlap",
+              "role": "baseline",
+              "score": 0.792944,
+              "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/lexical_overlap-session-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543556285"
+            },
+            {
+              "system": "mem0_explicit",
+              "role": "comparator",
+              "score": 0.841054,
+              "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/mem0_explicit-session-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543562462"
+            }
+          ]
+        },
+        {
+          "metric": "knowledge_update_recall_all@5",
+          "direction": "higher",
+          "metric_unit": "fraction",
+          "best_score": 0.972222,
+          "best_system": "agent_memory",
+          "agent_memory_score": 0.972222,
+          "gap_to_best": 0,
+          "rows": [
+            {
+              "system": "agent_memory",
+              "role": "control",
+              "score": 0.972222,
+              "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/agent_memory-session-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543549261"
+            },
+            {
+              "system": "lexical_overlap",
+              "role": "baseline",
+              "score": 0.916667,
+              "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/lexical_overlap-session-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543556285"
+            },
+            {
+              "system": "mem0_explicit",
+              "role": "comparator",
+              "score": 0.902778,
+              "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/mem0_explicit-session-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543562462"
+            }
+          ]
+        },
+        {
+          "metric": "latest_gold_ranked_first",
+          "direction": "higher",
+          "metric_unit": "fraction",
+          "best_score": 0.457143,
+          "best_system": "agent_memory",
+          "agent_memory_score": 0.457143,
+          "gap_to_best": 0,
+          "rows": [
+            {
+              "system": "agent_memory",
+              "role": "control",
+              "score": 0.457143,
+              "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/agent_memory-session-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543549261"
+            },
+            {
+              "system": "lexical_overlap",
+              "role": "baseline",
+              "score": 0.457143,
+              "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/lexical_overlap-session-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543556285"
+            },
+            {
+              "system": "mem0_explicit",
+              "role": "comparator",
+              "score": 0.442857,
+              "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/mem0_explicit-session-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543562462"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profile_id": "longmemeval-s-retrieval-parity-v2:turn",
+      "lane_id": "longmemeval-s-retrieval-parity-v2",
+      "plane": "turn",
+      "accepted_on": "2026-10-06",
+      "benchmark_file": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v2.json",
+      "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+      "harness_revision": "9e0b455f4ef0e2ab8f2e582289761153549043fc",
+      "llm_calls": false,
+      "method_note": "session rows compare with session rows and turn rows with turn rows; recall_all@50 exists on the turn plane only; lexical_overlap is the profile's baseline and Agent Memory the control, never a market claim; the v2 control's scored metrics are reported against v1's",
+      "metrics": [
+        {
+          "metric": "recall_all@5",
+          "direction": "higher",
+          "metric_unit": "fraction",
+          "best_score": 0.601432,
+          "best_system": "agent_memory",
+          "agent_memory_score": 0.601432,
+          "gap_to_best": 0,
+          "rows": [
+            {
+              "system": "agent_memory",
+              "role": "control",
+              "score": 0.601432,
+              "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/agent_memory-turn-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543552664"
+            },
+            {
+              "system": "lexical_overlap",
+              "role": "baseline",
+              "score": 0.486874,
+              "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/lexical_overlap-turn-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543559580"
+            },
+            {
+              "system": "mem0_explicit",
+              "role": "comparator",
+              "score": 0.498807,
+              "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/mem0_explicit-turn-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543565695"
+            }
+          ]
+        },
+        {
+          "metric": "recall_all@10",
+          "direction": "higher",
+          "metric_unit": "fraction",
+          "best_score": 0.72315,
+          "best_system": "agent_memory",
+          "agent_memory_score": 0.72315,
+          "gap_to_best": 0,
+          "rows": [
+            {
+              "system": "agent_memory",
+              "role": "control",
+              "score": 0.72315,
+              "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/agent_memory-turn-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543552664"
+            },
+            {
+              "system": "lexical_overlap",
+              "role": "baseline",
+              "score": 0.587112,
+              "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/lexical_overlap-turn-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543559580"
+            },
+            {
+              "system": "mem0_explicit",
+              "role": "comparator",
+              "score": 0.673031,
+              "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/mem0_explicit-turn-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543565695"
+            }
+          ]
+        },
+        {
+          "metric": "ndcg_any@5",
+          "direction": "higher",
+          "metric_unit": "fraction",
+          "best_score": 0.648611,
+          "best_system": "agent_memory",
+          "agent_memory_score": 0.648611,
+          "gap_to_best": 0,
+          "rows": [
+            {
+              "system": "agent_memory",
+              "role": "control",
+              "score": 0.648611,
+              "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/agent_memory-turn-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543552664"
+            },
+            {
+              "system": "lexical_overlap",
+              "role": "baseline",
+              "score": 0.527168,
+              "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/lexical_overlap-turn-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543559580"
+            },
+            {
+              "system": "mem0_explicit",
+              "role": "comparator",
+              "score": 0.547177,
+              "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/mem0_explicit-turn-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543565695"
+            }
+          ]
+        },
+        {
+          "metric": "ndcg_any@10",
+          "direction": "higher",
+          "metric_unit": "fraction",
+          "best_score": 0.68156,
+          "best_system": "agent_memory",
+          "agent_memory_score": 0.68156,
+          "gap_to_best": 0,
+          "rows": [
+            {
+              "system": "agent_memory",
+              "role": "control",
+              "score": 0.68156,
+              "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/agent_memory-turn-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543552664"
+            },
+            {
+              "system": "lexical_overlap",
+              "role": "baseline",
+              "score": 0.559738,
+              "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/lexical_overlap-turn-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543559580"
+            },
+            {
+              "system": "mem0_explicit",
+              "role": "comparator",
+              "score": 0.596012,
+              "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/mem0_explicit-turn-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543565695"
+            }
+          ]
+        },
+        {
+          "metric": "knowledge_update_recall_all@5",
+          "direction": "higher",
+          "metric_unit": "fraction",
+          "best_score": 0.791667,
+          "best_system": "agent_memory",
+          "agent_memory_score": 0.791667,
+          "gap_to_best": 0,
+          "rows": [
+            {
+              "system": "agent_memory",
+              "role": "control",
+              "score": 0.791667,
+              "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/agent_memory-turn-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543552664"
+            },
+            {
+              "system": "lexical_overlap",
+              "role": "baseline",
+              "score": 0.680556,
+              "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/lexical_overlap-turn-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543559580"
+            },
+            {
+              "system": "mem0_explicit",
+              "role": "comparator",
+              "score": 0.611111,
+              "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/mem0_explicit-turn-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543565695"
+            }
+          ]
+        },
+        {
+          "metric": "latest_gold_ranked_first",
+          "direction": "higher",
+          "metric_unit": "fraction",
+          "best_score": 0.557143,
+          "best_system": "agent_memory",
+          "agent_memory_score": 0.557143,
+          "gap_to_best": 0,
+          "rows": [
+            {
+              "system": "agent_memory",
+              "role": "control",
+              "score": 0.557143,
+              "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/agent_memory-turn-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543552664"
+            },
+            {
+              "system": "lexical_overlap",
+              "role": "baseline",
+              "score": 0.614286,
+              "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/lexical_overlap-turn-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543559580"
+            },
+            {
+              "system": "mem0_explicit",
+              "role": "comparator",
+              "score": 0.485714,
+              "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/mem0_explicit-turn-ca0f9a748b3b/evidence.json",
+              "sample_count": 419,
+              "workflow_run_id": "37543565695"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "competitors": [
+    {
+      "id": "agent-memory",
+      "name": "Agent Memory",
+      "state": "measured",
+      "url": "https://github.com/MythologIQ-Labs-LLC/agent-memory"
+    },
+    {
+      "id": "mem0",
+      "name": "Mem0 OSS",
+      "state": "measured",
+      "url": "https://github.com/mem0ai/mem0"
+    },
+    {
+      "id": "tencentdb-agent-memory",
+      "name": "TencentDB Agent Memory",
+      "state": "not_run",
+      "url": "https://github.com/TencentCloud/TencentDB-Agent-Memory"
+    },
+    {
+      "id": "openviking",
+      "name": "OpenViking",
+      "state": "not_run",
+      "url": "https://github.com/volcengine/OpenViking"
+    },
+    {
+      "id": "langmem",
+      "name": "LangMem",
+      "state": "not_run",
+      "url": "https://github.com/langchain-ai/langmem"
+    },
+    {
+      "id": "supermemory",
+      "name": "Supermemory",
+      "state": "not_run",
+      "url": "https://github.com/supermemoryai/supermemory"
+    },
+    {
+      "id": "graphiti",
+      "name": "Graphiti / Zep",
+      "state": "not_run",
+      "url": "https://github.com/getzep/graphiti"
+    },
+    {
+      "id": "letta",
+      "name": "Letta",
+      "state": "not_run",
+      "url": "https://github.com/letta-ai/letta"
+    },
+    {
+      "id": "hindsight",
+      "name": "Hindsight",
+      "state": "published_reference",
+      "url": "https://github.com/vectorize-io/hindsight"
+    },
+    {
+      "id": "cognee",
+      "name": "Cognee",
+      "state": "not_run",
+      "url": "https://github.com/topoteretes/cognee"
+    }
+  ],
+  "published_reference": [
+    {
+      "system": "Hindsight v0.4.19",
+      "signals": {
+        "LongMemEval_accuracy": 0.946,
+        "LoCoMo_accuracy": 0.92
+      },
+      "methodology": "single-query end-to-end accuracy in the Hindsight Agent Memory Benchmark; open pluggable harness",
+      "comparability": "published_reference",
+      "source": "https://hindsight.vectorize.io/blog/2026/03/23/agent-memory-benchmark",
+      "comparison_state": "published_reference",
+      "eligible_for_numeric_delta": false
+    },
+    {
+      "system": "Mem0 managed platform",
+      "signals": {
+        "LongMemEval_accuracy": 0.944,
+        "LoCoMo_accuracy": 0.925,
+        "BEAM_1M_avg_score": 0.641
+      },
+      "methodology": "managed end-to-end pipeline; published retrieval budgets include top-200/top-50; not Agent Memory recall_all@k",
+      "comparability": "published_reference",
+      "source": "https://github.com/mem0ai/mem0/blob/main/docs/core-concepts/memory-evaluation.mdx",
+      "comparison_state": "published_reference",
+      "eligible_for_numeric_delta": false
+    },
+    {
+      "system": "Zep",
+      "signals": {
+        "LongMemEval_accuracy": 0.902,
+        "LoCoMo_accuracy": 0.947,
+        "LongMemEval_retrieval_p50_ms": 104,
+        "LongMemEval_retrieval_p95_ms": 162,
+        "LongMemEval_median_context_tokens": 4408
+      },
+      "methodology": "end-to-end accuracy with published retrieval latency/context size; reader/judge differs from Agent Memory profiles",
+      "comparability": "published_reference",
+      "source": "https://www.getzep.com/research/",
+      "comparison_state": "published_reference",
+      "eligible_for_numeric_delta": false
+    },
+    {
+      "system": "Supermemory",
+      "signals": {
+        "LongMemEval_S_Recall_at_20_with_aggregation": 0.97
+      },
+      "methodology": "retrieval Recall@20 with aggregation; not end-to-end QA and not Agent Memory recall_all@5/@10",
+      "comparability": "published_reference",
+      "source": "https://supermemory.ai/research/",
+      "comparison_state": "published_reference",
+      "eligible_for_numeric_delta": false
+    },
+    {
+      "system": "Cognee",
+      "signals": {
+        "BEAM_100K": 0.79,
+        "BEAM_10M": 0.67
+      },
+      "methodology": "BEAM long-horizon evaluation; different benchmark family",
+      "comparability": "published_reference",
+      "source": "https://www.cognee.ai/research-and-evaluation-results",
+      "comparison_state": "published_reference",
+      "eligible_for_numeric_delta": false
+    }
+  ],
+  "issues": {
+    "competitive": "https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/806",
+    "website": "https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/807"
+  }
+}
