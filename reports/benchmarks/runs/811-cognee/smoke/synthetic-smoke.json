@@ -1,0 +1,1078 @@
+{
+  "claim_boundary": {
+    "abstention_excluded_from_retrieval_recall_denominator": true,
+    "aggregate_memory_health_score": "not_defined",
+    "answer_generation_quality_measured": false,
+    "benchmark_score_is_authority": false
+  },
+  "comparability": {
+    "official_longmemeval_qa_score": "not_computed",
+    "reason": "upstream QA scoring uses a separate model-dependent answer evaluator; this profile measures retrieval/currentness only",
+    "retriever_note": "no_memory and lexical_overlap are profile-local baselines; upstream flat-bm25/dense retrievers are not reproduced here",
+    "status": "synthetic-smoke-only"
+  },
+  "execution": {
+    "agent_memory_configuration": {
+      "budget": "none",
+      "ranking_variant": "default",
+      "recall_control": "off",
+      "semantic_retrieval": "off",
+      "temporal_metadata": "none"
+    },
+    "agent_memory_package_version": "0.2.0",
+    "agent_memory_revision": "865f5dfc105ad6f5e578a0a0060d2cdeacb4c744",
+    "agent_memory_worktree_dirty": false,
+    "backends": [
+      "cognee_gliner_local"
+    ],
+    "external_backends": {
+      "cognee_gliner_local": {
+        "adapter_id": "reference/longmemeval_cognee_bridge.py",
+        "adapter_revision": "0.1.0-candidate",
+        "authority_effect": "none",
+        "backend": "cognee_gliner_local",
+        "boundary": "Cognee OSS public remember/recall, local GLiNER extraction + local embeddings, no LLM; retrieval only",
+        "configuration": {
+          "gold_access": "none",
+          "identity_mapping": "DataItem.data_id = uuid5(namespace, doc_id); ids never in text",
+          "isolation": "prune_data + prune_system(metadata=True) before every question",
+          "llm": "none (no key; LLM-dependent stages skip per upstream README)",
+          "package": "cognee[gliner]==1.6.4",
+          "qualification": "candidate until independent review",
+          "recall": {
+            "query_type": "default (auto_route)",
+            "top_k": 50
+          },
+          "remember": "product defaults (self_improvement default) per question dataset",
+          "repository": "https://github.com/topoteretes/cognee"
+        },
+        "system_id": "cognee",
+        "system_kind": "external_memory",
+        "system_revision": "1.6.4@f154b32a9e544dac73e7ddf2010327cf9988edcd"
+      }
+    },
+    "finished_at": "2026-10-15T05:03:04.177142+00:00",
+    "granularities": [
+      "session",
+      "turn"
+    ],
+    "implementation": "CPython",
+    "input_loading": {
+      "method": "streaming: incremental UTF-8 + json.JSONDecoder.raw_decode per top-level element (#568)",
+      "passes": [
+        {
+          "bytes_read": 6504,
+          "pass": "scan",
+          "sha256": "804b92abba52105f59b102d2500bb4f538ff11c565e25ea20415586196bba2e7"
+        },
+        {
+          "bytes_read": 6504,
+          "pass": "session/cognee_gliner_local",
+          "sha256": "804b92abba52105f59b102d2500bb4f538ff11c565e25ea20415586196bba2e7"
+        },
+        {
+          "bytes_read": 6504,
+          "pass": "turn/cognee_gliner_local",
+          "sha256": "804b92abba52105f59b102d2500bb4f538ff11c565e25ea20415586196bba2e7"
+        }
+      ],
+      "read_chunk_bytes": 1048576,
+      "resident_questions_max": 1,
+      "scan_seconds": 0.0
+    },
+    "platform": "Linux-6.18.44-fc-v114-x86_64-with-glibc2.39",
+    "python": "3.12.3",
+    "resource_consumption": {
+      "method": "getrusage(RUSAGE_SELF).ru_maxrss; the process high-water mark, not attributable to one backend",
+      "peak_rss_mb_after_input_scan": 343.2,
+      "peak_rss_mb_process": 3436.2
+    },
+    "started_at": "2026-10-15T04:50:22.732116+00:00",
+    "wall_seconds": 761.445
+  },
+  "input": {
+    "abstention_question_count": 0,
+    "corpus_class": "synthetic",
+    "duplicate_session_id_note": "upstream indexes each repeated haystack session as its own corpus item under the same id; this profile does the same (repeats must carry identical content)",
+    "duplicate_session_id_question_count": 0,
+    "no_user_target_question_count": 0,
+    "path_name": "synthetic.json",
+    "question_count": 3,
+    "selection": {
+      "method": "source-order prefix",
+      "question_ids_sha256": "07f1c66d994798ada6cda40da73dced3f8a8a5a1fbec6a1a71a386dbef540399",
+      "size": 3,
+      "source_question_count": 5
+    },
+    "sha256": "804b92abba52105f59b102d2500bb4f538ff11c565e25ea20415586196bba2e7",
+    "sha256_scope": "raw source bytes, every byte read in each streaming pass; all passes must agree",
+    "size_bytes": 6504,
+    "source_question_count": 5
+  },
+  "planes": {
+    "session": {
+      "backends": {
+        "cognee_gliner_local": {
+          "aggregate": {
+            "abstention_diagnostic": {
+              "mean_returned_count": 0.0,
+              "question_count": 0,
+              "returned_any_rate": 0.0,
+              "upstream_metric": false
+            },
+            "evaluated_question_count": 3,
+            "excluded_abstention_count": 0,
+            "excluded_no_user_target_count": 0,
+            "headline": {
+              "ndcg_any@10": 1.0,
+              "ndcg_any@5": 1.0,
+              "recall_all@10": 1.0,
+              "recall_all@5": 1.0
+            },
+            "metrics": {
+              "session": {
+                "ndcg_any@1": 1.0,
+                "ndcg_any@10": 1.0,
+                "ndcg_any@3": 1.0,
+                "ndcg_any@30": 1.0,
+                "ndcg_any@5": 1.0,
+                "ndcg_any@50": 1.0,
+                "recall_all@1": 0.333333,
+                "recall_all@10": 1.0,
+                "recall_all@3": 1.0,
+                "recall_all@30": 1.0,
+                "recall_all@5": 1.0,
+                "recall_all@50": 1.0,
+                "recall_any@1": 1.0,
+                "recall_any@10": 1.0,
+                "recall_any@3": 1.0,
+                "recall_any@30": 1.0,
+                "recall_any@5": 1.0,
+                "recall_any@50": 1.0
+              }
+            }
+          },
+          "authority_effect": "none",
+          "boundary": "Cognee OSS public remember/recall, local GLiNER extraction + local embeddings, no LLM; retrieval only",
+          "by_question_type": {
+            "knowledge-update": {
+              "abstention_diagnostic": {
+                "mean_returned_count": 0.0,
+                "question_count": 0,
+                "returned_any_rate": 0.0,
+                "upstream_metric": false
+              },
+              "evaluated_question_count": 1,
+              "excluded_abstention_count": 0,
+              "excluded_no_user_target_count": 0,
+              "headline": {
+                "ndcg_any@10": 1.0,
+                "ndcg_any@5": 1.0,
+                "recall_all@10": 1.0,
+                "recall_all@5": 1.0
+              },
+              "metrics": {
+                "session": {
+                  "ndcg_any@1": 1.0,
+                  "ndcg_any@10": 1.0,
+                  "ndcg_any@3": 1.0,
+                  "ndcg_any@30": 1.0,
+                  "ndcg_any@5": 1.0,
+                  "ndcg_any@50": 1.0,
+                  "recall_all@1": 0.0,
+                  "recall_all@10": 1.0,
+                  "recall_all@3": 1.0,
+                  "recall_all@30": 1.0,
+                  "recall_all@5": 1.0,
+                  "recall_all@50": 1.0,
+                  "recall_any@1": 1.0,
+                  "recall_any@10": 1.0,
+                  "recall_any@3": 1.0,
+                  "recall_any@30": 1.0,
+                  "recall_any@5": 1.0,
+                  "recall_any@50": 1.0
+                }
+              }
+            },
+            "multi-session": {
+              "abstention_diagnostic": {
+                "mean_returned_count": 0.0,
+                "question_count": 0,
+                "returned_any_rate": 0.0,
+                "upstream_metric": false
+              },
+              "evaluated_question_count": 1,
+              "excluded_abstention_count": 0,
+              "excluded_no_user_target_count": 0,
+              "headline": {
+                "ndcg_any@10": 1.0,
+                "ndcg_any@5": 1.0,
+                "recall_all@10": 1.0,
+                "recall_all@5": 1.0
+              },
+              "metrics": {
+                "session": {
+                  "ndcg_any@1": 1.0,
+                  "ndcg_any@10": 1.0,
+                  "ndcg_any@3": 1.0,
+                  "ndcg_any@30": 1.0,
+                  "ndcg_any@5": 1.0,
+                  "ndcg_any@50": 1.0,
+                  "recall_all@1": 0.0,
+                  "recall_all@10": 1.0,
+                  "recall_all@3": 1.0,
+                  "recall_all@30": 1.0,
+                  "recall_all@5": 1.0,
+                  "recall_all@50": 1.0,
+                  "recall_any@1": 1.0,
+                  "recall_any@10": 1.0,
+                  "recall_any@3": 1.0,
+                  "recall_any@30": 1.0,
+                  "recall_any@5": 1.0,
+                  "recall_any@50": 1.0
+                }
+              }
+            },
+            "single-session-user": {
+              "abstention_diagnostic": {
+                "mean_returned_count": 0.0,
+                "question_count": 0,
+                "returned_any_rate": 0.0,
+                "upstream_metric": false
+              },
+              "evaluated_question_count": 1,
+              "excluded_abstention_count": 0,
+              "excluded_no_user_target_count": 0,
+              "headline": {
+                "ndcg_any@10": 1.0,
+                "ndcg_any@5": 1.0,
+                "recall_all@10": 1.0,
+                "recall_all@5": 1.0
+              },
+              "metrics": {
+                "session": {
+                  "ndcg_any@1": 1.0,
+                  "ndcg_any@10": 1.0,
+                  "ndcg_any@3": 1.0,
+                  "ndcg_any@30": 1.0,
+                  "ndcg_any@5": 1.0,
+                  "ndcg_any@50": 1.0,
+                  "recall_all@1": 1.0,
+                  "recall_all@10": 1.0,
+                  "recall_all@3": 1.0,
+                  "recall_all@30": 1.0,
+                  "recall_all@5": 1.0,
+                  "recall_all@50": 1.0,
+                  "recall_any@1": 1.0,
+                  "recall_any@10": 1.0,
+                  "recall_any@3": 1.0,
+                  "recall_any@30": 1.0,
+                  "recall_any@5": 1.0,
+                  "recall_any@50": 1.0
+                }
+              }
+            }
+          },
+          "currentness": {
+            "knowledge_update": {
+              "abstention_diagnostic": {
+                "mean_returned_count": 0.0,
+                "question_count": 0,
+                "returned_any_rate": 0.0,
+                "upstream_metric": false
+              },
+              "evaluated_question_count": 1,
+              "excluded_abstention_count": 0,
+              "excluded_no_user_target_count": 0,
+              "headline": {
+                "ndcg_any@10": 1.0,
+                "ndcg_any@5": 1.0,
+                "recall_all@10": 1.0,
+                "recall_all@5": 1.0
+              },
+              "metrics": {
+                "session": {
+                  "ndcg_any@1": 1.0,
+                  "ndcg_any@10": 1.0,
+                  "ndcg_any@3": 1.0,
+                  "ndcg_any@30": 1.0,
+                  "ndcg_any@5": 1.0,
+                  "ndcg_any@50": 1.0,
+                  "recall_all@1": 0.0,
+                  "recall_all@10": 1.0,
+                  "recall_all@3": 1.0,
+                  "recall_all@30": 1.0,
+                  "recall_all@5": 1.0,
+                  "recall_all@50": 1.0,
+                  "recall_any@1": 1.0,
+                  "recall_any@10": 1.0,
+                  "recall_any@3": 1.0,
+                  "recall_any@30": 1.0,
+                  "recall_any@5": 1.0,
+                  "recall_any@50": 1.0
+                }
+              }
+            },
+            "latest_gold_ranked_first": {
+              "applicable_question_count": 1,
+              "definition": "among scored knowledge-update questions with gold items on >=2 distinct dates, fraction where the most recently dated gold item is returned ahead of every older gold item",
+              "rate": 1.0,
+              "upstream_metric": false
+            }
+          },
+          "external_system": {
+            "system_id": "cognee",
+            "system_revision": "1.6.4@f154b32a9e544dac73e7ddf2010327cf9988edcd",
+            "unmapped_result_count_total": 0
+          },
+          "failures": {
+            "ingestion_failure_count": 0,
+            "out_of_corpus_returned_count": 0,
+            "runtime_failure_count": 0
+          },
+          "rows": [
+            {
+              "capability": "retrieval_only",
+              "corpus_size": 3,
+              "gold": [
+                "answer_syn_editor_1"
+              ],
+              "ingest_seconds": 140.18574040300018,
+              "latest_gold_first": null,
+              "llm_calls": 0,
+              "metrics": {
+                "session": {
+                  "ndcg_any@1": 1.0,
+                  "ndcg_any@10": 1.0,
+                  "ndcg_any@3": 1.0,
+                  "ndcg_any@30": 1.0,
+                  "ndcg_any@5": 1.0,
+                  "ndcg_any@50": 1.0,
+                  "recall_all@1": 1.0,
+                  "recall_all@10": 1.0,
+                  "recall_all@3": 1.0,
+                  "recall_all@30": 1.0,
+                  "recall_all@5": 1.0,
+                  "recall_all@50": 1.0,
+                  "recall_any@1": 1.0,
+                  "recall_any@10": 1.0,
+                  "recall_any@3": 1.0,
+                  "recall_any@30": 1.0,
+                  "recall_any@5": 1.0,
+                  "recall_any@50": 1.0
+                }
+              },
+              "out_of_corpus_returned_count": 0,
+              "question_id": "syn_single_editor",
+              "question_isolated": true,
+              "question_type": "single-session-user",
+              "ranked_top": [
+                "answer_syn_editor_1",
+                "syn_filler_lunch",
+                "syn_filler_music"
+              ],
+              "recall_seconds": 0.3344970889997967,
+              "remember_status": "completed",
+              "returned_count": 3,
+              "returned_entry_count": 3,
+              "returned_entry_kinds": {
+                "CHUNKS:chunk": 3
+              },
+              "runtime_error": null,
+              "skipped_blank_items": 0,
+              "status": "scored",
+              "unmapped_result_count": 0
+            },
+            {
+              "capability": "retrieval_only",
+              "corpus_size": 3,
+              "gold": [
+                "answer_syn_branch_1",
+                "answer_syn_branch_2"
+              ],
+              "ingest_seconds": 102.48355072100003,
+              "latest_gold_first": true,
+              "llm_calls": 0,
+              "metrics": {
+                "session": {
+                  "ndcg_any@1": 1.0,
+                  "ndcg_any@10": 1.0,
+                  "ndcg_any@3": 1.0,
+                  "ndcg_any@30": 1.0,
+                  "ndcg_any@5": 1.0,
+                  "ndcg_any@50": 1.0,
+                  "recall_all@1": 0.0,
+                  "recall_all@10": 1.0,
+                  "recall_all@3": 1.0,
+                  "recall_all@30": 1.0,
+                  "recall_all@5": 1.0,
+                  "recall_all@50": 1.0,
+                  "recall_any@1": 1.0,
+                  "recall_any@10": 1.0,
+                  "recall_any@3": 1.0,
+                  "recall_any@30": 1.0,
+                  "recall_any@5": 1.0,
+                  "recall_any@50": 1.0
+                }
+              },
+              "out_of_corpus_returned_count": 0,
+              "question_id": "syn_update_branch",
+              "question_isolated": true,
+              "question_type": "knowledge-update",
+              "ranked_top": [
+                "answer_syn_branch_2",
+                "answer_syn_branch_1",
+                "syn_filler_weather"
+              ],
+              "recall_seconds": 0.2800365790003525,
+              "remember_status": "completed",
+              "returned_count": 3,
+              "returned_entry_count": 3,
+              "returned_entry_kinds": {
+                "CHUNKS:chunk": 3
+              },
+              "runtime_error": null,
+              "skipped_blank_items": 0,
+              "status": "scored",
+              "unmapped_result_count": 0
+            },
+            {
+              "capability": "retrieval_only",
+              "corpus_size": 4,
+              "gold": [
+                "answer_syn_pets_1",
+                "answer_syn_pets_2"
+              ],
+              "ingest_seconds": 143.367910683,
+              "latest_gold_first": true,
+              "llm_calls": 0,
+              "metrics": {
+                "session": {
+                  "ndcg_any@1": 1.0,
+                  "ndcg_any@10": 1.0,
+                  "ndcg_any@3": 1.0,
+                  "ndcg_any@30": 1.0,
+                  "ndcg_any@5": 1.0,
+                  "ndcg_any@50": 1.0,
+                  "recall_all@1": 0.0,
+                  "recall_all@10": 1.0,
+                  "recall_all@3": 1.0,
+                  "recall_all@30": 1.0,
+                  "recall_all@5": 1.0,
+                  "recall_all@50": 1.0,
+                  "recall_any@1": 1.0,
+                  "recall_any@10": 1.0,
+                  "recall_any@3": 1.0,
+                  "recall_any@30": 1.0,
+                  "recall_any@5": 1.0,
+                  "recall_any@50": 1.0
+                }
+              },
+              "out_of_corpus_returned_count": 0,
+              "question_id": "syn_multi_pets",
+              "question_isolated": true,
+              "question_type": "multi-session",
+              "ranked_top": [
+                "answer_syn_pets_2",
+                "answer_syn_pets_1",
+                "syn_filler_garden",
+                "noans_syn_pets_3"
+              ],
+              "recall_seconds": 0.3293398369996794,
+              "remember_status": "completed",
+              "returned_count": 4,
+              "returned_entry_count": 4,
+              "returned_entry_kinds": {
+                "CHUNKS:chunk": 4
+              },
+              "runtime_error": null,
+              "skipped_blank_items": 0,
+              "status": "scored",
+              "unmapped_result_count": 0
+            }
+          ],
+          "timing": {
+            "ingest_seconds_total": 386.037,
+            "recall_seconds_max": 0.334497,
+            "recall_seconds_total": 0.944,
+            "wall_seconds": 399.866
+          }
+        }
+      }
+    },
+    "turn": {
+      "backends": {
+        "cognee_gliner_local": {
+          "aggregate": {
+            "abstention_diagnostic": {
+              "mean_returned_count": 0.0,
+              "question_count": 0,
+              "returned_any_rate": 0.0,
+              "upstream_metric": false
+            },
+            "evaluated_question_count": 3,
+            "excluded_abstention_count": 0,
+            "excluded_no_user_target_count": 0,
+            "headline": {
+              "ndcg_any@10": 1.0,
+              "ndcg_any@5": 1.0,
+              "ndcg_any@50": 1.0,
+              "recall_all@10": 1.0,
+              "recall_all@5": 1.0,
+              "recall_all@50": 1.0
+            },
+            "metrics": {
+              "turn": {
+                "ndcg_any@1": 1.0,
+                "ndcg_any@10": 1.0,
+                "ndcg_any@3": 1.0,
+                "ndcg_any@30": 1.0,
+                "ndcg_any@5": 1.0,
+                "ndcg_any@50": 1.0,
+                "recall_all@1": 0.333333,
+                "recall_all@10": 1.0,
+                "recall_all@3": 1.0,
+                "recall_all@30": 1.0,
+                "recall_all@5": 1.0,
+                "recall_all@50": 1.0,
+                "recall_any@1": 1.0,
+                "recall_any@10": 1.0,
+                "recall_any@3": 1.0,
+                "recall_any@30": 1.0,
+                "recall_any@5": 1.0,
+                "recall_any@50": 1.0
+              },
+              "turn_to_session": {
+                "ndcg_any@1": 1.0,
+                "ndcg_any@10": 1.0,
+                "ndcg_any@3": 1.0,
+                "ndcg_any@30": 1.0,
+                "ndcg_any@5": 1.0,
+                "ndcg_any@50": 1.0,
+                "recall_all@1": 0.333333,
+                "recall_all@10": 1.0,
+                "recall_all@3": 1.0,
+                "recall_all@30": 1.0,
+                "recall_all@5": 1.0,
+                "recall_all@50": 1.0,
+                "recall_any@1": 1.0,
+                "recall_any@10": 1.0,
+                "recall_any@3": 1.0,
+                "recall_any@30": 1.0,
+                "recall_any@5": 1.0,
+                "recall_any@50": 1.0
+              }
+            }
+          },
+          "authority_effect": "none",
+          "boundary": "Cognee OSS public remember/recall, local GLiNER extraction + local embeddings, no LLM; retrieval only",
+          "by_question_type": {
+            "knowledge-update": {
+              "abstention_diagnostic": {
+                "mean_returned_count": 0.0,
+                "question_count": 0,
+                "returned_any_rate": 0.0,
+                "upstream_metric": false
+              },
+              "evaluated_question_count": 1,
+              "excluded_abstention_count": 0,
+              "excluded_no_user_target_count": 0,
+              "headline": {
+                "ndcg_any@10": 1.0,
+                "ndcg_any@5": 1.0,
+                "ndcg_any@50": 1.0,
+                "recall_all@10": 1.0,
+                "recall_all@5": 1.0,
+                "recall_all@50": 1.0
+              },
+              "metrics": {
+                "turn": {
+                  "ndcg_any@1": 1.0,
+                  "ndcg_any@10": 1.0,
+                  "ndcg_any@3": 1.0,
+                  "ndcg_any@30": 1.0,
+                  "ndcg_any@5": 1.0,
+                  "ndcg_any@50": 1.0,
+                  "recall_all@1": 0.0,
+                  "recall_all@10": 1.0,
+                  "recall_all@3": 1.0,
+                  "recall_all@30": 1.0,
+                  "recall_all@5": 1.0,
+                  "recall_all@50": 1.0,
+                  "recall_any@1": 1.0,
+                  "recall_any@10": 1.0,
+                  "recall_any@3": 1.0,
+                  "recall_any@30": 1.0,
+                  "recall_any@5": 1.0,
+                  "recall_any@50": 1.0
+                },
+                "turn_to_session": {
+                  "ndcg_any@1": 1.0,
+                  "ndcg_any@10": 1.0,
+                  "ndcg_any@3": 1.0,
+                  "ndcg_any@30": 1.0,
+                  "ndcg_any@5": 1.0,
+                  "ndcg_any@50": 1.0,
+                  "recall_all@1": 0.0,
+                  "recall_all@10": 1.0,
+                  "recall_all@3": 1.0,
+                  "recall_all@30": 1.0,
+                  "recall_all@5": 1.0,
+                  "recall_all@50": 1.0,
+                  "recall_any@1": 1.0,
+                  "recall_any@10": 1.0,
+                  "recall_any@3": 1.0,
+                  "recall_any@30": 1.0,
+                  "recall_any@5": 1.0,
+                  "recall_any@50": 1.0
+                }
+              }
+            },
+            "multi-session": {
+              "abstention_diagnostic": {
+                "mean_returned_count": 0.0,
+                "question_count": 0,
+                "returned_any_rate": 0.0,
+                "upstream_metric": false
+              },
+              "evaluated_question_count": 1,
+              "excluded_abstention_count": 0,
+              "excluded_no_user_target_count": 0,
+              "headline": {
+                "ndcg_any@10": 1.0,
+                "ndcg_any@5": 1.0,
+                "ndcg_any@50": 1.0,
+                "recall_all@10": 1.0,
+                "recall_all@5": 1.0,
+                "recall_all@50": 1.0
+              },
+              "metrics": {
+                "turn": {
+                  "ndcg_any@1": 1.0,
+                  "ndcg_any@10": 1.0,
+                  "ndcg_any@3": 1.0,
+                  "ndcg_any@30": 1.0,
+                  "ndcg_any@5": 1.0,
+                  "ndcg_any@50": 1.0,
+                  "recall_all@1": 0.0,
+                  "recall_all@10": 1.0,
+                  "recall_all@3": 1.0,
+                  "recall_all@30": 1.0,
+                  "recall_all@5": 1.0,
+                  "recall_all@50": 1.0,
+                  "recall_any@1": 1.0,
+                  "recall_any@10": 1.0,
+                  "recall_any@3": 1.0,
+                  "recall_any@30": 1.0,
+                  "recall_any@5": 1.0,
+                  "recall_any@50": 1.0
+                },
+                "turn_to_session": {
+                  "ndcg_any@1": 1.0,
+                  "ndcg_any@10": 1.0,
+                  "ndcg_any@3": 1.0,
+                  "ndcg_any@30": 1.0,
+                  "ndcg_any@5": 1.0,
+                  "ndcg_any@50": 1.0,
+                  "recall_all@1": 0.0,
+                  "recall_all@10": 1.0,
+                  "recall_all@3": 1.0,
+                  "recall_all@30": 1.0,
+                  "recall_all@5": 1.0,
+                  "recall_all@50": 1.0,
+                  "recall_any@1": 1.0,
+                  "recall_any@10": 1.0,
+                  "recall_any@3": 1.0,
+                  "recall_any@30": 1.0,
+                  "recall_any@5": 1.0,
+                  "recall_any@50": 1.0
+                }
+              }
+            },
+            "single-session-user": {
+              "abstention_diagnostic": {
+                "mean_returned_count": 0.0,
+                "question_count": 0,
+                "returned_any_rate": 0.0,
+                "upstream_metric": false
+              },
+              "evaluated_question_count": 1,
+              "excluded_abstention_count": 0,
+              "excluded_no_user_target_count": 0,
+              "headline": {
+                "ndcg_any@10": 1.0,
+                "ndcg_any@5": 1.0,
+                "ndcg_any@50": 1.0,
+                "recall_all@10": 1.0,
+                "recall_all@5": 1.0,
+                "recall_all@50": 1.0
+              },
+              "metrics": {
+                "turn": {
+                  "ndcg_any@1": 1.0,
+                  "ndcg_any@10": 1.0,
+                  "ndcg_any@3": 1.0,
+                  "ndcg_any@30": 1.0,
+                  "ndcg_any@5": 1.0,
+                  "ndcg_any@50": 1.0,
+                  "recall_all@1": 1.0,
+                  "recall_all@10": 1.0,
+                  "recall_all@3": 1.0,
+                  "recall_all@30": 1.0,
+                  "recall_all@5": 1.0,
+                  "recall_all@50": 1.0,
+                  "recall_any@1": 1.0,
+                  "recall_any@10": 1.0,
+                  "recall_any@3": 1.0,
+                  "recall_any@30": 1.0,
+                  "recall_any@5": 1.0,
+                  "recall_any@50": 1.0
+                },
+                "turn_to_session": {
+                  "ndcg_any@1": 1.0,
+                  "ndcg_any@10": 1.0,
+                  "ndcg_any@3": 1.0,
+                  "ndcg_any@30": 1.0,
+                  "ndcg_any@5": 1.0,
+                  "ndcg_any@50": 1.0,
+                  "recall_all@1": 1.0,
+                  "recall_all@10": 1.0,
+                  "recall_all@3": 1.0,
+                  "recall_all@30": 1.0,
+                  "recall_all@5": 1.0,
+                  "recall_all@50": 1.0,
+                  "recall_any@1": 1.0,
+                  "recall_any@10": 1.0,
+                  "recall_any@3": 1.0,
+                  "recall_any@30": 1.0,
+                  "recall_any@5": 1.0,
+                  "recall_any@50": 1.0
+                }
+              }
+            }
+          },
+          "currentness": {
+            "knowledge_update": {
+              "abstention_diagnostic": {
+                "mean_returned_count": 0.0,
+                "question_count": 0,
+                "returned_any_rate": 0.0,
+                "upstream_metric": false
+              },
+              "evaluated_question_count": 1,
+              "excluded_abstention_count": 0,
+              "excluded_no_user_target_count": 0,
+              "headline": {
+                "ndcg_any@10": 1.0,
+                "ndcg_any@5": 1.0,
+                "ndcg_any@50": 1.0,
+                "recall_all@10": 1.0,
+                "recall_all@5": 1.0,
+                "recall_all@50": 1.0
+              },
+              "metrics": {
+                "turn": {
+                  "ndcg_any@1": 1.0,
+                  "ndcg_any@10": 1.0,
+                  "ndcg_any@3": 1.0,
+                  "ndcg_any@30": 1.0,
+                  "ndcg_any@5": 1.0,
+                  "ndcg_any@50": 1.0,
+                  "recall_all@1": 0.0,
+                  "recall_all@10": 1.0,
+                  "recall_all@3": 1.0,
+                  "recall_all@30": 1.0,
+                  "recall_all@5": 1.0,
+                  "recall_all@50": 1.0,
+                  "recall_any@1": 1.0,
+                  "recall_any@10": 1.0,
+                  "recall_any@3": 1.0,
+                  "recall_any@30": 1.0,
+                  "recall_any@5": 1.0,
+                  "recall_any@50": 1.0
+                },
+                "turn_to_session": {
+                  "ndcg_any@1": 1.0,
+                  "ndcg_any@10": 1.0,
+                  "ndcg_any@3": 1.0,
+                  "ndcg_any@30": 1.0,
+                  "ndcg_any@5": 1.0,
+                  "ndcg_any@50": 1.0,
+                  "recall_all@1": 0.0,
+                  "recall_all@10": 1.0,
+                  "recall_all@3": 1.0,
+                  "recall_all@30": 1.0,
+                  "recall_all@5": 1.0,
+                  "recall_all@50": 1.0,
+                  "recall_any@1": 1.0,
+                  "recall_any@10": 1.0,
+                  "recall_any@3": 1.0,
+                  "recall_any@30": 1.0,
+                  "recall_any@5": 1.0,
+                  "recall_any@50": 1.0
+                }
+              }
+            },
+            "latest_gold_ranked_first": {
+              "applicable_question_count": 1,
+              "definition": "among scored knowledge-update questions with gold items on >=2 distinct dates, fraction where the most recently dated gold item is returned ahead of every older gold item",
+              "rate": 1.0,
+              "upstream_metric": false
+            }
+          },
+          "external_system": {
+            "system_id": "cognee",
+            "system_revision": "1.6.4@f154b32a9e544dac73e7ddf2010327cf9988edcd",
+            "unmapped_result_count_total": 0
+          },
+          "failures": {
+            "ingestion_failure_count": 0,
+            "out_of_corpus_returned_count": 0,
+            "runtime_failure_count": 0
+          },
+          "rows": [
+            {
+              "capability": "retrieval_only",
+              "corpus_size": 3,
+              "gold": [
+                "answer_syn_editor_1_1"
+              ],
+              "ingest_seconds": 92.20068996999998,
+              "latest_gold_first": null,
+              "llm_calls": 0,
+              "metrics": {
+                "turn": {
+                  "ndcg_any@1": 1.0,
+                  "ndcg_any@10": 1.0,
+                  "ndcg_any@3": 1.0,
+                  "ndcg_any@30": 1.0,
+                  "ndcg_any@5": 1.0,
+                  "ndcg_any@50": 1.0,
+                  "recall_all@1": 1.0,
+                  "recall_all@10": 1.0,
+                  "recall_all@3": 1.0,
+                  "recall_all@30": 1.0,
+                  "recall_all@5": 1.0,
+                  "recall_all@50": 1.0,
+                  "recall_any@1": 1.0,
+                  "recall_any@10": 1.0,
+                  "recall_any@3": 1.0,
+                  "recall_any@30": 1.0,
+                  "recall_any@5": 1.0,
+                  "recall_any@50": 1.0
+                },
+                "turn_to_session": {
+                  "ndcg_any@1": 1.0,
+                  "ndcg_any@10": 1.0,
+                  "ndcg_any@3": 1.0,
+                  "ndcg_any@30": 1.0,
+                  "ndcg_any@5": 1.0,
+                  "ndcg_any@50": 1.0,
+                  "recall_all@1": 1.0,
+                  "recall_all@10": 1.0,
+                  "recall_all@3": 1.0,
+                  "recall_all@30": 1.0,
+                  "recall_all@5": 1.0,
+                  "recall_all@50": 1.0,
+                  "recall_any@1": 1.0,
+                  "recall_any@10": 1.0,
+                  "recall_any@3": 1.0,
+                  "recall_any@30": 1.0,
+                  "recall_any@5": 1.0,
+                  "recall_any@50": 1.0
+                }
+              },
+              "out_of_corpus_returned_count": 0,
+              "question_id": "syn_single_editor",
+              "question_isolated": true,
+              "question_type": "single-session-user",
+              "ranked_top": [
+                "answer_syn_editor_1_1",
+                "syn_filler_lunch_1",
+                "syn_filler_music_1"
+              ],
+              "recall_seconds": 0.2967964229997051,
+              "remember_status": "completed",
+              "returned_count": 3,
+              "returned_entry_count": 3,
+              "returned_entry_kinds": {
+                "CHUNKS:chunk": 3
+              },
+              "runtime_error": null,
+              "skipped_blank_items": 0,
+              "status": "scored",
+              "unmapped_result_count": 0
+            },
+            {
+              "capability": "retrieval_only",
+              "corpus_size": 3,
+              "gold": [
+                "answer_syn_branch_1_1",
+                "answer_syn_branch_2_1"
+              ],
+              "ingest_seconds": 97.50338416000022,
+              "latest_gold_first": true,
+              "llm_calls": 0,
+              "metrics": {
+                "turn": {
+                  "ndcg_any@1": 1.0,
+                  "ndcg_any@10": 1.0,
+                  "ndcg_any@3": 1.0,
+                  "ndcg_any@30": 1.0,
+                  "ndcg_any@5": 1.0,
+                  "ndcg_any@50": 1.0,
+                  "recall_all@1": 0.0,
+                  "recall_all@10": 1.0,
+                  "recall_all@3": 1.0,
+                  "recall_all@30": 1.0,
+                  "recall_all@5": 1.0,
+                  "recall_all@50": 1.0,
+                  "recall_any@1": 1.0,
+                  "recall_any@10": 1.0,
+                  "recall_any@3": 1.0,
+                  "recall_any@30": 1.0,
+                  "recall_any@5": 1.0,
+                  "recall_any@50": 1.0
+                },
+                "turn_to_session": {
+                  "ndcg_any@1": 1.0,
+                  "ndcg_any@10": 1.0,
+                  "ndcg_any@3": 1.0,
+                  "ndcg_any@30": 1.0,
+                  "ndcg_any@5": 1.0,
+                  "ndcg_any@50": 1.0,
+                  "recall_all@1": 0.0,
+                  "recall_all@10": 1.0,
+                  "recall_all@3": 1.0,
+                  "recall_all@30": 1.0,
+                  "recall_all@5": 1.0,
+                  "recall_all@50": 1.0,
+                  "recall_any@1": 1.0,
+                  "recall_any@10": 1.0,
+                  "recall_any@3": 1.0,
+                  "recall_any@30": 1.0,
+                  "recall_any@5": 1.0,
+                  "recall_any@50": 1.0
+                }
+              },
+              "out_of_corpus_returned_count": 0,
+              "question_id": "syn_update_branch",
+              "question_isolated": true,
+              "question_type": "knowledge-update",
+              "ranked_top": [
+                "answer_syn_branch_2_1",
+                "answer_syn_branch_1_1",
+                "syn_filler_weather_1"
+              ],
+              "recall_seconds": 0.286874773999898,
+              "remember_status": "completed",
+              "returned_count": 3,
+              "returned_entry_count": 3,
+              "returned_entry_kinds": {
+                "CHUNKS:chunk": 3
+              },
+              "runtime_error": null,
+              "skipped_blank_items": 0,
+              "status": "scored",
+              "unmapped_result_count": 0
+            },
+            {
+              "capability": "retrieval_only",
+              "corpus_size": 4,
+              "gold": [
+                "answer_syn_pets_1_1",
+                "answer_syn_pets_2_1"
+              ],
+              "ingest_seconds": 155.244319248,
+              "latest_gold_first": true,
+              "llm_calls": 0,
+              "metrics": {
+                "turn": {
+                  "ndcg_any@1": 1.0,
+                  "ndcg_any@10": 1.0,
+                  "ndcg_any@3": 1.0,
+                  "ndcg_any@30": 1.0,
+                  "ndcg_any@5": 1.0,
+                  "ndcg_any@50": 1.0,
+                  "recall_all@1": 0.0,
+                  "recall_all@10": 1.0,
+                  "recall_all@3": 1.0,
+                  "recall_all@30": 1.0,
+                  "recall_all@5": 1.0,
+                  "recall_all@50": 1.0,
+                  "recall_any@1": 1.0,
+                  "recall_any@10": 1.0,
+                  "recall_any@3": 1.0,
+                  "recall_any@30": 1.0,
+                  "recall_any@5": 1.0,
+                  "recall_any@50": 1.0
+                },
+                "turn_to_session": {
+                  "ndcg_any@1": 1.0,
+                  "ndcg_any@10": 1.0,
+                  "ndcg_any@3": 1.0,
+                  "ndcg_any@30": 1.0,
+                  "ndcg_any@5": 1.0,
+                  "ndcg_any@50": 1.0,
+                  "recall_all@1": 0.0,
+                  "recall_all@10": 1.0,
+                  "recall_all@3": 1.0,
+                  "recall_all@30": 1.0,
+                  "recall_all@5": 1.0,
+                  "recall_all@50": 1.0,
+                  "recall_any@1": 1.0,
+                  "recall_any@10": 1.0,
+                  "recall_any@3": 1.0,
+                  "recall_any@30": 1.0,
+                  "recall_any@5": 1.0,
+                  "recall_any@50": 1.0
+                }
+              },
+              "out_of_corpus_returned_count": 0,
+              "question_id": "syn_multi_pets",
+              "question_isolated": true,
+              "question_type": "multi-session",
+              "ranked_top": [
+                "answer_syn_pets_2_1",
+                "answer_syn_pets_1_1",
+                "syn_filler_garden_1",
+                "noans_syn_pets_3_1"
+              ],
+              "recall_seconds": 0.3023780479998095,
+              "remember_status": "completed",
+              "returned_count": 4,
+              "returned_entry_count": 4,
+              "returned_entry_kinds": {
+                "CHUNKS:chunk": 4
+              },
+              "runtime_error": null,
+              "skipped_blank_items": 0,
+              "status": "scored",
+              "unmapped_result_count": 0
+            }
+          ],
+          "timing": {
+            "ingest_seconds_total": 344.948,
+            "recall_seconds_max": 0.302378,
+            "recall_seconds_total": 0.886,
+            "wall_seconds": 361.577
+          }
+        }
+      }
+    }
+  },
+  "profile_id": "agent-memory-longmemeval-retrieval-currentness-v1",
+  "schema_version": "2.1.0",
+  "upstream": {
+    "dataset_distribution": "huggingface.co/datasets/xiaowu0162/longmemeval-cleaned",
+    "license": "MIT",
+    "replicated_semantics": [
+      "src/retrieval/run_retrieval.py::process_item_flat_index",
+      "src/retrieval/run_retrieval.py::main (abstention and no-target exclusion)",
+      "src/retrieval/eval_utils.py::evaluate_retrieval",
+      "src/retrieval/eval_utils.py::evaluate_retrieval_turn2session"
+    ],
+    "repository": "xiaowu0162/LongMemEval",
+    "revision": "9e0b455f4ef0e2ab8f2e582289761153549043fc"
+  }
+}

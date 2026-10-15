@@ -1,0 +1,169 @@
+{
+  "aggregate": {
+    "evaluated_question_count": 1,
+    "excluded_abstention_count": 0,
+    "excluded_no_user_target_count": 0,
+    "headline": {
+      "recall_all@5": 1.0,
+      "ndcg_any@5": 1.0,
+      "recall_all@10": 1.0,
+      "ndcg_any@10": 1.0
+    },
+    "metrics": {
+      "session": {
+        "ndcg_any@1": 1.0,
+        "ndcg_any@10": 1.0,
+        "ndcg_any@3": 1.0,
+        "ndcg_any@30": 1.0,
+        "ndcg_any@5": 1.0,
+        "ndcg_any@50": 1.0,
+        "recall_all@1": 1.0,
+        "recall_all@10": 1.0,
+        "recall_all@3": 1.0,
+        "recall_all@30": 1.0,
+        "recall_all@5": 1.0,
+        "recall_all@50": 1.0,
+        "recall_any@1": 1.0,
+        "recall_any@10": 1.0,
+        "recall_any@3": 1.0,
+        "recall_any@30": 1.0,
+        "recall_any@5": 1.0,
+        "recall_any@50": 1.0
+      }
+    },
+    "abstention_diagnostic": {
+      "upstream_metric": false,
+      "question_count": 0,
+      "returned_any_rate": 0.0,
+      "mean_returned_count": 0.0
+    }
+  },
+  "by_question_type": {
+    "single-session-user": {
+      "evaluated_question_count": 1,
+      "excluded_abstention_count": 0,
+      "excluded_no_user_target_count": 0,
+      "headline": {
+        "recall_all@5": 1.0,
+        "ndcg_any@5": 1.0,
+        "recall_all@10": 1.0,
+        "ndcg_any@10": 1.0
+      },
+      "metrics": {
+        "session": {
+          "ndcg_any@1": 1.0,
+          "ndcg_any@10": 1.0,
+          "ndcg_any@3": 1.0,
+          "ndcg_any@30": 1.0,
+          "ndcg_any@5": 1.0,
+          "ndcg_any@50": 1.0,
+          "recall_all@1": 1.0,
+          "recall_all@10": 1.0,
+          "recall_all@3": 1.0,
+          "recall_all@30": 1.0,
+          "recall_all@5": 1.0,
+          "recall_all@50": 1.0,
+          "recall_any@1": 1.0,
+          "recall_any@10": 1.0,
+          "recall_any@3": 1.0,
+          "recall_any@30": 1.0,
+          "recall_any@5": 1.0,
+          "recall_any@50": 1.0
+        }
+      },
+      "abstention_diagnostic": {
+        "upstream_metric": false,
+        "question_count": 0,
+        "returned_any_rate": 0.0,
+        "mean_returned_count": 0.0
+      }
+    }
+  },
+  "currentness": {
+    "knowledge_update": {
+      "evaluated_question_count": 0,
+      "excluded_abstention_count": 0,
+      "excluded_no_user_target_count": 0,
+      "headline": {
+        "recall_all@5": 0.0,
+        "ndcg_any@5": 0.0,
+        "recall_all@10": 0.0,
+        "ndcg_any@10": 0.0
+      },
+      "metrics": {
+        "session": {}
+      },
+      "abstention_diagnostic": {
+        "upstream_metric": false,
+        "question_count": 0,
+        "returned_any_rate": 0.0,
+        "mean_returned_count": 0.0
+      }
+    },
+    "latest_gold_ranked_first": {
+      "upstream_metric": false,
+      "definition": "among scored knowledge-update questions with gold items on >=2 distinct dates, fraction where the most recently dated gold item is returned ahead of every older gold item",
+      "applicable_question_count": 0,
+      "rate": 0.0
+    }
+  },
+  "failures": {
+    "runtime_failure_count": 0,
+    "ingestion_failure_count": 0,
+    "out_of_corpus_returned_count": 0
+  },
+  "question_count_completed": 1,
+  "question_count_preregistered": 50,
+  "missing_question_ids": [
+    "58ef2f1c",
+    "7527f7e2",
+    "3b6f954b",
+    "577d4d32",
+    "e01b8e2f",
+    "001be529",
+    "76d63226",
+    "f4f1d8a4",
+    "gpt4_d84a3211",
+    "gpt4_a56e767c",
+    "gpt4_7fce9456",
+    "d851d5ba",
+    "60bf93ed_abs",
+    "06878be2",
+    "75f70248",
+    "fca70973",
+    "a11281a2",
+    "51c32626",
+    "ef66a6e5",
+    "bb7c3b45",
+    "bc149d6b",
+    "a08a253f",
+    "e5ba910e_abs",
+    "gpt4_f49edff3",
+    "gpt4_45189cb4",
+    "370a8ff4",
+    "bcbe585f",
+    "gpt4_7ddcf75f",
+    "gpt4_e414231e",
+    "2ebe6c92",
+    "gpt4_d6585ce9",
+    "gpt4_2487a7cb",
+    "a3045048",
+    "gpt4_fe651585",
+    "gpt4_70e84552_abs",
+    "d7c942c3",
+    "07741c44",
+    "5a4f22c0",
+    "ed4ddc30",
+    "4b24c848",
+    "50635ada",
+    "e66b632c",
+    "ba61f0b9",
+    "c6853660",
+    "6ae235be",
+    "f523d9fe",
+    "1d4da289",
+    "fca762bc",
+    "4baee567"
+  ],
+  "external_system": null
+}

@@ -1,0 +1,52 @@
+{
+  "argv": [
+    "python",
+    "reference/run_longmemeval.py",
+    "--external-backend",
+    "longmemeval_jev_mem_bridge:install_longmemeval_jev_mem_backend",
+    "--backend",
+    "jev_mem_laya",
+    "--backend",
+    "agent_memory",
+    "--backend",
+    "lexical_overlap",
+    "--input",
+    "reference/fixtures/benchmarks/longmemeval/synthetic.json",
+    "--corpus-class",
+    "synthetic",
+    "--max-questions",
+    "3",
+    "--granularity",
+    "session",
+    "--granularity",
+    "turn",
+    "--output",
+    "/tmp/am-bench/runs/smoke2.json"
+  ],
+  "cwd": "/tmp/am-bench/am",
+  "exit_status": 0,
+  "started_utc": "2026-10-15T04:31:22Z",
+  "wall_seconds": 154.364,
+  "user_cpu_seconds": 443.108,
+  "system_cpu_seconds": 65.311,
+  "peak_rss_mib": 3336.1,
+  "env": {
+    "HF_HOME": "/tmp/am-bench/hf-home",
+    "HF_HUB_OFFLINE": "1",
+    "TRANSFORMERS_OFFLINE": "1",
+    "JEV_MEM_SOURCE_ROOT": "/tmp/jev-mem-source",
+    "PYTHONHASHSEED": "0",
+    "VIRTUAL_ENV": "/tmp/am-bench/jev-venv",
+    "OMP_NUM_THREADS": null
+  },
+  "secrets_present": {
+    "OPENAI_API_KEY": false,
+    "TYPESAFE_API_KEY": false,
+    "HF_TOKEN": false
+  },
+  "host": {
+    "platform": "Linux-6.18.44-fc-v114-x86_64-with-glibc2.39",
+    "cpu_count": 4,
+    "python": "3.12.3"
+  }
+}
