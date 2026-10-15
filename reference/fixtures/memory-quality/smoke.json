@@ -1,0 +1,12 @@
+{"version": 1, "scenarios": [
+ {"id": "smoke-lifecycle", "category": "correction", "description": "runner smoke: correction, forgetting, scope",
+  "operations": [
+   {"op": "remember", "scope": "project:home", "ref": "memory:car", "text": "Our car is a blue Honda Civic."},
+   {"op": "remember", "scope": "project:home", "ref": "memory:vet", "text": "The vet appointment for Rex is on Friday."},
+   {"op": "remember", "scope": "project:work", "ref": "memory:secret", "text": "The Honda supplier contract is confidential."},
+   {"op": "correct", "scope": "project:home", "ref": "memory:car", "text": "Our car is now a red Toyota Corolla; we sold the Honda."},
+   {"op": "forget", "scope": "project:home", "ref": "memory:vet"}],
+  "queries": [
+   {"id": "q-car", "scope": "project:home", "query": "what car do we drive now?", "expect": {"must_include": ["memory:car"], "must_exclude": [{"ref": "memory:secret", "reason": "other_scope"}]}},
+   {"id": "q-vet", "scope": "project:home", "query": "when is the vet appointment for Rex?", "expect": {"must_include": [], "must_exclude": [{"ref": "memory:vet", "reason": "forgotten"}]}},
+   {"id": "q-abstain", "scope": "project:home", "query": "what is my dentist's name?", "expect": {"must_include": []}}]}]}
