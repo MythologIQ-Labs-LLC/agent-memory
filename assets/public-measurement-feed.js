@@ -261,8 +261,8 @@ async function processFeed(feed,sourceSha){
  }
  return {profiles,errors};
 }
-let currentHead=null,profileCache=[],started=false;
-async function refresh(){
+let currentHead=null,profileCache=[],started=false,inFlight=null;
+async function loadCurrentHead(){
  const ref=await fetch(API+'/git/ref/heads/'+BRANCH,{cache:'no-store',
    headers:{Accept:'application/vnd.github+json'}});
  if(!ref.ok)throw Error('Public feed ref status '+ref.status);
@@ -271,16 +271,40 @@ async function refresh(){
  if(currentHead===head)return profileCache;
  const data=await fetch(RAW+head+'/'+PATH,{cache:'no-store'});
  if(!data.ok)throw Error('Public benchmark feed unavailable: '+data.status);
- const result=await processFeed(await data.json(),head);
+ const feedDoc=await data.json();
+ const result=await processFeed(feedDoc,head);
  // No automatic fallback to unverifiable results: keep previously validated feed
  // until the next complete branch update.
- if(!result.profiles.length)throw Error('No verifiable public measurements');
+ if(result.errors.length || result.profiles.length!==feedDoc.profiles.length) {
+   // A single invalid or temporarily unavailable artifact invalidates the new
+   // publication head as a whole. Never pin a partially verified update.
+   const message='Public measurement feed revision '+head.slice(0,12)+
+     ' not applied: '+result.errors.length+' source verification error(s).';
+   throw Error(message);
+ }
  currentHead=head;
  profileCache=result.profiles;
  if(typeof root.dispatchEvent==='function'&&typeof CustomEvent!=='undefined')
   root.dispatchEvent(new CustomEvent('agent-memory:public-feed',
-    {detail:{profiles:profileCache,head,errors:result.errors}}));
+    {detail:{profiles:profileCache,head,errors:[]}}));
  return profileCache;
+}
+function refresh(){
+ // Manual and periodic checks may overlap; serialize them to prevent an older
+ // slow response from replacing a newer fully verified published revision.
+ if(inFlight)return inFlight;
+ const operation=loadCurrentHead().catch(error=>{
+   // Also surface upstream HTTP, JSON and network failures. A verification
+   // failure must never silently masquerade as a successfully refreshed feed.
+   const message=String(error?.message||error).slice(0,320);
+   if(typeof root.dispatchEvent==='function'&&typeof CustomEvent!=='undefined')
+    root.dispatchEvent(new CustomEvent('agent-memory:public-feed-error',
+      {detail:{verifiedHead:currentHead,message}}));
+   throw error;
+ });
+ inFlight=operation;
+ operation.finally(()=>{if(inFlight===operation)inFlight=null;}).catch(()=>{});
+ return operation;
 }
 function attach(){
  if(started)return;started=true;

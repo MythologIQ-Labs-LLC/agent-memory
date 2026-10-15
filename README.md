@@ -163,3 +163,20 @@ node tools/test-public-measurement-feed.cjs /tmp/agent-memory-public-feed.json
 ```
 
 No accepted score or runtime contract is changed by feed publication.
+
+## Measured leaderboard refresh integrity (October 15, 2026)
+
+The read-only public feed is now applied **atomically**. A new `benchmark-public-feed` commit may contain many profiles and competitors; if **any declared artifact** is missing, fails its SHA-256 check, fails native score verification, or produces a mismatched denominator, that feed revision is withheld in full. The prior successfully verified revision stays in memory, and the same source head is retried on a future check. Network/API failures are also surfaced in the existing leaderboard provenance text as a refresh warning, without adding new page components or redesigning the site.
+
+Once the verified feed has loaded, its profile roster is authoritative for candidate measurements. A deliberately retired/retracted candidate profile does not silently reappear from the old static fallback snapshot. Historical accepted results remain separate. Candidate fallback is still available when no live feed has verified during a fresh page load, and its provenance identifies it as the older pinned snapshot.
+
+A profile containing Agent Memory and only a baseline method such as BM25 **is not a competitive first-place result**. The existing rank cell instead says "No peer"; the native metric and baseline score remain visible. Revision-to-revision comparisons use generic labels, not a hardcoded C2 label, so subsequent runtimes will not inherit misleading headings.
+
+Concurrent manual and periodic refreshes share one in-flight verification so an older request cannot overwrite a newer published revision. Test without hosted CI:
+
+```sh
+node tools/test-public-feed-atomic.cjs
+node tools/test-leaderboard-feed-authority.cjs
+```
+
+Keep all live scores scoped to the exact evaluator, cohort, native metric, and capability tier. No acceptance authority is conveyed by the data-only feed.

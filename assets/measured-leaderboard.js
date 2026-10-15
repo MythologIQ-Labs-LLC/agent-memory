@@ -12,6 +12,7 @@ const scope=()=>q('measuredScope')?.value||'all';
 const FROZEN='5266568e2e883b64e92e0da632d5e24c3fd61d8a447de7e629ebf93ef26a7339';
 const INPUT='d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442';
 let accepted=null,preview=null,observed=[],current=[],publicFeedProfiles=[],initialized=false;
+let publicFeedWarning='';
 const SAFE=/^https:\/\/github\.com\/MythologIQ-Labs-LLC\/agent-memory\/blob\/[0-9a-f]{40}\/[a-zA-Z0-9_.\/-]+$/;
 function safeHref(url){return SAFE.test(url||'')&&!url.split('/').includes('..')?url:'#'}
 function validatedPreview(d){
@@ -100,7 +101,10 @@ function discoveredProfiles(rows){
 function profiles(){
  const acceptedRows=acceptedProfiles();
  if(scope()==='accepted')return acceptedRows;
- const candidates=new Map(previewProfiles().map(p=>[p.id,p]));
+ // Curated fallback is strictly for bootstrap/offline operation. Once an
+ // independently source-verified feed has loaded, removed records stay removed.
+ const candidates=new Map(
+   publicFeedProfiles.length?[]:previewProfiles().map(p=>[p.id,p]));
  for(const p of discoveredProfiles(observed)){
   const earlier=candidates.get(p.id);
   if(!earlier||p.metrics[0].rows.length>=earlier.metrics[0].rows.length)
@@ -151,16 +155,19 @@ function render(){
  q('measuredMode').textContent=statusName(p.evidence_status);
  q('measuredMode').className='score-mode '+(p.evidence_status==='accepted'?'mode-accepted':'mode-candidate');
  q('measuredKpis').innerHTML=[
-  [revision?'Leading revision':'Memory-system leader',order[0]?pretty(order[0].score):'Not measured'],
-  [revision?'C2 candidate':'Agent Memory',am?pretty(am.score):'Not measured'],
-  [revision?'C2 revision rank':'Agent Memory rank',rank?'#'+rank+' / '+order.length:'Not ranked'],
-  [revision?'C2 vs original baseline':'Gap to strongest external memory system',leader&&am?
+  [revision?'Leading revision':order.length<2?'Only measured product':'Memory-system leader',
+   order[0]?pretty(order[0].score):'Not measured'],
+  [revision?'Selected revision':'Agent Memory',am?pretty(am.score):'Not measured'],
+  [revision?'Selected revision rank':'Agent Memory rank',
+   !revision&&order.length<2?'No measured peer':rank?'#'+rank+' / '+order.length:'Not ranked'],
+  [revision?'Selected vs original baseline':'Gap to strongest external memory system',leader&&am?
     ((am.score-leader.score)>=0?'+':'')+((am.score-leader.score)*100).toFixed(2)+' pp':revision?'Not measured':'No external measurement']
  ].map(([label,value])=>'<div class="measured-kpi"><span>'+h(label)+
   '</span><strong>'+h(value)+'</strong></div>').join('');
  q('measuredRows').innerHTML=[...rows].sort((a,b)=>b.score-a.score).map(r=>{
   const isBase=r.role==='baseline';
-  const rankLabel=isBase&&!revision?'Baseline':'#'+(1+order.filter(x=>x.score>r.score).length);
+  const rankLabel=isBase&&!revision?'Baseline':
+    !revision&&order.length<2?'No peer':'#'+(1+order.filter(x=>x.score>r.score).length);
   return '<tr'+(r.role==='control'?' class="measured-am"':'')+'>'+
    '<td class="measured-rank">'+h(rankLabel)+'</td>'+
    '<th scope="row">'+h(r.label||r.system)+'</th>'+
@@ -172,8 +179,10 @@ function render(){
    '<td><a href="'+h(safeHref(r.run_url))+
     '" target="_blank" rel="noopener noreferrer">Evidence ↗</a></td></tr>';
  }).join('');
- q('measuredProvenance').textContent=p.origin+' · '+p.method_note+
-  (revision?' Revision rank is ONLY relative to the two versions shown, not a product market ranking.':
+ q('measuredProvenance').textContent=(publicFeedWarning?
+  'DATA REFRESH WARNING: '+publicFeedWarning+' · ':'')+
+  p.origin+' · '+p.method_note+
+  (revision?' Revision rank is ONLY relative to the listed runtime versions, not a product market ranking.':
   ' Rankings exclude baseline-only methods. Never combine different cohorts, evaluator protocols or native metrics.');
 }
 function setup(){
@@ -183,10 +192,15 @@ function setup(){
  q('measuredMetricSelect').addEventListener('change',render);
  root.addEventListener('agent-memory:public-feed',e=>{
   if(!Array.isArray(e.detail?.profiles))return;
+  publicFeedWarning='';
   publicFeedProfiles=e.detail.profiles;
   const selected=q('measuredProfileSelect').value,metric=q('measuredMetricSelect').value;
   updateProfiles(selected);
   updateMetrics(metric);
+ });
+ root.addEventListener('agent-memory:public-feed-error',e=>{
+  publicFeedWarning=String(e.detail?.message||'An unverified feed update was withheld');
+  render();
  });
  root.addEventListener('agent-memory:candidate-runs',e=>{
   if(!Array.isArray(e.detail))return;
