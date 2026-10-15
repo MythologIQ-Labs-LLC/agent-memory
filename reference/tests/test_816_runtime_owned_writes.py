@@ -269,7 +269,7 @@ class CloseAndFailureInjection(_Store):
         reopened.close()
         memory.close()
 
-    def test_a_failed_publication_rolls_back_and_the_connection_stays_sealed(self):
+    def test_a_failed_publication_rolls_back_and_the_guard_still_holds(self):
         memory = self.open()
         memory.remember("memory:x", "The deploy window is Thursday.")
         rows, governance = _rows(self.root), _governance(memory)
