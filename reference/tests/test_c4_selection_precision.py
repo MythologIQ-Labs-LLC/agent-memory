@@ -86,37 +86,43 @@ class CoveredEntitiesAddNothing(_Facade):
         self.assertEqual(result["returned"], [vet])
 
 
-class RedundantSingleAnswers(_Facade):
-    def test_earlier_partial_match_beside_a_full_answer_is_withheld(self):
-        self.put("memory:case", "I need to buy a new phone case.")
-        self.put("memory:visit", "My sister is visiting in June.")
-        phone = self.put("memory:phone", "My sister Ava's phone number is 07700 900123.")
-        result = self.memory.recall("What's my sister's phone number?")
-        self.assertEqual(result["returned"], [phone])
+FILLER = ("Paid the electric bill.", "Lunch with Sam on Friday.", "Dentist on Tuesday.")
 
-    def test_later_partial_statement_is_kept(self):
-        # A later statement that matches fewer query words may be the update ("the guitar now goes
-        # to Mike's" after "serviced at Strings Co"); only a statement no newer than the fuller one
-        # is withheld as redundant.
-        texts = {"full": "guitar serviced at strings co on elm street last spring",
-                 "partial": "guitar repairs: the guitar now goes to mikes",
-                 "x": "lunch on friday", "y": "bought milk", "z": "paid rent"}
 
-        def run(full_at, partial_at):
-            times = {"full": full_at, "partial": partial_at, "x": "2025-01-01", "y": "2025-01-01", "z": "2025-01-01"}
-            facts = {ref: SimpleNamespace(fact_text=text, attributes={}, created_at=times[ref]) for ref, text in texts.items()}
-            return select_relevance_sufficient(
-                list(texts), {ref: ("lexical",) for ref in texts}, facts.get, query="where is my guitar serviced",
-                intent=TemporalIntent(), lexical_route="lexical", exact_identity_route="exact_logical_identity")
+class SingleAnswersKeepTheirEvidence(_Facade):
+    def filler(self):
+        for i, text in enumerate(FILLER):
+            self.put(f"memory:x{i}", text)
 
-        selected, records, _ = run("2025-01-01", "2025-06-01")
-        self.assertEqual(selected, ["full", "partial"])
-        selected, records, _ = run("2025-06-01", "2025-01-01")
-        self.assertEqual(selected, ["full"])
-        self.assertEqual(records["partial"]["basis"], "dominated_by_selected")
+    def test_answer_is_never_withheld_by_a_fact_that_restates_the_question(self):
+        # Independent review F1 (reproductions r1, r4): a fact repeating the question's words
+        # without the answer, from the user or a tool, must not suppress the fact that holds it.
+        answer = self.put("memory:answer", "Blue running shoes are from Fleet Feet.")
+        chatty = self.put("memory:chatty", "I want to buy more blue running shoes before the marathon.")
+        self.filler()
+        result = self.memory.recall("Where did I buy my blue running shoes?")
+        self.assertTrue({answer, chatty} <= set(result["returned"]))
+
+    def test_tool_text_cannot_suppress_the_users_answer(self):
+        answer = self.memory.remember("memory:ans", "Side garage door code at the lake house is 4471.",
+                                      source_ref="user:alice")["fact_uuid"]
+        self.filler()
+        self.memory.remember("memory:tool", "Lake house cabin FAQ: what is the code for the side garage door? Ask the "
+                             "owner for the side garage door code at the lake house.", source_ref="tool:web-search")
+        result = self.memory.recall("What is the code for the side garage door at the lake house cabin?")
+        self.assertIn(answer, result["returned"])
+
+    def test_same_day_update_is_kept(self):
+        # Independent review F2 (r3): an update declared on the same day as the old statement.
+        old = self.memory.remember("memory:full", "Side garage door code at the lake house is 4471.",
+                                   observed_at="2025-05-20")["fact_uuid"]
+        self.filler()
+        new = self.memory.remember("memory:upd", "Lake house garage door code changed to 9032.",
+                                   observed_at="2025-05-20")["fact_uuid"]
+        result = self.memory.recall("What is the code for the side garage door at the lake house?")
+        self.assertTrue({old, new} <= set(result["returned"]))
 
     def test_equal_matches_are_both_kept(self):
-        # Two facts that answer equally well (possibly conflicting) are not collapsed.
         old = self.put("memory:old", "Gate code for the garage is 4471.")
         new = self.put("memory:new", "New gate code for the garage is 9032.")
         result = self.memory.recall("What is the garage gate code?")
@@ -130,6 +136,17 @@ class RedundantSingleAnswers(_Facade):
         self.put("memory:noise", "The concert hall parking costs ten dollars.")
         result = self.memory.recall("How many concerts did I go to this year?")
         self.assertTrue(set(refs) <= set(result["returned"]))
+
+
+class HomographsDoNotCover(_Facade):
+    def test_lowercase_homograph_does_not_cover_a_name(self):
+        # Independent review F5 (r6): "mark it urgent" does not cover the person Mark.
+        mark = self.put("memory:mark", "Mark recommended raising it.")
+        self.put("memory:form", "Bank transfer limit increase form: mark it urgent.")
+        for i, text in enumerate(FILLER):
+            self.put(f"memory:x{i}", text)
+        result = self.memory.recall("What did Mark recommend for the bank transfer limit increase?")
+        self.assertIn(mark, result["returned"])
 
 
 class RankingConsistency(unittest.TestCase):
@@ -157,14 +174,14 @@ class Diagnostics(_Facade):
         phone = self.put("memory:phone", "My sister Ava's phone number is 07700 900123.")
         result = self.memory.recall("What's my sister's phone number?")
         chosen = result["admissions"][phone]["return_selection"]
-        withheld = result["admissions"][visit]["return_selection"]
+        other = result["admissions"][visit]["return_selection"]
         self.assertEqual(chosen["requirement"], "single")
         self.assertEqual(chosen["query_terms_matched"], 2)  # "number" is a frame word
         self.assertEqual(chosen["query_terms_added"], 2)
-        self.assertFalse(withheld["sufficient"])
-        self.assertEqual(withheld["basis"], "dominated_by_selected")
-        self.assertEqual(withheld["dominated_by"], phone)  # an admitted, returned fact only
-        self.assertEqual(withheld["query_terms_added"], 0)
+        self.assertEqual(chosen["entities_added"], 0)
+        self.assertEqual(other["query_terms_matched"], 1)
+        self.assertEqual(other["query_terms_added"], 0)  # adds nothing beyond the answer above it
+        self.assertNotIn("dominated_by", other)
 
 
 class GovernanceUnchanged(_Facade):

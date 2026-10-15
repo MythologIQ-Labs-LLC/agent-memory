@@ -414,11 +414,6 @@
             "frame_fallback": {
               "type": "boolean"
             },
-            "dominated_count": {
-              "type": "integer",
-              "minimum": 0,
-              "description": "Selection policy 2.3.0 (#819 C4): admitted facts withheld from a single-answer recall because a selected, higher-ranked fact matches a strict superset of their query terms. Never authority."
-            },
             "lifecycle_successor_count": {
               "type": "integer",
               "minimum": 0,

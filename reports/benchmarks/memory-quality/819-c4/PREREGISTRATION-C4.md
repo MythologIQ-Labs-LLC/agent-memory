@@ -150,3 +150,25 @@ transaction time (the ranking stage's order). If the order is unknown, nothing i
 - A function-level test pins both orders.
 
 No further LongMemEval-driven changes follow. Its rerun is reported as measured.
+
+## Erratum 3: term-coverage dominance removed after independent review (before freeze; held-out v3 unread)
+
+The independent adversarial review of `3caf0c13` (`REVIEW-C4-adversarial.md`) showed that
+preregistered change 3 is unsound:
+
+- **Matching more of the question's words is not answering it.** A newer fact that restates the
+  question ("I want to buy more blue running shoes…") withheld the older fact holding the answer
+  ("Blue running shoes are from Fleet Feet."). Any writer, including a tool, could suppress a
+  correct answer by restating the question.
+- **Its statement-order guard was manipulable.** Equal declared days withheld the newer update,
+  and caller-declared dates overrode write order.
+- **List questions without an aggregate cue lost items**, because they are read as single.
+- **The pairwise loop was quadratic:** about 6× slower at 3,000 matching facts.
+
+Change 3 is **removed**, not patched. Changes 1 and 2 remain. Change 1 gains the review's F5 fix:
+a selected fact covers an entity only if it writes it as a name (capitalised or letter–digit),
+so a lowercase homograph such as "mark it urgent" does not cover Mark.
+
+The acceptance measures are unchanged. The first acceptance criterion now rests on changes 1 and 2
+alone. The dominance tests are replaced by the reviewer's reproductions, which fail on
+`3caf0c13`; the per-fact diagnostics no longer carry `dominated_by`.

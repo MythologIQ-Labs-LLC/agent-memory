@@ -54,14 +54,11 @@ memory text; only admitted facts can join; no currentness decision is made, so t
 explicit-current gate (G1) does not apply.
 
 Policy 2.3.0 (#819 C4) controls what joins the set. C3 recovered multi-evidence recall but returned
-facts no requirement asked for. Three rules tighten that without touching aggregate sets:
-**uncovered-entity coverage** (an entity a selected fact already names with at least half the best
-relevance to it is covered; only an uncovered entity brings another fact), **ranking consistency
-anchored on the best primary fact** (only a fact ranking places above the best match is promoted,
-not ordering noise below it), and **term-coverage dominance** for single-answer questions (a fact
-whose matched query terms are a strict subset of a selected, higher-ranked fact's, and which is
-not newer than it, is withheld as ``dominated_by_selected``; equal coverage and later statements
-are kept). Each admitted fact's record states the
+facts no requirement asked for. Two rules tighten that without touching aggregate sets:
+**uncovered-entity coverage** (an entity a selected fact already *writes as a name* with at least
+half the best relevance to it is covered; only an uncovered entity brings another fact) and
+**ranking consistency anchored on the best primary fact** (only a fact ranking places above the
+best match is promoted, not ordering noise below it). Each admitted fact's record states the
 requirement served and the query terms and entities it added.
 
 The stage reads only the admitted, ranked list and its evidence. It never changes candidates,
@@ -78,16 +75,14 @@ from functools import lru_cache
 from typing import Any, Callable, Iterable, Mapping, Sequence
 
 from .ranking_policy import (
-    _CLOCK_ORDER,
     HIGH_RISK_SELF_CLAIMS,
-    typed_temporal_evidence,
     admitted_set_bm25,
     eligible_temporal_query_terms,
     persisted_self_claims,
     relevance_tokens,
 )
 from .lexical_normalization import normal_form, normalized_text, typo_correction_allowed, typo_matches
-from .query_interpretation import SINGLE, QueryInterpretation, interpret
+from .query_interpretation import QueryInterpretation, interpret
 from .temporal_intent import TemporalIntent
 
 SELECTION_POLICY_ID = "relevance-sufficient-return-selection"
@@ -215,16 +210,15 @@ def _normal_form_masks(query: str, intent: TemporalIntent, facts: Mapping[str, A
     return masks
 
 
-def _not_later(fact: Any, other: Any) -> bool:
-    """Whether ``fact`` is known to be stated no later than ``other``, on the first clock both
-    carry (declared valid-from, declared observed-at, transaction time: the ranking stage's order).
-    Unknown order is ``False``: a statement is never withheld as redundant unless it is not newer."""
+def _names_mention(text: str, mention: tuple[str, ...]) -> bool:
+    """Whether ``text`` writes a term of ``mention`` as a name (2.3.0): capitalised or as a
+    letter-digit token. A lowercase homograph ("mark it urgent", "will confirm") does not cover
+    the person Mark or Will. ``text`` is the fact's raw text after contraction handling."""
 
-    mine = typed_temporal_evidence(fact)["clocks"]
-    theirs = typed_temporal_evidence(other)["clocks"]
-    for kind in _CLOCK_ORDER:
-        if kind in mine and kind in theirs:
-            return mine[kind]["seconds"] <= theirs[kind]["seconds"]
+    for match in _WORD.finditer(text):
+        token = match.group(0)
+        if normal_form(token.lower()) in mention and (token[0].isupper() or any(c.isdigit() for c in token)):
+            return True
     return False
 
 
@@ -352,22 +346,6 @@ def select_relevance_sufficient(
     for ref in ranked[:max(first, 0)]:
         if records[ref]["basis"] == "below_relative_floor":
             records[ref].update(sufficient=True, basis="ranked_above_sufficient")
-    # Term-coverage dominance (2.3.0): for a single-answer question, a fact whose matched query
-    # terms are a strict subset of a selected, higher-ranked fact's explains less of the question
-    # than evidence already returned. Equal coverage is kept (possibly conflicting answers are
-    # not collapsed); facts ranked above the best match keep their place.
-    if reading.shape == SINGLE and first >= 0:
-        for ref in ranked[first + 1:]:
-            if records[ref]["basis"] != "content_relevance":
-                continue
-            # A later statement that matches less may be an update ("took the guitar to Mike's"
-            # after "the guitar was serviced at Strings Co"); only a statement no newer than the
-            # dominating one is redundant.
-            dominator = next((other for other in ranked[:position[ref]]
-                              if records[other]["sufficient"] and matched[ref] < matched[other]
-                              and _not_later(facts[ref], facts[other])), None)
-            if dominator is not None:
-                records[ref].update(sufficient=False, basis="dominated_by_selected", dominated_by=dominator)
     # Entity coverage (2.3.0): a named entity is covered when a selected fact is substantially
     # about it (its relevance to the mention is at least COVERAGE_FRACTION of the best). Only an
     # uncovered entity brings the admitted fact most about it; a passing mention is not coverage.
@@ -381,12 +359,12 @@ def select_relevance_sufficient(
             continue
         best_about = max(about[ref] for ref in candidates)
         if any(records[ref]["sufficient"] and about.get(ref, 0.0) >= COVERAGE_FRACTION * best_about
-               and _mention_matched(mention, tokens.get(ref, frozenset())) for ref in ranked):
+               and _mention_matched(mention, tokens.get(ref, frozenset()))
+               and _names_mention(raw_texts.get(ref, ""), mention) for ref in ranked):
             continue
         chosen = max(candidates, key=lambda ref: (about[ref], -position[ref]))
         if not records[chosen]["sufficient"]:
             records[chosen].update(sufficient=True, basis="entity_coverage")
-            records[chosen].pop("dominated_by", None)
         entities_added[chosen] = entities_added.get(chosen, 0) + 1
     # Lifecycle closure: a returned state must not travel without the admitted later state that
     # the runtime's guarded write-time evidence says changes it. Transitive; admitted only.
@@ -405,7 +383,7 @@ def select_relevance_sufficient(
         frontier = following
     selected = [ref for ref in ranked if records[ref]["sufficient"]]
     # Per-fact explanation (2.3.0): the requirement served and the coverage contributed, in counts
-    # of the caller's own query terms; ``dominated_by`` names only an admitted, selected fact.
+    # of the caller's own query terms.
     seen: set[str] = set()
     for ref in ranked:
         record = records[ref]
@@ -416,7 +394,6 @@ def select_relevance_sufficient(
         if record["sufficient"]:
             seen |= matched[ref]
     summary = {
-        "dominated_count": sum(1 for ref in ranked if records[ref]["basis"] == "dominated_by_selected"),
         "lifecycle_successor_count": closure_count,
         "informative_query_term_count": len(evidence_terms),
         "relative_floor": relative_floor,
