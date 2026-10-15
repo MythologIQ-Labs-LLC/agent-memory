@@ -1,0 +1,16 @@
+# MemPalace v3.11.0 (602d796c699cabba2971982cd9dccbbf46abfe79) default embedder pins
+embedder: minilm (MempalaceConfig.embedding_model fallback when no config/env; mempalace/config.py:1430)
+implementation: chromadb==1.5.9 ONNXMiniLM_L6_V2 via mempalace.embedding._build_ef_class (name 'default')
+source_url: https://chroma-onnx-models.s3.amazonaws.com/all-MiniLM-L6-v2/onnx.tar.gz
+upstream_model: sentence-transformers/all-MiniLM-L6-v2 (ONNX export distributed by ChromaDB; not fetched from the HF Hub, so there is no HF revision; archive hash == chromadb _MODEL_SHA256)
+chromadb_pinned_archive_sha256: 913d7300ceae3b2dbc2c50d1de4baacab4be7b9380491c27fab7418616a16ec3
+local_dir: /tmp/am-bench/mempalace-home/.cache/chroma/onnx_models/all-MiniLM-L6-v2
+offline: child env HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1; chromadb downloads only when a file is missing
+sha256:
+913d7300ceae3b2dbc2c50d1de4baacab4be7b9380491c27fab7418616a16ec3  onnx.tar.gz
+b567c7d5a55b636c95186aaf993f9a8920842b7e05a9e703e68b23cab2c3a670  onnx/config.json
+4f148ba8ae9c2c7fbee4af2b132db8d06c6a6545b47fc83bbb98c3d22b8393e6  onnx/model.onnx
+b6d346be366a7d1d48332dbc9fdf3bf8960b5d879522b7799ddba59e76237ee3  onnx/special_tokens_map.json
+da0e79933b9ed51798a3ae27893d3c5fa4a201126cef75586296df9b4d2c62a0  onnx/tokenizer.json
+7702051bbc4953b94d47fa1d61b42ed4cbb3c71b501a8dd7183a823f8bea1f20  onnx/tokenizer_config.json
+07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3  onnx/vocab.txt

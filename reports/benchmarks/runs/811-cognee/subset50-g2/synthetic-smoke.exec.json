@@ -1,0 +1,58 @@
+{
+  "argv": [
+    "/tmp/am-bench/cognee-venv/bin/python",
+    "reference/run_longmemeval.py",
+    "--external-backend",
+    "longmemeval_cognee_bridge:install_longmemeval_cognee_backend",
+    "--backend",
+    "cognee_gliner_local",
+    "--input",
+    "reference/fixtures/benchmarks/longmemeval/synthetic.json",
+    "--corpus-class",
+    "synthetic",
+    "--max-questions",
+    "3",
+    "--granularity",
+    "session",
+    "--granularity",
+    "turn",
+    "--output",
+    "/tmp/am-bench/runs/smoke/cognee-smoke.json"
+  ],
+  "cwd": "/tmp/am-bench/am",
+  "env": {
+    "HF_HOME": "/tmp/am-bench/hf-home-cognee",
+    "HF_HUB_OFFLINE": null,
+    "TRANSFORMERS_OFFLINE": null,
+    "JEV_MEM_SOURCE_ROOT": null,
+    "PYTHONHASHSEED": "0",
+    "VIRTUAL_ENV": null,
+    "OMP_NUM_THREADS": null
+  },
+  "run_as_user": "benchrun",
+  "host": {
+    "platform": "Linux-6.18.44-fc-v114-x86_64-with-glibc2.39",
+    "cpu_count": 4,
+    "python": "3.13.16"
+  },
+  "started_utc": "2026-10-15T13:22:54Z",
+  "exit_status": 0,
+  "wall_seconds": 420.275,
+  "user_cpu_seconds": 479.878,
+  "system_cpu_seconds": 74.283,
+  "peak_rss_mib": 3594.8,
+  "secrets_present": {
+    "OPENAI_API_KEY": false,
+    "ANTHROPIC_API_KEY": false,
+    "TYPESAFE_API_KEY": false,
+    "HF_TOKEN": false,
+    "GEMINI_API_KEY": false,
+    "GOOGLE_API_KEY": false,
+    "GROQ_API_KEY": false,
+    "AWS_ACCESS_KEY_ID": false,
+    "AWS_SECRET_ACCESS_KEY": false,
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false,
+    "LLM_API_KEY": false
+  }
+}
