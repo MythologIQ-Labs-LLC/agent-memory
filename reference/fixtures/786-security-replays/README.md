@@ -11,6 +11,15 @@ wanting in v1). The runner still executes a `-v1` id on request; the cumulative 
 (`reports/runtime/proposals/786-cumulative-v6-to-v8.PROPOSED.json`, read by the verifier, which lists
 the family under the first-class `security_replay` evidence kind) names only the `-v2` ids.
 
+Reading note for W4 / W4b (owner's PR #805 checkpoint; the frozen fixture text is not edited): the
+complete-scope override those cases admit is a property of the privileged-host model, not of the
+facade as an isolation boundary. The facade does not authenticate who submits `overrides` or the
+handle's scope; a host that declares a complete scope is trusted to have bound authenticated
+authority to it first (docs/44 "Scope is privileged host input", docs/786 "What remains disclosed").
+The cases prove that the override is judged exactly as a handle opened with that scope would be,
+not that an end user is isolated from a host that can declare the owner's scope. The independent
+invariant-by-invariant record of the `-v2` set is `reports/validation/805-at-head/independent-replay-review-v2.md`.
+
 | replay | contract sources | what it holds |
 |---|---|---|
 | `cross-scope-write-authority-denial-v2` | docs/786, docs/44 | the v1 cases plus: refusal tokens and `v0` states after restart (W3), the documented superset-override admission of forget/dispute and the complete-scope override commit (W4b), owner recall candidates (W5), a former owner's `delete_version`/dispute/forget/remember against a re-created id leave no trace and answer the same as with no re-creation (W7b, W7c), refused and parked proposals on a tombstoned id report `v0` (W8b) |

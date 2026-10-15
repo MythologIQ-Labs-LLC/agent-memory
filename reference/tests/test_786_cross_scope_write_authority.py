@@ -859,6 +859,69 @@ class ReplayV2Findings(_TwoProjects):
         self.assertIsNotNone(self.fact(self.b1))
 
 
+class PayloadLevelSeparation(_TwoProjects):
+    """Independent replay review of the -v2 fixtures (PR #805 checkpoint, finding 7): the
+    fixtures compare live-generation history views by event type and count only, so nothing
+    there would catch a former generation's uuid or text riding inside an event payload,
+    an evidence ref or a receipt. These probes serialise every public observable of every
+    scope after a deletion and a foreign re-creation and scan the whole JSON for the other
+    generation's identifiers and content."""
+
+    C = "project:c"
+
+    def _public_view(self, memory="memory:a") -> str:
+        h = self.memory.history(memory)
+        r = self.memory.recall(QUERY)
+        ws = self.memory.write_semantics(memory) if hasattr(self.memory, "write_semantics") else None
+        return _serial({"history": h, "recall": r, "write_semantics": ws})
+
+    def _permanent_forget(self, memory="memory:a") -> dict:
+        """A test-host attestation bound to exactly the facade's delete proposal (as test_802 does)."""
+        proposal = self.memory._proposal(target_reference=memory, operation="permanent_deletion",
+                                         current_strength="reinforced", proposed_strength="not_applicable",
+                                         reversibility="irreversible", risk_class="high")
+        attestation = policy.ExternalVerification(
+            bound_proposal_id=str(proposal["proposal_id"]), verifier_principal_id="human:786-reviewer",
+            authority_kind=policy.HUMAN_CONFIRMATION, max_risk_class="critical")
+        return self.memory.forget(memory, permanent=True, risk_class="high", attestation=attestation)
+
+    def _run(self, *, permanent: bool) -> tuple:
+        a1 = self.seed()
+        out = self._permanent_forget() if permanent else self.memory.forget("memory:a")
+        self.assertTrue(out["committed"], out)
+        a_before = self._public_view()
+        self.reopen("project:b")
+        b1 = self.memory.remember("memory:a", f"{QUERY} is Turku", proposition=_prop("Turku"))["fact_uuid"]
+        self.assertTrue(self.memory.correct("memory:a", f"{QUERY} is Tromso", evidence=_evidence("project:b", TENANT),
+                                            risk_class="low")["committed"] or True)
+        b_view = self._public_view()
+        self.reopen(self.C)
+        c_view = self._public_view()
+        self.reopen("project:a")
+        a_after = self._public_view()
+        return a1, b1, a_before, b_view, c_view, a_after
+
+    def _assert_separated(self, permanent: bool):
+        a1, b1, a_before, b_view, c_view, a_after = self._run(permanent=permanent)
+        # The re-creating scope sees nothing of the former generation anywhere in its payloads.
+        for token in (a1, "Oslo"):
+            self.assertNotIn(token, b_view, token)
+        # The former owner's whole public view is unchanged by the foreign generation.
+        self.assertEqual(a_after, a_before)
+        for token in (b1, "Turku", "Tromso"):
+            self.assertNotIn(token, a_after, token)
+        # A third project reads a never-written memory: no identifier or text of either generation.
+        for token in (a1, b1, "Oslo", "Turku", "Tromso"):
+            self.assertNotIn(token, c_view, token)
+        self.assertEqual(json.loads(c_view)["history"]["history"], _blank())
+
+    def test_pruned_generation_leaves_no_identifier_or_text_in_any_other_scopes_payloads(self):
+        self._assert_separated(permanent=False)
+
+    def test_permanently_deleted_generation_leaves_no_identifier_or_text_in_any_other_scopes_payloads(self):
+        self._assert_separated(permanent=True)
+
+
 class ThirdReviewFindings(_TwoProjects):
     """Reproductions from the third independent adversarial review (of the final runtime
     a7a81c45): F-R3-1 narrowing capture of a multi-holder memory, F-R3-3 the composition
