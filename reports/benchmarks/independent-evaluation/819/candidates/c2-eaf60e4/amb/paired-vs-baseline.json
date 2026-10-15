@@ -1,0 +1,148 @@
+{
+ "kind": "amb",
+ "plane": null,
+ "paired_n": 77,
+ "base_pass": 15,
+ "cand_pass": 39,
+ "classes": {
+  "improved": 24,
+  "unchanged_fail": 38,
+  "unchanged_pass": 15
+ },
+ "mcnemar_exact_p": 0.0,
+ "delta_pass_rate_ci95": [
+  0.3117,
+  0.2078,
+  0.4156
+ ],
+ "delta_precision_ci95": [
+  0.3356,
+  0.2437,
+  0.4324
+ ],
+ "delta_recall_ci95": [
+  -0.0753,
+  -0.1506,
+  -0.0155
+ ],
+ "by_group": {
+  "Alias resolution": {
+   "n": 23,
+   "base_pass": 3,
+   "cand_pass": 14,
+   "improved": 11,
+   "regressed": 0
+  },
+  "Budget eviction and capacity": {
+   "n": 5,
+   "base_pass": 3,
+   "cand_pass": 5,
+   "improved": 2,
+   "regressed": 0
+  },
+  "Cold start behavior": {
+   "n": 1,
+   "base_pass": 1,
+   "cand_pass": 1,
+   "improved": 0,
+   "regressed": 0
+  },
+  "Counter-signal retrieval": {
+   "n": 2,
+   "base_pass": 0,
+   "cand_pass": 0,
+   "improved": 0,
+   "regressed": 0
+  },
+  "Cross-user isolation": {
+   "n": 1,
+   "base_pass": 1,
+   "cand_pass": 1,
+   "improved": 0,
+   "regressed": 0
+  },
+  "Design boundary cases": {
+   "n": 6,
+   "base_pass": 2,
+   "cand_pass": 3,
+   "improved": 1,
+   "regressed": 0
+  },
+  "Fuzzy matching and prefix guards": {
+   "n": 7,
+   "base_pass": 3,
+   "cand_pass": 5,
+   "improved": 2,
+   "regressed": 0
+  },
+  "Persona prelude content": {
+   "n": 4,
+   "base_pass": 1,
+   "cand_pass": 3,
+   "improved": 2,
+   "regressed": 0
+  },
+  "Ranking stability": {
+   "n": 3,
+   "base_pass": 1,
+   "cand_pass": 3,
+   "improved": 2,
+   "regressed": 0
+  },
+  "Relation expansion": {
+   "n": 4,
+   "base_pass": 0,
+   "cand_pass": 1,
+   "improved": 1,
+   "regressed": 0
+  },
+  "Scope disambiguation": {
+   "n": 12,
+   "base_pass": 0,
+   "cand_pass": 3,
+   "improved": 3,
+   "regressed": 0
+  },
+  "Supersession chain exclusion": {
+   "n": 3,
+   "base_pass": 0,
+   "cand_pass": 0,
+   "improved": 0,
+   "regressed": 0
+  },
+  "Type routing and open questions": {
+   "n": 6,
+   "base_pass": 0,
+   "cand_pass": 0,
+   "improved": 0,
+   "regressed": 0
+  }
+ },
+ "improved_ids": [
+  "alias-base-class-retrieves-composition",
+  "alias-dlq-abbreviation-resolves",
+  "alias-exceptions-retrieves-error-handling",
+  "alias-mongo-resolves",
+  "alias-pov-shift-resolves",
+  "alias-protagonist-resolves",
+  "alias-ts-resolves",
+  "alias-two-word-shingle-dead-letter",
+  "canonical-name-match-mara",
+  "fuzzy-single-edit-fires-non-pinned",
+  "messy-filler-heavy-extraction",
+  "messy-negation-surfaces-topic",
+  "messy-typo-blind-spot",
+  "multi-scope-prelude-uses-primary-scope-only",
+  "out-of-scope-coin-collecting",
+  "preference-flood-relevant-entity-survives",
+  "ranking-canonical-name-over-content",
+  "ranking-orderedbefore-alias-beats-content",
+  "relation-expansion-respects-scope-filter",
+  "score-boundary-weak-match-filtered",
+  "universal-scope-belief-content-in-persona-prelude",
+  "universal-scope-explicit-query-no-relevant",
+  "user-edited-cross-scope-surfaces",
+  "zero-reinforcement-fresh-belief-surfaces"
+ ],
+ "regressed_ids": []
+}

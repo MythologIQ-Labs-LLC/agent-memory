@@ -1,0 +1,128 @@
+{
+ "kind": "lme",
+ "plane": "turn",
+ "paired_n": 419,
+ "base_pass": 303,
+ "cand_pass": 258,
+ "classes": {
+  "improved": 5,
+  "regressed": 50,
+  "unchanged_fail": 111,
+  "unchanged_pass": 253
+ },
+ "mcnemar_exact_p": 0.0,
+ "delta_pass_rate_ci95": [
+  -0.1074,
+  -0.1408,
+  -0.074
+ ],
+ "delta_precision_ci95": null,
+ "delta_recall_ci95": [
+  -0.1074,
+  -0.1408,
+  -0.074
+ ],
+ "by_group": {
+  "knowledge-update": {
+   "n": 72,
+   "base_pass": 67,
+   "cand_pass": 53,
+   "improved": 0,
+   "regressed": 14
+  },
+  "multi-session": {
+   "n": 121,
+   "base_pass": 65,
+   "cand_pass": 52,
+   "improved": 1,
+   "regressed": 14
+  },
+  "single-session-assistant": {
+   "n": 5,
+   "base_pass": 4,
+   "cand_pass": 4,
+   "improved": 0,
+   "regressed": 0
+  },
+  "single-session-preference": {
+   "n": 30,
+   "base_pass": 12,
+   "cand_pass": 13,
+   "improved": 3,
+   "regressed": 2
+  },
+  "single-session-user": {
+   "n": 64,
+   "base_pass": 61,
+   "cand_pass": 61,
+   "improved": 0,
+   "regressed": 0
+  },
+  "temporal-reasoning": {
+   "n": 127,
+   "base_pass": 94,
+   "cand_pass": 75,
+   "improved": 1,
+   "regressed": 20
+  }
+ },
+ "improved_ids": [
+  "3fdac837",
+  "57f827a0",
+  "75832dbd",
+  "d6233ab6",
+  "gpt4_fe651585"
+ ],
+ "regressed_ids": [
+  "0db4c65d",
+  "18bc8abd",
+  "1c0ddc50",
+  "22d2cb42",
+  "2311e44b",
+  "27016adc",
+  "3c1045c8",
+  "5025383b",
+  "505af2f5",
+  "50635ada",
+  "60036106",
+  "60472f9c",
+  "618f13b2",
+  "6e984301",
+  "89941a93",
+  "8cf4d046",
+  "945e3d21",
+  "9a707b82",
+  "a3332713",
+  "a346bb18",
+  "b5ef892d",
+  "b9cfe692",
+  "c4ea545c",
+  "c6853660",
+  "c8090214",
+  "cc6d1ec1",
+  "cf22b7bf",
+  "d3ab962e",
+  "dad224aa",
+  "db467c8c",
+  "dcfa8644",
+  "e25c3b8d",
+  "e493bb7c",
+  "e61a7584",
+  "eac54adc",
+  "eace081b",
+  "gpt4_0b2f1d21",
+  "gpt4_213fd887",
+  "gpt4_372c3eed",
+  "gpt4_4929293a",
+  "gpt4_59149c77",
+  "gpt4_59149c78",
+  "gpt4_61e13b3c",
+  "gpt4_68e94287",
+  "gpt4_76048e76",
+  "gpt4_8e165409",
+  "gpt4_c27434e8",
+  "gpt4_cd90e484",
+  "gpt4_d12ceb0e",
+  "gpt4_e414231e"
+ ]
+}

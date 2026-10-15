@@ -1,0 +1,102 @@
+{
+ "kind": "holdout",
+ "plane": null,
+ "paired_n": 176,
+ "base_pass": 37,
+ "cand_pass": 116,
+ "classes": {
+  "improved": 79,
+  "unchanged_fail": 60,
+  "unchanged_pass": 37
+ },
+ "mcnemar_exact_p": 0.0,
+ "delta_pass_rate_ci95": [
+  0.4489,
+  0.375,
+  0.5227
+ ],
+ "delta_precision_ci95": [
+  0.2512,
+  0.2095,
+  0.2934
+ ],
+ "delta_recall_ci95": [
+  -0.0556,
+  -0.0833,
+  -0.0312
+ ],
+ "by_group": {
+  "abstention": {
+   "n": 16,
+   "base_pass": 0,
+   "cand_pass": 16,
+   "improved": 16,
+   "regressed": 0
+  },
+  "conflicting_unreconciled": {
+   "n": 16,
+   "base_pass": 0,
+   "cand_pass": 0,
+   "improved": 0,
+   "regressed": 0
+  },
+  "corrected_memory": {
+   "n": 16,
+   "base_pass": 12,
+   "cand_pass": 16,
+   "improved": 4,
+   "regressed": 0
+  },
+  "cross_scope_isolation": {
+   "n": 16,
+   "base_pass": 0,
+   "cand_pass": 16,
+   "improved": 16,
+   "regressed": 0
+  },
+  "factual_precision": {
+   "n": 16,
+   "base_pass": 4,
+   "cand_pass": 12,
+   "improved": 8,
+   "regressed": 0
+  },
+  "irrelevant_context": {
+   "n": 16,
+   "base_pass": 0,
+   "cand_pass": 0,
+   "improved": 0,
+   "regressed": 0
+  },
+  "multi_hop": {
+   "n": 16,
+   "base_pass": 0,
+   "cand_pass": 0,
+   "improved": 0,
+   "regressed": 0
+  },
+  "multi_session": {
+   "n": 32,
+   "base_pass": 13,
+   "cand_pass": 24,
+   "improved": 11,
+   "regressed": 0
+  },
+  "query_disambiguation": {
+   "n": 16,
+   "base_pass": 0,
+   "cand_pass": 16,
+   "improved": 16,
+   "regressed": 0
+  },
+  "temporal_currentness": {
+   "n": 16,
+   "base_pass": 8,
+   "cand_pass": 16,
+   "improved": 8,
+   "regressed": 0
+  }
+ },
+ "cand_hard_gate_leaks": 0,
+ "base_hard_gate_leaks": 0
+}

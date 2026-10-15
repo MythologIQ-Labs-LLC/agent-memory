@@ -1,0 +1,38 @@
+{
+  "argv": [
+    "/tmp/eval/amb-venv-cand/bin/python",
+    "run_locomo_evidence_benchmark.py",
+    "--dataset",
+    "/tmp/eval/data/locomo10.json",
+    "--agent-memory-revision",
+    "4bd38e6ca9cec9de7a054dd6b970ac26f05fb946",
+    "--output",
+    "/tmp/eval/evidence/cand-locomo.json"
+  ],
+  "cwd": "/tmp/eval/am-cand/reference",
+  "exit_status": 0,
+  "started_utc": "2026-10-15T14:41:23Z",
+  "wall_seconds": 851.759,
+  "user_cpu_seconds": 537.399,
+  "system_cpu_seconds": 24.889,
+  "peak_rss_mib": 3263.8,
+  "env": {
+    "HF_HOME": null,
+    "HF_HUB_OFFLINE": null,
+    "TRANSFORMERS_OFFLINE": null,
+    "JEV_MEM_SOURCE_ROOT": null,
+    "PYTHONHASHSEED": "0",
+    "VIRTUAL_ENV": null,
+    "OMP_NUM_THREADS": null
+  },
+  "secrets_present": {
+    "OPENAI_API_KEY": false,
+    "TYPESAFE_API_KEY": false,
+    "HF_TOKEN": false
+  },
+  "host": {
+    "platform": "Linux-6.18.44-fc-v114-x86_64-with-glibc2.39",
+    "cpu_count": 4,
+    "python": "3.12.3"
+  }
+}

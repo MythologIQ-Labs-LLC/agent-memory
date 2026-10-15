@@ -1,0 +1,109 @@
+{
+ "kind": "lme",
+ "plane": "session",
+ "paired_n": 419,
+ "base_pass": 345,
+ "cand_pass": 313,
+ "classes": {
+  "improved": 2,
+  "regressed": 34,
+  "unchanged_fail": 72,
+  "unchanged_pass": 311
+ },
+ "mcnemar_exact_p": 0.0,
+ "delta_pass_rate_ci95": [
+  -0.0764,
+  -0.105,
+  -0.0501
+ ],
+ "delta_precision_ci95": null,
+ "delta_recall_ci95": [
+  -0.0764,
+  -0.105,
+  -0.0501
+ ],
+ "by_group": {
+  "knowledge-update": {
+   "n": 72,
+   "base_pass": 70,
+   "cand_pass": 65,
+   "improved": 1,
+   "regressed": 6
+  },
+  "multi-session": {
+   "n": 121,
+   "base_pass": 82,
+   "cand_pass": 71,
+   "improved": 1,
+   "regressed": 12
+  },
+  "single-session-assistant": {
+   "n": 5,
+   "base_pass": 5,
+   "cand_pass": 5,
+   "improved": 0,
+   "regressed": 0
+  },
+  "single-session-preference": {
+   "n": 30,
+   "base_pass": 22,
+   "cand_pass": 22,
+   "improved": 0,
+   "regressed": 0
+  },
+  "single-session-user": {
+   "n": 64,
+   "base_pass": 64,
+   "cand_pass": 64,
+   "improved": 0,
+   "regressed": 0
+  },
+  "temporal-reasoning": {
+   "n": 127,
+   "base_pass": 102,
+   "cand_pass": 86,
+   "improved": 0,
+   "regressed": 16
+  }
+ },
+ "improved_ids": [
+  "10d9b85a",
+  "830ce83f"
+ ],
+ "regressed_ids": [
+  "06db6396",
+  "0bb5a684",
+  "18bc8abd",
+  "27016adc",
+  "28dc39ac",
+  "36b9f61e",
+  "3c1045c8",
+  "618f13b2",
+  "89941a93",
+  "8cf4d046",
+  "a3332713",
+  "a4996e51",
+  "aae3761f",
+  "b9cfe692",
+  "bf659f65",
+  "c6853660",
+  "d3ab962e",
+  "dfde3500",
+  "e25c3b8d",
+  "eac54adc",
+  "gpt4_0b2f1d21",
+  "gpt4_213fd887",
+  "gpt4_2487a7cb",
+  "gpt4_2c50253f",
+  "gpt4_2d58bcd6",
+  "gpt4_372c3eed",
+  "gpt4_59149c78",
+  "gpt4_5dcc0aab",
+  "gpt4_61e13b3c",
+  "gpt4_7ca326fa",
+  "gpt4_8e165409",
+  "gpt4_c27434e8",
+  "gpt4_d31cdae3",
+  "gpt4_e414231f"
+ ]
+}

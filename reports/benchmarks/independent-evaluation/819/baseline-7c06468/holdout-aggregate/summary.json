@@ -1,0 +1,160 @@
+{
+ "cohort_id": "am-819-holdout-v1",
+ "cases_sha256": "8674577ec8e9f467ad1633b302f96f519361942d57becd11325dcb166c14e962",
+ "harness_sha256": "805d76b1a4eb61207aefdb527648388f1d68985dcc841720435551ec1a35d365",
+ "summary": {
+  "overall": {
+   "queries": 176,
+   "strict_pass": 37,
+   "eval_failures": 0,
+   "mean_precision": 0.4395,
+   "precision_n": 168,
+   "mean_recall": 0.8333,
+   "recall_n": 144,
+   "isolation_leaks": 0,
+   "forgotten_leaks": 0,
+   "stale_returned": 0,
+   "mean_returned": 1.795
+  },
+  "by_category": {
+   "abstention": {
+    "queries": 16,
+    "strict_pass": 0,
+    "eval_failures": 0,
+    "mean_precision": 0.0,
+    "precision_n": 16,
+    "mean_recall": null,
+    "recall_n": 0,
+    "isolation_leaks": 0,
+    "forgotten_leaks": 0,
+    "stale_returned": 0,
+    "mean_returned": 1.562
+   },
+   "conflicting_unreconciled": {
+    "queries": 16,
+    "strict_pass": 0,
+    "eval_failures": 0,
+    "mean_precision": 0.5,
+    "precision_n": 16,
+    "mean_recall": 1.0,
+    "recall_n": 16,
+    "isolation_leaks": 0,
+    "forgotten_leaks": 0,
+    "stale_returned": 0,
+    "mean_returned": 2.0
+   },
+   "corrected_memory": {
+    "queries": 16,
+    "strict_pass": 12,
+    "eval_failures": 0,
+    "mean_precision": 0.875,
+    "precision_n": 16,
+    "mean_recall": 1.0,
+    "recall_n": 16,
+    "isolation_leaks": 0,
+    "forgotten_leaks": 0,
+    "stale_returned": 0,
+    "mean_returned": 1.25
+   },
+   "cross_scope_isolation": {
+    "queries": 16,
+    "strict_pass": 0,
+    "eval_failures": 0,
+    "mean_precision": 0.5,
+    "precision_n": 16,
+    "mean_recall": 1.0,
+    "recall_n": 16,
+    "isolation_leaks": 0,
+    "forgotten_leaks": 0,
+    "stale_returned": 0,
+    "mean_returned": 2.0
+   },
+   "factual_precision": {
+    "queries": 16,
+    "strict_pass": 4,
+    "eval_failures": 0,
+    "mean_precision": 0.4896,
+    "precision_n": 16,
+    "mean_recall": 1.0,
+    "recall_n": 16,
+    "isolation_leaks": 0,
+    "forgotten_leaks": 0,
+    "stale_returned": 0,
+    "mean_returned": 2.625
+   },
+   "irrelevant_context": {
+    "queries": 16,
+    "strict_pass": 0,
+    "eval_failures": 0,
+    "mean_precision": 0.0,
+    "precision_n": 16,
+    "mean_recall": 0.0,
+    "recall_n": 16,
+    "isolation_leaks": 0,
+    "forgotten_leaks": 0,
+    "stale_returned": 0,
+    "mean_returned": 1.812
+   },
+   "multi_hop": {
+    "queries": 16,
+    "strict_pass": 0,
+    "eval_failures": 0,
+    "mean_precision": 0.625,
+    "precision_n": 16,
+    "mean_recall": 1.0,
+    "recall_n": 16,
+    "isolation_leaks": 0,
+    "forgotten_leaks": 0,
+    "stale_returned": 0,
+    "mean_returned": 3.25
+   },
+   "multi_session": {
+    "queries": 32,
+    "strict_pass": 13,
+    "eval_failures": 0,
+    "mean_precision": 0.2708,
+    "precision_n": 24,
+    "mean_recall": 0.5,
+    "recall_n": 16,
+    "isolation_leaks": 0,
+    "forgotten_leaks": 0,
+    "stale_returned": 0,
+    "mean_returned": 0.781
+   },
+   "query_disambiguation": {
+    "queries": 16,
+    "strict_pass": 0,
+    "eval_failures": 0,
+    "mean_precision": 0.4688,
+    "precision_n": 16,
+    "mean_recall": 1.0,
+    "recall_n": 16,
+    "isolation_leaks": 0,
+    "forgotten_leaks": 0,
+    "stale_returned": 0,
+    "mean_returned": 2.188
+   },
+   "temporal_currentness": {
+    "queries": 16,
+    "strict_pass": 8,
+    "eval_failures": 0,
+    "mean_precision": 0.75,
+    "precision_n": 16,
+    "mean_recall": 1.0,
+    "recall_n": 16,
+    "isolation_leaks": 0,
+    "forgotten_leaks": 0,
+    "stale_returned": 0,
+    "mean_returned": 1.5
+   }
+  },
+  "latency_ms": {
+   "p50": 60.888,
+   "p95": 93.01,
+   "max": 132.512
+  }
+ },
+ "ingest_ms_total": 75043.3,
+ "op_refusal_count": 0,
+ "note": "aggregate only; per-query rows withheld until the holdout is released"
+}
