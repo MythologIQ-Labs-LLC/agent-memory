@@ -7,14 +7,14 @@ Loading queries...
 Loading documents...
   35 documents loaded
 Ingesting into agent-memory...
-  ingested in 274ms (7.8ms/doc avg)
+  ingested in 282ms (8.0ms/doc avg)
 
   Evaluating ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:01
 
 Saved → 
 /tmp/claude-0/-home-user-agent-memory/e3e750d6-aa32-58ce-8a57-ef081d712c0b/scrat
-chpad/evidence-final/stock-cli-full-agent-memory/amb-outputs/precisionmembench/a
-gent-memory/retrieval/single-turn.json
+chpad/evidence-final2/stock-cli-full-agent-memory/amb-outputs/precisionmembench/
+agent-memory/retrieval/single-turn.json
         Results —        
 precisionmembench/single-
   turn | agent-memory |  

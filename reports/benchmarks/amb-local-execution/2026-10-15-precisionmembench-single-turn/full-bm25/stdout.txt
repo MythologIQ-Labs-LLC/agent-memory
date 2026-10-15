@@ -6,14 +6,14 @@ Loading queries...
 Loading documents...
   35 documents loaded
 Ingesting into bm25...
-  ingested in 269ms (7.7ms/doc avg)
+  ingested in 270ms (7.7ms/doc avg)
 
   Evaluating ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
 
 Saved → 
 /tmp/claude-0/-home-user-agent-memory/e3e750d6-aa32-58ce-8a57-ef081d712c0b/scrat
-chpad/evidence-final/full-bm25/amb-outputs/precisionmembench/bm25/retrieval/sing
-le-turn.json
+chpad/evidence-final2/full-bm25/amb-outputs/precisionmembench/bm25/retrieval/sin
+gle-turn.json
         Results —        
 precisionmembench/single-
  turn | bm25 | retrieval 

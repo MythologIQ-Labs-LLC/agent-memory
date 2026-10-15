@@ -1,7 +1,8 @@
 {
   "left": "/home/user/agent-memory/reports/benchmarks/amb/amb-precisionmembench-retrieval-v6/bm25-24048d55e26d/single-turn.json",
-  "right": "/tmp/claude-0/-home-user-agent-memory/e3e750d6-aa32-58ce-8a57-ef081d712c0b/scratchpad/evidence-final/full-bm25/amb-outputs/precisionmembench/bm25/retrieval/single-turn.json",
-  "cases_compared": 77,
+  "right": "/tmp/claude-0/-home-user-agent-memory/e3e750d6-aa32-58ce-8a57-ef081d712c0b/scratchpad/evidence-final2/full-bm25/amb-outputs/precisionmembench/bm25/retrieval/single-turn.json",
+  "left_cases": 77,
+  "right_cases": 77,
   "ignored_fields": [
     "avg_retrieve_time_ms",
     "ingestion_time_ms",

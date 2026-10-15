@@ -2,10 +2,10 @@
   "agent_memory": {
     "bridge_blobs": {
       "reference/amb_agent_memory_bridge.py": "3d9ccb31587b55edf4ddb714d6e8ff41d5b03228",
-      "reference/amb_retrieval_no_llm.py": "2273248e81585197a0d024916e3d0271237bf50b",
+      "reference/amb_retrieval_no_llm.py": "1d3584f0cfff0ea65dff50b4bcd6bcd57e866f04",
       "reference/run_amb_external.py": "0c7b438395240d0d9d08e0c4031f0a8425092265"
     },
-    "revision": "b9a9307484f4bc4312203c9dc54b951002e3ee90",
+    "revision": "7c06468aae1aed0d2115c42f9588fbbe8417657e",
     "worktree_dirty_paths": []
   },
   "amb": {
@@ -20,6 +20,7 @@
       "src/memory_bench/runner.py": "190bb2b5d98c697859e534ac5fd8c34038ad9146",
       "src/memory_bench/utils.py": "e68586c8dcf37016e836659922d0c7609c066893"
     },
+    "unchanged_during_run": true,
     "uv_lock_sha256": "de4408d18088476169d62286e379417aac2bd52c97f1bdd868bf4f4a366bcad7",
     "worktree_dirty_paths": []
   },
@@ -46,13 +47,14 @@
     "--mode",
     "retrieval",
     "--output-dir",
-    "/tmp/claude-0/-home-user-agent-memory/e3e750d6-aa32-58ce-8a57-ef081d712c0b/scratchpad/evidence-final/stock-cli-full-bm25/amb-outputs"
+    "/tmp/claude-0/-home-user-agent-memory/e3e750d6-aa32-58ce-8a57-ef081d712c0b/scratchpad/evidence-final2/stock-cli-full-bm25/amb-outputs"
   ],
   "credentials_present_in_child": [
     "GEMINI_API_KEY",
     "GROQ_API_KEY"
   ],
   "credentials_removed": [],
+  "dataset_fixture_dir": "/tmp/agent-memory-benchmark/.datasets/precisionmembench",
   "dataset_fixtures_sha256": {
     "beliefs.seed.json": "35659b3b9a581b644fc6746e1b4e902c3e7b56c0973b546bf7b0816a69e3de98",
     "retrieval.cases.json": "09e99f0852280538abe34b03570f65583fdb10df3c554b7150f0f665d5db709c"
@@ -362,13 +364,15 @@
   },
   "exit_code": 0,
   "outputs_sha256": {
-    "amb-outputs/precisionmembench/bm25/retrieval/single-turn.json": "2931a9c783220e0645126373e547f4b6614635078c4d15e16f3a051ac6b6d47a"
+    "amb-outputs/precisionmembench/bm25/retrieval/single-turn.json": "670347f37e95c7e166eb8f6b7646d360fa58b9c1b1532bae73c759d2d019c9a8"
   },
-  "peak_rss_kib": 1356720,
+  "peak_rss_kib": 1355392,
   "schema": "agent-memory-amb-local-execution/1",
-  "started_utc": "2026-10-15T04:46:09+00:00",
-  "system_cpu_s": 0.731,
+  "scoring_env_in_child": {},
+  "scoring_env_removed_from_child": [],
+  "started_utc": "2026-10-15T05:08:15+00:00",
+  "system_cpu_s": 1.797,
   "tiktoken_cache_dir": "/tmp/claude-0/-home-user-agent-memory/e3e750d6-aa32-58ce-8a57-ef081d712c0b/scratchpad/amb-env/tiktoken-cache",
-  "user_cpu_s": 6.95,
-  "wall_time_s": 7.568
+  "user_cpu_s": 6.957,
+  "wall_time_s": 8.545
 }
