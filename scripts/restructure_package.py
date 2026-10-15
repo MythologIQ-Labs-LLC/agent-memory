@@ -51,7 +51,7 @@ LAYERS: dict[str, tuple[str, ...]] = {
     "runtime": (
         "adapter", "restart_runtime", "sqlite_runtime", "sqlite_composition",
         "checkpoint_transactions", "auxiliary_checkpoint",
-        "configured_restart", "runtime_composition", "ranking_policy", "return_selection", "query_interpretation", "temporal_order_constraints", "temporal_intent", "proposition_semantics", "runtime_config", "runtime_behavior",
+        "configured_restart", "runtime_composition", "ranking_policy", "return_selection", "query_interpretation", "lexical_normalization", "temporal_order_constraints", "temporal_intent", "proposition_semantics", "runtime_config", "runtime_behavior",
         "doctor", "cli", "discovery", "composition", "contextual_recall_adapter",
         "projection_governance", "query_driven_recall", "recall_control", "vector_retrieval", "cross_fact_currentness",
         "typed_proposition", "proposition_extraction",

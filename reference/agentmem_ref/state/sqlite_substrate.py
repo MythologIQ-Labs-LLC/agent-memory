@@ -955,6 +955,10 @@ class SQLiteTemporalGraph:
         scored.sort(key=lambda pair: (-pair[1], pair[0].uuid))
         return scored
 
+    def discovery_rows(self, group_ids: list[str] | None) -> list[tuple[str, str, str]]:
+        """``(uuid, group_id, fact_text)`` for the groups, without decoding; read-only (#819 C3)."""
+        return self._identity_rows_for_groups(group_ids)
+
     def _identity_rows_for_groups(self, group_ids: list[str] | None) -> list[tuple[str, str, str]]:
         """Candidate-discovery projection: identity and text only, no JSON decoding."""
         if group_ids is UNFILTERED:

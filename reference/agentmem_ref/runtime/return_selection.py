@@ -34,6 +34,16 @@ the query first (``query_interpretation``): relevance uses topical terms only, a
 relational question admits set evidence down to half the floor, and the fact most about each
 named entity joins the set. Ranking, admission and governance are unchanged.
 
+Policy 2.1.0 (#819 C3 slice 2) matches word forms, not exact tokens: query and fact terms are
+compared by their inflectional normal form (``lexical_normalization``: Porter step 1, so
+"weddings"/"wedding" and "attended"/"attend" meet; derivational families stay apart), and a
+short query whose topic matched nothing may correct one Damerau edit against the admitted
+vocabulary ("typsecript" -> "typescript"). The planner applies the same rules to candidate
+discovery, using only the vocabulary of current, live, in-scope facts; ranking still scores
+the query as written. Ranking consistency is anchored on primary evidence only: with set
+evidence as an anchor, one weak set member ranked low pulled in every fact ranked above it that
+carried any topical trace (on LongMemEval-S, 1,056 such returns of which 14 were gold).
+
 The stage reads only the admitted, ranked list and its evidence. It never changes candidates,
 admission, refusals, ``admitted`` or the ranked order, and it is never authority: a withheld
 fact is still admitted and still visible to a caller that reads ``admitted`` or asks for the
@@ -47,11 +57,12 @@ import re
 from typing import Any, Callable, Iterable, Mapping, Sequence
 
 from .ranking_policy import _candidate_term_masks, admitted_set_bm25, relevance_tokens
+from .lexical_normalization import normal_form, normalized_text, typo_correction_allowed, typo_matches
 from .query_interpretation import QueryInterpretation, interpret
 from .temporal_intent import TemporalIntent
 
 SELECTION_POLICY_ID = "relevance-sufficient-return-selection"
-SELECTION_POLICY_VERSION = "2.0.0"
+SELECTION_POLICY_VERSION = "2.1.0"
 SELECTION_BASIS = "post_ranking_relevance_sufficiency_then_ranked_prefix"
 RELATIVE_FLOOR = 0.5
 # 2.0.0: a query that needs several pieces of evidence (aggregate or relational) admits set
@@ -61,6 +72,7 @@ RELEVANCE_SUFFICIENT = "relevance_sufficient"
 RANKED_PREFIX = "ranked_prefix"
 RETURN_SELECTIONS = (RELEVANCE_SUFFICIENT, RANKED_PREFIX)
 _SUFFICIENT = frozenset({"exact_identity", "non_lexical_route_evidence", "content_relevance", "set_evidence"})
+_PRIMARY = frozenset({"exact_identity", "non_lexical_route_evidence", "content_relevance"})
 
 # Closed-class English function words: articles and determiners, pronouns, auxiliaries and
 # modals, prepositions, conjunctions, wh-words, negation and discourse particles. Grammar only;
@@ -173,8 +185,8 @@ def select_relevance_sufficient(
        ``relative_floor`` of the best.
     2. **Set evidence**: when the query needs several pieces of evidence (aggregate or
        relational), lexical facts down to ``SET_FLOOR_FACTOR`` times that floor.
-    3. **Ranking consistency**: a fact with topical evidence ranked above a selected fact is
-       selected too.
+    3. **Ranking consistency**: a fact with topical evidence ranked above a primary-evidence
+       fact is selected too (set evidence does not extend it, 2.1.0).
     4. **Entity coverage**: each entity the query names that no selected fact covers is
        covered by its highest-ranked candidate with topical evidence, if any.
 
@@ -196,19 +208,40 @@ def select_relevance_sufficient(
     masks: dict[str, tuple[str, ...]] = {}
     evidence_terms = reading.topical_terms
     frame_fallback = False
+    mentions = reading.entity_mentions
     if lexical_scope and (reading.topical_terms or reading.frame_terms):
-        texts = {ref: normalize_contractions(getattr(fact, "fact_text", "") or "") for ref, fact in lexical_scope.items()}
-        masks = _candidate_term_masks(query, intent, lexical_scope)
-        tokens = {ref: frozenset(relevance_tokens(text)) - frozenset(masks.get(ref, ())) for ref, text in texts.items()}
+        # Matching is on normal forms (2.1.0): "weddings" meets "wedding", and a query term that
+        # matches nothing is read as its one-edit neighbours in the admitted text ("typsecript").
+        raw_texts = {ref: normalize_contractions(getattr(fact, "fact_text", "") or "") for ref, fact in lexical_scope.items()}
+        texts = {ref: normalized_text(text) for ref, text in raw_texts.items()}
+        raw_masks = _candidate_term_masks(query, intent, lexical_scope)
+        masks = {ref: tuple(sorted({normal_form(term) for term in terms})) for ref, terms in raw_masks.items()}
+        tokens = {ref: frozenset(text.split()) - frozenset(masks.get(ref, ())) for ref, text in texts.items()}
+        normal_vocabulary = frozenset().union(*tokens.values()) if tokens else frozenset()
+
+        allow_typos = typo_correction_allowed(
+            len(reading.topical_terms), any(normal_form(term) in normal_vocabulary for term in reading.topical_terms))
+        raw_vocabulary = (sorted(set().union(*(relevance_tokens(text) for text in raw_texts.values())))
+                          if allow_typos else [])
+
+        def normalize_terms(terms: Iterable[str]) -> tuple[str, ...]:
+            out: list[str] = []
+            for term in terms:
+                form = normal_form(term)
+                corrected = () if form in normal_vocabulary or not allow_typos else typo_matches(term, raw_vocabulary)
+                out.extend(normal_form(match) for match in corrected) if corrected else out.append(form)
+            return tuple(dict.fromkeys(out))
+
+        mentions = tuple(normalize_terms(mention) for mention in mentions)
         if reading.topical_terms:
             # A query with a topic is answered only by evidence about that topic: when nothing
             # topical matches, the recall abstains rather than fall back to frame words.
-            relevance = admitted_set_bm25(" ".join(reading.topical_terms), texts, masks)
+            relevance = admitted_set_bm25(" ".join(normalize_terms(reading.topical_terms)), texts, masks)
         else:
             # A query that is all frame ("what did I do last week?") has no other topic.
             evidence_terms = reading.frame_terms
             frame_fallback = True
-            relevance = admitted_set_bm25(" ".join(evidence_terms), texts, masks)
+            relevance = admitted_set_bm25(" ".join(normalize_terms(evidence_terms)), texts, masks)
     best = max(relevance.values(), default=0.0)
     set_floor = relative_floor * SET_FLOOR_FACTOR if reading.needs_several else relative_floor
 
@@ -235,8 +268,11 @@ def select_relevance_sufficient(
             "relative_to_best": relative,
             "authority_effect": "none",
         }
-    # Ranking consistency: a fact with topical evidence ranked above a sufficient fact is kept.
-    lowest = max((index for index, ref in enumerate(ranked) if records[ref]["sufficient"]), default=-1)
+    # Ranking consistency: a fact with topical evidence ranked above a primary-evidence fact is
+    # kept. Set evidence does not anchor it (2.1.0): set evidence is admitted by relevance, not
+    # rank, and a weak set member ranked low would otherwise pull every fact above it with any
+    # trace of topical evidence into the set.
+    lowest = max((index for index, ref in enumerate(ranked) if records[ref]["basis"] in _PRIMARY), default=-1)
     for ref in ranked[:lowest]:
         if records[ref]["basis"] == "below_relative_floor":
             records[ref].update(sufficient=True, basis="ranked_above_sufficient")
@@ -245,7 +281,7 @@ def select_relevance_sufficient(
     # that mentions it.
     # The fact most about each named entity is in the evidence set (a passing mention elsewhere
     # does not stand in for it); ties go to the higher-ranked fact.
-    for mention in reading.entity_mentions:
+    for mention in mentions:
         about = admitted_set_bm25(" ".join(mention), texts, masks) if lexical_scope else {}
         candidates = [ref for ref in ranked
                       if records[ref]["content_relevance"] > 0.0 and about.get(ref, 0.0) > 0.0

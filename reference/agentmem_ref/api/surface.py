@@ -953,6 +953,7 @@ class AgentMemory:
         )
         for ref, record in records.items():
             admissions.setdefault(ref, {})["return_selection"] = record
+        summary["query_expansion"] = dict(getattr(result, "query_expansion", {}) or {})
         return contract.apply_return_selection(result.ranked_admitted, selected, k, summary)
 
     def _shadow_recall_control(self, query: str, logical_memory_refs: tuple[str, ...], result, envelope) -> dict:

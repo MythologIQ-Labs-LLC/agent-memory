@@ -111,6 +111,7 @@ class MultiRouteRecallResult:
     candidate_policy: dict = field(default_factory=dict)
     admission_mode: str = "current_state"
     admission_basis: dict[str, dict] = field(default_factory=dict)
+    query_expansion: dict = field(default_factory=dict)
 
     def provenance_for(self, candidate_ref: str) -> tuple[RetrievalRouteHit, ...]:
         return tuple(self.route_hits.get(candidate_ref, ()))
@@ -153,6 +154,10 @@ class DeterministicMultiRouteRecallPlanner:
         if vector_candidate_limit < 0:
             raise ValueError("vector_candidate_limit must be non-negative")
         self.vector_candidate_limit = vector_candidate_limit
+        # #819 C3: discovery-vocabulary tokens by fact uuid (a fact's text never changes under
+        # its uuid). Pruned to the live, eligible set on every recall, so forgotten or
+        # superseded text does not stay resident here.
+        self._vocabulary_tokens: dict[str, frozenset[str]] = {}
         substrate_reader = getattr(adapter, "checkpoint_substrate", None)
         tenant_reader = getattr(adapter, "checkpoint_tenant", None)
         if not callable(substrate_reader) or not callable(tenant_reader):
@@ -173,8 +178,9 @@ class DeterministicMultiRouteRecallPlanner:
 
         hits: list[RetrievalRouteHit] = []
         routes_executed = [LEXICAL_ROUTE, EXACT_IDENTITY_ROUTE]
+        discovery_query, expansion = self._discovery_query(query, substrate, tenant, context)
         for fact, score in eligible_search(
-            substrate, query, tenant, lambda fact: self.adapter.domain_eligible(fact, context),
+            substrate, discovery_query, tenant, lambda fact: self.adapter.domain_eligible(fact, context),
             lambda uuid, group_id: self.adapter.domain_eligible_identity(uuid, group_id, context),
         ):
             hits.append(
@@ -293,7 +299,61 @@ class DeterministicMultiRouteRecallPlanner:
             admission_mode=admission.admission_mode,
             admission_basis=dict(admission.admission_basis),
             query_temporal_intent=intent.to_dict(),
+            query_expansion=expansion,
         )
+
+    def _discovery_query(self, query: str, substrate, tenant: str, context: RecallContext) -> tuple[str, dict]:
+        """The lexical route's discovery query: the caller's query plus vocabulary variants (#819 C3).
+
+        The vocabulary is the lexical route's own tokens of facts that are current, not
+        tombstoned, in this tenant and domain-eligible for this recall, so forgotten,
+        superseded and out-of-scope text never shapes discovery. Variants share a normal form
+        with a query term (``weddings``/``wedding``) or, for a term nothing matches, are one
+        edit away (``typsecript``/``typescript``). Only candidate discovery widens: ranking
+        still scores the caller's query, and every candidate crosses governed admission.
+        """
+        from ..state.substrate import _tokens as route_tokens
+        from .lexical_normalization import NORMALIZATION_VERSION, _key, expansion_terms, typo_correction_allowed
+        from .return_selection import interpret_query
+
+        live_reader = getattr(self.adapter, "current_live_fact_uuids", None)
+        if not callable(live_reader):
+            return query, {}
+        live = live_reader()
+        eligible = {uuid for uuid in live if self.adapter.domain_eligible_identity(uuid, tenant, context)}
+        memo = self._vocabulary_tokens
+        for uuid in [uuid for uuid in memo if uuid not in eligible]:
+            del memo[uuid]
+        missing = eligible - memo.keys()
+        if missing:
+            rows = getattr(substrate, "discovery_rows", None)
+            if callable(rows):
+                texts = ((uuid, text) for uuid, group_id, text in rows([tenant]) if uuid in missing and group_id == tenant)
+            else:
+                all_facts = getattr(substrate, "all_facts", None)
+                if not callable(all_facts):
+                    return query, {}
+                texts = ((fact.uuid, fact.fact_text) for fact in all_facts()
+                         if fact.uuid in missing and fact.group_id == tenant)
+            for uuid, text in texts:
+                memo[uuid] = frozenset(route_tokens(text))
+        vocabulary: set[str] = set()
+        for uuid in eligible:
+            vocabulary |= memo.get(uuid, frozenset())
+        reading = interpret_query(query)
+        terms = reading.topical_terms or reading.frame_terms
+        keys = {_key(token) for token in vocabulary}
+        allow_typos = typo_correction_allowed(len(reading.topical_terms),
+                                              any(_key(term) in keys for term in reading.topical_terms))
+        variants = expansion_terms(terms, vocabulary, allow_typos=allow_typos)
+        added = sorted(set(variants["morphological"]) | set(variants["typo"]))
+        expansion = {
+            "normalization_version": NORMALIZATION_VERSION,
+            "morphological_variant_count": len(variants["morphological"]),
+            "typo_variant_count": len(variants["typo"]),
+            "authority_effect": "none",
+        }
+        return (query + " " + " ".join(added)) if added else query, expansion
 
 
 @dataclass(frozen=True)

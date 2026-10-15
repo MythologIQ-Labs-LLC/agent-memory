@@ -52,8 +52,10 @@ _AGGREGATE_CUES = (
     r"how often", r"number of", r"count", r"different", r"altogether", r"combined", r"average",
     r"times", r"so far",
 )
+# Choice between alternatives ("X versus Y", "X or Y") is not a multi-evidence relation: a single
+# preference or decision usually answers it, so "versus"/"vs"/"or" are not cues.
 _RELATIONAL_CUES = (
-    r"between", r"compar\w*", r"difference", r"than", r"versus", r"vs", r"before", r"after",
+    r"between", r"compar\w*", r"difference", r"than", r"before", r"after",
     r"since", r"ago", r"how long", r"first", r"last", r"earlier", r"later", r"older", r"younger",
     r"percentage", r"ratio", r"which came", r"in what order",
 )

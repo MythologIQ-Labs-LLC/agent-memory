@@ -356,7 +356,8 @@
               "enum": [
                 "1.0.0",
                 "1.1.0",
-                "2.0.0"
+                "2.0.0",
+                "2.1.0"
               ]
             },
             "requested_k": {
@@ -450,6 +451,33 @@
                   "minimum": 0
                 },
                 "entity_mention_count": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "authority_effect": {
+                  "const": "none"
+                }
+              }
+            },
+            "query_expansion": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "normalization_version",
+                "morphological_variant_count",
+                "typo_variant_count",
+                "authority_effect"
+              ],
+              "description": "Selection policy 2.1.0 (#819 C3 slice 2): how many vocabulary variants (normal-form siblings, one-edit typo neighbours) widened lexical candidate discovery. Counts only; built from current, live, eligible facts. Never authority.",
+              "properties": {
+                "normalization_version": {
+                  "type": "string"
+                },
+                "morphological_variant_count": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "typo_variant_count": {
                   "type": "integer",
                   "minimum": 0
                 },

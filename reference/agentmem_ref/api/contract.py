@@ -212,6 +212,7 @@ def apply_return_selection(
         **({"frame_fallback": bool(summary["frame_fallback"])} if "frame_fallback" in summary else {}),
         **({"information_requirement": dict(summary["information_requirement"])}
            if "information_requirement" in summary else {}),
+        **({"query_expansion": dict(summary["query_expansion"])} if summary.get("query_expansion") else {}),
         "basis": RETURN_SELECTION_BASIS,
         "authority_effect": "none",
     }

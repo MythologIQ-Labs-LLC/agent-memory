@@ -1257,6 +1257,16 @@ class GovernedMemoryAdapter:
     def tombstoned_ids(self) -> set[str]:
         return {record["memory_id"] for record in self._tombstones.values()}
 
+    def current_live_fact_uuids(self) -> frozenset[str]:
+        """Current fact of every logical memory that is not tombstoned (#819 C3). Read-only.
+
+        Recall uses it to keep forgotten and superseded text out of anything derived for a
+        query (the discovery vocabulary); it grants nothing and admission still decides.
+        """
+        dead = self.tombstoned_ids()
+        return frozenset(uuid for memory_id, uuid in self._current_fact_by_memory.items()
+                         if uuid and memory_id not in dead)
+
     def record_correction(self, memory_id: str) -> int:
         """A correction advances canonical version; dependents become stale by relation."""
         self._state_version[memory_id] = self._state_version.get(memory_id, 0) + 1

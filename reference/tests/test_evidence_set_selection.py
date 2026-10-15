@@ -13,11 +13,13 @@ from __future__ import annotations
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
 
 from agentmem_ref import AgentMemory
 from agentmem_ref.memory import procedural_memory as pm
 from agentmem_ref.runtime.query_interpretation import AGGREGATE, RELATIONAL, SINGLE
-from agentmem_ref.runtime.return_selection import interpret_query
+from agentmem_ref.runtime.return_selection import interpret_query, select_relevance_sufficient
+from agentmem_ref.runtime.temporal_intent import TemporalIntent
 
 TENANT = "tenant:evidence-set"
 SCOPE = "project:evidence-set"
@@ -140,6 +142,26 @@ class EvidenceSets(_Facade):
         positions = [first["admitted"].index(r) for r in first["returned"]]
         self.assertEqual(positions, sorted(positions))
         self.assertLessEqual(len(first["returned"]), 5)
+
+
+class SetEvidenceDoesNotAnchorRanking(unittest.TestCase):
+    def test_weak_fact_ranked_above_set_evidence_stays_withheld(self):
+        # 2.1.0: ranking consistency extends only from primary evidence. A set member ranked low
+        # must not pull in a fact above it whose only evidence is a passing topical trace.
+        texts = {
+            "strong": "Charity runs: the spring charity run and the autumn charity run for the shelter.",
+            "trace": "We went for runs along the river most weekends, then had brunch with my cousins, walked "
+                     "the dog, cleaned the flat, called my parents and watched a film.",
+            "set": "I volunteered at the charity book fair in town on Saturday afternoon.",
+            "other": "Bought new shoes.",
+        }
+        facts = {ref: SimpleNamespace(fact_text=text, attributes={}) for ref, text in texts.items()}
+        selected, records, _ = select_relevance_sufficient(
+            list(texts), {ref: ("lexical",) for ref in texts}, facts.get, query="How many charity runs did I do?",
+            intent=TemporalIntent(), lexical_route="lexical", exact_identity_route="exact_logical_identity")
+        self.assertEqual(selected, ["strong", "set"])
+        self.assertEqual(records["set"]["basis"], "set_evidence")
+        self.assertEqual(records["trace"]["basis"], "below_relative_floor")
 
 
 class GovernanceUnchanged(_Facade):
