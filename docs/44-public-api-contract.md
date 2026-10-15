@@ -197,21 +197,31 @@ Because new refusal tokens reach callers (`target_unavailable` on `remember`; `f
 
 ## Context package (#691 candidate `agent-memory-context/0.1.0`; contract unchanged)
 
-`AgentMemory.recall_context(query, *, max_items=None, max_chars_per_item=2000, max_total_chars=8000, max_tokens=None, **recall_kwargs)` returns the content of exactly the facts one public recall returned. `recall()` and its identifier-only result are unchanged.
+`AgentMemory.recall_context(query, *, max_items=20, max_chars_per_item=2000, max_total_chars=8000, max_tokens=None, logical_memory_refs=(), temporal_intent=None, reference_time=None)` returns the content of exactly the facts one public recall returned. `recall()` and its identifier-only result are unchanged.
 
 - **What is resolved.** Only the recall's `returned` list, after the #777 public projection. Candidates, refused facts, withheld facts and other identifiers are never resolved, and there is no lookup by identifier.
-- **Consistency.** The recall and the resolution run under one hold of the runtime-owned serialization lock (#530), so no correction, deletion or dispute interleaves.
+- **Authority.** Content is delivered only under the handle's own scope and identity. The privileged-host overrides that `recall` accepts (`target_domain_refs`, `project_ref`, `task_ref`, `principal_ref`, `purpose`) are refused with `TypeError`; a host that needs another scope opens a handle for it.
+- **Consistency.** The recall and the resolution run under one hold of the runtime-owned serialization lock (#530).
   - Each returned fact is re-checked against admission, in the mode the recall used, and against the deleted-lineage withholding predicate before its text is read.
-  - A fact that fails resolves to `unresolved` (`withheld`, `not_found`, `no_longer_admissible` or `content_read_failed`) with no content.
-  - A fact with no text is `unsupported`.
+  - A fact that fails resolves to `unresolved` (`withheld`, `not_found`, `no_longer_admissible` or `content_read_failed`) with no content. A fact with no text is `unsupported`.
+  - A second process opening the same store makes this handle's next read or write fail with a checkpoint conflict, so a stale handle serves nothing.
 - **Bounds.**
-  - `max_items` is the recall's return budget.
-  - Content is cut to `max_chars_per_item` and to the smaller of `max_total_chars` and `max_tokens × 4`. The token figure is a deterministic `ceil(chars / 4)` estimate, not a model tokenizer.
+  - `max_items` (default 20) is the recall's return budget.
+  - Content is cut to `max_chars_per_item`, `max_total_chars` and `max_tokens`. The token figure is a deterministic, conservative estimate: ASCII at four characters per token, any other character one token. It is not a model tokenizer.
+  - Cuts never split a combining mark, joiner or variation selector.
   - An item cut to fit is `truncated`; items past the budget are `omitted_budget` without content.
   - Package `status` is one of `empty`, `complete`, `truncated`, `budget_exhausted` or `partial_unresolved`.
-- **Provenance receipt per resolved item:** `memory_ref` (withheld for a deleted lineage), `source_ref` and `write_operation` from write provenance, `recorded_at`, the declared `observed_at`/`valid_from`/`valid_until`, `content_sha256` and `content_chars` of the full text, and the recall's `admission_decision_id` and `admission_mode`.
-- **Untrusted evidence.** Every item is `trust: untrusted_memory_text` with `authority_effect: none`, and the package carries `instruction_policy`. Memory text never grants permission or authority.
-- **Schema.** The package validates against `schemas/api-context-package.schema.json`. It is separately versioned and is **not** part of an accepted contract; adopting it needs the owner's decision, a contract or package version decision, and a lane (#691 acceptance).
+- **Provenance receipt per resolved item:**
+  - `memory_ref` and `source_ref`. Both are withheld for a deleted lineage. `source_ref` is writer-declared text, never authority.
+  - `write_channel`, `recorded_at`, and the declared `observed_at`/`valid_from`/`valid_until`.
+  - `content_sha256` and `content_chars` of the full text.
+  - The recall's `admission_decision_id` and `admission_mode`.
+  - `currentness`. For historical evidence it adds `replacement_kind`, `replaced_at` and `historical_valid_from`/`historical_valid_until`, so a historical or as-of package distinguishes the current fact from a superseded one.
+- **Untrusted evidence.** Every item is `trust: untrusted_memory_text` with `authority_effect: none`, and the package carries `instruction_policy`.
+- **Schema.** The package validates against `schemas/api-context-package.schema.json`. The schema enforces the fail-closed rules: an unresolved, unsupported or omitted item has no content or provenance, and an `empty` or `complete` package is consistent with its items. It is separately versioned and is **not** part of an accepted contract; adoption needs the owner's #691 acceptance decision.
+- **Open owner decisions:**
+  - whether `memory_ref` and the default `source_ref` (`actor:<id>`) should be shown to other actors in the same project;
+  - a separate audit event for content reads (today only `memory.recall` is recorded).
 
 ## Action authority and execution evidence (contract `1.2.0`, ADR-038)
 

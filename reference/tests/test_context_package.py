@@ -246,5 +246,74 @@ class Integrity(_Store):
         self.assertEqual(first["package_version"], "agent-memory-context/0.1.0")
 
 
+class ReviewRegressions(_Store):
+    """Independent adversarial review of f6184d22 (#691)."""
+
+    def test_historical_package_distinguishes_current_from_superseded(self):
+        # F1: under historical intent every admitted fact has admission_mode historical_evidence;
+        # the item must carry currentness so a superseded state is not read as current.
+        self.put("memory:home", "Alice lives in Paris on Rue Cler.")
+        moved = self.memory.correct("memory:home", "Alice lives in Berlin on Torstrasse.", evidence=_evidence(),
+                                    replacement_kind="state_change")
+        self.assertTrue(moved["committed"])
+        package = self.memory.recall_context("Where does Alice live?", temporal_intent={"mode": "historical"})
+        by_text = {item["content"]: item["provenance"] for item in package["items"] if item.get("content")}
+        self.assertEqual(by_text["Alice lives in Berlin on Torstrasse."]["currentness"], "current_state")
+        old = by_text["Alice lives in Paris on Rue Cler."]
+        self.assertEqual(old["currentness"], "historical_evidence_not_current")
+        self.assertEqual(old["replacement_kind"], "state_change")
+
+    def test_write_channel_is_reported(self):
+        # F2: the receipt reports the write channel recorded in write provenance.
+        self.put("memory:a", "Garden fence painted green.")
+        package = self.memory.recall_context("garden fence")
+        self.assertEqual(package["items"][0]["provenance"]["write_channel"], "caller_observation")
+
+    def test_schema_enforces_fail_closed_states(self):
+        # F3: an unresolved, unsupported or omitted item can never carry content or provenance.
+        from agentmem_ref.core import receipts
+
+        self.put("memory:a", "Garden fence painted green.")
+        package = self.memory.recall_context("garden fence")
+        leaked = json.loads(json.dumps(package))
+        leaked["items"][0]["state"] = "unresolved"
+        leaked["items"][0]["reason"] = "withheld"
+        leaked["status"] = "partial_unresolved"
+        with self.assertRaises(ValueError):
+            receipts.validate("api-context-package.schema.json", leaked)
+        missing = json.loads(json.dumps(package))
+        del missing["items"][0]["content"]
+        with self.assertRaises(ValueError):
+            receipts.validate("api-context-package.schema.json", missing)
+
+    def test_scope_and_identity_overrides_are_refused(self):
+        # F4: content only under the handle's own authority.
+        self.put("memory:a", "Public note about launch.")
+        for kwargs in ({"project_ref": "project:other"}, {"target_domain_refs": [TENANT, "project:other"]},
+                       {"principal_ref": "agent:root"}, {"purpose": "audit"}, {"task_ref": "task:x"}):
+            with self.assertRaises(TypeError):
+                self.memory.recall_context("launch", **kwargs)
+        self.assertEqual(self.contents(self.memory.recall_context("launch")), ["Public note about launch."])
+
+    def test_cut_keeps_combining_marks_and_estimate_is_conservative(self):
+        # N4: never split a combining mark or joiner; non-ASCII counts one token per character.
+        text = "Cafe\u0301 Familie \U0001F468\u200d\U0001F469 notes"
+        self.put("memory:u", text)
+        package = self.memory.recall_context("Familie notes", max_chars_per_item=5)
+        content = package["items"][0]["content"]
+        self.assertTrue(text.startswith(content))
+        self.assertNotEqual(content, "Cafe")  # the accent is not cut off its letter
+        self.assertGreaterEqual(package["budget"]["used_tokens_estimate"], 1)
+        from agentmem_ref.api.context_package import token_estimate
+        self.assertEqual(token_estimate("\u4e2d\u6587\u6587\u672c"), 4)
+
+    def test_default_item_cap(self):
+        # N5: the package is bounded even when the caller sets no item budget.
+        for i in range(30):
+            self.put(f"memory:{i}", f"Standup note {i}.")
+        package = self.memory.recall_context("standup note")
+        self.assertLessEqual(len(package["items"]), 20)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -49,6 +49,11 @@ __all__ = [
 ]
 
 
+#: #691: the recall keyword arguments ``recall_context`` accepts. Scope and identity overrides
+#: are refused so content is delivered only under the handle's own authority.
+_CONTEXT_RECALL_KWARGS = frozenset({"logical_memory_refs", "temporal_intent", "reference_time"})
+
+
 # -- #777 public read projection ------------------------------------------------------
 # Applied to ordinary caller-facing responses only, AFTER canonical governance decided the
 # read. It never retrieves hidden text, never broadens admission, and never rewrites stored
@@ -1030,7 +1035,7 @@ class AgentMemory:
         self,
         query: str,
         *,
-        max_items: int | None = None,
+        max_items: int = context_package.DEFAULT_MAX_ITEMS,
         max_chars_per_item: int = context_package.DEFAULT_MAX_CHARS_PER_ITEM,
         max_total_chars: int = context_package.DEFAULT_MAX_TOTAL_CHARS,
         max_tokens: int | None = None,
@@ -1044,14 +1049,20 @@ class AgentMemory:
         against admission and the #777 public withholding predicate before its text is read;
         failures resolve to ``unresolved`` without content. ``max_items`` is the recall's return
         budget; the character and token limits bound the content (see
-        ``api.context_package``). Memory text is untrusted evidence and grants nothing. The
-        ``recall`` keyword arguments (scope context, temporal intent) are accepted as for
-        ``recall``; ``budget`` is ``max_items`` here.
+        ``api.context_package``). Memory text is untrusted evidence and grants nothing.
+
+        Content is delivered only under the handle's own authority: the scope and identity
+        overrides ``recall`` accepts from a privileged host (``target_domain_refs``,
+        ``project_ref``, ``task_ref``, ``principal_ref``, ``purpose``) are refused here; a host
+        that needs another scope opens a handle for it. ``logical_memory_refs``,
+        ``temporal_intent`` and ``reference_time`` are accepted as for ``recall``.
         """
         self._require_open()
-        if "budget" in recall_kwargs:
-            raise TypeError("recall_context takes max_items, not budget")
-        if max_items is not None and (not isinstance(max_items, int) or isinstance(max_items, bool) or max_items < 1):
+        refused = sorted(set(recall_kwargs) - _CONTEXT_RECALL_KWARGS)
+        if refused:
+            raise TypeError(f"recall_context does not accept {refused}: content is delivered only under the "
+                            "handle's own scope and identity; budget is max_items")
+        if not isinstance(max_items, int) or isinstance(max_items, bool) or max_items < 1:
             raise ValueError("max_items must be a positive integer")
         context_package.validate_budgets(max_chars_per_item, max_total_chars, max_tokens)
         document, context = self._recall_document_and_context(query, public=True, budget=max_items, **recall_kwargs)
@@ -1076,10 +1087,12 @@ class AgentMemory:
             written = dict(attributes.get(cross_fact.WRITE_PROVENANCE_KEY) or {})
             declared = dict(attributes.get(DECLARED_TEMPORAL_KEY) or {})
             memory_ref = adapter.memory_ref_of(ref)
+            source_ref = written.get("source_ref")
             receipt = {
                 "memory_ref": memory_ref if memory_ref and not withheld(memory_ref) else None,
-                "source_ref": written.get("source_ref"),
-                "write_operation": written.get("operation"),
+                # writer-declared, never authority; withheld like any identifier of a deleted lineage
+                "source_ref": source_ref if isinstance(source_ref, str) and not withheld(source_ref) else None,
+                "write_channel": written.get("channel"),
                 "recorded_at": getattr(fact, "created_at", None),
                 "observed_at": declared.get("observed_at"),
                 "valid_from": declared.get("valid_from"),

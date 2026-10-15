@@ -62,9 +62,12 @@ See docs/44, "Context package".
   - acceptance of the package version or contract numbering;
   - a lane for content and token metrics;
   - an adoption path for the AMB bridge, which could drop its plaintext index.
-- **Concurrency boundary.** The boundary is the in-process lock. The store already refuses a
-  second open handle (generation conflict), so cross-process interleaving is not possible through
-  the facade.
+- **Concurrency boundary.** The boundary is the in-process lock. A second process can open the
+  same store, but this handle's next read or write then fails with a checkpoint conflict, so a
+  stale handle serves nothing.
+- **Independent review.** `REVIEW-691-adversarial.md` records the review of `f6184d22`: one
+  blocking and three should-fix findings were fixed in the next commit; two owner decisions
+  remain open.
 - **Token budget.** It is an estimate, `ceil(chars / 4)`, not a model tokenizer.
 - **Semantic sidecar residue.** Physical residue in the semantic vector sidecar is #802's and is
   not touched here.
