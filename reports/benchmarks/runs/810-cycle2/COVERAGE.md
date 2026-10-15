@@ -20,8 +20,8 @@ The classes below follow the #817 request: INSTALLED, EXECUTED, REPRODUCED, REVI
 | System, pinned | Tier measured | Installed | AMB PrecisionMemBench 77 (query-only, retrieval) | LongMemEval-S subset50 (retrieval) | Status / blocker |
 | --- | --- | --- | --- | --- | --- |
 | Mem0 OSS 2.2.1, explicit `infer=False` | explicit store, no LLM | yes | accepted lane v6, 10/77 | session and turn, 1 run each | ACCEPTED (AMB v6); LongMemEval subset is candidate |
-| Hindsight 0.10.2 `5fc4ce2`, chunks, ONNX e5-small, `llm_provider=none` | no-LLM chunk retrieval, **not** Hindsight's LLM product mode | yes | **9/77, repeated** (identical verdicts) | session and turn, 1 run | EXECUTED, repeated on AMB. The filtered/LLM tier is BLOCKED (below) |
-| Letta 0.16.8 `1131535`, archival memory over REST, bge-small | archival passage retrieval, **not** the stateful self-editing agent | yes | **9/77, repeated** (identical, including order) | session in progress, turn queued | EXECUTED, repeated on AMB |
+| Hindsight 0.10.2 `5fc4ce2`, chunks, ONNX e5-small, `llm_provider=none` | no-LLM chunk retrieval, **not** Hindsight's LLM product mode | yes | **9/77, repeated** (identical verdicts) | session and turn, **repeated** (0 per-question recall differences) | EXECUTED, repeated on AMB. The filtered/LLM tier is BLOCKED (below) |
+| Letta 0.16.8 `1131535`, archival memory over REST, bge-small | archival passage retrieval, **not** the stateful self-editing agent | yes | **9/77, repeated** (identical, including order) | **session 0.953 @5, turn 0.814 @10**, 0 failures; repetition 2 running | EXECUTED, repeated on AMB |
 | Cognee 1.6.4 `f154b32`, local GLiNER, no LLM | documented no-LLM mode | yes | **9/77, repeated** (identical, including order) | gen-1 37/50 session (exploratory, preregistration erratum); gen-2 preregistered | EXECUTED, repeated on AMB; LongMemEval partial |
 | Jev-Mem `7ab0c73` + Laya `7b928d8` (fp32 CPU) | native graph with System-One | yes | — | session 5/50 partial | BLOCKED: hardware (GPU); see `817-jev-mem/HANDOFF.md` |
 | LangMem 0.0.30, memory store manager + Qwen2.5-3B-Instruct Q4_K_M (llama.cpp, local) | LLM extraction and consolidation, real LangMem behaviour | yes (service built) | — | — | BLOCKED: local LLM throughput on a shared CPU |
@@ -60,9 +60,9 @@ These results are retrieval-only and query-only, on the same harness.
   - All three dense-retrieval peers pass **the same 9 cases**: 6 structural and 3 trivially empty, with **0 active passes**. Their returned sets differ in most cases.
   - None of them has a relevance floor, so they return about k items for every query. Mean precision is about 0.055 against recall of about 0.99. Precision is set by AMB's k, not by the system.
   - Agent Memory's lead comes entirely from its 4 active passes, and its precision is also low, at 0.18. #819 diagnosed this as the shared failure class: no selective return.
-- **LongMemEval-S subset50** (43 scored), from earlier evidence on `claude/817-jev-mem-execution-no-ci`:
-  - Session recall_all@5: Hindsight-chunks 0.930, Mem0 0.884, Agent Memory 0.837, lexical 0.814.
-  - Turn recall_all@10: Hindsight 0.837, Agent Memory 0.721, Mem0 0.651, lexical 0.605.
+- **LongMemEval-S subset50** (43 scored, same preregistered selection, evaluator blob `6b9c237`):
+  - Session recall_all@5: Letta-archival 0.953, Hindsight-chunks 0.930, Mem0 0.884, Agent Memory 0.837, lexical 0.814. Paired against Agent Memory: Letta +7/−2 (p=0.18).
+  - Turn recall_all@10: Hindsight 0.837, Letta 0.814, Agent Memory 0.721, Mem0 0.651, lexical 0.605. At recall_all@50, Letta reaches 0.977 against Agent Memory's 0.814 (+7/−0, p=0.016).
   - Agent Memory trails dense chunk retrieval on multi-session evidence recall.
 - **Capability explanation.**
   - Dense chunk and passage retrieval wins on LongMemEval: it aggregates semantically related evidence and returns long ranked lists.
