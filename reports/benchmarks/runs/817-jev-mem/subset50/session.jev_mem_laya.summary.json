@@ -1,6 +1,6 @@
 {
   "aggregate": {
-    "evaluated_question_count": 2,
+    "evaluated_question_count": 3,
     "excluded_abstention_count": 0,
     "excluded_no_user_target_count": 0,
     "headline": {
@@ -40,7 +40,7 @@
   },
   "by_question_type": {
     "single-session-user": {
-      "evaluated_question_count": 2,
+      "evaluated_question_count": 3,
       "excluded_abstention_count": 0,
       "excluded_no_user_target_count": 0,
       "headline": {
@@ -112,10 +112,9 @@
     "ingestion_failure_count": 0,
     "out_of_corpus_returned_count": 0
   },
-  "question_count_completed": 2,
+  "question_count_completed": 3,
   "question_count_preregistered": 50,
   "missing_question_ids": [
-    "7527f7e2",
     "3b6f954b",
     "577d4d32",
     "e01b8e2f",
