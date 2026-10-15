@@ -314,6 +314,28 @@ class WorkflowPolicyTests(unittest.TestCase):
         self.assertEqual(envelope["provenance"],
                          "committed_workflow_configuration_only")
 
+    def test_dependabot_version_update_intake_is_bounded(self):
+        # This controls *routine version-update PR churn*, not security-advisory
+        # updates. Security updates must remain independently enabled.
+        import yaml
+
+        source = REPO_ROOT / ".github" / "dependabot.yml"
+        config = yaml.safe_load(source.read_text(encoding="utf-8"))
+        self.assertEqual(config["version"], 2)
+        updates = {
+            (entry["package-ecosystem"], entry["directory"]): entry
+            for entry in config["updates"]
+        }
+        for key, limit in ((("pip", "/reference"), 3), (("github-actions", "/"), 1)):
+            with self.subTest(ecosystem=key[0]):
+                entry = updates[key]
+                self.assertEqual(entry["schedule"]["interval"], "monthly")
+                self.assertEqual(entry["open-pull-requests-limit"], limit)
+        self.assertEqual(
+            updates["github-actions", "/"]["groups"]["actions"]["patterns"],
+            ["*"],
+        )
+
     def test_inventory_write_refuses_unreviewed_protected_uploads(self):
         # An inventory rewrite cannot launder a newly uncapped artifact into
         # the canonical metadata before its custody exception is reviewed.
