@@ -9,6 +9,7 @@
 <script defer src="./assets/evidence-transparency.js"></script>
 <script defer src="./assets/external-evaluations.js"></script>
 <script defer src="./assets/live-evidence.js"></script>
+<script defer src="./assets/run-discovery.js"></script>
 <script defer src="./assets/site.js"></script></head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -53,6 +54,11 @@
 <div class="table-scroll" id="liveCompetitorRows" aria-live="polite"><p class="live-loading">Retrieving latest pinned competitor evidence…</p></div>
 <p class="fineprint" id="liveCompetitorNotice">An incomplete competitor run is reported by completed question count only, not by extrapolated scores.</p>
 </div>
+<div class="live-outcomes-head discover-head"><div><h3>Source-pinned execution registry</h3>
+<p>Automatically discovers new candidate run manifests, benchmark families and partial progress records committed by the Claude execution branches. Exact source identity, denominators and raw report digests are checked before displaying numeric results.</p></div></div>
+<p class="live-source" id="discoveredRunStatus" aria-live="polite">Discovering eligible candidate source manifests…</p>
+<div class="table-scroll discover-scroll" id="discoveredRunRows" aria-live="polite"><p class="live-loading">Checking source-pinned manifests…</p></div>
+<p class="fineprint discover-notes" id="discoveredRunProblems" aria-live="polite">Incomplete runs show progress only. Unknown benchmark families appear as evidence references without inferred scores.</p>
 <div class="live-outcomes-head"><div><h3>Independent-harness outcomes</h3><p>These are separate experimental protocols. Keep their scoring and evidence boundaries intact.</p></div></div>
 <p class="live-source" id="liveExternalStatus" aria-live="polite">Checking external evaluation branch…</p>
 <div class="live-external-grid" id="liveExternalResults" aria-live="polite"><p class="live-loading">Loading upstream AMB and MemoryArena execution summaries…</p></div>
