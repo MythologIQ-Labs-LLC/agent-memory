@@ -1,0 +1,1522 @@
+{
+ "summary": {
+  "runtime": "/home/user/eval/am-c4/reference/agentmem_ref/__init__.py",
+  "semantic": "off",
+  "queries": 57,
+  "strict": 22,
+  "needed_recall": 0.2029,
+  "extras": 4,
+  "no_answer_returning": 2,
+  "safety_ref_leaks": 0,
+  "safety_text_leaks": 0,
+  "op_failures": [],
+  "p50_ms": 6.24
+ },
+ "rows": [
+  {
+   "scenario": "agg1",
+   "category": "aggregation",
+   "id": "agg1",
+   "query": "What hobbies have I started recently?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [
+    "a",
+    "b",
+    "c"
+   ],
+   "needed": 3,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": true,
+   "ms": 7.76,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "agg2",
+   "category": "aggregation",
+   "id": "agg2",
+   "query": "Remind me of everything I'm allergic to.",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [
+    "a",
+    "b",
+    "c"
+   ],
+   "needed": 3,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": true,
+   "ms": 5.7,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "agg3",
+   "category": "aggregation",
+   "id": "agg3",
+   "query": "Name the cities I've travelled to.",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [
+    "a",
+    "b",
+    "c"
+   ],
+   "needed": 3,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": true,
+   "ms": 6.87,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "agg4",
+   "category": "aggregation",
+   "id": "agg4",
+   "query": "Tell me about my siblings.",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [
+    "a",
+    "b",
+    "c"
+   ],
+   "needed": 3,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": true,
+   "ms": 5.9,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "agg5",
+   "category": "aggregation",
+   "id": "agg5",
+   "query": "How is my week usually structured after work?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [
+    "a",
+    "b",
+    "c"
+   ],
+   "needed": 3,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": true,
+   "ms": 7.18,
+   "shape": "relational",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "agg6",
+   "category": "aggregation",
+   "id": "agg6",
+   "query": "Which medicines am I on?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [
+    "a",
+    "b",
+    "c"
+   ],
+   "needed": 3,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": true,
+   "ms": 20.7,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "agg7",
+   "category": "aggregation",
+   "id": "agg7",
+   "query": "How many kids do we have?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [
+    "a",
+    "b"
+   ],
+   "needed": 2,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": true,
+   "ms": 6.19,
+   "shape": "aggregate",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "agg8",
+   "category": "aggregation",
+   "id": "agg8",
+   "query": "What novels have I been reading?",
+   "returned": [
+    "a"
+   ],
+   "routes": {
+    "a": [
+     "lexical"
+    ]
+   },
+   "semantic_proposals": [],
+   "must": [
+    "a",
+    "b",
+    "c"
+   ],
+   "needed": 3,
+   "needed_returned": 1,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": false,
+   "ms": 6.19,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "para1",
+   "category": "paraphrase",
+   "id": "para1",
+   "query": "What do I drive?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [
+    "a"
+   ],
+   "needed": 1,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": true,
+   "ms": 6.19,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "para2",
+   "category": "paraphrase",
+   "id": "para2",
+   "query": "What's my job?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [
+    "a"
+   ],
+   "needed": 1,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": true,
+   "ms": 5.35,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "para3",
+   "category": "paraphrase",
+   "id": "para3",
+   "query": "What is the name of my pet?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [
+    "a"
+   ],
+   "needed": 1,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": true,
+   "ms": 6.09,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "para4",
+   "category": "paraphrase",
+   "id": "para4",
+   "query": "How do I contact the person I rent from?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [
+    "a"
+   ],
+   "needed": 1,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": true,
+   "ms": 6.35,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "para5",
+   "category": "paraphrase",
+   "id": "para5",
+   "query": "Do I have any dietary restrictions?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [
+    "a"
+   ],
+   "needed": 1,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": true,
+   "ms": 6.25,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "para6",
+   "category": "paraphrase",
+   "id": "para6",
+   "query": "When am I next seeing the person who looks after my teeth?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [
+    "a"
+   ],
+   "needed": 1,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": true,
+   "ms": 7.26,
+   "shape": "relational",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "para7",
+   "category": "paraphrase",
+   "id": "para7",
+   "query": "When did my spouse and I get married?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [
+    "a"
+   ],
+   "needed": 1,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": true,
+   "ms": 5.93,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "para8",
+   "category": "paraphrase",
+   "id": "para8",
+   "query": "What is my main financial goal at the moment?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [
+    "a"
+   ],
+   "needed": 1,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": true,
+   "ms": 6.53,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "noans1",
+   "category": "no_answer",
+   "id": "noans1",
+   "query": "What's my sister's favourite movie?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [],
+   "needed": 0,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": true,
+   "no_answer": true,
+   "abstained": true,
+   "ms": 5.84,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "noans2",
+   "category": "no_answer",
+   "id": "noans2",
+   "query": "Where did I park at the shopping centre today?",
+   "returned": [
+    "near"
+   ],
+   "routes": {
+    "near": [
+     "lexical"
+    ]
+   },
+   "semantic_proposals": [],
+   "must": [],
+   "needed": 0,
+   "needed_returned": 0,
+   "extra": 1,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": true,
+   "abstained": false,
+   "ms": 6.24,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "noans3",
+   "category": "no_answer",
+   "id": "noans3",
+   "query": "When is my father's birthday?",
+   "returned": [
+    "near"
+   ],
+   "routes": {
+    "near": [
+     "lexical"
+    ]
+   },
+   "semantic_proposals": [],
+   "must": [],
+   "needed": 0,
+   "needed_returned": 0,
+   "extra": 1,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": true,
+   "abstained": false,
+   "ms": 5.74,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "noans4",
+   "category": "no_answer",
+   "id": "noans4",
+   "query": "What is my blood type?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [],
+   "needed": 0,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": true,
+   "no_answer": true,
+   "abstained": true,
+   "ms": 5.26,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "noans5",
+   "category": "no_answer",
+   "id": "noans5",
+   "query": "Who repaired the bathroom shower?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [],
+   "needed": 0,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": true,
+   "no_answer": true,
+   "abstained": true,
+   "ms": 5.52,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "noans6",
+   "category": "no_answer",
+   "id": "noans6",
+   "query": "Where did my wife go to university?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [],
+   "needed": 0,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": true,
+   "no_answer": true,
+   "abstained": true,
+   "ms": 5.15,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "noans7",
+   "category": "no_answer",
+   "id": "noans7",
+   "query": "What breed is our dog?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [],
+   "needed": 0,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": true,
+   "no_answer": true,
+   "abstained": true,
+   "ms": 5.47,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "noans8",
+   "category": "no_answer",
+   "id": "noans8",
+   "query": "What's my employee ID number?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [],
+   "needed": 0,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": true,
+   "no_answer": true,
+   "abstained": true,
+   "ms": 23.14,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "qshape1",
+   "category": "question_shaped",
+   "id": "qshape1",
+   "query": "What is my dentist's name?",
+   "returned": [
+    "qs",
+    "ans"
+   ],
+   "routes": {
+    "qs": [
+     "lexical"
+    ],
+    "ans": [
+     "lexical"
+    ]
+   },
+   "semantic_proposals": [],
+   "must": [
+    "ans"
+   ],
+   "needed": 1,
+   "needed_returned": 1,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": true,
+   "no_answer": false,
+   "abstained": false,
+   "ms": 6.44,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "qshape2",
+   "category": "question_shaped",
+   "id": "qshape2",
+   "query": "Which day are the bins collected?",
+   "returned": [
+    "qs",
+    "ans"
+   ],
+   "routes": {
+    "qs": [
+     "lexical"
+    ],
+    "ans": [
+     "lexical"
+    ]
+   },
+   "semantic_proposals": [],
+   "must": [
+    "ans"
+   ],
+   "needed": 1,
+   "needed_returned": 1,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": true,
+   "no_answer": false,
+   "abstained": false,
+   "ms": 6.45,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "qshape3",
+   "category": "question_shaped",
+   "id": "qshape3",
+   "query": "What should I get Mum for her birthday?",
+   "returned": [
+    "qs"
+   ],
+   "routes": {
+    "qs": [
+     "lexical"
+    ]
+   },
+   "semantic_proposals": [],
+   "must": [
+    "ans"
+   ],
+   "needed": 1,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": false,
+   "ms": 5.98,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "qshape4",
+   "category": "question_shaped",
+   "id": "qshape4",
+   "query": "Who rewired the hallway?",
+   "returned": [
+    "qs",
+    "ans"
+   ],
+   "routes": {
+    "qs": [
+     "lexical"
+    ],
+    "ans": [
+     "lexical"
+    ]
+   },
+   "semantic_proposals": [],
+   "must": [
+    "ans"
+   ],
+   "needed": 1,
+   "needed_returned": 1,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": true,
+   "no_answer": false,
+   "abstained": false,
+   "ms": 11.4,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "qshape5",
+   "category": "question_shaped",
+   "id": "qshape5",
+   "query": "Where is the spare charger?",
+   "returned": [
+    "qs",
+    "ans"
+   ],
+   "routes": {
+    "qs": [
+     "lexical"
+    ],
+    "ans": [
+     "lexical"
+    ]
+   },
+   "semantic_proposals": [],
+   "must": [
+    "ans"
+   ],
+   "needed": 1,
+   "needed_returned": 1,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": true,
+   "no_answer": false,
+   "abstained": false,
+   "ms": 6.92,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "qshape6",
+   "category": "question_shaped",
+   "id": "qshape6",
+   "query": "How much was the new boiler?",
+   "returned": [
+    "qs",
+    "ans",
+    "fill1"
+   ],
+   "routes": {
+    "qs": [
+     "lexical"
+    ],
+    "ans": [
+     "lexical"
+    ],
+    "fill1": [
+     "lexical"
+    ]
+   },
+   "semantic_proposals": [],
+   "must": [
+    "ans"
+   ],
+   "needed": 1,
+   "needed_returned": 1,
+   "extra": 1,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": false,
+   "ms": 6.48,
+   "shape": "aggregate",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "qshape7",
+   "category": "question_shaped",
+   "id": "qshape7",
+   "query": "Which plants need repotting?",
+   "returned": [
+    "qs"
+   ],
+   "routes": {
+    "qs": [
+     "lexical"
+    ]
+   },
+   "semantic_proposals": [],
+   "must": [
+    "a",
+    "b"
+   ],
+   "needed": 2,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": false,
+   "ms": 7.87,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "list1",
+   "category": "list_shape",
+   "id": "list1",
+   "query": "Which animals live with us?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [
+    "a",
+    "b",
+    "c"
+   ],
+   "needed": 3,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": true,
+   "ms": 6.72,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "list2",
+   "category": "list_shape",
+   "id": "list2",
+   "query": "Which people do I mentor at work?",
+   "returned": [
+    "c",
+    "a"
+   ],
+   "routes": {
+    "c": [
+     "lexical"
+    ],
+    "a": [
+     "lexical"
+    ]
+   },
+   "semantic_proposals": [],
+   "must": [
+    "a",
+    "b",
+    "c"
+   ],
+   "needed": 3,
+   "needed_returned": 2,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": false,
+   "ms": 7.0,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "list3",
+   "category": "list_shape",
+   "id": "list3",
+   "query": "Where have I lived?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [
+    "a",
+    "b",
+    "c"
+   ],
+   "needed": 3,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": true,
+   "ms": 6.95,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "list4",
+   "category": "list_shape",
+   "id": "list4",
+   "query": "What languages do I speak?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [
+    "a",
+    "b",
+    "c"
+   ],
+   "needed": 3,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": true,
+   "ms": 6.77,
+   "shape": "single",
+   "control": true,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "list5",
+   "category": "list_shape",
+   "id": "list5",
+   "query": "Tell me the instruments I play.",
+   "returned": [
+    "a"
+   ],
+   "routes": {
+    "a": [
+     "lexical"
+    ]
+   },
+   "semantic_proposals": [],
+   "must": [
+    "a",
+    "b"
+   ],
+   "needed": 2,
+   "needed_returned": 1,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": false,
+   "ms": 7.65,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "list6",
+   "category": "list_shape",
+   "id": "list6",
+   "query": "Which of my friends are vegetarian?",
+   "returned": [
+    "b"
+   ],
+   "routes": {
+    "b": [
+     "lexical"
+    ]
+   },
+   "semantic_proposals": [],
+   "must": [
+    "a",
+    "b"
+   ],
+   "needed": 2,
+   "needed_returned": 1,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": false,
+   "ms": 5.71,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "list7",
+   "category": "list_shape",
+   "id": "list7",
+   "query": "What do I collect?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [
+    "a",
+    "b"
+   ],
+   "needed": 2,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": true,
+   "ms": 5.03,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "list8",
+   "category": "list_shape",
+   "id": "list8",
+   "query": "Any pets in the wider family?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [
+    "a",
+    "b"
+   ],
+   "needed": 2,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": true,
+   "ms": 8.92,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "list9",
+   "category": "list_shape",
+   "id": "list9",
+   "query": "Who did I invite to the barbecue?",
+   "returned": [
+    "a"
+   ],
+   "routes": {
+    "a": [
+     "lexical"
+    ]
+   },
+   "semantic_proposals": [],
+   "must": [
+    "a",
+    "b"
+   ],
+   "needed": 2,
+   "needed_returned": 1,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": false,
+   "ms": 9.34,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "list10",
+   "category": "list_shape",
+   "id": "list10",
+   "query": "What glasses do I wear day to day?",
+   "returned": [
+    "a"
+   ],
+   "routes": {
+    "a": [
+     "lexical"
+    ]
+   },
+   "semantic_proposals": [],
+   "must": [
+    "a"
+   ],
+   "needed": 1,
+   "needed_returned": 1,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": true,
+   "no_answer": false,
+   "abstained": false,
+   "ms": 6.28,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": true
+  },
+  {
+   "scenario": "hist1",
+   "category": "historical",
+   "id": "hist1-asof",
+   "query": "Where was I employed?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [
+    "job"
+   ],
+   "needed": 1,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": true,
+   "ms": 5.57,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "hist1",
+   "category": "historical",
+   "id": "hist1-now",
+   "query": "Where am I employed?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [
+    "job@new"
+   ],
+   "needed": 1,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": true,
+   "ms": 5.55,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "hist2",
+   "category": "historical",
+   "id": "hist2",
+   "query": "What blood group was on record for me?",
+   "returned": [
+    "bg@new"
+   ],
+   "routes": {
+    "bg@new": [
+     "lexical"
+    ]
+   },
+   "semantic_proposals": [],
+   "must": [],
+   "needed": 0,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": true,
+   "no_answer": true,
+   "abstained": false,
+   "ms": 7.01,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "hist3",
+   "category": "historical",
+   "id": "hist3",
+   "query": "Who was I seeing in the past?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [],
+   "needed": 0,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": true,
+   "no_answer": true,
+   "abstained": true,
+   "ms": 7.99,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "hist4",
+   "category": "historical",
+   "id": "hist4",
+   "query": "Where did we reside back then?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [
+    "home"
+   ],
+   "needed": 1,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": true,
+   "ms": 7.5,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "hist5",
+   "category": "historical",
+   "id": "hist5",
+   "query": "Which dealer sold us the car originally?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [],
+   "needed": 0,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": true,
+   "no_answer": true,
+   "abstained": true,
+   "ms": 7.59,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "scope1",
+   "category": "cross_scope",
+   "id": "scope1",
+   "query": "What is the launch password hint?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [],
+   "needed": 0,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": true,
+   "no_answer": true,
+   "abstained": true,
+   "ms": 5.65,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "scope2",
+   "category": "cross_scope",
+   "id": "scope2",
+   "query": "How much do I earn?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [],
+   "needed": 0,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": true,
+   "no_answer": true,
+   "abstained": true,
+   "ms": 6.05,
+   "shape": "aggregate",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "scope3",
+   "category": "cross_scope",
+   "id": "scope3",
+   "query": "Who is on call this week?",
+   "returned": [
+    "project:beta#oncall"
+   ],
+   "routes": {
+    "project:beta#oncall": [
+     "lexical"
+    ]
+   },
+   "semantic_proposals": [],
+   "must": [
+    "oncall"
+   ],
+   "needed": 1,
+   "needed_returned": 0,
+   "extra": 1,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": false,
+   "ms": 6.64,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "scope4",
+   "category": "cross_scope",
+   "id": "scope4",
+   "query": "Do I have any medical conditions?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [],
+   "needed": 0,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": true,
+   "no_answer": true,
+   "abstained": true,
+   "ms": 5.43,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "life1",
+   "category": "lifecycle",
+   "id": "life1",
+   "query": "How do I remember my card PIN?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [],
+   "needed": 0,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": true,
+   "no_answer": true,
+   "abstained": true,
+   "ms": 5.56,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "life2",
+   "category": "lifecycle",
+   "id": "life2",
+   "query": "What am I anxious about?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [],
+   "needed": 0,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": true,
+   "no_answer": true,
+   "abstained": true,
+   "ms": 4.85,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "life3",
+   "category": "lifecycle",
+   "id": "life3",
+   "query": "Which school does my boy attend?",
+   "returned": [
+    "sch@new"
+   ],
+   "routes": {
+    "sch@new": [
+     "lexical"
+    ]
+   },
+   "semantic_proposals": [],
+   "must": [
+    "sch@new"
+   ],
+   "needed": 1,
+   "needed_returned": 1,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": true,
+   "no_answer": false,
+   "abstained": false,
+   "ms": 5.46,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "life4",
+   "category": "lifecycle",
+   "id": "life4",
+   "query": "What's my diet like these days?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [
+    "diet@new"
+   ],
+   "needed": 1,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": true,
+   "ms": 5.53,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "life5",
+   "category": "lifecycle",
+   "id": "life5",
+   "query": "Was my grandfather in the military?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [],
+   "needed": 0,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": true,
+   "no_answer": true,
+   "abstained": true,
+   "ms": 6.05,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "life6",
+   "category": "lifecycle",
+   "id": "life6",
+   "query": "Where does Aunt June live?",
+   "returned": [
+    "oz"
+   ],
+   "routes": {
+    "oz": [
+     "lexical"
+    ]
+   },
+   "semantic_proposals": [],
+   "must": [
+    "oz"
+   ],
+   "needed": 1,
+   "needed_returned": 1,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": true,
+   "no_answer": false,
+   "abstained": false,
+   "ms": 5.99,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  }
+ ]
+}

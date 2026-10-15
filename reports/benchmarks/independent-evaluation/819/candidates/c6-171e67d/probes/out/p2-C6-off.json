@@ -1,0 +1,177 @@
+{
+ "summary": {
+  "runtime": "/home/user/eval/am-c6/reference/agentmem_ref/__init__.py",
+  "semantic": "off",
+  "queries": 5,
+  "strict": 2,
+  "needed_recall": 0.8,
+  "extras": 2,
+  "no_answer_returning": 0,
+  "safety_ref_leaks": 2,
+  "safety_text_leaks": 0,
+  "op_failures": [],
+  "p50_ms": 5.27
+ },
+ "rows": [
+  {
+   "scenario": "w1",
+   "category": "asof_window",
+   "id": "w1-asof2022",
+   "query": "Where do I work?",
+   "returned": [
+    "job",
+    "job@new"
+   ],
+   "routes": {
+    "job": [
+     "lexical"
+    ],
+    "job@new": [
+     "lexical"
+    ]
+   },
+   "semantic_proposals": [],
+   "must": [
+    "job"
+   ],
+   "needed": 1,
+   "needed_returned": 1,
+   "extra": 1,
+   "excluded_returned": [
+    "job@new"
+   ],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": false,
+   "ms": 5.71,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "w1",
+   "category": "asof_window",
+   "id": "w1-now",
+   "query": "Where do I work?",
+   "returned": [
+    "job@new"
+   ],
+   "routes": {
+    "job@new": [
+     "lexical"
+    ]
+   },
+   "semantic_proposals": [],
+   "must": [
+    "job@new"
+   ],
+   "needed": 1,
+   "needed_returned": 1,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": true,
+   "no_answer": false,
+   "abstained": false,
+   "ms": 5.27,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "w1",
+   "category": "asof_window",
+   "id": "w1-hist",
+   "query": "Where did I work before?",
+   "returned": [
+    "job",
+    "job@new"
+   ],
+   "routes": {
+    "job": [
+     "lexical"
+    ],
+    "job@new": [
+     "lexical"
+    ]
+   },
+   "semantic_proposals": [],
+   "must": [
+    "job"
+   ],
+   "needed": 1,
+   "needed_returned": 1,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": true,
+   "no_answer": false,
+   "abstained": false,
+   "ms": 5.22,
+   "shape": "relational",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "w2",
+   "category": "asof_window",
+   "id": "w2-asof2021",
+   "query": "What was our home like?",
+   "returned": [
+    "home",
+    "home@new"
+   ],
+   "routes": {
+    "home": [
+     "lexical"
+    ],
+    "home@new": [
+     "lexical"
+    ]
+   },
+   "semantic_proposals": [],
+   "must": [
+    "home"
+   ],
+   "needed": 1,
+   "needed_returned": 1,
+   "extra": 1,
+   "excluded_returned": [
+    "home@new"
+   ],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": false,
+   "ms": 4.8,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  },
+  {
+   "scenario": "w2",
+   "category": "asof_window",
+   "id": "w2-asof2021-para",
+   "query": "Where were we living at that point?",
+   "returned": [],
+   "routes": {},
+   "semantic_proposals": [],
+   "must": [
+    "home"
+   ],
+   "needed": 1,
+   "needed_returned": 0,
+   "extra": 0,
+   "excluded_returned": [],
+   "excluded_text_in_result": [],
+   "strict": false,
+   "no_answer": false,
+   "abstained": true,
+   "ms": 7.25,
+   "shape": "single",
+   "control": false,
+   "false_positive_probe": false
+  }
+ ]
+}
