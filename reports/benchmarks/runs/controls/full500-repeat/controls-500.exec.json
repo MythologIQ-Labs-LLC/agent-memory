@@ -1,0 +1,56 @@
+{
+  "argv": [
+    "/tmp/am-bench/am-venv/bin/python",
+    "reference/run_longmemeval.py",
+    "--backend",
+    "agent_memory",
+    "--backend",
+    "lexical_overlap",
+    "--input",
+    "/tmp/agent-memory-benchmark-data/longmemeval_s_cleaned.json",
+    "--corpus-class",
+    "external_frozen",
+    "--granularity",
+    "session",
+    "--granularity",
+    "turn",
+    "--output",
+    "/tmp/am-bench/runs/controls-full500-repeat/controls-500.json"
+  ],
+  "cwd": "/tmp/am-bench/am",
+  "env": {
+    "HF_HOME": null,
+    "HF_HUB_OFFLINE": null,
+    "TRANSFORMERS_OFFLINE": null,
+    "JEV_MEM_SOURCE_ROOT": null,
+    "PYTHONHASHSEED": null,
+    "VIRTUAL_ENV": "/tmp/am-bench/am-venv",
+    "OMP_NUM_THREADS": null
+  },
+  "run_as_user": "benchrun",
+  "host": {
+    "platform": "Linux-6.18.44-fc-v114-x86_64-with-glibc2.39",
+    "cpu_count": 4,
+    "python": "3.13.16"
+  },
+  "started_utc": "2026-10-15T13:33:05Z",
+  "exit_status": 0,
+  "wall_seconds": 2767.926,
+  "user_cpu_seconds": 577.5,
+  "system_cpu_seconds": 100.187,
+  "peak_rss_mib": 90.2,
+  "secrets_present": {
+    "OPENAI_API_KEY": false,
+    "ANTHROPIC_API_KEY": false,
+    "TYPESAFE_API_KEY": false,
+    "HF_TOKEN": false,
+    "GEMINI_API_KEY": false,
+    "GOOGLE_API_KEY": false,
+    "GROQ_API_KEY": false,
+    "AWS_ACCESS_KEY_ID": false,
+    "AWS_SECRET_ACCESS_KEY": false,
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false,
+    "LLM_API_KEY": false
+  }
+}

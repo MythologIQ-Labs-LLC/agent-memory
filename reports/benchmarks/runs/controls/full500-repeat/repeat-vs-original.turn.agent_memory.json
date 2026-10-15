@@ -1,0 +1,23 @@
+{
+  "left": "reports/benchmarks/runs/controls/full500/controls-500.json.gz",
+  "right": "/tmp/am-bench/runs/controls-full500-repeat/controls-500.json",
+  "plane": "turn",
+  "backend": "agent_memory",
+  "scope": "exact",
+  "compared_fields": [
+    "metrics",
+    "status",
+    "runtime_error",
+    "ranked_top",
+    "gold",
+    "question_type"
+  ],
+  "left_questions": 500,
+  "right_questions": 500,
+  "compared_questions": 500,
+  "only_left": 0,
+  "only_right": 0,
+  "differing_questions": 0,
+  "differences": 0,
+  "equal": true
+}
