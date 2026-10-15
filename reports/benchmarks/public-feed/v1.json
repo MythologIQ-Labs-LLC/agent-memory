@@ -2,7 +2,7 @@
   "schema_version": 1,
   "kind": "agent-memory-measured-results-feed",
   "authority_effect": "none",
-  "feed_revision": "2026-10-15-initial",
+  "feed_revision": "2026-10-15-candidate819",
   "profiles": [
     {
       "id": "candidate:longmemeval-s:subset50:session",
@@ -264,6 +264,197 @@
             "pass_value": "True"
           },
           "expected_score": 0.1038961038961039
+        }
+      ]
+    },
+    {
+      "id": "candidate:819:amb:strict:baseline-vs-c2",
+      "title": "Agent Memory #819 · AMB strict success · baseline vs C2",
+      "family": "runtime-revision-amb-diagnostic",
+      "evidence_status": "candidate",
+      "cohort": {
+        "sample_count": 77,
+        "scored_count": 77,
+        "excluded_count": 0,
+        "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+        "selection_id": "same frozen upstream AMB full 77-case single-turn split"
+      },
+      "evaluator_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+      "protocol": "same native AMB benchmark, same frozen 77 cases; self-run and previously exposed diagnostic data; independent hidden holdout pending",
+      "metric": "strict_case_success",
+      "method_note": "This is a runtime A/B comparison, NOT a competitive rank. Baseline at 15/77, C2 at 39/77, but recall decreased 0.9535 to 0.8782. Known AMB data informed C2 and are not a blind holdout. The independent evaluator has not approved default adoption.",
+      "rows": [
+        {
+          "source_commit": "3179ffa5825065c901d48daf3625ecc388b9500a",
+          "artifact": "reports/benchmarks/amb-local-execution/2026-10-15-819-relevance-sufficient-recall/paired/paired-amb-c2.json",
+          "artifact_sha256": "4025c04a5f60b40cc6986191a8dcbac9a68016b80a7235b3f8b0a966632b9a02",
+          "status": "candidate",
+          "system": "agent_memory_c2",
+          "label": "Agent Memory · C2 selection (unaccepted)",
+          "role": "control",
+          "extract": {
+            "type": "json_path",
+            "path": [
+              "after",
+              "strict_success"
+            ]
+          },
+          "expected_score": 0.5065
+        },
+        {
+          "source_commit": "3179ffa5825065c901d48daf3625ecc388b9500a",
+          "artifact": "reports/benchmarks/amb-local-execution/2026-10-15-819-relevance-sufficient-recall/paired/paired-amb-c2.json",
+          "artifact_sha256": "4025c04a5f60b40cc6986191a8dcbac9a68016b80a7235b3f8b0a966632b9a02",
+          "status": "candidate",
+          "system": "agent_memory_baseline",
+          "label": "Agent Memory · previous baseline",
+          "role": "baseline",
+          "extract": {
+            "type": "json_path",
+            "path": [
+              "before",
+              "strict_success"
+            ]
+          },
+          "expected_score": 0.1948
+        }
+      ]
+    },
+    {
+      "id": "candidate:819:longmemeval-s:full500:session:c2",
+      "title": "Agent Memory #819 · LongMemEval-S full 500 · session depth recall",
+      "family": "runtime-revision-longmemeval-diagnostic",
+      "evidence_status": "candidate",
+      "cohort": {
+        "sample_count": 500,
+        "scored_count": 419,
+        "excluded_count": 81,
+        "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+        "selection_id": "full 500, 419 scored, 81 excluded"
+      },
+      "evaluator_revision": "git-blob:6b9c237380f1d527e564161c2dac7fe32ada0ef9",
+      "protocol": "same 500-question evaluator, same input revision, self-run only; candidate default C2 vs prior baseline",
+      "metric": "recall_all@10",
+      "method_note": "Runtime revision A/B only, NOT a competitive product ranking. C2 improves precision on AMB but decreases multi-evidence depth recall; this session recall_all@10 falls 0.8926 to 0.7542 and turn falls 0.7232 to 0.6325. ranked_prefix reproduces previous baseline exactly. Independent holdout review pending.",
+      "rows": [
+        {
+          "source_commit": "3179ffa5825065c901d48daf3625ecc388b9500a",
+          "artifact": "reports/benchmarks/amb-local-execution/2026-10-15-819-relevance-sufficient-recall/longmemeval/session-summary-C2.json",
+          "artifact_sha256": "0957642f7ca4f9d5adcf5564febfccc062f6b49edc248552dfb568eeba78bc68",
+          "status": "candidate",
+          "system": "agent_memory_c2",
+          "label": "Agent Memory · C2 default (unaccepted)",
+          "role": "control",
+          "extract": {
+            "type": "json_path",
+            "path": [
+              "runs",
+              "candidate_default",
+              "metrics",
+              "recall_all@10"
+            ]
+          },
+          "expected_score": 0.754177,
+          "engine_revision": "eaf60e4dd001c02ce00bb36f15f800996bf77da3",
+          "revision_path": [
+            "runs",
+            "candidate_default",
+            "agent_memory_revision"
+          ]
+        },
+        {
+          "source_commit": "3179ffa5825065c901d48daf3625ecc388b9500a",
+          "artifact": "reports/benchmarks/amb-local-execution/2026-10-15-819-relevance-sufficient-recall/longmemeval/session-summary-C2.json",
+          "artifact_sha256": "0957642f7ca4f9d5adcf5564febfccc062f6b49edc248552dfb568eeba78bc68",
+          "status": "candidate",
+          "system": "agent_memory_baseline",
+          "label": "Agent Memory · previous baseline",
+          "role": "baseline",
+          "extract": {
+            "type": "json_path",
+            "path": [
+              "runs",
+              "baseline",
+              "metrics",
+              "recall_all@10"
+            ]
+          },
+          "expected_score": 0.892601,
+          "engine_revision": "1df28f84c236f5369b004465252610bd88ae07c9",
+          "revision_path": [
+            "runs",
+            "baseline",
+            "agent_memory_revision"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "candidate:819:longmemeval-s:full500:turn:c2",
+      "title": "Agent Memory #819 · LongMemEval-S full 500 · turn depth recall",
+      "family": "runtime-revision-longmemeval-diagnostic",
+      "evidence_status": "candidate",
+      "cohort": {
+        "sample_count": 500,
+        "scored_count": 419,
+        "excluded_count": 81,
+        "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+        "selection_id": "full 500, 419 scored, 81 excluded"
+      },
+      "evaluator_revision": "git-blob:6b9c237380f1d527e564161c2dac7fe32ada0ef9",
+      "protocol": "same 500-question evaluator, same input revision, self-run only; candidate default C2 vs prior baseline",
+      "metric": "recall_all@10",
+      "method_note": "Runtime revision A/B only, NOT a competitive product ranking. C2 improves precision on AMB but decreases multi-evidence depth recall; this session recall_all@10 falls 0.8926 to 0.7542 and turn falls 0.7232 to 0.6325. ranked_prefix reproduces previous baseline exactly. Independent holdout review pending.",
+      "rows": [
+        {
+          "source_commit": "3179ffa5825065c901d48daf3625ecc388b9500a",
+          "artifact": "reports/benchmarks/amb-local-execution/2026-10-15-819-relevance-sufficient-recall/longmemeval/turn-summary-C2.json",
+          "artifact_sha256": "02268532195bdbc104e3338ce8b643235f9d930ad50b85c39fbf054f35c3b191",
+          "status": "candidate",
+          "system": "agent_memory_c2",
+          "label": "Agent Memory · C2 default (unaccepted)",
+          "role": "control",
+          "extract": {
+            "type": "json_path",
+            "path": [
+              "runs",
+              "candidate_default",
+              "metrics",
+              "recall_all@10"
+            ]
+          },
+          "expected_score": 0.632458,
+          "engine_revision": "eaf60e4dd001c02ce00bb36f15f800996bf77da3",
+          "revision_path": [
+            "runs",
+            "candidate_default",
+            "agent_memory_revision"
+          ]
+        },
+        {
+          "source_commit": "3179ffa5825065c901d48daf3625ecc388b9500a",
+          "artifact": "reports/benchmarks/amb-local-execution/2026-10-15-819-relevance-sufficient-recall/longmemeval/turn-summary-C2.json",
+          "artifact_sha256": "02268532195bdbc104e3338ce8b643235f9d930ad50b85c39fbf054f35c3b191",
+          "status": "candidate",
+          "system": "agent_memory_baseline",
+          "label": "Agent Memory · previous baseline",
+          "role": "baseline",
+          "extract": {
+            "type": "json_path",
+            "path": [
+              "runs",
+              "baseline",
+              "metrics",
+              "recall_all@10"
+            ]
+          },
+          "expected_score": 0.72315,
+          "engine_revision": "1df28f84c236f5369b004465252610bd88ae07c9",
+          "revision_path": [
+            "runs",
+            "baseline",
+            "agent_memory_revision"
+          ]
         }
       ]
     }
