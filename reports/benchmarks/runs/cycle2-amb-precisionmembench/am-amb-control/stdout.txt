@@ -1,0 +1,39 @@
+
+Dataset: precisionmembench  Split: single-turn  Memory: agent-memory  Mode: 
+retrieval
+
+Loading queries...
+  77 queries loaded
+Loading documents...
+  35 documents loaded
+Ingesting into agent-memory...
+  ingested in 904ms (25.8ms/doc avg)
+
+  Evaluating ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:06
+
+Saved → 
+/tmp/c2/evidence/am-amb-control/amb-outputs/precisionmembench/agent-memory/retri
+eval/single-turn.json
+        Results —        
+precisionmembench/single-
+  turn | agent-memory |  
+        retrieval        
+┏━━━━━━━━━━━━━━━┳━━━━━━━┓
+┃ Metric        ┃ Value ┃
+┡━━━━━━━━━━━━━━━╇━━━━━━━┩
+│ Total queries │    77 │
+│ Correct       │    15 │
+│ Accuracy      │ 19.5% │
+└───────────────┴───────┘
+            PrecisionMemBench             
+┏━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
+┃ Metric                 ┃         Value ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
+│ Active passes          │          4/43 │
+│ Structural passes      │          6/25 │
+│ Trivially-empty passes │           5/9 │
+│ Total passes           │         15/77 │
+│ Mean precision         │          0.18 │
+│ Mean recall            │          0.95 │
+│ ID resolution          │ source_id=686 │
+└────────────────────────┴───────────────┘

@@ -1,0 +1,37 @@
+
+Dataset: precisionmembench  Split: single-turn  Memory: bm25  Mode: retrieval
+
+Loading queries...
+  77 queries loaded
+Loading documents...
+  35 documents loaded
+Ingesting into bm25...
+  ingested in 216ms (6.2ms/doc avg)
+
+  Evaluating ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+
+Saved → 
+/tmp/c2/evidence/bm25-amb-control/amb-outputs/precisionmembench/bm25/retrieval/s
+ingle-turn.json
+        Results —        
+precisionmembench/single-
+ turn | bm25 | retrieval 
+┏━━━━━━━━━━━━━━━┳━━━━━━━┓
+┃ Metric        ┃ Value ┃
+┡━━━━━━━━━━━━━━━╇━━━━━━━┩
+│ Total queries │    77 │
+│ Correct       │     8 │
+│ Accuracy      │ 10.4% │
+└───────────────┴───────┘
+           PrecisionMemBench            
+┏━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━┓
+┃ Metric                 ┃       Value ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━┩
+│ Active passes          │        0/43 │
+│ Structural passes      │        5/25 │
+│ Trivially-empty passes │         3/9 │
+│ Total passes           │        8/77 │
+│ Mean precision         │        0.05 │
+│ Mean recall            │        0.97 │
+│ ID resolution          │ doc_id=1391 │
+└────────────────────────┴─────────────┘

@@ -1,0 +1,21 @@
+amb-retrieval-no-llm-guard {"authority_effect": "none", "guard": "amb_retrieval_no_llm", "guard_version": "1.0.0", "llm_clients_constructed": 0, "patched_symbols": ["memory_bench.cli._resolve_gemini_key", "memory_bench.cli.get_answer_llm", "memory_bench.runner.GeminiJudge"]}
+2026-10-15 15:40:29,234 [INFO] [query:happy-stack-repository-layer] start — How should I structure my repository layer?
+2026-10-15 15:40:29,330 [INFO] [query:happy-stack-repository-layer] answer done in 0.1s (retrieve=95ms)
+2026-10-15 15:40:29,330 [INFO] [query:happy-stack-repository-layer] done in 0.1s — correct=False score=None
+2026-10-15 15:40:29,566 [INFO] [query:happy-alias-match-kubernetes] start — what's my k8s deploy story?
+2026-10-15 15:40:29,633 [INFO] [query:happy-alias-match-kubernetes] answer done in 0.1s (retrieve=67ms)
+2026-10-15 15:40:29,634 [INFO] [query:happy-alias-match-kubernetes] done in 0.1s — correct=False score=None
+2026-10-15 15:40:29,634 [INFO] [query:alias-kube-resolves] start — how does kube schedule pods across our CI pipeline nodes?
+2026-10-15 15:40:29,757 [INFO] [query:alias-kube-resolves] answer done in 0.1s (retrieve=123ms)
+2026-10-15 15:40:29,758 [INFO] [query:alias-kube-resolves] done in 0.1s — correct=False score=None
+2026-10-15 15:40:29,758 [INFO] [query:alias-gha-resolves] start — GHA secrets config
+2026-10-15 15:40:29,825 [INFO] [query:alias-gha-resolves] answer done in 0.1s (retrieve=67ms)
+2026-10-15 15:40:29,825 [INFO] [query:alias-gha-resolves] done in 0.1s — correct=False score=None
+2026-10-15 15:40:29,826 [INFO] [query:long-query-rambling-kubernetes] start — ok so I've been thinking about this for a while and I know we've talked about in
+2026-10-15 15:40:30,117 [INFO] [query:long-query-rambling-kubernetes] answer done in 0.3s (retrieve=291ms)
+2026-10-15 15:40:30,118 [INFO] [query:long-query-rambling-kubernetes] done in 0.3s — correct=False score=None
+2026-10-15 15:40:30,124 [ERROR] Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x7f5e1b809b50>
+2026-10-15 15:40:30,125 [ERROR] Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x7f5e1b814890>, 17494.572376483)])']
+connector: <aiohttp.connector.TCPConnector object at 0x7f5e1b8090a0>

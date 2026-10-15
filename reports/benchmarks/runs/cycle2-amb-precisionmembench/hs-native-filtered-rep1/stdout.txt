@@ -1,0 +1,39 @@
+
+Dataset: precisionmembench  Split: single-turn  Memory: hindsight-http  Mode: 
+retrieval
+
+Loading queries...
+  77 queries loaded
+Loading documents...
+  35 documents loaded
+Extraction labels: state, name
+Ingesting into hindsight-http...
+  ingested in 15233ms (435.2ms/doc avg)
+
+  Evaluating ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:08
+
+Saved → 
+/tmp/c2/evidence/hs-native-filtered-rep1/amb-outputs/precisionmembench/hindsight
+-http/retrieval/single-turn.json
+        Results —        
+precisionmembench/single-
+ turn | hindsight-http | 
+        retrieval        
+┏━━━━━━━━━━━━━━━┳━━━━━━━┓
+┃ Metric        ┃ Value ┃
+┡━━━━━━━━━━━━━━━╇━━━━━━━┩
+│ Total queries │    77 │
+│ Correct       │    34 │
+│ Accuracy      │ 44.2% │
+└───────────────┴───────┘
+        PrecisionMemBench         
+┏━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┓
+┃ Metric                 ┃ Value ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━┩
+│ Active passes          │  0/43 │
+│ Structural passes      │ 25/25 │
+│ Trivially-empty passes │   9/9 │
+│ Total passes           │ 34/77 │
+│ Mean precision         │  0.00 │
+│ Mean recall            │  0.00 │
+└────────────────────────┴───────┘

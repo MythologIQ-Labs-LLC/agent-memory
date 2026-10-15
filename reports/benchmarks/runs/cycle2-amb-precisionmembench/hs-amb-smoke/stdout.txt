@@ -1,0 +1,40 @@
+
+Dataset: precisionmembench  Split: single-turn  Memory: hindsight-chunks-local  
+Mode: retrieval
+
+Loading queries...
+  5 queries loaded
+Loading documents...
+  35 documents loaded
+Ingesting into hindsight-chunks-local...
+  ingested in 6584ms (188.1ms/doc avg)
+
+  Evaluating ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+
+Saved → 
+/tmp/c2/evidence/hs-amb-smoke/amb-outputs/precisionmembench/hindsight-chunks-loc
+al/retrieval/single-turn.json
+        Results —        
+precisionmembench/single-
+         turn |          
+hindsight-chunks-local | 
+        retrieval        
+┏━━━━━━━━━━━━━━━┳━━━━━━━┓
+┃ Metric        ┃ Value ┃
+┡━━━━━━━━━━━━━━━╇━━━━━━━┩
+│ Total queries │     5 │
+│ Correct       │     0 │
+│ Accuracy      │  0.0% │
+└───────────────┴───────┘
+            PrecisionMemBench             
+┏━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
+┃ Metric                 ┃         Value ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
+│ Active passes          │           0/4 │
+│ Structural passes      │           0/1 │
+│ Trivially-empty passes │           0/0 │
+│ Total passes           │           0/5 │
+│ Mean precision         │          0.06 │
+│ Mean recall            │          1.00 │
+│ ID resolution          │ source_id=100 │
+└────────────────────────┴───────────────┘
