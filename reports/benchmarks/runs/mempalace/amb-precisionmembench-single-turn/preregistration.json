@@ -1,0 +1,66 @@
+{
+  "schema": "agent-memory/comparator-preregistration/v1",
+  "registered_utc": "2026-10-15T16:57:38Z",
+  "issue": [
+    "#810"
+  ],
+  "status": "preregistered before execution; candidate, not reviewed or accepted",
+  "system": {
+    "id": "mempalace-local",
+    "family": "verbatim personal memory: drawers in a local vector store, hybrid vector + BM25 rerank",
+    "product": "MemPalace 3.11.0 @ 602d796c699cabba2971982cd9dccbbf46abfe79 (MIT), installed tree hash-checked in its own interpreter",
+    "environment": "../mempalace-venv-freeze.txt (product), ../../812-graphiti/graphiti-amb-venv-freeze.txt (AMB process)",
+    "embedder": "chroma ONNX all-MiniLM-L6-v2, files pinned in ../model-pins.txt; 1 embedding thread; offline",
+    "llm": "none reachable",
+    "capability_tier": "no LLM at ingestion or retrieval (same tier as agent-memory and bm25)"
+  },
+  "adapter": {
+    "file": "reference/amb_mempalace_bridge.py",
+    "version": "0.1.0-candidate",
+    "git_blob": "b60ba7601234bd8fee0356edccc7a423180597e8",
+    "add": "mempalace_add_drawer(wing='amb', room='history', content=document.content, source_file=uuid5 key)",
+    "search": "mempalace_search(query, limit=k), k = AMB per-case retrieval_limit (maxBeliefs, default 20); mapped list cut to k",
+    "isolation": "one palace and MCP server per AMB user_id",
+    "withheld": [
+      "belief ids",
+      "scope tags",
+      "document.context markers",
+      "timestamps",
+      "gold",
+      "query category",
+      "retrieval_filter"
+    ]
+  },
+  "protocol": {
+    "harness": "AMB 03c1d0f1d27da63034f0931121c858faba512383",
+    "dataset": "precisionmembench",
+    "split": "single-turn",
+    "mode": "retrieval",
+    "cases": 77,
+    "fixtures_sha256": {
+      "beliefs.seed.json": "35659b3b9a581b644fc6746e1b4e902c3e7b56c0973b546bf7b0816a69e3de98",
+      "retrieval.cases.json": "09e99f0852280538abe34b03570f65583fdb10df3c554b7150f0f665d5db709c"
+    },
+    "guard": "reference/amb_retrieval_no_llm.py 1.0.0 (unchanged from 1df28f8)",
+    "runner_git_blob": "e569f7eaccf20b23d043a4b51cedd708b27cfe2a",
+    "evidence_wrapper": "scripts/run_amb_local_evidence.py (unchanged from 1df28f8)",
+    "filters": "none (protocol A)",
+    "command": "python scripts/run_amb_local_evidence.py --amb-root /tmp/agent-memory-benchmark --python /tmp/am-bench/graphiti-amb-venv/bin/python --evidence-dir <dir> --set-env TIKTOKEN_CACHE_DIR=/tmp/am-bench/tiktoken-cache --set-env HF_HUB_OFFLINE=1 --set-env PYTHONHASHSEED=0 --set-env MEMPALACE_PYTHON=/tmp/am-bench/mempalace-venv/bin/python --set-env MEMPALACE_BENCH_MODEL_DIR=<pinned MiniLM dir> -- run --dataset precisionmembench --split single-turn --memory mempalace-local --mode retrieval"
+  },
+  "runs": {
+    "primary": "rep 1 is the result",
+    "repeat": "rep 2, a full fresh rerun, as repeatability evidence; never substituted"
+  },
+  "outcomes": [
+    "AMB native correct/77, pass classes, mean precision/recall, per-category passes",
+    "per-case paired comparison with agent-memory rep 1 and bm25 (scripts/compare_amb_runs.py) with exact McNemar",
+    "latency, wall time, peak RSS"
+  ],
+  "failure_rules": [
+    "a provider or harness exception fails the run; reported, not scored",
+    "no per-case retries",
+    "no configuration change after registration"
+  ],
+  "comparability": "Same harness, inputs, budgets, scorer, protocol A and capability tier (no LLM) as agent-memory 15/77 and bm25 8/77.",
+  "smoke": "synthetic-smoke.json: 4 hand-written documents, all 5 structural checks passed before this registration"
+}

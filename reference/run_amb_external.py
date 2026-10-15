@@ -26,6 +26,7 @@ from pathlib import Path
 
 from amb_agent_memory_bridge import AMB_REVISION, install_amb_agent_memory_provider, verify_amb_checkout
 from amb_graphiti_bridge import install_amb_graphiti_provider
+from amb_mempalace_bridge import install_amb_mempalace_provider
 from amb_mem0_explicit_bridge import install_amb_mem0_explicit_provider
 from amb_retrieval_no_llm import install_retrieval_no_llm_guard, requested_mode
 
@@ -95,6 +96,8 @@ def main(argv: list[str] | None = None) -> int:
     # The Graphiti comparator (#812) registers the same way; graphiti_core is imported only
     # when the provider is prepared, so other providers never need it.
     install_amb_graphiti_provider(amb_root)
+    # MemPalace (#810) speaks MCP to its own pinned interpreter; nothing is imported here.
+    install_amb_mempalace_provider(amb_root)
 
     # Import after registration so CLI help and provider lookup both see Agent Memory.
     from memory_bench import cli as amb_cli  # type: ignore[import-not-found]  # noqa: PLC0415

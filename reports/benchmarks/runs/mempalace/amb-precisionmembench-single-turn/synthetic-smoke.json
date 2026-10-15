@@ -1,0 +1,94 @@
+{
+  "provider": "mempalace-local",
+  "searches": {
+    "alice_work": {
+      "doc_ids": [
+        "s3",
+        "s1",
+        "s2"
+      ],
+      "raw": {
+        "provider": "mempalace-local",
+        "bridge_version": "0.1.0-candidate",
+        "search_seconds": 0.193,
+        "limit": 10,
+        "hit_count": 3,
+        "hit_stats": {
+          "hit_count": 3,
+          "also_in_ref_count": 0,
+          "duplicate_hit_count": 0
+        },
+        "unmapped": 0,
+        "total_before_filter": 3
+      }
+    },
+    "alice_editor": {
+      "doc_ids": [
+        "s2",
+        "s1",
+        "s3"
+      ],
+      "raw": {
+        "provider": "mempalace-local",
+        "bridge_version": "0.1.0-candidate",
+        "search_seconds": 0.0893,
+        "limit": 10,
+        "hit_count": 3,
+        "hit_stats": {
+          "hit_count": 3,
+          "also_in_ref_count": 0,
+          "duplicate_hit_count": 0
+        },
+        "unmapped": 0,
+        "total_before_filter": 3
+      }
+    },
+    "bob_from_a": {
+      "doc_ids": [
+        "s1",
+        "s3",
+        "s2"
+      ],
+      "raw": {
+        "provider": "mempalace-local",
+        "bridge_version": "0.1.0-candidate",
+        "search_seconds": 0.1598,
+        "limit": 10,
+        "hit_count": 3,
+        "hit_stats": {
+          "hit_count": 3,
+          "also_in_ref_count": 0,
+          "duplicate_hit_count": 0
+        },
+        "unmapped": 0,
+        "total_before_filter": 3
+      }
+    },
+    "bob_from_b": {
+      "doc_ids": [
+        "s4"
+      ],
+      "raw": {
+        "provider": "mempalace-local",
+        "bridge_version": "0.1.0-candidate",
+        "search_seconds": 0.1517,
+        "limit": 10,
+        "hit_count": 1,
+        "hit_stats": {
+          "hit_count": 1,
+          "also_in_ref_count": 0,
+          "duplicate_hit_count": 0
+        },
+        "unmapped": 0,
+        "total_before_filter": 1
+      }
+    }
+  },
+  "checks": {
+    "alice_work_returns_alice_docs": true,
+    "alice_editor_returns_s2": true,
+    "no_cross_user_leak_a": true,
+    "no_cross_user_leak_b": true,
+    "budget_respected": true
+  }
+}

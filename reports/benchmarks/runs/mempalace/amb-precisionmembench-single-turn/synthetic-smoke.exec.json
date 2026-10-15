@@ -1,0 +1,46 @@
+{
+  "argv": [
+    "/tmp/am-bench/graphiti-amb-venv/bin/python",
+    "../scripts/smoke_amb_provider.py",
+    "mempalace-local",
+    "/tmp/agent-memory-benchmark",
+    "/tmp/am-bench/mempalace-amb-work/smoke",
+    "/tmp/am-bench/runs/810-mempalace-amb-smoke/synthetic-smoke.json"
+  ],
+  "cwd": "/home/user/ext-exec/reference",
+  "env": {
+    "HF_HOME": null,
+    "HF_HUB_OFFLINE": "1",
+    "TRANSFORMERS_OFFLINE": null,
+    "JEV_MEM_SOURCE_ROOT": null,
+    "PYTHONHASHSEED": "0",
+    "VIRTUAL_ENV": null,
+    "OMP_NUM_THREADS": null
+  },
+  "run_as_user": "root",
+  "host": {
+    "platform": "Linux-6.18.44-fc-v114-x86_64-with-glibc2.39",
+    "cpu_count": 4,
+    "python": "3.13.16"
+  },
+  "started_utc": "2026-10-15T16:56:52Z",
+  "exit_status": 0,
+  "wall_seconds": 23.03,
+  "user_cpu_seconds": 10.161,
+  "system_cpu_seconds": 7.038,
+  "peak_rss_mib": 969.1,
+  "secrets_present": {
+    "OPENAI_API_KEY": false,
+    "ANTHROPIC_API_KEY": false,
+    "TYPESAFE_API_KEY": false,
+    "HF_TOKEN": false,
+    "GEMINI_API_KEY": false,
+    "GOOGLE_API_KEY": false,
+    "GROQ_API_KEY": false,
+    "AWS_ACCESS_KEY_ID": false,
+    "AWS_SECRET_ACCESS_KEY": false,
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false,
+    "LLM_API_KEY": false
+  }
+}
