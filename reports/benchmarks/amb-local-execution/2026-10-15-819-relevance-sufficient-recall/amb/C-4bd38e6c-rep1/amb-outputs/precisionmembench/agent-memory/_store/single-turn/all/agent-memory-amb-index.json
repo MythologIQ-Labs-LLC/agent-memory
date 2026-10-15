@@ -1,0 +1,462 @@
+{
+  "agent_memory_revision": "4bd38e6ca9cec9de7a054dd6b970ac26f05fb946",
+  "amb_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+  "bridge_version": "0.4.0",
+  "records": {
+    "ref-0004": {
+      "content": "response_length verbosity directness Reads responses carefully rather than skimming. Prefers direct answers without lengthy preamble. Shapes response length and opening style. Prevents affirmations and restating the question.",
+      "context": "beliefId=b-comm-response-length scope=user:universal",
+      "id": "b-comm-response-length",
+      "source_ids": [
+        "b-comm-response-length"
+      ],
+      "tags": [
+        "scope:user-universal"
+      ],
+      "timestamp": "2026-09-01T00:00:00Z",
+      "user_id": "test-user"
+    },
+    "ref-0011": {
+      "content": "challenge_mode pushback disagreement Wants explicit pushback when a plan has problems, rather than silent compliance. Shapes conversational posture toward honest disagreement over silent compliance on every turn.",
+      "context": "beliefId=b-comm-pushback scope=user:universal",
+      "id": "b-comm-pushback",
+      "source_ids": [
+        "b-comm-pushback"
+      ],
+      "tags": [
+        "scope:user-universal"
+      ],
+      "timestamp": "2026-09-01T00:00:00Z",
+      "user_id": "test-user"
+    },
+    "ref-0018": {
+      "content": "recommendation_style Prefers a single strong recommendation over a menu of options. Shapes how options are presented \u2014 a single defended recommendation rather than an open-ended menu.",
+      "context": "beliefId=b-comm-recommendation scope=user:universal",
+      "id": "b-comm-recommendation",
+      "source_ids": [
+        "b-comm-recommendation"
+      ],
+      "tags": [
+        "scope:user-universal"
+      ],
+      "timestamp": "2026-09-01T00:00:00Z",
+      "user_id": "test-user"
+    },
+    "ref-0025": {
+      "content": "authorship_mode Edits AI output rather than having AI edit their own drafts. Shapes output handling \u2014 prevents rewriting user prose; produces raw material for the user to edit into their own voice.",
+      "context": "beliefId=b-authorship-mode scope=user:universal",
+      "id": "b-authorship-mode",
+      "source_ids": [
+        "b-authorship-mode"
+      ],
+      "tags": [
+        "scope:user-universal"
+      ],
+      "timestamp": "2026-09-01T00:00:00Z",
+      "user_id": "test-user"
+    },
+    "ref-0032": {
+      "content": "language_typescript TypeScript TS Writes TypeScript with strict mode and no implicit any. Shapes all code examples toward TypeScript with strict mode and no implicit any.",
+      "context": "beliefId=b-ts-pref scope=domain:code",
+      "id": "b-ts-pref",
+      "source_ids": [
+        "b-ts-pref"
+      ],
+      "tags": [
+        "scope:domain-code"
+      ],
+      "timestamp": "2026-09-01T00:00:00Z",
+      "user_id": "test-user"
+    },
+    "ref-0039": {
+      "content": "framework_fastify Fastify express Uses Fastify for HTTP services rather than Express. Shapes server-side code examples toward Fastify and prevents suggesting Express as an alternative.",
+      "context": "beliefId=b-fastify-pref scope=domain:code",
+      "id": "b-fastify-pref",
+      "source_ids": [
+        "b-fastify-pref"
+      ],
+      "tags": [
+        "scope:domain-code"
+      ],
+      "timestamp": "2026-09-01T00:00:00Z",
+      "user_id": "test-user"
+    },
+    "ref-0046": {
+      "content": "mongodb_raw_driver MongoDB Mongo moongoose Uses the MongoDB raw driver with explicit Collection types. Shapes all database code toward raw MongoDB driver calls and prevents ORM suggestions such as Mongoose or Prisma.",
+      "context": "beliefId=b-mongo-raw-driver scope=domain:code",
+      "id": "b-mongo-raw-driver",
+      "source_ids": [
+        "b-mongo-raw-driver"
+      ],
+      "tags": [
+        "scope:domain-code"
+      ],
+      "timestamp": "2026-09-01T00:00:00Z",
+      "user_id": "test-user"
+    },
+    "ref-0053": {
+      "content": "composition_over_inheritance inheritance class hierarchies base class factory function Prefers composition over inheritance. Factory functions returning plain objects rather than class hierarchies. Shapes object design suggestions away from class hierarchies toward factory functions returning plain objects.",
+      "context": "beliefId=b-composition-inheritance scope=domain:code",
+      "id": "b-composition-inheritance",
+      "source_ids": [
+        "b-composition-inheritance"
+      ],
+      "tags": [
+        "scope:domain-code"
+      ],
+      "timestamp": "2026-09-01T00:00:00Z",
+      "user_id": "test-user"
+    },
+    "ref-0060": {
+      "content": "error_handling_explicit error handling exceptions try-catch Result type error Go-style explicit error returns. Error tuples or Result<T> types rather than thrown exceptions. Shapes error handling patterns toward explicit return values and away from thrown exceptions or try/catch wrappers.",
+      "context": "beliefId=b-error-handling scope=domain:code",
+      "id": "b-error-handling",
+      "source_ids": [
+        "b-error-handling"
+      ],
+      "tags": [
+        "scope:domain-code"
+      ],
+      "timestamp": "2026-09-01T00:00:00Z",
+      "user_id": "test-user"
+    },
+    "ref-0067": {
+      "content": "database_mongodb database Decided on MongoDB after evaluating Postgres. Raw driver only. Shapes all data-layer recommendations \u2014 database choice is settled and prevents re-litigating Postgres as an alternative.",
+      "context": "beliefId=b-db-decision scope=domain:code",
+      "id": "b-db-decision",
+      "source_ids": [
+        "b-db-decision"
+      ],
+      "tags": [
+        "scope:domain-code"
+      ],
+      "timestamp": "2026-04-12T00:00:00Z",
+      "user_id": "test-user"
+    },
+    "ref-0074": {
+      "content": "database_sqlalchemy_old SQLAlchemy Postgres Previously used SQLAlchemy with Postgres. Stack replaced by MongoDB with raw driver. Historical record only \u2014 prevents resurfacing superseded SQLAlchemy and Postgres choices in current recommendations.",
+      "context": "beliefId=b-sqlalchemy-superseded scope=domain:code",
+      "id": "b-sqlalchemy-superseded",
+      "source_ids": [
+        "b-sqlalchemy-superseded"
+      ],
+      "tags": [
+        "scope:domain-code"
+      ],
+      "timestamp": "2026-01-01T00:00:00Z",
+      "user_id": "test-user"
+    },
+    "ref-0081": {
+      "content": "kubernetes k8s kube Deploys services to a Kubernetes cluster on EKS. Uses Helm charts checked into the monorepo. Shapes all deployment and infrastructure answers to assume Kubernetes on EKS rather than bare EC2 or Lambda.",
+      "context": "beliefId=b-kubernetes-entity scope=domain:code",
+      "id": "b-kubernetes-entity",
+      "source_ids": [
+        "b-kubernetes-entity"
+      ],
+      "tags": [
+        "scope:domain-code"
+      ],
+      "timestamp": "2026-09-01T00:00:00Z",
+      "user_id": "test-user"
+    },
+    "ref-0088": {
+      "content": "react ReactJS react.js Frontend is React 18 with TanStack Query and Tailwind. Shapes all frontend code answers to assume React 18 with hooks rather than Vue or Svelte.",
+      "context": "beliefId=b-react-entity scope=domain:code",
+      "id": "b-react-entity",
+      "source_ids": [
+        "b-react-entity"
+      ],
+      "tags": [
+        "scope:domain-code"
+      ],
+      "timestamp": "2026-09-01T00:00:00Z",
+      "user_id": "test-user"
+    },
+    "ref-0095": {
+      "content": "auth_strategy JWT session tokens auth service authentication Evaluating JWT vs session tokens for the new auth service. Not decided. Shapes auth-related responses \u2014 prevents premature commitment and surfaces the JWT vs session token tradeoff.",
+      "context": "beliefId=b-auth-open-q scope=domain:code",
+      "id": "b-auth-open-q",
+      "source_ids": [
+        "b-auth-open-q"
+      ],
+      "tags": [
+        "scope:domain-code"
+      ],
+      "timestamp": "2026-09-15T00:00:00Z",
+      "user_id": "test-user"
+    },
+    "ref-0102": {
+      "content": "narrator_voice Close third-person, present tense. No omniscient asides. Shapes all prose drafting for this project toward close third-person, present tense narration.",
+      "context": "beliefId=b-narrator-voice scope=domain:writing",
+      "id": "b-narrator-voice",
+      "source_ids": [
+        "b-narrator-voice"
+      ],
+      "tags": [
+        "scope:domain-writing"
+      ],
+      "timestamp": "2026-09-01T00:00:00Z",
+      "user_id": "test-user"
+    },
+    "ref-0109": {
+      "content": "narrator_voice_old Previously wrote in first-person narrator voice. Replaced by close third-person. Historical record only \u2014 prevents applying the superseded first-person convention to current prose.",
+      "context": "beliefId=b-narrator-superseded scope=domain:writing",
+      "id": "b-narrator-superseded",
+      "source_ids": [
+        "b-narrator-superseded"
+      ],
+      "tags": [
+        "scope:domain-writing"
+      ],
+      "timestamp": "2026-01-01T00:00:00Z",
+      "user_id": "test-user"
+    },
+    "ref-0116": {
+      "content": "mara protagonist Protagonist of the novel. Set in 1970s Lisbon. Does not reconcile with her father; ending is ambiguous. Shapes all plot suggestions \u2014 the father-daughter thread must remain unresolved; prevents any reconciliation arc.",
+      "context": "beliefId=b-protagonist-entity scope=domain:writing",
+      "id": "b-protagonist-entity",
+      "source_ids": [
+        "b-protagonist-entity"
+      ],
+      "tags": [
+        "scope:domain-writing"
+      ],
+      "timestamp": "2026-09-01T00:00:00Z",
+      "user_id": "test-user"
+    },
+    "ref-0123": {
+      "content": "redis_character Redis Redis is a supporting character in the novel \u2014 a jazz pianist Mara meets in Lisbon. Shapes interpretation of 'Redis' in the writing scope \u2014 always the jazz pianist character, not the database technology.",
+      "context": "beliefId=b-redis-writing scope=domain:writing",
+      "id": "b-redis-writing",
+      "source_ids": [
+        "b-redis-writing"
+      ],
+      "tags": [
+        "scope:domain-writing"
+      ],
+      "timestamp": "2026-09-01T00:00:00Z",
+      "user_id": "test-user"
+    },
+    "ref-0130": {
+      "content": "redis_cache Redis Redis is used as a cache and rate-limiter in the backend. Single-node, not clustered. Shapes interpretation of 'Redis' in the code scope \u2014 always the caching datastore, not the fictional character.",
+      "context": "beliefId=b-redis-code scope=domain:code",
+      "id": "b-redis-code",
+      "source_ids": [
+        "b-redis-code"
+      ],
+      "tags": [
+        "scope:domain-code"
+      ],
+      "timestamp": "2026-09-01T00:00:00Z",
+      "user_id": "test-user"
+    },
+    "ref-0137": {
+      "content": "chapter_structure timeline chapter order linear fragmented structure Debating linear vs fragmented timeline for the novel. Shapes responses about novel structure \u2014 prevents premature commitment and surfaces the linear vs fragmented timeline tradeoff.",
+      "context": "beliefId=b-chapter-structure-q scope=domain:writing",
+      "id": "b-chapter-structure-q",
+      "source_ids": [
+        "b-chapter-structure-q"
+      ],
+      "tags": [
+        "scope:domain-writing"
+      ],
+      "timestamp": "2026-09-10T00:00:00Z",
+      "user_id": "test-user"
+    },
+    "ref-0144": {
+      "content": "github_actions GHA CI pipeline github actions CI/CD runs on GitHub Actions. Merge to main triggers a deploy to staging; promotion to prod is manual. Shapes all CI/CD and pipeline answers to assume GitHub Actions rather than Jenkins or CircleCI.",
+      "context": "beliefId=b-ci-gha-entity scope=domain:code",
+      "id": "b-ci-gha-entity",
+      "source_ids": [
+        "b-ci-gha-entity"
+      ],
+      "tags": [
+        "scope:domain-code"
+      ],
+      "timestamp": "2026-09-01T00:00:00Z",
+      "user_id": "test-user"
+    },
+    "ref-0151": {
+      "content": "pov_shift POV point of view perspective shift viewpoint chapter 7 Chapter 7 uses a deliberate POV shift to an unnamed observer. This is the only chapter that breaks close-third. Shapes editorial feedback \u2014 prevents flagging the chapter 7 POV shift as an error; the break is intentional and structurally load-bearing.",
+      "context": "beliefId=b-pov-shift-entity scope=domain:writing",
+      "id": "b-pov-shift-entity",
+      "source_ids": [
+        "b-pov-shift-entity"
+      ],
+      "tags": [
+        "scope:domain-writing"
+      ],
+      "timestamp": "2026-09-01T00:00:00Z",
+      "user_id": "test-user"
+    },
+    "ref-0158": {
+      "content": "hosting_decision_old Fly.io self-host hosting Was evaluating whether to self-host on bare metal or use Fly.io for the auth service. Historical record only \u2014 prevents resurfacing the Fly.io vs self-hosting question; resolved in favour of EKS.",
+      "context": "beliefId=b-hosting-resolved scope=domain:code",
+      "id": "b-hosting-resolved",
+      "source_ids": [
+        "b-hosting-resolved"
+      ],
+      "tags": [
+        "scope:domain-code"
+      ],
+      "timestamp": "2026-06-01T00:00:00Z",
+      "user_id": "test-user"
+    },
+    "ref-0165": {
+      "content": "prose_output_style prose style documentation tone Documentation prose should be terse and scannable. No marketing fluff. Shapes README, docstring, and comment generation toward terse, scannable prose and away from verbose or marketing-style writing.",
+      "context": "beliefId=b-prose-style-user-edited scope=domain:writing",
+      "id": "b-prose-style-user-edited",
+      "source_ids": [
+        "b-prose-style-user-edited"
+      ],
+      "tags": [
+        "scope:domain-writing"
+      ],
+      "timestamp": "2026-09-01T00:00:00Z",
+      "user_id": "test-user"
+    },
+    "ref-0172": {
+      "content": "functional_pipeline pipe compose fp Uses functional composition patterns with pipe() to chain data transformations instead of imperative loops. Shapes data-processing code suggestions toward functional pipe composition and away from imperative loops or nested map/filter chains.",
+      "context": "beliefId=b-functional-pipeline scope=domain:code",
+      "id": "b-functional-pipeline",
+      "source_ids": [
+        "b-functional-pipeline"
+      ],
+      "tags": [
+        "scope:domain-code"
+      ],
+      "timestamp": "2026-09-01T00:00:00Z",
+      "user_id": "test-user"
+    },
+    "ref-0179": {
+      "content": "linting_tslint TSLint tslint Previously used TSLint for linting TypeScript. Replaced by ESLint. Historical record only \u2014 prevents resurfacing TSLint configuration advice in current sessions.",
+      "context": "beliefId=b-linting-v0 scope=domain:code",
+      "id": "b-linting-v0",
+      "source_ids": [
+        "b-linting-v0"
+      ],
+      "tags": [
+        "scope:domain-code"
+      ],
+      "timestamp": "2026-01-01T00:00:00Z",
+      "user_id": "test-user"
+    },
+    "ref-0186": {
+      "content": "linting_eslint ESLint eslint @typescript-eslint Switched from TSLint to ESLint with @typescript-eslint. Later replaced by Biome. Historical record only \u2014 prevents resurfacing ESLint as the current linting tool.",
+      "context": "beliefId=b-linting-v1 scope=domain:code",
+      "id": "b-linting-v1",
+      "source_ids": [
+        "b-linting-v1"
+      ],
+      "tags": [
+        "scope:domain-code"
+      ],
+      "timestamp": "2026-03-01T00:00:00Z",
+      "user_id": "test-user"
+    },
+    "ref-0193": {
+      "content": "linting_biome Biome biome linting formatter Uses Biome for linting and formatting. Replaced ESLint and Prettier. Shapes all linting and formatting suggestions toward Biome \u2014 prevents ESLint, TSLint, or Prettier recommendations.",
+      "context": "beliefId=b-linting-current scope=domain:code",
+      "id": "b-linting-current",
+      "source_ids": [
+        "b-linting-current"
+      ],
+      "tags": [
+        "scope:domain-code"
+      ],
+      "timestamp": "2026-07-01T00:00:00Z",
+      "user_id": "test-user"
+    },
+    "ref-0200": {
+      "content": "testing_vitest Vitest vitest jest Uses Vitest for all testing. Replaced Jest. Shapes all testing examples toward Vitest and prevents suggesting Jest, Mocha, or Jasmine.",
+      "context": "beliefId=b-vitest-pref scope=domain:code",
+      "id": "b-vitest-pref",
+      "source_ids": [
+        "b-vitest-pref"
+      ],
+      "tags": [
+        "scope:domain-code"
+      ],
+      "timestamp": "2026-07-01T00:00:00Z",
+      "user_id": "test-user"
+    },
+    "ref-0207": {
+      "content": "dead_letter_queue dead letter DLQ failed messages Failed messages route to a MongoDB-backed dead letter queue with manual replay via admin CLI. Shapes error recovery and messaging answers to assume a DLQ exists rather than suggesting one from scratch.",
+      "context": "beliefId=b-dead-letter-queue scope=domain:code",
+      "id": "b-dead-letter-queue",
+      "source_ids": [
+        "b-dead-letter-queue"
+      ],
+      "tags": [
+        "scope:domain-code"
+      ],
+      "timestamp": "2026-09-01T00:00:00Z",
+      "user_id": "test-user"
+    },
+    "ref-0214": {
+      "content": "react_expertise_depth react depth react level Deep React expertise \u2014 skip basics, engage on architecture and performance trade-offs. Calibrates React responses to expert level; never explain hooks, JSX, or component basics.",
+      "context": "beliefId=b-react-expertise scope=user:universal",
+      "id": "b-react-expertise",
+      "source_ids": [
+        "b-react-expertise"
+      ],
+      "tags": [
+        "scope:user-universal"
+      ],
+      "timestamp": "2026-09-01T00:00:00Z",
+      "user_id": "test-user"
+    },
+    "ref-0221": {
+      "content": "auth_service_depends_on_redis auth redis session backend auth Auth service depends on Redis for session storage. If Redis is down, auth fails open (denies all). Shapes failure-mode analysis \u2014 auth and Redis are coupled; cannot discuss auth resilience without addressing Redis availability.",
+      "context": "beliefId=b-auth-depends-redis scope=domain:code",
+      "id": "b-auth-depends-redis",
+      "source_ids": [
+        "b-auth-depends-redis"
+      ],
+      "tags": [
+        "scope:domain-code"
+      ],
+      "timestamp": "2026-10-03T00:00:00Z",
+      "user_id": "test-user"
+    },
+    "ref-0228": {
+      "content": "api_versioning_strategy API versioning v2 migration Was debating URL-path versioning vs header-based versioning for the public API. Historical record only \u2014 resolved in favour of URL-path versioning.",
+      "context": "beliefId=b-pinned-resolved-interaction scope=domain:code",
+      "id": "b-pinned-resolved-interaction",
+      "source_ids": [
+        "b-pinned-resolved-interaction"
+      ],
+      "tags": [
+        "scope:domain-code"
+      ],
+      "timestamp": "2026-07-01T00:00:00Z",
+      "user_id": "test-user"
+    },
+    "ref-0235": {
+      "content": "turborepo_monorepo Turborepo turbo monorepo Monorepo managed by Turborepo. Apps and packages in /apps and /packages directories. Shapes all build and workspace structure answers to assume Turborepo monorepo layout.",
+      "context": "beliefId=b-zero-reinforcement-fresh scope=domain:code",
+      "id": "b-zero-reinforcement-fresh",
+      "source_ids": [
+        "b-zero-reinforcement-fresh"
+      ],
+      "tags": [
+        "scope:domain-code"
+      ],
+      "timestamp": "2026-10-07T00:00:00Z",
+      "user_id": "test-user"
+    },
+    "ref-0242": {
+      "content": "other_user_secret Other user uses Haskell exclusively. Shapes all language and tooling recommendations for this user toward Haskell exclusively.",
+      "context": "beliefId=b-other-user-leak-check scope=domain:code",
+      "id": "b-other-user-leak-check",
+      "source_ids": [
+        "b-other-user-leak-check"
+      ],
+      "tags": [
+        "scope:domain-code"
+      ],
+      "timestamp": "2026-09-01T00:00:00Z",
+      "user_id": "other-user"
+    }
+  }
+}

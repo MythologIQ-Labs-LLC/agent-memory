@@ -1,0 +1,1160 @@
+[
+  {
+    "caseId": "home-dog-bowl-paraphrase",
+    "category": "paraphrase",
+    "description": "Asking what to feed the dog should surface the current food and the dog's allergy, not the superseded kibble.",
+    "query": "what should I be putting in the dog's bowl these days?",
+    "scope": [
+      "domain:home"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-mercury-food-salmon",
+          "b-mercury-dog"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "home-mercury-one-word",
+    "category": "terse",
+    "description": "A bare name in the home scope should resolve to the dog, not the finance fund.",
+    "query": "Mercury",
+    "scope": [
+      "domain:home"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-mercury-dog"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "home-storm-prep",
+    "category": "paraphrase",
+    "description": "Storm preparation for the pet needs the dog entity, which shares no key words with the query.",
+    "query": "there's a big thunderstorm rolling in tonight, anything I should do to get ready for the pup?",
+    "scope": [
+      "domain:home"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-mercury-dog"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "home-contractor-current",
+    "category": "supersession",
+    "description": "Only the current contractor decision should be retrieved, not the dropped one.",
+    "query": "remind me which crew is doing the kitchen job",
+    "scope": [
+      "domain:home"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-kitchen-contractor-halvorsen"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "home-counter-typo",
+    "category": "typo",
+    "description": "Typo-laden question naming a superseded material should still get the current choice only.",
+    "query": "kitchn countr tops - did we go with marbel in the end?",
+    "scope": [
+      "domain:home"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-countertop-quartz"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "home-remodel-meeting-rambling",
+    "category": "multi-belief",
+    "description": "Long rambling prep for a remodel meeting needs contractor, cap and counters.",
+    "query": "OK so I'm meeting with the remodel folks Friday and I want to walk in knowing the basics: who we actually hired, the most we're willing to spend, and what we picked for the counters so they can't upsell me on something fancier. Anything else I'm forgetting is fine to skip.",
+    "scope": [
+      "domain:home"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-kitchen-contractor-halvorsen",
+          "b-kitchen-remodel-budget",
+          "b-countertop-quartz"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "home-grocery-budget-distractor",
+    "category": "distractor-overlap",
+    "description": "Shares 'weekly' and 'budget' with stored beliefs but nothing stored is about groceries.",
+    "query": "can you help me plan a weekly budget for groceries?",
+    "scope": [
+      "domain:home"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": []
+      }
+    }
+  },
+  {
+    "caseId": "home-floor-cleaner-paraphrase",
+    "category": "paraphrase",
+    "description": "Choosing a scented cleaner should surface the fragrance-free preference.",
+    "query": "I'm at the store, should I grab the lavender-scented floor cleaner or something else?",
+    "scope": [
+      "domain:home"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-cleaning-routine"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "home-bedroom-cold",
+    "category": "direct",
+    "description": "Cold bedroom at night needs the thermostat setpoints.",
+    "query": "it's freezing in the bedroom at night, what temp is the thermostat set to?",
+    "scope": [
+      "domain:home"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-thermostat-setpoints"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "home-aphids-relation",
+    "category": "relation",
+    "description": "Pest treatment needs the garden, the dog-safety relation and the dog.",
+    "query": "aphids are all over my tomato plants, what spray should I use?",
+    "scope": [
+      "domain:home"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-raised-bed-garden",
+          "b-rel-garden-mercury",
+          "b-mercury-dog"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "home-sam-cats-pinned",
+    "category": "pinned-only",
+    "description": "Only the pinned no-cats/allergy belief is relevant; it is injected separately.",
+    "query": "Sam's staying at a friend's place this weekend and they have three cats, anything to worry about?",
+    "scope": [
+      "domain:home"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": []
+      }
+    }
+  },
+  {
+    "caseId": "home-musty-basement",
+    "category": "open-question-only",
+    "description": "Only an unresolved open question matches; nothing should be retrieved.",
+    "query": "the basement smells musty again",
+    "scope": [
+      "domain:home"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": []
+      }
+    }
+  },
+  {
+    "caseId": "home-fence-resolved",
+    "category": "resolved-question",
+    "description": "The fence question is resolved and routed separately; nothing else is relevant.",
+    "query": "can we put up a tall privacy fence out back?",
+    "scope": [
+      "domain:home"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": []
+      }
+    }
+  },
+  {
+    "caseId": "home-lukewarm-water",
+    "category": "paraphrase",
+    "description": "Symptom description should surface the tankless heater maintenance belief.",
+    "query": "the hot water's been coming out lukewarm and kinda sputtery lately",
+    "scope": [
+      "domain:home"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-water-heater-tankless"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "home-fund-shares-out-of-scope",
+    "category": "name-collision",
+    "description": "Fund question in home scope: the fund is out of scope and the dog with the same name is irrelevant.",
+    "query": "how are my Mercury shares doing this quarter?",
+    "scope": [
+      "domain:home"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": []
+      }
+    }
+  },
+  {
+    "caseId": "home-unrelated-trivia",
+    "category": "unrelated",
+    "description": "Unrelated trivia should retrieve nothing.",
+    "query": "what's the capital of Portugal?",
+    "scope": [
+      "domain:home"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": []
+      }
+    }
+  },
+  {
+    "caseId": "home-book-club-schedule",
+    "category": "distractor-overlap",
+    "description": "Shares 'plan' and 'schedule' vocabulary but has nothing to do with stored beliefs.",
+    "query": "help me plan a schedule for my book club's reading list this fall",
+    "scope": [
+      "domain:home"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": []
+      }
+    }
+  },
+  {
+    "caseId": "home-walker-negation",
+    "category": "negation",
+    "description": "Explicitly excludes the food topic; only the walker arrangement is wanted.",
+    "query": "not asking about the dog's food, just want to know if Priya's still on for the same days",
+    "scope": [
+      "domain:home"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-dog-walker-priya"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "home-mercury-isolation",
+    "category": "isolation",
+    "description": "Another user's same-named pet must not leak in; only this user's dog.",
+    "query": "what kind of animal is Mercury again?",
+    "scope": [
+      "domain:home"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-mercury-dog"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "home-furnace-leaning",
+    "category": "exploratory",
+    "description": "An exploratory, still-current leaning should be retrieved when asked about it indirectly.",
+    "query": "the furnace guy says ours is on its last legs, what was I thinking of getting instead?",
+    "scope": [
+      "domain:home"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-heat-pump-leaning"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "home-protein-out-of-scope",
+    "category": "out-of-scope",
+    "description": "Diet question asked in home scope; the health belief is out of scope.",
+    "query": "what's my daily protein target?",
+    "scope": [
+      "domain:home"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": []
+      }
+    }
+  },
+  {
+    "caseId": "fin-keep-adding-mercury",
+    "category": "name-collision",
+    "description": "In finance scope Mercury is the fund; needs the fund and current contribution decision.",
+    "query": "should I keep adding to Mercury?",
+    "scope": [
+      "domain:finance"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-mercury-growth-fund",
+          "b-roth-total-market"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "fin-home-loan-rate",
+    "category": "paraphrase",
+    "description": "Home loan rate question shares no words with the Atlas mortgage belief.",
+    "query": "what's the interest rate on our home loan?",
+    "scope": [
+      "domain:finance"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-atlas-credit-union-mortgage"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "fin-atlas-one-word",
+    "category": "terse",
+    "description": "A bare name in finance scope should resolve to the mortgage lender, not the strength program.",
+    "query": "Atlas",
+    "scope": [
+      "domain:finance"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-atlas-credit-union-mortgage"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "fin-refi-rate-dip",
+    "category": "resolved-question",
+    "description": "Refi question needs the mortgage threshold; the resolved spring question is routed separately.",
+    "query": "rates just dipped to 5.1% - is it finally time to refinance?",
+    "scope": [
+      "domain:finance"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-atlas-credit-union-mortgage"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "fin-rainy-day",
+    "category": "supersession",
+    "description": "Paraphrased emergency-fund question must get the current target only.",
+    "query": "how big is our rainy day cushion supposed to be?",
+    "scope": [
+      "domain:finance"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-emergency-fund-six-months"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "fin-money-spreadsheet-review",
+    "category": "paraphrase",
+    "description": "When the couple reviews finances needs the budget method belief.",
+    "query": "when do we normally sit down to go over the household money spreadsheet?",
+    "scope": [
+      "domain:finance"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-zero-based-budget"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "fin-concert-ticket-relation",
+    "category": "relation",
+    "description": "Spending without consulting the partner needs allowance, its budget relation and the budget.",
+    "query": "how much can I drop on a concert ticket without running it by Sam first?",
+    "scope": [
+      "domain:finance"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-weekly-fun-money",
+          "b-rel-fun-money-budget",
+          "b-zero-based-budget"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "fin-tax-software",
+    "category": "paraphrase",
+    "description": "Buying tax software conflicts with the CPA preference.",
+    "query": "tax season's coming up, should I just buy TurboTax this year?",
+    "scope": [
+      "domain:finance"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-cpa-joint-filing"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "fin-dentist-hsa",
+    "category": "direct",
+    "description": "Reimbursement timing should surface the HSA strategy.",
+    "query": "I just paid a $400 dentist bill - should I reimburse myself from the HSA right away?",
+    "scope": [
+      "domain:finance"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-hsa-invest-receipts"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "fin-altcoin-pinned",
+    "category": "pinned-only",
+    "description": "Only the pinned no-speculation rule applies; it is injected separately.",
+    "query": "my brother says I should throw 5k into some new altcoin",
+    "scope": [
+      "domain:finance"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": []
+      }
+    }
+  },
+  {
+    "caseId": "fin-niece-college",
+    "category": "open-question-only",
+    "description": "Only an unresolved open question matches.",
+    "query": "should we start saving for my niece's college?",
+    "scope": [
+      "domain:finance"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": []
+      }
+    }
+  },
+  {
+    "caseId": "fin-airline-card",
+    "category": "paraphrase",
+    "description": "A new card offer should surface the single-card preference.",
+    "query": "there's a new airline card with a 70k mile signup bonus, worth it?",
+    "scope": [
+      "domain:finance"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-single-cashback-card"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "fin-food-bank-december",
+    "category": "paraphrase",
+    "description": "Year-end gift timing should surface the bunched giving strategy without reusing its words.",
+    "query": "year-end giving question: are we doing the big gift to the food bank this December or holding off?",
+    "scope": [
+      "domain:finance"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-bunched-charitable-giving"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "fin-dog-vet-out-of-scope",
+    "category": "name-collision",
+    "description": "Dog question in finance scope: the dog is out of scope and the same-named fund is irrelevant.",
+    "query": "Mercury needs to go to the vet, remind me what he's allergic to",
+    "scope": [
+      "domain:finance"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": []
+      }
+    }
+  },
+  {
+    "caseId": "fin-reading-goal-distractor",
+    "category": "distractor-overlap",
+    "description": "Shares 'goal' and finance vocabulary but nothing stored is relevant.",
+    "query": "I want to set a goal to read more personal finance books this year, any recommendations?",
+    "scope": [
+      "domain:finance"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": []
+      }
+    }
+  },
+  {
+    "caseId": "fin-kitchen-cap-out-of-scope",
+    "category": "out-of-scope",
+    "description": "Remodel spending cap lives in the home domain; out of scope here.",
+    "query": "how much are we allowed to spend on the kitchen remodel?",
+    "scope": [
+      "domain:finance"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": []
+      }
+    }
+  },
+  {
+    "caseId": "fin-annual-checkin-rambling",
+    "category": "multi-belief",
+    "description": "Long multi-topic money check-in needs emergency fund, retirement allocation and mortgage.",
+    "query": "Sam and I are doing our big money check-in this weekend. I want to cover three things: are we on track with the emergency stash, are we still putting retirement money where we said we would, and is there anything about the house loan we should revisit.",
+    "scope": [
+      "domain:finance"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-emergency-fund-six-months",
+          "b-roth-total-market",
+          "b-atlas-credit-union-mortgage"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "fin-negation-stopped-fund",
+    "category": "negation",
+    "description": "Excludes the mortgage; asks which fund no longer receives money.",
+    "query": "forget the mortgage for a sec - which fund did I stop putting new money into, and what's it charging me?",
+    "scope": [
+      "domain:finance"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-roth-total-market",
+          "b-mercury-growth-fund"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "fin-envelope-isolation",
+    "category": "isolation",
+    "description": "Another user's envelope method must not leak; this user's budget method answers it.",
+    "query": "do we use cash envelopes for budgeting?",
+    "scope": [
+      "domain:finance"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-zero-based-budget"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "fin-expense-ratio-typo",
+    "category": "typo",
+    "description": "Misspelled fee question should hit the fund entity.",
+    "query": "whats teh expence ratio on my mercury fnd",
+    "scope": [
+      "domain:finance"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-mercury-growth-fund"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "fin-knee-out-of-scope",
+    "category": "out-of-scope",
+    "description": "Injury chatter in finance scope retrieves nothing.",
+    "query": "tweaked my knee again on the stairs, ugh",
+    "scope": [
+      "domain:finance"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": []
+      }
+    }
+  },
+  {
+    "caseId": "hl-atlas-one-word",
+    "category": "terse",
+    "description": "A bare name in health scope should resolve to the strength program.",
+    "query": "Atlas",
+    "scope": [
+      "domain:health"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-atlas-strength-program"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "hl-full-squats-relation",
+    "category": "relation",
+    "description": "Returning to deep squats needs the knee, the program modification relation and the program.",
+    "query": "can I go back to doing full-depth back squats on lifting day?",
+    "scope": [
+      "domain:health"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-left-knee-meniscus",
+          "b-rel-knee-atlas-mods",
+          "b-atlas-strength-program"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "hl-early-alarm-superseded",
+    "category": "supersession",
+    "description": "Query matches the superseded morning-run routine; only the current schedule should come back.",
+    "query": "should I set my alarm for 5:45 to get my run in before work tomorrow?",
+    "scope": [
+      "domain:health"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-workout-evening-lifts"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "hl-bacon-keto",
+    "category": "supersession",
+    "description": "Mentions the oldest diet in the chain; only the current diet is relevant.",
+    "query": "is a bacon-and-eggs keto breakfast still my thing?",
+    "scope": [
+      "domain:health"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-diet-mediterranean-protein"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "hl-antibiotic-hives-pinned",
+    "category": "pinned-only",
+    "description": "Only the pinned penicillin allergy applies; it is injected separately.",
+    "query": "which kind of antibiotic gives me hives?",
+    "scope": [
+      "domain:health"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": []
+      }
+    }
+  },
+  {
+    "caseId": "hl-missed-pill",
+    "category": "paraphrase",
+    "description": "Missed cholesterol dose should surface the statin belief.",
+    "query": "I forgot my cholesterol pill last night, should I take two tonight?",
+    "scope": [
+      "domain:health"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-atorvastatin-daily"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "hl-doomscrolling",
+    "category": "paraphrase",
+    "description": "Late-night phone habit should surface the sleep routine.",
+    "query": "I keep doomscrolling until midnight, help me get back on track",
+    "scope": [
+      "domain:health"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-sleep-wind-down"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "hl-afternoon-latte",
+    "category": "paraphrase",
+    "description": "Afternoon coffee question should surface the caffeine cutoff.",
+    "query": "is a 3pm latte a bad idea for me?",
+    "scope": [
+      "domain:health"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-caffeine-cutoff"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "hl-sugar-sensor",
+    "category": "open-question-only",
+    "description": "Only an unresolved open question matches.",
+    "query": "been thinking about one of those arm patch blood sugar sensors",
+    "scope": [
+      "domain:health"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": []
+      }
+    }
+  },
+  {
+    "caseId": "hl-half-marathon-knee",
+    "category": "resolved-question",
+    "description": "Race signup: the resolved question is routed separately but the knee injury is still relevant.",
+    "query": "should I register for the city half in november?",
+    "scope": [
+      "domain:health"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-left-knee-meniscus"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "hl-sunday-batch-cook",
+    "category": "multi-belief",
+    "description": "Weekend batch cooking needs the meal prep habit and the current diet.",
+    "query": "Sunday plan: what should I batch cook this week?",
+    "scope": [
+      "domain:health"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-sunday-meal-prep",
+          "b-diet-mediterranean-protein"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "hl-language-streak-distractor",
+    "category": "distractor-overlap",
+    "description": "Shares 'weekly goal' vocabulary but is unrelated to health beliefs.",
+    "query": "set me a weekly goal for my language-learning app streak",
+    "scope": [
+      "domain:health"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": []
+      }
+    }
+  },
+  {
+    "caseId": "hl-lab-followup-visit",
+    "category": "paraphrase",
+    "description": "Booking a lab follow-up should surface the telehealth preference.",
+    "query": "should I book an in-person appointment for my lab results follow-up, or do a video call?",
+    "scope": [
+      "domain:health"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-dr-okafor-telehealth"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "hl-fund-out-of-scope",
+    "category": "out-of-scope",
+    "description": "Fund performance in health scope retrieves nothing.",
+    "query": "is Mercury Growth beating the index this year?",
+    "scope": [
+      "domain:health"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": []
+      }
+    }
+  },
+  {
+    "caseId": "hl-knee-and-coffee-multi",
+    "category": "multi-belief",
+    "description": "Two-topic complaint needs the knee, its program relation, the program, and caffeine limits.",
+    "query": "knee's been achy since Wednesday's lifting session and I've been drinking coffee way into the evening - which of these should I worry about more?",
+    "scope": [
+      "domain:health"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-left-knee-meniscus",
+          "b-rel-knee-atlas-mods",
+          "b-atlas-strength-program",
+          "b-caffeine-cutoff"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "hl-dog-wrist-collision",
+    "category": "name-collision",
+    "description": "The dog is out of health scope and the wrist is unrelated to stored health beliefs.",
+    "query": "Mercury yanked the leash on our walk and now my wrist hurts",
+    "scope": [
+      "domain:health"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": []
+      }
+    }
+  },
+  {
+    "caseId": "uni-format-prefs",
+    "category": "universal",
+    "description": "Asking how answers should be formatted needs the format and no-emoji preferences.",
+    "query": "how do I like my answers formatted, remind me?",
+    "scope": [
+      "user:universal"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-comm-concise-bullets",
+          "b-comm-no-emoji"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "uni-units",
+    "category": "universal",
+    "description": "Units question surfaces the units preference.",
+    "query": "metric or imperial for me?",
+    "scope": [
+      "user:universal"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-comm-us-units"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "uni-name-pinned",
+    "category": "pinned-only",
+    "description": "The preferred name is pinned and injected separately.",
+    "query": "what name do you use for me?",
+    "scope": [
+      "user:universal"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": []
+      }
+    }
+  },
+  {
+    "caseId": "uni-med-sources-mixed-scope",
+    "category": "universal",
+    "description": "With health and universal scopes, a sourcing question needs the citation preference only.",
+    "query": "when you tell me stuff about my meds do you need to back it up with references?",
+    "scope": [
+      "domain:health",
+      "user:universal"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-comm-cite-sources"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "cross-two-mercuries",
+    "category": "name-collision",
+    "description": "Conversation spans home and finance; both senses of the name are requested.",
+    "query": "two Mercury questions: is the dog's new food working out OK, and is the fund still sitting in my Roth?",
+    "scope": [
+      "domain:home",
+      "domain:finance"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": [
+          "b-mercury-food-salmon",
+          "b-mercury-growth-fund",
+          "b-roth-total-market"
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "home-bathroom-paint",
+    "category": "general-knowledge",
+    "description": "Generic home-improvement question with no stored context.",
+    "query": "what sheen of paint holds up best on a bathroom ceiling?",
+    "scope": [
+      "domain:home"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": []
+      }
+    }
+  },
+  {
+    "caseId": "fin-apr-general",
+    "category": "general-knowledge",
+    "description": "Generic definition with no stored context.",
+    "query": "what does APR stand for?",
+    "scope": [
+      "domain:finance"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": []
+      }
+    }
+  },
+  {
+    "caseId": "fin-bp-out-of-scope",
+    "category": "out-of-scope",
+    "description": "Blood pressure reading asked in finance scope; the health belief is out of scope.",
+    "query": "my blood pressure was 138/88 this morning, is that bad?",
+    "scope": [
+      "domain:finance"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": []
+      }
+    }
+  },
+  {
+    "caseId": "hl-quartz-out-of-scope",
+    "category": "out-of-scope",
+    "description": "Countertop order asked in health scope; the home belief is out of scope.",
+    "query": "did the quartz order ship yet?",
+    "scope": [
+      "domain:health"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": []
+      }
+    }
+  },
+  {
+    "caseId": "hl-hand-bones",
+    "category": "general-knowledge",
+    "description": "Anatomy trivia with no personal context needed.",
+    "query": "how many bones are in the human hand",
+    "scope": [
+      "domain:health"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": []
+      }
+    }
+  },
+  {
+    "caseId": "hl-juggling-plan",
+    "category": "distractor-overlap",
+    "description": "Uses plan/goal phrasing that overlaps many beliefs but concerns nothing stored.",
+    "query": "make me a two week plan to learn juggling, goal is three balls",
+    "scope": [
+      "domain:health"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": []
+      }
+    }
+  },
+  {
+    "caseId": "fin-market-hours",
+    "category": "unrelated",
+    "description": "Market-hours trivia unrelated to stored beliefs despite finance vocabulary.",
+    "query": "what time does the stock market close on christmas eve?",
+    "scope": [
+      "domain:finance"
+    ],
+    "userId": "test-user",
+    "expect": {
+      "relevantBeliefs": {
+        "shouldOnlyInclude": []
+      }
+    }
+  }
+]

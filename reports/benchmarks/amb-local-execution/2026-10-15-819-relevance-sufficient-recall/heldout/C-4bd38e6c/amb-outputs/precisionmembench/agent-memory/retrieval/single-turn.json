@@ -1,0 +1,4427 @@
+{
+  "dataset": "precisionmembench",
+  "split": "single-turn",
+  "category": null,
+  "memory_provider": "agent-memory",
+  "run_name": "agent-memory",
+  "mode": "retrieval",
+  "oracle": false,
+  "total_queries": 70,
+  "correct": 14,
+  "accuracy": 0.2,
+  "mean_precision": 0.2755,
+  "mean_recall": 0.6221,
+  "active_passes": 9,
+  "active_total": 43,
+  "ingestion_time_ms": 545.1,
+  "ingested_docs": 59,
+  "description": null,
+  "answer_llm": null,
+  "judge_llm": null,
+  "results": [
+    {
+      "query_id": "home-dog-bowl-paraphrase",
+      "query": "what should I be putting in the dog's bowl these days?",
+      "answer": "8 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (8)\n\n1. [b-mercury-food-salmon] \u2190 b-mercury-food-salmon\nmercury_food Used to feed Mercury lamb-and-rice kibble; switched to a salmon-and-potato limited-ingredient food on the vet's advice. Determines what food to buy for the dog and what to avoid substituting.\n\n2. [b-rel-garden-mercury] \u2190 b-rel-garden-mercury\ngarden_dog_safety_link Nothing toxic (synthetic sprays, cocoa-hull mulch) goes in the raised beds because Mercury digs in them. Any garden treatment must be safe for the dog.\n\n3. [b-mercury-food-lamb] \u2190 b-mercury-food-lamb\nmercury_food Feeds Mercury a lamb-and-rice kibble from the local pet store. Determines what food to buy for the dog.\n\n4. [b-mercury-dog] \u2190 b-mercury-dog\nmercury_dog Mercury Merc Mercury is the user's six-year-old border collie mix; he is allergic to chicken and gets very anxious during thunderstorms. Care, food and comfort decisions for the dog depend on his allergy and storm anxiety.\n\n5. [b-rel-knee-atlas-mods] \u2190 b-rel-knee-atlas-mods\nknee_program_modification Atlas squat days are done as box squats to parallel because of the left meniscus tear. Explains why the program deviates from standard squats.\n\n6. [b-sunday-meal-prep] \u2190 b-sunday-meal-prep\nweekly_meal_prep Batch-cooks weekday lunches every Sunday afternoon, usually a grain bowl and a lentil soup, so the weekly plan stays on track. Shapes weekend cooking suggestions.\n\n7. [b-roth-total-market] \u2190 b-roth-total-market\nroth_contribution_allocation Stopped putting new Roth money into Mercury Growth; all new contributions now go to a total-market index fund, and existing Mercury shares stay put. Determines where retirement contributions go.\n\n8. [b-dog-walker-priya] \u2190 b-dog-walker-priya\ndog_walker_arrangement Priya Hired Priya, the neighbors' teenager, to walk Mercury at noon on Tuesdays and Thursdays. Explains who has house access midday and when the dog gets exercise.",
+      "context_tokens": 489,
+      "retrieve_time_ms": 58.4,
+      "gold_answers": [
+        "b-mercury-food-salmon",
+        "b-mercury-dog"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-rel-garden-mercury; unexpected belief in relevantBeliefs: b-mercury-food-lamb; unexpected belief in relevantBeliefs: b-rel-knee-atlas-mods; unexpected belief in relevantBeliefs: b-sunday-meal-prep",
+      "score": null,
+      "meta": {
+        "category": "paraphrase",
+        "description": "Asking what to feed the dog should surface the current food and the dog's allergy, not the superseded kibble.",
+        "scope": [
+          "domain:home"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-mercury-food-salmon",
+              "b-mercury-dog"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-mercury-food-salmon",
+          "b-rel-garden-mercury",
+          "b-mercury-food-lamb",
+          "b-mercury-dog",
+          "b-rel-knee-atlas-mods",
+          "b-sunday-meal-prep",
+          "b-roth-total-market",
+          "b-dog-walker-priya",
+          "b-raised-bed-garden"
+        ],
+        "pinned_beliefs": [
+          "b-no-cats-sam-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.2222222222222222,
+        "retrieval_recall": 1.0,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-rel-garden-mercury",
+          "unexpected belief in relevantBeliefs: b-mercury-food-lamb",
+          "unexpected belief in relevantBeliefs: b-rel-knee-atlas-mods",
+          "unexpected belief in relevantBeliefs: b-sunday-meal-prep",
+          "unexpected belief in relevantBeliefs: b-roth-total-market",
+          "unexpected belief in relevantBeliefs: b-dog-walker-priya",
+          "unexpected belief in relevantBeliefs: b-raised-bed-garden"
+        ],
+        "resolution": {
+          "source_id": 8
+        },
+        "retrieved_count": 8
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "paraphrase"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "home-mercury-one-word",
+      "query": "Mercury",
+      "answer": "8 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (8)\n\n1. [b-mercury-growth-fund] \u2190 b-mercury-growth-fund\nmercury_growth_fund Mercury Mercury Growth MGF Mercury Growth Fund is an actively managed mid-cap mutual fund held in the user's Roth IRA, with a 0.85% expense ratio. Relevant to any question about fees, performance or rebalancing of the Roth.\n\n2. [b-mercury-food-lamb] \u2190 b-mercury-food-lamb\nmercury_food Feeds Mercury a lamb-and-rice kibble from the local pet store. Determines what food to buy for the dog.\n\n3. [b-mercury-dog] \u2190 b-mercury-dog\nmercury_dog Mercury Merc Mercury is the user's six-year-old border collie mix; he is allergic to chicken and gets very anxious during thunderstorms. Care, food and comfort decisions for the dog depend on his allergy and storm anxiety.\n\n4. [b-roth-total-market] \u2190 b-roth-total-market\nroth_contribution_allocation Stopped putting new Roth money into Mercury Growth; all new contributions now go to a total-market index fund, and existing Mercury shares stay put. Determines where retirement contributions go.\n\n5. [b-mercury-food-salmon] \u2190 b-mercury-food-salmon\nmercury_food Used to feed Mercury lamb-and-rice kibble; switched to a salmon-and-potato limited-ingredient food on the vet's advice. Determines what food to buy for the dog and what to avoid substituting.\n\n6. [b-roth-split-mercury] \u2190 b-roth-split-mercury\nroth_contribution_allocation Split new Roth IRA contributions 50/50 between Mercury Growth Fund and an S&P 500 index fund. Determines where retirement contributions go.\n\n7. [b-dog-walker-priya] \u2190 b-dog-walker-priya\ndog_walker_arrangement Priya Hired Priya, the neighbors' teenager, to walk Mercury at noon on Tuesdays and Thursdays. Explains who has house access midday and when the dog gets exercise.\n\n8. [b-rel-garden-mercury] \u2190 b-rel-garden-mercury\ngarden_dog_safety_link Nothing toxic (synthetic sprays, cocoa-hull mulch) goes in the raised beds because Mercury digs in them. Any garden treatment must be safe for the dog.",
+      "context_tokens": 504,
+      "retrieve_time_ms": 47.9,
+      "gold_answers": [
+        "b-mercury-dog"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-mercury-growth-fund; unexpected belief in relevantBeliefs: b-mercury-food-lamb; unexpected belief in relevantBeliefs: b-roth-total-market; unexpected belief in relevantBeliefs: b-mercury-food-salmon",
+      "score": null,
+      "meta": {
+        "category": "terse",
+        "description": "A bare name in the home scope should resolve to the dog, not the finance fund.",
+        "scope": [
+          "domain:home"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-mercury-dog"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-mercury-growth-fund",
+          "b-mercury-food-lamb",
+          "b-mercury-dog",
+          "b-roth-total-market",
+          "b-mercury-food-salmon",
+          "b-roth-split-mercury",
+          "b-dog-walker-priya",
+          "b-rel-garden-mercury",
+          "b-raised-bed-garden"
+        ],
+        "pinned_beliefs": [
+          "b-no-cats-sam-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.1111111111111111,
+        "retrieval_recall": 1.0,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-mercury-growth-fund",
+          "unexpected belief in relevantBeliefs: b-mercury-food-lamb",
+          "unexpected belief in relevantBeliefs: b-roth-total-market",
+          "unexpected belief in relevantBeliefs: b-mercury-food-salmon",
+          "unexpected belief in relevantBeliefs: b-roth-split-mercury",
+          "unexpected belief in relevantBeliefs: b-dog-walker-priya",
+          "unexpected belief in relevantBeliefs: b-rel-garden-mercury",
+          "unexpected belief in relevantBeliefs: b-raised-bed-garden"
+        ],
+        "resolution": {
+          "source_id": 8
+        },
+        "retrieved_count": 8
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "terse"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "home-storm-prep",
+      "query": "there's a big thunderstorm rolling in tonight, anything I should do to get ready for the pup?",
+      "answer": "2 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (2)\n\n1. [b-dr-okafor-telehealth] \u2190 b-dr-okafor-telehealth\nprimary_care_preference Dr. Okafor Primary care doctor is Dr. Okafor; prefers video telehealth visits for routine follow-ups and lab reviews to avoid taking time off. Shapes how appointments get booked.\n\n2. [b-weekly-fun-money] \u2190 b-weekly-fun-money\npersonal_allowance Each partner gets $150 per week of no-questions-asked personal spending money; anything above that is discussed first. Decides whether a purchase needs a conversation with Sam.",
+      "context_tokens": 128,
+      "retrieve_time_ms": 46.9,
+      "gold_answers": [
+        "b-mercury-dog"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-dr-okafor-telehealth; unexpected belief in relevantBeliefs: b-weekly-fun-money; missing expected belief: b-mercury-dog",
+      "score": null,
+      "meta": {
+        "category": "paraphrase",
+        "description": "Storm preparation for the pet needs the dog entity, which shares no key words with the query.",
+        "scope": [
+          "domain:home"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-mercury-dog"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-dr-okafor-telehealth",
+          "b-weekly-fun-money"
+        ],
+        "pinned_beliefs": [
+          "b-no-cats-sam-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": 0.0,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-dr-okafor-telehealth",
+          "unexpected belief in relevantBeliefs: b-weekly-fun-money",
+          "missing expected belief: b-mercury-dog"
+        ],
+        "resolution": {
+          "source_id": 2
+        },
+        "retrieved_count": 2
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "paraphrase"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "home-contractor-current",
+      "query": "remind me which crew is doing the kitchen job",
+      "answer": "6 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (6)\n\n1. [b-kitchen-contractor-brightline] \u2190 b-kitchen-contractor-brightline\nkitchen_contractor BrightLine Chose BrightLine Renovations to do the kitchen remodel. Identifies who is responsible for the remodel work.\n\n2. [b-kitchen-remodel-budget] \u2190 b-kitchen-remodel-budget\nkitchen_remodel_budget The kitchen remodel is capped at $38,000 all-in, including a 10% contingency. Any change order has to fit under this cap.\n\n3. [b-kitchen-contractor-halvorsen] \u2190 b-kitchen-contractor-halvorsen\nkitchen_contractor Halvorsen Switched the kitchen remodel to Halvorsen Builders after BrightLine Renovations kept missing site visits. Identifies who is responsible for the remodel work and who to coordinate with.\n\n4. [b-countertop-butcher-block] \u2190 b-countertop-butcher-block\nkitchen_countertop_material Planned butcher-block counters for the kitchen remodel. Drives material orders and install timing.\n\n5. [b-countertop-quartz] \u2190 b-countertop-quartz\nkitchen_countertop_material Moved away from marble over staining worries; the final pick is a white quartz with light veining. Drives material orders and guards against being upsold on stone.\n\n6. [b-countertop-marble] \u2190 b-countertop-marble\nkitchen_countertop_material Changed the counter plan from butcher block to Carrara marble. Drives material orders and install timing.",
+      "context_tokens": 327,
+      "retrieve_time_ms": 45.6,
+      "gold_answers": [
+        "b-kitchen-contractor-halvorsen"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-kitchen-contractor-brightline; unexpected belief in relevantBeliefs: b-kitchen-remodel-budget; unexpected belief in relevantBeliefs: b-countertop-butcher-block; unexpected belief in relevantBeliefs: b-countertop-quartz",
+      "score": null,
+      "meta": {
+        "category": "supersession",
+        "description": "Only the current contractor decision should be retrieved, not the dropped one.",
+        "scope": [
+          "domain:home"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-kitchen-contractor-halvorsen"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-kitchen-contractor-brightline",
+          "b-kitchen-remodel-budget",
+          "b-kitchen-contractor-halvorsen",
+          "b-countertop-butcher-block",
+          "b-countertop-quartz",
+          "b-countertop-marble"
+        ],
+        "pinned_beliefs": [
+          "b-no-cats-sam-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.16666666666666666,
+        "retrieval_recall": 1.0,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-kitchen-contractor-brightline",
+          "unexpected belief in relevantBeliefs: b-kitchen-remodel-budget",
+          "unexpected belief in relevantBeliefs: b-countertop-butcher-block",
+          "unexpected belief in relevantBeliefs: b-countertop-quartz",
+          "unexpected belief in relevantBeliefs: b-countertop-marble"
+        ],
+        "resolution": {
+          "source_id": 6
+        },
+        "retrieved_count": 6
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "supersession"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "home-counter-typo",
+      "query": "kitchn countr tops - did we go with marbel in the end?",
+      "answer": "3 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (3)\n\n1. [b-roth-total-market] \u2190 b-roth-total-market\nroth_contribution_allocation Stopped putting new Roth money into Mercury Growth; all new contributions now go to a total-market index fund, and existing Mercury shares stay put. Determines where retirement contributions go.\n\n2. [b-bunched-charitable-giving] \u2190 b-bunched-charitable-giving\ncharitable_giving_strategy Gives about 3% of net income, mostly to the local food bank, bunching two years of gifts into every other December to itemize; the next bunched year is 2026. Determines timing and size of year-end gifts.\n\n3. [b-roth-split-mercury] \u2190 b-roth-split-mercury\nroth_contribution_allocation Split new Roth IRA contributions 50/50 between Mercury Growth Fund and an S&P 500 index fund. Determines where retirement contributions go.",
+      "context_tokens": 189,
+      "retrieve_time_ms": 45.0,
+      "gold_answers": [
+        "b-countertop-quartz"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-roth-total-market; unexpected belief in relevantBeliefs: b-bunched-charitable-giving; unexpected belief in relevantBeliefs: b-roth-split-mercury; missing expected belief: b-countertop-quartz",
+      "score": null,
+      "meta": {
+        "category": "typo",
+        "description": "Typo-laden question naming a superseded material should still get the current choice only.",
+        "scope": [
+          "domain:home"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-countertop-quartz"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-roth-total-market",
+          "b-bunched-charitable-giving",
+          "b-roth-split-mercury"
+        ],
+        "pinned_beliefs": [
+          "b-no-cats-sam-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": 0.0,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-roth-total-market",
+          "unexpected belief in relevantBeliefs: b-bunched-charitable-giving",
+          "unexpected belief in relevantBeliefs: b-roth-split-mercury",
+          "missing expected belief: b-countertop-quartz"
+        ],
+        "resolution": {
+          "source_id": 3
+        },
+        "retrieved_count": 3
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "typo"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "home-remodel-meeting-rambling",
+      "query": "OK so I'm meeting with the remodel folks Friday and I want to walk in knowing the basics: who we actually hired, the most we're willing to spend, and what we picked for the counters so they can't upsell me on something fancier. Anything else I'm forgetting is fine to skip.",
+      "answer": "4 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (4)\n\n1. [b-dog-walker-priya] \u2190 b-dog-walker-priya\ndog_walker_arrangement Priya Hired Priya, the neighbors' teenager, to walk Mercury at noon on Tuesdays and Thursdays. Explains who has house access midday and when the dog gets exercise.\n\n2. [b-kitchen-contractor-brightline] \u2190 b-kitchen-contractor-brightline\nkitchen_contractor BrightLine Chose BrightLine Renovations to do the kitchen remodel. Identifies who is responsible for the remodel work.\n\n3. [b-countertop-butcher-block] \u2190 b-countertop-butcher-block\nkitchen_countertop_material Planned butcher-block counters for the kitchen remodel. Drives material orders and install timing.\n\n4. [b-comm-no-emoji] \u2190 b-comm-no-emoji\nno_emoji Does not want emojis in any response. Applies to the style of every answer.",
+      "context_tokens": 201,
+      "retrieve_time_ms": 60.7,
+      "gold_answers": [
+        "b-kitchen-contractor-halvorsen",
+        "b-kitchen-remodel-budget",
+        "b-countertop-quartz"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-dog-walker-priya; unexpected belief in relevantBeliefs: b-kitchen-contractor-brightline; unexpected belief in relevantBeliefs: b-countertop-butcher-block; unexpected belief in relevantBeliefs: b-comm-no-emoji",
+      "score": null,
+      "meta": {
+        "category": "multi-belief",
+        "description": "Long rambling prep for a remodel meeting needs contractor, cap and counters.",
+        "scope": [
+          "domain:home"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-kitchen-contractor-halvorsen",
+              "b-kitchen-remodel-budget",
+              "b-countertop-quartz"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-dog-walker-priya",
+          "b-kitchen-contractor-brightline",
+          "b-countertop-butcher-block",
+          "b-comm-no-emoji"
+        ],
+        "pinned_beliefs": [
+          "b-no-cats-sam-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": 0.0,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-dog-walker-priya",
+          "unexpected belief in relevantBeliefs: b-kitchen-contractor-brightline",
+          "unexpected belief in relevantBeliefs: b-countertop-butcher-block",
+          "unexpected belief in relevantBeliefs: b-comm-no-emoji",
+          "missing expected belief: b-countertop-quartz",
+          "missing expected belief: b-kitchen-contractor-halvorsen",
+          "missing expected belief: b-kitchen-remodel-budget"
+        ],
+        "resolution": {
+          "source_id": 4
+        },
+        "retrieved_count": 4
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "multi-belief"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "home-grocery-budget-distractor",
+      "query": "can you help me plan a weekly budget for groceries?",
+      "answer": "3 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (3)\n\n1. [b-rel-fun-money-budget] \u2190 b-rel-fun-money-budget\nallowance_budget_link The $150 weekly personal allowance is a fixed category inside the zero-based monthly budget. Allowance overspending shows up in the monthly budget review.\n\n2. [b-sunday-meal-prep] \u2190 b-sunday-meal-prep\nweekly_meal_prep Batch-cooks weekday lunches every Sunday afternoon, usually a grain bowl and a lentil soup, so the weekly plan stays on track. Shapes weekend cooking suggestions.\n\n3. [b-zero-based-budget] \u2190 b-zero-based-budget\nhousehold_budget_method Runs a zero-based monthly budget in a shared spreadsheet with Sam, reviewed together on the first Sunday of every month. Every spending question routes through this budget and its review cadence.",
+      "context_tokens": 167,
+      "retrieve_time_ms": 75.2,
+      "gold_answers": [],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-rel-fun-money-budget; unexpected belief in relevantBeliefs: b-sunday-meal-prep; unexpected belief in relevantBeliefs: b-zero-based-budget",
+      "score": null,
+      "meta": {
+        "category": "distractor-overlap",
+        "description": "Shares 'weekly' and 'budget' with stored beliefs but nothing stored is about groceries.",
+        "scope": [
+          "domain:home"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": []
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "trivially-empty",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-rel-fun-money-budget",
+          "b-sunday-meal-prep",
+          "b-zero-based-budget"
+        ],
+        "pinned_beliefs": [
+          "b-no-cats-sam-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": null,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-rel-fun-money-budget",
+          "unexpected belief in relevantBeliefs: b-sunday-meal-prep",
+          "unexpected belief in relevantBeliefs: b-zero-based-budget"
+        ],
+        "resolution": {
+          "source_id": 3
+        },
+        "retrieved_count": 3
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "distractor-overlap"
+        ],
+        "Pass type": [
+          "trivially-empty"
+        ]
+      }
+    },
+    {
+      "query_id": "home-floor-cleaner-paraphrase",
+      "query": "I'm at the store, should I grab the lavender-scented floor cleaner or something else?",
+      "answer": "1 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (1)\n\n1. [b-mercury-food-lamb] \u2190 b-mercury-food-lamb\nmercury_food Feeds Mercury a lamb-and-rice kibble from the local pet store. Determines what food to buy for the dog.",
+      "context_tokens": 54,
+      "retrieve_time_ms": 57.2,
+      "gold_answers": [
+        "b-cleaning-routine"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-mercury-food-lamb; missing expected belief: b-cleaning-routine",
+      "score": null,
+      "meta": {
+        "category": "paraphrase",
+        "description": "Choosing a scented cleaner should surface the fragrance-free preference.",
+        "scope": [
+          "domain:home"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-cleaning-routine"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-mercury-food-lamb"
+        ],
+        "pinned_beliefs": [
+          "b-no-cats-sam-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": 0.0,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-mercury-food-lamb",
+          "missing expected belief: b-cleaning-routine"
+        ],
+        "resolution": {
+          "source_id": 1
+        },
+        "retrieved_count": 1
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "paraphrase"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "home-bedroom-cold",
+      "query": "it's freezing in the bedroom at night, what temp is the thermostat set to?",
+      "answer": "3 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (3)\n\n1. [b-thermostat-setpoints] \u2190 b-thermostat-setpoints\nthermostat_setpoints Keeps the smart thermostat at 66 F overnight and 70 F during the day. Baseline for comfort and heating-cost questions.\n\n2. [b-sleep-wind-down] \u2190 b-sleep-wind-down\nsleep_routine Aims for lights out by 10:30pm and keeps phones out of the bedroom after 10pm. Baseline for any sleep or evening-habit advice.\n\n3. [b-atorvastatin-daily] \u2190 b-atorvastatin-daily\ncholesterol_medication Lipitor statin Takes 10 mg atorvastatin every night (started March 2026) to lower LDL; Dr. Okafor said not to double up after a missed dose. Relevant to any medication, missed-dose or interaction question.",
+      "context_tokens": 189,
+      "retrieve_time_ms": 57.6,
+      "gold_answers": [
+        "b-thermostat-setpoints"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-sleep-wind-down; unexpected belief in relevantBeliefs: b-atorvastatin-daily",
+      "score": null,
+      "meta": {
+        "category": "direct",
+        "description": "Cold bedroom at night needs the thermostat setpoints.",
+        "scope": [
+          "domain:home"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-thermostat-setpoints"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-thermostat-setpoints",
+          "b-sleep-wind-down",
+          "b-atorvastatin-daily"
+        ],
+        "pinned_beliefs": [
+          "b-no-cats-sam-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.3333333333333333,
+        "retrieval_recall": 1.0,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-sleep-wind-down",
+          "unexpected belief in relevantBeliefs: b-atorvastatin-daily"
+        ],
+        "resolution": {
+          "source_id": 3
+        },
+        "retrieved_count": 3
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "direct"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "home-aphids-relation",
+      "query": "aphids are all over my tomato plants, what spray should I use?",
+      "answer": "1 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (1)\n\n1. [b-roth-total-market] \u2190 b-roth-total-market\nroth_contribution_allocation Stopped putting new Roth money into Mercury Growth; all new contributions now go to a total-market index fund, and existing Mercury shares stay put. Determines where retirement contributions go.",
+      "context_tokens": 62,
+      "retrieve_time_ms": 44.5,
+      "gold_answers": [
+        "b-raised-bed-garden",
+        "b-rel-garden-mercury",
+        "b-mercury-dog"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-roth-total-market; missing expected belief: b-rel-garden-mercury; missing expected belief: b-raised-bed-garden; missing expected belief: b-mercury-dog",
+      "score": null,
+      "meta": {
+        "category": "relation",
+        "description": "Pest treatment needs the garden, the dog-safety relation and the dog.",
+        "scope": [
+          "domain:home"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-raised-bed-garden",
+              "b-rel-garden-mercury",
+              "b-mercury-dog"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-roth-total-market"
+        ],
+        "pinned_beliefs": [
+          "b-no-cats-sam-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": 0.0,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-roth-total-market",
+          "missing expected belief: b-rel-garden-mercury",
+          "missing expected belief: b-raised-bed-garden",
+          "missing expected belief: b-mercury-dog"
+        ],
+        "resolution": {
+          "source_id": 1
+        },
+        "retrieved_count": 1
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "relation"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "home-sam-cats-pinned",
+      "query": "Sam's staying at a friend's place this weekend and they have three cats, anything to worry about?",
+      "answer": "2 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (2)\n\n1. [b-no-cats-sam-allergy] \u2190 b-no-cats-sam-allergy\nno_cats_household_rule No cats in the house: Sam, the user's partner, has a severe cat allergy. Rules out cat adoption and matters whenever Sam is around cats.\n\n2. [b-weekly-fun-money] \u2190 b-weekly-fun-money\npersonal_allowance Each partner gets $150 per week of no-questions-asked personal spending money; anything above that is discussed first. Decides whether a purchase needs a conversation with Sam.",
+      "context_tokens": 121,
+      "retrieve_time_ms": 55.6,
+      "gold_answers": [],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-weekly-fun-money",
+      "score": null,
+      "meta": {
+        "category": "pinned-only",
+        "description": "Only the pinned no-cats/allergy belief is relevant; it is injected separately.",
+        "scope": [
+          "domain:home"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": []
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "trivially-empty",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-weekly-fun-money"
+        ],
+        "pinned_beliefs": [
+          "b-no-cats-sam-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": null,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-weekly-fun-money"
+        ],
+        "resolution": {
+          "source_id": 2
+        },
+        "retrieved_count": 2
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "pinned-only"
+        ],
+        "Pass type": [
+          "trivially-empty"
+        ]
+      }
+    },
+    {
+      "query_id": "home-musty-basement",
+      "query": "the basement smells musty again",
+      "answer": "1 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (1)\n\n1. [b-oq-basement-dehumidifier] \u2190 b-oq-basement-dehumidifier\nbasement_dehumidifier_choice Undecided whether to install a whole-house dehumidifier in the basement or keep running two portable units. The basement has recurring dampness that needs a long-term fix.",
+      "context_tokens": 74,
+      "retrieve_time_ms": 42.5,
+      "gold_answers": [],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-oq-basement-dehumidifier",
+      "score": null,
+      "meta": {
+        "category": "open-question-only",
+        "description": "Only an unresolved open question matches; nothing should be retrieved.",
+        "scope": [
+          "domain:home"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": []
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "trivially-empty",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-oq-basement-dehumidifier"
+        ],
+        "pinned_beliefs": [
+          "b-no-cats-sam-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": null,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-oq-basement-dehumidifier"
+        ],
+        "resolution": {
+          "source_id": 1
+        },
+        "retrieved_count": 1
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "open-question-only"
+        ],
+        "Pass type": [
+          "trivially-empty"
+        ]
+      }
+    },
+    {
+      "query_id": "home-fence-resolved",
+      "query": "can we put up a tall privacy fence out back?",
+      "answer": "1 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (1)\n\n1. [b-oq-fence-permit] \u2190 b-oq-fence-permit\nbackyard_fence_permit Does the town allow a 6-foot backyard privacy fence? Resolved: allowed with a permit, which was filed in June. Determined whether the fence project could proceed.",
+      "context_tokens": 66,
+      "retrieve_time_ms": 41.2,
+      "gold_answers": [],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-oq-fence-permit",
+      "score": null,
+      "meta": {
+        "category": "resolved-question",
+        "description": "The fence question is resolved and routed separately; nothing else is relevant.",
+        "scope": [
+          "domain:home"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": []
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "trivially-empty",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-oq-fence-permit"
+        ],
+        "pinned_beliefs": [
+          "b-no-cats-sam-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": null,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-oq-fence-permit"
+        ],
+        "resolution": {
+          "source_id": 1
+        },
+        "retrieved_count": 1
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "resolved-question"
+        ],
+        "Pass type": [
+          "trivially-empty"
+        ]
+      }
+    },
+    {
+      "query_id": "home-lukewarm-water",
+      "query": "the hot water's been coming out lukewarm and kinda sputtery lately",
+      "answer": "1 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (1)\n\n1. [b-water-heater-tankless] \u2190 b-water-heater-tankless\ntankless_water_heater The tankless gas water heater was installed in 2024 and needs a vinegar descaling flush every March or its output temperature starts fluctuating. First thing to check when hot water misbehaves.",
+      "context_tokens": 69,
+      "retrieve_time_ms": 50.6,
+      "gold_answers": [
+        "b-water-heater-tankless"
+      ],
+      "correct": true,
+      "judge_reason": "pass",
+      "score": null,
+      "meta": {
+        "category": "paraphrase",
+        "description": "Symptom description should surface the tankless heater maintenance belief.",
+        "scope": [
+          "domain:home"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-water-heater-tankless"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": true,
+        "relevant_beliefs": [
+          "b-water-heater-tankless"
+        ],
+        "pinned_beliefs": [
+          "b-no-cats-sam-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 1.0,
+        "retrieval_recall": 1.0,
+        "pinned_coverage": null,
+        "failures": [],
+        "resolution": {
+          "source_id": 1
+        },
+        "retrieved_count": 1
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "paraphrase"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "home-fund-shares-out-of-scope",
+      "query": "how are my Mercury shares doing this quarter?",
+      "answer": "1 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (1)\n\n1. [b-roth-total-market] \u2190 b-roth-total-market\nroth_contribution_allocation Stopped putting new Roth money into Mercury Growth; all new contributions now go to a total-market index fund, and existing Mercury shares stay put. Determines where retirement contributions go.",
+      "context_tokens": 62,
+      "retrieve_time_ms": 66.9,
+      "gold_answers": [],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-roth-total-market",
+      "score": null,
+      "meta": {
+        "category": "name-collision",
+        "description": "Fund question in home scope: the fund is out of scope and the dog with the same name is irrelevant.",
+        "scope": [
+          "domain:home"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": []
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "trivially-empty",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-roth-total-market"
+        ],
+        "pinned_beliefs": [
+          "b-no-cats-sam-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": null,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-roth-total-market"
+        ],
+        "resolution": {
+          "source_id": 1
+        },
+        "retrieved_count": 1
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "name-collision"
+        ],
+        "Pass type": [
+          "trivially-empty"
+        ]
+      }
+    },
+    {
+      "query_id": "home-unrelated-trivia",
+      "query": "what's the capital of Portugal?",
+      "answer": "0 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (0)",
+      "context_tokens": 6,
+      "retrieve_time_ms": 66.9,
+      "gold_answers": [],
+      "correct": true,
+      "judge_reason": "pass",
+      "score": null,
+      "meta": {
+        "category": "unrelated",
+        "description": "Unrelated trivia should retrieve nothing.",
+        "scope": [
+          "domain:home"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": []
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "trivially-empty",
+        "active_pass": false,
+        "relevant_beliefs": [],
+        "pinned_beliefs": [
+          "b-no-cats-sam-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": null,
+        "retrieval_recall": null,
+        "pinned_coverage": null,
+        "failures": [],
+        "resolution": {},
+        "retrieved_count": 0
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "unrelated"
+        ],
+        "Pass type": [
+          "trivially-empty"
+        ]
+      }
+    },
+    {
+      "query_id": "home-book-club-schedule",
+      "query": "help me plan a schedule for my book club's reading list this fall",
+      "answer": "1 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (1)\n\n1. [b-oq-half-marathon] \u2190 b-oq-half-marathon\nfall_half_marathon Should the user sign up for a fall half marathon? Resolved: no, not this year because of the knee. Settled the fall race plan.",
+      "context_tokens": 60,
+      "retrieve_time_ms": 42.7,
+      "gold_answers": [],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-oq-half-marathon",
+      "score": null,
+      "meta": {
+        "category": "distractor-overlap",
+        "description": "Shares 'plan' and 'schedule' vocabulary but has nothing to do with stored beliefs.",
+        "scope": [
+          "domain:home"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": []
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "trivially-empty",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-oq-half-marathon"
+        ],
+        "pinned_beliefs": [
+          "b-no-cats-sam-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": null,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-oq-half-marathon"
+        ],
+        "resolution": {
+          "source_id": 1
+        },
+        "retrieved_count": 1
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "distractor-overlap"
+        ],
+        "Pass type": [
+          "trivially-empty"
+        ]
+      }
+    },
+    {
+      "query_id": "home-walker-negation",
+      "query": "not asking about the dog's food, just want to know if Priya's still on for the same days",
+      "answer": "4 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (4)\n\n1. [b-mercury-food-salmon] \u2190 b-mercury-food-salmon\nmercury_food Used to feed Mercury lamb-and-rice kibble; switched to a salmon-and-potato limited-ingredient food on the vet's advice. Determines what food to buy for the dog and what to avoid substituting.\n\n2. [b-dog-walker-priya] \u2190 b-dog-walker-priya\ndog_walker_arrangement Priya Hired Priya, the neighbors' teenager, to walk Mercury at noon on Tuesdays and Thursdays. Explains who has house access midday and when the dog gets exercise.\n\n3. [b-mercury-dog] \u2190 b-mercury-dog\nmercury_dog Mercury Merc Mercury is the user's six-year-old border collie mix; he is allergic to chicken and gets very anxious during thunderstorms. Care, food and comfort decisions for the dog depend on his allergy and storm anxiety.\n\n4. [b-mercury-food-lamb] \u2190 b-mercury-food-lamb\nmercury_food Feeds Mercury a lamb-and-rice kibble from the local pet store. Determines what food to buy for the dog.",
+      "context_tokens": 256,
+      "retrieve_time_ms": 45.5,
+      "gold_answers": [
+        "b-dog-walker-priya"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-mercury-food-salmon; unexpected belief in relevantBeliefs: b-mercury-dog; unexpected belief in relevantBeliefs: b-mercury-food-lamb",
+      "score": null,
+      "meta": {
+        "category": "negation",
+        "description": "Explicitly excludes the food topic; only the walker arrangement is wanted.",
+        "scope": [
+          "domain:home"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-dog-walker-priya"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-mercury-food-salmon",
+          "b-dog-walker-priya",
+          "b-mercury-dog",
+          "b-mercury-food-lamb"
+        ],
+        "pinned_beliefs": [
+          "b-no-cats-sam-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.25,
+        "retrieval_recall": 1.0,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-mercury-food-salmon",
+          "unexpected belief in relevantBeliefs: b-mercury-dog",
+          "unexpected belief in relevantBeliefs: b-mercury-food-lamb"
+        ],
+        "resolution": {
+          "source_id": 4
+        },
+        "retrieved_count": 4
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "negation"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "home-mercury-isolation",
+      "query": "what kind of animal is Mercury again?",
+      "answer": "8 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (8)\n\n1. [b-mercury-food-salmon] \u2190 b-mercury-food-salmon\nmercury_food Used to feed Mercury lamb-and-rice kibble; switched to a salmon-and-potato limited-ingredient food on the vet's advice. Determines what food to buy for the dog and what to avoid substituting.\n\n2. [b-mercury-food-lamb] \u2190 b-mercury-food-lamb\nmercury_food Feeds Mercury a lamb-and-rice kibble from the local pet store. Determines what food to buy for the dog.\n\n3. [b-mercury-growth-fund] \u2190 b-mercury-growth-fund\nmercury_growth_fund Mercury Mercury Growth MGF Mercury Growth Fund is an actively managed mid-cap mutual fund held in the user's Roth IRA, with a 0.85% expense ratio. Relevant to any question about fees, performance or rebalancing of the Roth.\n\n4. [b-mercury-dog] \u2190 b-mercury-dog\nmercury_dog Mercury Merc Mercury is the user's six-year-old border collie mix; he is allergic to chicken and gets very anxious during thunderstorms. Care, food and comfort decisions for the dog depend on his allergy and storm anxiety.\n\n5. [b-roth-total-market] \u2190 b-roth-total-market\nroth_contribution_allocation Stopped putting new Roth money into Mercury Growth; all new contributions now go to a total-market index fund, and existing Mercury shares stay put. Determines where retirement contributions go.\n\n6. [b-roth-split-mercury] \u2190 b-roth-split-mercury\nroth_contribution_allocation Split new Roth IRA contributions 50/50 between Mercury Growth Fund and an S&P 500 index fund. Determines where retirement contributions go.\n\n7. [b-dog-walker-priya] \u2190 b-dog-walker-priya\ndog_walker_arrangement Priya Hired Priya, the neighbors' teenager, to walk Mercury at noon on Tuesdays and Thursdays. Explains who has house access midday and when the dog gets exercise.\n\n8. [b-rel-garden-mercury] \u2190 b-rel-garden-mercury\ngarden_dog_safety_link Nothing toxic (synthetic sprays, cocoa-hull mulch) goes in the raised beds because Mercury digs in them. Any garden treatment must be safe for the dog.",
+      "context_tokens": 504,
+      "retrieve_time_ms": 42.2,
+      "gold_answers": [
+        "b-mercury-dog"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-mercury-food-salmon; unexpected belief in relevantBeliefs: b-mercury-food-lamb; unexpected belief in relevantBeliefs: b-mercury-growth-fund; unexpected belief in relevantBeliefs: b-roth-total-market",
+      "score": null,
+      "meta": {
+        "category": "isolation",
+        "description": "Another user's same-named pet must not leak in; only this user's dog.",
+        "scope": [
+          "domain:home"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-mercury-dog"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-mercury-food-salmon",
+          "b-mercury-food-lamb",
+          "b-mercury-growth-fund",
+          "b-mercury-dog",
+          "b-roth-total-market",
+          "b-roth-split-mercury",
+          "b-dog-walker-priya",
+          "b-rel-garden-mercury",
+          "b-raised-bed-garden"
+        ],
+        "pinned_beliefs": [
+          "b-no-cats-sam-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.1111111111111111,
+        "retrieval_recall": 1.0,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-mercury-food-salmon",
+          "unexpected belief in relevantBeliefs: b-mercury-food-lamb",
+          "unexpected belief in relevantBeliefs: b-mercury-growth-fund",
+          "unexpected belief in relevantBeliefs: b-roth-total-market",
+          "unexpected belief in relevantBeliefs: b-roth-split-mercury",
+          "unexpected belief in relevantBeliefs: b-dog-walker-priya",
+          "unexpected belief in relevantBeliefs: b-rel-garden-mercury",
+          "unexpected belief in relevantBeliefs: b-raised-bed-garden"
+        ],
+        "resolution": {
+          "source_id": 8
+        },
+        "retrieved_count": 8
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "isolation"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "home-furnace-leaning",
+      "query": "the furnace guy says ours is on its last legs, what was I thinking of getting instead?",
+      "answer": "1 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (1)\n\n1. [b-heat-pump-leaning] \u2190 b-heat-pump-leaning\nfurnace_replacement_leaning Leaning toward replacing the aging furnace with a cold-climate heat pump in 2027, though nothing is committed yet. Frames any HVAC replacement discussion.",
+      "context_tokens": 62,
+      "retrieve_time_ms": 53.5,
+      "gold_answers": [
+        "b-heat-pump-leaning"
+      ],
+      "correct": true,
+      "judge_reason": "pass",
+      "score": null,
+      "meta": {
+        "category": "exploratory",
+        "description": "An exploratory, still-current leaning should be retrieved when asked about it indirectly.",
+        "scope": [
+          "domain:home"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-heat-pump-leaning"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": true,
+        "relevant_beliefs": [
+          "b-heat-pump-leaning"
+        ],
+        "pinned_beliefs": [
+          "b-no-cats-sam-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 1.0,
+        "retrieval_recall": 1.0,
+        "pinned_coverage": null,
+        "failures": [],
+        "resolution": {
+          "source_id": 1
+        },
+        "retrieved_count": 1
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "exploratory"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "home-protein-out-of-scope",
+      "query": "what's my daily protein target?",
+      "answer": "1 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (1)\n\n1. [b-diet-mediterranean-protein] \u2190 b-diet-mediterranean-protein\ndiet_approach Stopped intermittent fasting; now eats a Mediterranean-style diet with three meals a day and a 120 g daily protein target. Shapes meal suggestions, timing and protein math.",
+      "context_tokens": 67,
+      "retrieve_time_ms": 54.7,
+      "gold_answers": [],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-diet-mediterranean-protein",
+      "score": null,
+      "meta": {
+        "category": "out-of-scope",
+        "description": "Diet question asked in home scope; the health belief is out of scope.",
+        "scope": [
+          "domain:home"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": []
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "trivially-empty",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-diet-mediterranean-protein"
+        ],
+        "pinned_beliefs": [
+          "b-no-cats-sam-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": null,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-diet-mediterranean-protein"
+        ],
+        "resolution": {
+          "source_id": 1
+        },
+        "retrieved_count": 1
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "out-of-scope"
+        ],
+        "Pass type": [
+          "trivially-empty"
+        ]
+      }
+    },
+    {
+      "query_id": "fin-keep-adding-mercury",
+      "query": "should I keep adding to Mercury?",
+      "answer": "6 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (6)\n\n1. [b-oq-basement-dehumidifier] \u2190 b-oq-basement-dehumidifier\nbasement_dehumidifier_choice Undecided whether to install a whole-house dehumidifier in the basement or keep running two portable units. The basement has recurring dampness that needs a long-term fix.\n\n2. [b-mercury-growth-fund] \u2190 b-mercury-growth-fund\nmercury_growth_fund Mercury Mercury Growth MGF Mercury Growth Fund is an actively managed mid-cap mutual fund held in the user's Roth IRA, with a 0.85% expense ratio. Relevant to any question about fees, performance or rebalancing of the Roth.\n\n3. [b-mercury-food-lamb] \u2190 b-mercury-food-lamb\nmercury_food Feeds Mercury a lamb-and-rice kibble from the local pet store. Determines what food to buy for the dog.\n\n4. [b-mercury-dog] \u2190 b-mercury-dog\nmercury_dog Mercury Merc Mercury is the user's six-year-old border collie mix; he is allergic to chicken and gets very anxious during thunderstorms. Care, food and comfort decisions for the dog depend on his allergy and storm anxiety.\n\n5. [b-roth-total-market] \u2190 b-roth-total-market\nroth_contribution_allocation Stopped putting new Roth money into Mercury Growth; all new contributions now go to a total-market index fund, and existing Mercury shares stay put. Determines where retirement contributions go.\n\n6. [b-mercury-food-salmon] \u2190 b-mercury-food-salmon\nmercury_food Used to feed Mercury lamb-and-rice kibble; switched to a salmon-and-potato limited-ingredient food on the vet's advice. Determines what food to buy for the dog and what to avoid substituting.",
+      "context_tokens": 391,
+      "retrieve_time_ms": 62.7,
+      "gold_answers": [
+        "b-mercury-growth-fund",
+        "b-roth-total-market"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-oq-basement-dehumidifier; unexpected belief in relevantBeliefs: b-mercury-food-lamb; unexpected belief in relevantBeliefs: b-mercury-dog; unexpected belief in relevantBeliefs: b-mercury-food-salmon",
+      "score": null,
+      "meta": {
+        "category": "name-collision",
+        "description": "In finance scope Mercury is the fund; needs the fund and current contribution decision.",
+        "scope": [
+          "domain:finance"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-mercury-growth-fund",
+              "b-roth-total-market"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-oq-basement-dehumidifier",
+          "b-mercury-growth-fund",
+          "b-mercury-food-lamb",
+          "b-mercury-dog",
+          "b-roth-total-market",
+          "b-mercury-food-salmon"
+        ],
+        "pinned_beliefs": [
+          "b-no-crypto-speculation"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.3333333333333333,
+        "retrieval_recall": 1.0,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-oq-basement-dehumidifier",
+          "unexpected belief in relevantBeliefs: b-mercury-food-lamb",
+          "unexpected belief in relevantBeliefs: b-mercury-dog",
+          "unexpected belief in relevantBeliefs: b-mercury-food-salmon"
+        ],
+        "resolution": {
+          "source_id": 6
+        },
+        "retrieved_count": 6
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "name-collision"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "fin-home-loan-rate",
+      "query": "what's the interest rate on our home loan?",
+      "answer": "2 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (2)\n\n1. [b-bp-home-log] \u2190 b-bp-home-log\nblood_pressure_tracking Logs blood pressure at home on Tuesday and Friday mornings in a phone app; the goal is to stay under 125/80. Baseline for blood pressure questions.\n\n2. [b-atlas-credit-union-mortgage] \u2190 b-atlas-credit-union-mortgage\natlas_mortgage Atlas Atlas CU The house loan is a 30-year fixed at 6.1% with Atlas Credit Union; refinancing only makes sense if rates fall below 5.25% and closing costs pay back within three years. Anchors refinancing and extra-payment questions.",
+      "context_tokens": 142,
+      "retrieve_time_ms": 48.5,
+      "gold_answers": [
+        "b-atlas-credit-union-mortgage"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-bp-home-log",
+      "score": null,
+      "meta": {
+        "category": "paraphrase",
+        "description": "Home loan rate question shares no words with the Atlas mortgage belief.",
+        "scope": [
+          "domain:finance"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-atlas-credit-union-mortgage"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-bp-home-log",
+          "b-atlas-credit-union-mortgage"
+        ],
+        "pinned_beliefs": [
+          "b-no-crypto-speculation"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.5,
+        "retrieval_recall": 1.0,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-bp-home-log"
+        ],
+        "resolution": {
+          "source_id": 2
+        },
+        "retrieved_count": 2
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "paraphrase"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "fin-atlas-one-word",
+      "query": "Atlas",
+      "answer": "4 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (4)\n\n1. [b-atlas-strength-program] \u2190 b-atlas-strength-program\natlas_strength_program Atlas Atlas 5x5 Atlas is the user's 5x5 barbell strength program: squat, bench, deadlift and overhead press, three sessions a week. Defines what the user's training sessions contain.\n\n2. [b-atlas-credit-union-mortgage] \u2190 b-atlas-credit-union-mortgage\natlas_mortgage Atlas Atlas CU The house loan is a 30-year fixed at 6.1% with Atlas Credit Union; refinancing only makes sense if rates fall below 5.25% and closing costs pay back within three years. Anchors refinancing and extra-payment questions.\n\n3. [b-rel-knee-atlas-mods] \u2190 b-rel-knee-atlas-mods\nknee_program_modification Atlas squat days are done as box squats to parallel because of the left meniscus tear. Explains why the program deviates from standard squats.\n\n4. [b-oq-refinance-spring] \u2190 b-oq-refinance-spring\nspring_refinance_question Should the Atlas mortgage be refinanced in spring 2026? Resolved: no, rates never fell far enough to justify closing costs. Settled whether to refinance that season.",
+      "context_tokens": 277,
+      "retrieve_time_ms": 39.9,
+      "gold_answers": [
+        "b-atlas-credit-union-mortgage"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-atlas-strength-program; unexpected belief in relevantBeliefs: b-rel-knee-atlas-mods; unexpected belief in relevantBeliefs: b-oq-refinance-spring",
+      "score": null,
+      "meta": {
+        "category": "terse",
+        "description": "A bare name in finance scope should resolve to the mortgage lender, not the strength program.",
+        "scope": [
+          "domain:finance"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-atlas-credit-union-mortgage"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-atlas-strength-program",
+          "b-atlas-credit-union-mortgage",
+          "b-rel-knee-atlas-mods",
+          "b-oq-refinance-spring"
+        ],
+        "pinned_beliefs": [
+          "b-no-crypto-speculation"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.25,
+        "retrieval_recall": 1.0,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-atlas-strength-program",
+          "unexpected belief in relevantBeliefs: b-rel-knee-atlas-mods",
+          "unexpected belief in relevantBeliefs: b-oq-refinance-spring"
+        ],
+        "resolution": {
+          "source_id": 4
+        },
+        "retrieved_count": 4
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "terse"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "fin-refi-rate-dip",
+      "query": "rates just dipped to 5.1% - is it finally time to refinance?",
+      "answer": "2 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (2)\n\n1. [b-atlas-credit-union-mortgage] \u2190 b-atlas-credit-union-mortgage\natlas_mortgage Atlas Atlas CU The house loan is a 30-year fixed at 6.1% with Atlas Credit Union; refinancing only makes sense if rates fall below 5.25% and closing costs pay back within three years. Anchors refinancing and extra-payment questions.\n\n2. [b-oq-refinance-spring] \u2190 b-oq-refinance-spring\nspring_refinance_question Should the Atlas mortgage be refinanced in spring 2026? Resolved: no, rates never fell far enough to justify closing costs. Settled whether to refinance that season.",
+      "context_tokens": 152,
+      "retrieve_time_ms": 75.3,
+      "gold_answers": [
+        "b-atlas-credit-union-mortgage"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-oq-refinance-spring",
+      "score": null,
+      "meta": {
+        "category": "resolved-question",
+        "description": "Refi question needs the mortgage threshold; the resolved spring question is routed separately.",
+        "scope": [
+          "domain:finance"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-atlas-credit-union-mortgage"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-atlas-credit-union-mortgage",
+          "b-oq-refinance-spring"
+        ],
+        "pinned_beliefs": [
+          "b-no-crypto-speculation"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.5,
+        "retrieval_recall": 1.0,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-oq-refinance-spring"
+        ],
+        "resolution": {
+          "source_id": 2
+        },
+        "retrieved_count": 2
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "resolved-question"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "fin-rainy-day",
+      "query": "how big is our rainy day cushion supposed to be?",
+      "answer": "3 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (3)\n\n1. [b-thermostat-setpoints] \u2190 b-thermostat-setpoints\nthermostat_setpoints Keeps the smart thermostat at 66 F overnight and 70 F during the day. Baseline for comfort and heating-cost questions.\n\n2. [b-caffeine-cutoff] \u2190 b-caffeine-cutoff\ncaffeine_limit Caps coffee at two cups a day and none after 1pm because later caffeine wrecks sleep. Frames any question about caffeinated drinks.\n\n3. [b-diet-mediterranean-protein] \u2190 b-diet-mediterranean-protein\ndiet_approach Stopped intermittent fasting; now eats a Mediterranean-style diet with three meals a day and a 120 g daily protein target. Shapes meal suggestions, timing and protein math.",
+      "context_tokens": 164,
+      "retrieve_time_ms": 45.9,
+      "gold_answers": [
+        "b-emergency-fund-six-months"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-thermostat-setpoints; unexpected belief in relevantBeliefs: b-caffeine-cutoff; unexpected belief in relevantBeliefs: b-diet-mediterranean-protein; missing expected belief: b-emergency-fund-six-months",
+      "score": null,
+      "meta": {
+        "category": "supersession",
+        "description": "Paraphrased emergency-fund question must get the current target only.",
+        "scope": [
+          "domain:finance"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-emergency-fund-six-months"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-thermostat-setpoints",
+          "b-caffeine-cutoff",
+          "b-diet-mediterranean-protein"
+        ],
+        "pinned_beliefs": [
+          "b-no-crypto-speculation"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": 0.0,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-thermostat-setpoints",
+          "unexpected belief in relevantBeliefs: b-caffeine-cutoff",
+          "unexpected belief in relevantBeliefs: b-diet-mediterranean-protein",
+          "missing expected belief: b-emergency-fund-six-months"
+        ],
+        "resolution": {
+          "source_id": 3
+        },
+        "retrieved_count": 3
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "supersession"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "fin-money-spreadsheet-review",
+      "query": "when do we normally sit down to go over the household money spreadsheet?",
+      "answer": "2 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (2)\n\n1. [b-roth-total-market] \u2190 b-roth-total-market\nroth_contribution_allocation Stopped putting new Roth money into Mercury Growth; all new contributions now go to a total-market index fund, and existing Mercury shares stay put. Determines where retirement contributions go.\n\n2. [b-zero-based-budget] \u2190 b-zero-based-budget\nhousehold_budget_method Runs a zero-based monthly budget in a shared spreadsheet with Sam, reviewed together on the first Sunday of every month. Every spending question routes through this budget and its review cadence.",
+      "context_tokens": 116,
+      "retrieve_time_ms": 47.5,
+      "gold_answers": [
+        "b-zero-based-budget"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-roth-total-market",
+      "score": null,
+      "meta": {
+        "category": "paraphrase",
+        "description": "When the couple reviews finances needs the budget method belief.",
+        "scope": [
+          "domain:finance"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-zero-based-budget"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-roth-total-market",
+          "b-zero-based-budget"
+        ],
+        "pinned_beliefs": [
+          "b-no-crypto-speculation"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.5,
+        "retrieval_recall": 1.0,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-roth-total-market"
+        ],
+        "resolution": {
+          "source_id": 2
+        },
+        "retrieved_count": 2
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "paraphrase"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "fin-concert-ticket-relation",
+      "query": "how much can I drop on a concert ticket without running it by Sam first?",
+      "answer": "6 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (6)\n\n1. [b-zero-based-budget] \u2190 b-zero-based-budget\nhousehold_budget_method Runs a zero-based monthly budget in a shared spreadsheet with Sam, reviewed together on the first Sunday of every month. Every spending question routes through this budget and its review cadence.\n\n2. [b-emergency-fund-three-months] \u2190 b-emergency-fund-three-months\nemergency_fund_target Emergency fund target is three months of expenses. Sets how much cash to hold in reserve.\n\n3. [b-weekly-fun-money] \u2190 b-weekly-fun-money\npersonal_allowance Each partner gets $150 per week of no-questions-asked personal spending money; anything above that is discussed first. Decides whether a purchase needs a conversation with Sam.\n\n4. [b-emergency-fund-six-months] \u2190 b-emergency-fund-six-months\nemergency_fund_target Used to aim for three months of expenses; raised the emergency fund target to six months (about $27k) kept in a high-yield savings account. Sets how much cash to hold in reserve and where.\n\n5. [b-oq-basement-dehumidifier] \u2190 b-oq-basement-dehumidifier\nbasement_dehumidifier_choice Undecided whether to install a whole-house dehumidifier in the basement or keep running two portable units. The basement has recurring dampness that needs a long-term fix.\n\n6. [b-no-cats-sam-allergy] \u2190 b-no-cats-sam-allergy\nno_cats_household_rule No cats in the house: Sam, the user's partner, has a severe cat allergy. Rules out cat adoption and matters whenever Sam is around cats.",
+      "context_tokens": 356,
+      "retrieve_time_ms": 45.1,
+      "gold_answers": [
+        "b-weekly-fun-money",
+        "b-rel-fun-money-budget",
+        "b-zero-based-budget"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-emergency-fund-three-months; unexpected belief in relevantBeliefs: b-emergency-fund-six-months; unexpected belief in relevantBeliefs: b-oq-basement-dehumidifier; unexpected belief in relevantBeliefs: b-no-cats-sam-allergy",
+      "score": null,
+      "meta": {
+        "category": "relation",
+        "description": "Spending without consulting the partner needs allowance, its budget relation and the budget.",
+        "scope": [
+          "domain:finance"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-weekly-fun-money",
+              "b-rel-fun-money-budget",
+              "b-zero-based-budget"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-zero-based-budget",
+          "b-emergency-fund-three-months",
+          "b-weekly-fun-money",
+          "b-emergency-fund-six-months",
+          "b-oq-basement-dehumidifier",
+          "b-no-cats-sam-allergy"
+        ],
+        "pinned_beliefs": [
+          "b-no-crypto-speculation"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.3333333333333333,
+        "retrieval_recall": 0.6666666666666666,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-emergency-fund-three-months",
+          "unexpected belief in relevantBeliefs: b-emergency-fund-six-months",
+          "unexpected belief in relevantBeliefs: b-oq-basement-dehumidifier",
+          "unexpected belief in relevantBeliefs: b-no-cats-sam-allergy",
+          "missing expected belief: b-rel-fun-money-budget"
+        ],
+        "resolution": {
+          "source_id": 6
+        },
+        "retrieved_count": 6
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "relation"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "fin-tax-software",
+      "query": "tax season's coming up, should I just buy TurboTax this year?",
+      "answer": "3 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (3)\n\n1. [b-cpa-joint-filing] \u2190 b-cpa-joint-filing\ntax_filing_approach Dana Whitfield Files taxes jointly with Sam through their CPA, Dana Whitfield, rather than using tax software. Determines how tax prep is handled each year.\n\n2. [b-oq-refinance-spring] \u2190 b-oq-refinance-spring\nspring_refinance_question Should the Atlas mortgage be refinanced in spring 2026? Resolved: no, rates never fell far enough to justify closing costs. Settled whether to refinance that season.\n\n3. [b-comm-cite-sources] \u2190 b-comm-cite-sources\nsourcing_expectation For medical or tax information, wants sources cited and uncertainty clearly flagged. Applies to health and tax answers.",
+      "context_tokens": 167,
+      "retrieve_time_ms": 40.9,
+      "gold_answers": [
+        "b-cpa-joint-filing"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-oq-refinance-spring; unexpected belief in relevantBeliefs: b-comm-cite-sources",
+      "score": null,
+      "meta": {
+        "category": "paraphrase",
+        "description": "Buying tax software conflicts with the CPA preference.",
+        "scope": [
+          "domain:finance"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-cpa-joint-filing"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-cpa-joint-filing",
+          "b-oq-refinance-spring",
+          "b-comm-cite-sources"
+        ],
+        "pinned_beliefs": [
+          "b-no-crypto-speculation"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.3333333333333333,
+        "retrieval_recall": 1.0,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-oq-refinance-spring",
+          "unexpected belief in relevantBeliefs: b-comm-cite-sources"
+        ],
+        "resolution": {
+          "source_id": 3
+        },
+        "retrieved_count": 3
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "paraphrase"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "fin-dentist-hsa",
+      "query": "I just paid a $400 dentist bill - should I reimburse myself from the HSA right away?",
+      "answer": "1 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (1)\n\n1. [b-hsa-invest-receipts] \u2190 b-hsa-invest-receipts\nhsa_strategy Treats the HSA as a long-term investment account: pays medical bills out of pocket now and keeps receipts to reimburse years later. Changes how medical expenses should be paid.",
+      "context_tokens": 66,
+      "retrieve_time_ms": 76.0,
+      "gold_answers": [
+        "b-hsa-invest-receipts"
+      ],
+      "correct": true,
+      "judge_reason": "pass",
+      "score": null,
+      "meta": {
+        "category": "direct",
+        "description": "Reimbursement timing should surface the HSA strategy.",
+        "scope": [
+          "domain:finance"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-hsa-invest-receipts"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": true,
+        "relevant_beliefs": [
+          "b-hsa-invest-receipts"
+        ],
+        "pinned_beliefs": [
+          "b-no-crypto-speculation"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 1.0,
+        "retrieval_recall": 1.0,
+        "pinned_coverage": null,
+        "failures": [],
+        "resolution": {
+          "source_id": 1
+        },
+        "retrieved_count": 1
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "direct"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "fin-altcoin-pinned",
+      "query": "my brother says I should throw 5k into some new altcoin",
+      "answer": "1 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (1)\n\n1. [b-workout-morning-runs] \u2190 b-workout-morning-runs\nworkout_schedule Runs 5k at 6am on weekdays before work. Sets when the user exercises.",
+      "context_tokens": 48,
+      "retrieve_time_ms": 41.1,
+      "gold_answers": [],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-workout-morning-runs",
+      "score": null,
+      "meta": {
+        "category": "pinned-only",
+        "description": "Only the pinned no-speculation rule applies; it is injected separately.",
+        "scope": [
+          "domain:finance"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": []
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "trivially-empty",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-workout-morning-runs"
+        ],
+        "pinned_beliefs": [
+          "b-no-crypto-speculation"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": null,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-workout-morning-runs"
+        ],
+        "resolution": {
+          "source_id": 1
+        },
+        "retrieved_count": 1
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "pinned-only"
+        ],
+        "Pass type": [
+          "trivially-empty"
+        ]
+      }
+    },
+    {
+      "query_id": "fin-niece-college",
+      "query": "should we start saving for my niece's college?",
+      "answer": "1 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (1)\n\n1. [b-oq-niece-529] \u2190 b-oq-niece-529\nniece_college_savings Undecided whether to open a 529 college savings plan for their niece Ava. Would add a new recurring savings commitment.",
+      "context_tokens": 56,
+      "retrieve_time_ms": 47.8,
+      "gold_answers": [],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-oq-niece-529",
+      "score": null,
+      "meta": {
+        "category": "open-question-only",
+        "description": "Only an unresolved open question matches.",
+        "scope": [
+          "domain:finance"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": []
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "trivially-empty",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-oq-niece-529"
+        ],
+        "pinned_beliefs": [
+          "b-no-crypto-speculation"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": null,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-oq-niece-529"
+        ],
+        "resolution": {
+          "source_id": 1
+        },
+        "retrieved_count": 1
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "open-question-only"
+        ],
+        "Pass type": [
+          "trivially-empty"
+        ]
+      }
+    },
+    {
+      "query_id": "fin-airline-card",
+      "query": "there's a new airline card with a 70k mile signup bonus, worth it?",
+      "answer": "1 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (1)\n\n1. [b-single-cashback-card] \u2190 b-single-cashback-card\ncredit_card_strategy Uses a single flat 2% cash-back card for everything and pays it in full monthly; does not want to juggle travel points. Frames any new card offer.",
+      "context_tokens": 61,
+      "retrieve_time_ms": 44.8,
+      "gold_answers": [
+        "b-single-cashback-card"
+      ],
+      "correct": true,
+      "judge_reason": "pass",
+      "score": null,
+      "meta": {
+        "category": "paraphrase",
+        "description": "A new card offer should surface the single-card preference.",
+        "scope": [
+          "domain:finance"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-single-cashback-card"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": true,
+        "relevant_beliefs": [
+          "b-single-cashback-card"
+        ],
+        "pinned_beliefs": [
+          "b-no-crypto-speculation"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 1.0,
+        "retrieval_recall": 1.0,
+        "pinned_coverage": null,
+        "failures": [],
+        "resolution": {
+          "source_id": 1
+        },
+        "retrieved_count": 1
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "paraphrase"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "fin-food-bank-december",
+      "query": "year-end giving question: are we doing the big gift to the food bank this December or holding off?",
+      "answer": "1 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (1)\n\n1. [b-bunched-charitable-giving] \u2190 b-bunched-charitable-giving\ncharitable_giving_strategy Gives about 3% of net income, mostly to the local food bank, bunching two years of gifts into every other December to itemize; the next bunched year is 2026. Determines timing and size of year-end gifts.",
+      "context_tokens": 80,
+      "retrieve_time_ms": 68.7,
+      "gold_answers": [
+        "b-bunched-charitable-giving"
+      ],
+      "correct": true,
+      "judge_reason": "pass",
+      "score": null,
+      "meta": {
+        "category": "paraphrase",
+        "description": "Year-end gift timing should surface the bunched giving strategy without reusing its words.",
+        "scope": [
+          "domain:finance"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-bunched-charitable-giving"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": true,
+        "relevant_beliefs": [
+          "b-bunched-charitable-giving"
+        ],
+        "pinned_beliefs": [
+          "b-no-crypto-speculation"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 1.0,
+        "retrieval_recall": 1.0,
+        "pinned_coverage": null,
+        "failures": [],
+        "resolution": {
+          "source_id": 1
+        },
+        "retrieved_count": 1
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "paraphrase"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "fin-dog-vet-out-of-scope",
+      "query": "Mercury needs to go to the vet, remind me what he's allergic to",
+      "answer": "5 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (5)\n\n1. [b-mercury-food-salmon] \u2190 b-mercury-food-salmon\nmercury_food Used to feed Mercury lamb-and-rice kibble; switched to a salmon-and-potato limited-ingredient food on the vet's advice. Determines what food to buy for the dog and what to avoid substituting.\n\n2. [b-mercury-dog] \u2190 b-mercury-dog\nmercury_dog Mercury Merc Mercury is the user's six-year-old border collie mix; he is allergic to chicken and gets very anxious during thunderstorms. Care, food and comfort decisions for the dog depend on his allergy and storm anxiety.\n\n3. [b-roth-split-mercury] \u2190 b-roth-split-mercury\nroth_contribution_allocation Split new Roth IRA contributions 50/50 between Mercury Growth Fund and an S&P 500 index fund. Determines where retirement contributions go.\n\n4. [b-roth-total-market] \u2190 b-roth-total-market\nroth_contribution_allocation Stopped putting new Roth money into Mercury Growth; all new contributions now go to a total-market index fund, and existing Mercury shares stay put. Determines where retirement contributions go.\n\n5. [b-penicillin-allergy] \u2190 b-penicillin-allergy\npenicillin_allergy Allergic to penicillin-class antibiotics; they cause hives. Safety-critical for any prescription discussion.",
+      "context_tokens": 296,
+      "retrieve_time_ms": 54.0,
+      "gold_answers": [],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-mercury-food-salmon; unexpected belief in relevantBeliefs: b-mercury-dog; unexpected belief in relevantBeliefs: b-roth-split-mercury; unexpected belief in relevantBeliefs: b-roth-total-market",
+      "score": null,
+      "meta": {
+        "category": "name-collision",
+        "description": "Dog question in finance scope: the dog is out of scope and the same-named fund is irrelevant.",
+        "scope": [
+          "domain:finance"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": []
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "trivially-empty",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-mercury-food-salmon",
+          "b-mercury-dog",
+          "b-roth-split-mercury",
+          "b-roth-total-market",
+          "b-penicillin-allergy"
+        ],
+        "pinned_beliefs": [
+          "b-no-crypto-speculation"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": null,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-mercury-food-salmon",
+          "unexpected belief in relevantBeliefs: b-mercury-dog",
+          "unexpected belief in relevantBeliefs: b-roth-split-mercury",
+          "unexpected belief in relevantBeliefs: b-roth-total-market",
+          "unexpected belief in relevantBeliefs: b-penicillin-allergy"
+        ],
+        "resolution": {
+          "source_id": 5
+        },
+        "retrieved_count": 5
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "name-collision"
+        ],
+        "Pass type": [
+          "trivially-empty"
+        ]
+      }
+    },
+    {
+      "query_id": "fin-reading-goal-distractor",
+      "query": "I want to set a goal to read more personal finance books this year, any recommendations?",
+      "answer": "8 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (8)\n\n1. [b-comm-no-emoji] \u2190 b-comm-no-emoji\nno_emoji Does not want emojis in any response. Applies to the style of every answer.\n\n2. [b-oq-half-marathon] \u2190 b-oq-half-marathon\nfall_half_marathon Should the user sign up for a fall half marathon? Resolved: no, not this year because of the knee. Settled the fall race plan.\n\n3. [b-single-cashback-card] \u2190 b-single-cashback-card\ncredit_card_strategy Uses a single flat 2% cash-back card for everything and pays it in full monthly; does not want to juggle travel points. Frames any new card offer.\n\n4. [b-weekly-fun-money] \u2190 b-weekly-fun-money\npersonal_allowance Each partner gets $150 per week of no-questions-asked personal spending money; anything above that is discussed first. Decides whether a purchase needs a conversation with Sam.\n\n5. [b-bp-home-log] \u2190 b-bp-home-log\nblood_pressure_tracking Logs blood pressure at home on Tuesday and Friday mornings in a phone app; the goal is to stay under 125/80. Baseline for blood pressure questions.\n\n6. [b-rel-fun-money-budget] \u2190 b-rel-fun-money-budget\nallowance_budget_link The $150 weekly personal allowance is a fixed category inside the zero-based monthly budget. Allowance overspending shows up in the monthly budget review.\n\n7. [b-bunched-charitable-giving] \u2190 b-bunched-charitable-giving\ncharitable_giving_strategy Gives about 3% of net income, mostly to the local food bank, bunching two years of gifts into every other December to itemize; the next bunched year is 2026. Determines timing and size of year-end gifts.\n\n8. [b-cpa-joint-filing] \u2190 b-cpa-joint-filing\ntax_filing_approach Dana Whitfield Files taxes jointly with Sam through their CPA, Dana Whitfield, rather than using tax software. Determines how tax prep is handled each year.",
+      "context_tokens": 440,
+      "retrieve_time_ms": 46.0,
+      "gold_answers": [],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-comm-no-emoji; unexpected belief in relevantBeliefs: b-oq-half-marathon; unexpected belief in relevantBeliefs: b-single-cashback-card; unexpected belief in relevantBeliefs: b-weekly-fun-money",
+      "score": null,
+      "meta": {
+        "category": "distractor-overlap",
+        "description": "Shares 'goal' and finance vocabulary but nothing stored is relevant.",
+        "scope": [
+          "domain:finance"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": []
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "trivially-empty",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-comm-no-emoji",
+          "b-oq-half-marathon",
+          "b-single-cashback-card",
+          "b-weekly-fun-money",
+          "b-bp-home-log",
+          "b-rel-fun-money-budget",
+          "b-bunched-charitable-giving",
+          "b-cpa-joint-filing",
+          "b-zero-based-budget"
+        ],
+        "pinned_beliefs": [
+          "b-no-crypto-speculation"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": null,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-comm-no-emoji",
+          "unexpected belief in relevantBeliefs: b-oq-half-marathon",
+          "unexpected belief in relevantBeliefs: b-single-cashback-card",
+          "unexpected belief in relevantBeliefs: b-weekly-fun-money",
+          "unexpected belief in relevantBeliefs: b-bp-home-log",
+          "unexpected belief in relevantBeliefs: b-rel-fun-money-budget",
+          "unexpected belief in relevantBeliefs: b-bunched-charitable-giving",
+          "unexpected belief in relevantBeliefs: b-cpa-joint-filing",
+          "unexpected belief in relevantBeliefs: b-zero-based-budget"
+        ],
+        "resolution": {
+          "source_id": 8
+        },
+        "retrieved_count": 8
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "distractor-overlap"
+        ],
+        "Pass type": [
+          "trivially-empty"
+        ]
+      }
+    },
+    {
+      "query_id": "fin-kitchen-cap-out-of-scope",
+      "query": "how much are we allowed to spend on the kitchen remodel?",
+      "answer": "6 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (6)\n\n1. [b-kitchen-contractor-brightline] \u2190 b-kitchen-contractor-brightline\nkitchen_contractor BrightLine Chose BrightLine Renovations to do the kitchen remodel. Identifies who is responsible for the remodel work.\n\n2. [b-kitchen-contractor-halvorsen] \u2190 b-kitchen-contractor-halvorsen\nkitchen_contractor Halvorsen Switched the kitchen remodel to Halvorsen Builders after BrightLine Renovations kept missing site visits. Identifies who is responsible for the remodel work and who to coordinate with.\n\n3. [b-kitchen-remodel-budget] \u2190 b-kitchen-remodel-budget\nkitchen_remodel_budget The kitchen remodel is capped at $38,000 all-in, including a 10% contingency. Any change order has to fit under this cap.\n\n4. [b-countertop-butcher-block] \u2190 b-countertop-butcher-block\nkitchen_countertop_material Planned butcher-block counters for the kitchen remodel. Drives material orders and install timing.\n\n5. [b-emergency-fund-three-months] \u2190 b-emergency-fund-three-months\nemergency_fund_target Emergency fund target is three months of expenses. Sets how much cash to hold in reserve.\n\n6. [b-oq-fence-permit] \u2190 b-oq-fence-permit\nbackyard_fence_permit Does the town allow a 6-foot backyard privacy fence? Resolved: allowed with a permit, which was filed in June. Determined whether the fence project could proceed.",
+      "context_tokens": 330,
+      "retrieve_time_ms": 46.3,
+      "gold_answers": [],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-kitchen-contractor-brightline; unexpected belief in relevantBeliefs: b-kitchen-contractor-halvorsen; unexpected belief in relevantBeliefs: b-kitchen-remodel-budget; unexpected belief in relevantBeliefs: b-countertop-butcher-block",
+      "score": null,
+      "meta": {
+        "category": "out-of-scope",
+        "description": "Remodel spending cap lives in the home domain; out of scope here.",
+        "scope": [
+          "domain:finance"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": []
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "trivially-empty",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-kitchen-contractor-brightline",
+          "b-kitchen-contractor-halvorsen",
+          "b-kitchen-remodel-budget",
+          "b-countertop-butcher-block",
+          "b-emergency-fund-three-months",
+          "b-oq-fence-permit"
+        ],
+        "pinned_beliefs": [
+          "b-no-crypto-speculation"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": null,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-kitchen-contractor-brightline",
+          "unexpected belief in relevantBeliefs: b-kitchen-contractor-halvorsen",
+          "unexpected belief in relevantBeliefs: b-kitchen-remodel-budget",
+          "unexpected belief in relevantBeliefs: b-countertop-butcher-block",
+          "unexpected belief in relevantBeliefs: b-emergency-fund-three-months",
+          "unexpected belief in relevantBeliefs: b-oq-fence-permit"
+        ],
+        "resolution": {
+          "source_id": 6
+        },
+        "retrieved_count": 6
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "out-of-scope"
+        ],
+        "Pass type": [
+          "trivially-empty"
+        ]
+      }
+    },
+    {
+      "query_id": "fin-annual-checkin-rambling",
+      "query": "Sam and I are doing our big money check-in this weekend. I want to cover three things: are we on track with the emergency stash, are we still putting retirement money where we said we would, and is there anything about the house loan we should revisit.",
+      "answer": "7 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (7)\n\n1. [b-emergency-fund-six-months] \u2190 b-emergency-fund-six-months\nemergency_fund_target Used to aim for three months of expenses; raised the emergency fund target to six months (about $27k) kept in a high-yield savings account. Sets how much cash to hold in reserve and where.\n\n2. [b-roth-total-market] \u2190 b-roth-total-market\nroth_contribution_allocation Stopped putting new Roth money into Mercury Growth; all new contributions now go to a total-market index fund, and existing Mercury shares stay put. Determines where retirement contributions go.\n\n3. [b-weekly-fun-money] \u2190 b-weekly-fun-money\npersonal_allowance Each partner gets $150 per week of no-questions-asked personal spending money; anything above that is discussed first. Decides whether a purchase needs a conversation with Sam.\n\n4. [b-emergency-fund-three-months] \u2190 b-emergency-fund-three-months\nemergency_fund_target Emergency fund target is three months of expenses. Sets how much cash to hold in reserve.\n\n5. [b-atlas-credit-union-mortgage] \u2190 b-atlas-credit-union-mortgage\natlas_mortgage Atlas Atlas CU The house loan is a 30-year fixed at 6.1% with Atlas Credit Union; refinancing only makes sense if rates fall below 5.25% and closing costs pay back within three years. Anchors refinancing and extra-payment questions.\n\n6. [b-sunday-meal-prep] \u2190 b-sunday-meal-prep\nweekly_meal_prep Batch-cooks weekday lunches every Sunday afternoon, usually a grain bowl and a lentil soup, so the weekly plan stays on track. Shapes weekend cooking suggestions.\n\n7. [b-no-cats-sam-allergy] \u2190 b-no-cats-sam-allergy\nno_cats_household_rule No cats in the house: Sam, the user's partner, has a severe cat allergy. Rules out cat adoption and matters whenever Sam is around cats.",
+      "context_tokens": 430,
+      "retrieve_time_ms": 48.4,
+      "gold_answers": [
+        "b-emergency-fund-six-months",
+        "b-roth-total-market",
+        "b-atlas-credit-union-mortgage"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-weekly-fun-money; unexpected belief in relevantBeliefs: b-emergency-fund-three-months; unexpected belief in relevantBeliefs: b-sunday-meal-prep; unexpected belief in relevantBeliefs: b-no-cats-sam-allergy",
+      "score": null,
+      "meta": {
+        "category": "multi-belief",
+        "description": "Long multi-topic money check-in needs emergency fund, retirement allocation and mortgage.",
+        "scope": [
+          "domain:finance"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-emergency-fund-six-months",
+              "b-roth-total-market",
+              "b-atlas-credit-union-mortgage"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-emergency-fund-six-months",
+          "b-roth-total-market",
+          "b-weekly-fun-money",
+          "b-emergency-fund-three-months",
+          "b-atlas-credit-union-mortgage",
+          "b-sunday-meal-prep",
+          "b-no-cats-sam-allergy"
+        ],
+        "pinned_beliefs": [
+          "b-no-crypto-speculation"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.42857142857142855,
+        "retrieval_recall": 1.0,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-weekly-fun-money",
+          "unexpected belief in relevantBeliefs: b-emergency-fund-three-months",
+          "unexpected belief in relevantBeliefs: b-sunday-meal-prep",
+          "unexpected belief in relevantBeliefs: b-no-cats-sam-allergy"
+        ],
+        "resolution": {
+          "source_id": 7
+        },
+        "retrieved_count": 7
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "multi-belief"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "fin-negation-stopped-fund",
+      "query": "forget the mortgage for a sec - which fund did I stop putting new money into, and what's it charging me?",
+      "answer": "1 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (1)\n\n1. [b-roth-total-market] \u2190 b-roth-total-market\nroth_contribution_allocation Stopped putting new Roth money into Mercury Growth; all new contributions now go to a total-market index fund, and existing Mercury shares stay put. Determines where retirement contributions go.",
+      "context_tokens": 62,
+      "retrieve_time_ms": 47.5,
+      "gold_answers": [
+        "b-roth-total-market",
+        "b-mercury-growth-fund"
+      ],
+      "correct": false,
+      "judge_reason": "missing expected belief: b-mercury-growth-fund",
+      "score": null,
+      "meta": {
+        "category": "negation",
+        "description": "Excludes the mortgage; asks which fund no longer receives money.",
+        "scope": [
+          "domain:finance"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-roth-total-market",
+              "b-mercury-growth-fund"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-roth-total-market"
+        ],
+        "pinned_beliefs": [
+          "b-no-crypto-speculation"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 1.0,
+        "retrieval_recall": 0.5,
+        "pinned_coverage": null,
+        "failures": [
+          "missing expected belief: b-mercury-growth-fund"
+        ],
+        "resolution": {
+          "source_id": 1
+        },
+        "retrieved_count": 1
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "negation"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "fin-envelope-isolation",
+      "query": "do we use cash envelopes for budgeting?",
+      "answer": "3 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (3)\n\n1. [b-emergency-fund-three-months] \u2190 b-emergency-fund-three-months\nemergency_fund_target Emergency fund target is three months of expenses. Sets how much cash to hold in reserve.\n\n2. [b-single-cashback-card] \u2190 b-single-cashback-card\ncredit_card_strategy Uses a single flat 2% cash-back card for everything and pays it in full monthly; does not want to juggle travel points. Frames any new card offer.\n\n3. [b-emergency-fund-six-months] \u2190 b-emergency-fund-six-months\nemergency_fund_target Used to aim for three months of expenses; raised the emergency fund target to six months (about $27k) kept in a high-yield savings account. Sets how much cash to hold in reserve and where.",
+      "context_tokens": 174,
+      "retrieve_time_ms": 44.5,
+      "gold_answers": [
+        "b-zero-based-budget"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-emergency-fund-three-months; unexpected belief in relevantBeliefs: b-single-cashback-card; unexpected belief in relevantBeliefs: b-emergency-fund-six-months; missing expected belief: b-zero-based-budget",
+      "score": null,
+      "meta": {
+        "category": "isolation",
+        "description": "Another user's envelope method must not leak; this user's budget method answers it.",
+        "scope": [
+          "domain:finance"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-zero-based-budget"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-emergency-fund-three-months",
+          "b-single-cashback-card",
+          "b-emergency-fund-six-months"
+        ],
+        "pinned_beliefs": [
+          "b-no-crypto-speculation"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": 0.0,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-emergency-fund-three-months",
+          "unexpected belief in relevantBeliefs: b-single-cashback-card",
+          "unexpected belief in relevantBeliefs: b-emergency-fund-six-months",
+          "missing expected belief: b-zero-based-budget"
+        ],
+        "resolution": {
+          "source_id": 3
+        },
+        "retrieved_count": 3
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "isolation"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "fin-expense-ratio-typo",
+      "query": "whats teh expence ratio on my mercury fnd",
+      "answer": "1 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (1)\n\n1. [b-mercury-growth-fund] \u2190 b-mercury-growth-fund\nmercury_growth_fund Mercury Mercury Growth MGF Mercury Growth Fund is an actively managed mid-cap mutual fund held in the user's Roth IRA, with a 0.85% expense ratio. Relevant to any question about fees, performance or rebalancing of the Roth.",
+      "context_tokens": 83,
+      "retrieve_time_ms": 54.9,
+      "gold_answers": [
+        "b-mercury-growth-fund"
+      ],
+      "correct": true,
+      "judge_reason": "pass",
+      "score": null,
+      "meta": {
+        "category": "typo",
+        "description": "Misspelled fee question should hit the fund entity.",
+        "scope": [
+          "domain:finance"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-mercury-growth-fund"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": true,
+        "relevant_beliefs": [
+          "b-mercury-growth-fund"
+        ],
+        "pinned_beliefs": [
+          "b-no-crypto-speculation"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 1.0,
+        "retrieval_recall": 1.0,
+        "pinned_coverage": null,
+        "failures": [],
+        "resolution": {
+          "source_id": 1
+        },
+        "retrieved_count": 1
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "typo"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "fin-knee-out-of-scope",
+      "query": "tweaked my knee again on the stairs, ugh",
+      "answer": "3 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (3)\n\n1. [b-oq-half-marathon] \u2190 b-oq-half-marathon\nfall_half_marathon Should the user sign up for a fall half marathon? Resolved: no, not this year because of the knee. Settled the fall race plan.\n\n2. [b-rel-knee-atlas-mods] \u2190 b-rel-knee-atlas-mods\nknee_program_modification Atlas squat days are done as box squats to parallel because of the left meniscus tear. Explains why the program deviates from standard squats.\n\n3. [b-left-knee-meniscus] \u2190 b-left-knee-meniscus\nleft_knee_meniscus_tear Tore the left meniscus in 2025; avoids deep lunges, jumping and full-depth squats, and does physio band work twice a week. Limits which exercises and events are safe.",
+      "context_tokens": 190,
+      "retrieve_time_ms": 53.0,
+      "gold_answers": [],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-oq-half-marathon; unexpected belief in relevantBeliefs: b-rel-knee-atlas-mods; unexpected belief in relevantBeliefs: b-left-knee-meniscus",
+      "score": null,
+      "meta": {
+        "category": "out-of-scope",
+        "description": "Injury chatter in finance scope retrieves nothing.",
+        "scope": [
+          "domain:finance"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": []
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "trivially-empty",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-oq-half-marathon",
+          "b-rel-knee-atlas-mods",
+          "b-left-knee-meniscus"
+        ],
+        "pinned_beliefs": [
+          "b-no-crypto-speculation"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": null,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-oq-half-marathon",
+          "unexpected belief in relevantBeliefs: b-rel-knee-atlas-mods",
+          "unexpected belief in relevantBeliefs: b-left-knee-meniscus"
+        ],
+        "resolution": {
+          "source_id": 3
+        },
+        "retrieved_count": 3
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "out-of-scope"
+        ],
+        "Pass type": [
+          "trivially-empty"
+        ]
+      }
+    },
+    {
+      "query_id": "hl-atlas-one-word",
+      "query": "Atlas",
+      "answer": "4 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (4)\n\n1. [b-atlas-strength-program] \u2190 b-atlas-strength-program\natlas_strength_program Atlas Atlas 5x5 Atlas is the user's 5x5 barbell strength program: squat, bench, deadlift and overhead press, three sessions a week. Defines what the user's training sessions contain.\n\n2. [b-atlas-credit-union-mortgage] \u2190 b-atlas-credit-union-mortgage\natlas_mortgage Atlas Atlas CU The house loan is a 30-year fixed at 6.1% with Atlas Credit Union; refinancing only makes sense if rates fall below 5.25% and closing costs pay back within three years. Anchors refinancing and extra-payment questions.\n\n3. [b-rel-knee-atlas-mods] \u2190 b-rel-knee-atlas-mods\nknee_program_modification Atlas squat days are done as box squats to parallel because of the left meniscus tear. Explains why the program deviates from standard squats.\n\n4. [b-oq-refinance-spring] \u2190 b-oq-refinance-spring\nspring_refinance_question Should the Atlas mortgage be refinanced in spring 2026? Resolved: no, rates never fell far enough to justify closing costs. Settled whether to refinance that season.",
+      "context_tokens": 277,
+      "retrieve_time_ms": 39.1,
+      "gold_answers": [
+        "b-atlas-strength-program"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-atlas-credit-union-mortgage; unexpected belief in relevantBeliefs: b-rel-knee-atlas-mods; unexpected belief in relevantBeliefs: b-oq-refinance-spring; unexpected belief in relevantBeliefs: b-left-knee-meniscus",
+      "score": null,
+      "meta": {
+        "category": "terse",
+        "description": "A bare name in health scope should resolve to the strength program.",
+        "scope": [
+          "domain:health"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-atlas-strength-program"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-atlas-strength-program",
+          "b-atlas-credit-union-mortgage",
+          "b-rel-knee-atlas-mods",
+          "b-oq-refinance-spring",
+          "b-left-knee-meniscus"
+        ],
+        "pinned_beliefs": [
+          "b-penicillin-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.2,
+        "retrieval_recall": 1.0,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-atlas-credit-union-mortgage",
+          "unexpected belief in relevantBeliefs: b-rel-knee-atlas-mods",
+          "unexpected belief in relevantBeliefs: b-oq-refinance-spring",
+          "unexpected belief in relevantBeliefs: b-left-knee-meniscus"
+        ],
+        "resolution": {
+          "source_id": 4
+        },
+        "retrieved_count": 4
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "terse"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "hl-full-squats-relation",
+      "query": "can I go back to doing full-depth back squats on lifting day?",
+      "answer": "2 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (2)\n\n1. [b-left-knee-meniscus] \u2190 b-left-knee-meniscus\nleft_knee_meniscus_tear Tore the left meniscus in 2025; avoids deep lunges, jumping and full-depth squats, and does physio band work twice a week. Limits which exercises and events are safe.\n\n2. [b-single-cashback-card] \u2190 b-single-cashback-card\ncredit_card_strategy Uses a single flat 2% cash-back card for everything and pays it in full monthly; does not want to juggle travel points. Frames any new card offer.",
+      "context_tokens": 132,
+      "retrieve_time_ms": 47.6,
+      "gold_answers": [
+        "b-left-knee-meniscus",
+        "b-rel-knee-atlas-mods",
+        "b-atlas-strength-program"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-single-cashback-card; missing expected belief: b-atlas-strength-program; missing expected belief: b-rel-knee-atlas-mods",
+      "score": null,
+      "meta": {
+        "category": "relation",
+        "description": "Returning to deep squats needs the knee, the program modification relation and the program.",
+        "scope": [
+          "domain:health"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-left-knee-meniscus",
+              "b-rel-knee-atlas-mods",
+              "b-atlas-strength-program"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-left-knee-meniscus",
+          "b-single-cashback-card"
+        ],
+        "pinned_beliefs": [
+          "b-penicillin-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.5,
+        "retrieval_recall": 0.3333333333333333,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-single-cashback-card",
+          "missing expected belief: b-atlas-strength-program",
+          "missing expected belief: b-rel-knee-atlas-mods"
+        ],
+        "resolution": {
+          "source_id": 2
+        },
+        "retrieved_count": 2
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "relation"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "hl-early-alarm-superseded",
+      "query": "should I set my alarm for 5:45 to get my run in before work tomorrow?",
+      "answer": "1 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (1)\n\n1. [b-workout-evening-lifts] \u2190 b-workout-evening-lifts\nworkout_schedule Used to run early mornings; switched to lifting Monday, Wednesday and Friday evenings after work, with one longer run on Saturday. Sets when the user exercises.",
+      "context_tokens": 62,
+      "retrieve_time_ms": 49.3,
+      "gold_answers": [
+        "b-workout-evening-lifts"
+      ],
+      "correct": true,
+      "judge_reason": "pass",
+      "score": null,
+      "meta": {
+        "category": "supersession",
+        "description": "Query matches the superseded morning-run routine; only the current schedule should come back.",
+        "scope": [
+          "domain:health"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-workout-evening-lifts"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": true,
+        "relevant_beliefs": [
+          "b-workout-evening-lifts"
+        ],
+        "pinned_beliefs": [
+          "b-penicillin-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 1.0,
+        "retrieval_recall": 1.0,
+        "pinned_coverage": null,
+        "failures": [],
+        "resolution": {
+          "source_id": 1
+        },
+        "retrieved_count": 1
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "supersession"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "hl-bacon-keto",
+      "query": "is a bacon-and-eggs keto breakfast still my thing?",
+      "answer": "3 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (3)\n\n1. [b-diet-intermittent-fasting] \u2190 b-diet-intermittent-fasting\ndiet_approach Dropped keto and now does 16:8 intermittent fasting. Shapes meal timing and suggestions.\n\n2. [b-diet-keto] \u2190 b-diet-keto\ndiet_approach Follows a strict keto diet. Shapes meal suggestions.\n\n3. [b-water-heater-tankless] \u2190 b-water-heater-tankless\ntankless_water_heater The tankless gas water heater was installed in 2024 and needs a vinegar descaling flush every March or its output temperature starts fluctuating. First thing to check when hot water misbehaves.",
+      "context_tokens": 143,
+      "retrieve_time_ms": 51.1,
+      "gold_answers": [
+        "b-diet-mediterranean-protein"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-diet-intermittent-fasting; unexpected belief in relevantBeliefs: b-diet-keto; unexpected belief in relevantBeliefs: b-water-heater-tankless; missing expected belief: b-diet-mediterranean-protein",
+      "score": null,
+      "meta": {
+        "category": "supersession",
+        "description": "Mentions the oldest diet in the chain; only the current diet is relevant.",
+        "scope": [
+          "domain:health"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-diet-mediterranean-protein"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-diet-intermittent-fasting",
+          "b-diet-keto",
+          "b-water-heater-tankless"
+        ],
+        "pinned_beliefs": [
+          "b-penicillin-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": 0.0,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-diet-intermittent-fasting",
+          "unexpected belief in relevantBeliefs: b-diet-keto",
+          "unexpected belief in relevantBeliefs: b-water-heater-tankless",
+          "missing expected belief: b-diet-mediterranean-protein"
+        ],
+        "resolution": {
+          "source_id": 3
+        },
+        "retrieved_count": 3
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "supersession"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "hl-antibiotic-hives-pinned",
+      "query": "which kind of antibiotic gives me hives?",
+      "answer": "2 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (2)\n\n1. [b-penicillin-allergy] \u2190 b-penicillin-allergy\npenicillin_allergy Allergic to penicillin-class antibiotics; they cause hives. Safety-critical for any prescription discussion.\n\n2. [b-bunched-charitable-giving] \u2190 b-bunched-charitable-giving\ncharitable_giving_strategy Gives about 3% of net income, mostly to the local food bank, bunching two years of gifts into every other December to itemize; the next bunched year is 2026. Determines timing and size of year-end gifts.",
+      "context_tokens": 125,
+      "retrieve_time_ms": 43.5,
+      "gold_answers": [],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-bunched-charitable-giving",
+      "score": null,
+      "meta": {
+        "category": "pinned-only",
+        "description": "Only the pinned penicillin allergy applies; it is injected separately.",
+        "scope": [
+          "domain:health"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": []
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "trivially-empty",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-bunched-charitable-giving"
+        ],
+        "pinned_beliefs": [
+          "b-penicillin-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": null,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-bunched-charitable-giving"
+        ],
+        "resolution": {
+          "source_id": 2
+        },
+        "retrieved_count": 2
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "pinned-only"
+        ],
+        "Pass type": [
+          "trivially-empty"
+        ]
+      }
+    },
+    {
+      "query_id": "hl-missed-pill",
+      "query": "I forgot my cholesterol pill last night, should I take two tonight?",
+      "answer": "1 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (1)\n\n1. [b-atorvastatin-daily] \u2190 b-atorvastatin-daily\ncholesterol_medication Lipitor statin Takes 10 mg atorvastatin every night (started March 2026) to lower LDL; Dr. Okafor said not to double up after a missed dose. Relevant to any medication, missed-dose or interaction question.",
+      "context_tokens": 86,
+      "retrieve_time_ms": 39.3,
+      "gold_answers": [
+        "b-atorvastatin-daily"
+      ],
+      "correct": true,
+      "judge_reason": "pass",
+      "score": null,
+      "meta": {
+        "category": "paraphrase",
+        "description": "Missed cholesterol dose should surface the statin belief.",
+        "scope": [
+          "domain:health"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-atorvastatin-daily"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": true,
+        "relevant_beliefs": [
+          "b-atorvastatin-daily"
+        ],
+        "pinned_beliefs": [
+          "b-penicillin-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 1.0,
+        "retrieval_recall": 1.0,
+        "pinned_coverage": null,
+        "failures": [],
+        "resolution": {
+          "source_id": 1
+        },
+        "retrieved_count": 1
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "paraphrase"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "hl-doomscrolling",
+      "query": "I keep doomscrolling until midnight, help me get back on track",
+      "answer": "4 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (4)\n\n1. [b-sunday-meal-prep] \u2190 b-sunday-meal-prep\nweekly_meal_prep Batch-cooks weekday lunches every Sunday afternoon, usually a grain bowl and a lentil soup, so the weekly plan stays on track. Shapes weekend cooking suggestions.\n\n2. [b-oq-basement-dehumidifier] \u2190 b-oq-basement-dehumidifier\nbasement_dehumidifier_choice Undecided whether to install a whole-house dehumidifier in the basement or keep running two portable units. The basement has recurring dampness that needs a long-term fix.\n\n3. [b-dr-okafor-telehealth] \u2190 b-dr-okafor-telehealth\nprimary_care_preference Dr. Okafor Primary care doctor is Dr. Okafor; prefers video telehealth visits for routine follow-ups and lab reviews to avoid taking time off. Shapes how appointments get booked.\n\n4. [b-atlas-credit-union-mortgage] \u2190 b-atlas-credit-union-mortgage\natlas_mortgage Atlas Atlas CU The house loan is a 30-year fixed at 6.1% with Atlas Credit Union; refinancing only makes sense if rates fall below 5.25% and closing costs pay back within three years. Anchors refinancing and extra-payment questions.",
+      "context_tokens": 279,
+      "retrieve_time_ms": 39.9,
+      "gold_answers": [
+        "b-sleep-wind-down"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-sunday-meal-prep; unexpected belief in relevantBeliefs: b-oq-basement-dehumidifier; unexpected belief in relevantBeliefs: b-dr-okafor-telehealth; unexpected belief in relevantBeliefs: b-atlas-credit-union-mortgage",
+      "score": null,
+      "meta": {
+        "category": "paraphrase",
+        "description": "Late-night phone habit should surface the sleep routine.",
+        "scope": [
+          "domain:health"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-sleep-wind-down"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-sunday-meal-prep",
+          "b-oq-basement-dehumidifier",
+          "b-dr-okafor-telehealth",
+          "b-atlas-credit-union-mortgage"
+        ],
+        "pinned_beliefs": [
+          "b-penicillin-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": 0.0,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-sunday-meal-prep",
+          "unexpected belief in relevantBeliefs: b-oq-basement-dehumidifier",
+          "unexpected belief in relevantBeliefs: b-dr-okafor-telehealth",
+          "unexpected belief in relevantBeliefs: b-atlas-credit-union-mortgage",
+          "missing expected belief: b-sleep-wind-down"
+        ],
+        "resolution": {
+          "source_id": 4
+        },
+        "retrieved_count": 4
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "paraphrase"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "hl-afternoon-latte",
+      "query": "is a 3pm latte a bad idea for me?",
+      "answer": "0 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (0)",
+      "context_tokens": 6,
+      "retrieve_time_ms": 47.0,
+      "gold_answers": [
+        "b-caffeine-cutoff"
+      ],
+      "correct": false,
+      "judge_reason": "missing expected belief: b-caffeine-cutoff",
+      "score": null,
+      "meta": {
+        "category": "paraphrase",
+        "description": "Afternoon coffee question should surface the caffeine cutoff.",
+        "scope": [
+          "domain:health"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-caffeine-cutoff"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [],
+        "pinned_beliefs": [
+          "b-penicillin-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": 0.0,
+        "pinned_coverage": null,
+        "failures": [
+          "missing expected belief: b-caffeine-cutoff"
+        ],
+        "resolution": {},
+        "retrieved_count": 0
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "paraphrase"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "hl-sugar-sensor",
+      "query": "been thinking about one of those arm patch blood sugar sensors",
+      "answer": "2 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (2)\n\n1. [b-oq-glucose-monitor] \u2190 b-oq-glucose-monitor\nglucose_monitor_trial Undecided whether to try a continuous glucose monitor for a month to see how meals affect blood sugar. Could change diet tracking.\n\n2. [b-bp-home-log] \u2190 b-bp-home-log\nblood_pressure_tracking Logs blood pressure at home on Tuesday and Friday mornings in a phone app; the goal is to stay under 125/80. Baseline for blood pressure questions.",
+      "context_tokens": 105,
+      "retrieve_time_ms": 40.5,
+      "gold_answers": [],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-oq-glucose-monitor; unexpected belief in relevantBeliefs: b-bp-home-log",
+      "score": null,
+      "meta": {
+        "category": "open-question-only",
+        "description": "Only an unresolved open question matches.",
+        "scope": [
+          "domain:health"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": []
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "trivially-empty",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-oq-glucose-monitor",
+          "b-bp-home-log"
+        ],
+        "pinned_beliefs": [
+          "b-penicillin-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": null,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-oq-glucose-monitor",
+          "unexpected belief in relevantBeliefs: b-bp-home-log"
+        ],
+        "resolution": {
+          "source_id": 2
+        },
+        "retrieved_count": 2
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "open-question-only"
+        ],
+        "Pass type": [
+          "trivially-empty"
+        ]
+      }
+    },
+    {
+      "query_id": "hl-half-marathon-knee",
+      "query": "should I register for the city half in november?",
+      "answer": "1 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (1)\n\n1. [b-oq-half-marathon] \u2190 b-oq-half-marathon\nfall_half_marathon Should the user sign up for a fall half marathon? Resolved: no, not this year because of the knee. Settled the fall race plan.",
+      "context_tokens": 60,
+      "retrieve_time_ms": 45.4,
+      "gold_answers": [
+        "b-left-knee-meniscus"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-oq-half-marathon; missing expected belief: b-left-knee-meniscus",
+      "score": null,
+      "meta": {
+        "category": "resolved-question",
+        "description": "Race signup: the resolved question is routed separately but the knee injury is still relevant.",
+        "scope": [
+          "domain:health"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-left-knee-meniscus"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-oq-half-marathon"
+        ],
+        "pinned_beliefs": [
+          "b-penicillin-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": 0.0,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-oq-half-marathon",
+          "missing expected belief: b-left-knee-meniscus"
+        ],
+        "resolution": {
+          "source_id": 1
+        },
+        "retrieved_count": 1
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "resolved-question"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "hl-sunday-batch-cook",
+      "query": "Sunday plan: what should I batch cook this week?",
+      "answer": "1 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (1)\n\n1. [b-sunday-meal-prep] \u2190 b-sunday-meal-prep\nweekly_meal_prep Batch-cooks weekday lunches every Sunday afternoon, usually a grain bowl and a lentil soup, so the weekly plan stays on track. Shapes weekend cooking suggestions.",
+      "context_tokens": 62,
+      "retrieve_time_ms": 41.4,
+      "gold_answers": [
+        "b-sunday-meal-prep",
+        "b-diet-mediterranean-protein"
+      ],
+      "correct": false,
+      "judge_reason": "missing expected belief: b-diet-mediterranean-protein",
+      "score": null,
+      "meta": {
+        "category": "multi-belief",
+        "description": "Weekend batch cooking needs the meal prep habit and the current diet.",
+        "scope": [
+          "domain:health"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-sunday-meal-prep",
+              "b-diet-mediterranean-protein"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-sunday-meal-prep"
+        ],
+        "pinned_beliefs": [
+          "b-penicillin-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 1.0,
+        "retrieval_recall": 0.5,
+        "pinned_coverage": null,
+        "failures": [
+          "missing expected belief: b-diet-mediterranean-protein"
+        ],
+        "resolution": {
+          "source_id": 1
+        },
+        "retrieved_count": 1
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "multi-belief"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "hl-language-streak-distractor",
+      "query": "set me a weekly goal for my language-learning app streak",
+      "answer": "2 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (2)\n\n1. [b-bp-home-log] \u2190 b-bp-home-log\nblood_pressure_tracking Logs blood pressure at home on Tuesday and Friday mornings in a phone app; the goal is to stay under 125/80. Baseline for blood pressure questions.\n\n2. [b-sunday-meal-prep] \u2190 b-sunday-meal-prep\nweekly_meal_prep Batch-cooks weekday lunches every Sunday afternoon, usually a grain bowl and a lentil soup, so the weekly plan stays on track. Shapes weekend cooking suggestions.",
+      "context_tokens": 114,
+      "retrieve_time_ms": 50.1,
+      "gold_answers": [],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-bp-home-log; unexpected belief in relevantBeliefs: b-sunday-meal-prep",
+      "score": null,
+      "meta": {
+        "category": "distractor-overlap",
+        "description": "Shares 'weekly goal' vocabulary but is unrelated to health beliefs.",
+        "scope": [
+          "domain:health"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": []
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "trivially-empty",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-bp-home-log",
+          "b-sunday-meal-prep"
+        ],
+        "pinned_beliefs": [
+          "b-penicillin-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": null,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-bp-home-log",
+          "unexpected belief in relevantBeliefs: b-sunday-meal-prep"
+        ],
+        "resolution": {
+          "source_id": 2
+        },
+        "retrieved_count": 2
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "distractor-overlap"
+        ],
+        "Pass type": [
+          "trivially-empty"
+        ]
+      }
+    },
+    {
+      "query_id": "hl-lab-followup-visit",
+      "query": "should I book an in-person appointment for my lab results follow-up, or do a video call?",
+      "answer": "1 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (1)\n\n1. [b-dr-okafor-telehealth] \u2190 b-dr-okafor-telehealth\nprimary_care_preference Dr. Okafor Primary care doctor is Dr. Okafor; prefers video telehealth visits for routine follow-ups and lab reviews to avoid taking time off. Shapes how appointments get booked.",
+      "context_tokens": 71,
+      "retrieve_time_ms": 108.3,
+      "gold_answers": [
+        "b-dr-okafor-telehealth"
+      ],
+      "correct": true,
+      "judge_reason": "pass",
+      "score": null,
+      "meta": {
+        "category": "paraphrase",
+        "description": "Booking a lab follow-up should surface the telehealth preference.",
+        "scope": [
+          "domain:health"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-dr-okafor-telehealth"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": true,
+        "relevant_beliefs": [
+          "b-dr-okafor-telehealth"
+        ],
+        "pinned_beliefs": [
+          "b-penicillin-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 1.0,
+        "retrieval_recall": 1.0,
+        "pinned_coverage": null,
+        "failures": [],
+        "resolution": {
+          "source_id": 1
+        },
+        "retrieved_count": 1
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "paraphrase"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "hl-fund-out-of-scope",
+      "query": "is Mercury Growth beating the index this year?",
+      "answer": "4 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (4)\n\n1. [b-roth-split-mercury] \u2190 b-roth-split-mercury\nroth_contribution_allocation Split new Roth IRA contributions 50/50 between Mercury Growth Fund and an S&P 500 index fund. Determines where retirement contributions go.\n\n2. [b-roth-total-market] \u2190 b-roth-total-market\nroth_contribution_allocation Stopped putting new Roth money into Mercury Growth; all new contributions now go to a total-market index fund, and existing Mercury shares stay put. Determines where retirement contributions go.\n\n3. [b-mercury-growth-fund] \u2190 b-mercury-growth-fund\nmercury_growth_fund Mercury Mercury Growth MGF Mercury Growth Fund is an actively managed mid-cap mutual fund held in the user's Roth IRA, with a 0.85% expense ratio. Relevant to any question about fees, performance or rebalancing of the Roth.\n\n4. [b-mercury-dog] \u2190 b-mercury-dog\nmercury_dog Mercury Merc Mercury is the user's six-year-old border collie mix; he is allergic to chicken and gets very anxious during thunderstorms. Care, food and comfort decisions for the dog depend on his allergy and storm anxiety.",
+      "context_tokens": 259,
+      "retrieve_time_ms": 59.8,
+      "gold_answers": [],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-roth-split-mercury; unexpected belief in relevantBeliefs: b-roth-total-market; unexpected belief in relevantBeliefs: b-mercury-growth-fund; unexpected belief in relevantBeliefs: b-mercury-dog",
+      "score": null,
+      "meta": {
+        "category": "out-of-scope",
+        "description": "Fund performance in health scope retrieves nothing.",
+        "scope": [
+          "domain:health"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": []
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "trivially-empty",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-roth-split-mercury",
+          "b-roth-total-market",
+          "b-mercury-growth-fund",
+          "b-mercury-dog"
+        ],
+        "pinned_beliefs": [
+          "b-penicillin-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": null,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-roth-split-mercury",
+          "unexpected belief in relevantBeliefs: b-roth-total-market",
+          "unexpected belief in relevantBeliefs: b-mercury-growth-fund",
+          "unexpected belief in relevantBeliefs: b-mercury-dog"
+        ],
+        "resolution": {
+          "source_id": 4
+        },
+        "retrieved_count": 4
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "out-of-scope"
+        ],
+        "Pass type": [
+          "trivially-empty"
+        ]
+      }
+    },
+    {
+      "query_id": "hl-knee-and-coffee-multi",
+      "query": "knee's been achy since Wednesday's lifting session and I've been drinking coffee way into the evening - which of these should I worry about more?",
+      "answer": "3 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (3)\n\n1. [b-workout-evening-lifts] \u2190 b-workout-evening-lifts\nworkout_schedule Used to run early mornings; switched to lifting Monday, Wednesday and Friday evenings after work, with one longer run on Saturday. Sets when the user exercises.\n\n2. [b-caffeine-cutoff] \u2190 b-caffeine-cutoff\ncaffeine_limit Caps coffee at two cups a day and none after 1pm because later caffeine wrecks sleep. Frames any question about caffeinated drinks.\n\n3. [b-sleep-wind-down] \u2190 b-sleep-wind-down\nsleep_routine Aims for lights out by 10:30pm and keeps phones out of the bedroom after 10pm. Baseline for any sleep or evening-habit advice.",
+      "context_tokens": 166,
+      "retrieve_time_ms": 57.3,
+      "gold_answers": [
+        "b-left-knee-meniscus",
+        "b-rel-knee-atlas-mods",
+        "b-atlas-strength-program",
+        "b-caffeine-cutoff"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-workout-evening-lifts; unexpected belief in relevantBeliefs: b-sleep-wind-down; missing expected belief: b-atlas-strength-program; missing expected belief: b-left-knee-meniscus",
+      "score": null,
+      "meta": {
+        "category": "multi-belief",
+        "description": "Two-topic complaint needs the knee, its program relation, the program, and caffeine limits.",
+        "scope": [
+          "domain:health"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-left-knee-meniscus",
+              "b-rel-knee-atlas-mods",
+              "b-atlas-strength-program",
+              "b-caffeine-cutoff"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-workout-evening-lifts",
+          "b-caffeine-cutoff",
+          "b-sleep-wind-down"
+        ],
+        "pinned_beliefs": [
+          "b-penicillin-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.3333333333333333,
+        "retrieval_recall": 0.25,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-workout-evening-lifts",
+          "unexpected belief in relevantBeliefs: b-sleep-wind-down",
+          "missing expected belief: b-atlas-strength-program",
+          "missing expected belief: b-left-knee-meniscus",
+          "missing expected belief: b-rel-knee-atlas-mods"
+        ],
+        "resolution": {
+          "source_id": 3
+        },
+        "retrieved_count": 3
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "multi-belief"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "hl-dog-wrist-collision",
+      "query": "Mercury yanked the leash on our walk and now my wrist hurts",
+      "answer": "5 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (5)\n\n1. [b-dog-walker-priya] \u2190 b-dog-walker-priya\ndog_walker_arrangement Priya Hired Priya, the neighbors' teenager, to walk Mercury at noon on Tuesdays and Thursdays. Explains who has house access midday and when the dog gets exercise.\n\n2. [b-roth-total-market] \u2190 b-roth-total-market\nroth_contribution_allocation Stopped putting new Roth money into Mercury Growth; all new contributions now go to a total-market index fund, and existing Mercury shares stay put. Determines where retirement contributions go.\n\n3. [b-diet-intermittent-fasting] \u2190 b-diet-intermittent-fasting\ndiet_approach Dropped keto and now does 16:8 intermittent fasting. Shapes meal timing and suggestions.\n\n4. [b-mercury-food-lamb] \u2190 b-mercury-food-lamb\nmercury_food Feeds Mercury a lamb-and-rice kibble from the local pet store. Determines what food to buy for the dog.\n\n5. [b-mercury-growth-fund] \u2190 b-mercury-growth-fund\nmercury_growth_fund Mercury Mercury Growth MGF Mercury Growth Fund is an actively managed mid-cap mutual fund held in the user's Roth IRA, with a 0.85% expense ratio. Relevant to any question about fees, performance or rebalancing of the Roth.",
+      "context_tokens": 297,
+      "retrieve_time_ms": 82.2,
+      "gold_answers": [],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-dog-walker-priya; unexpected belief in relevantBeliefs: b-roth-total-market; unexpected belief in relevantBeliefs: b-diet-intermittent-fasting; unexpected belief in relevantBeliefs: b-mercury-food-lamb",
+      "score": null,
+      "meta": {
+        "category": "name-collision",
+        "description": "The dog is out of health scope and the wrist is unrelated to stored health beliefs.",
+        "scope": [
+          "domain:health"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": []
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "trivially-empty",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-dog-walker-priya",
+          "b-roth-total-market",
+          "b-diet-intermittent-fasting",
+          "b-mercury-food-lamb",
+          "b-mercury-growth-fund"
+        ],
+        "pinned_beliefs": [
+          "b-penicillin-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": null,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-dog-walker-priya",
+          "unexpected belief in relevantBeliefs: b-roth-total-market",
+          "unexpected belief in relevantBeliefs: b-diet-intermittent-fasting",
+          "unexpected belief in relevantBeliefs: b-mercury-food-lamb",
+          "unexpected belief in relevantBeliefs: b-mercury-growth-fund"
+        ],
+        "resolution": {
+          "source_id": 5
+        },
+        "retrieved_count": 5
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "name-collision"
+        ],
+        "Pass type": [
+          "trivially-empty"
+        ]
+      }
+    },
+    {
+      "query_id": "uni-format-prefs",
+      "query": "how do I like my answers formatted, remind me?",
+      "answer": "1 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (1)\n\n1. [b-comm-concise-bullets] \u2190 b-comm-concise-bullets\nanswer_format Prefers short answers led by bullet points, with no long preambles or recaps. Applies to how every answer is formatted.",
+      "context_tokens": 55,
+      "retrieve_time_ms": 41.6,
+      "gold_answers": [
+        "b-comm-concise-bullets",
+        "b-comm-no-emoji"
+      ],
+      "correct": false,
+      "judge_reason": "missing expected belief: b-comm-no-emoji",
+      "score": null,
+      "meta": {
+        "category": "universal",
+        "description": "Asking how answers should be formatted needs the format and no-emoji preferences.",
+        "scope": [
+          "user:universal"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-comm-concise-bullets",
+              "b-comm-no-emoji"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-comm-concise-bullets"
+        ],
+        "pinned_beliefs": [
+          "b-comm-address-as-robin"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 1.0,
+        "retrieval_recall": 0.5,
+        "pinned_coverage": null,
+        "failures": [
+          "missing expected belief: b-comm-no-emoji"
+        ],
+        "resolution": {
+          "source_id": 1
+        },
+        "retrieved_count": 1
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "universal"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "uni-units",
+      "query": "metric or imperial for me?",
+      "answer": "0 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (0)",
+      "context_tokens": 6,
+      "retrieve_time_ms": 49.3,
+      "gold_answers": [
+        "b-comm-us-units"
+      ],
+      "correct": false,
+      "judge_reason": "missing expected belief: b-comm-us-units",
+      "score": null,
+      "meta": {
+        "category": "universal",
+        "description": "Units question surfaces the units preference.",
+        "scope": [
+          "user:universal"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-comm-us-units"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [],
+        "pinned_beliefs": [
+          "b-comm-address-as-robin"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": 0.0,
+        "pinned_coverage": null,
+        "failures": [
+          "missing expected belief: b-comm-us-units"
+        ],
+        "resolution": {},
+        "retrieved_count": 0
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "universal"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "uni-name-pinned",
+      "query": "what name do you use for me?",
+      "answer": "0 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (0)",
+      "context_tokens": 6,
+      "retrieve_time_ms": 60.4,
+      "gold_answers": [],
+      "correct": true,
+      "judge_reason": "pass",
+      "score": null,
+      "meta": {
+        "category": "pinned-only",
+        "description": "The preferred name is pinned and injected separately.",
+        "scope": [
+          "user:universal"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": []
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "trivially-empty",
+        "active_pass": false,
+        "relevant_beliefs": [],
+        "pinned_beliefs": [
+          "b-comm-address-as-robin"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": null,
+        "retrieval_recall": null,
+        "pinned_coverage": null,
+        "failures": [],
+        "resolution": {},
+        "retrieved_count": 0
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "pinned-only"
+        ],
+        "Pass type": [
+          "trivially-empty"
+        ]
+      }
+    },
+    {
+      "query_id": "uni-med-sources-mixed-scope",
+      "query": "when you tell me stuff about my meds do you need to back it up with references?",
+      "answer": "2 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (2)\n\n1. [b-single-cashback-card] \u2190 b-single-cashback-card\ncredit_card_strategy Uses a single flat 2% cash-back card for everything and pays it in full monthly; does not want to juggle travel points. Frames any new card offer.\n\n2. [b-atlas-credit-union-mortgage] \u2190 b-atlas-credit-union-mortgage\natlas_mortgage Atlas Atlas CU The house loan is a 30-year fixed at 6.1% with Atlas Credit Union; refinancing only makes sense if rates fall below 5.25% and closing costs pay back within three years. Anchors refinancing and extra-payment questions.",
+      "context_tokens": 145,
+      "retrieve_time_ms": 64.7,
+      "gold_answers": [
+        "b-comm-cite-sources"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-single-cashback-card; unexpected belief in relevantBeliefs: b-atlas-credit-union-mortgage; missing expected belief: b-comm-cite-sources",
+      "score": null,
+      "meta": {
+        "category": "universal",
+        "description": "With health and universal scopes, a sourcing question needs the citation preference only.",
+        "scope": [
+          "domain:health",
+          "user:universal"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-comm-cite-sources"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-single-cashback-card",
+          "b-atlas-credit-union-mortgage"
+        ],
+        "pinned_beliefs": [
+          "b-comm-address-as-robin",
+          "b-penicillin-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": 0.0,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-single-cashback-card",
+          "unexpected belief in relevantBeliefs: b-atlas-credit-union-mortgage",
+          "missing expected belief: b-comm-cite-sources"
+        ],
+        "resolution": {
+          "source_id": 2
+        },
+        "retrieved_count": 2
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "universal"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "cross-two-mercuries",
+      "query": "two Mercury questions: is the dog's new food working out OK, and is the fund still sitting in my Roth?",
+      "answer": "6 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (6)\n\n1. [b-roth-split-mercury] \u2190 b-roth-split-mercury\nroth_contribution_allocation Split new Roth IRA contributions 50/50 between Mercury Growth Fund and an S&P 500 index fund. Determines where retirement contributions go.\n\n2. [b-mercury-growth-fund] \u2190 b-mercury-growth-fund\nmercury_growth_fund Mercury Mercury Growth MGF Mercury Growth Fund is an actively managed mid-cap mutual fund held in the user's Roth IRA, with a 0.85% expense ratio. Relevant to any question about fees, performance or rebalancing of the Roth.\n\n3. [b-roth-total-market] \u2190 b-roth-total-market\nroth_contribution_allocation Stopped putting new Roth money into Mercury Growth; all new contributions now go to a total-market index fund, and existing Mercury shares stay put. Determines where retirement contributions go.\n\n4. [b-mercury-dog] \u2190 b-mercury-dog\nmercury_dog Mercury Merc Mercury is the user's six-year-old border collie mix; he is allergic to chicken and gets very anxious during thunderstorms. Care, food and comfort decisions for the dog depend on his allergy and storm anxiety.\n\n5. [b-mercury-food-salmon] \u2190 b-mercury-food-salmon\nmercury_food Used to feed Mercury lamb-and-rice kibble; switched to a salmon-and-potato limited-ingredient food on the vet's advice. Determines what food to buy for the dog and what to avoid substituting.\n\n6. [b-mercury-food-lamb] \u2190 b-mercury-food-lamb\nmercury_food Feeds Mercury a lamb-and-rice kibble from the local pet store. Determines what food to buy for the dog.",
+      "context_tokens": 376,
+      "retrieve_time_ms": 65.3,
+      "gold_answers": [
+        "b-mercury-food-salmon",
+        "b-mercury-growth-fund",
+        "b-roth-total-market"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-roth-split-mercury; unexpected belief in relevantBeliefs: b-mercury-dog; unexpected belief in relevantBeliefs: b-mercury-food-lamb",
+      "score": null,
+      "meta": {
+        "category": "name-collision",
+        "description": "Conversation spans home and finance; both senses of the name are requested.",
+        "scope": [
+          "domain:home",
+          "domain:finance"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-mercury-food-salmon",
+              "b-mercury-growth-fund",
+              "b-roth-total-market"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-roth-split-mercury",
+          "b-mercury-growth-fund",
+          "b-roth-total-market",
+          "b-mercury-dog",
+          "b-mercury-food-salmon",
+          "b-mercury-food-lamb"
+        ],
+        "pinned_beliefs": [
+          "b-no-cats-sam-allergy",
+          "b-no-crypto-speculation"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.5,
+        "retrieval_recall": 1.0,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-roth-split-mercury",
+          "unexpected belief in relevantBeliefs: b-mercury-dog",
+          "unexpected belief in relevantBeliefs: b-mercury-food-lamb"
+        ],
+        "resolution": {
+          "source_id": 6
+        },
+        "retrieved_count": 6
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "name-collision"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "home-bathroom-paint",
+      "query": "what sheen of paint holds up best on a bathroom ceiling?",
+      "answer": "0 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (0)",
+      "context_tokens": 6,
+      "retrieve_time_ms": 51.6,
+      "gold_answers": [],
+      "correct": true,
+      "judge_reason": "pass",
+      "score": null,
+      "meta": {
+        "category": "general-knowledge",
+        "description": "Generic home-improvement question with no stored context.",
+        "scope": [
+          "domain:home"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": []
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "trivially-empty",
+        "active_pass": false,
+        "relevant_beliefs": [],
+        "pinned_beliefs": [
+          "b-no-cats-sam-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": null,
+        "retrieval_recall": null,
+        "pinned_coverage": null,
+        "failures": [],
+        "resolution": {},
+        "retrieved_count": 0
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "general-knowledge"
+        ],
+        "Pass type": [
+          "trivially-empty"
+        ]
+      }
+    },
+    {
+      "query_id": "fin-apr-general",
+      "query": "what does APR stand for?",
+      "answer": "0 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (0)",
+      "context_tokens": 6,
+      "retrieve_time_ms": 48.7,
+      "gold_answers": [],
+      "correct": true,
+      "judge_reason": "pass",
+      "score": null,
+      "meta": {
+        "category": "general-knowledge",
+        "description": "Generic definition with no stored context.",
+        "scope": [
+          "domain:finance"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": []
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "trivially-empty",
+        "active_pass": false,
+        "relevant_beliefs": [],
+        "pinned_beliefs": [
+          "b-no-crypto-speculation"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": null,
+        "retrieval_recall": null,
+        "pinned_coverage": null,
+        "failures": [],
+        "resolution": {},
+        "retrieved_count": 0
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "general-knowledge"
+        ],
+        "Pass type": [
+          "trivially-empty"
+        ]
+      }
+    },
+    {
+      "query_id": "fin-bp-out-of-scope",
+      "query": "my blood pressure was 138/88 this morning, is that bad?",
+      "answer": "1 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (1)\n\n1. [b-bp-home-log] \u2190 b-bp-home-log\nblood_pressure_tracking Logs blood pressure at home on Tuesday and Friday mornings in a phone app; the goal is to stay under 125/80. Baseline for blood pressure questions.",
+      "context_tokens": 58,
+      "retrieve_time_ms": 48.6,
+      "gold_answers": [],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-bp-home-log",
+      "score": null,
+      "meta": {
+        "category": "out-of-scope",
+        "description": "Blood pressure reading asked in finance scope; the health belief is out of scope.",
+        "scope": [
+          "domain:finance"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": []
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "trivially-empty",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-bp-home-log"
+        ],
+        "pinned_beliefs": [
+          "b-no-crypto-speculation"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": null,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-bp-home-log"
+        ],
+        "resolution": {
+          "source_id": 1
+        },
+        "retrieved_count": 1
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "out-of-scope"
+        ],
+        "Pass type": [
+          "trivially-empty"
+        ]
+      }
+    },
+    {
+      "query_id": "hl-quartz-out-of-scope",
+      "query": "did the quartz order ship yet?",
+      "answer": "2 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (2)\n\n1. [b-kitchen-remodel-budget] \u2190 b-kitchen-remodel-budget\nkitchen_remodel_budget The kitchen remodel is capped at $38,000 all-in, including a 10% contingency. Any change order has to fit under this cap.\n\n2. [b-countertop-quartz] \u2190 b-countertop-quartz\nkitchen_countertop_material Moved away from marble over staining worries; the final pick is a white quartz with light veining. Drives material orders and guards against being upsold on stone.",
+      "context_tokens": 118,
+      "retrieve_time_ms": 80.7,
+      "gold_answers": [],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-kitchen-remodel-budget; unexpected belief in relevantBeliefs: b-countertop-quartz",
+      "score": null,
+      "meta": {
+        "category": "out-of-scope",
+        "description": "Countertop order asked in health scope; the home belief is out of scope.",
+        "scope": [
+          "domain:health"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": []
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "trivially-empty",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-kitchen-remodel-budget",
+          "b-countertop-quartz"
+        ],
+        "pinned_beliefs": [
+          "b-penicillin-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": null,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-kitchen-remodel-budget",
+          "unexpected belief in relevantBeliefs: b-countertop-quartz"
+        ],
+        "resolution": {
+          "source_id": 2
+        },
+        "retrieved_count": 2
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "out-of-scope"
+        ],
+        "Pass type": [
+          "trivially-empty"
+        ]
+      }
+    },
+    {
+      "query_id": "hl-hand-bones",
+      "query": "how many bones are in the human hand",
+      "answer": "0 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (0)",
+      "context_tokens": 6,
+      "retrieve_time_ms": 55.0,
+      "gold_answers": [],
+      "correct": true,
+      "judge_reason": "pass",
+      "score": null,
+      "meta": {
+        "category": "general-knowledge",
+        "description": "Anatomy trivia with no personal context needed.",
+        "scope": [
+          "domain:health"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": []
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "trivially-empty",
+        "active_pass": false,
+        "relevant_beliefs": [],
+        "pinned_beliefs": [
+          "b-penicillin-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": null,
+        "retrieval_recall": null,
+        "pinned_coverage": null,
+        "failures": [],
+        "resolution": {},
+        "retrieved_count": 0
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "general-knowledge"
+        ],
+        "Pass type": [
+          "trivially-empty"
+        ]
+      }
+    },
+    {
+      "query_id": "hl-juggling-plan",
+      "query": "make me a two week plan to learn juggling, goal is three balls",
+      "answer": "12 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (12)\n\n1. [b-atlas-strength-program] \u2190 b-atlas-strength-program\natlas_strength_program Atlas Atlas 5x5 Atlas is the user's 5x5 barbell strength program: squat, bench, deadlift and overhead press, three sessions a week. Defines what the user's training sessions contain.\n\n2. [b-bp-home-log] \u2190 b-bp-home-log\nblood_pressure_tracking Logs blood pressure at home on Tuesday and Friday mornings in a phone app; the goal is to stay under 125/80. Baseline for blood pressure questions.\n\n3. [b-weekly-fun-money] \u2190 b-weekly-fun-money\npersonal_allowance Each partner gets $150 per week of no-questions-asked personal spending money; anything above that is discussed first. Decides whether a purchase needs a conversation with Sam.\n\n4. [b-emergency-fund-three-months] \u2190 b-emergency-fund-three-months\nemergency_fund_target Emergency fund target is three months of expenses. Sets how much cash to hold in reserve.\n\n5. [b-oq-niece-529] \u2190 b-oq-niece-529\nniece_college_savings Undecided whether to open a 529 college savings plan for their niece Ava. Would add a new recurring savings commitment.\n\n6. [b-oq-basement-dehumidifier] \u2190 b-oq-basement-dehumidifier\nbasement_dehumidifier_choice Undecided whether to install a whole-house dehumidifier in the basement or keep running two portable units. The basement has recurring dampness that needs a long-term fix.\n\n7. [b-countertop-marble] \u2190 b-countertop-marble\nkitchen_countertop_material Changed the counter plan from butcher block to Carrara marble. Drives material orders and install timing.\n\n8. [b-caffeine-cutoff] \u2190 b-caffeine-cutoff\ncaffeine_limit Caps coffee at two cups a day and none after 1pm because later caffeine wrecks sleep. Frames any question about caffeinated drinks.\n\n9. [b-sunday-meal-prep] \u2190 b-sunday-meal-prep\nweekly_meal_prep Batch-cooks weekday lunches every Sunday afternoon, usually a grain bowl and a lentil soup, so the weekly plan stays on track. Shapes weekend cooking suggestions.\n\n10. [b-oq-half-marathon] \u2190 b-oq-half-marathon\nfall_half_marathon Should the user sign up for a fall half marathon? Resolved: no, not this year because of the knee. Settled the fall race plan.\n\n11. [b-left-knee-meniscus] \u2190 b-left-knee-meniscus\nleft_knee_meniscus_tear Tore the left meniscus in 2025; avoids deep lunges, jumping and full-depth squats, and does physio band work twice a week. Limits which exercises and events are safe.\n\n12. [b-raised-bed-garden] \u2190 b-raised-bed-garden\nraised_bed_garden Grows San Marzano tomatoes and herbs in two raised beds and avoids synthetic pesticides. Shapes advice about garden pests and plantings.",
+      "context_tokens": 665,
+      "retrieve_time_ms": 57.1,
+      "gold_answers": [],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-atlas-strength-program; unexpected belief in relevantBeliefs: b-bp-home-log; unexpected belief in relevantBeliefs: b-weekly-fun-money; unexpected belief in relevantBeliefs: b-emergency-fund-three-months",
+      "score": null,
+      "meta": {
+        "category": "distractor-overlap",
+        "description": "Uses plan/goal phrasing that overlaps many beliefs but concerns nothing stored.",
+        "scope": [
+          "domain:health"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": []
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "trivially-empty",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-atlas-strength-program",
+          "b-bp-home-log",
+          "b-weekly-fun-money",
+          "b-emergency-fund-three-months",
+          "b-oq-niece-529",
+          "b-oq-basement-dehumidifier",
+          "b-countertop-marble",
+          "b-caffeine-cutoff",
+          "b-sunday-meal-prep",
+          "b-oq-half-marathon",
+          "b-left-knee-meniscus",
+          "b-raised-bed-garden"
+        ],
+        "pinned_beliefs": [
+          "b-penicillin-allergy"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": null,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-atlas-strength-program",
+          "unexpected belief in relevantBeliefs: b-bp-home-log",
+          "unexpected belief in relevantBeliefs: b-weekly-fun-money",
+          "unexpected belief in relevantBeliefs: b-emergency-fund-three-months",
+          "unexpected belief in relevantBeliefs: b-oq-niece-529",
+          "unexpected belief in relevantBeliefs: b-oq-basement-dehumidifier",
+          "unexpected belief in relevantBeliefs: b-countertop-marble",
+          "unexpected belief in relevantBeliefs: b-caffeine-cutoff",
+          "unexpected belief in relevantBeliefs: b-sunday-meal-prep",
+          "unexpected belief in relevantBeliefs: b-oq-half-marathon",
+          "unexpected belief in relevantBeliefs: b-left-knee-meniscus",
+          "unexpected belief in relevantBeliefs: b-raised-bed-garden"
+        ],
+        "resolution": {
+          "source_id": 12
+        },
+        "retrieved_count": 12
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "distractor-overlap"
+        ],
+        "Pass type": [
+          "trivially-empty"
+        ]
+      }
+    },
+    {
+      "query_id": "fin-market-hours",
+      "query": "what time does the stock market close on christmas eve?",
+      "answer": "1 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (1)\n\n1. [b-dr-okafor-telehealth] \u2190 b-dr-okafor-telehealth\nprimary_care_preference Dr. Okafor Primary care doctor is Dr. Okafor; prefers video telehealth visits for routine follow-ups and lab reviews to avoid taking time off. Shapes how appointments get booked.",
+      "context_tokens": 71,
+      "retrieve_time_ms": 55.6,
+      "gold_answers": [],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-dr-okafor-telehealth",
+      "score": null,
+      "meta": {
+        "category": "unrelated",
+        "description": "Market-hours trivia unrelated to stored beliefs despite finance vocabulary.",
+        "scope": [
+          "domain:finance"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": []
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "trivially-empty",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-dr-okafor-telehealth"
+        ],
+        "pinned_beliefs": [
+          "b-no-crypto-speculation"
+        ],
+        "retrieved_questions": [],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": null,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-dr-okafor-telehealth"
+        ],
+        "resolution": {
+          "source_id": 1
+        },
+        "retrieved_count": 1
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "unrelated"
+        ],
+        "Pass type": [
+          "trivially-empty"
+        ]
+      }
+    }
+  ],
+  "avg_retrieve_time_ms": 52.9,
+  "avg_context_tokens": 164.3
+}

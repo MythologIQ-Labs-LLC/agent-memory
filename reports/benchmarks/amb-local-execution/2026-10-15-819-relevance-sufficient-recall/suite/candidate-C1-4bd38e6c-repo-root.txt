@@ -1,0 +1,3 @@
+FAIL: test_evaluation_only_change_keeps_runtime_baseline_equivalence (tests.test_benchmark_integration_contract.BenchmarkIntegrationContractTests.test_evaluation_only_change_keeps_runtime_baseline_equivalence)
+Ran 2580 tests in 188.144s
+FAILED (failures=1, skipped=36)

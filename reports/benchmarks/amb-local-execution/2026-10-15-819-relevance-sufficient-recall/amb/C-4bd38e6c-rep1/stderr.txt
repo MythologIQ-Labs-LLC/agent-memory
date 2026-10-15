@@ -1,0 +1,232 @@
+amb-retrieval-no-llm-guard {"authority_effect": "none", "guard": "amb_retrieval_no_llm", "guard_version": "1.0.0", "llm_clients_constructed": 0, "patched_symbols": ["memory_bench.cli._resolve_gemini_key", "memory_bench.cli.get_answer_llm", "memory_bench.runner.GeminiJudge"]}
+2026-10-15 13:31:37,168 [INFO] [query:happy-stack-repository-layer] start — How should I structure my repository layer?
+2026-10-15 13:31:37,203 [INFO] [query:happy-stack-repository-layer] answer done in 0.0s (retrieve=35ms)
+2026-10-15 13:31:37,203 [INFO] [query:happy-stack-repository-layer] done in 0.0s — correct=False score=None
+2026-10-15 13:31:37,647 [INFO] [query:happy-alias-match-kubernetes] start — what's my k8s deploy story?
+2026-10-15 13:31:37,680 [INFO] [query:happy-alias-match-kubernetes] answer done in 0.0s (retrieve=33ms)
+2026-10-15 13:31:37,680 [INFO] [query:happy-alias-match-kubernetes] done in 0.0s — correct=False score=None
+2026-10-15 13:31:37,681 [INFO] [query:alias-kube-resolves] start — how does kube schedule pods across our CI pipeline nodes?
+2026-10-15 13:31:37,733 [INFO] [query:alias-kube-resolves] answer done in 0.1s (retrieve=52ms)
+2026-10-15 13:31:37,733 [INFO] [query:alias-kube-resolves] done in 0.1s — correct=False score=None
+2026-10-15 13:31:37,733 [INFO] [query:alias-gha-resolves] start — GHA secrets config
+2026-10-15 13:31:37,783 [INFO] [query:alias-gha-resolves] answer done in 0.0s (retrieve=49ms)
+2026-10-15 13:31:37,783 [INFO] [query:alias-gha-resolves] done in 0.0s — correct=True score=None
+2026-10-15 13:31:37,783 [INFO] [query:long-query-rambling-kubernetes] start — ok so I've been thinking about this for a while and I know we've talked about in
+2026-10-15 13:31:37,824 [INFO] [query:long-query-rambling-kubernetes] answer done in 0.0s (retrieve=40ms)
+2026-10-15 13:31:37,824 [INFO] [query:long-query-rambling-kubernetes] done in 0.0s — correct=False score=None
+2026-10-15 13:31:37,825 [INFO] [query:out-of-scope-coin-collecting] start — what's a good way to grade a 1909-S VDB penny without sending it to PCGS?
+2026-10-15 13:31:37,863 [INFO] [query:out-of-scope-coin-collecting] answer done in 0.0s (retrieve=38ms)
+2026-10-15 13:31:37,863 [INFO] [query:out-of-scope-coin-collecting] done in 0.0s — correct=True score=None
+2026-10-15 13:31:37,863 [INFO] [query:happy-writing-scope] start — How should I open the next chapter with Mara?
+2026-10-15 13:31:37,898 [INFO] [query:happy-writing-scope] answer done in 0.0s (retrieve=35ms)
+2026-10-15 13:31:37,898 [INFO] [query:happy-writing-scope] done in 0.0s — correct=False score=None
+2026-10-15 13:31:37,898 [INFO] [query:conflict-scope-disambiguation-redis-writing] start — What's Redis doing in chapter three?
+2026-10-15 13:31:37,932 [INFO] [query:conflict-scope-disambiguation-redis-writing] answer done in 0.0s (retrieve=33ms)
+2026-10-15 13:31:37,932 [INFO] [query:conflict-scope-disambiguation-redis-writing] done in 0.0s — correct=False score=None
+2026-10-15 13:31:37,932 [INFO] [query:conflict-scope-disambiguation-redis-code] start — What are we using Redis for?
+2026-10-15 13:31:37,967 [INFO] [query:conflict-scope-disambiguation-redis-code] answer done in 0.0s (retrieve=34ms)
+2026-10-15 13:31:37,967 [INFO] [query:conflict-scope-disambiguation-redis-code] done in 0.0s — correct=False score=None
+2026-10-15 13:31:37,967 [INFO] [query:multi-scope-redis-both-surfaces] start — What's Redis doing?
+2026-10-15 13:31:37,999 [INFO] [query:multi-scope-redis-both-surfaces] answer done in 0.0s (retrieve=32ms)
+2026-10-15 13:31:37,999 [INFO] [query:multi-scope-redis-both-surfaces] done in 0.0s — correct=False score=None
+2026-10-15 13:31:38,000 [INFO] [query:conflict-mongodb-supersedes-sqlalchemy] start — how's our SQLAlchemy setup these days?
+2026-10-15 13:31:38,032 [INFO] [query:conflict-mongodb-supersedes-sqlalchemy] answer done in 0.0s (retrieve=32ms)
+2026-10-15 13:31:38,032 [INFO] [query:conflict-mongodb-supersedes-sqlalchemy] done in 0.0s — correct=False score=None
+2026-10-15 13:31:38,032 [INFO] [query:edge-empty-query] start — 
+2026-10-15 13:31:38,032 [INFO] [query:edge-empty-query] answer done in 0.0s (retrieve=0ms)
+2026-10-15 13:31:38,032 [INFO] [query:edge-empty-query] done in 0.0s — correct=True score=None
+2026-10-15 13:31:38,032 [INFO] [query:edge-short-query-raw-passthrough] start — fastify?
+2026-10-15 13:31:38,064 [INFO] [query:edge-short-query-raw-passthrough] answer done in 0.0s (retrieve=31ms)
+2026-10-15 13:31:38,064 [INFO] [query:edge-short-query-raw-passthrough] done in 0.0s — correct=True score=None
+2026-10-15 13:31:38,064 [INFO] [query:isolation-user-scoping] start — what language do I write in?
+2026-10-15 13:31:38,097 [INFO] [query:isolation-user-scoping] answer done in 0.0s (retrieve=32ms)
+2026-10-15 13:31:38,097 [INFO] [query:isolation-user-scoping] done in 0.0s — correct=True score=None
+2026-10-15 13:31:38,097 [INFO] [query:questions-pinned-active-only] start — any open questions?
+2026-10-15 13:31:38,132 [INFO] [query:questions-pinned-active-only] answer done in 0.0s (retrieve=34ms)
+2026-10-15 13:31:38,132 [INFO] [query:questions-pinned-active-only] done in 0.0s — correct=False score=None
+2026-10-15 13:31:38,132 [INFO] [query:alias-ts-resolves] start — TS strict mode question about unknown types
+2026-10-15 13:31:38,169 [INFO] [query:alias-ts-resolves] answer done in 0.0s (retrieve=36ms)
+2026-10-15 13:31:38,169 [INFO] [query:alias-ts-resolves] done in 0.0s — correct=True score=None
+2026-10-15 13:31:38,169 [INFO] [query:alias-mongo-resolves] start — what's the Mongo pattern we're using for collections?
+2026-10-15 13:31:38,206 [INFO] [query:alias-mongo-resolves] answer done in 0.0s (retrieve=37ms)
+2026-10-15 13:31:38,207 [INFO] [query:alias-mongo-resolves] done in 0.0s — correct=True score=None
+2026-10-15 13:31:38,207 [INFO] [query:alias-reactjs-resolves] start — how should I structure my ReactJS components here?
+2026-10-15 13:31:38,242 [INFO] [query:alias-reactjs-resolves] answer done in 0.0s (retrieve=35ms)
+2026-10-15 13:31:38,242 [INFO] [query:alias-reactjs-resolves] done in 0.0s — correct=False score=None
+2026-10-15 13:31:38,242 [INFO] [query:alias-protagonist-resolves] start — what does the protagonist want, and does their viewpoint stay consistent in act 
+2026-10-15 13:31:38,309 [INFO] [query:alias-protagonist-resolves] answer done in 0.1s (retrieve=67ms)
+2026-10-15 13:31:38,309 [INFO] [query:alias-protagonist-resolves] done in 0.1s — correct=True score=None
+2026-10-15 13:31:38,310 [INFO] [query:canonical-name-match-mara] start — tell me about Mara's backstory with her father
+2026-10-15 13:31:38,356 [INFO] [query:canonical-name-match-mara] answer done in 0.0s (retrieve=47ms)
+2026-10-15 13:31:38,357 [INFO] [query:canonical-name-match-mara] done in 0.0s — correct=True score=None
+2026-10-15 13:31:38,357 [INFO] [query:alias-pov-shift-resolves] start — POV rules for chapter 7
+2026-10-15 13:31:38,400 [INFO] [query:alias-pov-shift-resolves] answer done in 0.0s (retrieve=43ms)
+2026-10-15 13:31:38,400 [INFO] [query:alias-pov-shift-resolves] done in 0.0s — correct=True score=None
+2026-10-15 13:31:38,400 [INFO] [query:alias-base-class-retrieves-composition] start — should I use a base class hierarchy for these domain objects?
+2026-10-15 13:31:38,439 [INFO] [query:alias-base-class-retrieves-composition] answer done in 0.0s (retrieve=38ms)
+2026-10-15 13:31:38,439 [INFO] [query:alias-base-class-retrieves-composition] done in 0.0s — correct=True score=None
+2026-10-15 13:31:38,439 [INFO] [query:alias-exceptions-retrieves-error-handling] start — when should I throw exceptions versus return them?
+2026-10-15 13:31:38,473 [INFO] [query:alias-exceptions-retrieves-error-handling] answer done in 0.0s (retrieve=34ms)
+2026-10-15 13:31:38,473 [INFO] [query:alias-exceptions-retrieves-error-handling] done in 0.0s — correct=True score=None
+2026-10-15 13:31:38,473 [INFO] [query:filter-resolved-at-excluded] start — should we self-host the landing page or go with Fly.io?
+2026-10-15 13:31:38,522 [INFO] [query:filter-resolved-at-excluded] answer done in 0.0s (retrieve=48ms)
+2026-10-15 13:31:38,522 [INFO] [query:filter-resolved-at-excluded] done in 0.0s — correct=False score=None
+2026-10-15 13:31:38,522 [INFO] [query:scope-bleed-questions-code-excludes-writing] start — any unresolved decisions on this sprint?
+2026-10-15 13:31:38,555 [INFO] [query:scope-bleed-questions-code-excludes-writing] answer done in 0.0s (retrieve=32ms)
+2026-10-15 13:31:38,555 [INFO] [query:scope-bleed-questions-code-excludes-writing] done in 0.0s — correct=False score=None
+2026-10-15 13:31:38,555 [INFO] [query:persona-prelude-content-present] start — what's our stack?
+2026-10-15 13:31:38,592 [INFO] [query:persona-prelude-content-present] answer done in 0.0s (retrieve=37ms)
+2026-10-15 13:31:38,593 [INFO] [query:persona-prelude-content-present] done in 0.0s — correct=False score=None
+2026-10-15 13:31:38,593 [INFO] [query:edge-short-query-score-clears] start — k8s?
+2026-10-15 13:31:38,632 [INFO] [query:edge-short-query-score-clears] answer done in 0.0s (retrieve=39ms)
+2026-10-15 13:31:38,632 [INFO] [query:edge-short-query-score-clears] done in 0.0s — correct=True score=None
+2026-10-15 13:31:38,632 [INFO] [query:edge-whitespace-query] start —    
+2026-10-15 13:31:38,632 [INFO] [query:edge-whitespace-query] answer done in 0.0s (retrieve=0ms)
+2026-10-15 13:31:38,632 [INFO] [query:edge-whitespace-query] done in 0.0s — correct=True score=None
+2026-10-15 13:31:38,632 [INFO] [query:score-boundary-weak-match-filtered] start — thinking about observability and monitoring dashboards
+2026-10-15 13:31:38,687 [INFO] [query:score-boundary-weak-match-filtered] answer done in 0.1s (retrieve=55ms)
+2026-10-15 13:31:38,688 [INFO] [query:score-boundary-weak-match-filtered] done in 0.1s — correct=True score=None
+2026-10-15 13:31:38,688 [INFO] [query:user-edited-cross-scope-surfaces] start — summarize what you know about my preferences
+2026-10-15 13:31:38,737 [INFO] [query:user-edited-cross-scope-surfaces] answer done in 0.0s (retrieve=49ms)
+2026-10-15 13:31:38,737 [INFO] [query:user-edited-cross-scope-surfaces] done in 0.0s — correct=True score=None
+2026-10-15 13:31:38,738 [INFO] [query:user-edited-absent-without-flag] start — what are my writing preferences?
+2026-10-15 13:31:38,771 [INFO] [query:user-edited-absent-without-flag] answer done in 0.0s (retrieve=33ms)
+2026-10-15 13:31:38,771 [INFO] [query:user-edited-absent-without-flag] done in 0.0s — correct=False score=None
+2026-10-15 13:31:38,771 [INFO] [query:ranking-canonical-name-over-content] start — composition over inheritance — what's our pattern?
+2026-10-15 13:31:38,807 [INFO] [query:ranking-canonical-name-over-content] answer done in 0.0s (retrieve=36ms)
+2026-10-15 13:31:38,808 [INFO] [query:ranking-canonical-name-over-content] done in 0.0s — correct=True score=None
+2026-10-15 13:31:38,808 [INFO] [query:messy-typo-blind-spot] start — how do I configure typscript strict mode?
+2026-10-15 13:31:38,848 [INFO] [query:messy-typo-blind-spot] answer done in 0.0s (retrieve=40ms)
+2026-10-15 13:31:38,849 [INFO] [query:messy-typo-blind-spot] done in 0.0s — correct=True score=None
+2026-10-15 13:31:38,849 [INFO] [query:messy-all-caps-case-insensitive] start — REACTJS component patterns
+2026-10-15 13:31:38,882 [INFO] [query:messy-all-caps-case-insensitive] answer done in 0.0s (retrieve=33ms)
+2026-10-15 13:31:38,882 [INFO] [query:messy-all-caps-case-insensitive] done in 0.0s — correct=False score=None
+2026-10-15 13:31:38,883 [INFO] [query:messy-filler-heavy-extraction] start — ugh so like I was wondering you know about how we should think about error handl
+2026-10-15 13:31:38,921 [INFO] [query:messy-filler-heavy-extraction] answer done in 0.0s (retrieve=38ms)
+2026-10-15 13:31:38,921 [INFO] [query:messy-filler-heavy-extraction] done in 0.0s — correct=True score=None
+2026-10-15 13:31:38,921 [INFO] [query:messy-negation-surfaces-topic] start — I don't want class hierarchies in this codebase, what should I use instead?
+2026-10-15 13:31:38,954 [INFO] [query:messy-negation-surfaces-topic] answer done in 0.0s (retrieve=33ms)
+2026-10-15 13:31:38,955 [INFO] [query:messy-negation-surfaces-topic] done in 0.0s — correct=True score=None
+2026-10-15 13:31:38,955 [INFO] [query:messy-compound-surfaces-two-beliefs] start — how should ReactJS components handle exceptions from async calls?
+2026-10-15 13:31:38,990 [INFO] [query:messy-compound-surfaces-two-beliefs] answer done in 0.0s (retrieve=35ms)
+2026-10-15 13:31:38,990 [INFO] [query:messy-compound-surfaces-two-beliefs] done in 0.0s — correct=False score=None
+2026-10-15 13:31:38,990 [INFO] [query:cap-stress-compound-six-entities] start — When our React frontend catches error handling exceptions, how should the Kubern
+2026-10-15 13:31:39,030 [INFO] [query:cap-stress-compound-six-entities] answer done in 0.0s (retrieve=39ms)
+2026-10-15 13:31:39,030 [INFO] [query:cap-stress-compound-six-entities] done in 0.0s — correct=False score=None
+2026-10-15 13:31:39,030 [INFO] [query:cap-stress-kitchen-sink-exceeds-twelve] start — Set up our React components to use composition pattern with explicit error handl
+2026-10-15 13:31:39,073 [INFO] [query:cap-stress-kitchen-sink-exceeds-twelve] answer done in 0.0s (retrieve=42ms)
+2026-10-15 13:31:39,074 [INFO] [query:cap-stress-kitchen-sink-exceeds-twelve] done in 0.0s — correct=False score=None
+2026-10-15 13:31:39,074 [INFO] [query:cap-stress-late-position-entity-at-risk] start — Given our React frontend, the GitHub Actions CI pipeline, the Kubernetes deploym
+2026-10-15 13:31:39,113 [INFO] [query:cap-stress-late-position-entity-at-risk] answer done in 0.0s (retrieve=39ms)
+2026-10-15 13:31:39,114 [INFO] [query:cap-stress-late-position-entity-at-risk] done in 0.0s — correct=False score=None
+2026-10-15 13:31:39,114 [INFO] [query:fuzzy-single-edit-fires-non-pinned] start — eror handling patterns
+2026-10-15 13:31:39,149 [INFO] [query:fuzzy-single-edit-fires-non-pinned] answer done in 0.0s (retrieve=35ms)
+2026-10-15 13:31:39,149 [INFO] [query:fuzzy-single-edit-fires-non-pinned] done in 0.0s — correct=True score=None
+2026-10-15 13:31:39,149 [INFO] [query:fuzzy-scope-filter-discriminates-after-fuzzy-fires] start — Reedis cache eviction strategy
+2026-10-15 13:31:39,184 [INFO] [query:fuzzy-scope-filter-discriminates-after-fuzzy-fires] answer done in 0.0s (retrieve=34ms)
+2026-10-15 13:31:39,184 [INFO] [query:fuzzy-scope-filter-discriminates-after-fuzzy-fires] done in 0.0s — correct=True score=None
+2026-10-15 13:31:39,185 [INFO] [query:fuzzy-prefix-blocks-transitive-match] start — mango connection pooling
+2026-10-15 13:31:39,217 [INFO] [query:fuzzy-prefix-blocks-transitive-match] answer done in 0.0s (retrieve=32ms)
+2026-10-15 13:31:39,218 [INFO] [query:fuzzy-prefix-blocks-transitive-match] done in 0.0s — correct=True score=None
+2026-10-15 13:31:39,219 [INFO] [query:fuzzy-abbreviation-prefix-blind-spot] start — k9s pod scheduling
+2026-10-15 13:31:39,258 [INFO] [query:fuzzy-abbreviation-prefix-blind-spot] answer done in 0.0s (retrieve=37ms)
+2026-10-15 13:31:39,258 [INFO] [query:fuzzy-abbreviation-prefix-blind-spot] done in 0.0s — correct=True score=None
+2026-10-15 13:31:39,258 [INFO] [query:fuzzy-two-edit-transposition-blocked] start — typsecript compilation config
+2026-10-15 13:31:39,292 [INFO] [query:fuzzy-two-edit-transposition-blocked] answer done in 0.0s (retrieve=34ms)
+2026-10-15 13:31:39,292 [INFO] [query:fuzzy-two-edit-transposition-blocked] done in 0.0s — correct=False score=None
+2026-10-15 13:31:39,292 [INFO] [query:fuzzy-single-term-only-signal] start — mongod
+2026-10-15 13:31:39,338 [INFO] [query:fuzzy-single-term-only-signal] answer done in 0.0s (retrieve=45ms)
+2026-10-15 13:31:39,338 [INFO] [query:fuzzy-single-term-only-signal] done in 0.0s — correct=False score=None
+2026-10-15 13:31:39,338 [INFO] [query:universal-scope-belief-content-in-persona-prelude] start — what's a good way to grade a 1909-S VDB penny without sending it to PCGS?
+2026-10-15 13:31:39,386 [INFO] [query:universal-scope-belief-content-in-persona-prelude] answer done in 0.0s (retrieve=48ms)
+2026-10-15 13:31:39,387 [INFO] [query:universal-scope-belief-content-in-persona-prelude] done in 0.0s — correct=True score=None
+2026-10-15 13:31:39,387 [INFO] [query:type-isolation-open-question-not-in-relevant] start — JWT authentication token strategy
+2026-10-15 13:31:39,421 [INFO] [query:type-isolation-open-question-not-in-relevant] answer done in 0.0s (retrieve=33ms)
+2026-10-15 13:31:39,421 [INFO] [query:type-isolation-open-question-not-in-relevant] done in 0.0s — correct=False score=None
+2026-10-15 13:31:39,421 [INFO] [query:multi-hop-supersession-chain-all-excluded] start — ESLint rules and TSLint configuration
+2026-10-15 13:31:39,458 [INFO] [query:multi-hop-supersession-chain-all-excluded] answer done in 0.0s (retrieve=37ms)
+2026-10-15 13:31:39,458 [INFO] [query:multi-hop-supersession-chain-all-excluded] done in 0.0s — correct=False score=None
+2026-10-15 13:31:39,459 [INFO] [query:cross-scope-one-empty-domain-does-not-degrade] start — What are we using Redis for?
+2026-10-15 13:31:39,494 [INFO] [query:cross-scope-one-empty-domain-does-not-degrade] answer done in 0.0s (retrieve=35ms)
+2026-10-15 13:31:39,495 [INFO] [query:cross-scope-one-empty-domain-does-not-degrade] done in 0.0s — correct=False score=None
+2026-10-15 13:31:39,495 [INFO] [query:ranking-orderedbefore-alias-beats-content] start — explicit error returns in pipe transforms
+2026-10-15 13:31:39,529 [INFO] [query:ranking-orderedbefore-alias-beats-content] answer done in 0.0s (retrieve=34ms)
+2026-10-15 13:31:39,529 [INFO] [query:ranking-orderedbefore-alias-beats-content] done in 0.0s — correct=True score=None
+2026-10-15 13:31:39,529 [INFO] [query:cold-start-user-no-beliefs] start — how should I structure my repository layer?
+2026-10-15 13:31:39,562 [INFO] [query:cold-start-user-no-beliefs] answer done in 0.0s (retrieve=32ms)
+2026-10-15 13:31:39,562 [INFO] [query:cold-start-user-no-beliefs] done in 0.0s — correct=True score=None
+2026-10-15 13:31:39,562 [INFO] [query:narrator-voice-pinned-in-own-scope] start — 
+2026-10-15 13:31:39,562 [INFO] [query:narrator-voice-pinned-in-own-scope] answer done in 0.0s (retrieve=0ms)
+2026-10-15 13:31:39,562 [INFO] [query:narrator-voice-pinned-in-own-scope] done in 0.0s — correct=True score=None
+2026-10-15 13:31:39,562 [INFO] [query:multi-scope-prelude-uses-primary-scope-only] start — give me an overview of what I'm working on
+2026-10-15 13:31:39,598 [INFO] [query:multi-scope-prelude-uses-primary-scope-only] answer done in 0.0s (retrieve=35ms)
+2026-10-15 13:31:39,598 [INFO] [query:multi-scope-prelude-uses-primary-scope-only] done in 0.0s — correct=True score=None
+2026-10-15 13:31:39,598 [INFO] [query:why-it-matters-not-indexed-blind-spot] start — Vue component architecture
+2026-10-15 13:31:39,631 [INFO] [query:why-it-matters-not-indexed-blind-spot] answer done in 0.0s (retrieve=33ms)
+2026-10-15 13:31:39,631 [INFO] [query:why-it-matters-not-indexed-blind-spot] done in 0.0s — correct=False score=None
+2026-10-15 13:31:39,631 [INFO] [query:budget-ceiling-evicts-relevant-beliefs] start — How should I handle errors in my repository layer?
+2026-10-15 13:31:39,666 [INFO] [query:budget-ceiling-evicts-relevant-beliefs] answer done in 0.0s (retrieve=35ms)
+2026-10-15 13:31:39,666 [INFO] [query:budget-ceiling-evicts-relevant-beliefs] done in 0.0s — correct=True score=None
+2026-10-15 13:31:39,666 [INFO] [query:negative-guidance-mongoose] start — suggest a good Mongoose schema for my user model
+2026-10-15 13:31:39,705 [INFO] [query:negative-guidance-mongoose] answer done in 0.0s (retrieve=38ms)
+2026-10-15 13:31:39,705 [INFO] [query:negative-guidance-mongoose] done in 0.0s — correct=False score=None
+2026-10-15 13:31:39,705 [INFO] [query:recency-tiebreak-reinforcement] start — 
+2026-10-15 13:31:39,706 [INFO] [query:recency-tiebreak-reinforcement] answer done in 0.0s (retrieve=0ms)
+2026-10-15 13:31:39,706 [INFO] [query:recency-tiebreak-reinforcement] done in 0.0s — correct=True score=None
+2026-10-15 13:31:39,706 [INFO] [query:preference-flood-relevant-entity-survives] start — how does our CI pipeline handle secrets?
+2026-10-15 13:31:39,740 [INFO] [query:preference-flood-relevant-entity-survives] answer done in 0.0s (retrieve=34ms)
+2026-10-15 13:31:39,740 [INFO] [query:preference-flood-relevant-entity-survives] done in 0.0s — correct=True score=None
+2026-10-15 13:31:39,740 [INFO] [query:cross-scope-non-user-edited-blocked] start — tell me about Mara
+2026-10-15 13:31:39,777 [INFO] [query:cross-scope-non-user-edited-blocked] answer done in 0.0s (retrieve=37ms)
+2026-10-15 13:31:39,777 [INFO] [query:cross-scope-non-user-edited-blocked] done in 0.0s — correct=False score=None
+2026-10-15 13:31:39,778 [INFO] [query:alias-two-word-shingle-dead-letter] start — what happens to dead letter messages that fail replay?
+2026-10-15 13:31:39,818 [INFO] [query:alias-two-word-shingle-dead-letter] answer done in 0.0s (retrieve=40ms)
+2026-10-15 13:31:39,818 [INFO] [query:alias-two-word-shingle-dead-letter] done in 0.0s — correct=True score=None
+2026-10-15 13:31:39,819 [INFO] [query:alias-dlq-abbreviation-resolves] start — how do we replay items from the DLQ?
+2026-10-15 13:31:39,859 [INFO] [query:alias-dlq-abbreviation-resolves] answer done in 0.0s (retrieve=40ms)
+2026-10-15 13:31:39,859 [INFO] [query:alias-dlq-abbreviation-resolves] done in 0.0s — correct=True score=None
+2026-10-15 13:31:39,860 [INFO] [query:counter-signal-jest-surfaces-vitest] start — should I configure Jest for this project?
+2026-10-15 13:31:39,903 [INFO] [query:counter-signal-jest-surfaces-vitest] answer done in 0.0s (retrieve=43ms)
+2026-10-15 13:31:39,903 [INFO] [query:counter-signal-jest-surfaces-vitest] done in 0.0s — correct=False score=None
+2026-10-15 13:31:39,903 [INFO] [query:relation-type-expands-participants] start — what are the auth service dependencies and failure modes?
+2026-10-15 13:31:39,953 [INFO] [query:relation-type-expands-participants] answer done in 0.0s (retrieve=50ms)
+2026-10-15 13:31:39,953 [INFO] [query:relation-type-expands-participants] done in 0.0s — correct=False score=None
+2026-10-15 13:31:39,953 [INFO] [query:relation-participant-open-question-routes-correctly] start — session backend dependency graph
+2026-10-15 13:31:40,010 [INFO] [query:relation-participant-open-question-routes-correctly] answer done in 0.1s (retrieve=56ms)
+2026-10-15 13:31:40,010 [INFO] [query:relation-participant-open-question-routes-correctly] done in 0.1s — correct=False score=None
+2026-10-15 13:31:40,010 [INFO] [query:relation-expansion-respects-scope-filter] start — auth redis failure modes
+2026-10-15 13:31:40,063 [INFO] [query:relation-expansion-respects-scope-filter] answer done in 0.1s (retrieve=53ms)
+2026-10-15 13:31:40,064 [INFO] [query:relation-expansion-respects-scope-filter] done in 0.1s — correct=True score=None
+2026-10-15 13:31:40,064 [INFO] [query:subtype-expertise-retrieval] start — what's my react depth — should you explain hooks to me?
+2026-10-15 13:31:40,118 [INFO] [query:subtype-expertise-retrieval] answer done in 0.1s (retrieve=54ms)
+2026-10-15 13:31:40,118 [INFO] [query:subtype-expertise-retrieval] done in 0.1s — correct=False score=None
+2026-10-15 13:31:40,118 [INFO] [query:pinned-plus-resolved-excluded-from-questions] start — API versioning strategy for v2 migration
+2026-10-15 13:31:40,152 [INFO] [query:pinned-plus-resolved-excluded-from-questions] answer done in 0.0s (retrieve=34ms)
+2026-10-15 13:31:40,152 [INFO] [query:pinned-plus-resolved-excluded-from-questions] done in 0.0s — correct=False score=None
+2026-10-15 13:31:40,152 [INFO] [query:zero-reinforcement-fresh-belief-surfaces] start — how is our Turborepo monorepo structured?
+2026-10-15 13:31:40,189 [INFO] [query:zero-reinforcement-fresh-belief-surfaces] answer done in 0.0s (retrieve=36ms)
+2026-10-15 13:31:40,189 [INFO] [query:zero-reinforcement-fresh-belief-surfaces] done in 0.0s — correct=True score=None
+2026-10-15 13:31:40,189 [INFO] [query:budget-zero-graceful-empty] start — what's our stack?
+2026-10-15 13:31:40,223 [INFO] [query:budget-zero-graceful-empty] answer done in 0.0s (retrieve=34ms)
+2026-10-15 13:31:40,223 [INFO] [query:budget-zero-graceful-empty] done in 0.0s — correct=True score=None
+2026-10-15 13:31:40,223 [INFO] [query:budget-one-pinned-wins-over-relevant] start — MongoDB collection typing patterns
+2026-10-15 13:31:40,257 [INFO] [query:budget-one-pinned-wins-over-relevant] answer done in 0.0s (retrieve=34ms)
+2026-10-15 13:31:40,257 [INFO] [query:budget-one-pinned-wins-over-relevant] done in 0.0s — correct=True score=None
+2026-10-15 13:31:40,257 [INFO] [query:multi-scope-code-writing-dedup-no-double-surface] start — what tools do we use?
+2026-10-15 13:31:40,293 [INFO] [query:multi-scope-code-writing-dedup-no-double-surface] answer done in 0.0s (retrieve=35ms)
+2026-10-15 13:31:40,293 [INFO] [query:multi-scope-code-writing-dedup-no-double-surface] done in 0.0s — correct=False score=None
+2026-10-15 13:31:40,293 [INFO] [query:empty-alias-belief-content-path-only] start — should you give me one recommendation or a list of options?
+2026-10-15 13:31:40,332 [INFO] [query:empty-alias-belief-content-path-only] answer done in 0.0s (retrieve=39ms)
+2026-10-15 13:31:40,333 [INFO] [query:empty-alias-belief-content-path-only] done in 0.0s — correct=False score=None
+2026-10-15 13:31:40,333 [INFO] [query:universal-scope-explicit-query-no-relevant] start — how do I want you to respond to me?
+2026-10-15 13:31:40,370 [INFO] [query:universal-scope-explicit-query-no-relevant] answer done in 0.0s (retrieve=37ms)
+2026-10-15 13:31:40,370 [INFO] [query:universal-scope-explicit-query-no-relevant] done in 0.0s — correct=True score=None
+2026-10-15 13:31:40,370 [INFO] [query:negation-query-still-surfaces-rejected-tool] start — I do NOT want to use Express, what should I use instead?
+2026-10-15 13:31:40,409 [INFO] [query:negation-query-still-surfaces-rejected-tool] answer done in 0.0s (retrieve=38ms)
+2026-10-15 13:31:40,409 [INFO] [query:negation-query-still-surfaces-rejected-tool] done in 0.0s — correct=False score=None
+2026-10-15 13:31:40,410 [INFO] [query:superseded-chain-query-terminal-only] start — TSLint migration path
+2026-10-15 13:31:40,446 [INFO] [query:superseded-chain-query-terminal-only] answer done in 0.0s (retrieve=37ms)
+2026-10-15 13:31:40,447 [INFO] [query:superseded-chain-query-terminal-only] done in 0.0s — correct=False score=None
+2026-10-15 13:31:40,447 [INFO] [query:relation-does-not-appear-as-entity] start — Redis session backend dependency graph
+2026-10-15 13:31:40,482 [INFO] [query:relation-does-not-appear-as-entity] answer done in 0.0s (retrieve=35ms)
+2026-10-15 13:31:40,482 [INFO] [query:relation-does-not-appear-as-entity] done in 0.0s — correct=False score=None

@@ -1,0 +1,2108 @@
+{
+  "after": {
+    "correct": 14,
+    "mean_precision": 0.2755,
+    "mean_recall": 0.6221,
+    "strict_success": 0.2
+  },
+  "before": {
+    "correct": 0,
+    "mean_precision": 0.0453,
+    "mean_recall": 0.7752,
+    "strict_success": 0.0
+  },
+  "by_category": {
+    "direct": {
+      "after": 1,
+      "before": 0,
+      "cases": 2
+    },
+    "distractor-overlap": {
+      "after": 0,
+      "before": 0,
+      "cases": 5
+    },
+    "exploratory": {
+      "after": 1,
+      "before": 0,
+      "cases": 1
+    },
+    "general-knowledge": {
+      "after": 3,
+      "before": 0,
+      "cases": 3
+    },
+    "isolation": {
+      "after": 0,
+      "before": 0,
+      "cases": 2
+    },
+    "multi-belief": {
+      "after": 0,
+      "before": 0,
+      "cases": 4
+    },
+    "name-collision": {
+      "after": 0,
+      "before": 0,
+      "cases": 5
+    },
+    "negation": {
+      "after": 0,
+      "before": 0,
+      "cases": 2
+    },
+    "open-question-only": {
+      "after": 0,
+      "before": 0,
+      "cases": 3
+    },
+    "out-of-scope": {
+      "after": 0,
+      "before": 0,
+      "cases": 6
+    },
+    "paraphrase": {
+      "after": 5,
+      "before": 0,
+      "cases": 13
+    },
+    "pinned-only": {
+      "after": 1,
+      "before": 0,
+      "cases": 4
+    },
+    "relation": {
+      "after": 0,
+      "before": 0,
+      "cases": 3
+    },
+    "resolved-question": {
+      "after": 0,
+      "before": 0,
+      "cases": 3
+    },
+    "supersession": {
+      "after": 1,
+      "before": 0,
+      "cases": 4
+    },
+    "terse": {
+      "after": 0,
+      "before": 0,
+      "cases": 3
+    },
+    "typo": {
+      "after": 1,
+      "before": 0,
+      "cases": 2
+    },
+    "universal": {
+      "after": 0,
+      "before": 0,
+      "cases": 3
+    },
+    "unrelated": {
+      "after": 1,
+      "before": 0,
+      "cases": 2
+    }
+  },
+  "cases": 70,
+  "paired": {
+    "bootstrap": {
+      "resamples": 10000,
+      "seed": 819,
+      "unit": "case"
+    },
+    "bootstrap_95ci_after_minus_before": {
+      "mean_precision": [
+        0.1466,
+        0.3227
+      ],
+      "mean_recall": [
+        -0.2619,
+        -0.0589
+      ],
+      "strict_success": [
+        0.1143,
+        0.3
+      ]
+    },
+    "broken": [],
+    "fixed": [
+      "fin-airline-card",
+      "fin-apr-general",
+      "fin-dentist-hsa",
+      "fin-expense-ratio-typo",
+      "fin-food-bank-december",
+      "hl-early-alarm-superseded",
+      "hl-hand-bones",
+      "hl-lab-followup-visit",
+      "hl-missed-pill",
+      "home-bathroom-paint",
+      "home-furnace-leaning",
+      "home-lukewarm-water",
+      "home-unrelated-trivia",
+      "uni-name-pinned"
+    ],
+    "mcnemar_exact_p": 0.0001220703125
+  },
+  "per_case": {
+    "cross-two-mercuries": {
+      "after": false,
+      "after_relevant": [
+        "b-roth-split-mercury",
+        "b-mercury-growth-fund",
+        "b-roth-total-market",
+        "b-mercury-dog",
+        "b-mercury-food-salmon",
+        "b-mercury-food-lamb"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-roth-split-mercury",
+        "b-mercury-growth-fund",
+        "b-roth-total-market",
+        "b-mercury-dog",
+        "b-mercury-food-salmon",
+        "b-mercury-food-lamb",
+        "b-rel-garden-mercury",
+        "b-dog-walker-priya",
+        "b-bunched-charitable-giving",
+        "b-emergency-fund-three-months",
+        "b-bp-home-log",
+        "b-emergency-fund-six-months",
+        "b-sleep-wind-down",
+        "b-atlas-strength-program",
+        "b-raised-bed-garden",
+        "b-thermostat-setpoints",
+        "b-oq-basement-dehumidifier",
+        "b-single-cashback-card"
+      ]
+    },
+    "fin-airline-card": {
+      "after": true,
+      "after_relevant": [
+        "b-single-cashback-card"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-single-cashback-card",
+        "b-roth-split-mercury",
+        "b-roth-total-market",
+        "b-atlas-strength-program",
+        "b-mercury-growth-fund",
+        "b-oq-niece-529",
+        "b-no-cats-sam-allergy",
+        "b-mercury-food-salmon",
+        "b-diet-mediterranean-protein",
+        "b-oq-fence-permit",
+        "b-weekly-fun-money",
+        "b-heat-pump-leaning",
+        "b-countertop-quartz",
+        "b-zero-based-budget",
+        "b-comm-concise-bullets",
+        "b-workout-evening-lifts",
+        "b-cpa-joint-filing",
+        "b-kitchen-contractor-halvorsen",
+        "b-atlas-credit-union-mortgage"
+      ]
+    },
+    "fin-altcoin-pinned": {
+      "after": false,
+      "after_relevant": [
+        "b-workout-morning-runs"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-workout-morning-runs",
+        "b-roth-total-market",
+        "b-bunched-charitable-giving",
+        "b-oq-half-marathon",
+        "b-oq-refinance-spring",
+        "b-hsa-invest-receipts",
+        "b-oq-niece-529",
+        "b-roth-split-mercury",
+        "b-single-cashback-card"
+      ]
+    },
+    "fin-annual-checkin-rambling": {
+      "after": false,
+      "after_relevant": [
+        "b-emergency-fund-six-months",
+        "b-roth-total-market",
+        "b-weekly-fun-money",
+        "b-emergency-fund-three-months",
+        "b-atlas-credit-union-mortgage",
+        "b-sunday-meal-prep",
+        "b-no-cats-sam-allergy"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-emergency-fund-six-months",
+        "b-roth-total-market",
+        "b-weekly-fun-money",
+        "b-emergency-fund-three-months",
+        "b-atlas-credit-union-mortgage",
+        "b-sunday-meal-prep",
+        "b-zero-based-budget",
+        "b-no-cats-sam-allergy",
+        "b-roth-split-mercury",
+        "b-oq-half-marathon",
+        "b-comm-no-emoji",
+        "b-kitchen-remodel-budget",
+        "b-dog-walker-priya",
+        "b-mercury-growth-fund",
+        "b-water-heater-tankless",
+        "b-bp-home-log",
+        "b-countertop-quartz",
+        "b-cpa-joint-filing",
+        "b-workout-evening-lifts"
+      ]
+    },
+    "fin-apr-general": {
+      "after": true,
+      "after_relevant": [],
+      "before": false,
+      "before_relevant": [
+        "b-mercury-food-salmon",
+        "b-mercury-food-lamb",
+        "b-diet-intermittent-fasting",
+        "b-comm-no-emoji",
+        "b-atlas-strength-program",
+        "b-single-cashback-card",
+        "b-oq-fence-permit",
+        "b-left-knee-meniscus",
+        "b-sleep-wind-down",
+        "b-penicillin-allergy",
+        "b-countertop-butcher-block",
+        "b-kitchen-contractor-brightline",
+        "b-comm-cite-sources",
+        "b-thermostat-setpoints",
+        "b-oq-niece-529",
+        "b-oq-glucose-monitor",
+        "b-oq-half-marathon",
+        "b-rel-garden-mercury",
+        "b-kitchen-contractor-halvorsen"
+      ]
+    },
+    "fin-atlas-one-word": {
+      "after": false,
+      "after_relevant": [
+        "b-atlas-strength-program",
+        "b-atlas-credit-union-mortgage",
+        "b-rel-knee-atlas-mods",
+        "b-oq-refinance-spring"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-atlas-strength-program",
+        "b-atlas-credit-union-mortgage",
+        "b-rel-knee-atlas-mods",
+        "b-oq-refinance-spring"
+      ]
+    },
+    "fin-bp-out-of-scope": {
+      "after": false,
+      "after_relevant": [
+        "b-bp-home-log"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-bp-home-log",
+        "b-oq-glucose-monitor",
+        "b-kitchen-remodel-budget",
+        "b-weekly-fun-money",
+        "b-oq-fence-permit",
+        "b-water-heater-tankless",
+        "b-oq-half-marathon",
+        "b-oq-refinance-spring",
+        "b-oq-basement-dehumidifier",
+        "b-zero-based-budget",
+        "b-mercury-dog",
+        "b-kitchen-contractor-brightline",
+        "b-emergency-fund-three-months",
+        "b-comm-concise-bullets",
+        "b-rel-fun-money-budget",
+        "b-heat-pump-leaning",
+        "b-cpa-joint-filing",
+        "b-no-cats-sam-allergy",
+        "b-countertop-quartz"
+      ]
+    },
+    "fin-concert-ticket-relation": {
+      "after": false,
+      "after_relevant": [
+        "b-zero-based-budget",
+        "b-emergency-fund-three-months",
+        "b-weekly-fun-money",
+        "b-emergency-fund-six-months",
+        "b-oq-basement-dehumidifier",
+        "b-no-cats-sam-allergy"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-zero-based-budget",
+        "b-emergency-fund-three-months",
+        "b-comm-concise-bullets",
+        "b-weekly-fun-money",
+        "b-emergency-fund-six-months",
+        "b-cpa-joint-filing",
+        "b-oq-basement-dehumidifier",
+        "b-single-cashback-card",
+        "b-no-cats-sam-allergy",
+        "b-sleep-wind-down",
+        "b-water-heater-tankless",
+        "b-oq-glucose-monitor",
+        "b-hsa-invest-receipts",
+        "b-sunday-meal-prep",
+        "b-workout-morning-runs",
+        "b-countertop-quartz",
+        "b-bp-home-log",
+        "b-dr-okafor-telehealth",
+        "b-mercury-food-salmon"
+      ]
+    },
+    "fin-dentist-hsa": {
+      "after": true,
+      "after_relevant": [
+        "b-hsa-invest-receipts"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-hsa-invest-receipts",
+        "b-countertop-quartz",
+        "b-oq-half-marathon",
+        "b-mercury-food-lamb",
+        "b-countertop-marble",
+        "b-oq-refinance-spring",
+        "b-rel-knee-atlas-mods",
+        "b-oq-fence-permit",
+        "b-oq-basement-dehumidifier",
+        "b-rel-fun-money-budget",
+        "b-sunday-meal-prep",
+        "b-zero-based-budget",
+        "b-no-cats-sam-allergy",
+        "b-atlas-strength-program",
+        "b-mercury-food-salmon",
+        "b-kitchen-remodel-budget",
+        "b-heat-pump-leaning",
+        "b-bp-home-log",
+        "b-mercury-growth-fund"
+      ]
+    },
+    "fin-dog-vet-out-of-scope": {
+      "after": false,
+      "after_relevant": [
+        "b-mercury-food-salmon",
+        "b-mercury-dog",
+        "b-roth-split-mercury",
+        "b-roth-total-market",
+        "b-penicillin-allergy"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-mercury-food-salmon",
+        "b-mercury-dog",
+        "b-roth-split-mercury",
+        "b-roth-total-market",
+        "b-mercury-food-lamb",
+        "b-atlas-strength-program",
+        "b-mercury-growth-fund",
+        "b-penicillin-allergy",
+        "b-oq-basement-dehumidifier",
+        "b-water-heater-tankless",
+        "b-dog-walker-priya",
+        "b-weekly-fun-money",
+        "b-no-cats-sam-allergy",
+        "b-rel-garden-mercury",
+        "b-kitchen-contractor-halvorsen",
+        "b-kitchen-contractor-brightline",
+        "b-bunched-charitable-giving",
+        "b-comm-no-emoji",
+        "b-workout-evening-lifts"
+      ]
+    },
+    "fin-envelope-isolation": {
+      "after": false,
+      "after_relevant": [
+        "b-emergency-fund-three-months",
+        "b-single-cashback-card",
+        "b-emergency-fund-six-months"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-kitchen-contractor-brightline",
+        "b-emergency-fund-three-months",
+        "b-single-cashback-card",
+        "b-emergency-fund-six-months",
+        "b-sleep-wind-down",
+        "b-penicillin-allergy",
+        "b-countertop-butcher-block",
+        "b-comm-cite-sources",
+        "b-mercury-food-lamb",
+        "b-thermostat-setpoints",
+        "b-oq-niece-529",
+        "b-oq-glucose-monitor",
+        "b-oq-half-marathon",
+        "b-rel-garden-mercury",
+        "b-kitchen-contractor-halvorsen",
+        "b-bp-home-log",
+        "b-dr-okafor-telehealth",
+        "b-mercury-food-salmon",
+        "b-mercury-dog"
+      ]
+    },
+    "fin-expense-ratio-typo": {
+      "after": true,
+      "after_relevant": [
+        "b-mercury-growth-fund"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-mercury-growth-fund",
+        "b-mercury-dog",
+        "b-mercury-food-salmon",
+        "b-dog-walker-priya",
+        "b-mercury-food-lamb",
+        "b-roth-total-market",
+        "b-roth-split-mercury",
+        "b-workout-morning-runs",
+        "b-rel-garden-mercury",
+        "b-workout-evening-lifts",
+        "b-sunday-meal-prep",
+        "b-countertop-quartz",
+        "b-bp-home-log",
+        "b-zero-based-budget"
+      ]
+    },
+    "fin-food-bank-december": {
+      "after": true,
+      "after_relevant": [
+        "b-bunched-charitable-giving"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-bunched-charitable-giving",
+        "b-oq-half-marathon",
+        "b-mercury-dog",
+        "b-zero-based-budget",
+        "b-mercury-food-salmon",
+        "b-mercury-food-lamb",
+        "b-atorvastatin-daily",
+        "b-mercury-growth-fund",
+        "b-dr-okafor-telehealth",
+        "b-rel-knee-atlas-mods",
+        "b-kitchen-remodel-budget",
+        "b-oq-refinance-spring",
+        "b-comm-us-units",
+        "b-left-knee-meniscus",
+        "b-oq-basement-dehumidifier",
+        "b-comm-cite-sources",
+        "b-comm-concise-bullets",
+        "b-water-heater-tankless",
+        "b-caffeine-cutoff"
+      ]
+    },
+    "fin-home-loan-rate": {
+      "after": false,
+      "after_relevant": [
+        "b-bp-home-log",
+        "b-atlas-credit-union-mortgage"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-mercury-food-salmon",
+        "b-atlas-strength-program",
+        "b-bp-home-log",
+        "b-mercury-dog",
+        "b-atlas-credit-union-mortgage",
+        "b-mercury-food-lamb",
+        "b-no-cats-sam-allergy",
+        "b-workout-morning-runs",
+        "b-mercury-growth-fund",
+        "b-workout-evening-lifts",
+        "b-sunday-meal-prep",
+        "b-dog-walker-priya",
+        "b-countertop-quartz",
+        "b-zero-based-budget",
+        "b-oq-half-marathon",
+        "b-rel-fun-money-budget",
+        "b-kitchen-contractor-brightline",
+        "b-thermostat-setpoints",
+        "b-rel-knee-atlas-mods"
+      ]
+    },
+    "fin-keep-adding-mercury": {
+      "after": false,
+      "after_relevant": [
+        "b-oq-basement-dehumidifier",
+        "b-mercury-growth-fund",
+        "b-mercury-food-lamb",
+        "b-mercury-dog",
+        "b-roth-total-market",
+        "b-mercury-food-salmon"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-oq-basement-dehumidifier",
+        "b-oq-refinance-spring",
+        "b-oq-half-marathon",
+        "b-mercury-growth-fund",
+        "b-hsa-invest-receipts",
+        "b-mercury-food-lamb",
+        "b-mercury-dog",
+        "b-roth-total-market",
+        "b-mercury-food-salmon",
+        "b-dog-walker-priya",
+        "b-roth-split-mercury",
+        "b-rel-garden-mercury",
+        "b-comm-address-as-robin",
+        "b-atorvastatin-daily",
+        "b-emergency-fund-six-months",
+        "b-oq-glucose-monitor",
+        "b-workout-evening-lifts",
+        "b-kitchen-contractor-halvorsen",
+        "b-bunched-charitable-giving"
+      ]
+    },
+    "fin-kitchen-cap-out-of-scope": {
+      "after": false,
+      "after_relevant": [
+        "b-kitchen-contractor-brightline",
+        "b-kitchen-contractor-halvorsen",
+        "b-kitchen-remodel-budget",
+        "b-countertop-butcher-block",
+        "b-emergency-fund-three-months",
+        "b-oq-fence-permit"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-kitchen-contractor-brightline",
+        "b-kitchen-contractor-halvorsen",
+        "b-kitchen-remodel-budget",
+        "b-countertop-butcher-block",
+        "b-emergency-fund-three-months",
+        "b-emergency-fund-six-months",
+        "b-countertop-quartz",
+        "b-oq-fence-permit",
+        "b-rel-knee-atlas-mods",
+        "b-countertop-marble",
+        "b-comm-us-units",
+        "b-left-knee-meniscus",
+        "b-mercury-food-salmon",
+        "b-workout-evening-lifts",
+        "b-oq-glucose-monitor",
+        "b-comm-concise-bullets",
+        "b-hsa-invest-receipts",
+        "b-dog-walker-priya",
+        "b-workout-morning-runs"
+      ]
+    },
+    "fin-knee-out-of-scope": {
+      "after": false,
+      "after_relevant": [
+        "b-oq-half-marathon",
+        "b-rel-knee-atlas-mods",
+        "b-left-knee-meniscus"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-oq-half-marathon",
+        "b-rel-knee-atlas-mods",
+        "b-left-knee-meniscus",
+        "b-workout-morning-runs",
+        "b-workout-evening-lifts",
+        "b-sunday-meal-prep",
+        "b-dog-walker-priya",
+        "b-countertop-quartz",
+        "b-bp-home-log",
+        "b-zero-based-budget",
+        "b-mercury-food-salmon",
+        "b-mercury-dog",
+        "b-rel-fun-money-budget",
+        "b-kitchen-contractor-brightline",
+        "b-mercury-food-lamb",
+        "b-thermostat-setpoints",
+        "b-rel-garden-mercury",
+        "b-no-cats-sam-allergy",
+        "b-oq-fence-permit"
+      ]
+    },
+    "fin-market-hours": {
+      "after": false,
+      "after_relevant": [
+        "b-dr-okafor-telehealth"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-mercury-food-salmon",
+        "b-dr-okafor-telehealth",
+        "b-mercury-food-lamb",
+        "b-comm-no-emoji",
+        "b-atlas-strength-program",
+        "b-diet-intermittent-fasting",
+        "b-oq-fence-permit",
+        "b-left-knee-meniscus",
+        "b-single-cashback-card",
+        "b-workout-morning-runs",
+        "b-workout-evening-lifts",
+        "b-dog-walker-priya",
+        "b-sunday-meal-prep",
+        "b-countertop-quartz",
+        "b-bp-home-log",
+        "b-zero-based-budget",
+        "b-mercury-dog",
+        "b-oq-half-marathon",
+        "b-rel-fun-money-budget"
+      ]
+    },
+    "fin-money-spreadsheet-review": {
+      "after": false,
+      "after_relevant": [
+        "b-roth-total-market",
+        "b-zero-based-budget"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-roth-total-market",
+        "b-zero-based-budget",
+        "b-kitchen-contractor-brightline",
+        "b-cleaning-routine",
+        "b-countertop-quartz",
+        "b-workout-evening-lifts",
+        "b-workout-morning-runs",
+        "b-roth-split-mercury",
+        "b-no-cats-sam-allergy",
+        "b-dog-walker-priya",
+        "b-weekly-fun-money",
+        "b-water-heater-tankless",
+        "b-mercury-food-salmon",
+        "b-kitchen-contractor-halvorsen",
+        "b-mercury-food-lamb",
+        "b-bunched-charitable-giving",
+        "b-comm-no-emoji",
+        "b-emergency-fund-six-months",
+        "b-oq-refinance-spring"
+      ]
+    },
+    "fin-negation-stopped-fund": {
+      "after": false,
+      "after_relevant": [
+        "b-roth-total-market"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-roth-total-market",
+        "b-roth-split-mercury",
+        "b-mercury-food-salmon",
+        "b-single-cashback-card",
+        "b-atlas-strength-program",
+        "b-mercury-food-lamb",
+        "b-mercury-growth-fund",
+        "b-emergency-fund-six-months",
+        "b-oq-niece-529",
+        "b-left-knee-meniscus",
+        "b-oq-fence-permit",
+        "b-mercury-dog",
+        "b-atlas-credit-union-mortgage",
+        "b-weekly-fun-money",
+        "b-cleaning-routine",
+        "b-no-cats-sam-allergy",
+        "b-bunched-charitable-giving",
+        "b-emergency-fund-three-months",
+        "b-oq-refinance-spring"
+      ]
+    },
+    "fin-niece-college": {
+      "after": false,
+      "after_relevant": [
+        "b-oq-niece-529"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-oq-niece-529",
+        "b-mercury-food-salmon",
+        "b-oq-half-marathon",
+        "b-mercury-dog",
+        "b-oq-refinance-spring",
+        "b-hsa-invest-receipts",
+        "b-sleep-wind-down",
+        "b-penicillin-allergy",
+        "b-countertop-butcher-block",
+        "b-kitchen-contractor-brightline",
+        "b-comm-cite-sources",
+        "b-mercury-food-lamb",
+        "b-thermostat-setpoints",
+        "b-oq-glucose-monitor",
+        "b-rel-garden-mercury",
+        "b-kitchen-contractor-halvorsen",
+        "b-bp-home-log",
+        "b-single-cashback-card",
+        "b-dr-okafor-telehealth"
+      ]
+    },
+    "fin-rainy-day": {
+      "after": false,
+      "after_relevant": [
+        "b-thermostat-setpoints",
+        "b-caffeine-cutoff",
+        "b-diet-mediterranean-protein"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-hsa-invest-receipts",
+        "b-comm-address-as-robin",
+        "b-emergency-fund-three-months",
+        "b-comm-concise-bullets",
+        "b-dr-okafor-telehealth",
+        "b-thermostat-setpoints",
+        "b-oq-refinance-spring",
+        "b-caffeine-cutoff",
+        "b-cpa-joint-filing",
+        "b-diet-mediterranean-protein",
+        "b-oq-glucose-monitor",
+        "b-rel-garden-mercury",
+        "b-emergency-fund-six-months",
+        "b-kitchen-contractor-brightline",
+        "b-mercury-dog",
+        "b-kitchen-contractor-halvorsen",
+        "b-kitchen-remodel-budget",
+        "b-bp-home-log",
+        "b-bunched-charitable-giving"
+      ]
+    },
+    "fin-reading-goal-distractor": {
+      "after": false,
+      "after_relevant": [
+        "b-comm-no-emoji",
+        "b-oq-half-marathon",
+        "b-single-cashback-card",
+        "b-weekly-fun-money",
+        "b-bp-home-log",
+        "b-rel-fun-money-budget",
+        "b-bunched-charitable-giving",
+        "b-cpa-joint-filing",
+        "b-zero-based-budget"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-comm-no-emoji",
+        "b-oq-half-marathon",
+        "b-kitchen-remodel-budget",
+        "b-single-cashback-card",
+        "b-weekly-fun-money",
+        "b-bp-home-log",
+        "b-rel-fun-money-budget",
+        "b-bunched-charitable-giving",
+        "b-zero-based-budget",
+        "b-atorvastatin-daily",
+        "b-penicillin-allergy",
+        "b-mercury-dog",
+        "b-cpa-joint-filing",
+        "b-atlas-credit-union-mortgage",
+        "b-caffeine-cutoff",
+        "b-heat-pump-leaning",
+        "b-mercury-growth-fund",
+        "b-sleep-wind-down",
+        "b-rel-garden-mercury"
+      ]
+    },
+    "fin-refi-rate-dip": {
+      "after": false,
+      "after_relevant": [
+        "b-atlas-credit-union-mortgage",
+        "b-oq-refinance-spring"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-atlas-credit-union-mortgage",
+        "b-oq-refinance-spring",
+        "b-dr-okafor-telehealth",
+        "b-single-cashback-card",
+        "b-kitchen-contractor-brightline",
+        "b-emergency-fund-three-months",
+        "b-mercury-dog",
+        "b-comm-concise-bullets",
+        "b-kitchen-contractor-halvorsen",
+        "b-kitchen-remodel-budget",
+        "b-bp-home-log",
+        "b-bunched-charitable-giving",
+        "b-mercury-growth-fund",
+        "b-rel-fun-money-budget",
+        "b-heat-pump-leaning",
+        "b-cpa-joint-filing",
+        "b-no-cats-sam-allergy",
+        "b-weekly-fun-money",
+        "b-countertop-quartz"
+      ]
+    },
+    "fin-tax-software": {
+      "after": false,
+      "after_relevant": [
+        "b-cpa-joint-filing",
+        "b-oq-refinance-spring",
+        "b-comm-cite-sources"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-oq-half-marathon",
+        "b-cpa-joint-filing",
+        "b-oq-refinance-spring",
+        "b-mercury-food-salmon",
+        "b-comm-cite-sources",
+        "b-bunched-charitable-giving",
+        "b-mercury-food-lamb",
+        "b-kitchen-remodel-budget",
+        "b-rel-fun-money-budget",
+        "b-cleaning-routine",
+        "b-hsa-invest-receipts",
+        "b-zero-based-budget",
+        "b-atorvastatin-daily",
+        "b-weekly-fun-money"
+      ]
+    },
+    "hl-afternoon-latte": {
+      "after": false,
+      "after_relevant": [],
+      "before": false,
+      "before_relevant": [
+        "b-bp-home-log",
+        "b-kitchen-contractor-brightline",
+        "b-mercury-dog",
+        "b-kitchen-contractor-halvorsen",
+        "b-dr-okafor-telehealth",
+        "b-oq-niece-529",
+        "b-oq-glucose-monitor",
+        "b-mercury-food-lamb",
+        "b-weekly-fun-money",
+        "b-kitchen-remodel-budget",
+        "b-oq-half-marathon",
+        "b-rel-fun-money-budget",
+        "b-heat-pump-leaning",
+        "b-no-cats-sam-allergy",
+        "b-countertop-quartz",
+        "b-sleep-wind-down",
+        "b-single-cashback-card",
+        "b-atlas-strength-program",
+        "b-mercury-food-salmon"
+      ]
+    },
+    "hl-antibiotic-hives-pinned": {
+      "after": false,
+      "after_relevant": [
+        "b-bunched-charitable-giving"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-bunched-charitable-giving",
+        "b-oq-fence-permit",
+        "b-cleaning-routine",
+        "b-left-knee-meniscus",
+        "b-comm-no-emoji",
+        "b-emergency-fund-three-months",
+        "b-sleep-wind-down",
+        "b-rel-knee-atlas-mods",
+        "b-oq-half-marathon",
+        "b-weekly-fun-money",
+        "b-hsa-invest-receipts",
+        "b-zero-based-budget",
+        "b-emergency-fund-six-months",
+        "b-mercury-growth-fund",
+        "b-atlas-strength-program"
+      ]
+    },
+    "hl-atlas-one-word": {
+      "after": false,
+      "after_relevant": [
+        "b-atlas-strength-program",
+        "b-atlas-credit-union-mortgage",
+        "b-rel-knee-atlas-mods",
+        "b-oq-refinance-spring",
+        "b-left-knee-meniscus"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-atlas-strength-program",
+        "b-atlas-credit-union-mortgage",
+        "b-rel-knee-atlas-mods",
+        "b-oq-refinance-spring",
+        "b-left-knee-meniscus"
+      ]
+    },
+    "hl-bacon-keto": {
+      "after": false,
+      "after_relevant": [
+        "b-diet-intermittent-fasting",
+        "b-diet-keto",
+        "b-water-heater-tankless"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-diet-intermittent-fasting",
+        "b-diet-keto",
+        "b-water-heater-tankless",
+        "b-mercury-dog",
+        "b-no-cats-sam-allergy",
+        "b-countertop-quartz",
+        "b-bp-home-log",
+        "b-atlas-credit-union-mortgage",
+        "b-atlas-strength-program",
+        "b-kitchen-contractor-halvorsen",
+        "b-dr-okafor-telehealth",
+        "b-diet-mediterranean-protein",
+        "b-bunched-charitable-giving",
+        "b-weekly-fun-money",
+        "b-kitchen-remodel-budget",
+        "b-rel-fun-money-budget",
+        "b-heat-pump-leaning",
+        "b-left-knee-meniscus",
+        "b-mercury-food-salmon"
+      ]
+    },
+    "hl-dog-wrist-collision": {
+      "after": false,
+      "after_relevant": [
+        "b-dog-walker-priya",
+        "b-roth-total-market",
+        "b-diet-intermittent-fasting",
+        "b-mercury-food-lamb",
+        "b-mercury-growth-fund"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-dog-walker-priya",
+        "b-roth-total-market",
+        "b-mercury-dog",
+        "b-mercury-food-salmon",
+        "b-diet-intermittent-fasting",
+        "b-mercury-food-lamb",
+        "b-mercury-growth-fund",
+        "b-hsa-invest-receipts",
+        "b-diet-mediterranean-protein",
+        "b-workout-morning-runs",
+        "b-workout-evening-lifts",
+        "b-sunday-meal-prep",
+        "b-countertop-quartz",
+        "b-bp-home-log",
+        "b-roth-split-mercury",
+        "b-rel-garden-mercury",
+        "b-zero-based-budget",
+        "b-thermostat-setpoints",
+        "b-left-knee-meniscus"
+      ]
+    },
+    "hl-doomscrolling": {
+      "after": false,
+      "after_relevant": [
+        "b-sunday-meal-prep",
+        "b-oq-basement-dehumidifier",
+        "b-dr-okafor-telehealth",
+        "b-atlas-credit-union-mortgage"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-sunday-meal-prep",
+        "b-oq-basement-dehumidifier",
+        "b-dr-okafor-telehealth",
+        "b-atlas-credit-union-mortgage",
+        "b-workout-morning-runs",
+        "b-workout-evening-lifts",
+        "b-dog-walker-priya",
+        "b-countertop-quartz",
+        "b-bp-home-log",
+        "b-zero-based-budget",
+        "b-mercury-food-salmon",
+        "b-mercury-dog"
+      ]
+    },
+    "hl-early-alarm-superseded": {
+      "after": true,
+      "after_relevant": [
+        "b-workout-evening-lifts"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-workout-evening-lifts",
+        "b-workout-morning-runs",
+        "b-dr-okafor-telehealth",
+        "b-kitchen-contractor-brightline",
+        "b-oq-refinance-spring",
+        "b-oq-half-marathon",
+        "b-kitchen-contractor-halvorsen",
+        "b-left-knee-meniscus",
+        "b-hsa-invest-receipts",
+        "b-emergency-fund-six-months",
+        "b-bp-home-log",
+        "b-rel-garden-mercury",
+        "b-single-cashback-card",
+        "b-comm-no-emoji",
+        "b-oq-glucose-monitor",
+        "b-comm-cite-sources",
+        "b-emergency-fund-three-months",
+        "b-mercury-food-lamb",
+        "b-mercury-food-salmon"
+      ]
+    },
+    "hl-full-squats-relation": {
+      "after": false,
+      "after_relevant": [
+        "b-left-knee-meniscus",
+        "b-single-cashback-card"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-left-knee-meniscus",
+        "b-single-cashback-card",
+        "b-workout-evening-lifts",
+        "b-rel-knee-atlas-mods",
+        "b-roth-total-market",
+        "b-roth-split-mercury",
+        "b-thermostat-setpoints",
+        "b-caffeine-cutoff",
+        "b-diet-mediterranean-protein",
+        "b-atlas-credit-union-mortgage",
+        "b-workout-morning-runs",
+        "b-mercury-food-salmon",
+        "b-dog-walker-priya",
+        "b-bp-home-log",
+        "b-mercury-dog",
+        "b-sunday-meal-prep",
+        "b-countertop-quartz",
+        "b-zero-based-budget",
+        "b-comm-address-as-robin"
+      ]
+    },
+    "hl-fund-out-of-scope": {
+      "after": false,
+      "after_relevant": [
+        "b-roth-split-mercury",
+        "b-roth-total-market",
+        "b-mercury-growth-fund",
+        "b-mercury-dog"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-roth-split-mercury",
+        "b-roth-total-market",
+        "b-mercury-growth-fund",
+        "b-mercury-dog",
+        "b-oq-half-marathon",
+        "b-kitchen-remodel-budget",
+        "b-bunched-charitable-giving",
+        "b-cpa-joint-filing",
+        "b-mercury-food-lamb",
+        "b-atlas-credit-union-mortgage",
+        "b-zero-based-budget",
+        "b-mercury-food-salmon",
+        "b-dog-walker-priya",
+        "b-rel-garden-mercury",
+        "b-kitchen-contractor-brightline",
+        "b-rel-fun-money-budget",
+        "b-no-cats-sam-allergy",
+        "b-kitchen-contractor-halvorsen",
+        "b-heat-pump-leaning"
+      ]
+    },
+    "hl-half-marathon-knee": {
+      "after": false,
+      "after_relevant": [
+        "b-oq-half-marathon"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-oq-half-marathon",
+        "b-oq-refinance-spring",
+        "b-hsa-invest-receipts",
+        "b-rel-garden-mercury",
+        "b-emergency-fund-six-months",
+        "b-bp-home-log",
+        "b-single-cashback-card",
+        "b-sleep-wind-down",
+        "b-kitchen-contractor-brightline",
+        "b-countertop-butcher-block",
+        "b-mercury-food-lamb",
+        "b-thermostat-setpoints",
+        "b-comm-no-emoji",
+        "b-rel-fun-money-budget",
+        "b-kitchen-contractor-halvorsen",
+        "b-no-cats-sam-allergy",
+        "b-oq-fence-permit",
+        "b-oq-basement-dehumidifier",
+        "b-kitchen-remodel-budget"
+      ]
+    },
+    "hl-hand-bones": {
+      "after": true,
+      "after_relevant": [],
+      "before": false,
+      "before_relevant": [
+        "b-comm-us-units",
+        "b-left-knee-meniscus",
+        "b-emergency-fund-three-months",
+        "b-rel-knee-atlas-mods",
+        "b-emergency-fund-six-months",
+        "b-comm-concise-bullets",
+        "b-hsa-invest-receipts",
+        "b-oq-glucose-monitor",
+        "b-cpa-joint-filing",
+        "b-dr-okafor-telehealth",
+        "b-rel-garden-mercury",
+        "b-comm-no-emoji",
+        "b-rel-fun-money-budget",
+        "b-no-cats-sam-allergy",
+        "b-oq-fence-permit",
+        "b-oq-basement-dehumidifier",
+        "b-kitchen-remodel-budget",
+        "b-heat-pump-leaning",
+        "b-oq-refinance-spring"
+      ]
+    },
+    "hl-juggling-plan": {
+      "after": false,
+      "after_relevant": [
+        "b-atlas-strength-program",
+        "b-bp-home-log",
+        "b-weekly-fun-money",
+        "b-emergency-fund-three-months",
+        "b-oq-niece-529",
+        "b-oq-basement-dehumidifier",
+        "b-countertop-marble",
+        "b-caffeine-cutoff",
+        "b-sunday-meal-prep",
+        "b-oq-half-marathon",
+        "b-left-knee-meniscus",
+        "b-raised-bed-garden"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-atlas-strength-program",
+        "b-bp-home-log",
+        "b-weekly-fun-money",
+        "b-emergency-fund-three-months",
+        "b-oq-niece-529",
+        "b-bunched-charitable-giving",
+        "b-oq-basement-dehumidifier",
+        "b-countertop-marble",
+        "b-caffeine-cutoff",
+        "b-sunday-meal-prep",
+        "b-atlas-credit-union-mortgage",
+        "b-emergency-fund-six-months",
+        "b-oq-half-marathon",
+        "b-left-knee-meniscus",
+        "b-diet-mediterranean-protein",
+        "b-raised-bed-garden",
+        "b-kitchen-remodel-budget",
+        "b-kitchen-contractor-brightline",
+        "b-mercury-growth-fund"
+      ]
+    },
+    "hl-knee-and-coffee-multi": {
+      "after": false,
+      "after_relevant": [
+        "b-workout-evening-lifts",
+        "b-caffeine-cutoff",
+        "b-sleep-wind-down"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-workout-evening-lifts",
+        "b-oq-half-marathon",
+        "b-bunched-charitable-giving",
+        "b-caffeine-cutoff",
+        "b-sleep-wind-down",
+        "b-left-knee-meniscus",
+        "b-mercury-growth-fund",
+        "b-rel-knee-atlas-mods",
+        "b-hsa-invest-receipts",
+        "b-emergency-fund-six-months",
+        "b-atlas-strength-program",
+        "b-roth-total-market",
+        "b-oq-fence-permit",
+        "b-cleaning-routine",
+        "b-oq-refinance-spring",
+        "b-raised-bed-garden",
+        "b-no-cats-sam-allergy",
+        "b-mercury-food-salmon",
+        "b-mercury-dog"
+      ]
+    },
+    "hl-lab-followup-visit": {
+      "after": true,
+      "after_relevant": [
+        "b-dr-okafor-telehealth"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-dr-okafor-telehealth",
+        "b-oq-half-marathon",
+        "b-mercury-growth-fund",
+        "b-kitchen-contractor-brightline",
+        "b-atorvastatin-daily",
+        "b-rel-fun-money-budget",
+        "b-oq-refinance-spring",
+        "b-oq-basement-dehumidifier",
+        "b-sleep-wind-down",
+        "b-comm-cite-sources",
+        "b-roth-split-mercury",
+        "b-water-heater-tankless",
+        "b-hsa-invest-receipts",
+        "b-emergency-fund-six-months",
+        "b-rel-garden-mercury",
+        "b-bp-home-log",
+        "b-single-cashback-card",
+        "b-comm-concise-bullets",
+        "b-oq-fence-permit"
+      ]
+    },
+    "hl-language-streak-distractor": {
+      "after": false,
+      "after_relevant": [
+        "b-bp-home-log",
+        "b-sunday-meal-prep"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-bp-home-log",
+        "b-sunday-meal-prep",
+        "b-rel-fun-money-budget",
+        "b-cleaning-routine",
+        "b-oq-niece-529",
+        "b-oq-glucose-monitor",
+        "b-mercury-food-lamb",
+        "b-sleep-wind-down",
+        "b-oq-half-marathon",
+        "b-single-cashback-card",
+        "b-mercury-food-salmon",
+        "b-emergency-fund-six-months",
+        "b-countertop-butcher-block",
+        "b-kitchen-contractor-brightline",
+        "b-comm-cite-sources",
+        "b-thermostat-setpoints",
+        "b-rel-garden-mercury",
+        "b-kitchen-contractor-halvorsen",
+        "b-dr-okafor-telehealth"
+      ]
+    },
+    "hl-missed-pill": {
+      "after": true,
+      "after_relevant": [
+        "b-atorvastatin-daily"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-atorvastatin-daily",
+        "b-oq-half-marathon",
+        "b-oq-refinance-spring",
+        "b-hsa-invest-receipts",
+        "b-raised-bed-garden",
+        "b-caffeine-cutoff",
+        "b-oq-basement-dehumidifier",
+        "b-bunched-charitable-giving"
+      ]
+    },
+    "hl-quartz-out-of-scope": {
+      "after": false,
+      "after_relevant": [
+        "b-kitchen-remodel-budget",
+        "b-countertop-quartz"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-kitchen-remodel-budget",
+        "b-heat-pump-leaning",
+        "b-countertop-quartz",
+        "b-oq-half-marathon",
+        "b-rel-fun-money-budget",
+        "b-kitchen-contractor-brightline",
+        "b-mercury-food-lamb",
+        "b-thermostat-setpoints",
+        "b-rel-knee-atlas-mods",
+        "b-dog-walker-priya",
+        "b-rel-garden-mercury",
+        "b-no-cats-sam-allergy",
+        "b-oq-fence-permit",
+        "b-kitchen-contractor-halvorsen",
+        "b-oq-basement-dehumidifier",
+        "b-atlas-strength-program",
+        "b-mercury-food-salmon",
+        "b-workout-morning-runs",
+        "b-bunched-charitable-giving"
+      ]
+    },
+    "hl-sugar-sensor": {
+      "after": false,
+      "after_relevant": [
+        "b-oq-glucose-monitor",
+        "b-bp-home-log"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-oq-glucose-monitor",
+        "b-bp-home-log",
+        "b-workout-evening-lifts",
+        "b-bunched-charitable-giving",
+        "b-emergency-fund-six-months",
+        "b-mercury-growth-fund",
+        "b-raised-bed-garden",
+        "b-caffeine-cutoff",
+        "b-comm-no-emoji",
+        "b-emergency-fund-three-months",
+        "b-sleep-wind-down",
+        "b-rel-knee-atlas-mods",
+        "b-oq-half-marathon",
+        "b-weekly-fun-money",
+        "b-hsa-invest-receipts",
+        "b-zero-based-budget",
+        "b-left-knee-meniscus",
+        "b-atlas-strength-program"
+      ]
+    },
+    "hl-sunday-batch-cook": {
+      "after": false,
+      "after_relevant": [
+        "b-sunday-meal-prep"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-sunday-meal-prep",
+        "b-oq-half-marathon",
+        "b-zero-based-budget",
+        "b-atlas-strength-program",
+        "b-mercury-food-salmon",
+        "b-mercury-food-lamb",
+        "b-kitchen-remodel-budget",
+        "b-oq-refinance-spring",
+        "b-weekly-fun-money",
+        "b-hsa-invest-receipts",
+        "b-countertop-marble",
+        "b-left-knee-meniscus",
+        "b-oq-niece-529"
+      ]
+    },
+    "home-aphids-relation": {
+      "after": false,
+      "after_relevant": [
+        "b-roth-total-market"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-countertop-quartz",
+        "b-roth-total-market",
+        "b-mercury-food-salmon",
+        "b-comm-us-units",
+        "b-mercury-food-lamb",
+        "b-rel-knee-atlas-mods",
+        "b-oq-half-marathon",
+        "b-oq-refinance-spring",
+        "b-hsa-invest-receipts",
+        "b-left-knee-meniscus",
+        "b-atlas-strength-program"
+      ]
+    },
+    "home-bathroom-paint": {
+      "after": true,
+      "after_relevant": [],
+      "before": false,
+      "before_relevant": [
+        "b-mercury-food-salmon",
+        "b-oq-half-marathon",
+        "b-mercury-food-lamb",
+        "b-zero-based-budget",
+        "b-rel-fun-money-budget",
+        "b-atlas-strength-program",
+        "b-atorvastatin-daily",
+        "b-sunday-meal-prep",
+        "b-bunched-charitable-giving",
+        "b-workout-morning-runs",
+        "b-countertop-quartz",
+        "b-bp-home-log",
+        "b-weekly-fun-money",
+        "b-comm-no-emoji",
+        "b-workout-evening-lifts",
+        "b-hsa-invest-receipts",
+        "b-emergency-fund-three-months",
+        "b-dog-walker-priya",
+        "b-emergency-fund-six-months"
+      ]
+    },
+    "home-bedroom-cold": {
+      "after": false,
+      "after_relevant": [
+        "b-thermostat-setpoints",
+        "b-sleep-wind-down",
+        "b-atorvastatin-daily"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-thermostat-setpoints",
+        "b-atlas-strength-program",
+        "b-mercury-food-salmon",
+        "b-kitchen-remodel-budget",
+        "b-single-cashback-card",
+        "b-bp-home-log",
+        "b-mercury-growth-fund",
+        "b-mercury-food-lamb",
+        "b-mercury-dog",
+        "b-sleep-wind-down",
+        "b-atorvastatin-daily",
+        "b-emergency-fund-three-months",
+        "b-dog-walker-priya",
+        "b-workout-morning-runs",
+        "b-atlas-credit-union-mortgage",
+        "b-rel-fun-money-budget",
+        "b-heat-pump-leaning",
+        "b-kitchen-contractor-brightline",
+        "b-emergency-fund-six-months"
+      ]
+    },
+    "home-book-club-schedule": {
+      "after": false,
+      "after_relevant": [
+        "b-oq-half-marathon"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-oq-half-marathon",
+        "b-oq-niece-529",
+        "b-cleaning-routine",
+        "b-atlas-strength-program",
+        "b-kitchen-remodel-budget",
+        "b-mercury-food-salmon",
+        "b-zero-based-budget",
+        "b-sunday-meal-prep",
+        "b-countertop-marble",
+        "b-atlas-credit-union-mortgage",
+        "b-mercury-dog",
+        "b-mercury-growth-fund",
+        "b-oq-glucose-monitor",
+        "b-mercury-food-lamb",
+        "b-sleep-wind-down",
+        "b-bp-home-log",
+        "b-single-cashback-card",
+        "b-emergency-fund-six-months",
+        "b-penicillin-allergy"
+      ]
+    },
+    "home-contractor-current": {
+      "after": false,
+      "after_relevant": [
+        "b-kitchen-contractor-brightline",
+        "b-kitchen-remodel-budget",
+        "b-kitchen-contractor-halvorsen",
+        "b-countertop-butcher-block",
+        "b-countertop-quartz",
+        "b-countertop-marble"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-kitchen-contractor-brightline",
+        "b-kitchen-remodel-budget",
+        "b-kitchen-contractor-halvorsen",
+        "b-countertop-butcher-block",
+        "b-countertop-quartz",
+        "b-oq-fence-permit",
+        "b-left-knee-meniscus",
+        "b-cleaning-routine",
+        "b-countertop-marble",
+        "b-mercury-dog",
+        "b-rel-fun-money-budget",
+        "b-heat-pump-leaning",
+        "b-atlas-strength-program",
+        "b-bp-home-log",
+        "b-emergency-fund-three-months",
+        "b-bunched-charitable-giving",
+        "b-comm-concise-bullets",
+        "b-mercury-growth-fund",
+        "b-cpa-joint-filing"
+      ]
+    },
+    "home-counter-typo": {
+      "after": false,
+      "after_relevant": [
+        "b-roth-total-market",
+        "b-bunched-charitable-giving",
+        "b-roth-split-mercury"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-roth-total-market",
+        "b-bunched-charitable-giving",
+        "b-roth-split-mercury",
+        "b-heat-pump-leaning",
+        "b-oq-fence-permit",
+        "b-zero-based-budget",
+        "b-mercury-growth-fund",
+        "b-kitchen-contractor-halvorsen",
+        "b-workout-evening-lifts",
+        "b-countertop-quartz",
+        "b-rel-garden-mercury",
+        "b-comm-concise-bullets",
+        "b-comm-no-emoji",
+        "b-cpa-joint-filing",
+        "b-emergency-fund-six-months",
+        "b-rel-fun-money-budget",
+        "b-atlas-credit-union-mortgage",
+        "b-weekly-fun-money",
+        "b-diet-mediterranean-protein"
+      ]
+    },
+    "home-dog-bowl-paraphrase": {
+      "after": false,
+      "after_relevant": [
+        "b-mercury-food-salmon",
+        "b-rel-garden-mercury",
+        "b-mercury-food-lamb",
+        "b-mercury-dog",
+        "b-rel-knee-atlas-mods",
+        "b-sunday-meal-prep",
+        "b-roth-total-market",
+        "b-dog-walker-priya",
+        "b-raised-bed-garden"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-mercury-food-salmon",
+        "b-rel-garden-mercury",
+        "b-oq-refinance-spring",
+        "b-atlas-strength-program",
+        "b-mercury-food-lamb",
+        "b-hsa-invest-receipts",
+        "b-mercury-dog",
+        "b-rel-knee-atlas-mods",
+        "b-sunday-meal-prep",
+        "b-roth-total-market",
+        "b-dog-walker-priya",
+        "b-comm-address-as-robin",
+        "b-oq-half-marathon",
+        "b-mercury-growth-fund",
+        "b-comm-no-emoji",
+        "b-emergency-fund-six-months",
+        "b-rel-fun-money-budget",
+        "b-oq-fence-permit",
+        "b-kitchen-remodel-budget"
+      ]
+    },
+    "home-fence-resolved": {
+      "after": false,
+      "after_relevant": [
+        "b-oq-fence-permit"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-oq-fence-permit",
+        "b-sleep-wind-down",
+        "b-roth-total-market",
+        "b-single-cashback-card",
+        "b-oq-half-marathon",
+        "b-rel-fun-money-budget",
+        "b-hsa-invest-receipts",
+        "b-atlas-credit-union-mortgage",
+        "b-atorvastatin-daily",
+        "b-diet-mediterranean-protein",
+        "b-oq-niece-529",
+        "b-oq-glucose-monitor",
+        "b-sunday-meal-prep",
+        "b-weekly-fun-money",
+        "b-diet-keto",
+        "b-oq-basement-dehumidifier",
+        "b-zero-based-budget",
+        "b-mercury-food-lamb",
+        "b-caffeine-cutoff"
+      ]
+    },
+    "home-floor-cleaner-paraphrase": {
+      "after": false,
+      "after_relevant": [
+        "b-mercury-food-lamb"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-mercury-food-lamb",
+        "b-oq-half-marathon",
+        "b-oq-refinance-spring",
+        "b-hsa-invest-receipts",
+        "b-workout-morning-runs",
+        "b-thermostat-setpoints",
+        "b-comm-cite-sources",
+        "b-sleep-wind-down",
+        "b-kitchen-remodel-budget",
+        "b-comm-concise-bullets",
+        "b-dog-walker-priya",
+        "b-caffeine-cutoff",
+        "b-oq-basement-dehumidifier",
+        "b-bp-home-log",
+        "b-water-heater-tankless",
+        "b-mercury-growth-fund",
+        "b-atorvastatin-daily",
+        "b-atlas-credit-union-mortgage",
+        "b-rel-fun-money-budget"
+      ]
+    },
+    "home-fund-shares-out-of-scope": {
+      "after": false,
+      "after_relevant": [
+        "b-roth-total-market"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-roth-total-market",
+        "b-comm-us-units",
+        "b-kitchen-remodel-budget",
+        "b-rel-knee-atlas-mods",
+        "b-oq-half-marathon",
+        "b-left-knee-meniscus",
+        "b-zero-based-budget",
+        "b-mercury-growth-fund",
+        "b-mercury-food-lamb",
+        "b-mercury-dog",
+        "b-emergency-fund-three-months",
+        "b-mercury-food-salmon",
+        "b-comm-concise-bullets",
+        "b-oq-glucose-monitor",
+        "b-cpa-joint-filing",
+        "b-dr-okafor-telehealth",
+        "b-hsa-invest-receipts",
+        "b-roth-split-mercury",
+        "b-emergency-fund-six-months"
+      ]
+    },
+    "home-furnace-leaning": {
+      "after": true,
+      "after_relevant": [
+        "b-heat-pump-leaning"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-heat-pump-leaning",
+        "b-water-heater-tankless",
+        "b-zero-based-budget",
+        "b-mercury-food-salmon",
+        "b-atlas-strength-program",
+        "b-oq-fence-permit",
+        "b-mercury-food-lamb",
+        "b-bunched-charitable-giving",
+        "b-mercury-dog",
+        "b-emergency-fund-three-months",
+        "b-countertop-quartz",
+        "b-bp-home-log",
+        "b-weekly-fun-money",
+        "b-workout-morning-runs",
+        "b-mercury-growth-fund",
+        "b-comm-no-emoji",
+        "b-dog-walker-priya",
+        "b-workout-evening-lifts",
+        "b-sunday-meal-prep"
+      ]
+    },
+    "home-grocery-budget-distractor": {
+      "after": false,
+      "after_relevant": [
+        "b-rel-fun-money-budget",
+        "b-sunday-meal-prep",
+        "b-zero-based-budget"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-rel-fun-money-budget",
+        "b-sunday-meal-prep",
+        "b-zero-based-budget",
+        "b-oq-niece-529",
+        "b-oq-half-marathon",
+        "b-kitchen-remodel-budget",
+        "b-cleaning-routine",
+        "b-countertop-marble",
+        "b-oq-glucose-monitor",
+        "b-mercury-food-lamb",
+        "b-sleep-wind-down",
+        "b-bp-home-log",
+        "b-single-cashback-card",
+        "b-mercury-food-salmon",
+        "b-emergency-fund-six-months",
+        "b-penicillin-allergy",
+        "b-countertop-butcher-block",
+        "b-kitchen-contractor-brightline",
+        "b-comm-cite-sources"
+      ]
+    },
+    "home-lukewarm-water": {
+      "after": true,
+      "after_relevant": [
+        "b-water-heater-tankless"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-water-heater-tankless",
+        "b-sleep-wind-down",
+        "b-atlas-strength-program",
+        "b-hsa-invest-receipts",
+        "b-mercury-food-salmon",
+        "b-mercury-dog",
+        "b-roth-split-mercury",
+        "b-mercury-growth-fund",
+        "b-thermostat-setpoints",
+        "b-dog-walker-priya",
+        "b-mercury-food-lamb",
+        "b-left-knee-meniscus",
+        "b-countertop-butcher-block",
+        "b-kitchen-contractor-halvorsen",
+        "b-countertop-marble",
+        "b-bunched-charitable-giving",
+        "b-atlas-credit-union-mortgage",
+        "b-workout-evening-lifts",
+        "b-sunday-meal-prep"
+      ]
+    },
+    "home-mercury-isolation": {
+      "after": false,
+      "after_relevant": [
+        "b-mercury-food-salmon",
+        "b-mercury-food-lamb",
+        "b-mercury-growth-fund",
+        "b-mercury-dog",
+        "b-roth-total-market",
+        "b-roth-split-mercury",
+        "b-dog-walker-priya",
+        "b-rel-garden-mercury",
+        "b-raised-bed-garden"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-mercury-food-salmon",
+        "b-mercury-food-lamb",
+        "b-mercury-growth-fund",
+        "b-atlas-strength-program",
+        "b-mercury-dog",
+        "b-bunched-charitable-giving",
+        "b-emergency-fund-three-months",
+        "b-roth-total-market",
+        "b-weekly-fun-money",
+        "b-roth-split-mercury",
+        "b-dog-walker-priya",
+        "b-rel-garden-mercury",
+        "b-comm-no-emoji",
+        "b-sleep-wind-down",
+        "b-rel-knee-atlas-mods",
+        "b-oq-half-marathon",
+        "b-hsa-invest-receipts",
+        "b-zero-based-budget",
+        "b-emergency-fund-six-months"
+      ]
+    },
+    "home-mercury-one-word": {
+      "after": false,
+      "after_relevant": [
+        "b-mercury-growth-fund",
+        "b-mercury-food-lamb",
+        "b-mercury-dog",
+        "b-roth-total-market",
+        "b-mercury-food-salmon",
+        "b-roth-split-mercury",
+        "b-dog-walker-priya",
+        "b-rel-garden-mercury",
+        "b-raised-bed-garden"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-mercury-growth-fund",
+        "b-mercury-food-lamb",
+        "b-mercury-dog",
+        "b-roth-total-market",
+        "b-mercury-food-salmon",
+        "b-roth-split-mercury",
+        "b-dog-walker-priya",
+        "b-rel-garden-mercury",
+        "b-raised-bed-garden"
+      ]
+    },
+    "home-musty-basement": {
+      "after": false,
+      "after_relevant": [
+        "b-oq-basement-dehumidifier"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-oq-basement-dehumidifier",
+        "b-oq-half-marathon",
+        "b-rel-fun-money-budget",
+        "b-kitchen-contractor-brightline",
+        "b-mercury-food-lamb",
+        "b-thermostat-setpoints",
+        "b-rel-knee-atlas-mods",
+        "b-dog-walker-priya",
+        "b-rel-garden-mercury",
+        "b-oq-fence-permit",
+        "b-kitchen-contractor-halvorsen",
+        "b-atlas-strength-program",
+        "b-mercury-food-salmon",
+        "b-workout-morning-runs",
+        "b-bunched-charitable-giving",
+        "b-mercury-dog",
+        "b-comm-no-emoji",
+        "b-mercury-growth-fund",
+        "b-countertop-butcher-block"
+      ]
+    },
+    "home-protein-out-of-scope": {
+      "after": false,
+      "after_relevant": [
+        "b-diet-mediterranean-protein"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-diet-mediterranean-protein",
+        "b-emergency-fund-three-months",
+        "b-emergency-fund-six-months"
+      ]
+    },
+    "home-remodel-meeting-rambling": {
+      "after": false,
+      "after_relevant": [
+        "b-dog-walker-priya",
+        "b-kitchen-contractor-brightline",
+        "b-countertop-butcher-block",
+        "b-comm-no-emoji"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-dog-walker-priya",
+        "b-kitchen-contractor-halvorsen",
+        "b-kitchen-contractor-brightline",
+        "b-countertop-butcher-block",
+        "b-bp-home-log",
+        "b-mercury-food-salmon",
+        "b-workout-evening-lifts",
+        "b-kitchen-remodel-budget",
+        "b-penicillin-allergy",
+        "b-comm-no-emoji",
+        "b-sunday-meal-prep",
+        "b-mercury-food-lamb",
+        "b-single-cashback-card",
+        "b-weekly-fun-money",
+        "b-mercury-dog",
+        "b-countertop-quartz",
+        "b-zero-based-budget",
+        "b-atlas-strength-program",
+        "b-heat-pump-leaning"
+      ]
+    },
+    "home-sam-cats-pinned": {
+      "after": false,
+      "after_relevant": [
+        "b-weekly-fun-money"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-weekly-fun-money",
+        "b-zero-based-budget",
+        "b-kitchen-remodel-budget",
+        "b-atlas-strength-program",
+        "b-emergency-fund-six-months",
+        "b-caffeine-cutoff",
+        "b-penicillin-allergy",
+        "b-sunday-meal-prep",
+        "b-mercury-growth-fund",
+        "b-atlas-credit-union-mortgage",
+        "b-mercury-food-salmon",
+        "b-diet-mediterranean-protein",
+        "b-bp-home-log",
+        "b-oq-half-marathon",
+        "b-emergency-fund-three-months",
+        "b-raised-bed-garden",
+        "b-dog-walker-priya",
+        "b-bunched-charitable-giving",
+        "b-mercury-dog"
+      ]
+    },
+    "home-storm-prep": {
+      "after": false,
+      "after_relevant": [
+        "b-dr-okafor-telehealth",
+        "b-weekly-fun-money"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-kitchen-contractor-brightline",
+        "b-oq-half-marathon",
+        "b-dr-okafor-telehealth",
+        "b-mercury-food-salmon",
+        "b-oq-refinance-spring",
+        "b-weekly-fun-money",
+        "b-mercury-growth-fund",
+        "b-atlas-strength-program",
+        "b-hsa-invest-receipts",
+        "b-emergency-fund-six-months",
+        "b-mercury-dog",
+        "b-bp-home-log",
+        "b-single-cashback-card",
+        "b-mercury-food-lamb",
+        "b-rel-garden-mercury",
+        "b-oq-basement-dehumidifier",
+        "b-oq-glucose-monitor",
+        "b-kitchen-remodel-budget",
+        "b-oq-niece-529"
+      ]
+    },
+    "home-unrelated-trivia": {
+      "after": true,
+      "after_relevant": [],
+      "before": false,
+      "before_relevant": [
+        "b-atlas-strength-program",
+        "b-mercury-food-salmon",
+        "b-mercury-food-lamb",
+        "b-mercury-growth-fund",
+        "b-bunched-charitable-giving",
+        "b-mercury-dog",
+        "b-comm-no-emoji",
+        "b-emergency-fund-three-months",
+        "b-oq-half-marathon",
+        "b-rel-knee-atlas-mods",
+        "b-sleep-wind-down",
+        "b-hsa-invest-receipts",
+        "b-weekly-fun-money",
+        "b-zero-based-budget",
+        "b-emergency-fund-six-months",
+        "b-rel-fun-money-budget",
+        "b-kitchen-contractor-brightline",
+        "b-thermostat-setpoints",
+        "b-dog-walker-priya"
+      ]
+    },
+    "home-walker-negation": {
+      "after": false,
+      "after_relevant": [
+        "b-mercury-food-salmon",
+        "b-dog-walker-priya",
+        "b-mercury-dog",
+        "b-mercury-food-lamb"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-mercury-food-salmon",
+        "b-dog-walker-priya",
+        "b-mercury-dog",
+        "b-mercury-food-lamb",
+        "b-comm-no-emoji",
+        "b-single-cashback-card",
+        "b-bunched-charitable-giving",
+        "b-rel-knee-atlas-mods",
+        "b-rel-garden-mercury",
+        "b-mercury-growth-fund",
+        "b-oq-half-marathon",
+        "b-emergency-fund-six-months",
+        "b-bp-home-log",
+        "b-atlas-strength-program",
+        "b-atlas-credit-union-mortgage",
+        "b-atorvastatin-daily",
+        "b-workout-evening-lifts",
+        "b-workout-morning-runs",
+        "b-raised-bed-garden"
+      ]
+    },
+    "uni-format-prefs": {
+      "after": false,
+      "after_relevant": [
+        "b-comm-concise-bullets"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-comm-concise-bullets",
+        "b-kitchen-contractor-brightline",
+        "b-comm-us-units",
+        "b-comm-cite-sources",
+        "b-emergency-fund-three-months",
+        "b-oq-glucose-monitor",
+        "b-cpa-joint-filing",
+        "b-dr-okafor-telehealth",
+        "b-hsa-invest-receipts",
+        "b-emergency-fund-six-months"
+      ]
+    },
+    "uni-med-sources-mixed-scope": {
+      "after": false,
+      "after_relevant": [
+        "b-single-cashback-card",
+        "b-atlas-credit-union-mortgage"
+      ],
+      "before": false,
+      "before_relevant": [
+        "b-single-cashback-card",
+        "b-kitchen-contractor-brightline",
+        "b-workout-evening-lifts",
+        "b-atlas-credit-union-mortgage",
+        "b-mercury-growth-fund",
+        "b-atorvastatin-daily",
+        "b-workout-morning-runs",
+        "b-oq-half-marathon",
+        "b-rel-fun-money-budget",
+        "b-dog-walker-priya",
+        "b-emergency-fund-six-months",
+        "b-cleaning-routine",
+        "b-water-heater-tankless",
+        "b-raised-bed-garden",
+        "b-caffeine-cutoff",
+        "b-bunched-charitable-giving",
+        "b-comm-concise-bullets",
+        "b-kitchen-contractor-halvorsen"
+      ]
+    },
+    "uni-name-pinned": {
+      "after": true,
+      "after_relevant": [],
+      "before": false,
+      "before_relevant": [
+        "b-kitchen-contractor-brightline",
+        "b-mercury-food-salmon",
+        "b-mercury-food-lamb",
+        "b-atlas-strength-program",
+        "b-sleep-wind-down",
+        "b-penicillin-allergy",
+        "b-countertop-butcher-block",
+        "b-comm-cite-sources",
+        "b-thermostat-setpoints",
+        "b-oq-niece-529",
+        "b-oq-glucose-monitor",
+        "b-oq-half-marathon",
+        "b-rel-garden-mercury",
+        "b-kitchen-contractor-halvorsen",
+        "b-bp-home-log",
+        "b-single-cashback-card",
+        "b-dr-okafor-telehealth",
+        "b-emergency-fund-six-months",
+        "b-mercury-dog"
+      ]
+    },
+    "uni-units": {
+      "after": false,
+      "after_relevant": [],
+      "before": false,
+      "before_relevant": [
+        "b-comm-cite-sources",
+        "b-sleep-wind-down",
+        "b-comm-concise-bullets",
+        "b-oq-basement-dehumidifier",
+        "b-water-heater-tankless",
+        "b-atorvastatin-daily",
+        "b-mercury-growth-fund",
+        "b-penicillin-allergy",
+        "b-countertop-butcher-block",
+        "b-kitchen-contractor-brightline",
+        "b-mercury-food-lamb",
+        "b-thermostat-setpoints",
+        "b-oq-niece-529",
+        "b-oq-glucose-monitor",
+        "b-oq-half-marathon",
+        "b-rel-garden-mercury",
+        "b-kitchen-contractor-halvorsen",
+        "b-bp-home-log",
+        "b-single-cashback-card"
+      ]
+    }
+  },
+  "returned_count": {
+    "after_mean": 2.686,
+    "before_mean": 17.971
+  }
+}

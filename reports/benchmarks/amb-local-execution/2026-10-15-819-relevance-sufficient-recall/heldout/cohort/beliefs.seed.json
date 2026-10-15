@@ -1,0 +1,1104 @@
+[
+  {
+    "_id": "b-mercury-dog",
+    "user_id": "test-user",
+    "type": "entity",
+    "canonical_name": "mercury_dog",
+    "aliases": [
+      "Mercury",
+      "Merc"
+    ],
+    "content": "Mercury is the user's six-year-old border collie mix; he is allergic to chicken and gets very anxious during thunderstorms.",
+    "why_it_matters": "Care, food and comfort decisions for the dog depend on his allergy and storm anxiety.",
+    "scope": [
+      "domain:home"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.97,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2025-11-02T00:00:00Z"
+  },
+  {
+    "_id": "b-mercury-food-lamb",
+    "user_id": "test-user",
+    "type": "preference",
+    "canonical_name": "mercury_food",
+    "aliases": [],
+    "content": "Feeds Mercury a lamb-and-rice kibble from the local pet store.",
+    "why_it_matters": "Determines what food to buy for the dog.",
+    "scope": [
+      "domain:home"
+    ],
+    "epistemic_status": "superseded",
+    "confidence": 0.8,
+    "pinned": false,
+    "superseded_by": "b-mercury-food-salmon",
+    "resolved_at": null,
+    "created_at": "2025-11-02T00:00:00Z"
+  },
+  {
+    "_id": "b-mercury-food-salmon",
+    "user_id": "test-user",
+    "type": "preference",
+    "canonical_name": "mercury_food",
+    "aliases": [],
+    "content": "Used to feed Mercury lamb-and-rice kibble; switched to a salmon-and-potato limited-ingredient food on the vet's advice.",
+    "why_it_matters": "Determines what food to buy for the dog and what to avoid substituting.",
+    "scope": [
+      "domain:home"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.92,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2026-04-18T00:00:00Z"
+  },
+  {
+    "_id": "b-dog-walker-priya",
+    "user_id": "test-user",
+    "type": "decision",
+    "canonical_name": "dog_walker_arrangement",
+    "aliases": [
+      "Priya"
+    ],
+    "content": "Hired Priya, the neighbors' teenager, to walk Mercury at noon on Tuesdays and Thursdays.",
+    "why_it_matters": "Explains who has house access midday and when the dog gets exercise.",
+    "scope": [
+      "domain:home"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.9,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2026-02-10T00:00:00Z"
+  },
+  {
+    "_id": "b-kitchen-contractor-brightline",
+    "user_id": "test-user",
+    "type": "decision",
+    "canonical_name": "kitchen_contractor",
+    "aliases": [
+      "BrightLine"
+    ],
+    "content": "Chose BrightLine Renovations to do the kitchen remodel.",
+    "why_it_matters": "Identifies who is responsible for the remodel work.",
+    "scope": [
+      "domain:home"
+    ],
+    "epistemic_status": "superseded",
+    "confidence": 0.75,
+    "pinned": false,
+    "superseded_by": "b-kitchen-contractor-halvorsen",
+    "resolved_at": null,
+    "created_at": "2026-01-08T00:00:00Z"
+  },
+  {
+    "_id": "b-kitchen-contractor-halvorsen",
+    "user_id": "test-user",
+    "type": "decision",
+    "canonical_name": "kitchen_contractor",
+    "aliases": [
+      "Halvorsen"
+    ],
+    "content": "Switched the kitchen remodel to Halvorsen Builders after BrightLine Renovations kept missing site visits.",
+    "why_it_matters": "Identifies who is responsible for the remodel work and who to coordinate with.",
+    "scope": [
+      "domain:home"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.93,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2026-03-21T00:00:00Z"
+  },
+  {
+    "_id": "b-countertop-butcher-block",
+    "user_id": "test-user",
+    "type": "decision",
+    "canonical_name": "kitchen_countertop_material",
+    "aliases": [],
+    "content": "Planned butcher-block counters for the kitchen remodel.",
+    "why_it_matters": "Drives material orders and install timing.",
+    "scope": [
+      "domain:home"
+    ],
+    "epistemic_status": "superseded",
+    "confidence": 0.7,
+    "pinned": false,
+    "superseded_by": "b-countertop-marble",
+    "resolved_at": null,
+    "created_at": "2026-01-08T00:00:00Z"
+  },
+  {
+    "_id": "b-countertop-marble",
+    "user_id": "test-user",
+    "type": "decision",
+    "canonical_name": "kitchen_countertop_material",
+    "aliases": [],
+    "content": "Changed the counter plan from butcher block to Carrara marble.",
+    "why_it_matters": "Drives material orders and install timing.",
+    "scope": [
+      "domain:home"
+    ],
+    "epistemic_status": "superseded",
+    "confidence": 0.75,
+    "pinned": false,
+    "superseded_by": "b-countertop-quartz",
+    "resolved_at": null,
+    "created_at": "2026-02-14T00:00:00Z"
+  },
+  {
+    "_id": "b-countertop-quartz",
+    "user_id": "test-user",
+    "type": "decision",
+    "canonical_name": "kitchen_countertop_material",
+    "aliases": [],
+    "content": "Moved away from marble over staining worries; the final pick is a white quartz with light veining.",
+    "why_it_matters": "Drives material orders and guards against being upsold on stone.",
+    "scope": [
+      "domain:home"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.94,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2026-04-02T00:00:00Z"
+  },
+  {
+    "_id": "b-kitchen-remodel-budget",
+    "user_id": "test-user",
+    "type": "decision",
+    "canonical_name": "kitchen_remodel_budget",
+    "aliases": [],
+    "content": "The kitchen remodel is capped at $38,000 all-in, including a 10% contingency.",
+    "why_it_matters": "Any change order has to fit under this cap.",
+    "scope": [
+      "domain:home"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.92,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2026-01-20T00:00:00Z"
+  },
+  {
+    "_id": "b-cleaning-routine",
+    "user_id": "test-user",
+    "type": "preference",
+    "canonical_name": "household_cleaning_routine",
+    "aliases": [],
+    "content": "Keeps a weekly cleaning schedule (vacuuming Saturdays, bathrooms Sundays) and only uses fragrance-free products because scents trigger headaches.",
+    "why_it_matters": "Affects which cleaning products to buy and when chores happen.",
+    "scope": [
+      "domain:home"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.88,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2025-12-01T00:00:00Z"
+  },
+  {
+    "_id": "b-thermostat-setpoints",
+    "user_id": "test-user",
+    "type": "preference",
+    "canonical_name": "thermostat_setpoints",
+    "aliases": [],
+    "content": "Keeps the smart thermostat at 66 F overnight and 70 F during the day.",
+    "why_it_matters": "Baseline for comfort and heating-cost questions.",
+    "scope": [
+      "domain:home"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.85,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2025-12-12T00:00:00Z"
+  },
+  {
+    "_id": "b-raised-bed-garden",
+    "user_id": "test-user",
+    "type": "preference",
+    "canonical_name": "raised_bed_garden",
+    "aliases": [],
+    "content": "Grows San Marzano tomatoes and herbs in two raised beds and avoids synthetic pesticides.",
+    "why_it_matters": "Shapes advice about garden pests and plantings.",
+    "scope": [
+      "domain:home"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.87,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2026-04-25T00:00:00Z"
+  },
+  {
+    "_id": "b-rel-garden-mercury",
+    "user_id": "test-user",
+    "type": "relation",
+    "canonical_name": "garden_dog_safety_link",
+    "aliases": [],
+    "content": "Nothing toxic (synthetic sprays, cocoa-hull mulch) goes in the raised beds because Mercury digs in them.",
+    "why_it_matters": "Any garden treatment must be safe for the dog.",
+    "scope": [
+      "domain:home"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.9,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2026-05-03T00:00:00Z",
+    "participants": [
+      "b-raised-bed-garden",
+      "b-mercury-dog"
+    ]
+  },
+  {
+    "_id": "b-oq-basement-dehumidifier",
+    "user_id": "test-user",
+    "type": "open_question",
+    "canonical_name": "basement_dehumidifier_choice",
+    "aliases": [],
+    "content": "Undecided whether to install a whole-house dehumidifier in the basement or keep running two portable units.",
+    "why_it_matters": "The basement has recurring dampness that needs a long-term fix.",
+    "scope": [
+      "domain:home"
+    ],
+    "epistemic_status": "exploratory",
+    "confidence": 0.6,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2026-08-30T00:00:00Z"
+  },
+  {
+    "_id": "b-oq-fence-permit",
+    "user_id": "test-user",
+    "type": "open_question",
+    "canonical_name": "backyard_fence_permit",
+    "aliases": [],
+    "content": "Does the town allow a 6-foot backyard privacy fence? Resolved: allowed with a permit, which was filed in June.",
+    "why_it_matters": "Determined whether the fence project could proceed.",
+    "scope": [
+      "domain:home"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.9,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": "2026-06-12T00:00:00Z",
+    "created_at": "2026-05-20T00:00:00Z"
+  },
+  {
+    "_id": "b-no-cats-sam-allergy",
+    "user_id": "test-user",
+    "type": "decision",
+    "canonical_name": "no_cats_household_rule",
+    "aliases": [],
+    "content": "No cats in the house: Sam, the user's partner, has a severe cat allergy.",
+    "why_it_matters": "Rules out cat adoption and matters whenever Sam is around cats.",
+    "scope": [
+      "domain:home"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.99,
+    "pinned": true,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2025-10-01T00:00:00Z"
+  },
+  {
+    "_id": "b-water-heater-tankless",
+    "user_id": "test-user",
+    "type": "entity",
+    "canonical_name": "tankless_water_heater",
+    "aliases": [],
+    "content": "The tankless gas water heater was installed in 2024 and needs a vinegar descaling flush every March or its output temperature starts fluctuating.",
+    "why_it_matters": "First thing to check when hot water misbehaves.",
+    "scope": [
+      "domain:home"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.86,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2025-11-15T00:00:00Z"
+  },
+  {
+    "_id": "b-heat-pump-leaning",
+    "user_id": "test-user",
+    "type": "preference",
+    "canonical_name": "furnace_replacement_leaning",
+    "aliases": [],
+    "content": "Leaning toward replacing the aging furnace with a cold-climate heat pump in 2027, though nothing is committed yet.",
+    "why_it_matters": "Frames any HVAC replacement discussion.",
+    "scope": [
+      "domain:home"
+    ],
+    "epistemic_status": "exploratory",
+    "confidence": 0.6,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2026-09-10T00:00:00Z"
+  },
+  {
+    "_id": "b-mercury-growth-fund",
+    "user_id": "test-user",
+    "type": "entity",
+    "canonical_name": "mercury_growth_fund",
+    "aliases": [
+      "Mercury",
+      "Mercury Growth",
+      "MGF"
+    ],
+    "content": "Mercury Growth Fund is an actively managed mid-cap mutual fund held in the user's Roth IRA, with a 0.85% expense ratio.",
+    "why_it_matters": "Relevant to any question about fees, performance or rebalancing of the Roth.",
+    "scope": [
+      "domain:finance"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.93,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2025-09-15T00:00:00Z"
+  },
+  {
+    "_id": "b-roth-split-mercury",
+    "user_id": "test-user",
+    "type": "decision",
+    "canonical_name": "roth_contribution_allocation",
+    "aliases": [],
+    "content": "Split new Roth IRA contributions 50/50 between Mercury Growth Fund and an S&P 500 index fund.",
+    "why_it_matters": "Determines where retirement contributions go.",
+    "scope": [
+      "domain:finance"
+    ],
+    "epistemic_status": "superseded",
+    "confidence": 0.8,
+    "pinned": false,
+    "superseded_by": "b-roth-total-market",
+    "resolved_at": null,
+    "created_at": "2025-09-15T00:00:00Z"
+  },
+  {
+    "_id": "b-roth-total-market",
+    "user_id": "test-user",
+    "type": "decision",
+    "canonical_name": "roth_contribution_allocation",
+    "aliases": [],
+    "content": "Stopped putting new Roth money into Mercury Growth; all new contributions now go to a total-market index fund, and existing Mercury shares stay put.",
+    "why_it_matters": "Determines where retirement contributions go.",
+    "scope": [
+      "domain:finance"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.94,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2026-03-01T00:00:00Z"
+  },
+  {
+    "_id": "b-atlas-credit-union-mortgage",
+    "user_id": "test-user",
+    "type": "entity",
+    "canonical_name": "atlas_mortgage",
+    "aliases": [
+      "Atlas",
+      "Atlas CU"
+    ],
+    "content": "The house loan is a 30-year fixed at 6.1% with Atlas Credit Union; refinancing only makes sense if rates fall below 5.25% and closing costs pay back within three years.",
+    "why_it_matters": "Anchors refinancing and extra-payment questions.",
+    "scope": [
+      "domain:finance"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.95,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2025-08-01T00:00:00Z"
+  },
+  {
+    "_id": "b-zero-based-budget",
+    "user_id": "test-user",
+    "type": "preference",
+    "canonical_name": "household_budget_method",
+    "aliases": [],
+    "content": "Runs a zero-based monthly budget in a shared spreadsheet with Sam, reviewed together on the first Sunday of every month.",
+    "why_it_matters": "Every spending question routes through this budget and its review cadence.",
+    "scope": [
+      "domain:finance"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.91,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2025-10-05T00:00:00Z"
+  },
+  {
+    "_id": "b-emergency-fund-three-months",
+    "user_id": "test-user",
+    "type": "decision",
+    "canonical_name": "emergency_fund_target",
+    "aliases": [],
+    "content": "Emergency fund target is three months of expenses.",
+    "why_it_matters": "Sets how much cash to hold in reserve.",
+    "scope": [
+      "domain:finance"
+    ],
+    "epistemic_status": "superseded",
+    "confidence": 0.8,
+    "pinned": false,
+    "superseded_by": "b-emergency-fund-six-months",
+    "resolved_at": null,
+    "created_at": "2025-06-01T00:00:00Z"
+  },
+  {
+    "_id": "b-emergency-fund-six-months",
+    "user_id": "test-user",
+    "type": "decision",
+    "canonical_name": "emergency_fund_target",
+    "aliases": [],
+    "content": "Used to aim for three months of expenses; raised the emergency fund target to six months (about $27k) kept in a high-yield savings account.",
+    "why_it_matters": "Sets how much cash to hold in reserve and where.",
+    "scope": [
+      "domain:finance"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.93,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2026-02-01T00:00:00Z"
+  },
+  {
+    "_id": "b-cpa-joint-filing",
+    "user_id": "test-user",
+    "type": "preference",
+    "canonical_name": "tax_filing_approach",
+    "aliases": [
+      "Dana Whitfield"
+    ],
+    "content": "Files taxes jointly with Sam through their CPA, Dana Whitfield, rather than using tax software.",
+    "why_it_matters": "Determines how tax prep is handled each year.",
+    "scope": [
+      "domain:finance"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.9,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2025-12-20T00:00:00Z"
+  },
+  {
+    "_id": "b-hsa-invest-receipts",
+    "user_id": "test-user",
+    "type": "decision",
+    "canonical_name": "hsa_strategy",
+    "aliases": [],
+    "content": "Treats the HSA as a long-term investment account: pays medical bills out of pocket now and keeps receipts to reimburse years later.",
+    "why_it_matters": "Changes how medical expenses should be paid.",
+    "scope": [
+      "domain:finance"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.89,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2026-01-12T00:00:00Z"
+  },
+  {
+    "_id": "b-no-crypto-speculation",
+    "user_id": "test-user",
+    "type": "decision",
+    "canonical_name": "no_speculation_rule",
+    "aliases": [],
+    "content": "Firm rule: no cryptocurrency and no individual-stock speculation.",
+    "why_it_matters": "Overrides any suggestion to chase speculative assets.",
+    "scope": [
+      "domain:finance"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.99,
+    "pinned": true,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2025-07-01T00:00:00Z"
+  },
+  {
+    "_id": "b-oq-niece-529",
+    "user_id": "test-user",
+    "type": "open_question",
+    "canonical_name": "niece_college_savings",
+    "aliases": [],
+    "content": "Undecided whether to open a 529 college savings plan for their niece Ava.",
+    "why_it_matters": "Would add a new recurring savings commitment.",
+    "scope": [
+      "domain:finance"
+    ],
+    "epistemic_status": "exploratory",
+    "confidence": 0.6,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2026-07-14T00:00:00Z"
+  },
+  {
+    "_id": "b-oq-refinance-spring",
+    "user_id": "test-user",
+    "type": "open_question",
+    "canonical_name": "spring_refinance_question",
+    "aliases": [],
+    "content": "Should the Atlas mortgage be refinanced in spring 2026? Resolved: no, rates never fell far enough to justify closing costs.",
+    "why_it_matters": "Settled whether to refinance that season.",
+    "scope": [
+      "domain:finance"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.9,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": "2026-05-30T00:00:00Z",
+    "created_at": "2026-02-20T00:00:00Z"
+  },
+  {
+    "_id": "b-single-cashback-card",
+    "user_id": "test-user",
+    "type": "preference",
+    "canonical_name": "credit_card_strategy",
+    "aliases": [],
+    "content": "Uses a single flat 2% cash-back card for everything and pays it in full monthly; does not want to juggle travel points.",
+    "why_it_matters": "Frames any new card offer.",
+    "scope": [
+      "domain:finance"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.88,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2025-11-30T00:00:00Z"
+  },
+  {
+    "_id": "b-weekly-fun-money",
+    "user_id": "test-user",
+    "type": "decision",
+    "canonical_name": "personal_allowance",
+    "aliases": [],
+    "content": "Each partner gets $150 per week of no-questions-asked personal spending money; anything above that is discussed first.",
+    "why_it_matters": "Decides whether a purchase needs a conversation with Sam.",
+    "scope": [
+      "domain:finance"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.9,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2026-01-05T00:00:00Z"
+  },
+  {
+    "_id": "b-rel-fun-money-budget",
+    "user_id": "test-user",
+    "type": "relation",
+    "canonical_name": "allowance_budget_link",
+    "aliases": [],
+    "content": "The $150 weekly personal allowance is a fixed category inside the zero-based monthly budget.",
+    "why_it_matters": "Allowance overspending shows up in the monthly budget review.",
+    "scope": [
+      "domain:finance"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.88,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2026-01-06T00:00:00Z",
+    "participants": [
+      "b-weekly-fun-money",
+      "b-zero-based-budget"
+    ]
+  },
+  {
+    "_id": "b-bunched-charitable-giving",
+    "user_id": "test-user",
+    "type": "decision",
+    "canonical_name": "charitable_giving_strategy",
+    "aliases": [],
+    "content": "Gives about 3% of net income, mostly to the local food bank, bunching two years of gifts into every other December to itemize; the next bunched year is 2026.",
+    "why_it_matters": "Determines timing and size of year-end gifts.",
+    "scope": [
+      "domain:finance"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.87,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2025-12-28T00:00:00Z"
+  },
+  {
+    "_id": "b-atlas-strength-program",
+    "user_id": "test-user",
+    "type": "entity",
+    "canonical_name": "atlas_strength_program",
+    "aliases": [
+      "Atlas",
+      "Atlas 5x5"
+    ],
+    "content": "Atlas is the user's 5x5 barbell strength program: squat, bench, deadlift and overhead press, three sessions a week.",
+    "why_it_matters": "Defines what the user's training sessions contain.",
+    "scope": [
+      "domain:health"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.92,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2026-03-10T00:00:00Z"
+  },
+  {
+    "_id": "b-workout-morning-runs",
+    "user_id": "test-user",
+    "type": "decision",
+    "canonical_name": "workout_schedule",
+    "aliases": [],
+    "content": "Runs 5k at 6am on weekdays before work.",
+    "why_it_matters": "Sets when the user exercises.",
+    "scope": [
+      "domain:health"
+    ],
+    "epistemic_status": "superseded",
+    "confidence": 0.75,
+    "pinned": false,
+    "superseded_by": "b-workout-evening-lifts",
+    "resolved_at": null,
+    "created_at": "2025-09-01T00:00:00Z"
+  },
+  {
+    "_id": "b-workout-evening-lifts",
+    "user_id": "test-user",
+    "type": "decision",
+    "canonical_name": "workout_schedule",
+    "aliases": [],
+    "content": "Used to run early mornings; switched to lifting Monday, Wednesday and Friday evenings after work, with one longer run on Saturday.",
+    "why_it_matters": "Sets when the user exercises.",
+    "scope": [
+      "domain:health"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.92,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2026-03-10T00:00:00Z"
+  },
+  {
+    "_id": "b-diet-keto",
+    "user_id": "test-user",
+    "type": "decision",
+    "canonical_name": "diet_approach",
+    "aliases": [],
+    "content": "Follows a strict keto diet.",
+    "why_it_matters": "Shapes meal suggestions.",
+    "scope": [
+      "domain:health"
+    ],
+    "epistemic_status": "superseded",
+    "confidence": 0.7,
+    "pinned": false,
+    "superseded_by": "b-diet-intermittent-fasting",
+    "resolved_at": null,
+    "created_at": "2024-06-01T00:00:00Z"
+  },
+  {
+    "_id": "b-diet-intermittent-fasting",
+    "user_id": "test-user",
+    "type": "decision",
+    "canonical_name": "diet_approach",
+    "aliases": [],
+    "content": "Dropped keto and now does 16:8 intermittent fasting.",
+    "why_it_matters": "Shapes meal timing and suggestions.",
+    "scope": [
+      "domain:health"
+    ],
+    "epistemic_status": "superseded",
+    "confidence": 0.75,
+    "pinned": false,
+    "superseded_by": "b-diet-mediterranean-protein",
+    "resolved_at": null,
+    "created_at": "2025-02-01T00:00:00Z"
+  },
+  {
+    "_id": "b-diet-mediterranean-protein",
+    "user_id": "test-user",
+    "type": "decision",
+    "canonical_name": "diet_approach",
+    "aliases": [],
+    "content": "Stopped intermittent fasting; now eats a Mediterranean-style diet with three meals a day and a 120 g daily protein target.",
+    "why_it_matters": "Shapes meal suggestions, timing and protein math.",
+    "scope": [
+      "domain:health"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.93,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2026-04-05T00:00:00Z"
+  },
+  {
+    "_id": "b-penicillin-allergy",
+    "user_id": "test-user",
+    "type": "entity",
+    "canonical_name": "penicillin_allergy",
+    "aliases": [],
+    "content": "Allergic to penicillin-class antibiotics; they cause hives.",
+    "why_it_matters": "Safety-critical for any prescription discussion.",
+    "scope": [
+      "domain:health"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.99,
+    "pinned": true,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2025-01-01T00:00:00Z"
+  },
+  {
+    "_id": "b-left-knee-meniscus",
+    "user_id": "test-user",
+    "type": "entity",
+    "canonical_name": "left_knee_meniscus_tear",
+    "aliases": [],
+    "content": "Tore the left meniscus in 2025; avoids deep lunges, jumping and full-depth squats, and does physio band work twice a week.",
+    "why_it_matters": "Limits which exercises and events are safe.",
+    "scope": [
+      "domain:health"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.94,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2025-08-20T00:00:00Z"
+  },
+  {
+    "_id": "b-rel-knee-atlas-mods",
+    "user_id": "test-user",
+    "type": "relation",
+    "canonical_name": "knee_program_modification",
+    "aliases": [],
+    "content": "Atlas squat days are done as box squats to parallel because of the left meniscus tear.",
+    "why_it_matters": "Explains why the program deviates from standard squats.",
+    "scope": [
+      "domain:health"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.9,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2026-03-12T00:00:00Z",
+    "participants": [
+      "b-left-knee-meniscus",
+      "b-atlas-strength-program"
+    ]
+  },
+  {
+    "_id": "b-sleep-wind-down",
+    "user_id": "test-user",
+    "type": "preference",
+    "canonical_name": "sleep_routine",
+    "aliases": [],
+    "content": "Aims for lights out by 10:30pm and keeps phones out of the bedroom after 10pm.",
+    "why_it_matters": "Baseline for any sleep or evening-habit advice.",
+    "scope": [
+      "domain:health"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.86,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2026-01-15T00:00:00Z"
+  },
+  {
+    "_id": "b-atorvastatin-daily",
+    "user_id": "test-user",
+    "type": "decision",
+    "canonical_name": "cholesterol_medication",
+    "aliases": [
+      "Lipitor",
+      "statin"
+    ],
+    "content": "Takes 10 mg atorvastatin every night (started March 2026) to lower LDL; Dr. Okafor said not to double up after a missed dose.",
+    "why_it_matters": "Relevant to any medication, missed-dose or interaction question.",
+    "scope": [
+      "domain:health"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.95,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2026-03-18T00:00:00Z"
+  },
+  {
+    "_id": "b-dr-okafor-telehealth",
+    "user_id": "test-user",
+    "type": "preference",
+    "canonical_name": "primary_care_preference",
+    "aliases": [
+      "Dr. Okafor"
+    ],
+    "content": "Primary care doctor is Dr. Okafor; prefers video telehealth visits for routine follow-ups and lab reviews to avoid taking time off.",
+    "why_it_matters": "Shapes how appointments get booked.",
+    "scope": [
+      "domain:health"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.87,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2025-10-22T00:00:00Z"
+  },
+  {
+    "_id": "b-oq-glucose-monitor",
+    "user_id": "test-user",
+    "type": "open_question",
+    "canonical_name": "glucose_monitor_trial",
+    "aliases": [],
+    "content": "Undecided whether to try a continuous glucose monitor for a month to see how meals affect blood sugar.",
+    "why_it_matters": "Could change diet tracking.",
+    "scope": [
+      "domain:health"
+    ],
+    "epistemic_status": "exploratory",
+    "confidence": 0.55,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2026-09-02T00:00:00Z"
+  },
+  {
+    "_id": "b-oq-half-marathon",
+    "user_id": "test-user",
+    "type": "open_question",
+    "canonical_name": "fall_half_marathon",
+    "aliases": [],
+    "content": "Should the user sign up for a fall half marathon? Resolved: no, not this year because of the knee.",
+    "why_it_matters": "Settled the fall race plan.",
+    "scope": [
+      "domain:health"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.9,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": "2026-07-01T00:00:00Z",
+    "created_at": "2026-05-15T00:00:00Z"
+  },
+  {
+    "_id": "b-caffeine-cutoff",
+    "user_id": "test-user",
+    "type": "preference",
+    "canonical_name": "caffeine_limit",
+    "aliases": [],
+    "content": "Caps coffee at two cups a day and none after 1pm because later caffeine wrecks sleep.",
+    "why_it_matters": "Frames any question about caffeinated drinks.",
+    "scope": [
+      "domain:health"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.88,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2026-02-02T00:00:00Z"
+  },
+  {
+    "_id": "b-sunday-meal-prep",
+    "user_id": "test-user",
+    "type": "preference",
+    "canonical_name": "weekly_meal_prep",
+    "aliases": [],
+    "content": "Batch-cooks weekday lunches every Sunday afternoon, usually a grain bowl and a lentil soup, so the weekly plan stays on track.",
+    "why_it_matters": "Shapes weekend cooking suggestions.",
+    "scope": [
+      "domain:health"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.85,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2026-04-12T00:00:00Z"
+  },
+  {
+    "_id": "b-bp-home-log",
+    "user_id": "test-user",
+    "type": "preference",
+    "canonical_name": "blood_pressure_tracking",
+    "aliases": [],
+    "content": "Logs blood pressure at home on Tuesday and Friday mornings in a phone app; the goal is to stay under 125/80.",
+    "why_it_matters": "Baseline for blood pressure questions.",
+    "scope": [
+      "domain:health"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.88,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2026-03-25T00:00:00Z"
+  },
+  {
+    "_id": "b-comm-concise-bullets",
+    "user_id": "test-user",
+    "type": "preference",
+    "canonical_name": "answer_format",
+    "aliases": [],
+    "content": "Prefers short answers led by bullet points, with no long preambles or recaps.",
+    "why_it_matters": "Applies to how every answer is formatted.",
+    "scope": [
+      "user:universal"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.92,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2025-06-01T00:00:00Z"
+  },
+  {
+    "_id": "b-comm-no-emoji",
+    "user_id": "test-user",
+    "type": "preference",
+    "canonical_name": "no_emoji",
+    "aliases": [],
+    "content": "Does not want emojis in any response.",
+    "why_it_matters": "Applies to the style of every answer.",
+    "scope": [
+      "user:universal"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.95,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2025-06-01T00:00:00Z"
+  },
+  {
+    "_id": "b-comm-us-units",
+    "user_id": "test-user",
+    "type": "preference",
+    "canonical_name": "measurement_units",
+    "aliases": [],
+    "content": "Uses US customary units (pounds, miles, Fahrenheit) and wants answers in them.",
+    "why_it_matters": "Applies whenever quantities are given.",
+    "scope": [
+      "user:universal"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.9,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2025-06-03T00:00:00Z"
+  },
+  {
+    "_id": "b-comm-address-as-robin",
+    "user_id": "test-user",
+    "type": "preference",
+    "canonical_name": "preferred_name",
+    "aliases": [],
+    "content": "Wants to be addressed as Robin.",
+    "why_it_matters": "Applies to every greeting.",
+    "scope": [
+      "user:universal"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.99,
+    "pinned": true,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2025-06-01T00:00:00Z"
+  },
+  {
+    "_id": "b-comm-cite-sources",
+    "user_id": "test-user",
+    "type": "preference",
+    "canonical_name": "sourcing_expectation",
+    "aliases": [],
+    "content": "For medical or tax information, wants sources cited and uncertainty clearly flagged.",
+    "why_it_matters": "Applies to health and tax answers.",
+    "scope": [
+      "user:universal"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.9,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2025-07-10T00:00:00Z"
+  },
+  {
+    "_id": "b-other-mercury-cat",
+    "user_id": "other-user",
+    "type": "entity",
+    "canonical_name": "mercury_cat",
+    "aliases": [
+      "Mercury"
+    ],
+    "content": "Mercury is a fourteen-year-old grey tabby cat on a renal diet.",
+    "why_it_matters": "Shapes pet care questions for this user.",
+    "scope": [
+      "domain:home"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.9,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2026-01-01T00:00:00Z"
+  },
+  {
+    "_id": "b-other-envelope-budget",
+    "user_id": "other-user",
+    "type": "preference",
+    "canonical_name": "household_budget_method",
+    "aliases": [],
+    "content": "Budgets with a cash envelope system refilled every payday.",
+    "why_it_matters": "Every spending question routes through the envelopes.",
+    "scope": [
+      "domain:finance"
+    ],
+    "epistemic_status": "active",
+    "confidence": 0.9,
+    "pinned": false,
+    "superseded_by": null,
+    "resolved_at": null,
+    "created_at": "2026-01-01T00:00:00Z"
+  }
+]

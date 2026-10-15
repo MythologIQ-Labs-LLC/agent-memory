@@ -1,0 +1,40 @@
+
+Dataset: precisionmembench  Split: single-turn  Memory: agent-memory  Mode: 
+retrieval
+
+Loading queries...
+  70 queries loaded
+Loading documents...
+  59 documents loaded
+Ingesting into agent-memory...
+  ingested in 528ms (8.9ms/doc avg)
+
+  Evaluating ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:05
+
+Saved → 
+/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scrat
+chpad/amb-runs/heldout-C2-eaf60e4d/amb-outputs/precisionmembench/agent-memory/re
+trieval/single-turn.json
+        Results —        
+precisionmembench/single-
+  turn | agent-memory |  
+        retrieval        
+┏━━━━━━━━━━━━━━━┳━━━━━━━┓
+┃ Metric        ┃ Value ┃
+┡━━━━━━━━━━━━━━━╇━━━━━━━┩
+│ Total queries │    70 │
+│ Correct       │    14 │
+│ Accuracy      │ 20.0% │
+└───────────────┴───────┘
+            PrecisionMemBench             
+┏━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
+┃ Metric                 ┃         Value ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
+│ Active passes          │          9/43 │
+│ Structural passes      │           0/0 │
+│ Trivially-empty passes │          5/27 │
+│ Total passes           │         14/70 │
+│ Mean precision         │          0.27 │
+│ Mean recall            │          0.64 │
+│ ID resolution          │ source_id=209 │
+└────────────────────────┴───────────────┘

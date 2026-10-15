@@ -1,0 +1,211 @@
+amb-retrieval-no-llm-guard {"authority_effect": "none", "guard": "amb_retrieval_no_llm", "guard_version": "1.0.0", "llm_clients_constructed": 0, "patched_symbols": ["memory_bench.cli._resolve_gemini_key", "memory_bench.cli.get_answer_llm", "memory_bench.runner.GeminiJudge"]}
+2026-10-15 13:58:17,580 [INFO] [query:home-dog-bowl-paraphrase] start — what should I be putting in the dog's bowl these days?
+2026-10-15 13:58:17,627 [INFO] [query:home-dog-bowl-paraphrase] answer done in 0.0s (retrieve=47ms)
+2026-10-15 13:58:17,628 [INFO] [query:home-dog-bowl-paraphrase] done in 0.0s — correct=False score=None
+2026-10-15 13:58:18,161 [INFO] [query:home-mercury-one-word] start — Mercury
+2026-10-15 13:58:18,226 [INFO] [query:home-mercury-one-word] answer done in 0.1s (retrieve=65ms)
+2026-10-15 13:58:18,226 [INFO] [query:home-mercury-one-word] done in 0.1s — correct=False score=None
+2026-10-15 13:58:18,227 [INFO] [query:home-storm-prep] start — there's a big thunderstorm rolling in tonight, anything I should do to get ready
+2026-10-15 13:58:18,285 [INFO] [query:home-storm-prep] answer done in 0.1s (retrieve=58ms)
+2026-10-15 13:58:18,285 [INFO] [query:home-storm-prep] done in 0.1s — correct=False score=None
+2026-10-15 13:58:18,285 [INFO] [query:home-contractor-current] start — remind me which crew is doing the kitchen job
+2026-10-15 13:58:18,336 [INFO] [query:home-contractor-current] answer done in 0.1s (retrieve=51ms)
+2026-10-15 13:58:18,336 [INFO] [query:home-contractor-current] done in 0.1s — correct=False score=None
+2026-10-15 13:58:18,337 [INFO] [query:home-counter-typo] start — kitchn countr tops - did we go with marbel in the end?
+2026-10-15 13:58:18,395 [INFO] [query:home-counter-typo] answer done in 0.1s (retrieve=58ms)
+2026-10-15 13:58:18,395 [INFO] [query:home-counter-typo] done in 0.1s — correct=False score=None
+2026-10-15 13:58:18,395 [INFO] [query:home-remodel-meeting-rambling] start — OK so I'm meeting with the remodel folks Friday and I want to walk in knowing th
+2026-10-15 13:58:18,460 [INFO] [query:home-remodel-meeting-rambling] answer done in 0.1s (retrieve=64ms)
+2026-10-15 13:58:18,460 [INFO] [query:home-remodel-meeting-rambling] done in 0.1s — correct=False score=None
+2026-10-15 13:58:18,461 [INFO] [query:home-grocery-budget-distractor] start — can you help me plan a weekly budget for groceries?
+2026-10-15 13:58:18,529 [INFO] [query:home-grocery-budget-distractor] answer done in 0.1s (retrieve=67ms)
+2026-10-15 13:58:18,529 [INFO] [query:home-grocery-budget-distractor] done in 0.1s — correct=False score=None
+2026-10-15 13:58:18,530 [INFO] [query:home-floor-cleaner-paraphrase] start — I'm at the store, should I grab the lavender-scented floor cleaner or something 
+2026-10-15 13:58:18,597 [INFO] [query:home-floor-cleaner-paraphrase] answer done in 0.1s (retrieve=68ms)
+2026-10-15 13:58:18,598 [INFO] [query:home-floor-cleaner-paraphrase] done in 0.1s — correct=False score=None
+2026-10-15 13:58:18,598 [INFO] [query:home-bedroom-cold] start — it's freezing in the bedroom at night, what temp is the thermostat set to?
+2026-10-15 13:58:18,663 [INFO] [query:home-bedroom-cold] answer done in 0.1s (retrieve=65ms)
+2026-10-15 13:58:18,663 [INFO] [query:home-bedroom-cold] done in 0.1s — correct=False score=None
+2026-10-15 13:58:18,664 [INFO] [query:home-aphids-relation] start — aphids are all over my tomato plants, what spray should I use?
+2026-10-15 13:58:18,718 [INFO] [query:home-aphids-relation] answer done in 0.1s (retrieve=55ms)
+2026-10-15 13:58:18,719 [INFO] [query:home-aphids-relation] done in 0.1s — correct=False score=None
+2026-10-15 13:58:18,719 [INFO] [query:home-sam-cats-pinned] start — Sam's staying at a friend's place this weekend and they have three cats, anythin
+2026-10-15 13:58:18,775 [INFO] [query:home-sam-cats-pinned] answer done in 0.1s (retrieve=56ms)
+2026-10-15 13:58:18,776 [INFO] [query:home-sam-cats-pinned] done in 0.1s — correct=False score=None
+2026-10-15 13:58:18,776 [INFO] [query:home-musty-basement] start — the basement smells musty again
+2026-10-15 13:58:18,833 [INFO] [query:home-musty-basement] answer done in 0.1s (retrieve=57ms)
+2026-10-15 13:58:18,833 [INFO] [query:home-musty-basement] done in 0.1s — correct=False score=None
+2026-10-15 13:58:18,834 [INFO] [query:home-fence-resolved] start — can we put up a tall privacy fence out back?
+2026-10-15 13:58:18,883 [INFO] [query:home-fence-resolved] answer done in 0.0s (retrieve=49ms)
+2026-10-15 13:58:18,883 [INFO] [query:home-fence-resolved] done in 0.0s — correct=False score=None
+2026-10-15 13:58:18,883 [INFO] [query:home-lukewarm-water] start — the hot water's been coming out lukewarm and kinda sputtery lately
+2026-10-15 13:58:18,935 [INFO] [query:home-lukewarm-water] answer done in 0.1s (retrieve=52ms)
+2026-10-15 13:58:18,936 [INFO] [query:home-lukewarm-water] done in 0.1s — correct=True score=None
+2026-10-15 13:58:18,936 [INFO] [query:home-fund-shares-out-of-scope] start — how are my Mercury shares doing this quarter?
+2026-10-15 13:58:19,008 [INFO] [query:home-fund-shares-out-of-scope] answer done in 0.1s (retrieve=72ms)
+2026-10-15 13:58:19,008 [INFO] [query:home-fund-shares-out-of-scope] done in 0.1s — correct=False score=None
+2026-10-15 13:58:19,009 [INFO] [query:home-unrelated-trivia] start — what's the capital of Portugal?
+2026-10-15 13:58:19,094 [INFO] [query:home-unrelated-trivia] answer done in 0.1s (retrieve=85ms)
+2026-10-15 13:58:19,094 [INFO] [query:home-unrelated-trivia] done in 0.1s — correct=True score=None
+2026-10-15 13:58:19,094 [INFO] [query:home-book-club-schedule] start — help me plan a schedule for my book club's reading list this fall
+2026-10-15 13:58:19,177 [INFO] [query:home-book-club-schedule] answer done in 0.1s (retrieve=82ms)
+2026-10-15 13:58:19,177 [INFO] [query:home-book-club-schedule] done in 0.1s — correct=False score=None
+2026-10-15 13:58:19,178 [INFO] [query:home-walker-negation] start — not asking about the dog's food, just want to know if Priya's still on for the s
+2026-10-15 13:58:19,263 [INFO] [query:home-walker-negation] answer done in 0.1s (retrieve=85ms)
+2026-10-15 13:58:19,263 [INFO] [query:home-walker-negation] done in 0.1s — correct=False score=None
+2026-10-15 13:58:19,264 [INFO] [query:home-mercury-isolation] start — what kind of animal is Mercury again?
+2026-10-15 13:58:19,340 [INFO] [query:home-mercury-isolation] answer done in 0.1s (retrieve=76ms)
+2026-10-15 13:58:19,341 [INFO] [query:home-mercury-isolation] done in 0.1s — correct=False score=None
+2026-10-15 13:58:19,342 [INFO] [query:home-furnace-leaning] start — the furnace guy says ours is on its last legs, what was I thinking of getting in
+2026-10-15 13:58:19,446 [INFO] [query:home-furnace-leaning] answer done in 0.1s (retrieve=104ms)
+2026-10-15 13:58:19,446 [INFO] [query:home-furnace-leaning] done in 0.1s — correct=True score=None
+2026-10-15 13:58:19,446 [INFO] [query:home-protein-out-of-scope] start — what's my daily protein target?
+2026-10-15 13:58:19,519 [INFO] [query:home-protein-out-of-scope] answer done in 0.1s (retrieve=72ms)
+2026-10-15 13:58:19,519 [INFO] [query:home-protein-out-of-scope] done in 0.1s — correct=False score=None
+2026-10-15 13:58:19,520 [INFO] [query:fin-keep-adding-mercury] start — should I keep adding to Mercury?
+2026-10-15 13:58:19,597 [INFO] [query:fin-keep-adding-mercury] answer done in 0.1s (retrieve=77ms)
+2026-10-15 13:58:19,598 [INFO] [query:fin-keep-adding-mercury] done in 0.1s — correct=False score=None
+2026-10-15 13:58:19,598 [INFO] [query:fin-home-loan-rate] start — what's the interest rate on our home loan?
+2026-10-15 13:58:19,677 [INFO] [query:fin-home-loan-rate] answer done in 0.1s (retrieve=79ms)
+2026-10-15 13:58:19,678 [INFO] [query:fin-home-loan-rate] done in 0.1s — correct=False score=None
+2026-10-15 13:58:19,678 [INFO] [query:fin-atlas-one-word] start — Atlas
+2026-10-15 13:58:19,726 [INFO] [query:fin-atlas-one-word] answer done in 0.0s (retrieve=48ms)
+2026-10-15 13:58:19,726 [INFO] [query:fin-atlas-one-word] done in 0.0s — correct=False score=None
+2026-10-15 13:58:19,727 [INFO] [query:fin-refi-rate-dip] start — rates just dipped to 5.1% - is it finally time to refinance?
+2026-10-15 13:58:19,782 [INFO] [query:fin-refi-rate-dip] answer done in 0.1s (retrieve=55ms)
+2026-10-15 13:58:19,782 [INFO] [query:fin-refi-rate-dip] done in 0.1s — correct=False score=None
+2026-10-15 13:58:19,783 [INFO] [query:fin-rainy-day] start — how big is our rainy day cushion supposed to be?
+2026-10-15 13:58:19,855 [INFO] [query:fin-rainy-day] answer done in 0.1s (retrieve=72ms)
+2026-10-15 13:58:19,856 [INFO] [query:fin-rainy-day] done in 0.1s — correct=False score=None
+2026-10-15 13:58:19,856 [INFO] [query:fin-money-spreadsheet-review] start — when do we normally sit down to go over the household money spreadsheet?
+2026-10-15 13:58:19,928 [INFO] [query:fin-money-spreadsheet-review] answer done in 0.1s (retrieve=72ms)
+2026-10-15 13:58:19,929 [INFO] [query:fin-money-spreadsheet-review] done in 0.1s — correct=False score=None
+2026-10-15 13:58:19,929 [INFO] [query:fin-concert-ticket-relation] start — how much can I drop on a concert ticket without running it by Sam first?
+2026-10-15 13:58:20,004 [INFO] [query:fin-concert-ticket-relation] answer done in 0.1s (retrieve=75ms)
+2026-10-15 13:58:20,004 [INFO] [query:fin-concert-ticket-relation] done in 0.1s — correct=False score=None
+2026-10-15 13:58:20,005 [INFO] [query:fin-tax-software] start — tax season's coming up, should I just buy TurboTax this year?
+2026-10-15 13:58:20,056 [INFO] [query:fin-tax-software] answer done in 0.1s (retrieve=50ms)
+2026-10-15 13:58:20,056 [INFO] [query:fin-tax-software] done in 0.1s — correct=False score=None
+2026-10-15 13:58:20,057 [INFO] [query:fin-dentist-hsa] start — I just paid a $400 dentist bill - should I reimburse myself from the HSA right a
+2026-10-15 13:58:20,127 [INFO] [query:fin-dentist-hsa] answer done in 0.1s (retrieve=70ms)
+2026-10-15 13:58:20,127 [INFO] [query:fin-dentist-hsa] done in 0.1s — correct=True score=None
+2026-10-15 13:58:20,128 [INFO] [query:fin-altcoin-pinned] start — my brother says I should throw 5k into some new altcoin
+2026-10-15 13:58:20,200 [INFO] [query:fin-altcoin-pinned] answer done in 0.1s (retrieve=72ms)
+2026-10-15 13:58:20,200 [INFO] [query:fin-altcoin-pinned] done in 0.1s — correct=False score=None
+2026-10-15 13:58:20,200 [INFO] [query:fin-niece-college] start — should we start saving for my niece's college?
+2026-10-15 13:58:20,276 [INFO] [query:fin-niece-college] answer done in 0.1s (retrieve=76ms)
+2026-10-15 13:58:20,277 [INFO] [query:fin-niece-college] done in 0.1s — correct=False score=None
+2026-10-15 13:58:20,277 [INFO] [query:fin-airline-card] start — there's a new airline card with a 70k mile signup bonus, worth it?
+2026-10-15 13:58:20,362 [INFO] [query:fin-airline-card] answer done in 0.1s (retrieve=85ms)
+2026-10-15 13:58:20,363 [INFO] [query:fin-airline-card] done in 0.1s — correct=True score=None
+2026-10-15 13:58:20,363 [INFO] [query:fin-food-bank-december] start — year-end giving question: are we doing the big gift to the food bank this Decemb
+2026-10-15 13:58:20,452 [INFO] [query:fin-food-bank-december] answer done in 0.1s (retrieve=89ms)
+2026-10-15 13:58:20,452 [INFO] [query:fin-food-bank-december] done in 0.1s — correct=True score=None
+2026-10-15 13:58:20,452 [INFO] [query:fin-dog-vet-out-of-scope] start — Mercury needs to go to the vet, remind me what he's allergic to
+2026-10-15 13:58:20,544 [INFO] [query:fin-dog-vet-out-of-scope] answer done in 0.1s (retrieve=91ms)
+2026-10-15 13:58:20,544 [INFO] [query:fin-dog-vet-out-of-scope] done in 0.1s — correct=False score=None
+2026-10-15 13:58:20,545 [INFO] [query:fin-reading-goal-distractor] start — I want to set a goal to read more personal finance books this year, any recommen
+2026-10-15 13:58:20,634 [INFO] [query:fin-reading-goal-distractor] answer done in 0.1s (retrieve=89ms)
+2026-10-15 13:58:20,634 [INFO] [query:fin-reading-goal-distractor] done in 0.1s — correct=False score=None
+2026-10-15 13:58:20,635 [INFO] [query:fin-kitchen-cap-out-of-scope] start — how much are we allowed to spend on the kitchen remodel?
+2026-10-15 13:58:20,720 [INFO] [query:fin-kitchen-cap-out-of-scope] answer done in 0.1s (retrieve=85ms)
+2026-10-15 13:58:20,721 [INFO] [query:fin-kitchen-cap-out-of-scope] done in 0.1s — correct=False score=None
+2026-10-15 13:58:20,721 [INFO] [query:fin-annual-checkin-rambling] start — Sam and I are doing our big money check-in this weekend. I want to cover three t
+2026-10-15 13:58:20,811 [INFO] [query:fin-annual-checkin-rambling] answer done in 0.1s (retrieve=89ms)
+2026-10-15 13:58:20,811 [INFO] [query:fin-annual-checkin-rambling] done in 0.1s — correct=False score=None
+2026-10-15 13:58:20,811 [INFO] [query:fin-negation-stopped-fund] start — forget the mortgage for a sec - which fund did I stop putting new money into, an
+2026-10-15 13:58:20,881 [INFO] [query:fin-negation-stopped-fund] answer done in 0.1s (retrieve=70ms)
+2026-10-15 13:58:20,881 [INFO] [query:fin-negation-stopped-fund] done in 0.1s — correct=False score=None
+2026-10-15 13:58:20,882 [INFO] [query:fin-envelope-isolation] start — do we use cash envelopes for budgeting?
+2026-10-15 13:58:20,927 [INFO] [query:fin-envelope-isolation] answer done in 0.0s (retrieve=45ms)
+2026-10-15 13:58:20,927 [INFO] [query:fin-envelope-isolation] done in 0.0s — correct=False score=None
+2026-10-15 13:58:20,928 [INFO] [query:fin-expense-ratio-typo] start — whats teh expence ratio on my mercury fnd
+2026-10-15 13:58:20,998 [INFO] [query:fin-expense-ratio-typo] answer done in 0.1s (retrieve=70ms)
+2026-10-15 13:58:20,998 [INFO] [query:fin-expense-ratio-typo] done in 0.1s — correct=True score=None
+2026-10-15 13:58:20,998 [INFO] [query:fin-knee-out-of-scope] start — tweaked my knee again on the stairs, ugh
+2026-10-15 13:58:21,078 [INFO] [query:fin-knee-out-of-scope] answer done in 0.1s (retrieve=80ms)
+2026-10-15 13:58:21,078 [INFO] [query:fin-knee-out-of-scope] done in 0.1s — correct=False score=None
+2026-10-15 13:58:21,079 [INFO] [query:hl-atlas-one-word] start — Atlas
+2026-10-15 13:58:21,145 [INFO] [query:hl-atlas-one-word] answer done in 0.1s (retrieve=66ms)
+2026-10-15 13:58:21,145 [INFO] [query:hl-atlas-one-word] done in 0.1s — correct=False score=None
+2026-10-15 13:58:21,145 [INFO] [query:hl-full-squats-relation] start — can I go back to doing full-depth back squats on lifting day?
+2026-10-15 13:58:21,227 [INFO] [query:hl-full-squats-relation] answer done in 0.1s (retrieve=81ms)
+2026-10-15 13:58:21,227 [INFO] [query:hl-full-squats-relation] done in 0.1s — correct=False score=None
+2026-10-15 13:58:21,228 [INFO] [query:hl-early-alarm-superseded] start — should I set my alarm for 5:45 to get my run in before work tomorrow?
+2026-10-15 13:58:21,293 [INFO] [query:hl-early-alarm-superseded] answer done in 0.1s (retrieve=65ms)
+2026-10-15 13:58:21,293 [INFO] [query:hl-early-alarm-superseded] done in 0.1s — correct=True score=None
+2026-10-15 13:58:21,294 [INFO] [query:hl-bacon-keto] start — is a bacon-and-eggs keto breakfast still my thing?
+2026-10-15 13:58:21,346 [INFO] [query:hl-bacon-keto] answer done in 0.1s (retrieve=52ms)
+2026-10-15 13:58:21,346 [INFO] [query:hl-bacon-keto] done in 0.1s — correct=False score=None
+2026-10-15 13:58:21,347 [INFO] [query:hl-antibiotic-hives-pinned] start — which kind of antibiotic gives me hives?
+2026-10-15 13:58:21,393 [INFO] [query:hl-antibiotic-hives-pinned] answer done in 0.0s (retrieve=46ms)
+2026-10-15 13:58:21,393 [INFO] [query:hl-antibiotic-hives-pinned] done in 0.0s — correct=False score=None
+2026-10-15 13:58:21,393 [INFO] [query:hl-missed-pill] start — I forgot my cholesterol pill last night, should I take two tonight?
+2026-10-15 13:58:21,447 [INFO] [query:hl-missed-pill] answer done in 0.1s (retrieve=53ms)
+2026-10-15 13:58:21,447 [INFO] [query:hl-missed-pill] done in 0.1s — correct=True score=None
+2026-10-15 13:58:21,447 [INFO] [query:hl-doomscrolling] start — I keep doomscrolling until midnight, help me get back on track
+2026-10-15 13:58:21,497 [INFO] [query:hl-doomscrolling] answer done in 0.0s (retrieve=49ms)
+2026-10-15 13:58:21,497 [INFO] [query:hl-doomscrolling] done in 0.0s — correct=False score=None
+2026-10-15 13:58:21,497 [INFO] [query:hl-afternoon-latte] start — is a 3pm latte a bad idea for me?
+2026-10-15 13:58:21,544 [INFO] [query:hl-afternoon-latte] answer done in 0.0s (retrieve=46ms)
+2026-10-15 13:58:21,544 [INFO] [query:hl-afternoon-latte] done in 0.0s — correct=False score=None
+2026-10-15 13:58:21,545 [INFO] [query:hl-sugar-sensor] start — been thinking about one of those arm patch blood sugar sensors
+2026-10-15 13:58:21,587 [INFO] [query:hl-sugar-sensor] answer done in 0.0s (retrieve=42ms)
+2026-10-15 13:58:21,587 [INFO] [query:hl-sugar-sensor] done in 0.0s — correct=False score=None
+2026-10-15 13:58:21,588 [INFO] [query:hl-half-marathon-knee] start — should I register for the city half in november?
+2026-10-15 13:58:21,640 [INFO] [query:hl-half-marathon-knee] answer done in 0.1s (retrieve=52ms)
+2026-10-15 13:58:21,641 [INFO] [query:hl-half-marathon-knee] done in 0.1s — correct=False score=None
+2026-10-15 13:58:21,641 [INFO] [query:hl-sunday-batch-cook] start — Sunday plan: what should I batch cook this week?
+2026-10-15 13:58:21,683 [INFO] [query:hl-sunday-batch-cook] answer done in 0.0s (retrieve=42ms)
+2026-10-15 13:58:21,683 [INFO] [query:hl-sunday-batch-cook] done in 0.0s — correct=False score=None
+2026-10-15 13:58:21,683 [INFO] [query:hl-language-streak-distractor] start — set me a weekly goal for my language-learning app streak
+2026-10-15 13:58:21,734 [INFO] [query:hl-language-streak-distractor] answer done in 0.1s (retrieve=51ms)
+2026-10-15 13:58:21,734 [INFO] [query:hl-language-streak-distractor] done in 0.1s — correct=False score=None
+2026-10-15 13:58:21,735 [INFO] [query:hl-lab-followup-visit] start — should I book an in-person appointment for my lab results follow-up, or do a vid
+2026-10-15 13:58:21,788 [INFO] [query:hl-lab-followup-visit] answer done in 0.1s (retrieve=53ms)
+2026-10-15 13:58:21,788 [INFO] [query:hl-lab-followup-visit] done in 0.1s — correct=True score=None
+2026-10-15 13:58:21,789 [INFO] [query:hl-fund-out-of-scope] start — is Mercury Growth beating the index this year?
+2026-10-15 13:58:21,844 [INFO] [query:hl-fund-out-of-scope] answer done in 0.1s (retrieve=56ms)
+2026-10-15 13:58:21,845 [INFO] [query:hl-fund-out-of-scope] done in 0.1s — correct=False score=None
+2026-10-15 13:58:21,845 [INFO] [query:hl-knee-and-coffee-multi] start — knee's been achy since Wednesday's lifting session and I've been drinking coffee
+2026-10-15 13:58:21,914 [INFO] [query:hl-knee-and-coffee-multi] answer done in 0.1s (retrieve=69ms)
+2026-10-15 13:58:21,915 [INFO] [query:hl-knee-and-coffee-multi] done in 0.1s — correct=False score=None
+2026-10-15 13:58:21,915 [INFO] [query:hl-dog-wrist-collision] start — Mercury yanked the leash on our walk and now my wrist hurts
+2026-10-15 13:58:21,978 [INFO] [query:hl-dog-wrist-collision] answer done in 0.1s (retrieve=62ms)
+2026-10-15 13:58:21,978 [INFO] [query:hl-dog-wrist-collision] done in 0.1s — correct=False score=None
+2026-10-15 13:58:21,979 [INFO] [query:uni-format-prefs] start — how do I like my answers formatted, remind me?
+2026-10-15 13:58:22,046 [INFO] [query:uni-format-prefs] answer done in 0.1s (retrieve=66ms)
+2026-10-15 13:58:22,046 [INFO] [query:uni-format-prefs] done in 0.1s — correct=False score=None
+2026-10-15 13:58:22,046 [INFO] [query:uni-units] start — metric or imperial for me?
+2026-10-15 13:58:22,118 [INFO] [query:uni-units] answer done in 0.1s (retrieve=72ms)
+2026-10-15 13:58:22,118 [INFO] [query:uni-units] done in 0.1s — correct=False score=None
+2026-10-15 13:58:22,118 [INFO] [query:uni-name-pinned] start — what name do you use for me?
+2026-10-15 13:58:22,193 [INFO] [query:uni-name-pinned] answer done in 0.1s (retrieve=75ms)
+2026-10-15 13:58:22,193 [INFO] [query:uni-name-pinned] done in 0.1s — correct=True score=None
+2026-10-15 13:58:22,194 [INFO] [query:uni-med-sources-mixed-scope] start — when you tell me stuff about my meds do you need to back it up with references?
+2026-10-15 13:58:22,280 [INFO] [query:uni-med-sources-mixed-scope] answer done in 0.1s (retrieve=86ms)
+2026-10-15 13:58:22,280 [INFO] [query:uni-med-sources-mixed-scope] done in 0.1s — correct=False score=None
+2026-10-15 13:58:22,281 [INFO] [query:cross-two-mercuries] start — two Mercury questions: is the dog's new food working out OK, and is the fund sti
+2026-10-15 13:58:22,347 [INFO] [query:cross-two-mercuries] answer done in 0.1s (retrieve=66ms)
+2026-10-15 13:58:22,348 [INFO] [query:cross-two-mercuries] done in 0.1s — correct=False score=None
+2026-10-15 13:58:22,348 [INFO] [query:home-bathroom-paint] start — what sheen of paint holds up best on a bathroom ceiling?
+2026-10-15 13:58:22,398 [INFO] [query:home-bathroom-paint] answer done in 0.1s (retrieve=50ms)
+2026-10-15 13:58:22,399 [INFO] [query:home-bathroom-paint] done in 0.1s — correct=True score=None
+2026-10-15 13:58:22,399 [INFO] [query:fin-apr-general] start — what does APR stand for?
+2026-10-15 13:58:22,444 [INFO] [query:fin-apr-general] answer done in 0.0s (retrieve=43ms)
+2026-10-15 13:58:22,444 [INFO] [query:fin-apr-general] done in 0.0s — correct=True score=None
+2026-10-15 13:58:22,445 [INFO] [query:fin-bp-out-of-scope] start — my blood pressure was 138/88 this morning, is that bad?
+2026-10-15 13:58:22,506 [INFO] [query:fin-bp-out-of-scope] answer done in 0.1s (retrieve=60ms)
+2026-10-15 13:58:22,507 [INFO] [query:fin-bp-out-of-scope] done in 0.1s — correct=False score=None
+2026-10-15 13:58:22,507 [INFO] [query:hl-quartz-out-of-scope] start — did the quartz order ship yet?
+2026-10-15 13:58:22,577 [INFO] [query:hl-quartz-out-of-scope] answer done in 0.1s (retrieve=70ms)
+2026-10-15 13:58:22,577 [INFO] [query:hl-quartz-out-of-scope] done in 0.1s — correct=False score=None
+2026-10-15 13:58:22,578 [INFO] [query:hl-hand-bones] start — how many bones are in the human hand
+2026-10-15 13:58:22,629 [INFO] [query:hl-hand-bones] answer done in 0.1s (retrieve=51ms)
+2026-10-15 13:58:22,629 [INFO] [query:hl-hand-bones] done in 0.1s — correct=True score=None
+2026-10-15 13:58:22,629 [INFO] [query:hl-juggling-plan] start — make me a two week plan to learn juggling, goal is three balls
+2026-10-15 13:58:22,688 [INFO] [query:hl-juggling-plan] answer done in 0.1s (retrieve=58ms)
+2026-10-15 13:58:22,688 [INFO] [query:hl-juggling-plan] done in 0.1s — correct=False score=None
+2026-10-15 13:58:22,689 [INFO] [query:fin-market-hours] start — what time does the stock market close on christmas eve?
+2026-10-15 13:58:22,757 [INFO] [query:fin-market-hours] answer done in 0.1s (retrieve=68ms)
+2026-10-15 13:58:22,758 [INFO] [query:fin-market-hours] done in 0.1s — correct=False score=None
