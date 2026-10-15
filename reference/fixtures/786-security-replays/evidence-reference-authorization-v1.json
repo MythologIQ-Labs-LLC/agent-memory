@@ -130,24 +130,16 @@
    ],
    "expect": {
     "admitted_bd": {
-     "eq": [
-      "bd"
-     ]
+     "eq": true
     },
     "admitted_bl": {
-     "eq": [
-      "bl"
-     ]
+     "eq": true
     },
     "admitted_bn": {
-     "eq": [
-      "bn"
-     ]
+     "eq": true
     },
     "admitted_bu": {
-     "eq": [
-      "bu"
-     ]
+     "eq": true
     },
     "after_bd": {
      "eq": "v1"
@@ -293,34 +285,38 @@
    "probes": {
     "admitted_bd": {
      "as": "project:b",
+     "fact": "bd",
      "logical_refs": [
       "memory:bd"
      ],
-     "probe": "recall_admitted",
+     "probe": "recall_admits",
      "query": "Quillon ferry berth digest alpha"
     },
     "admitted_bl": {
      "as": "project:b",
+     "fact": "bl",
      "logical_refs": [
       "memory:bl"
      ],
-     "probe": "recall_admitted",
+     "probe": "recall_admits",
      "query": "Quillon ferry berth digest beta"
     },
     "admitted_bn": {
      "as": "project:b",
+     "fact": "bn",
      "logical_refs": [
       "memory:bn"
      ],
-     "probe": "recall_admitted",
+     "probe": "recall_admits",
      "query": "Quillon ferry berth digest delta"
     },
     "admitted_bu": {
      "as": "project:b",
+     "fact": "bu",
      "logical_refs": [
       "memory:bu"
      ],
-     "probe": "recall_admitted",
+     "probe": "recall_admits",
      "query": "Quillon ferry berth digest gamma"
     },
     "after_bd": {
@@ -1019,24 +1015,16 @@
    ],
    "expect": {
     "admitted_bd": {
-     "eq": [
-      "bd"
-     ]
+     "eq": true
     },
     "admitted_bl": {
-     "eq": [
-      "bl"
-     ]
+     "eq": true
     },
     "admitted_bn": {
-     "eq": [
-      "bn"
-     ]
+     "eq": true
     },
     "admitted_bu": {
-     "eq": [
-      "bu"
-     ]
+     "eq": true
     },
     "after_bd": {
      "eq": "v1"
@@ -1185,34 +1173,38 @@
    "probes": {
     "admitted_bd": {
      "as": "project:b",
+     "fact": "bd",
      "logical_refs": [
       "memory:bd"
      ],
-     "probe": "recall_admitted",
+     "probe": "recall_admits",
      "query": "Quillon ferry berth digest alpha"
     },
     "admitted_bl": {
      "as": "project:b",
+     "fact": "bl",
      "logical_refs": [
       "memory:bl"
      ],
-     "probe": "recall_admitted",
+     "probe": "recall_admits",
      "query": "Quillon ferry berth digest beta"
     },
     "admitted_bn": {
      "as": "project:b",
+     "fact": "bn",
      "logical_refs": [
       "memory:bn"
      ],
-     "probe": "recall_admitted",
+     "probe": "recall_admits",
      "query": "Quillon ferry berth digest delta"
     },
     "admitted_bu": {
      "as": "project:b",
+     "fact": "bu",
      "logical_refs": [
       "memory:bu"
      ],
-     "probe": "recall_admitted",
+     "probe": "recall_admits",
      "query": "Quillon ferry berth digest gamma"
     },
     "after_bd": {
@@ -1837,24 +1829,16 @@
    ],
    "expect": {
     "admitted_bd": {
-     "eq": [
-      "bd"
-     ]
+     "eq": true
     },
     "admitted_bl": {
-     "eq": [
-      "bl"
-     ]
+     "eq": true
     },
     "admitted_bn": {
-     "eq": [
-      "bn"
-     ]
+     "eq": true
     },
     "admitted_bu": {
-     "eq": [
-      "bu"
-     ]
+     "eq": true
     },
     "history_bd": {
      "eq": {
@@ -1947,34 +1931,38 @@
    "probes": {
     "admitted_bd": {
      "as": "project:b",
+     "fact": "bd",
      "logical_refs": [
       "memory:bd"
      ],
-     "probe": "recall_admitted",
+     "probe": "recall_admits",
      "query": "Quillon ferry berth digest alpha"
     },
     "admitted_bl": {
      "as": "project:b",
+     "fact": "bl",
      "logical_refs": [
       "memory:bl"
      ],
-     "probe": "recall_admitted",
+     "probe": "recall_admits",
      "query": "Quillon ferry berth digest beta"
     },
     "admitted_bn": {
      "as": "project:b",
+     "fact": "bn",
      "logical_refs": [
       "memory:bn"
      ],
-     "probe": "recall_admitted",
+     "probe": "recall_admits",
      "query": "Quillon ferry berth digest delta"
     },
     "admitted_bu": {
      "as": "project:b",
+     "fact": "bu",
      "logical_refs": [
       "memory:bu"
      ],
-     "probe": "recall_admitted",
+     "probe": "recall_admits",
      "query": "Quillon ferry berth digest gamma"
     },
     "history_bd": {
@@ -2614,9 +2602,7 @@
    ],
    "expect": {
     "admitted": {
-     "eq": [
-      "bc"
-     ]
+     "eq": true
     },
     "history": {
      "eq": {
@@ -2639,10 +2625,11 @@
    "probes": {
     "admitted": {
      "as": "project:b",
+     "fact": "bc",
      "logical_refs": [
       "memory:bc"
      ],
-     "probe": "recall_admitted",
+     "probe": "recall_admits",
      "query": "Quillon ferry berth digest eta"
     },
     "history": {
@@ -2726,9 +2713,7 @@
    ],
    "expect": {
     "admitted": {
-     "eq": [
-      "bc"
-     ]
+     "eq": true
     },
     "history": {
      "eq": {
@@ -2754,10 +2739,11 @@
    "probes": {
     "admitted": {
      "as": "project:b",
+     "fact": "bc",
      "logical_refs": [
       "memory:bc"
      ],
-     "probe": "recall_admitted",
+     "probe": "recall_admits",
      "query": "Quillon ferry berth digest eta"
     },
     "history": {
@@ -2850,14 +2836,10 @@
    "controls": [],
    "expect": {
     "kept": {
-     "eq": [
-      "ctl"
-     ]
+     "eq": true
     },
     "kept_after_reopen": {
-     "eq": [
-      "ctl"
-     ]
+     "eq": true
     },
     "withheld": {
      "eq": []
@@ -2872,17 +2854,19 @@
    ],
    "probes": {
     "kept": {
+     "fact": "ctl",
      "logical_refs": [
       "memory:ctl"
      ],
-     "probe": "recall_admitted",
+     "probe": "recall_admits",
      "query": "Quillon ferry berth digest kappa"
     },
     "kept_after_reopen": {
+     "fact": "ctl",
      "logical_refs": [
       "memory:ctl"
      ],
-     "probe": "recall_admitted",
+     "probe": "recall_admits",
      "query": "Quillon ferry berth digest kappa"
     },
     "withheld": {
@@ -3005,9 +2989,7 @@
    ],
    "expect": {
     "kept": {
-     "eq": [
-      "ctl"
-     ]
+     "eq": true
     },
     "q1_exists": {
      "eq": false
@@ -3025,10 +3007,11 @@
    ],
    "probes": {
     "kept": {
+     "fact": "ctl",
      "logical_refs": [
       "memory:ctl"
      ],
-     "probe": "recall_admitted",
+     "probe": "recall_admits",
      "query": "Quillon ferry berth digest kappa"
     },
     "q1_exists": {
@@ -3166,9 +3149,7 @@
    ],
    "expect": {
     "bp_admitted": {
-     "eq": [
-      "bp"
-     ]
+     "eq": true
     },
     "bp_history": {
      "eq": {
@@ -3197,10 +3178,11 @@
    "probes": {
     "bp_admitted": {
      "as": "project:b",
+     "fact": "bp",
      "logical_refs": [
       "memory:bp"
      ],
-     "probe": "recall_admitted",
+     "probe": "recall_admits",
      "query": "Quillon ferry berth digest mu"
     },
     "bp_history": {
@@ -3312,14 +3294,10 @@
    ],
    "expect": {
     "bf_before": {
-     "eq": [
-      "bf"
-     ]
+     "eq": true
     },
     "bo_before": {
-     "eq": [
-      "bo"
-     ]
+     "eq": true
     },
     "recreated": {
      "eq": "v1"
@@ -3332,18 +3310,20 @@
    "probes": {
     "bf_before": {
      "as": "project:b",
+     "fact": "bf",
      "logical_refs": [
       "memory:bf"
      ],
-     "probe": "recall_admitted",
+     "probe": "recall_admits",
      "query": "Quillon ferry berth digest nu"
     },
     "bo_before": {
      "as": "project:b",
+     "fact": "bo",
      "logical_refs": [
       "memory:bo"
      ],
-     "probe": "recall_admitted",
+     "probe": "recall_admits",
      "query": "Quillon ferry berth digest xi"
     },
     "recreated": {
@@ -3453,12 +3433,10 @@
    ],
    "expect": {
     "bf_after": {
-     "eq": [
-      "bf"
-     ]
+     "eq": true
     },
     "bo_after": {
-     "eq": []
+     "eq": false
     }
    },
    "id": "E6a-after-the-citing-scopes-own-deletion",
@@ -3468,18 +3446,20 @@
    "probes": {
     "bf_after": {
      "as": "project:b",
+     "fact": "bf",
      "logical_refs": [
       "memory:bf"
      ],
-     "probe": "recall_admitted",
+     "probe": "recall_admits",
      "query": "Quillon ferry berth digest nu"
     },
     "bo_after": {
      "as": "project:b",
+     "fact": "bo",
      "logical_refs": [
       "memory:bo"
      ],
-     "probe": "recall_admitted",
+     "probe": "recall_admits",
      "query": "Quillon ferry berth digest xi"
     }
    },
@@ -3590,12 +3570,10 @@
    ],
    "expect": {
     "bf_after_reopen": {
-     "eq": [
-      "bf"
-     ]
+     "eq": true
     },
     "bo_after_reopen": {
-     "eq": []
+     "eq": false
     }
    },
    "id": "E6r-after-the-citing-scopes-own-deletion-and-reopen",
@@ -3605,18 +3583,20 @@
    "probes": {
     "bf_after_reopen": {
      "as": "project:b",
+     "fact": "bf",
      "logical_refs": [
       "memory:bf"
      ],
-     "probe": "recall_admitted",
+     "probe": "recall_admits",
      "query": "Quillon ferry berth digest nu"
     },
     "bo_after_reopen": {
      "as": "project:b",
+     "fact": "bo",
      "logical_refs": [
       "memory:bo"
      ],
-     "probe": "recall_admitted",
+     "probe": "recall_admits",
      "query": "Quillon ferry berth digest xi"
     }
    },
@@ -3727,19 +3707,13 @@
    ],
    "expect": {
     "first": {
-     "eq": [
-      "c1"
-     ]
+     "eq": true
     },
     "second": {
-     "eq": [
-      "c2"
-     ]
+     "eq": true
     },
     "third": {
-     "eq": [
-      "c3"
-     ]
+     "eq": true
     }
    },
    "id": "E6b-chain-rooted-in-the-foreign-deleted-fact",
@@ -3749,26 +3723,29 @@
    "probes": {
     "first": {
      "as": "project:b",
+     "fact": "c1",
      "logical_refs": [
       "memory:c1"
      ],
-     "probe": "recall_admitted",
+     "probe": "recall_admits",
      "query": "Quillon ferry berth digest omicron"
     },
     "second": {
      "as": "project:b",
+     "fact": "c2",
      "logical_refs": [
       "memory:c2"
      ],
-     "probe": "recall_admitted",
+     "probe": "recall_admits",
      "query": "Quillon ferry berth digest pi"
     },
     "third": {
      "as": "project:b",
+     "fact": "c3",
      "logical_refs": [
       "memory:c3"
      ],
-     "probe": "recall_admitted",
+     "probe": "recall_admits",
      "query": "Quillon ferry berth digest rho"
     }
    },
@@ -3857,7 +3834,7 @@
    "sha256_at_base": "9f1c91f73ef511b68e13988790984e5164670a9d9bafe92a7cf043729b03beda"
   }
  ],
- "development_history": "Authored from the docs/44 clause 'Canonical derivation is bound under the writer's own authority' and the docs/786 F-R3-2 row at base_commit (the repair commit b932bd2f), after the unit-level expectations of reference/tests/test_809_evidence_reference_authorization.py were preregistered (10a0d70e, superseded after independent review at 53268532 and 8272b38e; three fail-first baselines on the unmodified runtime, the last 36 failed / 14 passed / 82 subtests) and executed once on the repaired runtime (27 passed, 1 xfailed, 106 subtests; reports/validation/809-at-head). The first fixture revision (871d2bbe) was executed once by its own family test inside a full-suite run before its independent review; that run is disclosed, not used as evidence, and its failures were the harness defect the review independently found (RF-1: unfolded clocks and scores in recall). This revision answers that review before the runner's first execution.",
+ "development_history": "Authored from the docs/44 clause 'Canonical derivation is bound under the writer's own authority' and the docs/786 F-R3-2 row at base_commit (the repair commit b932bd2f), after the unit-level expectations of reference/tests/test_809_evidence_reference_authorization.py were preregistered (10a0d70e, superseded after independent review at 53268532 and 8272b38e; three fail-first baselines on the unmodified runtime, the last 36 failed / 14 passed / 82 subtests) and executed once on the repaired runtime (27 passed, 1 xfailed, 106 subtests; reports/validation/809-at-head). The first fixture revision (871d2bbe) was executed once by its own family test inside a full-suite run before its independent review; that run is disclosed in reports/validation/809-at-head/pre-review-execution-871d2bbe.md and is not evidence. Its failures were two harness defects: the recall_same_* observables (unfolded clocks and scores; found independently by the review as RF-1) and the admitted_* observables, whose DSL/1 recall_admitted probe lists every admitted fact of the query rather than answering whether the logical reference's fact is admitted (not found by the review; disclosed by the coordinator from that run's log and replaced by the boolean recall_admits probe). The second revision (ee427d80) answered RF-1..RF-9; this revision replaces the probe. No expectation was weakened: every admitted_* expectation still requires the cited fact to be admitted (or, for B's own derivation of its own deleted generation, withheld).",
  "dsl_version": "786-security-replay-dsl/3",
  "fixture_version": 1,
  "frozen_on": "2026-10-15",

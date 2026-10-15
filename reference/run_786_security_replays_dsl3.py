@@ -166,6 +166,19 @@ class Scenario(base.Scenario):
         if kind == "history_events":
             m = self.use(scope)
             return [e["event_type"] for e in m.history(spec["ref"])["history"]["events"]]
+        if kind == "recall_admits":
+            # "is this labelled fact admitted by its logical reference" (bool). The DSL/1
+            # ``recall_admitted`` probe lists every admitted fact of the query, which in a store
+            # whose memories share the query vocabulary is not the question (pre-review run of
+            # 871d2bbe, admitted_* observables); this probe answers it exactly as the unit module
+            # does (``admitted.count(uuid) == 1``).
+            m = self.use(scope)
+            kw = {}
+            if spec.get("historical"):
+                kw["temporal_intent"] = root_runner.HIST
+            if "logical_refs" in spec:
+                kw["logical_memory_refs"] = tuple(spec["logical_refs"])
+            return self.resolve(spec["fact"]) in m.recall(spec["query"], **kw)["admitted"]
         if kind == "history_has_event":
             m = self.use(scope)
             return spec["event_type"] in [e["event_type"] for e in m.history(spec["ref"])["history"]["events"]]

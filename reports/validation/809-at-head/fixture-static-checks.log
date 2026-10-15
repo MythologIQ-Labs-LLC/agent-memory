@@ -1,5 +1,5 @@
 # Static (non-executing) checks of the #809 replay generation before its first execution; the Execution class is gated on committed evidence and reports SKIPPED
-# tree: 871d2bbed0d61449aff5d2c35ab8b69f7e3b70d1 + the uncommitted revision committed next (fixture sha256 9520acd7171cc2690b6fa143c187cdc1ca962c634aa166fe8c9468c2c3b030a0)
+# tree: ee427d8059a1e7dbf5d529ae3ec153adeb7f4ce1 + the uncommitted revision committed next (fixture sha256 fed458c85afa1f812c864d8a208578986b5803be5f9dce1a3d8ae888d4e33ae5)
 # command (repository root): python3 -m pytest reference/tests/test_809_security_replay_v1.py reference/tests/test_786_security_replay_evidence_kind.py reference/tests/test_786_security_replays_v3.py -q -p no:cacheprovider -rs --tb=short
 .....s [ 30%]
 ss............     [100%]
@@ -7,4 +7,4 @@ ss............     [100%]
 SKIPPED [1] reference/tests/test_809_security_replay_v1.py:142: the first execution of this fixture is the runner's own on a clean tree, committed under reports/validation/809-security-replays; until then the test suite does not execute it
 SKIPPED [1] reference/tests/test_809_security_replay_v1.py:132: the first execution of this fixture is the runner's own on a clean tree, committed under reports/validation/809-security-replays; until then the test suite does not execute it
 SKIPPED [1] reference/tests/test_809_security_replay_v1.py:153: the first execution of this fixture is the runner's own on a clean tree, committed under reports/validation/809-security-replays; until then the test suite does not execute it
-17 passed, 3 skipped, 120 subtests passed in 12.94s
+17 passed, 3 skipped, 120 subtests passed in 13.03s

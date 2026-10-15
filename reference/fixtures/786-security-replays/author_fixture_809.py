@@ -135,7 +135,7 @@ def four_probes(*, reopened=False):
             probes[f"refusal_{label}"] = {"probe": "op_result", "name": label, "field": "refusal"}
             probes[f"before_{label}"] = {"probe": "op_result", "name": label, "field": "before_state"}
             probes[f"after_{label}"] = {"probe": "op_result", "name": label, "field": "after_state"}
-        probes[f"admitted_{label}"] = {"probe": "recall_admitted", "query": DIGEST(token), "logical_refs": [memory], "as": B}
+        probes[f"admitted_{label}"] = {"probe": "recall_admits", "query": DIGEST(token), "logical_refs": [memory], "fact": label, "as": B}
         probes[f"history_{label}"] = {"probe": "history", "ref": memory, "as": B}
         probes[f"semantics_{label}"] = {"probe": "write_semantics_present", "fact": label, "as": B}
     for label, memory, token in (("bd", "memory:bd", "alpha"), ("bl", "memory:bl", "beta")):
@@ -159,7 +159,7 @@ def four_expect(*, reopened=False):
             expect[f"refusal_{label}"] = EQ(None)
             expect[f"before_{label}"] = EQ("v0")
             expect[f"after_{label}"] = EQ("v1")
-        expect[f"admitted_{label}"] = EQ([label])
+        expect[f"admitted_{label}"] = EQ(True)
         expect[f"history_{label}"] = EQ(LIVE(label))
         expect[f"semantics_{label}"] = EQ(True)
     for label in ("bd", "bl"):
@@ -202,9 +202,15 @@ FIXTURE = {
                             "on the unmodified runtime, the last 36 failed / 14 passed / 82 subtests) and executed once on the "
                             "repaired runtime (27 passed, 1 xfailed, 106 subtests; reports/validation/809-at-head). The first "
                             "fixture revision (871d2bbe) was executed once by its own family test inside a full-suite run before "
-                            "its independent review; that run is disclosed, not used as evidence, and its failures were the "
-                            "harness defect the review independently found (RF-1: unfolded clocks and scores in recall). This "
-                            "revision answers that review before the runner's first execution."),
+                            "its independent review; that run is disclosed in reports/validation/809-at-head/"
+                            "pre-review-execution-871d2bbe.md and is not evidence. Its failures were two harness defects: the "
+                            "recall_same_* observables (unfolded clocks and scores; found independently by the review as RF-1) "
+                            "and the admitted_* observables, whose DSL/1 recall_admitted probe lists every admitted fact of the "
+                            "query rather than answering whether the logical reference's fact is admitted (not found by the "
+                            "review; disclosed by the coordinator from that run's log and replaced by the boolean recall_admits "
+                            "probe). The second revision (ee427d80) answered RF-1..RF-9; this revision replaces the probe. No "
+                            "expectation was weakened: every admitted_* expectation still requires the cited fact to be admitted "
+                            "(or, for B's own derivation of its own deleted generation, withheld)."),
     "independence": ("Expected outcomes were written from the contract documents listed in contract_sources at base_commit, "
                      "clause by clause (`clauses` on every case), and compared to those clauses by a separate reviewer before "
                      "the runner's first execution. A failing expectation is a finding, never a reason to edit this fixture; a "
@@ -281,17 +287,17 @@ FIXTURE = {
          "clauses": [C(D786, Q_786_FIX, "admitted", "history"), C(D44, Q_SAME, "admitted", "history")],
          "steps": seed() + [rem("memory:bc", DIGEST("eta"), evidence_refs=["q2"], **{"as": B}, label="bc", require_committed=True),
                             forget_q(ref="memory:q2")],
-         "probes": {"admitted": {"probe": "recall_admitted", "query": DIGEST("eta"), "logical_refs": ["memory:bc"], "as": B},
+         "probes": {"admitted": {"probe": "recall_admits", "query": DIGEST("eta"), "logical_refs": ["memory:bc"], "fact": "bc", "as": B},
                     "history": {"probe": "history", "ref": "memory:bc", "as": B}},
-         "expect": {"admitted": EQ(["bc"]), "history": EQ(LIVE("bc"))}},
+         "expect": {"admitted": EQ(True), "history": EQ(LIVE("bc"))}},
         {"id": "E4b-canary-survives-permanent-deletion-of-its-source", "invariants": ["E4"],
          "clauses": [C(D786, Q_786_FIX, "admitted", "history"), C(D44, Q_SAME, "admitted", "history"), C(D28, Q_28_PURGE, "q2_exists")],
          "steps": seed() + [rem("memory:bc", DIGEST("eta"), evidence_refs=["q2"], **{"as": B}, label="bc", require_committed=True),
                             forget_q(ref="memory:q2", permanent=True), {"op": "reopen"}],
-         "probes": {"admitted": {"probe": "recall_admitted", "query": DIGEST("eta"), "logical_refs": ["memory:bc"], "as": B},
+         "probes": {"admitted": {"probe": "recall_admits", "query": DIGEST("eta"), "logical_refs": ["memory:bc"], "fact": "bc", "as": B},
                     "history": {"probe": "history", "ref": "memory:bc", "as": B},
                     "q2_exists": {"probe": "fact_exists", "fact": "q2"}},
-         "expect": {"admitted": EQ(["bc"]), "history": EQ(LIVE("bc")), "q2_exists": EQ(False)}},
+         "expect": {"admitted": EQ(True), "history": EQ(LIVE("bc")), "q2_exists": EQ(False)}},
         {"id": "E5-own-scope-derivations-withheld-after-pruning", "invariants": ["E5"],
          "clauses": [C(D44, Q_OWN, "withheld", "withheld_after_reopen"), C(D786, Q_786_OWN, "withheld"),
                      C(D44, Q_UNKNOWN, "kept", "kept_after_reopen")],
@@ -301,10 +307,10 @@ FIXTURE = {
                             rem("memory:ctl", DIGEST("kappa"), evidence_refs=[TICKET], label="ctl", require_committed=True),
                             forget_q()],
          "probes": {"withheld": {"probe": "recall_mentions", "query": DQ, "historical": True, "tokens": ["d1", "d2"]},
-                    "kept": {"probe": "recall_admitted", "query": DIGEST("kappa"), "logical_refs": ["memory:ctl"]},
+                    "kept": {"probe": "recall_admits", "query": DIGEST("kappa"), "logical_refs": ["memory:ctl"], "fact": "ctl"},
                     "withheld_after_reopen": {"probe": "recall_mentions", "query": DQ, "historical": True, "tokens": ["d1", "d2"]},
-                    "kept_after_reopen": {"probe": "recall_admitted", "query": DIGEST("kappa"), "logical_refs": ["memory:ctl"]}},
-         "expect": {"withheld": EQ([]), "kept": EQ(["ctl"]), "withheld_after_reopen": EQ([]), "kept_after_reopen": EQ(["ctl"])}},
+                    "kept_after_reopen": {"probe": "recall_admits", "query": DIGEST("kappa"), "logical_refs": ["memory:ctl"], "fact": "ctl"}},
+         "expect": {"withheld": EQ([]), "kept": EQ(True), "withheld_after_reopen": EQ([]), "kept_after_reopen": EQ(True)}},
         {"id": "E5b-own-scope-derivations-withheld-after-permanent-deletion", "invariants": ["E5"],
          "clauses": [C(D44, Q_OWN, "withheld", "withheld_after_reopen"), C(D786, Q_786_OWN, "withheld"),
                      C(D44, Q_UNKNOWN, "kept"), C(D28, Q_28_PURGE, "q1_exists")],
@@ -314,9 +320,9 @@ FIXTURE = {
                             forget_q(permanent=True), {"op": "reopen"}],
          "probes": {"q1_exists": {"probe": "fact_exists", "fact": "q1"},
                     "withheld": {"probe": "recall_mentions", "query": DQ, "historical": True, "tokens": ["d1", "d2"]},
-                    "kept": {"probe": "recall_admitted", "query": DIGEST("kappa"), "logical_refs": ["memory:ctl"]},
+                    "kept": {"probe": "recall_admits", "query": DIGEST("kappa"), "logical_refs": ["memory:ctl"], "fact": "ctl"},
                     "withheld_after_reopen": {"probe": "recall_mentions", "query": DQ, "historical": True, "tokens": ["d1", "d2"]}},
-         "expect": {"q1_exists": EQ(False), "withheld": EQ([]), "kept": EQ(["ctl"]), "withheld_after_reopen": EQ([])}},
+         "expect": {"q1_exists": EQ(False), "withheld": EQ([]), "kept": EQ(True), "withheld_after_reopen": EQ([])}},
         {"id": "E5c-purged-source-cited-afterwards", "invariants": ["E5"],
          "clauses": [C(D44, Q_OWN, "late_withheld"), C(D786, Q_786_OWN, "late_withheld"), C(D44, Q_UNKNOWN, "bp_admitted"),
                      C(D44, Q_SAME, "bp_admitted", "bp_history"), C(D28, Q_28_PURGE, "q1_exists")],
@@ -325,9 +331,9 @@ FIXTURE = {
                             rem("memory:bp", DIGEST("mu"), evidence_refs=["q1"], **{"as": B}, label="bp", require_committed=True)],
          "probes": {"q1_exists": {"probe": "fact_exists", "fact": "q1"},
                     "late_withheld": {"probe": "recall_mentions", "query": DIGEST("lambda"), "historical": True, "tokens": ["late"]},
-                    "bp_admitted": {"probe": "recall_admitted", "query": DIGEST("mu"), "logical_refs": ["memory:bp"], "as": B},
+                    "bp_admitted": {"probe": "recall_admits", "query": DIGEST("mu"), "logical_refs": ["memory:bp"], "fact": "bp", "as": B},
                     "bp_history": {"probe": "history", "ref": "memory:bp", "as": B}},
-         "expect": {"q1_exists": EQ(False), "late_withheld": EQ([]), "bp_admitted": EQ(["bp"]), "bp_history": EQ(LIVE("bp"))}},
+         "expect": {"q1_exists": EQ(False), "late_withheld": EQ([]), "bp_admitted": EQ(True), "bp_history": EQ(LIVE("bp"))}},
         {"id": "E6-re-creation-by-the-citing-scope", "invariants": ["E6"],
          "clauses": [C(D44, Q_OPEN, "recreated"), C(D44, Q_GEN, "recreated"), C(D44, Q_SAME, "bf_before", "bf_after", "bf_after_reopen"),
                      C(D44, Q_OWN, "bo_after", "bo_after_reopen"), C(D44, Q_BIND, "bo_before", "bo_after")],
@@ -336,24 +342,24 @@ FIXTURE = {
                             rem("memory:q", QT("east"), P(Q, QA, "east"), **{"as": B}, label="q-b", name="recreate", require_committed=True),
                             rem("memory:bo", DIGEST("xi"), evidence_refs=["q-b"], **{"as": B}, label="bo", name="bo", require_committed=True)],
          "probes": {"recreated": {"probe": "op_result", "name": "recreate", "field": "after_state"},
-                    "bf_before": {"probe": "recall_admitted", "query": DIGEST("nu"), "logical_refs": ["memory:bf"], "as": B},
-                    "bo_before": {"probe": "recall_admitted", "query": DIGEST("xi"), "logical_refs": ["memory:bo"], "as": B},
-                    "bf_after": {"probe": "recall_admitted", "query": DIGEST("nu"), "logical_refs": ["memory:bf"], "as": B},
-                    "bo_after": {"probe": "recall_admitted", "query": DIGEST("xi"), "logical_refs": ["memory:bo"], "as": B},
-                    "bf_after_reopen": {"probe": "recall_admitted", "query": DIGEST("nu"), "logical_refs": ["memory:bf"], "as": B},
-                    "bo_after_reopen": {"probe": "recall_admitted", "query": DIGEST("xi"), "logical_refs": ["memory:bo"], "as": B}},
-         "expect": {"recreated": EQ("v1"), "bf_before": EQ(["bf"]), "bo_before": EQ(["bo"]),
-                    "bf_after": EQ(["bf"]), "bo_after": EQ([]), "bf_after_reopen": EQ(["bf"]), "bo_after_reopen": EQ([])}},
+                    "bf_before": {"probe": "recall_admits", "query": DIGEST("nu"), "logical_refs": ["memory:bf"], "fact": "bf", "as": B},
+                    "bo_before": {"probe": "recall_admits", "query": DIGEST("xi"), "logical_refs": ["memory:bo"], "fact": "bo", "as": B},
+                    "bf_after": {"probe": "recall_admits", "query": DIGEST("nu"), "logical_refs": ["memory:bf"], "fact": "bf", "as": B},
+                    "bo_after": {"probe": "recall_admits", "query": DIGEST("xi"), "logical_refs": ["memory:bo"], "fact": "bo", "as": B},
+                    "bf_after_reopen": {"probe": "recall_admits", "query": DIGEST("nu"), "logical_refs": ["memory:bf"], "fact": "bf", "as": B},
+                    "bo_after_reopen": {"probe": "recall_admits", "query": DIGEST("xi"), "logical_refs": ["memory:bo"], "fact": "bo", "as": B}},
+         "expect": {"recreated": EQ("v1"), "bf_before": EQ(True), "bo_before": EQ(True),
+                    "bf_after": EQ(True), "bo_after": EQ(False), "bf_after_reopen": EQ(True), "bo_after_reopen": EQ(False)}},
         {"id": "E6b-chain-rooted-in-the-foreign-deleted-fact", "invariants": ["E6"],
          "clauses": [C(D44, Q_UNKNOWN, "first", "second", "third"), C(D44, Q_SAME, "first", "second", "third")],
          "steps": seed() + [forget_q(permanent=True),
                             rem("memory:c1", DIGEST("omicron"), evidence_refs=["q1"], **{"as": B}, label="c1", require_committed=True),
                             rem("memory:c2", DIGEST("pi"), evidence_refs=["c1"], **{"as": B}, label="c2", require_committed=True),
                             rem("memory:c3", DIGEST("rho"), evidence_refs=["c2"], **{"as": B}, label="c3", require_committed=True)],
-         "probes": {"first": {"probe": "recall_admitted", "query": DIGEST("omicron"), "logical_refs": ["memory:c1"], "as": B},
-                    "second": {"probe": "recall_admitted", "query": DIGEST("pi"), "logical_refs": ["memory:c2"], "as": B},
-                    "third": {"probe": "recall_admitted", "query": DIGEST("rho"), "logical_refs": ["memory:c3"], "as": B}},
-         "expect": {"first": EQ(["c1"]), "second": EQ(["c2"]), "third": EQ(["c3"])}},
+         "probes": {"first": {"probe": "recall_admits", "query": DIGEST("omicron"), "logical_refs": ["memory:c1"], "fact": "c1", "as": B},
+                    "second": {"probe": "recall_admits", "query": DIGEST("pi"), "logical_refs": ["memory:c2"], "fact": "c2", "as": B},
+                    "third": {"probe": "recall_admits", "query": DIGEST("rho"), "logical_refs": ["memory:c3"], "fact": "c3", "as": B}},
+         "expect": {"first": EQ(True), "second": EQ(True), "third": EQ(True)}},
     ],
 }
 
