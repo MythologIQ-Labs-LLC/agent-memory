@@ -16,9 +16,11 @@ after the independent pre-execution review found that the first version of ``_sh
 the bare case label and so rewrote runtime vocabulary (``deleted_lineage``, ``"status":
 "unknown"``) on one side of each comparison, the second
 (``reports/validation/809-at-head/preregistration-baseline-2.log``), run on the same runtime
-with this corrected module. The review record is
+with the corrected module, and a third (``preregistration-baseline-3.log``) after the
+re-review found two durable-path harness defects (membership not persisted by ``close``;
+an unlogged row rewrite tripping the recovery digest). The review record is
 ``reports/validation/809-at-head/independent-preregistration-review.md``; this revision
-answers its SF-1..SF-7 items. A failure after the change is a finding to investigate, never
+answers its SF-1..SF-7 and G-1..G-2 items. A failure after the change is a finding to investigate, never
 permission to weaken a line.
 
 What is expected to be RED on the unmodified tree (the oracle and its side channels):
@@ -30,8 +32,9 @@ stranger, a later member, another task or another project binds nothing). Of the
 declared 776 changes, the traversal test is RED (the forward note is refused pre-#809) and
 the property test is RED for the seeds in which a forward citation materialises (seed 4:
 the independent fail-closed oracle disagrees with the late-binding runtime). Recorded on
-the unmodified runtime with this module: 36 failed, 14 passed, 82 subtests passed; the 14
-are the 8 positive-control test bodies plus the 6 bodies whose failures are subtest-level.
+the unmodified runtime with this module (baseline 3): 36 failed, 14 passed, 82 subtests
+passed; the 14 are the 8 positive-control test bodies plus the 6 bodies whose failures are
+subtest-level.
 In the ``FourReferences`` family only the ``deleted`` case fails before the repair, and only
 on ``recall``, ``history`` and ``write_semantics``: ``remember`` (receipt) and every
 ``live_foreign`` comparison already hold, which is the pre-repair oracle exactly.
@@ -114,8 +117,10 @@ def _shape(value, *, self_uuid: str | None, ref: str | None, label: str) -> str:
     ``admissions``, ``candidates``, ``admitted``, ``returned``) are compared without regard
     to order: the citer's other memories are candidates of every recall and their rank
     relative to the citer's own fact follows the query text, which carries the label. What
-    is compared is therefore the set of candidate records and the citer's own record, with
-    nothing dropped."""
+    is compared is therefore the multiset of candidate records and the citer's own record
+    (including its ``rank_position``), with nothing dropped. The rule applies to every list
+    of fact uuids anywhere in a payload, not only to those four fields; scores are compared
+    at a tolerance of 1e-6, an accepted tolerance recorded in the evidence."""
 
     def fold(text: str) -> str:
         if self_uuid:
@@ -432,6 +437,8 @@ class ProvenanceAudit(_Citer):
         self.reopen("project:a")
         self.forget_a(permanent=False)
         for _ in range(2):
+            # the residue set also names non-fact components that keep derived state of the
+            # tombstoned fact (``rc1-local-derived-index``); only fact uuids matter here
             residue = set(self.adapter.undeclared_residue(a1))
             declared = set(self.adapter.tombstone(a1)["declared_derived_refs"])
             self.assertNotIn(foreign, residue | declared)
@@ -656,13 +663,17 @@ class SharedDomainAndRestrictions(unittest.TestCase):
 class SharedDomainDurable(_Citer):
     """Review SF-7e, facade over SQLite: a member's binding survives revocation of its
     membership, handle reopens and the source's deletion; a stranger granted membership
-    only after its citation never binds, also after reopens. Facts are written into the
-    shared domain alone (host-supplied scope override) so that membership is the gate."""
+    only after its citation never binds, also after reopens. Every handle is opened in
+    ``shared:x`` and every fact is written into the shared domain alone (host-supplied scope
+    override), so that membership, not the project gate, is what decides. Membership is an
+    in-memory administrative seam persisted by the next governed act (review G-1): the
+    revocation and the grant are followed by the owner's governed deletion in the same
+    session, and the restored membership is asserted after the reopen."""
 
     SHARED = {"isolation_domain_refs": ["shared:x"], "required_isolation_domain_refs": ["shared:x"]}
 
-    def handle(self, actor: str, scope: str = "shared:x") -> AgentMemory:
-        return AgentMemory.open(self.root, tenant=TENANT, actor_id=actor, scope=scope, purpose="c786")
+    def handle(self, actor: str) -> AgentMemory:
+        return AgentMemory.open(self.root, tenant=TENANT, actor_id=actor, scope="shared:x", purpose="c786")
 
     def test_binding_survives_revocation_and_reopen_and_a_later_grant_binds_nothing(self):
         self.fresh()
@@ -676,26 +687,27 @@ class SharedDomainDurable(_Citer):
         bound = member.remember("memory:sb", f"{QUERY} digest member", evidence_refs=(s1["fact_uuid"],), overrides=self.SHARED)
         self.assertTrue(bound["committed"], bound)
         member.close()
-        stranger = self.handle("agent:c", "project:c")
-        unbound = stranger.remember("memory:sc", f"{QUERY} digest stranger", evidence_refs=(s1["fact_uuid"],),
-                                    overrides={"isolation_domain_refs": ["project:c", "shared:x"],
-                                               "required_isolation_domain_refs": ["project:c"]})
+        stranger = self.handle("agent:c")
+        unbound = stranger.remember("memory:sc", f"{QUERY} digest stranger", evidence_refs=(s1["fact_uuid"],), overrides=self.SHARED)
         self.assertTrue(unbound["committed"], unbound)
         stranger.close()
         owner = self.handle("agent:a")
+        self.assertEqual(owner.runtime.adapter._shared_domain_members["shared:x"], {"agent:a", "agent:b"})
         owner.runtime.adapter.set_shared_domain_members("shared:x", ("agent:a", "agent:c"))  # revoke b, grant c
-        owner.close()
-        owner = self.handle("agent:a")
-        self.assertEqual(owner.runtime.adapter._shared_domain_members["shared:x"], {"agent:a", "agent:c"})
-        self.assertTrue(owner.forget("memory:s")["committed"])
+        self.assertTrue(owner.forget("memory:s")["committed"])  # the governed act that persists the change
         owner.close()
         for _ in range(2):
             owner = self.handle("agent:a")
+            self.assertEqual(owner.runtime.adapter._shared_domain_members["shared:x"], {"agent:a", "agent:c"})
             result = owner.runtime.adapter.governed_recall(f"{QUERY} digest", owner._handle_recall_context())
             self.assertIn(bound["fact_uuid"], result.candidates, result.refusals)
             self.assertIn(result.refusals.get(bound["fact_uuid"]), DELETION_FAMILY)
+            # a recall is a governed act; only the facade's serialized operations publish the
+            # governance state the next recovery verifies, so the public read below is also what
+            # makes the handle reopenable (an adapter-level call followed by close() is not)
+            self.assertNotIn(bound["fact_uuid"], owner.recall(f"{QUERY} digest", temporal_intent=HIST)["admitted"])
             owner.close()
-            stranger = self.handle("agent:c", "project:c")
+            stranger = self.handle("agent:c")  # a member now; its own digest never bound
             self.assertIn(unbound["fact_uuid"], stranger.recall(f"{QUERY} digest", temporal_intent=HIST)["admitted"])
             stranger.close()
         self.memory = self.open("project:a")
@@ -736,7 +748,8 @@ class LegacyFacts(unittest.TestCase):
 class LegacyFactsDurable(_Citer):
     """Review SF-5: the same on durable data. A legacy row (its recorded derivation removed
     through the SQLite substrate) is reopened from disk and still follows its source's
-    deletion. The row is rewritten on every runtime, so the baseline exercises the rewrite."""
+    deletion. The row is rewritten, logged and published on every runtime, so the baseline
+    exercises the whole rewrite path (byte-identical there, since no derivation is recorded)."""
 
     def test_a_legacy_row_keeps_binding_across_reopens(self):
         from agentmem_ref.runtime import adapter as adapter_module
@@ -748,8 +761,14 @@ class LegacyFactsDurable(_Citer):
         attributes = dict(self.fact(d).attributes or {})
         if key is not None:
             attributes.pop(key, None)
-        self.adapter._substrate._connection.execute(
+        substrate = self.adapter._substrate
+        substrate._connection.execute(
             "UPDATE facts SET attributes_json = ? WHERE uuid = ?", (_canonical_bytes(attributes).decode("utf-8"), d))
+        # the row is now a legacy row; recovery verifies the canonical substrate digest, so the
+        # rewrite is logged as a canonical write and published by one governed write before the
+        # reopen (review G-2), exactly as a migration tool would have to do
+        substrate._log("write_fact", d)
+        self.assertTrue(self.memory.remember("memory:touch", f"{QUERY} touch")["committed"])
         self.reopen("project:a")
         if key is not None:
             self.assertNotIn(key, self.fact(d).attributes or {})

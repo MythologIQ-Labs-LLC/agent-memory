@@ -463,3 +463,99 @@ short) before their first execution on the changed runtime.
   the -v3 replay verifier/tests. None of that is covered by this review; the replay fixture for the new generation and the
   changed verifier need their own pre-execution review (item 7), and the -v3 verifier changes must be shown not to alter
   what the frozen -v3 evidence verifies against.
+
+---
+
+## G. Re-review of the superseding preregistration commit `53268532` (2026-10-15)
+
+**Scope.** Commit `53268532e75850ae8657416f7399c0971ad79cc2` (parent `10a0d70e`), read via `git show 53268532:<path>`
+because the worktree still carries the uncommitted implementation. Files read: the whole of
+`reference/tests/test_809_evidence_reference_authorization.py` (764 lines), the diffs to
+`test_776_deletion_decision_properties.py` and `test_776_transitive_traversal_review.py`,
+`reports/validation/809-at-head/preregistration-baseline-2.log` (header, progress line, every `E` line, the FAILED/SUBFAILED
+list, totals), and, at HEAD runtime, `state/sqlite_substrate.py` (facts DDL 454-466, `_log` 776-784, `_row_payload` 1051,
+`_canonical_digest_rows` 1072-1077, `incremental_state_digest` 1114-1140, `verify_recorded_state_digest` 1157-1169),
+`runtime/sqlite_runtime.py` 330-350 (recovery), `runtime/adapter.py` 254-263 (`set_shared_domain_members`),
+`runtime/restart_runtime.py` 350-351 and 415-417 (membership snapshot/restore), `api/surface.py` 519 and 1349-1356
+(`AgentMemory.open` uses `SQLiteConfiguredCompositionRuntime.recover`; `close` publishes nothing). **Nothing executed.**
+
+### G.1 Per-item verdicts
+
+| item | change at 53268532 | verdict |
+|---|---|---|
+| SF-1 (label fold) | `_shape` folds only `memory:b-{label}`, `memory:d-{label}`, `digest {label}` (lines 124-129); bare label no longer touched. | **FIXED.** Baseline-2 confirms: the `write_semantics` channel now shows the real pre-repair difference (`null` vs document, log lines 25/38/51/64) and every `live_foreign` comparison and the `remember` channel hold (no `case='live_foreign'` entry in lines 178-198). |
+| SF-1 (canonicalisation) | uuid-keyed maps become sorted `[k, v]` pair lists, uuid-only lists are sorted (both by folded text, lines 131-142); `"seconds"` folded; `*score*` floats rounded to 1e-6 (lines 98-100). | **ACCEPTABLE, with two notes.** What it hides: only the *order* of candidate records and of uuid lists, wall-clock `transaction_time.seconds`, and score differences below 1e-6. Nothing is dropped: multiplicity is kept (sorted lists keep duplicates), each record's content including `rank_position`, `refusal`, `admission_basis` and `route_provenance` is still compared, and candidate-set membership is compared as a multiset. An order-only channel would require the runtime to order two equal-content candidate sets differently depending on the cited ref's deletion state while leaving every score equal to six decimals; no such ordering input exists in `admit_preselected_candidates`/ranking that is not itself in the record. Note (a): the 1e-6 rounding is a tolerance, so a sub-ppm score dependence on the cited ref would pass; state it in the completion evidence as an accepted tolerance (it is far below anything an attacker could read through the public float). Note (b): `UUID = ^ref-\d+$` makes any list of only `ref-N` strings order-insensitive, including `evidence_refs` lists; harmless for these cases (single element), but the docstring should say lists of fact uuids anywhere in the payload are order-folded, not only the four named recall fields. The coordinator's claim ("candidate set membership and every record's content are still compared; only rank among the citer's own memories is not") is accurate, with the correction that `rank_position` *inside* an admitted record is still compared, so rank is hidden only for non-admitted candidates. |
+| SF-2 | deleted-vs-unknown and live-vs-unknown are separate `subTest(channel, case)` (lines 241-244); the dispute case compares `dispute` and `history` shapes in separate subTests (288-290). | **FIXED.** |
+| SF-3 | `DELETION_FAMILY` pinned in the four shared-domain positives and both legacy tests (lines 611, 620, 641, 696, 733). | **FIXED.** |
+| SF-4 | LateBinding docstring (532-541) and the traversal test comment (diff lines 134-139) state the withdrawn guarantee verbatim and that owner acceptance is requested, not assumed. | **FIXED** as a declaration. The decision itself remains the owner's. |
+| SF-5 (in-memory) | `LegacyFacts` asserts the pop (722), resets both memos (725-726), pins candidate presence and the family (732-733). | **FIXED.** |
+| SF-5 (durable) | new `LegacyFactsDurable` (736-760): removes the attribute by `UPDATE facts SET attributes_json = ?` on the live connection, then `reopen`. | **WRONG as a harness, BLOCKING.** `AgentMemory.open` recovers through `SQLiteConfiguredCompositionRuntime.recover`, which calls `substrate.verify_recorded_state_digest(state["substrate_digest"])` and raises `RuntimeRecoveryError("SQLite canonical substrate digest mismatch")` on failure (sqlite_runtime.py 341-343). That verification recomputes the digest **from the canonical rows**, and the facts row hash is `_row_hash("facts", asdict(fact))`, i.e. it covers `attributes_json` (sqlite_substrate.py 1076-1077, 1157-1169). An out-of-band `UPDATE` is not routed through `_log`, so the recorded root is never republished to cover it. On the unmodified runtime the test passed only because `key is None` left the attributes byte-identical (the substrate's own `_canonical_bytes` serialiser was used), so the rewrite was a no-op for the digest. On the repaired runtime the attribute is removed, the row bytes change, and the very next `reopen` (line 752) raises before any legacy-binding assertion runs: RED/ERROR for a harness reason. The coordinator's statement "the row is rewritten on every runtime so the baseline exercised the rewrite path" is true of the SQL statement but not of what the test needs, which is a *changed* row surviving recovery. |
+| SF-6 | `_dependencies(adapter, fact)` recomputes bound refs as `ref in adapter._fact_scope and seq(ref) < seq(uuid)` with an assertion that both scope records share `domain_refs` (diff lines 64-86); the oracle never reads the recorded derivation. | **FIXED.** Independent of `_bound_derivation`. One note: equality of `domain_refs` is asserted as a precondition, not used as a gate; in this single-scope property that is sufficient, and the assertion will fire if the property ever gains a second scope, which is the right failure mode. Baseline-2 shows seed 4 RED for the predicted reason (log line 153), i.e. the oracle is now stricter than the late-binding runtime, exactly as declared. |
+| SF-7a | `test_own_scope_dependencies_survive_a_genuine_process_restart_before_and_after_the_deletion` (470-488): child-process historical recall before and after pruning/permanent deletion; after a purge `fact(a1)` is None and `d1, d2` stay withheld, `ctl` admitted. | **DERIVED, GREEN on baseline-2 as declared.** Covers B.1. |
+| SF-7b | `DirectProbes` (325-343): `dispute(fact_uuid=a1)` vs `fact_uuid=GUESS` both refused with byte-equal shapes; `write_semantics` None for both; no event recorded. | **DERIVED, GREEN as declared.** Covers B.6. (`label="probe"` is used for both cases, correct since the memory is the same.) |
+| SF-7c | `ProvenanceAudit` (420-440): `undeclared_residue(a1)` ∪ `declared_derived_refs` excludes B's foreign citation and includes A's own `d1`, checked twice across a reopen. | **REASONABLE, RED on baseline-2 for the right reason** (log line 128: the foreign uuid is in the residue set; the set also contains `rc1-local-derived-index`, a non-`ref-N` member that names a derived-index component -- harmless to the assertions, but worth a one-line comment so a later reader does not mistake it for leakage). Pins D(i)'s residue decision: the deleting scope no longer learns a foreign citing uuid. Note this also means a verbatim remnant string of a purged uuid in another scope's `episode_uuids` is no longer reported anywhere; the completion evidence should say so (it is the citer's own input and inert after the repair). |
+| SF-7d | `test_the_owners_view_after_the_other_scope_re_creates_and_deletes_the_id` (377-398): A's `d1` stays withheld through B's re-creation; A's citation of B's generation never binds; B's later deletion changes nothing A sees. | **DERIVED, RED on baseline-2 for the right reason** (log line 114-116: `x` withheld pre-repair). Covers B.8. |
+| SF-7e | `SharedDomainDurable` (686-731), facade over SQLite. | **WRONG as a harness, BLOCKING.** Baseline-2 line 142-146 shows the test failing at line 719 (`_shared_domain_members["shared:x"] == {"agent:a","agent:c"}`): the restored set still holds `agent:b` and lacks `agent:c`. Cause: `set_shared_domain_members` is an in-memory setter (adapter 254-263); membership is persisted only when the runtime publishes governance state after a governed act (restart_runtime 350-351 snapshot / 415-417 restore), and `AgentMemory.close` publishes nothing (surface 1349-1356). The first membership (line 701) survived only because the `remember` of `s1` published after it; the revoke/grant at line 716 is followed directly by `close()` and is lost. The test therefore fails before reaching any oracle assertion, on the unmodified and on the repaired runtime alike, and its presence in the RED set is a false positive for the oracle. Secondary: the stranger handle is opened with `scope="project:c"` (line 709), so its proposal's `project_ref` is `project:c` while `s1` was written with `project_ref="shared:x"` (the facade sets `project_ref = self.scope` and the override does not replace it, surface 677-686); the stranger is therefore refused by the project gate regardless of membership, and "a later grant binds nothing" would hold even if membership were ignored -- contrary to the docstring's "membership is the gate". |
+| N-2 | parent/child `agentmem_ref` package roots compared (lines 221-226, `_package_root`). | **FIXED.** |
+| N-1, N-3, N-4 | unchanged (N-1 acknowledged in the docstring 56-60). | carried; see G.4. |
+
+### G.2 Do the docstring's RED/GREEN sets match baseline-2?
+
+Yes, exactly. Declared RED (docstring 24-32): FourReferences 4, CanaryAndReCreation 3, CrossScopeChains 2, LateBinding,
+RecordedDerivation, ProvenanceAudit, SharedDomainDurable, SharedDomainAndRestrictions 4 of 5, the traversal test, the
+property test (seed 4), plus the oracle's unexpected success: log lines 178-213 list precisely these and nothing else.
+Declared GREEN (38-42): OwnScopeDeletionCompleteness 4, DirectProbes, revocation, LegacyFacts, LegacyFactsDurable (8 bodies)
+have no entry. Counts: progress line (log 10) has 14 `.` and 14 `F` over 28 tests (unittest alphabetical order within each
+class, file order across classes -- verified by hand); 36 failed = 14 test-level + 22 SUBFAILED; 14 passed = 8 positive
+controls + 6 bodies whose failures are subtest-level (FourReferences 4, canary, property). The docstring's gloss (33-34)
+is now correct. In FourReferences only `case='deleted'` fails and only on recall/history/write_semantics (181-195), which is
+the pre-repair oracle exactly.
+
+**But** two entries in the matched sets are matched for the wrong reason: `SharedDomainDurable` is RED on a harness
+assumption that fails identically after the repair (G.1 SF-7e), and `LegacyFactsDurable` is GREEN on the baseline only
+because its row rewrite was a byte-level no-op there; on the repaired runtime it will error at reopen (G.1 SF-5 durable).
+Both would be misread at first execution as findings about the runtime.
+
+### G.3 Remaining blocking items and exact fixes
+
+- **G-1 (BLOCKING) `SharedDomainDurable::test_binding_survives_revocation_and_reopen_and_a_later_grant_binds_nothing`.**
+  Make the membership change durable through a path that publishes. Either (i) replace line 716 with the governed path
+  `agentmem_ref.runtime.shared_revocation.commit_shared_domain_membership_change(...)` (bootstrap + change objects, the
+  runtime's own durable mechanism; it also writes the membership-authority slot), or, minimally, (ii) keep
+  `set_shared_domain_members` at 716 but perform the `owner.forget("memory:s")` **in the same handle session before**
+  `owner.close()` (the forget publishes governance), then reopen and assert the membership (line 719) and the recall results.
+  Either way keep the post-reopen membership assertion so persistence stays verified. Also open the stranger with
+  `scope="shared:x"` and override `isolation_domain_refs=["shared:x"]`, `required_isolation_domain_refs=["shared:x"]`, so
+  that membership, not `project_ref`, is what decides the stranger's non-binding (otherwise rename the docstring's claim).
+- **G-2 (BLOCKING) `LegacyFactsDurable::test_a_legacy_row_keeps_binding_across_reopens`.** The out-of-band row rewrite
+  must be brought under the substrate digest before `reopen`, or the test must avoid the rewrite. Minimal fix: after the
+  `UPDATE` (line 750), register the row as changed and publish through a governed act *before* reopening:
+  `self.adapter._substrate._log("write_fact", d)` (marks `("facts", d)` dirty, sqlite_substrate 776-784) followed by one
+  governed write on the open handle (e.g. `self.memory.remember("memory:tick", f"{QUERY} tick")`), whose publish recomputes the
+  dirty row's hash into the root; then `reopen` verifies. Alternatively set `substrate._digest_index_trusted = False`
+  before the governed write so the next publish rebuilds the index from canonical rows. In both variants keep the
+  `assertNotIn(key, ...)` after reopen (line 755) so a silent persistence failure stays visible, and add
+  `self.assertNotIn(d, ...)` only after `forget_a` as now. A cleaner alternative that touches no private member is to build the
+  legacy row through the file-checkpoint runtime (`checkpoint_migration`), but that is a larger harness; the minimal fix is
+  acceptable for a preregistration.
+- After G-1 and G-2: re-run the baseline on the unmodified runtime, commit as `preregistration-baseline-3.log` beside the
+  two existing logs, update the docstring's counts, and record the executed module's sha256 as baseline-2 does (log line
+  9). Expected deltas vs baseline-2: `SharedDomainDurable` RED on its oracle assertions (lines 726-727 or 729) instead of
+  line 719; `LegacyFactsDurable` GREEN as before.
+
+### G.4 Non-blocking notes carried or new
+
+- The `ProvenanceAudit` residue set contains `rc1-local-derived-index` (log 128); add a comment naming its origin.
+- `_shape` docstring: say that *any* list consisting solely of `ref-N` strings is order-folded (G.1, note b).
+- N-1: the `expectedFailure`-inside-`subTest` reporting path is still unobserved; check at first execution that the
+  oracle reports xfail, not SUBFAILED.
+- N-4: the replay-generation fixture (DSL/3) and the verifier changes seen uncommitted in the worktree are outside this
+  module and still need their own pre-execution review when committed (issue item 7).
+- The timing channel (B.2) remains unmeasured; the completion evidence should argue it.
+
+### G.5 One-line verdict
+
+**NO** -- not as committed at `53268532`: two tests (`SharedDomainDurable`, `LegacyFactsDurable`) are harness-broken in
+ways that would be misread at first execution; every other test in the module may be executed on the changed runtime as
+committed, and the SF-1..SF-4, SF-6, SF-7a-d and N-2 answers are accepted. Fix G-1 and G-2, re-baseline, commit, then
+execute.
