@@ -316,6 +316,23 @@ Controls:
 - dependency checks
 - stronger authority as reversibility decreases
 
+### 18b. Deletion-membership oracle through self-declared provenance
+
+A writer cites a guessed or foreign identifier as the provenance of its own memory and then observes its own reads (recall, history, write semantics) to learn whether that identifier belongs to a deleted record of another scope, because deletion taint followed every cited reference regardless of whether the citer could ever have read it (reference runtime finding F-R3-2, closed under #809).
+
+Required invariant:
+
+```text
+a dependency the writer could not read is not a dependency
+```
+
+Controls:
+
+- canonical derivation bound at commit under the writer's own read authority, recorded with the fact
+- unreadable, unbound and absent references externally indistinguishable at write and at every public read
+- deletion taint, residue and public withholding follow only the bound derivation
+- deletion completeness preserved for every dependency the writer was entitled to (shared membership at commit, later revocation, physical purge of the source)
+
 ### 19. Promotion-queue flooding
 
 The proportional-handling lanes concentrate friction at promotion and review boundaries, which makes those boundaries the highest-value place to attack by volume rather than by quality. An attacker, a compromised estimator, or merely a noisy environment floods the review queue with plausible-looking candidates until reviewer attention degrades, then a bad promotion rides through on fatigue. This is governance-fatigue exploitation, and it is a direct consequence of the architecture's own design choice to make review the gate.
@@ -441,6 +458,7 @@ At minimum:
 - uncertain sensitivity
 - stale authorization
 - deletion residue
+- deletion-membership oracle through self-declared provenance
 - permanent deletion from predicted low utility
 - estimator drift
 - promotion-queue flooding under review-capacity pressure

@@ -559,3 +559,82 @@ Both would be misread at first execution as findings about the runtime.
 ways that would be misread at first execution; every other test in the module may be executed on the changed runtime as
 committed, and the SF-1..SF-4, SF-6, SF-7a-d and N-2 answers are accepted. Fix G-1 and G-2, re-baseline, commit, then
 execute.
+
+---
+
+## H. Re-review of commit `8272b38e` (2026-10-15): G-1, G-2 and the two notes
+
+**Scope.** Commit `8272b38ead003ea2c13810c3cc826de32d57a08f` (parent `53268532`), read via `git show 8272b38e:<path>`: the
+diff to `reference/tests/test_809_evidence_reference_authorization.py` (docstring, `_shape` docstring, `ProvenanceAudit`
+comment, `SharedDomainDurable`, `LegacyFactsDurable`), those two classes in full (module lines 663-779), and
+`reports/validation/809-at-head/preregistration-baseline-3.log` (header, progress line, every `E` line, FAILED/SUBFAILED
+list, totals). Runtime at HEAD, read-only: `api/surface.py` 339-347 (`_serialized` is a lock only), `runtime/sqlite_runtime.py`
+419-428 and 500-561 (`_persist_unlocked`; `_transactional_operation` wraps the runtime's governed operations, recall
+included, in a substrate transaction followed by `_persist_unlocked`; its docstring at 543 notes that governed recall is
+content-read-only but allocates decision/event identifiers), `state/sqlite_substrate.py` 431 and 586-589
+(`SqliteDeterministicIds` lives in the database) and 1072-1083 (the recovery digest covers episodes, facts, typed relations).
+**Nothing executed.** No runtime file is touched by the commit (`git show --stat`).
+
+### H.1 G-1 `SharedDomainDurable::test_binding_survives_revocation_and_reopen_and_a_later_grant_binds_nothing` (663-713)
+
+**FIXED.** Every handle opens in `shared:x` (675-676) and every fact is written with the `["shared:x"]` override (683, 687,
+691), so the facade's `project_ref` is `shared:x` for all three actors and the stranger's non-binding is decided by shared
+membership alone (adapter `_scope_refusal` 1633-1639 at HEAD), as the docstring now claims. The revoke/grant (696) is
+followed in the same session by the owner's governed `forget` (697), which publishes governance; the restored membership is
+asserted before (695) and after each reopen (701). On the repaired runtime the expected path is: `bound` written while `b`
+is a member -> bound `[s1]`; `unbound` written while `c` is not -> bound `[]`; after the deletion the owner (a member) sees
+`bound` as a candidate with a deletion-family refusal (703-704) and not admitted (708); `c`, a member now, is admitted its own
+digest (711). Each assertion is reachable and non-vacuous (candidate presence asserted at 703).
+
+**The `governed_recall`-then-`close` observation (705-708).** Legitimate harness choice, and it masks nothing. Reading
+the runtime confirms the documented mechanism: an adapter-level `governed_recall` allocates identifiers from the
+database-resident counter and records decisions/events (adapter 1225, 1243) outside `_transactional_operation`, so nothing
+republishes the governance/substrate digests the next `recover` verifies (sqlite_runtime 341-343); the facade's public
+`recall` goes through the composition runtime's transactional path and ends in `_persist_unlocked` (sqlite_runtime 552-561),
+which is why it "makes the handle reopenable". What the test asserts is unchanged by the ordering: the adapter-level
+refusal family is checked on the adapter result before the public recall runs (703-704), and the public recall adds the
+complementary public assertion (not admitted, 708). The public recall cannot alter the adapter-level outcome (admission
+is a pure function of governed state; the recall writes no memory content), so nothing observed at 703-704 is
+retroactively affected. Two notes for the record, not for the test: (a) direct adapter calls on a facade-owned SQLite
+runtime are an unsupported pattern that the test now documents; the implementation agent should say so in the completion
+evidence rather than let it look like a runtime defect; (b) this means `SharedDomainAndRestrictions` (in-memory adapter)
+remains the only place the adapter boundary is exercised without a facade publish in between, which is fine.
+
+### H.2 G-2 `LegacyFactsDurable::test_a_legacy_row_keeps_binding_across_reopens` (748-779)
+
+**FIXED.** After the out-of-band `UPDATE` (765-766) the row is registered as a canonical write (`substrate._log("write_fact",
+d)`, 770; marks `("facts", d)` dirty, sqlite_substrate 776-784) and one governed facade write follows (771), whose persist
+recomputes the dirty row's hash from the canonical row into the published root (`incremental_state_digest` 1124-1140), so
+`verify_recorded_state_digest` holds at the reopen (772) on every runtime. On the repaired runtime the attribute is absent
+after reopen (773-774 asserts it), the legacy row is admitted before and withheld after the source's pruning, live and after
+a second reopen. The baseline exercised the identical statement sequence (byte-identical rewrite there), so a persistence
+failure on the repaired runtime would surface at 774, not as a recovery error. Non-vacuous.
+
+### H.3 Notes
+
+Residue comment on `rc1-local-derived-index` added (the profile's currentness projection id, `_profiles/rc1-local.json:192`);
+`_shape` docstring states the multiset comparison, that every list of fact uuids anywhere in a payload is order-folded, and
+the accepted 1e-6 score tolerance. Both as requested.
+
+### H.4 RED/GREEN match against baseline-3
+
+Exact. Log lines 175-210 list the same 19 module tests, the oracle's unexpected success, the traversal test and property
+seed 4 as baseline-2, and nothing else; the eight GREEN bodies (OwnScope 4, DirectProbes, revocation, LegacyFacts,
+LegacyFactsDurable) have no entry. Progress line (log 10) `......FFFFF....FFFFFF.F..FF.` is identical to baseline-2 (14
+`.`, 14 `F`, 28 tests, unittest alphabetical order within classes). Totals 36 failed = 14 + 22 SUBFAILED, 14 passed = 8 + 6,
+82 subtests passed. The two previously mis-reasoned entries are now right: `SharedDomainDurable` fails on its oracle line
+(log 142, `'ref-0018' not found in []`: the later-granted stranger's digest is withheld pre-repair, test line 711), not on
+membership; `LegacyFactsDurable` passes through the full rewrite-log-publish-reopen path. The executed module's sha256 is
+recorded (log 9); baselines 1 and 2 are kept.
+
+### H.5 Remaining items
+
+No blocking item. Carried, non-blocking: N-1 (observe the `expectedFailure`-inside-`subTest` reporting of the oracle at
+first execution), N-4 (the DSL/3 replay fixture and verifier changes need their own pre-execution review when committed),
+B.2 (timing unmeasured; argue it in the completion evidence), SF-4 (owner's explicit acceptance of the withdrawn
+forward-binding guarantee is still outstanding; the module presents it correctly as pending).
+
+### H.6 One-line verdict
+
+**YES** -- the module may be executed as committed at `8272b38e` on the changed runtime; a failure there is a finding to
+investigate, not a licence to edit the expectations.

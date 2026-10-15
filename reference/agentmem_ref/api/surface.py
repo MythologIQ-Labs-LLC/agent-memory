@@ -72,14 +72,18 @@ def _never(value: str) -> bool:
     return False
 
 
-def _withheld_predicate(adapter) -> Callable[[str], bool]:
+def _withheld_predicate(adapter, context=None) -> Callable[[str], bool]:
+    """The deleted-lineage withholding predicate for one projection. ``context`` is the
+    reader's own recall context (#809): an identifier of a generation the reader could never
+    have read is its own input, not a disclosure, and is not withheld from it."""
     if not adapter.has_governed_deletions():
         return _never
     cache: dict[str, bool] = {}
 
     def withheld(value: str) -> bool:
         if value not in cache:
-            cache[value] = bool(adapter.public_identifier_withheld(value) or adapter.public_memory_withheld(value))
+            cache[value] = bool(adapter.public_identifier_withheld(value, context)
+                                or adapter.public_memory_withheld(value, context))
         return cache[value]
 
     return withheld
@@ -193,13 +197,14 @@ def recall(memory: GovernedMemoryAdapter, query: str, context_envelope: Mapping[
     compat, validated, early = _gate(context_envelope, contract.validate_recall_context, "recall")
     if early is not None:
         return early
-    admission = memory.governed_recall(query, contract.recall_context_from_envelope(validated))
+    context = contract.recall_context_from_envelope(validated)
+    admission = memory.governed_recall(query, context)
     # Contract 1.4.0 (#670): the adapter path has no ranking stage, so the prefix is taken in
     # admission order; the budget is policy applied after admission, never authority.
     returned, return_policy = contract.apply_return_budget(
         admission.admitted, (validated.get("budget") or {}).get("k"))
     # #777: the public projection withholds deleted-generation identifiers after admission.
-    withheld = _withheld_predicate(memory)
+    withheld = _withheld_predicate(memory, context)
     hidden = _withheld_candidates(admission.candidates, admission.refusals, withheld)
     candidates = [c for c in admission.candidates if c not in hidden]
     admissions = _scrub({c: d for c, d in admission.decisions.items() if c not in hidden}, withheld)
@@ -888,9 +893,8 @@ class AgentMemory:
         """
         self._require_open()
         adapter = self.runtime.adapter
-        return _project_semantics(
-            adapter.write_semantics(fact_uuid, self._handle_recall_context()),
-            _withheld_predicate(adapter))
+        context = self._handle_recall_context()
+        return _project_semantics(adapter.write_semantics(fact_uuid, context), _withheld_predicate(adapter, context))
 
     @_serialized
     def semantic_proposals(self, *, status: str | None = None) -> list[dict]:
@@ -1082,7 +1086,7 @@ class AgentMemory:
         rank = {candidate: index + 1 for index, candidate in enumerate(result.ranked_admitted)}
         # #777: ordinary readers never see deleted-generation identifiers, refusal reasons
         # that disclose a deletion, or counts/stop reasons derived from them.
-        withheld = _withheld_predicate(self.runtime.adapter) if public else (lambda value: False)
+        withheld = _withheld_predicate(self.runtime.adapter, context) if public else (lambda value: False)
         hidden = _withheld_candidates(result.candidates, result.refusals, withheld) if public else set()
         public_candidates = [c for c in result.candidates if c not in hidden]
         admissions: dict[str, dict] = {}
@@ -1271,7 +1275,7 @@ class AgentMemory:
                 projected["rejected_values"] = []
         else:
             start = adapter.public_generation_start(target_reference)
-            withheld = _withheld_predicate(adapter)
+            withheld = _withheld_predicate(adapter, context)
             # Deletion records are audit metadata: every deletion correlation is omitted, as is
             # every correlation that began in an earlier (deleted) generation.
             hidden = {e.get("correlation_id") for e in record["events"]
