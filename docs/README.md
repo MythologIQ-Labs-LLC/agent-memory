@@ -121,6 +121,14 @@ ADR-039 stays Proposed, and PR #587 / #583 stays DRAFT/HOLD, until the ADR index
 
 [`ARCHITECTURE_INDEX.md`](ARCHITECTURE_INDEX.md) is the single catalog for the architecture corpus: it files every numbered `docs/NN-*.md` document on exactly one shelf with a named owner, lists the non-numbered entry points and collections, and states the filing rule for new architectural documents. This page does not keep a second copy of that catalog. [`AGENTIC_MEMORY_SYSTEMS_CANONICAL_ARCHITECTURE.md`](AGENTIC_MEMORY_SYSTEMS_CANONICAL_ARCHITECTURE.md) is the governing architectural narrative; individual ADRs, schemas, code, and accepted evidence keep factual authority for their own claims.
 
+## Active runtime succession candidates
+
+- [`76-typed-recall-evidence-sufficiency.md`](76-typed-recall-evidence-sufficiency.md) records the **unmerged** #644 typed post-admission sufficiency observer, its local tests and Runtime Baseline v7 publication prerequisites. This is a candidate implementation, not accepted v6 runtime behavior.
+- [`77-governed-admitted-value-coherence.md`](77-governed-admitted-value-coherence.md) documents the #644 persisted-value disagreement/coexistence guard, its adversarial controls and independent local qualification requirements.
+- [`78-committed-governed-transition-witness.md`](78-committed-governed-transition-witness.md) documents the independently implemented, read-only applied-correction witness and its release/authority limits.
+- [`79-independent-644-qualification-reconciliation.md`](79-independent-644-qualification-reconciliation.md) records independent high-severity findings, conservative slot audit, and the mandatory stop-attestation safety hold.
+- [`81-indexed-slot-audit-qualification.md`](81-indexed-slot-audit-qualification.md) records the SQLite indexed-audit repair, differential controls, future validity and remaining independent qualification.
+
 ## Architecture Decision Records
 
 See [`adr/README.md`](adr/README.md).

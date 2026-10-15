@@ -7,6 +7,7 @@ import unittest
 from pathlib import Path
 
 from agentmem_ref import AgentMemory, policy
+from agentmem_ref.runtime.representation_cache import DerivedVectorStore
 from agentmem_ref.memory import procedural_memory as pm
 from agentmem_ref.runtime.restart_runtime import RuntimeRecoveryError
 
@@ -51,7 +52,7 @@ class DeveloperFacade(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             memory = self._open(root)
-            self.assertEqual(memory.contract_version, "1.6.0")
+            self.assertEqual(memory.contract_version, "1.8.0")
             retained = memory.remember(TARGET, "release branch main")
             self.assertTrue(retained["committed"])
             self.assertEqual(retained["stage"], "commit")
@@ -179,12 +180,43 @@ class DeveloperFacade(unittest.TestCase):
             self.assertTrue(forgotten["committed"])
             history = memory.history(TARGET)["history"]
             self.assertTrue(history["tombstoned"])
+            # #777: the owner's own deletion is visible as one boolean; the deleted
+            # generation's identifiers and events stay internal audit records.
+            self.assertEqual(history["events"], [])
+            self.assertIsNone(history["current_fact_uuid"])
+            self.assertNotIn(seed["fact_uuid"], json.dumps(memory.history(TARGET)))
+            self.assertTrue(memory._canonical_history(TARGET)["history"]["tombstoned"])
             memory.close()
 
             recovered = self._open(root)
             recalled = recovered.recall("temporary release detail", logical_memory_refs=(TARGET,))
             self.assertNotIn(seed["fact_uuid"], recalled["admitted"])
             self.assertTrue(recovered.history(TARGET)["history"]["tombstoned"])
+            recovered.close()
+
+    def test_recovery_reconciles_old_semantic_sidecar_without_model(self):
+        # A no-model facade still owns durable lifecycle for old derived stores.
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            memory = self._open(root)
+            live = memory.remember(TARGET, "retained canonical value")
+            self.assertTrue(live["committed"])
+            memory.close()
+
+            store = DerivedVectorStore(root, "sha256:" + "ab" * 32, 3)
+            store.vector_for(live["fact_uuid"], "retained canonical value", lambda _text: (1, 0, 0))
+            store.vector_for("orphan:deleted", "derived residue", lambda _text: (0, 1, 0))
+            store.close()
+
+            recovered = self._open(root)
+            self.assertEqual(recovered.semantic_retrieval_posture()["status"], "disabled")
+            store = DerivedVectorStore(root, "sha256:" + "ab" * 32, 3)
+            self.assertEqual(store.row_count(), 1)
+            self.assertEqual(
+                store._connection.execute("SELECT fact_uuid FROM vectors").fetchone()[0],
+                live["fact_uuid"],
+            )
+            store.close()
             recovered.close()
 
     def test_permanent_delete_is_not_convenience_authorized(self):

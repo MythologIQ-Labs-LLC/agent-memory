@@ -1,0 +1,23 @@
+{
+ "attestation": "none: hashes bind contents for review; they are not signatures and confer no acceptance",
+ "command": "python reference/run_644_v7_replays.py --all",
+ "fixture": {
+  "path": "reference/fixtures/644-v7-replays/governed-persisted-typed-slot-sufficiency-admission-recheck-v1.json",
+  "sha256": "053af75ad93e6ea6ac0b2811d3c6fcbf605eac7cca1c0946bc4270448b3ccd6a"
+ },
+ "observations_sha256": "0cce1987d38d790a1f07404288efbb9ba7f2497a204a0acb3209d80b4046c2e8",
+ "replay_id": "governed-persisted-typed-slot-sufficiency-admission-recheck-v1",
+ "report": {
+  "path": "report.json",
+  "sha256": "05888736743e05d9ba1f4dd3d27f6bb44ccf6e6d3acd59c5d02b49664a6e6718"
+ },
+ "runner": {
+  "path": "reference/run_644_v7_replays.py",
+  "sha256": "941a0dc6860e932531d77eb65c1f305f84feeab3366cacd39953dae160cf0def",
+  "version": "644-v7-replay-runner/1"
+ },
+ "runtime_tree": "544fb9e667712e92ce6d100b364ead98992220b8",
+ "schema": "644-v7-replay-manifest/1",
+ "source_commit": "df6d9bed53c8e0199f2f53258e340561e9602886",
+ "verdict": "PASS"
+}

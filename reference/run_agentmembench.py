@@ -330,7 +330,7 @@ class AgentMemoryAdapter:
     def search(self, query: str, user_id: str, limit: int) -> list[str]:
         assert self._memory is not None
         scope = self._scope(user_id)
-        recalled = self._memory.recall(query, target_domain_refs=[self.tenant, scope], project_ref=scope)
+        recalled = getattr(self._memory, "_canonical_recall", self._memory.recall)(query, target_domain_refs=[self.tenant, scope], project_ref=scope)
         self._stats["recall_calls"] += 1
         self._stats["candidate_count"] += len(recalled["candidates"])
         # Contract 1.3.0 (#548) declares candidates domain-eligible; older contracts

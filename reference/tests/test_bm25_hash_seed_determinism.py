@@ -81,7 +81,7 @@ _CHILD = textwrap.dedent(
         forgotten = memory.remember("memory:forgotten", query + " forgotten")["fact_uuid"]
         refs[forgotten] = "forgotten"
         memory.forget("memory:forgotten")
-        recalled = memory.recall(query)
+        recalled = memory._canonical_recall(query)  # #777: the refusal is asserted on the canonical record
         memory.close()
     admissions = {
         refs[uuid]: [adm["outcome"], adm["reason_code"],

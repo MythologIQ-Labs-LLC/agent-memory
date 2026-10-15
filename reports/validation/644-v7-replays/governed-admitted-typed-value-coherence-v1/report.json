@@ -1,0 +1,1402 @@
+{
+ "authority_boundary": "A replay verdict is evidence for independent review. It is not v7 acceptance, not publication, and not stop authority. sha256 values are integrity bindings, not signatures.",
+ "cases": [
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "no_eligible_value"
+     },
+     "observable": "coherence_status",
+     "observed": "no_eligible_value"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "continue_if_permitted"
+     },
+     "observable": "continuation_proposal",
+     "observed": "continue_if_permitted"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "stop_attested",
+     "observed": false
+    }
+   ],
+   "error": null,
+   "id": "V1-no-eligible-typed-value",
+   "invariants": [
+    "V1"
+   ],
+   "kind": "coverage",
+   "observations": {
+    "answer_quality_verified": false,
+    "authority_effect": "none",
+    "budget_bound_routes": [],
+    "can_admit": false,
+    "can_mutate": false,
+    "coherence_groups": [],
+    "coherence_status": "no_eligible_value",
+    "continuation_proposal": "continue_if_permitted",
+    "count_target_met": true,
+    "diagnosis": "missing_declared_evidence",
+    "mechanical_coverage_met": false,
+    "need_missing": true,
+    "obstacles.declared_temporal_boundary": 0,
+    "obstacles.eligible_unretrieved": 0,
+    "obstacles.qualified_counter_evidence": 0,
+    "raises": null,
+    "raises_any": false,
+    "receipt_unchanged": true,
+    "stop_attested": false,
+    "support_count": 0,
+    "support_refs": [],
+    "unexecuted_routes": [],
+    "verification_raised": false
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "same_value_observed"
+     },
+     "observable": "coherence_status",
+     "observed": "same_value_observed"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "continue_if_permitted"
+     },
+     "observable": "continuation_proposal",
+     "observed": "continue_if_permitted"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "stop_attested",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       [
+        "memory:c1"
+       ]
+      ]
+     },
+     "observable": "coherence_groups",
+     "observed": [
+      [
+       "memory:c1"
+      ]
+     ]
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "coverage_observed_unattested"
+     },
+     "observable": "diagnosis",
+     "observed": "coverage_observed_unattested"
+    }
+   ],
+   "error": null,
+   "id": "V2-single-value",
+   "invariants": [
+    "V2"
+   ],
+   "kind": "coverage",
+   "observations": {
+    "answer_quality_verified": false,
+    "authority_effect": "none",
+    "budget_bound_routes": [],
+    "can_admit": false,
+    "can_mutate": false,
+    "coherence_groups": [
+     [
+      "memory:c1"
+     ]
+    ],
+    "coherence_status": "same_value_observed",
+    "continuation_proposal": "continue_if_permitted",
+    "count_target_met": true,
+    "diagnosis": "coverage_observed_unattested",
+    "mechanical_coverage_met": true,
+    "need_missing": false,
+    "obstacles.declared_temporal_boundary": 0,
+    "obstacles.eligible_unretrieved": 0,
+    "obstacles.qualified_counter_evidence": 0,
+    "raises": null,
+    "raises_any": false,
+    "receipt_unchanged": true,
+    "stop_attested": false,
+    "support_count": 1,
+    "support_refs": [
+     "memory:c1"
+    ],
+    "unexecuted_routes": [],
+    "verification_raised": false
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "same_value_observed"
+     },
+     "observable": "coherence_status",
+     "observed": "same_value_observed"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "continue_if_permitted"
+     },
+     "observable": "continuation_proposal",
+     "observed": "continue_if_permitted"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "stop_attested",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       [
+        "memory:c1",
+        "memory:c2"
+       ]
+      ]
+     },
+     "observable": "coherence_groups",
+     "observed": [
+      [
+       "memory:c1",
+       "memory:c2"
+      ]
+     ]
+    }
+   ],
+   "error": null,
+   "id": "V2-equal-values",
+   "invariants": [
+    "V2"
+   ],
+   "kind": "coverage",
+   "observations": {
+    "answer_quality_verified": false,
+    "authority_effect": "none",
+    "budget_bound_routes": [],
+    "can_admit": false,
+    "can_mutate": false,
+    "coherence_groups": [
+     [
+      "memory:c1",
+      "memory:c2"
+     ]
+    ],
+    "coherence_status": "same_value_observed",
+    "continuation_proposal": "continue_if_permitted",
+    "count_target_met": true,
+    "diagnosis": "coverage_observed_unattested",
+    "mechanical_coverage_met": true,
+    "need_missing": false,
+    "obstacles.declared_temporal_boundary": 0,
+    "obstacles.eligible_unretrieved": 0,
+    "obstacles.qualified_counter_evidence": 0,
+    "raises": null,
+    "raises_any": false,
+    "receipt_unchanged": true,
+    "stop_attested": false,
+    "support_count": 2,
+    "support_refs": [
+     "memory:c1",
+     "memory:c2"
+    ],
+    "unexecuted_routes": [],
+    "verification_raised": false
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "competing_values_unresolved"
+     },
+     "observable": "coherence_status",
+     "observed": "competing_values_unresolved"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "continue_if_permitted"
+     },
+     "observable": "continuation_proposal",
+     "observed": "continue_if_permitted"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "stop_attested",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       [
+        "memory:c1"
+       ],
+       [
+        "memory:c2"
+       ]
+      ]
+     },
+     "observable": "coherence_groups",
+     "observed": [
+      [
+       "memory:c1"
+      ],
+      [
+       "memory:c2"
+      ]
+     ]
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "value_coherence_unresolved"
+     },
+     "observable": "diagnosis",
+     "observed": "value_coherence_unresolved"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "mechanical_coverage_met",
+     "observed": true
+    }
+   ],
+   "error": null,
+   "id": "V3-competing-values",
+   "invariants": [
+    "V3",
+    "V8"
+   ],
+   "kind": "coverage",
+   "observations": {
+    "answer_quality_verified": false,
+    "authority_effect": "none",
+    "budget_bound_routes": [],
+    "can_admit": false,
+    "can_mutate": false,
+    "coherence_groups": [
+     [
+      "memory:c1"
+     ],
+     [
+      "memory:c2"
+     ]
+    ],
+    "coherence_status": "competing_values_unresolved",
+    "continuation_proposal": "continue_if_permitted",
+    "count_target_met": true,
+    "diagnosis": "value_coherence_unresolved",
+    "mechanical_coverage_met": true,
+    "need_missing": false,
+    "obstacles.declared_temporal_boundary": 0,
+    "obstacles.eligible_unretrieved": 0,
+    "obstacles.qualified_counter_evidence": 0,
+    "raises": null,
+    "raises_any": false,
+    "receipt_unchanged": true,
+    "stop_attested": false,
+    "support_count": 2,
+    "support_refs": [
+     "memory:c1",
+     "memory:c2"
+    ],
+    "unexecuted_routes": [],
+    "verification_raised": false
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "coexistence_possible"
+     },
+     "observable": "coherence_status",
+     "observed": "coexistence_possible"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "continue_if_permitted"
+     },
+     "observable": "continuation_proposal",
+     "observed": "continue_if_permitted"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "stop_attested",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "value_coherence_unresolved"
+     },
+     "observable": "diagnosis",
+     "observed": "value_coherence_unresolved"
+    }
+   ],
+   "error": null,
+   "id": "V4-multi-single-value",
+   "invariants": [
+    "V4",
+    "V8"
+   ],
+   "kind": "coverage",
+   "observations": {
+    "answer_quality_verified": false,
+    "authority_effect": "none",
+    "budget_bound_routes": [],
+    "can_admit": false,
+    "can_mutate": false,
+    "coherence_groups": [
+     [
+      "memory:c1"
+     ]
+    ],
+    "coherence_status": "coexistence_possible",
+    "continuation_proposal": "continue_if_permitted",
+    "count_target_met": true,
+    "diagnosis": "value_coherence_unresolved",
+    "mechanical_coverage_met": true,
+    "need_missing": false,
+    "obstacles.declared_temporal_boundary": 0,
+    "obstacles.eligible_unretrieved": 0,
+    "obstacles.qualified_counter_evidence": 0,
+    "raises": null,
+    "raises_any": false,
+    "receipt_unchanged": true,
+    "stop_attested": false,
+    "support_count": 1,
+    "support_refs": [
+     "memory:c1"
+    ],
+    "unexecuted_routes": [],
+    "verification_raised": false
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "coexistence_possible"
+     },
+     "observable": "coherence_status",
+     "observed": "coexistence_possible"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "continue_if_permitted"
+     },
+     "observable": "continuation_proposal",
+     "observed": "continue_if_permitted"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "stop_attested",
+     "observed": false
+    }
+   ],
+   "error": null,
+   "id": "V4-multi-two-values",
+   "invariants": [
+    "V4"
+   ],
+   "kind": "coverage",
+   "observations": {
+    "answer_quality_verified": false,
+    "authority_effect": "none",
+    "budget_bound_routes": [],
+    "can_admit": false,
+    "can_mutate": false,
+    "coherence_groups": [
+     [
+      "memory:c1"
+     ],
+     [
+      "memory:c2"
+     ]
+    ],
+    "coherence_status": "coexistence_possible",
+    "continuation_proposal": "continue_if_permitted",
+    "count_target_met": true,
+    "diagnosis": "value_coherence_unresolved",
+    "mechanical_coverage_met": true,
+    "need_missing": false,
+    "obstacles.declared_temporal_boundary": 0,
+    "obstacles.eligible_unretrieved": 0,
+    "obstacles.qualified_counter_evidence": 0,
+    "raises": null,
+    "raises_any": false,
+    "receipt_unchanged": true,
+    "stop_attested": false,
+    "support_count": 2,
+    "support_refs": [
+     "memory:c1",
+     "memory:c2"
+    ],
+    "unexecuted_routes": [],
+    "verification_raised": false
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "cardinality_unresolved"
+     },
+     "observable": "coherence_status",
+     "observed": "cardinality_unresolved"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "continue_if_permitted"
+     },
+     "observable": "continuation_proposal",
+     "observed": "continue_if_permitted"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "stop_attested",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "value_coherence_unresolved"
+     },
+     "observable": "diagnosis",
+     "observed": "value_coherence_unresolved"
+    }
+   ],
+   "error": null,
+   "id": "V5-unknown-cardinality",
+   "invariants": [
+    "V5",
+    "V8"
+   ],
+   "kind": "coverage",
+   "observations": {
+    "answer_quality_verified": false,
+    "authority_effect": "none",
+    "budget_bound_routes": [],
+    "can_admit": false,
+    "can_mutate": false,
+    "coherence_groups": [
+     [
+      "memory:c1"
+     ]
+    ],
+    "coherence_status": "cardinality_unresolved",
+    "continuation_proposal": "continue_if_permitted",
+    "count_target_met": true,
+    "diagnosis": "value_coherence_unresolved",
+    "mechanical_coverage_met": true,
+    "need_missing": false,
+    "obstacles.declared_temporal_boundary": 0,
+    "obstacles.eligible_unretrieved": 0,
+    "obstacles.qualified_counter_evidence": 0,
+    "raises": null,
+    "raises_any": false,
+    "receipt_unchanged": true,
+    "stop_attested": false,
+    "support_count": 1,
+    "support_refs": [
+     "memory:c1"
+    ],
+    "unexecuted_routes": [],
+    "verification_raised": false
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "change_assertion_unresolved"
+     },
+     "observable": "coherence_status",
+     "observed": "change_assertion_unresolved"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "continue_if_permitted"
+     },
+     "observable": "continuation_proposal",
+     "observed": "continue_if_permitted"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "stop_attested",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "value_coherence_unresolved"
+     },
+     "observable": "diagnosis",
+     "observed": "value_coherence_unresolved"
+    }
+   ],
+   "error": null,
+   "id": "V6-single-change-assertion",
+   "invariants": [
+    "V6",
+    "V8"
+   ],
+   "kind": "coverage",
+   "observations": {
+    "answer_quality_verified": false,
+    "authority_effect": "none",
+    "budget_bound_routes": [],
+    "can_admit": false,
+    "can_mutate": false,
+    "coherence_groups": [
+     [
+      "memory:c1"
+     ]
+    ],
+    "coherence_status": "change_assertion_unresolved",
+    "continuation_proposal": "continue_if_permitted",
+    "count_target_met": true,
+    "diagnosis": "value_coherence_unresolved",
+    "mechanical_coverage_met": true,
+    "need_missing": false,
+    "obstacles.declared_temporal_boundary": 0,
+    "obstacles.eligible_unretrieved": 0,
+    "obstacles.qualified_counter_evidence": 0,
+    "raises": null,
+    "raises_any": false,
+    "receipt_unchanged": true,
+    "stop_attested": false,
+    "support_count": 1,
+    "support_refs": [
+     "memory:c1"
+    ],
+    "unexecuted_routes": [],
+    "verification_raised": false
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "change_assertion_unresolved"
+     },
+     "observable": "coherence_status",
+     "observed": "change_assertion_unresolved"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "continue_if_permitted"
+     },
+     "observable": "continuation_proposal",
+     "observed": "continue_if_permitted"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "stop_attested",
+     "observed": false
+    }
+   ],
+   "error": null,
+   "id": "V6-change-over-prior-state",
+   "invariants": [
+    "V6"
+   ],
+   "kind": "coverage",
+   "observations": {
+    "answer_quality_verified": false,
+    "authority_effect": "none",
+    "budget_bound_routes": [],
+    "can_admit": false,
+    "can_mutate": false,
+    "coherence_groups": [
+     [
+      "memory:c1"
+     ],
+     [
+      "memory:c2"
+     ]
+    ],
+    "coherence_status": "change_assertion_unresolved",
+    "continuation_proposal": "continue_if_permitted",
+    "count_target_met": true,
+    "diagnosis": "value_coherence_unresolved",
+    "mechanical_coverage_met": true,
+    "need_missing": false,
+    "obstacles.declared_temporal_boundary": 0,
+    "obstacles.eligible_unretrieved": 0,
+    "obstacles.qualified_counter_evidence": 0,
+    "raises": null,
+    "raises_any": false,
+    "receipt_unchanged": true,
+    "stop_attested": false,
+    "support_count": 2,
+    "support_refs": [
+     "memory:c1",
+     "memory:c2"
+    ],
+    "unexecuted_routes": [],
+    "verification_raised": false
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "competing_values_unresolved"
+     },
+     "observable": "coherence_status",
+     "observed": "competing_values_unresolved"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "continue_if_permitted"
+     },
+     "observable": "continuation_proposal",
+     "observed": "continue_if_permitted"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "stop_attested",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       [
+        "memory:c1"
+       ],
+       [
+        "memory:c2"
+       ]
+      ]
+     },
+     "observable": "coherence_groups",
+     "observed": [
+      [
+       "memory:c1"
+      ],
+      [
+       "memory:c2"
+      ]
+     ]
+    }
+   ],
+   "error": null,
+   "id": "V7-capitalization-competes",
+   "invariants": [
+    "V7"
+   ],
+   "kind": "coverage",
+   "observations": {
+    "answer_quality_verified": false,
+    "authority_effect": "none",
+    "budget_bound_routes": [],
+    "can_admit": false,
+    "can_mutate": false,
+    "coherence_groups": [
+     [
+      "memory:c1"
+     ],
+     [
+      "memory:c2"
+     ]
+    ],
+    "coherence_status": "competing_values_unresolved",
+    "continuation_proposal": "continue_if_permitted",
+    "count_target_met": true,
+    "diagnosis": "value_coherence_unresolved",
+    "mechanical_coverage_met": true,
+    "need_missing": false,
+    "obstacles.declared_temporal_boundary": 0,
+    "obstacles.eligible_unretrieved": 0,
+    "obstacles.qualified_counter_evidence": 0,
+    "raises": null,
+    "raises_any": false,
+    "receipt_unchanged": true,
+    "stop_attested": false,
+    "support_count": 2,
+    "support_refs": [
+     "memory:c1",
+     "memory:c2"
+    ],
+    "unexecuted_routes": [],
+    "verification_raised": false
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "same_value_observed"
+     },
+     "observable": "coherence_status",
+     "observed": "same_value_observed"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "continue_if_permitted"
+     },
+     "observable": "continuation_proposal",
+     "observed": "continue_if_permitted"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "stop_attested",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       [
+        "memory:c1"
+       ]
+      ]
+     },
+     "observable": "coherence_groups",
+     "observed": [
+      [
+       "memory:c1"
+      ]
+     ]
+    }
+   ],
+   "error": null,
+   "id": "V9-disputed-and-forgotten-excluded",
+   "invariants": [
+    "V9"
+   ],
+   "kind": "coverage",
+   "observations": {
+    "answer_quality_verified": false,
+    "authority_effect": "none",
+    "budget_bound_routes": [],
+    "can_admit": false,
+    "can_mutate": false,
+    "coherence_groups": [
+     [
+      "memory:c1"
+     ]
+    ],
+    "coherence_status": "same_value_observed",
+    "continuation_proposal": "continue_if_permitted",
+    "count_target_met": true,
+    "diagnosis": "coverage_observed_unattested",
+    "mechanical_coverage_met": true,
+    "need_missing": false,
+    "obstacles.declared_temporal_boundary": 0,
+    "obstacles.eligible_unretrieved": 0,
+    "obstacles.qualified_counter_evidence": 0,
+    "raises": null,
+    "raises_any": false,
+    "receipt_unchanged": true,
+    "stop_attested": false,
+    "support_count": 1,
+    "support_refs": [
+     "memory:c1"
+    ],
+    "unexecuted_routes": [],
+    "verification_raised": false
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "values_absent",
+     "observed": true
+    }
+   ],
+   "error": null,
+   "id": "V10-no-raw-values-in-report",
+   "invariants": [
+    "V10"
+   ],
+   "kind": "coverage",
+   "observations": {
+    "answer_quality_verified": false,
+    "authority_effect": "none",
+    "budget_bound_routes": [],
+    "can_admit": false,
+    "can_mutate": false,
+    "coherence_groups": [
+     [
+      "memory:c1"
+     ],
+     [
+      "memory:c2"
+     ]
+    ],
+    "coherence_status": "competing_values_unresolved",
+    "continuation_proposal": "continue_if_permitted",
+    "count_target_met": true,
+    "diagnosis": "value_coherence_unresolved",
+    "mechanical_coverage_met": true,
+    "need_missing": false,
+    "obstacles.declared_temporal_boundary": 0,
+    "obstacles.eligible_unretrieved": 0,
+    "obstacles.qualified_counter_evidence": 0,
+    "raises": null,
+    "raises_any": false,
+    "receipt_unchanged": true,
+    "stop_attested": false,
+    "support_count": 2,
+    "support_refs": [
+     "memory:c1",
+     "memory:c2"
+    ],
+    "unexecuted_routes": [],
+    "values_absent": true,
+    "verification_raised": false
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "competing_values_unresolved"
+     },
+     "observable": "coherence_status",
+     "observed": "competing_values_unresolved"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "continue_if_permitted"
+     },
+     "observable": "continuation_proposal",
+     "observed": "continue_if_permitted"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "stop_attested",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       [
+        "memory:c1",
+        "memory:c3"
+       ],
+       [
+        "memory:c2"
+       ]
+      ]
+     },
+     "observable": "coherence_groups",
+     "observed": [
+      [
+       "memory:c1",
+       "memory:c3"
+      ],
+      [
+       "memory:c2"
+      ]
+     ]
+    }
+   ],
+   "error": null,
+   "id": "V11-write-order-a",
+   "invariants": [
+    "V11"
+   ],
+   "kind": "coverage",
+   "observations": {
+    "answer_quality_verified": false,
+    "authority_effect": "none",
+    "budget_bound_routes": [],
+    "can_admit": false,
+    "can_mutate": false,
+    "coherence_groups": [
+     [
+      "memory:c1",
+      "memory:c3"
+     ],
+     [
+      "memory:c2"
+     ]
+    ],
+    "coherence_status": "competing_values_unresolved",
+    "continuation_proposal": "continue_if_permitted",
+    "count_target_met": true,
+    "diagnosis": "value_coherence_unresolved",
+    "mechanical_coverage_met": true,
+    "need_missing": false,
+    "obstacles.declared_temporal_boundary": 0,
+    "obstacles.eligible_unretrieved": 0,
+    "obstacles.qualified_counter_evidence": 0,
+    "raises": null,
+    "raises_any": false,
+    "receipt_unchanged": true,
+    "stop_attested": false,
+    "support_count": 3,
+    "support_refs": [
+     "memory:c1",
+     "memory:c2",
+     "memory:c3"
+    ],
+    "unexecuted_routes": [],
+    "verification_raised": false
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "competing_values_unresolved"
+     },
+     "observable": "coherence_status",
+     "observed": "competing_values_unresolved"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "continue_if_permitted"
+     },
+     "observable": "continuation_proposal",
+     "observed": "continue_if_permitted"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "stop_attested",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       [
+        "memory:c1",
+        "memory:c3"
+       ],
+       [
+        "memory:c2"
+       ]
+      ]
+     },
+     "observable": "coherence_groups",
+     "observed": [
+      [
+       "memory:c1",
+       "memory:c3"
+      ],
+      [
+       "memory:c2"
+      ]
+     ]
+    }
+   ],
+   "error": null,
+   "id": "V11-write-order-b",
+   "invariants": [
+    "V11"
+   ],
+   "kind": "coverage",
+   "observations": {
+    "answer_quality_verified": false,
+    "authority_effect": "none",
+    "budget_bound_routes": [],
+    "can_admit": false,
+    "can_mutate": false,
+    "coherence_groups": [
+     [
+      "memory:c1",
+      "memory:c3"
+     ],
+     [
+      "memory:c2"
+     ]
+    ],
+    "coherence_status": "competing_values_unresolved",
+    "continuation_proposal": "continue_if_permitted",
+    "count_target_met": true,
+    "diagnosis": "value_coherence_unresolved",
+    "mechanical_coverage_met": true,
+    "need_missing": false,
+    "obstacles.declared_temporal_boundary": 0,
+    "obstacles.eligible_unretrieved": 0,
+    "obstacles.qualified_counter_evidence": 0,
+    "raises": null,
+    "raises_any": false,
+    "receipt_unchanged": true,
+    "stop_attested": false,
+    "support_count": 3,
+    "support_refs": [
+     "memory:c1",
+     "memory:c2",
+     "memory:c3"
+    ],
+    "unexecuted_routes": [],
+    "verification_raised": false
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "ValueError"
+     },
+     "observable": "raises",
+     "observed": "ValueError"
+    }
+   ],
+   "error": null,
+   "id": "V12-stop-with-unresolved-values-refused",
+   "invariants": [
+    "V12"
+   ],
+   "kind": "forge_report",
+   "observations": {
+    "raised_message": "unresolved typed values cannot recommend stopping",
+    "raises": "ValueError",
+    "raises_any": true
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "same_value_observed"
+     },
+     "observable": "coherence_status",
+     "observed": "same_value_observed"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "continue_if_permitted"
+     },
+     "observable": "continuation_proposal",
+     "observed": "continue_if_permitted"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "stop_attested",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       [
+        "memory:c1",
+        "memory:c2"
+       ]
+      ]
+     },
+     "observable": "coherence_groups",
+     "observed": [
+      [
+       "memory:c1",
+       "memory:c2"
+      ]
+     ]
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": 2
+     },
+     "observable": "support_count",
+     "observed": 2
+    }
+   ],
+   "error": null,
+   "id": "V13-one-source-two-facts",
+   "invariants": [
+    "V13"
+   ],
+   "kind": "coverage",
+   "observations": {
+    "answer_quality_verified": false,
+    "authority_effect": "none",
+    "budget_bound_routes": [],
+    "can_admit": false,
+    "can_mutate": false,
+    "coherence_groups": [
+     [
+      "memory:c1",
+      "memory:c2"
+     ]
+    ],
+    "coherence_status": "same_value_observed",
+    "continuation_proposal": "continue_if_permitted",
+    "count_target_met": true,
+    "diagnosis": "coverage_observed_unattested",
+    "mechanical_coverage_met": true,
+    "need_missing": false,
+    "obstacles.declared_temporal_boundary": 0,
+    "obstacles.eligible_unretrieved": 0,
+    "obstacles.qualified_counter_evidence": 0,
+    "raises": null,
+    "raises_any": false,
+    "receipt_unchanged": true,
+    "stop_attested": false,
+    "support_count": 2,
+    "support_refs": [
+     "memory:c1",
+     "memory:c2"
+    ],
+    "unexecuted_routes": [],
+    "verification_raised": false
+   },
+   "outcome": "pass",
+   "recorded": {}
+  }
+ ],
+ "dsl_version": "644-v7-replay-dsl/1",
+ "invariants": {
+  "V1": {
+   "cases": [
+    "V1-no-eligible-typed-value"
+   ],
+   "holds": true,
+   "statement": "No eligible typed value among admitted facts: disposition no_eligible_value."
+  },
+  "V10": {
+   "cases": [
+    "V10-no-raw-values-in-report"
+   ],
+   "holds": true,
+   "statement": "The serialized report contains no raw claim values."
+  },
+  "V11": {
+   "cases": [
+    "V11-write-order-a",
+    "V11-write-order-b"
+   ],
+   "holds": true,
+   "statement": "Grouping is independent of write order."
+  },
+  "V12": {
+   "cases": [
+    "V12-stop-with-unresolved-values-refused"
+   ],
+   "holds": true,
+   "statement": "A report carrying an unresolved disposition cannot be constructed with a stop proposal."
+  },
+  "V13": {
+   "cases": [
+    "V13-one-source-two-facts"
+   ],
+   "holds": true,
+   "statement": "Multiplicity counts distinct facts, not independent sources (recorded boundary)."
+  },
+  "V2": {
+   "cases": [
+    "V2-single-value",
+    "V2-equal-values"
+   ],
+   "holds": true,
+   "statement": "One or more exactly equal single-valued values without asserted change: same_value_observed, one group holding every supporting fact."
+  },
+  "V3": {
+   "cases": [
+    "V3-competing-values"
+   ],
+   "holds": true,
+   "statement": "Different single-valued values without asserted change: competing_values_unresolved, one group per value."
+  },
+  "V4": {
+   "cases": [
+    "V4-multi-single-value",
+    "V4-multi-two-values"
+   ],
+   "holds": true,
+   "statement": "Any multi-valued claim, even a single value: coexistence_possible."
+  },
+  "V5": {
+   "cases": [
+    "V5-unknown-cardinality"
+   ],
+   "holds": true,
+   "statement": "Any unknown cardinality, even a single value: cardinality_unresolved."
+  },
+  "V6": {
+   "cases": [
+    "V6-single-change-assertion",
+    "V6-change-over-prior-state"
+   ],
+   "holds": true,
+   "statement": "Any asserted change, including a single current claim: change_assertion_unresolved; an asserted change is never treated as an applied correction."
+  },
+  "V7": {
+   "cases": [
+    "V7-capitalization-competes"
+   ],
+   "holds": true,
+   "statement": "Comparison is strict literal equality: capitalization variants compete."
+  },
+  "V8": {
+   "cases": [
+    "V3-competing-values",
+    "V4-multi-single-value",
+    "V5-unknown-cardinality",
+    "V6-single-change-assertion"
+   ],
+   "holds": true,
+   "statement": "An unresolved disposition yields diagnosis value_coherence_unresolved and continuation, even when mechanical coverage is met."
+  },
+  "V9": {
+   "cases": [
+    "V9-disputed-and-forgotten-excluded"
+   ],
+   "holds": true,
+   "statement": "Disputed or forgotten facts never contribute a value."
+  }
+ },
+ "observations_sha256": "5b8edee241e8283ce5b9fc305d1de15dcdd9048d78df181c508618f6c3d0a35c",
+ "provenance": {
+  "dirty_exclusion": "reports/validation/644-v7-replays/",
+  "dirty_paths": [],
+  "fixture": {
+   "path": "reference/fixtures/644-v7-replays/governed-admitted-typed-value-coherence-v1.json",
+   "sha256": "f83c9cb3281568e649691b2e2e21ea0ec1d6e569aa4e50df774fbff4039e019b"
+  },
+  "platform": "Linux-6.18.44-fc-v114-x86_64-with-glibc2.39",
+  "python": "3.13.16",
+  "runner": {
+   "path": "reference/run_644_v7_replays.py",
+   "sha256": "941a0dc6860e932531d77eb65c1f305f84feeab3366cacd39953dae160cf0def",
+   "version": "644-v7-replay-runner/1"
+  },
+  "runtime_tree": "f9ccd0472e32cb68a5caf988a017078a73425cc5",
+  "source_commit": "76632295163a4b80cf7c153d9297a788c59d1b95",
+  "sqlite": "3.45.1"
+ },
+ "replay_id": "governed-admitted-typed-value-coherence-v1",
+ "schema": "644-v7-replay-report/1",
+ "summary": {
+  "cases": 16,
+  "errors": 0,
+  "failed": 0,
+  "passed": 16
+ },
+ "verdict": "PASS",
+ "verdict_reasons": [
+  "every expectation held on a clean source tree"
+ ]
+}

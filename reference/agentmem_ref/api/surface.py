@@ -24,12 +24,12 @@ import importlib.resources
 import json
 import os
 from pathlib import Path
-from typing import Any, Mapping, Sequence
+from typing import Any, Callable, Mapping, Sequence
 
 from ..core import policy
 from ..memory import action_authority
 from ..runtime import doctor
-from ..runtime.adapter import REPLACEMENT_KINDS, GovernedMemoryAdapter
+from ..runtime.adapter import REPLACEMENT_KINDS, WRITE_TARGET_REFUSED_REF, GovernedMemoryAdapter
 from ..runtime.temporal_intent import declared_temporal, resolve_intent
 from . import contract
 
@@ -45,6 +45,99 @@ __all__ = [
     "authorize",
     "witness",
 ]
+
+
+# -- #777 public read projection ------------------------------------------------------
+# Applied to ordinary caller-facing responses only, AFTER canonical governance decided the
+# read. It never retrieves hidden text, never broadens admission, and never rewrites stored
+# semantics, tombstones or audit events. Detailed deletion records stay internal.
+
+
+
+_PUBLIC_PROJECTION = {
+    "policy_id": "public-deleted-lineage-redaction",
+    "policy_version": "1.0.0",
+    "deleted_lineage": "withheld",
+}
+
+#: Refusal reasons that would disclose a deletion relationship to an ordinary reader.
+_DELETION_REFUSALS = frozenset({
+    "tombstoned", "derived_from_tombstoned_source",
+    "logical_memory_deleted", "derived_from_deleted_logical_memory",
+})
+
+
+def _never(value: str) -> bool:
+    """The predicate for a store with no governed deletion: nothing can be withheld."""
+    return False
+
+
+def _withheld_predicate(adapter) -> Callable[[str], bool]:
+    if not adapter.has_governed_deletions():
+        return _never
+    cache: dict[str, bool] = {}
+
+    def withheld(value: str) -> bool:
+        if value not in cache:
+            cache[value] = bool(adapter.public_identifier_withheld(value) or adapter.public_memory_withheld(value))
+        return cache[value]
+
+    return withheld
+
+
+def _mentions(value: Any, withheld: Callable[[str], bool]) -> bool:
+    if isinstance(value, str):
+        return withheld(value)
+    if isinstance(value, dict):
+        return any(withheld(k) or _mentions(v, withheld) for k, v in value.items())
+    if isinstance(value, (list, tuple)):
+        return any(_mentions(v, withheld) for v in value)
+    return False
+
+
+def _normalize(value: Any) -> Any:
+    """What ``_scrub`` returns when nothing is withheld: a copy with sequences as lists."""
+    if isinstance(value, dict):
+        return {key: _normalize(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_normalize(item) for item in value]
+    return value
+
+
+def _scrub(value: Any, withheld: Callable[[str], bool]) -> Any:
+    """Drop list items and mapping entries that name a withheld identifier; blank scalar refs."""
+    if withheld is _never:
+        return _normalize(value)  # same result, one traversal, no per-value lookups
+    if isinstance(value, dict):
+        out = {}
+        for key, item in value.items():
+            if withheld(key):
+                continue
+            if isinstance(item, str) and withheld(item):
+                out[key] = ""
+                continue
+            out[key] = _scrub(item, withheld)
+        return out
+    if isinstance(value, (list, tuple)):
+        return [_scrub(item, withheld) for item in value if not _mentions(item, withheld)]
+    return value
+
+
+def _withheld_candidates(candidates, refusals, withheld: Callable[[str], bool]) -> set[str]:
+    return {c for c in candidates if refusals.get(c) in _DELETION_REFUSALS or withheld(c)}
+
+
+def _project_semantics(document: dict | None, withheld: Callable[[str], bool]) -> dict | None:
+    if document is None:
+        return None
+    relations = [r for r in document.get("relations", ()) if not _mentions(r, withheld)]
+    out = dict(document)
+    if "relations" in document:
+        out["relations"] = relations
+    if "relation_count" in document:
+        # count-only relations are not materialised; subtract only what was withheld
+        out["relation_count"] = document["relation_count"] - (len(document.get("relations", ())) - len(relations))
+    return out
 
 
 def _gate(envelope: Mapping[str, Any], validator, stage: str):
@@ -105,10 +198,16 @@ def recall(memory: GovernedMemoryAdapter, query: str, context_envelope: Mapping[
     # admission order; the budget is policy applied after admission, never authority.
     returned, return_policy = contract.apply_return_budget(
         admission.admitted, (validated.get("budget") or {}).get("k"))
-    return contract.result("recall", compat, candidates=list(admission.candidates),
-                           admitted=list(admission.admitted), admissions=dict(admission.decisions),
+    # #777: the public projection withholds deleted-generation identifiers after admission.
+    withheld = _withheld_predicate(memory)
+    hidden = _withheld_candidates(admission.candidates, admission.refusals, withheld)
+    candidates = [c for c in admission.candidates if c not in hidden]
+    admissions = _scrub({c: d for c, d in admission.decisions.items() if c not in hidden}, withheld)
+    return contract.result("recall", compat, candidates=candidates,
+                           admitted=list(admission.admitted), admissions=admissions,
                            candidate_policy=dict(admission.candidate_policy),
-                           returned=returned, return_policy=return_policy)
+                           returned=returned, return_policy=return_policy,
+                           public_projection=dict(_PUBLIC_PROJECTION))
 
 
 def forget(memory: GovernedMemoryAdapter, envelope: Mapping[str, Any], *,
@@ -275,7 +374,16 @@ def _semantic_route(root: Path, mode: str, representation_dir: str | Path | None
         if mode == "required":
             raise
         return {"status": "disabled", "mode": mode, "reason": f"unavailable: {exc}", "retriever": None}
-    store = DerivedVectorStore(root, provider.spec.config_digest, provider.spec.dimensions)
+    try:
+        store = DerivedVectorStore(root, provider.spec.config_digest, provider.spec.dimensions)
+    except ValueError as exc:
+        # #802/#804: the derived cache directory or file is refused before any I/O through
+        # it (a link, another owner, a foreign database, an inode SQLite did not pin).
+        # Derived state is never authority: ``auto`` keeps the canonical runtime and the
+        # lexical route and records why; ``required`` refuses, as it does for the model.
+        if mode == "required":
+            raise
+        return {"status": "disabled", "mode": mode, "reason": f"derived store refused: {exc}", "retriever": None}
     retriever = NativeVectorCandidateRetriever(
         provider, minimum_similarity=SEMANTIC_MINIMUM_SIMILARITY, store=store
     )
@@ -329,6 +437,9 @@ class AgentMemory:
             raise ValueError(f"recall_control must be one of {RECALL_CONTROL_MODES}")
         self._recall_control = recall_control
         self._proposition_extractor = _checked_extractor(proposition_extractor)
+        # #802: the latest derived-sidecar reconciliation report (recovery or deletion).
+        self._derived_reconciliation: dict = {"status": "complete", "stores_checked": 0, "rows_purged": 0,
+                                              "stores_discarded": [], "foreign": [], "unsafe": [], "failed": [], "pending": []}
 
     @classmethod
     def open(
@@ -430,7 +541,17 @@ class AgentMemory:
             raise RuntimeRecoveryError(
                 f"requested tenant {tenant!r} does not match recovered runtime tenant {actual_tenant!r}"
             )
-        return cls(
+        # #802: retry any interrupted sidecar cleanup against the recovered canonical facts,
+        # whatever the semantic mode. A derived cache is never authority, so its state never
+        # refuses the canonical runtime: the outcome is recorded for the posture instead.
+        try:
+            reconciliation = cls._reconcile_cached_representations(root, runtime)
+        except Exception as exc:  # unexpected: the report, not the exception, carries it
+            reconciliation = {"status": "incomplete", "stores_checked": 0, "rows_purged": 0,
+                              "stores_discarded": [], "foreign": [], "unsafe": [],
+                              "failed": [[str(root / "derived"), f"{type(exc).__name__}: {exc}"]]}
+        reconciliation["pending"] = []
+        handle = cls(
             root=root,
             config_path=resolved_config,
             qualification_path=resolved_qualification,
@@ -443,6 +564,23 @@ class AgentMemory:
             semantic=semantic,
             recall_control=recall_control,
             proposition_extractor=proposition_extractor,
+        )
+        handle._derived_reconciliation = reconciliation
+        return handle
+
+    @staticmethod
+    def _reconcile_cached_representations(root: Path, runtime, *, deleted_fact_uuid: str | None = None) -> dict:
+        """Close derived sidecar rows no canonical fact accounts for (#802); provider-free.
+
+        Only the recovered canonical facts decide what a sidecar may retain; the caller
+        holds the runtime serialization lock. Returns the reconciliation report.
+        """
+        from ..runtime.representation_cache import reconcile_derived_vector_stores
+
+        substrate = runtime.adapter.checkpoint_substrate()
+        texts = {fact.uuid: fact.fact_text for fact in substrate.all_facts()}
+        return reconcile_derived_vector_stores(
+            root, texts, deleted_fact_uuid=deleted_fact_uuid
         )
 
     @property
@@ -459,6 +597,45 @@ class AgentMemory:
 
     def _domain_refs(self) -> tuple[str, ...]:
         return tuple(dict.fromkeys((self.tenant, self.scope)))
+
+    def _writer_context(self, envelope: Mapping[str, Any]):
+        """#786: the authority context of one proposal envelope, overrides applied: a host
+        that declares another scope through ``overrides`` is judged under that scope, exactly
+        as the adapter will judge the proposal."""
+        return self.runtime.adapter.writer_context(
+            isolation_domain_refs=tuple(envelope.get("isolation_domain_refs") or ()),
+            scope=str(envelope.get("scope") or ""), actor_id=self.actor_id,
+            project_ref=str(envelope.get("project_ref") or ""), task_ref=str(envelope.get("task_ref") or ""),
+            purpose=str(envelope.get("purpose") or ""))
+
+    def _visible_head(self, target_reference: str, envelope: Mapping[str, Any]) -> str | None:
+        """#786: the target's current fact if this proposal's writer may act on it, else None.
+
+        A live head outside the writer's scope is reported exactly as no head at all, so a
+        correction, forget or dispute from another project reads as ``fact_not_found`` --
+        indistinguishable from an id nobody ever wrote. The canonical refusal lives in the
+        adapter (``write_target_refusal``, ``_delete_refusal``, ``_dispute_refusal``); this
+        only keeps the facade result shape identical to the unknown-id case.
+        """
+        adapter = self.runtime.adapter
+        head = adapter.current_fact_uuid(target_reference)
+        if head is None or not adapter.fact_eligible_in_context(head, self._writer_context(envelope)):
+            return None
+        if str(envelope.get("operation")) in ("promotion", "correction"):
+            probe = {**envelope, "proposal_id": "probe", "state_snapshot": "",
+                     "evidence_refs": list(envelope.get("evidence_refs") or ["probe"])}
+            if adapter.write_target_refusal(contract.proposal_from_envelope(probe)) is not None:
+                return None  # a write the head's holders could not read (scope continuity) is not a visible target
+        return head
+
+    def _state_snapshot(self, target_reference: str, envelope: Mapping[str, Any]) -> str:
+        """The state version this proposal's authority is resolved against. A live head the
+        writer may not act on contributes nothing (#786): the proposal, its id and its receipt
+        then carry ``v0`` rather than the protected memory's version."""
+        adapter = self.runtime.adapter
+        if adapter.current_fact_uuid(target_reference) is not None and self._visible_head(target_reference, envelope) is None:
+            return "v0"
+        return f"v{adapter.public_state_version(target_reference)}"
 
     def _proposal(
         self,
@@ -480,22 +657,8 @@ class AgentMemory:
         self._require_open()
         if not target_reference:
             raise ValueError("target_reference must be non-empty")
-        state_snapshot = f"v{self.runtime.adapter.state_version(target_reference)}"
-        refs = tuple(evidence_refs) or ((_content_ref(fact_text),) if fact_text else (f"state:{state_snapshot}",))
-        material = {
-            "actor_id": self.actor_id,
-            "charter_version": self.charter_version,
-            "target_reference": target_reference,
-            "operation": operation,
-            "state_snapshot": state_snapshot,
-            "scope": self.scope,
-            "tenant_ref": self.tenant,
-            "fact_ref": _content_ref(fact_text) if fact_text else "",
-            "risk_class": risk_class,
-        }
         envelope: dict[str, object] = {
             "contract_version": contract.CONTRACT_VERSION,
-            "proposal_id": "facade:" + hashlib.sha256(_canonical_bytes(material)).hexdigest(),
             "actor_id": self.actor_id,
             "charter_version": self.charter_version,
             "target_reference": target_reference,
@@ -507,8 +670,6 @@ class AgentMemory:
             "downstream_authority": downstream_authority,
             "reversibility": reversibility,
             "risk_class": risk_class,
-            "evidence_refs": list(refs),
-            "state_snapshot": state_snapshot,
             "tenant_ref": self.tenant,
             "purpose": self.purpose if purpose is None else purpose,
             "isolation_domain_refs": list(self._domain_refs()),
@@ -523,6 +684,30 @@ class AgentMemory:
             if attempted:
                 raise ValueError(f"facade proposal overrides may not replace protected fields: {sorted(attempted)}")
             envelope.update(dict(overrides))
+            required = set(envelope.get("required_isolation_domain_refs") or ())
+            if not required.issubset(set(envelope.get("isolation_domain_refs") or ())):
+                # #786 (review F3): an internally inconsistent scope is a malformed proposal,
+                # refused before any target is resolved -- it is neither judged against the
+                # target nor allowed to learn the target's version through a PAMA block
+                raise ValueError("required isolation domains must also be bound isolation domains")
+        # #786: the snapshot is resolved under the proposal's effective scope (overrides applied)
+        state_snapshot = self._state_snapshot(target_reference, envelope)
+        refs = tuple(evidence_refs) or ((_content_ref(fact_text),) if fact_text else (f"state:{state_snapshot}",))
+        material = {
+            "actor_id": self.actor_id,
+            "charter_version": self.charter_version,
+            "target_reference": target_reference,
+            "operation": operation,
+            "state_snapshot": state_snapshot,
+            "scope": self.scope,
+            "tenant_ref": self.tenant,
+            "fact_ref": _content_ref(fact_text) if fact_text else "",
+            "risk_class": risk_class,
+        }
+        envelope["proposal_id"] = "facade:" + hashlib.sha256(_canonical_bytes(material)).hexdigest()
+        envelope["state_snapshot"] = state_snapshot
+        if "evidence_refs" not in (overrides or {}):
+            envelope["evidence_refs"] = list(refs)
         contract.validate_proposal_envelope(envelope)
         return envelope
 
@@ -663,8 +848,18 @@ class AgentMemory:
         )
         if replacement_kind not in REPLACEMENT_KINDS:
             raise ValueError(f"unknown replacement_kind {replacement_kind!r}")
-        current = self.runtime.adapter.current_fact_uuid(target_reference)
-        if current is None:
+        envelope = self._proposal(
+            target_reference=target_reference,
+            fact_text=fact_text,
+            operation="correction",
+            current_strength="reinforced",
+            proposed_strength="reinforced",
+            risk_class=risk_class,
+            evidence_refs=evidence_refs,
+            purpose=purpose,
+            overrides=overrides,
+        )
+        if self._visible_head(target_reference, envelope) is None:
             return contract.result(
                 "commit",
                 contract.CURRENT,
@@ -672,19 +867,7 @@ class AgentMemory:
                 fact_uuid=None,
                 refusal="fact_not_found",
             )
-        proposal = contract.proposal_from_envelope(
-            self._proposal(
-                target_reference=target_reference,
-                fact_text=fact_text,
-                operation="correction",
-                current_strength="reinforced",
-                proposed_strength="reinforced",
-                risk_class=risk_class,
-                evidence_refs=evidence_refs,
-                purpose=purpose,
-                overrides=overrides,
-            )
-        )
+        proposal = contract.proposal_from_envelope(envelope)
         outcome = self.runtime.correct(
             proposal,
             fact_text,
@@ -704,7 +887,10 @@ class AgentMemory:
         ``authority_effect: none``; nothing in it refuses, supersedes, or mutates.
         """
         self._require_open()
-        return self.runtime.adapter.write_semantics(fact_uuid, self._handle_recall_context())
+        adapter = self.runtime.adapter
+        return _project_semantics(
+            adapter.write_semantics(fact_uuid, self._handle_recall_context()),
+            _withheld_predicate(adapter))
 
     @_serialized
     def semantic_proposals(self, *, status: str | None = None) -> list[dict]:
@@ -792,18 +978,9 @@ class AgentMemory:
         separate from correction/supersession and grants no truth or currentness authority.
         """
         self._require_open()
-        target_fact = fact_uuid or self.runtime.adapter.current_fact_uuid(target_reference)
-        if not target_fact:
-            return contract.result(
-                "commit",
-                contract.CURRENT,
-                committed=False,
-                fact_uuid=None,
-                refusal="fact_not_found",
-            )
-        refs = tuple(dict.fromkeys((f"fact:{target_fact}", *tuple(evidence_refs))))
-        proposal = contract.proposal_from_envelope(
-            self._proposal(
+
+        def envelope_for(refs):
+            return self._proposal(
                 target_reference=target_reference,
                 operation="other",
                 current_strength="reinforced",
@@ -813,7 +990,21 @@ class AgentMemory:
                 purpose=purpose,
                 overrides=overrides,
             )
-        )
+
+        probe = envelope_for(tuple(evidence_refs))
+        target_fact = fact_uuid or self._visible_head(target_reference, probe)
+        if target_fact and not self.runtime.adapter.fact_eligible_in_context(target_fact, self._writer_context(probe)):
+            target_fact = None  # #786: a named fact outside the writer's scope reads as absent
+        if not target_fact:
+            return contract.result(
+                "commit",
+                contract.CURRENT,
+                committed=False,
+                fact_uuid=None,
+                refusal="fact_not_found",
+            )
+        refs = tuple(dict.fromkeys((f"fact:{target_fact}", *tuple(evidence_refs))))
+        proposal = contract.proposal_from_envelope(envelope_for(refs))
         outcome = self.runtime.dispute(
             proposal,
             target_fact,
@@ -823,10 +1014,24 @@ class AgentMemory:
         return self._commit_result(outcome)
 
     @_serialized
-    def recall(
+    def recall(self, query: str, **kwargs) -> dict:
+        """Ordinary caller-facing recall (#777 public projection applied); see ``_recall_document``."""
+        self._require_open()
+        return self._recall_document(query, public=True, **kwargs)
+
+    @_serialized
+    def _canonical_recall(self, query: str, **kwargs) -> dict:
+        """IN-PROCESS EVALUATION ONLY, not part of the public contract (#777): the canonical
+        recall document including deleted-lineage refusals, for governance evaluators that
+        already hold the runtime. Ordinary callers use ``recall``."""
+        self._require_open()
+        return self._recall_document(query, public=False, **kwargs)
+
+    def _recall_document(
         self,
         query: str,
         *,
+        public: bool = True,
         logical_memory_refs: Sequence[str] = (),
         target_domain_refs: Sequence[str] | None = None,
         principal_ref: str | None = None,
@@ -875,8 +1080,13 @@ class AgentMemory:
             temporal_intent=intent,
         )
         rank = {candidate: index + 1 for index, candidate in enumerate(result.ranked_admitted)}
+        # #777: ordinary readers never see deleted-generation identifiers, refusal reasons
+        # that disclose a deletion, or counts/stop reasons derived from them.
+        withheld = _withheld_predicate(self.runtime.adapter) if public else (lambda value: False)
+        hidden = _withheld_candidates(result.candidates, result.refusals, withheld) if public else set()
+        public_candidates = [c for c in result.candidates if c not in hidden]
         admissions: dict[str, dict] = {}
-        for candidate in result.candidates:
+        for candidate in public_candidates:
             decision = dict(result.decisions.get(candidate, {}))
             decision["route_provenance"] = [hit.to_dict() for hit in result.provenance_for(candidate)]
             basis = getattr(result, "admission_basis", {}).get(candidate)
@@ -894,20 +1104,23 @@ class AgentMemory:
             result.ranked_admitted, (validated.get("budget") or {}).get("k"))
         recall_control = None
         if self._recall_control == "shadow":
-            recall_control = self._shadow_recall_control(query, tuple(logical_memory_refs), result, validated)
+            recall_control = self._shadow_recall_control(query, tuple(logical_memory_refs), result, validated,
+                                                         public_candidates)
         return contract.result(
             "recall",
             contract.CURRENT,
-            candidates=list(result.candidates),
+            candidates=public_candidates,
             admitted=list(result.ranked_admitted),
-            admissions=admissions,
+            admissions=_scrub(admissions, withheld) if public else admissions,
+            public_projection=dict(_PUBLIC_PROJECTION) if public else None,
             candidate_policy=dict(getattr(result, "candidate_policy", {}) or {}) or None,
             returned=returned,
             return_policy=return_policy,
             recall_control=recall_control,
         )
 
-    def _shadow_recall_control(self, query: str, logical_memory_refs: tuple[str, ...], result, envelope) -> dict:
+    def _shadow_recall_control(self, query: str, logical_memory_refs: tuple[str, ...], result, envelope,
+                               public_candidates=None) -> dict:
         """Plan in shadow beside the executed recall (#644 T-controller S2-S4).
 
         Runs after ``multi_route_recall`` returned; reads only the result and the route
@@ -928,8 +1141,9 @@ class AgentMemory:
             host_caps[SEMANTIC_VECTOR_ROUTE] = SEMANTIC_CANDIDATE_LIMIT
         if isinstance(substrate, EvidenceNeighborTemporalGraphPort):
             available.append(SHARED_EVIDENCE_ROUTE)
+        visible = list(result.candidates) if public_candidates is None else list(public_candidates)
         counts: dict[str, int] = {}
-        for candidate in result.candidates:
+        for candidate in visible:
             for route in {hit.route_id for hit in result.provenance_for(candidate)}:
                 counts[route] = counts.get(route, 0) + 1
         return shadow_control_report(
@@ -940,7 +1154,7 @@ class AgentMemory:
             routes_executed=tuple(result.routes_executed),
             route_counts=counts,
             host_caps=host_caps,
-            candidate_count=len(result.candidates),
+            candidate_count=len(visible),
             policy_context={
                 "tenant_scope_ref": f"{self.tenant}#{envelope.get('project_ref') or self.scope}",
                 "recall_policy_ref": str(result.policy_version),
@@ -963,7 +1177,19 @@ class AgentMemory:
     ) -> dict:
         """Tombstone by default; permanent deletion remains a stricter explicit request."""
         self._require_open()
-        if self.runtime.adapter.current_fact_uuid(target_reference) is None:
+        operation = "permanent_deletion" if permanent else "pruning"
+        envelope = self._proposal(
+            target_reference=target_reference,
+            operation=operation,
+            current_strength="reinforced",
+            proposed_strength="not_applicable" if permanent else "archived",
+            reversibility="irreversible" if permanent else "reversible",
+            risk_class=risk_class or ("high" if permanent else "low"),
+            evidence_refs=evidence_refs,
+            purpose=purpose,
+            overrides=overrides,
+        )
+        if self._visible_head(target_reference, envelope) is None:
             return contract.result(
                 "forget",
                 contract.CURRENT,
@@ -971,35 +1197,103 @@ class AgentMemory:
                 fact_uuid=None,
                 refusal="fact_not_found",
             )
-        operation = "permanent_deletion" if permanent else "pruning"
-        proposal = contract.proposal_from_envelope(
-            self._proposal(
-                target_reference=target_reference,
-                operation=operation,
-                current_strength="reinforced",
-                proposed_strength="not_applicable" if permanent else "archived",
-                reversibility="irreversible" if permanent else "reversible",
-                risk_class=risk_class or ("high" if permanent else "low"),
-                evidence_refs=evidence_refs,
-                purpose=purpose,
-                overrides=overrides,
-            )
-        )
+        proposal = contract.proposal_from_envelope(envelope)
         outcome = self.runtime.delete_current(
             proposal,
             evidence=list(evidence) or None,
             external_verification=attestation,
         )
-        return self._commit_result(outcome, stage="forget")
+        result = self._commit_result(outcome, stage="forget")
+        if permanent and outcome.committed:
+            # #802: the canonical generation is committed; now every persistent sidecar under
+            # this root drops the deleted lineage, whatever the semantic mode. Two SQLite files
+            # are not one transaction: an incomplete cleanup is reported loudly, with the
+            # canonical receipt attached, and retried on the next open. It is never a claim
+            # of full erasure, and the caller's authority is not re-used for anything else.
+            from ..runtime.representation_cache import DerivedCacheReconciliationError
+
+            cause = None
+            try:
+                report = self._reconcile_cached_representations(
+                    self.root, self.runtime, deleted_fact_uuid=outcome.fact_uuid
+                )
+            except Exception as exc:
+                cause = exc
+                report = {"status": "incomplete", "stores_checked": 0, "rows_purged": 0,
+                          "stores_discarded": [], "foreign": [], "unsafe": [],
+                          "failed": [[str(self.root / "derived"), f"{type(exc).__name__}: {exc}"]]}
+            complete = report["status"] == "complete"
+            report["pending"] = [] if complete else [outcome.fact_uuid]
+            self._derived_reconciliation = report
+            if not complete:
+                raise DerivedCacheReconciliationError(
+                    "canonical permanent deletion committed, but derived vector cleanup is "
+                    "incomplete; residue may remain and reopen will retry reconciliation",
+                    fact_uuid=outcome.fact_uuid, report=report, result=result,
+                ) from cause
+        return result
+
+    @_serialized
+    def _canonical_history(self, target_reference: str, *, fact_text: str | None = None) -> dict:
+        """IN-PROCESS EVALUATION ONLY (#777): the unprojected history record."""
+        self._require_open()
+        return history(self.runtime.adapter,
+                       {"contract_version": contract.CONTRACT_VERSION, "target_reference": target_reference},
+                       fact_text=fact_text)
 
     @_serialized
     def history(self, target_reference: str, *, fact_text: str | None = None) -> dict:
         self._require_open()
-        return history(
+        raw = history(
             self.runtime.adapter,
             {"contract_version": contract.CONTRACT_VERSION, "target_reference": target_reference},
             fact_text=fact_text,
         )
+        if "history" not in raw:
+            return raw
+        # #777: an ordinary handle sees only a memory whose current fact it may read, and only
+        # that live generation's events. An out-of-scope memory reads as unknown. A memory this
+        # handle could have read and that is now governed-deleted reads as ``tombstoned`` with
+        # nothing else (docs/44; durability profile DUR-DEL-001): the deletion is the reader's
+        # own lifecycle fact, while the deleted generation's identifiers, timestamps, events
+        # and rejected values stay internal audit records.
+        adapter = self.runtime.adapter
+        record = raw["history"]
+        context = self._handle_recall_context()
+        if not adapter.public_current_visible(target_reference, context):
+            # the version recorded by the deletion itself, never the live memory-wide counter,
+            # which another scope's later generation would move
+            deleted_version = adapter.public_deleted_version(target_reference, context)
+            projected = {"current_fact_uuid": None,
+                         "state_version": deleted_version if deleted_version is not None else 0,
+                         "tombstoned": deleted_version is not None, "events": []}
+            if fact_text is not None:
+                projected["rejected_values"] = []
+        else:
+            start = adapter.public_generation_start(target_reference)
+            withheld = _withheld_predicate(adapter)
+            # Deletion records are audit metadata: every deletion correlation is omitted, as is
+            # every correlation that began in an earlier (deleted) generation.
+            hidden = {e.get("correlation_id") for e in record["events"]
+                      if e.get("event_type") == "memory.delete"
+                      or (start is not None and str(e.get("timestamp", "")) <= start)}
+            # a write-target-refused attempt by another scope is an audit record, not the
+            # memory's lifecycle: its whole correlation is withheld (#786, review F7)
+            hidden |= {e.get("correlation_id") for e in record["events"]
+                       if WRITE_TARGET_REFUSED_REF in (e.get("authority") or {}).get("authority_refs", ())}
+            events = [e for e in record["events"]
+                      if (start is None or str(e.get("timestamp", "")) > start) and e.get("correlation_id") not in hidden]
+            projected = dict(record, tombstoned=False, events=_scrub(events, withheld))
+            if "rejected_values" in projected:
+                # a deleted generation's rejections stay internal audit records (#786, review F1)
+                projected["rejected_values"] = [
+                    row for row in projected["rejected_values"]
+                    if not adapter.memory_deleted(str(row.get("superseded_fact_uuid", "")))
+                    and not _mentions(row, withheld)]
+        raw = dict(raw, history=projected, public_projection=dict(_PUBLIC_PROJECTION))
+        from ..core import receipts
+        receipts.validate(contract.RESULT_SCHEMA, raw)
+        return raw
 
     @_serialized
     def posture(self) -> dict:
@@ -1036,6 +1330,7 @@ class AgentMemory:
             "candidate_limit": None if retriever is None else SEMANTIC_CANDIDATE_LIMIT,
             "ordering": "subordinate: after every relevance and temporal stage (ranking policy 3.2.0)",
             "store": None if store is None else store.posture(),
+            "derived_reconciliation": dict(self._derived_reconciliation),
             "authority_effect": "none",
         }
 

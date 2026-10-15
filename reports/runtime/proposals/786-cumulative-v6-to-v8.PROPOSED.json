@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "baseline_id": "agent-memory-runtime-baseline-v8",
+  "predecessor_baseline_id": "agent-memory-runtime-baseline-v6",
+  "issue": 786,
+  "declared_changes": [
+    {
+      "path": "reference/agentmem_ref/api/contract.py",
+      "blob": "cadf93763d0ad172e573131ba718da8ca7200a16"
+    },
+    {
+      "path": "reference/agentmem_ref/api/surface.py",
+      "blob": "34e92bcb4ab2f864a13054703c052574a080fc36"
+    },
+    {
+      "path": "reference/agentmem_ref/evidence_sufficiency.py",
+      "blob": "55edbc614bf86c8f1ffd0d46369a8738712ff5b3"
+    },
+    {
+      "path": "reference/agentmem_ref/governed_transition_witness.py",
+      "blob": "c638210619d661db2d57490ed684df2b80e9db19"
+    },
+    {
+      "path": "reference/agentmem_ref/memory/procedural_memory.py",
+      "blob": "d5c25f431dd9860587fc2514fabe649828fc1b07"
+    },
+    {
+      "path": "reference/agentmem_ref/recall_observation_receipt.py",
+      "blob": "cfeeb6948f38cae0e04a87ed6e61c1344548509c"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/adapter.py",
+      "blob": "66a216fda9ecdf86d64f5bd0b4d13a43d9b102bf"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/evidence_sufficiency.py",
+      "blob": "3ca2d2d9ad8cbf364c4575aa05fe49fea6c3f1eb"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/governed_transition_witness.py",
+      "blob": "6deb69083617bc0f3c229d6870e3f52a8545756c"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/recall_control.py",
+      "blob": "c049d23f178f5ea6d12dcec8cd02c47e704fcef9"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/recall_observation_receipt.py",
+      "blob": "f80d3145d7290c8931b3269c7dcb95585385a45d"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/representation_cache.py",
+      "blob": "4f61d53e1ed7f653ab7f12c893766dc13e3b7282"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/restart_runtime.py",
+      "blob": "782129b63e70d3235a0fc133edcbececb7535c7a"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/runtime_composition.py",
+      "blob": "5f0a8666dfc2e3362f347ec1f23cd489a6da9475"
+    }
+  ],
+  "identity_deltas": [
+    {
+      "identity_path": "identity.public_contract_version",
+      "from": "1.6.0",
+      "to": "1.8.0"
+    }
+  ],
+  "pyproject_change": null,
+  "acceptance_evidence_required": [
+    {
+      "kind": "public_gauntlet",
+      "ref": "gauntlet-orchestration-retrieval-probe-v1"
+    },
+    {
+      "kind": "replay",
+      "ref": "typed-sufficiency-noninterference-and-negative-controls-v1"
+    },
+    {
+      "kind": "replay",
+      "ref": "governed-persisted-typed-slot-sufficiency-admission-recheck-v1"
+    },
+    {
+      "kind": "replay",
+      "ref": "governed-admitted-typed-value-coherence-v1"
+    },
+    {
+      "kind": "replay",
+      "ref": "committed-governed-transition-witness-v1"
+    },
+    {
+      "kind": "replay",
+      "ref": "same-slot-safety-counterevidence-and-immutable-stop-gate-v1"
+    },
+    {
+      "kind": "lane",
+      "ref": "amb-precisionmembench-retrieval-v8"
+    },
+    {
+      "kind": "lane",
+      "ref": "longmemeval-s-retrieval-parity-v8"
+    },
+    {
+      "kind": "security_replay",
+      "ref": "cross-scope-write-authority-denial-v3"
+    },
+    {
+      "kind": "security_replay",
+      "ref": "deleted-lineage-generations-and-restart-v3"
+    },
+    {
+      "kind": "security_replay",
+      "ref": "public-tombstone-redaction-and-observer-separation-v3"
+    }
+  ]
+}

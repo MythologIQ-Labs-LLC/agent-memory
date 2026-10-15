@@ -1,0 +1,4 @@
+retain timing at the integration candidate (scratchpad/perf/profile_retain.py <root>/reference 1000, CPU otherwise busy with the suite run in another worktree)
+060e7cd7 (#784 head): writes 750-1000 1.51s (6.0 ms/write), cumulative 5.89s, recall 209.6 ms, state bytes 4297052
+1d0d4c75 (candidate): writes 750-1000 1.49s (5.9 ms/write), cumulative 5.45s, recall 182.1 ms, state bytes 4297052
+Elapsed-time deltas are within run-to-run noise; reported as such, not as an asymptotic change.
