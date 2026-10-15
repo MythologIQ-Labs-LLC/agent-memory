@@ -38,7 +38,7 @@
       "action_label": "Our upstream runner",
       "submission_deadline": null,
       "submission_timezone": null,
-      "external_method": "The AMB project owns benchmark datasets, runner and scoring. Our internal AMB-compatible frozen lanes are not automatically official AMB leaderboard placements.",
+      "external_method": "Operated by Vectorize, which also develops Hindsight. The upstream project owns datasets, provider evaluation and published outcomes; its commercial affiliation is relevant context for independent review.",
       "integration_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/38f6a7dcc358e8ee50a38d703b0addb9d8e660d7/reference/amb_agent_memory_bridge.py",
       "official_result": null
     },

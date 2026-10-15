@@ -94,6 +94,7 @@
         '<p class="ext-coverage">' + safe(p.coverage) + '</p>' +
         '<p class="ext-status"><strong>Our status:</strong> ' + safe(p.summary) + '</p>' +
         resultHtml +
+        '<p class="ext-method"><strong>Evaluation method:</strong> ' + safe(p.external_method) + '</p>' +
         '<p class="ext-next"><strong>Next:</strong> ' + safe(p.next_step) + '</p>' +
         deadline +
         '<div class="ext-links">' + link(p.program_url, 'Official site') +
