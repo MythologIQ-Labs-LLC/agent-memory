@@ -41,7 +41,11 @@ The baselines BM25 (8/77) and lexical overlap are controls, not memory products.
    - While the 5 long-running benchmark jobs share the 4 vCPUs (load average about 12), one LangMem extraction call for one short document did not finish in more than 10 minutes. The LLM server also held 4.9 GB resident.
    - AMB ingests 35 documents, and LangMem makes at least one tool-calling extraction per document. One repetition is therefore on the order of 10 hours or more, and the Graphiti episode pipeline needs several structured calls per episode.
    - A 3B model would also be a weak, non-representative extractor. Any number from it measures the model as much as the product, and must be labelled as such.
-   - **Unblock:** a GPU host, or explicit approval for a paid inference budget. The hard stops forbid paid inference.
+   - **Re-measured on a quieter host** (load about 5.7, 22:40 UTC), using a single clear fact (*"I switched our team's CI from Jenkins to GitHub Actions…"*):
+     - One LangMem `create_memory_store_manager` call took **266 s**: 519 prompt tokens at 6.0 tok/s, then 521 generated tokens at 3.0 tok/s.
+     - It wrote **0 memories** and recorded **0 LLM errors**. The 3B model's tool-calling output gave LangMem nothing to store.
+     - A full AMB run would therefore measure the local model's tool-calling failure, not LangMem. It would mostly produce empty stores and trivially empty passes, and that is **not a valid LangMem measurement**.
+   - **Unblock:** a capable tool-calling model, through a GPU host or an approved inference budget. The hard stops forbid paid inference.
 2. **Hardware (Jev-Mem).** Laya is ModernBERT-large running fp32 on CPU, at about 64 to 78 minutes per session-plane question. The CUDA handoff has pinned commands and hashes. CPU fp32 and CUDA bf16 rows must never be pooled.
 3. **Supermemory local.**
    - The vendor's own docs at `server-v0.0.9` say: *"needs one model provider to power summaries, contextual chunking, and memory extraction"* and *"the only required input is one LLM provider key"*. That is the same LLM blocker as above.
