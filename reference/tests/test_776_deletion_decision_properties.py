@@ -9,6 +9,7 @@ checkpoint recovery.
 from __future__ import annotations
 
 import random
+import re
 import unittest
 
 from tests.test_776_adversarial_review import _Store
@@ -18,9 +19,34 @@ DELETION_FAMILY = {"tombstoned", "derived_from_tombstoned_source",
                    "logical_memory_deleted", "derived_from_deleted_logical_memory"}
 
 
+def _seq(ref: str) -> int | None:
+    match = re.fullmatch(r"ref-(\d+)", ref)
+    return int(match.group(1)) if match else None
+
+
+def _dependencies(adapter, fact) -> tuple[str, ...]:
+    """#809: a fact's deletion dependencies are the cited references its writer was
+    eligible to read at commit. Recomputed here INDEPENDENTLY of the runtime's recorded
+    derivation (review SF-6: reading ``attributes["canonical_derivation"]`` would make this
+    oracle mirror the function under test): a reference binds iff it names a fact this
+    adapter governed (its scope record in ``_fact_scope`` survives pruning and purge) and was
+    minted before the citing fact (deterministic ids are one monotonic sequence, so a forward
+    citation of an id written later never binds: fail closed at commit). Every write in this
+    property shares one scope, actor, project and task, so scope eligibility of the citing
+    writer for the cited fact is trivially satisfied and is asserted, not assumed."""
+    own = _seq(fact.uuid)
+    bound = []
+    for ref in fact.episode_uuids:
+        if ref not in adapter._fact_scope or _seq(ref) is None or own is None or _seq(ref) >= own:
+            continue
+        assert adapter._fact_scope[ref]["domain_refs"] == adapter._fact_scope[fact.uuid]["domain_refs"]
+        bound.append(ref)
+    return tuple(bound)
+
+
 def oracle(adapter):
     """Independent definition: a fact is deletion-refused iff it is in a deleted lineage
-    or its provenance (episode_uuids, transitively over facts) reaches one."""
+    or its dependencies (transitively over facts) reach one."""
     deleted = set(adapter._tombstones)
     for key, record in adapter._tombstones.items():
         deleted.update(record.get("deleted_fact_uuids") or ())
@@ -30,7 +56,7 @@ def oracle(adapter):
         if uuid in deleted:
             out[uuid] = True
             continue
-        seen, stack, hit = set(), list(fact.episode_uuids), False
+        seen, stack, hit = set(), list(_dependencies(adapter, fact)), False
         while stack:
             ref = stack.pop()
             if ref in seen:
@@ -40,7 +66,7 @@ def oracle(adapter):
                 hit = True
                 break
             if ref in facts:
-                stack.extend(facts[ref].episode_uuids)
+                stack.extend(_dependencies(adapter, facts[ref]))
         out[uuid] = hit
     return out
 

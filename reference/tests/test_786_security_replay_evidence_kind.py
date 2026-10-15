@@ -26,6 +26,7 @@ SECURITY_REPLAYS = (
     "cross-scope-write-authority-denial-v3",
     "deleted-lineage-generations-and-restart-v3",
     "public-tombstone-redaction-and-observer-separation-v3",
+    "evidence-reference-authorization-v1",  # #809, DSL/3, additive
 )
 
 
@@ -70,10 +71,13 @@ class SecurityReplayEvidenceKind(unittest.TestCase):
         spec.loader.exec_module(module)
         self.assertEqual(module.DECLARATION, DECLARATION)
         self.assertFalse((ROOT / "reports/runtime/proposals/786-security-replay-acceptance.PROPOSED.json").exists())
-        # the declaration names the -v3 generation, executed by the DSL/2 runner the verifier picks per fixture
-        self.assertEqual(tuple(module.runner_dsl2.REPLAYS), SECURITY_REPLAYS)
-        for ref in SECURITY_REPLAYS:
+        # the declaration names the -v3 generation (DSL/2) and the #809 generation (DSL/3); the
+        # verifier picks each fixture's runner by its dsl_version
+        self.assertEqual(tuple(module.runner_dsl2.REPLAYS) + tuple(module.runner_dsl3.REPLAYS), SECURITY_REPLAYS)
+        for ref in module.runner_dsl2.REPLAYS:
             self.assertIs(module.runner_for(ref, module.runner.FIXTURE_DIR), module.runner_dsl2)
+        for ref in module.runner_dsl3.REPLAYS:
+            self.assertIs(module.runner_for(ref, module.runner.FIXTURE_DIR), module.runner_dsl3)
         self.assertIs(module.runner_for("cross-scope-write-authority-denial-v2", module.runner.FIXTURE_DIR), module.runner)
 
     def test_contract_identity_delta_matches_the_adopted_version(self):

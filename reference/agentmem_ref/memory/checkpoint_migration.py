@@ -49,6 +49,10 @@ MIGRATION_SCHEMA_VERSION = "1.0.0"
 MIGRATION_PROTOCOL = "governed_checkpoint_migration_v1"
 
 
+#: Fact attributes a checkpoint migration may never add, alter or remove (#809, code review SF-1).
+PROTECTED_FACT_ATTRIBUTES = ("write_provenance", "canonical_derivation")
+
+
 class CheckpointMigrationError(RuntimeRecoveryError):
     """A durable migration cannot be proven or completed safely."""
 
@@ -728,6 +732,18 @@ def _validate_migration_state(
                 )
         if source_fact.get("fact_text") and not target_fact.get("fact_text"):
             raise CheckpointMigrationError("migration cannot erase durable fact content")
+        # #809 (code review SF-1): the attributes that decide authority are as immutable to a
+        # migration as episode_uuids: the writer's provenance and the recorded canonical
+        # derivation (what deletion taint follows). A transformer can neither bind a reference
+        # retroactively nor release a legitimate dependency; the sanctioned legacy upgrade is a
+        # governed runtime operation, not a checkpoint transformer.
+        source_attributes = source_fact.get("attributes") or {}
+        target_attributes = target_fact.get("attributes") or {}
+        for key in PROTECTED_FACT_ATTRIBUTES:
+            if target_attributes.get(key) != source_attributes.get(key):
+                raise CheckpointMigrationError(
+                    f"migration cannot alter fact authority attribute {key} for {fact_id}"
+                )
 
 
 def _adapter_from_state(runtime: RestartSafeRuntime, state: MigrationState):

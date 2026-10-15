@@ -734,7 +734,8 @@ class ControlledRecallPlanner:
             withheld = getattr(self.adapter, "public_identifier_withheld", None)
             reported = graph_results if withheld is None else self.graph_retriever.search(
                 substrate, tuple(graph_seed_refs), group_id=tenant,
-                candidate_limit=graph_budget.candidate_limit, exclude=withheld)
+                candidate_limit=graph_budget.candidate_limit,
+                exclude=lambda ref: withheld(ref, context))  # #809: the reader's context
             for graph_hit in reported:
                 graph_candidate_hits[graph_hit.candidate_ref] = graph_hit
             for graph_hit in graph_results:

@@ -955,6 +955,11 @@ class EvidenceReferenceOracle(_TwoProjects):
         return {"deleted": self._cite(a1, "deleted"), "live_foreign": self._cite(a2, "live"),
                 "random": self._cite("fact-guess-" + "9" * 12, "random"), "none": self._cite(None, "none")}
 
+    # #809: the pre-repair proof, body unchanged. On the repaired runtime this test MUST fail
+    # (the deleted-foreign citation is admitted like a guess); an unexpected success means the
+    # oracle has reopened. The post-repair expectations live in
+    # test_809_evidence_reference_authorization.py.
+    @unittest.expectedFailure
     def test_fr3_2_citing_a_deleted_foreign_uuid_is_observable_to_the_citer(self):
         for permanent in (False, True):
             with self.subTest(permanent=permanent):

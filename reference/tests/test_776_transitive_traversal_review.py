@@ -65,10 +65,20 @@ class TransitiveTraversal(_Facade):
         return late, before, live, fresh
 
     def test_decision_does_not_depend_on_query_order(self):
-        # A fact whose provenance becomes tainted WITHOUT a new deletion (a later write
-        # deriving from an already-deleted version) must be refused whether or not it was
-        # evaluated (memoised) before that write. Deterministic ids: a discovery pass learns
-        # the late fact's id, the replay cites it before it exists.
+        # The decision for a fact must be the same whether or not it was evaluated (memoised)
+        # before a later write. Deterministic ids: a discovery pass learns the late fact's id,
+        # the replay cites it before it exists. Until #809 the forward citation bound once the
+        # late fact existed and the forward note became refused; since #809 the canonical
+        # derivation is decided at commit under the writer's authority (a reference that
+        # names no fact yet never binds: fail closed), so the forward note stays admitted
+        # live, memoised and after a reopen, while the late derivation of the deleted source
+        # is itself withheld (test_809_evidence_reference_authorization::LateBinding).
+        # GUARANTEE WITHDRAWN (declared, not silent): until #809 this test asserted
+        # ``self.assertFalse(fresh)`` -- "a fact whose provenance becomes tainted WITHOUT a new
+        # deletion (a later write deriving from an already-deleted version) must be refused".
+        # Since #809 such a forward note is never refused. The change is presented for the
+        # owner's explicit acceptance in the #809 handoff (review SF-4); it was not approved
+        # as part of the repair decision.
         import tempfile
         with tempfile.TemporaryDirectory() as d1:
             late_id, *_ = self._order_scenario(d1 + "/m", "external:placeholder")
@@ -76,7 +86,8 @@ class TransitiveTraversal(_Facade):
             late, before, live, fresh = self._order_scenario(d2 + "/m", late_id)
         self.assertEqual(late, late_id)
         self.assertEqual(live, fresh, f"stale memo: before={before} live={live} fresh={fresh}")
-        self.assertFalse(fresh)
+        self.assertEqual(before, live, f"the memoised answer changed under a later write: before={before} live={live}")
+        self.assertTrue(fresh)
 
     def test_recreated_generation_derivations_are_live_old_ones_refused(self):
         old, new = self.state_changed()

@@ -1,0 +1,45 @@
+# First execution of the preregistered #809 legacy-upgrade expectations (module as committed at ad52cc9b, reviewer YES in section 7 of independent-review-preexecution.md) on the IMPLEMENTED runtime
+# runtime blobs as executed (uncommitted at run time; committed unchanged as the next commit): adapter.py 9912f175f3e3370b4f91e55a65f481fa31812254 surface.py ff685664da430c15c7421e1ede2c470fe765c0fb substrate.py 767993510016820c84e414a9e060f9b86320733e sqlite_substrate.py 878a4232ab7d73a13c4fece2628c392d431185fb
+# module sha256: 0b018dea063f80211289b110574f8043dc08c1a16c5f14feb21f78a14fe2f4fd (same as baseline 2)
+# command (repository root): python3 -m pytest reference/tests/test_809_legacy_upgrade.py -q -p no:cacheprovider --tb=short
+....F.....                                     [100%]
+=================================== FAILURES ===================================
+_ CrossScopeStore.test_upgrade_classifies_rewrites_and_closes_the_oracle_without_releasing_own_dependencies (channel='recall') _
+reference/tests/test_809_legacy_upgrade.py:216: in _expect_after
+    self.assertEqual(shapes["bd"][ch], shapes["bu"][ch])
+E   AssertionError: '{"ad[932 chars]": 1.938315, "metabolic_evidence": "not_used",[7621 chars]ll"}' != '{"ad[932 chars]": 1.591554, "metabolic_evidence": "not_used",[7571 chars]ll"}'
+E   Diff is 32207 characters long. Set self.maxDiff to None to see it.
+_ CrossScopeStore.test_upgrade_classifies_rewrites_and_closes_the_oracle_without_releasing_own_dependencies _
+reference/tests/test_809_legacy_upgrade.py:247: in test_upgrade_classifies_rewrites_and_closes_the_oracle_without_releasing_own_dependencies
+    self._expect_after(self.open("project:b"), a)
+reference/tests/test_809_legacy_upgrade.py:218: in _expect_after
+    self.assertEqual(self.admitted(a) & {self.ids["d1"], self.ids["ctl"]}, {self.ids["ctl"]})
+                     ^^^^^^^^^^^^^^^^
+reference/tests/test_809_legacy_upgrade.py:119: in admitted
+    return set(handle.recall(f"{QUERY} digest", temporal_intent=HIST)["admitted"])
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+reference/agentmem_ref/api/surface.py:350: in wrapper
+    return method(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+reference/agentmem_ref/api/surface.py:1024: in recall
+    return self._recall_document(query, public=True, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+reference/agentmem_ref/api/surface.py:1080: in _recall_document
+    result = self.runtime.multi_route_recall(
+reference/agentmem_ref/runtime/sqlite_composition.py:103: in multi_route_recall
+    return self.durable_runtime.run_governed_read(
+reference/agentmem_ref/runtime/sqlite_runtime.py:703: in run_governed_read
+    result = self.base.run_governed_read(operation)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+reference/agentmem_ref/runtime/sqlite_runtime.py:569: in run_governed_read
+    return self._transactional_operation(operation)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+reference/agentmem_ref/runtime/sqlite_runtime.py:555: in _transactional_operation
+    raise RuntimeCheckpointConflict(
+E   agentmem_ref.runtime.restart_runtime.RuntimeCheckpointConflict: SQLite generation conflict: observed 12, current 16
+----------------------------- Captured stdout call -----------------------------
+uuuuuuuu
+=========================== short test summary info ============================
+SUBFAILED(channel='recall') reference/tests/test_809_legacy_upgrade.py::CrossScopeStore::test_upgrade_classifies_rewrites_and_closes_the_oracle_without_releasing_own_dependencies
+FAILED reference/tests/test_809_legacy_upgrade.py::CrossScopeStore::test_upgrade_classifies_rewrites_and_closes_the_oracle_without_releasing_own_dependencies
+2 failed, 9 passed, 25 subtests passed in 2.14s

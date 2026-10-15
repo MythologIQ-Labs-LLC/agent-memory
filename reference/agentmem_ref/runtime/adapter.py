@@ -35,6 +35,22 @@ from . import proposition_semantics as semantics
 from . import typed_proposition as typed
 from .temporal_intent import DECLARED_TEMPORAL_KEY, declared_temporal, parse_time
 
+#: #809 (F-R3-2): the canonical derivation of a governed write, recorded in the fact's
+#: attributes apart from the caller-supplied ``episode_uuids``. Only a cited reference that
+#: names a fact of this tenant the writer was eligible to read at commit time is bound; every
+#: other reference (an external evidence identifier, an id nobody wrote, a fact outside the
+#: writer's scope) is unknown, stays in ``episode_uuids`` as evidence, and carries no deletion
+#: state. Deletion taint, residue and the public withholding read the bound set only.
+DERIVATION_KEY = "canonical_derivation"
+DERIVATION_POLICY = "writer-eligible-at-commit/1"
+#: #809 legacy upgrade: the derivation record a pre-#809 fact receives, reconstructed from durable
+#: state only (reports/validation/809-legacy-upgrade/decision.PREREGISTERED.md).
+RECONSTRUCTED_POLICY = "writer-eligible-reconstructed/1"
+LEGACY_UPGRADE_KEY = "canonical_derivation_upgrade"
+LEGACY_CLASSES = ("eligible", "ineligible_scope", "unknown_reference", "forward_reference",
+                  "membership_undecidable", "order_undecidable", "scope_undecidable")
+LEGACY_UNDECIDABLE = frozenset(("membership_undecidable", "order_undecidable", "scope_undecidable"))
+
 
 class Clock:
     """Deterministic clock, so runs are reproducible.
@@ -736,6 +752,8 @@ class GovernedMemoryAdapter:
         attributes[semantics.WRITE_SEMANTICS_KEY] = semantics.persisted_form(
             self._interpret_write(uuid, proposal.target_reference, fact_text, declared, scope, typed_write)
         )
+        # #809: the canonical derivation is decided here, once, under the writer's own authority
+        attributes[DERIVATION_KEY] = {"policy": DERIVATION_POLICY, "bound": list(self._bound_derivation(proposal))}
         self._substrate.write_fact(
             Fact(
                 uuid=uuid,
@@ -759,6 +777,154 @@ class GovernedMemoryAdapter:
         self._fact_memory[uuid] = proposal.target_reference
         self._state_version[proposal.target_reference] = self._state_version.get(proposal.target_reference, 0) + 1
         return uuid
+
+    # -- canonical derivation (#809, F-R3-2) --------------------------------
+
+    def _bound_derivation(self, proposal: policy.Proposal) -> tuple[str, ...]:
+        """The cited references that become canonical derivation links of this write.
+
+        A reference binds iff it names a fact this adapter governed (its canonical scope is
+        recorded in ``_fact_scope``, which survives pruning and permanent deletion, so a purged
+        source still binds) and the writer is eligible for that fact under the #786 writer
+        gates (tenant, isolation domains, shared membership, project, task; the scope gates
+        only, never lifecycle: a deleted source the writer could read binds, so deletion
+        completeness holds). Evaluated at commit and persisted: a later change of membership
+        or scope neither unbinds a legitimate dependency nor binds one retroactively, and a
+        reference that names no fact yet never binds later (fail closed). Every other
+        reference is unknown: it is kept verbatim in ``episode_uuids`` as caller-supplied
+        evidence and is never a dependency, so citing an id outside the writer's scope commits,
+        reads and is withheld exactly like citing an id nobody wrote.
+        """
+        context = self._writer_context(proposal)
+        bound: list[str] = []
+        for ref in dict.fromkeys(ref for ref in proposal.evidence_refs if isinstance(ref, str)):
+            if ref not in self._fact_scope:
+                continue
+            if self._domain_identity_refusal(ref, self._tenant, context) is None:
+                bound.append(ref)
+        return tuple(bound)
+
+    # -- #809 legacy upgrade (reports/validation/809-legacy-upgrade/decision.PREREGISTERED.md) --
+
+    def _legacy_facts(self) -> list[Fact]:
+        return [fact for fact in getattr(self._substrate, "all_facts", tuple)()
+                if DERIVATION_KEY not in (fact.attributes or {})]
+
+    @staticmethod
+    def _id_sequence(ref: str) -> int | None:
+        head, _, tail = str(ref).rpartition("-")
+        return int(tail) if head and tail.isdigit() else None
+
+    def _governance_witness(self, ref: str) -> bool:
+        """Whether this store ever governed ``ref`` as a fact: a scope record, a fact row, a
+        memory binding or a tombstone naming it."""
+        if ref in self._fact_scope or ref in self._fact_memory or ref in self._tombstones:
+            return True
+        if self._substrate.get_fact(ref) is not None:
+            return True
+        return any(ref in (record.get("deleted_fact_uuids") or ()) for record in self._tombstones.values())
+
+    def _classify_legacy_reference(self, fact: Fact, ref: str) -> str:
+        """One class per cited reference of a legacy fact, decided from durable state only:
+        scope records (which survive purge), write provenance, id order, and the current
+        shared-domain keys (never removed by the runtime). Write-time shared membership is not
+        recorded and is never assumed."""
+        if not isinstance(ref, str) or not self._governance_witness(ref):
+            return "unknown_reference"
+        scope_f = self._fact_scope.get(fact.uuid)
+        scope_r = self._fact_scope.get(ref)
+        if scope_f is None or scope_r is None:
+            return "scope_undecidable"
+        own, cited = self._id_sequence(fact.uuid), self._id_sequence(ref)
+        if own is None or cited is None:
+            return "order_undecidable"
+        if cited > own:
+            return "forward_reference"
+        memory_domains, target_domains = set(scope_r["domain_refs"]), set(scope_f["domain_refs"])
+        matching = memory_domains & target_domains
+        if not matching or not set(scope_r.get("required_domain_refs", ())) <= target_domains:
+            return "ineligible_scope"
+        if scope_r.get("project_ref") and scope_r["project_ref"] != scope_f.get("project_ref", ""):
+            return "ineligible_scope"
+        if scope_r.get("task_ref") and scope_r["task_ref"] != scope_f.get("task_ref", ""):
+            return "ineligible_scope"
+        if matching <= set(self._shared_domain_members):
+            return "membership_undecidable"
+        return "eligible"
+
+    def legacy_upgrade_status(self) -> dict:
+        """``fresh`` (no legacy fact, no record), ``legacy_pending`` (legacy facts, no record),
+        or the recorded status of the last upgrade (``legacy_qualified`` / ``legacy_unqualified``)."""
+        record = self.extension_state.get(LEGACY_UPGRADE_KEY)
+        legacy = len(self._legacy_facts())
+        if record is not None:
+            return {"status": record["status"], "legacy_facts": legacy, "record": dict(record)}
+        return {"status": "legacy_pending" if legacy else "fresh", "legacy_facts": legacy, "record": None}
+
+    def upgrade_canonical_derivation(self) -> dict:
+        """Give every legacy fact a reconstructed derivation record (policy
+        ``writer-eligible-reconstructed/1``: ``bound`` = eligible and undecidable references,
+        ``classification`` per reference); ``episode_uuids`` and every other attribute stay
+        verbatim; scope records are never created or altered. Undecidable edges are kept bound
+        and quarantined; a store with any of them reads ``legacy_unqualified``. Idempotent: a
+        later run rewrites nothing and returns the store record. Must run inside the durable
+        runtime's transactional seam so the rewrites publish as one generation."""
+        rewrite = getattr(self._substrate, "rewrite_fact_attributes", None)
+        legacy = self._legacy_facts()
+        existing = self.extension_state.get(LEGACY_UPGRADE_KEY)
+        if existing is not None and not legacy:
+            record = dict(existing)
+            record["runs"] = int(record.get("runs", 1)) + 1
+            record["facts_rewritten"] = 0
+            self.extension_state[LEGACY_UPGRADE_KEY] = record
+            return dict(record)
+        if legacy and rewrite is None:
+            raise RuntimeError("substrate does not support the #809 legacy upgrade (no rewrite_fact_attributes)")
+        edges = {name: 0 for name in LEGACY_CLASSES}
+        quarantined: dict[str, list[str]] = {}
+        for fact in legacy:
+            classification = {ref: self._classify_legacy_reference(fact, ref) for ref in dict.fromkeys(fact.episode_uuids)}
+            bound = [ref for ref, cls in classification.items() if cls == "eligible" or cls in LEGACY_UNDECIDABLE]
+            held = [ref for ref, cls in classification.items() if cls in LEGACY_UNDECIDABLE]
+            for cls in classification.values():
+                edges[cls] += 1
+            if held:
+                quarantined[fact.uuid] = held
+            attributes = dict(fact.attributes or {})
+            attributes[DERIVATION_KEY] = {"policy": RECONSTRUCTED_POLICY, "bound": bound, "classification": classification}
+            rewrite(fact.uuid, attributes)
+        total = len(tuple(getattr(self._substrate, "all_facts", tuple)()))
+        if existing is not None:
+            edges = {k: edges[k] + int(existing.get("edges", {}).get(k, 0)) for k in LEGACY_CLASSES}
+            quarantined = {**{k: list(v) for k, v in existing.get("quarantined", {}).items()}, **quarantined}
+        record = {
+            "policy": RECONSTRUCTED_POLICY,
+            "status": "fresh" if not legacy and existing is None else ("legacy_unqualified" if quarantined else "legacy_qualified"),
+            "facts_total": total,
+            "facts_legacy": len(legacy) + (int(existing.get("facts_legacy", 0)) if existing else 0),
+            "facts_rewritten": len(legacy),
+            "edges": edges,
+            "quarantined": quarantined,
+            "runs": (int(existing.get("runs", 1)) if existing else 0) + 1,
+            "completed_at": self._clock.now(),
+        }
+        if legacy or existing is not None:
+            self.extension_state[LEGACY_UPGRADE_KEY] = dict(record)
+        self._derived_taint_memo = None
+        self._deleted_lineage_cache = None
+        self._semantic_slot_index = None
+        return dict(record)
+
+    @staticmethod
+    def _derivation_refs(fact: Fact) -> tuple[str, ...]:
+        """The references deletion taint follows for ``fact``: its recorded canonical
+        derivation (#809). A fact persisted before the derivation was recorded keeps its
+        ``episode_uuids`` as the dependency set, exactly as before: existing data is never
+        silently released from deletion completeness."""
+        record = (fact.attributes or {}).get(DERIVATION_KEY)
+        if isinstance(record, Mapping) and isinstance(record.get("bound"), (list, tuple)):
+            return tuple(str(ref) for ref in record["bound"])
+        return tuple(fact.episode_uuids)
 
     # -- write-time semantics (#550) ----------------------------------------
 
@@ -925,7 +1091,7 @@ class GovernedMemoryAdapter:
         fact = self._substrate.get_fact(fact_uuid)
         if fact is None or fact.uuid in self._tombstones:
             return None
-        if any(source_ref in self._tombstones for source_ref in fact.episode_uuids):
+        if any(source_ref in self._tombstones for source_ref in self._derivation_refs(fact)):
             return None
         # #776: an earlier version of a deleted memory (or a fact derived from
         # one) is as unreadable here as it is at recall admission.
@@ -1381,7 +1547,7 @@ class GovernedMemoryAdapter:
             return "out_of_scope"
         if fact.uuid in self._tombstones:
             return "tombstoned"
-        if any(source_ref in self._tombstones for source_ref in fact.episode_uuids):
+        if any(source_ref in self._tombstones for source_ref in self._derivation_refs(fact)):
             return "derived_from_tombstoned_source"
         # #776 P0: the tombstone is recorded against the *current fact*,
         # but deletion belongs to the durable logical memory. Historical
@@ -1820,25 +1986,41 @@ class GovernedMemoryAdapter:
         """Whether any governed deletion exists, so a public projection may need to withhold."""
         return bool(self._tombstones)
 
-    def public_identifier_withheld(self, ref: object) -> bool:
+    def public_identifier_withheld(self, ref: object, context: RecallContext | None = None) -> bool:
         """Must an ordinary caller-facing read withhold this fact identifier?
 
         True for every fact of a deleted generation (head, earlier versions, erased
-        versions) and for facts whose provenance leads to one. Canonical admission,
-        tombstones and audit events are not changed by this projection.
+        versions) and for facts whose canonical derivation leads to one. Canonical
+        admission, tombstones and audit events are not changed by this projection.
+
+        With the reader's ``context`` (#809): an identifier of a generation this reader could
+        never have read (not eligible under the canonical scope recorded for it, which
+        survives pruning and permanent deletion) is NOT withheld from that reader. No
+        projection of this runtime serves such an identifier to that reader, so it can appear
+        in the reader's view only as the reader's own input, and withholding it would answer
+        whether that input names a deleted fact (F-R3-2). Without a context the predicate is
+        the tenant-wide one.
         """
         if not isinstance(ref, str) or not ref or not self._tombstones:
+            return False
+        if (context is not None and ref in self._fact_scope
+                and self._domain_identity_refusal(ref, self._tenant, context) is not None):
             return False
         if ref in self._tombstones or ref in self._deleted_lineage():
             return True
         fact = self._substrate.get_fact(ref) if ref in self._fact_memory else None
         return fact is not None and self._deleted_lineage_reason(fact) is not None
 
-    def public_memory_withheld(self, memory_id: object) -> bool:
-        """A logical memory id with deletion history and no live generation."""
-        return (isinstance(memory_id, str) and bool(self._tombstones)
+    def public_memory_withheld(self, memory_id: object, context: RecallContext | None = None) -> bool:
+        """A logical memory id with deletion history and no live generation. With the reader's
+        ``context`` (#809), only when a head deletion of that id was one this reader could have
+        read (``public_deleted_version``); a deletion in a scope the reader could never read is
+        not withheld from it, for the reason given in ``public_identifier_withheld``."""
+        if not (isinstance(memory_id, str) and bool(self._tombstones)
                 and self._current_fact_by_memory.get(memory_id) is None
-                and memory_id in self.tombstoned_ids())
+                and memory_id in self.tombstoned_ids()):
+            return False
+        return context is None or self.public_deleted_version(memory_id, context) is not None
 
     def public_generation_start(self, memory_id: str) -> str | None:
         """When the live generation of ``memory_id`` began: the latest whole-generation
@@ -1946,21 +2128,22 @@ class GovernedMemoryAdapter:
         deleted = self._deleted_lineage()
         if fact.uuid in deleted:
             return "logical_memory_deleted"
-        if any(self._derives_from_deleted(ref, deleted) for ref in fact.episode_uuids):
+        if any(self._derives_from_deleted(ref, deleted) for ref in self._derivation_refs(fact)):
             return "derived_from_deleted_logical_memory"
         return None
 
     def _derives_from_deleted(self, ref: str, deleted: Mapping[str, str]) -> bool:
-        """Is ``ref`` a deleted fact, or a fact whose provenance (``episode_uuids``) leads to one?
+        """Is ``ref`` a deleted fact, or a fact whose canonical derivation leads to one?
 
-        Transitive over canonical fact references, so a derivation of a derivation of a
-        deleted version is refused too. Facts are immutable and deletions only add to the
-        index, so results are memoised per index state; refs that are not facts
-        (external evidence identifiers) carry no deletion state.
+        Transitive over the bound derivation (``_derivation_refs``, #809), so a derivation of
+        a derivation of a deleted version is refused too. Facts are immutable and deletions
+        only add to the index, so results are memoised per index state; refs that are not
+        facts (external evidence identifiers, ids nobody wrote) carry no deletion state.
         """
-        # A negative answer can go stale without a new deletion: provenance may cite an id
+        # A negative answer could go stale without a new deletion for a fact whose dependency
+        # set is its ``episode_uuids`` (persisted before #809): such provenance may cite an id
         # before that fact exists, and a later write can bind it to a deleted source. Every
-        # governed write binds a fact, so the fact-binding count is part of the key.
+        # governed write binds a fact, so the fact-binding count stays part of the key.
         memo_key = (getattr(self, "_deleted_lineage_cache", (None,))[0],
                     id(self._fact_memory), len(self._fact_memory))
         memo = getattr(self, "_derived_taint_memo", None)
@@ -1985,7 +2168,7 @@ class GovernedMemoryAdapter:
             path.append(current)
             fact = self._substrate.get_fact(current)
             if fact is not None:
-                stack.extend(fact.episode_uuids)
+                stack.extend(self._derivation_refs(fact))
         if result:
             taint[ref] = True  # only the queried root is known tainted on an early exit
         else:
@@ -2205,7 +2388,7 @@ class GovernedMemoryAdapter:
         remnants = [
             candidate.uuid
             for candidate in getattr(self._substrate, "all_facts", tuple)()
-            if fact_uuid in candidate.episode_uuids and candidate.uuid not in declared
+            if fact_uuid in self._derivation_refs(candidate) and candidate.uuid not in declared
         ]
         return remnants
 

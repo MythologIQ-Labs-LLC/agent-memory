@@ -27,7 +27,7 @@ import hashlib
 import json
 from pathlib import Path
 import sqlite3
-from typing import Iterable
+from typing import Iterable, Mapping
 
 from .substrate import (
     DeterministicIds,
@@ -705,6 +705,18 @@ class SQLiteTemporalGraph:
                 ),
             )
         self._log("write_fact", fact.uuid)
+
+    def rewrite_fact_attributes(self, uuid: str, attributes: Mapping[str, object]) -> None:
+        """Replace one fact's attributes (#809 legacy upgrade): a canonical write, logged and
+        digested like ``write_fact`` so the next recovery verifies it. Identity, content,
+        provenance references and currentness columns are untouched."""
+        cursor = self._connection.execute(
+            "UPDATE facts SET attributes_json = ? WHERE uuid = ?",
+            (_canonical_bytes(dict(attributes)).decode("utf-8"), uuid),
+        )
+        if cursor.rowcount != 1:
+            raise KeyError(uuid)
+        self._log("write_fact", uuid)
 
     def invalidate_fact(self, uuid: str, invalid_at: str, expired_at: str) -> None:
         cursor = self._connection.execute(

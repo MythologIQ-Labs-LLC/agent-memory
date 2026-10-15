@@ -321,6 +321,47 @@ class CheckpointMigrationTests(unittest.TestCase):
                 transform=erase_visibility,
             )
 
+    def test_migration_cannot_alter_write_provenance_or_canonical_derivation(self):
+        """#809 (code review SF-1): a transformer can neither bind a reference retroactively nor
+        release a recorded dependency; the attributes that decide authority are immutable."""
+        plan = self._plan()
+
+        def forge(state: MigrationState) -> MigrationState:
+            target = state.detached_copy()
+            facts = []
+            for fact in target.substrate["facts"]:
+                row = dict(fact)
+                attributes = dict(row.get("attributes") or {})
+                attributes["canonical_derivation"] = {"policy": "forged", "bound": ["ref-0001"]}
+                row["attributes"] = attributes
+                facts.append(row)
+            target.substrate["facts"] = facts
+            return target
+
+        with self.assertRaisesRegex(CheckpointMigrationError, "canonical_derivation"):
+            execute_migration(
+                self.runtime, target_profile=self.target_profile, impact=self.impact, lifecycle=self.lifecycle,
+                plan=plan, transformer_id=plan.transformer_id, transformer_version=plan.transformer_version,
+                transform=forge)
+
+        def strip(state: MigrationState) -> MigrationState:
+            target = state.detached_copy()
+            facts = []
+            for fact in target.substrate["facts"]:
+                row = dict(fact)
+                attributes = dict(row.get("attributes") or {})
+                attributes.pop("write_provenance", None)
+                row["attributes"] = attributes
+                facts.append(row)
+            target.substrate["facts"] = facts
+            return target
+
+        with self.assertRaisesRegex(CheckpointMigrationError, "write_provenance"):
+            execute_migration(
+                self.runtime, target_profile=self.target_profile, impact=self.impact, lifecycle=self.lifecycle,
+                plan=plan, transformer_id=plan.transformer_id, transformer_version=plan.transformer_version,
+                transform=strip)
+
     def test_migration_cannot_erase_tombstones_or_rejected_value_history(self):
         # Populate both governance records through their normal governed paths.
         tombstoned = self.runtime.commit_proposal(
