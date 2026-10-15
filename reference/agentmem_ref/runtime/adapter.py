@@ -869,6 +869,7 @@ class GovernedMemoryAdapter:
         and quarantined; a store with any of them reads ``legacy_unqualified``. Idempotent: a
         later run rewrites nothing and returns the store record. Must run inside the durable
         runtime's transactional seam so the rewrites publish as one generation."""
+        self._ids.ensure_allocatable()  # #816: outside that seam, refuse before anything moves
         rewrite = getattr(self._substrate, "rewrite_fact_attributes", None)
         legacy = self._legacy_facts()
         existing = self.extension_state.get(LEGACY_UPGRADE_KEY)
@@ -1382,6 +1383,7 @@ class GovernedMemoryAdapter:
         substrate is trusted to return same-tenant candidates for policy
         evaluation. Candidate presence remains distinct from admission authority.
         """
+        self._ids.ensure_allocatable()  # #816: refuse before the clock or any state moves
         context = context or RecallContext(target_domain_refs=(self._tenant,))
         evaluated_at = self._clock.now()
         result = AdmissionResult(
@@ -2407,6 +2409,7 @@ class GovernedMemoryAdapter:
         return self._ids.next()
 
     def now(self) -> str:
+        self._ids.ensure_allocatable()  # the clock is published governance state (#816)
         return self._clock.now()
 
     # -- helpers --------------------------------------------------------

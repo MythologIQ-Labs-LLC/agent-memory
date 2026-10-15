@@ -699,12 +699,11 @@ class SharedDomainDurable(_Citer):
         for _ in range(2):
             owner = self.handle("agent:a")
             self.assertEqual(owner.runtime.adapter._shared_domain_members["shared:x"], {"agent:a", "agent:c"})
-            result = owner.runtime.adapter.governed_recall(f"{QUERY} digest", owner._handle_recall_context())
+            result = owner.runtime.recall(f"{QUERY} digest", owner._handle_recall_context())
             self.assertIn(bound["fact_uuid"], result.candidates, result.refusals)
             self.assertIn(result.refusals.get(bound["fact_uuid"]), DELETION_FAMILY)
-            # a recall is a governed act; only the facade's serialized operations publish the
-            # governance state the next recovery verifies, so the public read below is also what
-            # makes the handle reopenable (an adapter-level call followed by close() is not)
+            # a recall is a governed act, so it runs through the runtime's generation seam: an
+            # adapter-level call on this facade-owned handle is refused before anything moves (#816)
             self.assertNotIn(bound["fact_uuid"], owner.recall(f"{QUERY} digest", temporal_intent=HIST)["admitted"])
             owner.close()
             stranger = self.handle("agent:c")  # a member now; its own digest never bound

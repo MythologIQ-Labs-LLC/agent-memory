@@ -251,6 +251,23 @@ class SQLiteRestartSafeRuntime:
         # visibility snapshots, and journal publication. Operations still commit as
         # single-writer SQLite generations; they simply never interleave.
         self._serialization_lock = threading.RLock()
+        # #816: the database is the durable source of truth only for what a generation
+        # published, so from here on a governed act runs only inside ``_transactional_operation``
+        # (a direct adapter call on this handle is refused before anything moves, not half-applied).
+        substrate.require_runtime_generations()
+        self._on_generation_published = None
+
+    def on_generation_published(self, callback) -> None:
+        """Run ``callback`` after every generation this runtime publishes (#816), however the
+        governed act reached it, so an owner's binding of the published generation never lags."""
+
+        self._on_generation_published = callback
+
+    def _published(self, evidence: SQLiteRecoveryEvidence) -> None:
+        self._observed_generation = evidence.generation
+        self.recovery_evidence = evidence
+        if self._on_generation_published is not None:
+            self._on_generation_published()
 
     @property
     def serialization_lock(self) -> threading.RLock:
@@ -516,8 +533,7 @@ class SQLiteRestartSafeRuntime:
         with self._serialization_lock:
             with self.substrate.transaction():
                 evidence = self._persist_unlocked()
-            self._observed_generation = evidence.generation
-            self.recovery_evidence = evidence
+            self._published(evidence)
             return evidence
 
     def _restore_governance_after_rollback(self) -> None:
@@ -561,8 +577,7 @@ class SQLiteRestartSafeRuntime:
             except Exception:
                 self._restore_governance_after_rollback()
                 raise
-            self._observed_generation = evidence.generation
-            self.recovery_evidence = evidence
+            self._published(evidence)
             return result
 
     def run_governed_read(self, operation):
@@ -688,6 +703,12 @@ class SQLiteConfigBoundRestartRuntime(ConfigBoundRestartRuntime):
         )
         return cls(base=base, plan=plan, binding_store=binding_store, recovery_evidence=evidence)
 
+    def __init__(self, **kwargs) -> None:
+        super().__init__(**kwargs)
+        # #816: bind every base generation, including one a caller published by driving the
+        # base runtime directly; the binding store then never trails the SQLite generation.
+        self.base.on_generation_published(self._bind_current_base)
+
     def _bind_current_base(self) -> ConfigBoundRecoveryEvidence:
         self.recovery_evidence = self.binding_store.checkpoint(
             plan=self.plan,
@@ -697,12 +718,10 @@ class SQLiteConfigBoundRestartRuntime(ConfigBoundRestartRuntime):
 
     def checkpoint(self) -> ConfigBoundRecoveryEvidence:
         self.base.checkpoint()
-        return self._bind_current_base()
+        return self.recovery_evidence
 
     def run_governed_read(self, operation):
-        result = self.base.run_governed_read(operation)
-        self._bind_current_base()
-        return result
+        return self.base.run_governed_read(operation)
 
     def governed_recall(self, query, context=None):
         return self.run_governed_read(
@@ -721,7 +740,6 @@ class SQLiteConfigBoundRestartRuntime(ConfigBoundRestartRuntime):
             source_ref=source_ref,
             typed_write=typed_write,
         )
-        self._bind_current_base()
         return result
 
     def governed_delete(
@@ -739,10 +757,9 @@ class SQLiteConfigBoundRestartRuntime(ConfigBoundRestartRuntime):
             external_verification,
             evidence,
         )
-        self._bind_current_base()
         return result
 
     def persist_visibility_snapshot(self, operation_id: str, snapshot: dict) -> ConfigBoundRecoveryEvidence:
         _assert_visibility_matches_plan({operation_id: snapshot}, self.plan)
         self.base.persist_visibility_snapshot(operation_id, snapshot)
-        return self._bind_current_base()
+        return self.recovery_evidence

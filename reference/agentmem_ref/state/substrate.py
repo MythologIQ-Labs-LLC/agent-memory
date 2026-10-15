@@ -58,6 +58,9 @@ class DeterministicIds:
         self._n += 1
         return f"{self._prefix}-{self._n:04d}"
 
+    def ensure_allocatable(self) -> None:
+        """Raise when a governed act may not advance durable state now; in-memory ids always may."""
+
     def checkpoint_value(self) -> int:
         """Return durable identifier progress without exposing private state."""
         return self._n

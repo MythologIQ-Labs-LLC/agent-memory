@@ -87,6 +87,20 @@ def _tokens(text: str) -> set[str]:
     return {token.strip(".,;:!?").lower() for token in text.split() if token.strip(".,;:!?")}
 
 
+class UngovernedDurableWrite(RuntimeError):
+    """A durable write attempted outside a runtime generation on a runtime-owned store (#816).
+
+    Raised before anything changes: the store, its identifier sequence and the adapter's
+    governance state are exactly as the last published generation left them."""
+
+
+UNGOVERNED_WRITE_MESSAGE = (
+    "durable write outside a runtime generation refused: this SQLite store is owned by a "
+    "transactional runtime, so governed acts must run through AgentMemory or the runtime's "
+    "governed operations, which publish them as one generation (#816)"
+)
+
+
 class SqliteDeterministicIds(DeterministicIds):
     """Durable substrate-scoped id sequence stored in SQLite metadata."""
 
@@ -94,8 +108,14 @@ class SqliteDeterministicIds(DeterministicIds):
         super().__init__(prefix)
         self._connection = connection
         self._sqlite_prefix = prefix
+        self._generation_owned = False
+
+    def ensure_allocatable(self) -> None:
+        if self._generation_owned and not self._connection.in_transaction:
+            raise UngovernedDurableWrite(UNGOVERNED_WRITE_MESSAGE)
 
     def next(self) -> str:
+        self.ensure_allocatable()
         self._connection.execute(
             "UPDATE agent_memory_meta SET value = CAST(value AS INTEGER) + 1 WHERE key = 'id_counter'"
         )
@@ -561,6 +581,17 @@ class SQLiteTemporalGraph:
 
     def close(self) -> None:
         self._connection.close()
+
+    def require_runtime_generations(self) -> None:
+        """Bind this store's identifier sequence to a transactional runtime (#816).
+
+        From here on a governed act may allocate an identifier, the first durable effect of
+        every governed act, only inside ``transaction()``, the seam the runtime publishes as one
+        generation; outside it ``UngovernedDurableWrite`` is raised before anything moves.
+        Storage-level writes through this class stay a privileged, ungoverned layer: they are
+        published only by an explicit runtime checkpoint, and recovery refuses them otherwise."""
+
+        self._ids._generation_owned = True
 
     @property
     def sqlite_version(self) -> str:

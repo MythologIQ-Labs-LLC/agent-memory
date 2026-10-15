@@ -643,8 +643,9 @@ class SecondReviewFindings(_TwoProjects):
         for snap in ("v1", "v2", "v3"):
             env = dict(self.memory._proposal(target_reference="memory:a", operation="promotion",
                                              fact_text=f"{QUERY} is Turku {snap}"), state_snapshot=snap)
-            with self.memory.runtime.serialization_lock:
-                out = surface.commit(self.adapter, env, f"{QUERY} is Turku {snap}")
+            # a module-level governed act runs inside the runtime's generation seam (#816)
+            out = self.memory.runtime.durable_runtime.run_governed_read(
+                lambda: surface.commit(self.adapter, env, f"{QUERY} is Turku {snap}"))
             results[snap] = (out["committed"], out.get("refusal"), out["receipt"]["before_state"], out["receipt"]["after_state"])
         for snap, (committed, _refusal, before, after) in results.items():
             self.assertFalse(committed, snap)  # only the public v0 binds on a no-head id

@@ -239,7 +239,8 @@ class HarnessVectorPrefilterTests(unittest.TestCase):
             envelope = {"contract_version": contract.CONTRACT_VERSION, "target_domain_refs": list(memory._domain_refs()),
                         "principal_ref": memory.actor_id, "project_ref": memory.scope, "purpose": memory.purpose}
             context = contract.recall_context_from_envelope(contract.validate_recall_context(envelope))
-            planner.recall("budget", context)
+            # a module-level governed act runs inside the runtime's generation seam (#816)
+            memory.runtime.durable_runtime.run_governed_read(lambda: planner.recall("budget", context))
         self.assertIn("eligible", seen)
         self.assertTrue(callable(seen["eligible"]))
 
