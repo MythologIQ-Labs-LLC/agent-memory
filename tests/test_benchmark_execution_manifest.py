@@ -54,6 +54,40 @@ class ManifestTests(unittest.TestCase):
     def test_no_unsafe_relative_evidence_path(self):
         self.reject(lambda x: x["artifacts"][0].update(uri="../private/secret"), "unsafe evidence")
 
+    def test_duplicate_artifact_path(self):
+        self.reject(lambda x: x["artifacts"].append(copy.deepcopy(x["artifacts"][0])), "duplicate evidence")
+
+    def test_command_credential_guard(self):
+        self.reject(lambda x: x["execution"]["argv_redacted"].append("--api-key=unsafe"), "credential")
+
+    def test_accepted_hosted_model_requires_cost(self):
+        value = copy.deepcopy(EXAMPLE)
+        value["review"].update(status="accepted", reviewer="independent", decision_ref="https://github.com/example/review")
+        value["redaction"]["reviewed"] = True
+        value["inference"].update(used=True, calls=[{
+            "purpose": "generation", "provider": "example-provider", "model_id": "model-x",
+            "model_revision": "model-version-one", "model_digest": None, "endpoint_class": "hosted",
+            "parameters": {"temperature": 0, "top_p": 1, "seed": 42,
+                           "context_window_tokens": 2048, "max_output_tokens": 200},
+            "prompt_sha256": "b" * 64, "count": 1
+        }])
+        with self.assertRaisesRegex(Exception, "hosted inference requires a measured cost"):
+            validator.validate(value)
+
+    def test_accepted_generation_requires_prompt_digest(self):
+        value = copy.deepcopy(EXAMPLE)
+        value["review"].update(status="accepted", reviewer="independent", decision_ref="https://github.com/example/review")
+        value["redaction"]["reviewed"] = True
+        value["inference"].update(used=True, calls=[{
+            "purpose": "generation", "provider": "local", "model_id": "model-x",
+            "model_revision": "pinned", "model_digest": None, "endpoint_class": "local",
+            "parameters": {"temperature": 0, "top_p": 1, "seed": 42,
+                           "context_window_tokens": 2048, "max_output_tokens": 200},
+            "prompt_sha256": None, "count": 1
+        }])
+        with self.assertRaisesRegex(Exception, "prompt digest"):
+            validator.validate(value)
+
     def test_normalized_run_identity(self):
         value = copy.deepcopy(EXAMPLE)
         normalized = {

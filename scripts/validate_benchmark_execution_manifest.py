@@ -38,6 +38,16 @@ def validate(manifest: dict, normalized: dict | None = None) -> None:
     calls = manifest["inference"]["calls"]
     if manifest["inference"]["used"] != bool(calls):
         raise ValueError("inference.used and model calls disagree")
+    if len({(x["kind"], x["uri"]) for x in manifest["artifacts"]}) != len(manifest["artifacts"]):
+        raise ValueError("duplicate evidence artifact identity")
+    if len({x["uri"] for x in manifest["artifacts"]}) != len(manifest["artifacts"]):
+        raise ValueError("multiple evidence artifacts claim the same path")
+    sensitive = ("--api-key", "--api_key", "--auth-token", "--password", "--secret", "bearer ")
+    if any(any(term in arg.lower() for term in sensitive) for arg in manifest["execution"]["argv_redacted"]):
+        raise ValueError("command arguments must not expose sensitive credential flags or bearer values")
+    if any(any(term in key.lower() for term in ("api_key", "api-key", "secret", "password", "authorization", "access_token"))
+           for call in calls for key in call["parameters"]):
+        raise ValueError("model parameters must not contain credential fields")
     costs = manifest["costs"]
     if (costs["status"] == "measured") != (costs["amount"] is not None):
         raise ValueError("cost status and amount disagree")
@@ -53,6 +63,15 @@ def validate(manifest: dict, normalized: dict | None = None) -> None:
             raise ValueError("accepted inference requires immutable model version or digest")
         if costs["status"] == "not_measured":
             raise ValueError("accepted evidence requires explicit measured or not-applicable costs")
+        if any(call["endpoint_class"] == "hosted" for call in calls) and costs["status"] != "measured":
+            raise ValueError("accepted hosted inference requires a measured cost, including explicit zero if free")
+        for call in calls:
+            if call["purpose"] in ("generation", "judge"):
+                if not call["prompt_sha256"]:
+                    raise ValueError("accepted generative inference requires exact prompt digest")
+                required_settings = {"temperature", "top_p", "seed", "context_window_tokens", "max_output_tokens"}
+                if not required_settings.issubset(call["parameters"]):
+                    raise ValueError("accepted generation/judge requires explicitly recorded inference settings")
         kinds = {artifact["kind"] for artifact in manifest["artifacts"]}
         if not {"native_result", "row_level_results"}.issubset(kinds):
             raise ValueError("accepted evidence requires native and per-row artifacts")
