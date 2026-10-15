@@ -9,11 +9,16 @@ Usage example::
 
 Everything after ``--`` is passed to AMB's own Typer CLI. AMB remains responsible
 for dataset loading, prompts, answer generation, judging, and result files.
+
+With ``--mode retrieval`` the runner installs the no-LLM guard (amb_retrieval_no_llm.py):
+the frozen CLI otherwise constructs answer and judge clients that RetrievalMode never
+calls, so a credential-free retrieval run would exit before the first query.
 """
 
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import subprocess
 import sys
@@ -21,6 +26,7 @@ from pathlib import Path
 
 from amb_agent_memory_bridge import AMB_REVISION, install_amb_agent_memory_provider, verify_amb_checkout
 from amb_mem0_explicit_bridge import install_amb_mem0_explicit_provider
+from amb_retrieval_no_llm import install_retrieval_no_llm_guard, requested_mode
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
@@ -52,6 +58,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="Exact allowed AMB revision; defaults to the repository-qualified pin.",
     )
     parser.add_argument(
+        "--no-retrieval-guard",
+        action="store_true",
+        help="Run the frozen CLI unmodified even in retrieval mode (it then needs answer/judge credentials).",
+    )
+    parser.add_argument(
         "amb_args",
         nargs=argparse.REMAINDER,
         help="AMB CLI arguments after '--', for example: -- run --dataset longmemeval --split s --memory agent-memory",
@@ -80,9 +91,18 @@ def main(argv: list[str] | None = None) -> int:
     # The Mem0 explicit-memory comparator (#640) registers alongside; it imports mem0 only
     # when prepared, so Agent Memory and BM25 runs never need the Mem0 package.
     install_amb_mem0_explicit_provider(amb_root)
+    # Candidate comparator (#810 cycle 2): registration only; the provider needs a running
+    # pinned Hindsight server and is never used unless selected with --memory.
+    from amb_hindsight_chunks_bridge import install_amb_hindsight_chunks_provider  # noqa: PLC0415
+    install_amb_hindsight_chunks_provider(amb_root)
 
     # Import after registration so CLI help and provider lookup both see Agent Memory.
     from memory_bench import cli as amb_cli  # type: ignore[import-not-found]  # noqa: PLC0415
+    from memory_bench import runner as amb_runner  # type: ignore[import-not-found]  # noqa: PLC0415
+
+    if requested_mode(args.amb_args) == "retrieval" and not args.no_retrieval_guard:
+        record = install_retrieval_no_llm_guard(amb_cli, amb_runner)
+        print("amb-retrieval-no-llm-guard " + json.dumps(record, sort_keys=True), file=sys.stderr)
 
     sys.argv = ["amb", *args.amb_args]
     amb_cli.app()
