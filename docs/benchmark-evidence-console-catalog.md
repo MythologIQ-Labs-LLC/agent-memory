@@ -275,3 +275,22 @@ The F1 contract tests cover:
 - committed catalog freshness.
 
 This is the boundary that lets #699 and #700 proceed without inventing benchmark semantics in the frontend.
+
+
+## Competitor-cohort breadth audit (P0, #810)
+
+\`scripts/audit_competitor_coverage.py\` is the read-only cohort counter for the canonical dashboard's \`competitive_evidence.frozen_lanes\`. It answers a different question from how many scorecards or charts the UI renders.
+
+Local commands:
+
+~~~bash
+python scripts/audit_competitor_coverage.py
+python scripts/audit_competitor_coverage.py --check
+python -m unittest discover -s tests -p 'test_competitor_coverage.py' -v
+~~~
+
+Only \`accepted_rows\` from \`status: accepted\` frozen lanes are considered. Only rows with \`role: comparator\` and at least one native numeric metric that Agent Memory's \`control\` also measured in the **same lane and plane** count as an accepted external product. \`baseline\` rows never count. Identical provider ids differing only in hyphen/underscore are normalized as one comparator. Unmeasured candidates, deferred Hindsight, published vendor figures, and historical runs outside that frozen lane are not implicitly measured.
+
+The coverage target of **six distinct external systems** (issue #789) is a *minimum research breadth target*, not an all-purpose performance threshold. Per-native-metric scores, protocol parity, independent reviewer decisions and absolute adequacy remain evidence-owned. This audit projects **coverage** only and must not grant score comparability, reviewer acceptance or runtime authority. The script is intended to generate \`reports/benchmarks/competitor-coverage/current.json\` from the immutable dashboard and fail the \`--check\` gate on drift. Historical metrics and benchmark input bytes remain unchanged.
+
+As observed on the dashboard at \`2026-10-07\`, there is one distinct external product (Mem0 OSS), six profile/plane combinations, and 28 native metric contexts eligible for display. This description is not an ongoing authoritative count; only a fresh source-bound generated audit at the exact commit establishes the current result. Run the script locally before publishing it. See #810 and #789.
