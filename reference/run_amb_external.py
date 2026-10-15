@@ -25,6 +25,7 @@ import sys
 from pathlib import Path
 
 from amb_agent_memory_bridge import AMB_REVISION, install_amb_agent_memory_provider, verify_amb_checkout
+from amb_graphiti_bridge import install_amb_graphiti_provider
 from amb_mem0_explicit_bridge import install_amb_mem0_explicit_provider
 from amb_retrieval_no_llm import install_retrieval_no_llm_guard, requested_mode
 
@@ -91,6 +92,9 @@ def main(argv: list[str] | None = None) -> int:
     # The Mem0 explicit-memory comparator (#640) registers alongside; it imports mem0 only
     # when prepared, so Agent Memory and BM25 runs never need the Mem0 package.
     install_amb_mem0_explicit_provider(amb_root)
+    # The Graphiti comparator (#812) registers the same way; graphiti_core is imported only
+    # when the provider is prepared, so other providers never need it.
+    install_amb_graphiti_provider(amb_root)
 
     # Import after registration so CLI help and provider lookup both see Agent Memory.
     from memory_bench import cli as amb_cli  # type: ignore[import-not-found]  # noqa: PLC0415
