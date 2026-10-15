@@ -5,9 +5,14 @@
  "owning_issue": 786,
  "frozen_on": "2026-10-15",
  "status": "supersedes_v2",
- "supersession_reason": "The -v2 fixtures (frozen at a7a81c45, sources hashed at 560785a8) are superseded, not edited. The independent invariant-by-invariant review (reports/validation/805-at-head/independent-replay-review-v2.md) found: the hashed contract sources predate the closed-generation clauses the cases expect (finding 1); W4/W4b described the facade as a host-bound trust boundary without the privileged-host qualification (finding 2); live-generation histories were compared by event type and count only (finding 7); former-owner observables had no no-re-creation control (finding 5); R3's two deletions recorded the same version (finding 8); L5 promised a restart it did not perform (finding 10); W4's ValueError was pinned by type only (finding 11); the L family omitted the documents that define the owner tombstone view (finding 13); L6's wording outran its probes (finding 6); three sub-expectations were not derivable from any cited clause (finding 4). Every -v2 case is carried forward in substance; the 28 -v2 scenarios remain and control and restart cases are added.",
+ "supersession_reason": "The -v2 fixtures (frozen at a7a81c45, sources hashed at 560785a8) are superseded, not edited. The independent invariant-by-invariant review (reports/validation/805-at-head/independent-replay-review-v2.md) found: the hashed contract sources predate the closed-generation clauses the cases expect (finding 1); W4/W4b described the facade as a host-bound trust boundary without the privileged-host qualification (finding 2); live-generation histories were compared by event type and count only (finding 7); former-owner observables had no no-re-creation control (finding 5); R3's two deletions recorded the same version (finding 8); L5 promised a restart it did not perform (finding 10); W4's ValueError was pinned by type only (finding 11); the L family omitted the documents that define the owner tombstone view (finding 13); L6's wording outran its probes (finding 6); three sub-expectations were not derivable from any cited clause (finding 4); former-owner observables had no no-re-creation control (the W7c/L3 rows and finding 9). Every -v2 case is carried forward in substance; the 28 -v2 scenarios remain and control and restart cases are added.",
+ "preexecution_review": {
+  "record": "reports/validation/805-at-head/independent-replay-review-v3-preexecution.md",
+  "reviewed_commit": "679cefbf510a95b847e8897ddf6e66e2a1922c46",
+  "outcome": "no expectation WRONG, none BLOCKING; citation precision applied before first execution (F-1..F-6, F-11, F-12) with no expectation changed; the revised fixtures were re-compared before execution"
+ },
  "base_commit": "8c2a71c08977ff92bb7b29ae80d6fe71a7714158",
- "independence": "Expected outcomes were written from the contract documents listed in contract_sources at base_commit, clause by clause (`clauses` on every case), before this fixture was first executed by the runner, and compared to those clauses by a separate reviewer before that first execution (the record is committed beside the evidence). A failing expectation is a finding, never a reason to edit this fixture; a corrected expectation requires a superseding -v4 with a recorded reason. Observables listed under `implementation_evidence` are recorded, never expected, and never count toward acceptance. No frozen holdout phrase or #644 fixture vocabulary is used.",
+ "independence": "Expected outcomes were written from the contract documents listed in contract_sources at base_commit, clause by clause (`clauses` on every case), before this fixture was first executed by the runner, and compared to those clauses by a separate reviewer before that first execution (the record is committed beside the evidence). A failing expectation is a finding, never a reason to edit this fixture; a corrected expectation requires a superseding -v4 with a recorded reason. Observables listed under `implementation_evidence` are recorded, never expected, and never count toward acceptance; observables listed under `controls` are positive controls expected for falsifiability (a refuse-everything runtime must fail), not derivations of a clause. No frozen holdout phrase or #644 fixture vocabulary is used.",
  "stop_lines": [
   "no fixture edit after first execution; supersede with -v4 and record why",
   "no expectation weakened to obtain PASS",
@@ -15,7 +20,7 @@
   "a replay verdict is evidence, not successor acceptance; acceptance requires independent review",
   "a complete-scope override proves host re-declaration, never end-user isolation"
  ],
- "development_history": "v3 authored from the contract sources at base_commit before any execution. Changes against -v2: R1 repeats the value probe after restart; R3 gives A's and B's generations different lengths so the two deletions record different versions (A v3, B v2) and pins each owner's own version; R5 and R6b scan the whole history payload of the re-created generation; R6b's event list is implementation evidence and its public view is pinned without the event list.",
+ "development_history": "v3 authored from the contract sources at base_commit before any execution. Changes against -v2: docs/777 stays listed as the successor-qualification source the family descends from, but no expectation cites it (the pre-execution review found its 'out-of-scope indistinguishability' wording lives in docs/plan-776-777-772, which the cases cite instead); R1 repeats the value probe after restart; R3 gives A's and B's generations different lengths so the two deletions record different versions (A v3, B v2) and pins each owner's own version; R5 and R6b scan the whole history payload of the re-created generation; R6b's event list is implementation evidence and its public view is pinned without the event list.",
  "title": "The owner of a deleted memory reads only its tombstone; every other observer reads nothing; views are stable under other scopes and restart",
  "contract_sources": [
   {
@@ -76,7 +81,7 @@
    "clauses": [
     {
      "source": "docs/plan-776-777-772-exact-head-qualification.md",
-     "clause": "the owner reads `{current_fact_uuid: null, tombstoned: true, events: [], state_version: <canonical>}` and, with a value probe, `rejected_values: []`; no deleted-generation identifier, timestamp, event or value is served",
+     "clause": "a reader who could have read the deleted head (same tenant; domain, project and task eligible against the canonical `_fact_scope`, which survives pruning and permanent deletion) reads `{\"current_fact_uuid\": null, \"tombstoned\": true, \"events\": [], \"state_version\": <canonical>}` and, with a value probe, `rejected_values: []`; no deleted-generation identifier, timestamp, event or value is served",
      "observables": [
       "owner_history",
       "owner_probe",
@@ -171,7 +176,7 @@
    "clauses": [
     {
      "source": "docs/plan-776-777-772-exact-head-qualification.md",
-     "clause": "the owner reads `{current_fact_uuid: null, tombstoned: true, events: [], state_version: <canonical>}` and, with a value probe, `rejected_values: []`; no deleted-generation identifier, timestamp, event or value is served",
+     "clause": "a reader who could have read the deleted head (same tenant; domain, project and task eligible against the canonical `_fact_scope`, which survives pruning and permanent deletion) reads `{\"current_fact_uuid\": null, \"tombstoned\": true, \"events\": [], \"state_version\": <canonical>}` and, with a value probe, `rejected_values: []`; no deleted-generation identifier, timestamp, event or value is served",
      "observables": [
       "owner_history",
       "owner_probe",
@@ -276,15 +281,6 @@
       "by_ref",
       "historical"
      ]
-    },
-    {
-     "source": "docs/777-public-contract-1-7-successor-qualification.md",
-     "clause": "out-of-scope indistinguishability ... no regression to transitive deleted content refusal",
-     "observables": [
-      "history",
-      "value_probe",
-      "by_ref"
-     ]
     }
    ],
    "steps": [
@@ -363,15 +359,6 @@
     {
      "source": "docs/plan-776-777-772-exact-head-qualification.md",
      "clause": "a reader outside that scope reads byte-identically to a memory that never existed",
-     "observables": [
-      "history",
-      "value_probe",
-      "by_ref"
-     ]
-    },
-    {
-     "source": "docs/777-public-contract-1-7-successor-qualification.md",
-     "clause": "out-of-scope indistinguishability ... no regression to transitive deleted content refusal",
      "observables": [
       "history",
       "value_probe",
@@ -460,7 +447,7 @@
     },
     {
      "source": "docs/plan-776-777-772-exact-head-qualification.md",
-     "clause": "the owner reads `{current_fact_uuid: null, tombstoned: true, events: [], state_version: <canonical>}` and, with a value probe, `rejected_values: []`; no deleted-generation identifier, timestamp, event or value is served",
+     "clause": "a reader who could have read the deleted head (same tenant; domain, project and task eligible against the canonical `_fact_scope`, which survives pruning and permanent deletion) reads `{\"current_fact_uuid\": null, \"tombstoned\": true, \"events\": [], \"state_version\": <canonical>}` and, with a value probe, `rejected_values: []`; no deleted-generation identifier, timestamp, event or value is served",
      "observables": [
       "owner_history",
       "other_history"
@@ -468,7 +455,7 @@
     },
     {
      "source": "docs/786-cross-scope-write-authority.md",
-     "clause": "B re-creates A's deleted id: isolation proven; A cannot write it back while B's generation is live; every deleted generation stays a #774 as-of barrier for everyone",
+     "clause": "| B re-creates A's **deleted** id | allowed (fresh generation) | unchanged, with isolation proven (A cannot write it back while B's generation is live) |",
      "observables": [
       "owner_mentions"
      ]
@@ -600,20 +587,22 @@
    ],
    "clauses": [
     {
-     "source": "docs/777-public-contract-1-7-successor-qualification.md",
-     "clause": "out-of-scope indistinguishability ... no regression to transitive deleted content refusal",
+     "source": "docs/786-cross-scope-write-authority.md",
+     "clause": "a write deriving from a deleted source is withheld (`derived_from_tombstoned_source`)",
      "observables": [
-      "withheld",
-      "kept"
+      "withheld"
      ]
     },
     {
      "source": "docs/plan-776-777-772-exact-head-qualification.md",
-     "clause": "the owner reads `{current_fact_uuid: null, tombstoned: true, events: [], state_version: <canonical>}` and, with a value probe, `rejected_values: []`; no deleted-generation identifier, timestamp, event or value is served",
+     "clause": "a reader who could have read the deleted head (same tenant; domain, project and task eligible against the canonical `_fact_scope`, which survives pruning and permanent deletion) reads `{\"current_fact_uuid\": null, \"tombstoned\": true, \"events\": [], \"state_version\": <canonical>}` and, with a value probe, `rejected_values: []`; no deleted-generation identifier, timestamp, event or value is served",
      "observables": [
       "withheld"
      ]
     }
+   ],
+   "controls": [
+    "kept"
    ],
    "steps": [
     {
@@ -720,7 +709,7 @@
     },
     {
      "source": "docs/44-public-api-contract.md",
-     "clause": "A governed-deleted generation is closed. At the fact level (`dispute` of a tombstoned fact by its uuid, a governed pruning of one of its versions, the adapter's delete of a member of a deleted lineage) the answer is `already_deleted`; at the facade's logical-reference level (`forget`, permanent `forget`, `correct`, `dispute` by `target_reference`) the former owner reads the bare `fact_not_found` result ... Either answer is the same whether or not another scope has since re-created the id, and neither moves or reads the live generation",
+     "clause": "A governed-deleted generation is closed. At the fact level (`dispute` of a tombstoned fact by its uuid, a governed pruning of one of its versions, the adapter's delete of a member of a deleted lineage) the answer is `already_deleted`; at the facade's logical-reference level (`forget`, permanent `forget`, `correct`, `dispute` by `target_reference`) the former owner reads the bare `fact_not_found` result, because the reference has no visible head. Either answer is the same whether or not another scope has since re-created the id, and neither moves or reads the live generation [...] The one further governed act is the escalation of a reversible pruning to a permanent deletion by a writer eligible for that generation: it keeps the tombstone's `deleted_at`, recorded version and lineage, erases the content, and neither reads nor moves a live generation another scope holds.",
      "observables": [
       "a_disp",
       "a_disp_mentions"
@@ -905,7 +894,7 @@
    "clauses": [
     {
      "source": "docs/786-cross-scope-write-authority.md",
-     "clause": "the public history projection withholds a write-target-refused proposal's correlation",
+     "clause": "the authorize event of a write-target-refused proposal carries `authority_refs: [\"write-target:refused\"]` (schema-valid) and the public history projection withholds that correlation",
      "observables": [
       "other_history",
       "a_back"

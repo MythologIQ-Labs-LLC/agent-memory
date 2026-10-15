@@ -177,7 +177,7 @@ observables.
 - (Closed by the second slice.) B re-creating A's deleted id used to receive a receipt with
   `before_state` = the memory-wide version counter (`v3`) while its `history()` read `0`;
   versions are now generation-relative (see the owner-review section).
-- A cited fact uuid's membership in a deleted generation of any scope is observable through the citer's own withheld derivation (third review F-R3-2); the owner decides between opaque identifiers, refusing cross-scope evidence refs, or accepting it as the price of tenant-wide deletion completeness.
+- A cited fact uuid's membership in a deleted generation of any scope is observable through the citer's own withheld derivation (third review F-R3-2); the owner decides between opaque identifiers, treating references the writer cannot read as unknown, or accepting it as the price of tenant-wide deletion completeness. Reproduced, measured and dispositioned as evidence in `reports/validation/805-at-head/f-r3-2-disposition.md` (recommendation: unreadable references are unknown; a protected change held for the owner's decision); pinned by `EvidenceReferenceOracle` in `reference/tests/test_786_cross_scope_write_authority.py`.
 - `cross_tenant_delete` / `cross_tenant_dispute` still name a foreign fact's existence for a
   guessed uuid across adapters sharing one substrate (test-only configuration); pre-existing.
 - Scope is privileged host input (owner checkpoint on PR #805, 2026-10-14). The facade does not

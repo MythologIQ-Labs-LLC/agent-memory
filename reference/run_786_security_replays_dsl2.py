@@ -65,8 +65,9 @@ class Scenario(base.Scenario):
 
     def apply(self, op: Mapping) -> None:
         if op["op"] == "snapshot_tombstone":
-            # record the adapter's tombstone of a fact at this point of the scenario (folded)
-            self.ops[op["name"]] = {"record": self._tombstone(op.get("as", OWNER), op["fact"])}
+            # record the adapter's tombstone of a fact at this point of the scenario, unfolded
+            # (exact deleted_at) for the in-run comparison; never written into observations
+            self.ops[op["name"]] = {"record": self._tombstone(op.get("as", OWNER), op["fact"], fold=False)}
             return
         super().apply(op)
         name = op.get("name")
@@ -75,12 +76,15 @@ class Scenario(base.Scenario):
             # The facade raises before any target is resolved, so the second call is side-effect free.
             self.ops[name]["raised_message"] = self._raised_message(op)
 
-    def _tombstone(self, scope: str, fact_label: str):
+    def _tombstone(self, scope: str, fact_label: str, *, fold: bool = True):
+        """The adapter's tombstone of a fact, uuids mapped to labels; ``fold=False`` keeps the
+        exact ``deleted_at`` so an in-run comparison sees a rewritten timestamp (-v2 review F-C)."""
         adapter = self.use(scope).runtime.adapter
         record = adapter.tombstone(self.resolve(fact_label))
         if record is None:
             return None
-        return json.loads(_fold(self.labeller(json.dumps(record, sort_keys=True, default=str))))
+        text = self.labeller(json.dumps(record, sort_keys=True, default=str))
+        return json.loads(_fold(text) if fold else text)
 
     def _raised_message(self, op: Mapping) -> str | None:
         m = self.use(op.get("as", OWNER))
@@ -124,15 +128,17 @@ class Scenario(base.Scenario):
             # the adapter's recorded tombstone for a fact, uuids mapped to labels, times folded
             return self._tombstone(scope, spec["fact"])
         if kind == "tombstone_unchanged":
-            # True when the tombstone now equals the one a ``snapshot_tombstone`` step recorded
+            # True when the tombstone (exact deleted_at, state_version, lineage, mode) now equals
+            # the record a ``snapshot_tombstone`` step took; a missing record never compares equal
             before = self.ops.get(spec["name"], {}).get("record", "<absent>")
-            return before != "<absent>" and before == self._tombstone(scope, spec["fact"])
+            return before not in ("<absent>", None) and before == self._tombstone(scope, spec["fact"], fold=False)
         if kind == "op_raised_message":
             return self.ops.get(spec["name"], {}).get("raised_message")
         if kind == "derived_reconciliation":
             posture = self.use(scope).semantic_retrieval_posture()["derived_reconciliation"]
-            return {"status": posture["status"], "stores_checked": posture["stores_checked"],
-                    "pending": list(posture.get("pending", []))}
+            return {"status": posture["status"], "pending": list(posture.get("pending", []))}
+        if kind == "derived_stores_checked":
+            return self.use(scope).semantic_retrieval_posture()["derived_reconciliation"]["stores_checked"]
         return super().probe(spec)
 
 

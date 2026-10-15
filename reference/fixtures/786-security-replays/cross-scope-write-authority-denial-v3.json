@@ -5,9 +5,14 @@
  "owning_issue": 786,
  "frozen_on": "2026-10-15",
  "status": "supersedes_v2",
- "supersession_reason": "The -v2 fixtures (frozen at a7a81c45, sources hashed at 560785a8) are superseded, not edited. The independent invariant-by-invariant review (reports/validation/805-at-head/independent-replay-review-v2.md) found: the hashed contract sources predate the closed-generation clauses the cases expect (finding 1); W4/W4b described the facade as a host-bound trust boundary without the privileged-host qualification (finding 2); live-generation histories were compared by event type and count only (finding 7); former-owner observables had no no-re-creation control (finding 5); R3's two deletions recorded the same version (finding 8); L5 promised a restart it did not perform (finding 10); W4's ValueError was pinned by type only (finding 11); the L family omitted the documents that define the owner tombstone view (finding 13); L6's wording outran its probes (finding 6); three sub-expectations were not derivable from any cited clause (finding 4). Every -v2 case is carried forward in substance; the 28 -v2 scenarios remain and control and restart cases are added.",
+ "supersession_reason": "The -v2 fixtures (frozen at a7a81c45, sources hashed at 560785a8) are superseded, not edited. The independent invariant-by-invariant review (reports/validation/805-at-head/independent-replay-review-v2.md) found: the hashed contract sources predate the closed-generation clauses the cases expect (finding 1); W4/W4b described the facade as a host-bound trust boundary without the privileged-host qualification (finding 2); live-generation histories were compared by event type and count only (finding 7); former-owner observables had no no-re-creation control (finding 5); R3's two deletions recorded the same version (finding 8); L5 promised a restart it did not perform (finding 10); W4's ValueError was pinned by type only (finding 11); the L family omitted the documents that define the owner tombstone view (finding 13); L6's wording outran its probes (finding 6); three sub-expectations were not derivable from any cited clause (finding 4); former-owner observables had no no-re-creation control (the W7c/L3 rows and finding 9). Every -v2 case is carried forward in substance; the 28 -v2 scenarios remain and control and restart cases are added.",
+ "preexecution_review": {
+  "record": "reports/validation/805-at-head/independent-replay-review-v3-preexecution.md",
+  "reviewed_commit": "679cefbf510a95b847e8897ddf6e66e2a1922c46",
+  "outcome": "no expectation WRONG, none BLOCKING; citation precision applied before first execution (F-1..F-6, F-11, F-12) with no expectation changed; the revised fixtures were re-compared before execution"
+ },
  "base_commit": "8c2a71c08977ff92bb7b29ae80d6fe71a7714158",
- "independence": "Expected outcomes were written from the contract documents listed in contract_sources at base_commit, clause by clause (`clauses` on every case), before this fixture was first executed by the runner, and compared to those clauses by a separate reviewer before that first execution (the record is committed beside the evidence). A failing expectation is a finding, never a reason to edit this fixture; a corrected expectation requires a superseding -v4 with a recorded reason. Observables listed under `implementation_evidence` are recorded, never expected, and never count toward acceptance. No frozen holdout phrase or #644 fixture vocabulary is used.",
+ "independence": "Expected outcomes were written from the contract documents listed in contract_sources at base_commit, clause by clause (`clauses` on every case), before this fixture was first executed by the runner, and compared to those clauses by a separate reviewer before that first execution (the record is committed beside the evidence). A failing expectation is a finding, never a reason to edit this fixture; a corrected expectation requires a superseding -v4 with a recorded reason. Observables listed under `implementation_evidence` are recorded, never expected, and never count toward acceptance; observables listed under `controls` are positive controls expected for falsifiability (a refuse-everything runtime must fail), not derivations of a clause. No frozen holdout phrase or #644 fixture vocabulary is used.",
  "stop_lines": [
   "no fixture edit after first execution; supersede with -v4 and record why",
   "no expectation weakened to obtain PASS",
@@ -96,15 +101,15 @@
      ]
     },
     {
-     "source": "docs/44-public-api-contract.md",
-     "clause": "`correct`, `forget`, `dispute` on such a memory: the bare `fact_not_found` result, byte-identical to the result for an id nobody wrote.",
+     "source": "docs/plan-776-777-772-exact-head-qualification.md",
+     "clause": "a reader outside that scope reads byte-identically to a memory that never existed",
      "observables": [
       "other_history_unknown"
      ]
     },
     {
      "source": "docs/786-cross-scope-write-authority.md",
-     "clause": "same text in unrelated memories of two projects: independent",
+     "clause": "| same text in unrelated memories of two projects | independent | independent (positive control) |",
      "observables": [
       "other_recall"
      ]
@@ -371,7 +376,7 @@
    "clauses": [
     {
      "source": "docs/786-cross-scope-write-authority.md",
-     "clause": "wrong-scope correction after restart (x2): refused; `_fact_scope` survives every restart",
+     "clause": "| wrong-scope correction after restart (x2) | commits | refused; `_fact_scope` survives every restart |",
      "observables": [
       "b1",
       "b2",
@@ -617,6 +622,14 @@
      ]
     },
     {
+     "source": "docs/786-cross-scope-write-authority.md",
+     "clause": "`write_target_refusal` now also requires **scope continuity** -- the head's own scope, read as a context, must be eligible for the scope the new fact would be stored under. A write cannot move a live memory out of its holders' reach",
+     "observables": [
+      "sup_rem_committed",
+      "sup_cor_committed"
+     ]
+    },
+    {
      "source": "docs/44-public-api-contract.md",
      "clause": "A write that replaces a live head must also keep the memory within reach of the scope that holds it (scope continuity) ... A project handle therefore cannot capture a tenant-wide or shared memory into its own scope",
      "observables": [
@@ -625,11 +638,23 @@
      ]
     },
     {
+     "source": "docs/786-cross-scope-write-authority.md",
+     "clause": "`promotion` reports `target_unavailable` (`WRITE_TARGET_REFUSAL`); every operation that presupposes an existing fact reports `fact_not_found`, the same token an id nobody wrote reports.",
+     "observables": [
+      "sup_rem_refusal"
+     ]
+    },
+    {
+     "source": "docs/786-cross-scope-write-authority.md",
+     "clause": "a refused target selects as a blocked action, commits nothing, reports `before_state = after_state = \"v0\"`",
+     "observables": [
+      "sup_rem_before"
+     ]
+    },
+    {
      "source": "docs/44-public-api-contract.md",
      "clause": "`remember` onto a live head outside the writer's scope: `committed: false`, `refusal: \"target_unavailable\"`, receipt `before_state`/`after_state` `v0`, `state_snapshot` `v0`. Nothing is written, no episode is retained, no version moves.",
      "observables": [
-      "sup_rem_refusal",
-      "sup_rem_before",
       "head",
       "valid",
       "owner_recall",
@@ -1007,7 +1032,7 @@
    "clauses": [
     {
      "source": "docs/786-cross-scope-write-authority.md",
-     "clause": "same text in unrelated memories of two projects: independent",
+     "clause": "| same text in unrelated memories of two projects | independent | independent (positive control) |",
      "observables": [
       "a1",
       "a2",
@@ -1176,7 +1201,6 @@
      "clause": "the `episode` is now added only inside the commit branch, so no refused or parked proposal leaves episodic content",
      "observables": [
       "denied_committed",
-      "parked_committed",
       "kept_committed",
       "episode_denied",
       "episode_parked",
@@ -1193,6 +1217,12 @@
       "denied_before"
      ]
     }
+   ],
+   "record": [
+    "parked_committed"
+   ],
+   "implementation_evidence": [
+    "parked_committed"
    ],
    "steps": [
     {
@@ -1292,9 +1322,6 @@
     "denied_before": {
      "eq": "v0"
     },
-    "parked_committed": {
-     "eq": false
-    },
     "kept_committed": {
      "eq": true
     },
@@ -1323,7 +1350,7 @@
    "clauses": [
     {
      "source": "docs/786-cross-scope-write-authority.md",
-     "clause": "the public history projection withholds a write-target-refused proposal's correlation",
+     "clause": "the authorize event of a write-target-refused proposal carries `authority_refs: [\"write-target:refused\"]` (schema-valid) and the public history projection withholds that correlation",
      "observables": [
       "b1",
       "owner_history",
@@ -1332,8 +1359,8 @@
      ]
     },
     {
-     "source": "docs/44-public-api-contract.md",
-     "clause": "`correct`, `forget`, `dispute` on such a memory: the bare `fact_not_found` result, byte-identical to the result for an id nobody wrote.",
+     "source": "docs/plan-776-777-772-exact-head-qualification.md",
+     "clause": "a reader outside that scope reads byte-identically to a memory that never existed",
      "observables": [
       "other_history_unknown"
      ]
@@ -1443,7 +1470,7 @@
    "clauses": [
     {
      "source": "docs/786-cross-scope-write-authority.md",
-     "clause": "the public history projection withholds a write-target-refused proposal's correlation",
+     "clause": "the authorize event of a write-target-refused proposal carries `authority_refs: [\"write-target:refused\"]` (schema-valid) and the public history projection withholds that correlation",
      "observables": [
       "bd",
       "bf",
@@ -1453,8 +1480,8 @@
      ]
     },
     {
-     "source": "docs/44-public-api-contract.md",
-     "clause": "`correct`, `forget`, `dispute` on such a memory: the bare `fact_not_found` result, byte-identical to the result for an id nobody wrote.",
+     "source": "docs/plan-776-777-772-exact-head-qualification.md",
+     "clause": "a reader outside that scope reads byte-identically to a memory that never existed",
      "observables": [
       "other_history_unknown"
      ]
@@ -1569,7 +1596,7 @@
    "clauses": [
     {
      "source": "docs/44-public-api-contract.md",
-     "clause": "A governed-deleted generation is closed. At the fact level (`dispute` of a tombstoned fact by its uuid, a governed pruning of one of its versions, the adapter's delete of a member of a deleted lineage) the answer is `already_deleted`; at the facade's logical-reference level (`forget`, permanent `forget`, `correct`, `dispute` by `target_reference`) the former owner reads the bare `fact_not_found` result ... Either answer is the same whether or not another scope has since re-created the id, and neither moves or reads the live generation",
+     "clause": "A governed-deleted generation is closed. At the fact level (`dispute` of a tombstoned fact by its uuid, a governed pruning of one of its versions, the adapter's delete of a member of a deleted lineage) the answer is `already_deleted`; at the facade's logical-reference level (`forget`, permanent `forget`, `correct`, `dispute` by `target_reference`) the former owner reads the bare `fact_not_found` result, because the reference has no visible head. Either answer is the same whether or not another scope has since re-created the id, and neither moves or reads the live generation [...] The one further governed act is the escalation of a reversible pruning to a permanent deletion by a writer eligible for that generation: it keeps the tombstone's `deleted_at`, recorded version and lineage, erases the content, and neither reads nor moves a live generation another scope holds.",
      "observables": [
       "a_disp",
       "a_disp_refusal",
@@ -1589,7 +1616,7 @@
     },
     {
      "source": "docs/786-cross-scope-write-authority.md",
-     "clause": "B re-creates A's deleted id: isolation proven; A cannot write it back while B's generation is live; every deleted generation stays a #774 as-of barrier for everyone",
+     "clause": "| B re-creates A's **deleted** id | allowed (fresh generation) | unchanged, with isolation proven (A cannot write it back while B's generation is live) |",
      "observables": [
       "a_rem",
       "other_recall"
@@ -1604,7 +1631,7 @@
     },
     {
      "source": "docs/786-cross-scope-write-authority.md",
-     "clause": "the public history projection withholds a write-target-refused proposal's correlation",
+     "clause": "the authorize event of a write-target-refused proposal carries `authority_refs: [\"write-target:refused\"]` (schema-valid) and the public history projection withholds that correlation",
      "observables": [
       "other_history",
       "other_history_mentions"
@@ -1809,7 +1836,7 @@
    "clauses": [
     {
      "source": "docs/44-public-api-contract.md",
-     "clause": "A governed-deleted generation is closed. At the fact level (`dispute` of a tombstoned fact by its uuid, a governed pruning of one of its versions, the adapter's delete of a member of a deleted lineage) the answer is `already_deleted`; at the facade's logical-reference level (`forget`, permanent `forget`, `correct`, `dispute` by `target_reference`) the former owner reads the bare `fact_not_found` result ... Either answer is the same whether or not another scope has since re-created the id, and neither moves or reads the live generation",
+     "clause": "A governed-deleted generation is closed. At the fact level (`dispute` of a tombstoned fact by its uuid, a governed pruning of one of its versions, the adapter's delete of a member of a deleted lineage) the answer is `already_deleted`; at the facade's logical-reference level (`forget`, permanent `forget`, `correct`, `dispute` by `target_reference`) the former owner reads the bare `fact_not_found` result, because the reference has no visible head. Either answer is the same whether or not another scope has since re-created the id, and neither moves or reads the live generation [...] The one further governed act is the escalation of a reversible pruning to a permanent deletion by a writer eligible for that generation: it keeps the tombstone's `deleted_at`, recorded version and lineage, erases the content, and neither reads nor moves a live generation another scope holds.",
      "observables": [
       "a_disp",
       "a_disp_refusal",
@@ -1951,7 +1978,6 @@
      "source": "docs/44-public-api-contract.md",
      "clause": "Versions are generation-relative ... After a governed deletion of the head the id reports `0` to any writer, a re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one; the owner of the deleted generation still reads the version its deletion recorded (`tombstoned`, DUR-DEL-001).",
      "observables": [
-      "parked_b",
       "parked_b_states",
       "parked_b_after",
       "parked_a_after",
@@ -1968,6 +1994,12 @@
       "other_history_unknown"
      ]
     }
+   ],
+   "record": [
+    "parked_b"
+   ],
+   "implementation_evidence": [
+    "parked_b"
    ],
    "steps": [
     {
@@ -2081,9 +2113,6 @@
     }
    },
    "expect": {
-    "parked_b": {
-     "eq": false
-    },
     "parked_b_states": {
      "eq": []
     },
@@ -2151,7 +2180,7 @@
     },
     {
      "source": "docs/786-cross-scope-write-authority.md",
-     "clause": "B re-creates A's deleted id: isolation proven; A cannot write it back while B's generation is live; every deleted generation stays a #774 as-of barrier for everyone",
+     "clause": "| B re-creates A's **deleted** id | allowed (fresh generation) | unchanged, with isolation proven (A cannot write it back while B's generation is live) |",
      "observables": [
       "a_back"
      ]
@@ -2209,11 +2238,11 @@
     {
      "op": "remember",
      "ref": "memory:k",
-     "text": "Marrow lighthouse keeper shift is night",
+     "text": "Marrow lighthouse keeper shift is evening",
      "prop": {
       "s": "Marrow lighthouse keeper",
       "a": "shift",
-      "v": "night",
+      "v": "evening",
       "assertion": "state",
       "cardinality": "single"
      },
@@ -2297,7 +2326,7 @@
       "memory:k@2",
       "dawn",
       "noon",
-      "night",
+      "evening",
       "v3",
       "project:a"
      ]

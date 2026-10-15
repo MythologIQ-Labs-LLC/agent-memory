@@ -14,8 +14,9 @@ What changes against -v2, finding by finding:
   is privileged host input, not because the facade authenticates anyone;
 * finding 7: every live-generation history is also scanned as a whole payload for the
   other generation's identifiers and text (``history_mentions``);
-* finding 5 (former-owner observables): control cases without a re-creation pin the same
-  tokens the re-creation cases pin (W7c-control, L3-control);
+* the W7c/L3 rows and finding 9 (former-owner observables had no no-re-creation control):
+  control cases without a re-creation pin the same tokens the re-creation cases pin
+  (W7c-control, L3-control);
 * finding 8: R3 gives the two generations different lengths (A deletes at v3, B at v2);
 * finding 10: L5 restarts and re-probes;
 * finding 11: W4 pins the ``ValueError`` message, so a target-dependent message would fail;
@@ -30,7 +31,15 @@ What changes against -v2, finding by finding:
 * traceability: every case carries ``clauses`` naming the source document and the quoted
   clause each expected observable follows from; the author asserts full coverage;
 * per-fixture ``development_history``; expectations preregistered and compared to the
-  contracts by an independent reviewer before the first execution.
+  contracts by an independent reviewer before the first execution. That pre-execution review
+  (``reports/validation/805-at-head/independent-replay-review-v3-preexecution.md``, no
+  expectation WRONG, none BLOCKING) asked for citation precision before execution, applied
+  here with no expectation changed: clauses quoted verbatim with marked elisions (its F-1,
+  F-3), observables re-cited to the sentence that derives them (F-4), positive controls and
+  policy preconditions labelled as such instead of as derivations (F-5, R4 ``kept``), L5b's
+  tombstone comparison made blind to nothing (``deleted_at`` compared unfolded; F-2), W8's
+  write-back text chosen so no token is a substring of in-scope text (F-6), L2's recorded
+  ``old_exists`` left uncited (F-11), and the finding pointer corrected (F-12).
 
 Expectations are written from the contract documents named in each fixture's
 ``contract_sources``, never from a replay outcome. Vocabulary is new: no entity, value or
@@ -107,8 +116,11 @@ Q_HOST = ("Scope is privileged host input. ... the facade does not authenticate 
 Q_CLOSED = ("A governed-deleted generation is closed. At the fact level (`dispute` of a tombstoned fact by its uuid, a governed "
             "pruning of one of its versions, the adapter's delete of a member of a deleted lineage) the answer is "
             "`already_deleted`; at the facade's logical-reference level (`forget`, permanent `forget`, `correct`, `dispute` by "
-            "`target_reference`) the former owner reads the bare `fact_not_found` result ... Either answer is the same whether "
-            "or not another scope has since re-created the id, and neither moves or reads the live generation")
+            "`target_reference`) the former owner reads the bare `fact_not_found` result, because the reference has no visible "
+            "head. Either answer is the same whether or not another scope has since re-created the id, and neither moves or "
+            "reads the live generation [...] The one further governed act is the escalation of a reversible pruning to a "
+            "permanent deletion by a writer eligible for that generation: it keeps the tombstone's `deleted_at`, recorded "
+            "version and lineage, erases the content, and neither reads nor moves a live generation another scope holds.")
 Q_V0 = ("Staleness and the `before_state` of a committed deletion or dispute are judged against the version the writer may see: "
         "a memory whose live head lies outside the writer's scope reads `0` to that writer, the same `v0` its proposal's "
         "`state_snapshot` resolves.")
@@ -122,13 +134,23 @@ Q_786_SUP = ("override with a superset of domains + the owner's project | ... `r
 Q_786_COMPLETE = ("forged **complete** scope via `overrides` | ... commits (documented: `overrides` is the host re-declaring scope "
                   "exactly as `AgentMemory.open(scope=...)` would; ... the facade is not an authentication boundary)")
 Q_786_EP = "the `episode` is now added only inside the commit branch, so no refused or parked proposal leaves episodic content"
-Q_786_F7 = "the public history projection withholds a write-target-refused proposal's correlation"
-Q_786_RESTART = "wrong-scope correction after restart (x2): refused; `_fact_scope` survives every restart"
-Q_786_SAME = "same text in unrelated memories of two projects: independent"
-Q_786_GEN = ("B re-creates A's deleted id: isolation proven; A cannot write it back while B's generation is live; every deleted "
-             "generation stays a #774 as-of barrier for everyone")
-Q_786_FC = ("re-pruning a deleted head rewrote its tombstone (new `deleted_at`, shrunken lineage) | FIXED: `already_deleted`; "
-            "only pruning -> permanent escalation is a further act, and it keeps `deleted_at`, version and lineage")
+Q_786_REFUSAL = ("`promotion` reports `target_unavailable` (`WRITE_TARGET_REFUSAL`); every operation that presupposes an existing "
+                 "fact reports `fact_not_found`, the same token an id nobody wrote reports.")
+Q_786_V0 = "a refused target selects as a blocked action, commits nothing, reports `before_state = after_state = \"v0\"`"
+Q_786_F2 = ("`write_target_refusal` now also requires **scope continuity** -- the head's own scope, read as a context, must be "
+            "eligible for the scope the new fact would be stored under. A write cannot move a live memory out of its holders' reach")
+Q_786_F7 = ("the authorize event of a write-target-refused proposal carries `authority_refs: [\"write-target:refused\"]` "
+            "(schema-valid) and the public history projection withholds that correlation")
+Q_786_RESTART = "| wrong-scope correction after restart (x2) | commits | refused; `_fact_scope` survives every restart |"
+Q_786_SAME = "| same text in unrelated memories of two projects | independent | independent (positive control) |"
+Q_786_RECREATE = ("| B re-creates A's **deleted** id | allowed (fresh generation) | unchanged, with isolation proven (A cannot write "
+                  "it back while B's generation is live) |")
+Q_786_BARRIER = "every deleted generation stays a #774 as-of barrier for everyone"
+Q_786_PHYS = "| B `forget` / permanent forget of A's memory | commits, tombstones / physically deletes A's lineage | bare `fact_not_found`; no tombstone |"
+Q_786_FC = ("FIXED: `already_deleted` for a tombstoned fact or a direct member of a deleted lineage; only pruning -> permanent "
+            "deletion is a further governed act, and that escalation keeps `deleted_at`, `state_version` and the lineage (the "
+            "tombstone is reassigned, not mutated, so the durable maps see it)")
+Q_786_DERIVED = "a write deriving from a deleted source is withheld (`derived_from_tombstoned_source`)"
 Q_786_W4 = ("Replay case W4 (a complete-scope override is admitted) holds only in that privileged-host model and must not be "
             "read as end-user isolation: a user who controls the handle controls the declared scope.")
 Q_786_DISCLOSED = "A refused `promotion` tells the writer that the id is unavailable to it."
@@ -136,15 +158,19 @@ Q_L1 = ("Deleting an old lineage, then re-creating the same logical memory ... w
         "explicit historical retrieval")
 Q_L2 = "The new generation's head must not traverse into the deleted generation"
 Q_L3 = "Tombstoning only one superseded version must not mark its still-live current successor deleted or hide it from current recall"
-Q_LX = "Historical predecessor traversal must not cross generation boundaries; Deletion of one superseded fact must not hide its live successor."
+Q_LX1 = ("Historical predecessor traversal must not cross generation boundaries after memory-ID re-creation. Ordinary stated "
+         "state-change history remains reachable when not deleted.")
+Q_LX2 = "Deletion of one superseded fact must not hide its live successor."
 Q_774 = ("Verify admission and logical-generation membership before resolving a predecessor, including #776 deletion and "
          "re-created memory IDs. Never cross a deleted-lineage boundary")
-Q_PLAN_OWNER = ("the owner reads `{current_fact_uuid: null, tombstoned: true, events: [], state_version: <canonical>}` and, with a "
-                "value probe, `rejected_values: []`; no deleted-generation identifier, timestamp, event or value is served")
+Q_PLAN_OWNER = ("a reader who could have read the deleted head (same tenant; domain, project and task eligible against the "
+                "canonical `_fact_scope`, which survives pruning and permanent deletion) reads `{\"current_fact_uuid\": null, "
+                "\"tombstoned\": true, \"events\": [], \"state_version\": <canonical>}` and, with a value probe, "
+                "`rejected_values: []`; no deleted-generation identifier, timestamp, event or value is served")
 Q_PLAN_OTHER = "a reader outside that scope reads byte-identically to a memory that never existed"
 Q_PLAN_RECREATED = "a re-created memory shows only its live generation"
-Q_777 = "out-of-scope indistinguishability ... no regression to transitive deleted content refusal"
-Q_28_PRUNE = "Prune versus delete: pruned memory remains recoverable under policy; deleted memory follows stronger semantics."
+Q_28_PRUNE = "### Prune versus delete [...] Expected: pruned memory remains recoverable under policy; deleted memory follows stronger semantics."
+Q_28_PURGE = "| purge | no | intended no recoverable copies | no | required full deletion outcome |"
 Q_28_CLAIM = "The system should not claim full deletion where it cannot demonstrate it."
 Q_DERIVED = ("Authorized permanent `forget` and every `open` reconcile them against canonical facts and report the outcome in "
              "`semantic_retrieval_posture()[\"derived_reconciliation\"]` ... None of this is an erasure claim about rollback "
@@ -164,16 +190,23 @@ COMMON = {
                             "promised a restart it did not perform (finding 10); W4's ValueError was pinned by type only (finding "
                             "11); the L family omitted the documents that define the owner tombstone view (finding 13); L6's "
                             "wording outran its probes (finding 6); three sub-expectations were not derivable from any cited "
-                            "clause (finding 4). Every -v2 case is carried forward in substance; the 28 -v2 scenarios remain and "
+                            "clause (finding 4); former-owner observables had no no-re-creation control (the W7c/L3 rows and "
+                            "finding 9). Every -v2 case is carried forward in substance; the 28 -v2 scenarios remain and "
                             "control and restart cases are added."),
+    "preexecution_review": {"record": "reports/validation/805-at-head/independent-replay-review-v3-preexecution.md",
+                            "reviewed_commit": "679cefbf510a95b847e8897ddf6e66e2a1922c46",
+                            "outcome": "no expectation WRONG, none BLOCKING; citation precision applied before first execution "
+                                       "(F-1..F-6, F-11, F-12) with no expectation changed; the revised fixtures were "
+                                       "re-compared before execution"},
     "base_commit": BASE_COMMIT,
     "independence": ("Expected outcomes were written from the contract documents listed in contract_sources at base_commit, "
                      "clause by clause (`clauses` on every case), before this fixture was first executed by the runner, and "
                      "compared to those clauses by a separate reviewer before that first execution (the record is committed "
                      "beside the evidence). A failing expectation is a finding, never a reason to edit this fixture; a corrected "
                      "expectation requires a superseding -v4 with a recorded reason. Observables listed under "
-                     "`implementation_evidence` are recorded, never expected, and never count toward acceptance. No frozen "
-                     "holdout phrase or #644 fixture vocabulary is used."),
+                     "`implementation_evidence` are recorded, never expected, and never count toward acceptance; observables "
+                     "listed under `controls` are positive controls expected for falsifiability (a refuse-everything runtime "
+                     "must fail), not derivations of a clause. No frozen holdout phrase or #644 fixture vocabulary is used."),
     "stop_lines": [
         "no fixture edit after first execution; supersede with -v4 and record why",
         "no expectation weakened to obtain PASS",
@@ -218,7 +251,7 @@ R1 = {
     "cases": [
         {"id": "W1-remember-over-live-head", "invariants": ["W1"],
          "clauses": [C(D44, Q_REM, "b1_committed", "b1_refusal", "b1_before", "b1_after", "b1_snapshot", "b1_mentions", "head", "owner_history", "owner_recall"),
-                     C(D44, Q_CFD, "other_history_unknown"), C(D786, Q_786_SAME, "other_recall")],
+                     C(DPLAN, Q_PLAN_OTHER, "other_history_unknown"), C(D786, Q_786_SAME, "other_recall")],
          "steps": [rem("memory:k", KT("dawn"), P(K, KA, "dawn"), name="a1", require_committed=True),
                    rem("memory:k", KT("dusk"), P(K, KA, "dusk"), **{"as": B}, name="b1")],
          "probes": {"b1_committed": {"probe": "op_result", "name": "b1", "field": "committed"},
@@ -278,8 +311,10 @@ R1 = {
                     "owner_recall": EQ(["memory:k@2"])}},
         {"id": "W4-overrides", "invariants": ["W4"],
          "clauses": [C(D44, Q_OVR, "bad_target", "bad_unknown", "bad_target_message", "bad_unknown_message"),
-                     C(D786, Q_786_SUP, "sup_rem_committed", "sup_cor_committed"), C(D44, Q_CONT, "sup_rem_committed", "sup_cor_committed"),
-                     C(D44, Q_REM, "sup_rem_refusal", "sup_rem_before", "head", "valid", "owner_recall", "tombstones")],
+                     C(D786, Q_786_SUP, "sup_rem_committed", "sup_cor_committed"), C(D786, Q_786_F2, "sup_rem_committed", "sup_cor_committed"),
+                     C(D44, Q_CONT, "sup_rem_committed", "sup_cor_committed"),
+                     C(D786, Q_786_REFUSAL, "sup_rem_refusal"), C(D786, Q_786_V0, "sup_rem_before"),
+                     C(D44, Q_REM, "head", "valid", "owner_recall", "tombstones")],
          "steps": [rem("memory:k", KT("dawn"), P(K, KA, "dawn"), require_committed=True),
                    rem("memory:k", KT("dusk"), **{"as": B}, overrides=INCONSISTENT, name="bad_target"),
                    rem(NEVER, KT("dusk"), **{"as": B}, overrides=INCONSISTENT, name="bad_unknown"),
@@ -341,8 +376,10 @@ R1 = {
                     "owner_candidates": EQ(["memory:k", "memory:k@2"]), "disputed": EQ(["memory:k@2"]), "head": EQ("memory:k@2"),
                     "other_recall": EQ(["other"]), "other_view_of_k": EQ(True), "owner_view_of_other": EQ(True)}},
         {"id": "W6-denied-proposals-persist-no-episode", "invariants": ["W6"],
-         "clauses": [C(D786, Q_786_EP, "denied_committed", "parked_committed", "kept_committed", "episode_denied", "episode_parked", "episode_kept", "head", "parked_head"),
+         "clauses": [C(D786, Q_786_EP, "denied_committed", "kept_committed", "episode_denied", "episode_parked", "episode_kept", "head", "parked_head"),
                      C(D44, Q_REM, "denied_refusal", "denied_before")],
+         "record": ["parked_committed"],
+         "implementation_evidence": ["parked_committed"],
          "steps": [rem("memory:k", KT("dawn"), P(K, KA, "dawn"), require_committed=True),
                    {"op": "commit_with_episode", "ref": "memory:k", "text": KT("dusk"), "episode": "episode:denied", "as": B, "name": "denied"},
                    {"op": "commit_with_episode", "ref": "memory:parked", "text": KT("noon"), "episode": "episode:parked", "risk": "high", "name": "parked"},
@@ -358,10 +395,10 @@ R1 = {
                     "episode_kept": {"probe": "episode_present", "episode": "episode:kept"},
                     "head": {"probe": "canonical_head", "ref": "memory:k"}, "parked_head": {"probe": "canonical_head", "ref": "memory:parked"}},
          "expect": {"denied_committed": EQ(False), "denied_refusal": EQ("target_unavailable"), "denied_before": EQ("v0"),
-                    "parked_committed": EQ(False), "kept_committed": EQ(True), "episode_denied": EQ(False),
+                    "kept_committed": EQ(True), "episode_denied": EQ(False),
                     "episode_parked": EQ(False), "episode_kept": EQ(True), "head": EQ("memory:k"), "parked_head": EQ(None)}},
         {"id": "W7-refused-attempt-leaves-no-public-trace", "invariants": ["W7"],
-         "clauses": [C(D786, Q_786_F7, "b1", "owner_history", "owner_history_mentions", "canonical_version"), C(D44, Q_CFD, "other_history_unknown")],
+         "clauses": [C(D786, Q_786_F7, "b1", "owner_history", "owner_history_mentions", "canonical_version"), C(DPLAN, Q_PLAN_OTHER, "other_history_unknown")],
          "steps": [rem("memory:k", KT("dawn"), P(K, KA, "dawn"), require_committed=True),
                    rem("memory:k", KT("dusk"), P(K, KA, "dusk"), **{"as": B}, name="b1"),
                    cor("memory:k", KT("noon"), require_committed=True)],
@@ -373,7 +410,7 @@ R1 = {
          "expect": {"b1": EQ(False), "other_history_unknown": EQ(True), "canonical_version": EQ(2), "owner_history_mentions": EQ([]),
                     "owner_history": EQ({"current": "memory:k@2", "state_version": 2, "tombstoned": False, "events": FOUR + FOUR})}},
         {"id": "W7b-refused-dispute-and-forget-attempts-leave-no-public-trace", "invariants": ["W7"],
-         "clauses": [C(D786, Q_786_F7, "bd", "bf", "bdf", "owner_history", "owner_history_mentions"), C(D44, Q_CFD, "other_history_unknown")],
+         "clauses": [C(D786, Q_786_F7, "bd", "bf", "bdf", "owner_history", "owner_history_mentions"), C(DPLAN, Q_PLAN_OTHER, "other_history_unknown")],
          "steps": [rem("memory:k", KT("dawn"), P(K, KA, "dawn"), require_committed=True),
                    {"op": "dispute", "ref": "memory:k", "as": B, "name": "bd"},
                    {"op": "forget", "ref": "memory:k", "as": B, "name": "bf"},
@@ -388,7 +425,7 @@ R1 = {
                     "owner_history": EQ({"current": "memory:k", "state_version": 1, "tombstoned": False, "events": FOUR})}},
         {"id": "W7c-former-owner-attempts-leave-no-trace-in-the-new-generation", "invariants": ["W7", "W8"],
          "clauses": [C(D44, Q_CLOSED, "a_disp", "a_disp_refusal", "a_del", "a_del_refusal", "a_forget", "a_forget_refusal"),
-                     C(D44, Q_REM, "a_rem", "a_rem_refusal"), C(D786, Q_786_GEN, "a_rem", "other_recall"),
+                     C(D44, Q_REM, "a_rem", "a_rem_refusal"), C(D786, Q_786_RECREATE, "a_rem", "other_recall"),
                      C(D44, Q_V0, "a_disp_mentions"), C(D786, Q_786_F7, "other_history", "other_history_mentions"), C(DPLAN, Q_PLAN_RECREATED, "other_history_mentions")],
          "steps": [rem("memory:k", KT("dawn"), P(K, KA, "dawn"), require_committed=True),
                    {"op": "forget", "ref": "memory:k", "require_committed": True},
@@ -434,8 +471,10 @@ R1 = {
                     "a_del_refusal": EQ("already_deleted"), "a_forget": EQ(False), "a_forget_refusal": EQ("fact_not_found"),
                     "owner_history": EQ(TOMB(2))}},
         {"id": "W8b-refused-and-parked-proposals-on-a-tombstoned-id-report-v0", "invariants": ["W8"],
-         "clauses": [C(D44, Q_GEN, "parked_b", "parked_b_states", "parked_b_after", "parked_a_after", "parked_a_snapshot", "parked_b2_after", "owner_history"),
+         "clauses": [C(D44, Q_GEN, "parked_b_states", "parked_b_after", "parked_a_after", "parked_a_snapshot", "parked_b2_after", "owner_history"),
                      C(DPLAN, Q_PLAN_OTHER, "other_history", "other_history_unknown")],
+         "record": ["parked_b"],
+         "implementation_evidence": ["parked_b"],
          "steps": [rem("memory:k", KT("dawn"), P(K, KA, "dawn"), require_committed=True),
                    cor("memory:k", KT("noon"), require_committed=True),
                    {"op": "forget", "ref": "memory:k", "require_committed": True},
@@ -452,18 +491,18 @@ R1 = {
                     "other_history": {"probe": "history", "ref": "memory:k", "as": B},
                     "other_history_unknown": {"probe": "history_same_as_unknown", "ref": "memory:k", "as": B},
                     "owner_history": {"probe": "history", "ref": "memory:k"}},
-         "expect": {"parked_b": EQ(False), "parked_b_states": EQ([]), "parked_b_after": EQ("v0"), "parked_a_after": EQ("v0"),
+         "expect": {"parked_b_states": EQ([]), "parked_b_after": EQ("v0"), "parked_a_after": EQ("v0"),
                     "parked_a_snapshot": EQ("v0"), "parked_b2_after": EQ("v0"), "other_history": EQ(BLANK),
                     "other_history_unknown": EQ(True), "owner_history": EQ(TOMB(3))}},
         {"id": "W8-recreated-generation-starts-its-own-counter", "invariants": ["W8"],
          "clauses": [C(D44, Q_GEN, "b1_snapshot", "b1_before", "b1_after", "b1_mentions", "b2_before", "b2_after", "owner_history", "other_history", "head"),
-                     C(D44, Q_REM, "a_back", "a_back_refusal"), C(D786, Q_786_GEN, "a_back"),
+                     C(D44, Q_REM, "a_back", "a_back_refusal"), C(D786, Q_786_RECREATE, "a_back"),
                      C(DPLAN, Q_PLAN_RECREATED, "other_history_mentions")],
          "steps": [rem("memory:k", KT("dawn"), P(K, KA, "dawn"), require_committed=True),
                    cor("memory:k", KT("noon"), require_committed=True),
                    {"op": "forget", "ref": "memory:k", "name": "a_del", "require_committed": True},
                    rem("memory:k", KT("dusk"), P(K, KA, "dusk"), **{"as": B}, label="gen-b", name="b1"),
-                   rem("memory:k", KT("night"), P(K, KA, "night"), name="a_back"),
+                   rem("memory:k", KT("evening"), P(K, KA, "evening"), name="a_back"),
                    {"op": "reopen"},
                    cor("memory:k", KT("midnight"), **{"as": B}, label="gen-b@2", name="b2")],
          "probes": {"b1_snapshot": {"probe": "op_result", "name": "b1", "field": "state_snapshot"},
@@ -476,7 +515,7 @@ R1 = {
                     "a_back_refusal": {"probe": "op_result", "name": "a_back", "field": "refusal"},
                     "owner_history": {"probe": "history", "ref": "memory:k"},
                     "other_history": {"probe": "history", "ref": "memory:k", "as": B},
-                    "other_history_mentions": {"probe": "history_mentions", "ref": "memory:k", "as": B, "tokens": ["memory:k", "memory:k@2", "dawn", "noon", "night", "v3", A]},
+                    "other_history_mentions": {"probe": "history_mentions", "ref": "memory:k", "as": B, "tokens": ["memory:k", "memory:k@2", "dawn", "noon", "evening", "v3", A]},
                     "head": {"probe": "canonical_head", "ref": "memory:k"}},
          "expect": {"b1_snapshot": EQ("v0"), "b1_before": EQ("v0"), "b1_after": EQ("v1"), "b1_mentions": EQ([]),
                     "b2_before": EQ("v1"), "b2_after": EQ("v2"), "a_back": EQ(False), "a_back_refusal": EQ("target_unavailable"),
@@ -522,8 +561,8 @@ R2 = {
     ],
     "cases": [
         {"id": "L1-deletion-withholds-live", "invariants": ["L1"],
-         "clauses": [C(D774_776, Q_L1, "current", "historical", "mentions"), C(D786, Q_786_GEN, "by_ref_unknown"),
-                     C(DPLAN, Q_PLAN_OWNER, "owner_history"), C(D44, Q_GEN, "owner_history")],
+         "clauses": [C(D774_776, Q_L1, "current", "historical", "mentions"), C(DPLAN, Q_PLAN_OWNER, "by_ref_unknown", "owner_history"),
+                     C(D44, Q_GEN, "owner_history")],
          "steps": seed_two() + [{"op": "forget", "ref": "memory:f", "require_committed": True}],
          "probes": {"current": {"probe": "recall_admitted", "query": FQ},
                     "historical": {"probe": "recall_admitted", "query": FQ, "historical": True},
@@ -532,8 +571,8 @@ R2 = {
                     "mentions": {"probe": "recall_mentions", "query": FQ, "historical": True, "tokens": ["memory:f", "memory:f@2", "dawn", "noon"]}},
          "expect": {"current": EQ([]), "historical": EQ([]), "by_ref_unknown": EQ(True), "mentions": EQ([]), "owner_history": EQ(TOMB(3))}},
         {"id": "L1-deletion-withholds-after-restart", "invariants": ["L1"],
-         "clauses": [C(D774_776, Q_L1, "current", "historical", "mentions"), C(D786, Q_786_GEN, "by_ref_unknown"),
-                     C(DPLAN, Q_PLAN_OWNER, "owner_history"), C(D44, Q_GEN, "owner_history")],
+         "clauses": [C(D774_776, Q_L1, "current", "historical", "mentions"), C(DPLAN, Q_PLAN_OWNER, "by_ref_unknown", "owner_history"),
+                     C(D44, Q_GEN, "owner_history")],
          "steps": seed_two() + [{"op": "forget", "ref": "memory:f", "require_committed": True}, {"op": "reopen"}],
          "probes": {"current": {"probe": "recall_admitted", "query": FQ},
                     "historical": {"probe": "recall_admitted", "query": FQ, "historical": True},
@@ -543,7 +582,7 @@ R2 = {
          "expect": {"current": EQ([]), "historical": EQ([]), "by_ref_unknown": EQ(True), "mentions": EQ([]), "owner_history": EQ(TOMB(3))}},
         {"id": "L2-owner-recreation", "invariants": ["L2"],
          "clauses": [C(D774_776, Q_L1, "historical", "mentions"), C(D774_776, Q_L2, "owner_history", "old_semantics", "new_semantics"),
-                     C(DPLAN, Q_PLAN_RECREATED, "owner_history", "owner_history_mentions"), C(D28, Q_28_PRUNE, "old_exists")],
+                     C(DPLAN, Q_PLAN_RECREATED, "owner_history", "owner_history_mentions")],
          "steps": seed_two() + [{"op": "forget", "ref": "memory:f", "require_committed": True},
                                 rem("memory:f", FT("dusk"), P(F, FA, "dusk"), label="gen2", require_committed=True), {"op": "reopen"}],
          "probes": {"owner_history": {"probe": "history", "ref": "memory:f"},
@@ -559,7 +598,7 @@ R2 = {
          "record": ["old_exists"],
          "implementation_evidence": ["old_exists"]},
         {"id": "L3-other-project-recreation-is-isolated", "invariants": ["L3"],
-         "clauses": [C(D786, Q_786_GEN, "owner_historical", "owner_mentions", "other_mentions", "head", "a_rem"),
+         "clauses": [C(D786, Q_786_RECREATE, "owner_historical", "owner_mentions", "other_mentions", "head", "a_rem"),
                      C(DPLAN, Q_PLAN_OWNER, "owner_history"), C(D44, Q_GEN, "owner_history"),
                      C(DPLAN, Q_PLAN_RECREATED, "other_history", "other_history_mentions"),
                      C(D44, Q_REM, "a_rem_refusal", "a_rem_after", "a_mentions"), C(D786, Q_786_DISCLOSED, "a_rem_refusal"),
@@ -620,7 +659,7 @@ R2 = {
                     "a_disp_fact": EQ(False), "a_disp_fact_refusal": EQ("already_deleted")}},
         {"id": "L5b-a-deleted-head-or-version-cannot-be-deleted-again", "invariants": ["L5", "L1"],
          "clauses": [C(D44, Q_CLOSED, "again_head", "again_head_refusal", "again_member", "again_member_refusal"),
-                     C(D786, Q_786_FC, "head_tombstone_unchanged", "member_tombstone_unchanged"),
+                     C(D786, Q_786_FC, "head_tombstone_unchanged"), C(D44, Q_CLOSED, "head_tombstone_unchanged"),
                      C(D774_776, Q_L1, "historical", "old_semantics"), C(D774, Q_774, "at_v1"),
                      C(DPLAN, Q_PLAN_OWNER, "owner_history"), C(D44, Q_GEN, "owner_history")],
          "steps": seed_two() + [{"op": "forget", "ref": "memory:f", "require_committed": True},
@@ -634,20 +673,20 @@ R2 = {
                     "again_member": {"probe": "op_result", "name": "again_member", "field": "committed"},
                     "again_member_refusal": {"probe": "op_result", "name": "again_member", "field": "refusal"},
                     "head_tombstone_unchanged": {"probe": "tombstone_unchanged", "name": "ts_head", "fact": "memory:f@2"},
-                    "member_tombstone_unchanged": {"probe": "tombstone_unchanged", "name": "ts_member", "fact": "memory:f"},
+                    "member_tombstone_record": {"probe": "tombstone_record", "fact": "memory:f"},
                     "head_tombstone": {"probe": "tombstone_record", "fact": "memory:f@2"},
                     "historical": {"probe": "recall_admitted", "query": FQ, "historical": True},
                     "old_semantics": {"probe": "write_semantics_present", "fact": "memory:f"},
                     "at_v1": {"probe": "version_in_effect", "ref": "memory:f", "at": "memory:f"},
                     "owner_history": {"probe": "history", "ref": "memory:f"}},
          "expect": {"again_head": EQ(False), "again_head_refusal": EQ("already_deleted"), "again_member": EQ(False),
-                    "again_member_refusal": EQ("already_deleted"), "head_tombstone_unchanged": EQ(True), "member_tombstone_unchanged": EQ(True),
+                    "again_member_refusal": EQ("already_deleted"), "head_tombstone_unchanged": EQ(True),
                     "historical": EQ([]), "old_semantics": EQ(False), "at_v1": EQ(None), "owner_history": EQ(TOMB(3))},
-         "record": ["head_tombstone"],
-         "implementation_evidence": ["head_tombstone"]},
+         "record": ["head_tombstone", "member_tombstone_record"],
+         "implementation_evidence": ["head_tombstone", "member_tombstone_record"]},
         {"id": "L4-three-generations-as-of-barriers", "invariants": ["L4", "L3"],
          "clauses": [C(D774, Q_774, "owner_at_gen3", "other_at_gen3", "owner_at_v1", "owner_at_v2", "owner_at_genb", "other_at_genb", "other_at_v2"),
-                     C(D774_776, Q_LX, "owner_at_v1", "owner_at_v2", "head"), C(D786, Q_786_GEN, "b_back", "head"),
+                     C(D774_776, Q_LX1, "owner_at_v1", "owner_at_v2", "head"), C(D786, Q_786_RECREATE, "b_back", "head"), C(D786, Q_786_BARRIER, "owner_at_v1", "owner_at_v2", "other_at_v2"),
                      C(D44, Q_GEN, "other_history"), C(DPLAN, Q_PLAN_OWNER, "other_history")],
          "steps": seed_two() + [{"op": "forget", "ref": "memory:f", "require_committed": True},
                                 rem("memory:f", FT("dusk"), P(F, FA, "dusk"), **{"as": B}, label="gen-b", require_committed=True),
@@ -670,7 +709,7 @@ R2 = {
                     "b_back": EQ(False), "other_history": EQ(TOMB(2))}},
         {"id": "L5-partial-deletion-withholds-only-that-version", "invariants": ["L5"],
          "clauses": [C(D774_776, Q_L3, "d1", "deleted_mentions", "kept_mentions", "head", "current"),
-                     C(D774_776, Q_LX, "head", "current")],
+                     C(D774_776, Q_LX1, "kept_mentions"), C(D774_776, Q_LX2, "head", "current")],
          "steps": seed_two() + [cor("memory:f", FT("dusk"), require_committed=True),
                                 {"op": "delete_version", "ref": "memory:f", "fact": "memory:f@2", "name": "d1"}],
          "probes": {"d1": {"probe": "op_result", "name": "d1", "field": "committed"},
@@ -681,7 +720,7 @@ R2 = {
                     "head": EQ("memory:f@3"), "current": EQ(["memory:f@3"])}},
         {"id": "L5-partial-deletion-withholds-only-that-version-after-restart", "invariants": ["L5"],
          "clauses": [C(D774_776, Q_L3, "d1", "deleted_mentions_after", "kept_mentions_after", "head_after", "current_after"),
-                     C(D774_776, Q_LX, "head_after", "current_after")],
+                     C(D774_776, Q_LX1, "kept_mentions_after"), C(D774_776, Q_LX2, "head_after", "current_after")],
          "steps": seed_two() + [cor("memory:f", FT("dusk"), require_committed=True),
                                 {"op": "delete_version", "ref": "memory:f", "fact": "memory:f@2", "name": "d1"}, {"op": "reopen"}],
          "probes": {"d1": {"probe": "op_result", "name": "d1", "field": "committed"},
@@ -691,7 +730,8 @@ R2 = {
          "expect": {"d1": EQ(True), "deleted_mentions_after": EQ([]), "kept_mentions_after": EQ(["memory:f", "memory:f@3"]),
                     "head_after": EQ("memory:f@3"), "current_after": EQ(["memory:f@3"])}},
         {"id": "L6-permanent-deletion-removes-canonical-facts-and-withholds-every-public-read", "invariants": ["L6"],
-         "clauses": [C(D28, Q_28_PRUNE, "p1", "v1_exists", "v2_exists"), C(D774_776, Q_L1, "mentions", "old_semantics"),
+         "clauses": [C(D786, Q_786_PHYS, "p1", "v1_exists", "v2_exists"), C(D28, Q_28_PURGE, "v1_exists", "v2_exists"), C(D28, Q_28_PRUNE, "p1"),
+                     C(D774_776, Q_L1, "mentions", "old_semantics"),
                      C(DPLAN, Q_PLAN_OTHER, "other_unknown", "other_history_mentions"), C(DPLAN, Q_PLAN_OWNER, "owner_history"), C(D44, Q_GEN, "owner_history"),
                      C(D44, Q_DERIVED, "derived"), C(D28, Q_28_CLAIM, "derived")],
          "steps": seed_two() + [{"op": "forget", "ref": "memory:f", "permanent": True, "name": "p1"}, {"op": "reopen"}],
@@ -702,10 +742,13 @@ R2 = {
                     "other_unknown": {"probe": "history_same_as_unknown", "ref": "memory:f", "as": B},
                     "other_history_mentions": {"probe": "history_mentions", "ref": "memory:f", "as": B, "tokens": ["memory:f", "memory:f@2", "dawn", "noon", "v3"]},
                     "old_semantics": {"probe": "write_semantics_present", "fact": "memory:f"},
-                    "derived": {"probe": "derived_reconciliation"}},
+                    "derived": {"probe": "derived_reconciliation"},
+                    "derived_stores_checked": {"probe": "derived_stores_checked"}},
          "expect": {"p1": EQ(True), "v1_exists": EQ(False), "v2_exists": EQ(False), "mentions": EQ([]), "other_unknown": EQ(True),
                     "other_history_mentions": EQ([]), "old_semantics": EQ(False), "owner_history": EQ(TOMB(3)),
-                    "derived": EQ({"status": "complete", "stores_checked": 0, "pending": []})}},
+                    "derived": EQ({"status": "complete", "pending": []})},
+         "record": ["derived_stores_checked"],
+         "implementation_evidence": ["derived_stores_checked"]},
     ],
 }
 
@@ -725,7 +768,9 @@ R3 = {
     "title": "The owner of a deleted memory reads only its tombstone; every other observer reads nothing; views are stable under other scopes and restart",
     "contract_sources": [doc_hash(D777), doc_hash(D44), doc_hash(D786), doc_hash(DPLAN)],
     "development_history": ("v3 authored from the contract sources at base_commit before any execution. Changes against -v2: "
-                            "R1 repeats the value probe after restart; R3 gives A's and B's generations different lengths so the "
+                            "docs/777 stays listed as the successor-qualification source the family descends from, but no "
+                            "expectation cites it (the pre-execution review found its 'out-of-scope indistinguishability' "
+                            "wording lives in docs/plan-776-777-772, which the cases cite instead); R1 repeats the value probe after restart; R3 gives A's and B's generations different lengths so the "
                             "two deletions record different versions (A v3, B v2) and pins each owner's own version; R5 and R6b "
                             "scan the whole history payload of the re-created generation; R6b's event list is implementation "
                             "evidence and its public view is pinned without the event list."),
@@ -759,7 +804,7 @@ R3 = {
                     "mentions": {"probe": "recall_mentions", "query": OQ, "historical": True, "tokens": ["memory:t", "memory:t@2", "early", "late"]}},
          "expect": {"owner_history": EQ(TOMB(3)), "owner_probe": EQ({**TOMB(3), "rejected_values": 0}), "mentions": EQ([])}},
         {"id": "R2-other-reads-unknown-live", "invariants": ["R2"],
-         "clauses": [C(DPLAN, Q_PLAN_OTHER, "history", "value_probe", "by_ref", "historical"), C(D777, Q_777, "history", "value_probe", "by_ref")],
+         "clauses": [C(DPLAN, Q_PLAN_OTHER, "history", "value_probe", "by_ref", "historical")],
          "steps": seed_o() + [{"op": "forget", "ref": "memory:t", "require_committed": True}],
          "probes": {"history": {"probe": "history_same_as_unknown", "ref": "memory:t", "as": B},
                     "value_probe": {"probe": "history_same_as_unknown", "ref": "memory:t", "fact_text": OT("early"), "as": B},
@@ -767,7 +812,7 @@ R3 = {
                     "historical": {"probe": "recall_admitted", "query": OQ, "historical": True, "as": B}},
          "expect": {"history": EQ(True), "value_probe": EQ(True), "by_ref": EQ(True), "historical": EQ([])}},
         {"id": "R2-other-reads-unknown-after-restart", "invariants": ["R2"],
-         "clauses": [C(DPLAN, Q_PLAN_OTHER, "history", "value_probe", "by_ref"), C(D777, Q_777, "history", "value_probe", "by_ref")],
+         "clauses": [C(DPLAN, Q_PLAN_OTHER, "history", "value_probe", "by_ref")],
          "steps": seed_o() + [{"op": "forget", "ref": "memory:t", "require_committed": True}, {"op": "reopen"}],
          "probes": {"history": {"probe": "history_same_as_unknown", "ref": "memory:t", "as": B},
                     "value_probe": {"probe": "history_same_as_unknown", "ref": "memory:t", "fact_text": OT("early"), "as": B},
@@ -775,7 +820,7 @@ R3 = {
          "expect": {"history": EQ(True), "value_probe": EQ(True), "by_ref": EQ(True)}},
         {"id": "R3-owner-view-stable-under-other-scope-with-distinct-generation-lengths", "invariants": ["R3", "R6"],
          "clauses": [C(D44, Q_GEN, "owner_history", "other_history", "b1_before", "b1_after", "b3_after"),
-                     C(DPLAN, Q_PLAN_OWNER, "owner_history", "other_history"), C(D786, Q_786_GEN, "owner_mentions")],
+                     C(DPLAN, Q_PLAN_OWNER, "owner_history", "other_history"), C(D786, Q_786_RECREATE, "owner_mentions")],
          "steps": seed_o() + [{"op": "forget", "ref": "memory:t", "require_committed": True},
                               rem("memory:t", OT("mid"), P(O, OA, "mid"), **{"as": B}, label="gen-b", name="b1", require_committed=True),
                               {"op": "reopen"},
@@ -789,7 +834,8 @@ R3 = {
          "expect": {"owner_history": EQ(TOMB(3)), "owner_mentions": EQ([]), "other_history": EQ(TOMB(2)),
                     "b1_before": EQ("v0"), "b1_after": EQ("v1"), "b3_after": EQ("v2")}},
         {"id": "R4-derived-from-deleted-withheld-live-derivation-kept", "invariants": ["R4"],
-         "clauses": [C(D777, Q_777, "withheld", "kept"), C(DPLAN, Q_PLAN_OWNER, "withheld")],
+         "clauses": [C(D786, Q_786_DERIVED, "withheld"), C(DPLAN, Q_PLAN_OWNER, "withheld")],
+         "controls": ["kept"],
          "steps": [rem("memory:t", OT("early"), P(O, OA, "early"), require_committed=True),
                    rem("memory:d", f"Digest: {O} {OA} used to be early", evidence_refs=["memory:t"], label="digest", require_committed=True),
                    rem("memory:l", f"{O} steward is Team Larch", P(O, "steward", "Team Larch"), label="live", require_committed=True),
@@ -852,7 +898,9 @@ for fixture in (R1, R2, R3):
     for case in doc["cases"]:
         expected = set(case["expect"])
         traced = {o for clause in case["clauses"] for o in clause["observables"]}
-        assert expected <= traced, (case["id"], expected - traced)  # every expectation follows from a quoted clause
+        controls = set(case.get("controls", ()))
+        assert controls <= expected and not (controls & traced), (case["id"], "controls are expected, not clause-derived")
+        assert expected <= traced | controls, (case["id"], expected - traced - controls)  # every expectation follows from a quoted clause or is a declared positive control
         assert traced <= expected | set(case.get("record", ())), (case["id"], traced - expected)
         assert {clause["source"] for clause in case["clauses"]} <= sources, (case["id"], "clause source not in contract_sources")
         assert set(case.get("implementation_evidence", ())) <= set(case.get("record", ())) and not (
