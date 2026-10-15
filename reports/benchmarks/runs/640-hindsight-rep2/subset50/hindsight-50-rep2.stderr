@@ -1,0 +1,79 @@
+WARNING:hindsight_api.engine.db_utils:[DB POOL] Slow acquire: 0.068s
+WARNING:hindsight_api.engine.db_utils:[DB POOL] Slow acquire: 0.052s
+WARNING:hindsight_api.engine.db_utils:[DB POOL] Slow acquire: 0.054s
+WARNING:hindsight_api.engine.db_utils:[DB POOL] Slow acquire: 0.056s
+WARNING:hindsight_api.engine.db_utils:[DB POOL] Slow acquire: 0.065s
+WARNING:hindsight_api.engine.db_utils:[DB POOL] Slow acquire: 0.056s
+WARNING:hindsight_api.engine.db_utils:[DB POOL] Slow acquire: 0.051s
+WARNING:hindsight_api.engine.db_utils:[DB POOL] Slow acquire: 0.052s
+WARNING:hindsight_api.engine.retain.types:Rejected degenerate fact text: type=world, text='👍', entities=[]
+WARNING:hindsight_api.engine.db_utils:[DB POOL] Slow acquire: 0.080s
+WARNING:hindsight_api.engine.db_utils:[DB POOL] Slow acquire: 0.110s
+WARNING:hindsight_api.engine.db_utils:[DB POOL] Slow acquire: 0.092s
+WARNING:hindsight_api.engine.db_utils:[DB POOL] Slow acquire: 0.060s
+WARNING:hindsight_api.engine.db_utils:[DB POOL] Slow acquire: 0.062s
+WARNING:hindsight_api.engine.db_utils:[DB POOL] Slow acquire: 0.062s
+WARNING:hindsight_api.engine.db_utils:[DB POOL] Slow acquire: 0.142s
+WARNING:hindsight_api.engine.db_utils:[DB POOL] Slow acquire: 0.097s
+WARNING:hindsight_api.engine.db_utils:[DB POOL] Slow acquire: 0.104s
+WARNING:hindsight_api.engine.db_utils:[DB POOL] Slow acquire: 0.054s
+WARNING:hindsight_api.engine.db_utils:[DB POOL] Slow acquire: 0.054s
+WARNING:hindsight_api.engine.db_utils:[DB POOL] Slow acquire: 0.052s
+WARNING:hindsight_api.engine.db_utils:[DB POOL] Slow acquire: 0.097s
+WARNING:hindsight_api.engine.db_utils:[DB POOL] Slow acquire: 0.071s
+ERROR:    Traceback (most recent call last):
+  File "/tmp/hindsight-source/hindsight-api-slim/hindsight_api/pg0.py", line 104, in stop
+    await loop.run_in_executor(None, pg0.stop)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/base_events.py", line 863, in run_in_executor
+    executor.submit(func, *args), loop=self)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/thread.py", line 170, in submit
+    raise RuntimeError('cannot schedule new futures after shutdown')
+RuntimeError: cannot schedule new futures after shutdown
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/tmp/am-bench/hindsight-venv/lib/python3.12/site-packages/starlette/routing.py", line 654, in lifespan
+    async with self.lifespan_context(app) as maybe_state:
+  File "/usr/lib/python3.12/contextlib.py", line 217, in __aexit__
+    await anext(self.gen)
+  File "/tmp/hindsight-source/hindsight-api-slim/hindsight_api/api/http.py", line 5071, in lifespan
+    await memory.close()
+  File "/tmp/hindsight-source/hindsight-api-slim/hindsight_api/engine/memory_engine.py", line 5868, in close
+    await self._pg0.stop()
+  File "/tmp/hindsight-source/hindsight-api-slim/hindsight_api/pg0.py", line 109, in stop
+    raise RuntimeError(f"Failed to stop PostgreSQL: {e}")
+RuntimeError: Failed to stop PostgreSQL: cannot schedule new futures after shutdown
+
+ERROR:    Application shutdown failed. Exiting.
+Exception in thread Thread-1 (_run_server):
+Traceback (most recent call last):
+  File "/tmp/hindsight-source/hindsight-api-slim/hindsight_api/pg0.py", line 104, in stop
+    await loop.run_in_executor(None, pg0.stop)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/base_events.py", line 863, in run_in_executor
+    executor.submit(func, *args), loop=self)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/thread.py", line 170, in submit
+    raise RuntimeError('cannot schedule new futures after shutdown')
+RuntimeError: cannot schedule new futures after shutdown
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/threading.py", line 1073, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.12/threading.py", line 1010, in run
+    self._target(*self._args, **self._kwargs)
+  File "/tmp/hindsight-source/hindsight-all/hindsight/server.py", line 147, in _run_server
+    loop.run_until_complete(self._memory.close())
+  File "/usr/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/tmp/hindsight-source/hindsight-api-slim/hindsight_api/engine/memory_engine.py", line 5868, in close
+    await self._pg0.stop()
+  File "/tmp/hindsight-source/hindsight-api-slim/hindsight_api/pg0.py", line 109, in stop
+    raise RuntimeError(f"Failed to stop PostgreSQL: {e}")
+RuntimeError: Failed to stop PostgreSQL: cannot schedule new futures after shutdown
