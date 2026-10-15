@@ -1,38 +1,70 @@
-# Competitive benchmarking cycle 2: coverage, maturity and typed blockers (#810)
+# Competitive coverage inventory, reconciled across lanes (#810 / #789), 2026-10-15 23:30 UTC
 
-As of 2026-10-15. Everything here is **candidate** evidence: nothing is REVIEWED or ACCEPTED by this document.
+**Status.** Every row is **candidate** evidence. Nothing is accepted by this document. Final leaderboard admission and dashboard integration belong to the repository hygiene and delivery owner.
 
-**Host:** one Claude cloud VM with 4 vCPU, 15 GiB RAM, no GPU and Python 3.12. Network egress is allowlisted: GitHub, PyPI, Hugging Face and Docker Hub are reachable; vendor installer hosts such as `supermemory.ai` are not.
+**Sources, reconciled without overwriting anyone's work:**
 
-**Isolation:**
-- Every competitor runs in its own environment: a venv, a loopback service or a container.
-- The environment is allowlisted, with no GitHub, cloud or LLM credentials.
-- No paid inference was used, no hosted CI ran, and no PR was opened.
+| Lane | Branch | Head | Reviewed? |
+|---|---|---|---|
+| External execution (separate session) | `claude/810-external-exec-no-ci` | `8887bbe` | Independent adversarial review `competitive-diagnostics/independent-review-810.md`: acceptable as candidate, SHOULD-FIX applied |
+| Cycle 2 (this session) | `claude/810-competitive-cycle2-no-ci` | this branch | Self-reported, repeat-checked; **pending independent review** |
+| First comparator runs | `claude/817-jev-mem-execution-no-ci` | `13302fc6` | Earlier LongMemEval subset50 rows; owner provenance checks on #811 |
+| #819 independent evaluation | `claude/819-independent-evaluation-no-ci` | `81b02a25` | Independent evaluator; runtime revisions, not competitors |
 
-## Maturity classes
+**Counting rule.** A product is counted once, whatever the number of adapters, tiers or configurations. Two independent Hindsight AMB adapters (external lane and this branch) are one system, and they agree: 9/77 with the same 9 cases. Controls (BM25, lexical overlap) are never counted.
 
-The classes below follow the #817 request: INSTALLED, EXECUTED, REPRODUCED, REVIEWED and ACCEPTED.
+## Inventory
 
-- **EXECUTED, repeated** means two independent executions of the same configuration, compared case by case.
-- **Partial** means fewer rows than the preregistered population. No score may be inferred from a partial run.
-- A system with no completed run gets no score, **never a zero**.
+**Classes:**
+- **A:** complete and independently reviewed.
+- **B:** complete, pending review.
+- **C:** experimental or exploratory.
+- **R:** running.
+- **X:** blocked.
+- **N:** not implemented.
 
-| System, pinned | Tier measured | Installed | AMB PrecisionMemBench 77 (query-only, retrieval) | LongMemEval-S subset50 (retrieval) | Status / blocker |
-| --- | --- | --- | --- | --- | --- |
-| Mem0 OSS 2.2.1, explicit `infer=False` | explicit store, no LLM | yes | accepted lane v6, 10/77 | session and turn, 1 run each | ACCEPTED (AMB v6); LongMemEval subset is candidate |
-| Hindsight 0.10.2 `5fc4ce2`, chunks, ONNX e5-small, `llm_provider=none` | no-LLM chunk retrieval, **not** Hindsight's LLM product mode | yes | **9/77, repeated** (identical verdicts) | session and turn, **repeated** (0 per-question recall differences) | EXECUTED, repeated on AMB. The filtered/LLM tier is BLOCKED (below) |
-| Letta 0.16.8 `1131535`, archival memory over REST, bge-small | archival passage retrieval, **not** the stateful self-editing agent | yes | **9/77, repeated** (identical, including order) | **session 0.953 @5, turn 0.814 @10**, 0 failures, **repeated** (0 per-question metric differences) | EXECUTED, repeated on AMB |
-| Cognee 1.6.4 `f154b32`, local GLiNER, no LLM | documented no-LLM mode | yes | **9/77, repeated** (identical, including order) | gen-1 session 50/50 complete (0.953 @5, exploratory per erratum); gen-2 (qualified) session running; turn plane BLOCKED (about 50 h of CPU) | EXECUTED, repeated on AMB; LongMemEval partial |
-| Jev-Mem `7ab0c73` + Laya `7b928d8` (fp32 CPU) | native graph with System-One | yes | — | session 5/50 partial | BLOCKED: hardware (GPU); see `817-jev-mem/HANDOFF.md` |
-| LangMem 0.0.30, memory store manager + Qwen2.5-3B-Instruct Q4_K_M (llama.cpp, local) | LLM extraction and consolidation, real LangMem behaviour | yes (service built) | — | — | BLOCKED: local LLM throughput on a shared CPU |
-| Supermemory local 0.0.9 (image digest `sha256:55778146…`, tag `server-v0.0.9` at `4036c7d`) | — | image pulled and inspected, then removed | — | — | BLOCKED: LLM required, plus licence review |
-| Graphiti 0.31.1 (`getzep/graphiti`) | — | no | — | — | BLOCKED: LLM with structured output for every episode, plus a graph database |
-| OpenViking 0.5.0 (`volcengine/OpenViking`, AGPLv3) | — | no | — | — | BLOCKED: VLM and embedding provider required |
-| MemOS (`MemTensor/MemOS`, PyPI `MemoryOS` 2.0.33) | — | no | — | — | BLOCKED: LLM plus Neo4j and Qdrant services |
-| Zep (managed) | — | — | — | — | BLOCKED: hosted service and credentials; Graphiti is its open-source engine |
-| TencentDB Agent Memory | — | — | — | — | Owned by #806, not attempted here |
+The #789 status code is in brackets.
 
-The baselines BM25 (8/77) and lexical overlap are controls, not memory products. Agent Memory scores 15/77 on AMB here. Its control rerun has 0 case differences from the reproduced #819 baseline.
+| System (pinned) | Architecture family | LongMemEval-S full 500 | LongMemEval-S subset50 | AMB PrecisionMemBench 77 | Class [#789 status] |
+|---|---|---|---|---|---|
+| **Hindsight 0.10.2** `5fc4ce2`, chunk-only, no LLM | hybrid dense + BM25 with RRF | **A**: session r@5 0.888, turn r@10 0.835 | A: repeated (recall identical, order varies) | A: 9/77 (external); B: 9/77 (this branch's independent adapter) | **A** [executed_unaccepted]. LLM product tier X |
+| **MemPalace 3.11.0** | dense with rerank, wing/room structure | **A**: session r@5 0.881, turn r@10 0.804 (no LongMemEval repeat yet) | — | A: 9/77, repeat identical | **A** [executed_unaccepted] |
+| **Mem0 OSS 2.2.1**, explicit (`infer=False`) | vector store, MiniLM | — | A: repeated 100/100 identical | accepted lane v6: 10/77 | **A** [AMB accepted_same_harness; LongMemEval executed_unaccepted] |
+| **Letta 0.16.8**, archival memory only | dense passages over pgvector (component tier, not the stateful agent) | — | **B**: session r@5 0.953, turn r@10 0.814, both planes **repeated** (0 metric differences) | B: 9/77, repeated identical | **B** [executed_unaccepted]. Agent tier N |
+| **Cognee 1.6.4**, local GLiNER, no LLM | graph + vector (fastembed bge-small) | — | C: gen-1 session 0.953, **exploratory** (preregistration erratum). External gen-2: 3/50, stopped per owner directive. This host's duplicate gen-2: **R** (see below) | B: 9/77, repeated identical | **B** on AMB; **C/R** on LongMemEval [executed_unaccepted] |
+| **LangMem 0.0.30** + local Qwen2.5-3B | LLM-managed memories over a vector store | — | — | C: 9/77, precision 0.017, recall 0.093; LLM-ingestion tier; nondeterministic; one run (external) | **C** [executed_unaccepted, separate tier]. A valid LangMem measurement is X (needs a capable model) |
+| **Graphiti 0.31.1** + local 3B | temporal knowledge graph (LLM extraction) | X: compute (about 5 h per question) | X | R/X: attempt 3 relaunched in the external lane, outcome not recorded | **X** [blocked_cost] |
+| **Jev-Mem** `7ab0c73` + Laya | multi-relational graph with a learned controller | X | C/R: CPU fp32 rows 2/50 (external) and 6/50 on this host, partial, no score | — | **X** [blocked_dependency: GPU] |
+| **Supermemory local 0.0.9** | LLM-extracted memories with hybrid search | — | — | — | **X** [blocked_cost and licence review: closed binary, "lite license"] |
+| OpenViking, MemOS, MIRIX, EverOS, TencentDB, A-Mem, Memobase, Honcho | various | — | — | — | **N** [source_qualified or not_started]; see `NEXT-QUEUE.md` |
+| Zep (managed) | managed temporal graph | — | — | — | **X** [blocked: hosted only]; Graphiti is its open-source engine |
+
+**Distinct external products with completed same-harness results:** 6, namely Hindsight, MemPalace, Mem0, Letta (component tier), Cognee (AMB) and LangMem (separate LLM tier, one run). Of these:
+- **2** have reviewed full-500 LongMemEval results: Hindsight and MemPalace.
+- **4** are repeated with matching verdicts on at least one family: Hindsight, Mem0, Letta and Cognee (AMB).
+- **2** are repeated on both families: Hindsight and Letta.
+
+**Benchmark families with external peers:** 2, LongMemEval-S retrieval and AMB PrecisionMemBench. Both are retrieval and selectivity families. The first is depth-oriented and the second precision-oriented, and they are never pooled.
+
+**Not yet covered:** QA or answer generation, write-time update and correction at scale, cross-session agent outcomes, and lifecycle (deletion and permission) against peers.
+
+**Architecture families covered:**
+- hybrid dense + lexical (Hindsight);
+- dense with rerank (MemPalace);
+- pure vector (Mem0, Letta archival);
+- graph + vector, no-LLM (Cognee);
+- LLM-managed memories (LangMem, separate tier).
+
+Knowledge-graph-with-LLM (Graphiti) and learned-controller graph (Jev-Mem) are blocked.
+
+## Active runs on shared hosts and directives
+
+| Run | Host | State | Note |
+|---|---|---|---|
+| Cognee gen-2 (`811-cognee/subset50-gen2`, preregistered 16:53Z) | this host | **running**, 10/50 session | **Duplicates** the external lane's gen-2 (`subset50-g2`, preregistered 13:31Z, which I had not seen), and conflicts with the owner directive recorded there at 16:44Z: *"generation 2 must not run for days in its current configuration without a separately reviewed performance solution."* My attempt to stop it was denied by the session's safety classifier, so I am asking the owner. Its rows will not be scored or pooled |
+| Jev-Mem CPU subset50 | this host | running, 6/50 | The external lane recorded Jev-Mem as not resumed (hardware blocker). The CPU fp32 rows must never be pooled with GPU rows. The same multi-day concern applies, so I am asking the owner |
+| #819 C6 held-out evaluation (cohort e4) | this host | running | Independent evaluation lane. The C6 LongMemEval-500 semantic runs I had queued were **cancelled before starting**, under the "no resource-heavy launches while saturated" rule |
+| Graphiti AMB attempt 3 | external lane | unknown | No outcome recorded on the branch, per the review |
 
 ## Typed blockers, with evidence
 

@@ -6,6 +6,9 @@ This is candidate evidence. It has not been independently reviewed or accepted, 
 
 ## Protocol tier A: query-only providers (`supports_filters = False`)
 
+**Input asymmetry, disclosed after the #810 independent review (`8887bbe`, finding 2).** Agent Memory's AMB bridge (`reference/amb_agent_memory_bridge.py`) passes each document's timestamp as `observed_at`. The Hindsight, Letta and Cognee providers on this branch receive no timestamps: the service provider forwards them, but neither service uses them, and the Hindsight provider retains without one. So "same inputs" is not exact. Agent Memory's whole AMB lead is in alias and fuzzy-matching cases, and supersession is 0/3 for every system, so this is unlikely to drive the result. It is still an input difference.
+
+
 | System | Configuration | Correct | Active | Mean precision | Mean recall | Retrieve avg | Context tokens | Evidence |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
 | Agent Memory | runtime `7c06468`-equivalent (this branch's runtime is unchanged), bridge `3d9ccb3` | 15 | 4 | 0.1806 | 0.9535 | 84.8 ms | 542 | `am-amb-control` (0 case differences from the reproduced #819 baseline) |
