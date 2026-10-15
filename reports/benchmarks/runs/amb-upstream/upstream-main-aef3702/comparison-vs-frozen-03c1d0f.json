@@ -1,0 +1,15 @@
+{
+  "left": "reports/benchmarks/amb-local-execution/2026-10-15-precisionmembench-single-turn/full-agent-memory-rep1/amb-outputs/precisionmembench/agent-memory/retrieval/single-turn.json",
+  "right": "/home/user/ext-exec/reports/benchmarks/runs/amb-upstream/upstream-main-aef3702/single-turn.json",
+  "left_cases": 77,
+  "right_cases": 77,
+  "ignored_fields": [
+    "avg_retrieve_time_ms",
+    "ingestion_time_ms",
+    "retrieve_time_ms",
+    "run_name",
+    "raw_response"
+  ],
+  "differences": 0,
+  "equal": true
+}

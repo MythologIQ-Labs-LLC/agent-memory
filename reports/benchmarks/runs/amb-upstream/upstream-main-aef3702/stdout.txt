@@ -1,0 +1,44 @@
+/tmp/amb-upstream-head/src/memory_bench/__init__.py
+/home/user/agent-memory/reference/agentmem_ref/__init__.py
+
+Dataset: precisionmembench  Split: single-turn  Memory: agent-memory  Mode: 
+retrieval
+
+Loading queries...
+Downloading retrieval.cases.json from upstream @ b95d6ab...
+  77 queries loaded
+Loading documents...
+Downloading beliefs.seed.json from upstream @ b95d6ab...
+  35 documents loaded
+Ingesting into agent-memory...
+  ingested in 752ms (21.5ms/doc avg)
+
+  Evaluating ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:04
+
+Saved → 
+/tmp/claude-0/-home-user-agent-memory/e3e750d6-aa32-58ce-8a57-ef081d712c0b/scrat
+chpad/amb-upstream-head-run/out/precisionmembench/agent-memory/retrieval/single-
+turn.json
+        Results —        
+precisionmembench/single-
+  turn | agent-memory |  
+        retrieval        
+┏━━━━━━━━━━━━━━━┳━━━━━━━┓
+┃ Metric        ┃ Value ┃
+┡━━━━━━━━━━━━━━━╇━━━━━━━┩
+│ Total queries │    77 │
+│ Correct       │    15 │
+│ Accuracy      │ 19.5% │
+└───────────────┴───────┘
+            PrecisionMemBench             
+┏━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
+┃ Metric                 ┃         Value ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
+│ Active passes          │          4/43 │
+│ Structural passes      │          6/25 │
+│ Trivially-empty passes │           5/9 │
+│ Total passes           │         15/77 │
+│ Mean precision         │          0.18 │
+│ Mean recall            │          0.95 │
+│ ID resolution          │ source_id=686 │
+└────────────────────────┴───────────────┘
