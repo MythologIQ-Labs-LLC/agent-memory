@@ -53,7 +53,7 @@
         "wins": 3,
         "losses": 51,
         "ties": 365,
-        "mcnemar_exact_p_full_recall": 0.0,
+        "mcnemar_exact_p_full_recall": 2.92e-12,
         "mean_delta": -0.114558,
         "mean_delta_bootstrap95": [
           -0.147971,
@@ -76,7 +76,7 @@
         "wins": 5,
         "losses": 62,
         "ties": 352,
-        "mcnemar_exact_p_full_recall": 0.0,
+        "mcnemar_exact_p_full_recall": 1.42e-13,
         "mean_delta": -0.136038,
         "mean_delta_bootstrap95": [
           -0.171838,
@@ -101,7 +101,7 @@
         "wins": 57,
         "losses": 13,
         "ties": 349,
-        "mcnemar_exact_p_full_recall": 1e-07,
+        "mcnemar_exact_p_full_recall": 1.03e-07,
         "mean_delta": 0.105012,
         "mean_delta_bootstrap95": [
           0.066826,
@@ -124,7 +124,7 @@
         "wins": 51,
         "losses": 4,
         "ties": 364,
-        "mcnemar_exact_p_full_recall": 0.0,
+        "mcnemar_exact_p_full_recall": 2.05e-11,
         "mean_delta": 0.112172,
         "mean_delta_bootstrap95": [
           0.081146,

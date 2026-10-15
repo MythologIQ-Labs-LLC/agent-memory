@@ -46,8 +46,10 @@
 
 - **The returned set is stable at Hindsight's depth.** It is not stable at a tight budget: one AMB
   case with budget 2 swapped one item (`../../amb-precisionmembench-single-turn/`).
-- **recall_all@k is unchanged in every repeat so far.** nDCG and order-sensitive metrics can
-  move. Across hosts, `ef66a6e5` changed nDCG; on this host its order was stable.
+- **recall_all@5/@10/@50 are unchanged in every repeat so far.** Shallow cutoffs and nDCG can
+  move. Across hosts, nDCG changed on `ef66a6e5` and `gpt4_45189cb4`, and recall_all@3 changed on
+  `gpt4_45189cb4`. On this host, `ef66a6e5`'s order was stable.
+  *(Corrected after independent review.)*
 - **This is product behaviour,** reproducible on any host. It is not adapter or harness noise.
   A deterministic secondary key, such as `id`, on the BM25 arm would remove it. That would be an
   upstream suggestion, not something applied here.

@@ -34,7 +34,7 @@ systems are compared on the same 419 questions. Source: `paired-vs-controls.{pla
 | turn @5 | 0.601 | 0.706 | 57 / 13 / 349 | 1e-7 | +0.105 [+0.067, +0.143] |
 | turn @10 | 0.723 | 0.835 | 51 / 4 / 364 | <1e-8 | +0.112 [+0.081, +0.146] |
 
-recall_all@k for the two planes, per question type:
+recall_all@**10** for the two planes, per question type:
 
 | Question type (n) | Session AM | Session Hindsight | Turn AM | Turn Hindsight |
 |---|---:|---:|---:|---:|
@@ -50,12 +50,16 @@ The paired script's aggregates match the evaluator's native summaries exactly on
 ## Repeatability and ordering
 
 - **Cross-host repeat:** the 50 subset questions on a second host
-  (`subset50-vs-full500.session.json`) returned the same sets 50/50 and the same recall@k, but
-  the order was permuted on 40/50 and nDCG changed on 1.
+  (`subset50-vs-full500.session.json`) returned the same sets 50/50 and the same
+  recall_all@5/@10/@50. The order was permuted on 40/50, and nDCG changed on 2 (`ef66a6e5`,
+  `gpt4_45189cb4`). On `gpt4_45189cb4`, recall_all@3 also fell from 1 to 0. The second host also
+  ran Python 3.13 rather than 3.12.
+  *(Corrected after independent review: an earlier version said nDCG changed on 1 and recall@k
+  was unchanged.)*
 - **Cause:** the BM25 arm's score ties have no tie-break, so a fresh ingestion reorders them.
   Recall is unaffected (`determinism-probe/`).
-- **Effect on these numbers:** recall_all@k is stable. nDCG is a single-run value and may move by
-  small amounts.
+- **Effect on these numbers:** recall_all@5/@10/@50 are stable in every repeat. Shallow cutoffs
+  (@1, @3) and nDCG are single-run values and can move on individual questions.
 
 ## Execution
 

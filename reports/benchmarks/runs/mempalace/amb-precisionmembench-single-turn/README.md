@@ -36,6 +36,16 @@ AWS_SECRET_ACCESS_KEY -u AWS_SESSION_TOKEN`. Their `execution-identity.json` rec
 credentials in the child. The wrapper was left unchanged, because its blob is part of the
 preregistration. Adding `AWS_*` to its removal list is a recommended follow-up.
 
+## Input asymmetry: timestamps
+
+Agent Memory's reviewed AMB bridge passes each document's timestamp as `observed_at`
+(`reference/amb_agent_memory_bridge.py`). This bridge, like the MemPalace, Hindsight and LangMem
+bridges, passes no timestamp. Graphiti receives it as `reference_time`. "Same inputs" in the
+cohort tables therefore means same documents, queries, budgets and scorer, **but not the same
+timestamp metadata**. The difference is unlikely to explain the headline gap, because Agent
+Memory's lead comes from Alias resolution and Fuzzy matching, not time-dependent categories.
+It is still an input difference. *(Disclosed after independent review.)*
+
 ## Identity and reproduction
 
 - **Harness and inputs:** AMB `03c1d0f` and fixtures `35659b3b…` / `09e99f08…`.

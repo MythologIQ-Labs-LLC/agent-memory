@@ -24,8 +24,15 @@ no-LLM rows: Agent Memory 15, Mem0 10, MemPalace 9, Hindsight 9, BM25 8.
 
 - **Very few memories were stored.** With the local Qwen2.5-3B, LangMem's manager created or
   changed a memory for only **7 of 35** documents, and the user's store ended with **4
-  memories**. On the other 7 of the 35 calls, the model answered without any tool call, so
-  nothing was stored for those documents.
+  memories**. Of the 35 calls, 7 returned no tool call. Of the 28 that returned tool calls, most
+  changed nothing (21 of 23 PatchDoc calls were no-ops, per independent review).
+- **Ingestion varies from run to run, even at temperature 0.** The two aborted attempts changed
+  memories on different documents than run 1: attempt 2 changed 10 of its first 19. The model
+  server was shared with the concurrent Graphiti run, and no second complete run exists. So "7 of
+  35" is a single draw, not a stable property. *(Disclosed after independent review.)*
+- **The attribution rule cuts both ways.** Every document whose ingestion changed a memory is
+  credited to that memory. That can inflate recall and deflate precision. "Mean memories
+  returned" counts attributed documents, not distinct memories.
 - **Recall and precision follow from that.** Most beliefs are not retrievable (recall 0.09).
   What is returned maps through a few broad memories, each attributed to several documents, so
   failures include unexpected beliefs (precision 0.02).
@@ -47,6 +54,16 @@ All inference was local; there was no paid inference.
 | LLM wall time | about 5,390 s, sharing the LLM with the Graphiti run |
 | Embedding requests | 150 |
 | Full call log | `rep1/shim-calls.jsonl.gz` |
+
+## Input asymmetry: timestamps
+
+Agent Memory's reviewed AMB bridge passes each document's timestamp as `observed_at`
+(`reference/amb_agent_memory_bridge.py`). This bridge, like the MemPalace, Hindsight and LangMem
+bridges, passes no timestamp. Graphiti receives it as `reference_time`. "Same inputs" in the
+cohort tables therefore means same documents, queries, budgets and scorer, **but not the same
+timestamp metadata**. The difference is unlikely to explain the headline gap, because Agent
+Memory's lead comes from Alias resolution and Fuzzy matching, not time-dependent categories.
+It is still an input difference. *(Disclosed after independent review.)*
 
 ## Identity
 

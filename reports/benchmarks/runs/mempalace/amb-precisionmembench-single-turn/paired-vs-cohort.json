@@ -65,7 +65,7 @@
         "wins": 0,
         "losses": 7,
         "ties": 70,
-        "mcnemar_exact_p": 0.015625
+        "mcnemar_exact_p": 0.0156
       }
     },
     "mem0_explicit": {
@@ -137,7 +137,7 @@
         "wins": 0,
         "losses": 6,
         "ties": 71,
-        "mcnemar_exact_p": 0.03125
+        "mcnemar_exact_p": 0.0312
       }
     }
   }

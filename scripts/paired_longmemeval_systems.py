@@ -92,7 +92,7 @@ def main(argv: list[str] | None = None) -> int:
                 deltas = [value(label, q, metric) - value(reference, q, metric) for q in scored]
                 entry[f"{metric}_paired_vs_{reference}"] = {
                     "wins": len(wins), "losses": len(losses), "ties": len(scored) - len(wins) - len(losses),
-                    "mcnemar_exact_p_full_recall": round(mcnemar_exact(len(wins), len(losses)), 8),
+                    "mcnemar_exact_p_full_recall": float(f"{mcnemar_exact(len(wins), len(losses)):.3g}"),
                     "mean_delta": round(sum(deltas) / len(deltas), 6),
                     "mean_delta_bootstrap95": bootstrap_ci(deltas, f"{args.plane}:{label}:{metric}"),
                     "better_questions": sum(d > 0 for d in deltas), "worse_questions": sum(d < 0 for d in deltas)}

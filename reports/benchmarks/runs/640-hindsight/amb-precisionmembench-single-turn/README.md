@@ -31,7 +31,7 @@ Run 2 was a fresh full rerun on the same host, with new banks. Everything scored
 run 1: correct 9/77, precision 0.0544, recall 0.985, 0 active passes, and per-case `correct` on
 all 77 cases.
 
-The retrieval order is not identical: 27 of 77 cases return the same set in a different order
+The retrieval order is not identical: 27 of 77 cases differ in order: 26 return the same set reordered, and 1 changes the set
 (`rep1-vs-rep2.outcome-stability.json`; `scripts/compare_amb_runs.py` reports 78 field
 differences, all in order-dependent text). In one case the set itself changed:
 `budget-ceiling-evicts-relevant-beliefs`, with a budget of 2, swapped one item at the budget
@@ -39,8 +39,18 @@ edge. That case failed in both runs.
 
 So Hindsight's ordering variation also occurs on a single host, not only across hosts as in
 the LongMemEval repeat. At tight budgets it can change set membership. A same-host determinism
-probe that separates ingest-time from query-time variation is prepared
-(`reference/hindsight_determinism_probe.py`).
+probe that separates ingest-time from query-time variation has been completed
+(`../full500/determinism-probe/`): fresh ingestion reorders tied BM25 scores.
+
+## Input asymmetry: timestamps
+
+Agent Memory's reviewed AMB bridge passes each document's timestamp as `observed_at`
+(`reference/amb_agent_memory_bridge.py`). This bridge, like the MemPalace, Hindsight and LangMem
+bridges, passes no timestamp. Graphiti receives it as `reference_time`. "Same inputs" in the
+cohort tables therefore means same documents, queries, budgets and scorer, **but not the same
+timestamp metadata**. The difference is unlikely to explain the headline gap, because Agent
+Memory's lead comes from Alias resolution and Fuzzy matching, not time-dependent categories.
+It is still an input difference. *(Disclosed after independent review.)*
 
 ## Identity
 

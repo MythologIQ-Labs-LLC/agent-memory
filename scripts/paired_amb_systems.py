@@ -75,7 +75,7 @@ def main(argv: list[str] | None = None) -> int:
             wins = sum(bool(rows[q]["correct"]) and not by_case[reference][q]["correct"] for q in cases)
             losses = sum(by_case[reference][q]["correct"] and not rows[q]["correct"] for q in cases)
             entry[f"paired_vs_{reference}"] = {"wins": wins, "losses": losses, "ties": len(cases) - wins - losses,
-                                               "mcnemar_exact_p": round(mcnemar_exact(wins, losses), 6)}
+                                               "mcnemar_exact_p": float(f"{mcnemar_exact(wins, losses):.3g}")}
         report["systems"][label] = entry
     print(json.dumps(report, indent=2))
     return 0
