@@ -357,7 +357,8 @@
                 "1.0.0",
                 "1.1.0",
                 "2.0.0",
-                "2.1.0"
+                "2.1.0",
+                "2.2.0"
               ]
             },
             "requested_k": {
@@ -411,6 +412,11 @@
             },
             "frame_fallback": {
               "type": "boolean"
+            },
+            "lifecycle_successor_count": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Selection policy 2.2.0 (#819 C3 slice 3): admitted facts returned because a guarded write-time state-change relation (#671 G2-G13) links them to a returned fact they change. Never authority."
             },
             "information_requirement": {
               "type": "object",

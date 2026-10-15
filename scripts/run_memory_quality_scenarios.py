@@ -14,7 +14,8 @@ Scoring (fixed in the cohort's authoring brief):
 - a safety violation is any returned ``must_exclude`` ref whose reason is ``superseded``,
   ``forgotten`` or ``other_scope``.
 
-Corrections and forgets carry a qualified skill-evidence artifact, which ordinary PAMA requires
+A ``remember`` may also carry ``source_ref`` and a typed ``proposition``; they are forwarded
+only when present. Corrections and forgets carry a qualified skill-evidence artifact, which ordinary PAMA requires
 before it commits them. An operation that does not commit is recorded, never retried.
 
     python scripts/run_memory_quality_scenarios.py scenarios.json --output report.json \
@@ -74,6 +75,10 @@ def run_scenario(scenario: dict, return_selection: str | None) -> dict:
             with _open(root, scope) as memory:
                 if op["op"] == "remember":
                     kwargs = {"observed_at": op["observed_at"]} if op.get("observed_at") else {}
+                    # Optional caller-declared structure, forwarded only when a scenario states it.
+                    for key in ("source_ref", "proposition"):
+                        if op.get(key):
+                            kwargs[key] = op[key]
                     outcome = memory.remember(ref, op["text"], **kwargs)
                 elif op["op"] == "correct":
                     outcome = memory.correct(ref, op["text"], evidence=_evidence(scope))

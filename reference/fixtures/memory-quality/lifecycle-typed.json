@@ -1,0 +1,602 @@
+{
+ "version": "1",
+ "authoring": "engineer-authored (#819 C3 slice 3); diagnostic only, not holdout evidence",
+ "scenarios": [
+  {
+   "id": "typed-residence",
+   "category": "typed_state_change",
+   "description": "state, then a later typed change in different words",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "project:life",
+     "ref": "memory:residence-old",
+     "text": "I live in Boston with my partner.",
+     "observed_at": "2025-01-10",
+     "source_ref": "user:owner",
+     "proposition": {
+      "subject": "user",
+      "attribute": "residence",
+      "value": "Boston",
+      "assertion": "state",
+      "cardinality": "single"
+     }
+    },
+    {
+     "op": "remember",
+     "scope": "project:life",
+     "ref": "memory:residence-new",
+     "text": "My partner and I moved to Denver in June.",
+     "observed_at": "2025-07-02",
+     "source_ref": "user:owner",
+     "proposition": {
+      "subject": "user",
+      "attribute": "residence",
+      "value": "Denver",
+      "assertion": "change",
+      "cardinality": "single",
+      "replaces_value": "Boston"
+     }
+    },
+    {
+     "op": "remember",
+     "scope": "project:life",
+     "ref": "memory:residence-noise",
+     "text": "Bought groceries and paid the electricity bill.",
+     "observed_at": "2025-07-05",
+     "source_ref": "user:owner"
+    }
+   ],
+   "queries": [
+    {
+     "id": "q-residence",
+     "scope": "project:life",
+     "query": "Where do I live these days?",
+     "expect": {
+      "must_include": [
+       "memory:residence-new"
+      ],
+      "may_include": [
+       "memory:residence-old"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "typed-employer",
+   "category": "typed_state_change",
+   "description": "state, then a later typed change in different words",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "project:life",
+     "ref": "memory:employer-old",
+     "text": "I work as an analyst at Northwind.",
+     "observed_at": "2025-01-10",
+     "source_ref": "user:owner",
+     "proposition": {
+      "subject": "user",
+      "attribute": "employer",
+      "value": "Northwind",
+      "assertion": "state",
+      "cardinality": "single"
+     }
+    },
+    {
+     "op": "remember",
+     "scope": "project:life",
+     "ref": "memory:employer-new",
+     "text": "I started my new job at Contoso this week.",
+     "observed_at": "2025-07-02",
+     "source_ref": "user:owner",
+     "proposition": {
+      "subject": "user",
+      "attribute": "employer",
+      "value": "Contoso",
+      "assertion": "change",
+      "cardinality": "single",
+      "replaces_value": "Northwind"
+     }
+    },
+    {
+     "op": "remember",
+     "scope": "project:life",
+     "ref": "memory:employer-noise",
+     "text": "Bought groceries and paid the electricity bill.",
+     "observed_at": "2025-07-05",
+     "source_ref": "user:owner"
+    }
+   ],
+   "queries": [
+    {
+     "id": "q-employer",
+     "scope": "project:life",
+     "query": "Which company do I work for now?",
+     "expect": {
+      "must_include": [
+       "memory:employer-new"
+      ],
+      "may_include": [
+       "memory:employer-old"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "typed-manager",
+   "category": "typed_state_change",
+   "description": "state, then a later typed change in different words",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "project:life",
+     "ref": "memory:manager-old",
+     "text": "My manager is Priya.",
+     "observed_at": "2025-01-10",
+     "source_ref": "user:owner",
+     "proposition": {
+      "subject": "user",
+      "attribute": "manager",
+      "value": "Priya",
+      "assertion": "state",
+      "cardinality": "single"
+     }
+    },
+    {
+     "op": "remember",
+     "scope": "project:life",
+     "ref": "memory:manager-new",
+     "text": "Priya left; my team now reports to Daniel.",
+     "observed_at": "2025-07-02",
+     "source_ref": "user:owner",
+     "proposition": {
+      "subject": "user",
+      "attribute": "manager",
+      "value": "Daniel",
+      "assertion": "change",
+      "cardinality": "single",
+      "replaces_value": "Priya"
+     }
+    },
+    {
+     "op": "remember",
+     "scope": "project:life",
+     "ref": "memory:manager-noise",
+     "text": "Bought groceries and paid the electricity bill.",
+     "observed_at": "2025-07-05",
+     "source_ref": "user:owner"
+    }
+   ],
+   "queries": [
+    {
+     "id": "q-manager",
+     "scope": "project:life",
+     "query": "Who is my manager?",
+     "expect": {
+      "must_include": [
+       "memory:manager-new"
+      ],
+      "may_include": [
+       "memory:manager-old"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "typed-editor",
+   "category": "typed_state_change",
+   "description": "state, then a later typed change in different words",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "project:life",
+     "ref": "memory:editor-old",
+     "text": "I write all my code in Vim.",
+     "observed_at": "2025-01-10",
+     "source_ref": "user:owner",
+     "proposition": {
+      "subject": "user",
+      "attribute": "editor",
+      "value": "Vim",
+      "assertion": "state",
+      "cardinality": "single"
+     }
+    },
+    {
+     "op": "remember",
+     "scope": "project:life",
+     "ref": "memory:editor-new",
+     "text": "I switched to VS Code for everything last month.",
+     "observed_at": "2025-07-02",
+     "source_ref": "user:owner",
+     "proposition": {
+      "subject": "user",
+      "attribute": "editor",
+      "value": "VS Code",
+      "assertion": "change",
+      "cardinality": "single",
+      "replaces_value": "Vim"
+     }
+    },
+    {
+     "op": "remember",
+     "scope": "project:life",
+     "ref": "memory:editor-noise",
+     "text": "Bought groceries and paid the electricity bill.",
+     "observed_at": "2025-07-05",
+     "source_ref": "user:owner"
+    }
+   ],
+   "queries": [
+    {
+     "id": "q-editor",
+     "scope": "project:life",
+     "query": "Which editor do I use?",
+     "expect": {
+      "must_include": [
+       "memory:editor-new"
+      ],
+      "may_include": [
+       "memory:editor-old"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "typed-diet",
+   "category": "typed_state_change",
+   "description": "state, then a later typed change in different words",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "project:life",
+     "ref": "memory:diet-old",
+     "text": "I am vegetarian.",
+     "observed_at": "2025-01-10",
+     "source_ref": "user:owner",
+     "proposition": {
+      "subject": "user",
+      "attribute": "diet",
+      "value": "vegetarian",
+      "assertion": "state",
+      "cardinality": "single"
+     }
+    },
+    {
+     "op": "remember",
+     "scope": "project:life",
+     "ref": "memory:diet-new",
+     "text": "I went fully vegan in March.",
+     "observed_at": "2025-07-02",
+     "source_ref": "user:owner",
+     "proposition": {
+      "subject": "user",
+      "attribute": "diet",
+      "value": "vegan",
+      "assertion": "change",
+      "cardinality": "single",
+      "replaces_value": "vegetarian"
+     }
+    },
+    {
+     "op": "remember",
+     "scope": "project:life",
+     "ref": "memory:diet-noise",
+     "text": "Bought groceries and paid the electricity bill.",
+     "observed_at": "2025-07-05",
+     "source_ref": "user:owner"
+    }
+   ],
+   "queries": [
+    {
+     "id": "q-diet",
+     "scope": "project:life",
+     "query": "What is my diet?",
+     "expect": {
+      "must_include": [
+       "memory:diet-new"
+      ],
+      "may_include": [
+       "memory:diet-old"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "typed-car",
+   "category": "typed_state_change",
+   "description": "state, then a later typed change in different words",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "project:life",
+     "ref": "memory:car-old",
+     "text": "My car is a 2012 Golf.",
+     "observed_at": "2025-01-10",
+     "source_ref": "user:owner",
+     "proposition": {
+      "subject": "user",
+      "attribute": "car",
+      "value": "Golf",
+      "assertion": "state",
+      "cardinality": "single"
+     }
+    },
+    {
+     "op": "remember",
+     "scope": "project:life",
+     "ref": "memory:car-new",
+     "text": "I traded it in for a used Prius.",
+     "observed_at": "2025-07-02",
+     "source_ref": "user:owner",
+     "proposition": {
+      "subject": "user",
+      "attribute": "car",
+      "value": "Prius",
+      "assertion": "change",
+      "cardinality": "single",
+      "replaces_value": "Golf"
+     }
+    },
+    {
+     "op": "remember",
+     "scope": "project:life",
+     "ref": "memory:car-noise",
+     "text": "Bought groceries and paid the electricity bill.",
+     "observed_at": "2025-07-05",
+     "source_ref": "user:owner"
+    }
+   ],
+   "queries": [
+    {
+     "id": "q-car",
+     "scope": "project:life",
+     "query": "What car do I drive at the moment?",
+     "expect": {
+      "must_include": [
+       "memory:car-new"
+      ],
+      "may_include": [
+       "memory:car-old"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "typed-gym",
+   "category": "typed_state_change",
+   "description": "state, then a later typed change in different words",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "project:life",
+     "ref": "memory:gym-old",
+     "text": "I go to the gym at 6am on weekdays.",
+     "observed_at": "2025-01-10",
+     "source_ref": "user:owner",
+     "proposition": {
+      "subject": "user",
+      "attribute": "workout_time",
+      "value": "6am",
+      "assertion": "state",
+      "cardinality": "single"
+     }
+    },
+    {
+     "op": "remember",
+     "scope": "project:life",
+     "ref": "memory:gym-new",
+     "text": "I now train in the evenings after work.",
+     "observed_at": "2025-07-02",
+     "source_ref": "user:owner",
+     "proposition": {
+      "subject": "user",
+      "attribute": "workout_time",
+      "value": "evening",
+      "assertion": "change",
+      "cardinality": "single",
+      "replaces_value": "6am"
+     }
+    },
+    {
+     "op": "remember",
+     "scope": "project:life",
+     "ref": "memory:gym-noise",
+     "text": "Bought groceries and paid the electricity bill.",
+     "observed_at": "2025-07-05",
+     "source_ref": "user:owner"
+    }
+   ],
+   "queries": [
+    {
+     "id": "q-gym",
+     "scope": "project:life",
+     "query": "When do I work out?",
+     "expect": {
+      "must_include": [
+       "memory:gym-new"
+      ],
+      "may_include": [
+       "memory:gym-old"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "typed-phone",
+   "category": "typed_state_change",
+   "description": "state, then a later typed change in different words",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "project:life",
+     "ref": "memory:phone-old",
+     "text": "My phone number ends in 4417.",
+     "observed_at": "2025-01-10",
+     "source_ref": "user:owner",
+     "proposition": {
+      "subject": "user",
+      "attribute": "phone_number",
+      "value": "4417",
+      "assertion": "state",
+      "cardinality": "single"
+     }
+    },
+    {
+     "op": "remember",
+     "scope": "project:life",
+     "ref": "memory:phone-new",
+     "text": "I got a new number ending in 9902.",
+     "observed_at": "2025-07-02",
+     "source_ref": "user:owner",
+     "proposition": {
+      "subject": "user",
+      "attribute": "phone_number",
+      "value": "9902",
+      "assertion": "change",
+      "cardinality": "single",
+      "replaces_value": "4417"
+     }
+    },
+    {
+     "op": "remember",
+     "scope": "project:life",
+     "ref": "memory:phone-noise",
+     "text": "Bought groceries and paid the electricity bill.",
+     "observed_at": "2025-07-05",
+     "source_ref": "user:owner"
+    }
+   ],
+   "queries": [
+    {
+     "id": "q-phone",
+     "scope": "project:life",
+     "query": "What is my phone number?",
+     "expect": {
+      "must_include": [
+       "memory:phone-new"
+      ],
+      "may_include": [
+       "memory:phone-old"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "untyped-residence",
+   "category": "untyped_state_change",
+   "description": "control: same pattern, no typed proposition",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "project:life",
+     "ref": "memory:residence-old",
+     "text": "I live in Boston with my partner.",
+     "observed_at": "2025-01-10"
+    },
+    {
+     "op": "remember",
+     "scope": "project:life",
+     "ref": "memory:residence-new",
+     "text": "My partner and I moved to Denver in June.",
+     "observed_at": "2025-07-02"
+    }
+   ],
+   "queries": [
+    {
+     "id": "q-u-residence",
+     "scope": "project:life",
+     "query": "Where do I live these days?",
+     "expect": {
+      "must_include": [
+       "memory:residence-new"
+      ],
+      "may_include": [
+       "memory:residence-old"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "untyped-employer",
+   "category": "untyped_state_change",
+   "description": "control: same pattern, no typed proposition",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "project:life",
+     "ref": "memory:employer-old",
+     "text": "I work as an analyst at Northwind.",
+     "observed_at": "2025-01-10"
+    },
+    {
+     "op": "remember",
+     "scope": "project:life",
+     "ref": "memory:employer-new",
+     "text": "I started my new job at Contoso this week.",
+     "observed_at": "2025-07-02"
+    }
+   ],
+   "queries": [
+    {
+     "id": "q-u-employer",
+     "scope": "project:life",
+     "query": "Which company do I work for now?",
+     "expect": {
+      "must_include": [
+       "memory:employer-new"
+      ],
+      "may_include": [
+       "memory:employer-old"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "untyped-manager",
+   "category": "untyped_state_change",
+   "description": "control: same pattern, no typed proposition",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "project:life",
+     "ref": "memory:manager-old",
+     "text": "My manager is Priya.",
+     "observed_at": "2025-01-10"
+    },
+    {
+     "op": "remember",
+     "scope": "project:life",
+     "ref": "memory:manager-new",
+     "text": "Priya left; my team now reports to Daniel.",
+     "observed_at": "2025-07-02"
+    }
+   ],
+   "queries": [
+    {
+     "id": "q-u-manager",
+     "scope": "project:life",
+     "query": "Who is my manager?",
+     "expect": {
+      "must_include": [
+       "memory:manager-new"
+      ],
+      "may_include": [
+       "memory:manager-old"
+      ]
+     }
+    }
+   ]
+  }
+ ]
+}

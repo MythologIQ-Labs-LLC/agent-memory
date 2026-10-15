@@ -941,6 +941,10 @@ class AgentMemory:
         routes = {
             ref: [hit.route_id for hit in result.provenance_for(ref)] for ref in result.ranked_admitted
         }
+        # 2.2.0: guarded write-time state-change relations among admitted facts (#671 G2-G13),
+        # earlier fact -> later facts that change it.
+        reader = getattr(self.runtime.adapter, "lifecycle_successors", None)
+        successors = reader(list(result.ranked_admitted)) if callable(reader) else {}
         selected, records, summary = select_relevance_sufficient(
             result.ranked_admitted,
             routes,
@@ -950,6 +954,7 @@ class AgentMemory:
             lexical_route=LEXICAL_ROUTE,
             exact_identity_route=EXACT_IDENTITY_ROUTE,
             subordinate_routes=getattr(MULTI_ROUTE_RANKING_POLICY, "subordinate_routes", ()),
+            lifecycle_successors=successors,
         )
         for ref, record in records.items():
             admissions.setdefault(ref, {})["return_selection"] = record

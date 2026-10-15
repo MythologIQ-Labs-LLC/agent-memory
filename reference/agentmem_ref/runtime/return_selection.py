@@ -44,6 +44,15 @@ the query as written. Ranking consistency is anchored on primary evidence only: 
 evidence as an anchor, one weak set member ranked low pulled in every fact ranked above it that
 carried any topical trace (on LongMemEval-S, 1,056 such returns of which 14 were gold).
 
+Policy 2.2.0 (#819 C3 slice 3) adds **lifecycle closure**. A later fact can carry a guarded
+write-time state-change relation to an earlier one (#671 typed slot; guards G2-G13, read by
+``GovernedMemoryAdapter.lifecycle_successors``). Relevance alone withheld the later state when it
+shared no topical word ("Where do I live now?" returned "I live in Boston." without "I moved to
+Denver."), presenting a changed state as if it still held. A selected fact now brings the
+admitted facts that change it, transitively. The relation is runtime write-time evidence, never
+memory text; only admitted facts can join; no currentness decision is made, so the
+explicit-current gate (G1) does not apply.
+
 The stage reads only the admitted, ranked list and its evidence. It never changes candidates,
 admission, refusals, ``admitted`` or the ranked order, and it is never authority: a withheld
 fact is still admitted and still visible to a caller that reads ``admitted`` or asks for the
@@ -62,7 +71,7 @@ from .query_interpretation import QueryInterpretation, interpret
 from .temporal_intent import TemporalIntent
 
 SELECTION_POLICY_ID = "relevance-sufficient-return-selection"
-SELECTION_POLICY_VERSION = "2.1.0"
+SELECTION_POLICY_VERSION = "2.2.0"
 SELECTION_BASIS = "post_ranking_relevance_sufficiency_then_ranked_prefix"
 RELATIVE_FLOOR = 0.5
 # 2.0.0: a query that needs several pieces of evidence (aggregate or relational) admits set
@@ -175,6 +184,7 @@ def select_relevance_sufficient(
     exact_identity_route: str,
     subordinate_routes: Iterable[str] = (),
     relative_floor: float = RELATIVE_FLOOR,
+    lifecycle_successors: Mapping[str, Iterable[str]] | None = None,
 ) -> tuple[list[str], dict[str, dict[str, Any]], dict[str, Any]]:
     """Return (the evidence set in ranked order, per-candidate records, summary).
 
@@ -189,6 +199,9 @@ def select_relevance_sufficient(
        fact is selected too (set evidence does not extend it, 2.1.0).
     4. **Entity coverage**: each entity the query names that no selected fact covers is
        covered by its highest-ranked candidate with topical evidence, if any.
+    5. **Lifecycle closure** (2.2.0): a selected fact that ``lifecycle_successors`` maps to
+       later admitted facts (guarded write-time state-change relations) brings them in,
+       transitively. Facts outside the ranked admitted list never join.
 
     Nothing else is added; if nothing qualifies the recall abstains. Statistics cover the
     candidates some primary route found (#669), with the ranking stage's #583 masks.
@@ -291,8 +304,24 @@ def select_relevance_sufficient(
         chosen = max(candidates, key=lambda ref: (about[ref], -ranked.index(ref)))
         if not records[chosen]["sufficient"]:
             records[chosen].update(sufficient=True, basis="entity_coverage")
+    # Lifecycle closure: a returned state must not travel without the admitted later state that
+    # the runtime's guarded write-time evidence says changes it. Transitive; admitted only.
+    successors = {ref: tuple(lifecycle_successors.get(ref, ())) for ref in ranked} if lifecycle_successors else {}
+    admitted_set = set(ranked)
+    closure_count = 0
+    frontier = [ref for ref in ranked if records[ref]["sufficient"]]
+    while frontier:
+        following: list[str] = []
+        for ref in frontier:
+            for successor in successors.get(ref, ()):
+                if successor in admitted_set and not records[successor]["sufficient"]:
+                    records[successor].update(sufficient=True, basis="lifecycle_successor")
+                    closure_count += 1
+                    following.append(successor)
+        frontier = following
     selected = [ref for ref in ranked if records[ref]["sufficient"]]
     summary = {
+        "lifecycle_successor_count": closure_count,
         "informative_query_term_count": len(evidence_terms),
         "relative_floor": relative_floor,
         "set_floor": set_floor,

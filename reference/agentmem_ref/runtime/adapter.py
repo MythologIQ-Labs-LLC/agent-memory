@@ -827,6 +827,36 @@ class GovernedMemoryAdapter:
             explicit_current=explicit_current_profile,
         )
 
+    def lifecycle_successors(self, admitted) -> dict[str, list[str]]:
+        """#819 C3: for each admitted fact, the admitted facts whose guarded write-time
+        state-change relation targets it (pure read).
+
+        The same #671 guards as ``cross_fact_applicability`` (G2-G13: open proposal, same
+        actor, source, tenant, purpose and scope, assertive change, clock order) except G1:
+        no currentness or applicability decision is made, so the query's temporal intent does
+        not gate it. Return selection uses it only to return a later state alongside the
+        earlier one it changes; it never removes, demotes or relabels a fact. Only facts with
+        write-time slot evidence can carry a relation, so only those are read.
+        """
+
+        from .temporal_intent import TemporalIntent
+
+        indexed = set().union(*self._semantic_index().values()) if self._semantic_index() else set()
+        candidates = [uuid for uuid in admitted if uuid in indexed]
+        if len(candidates) < 2:
+            return {}
+        decisions = cross_fact.evaluate(
+            candidates,
+            TemporalIntent(),
+            fact_lookup=self._substrate.get_fact,
+            proposal_status=self._proposal_status,
+            fact_scope=self._fact_scope.get,
+            same_scope=self._same_semantic_scope,
+            explicit_current=lambda _intent: True,
+        )
+        return {target: [item["source_fact_uuid"] for item in decision["accepted"]]
+                for target, decision in decisions.items() if decision["accepted"]}
+
     def _proposal_status(self, proposal: dict) -> str:
         target, source = proposal["target_fact_uuid"], proposal["source_fact_uuid"]
         record = self.replacement_record(target)
