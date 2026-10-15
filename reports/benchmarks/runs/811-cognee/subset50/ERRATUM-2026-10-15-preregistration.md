@@ -41,3 +41,11 @@ The executor made a copying error. Nothing was tampered with.
 | Cognee configuration | unchanged: 1.6.4 `f154b32`, local GLiNER, no LLM, bridge 0.1.1 |
 
 That generation is the independently repeated run needed for any qualified Cognee LongMemEval evidence. It runs in its own output directory and never appends to these rows. This gen-2 preregistration was written after partial gen-1 Cognee results were visible. Nothing in the Cognee configuration, adapter or selection changed in response.
+
+## Completion note (2026-10-15)
+
+The gen-1 session plane completed all 50 questions, with 0 runtime, ingestion and out-of-corpus failures. The finalized `session.cognee_gliner_local.summary.json` shows recall_all@5 0.953488 and recall_all@10 0.976744 over 43 scored questions.
+
+These rows remain **exploratory**, as stated above. The qualified generation is `../subset50-gen2/`.
+
+Cognee's local mode embeds with fastembed `bge-small-en-v1.5`. Its headline therefore equals the Letta-archival run on this subset (cycle-2 branch), which uses the same embedder. The two retrieval paths are not the same code.
