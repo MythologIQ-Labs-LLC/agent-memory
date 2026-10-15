@@ -104,15 +104,15 @@
     },
     {
       "kind": "security_replay",
-      "ref": "cross-scope-write-authority-denial-v2"
+      "ref": "cross-scope-write-authority-denial-v3"
     },
     {
       "kind": "security_replay",
-      "ref": "deleted-lineage-generations-and-restart-v2"
+      "ref": "deleted-lineage-generations-and-restart-v3"
     },
     {
       "kind": "security_replay",
-      "ref": "public-tombstone-redaction-and-observer-separation-v2"
+      "ref": "public-tombstone-redaction-and-observer-separation-v3"
     }
   ]
 }

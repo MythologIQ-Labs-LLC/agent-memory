@@ -20,7 +20,19 @@ sys.path.insert(0, str(ROOT / "reference"))
 import run_786_security_replays as runner  # noqa: E402
 
 verifier = runpy.run_path(str(ROOT / "scripts/verify_786_security_replays.py"))
-PROPOSAL = ROOT / "reports/runtime/proposals/786-cumulative-v6-to-v8.PROPOSED.json"
+DECLARATION = ROOT / "reports/runtime/proposals/786-cumulative-v6-to-v8.PROPOSED.json"
+
+
+def _v2_declaration(folder: Path) -> Path:
+    """The declaration now names the -v3 generation; the frozen -v2 family verifies through a
+    scratch declaration that lists its own ids, exactly as it did when it was declared."""
+    record = json.loads(DECLARATION.read_text(encoding="utf-8"))
+    record["acceptance_evidence_required"] = [
+        e for e in record["acceptance_evidence_required"] if e["kind"] != "security_replay"
+    ] + [{"kind": "security_replay", "ref": r} for r in runner.REPLAYS]
+    path = folder / "declaration-v2.json"
+    path.write_text(json.dumps(record), encoding="utf-8")
+    return path
 
 
 def fixture(replay_id: str) -> dict:
@@ -87,7 +99,7 @@ class Verification(unittest.TestCase):
             for replay_id in runner.REPLAYS:
                 report = runner.run_replay(replay_id, allow_dirty=True)
                 runner.write_outputs(report, evidence, "test")
-            result = verifier["verify"](evidence, PROPOSAL)
+            result = verifier["verify"](evidence, _v2_declaration(Path(tmp)))
             self.assertEqual({r["replay"] for r in result["replays"]}, set(runner.REPLAYS))
             for row in result["replays"]:
                 self.assertIn(row["status"], ("VERIFIED", "STALE"), row)  # STALE only on a dirty runtime tree
@@ -96,7 +108,7 @@ class Verification(unittest.TestCase):
             doc = json.loads(target.read_text(encoding="utf-8"))
             doc["cases"][0]["checks"][0]["observed"] = "forged"
             target.write_text(json.dumps(doc, indent=1, sort_keys=True) + "\n", encoding="utf-8")
-            again = verifier["verify"](evidence, PROPOSAL)
+            again = verifier["verify"](evidence, _v2_declaration(Path(tmp)))
             self.assertEqual(next(r for r in again["replays"] if r["replay"] == runner.REPLAYS[0])["status"], "TAMPERED")
             self.assertFalse(again["evidence_verified"])
             self.assertIn("NOT GRANTED", again["acceptance"])

@@ -199,5 +199,8 @@ availability gap of the recovery path, not an authority gap. Reported in the PR,
 
 `reports/validation/786-at-head/README.md` names the exact SHA and the commands for the
 focused and full suites, the Gauntlet probe, the v7 and security replay re-executions and the
-holdouts; `reports/validation/786-security-replays/` holds the frozen security replay
-evidence. The PR description carries the same with the independent review logs.
+holdouts; `reports/validation/786-security-replays/` holds the frozen `-v2` security replay
+evidence and `reports/validation/786-security-replays-v3/` the preregistered `-v3` generation's
+first execution (the declaration names `-v3`; see the fixtures README for what changed and
+`reports/validation/805-at-head/` for the pre-execution review). The PR description carries
+the same with the independent review logs.
