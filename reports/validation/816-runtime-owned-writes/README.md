@@ -5,7 +5,7 @@
 | Issue | #816. An adapter-level `governed_recall` on a facade-owned SQLite handle, followed by `close()`, fails the next `open` with "SQLite canonical substrate digest mismatch". |
 | Base (unmodified security candidate) | #815 head `77c472e6f91fd292ac90eedd105c272f5cb21aea`, on #805 `28f257c9`; contract 1.8.0 |
 | Branch | `claude/eager-dirac-bftkfg-816-recovery` |
-| Frozen repair | **`e13d8c58`** (`e13d8c58...`; full SHA in the #816 handoff), a strict descendant of `77c472e6` |
+| Frozen repair | **`e13d8c58`** (`e13d8c58c3d5521be50c8d32feacf2710c7fc6c5`), a strict descendant of `77c472e6` |
 | Status | Implemented, tested, independently reviewed. **Not integrated, not released.** No PR, no hosted Actions, no contract bump, no Runtime Baseline successor. |
 
 ## 1. Reproduction on the unmodified base
