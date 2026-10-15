@@ -4,8 +4,11 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const f=require('../assets/public-measurement-feed.js');
-const source=JSON.parse(fs.readFileSync(path.join(__dirname,'../reports/benchmarks/public-feed/v1.json'),'utf8'));
-assert.equal(f.validate(source).profiles.length,6);
+// The live feed belongs to a separate data-only branch, not gh-pages.
+const feedPath=process.argv[2]||process.env.AGENT_MEMORY_PUBLIC_FEED_PATH;
+if(!feedPath)throw Error('Pass locally materialized benchmark-public-feed/v1.json as the first argument');
+const source=JSON.parse(fs.readFileSync(path.resolve(feedPath),'utf8'));
+assert.equal(f.validate(source).profiles.length,7);
 const copy=x=>structuredClone(x);
 const bad=(fn)=>{const x=copy(source);fn(x);assert.throws(()=>f.validate(x),Error)};
 bad(x=>{x.authority_effect='accepted'});
@@ -20,6 +23,27 @@ bad(x=>{x.profiles[0].cohort.scored_count=42});
 bad(x=>{x.profiles[0].rows[0].extract.path=['__proto__']});
 bad(x=>{x.profiles[3].rows[0].engine_revision='nonsense'});
 bad(x=>{x.profiles[3].rows[0].extract.type='unknown'});
+const independent=source.profiles.find(p=>p.id==='candidate:819:independent-holdout:176:strict');
+assert.ok(independent&&independent.evidence_status==='candidate');
+const iRows=Object.fromEntries(independent.rows.map(r=>[r.system,r]));
+const agg=pass=>JSON.stringify({
+ cohort_id:'am-819-holdout-v1',
+ cases_sha256:independent.cohort.input_sha256,
+ harness_sha256:independent.evaluator_revision,
+ summary:{overall:{queries:176,strict_pass:pass,eval_failures:0,
+  isolation_leaks:0,forgotten_leaks:0,stale_returned:0}}
+});
+assert.equal(f.evaluate(independent,iRows.agent_memory_baseline,agg(37)),37/176);
+assert.equal(f.evaluate(independent,iRows.agent_memory_c1,agg(116)),116/176);
+assert.equal(f.evaluate(independent,iRows.agent_memory_c2,agg(116)),116/176);
+assert.throws(()=>f.evaluate(independent,iRows.agent_memory_c2,agg(177)),/count numerator/);
+const invalidIdentity=JSON.parse(agg(116));invalidIdentity.cases_sha256='0'.repeat(64);
+assert.throws(()=>f.evaluate(independent,iRows.agent_memory_c2,
+ JSON.stringify(invalidIdentity)),/identity/);
+const leaked=JSON.parse(agg(116));leaked.summary.overall.forgotten_leaks=1;
+assert.throws(()=>f.evaluate(independent,iRows.agent_memory_c2,
+ JSON.stringify(leaked)),/safety/);
+bad(x=>{x.profiles[6].rows[0].extract.numerator_path=['__proto__']});
 const csv='query_id,correct,why\nq1,True,"example, with comma"\nq2,False,skip\n';
 assert.deepEqual(f.csvVerdicts(csv),{sample_count:2,scored_count:2,correct:1,score:0.5});
 assert.throws(()=>f.csvVerdicts(csv.replace('q2','q1')),/duplicate/);
@@ -48,4 +72,4 @@ assert.match(html,/All measured results \(default\)/);
 const script=fs.readFileSync(path.join(__dirname,'../assets/measured-leaderboard.js'),'utf8');
 assert.match(script,/agent-memory:public-feed/);
 assert.match(script,/publicFeedProfiles/);
-console.log('PASS: six cohorts, strict scoring/source boundaries, C2 A-B scores and runtime revision identity, stable leaderboard hook.');
+console.log('PASS: seven cohorts, strict scoring/source boundaries, C2 A-B scores and runtime revision identity, stable leaderboard hook.');

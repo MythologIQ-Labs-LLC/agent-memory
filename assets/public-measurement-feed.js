@@ -20,6 +20,11 @@ const MAX_BYTES=8*1024*1024;
 const validArtifact=p=>typeof p==='string'&&ARTIFACT.test(p)&&
   p.split('/').every(seg=>seg!=='.'&&seg!=='..'&&seg!=='');
 const validScore=n=>typeof n==='number'&&Number.isFinite(n)&&n>=0&&n<=1;
+function safeNativePath(path){
+ return Array.isArray(path)&&path.length>0&&path.length<=12&&path.every(k=>
+   typeof k==='string'&&k.length>0&&k.length<=100&&
+   !['__proto__','prototype','constructor'].includes(k));
+}
 function validate(feed){
  if(!feed||feed.kind!=='agent-memory-measured-results-feed'||feed.schema_version!==1||
    feed.authority_effect!=='none'||!Array.isArray(feed.profiles)||
@@ -64,10 +69,12 @@ function validate(feed){
    if(row.extract.type==='json_path'){
     if(!row.artifact.endsWith('.json')&&!row.artifact.endsWith('.json.gz'))
      throw Error('JSON extract requires JSON artifact');
-    if(!Array.isArray(row.extract.path)||row.extract.path.length<1||
-       row.extract.path.length>12||row.extract.path.some(k=>
-         typeof k!=='string'||!k||k.length>100||['__proto__','prototype','constructor'].includes(k)))
-     throw Error('Invalid native JSON path');
+    if(!safeNativePath(row.extract.path))throw Error('Invalid native JSON path');
+   } else if(row.extract.type==='json_count_fraction'){
+    if((!row.artifact.endsWith('.json')&&!row.artifact.endsWith('.json.gz'))||
+       !safeNativePath(row.extract.numerator_path)||
+       !safeNativePath(row.extract.denominator_path))
+     throw Error('Invalid native count fraction');
    } else if(row.extract.type==='csv_correct_fraction'){
     if(!row.artifact.endsWith('.csv')||row.extract.column!=='correct'||
        row.extract.pass_value!=='True')throw Error('Unsupported native CSV scoring');
@@ -93,6 +100,25 @@ function jsonValueText(document,path){
    current=current[key];}
  if(typeof current!=='string')throw Error('Runtime identity not a string');
  return current;
+}
+function nativeCountFraction(data,group,row){
+ const find=path=>{
+   let node=data;
+   for(const key of path){
+    if(node===null||typeof node!=='object'||
+      !Object.prototype.hasOwnProperty.call(node,key))
+     throw Error('Missing native count field');
+    node=node[key];
+   }
+   return node;
+ };
+ const a=find(row.extract.numerator_path);
+ const b=find(row.extract.denominator_path);
+ if(!Number.isInteger(a)||!Number.isInteger(b)||b<=0||
+    a<0||a>b||b!==group.cohort.sample_count||
+    b!==group.cohort.scored_count)
+   throw Error('Invalid count numerator or cohort denominator');
+ return a/b;
 }
 function csvVerdicts(raw){
  if(typeof raw!=='string'||raw.length>MAX_BYTES)throw Error('Invalid native CSV');
@@ -138,6 +164,16 @@ function evaluate(profile,row,raw){
  if(row.engine_revision&&row.revision_path&&
     jsonValueText(data,row.revision_path)!==row.engine_revision)
    throw Error('Runtime revision identity mismatch');
+ if(profile.family==='runtime-revision-hidden-holdout'){
+   const o=data.summary?.overall;
+   if(data.cohort_id!==profile.cohort.selection_id||
+      data.cases_sha256!==profile.cohort.input_sha256||
+      data.harness_sha256!==profile.evaluator_revision||
+      !o||o.queries!==profile.cohort.sample_count||
+      o.eval_failures!==0||o.isolation_leaks!==0||
+      o.forgotten_leaks!==0||o.stale_returned!==0)
+     throw Error('Hidden holdout aggregate identity or safety mismatch');
+ }
  if(profile.family==='longmemeval-s-retrieval'){
   if(data.input?.sha256!==profile.cohort.input_sha256||
      data.input?.question_count!==profile.cohort.sample_count)
@@ -159,6 +195,7 @@ function evaluate(profile,row,raw){
       result.aggregate?.excluded_no_user_target_count!==profile.cohort.excluded_count)
    throw Error('Native errors or denominator mismatch');
  }
+ if(row.extract.type==='json_count_fraction')return nativeCountFraction(data,profile,row);
  return jsonValue(data,row.extract.path);
 }
 function urlAt(sha,path){
@@ -217,7 +254,9 @@ async function processFeed(feed,sourceSha){
        row.source_commit+'/'+row.artifact});
    }catch(e){errors.push(group.id+'/'+row.system+': '+e.message);}
   }
-  if(rows.length>=2||rows.length===1&&group.rows.length===1)
+  // Withhold the entire cohort if any contestant's source is unavailable or invalid.
+  // A partial roster would manufacture a misleading competitive ranking.
+  if(rows.length===group.rows.length&&rows.length>0)
     profiles.push(toProfile(group,rows,sourceSha));
  }
  return {profiles,errors};

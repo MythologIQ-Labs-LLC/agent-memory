@@ -146,3 +146,20 @@ The feed contains only immutable artifact coordinates (exact source commit and p
 Runtime engineering #819 data are represented by **separate self-measured revision comparisons**, not competitive product rankings, while independent holdout evaluation is pending. These include the AMB improvement (15/77 to 39/77) and the LongMemEval-S full500 recall-all@10 declines (session 89.26% to 75.42%; turn 72.32% to 63.25%). No claim of default-runtime qualification is made.
 
 For data maintainers: append or update evidence records in `benchmark-public-feed:reports/benchmarks/public-feed/v1.json` only after the original benchmark result has been committed, frozen, and source-pinned. Preserve exact cohort identity. Verify the feed locally using `node tools/test-public-measurement-feed.cjs`; use the publication branch's README as the exact contract. Do not trigger hosted CI/PR workflows as part of candidate publication. The public page should reflect new validated measurements without additional site code changes. Change the site's appearance only for an explicit owner-approved design update.
+
+
+### Independent #819 aggregate evidence feed
+
+The independent 176-query holdout review (verdict **CHANGES REQUIRED** for C1 and C2) publishes only `holdout-aggregate/summary.json` records from exact source commit `08a0755aec6aee5afe87576faac94833037e7950`. The original hidden cases, query text, gold responses and per-case outcomes remain sealed. The existing `benchmark-public-feed` branch carries the aggregate rows with SHA-256 of their raw source bytes, frozen case/harness hashes, counts, and explicit unaccepted status.
+
+The generic `json_count_fraction` extractor handles native integer numerator/denominator records without introducing a new visualization. The reader refuses a cohort unless **every declared contestant** verifies, avoiding accidental optimistic rankings from missing comparators.
+
+To run the offline contract tests when checking out `gh-pages`, first obtain a local copy of the versioned feed from the dedicated publication branch:
+
+```sh
+git fetch origin benchmark-public-feed
+git show origin/benchmark-public-feed:reports/benchmarks/public-feed/v1.json > /tmp/agent-memory-public-feed.json
+node tools/test-public-measurement-feed.cjs /tmp/agent-memory-public-feed.json
+```
+
+No accepted score or runtime contract is changed by feed publication.
