@@ -43,7 +43,16 @@ never implies it, which ``LegacyOracleDemonstrated`` pins (review F-11). A no-op
 store record's totals (``facts_legacy`` is the count at first upgrade) with ``facts_rewritten`` 0.
 
 Superseded once after independent review (F-1..F-11; the review record is committed beside
-this module); the second fail-first baseline is ``preregistration-baseline-2.log``. Store status: ``fresh`` (no legacy
+this module; baseline 2) and once more after the first execution on the implemented runtime
+(``first-execution.log``, two harness defects, no runtime finding, reasons recorded here;
+baseline 3): (i) the v7-written texts of ``bd`` ("digest foreign deleted") and ``bu`` ("digest
+unknown") have different token lengths, so every score-derived recall field
+(``lexical_relevance_score``, ``route_scores``, ``raw_score``, ``ordered_before_next_by``)
+differs by construction; the recall channel now compares ``bd`` with ``bl`` (equal lengths) at
+full fidelity and the unequal-length pairs with those four fields folded, nothing else; (ii) two
+handles on one SQLite store with interleaved governed operations are refused by the single-writer
+generation protocol by design, so the test serialises its handles. Both changes were reviewed
+before the second execution. Store status: ``fresh`` (no legacy
 fact), ``legacy_pending`` (legacy facts, no record), ``legacy_qualified`` (upgraded, nothing
 quarantined), ``legacy_unqualified`` (upgraded, at least one quarantined edge; activation over
 the store is blocked by the decision record's rule).
@@ -52,6 +61,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -76,6 +86,17 @@ VOLATILE = {"runs", "completed_at", "facts_rewritten"}
 def _seq(ref: str) -> int | None:
     head, _, tail = ref.rpartition("-")
     return int(tail) if head and tail.isdigit() else None
+
+
+SCORE_FIELDS = ("lexical_relevance_score", "route_scores", "raw_score", "ordered_before_next_by")
+
+
+def _fold_scores(shape: str) -> str:
+    """Fold the four score-derived recall fields (reason (i) in the module docstring)."""
+    shape = re.sub(r'"(lexical_relevance_score|raw_score)": [0-9.e+-]+', r'"\1": N', shape)
+    shape = re.sub(r'"route_scores": \{[^}]*\}', '"route_scores": R', shape)
+    shape = re.sub(r'"ordered_before_next_by": "[^"]*"', '"ordered_before_next_by": O', shape)
+    return shape
 
 
 def _failing_gates(scope_f: dict, scope_r: dict) -> list[str]:
@@ -198,7 +219,10 @@ class CrossScopeStore(_Store):
     unbound by the upgrade; the owner's own derivation stays bound; external ids and guesses
     are unknown references. The store becomes legacy_qualified."""
 
-    def _expect_after(self, b: AgentMemory, a: AgentMemory):
+    def _expect_after(self):
+        """B's and A's views after the upgrade, each through its own handle in turn (one live
+        handle per SQLite store: the single-writer generation protocol, reason (ii))."""
+        b = self.open("project:b")
         admitted = self.admitted(b)
         for k in ("bd", "bl", "bu"):
             self.assertIn(self.ids[k], admitted, k)
@@ -211,11 +235,18 @@ class CrossScopeStore(_Store):
                      "history": b.history(memory), "write_semantics": b.write_semantics(uuid)}
             shapes[k] = {ch: _shape(v, self_uuid=uuid, ref=ref, label="x").replace(memory, "memory:<m>").replace(token, "digest <t>")
                          for ch, v in views.items()}
-        for ch in ("recall", "history", "write_semantics"):
+        for ch in ("history", "write_semantics"):
             with self.subTest(channel=ch):
                 self.assertEqual(shapes["bd"][ch], shapes["bu"][ch])
                 self.assertEqual(shapes["bl"][ch], shapes["bu"][ch])
+        with self.subTest(channel="recall"):
+            self.assertEqual(shapes["bd"]["recall"], shapes["bl"]["recall"])  # equal-length texts: full fidelity
+            self.assertEqual(_fold_scores(shapes["bd"]["recall"]), _fold_scores(shapes["bu"]["recall"]))
+            self.assertEqual(_fold_scores(shapes["bl"]["recall"]), _fold_scores(shapes["bu"]["recall"]))
+        b.close()
+        a = self.open("project:a")
         self.assertEqual(self.admitted(a) & {self.ids["d1"], self.ids["ctl"]}, {self.ids["ctl"]})
+        a.close()
 
     def test_upgrade_classifies_rewrites_and_closes_the_oracle_without_releasing_own_dependencies(self):
         a = self.open("project:a")
@@ -244,7 +275,8 @@ class CrossScopeStore(_Store):
                 self.assertEqual(list(rec["bound"]), bound)
                 self.assertEqual(set(self.fact(a, self.ids[k]).episode_uuids), set(classes))  # verbatim, nothing dropped
         self.assertEqual(a.legacy_upgrade_status()["status"], "legacy_qualified")
-        self._expect_after(self.open("project:b"), a)
+        a.close()
+        self._expect_after()
 
     def test_upgrade_is_idempotent_and_durable_across_reopen_and_a_genuine_restart(self):
         a = self.open("project:a")
@@ -343,11 +375,17 @@ class NoFabrication(_Store):
         adapter = h.runtime.adapter
         substrate = adapter._substrate
         scopes_before = {k: dict(v) for k, v in adapter._fact_scope.items()}
+        memory_before = dict(adapter._fact_memory)
+        tombstones_before = {k: dict(v) for k, v in adapter._tombstones.items()}
+        facts_before = {f.uuid for f in substrate.all_facts()}
         report = h.upgrade_canonical_derivation()
         self.assertEqual({k: dict(v) for k, v in adapter._fact_scope.items()}, scopes_before)
-        scopes = adapter._fact_scope
+        self.assertEqual(dict(adapter._fact_memory), memory_before)
+        self.assertEqual({k: dict(v) for k, v in adapter._tombstones.items()}, tombstones_before)
+        self.assertEqual({f.uuid for f in substrate.all_facts()}, facts_before)
+        scopes = scopes_before
         shared_keys = set(adapter._shared_domain_members)
-        tombstoned = set(adapter._tombstones) | {u for t in adapter._tombstones.values() for u in (t.get("deleted_fact_uuids") or ())}
+        tombstoned = set(tombstones_before) | {u for t in tombstones_before.values() for u in (t.get("deleted_fact_uuids") or ())}
         total = 0
         for fact in substrate.all_facts():
             rec = (fact.attributes or {}).get(KEY)
@@ -360,7 +398,7 @@ class NoFabrication(_Store):
             scope_f = scopes.get(fact.uuid)
             for ref, cls in classes.items():
                 total += 1
-                witness = ref in scopes or substrate.get_fact(ref) is not None or ref in adapter._fact_memory or ref in tombstoned
+                witness = ref in scopes or ref in facts_before or ref in memory_before or ref in tombstoned
                 if cls in UNDECIDABLE or cls == "eligible":
                     self.assertIn(ref, rec["bound"], (fact.uuid, ref, cls))
                 else:
