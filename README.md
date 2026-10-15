@@ -79,3 +79,16 @@ The initial site builder copied `native.scored_questions=419` to all LongMemEval
 The builder now **requires** that exact pinned audit for LongMemEval specialized metrics, verifies its source revision and dashboard blob, and rejects missing/mismatched report identities and invalid subset counts. The regenerated presentation snapshot corrects 24 historical `sample_count` observations from 419 to their actual 72/70 subpopulation. Score values, run identities, input selection and acceptance state are unchanged.
 
 Never use total input queries (500), general retrieval evaluated questions (419), knowledge-update evaluated questions (72), or latest-date eligible questions (70) interchangeably. Review each metric's native denominator and exclusion rule when publishing new runs.
+
+## Independently run external benchmarks (October 15, 2026)
+
+A separate **external evaluation directory** is published under `#external-evaluations`. Its versioned source is `data/external-evaluations.json`, rendered by `assets/external-evaluations.js` and checked with `tools/test-external-evaluations.cjs`. Sources link to the current official public evaluation program and directly to upstream methods, not transcribed external score numbers.
+
+Tracked external programs:
+- AML (Agent Memory Leaderboard): participant-hosted Add/Search API and official cycle submissions. **No verified Agent Memory official submission or placement.** Cycle 2 material deadline: October 31, 2026, 23:59 UTC+8.
+- AMB (Agent Memory Benchmark): public upstream native harness and results board. Agent Memory has a source-pinned provider bridge on main, but **the directory does not claim an upstream run or official placement**.
+- MemoryArena: preview research benchmark for multi-session agent task outcomes. **No verified Agent Memory execution**.
+
+Directory maintenance is intentionally separated from the accepted `data/snapshot.json` numeric metrics. No browser-side scraping or remote leaderboard dependency is used. Source links, manual participation status, exact as-of date and next concrete execution step are explicit. An `official_result` may only be added after an external organizer's publicly verifiable result, declared metric+dataset+evaluator version, system commit, date, and independent review. The validator refuses unproven "official" status. External results must not be merged into the accepted same-harness leaderboard or extrapolated as cross-program ranks.
+
+Run `node tools/test-external-evaluations.cjs` and inspect `#external-evaluations` on mobile/keyboard before publication. Updating `gh-pages` will trigger only the native GitHub Pages deployment, not our benchmark CI.
