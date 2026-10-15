@@ -1,0 +1,54 @@
+{
+  "diagnostic_only": true,
+  "authority_effect": "none",
+  "questions": 44,
+  "evidence_sessions": 115,
+  "evidence_sessions_hindsight_top5_agent_memory_below5": 45,
+  "for_those": {
+    "which_arm_ranks_them_higher": {
+      "semantic_ranks_higher": 26,
+      "bm25_ranks_higher": 11,
+      "tie": 8
+    },
+    "semantic_arm_rank_bucket": {
+      "1-5": 44,
+      "11-30": 1
+    },
+    "bm25_arm_rank_bucket": {
+      "6-10": 13,
+      "1-5": 29,
+      "11-30": 3
+    },
+    "agent_memory_rank_bucket": {
+      "11-30": 14,
+      "6-10": 30,
+      ">30": 1
+    }
+  },
+  "all_evidence_sessions": {
+    "semantic_arm_rank_bucket": {
+      "1-5": 109,
+      "6-10": 4,
+      "11-30": 2
+    },
+    "bm25_arm_rank_bucket": {
+      "absent": 3,
+      "11-30": 10,
+      "1-5": 83,
+      "6-10": 19
+    },
+    "hindsight_doc_rank_bucket": {
+      "11-30": 1,
+      "6-10": 7,
+      "1-5": 106,
+      ">30": 1
+    },
+    "agent_memory_doc_rank_bucket": {
+      "11-30": 20,
+      "1-5": 62,
+      "6-10": 32,
+      ">30": 1
+    }
+  },
+  "note": "Ranks are best chunk rank per arm before RRF; Hindsight final rank is the document rank after RRF. Per-question detail is withheld (it names evidence sessions)."
+}
