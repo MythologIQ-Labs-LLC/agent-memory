@@ -1,6 +1,6 @@
 # #819 hidden holdout v2: pre-candidate commitment (for C3 onward)
 
-Registered 2026-10-15 at 17:40 UTC. That is after the C3 freeze notice (`6a2255c0f46daa1d546758daa93f4402fed14108`) arrived, and **before C3 was checked out, inspected or run**.
+Registered 2026-10-15 at 17:30:14 UTC (commit `34688065`). That is after the C3 freeze notice (`6a2255c0f46daa1d546758daa93f4402fed14108`) arrived, and **before C3 was checked out, inspected or run**.
 
 ## Why a new cohort
 
