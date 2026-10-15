@@ -76,6 +76,38 @@
       "state": "not_run",
       "url": "https://github.com/topoteretes/cognee",
       "observed_ids": []
+    },
+    {
+      "id": "jev-mem",
+      "name": "Jev-Mem",
+      "state": "published_reference",
+      "url": "https://github.com/libingzheren/Jev-Mem",
+      "observed_ids": [
+        "jev-mem"
+      ],
+      "published_claim": {
+        "source": "https://github.com/libingzheren/Jev-Mem/blob/7ab0c73c6d8f4f611ad252c1e6ba8083f8df0e44/README.md",
+        "methodology": "Authors' LoCoMo answer-quality score using Jev System-One and GPT-4o-mini as System-Two, LLM judge. NOT local Laya and NOT same-harness LongMemEval retrieval; independent reproduction pending #817.",
+        "signals": {
+          "locomo_overall_paper": 0.777
+        }
+      }
+    },
+    {
+      "id": "mnemon",
+      "name": "Mnemon",
+      "state": "published_reference",
+      "url": "https://github.com/Grivn/mnemon-memory-agent",
+      "observed_ids": [
+        "mnemon"
+      ],
+      "published_claim": {
+        "source": "https://github.com/Grivn/mnemon-memory-agent/blob/c663f138b1b1126cb7313dac9aa443820922e891/README.md",
+        "methodology": "Authors' LoCoMo answer-quality score under their gpt-4.1-mini answer/judge protocol. NOT same-harness as Jev's paper or Agent Memory's retrieval rows. Independent reproduction required.",
+        "signals": {
+          "locomo_overall_author_report": 0.917
+        }
+      }
     }
   ]
 }

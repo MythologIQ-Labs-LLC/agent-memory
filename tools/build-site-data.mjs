@@ -73,7 +73,7 @@ export function makeSnapshot(d,c,o,denoms=null){
    if(metrics.length)profiles.push({profile_id:lane.lane_id+(plane!=="single-turn"?":"+plane:""),lane_id:lane.lane_id,plane,accepted_on:lane.accepted_on||null,benchmark_file:"https://github.com/"+o.repo+"/blob/"+o.head+"/"+validatePath(lane.lane_file),input_sha256:lane.input_sha256,harness_revision:lane.harness_revision,llm_calls:lane.llm_calls===true,method_note:lane.reading_rule||lane.note||"",metrics});
   }
  }
- const ids=new Set(), competitors=[];
+ const ids=new Set(), competitors=[], catalogClaims=[];
  for(const citem of c.systems){
   if(!/^[a-z0-9][a-z0-9-]*$/.test(citem.id)||ids.has(citem.id)||!citem.name||!/^https:\/\//.test(citem.url))throw Error("Invalid or duplicate comparator entry "+citem.id);
   ids.add(citem.id);
@@ -82,9 +82,22 @@ export function makeSnapshot(d,c,o,denoms=null){
   if(citem.state==="measured"&&!hasEvidence)throw Error("Measured system lacks accepted evidence: "+citem.id);
   if(citem.state==="not_run"&&hasEvidence)throw Error("System marked not_run has accepted evidence: "+citem.id);
   competitors.push({id:citem.id,name:citem.name,state:citem.state,url:citem.url,observed_ids:citem.observed_ids||[]});
+  if(citem.published_claim){
+   const claim=citem.published_claim;
+   if(citem.state!=="published_reference"||
+      !/^https:\/\/github\.com\/[^/]+\/[^/]+\/blob\/[a-f0-9]{40}\//.test(claim.source||"")||
+      !claim.methodology||typeof claim.methodology!=="string"||
+      !claim.signals||typeof claim.signals!=="object"||
+      !Object.values(claim.signals).every(v=>typeof v==="number"&&Number.isFinite(v)&&v>=0&&v<=1)) {
+     throw Error("Unqualified external published claim: "+citem.id);
+   }
+   catalogClaims.push({system:citem.name,source:claim.source,methodology:claim.methodology,
+     signals:claim.signals,comparison_state:"published_reference",
+     eligible_for_numeric_delta:false});
+  }
  }
  if(!ids.has("tencentdb-agent-memory"))throw Error("TencentDB comparator missing");
- const published=(d.published_reference||[]).map(x=>({...x,comparison_state:"published_reference",eligible_for_numeric_delta:false}));
+ const published=[...(d.published_reference||[]).map(x=>({...x,comparison_state:"published_reference",eligible_for_numeric_delta:false})),...catalogClaims];
  return {schema_version:1,kind:"static_read_only_benchmark_projection",source:{repository:"https://github.com/"+o.repo,head:o.head,dashboard_path:"reports/benchmarks/dashboard/current.json",dashboard_blob:o.blob,dashboard_as_of:d.as_of,authority_effect:"none",...(denoms?{denominator_audit_path:"data/longmemeval-denominator-audit.json",denominator_audit_blob:o.denomBlob}:{})},safety:{same_harness:"Comparisons only within one accepted frozen lane, plane and native metric.",published_reference:"Vendor/research figures are not same-harness results.",not_run:"Not run is not zero.",runtime_qualification:"Benchmark scores are not production readiness, truth or authority.",no_universal_score:true},profiles,competitors,published_reference:published,issues:{competitive:"https://github.com/"+o.repo+"/issues/806",website:"https://github.com/"+o.repo+"/issues/807"}};
 }
 

@@ -41,6 +41,15 @@ assert.equal(snapshot.measuredIds.includes('agent-memory'),false);
 const output = csv(snapshot);
 assert.ok(output.includes(data.source.head));
 assert.ok(!output.includes('tencentdb'));
+assert.equal(data.competitors.some(x=>x.id==='jev-mem'&&x.state==='published_reference'),true);
+assert.equal(data.competitors.some(x=>x.id==='mnemon'&&x.state==='published_reference'),true);
+const Jev=data.published_reference.find(x=>x.system==='Jev-Mem');
+assert.equal(Jev.signals.locomo_overall_paper,0.777);
+assert.equal(Jev.eligible_for_numeric_delta,false);
+assert.equal(snapshot.measuredIds.includes('jev-mem'),false);
+assert.equal(snapshot.measuredIds.includes('mnemon'),false);
+assert.ok(!output.includes('jev-mem'));
+
 assert.equal(output.trim().split(/\r?\n/).length,85);
 negative(x=>{x.profiles[0].metrics[0].rows[0].run_url='https://example.com/not-pinned.json'},/not pinned/);
 negative(x=>{x.competitors.find(s=>s.id==='mem0').state='not_run'},/not registered as measured/);
