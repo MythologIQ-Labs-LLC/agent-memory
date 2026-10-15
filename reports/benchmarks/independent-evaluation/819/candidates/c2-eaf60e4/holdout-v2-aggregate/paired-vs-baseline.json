@@ -1,0 +1,31 @@
+{
+ "kind": "holdout",
+ "plane": null,
+ "paired_n": 208,
+ "base_pass": 59,
+ "cand_pass": 151,
+ "classes": {
+  "improved": 105,
+  "regressed": 13,
+  "unchanged_fail": 44,
+  "unchanged_pass": 46
+ },
+ "mcnemar_exact_p": 0.0,
+ "delta_pass_rate_ci95": [
+  0.4423,
+  0.3606,
+  0.524
+ ],
+ "delta_precision_ci95": [
+  0.177,
+  0.1004,
+  0.2529
+ ],
+ "delta_recall_ci95": [
+  -0.1894,
+  -0.2443,
+  -0.1345
+ ],
+ "cand_hard_gate_leaks": 0,
+ "base_hard_gate_leaks": 0
+}

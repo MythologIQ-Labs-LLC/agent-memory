@@ -1,0 +1,44 @@
+{
+  "argv": [
+    "/tmp/eval/amb-venv-c3/bin/python",
+    "reference/run_longmemeval.py",
+    "--backend",
+    "agent_memory",
+    "--input",
+    "/tmp/agent-memory-benchmark-data/longmemeval_s_cleaned.json",
+    "--corpus-class",
+    "external_frozen",
+    "--granularity",
+    "session",
+    "--granularity",
+    "turn",
+    "--output",
+    "/tmp/eval/evidence/c3-lme500.json"
+  ],
+  "cwd": "/tmp/eval/am-c3",
+  "exit_status": 0,
+  "started_utc": "2026-10-15T17:34:47Z",
+  "wall_seconds": 2999.251,
+  "user_cpu_seconds": 1215.193,
+  "system_cpu_seconds": 79.717,
+  "peak_rss_mib": 92.2,
+  "env": {
+    "HF_HOME": null,
+    "HF_HUB_OFFLINE": null,
+    "TRANSFORMERS_OFFLINE": null,
+    "JEV_MEM_SOURCE_ROOT": null,
+    "PYTHONHASHSEED": "0",
+    "VIRTUAL_ENV": null,
+    "OMP_NUM_THREADS": null
+  },
+  "secrets_present": {
+    "OPENAI_API_KEY": false,
+    "TYPESAFE_API_KEY": false,
+    "HF_TOKEN": false
+  },
+  "host": {
+    "platform": "Linux-6.18.44-fc-v114-x86_64-with-glibc2.39",
+    "cpu_count": 4,
+    "python": "3.12.3"
+  }
+}
