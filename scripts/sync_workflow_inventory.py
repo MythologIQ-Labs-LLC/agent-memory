@@ -182,7 +182,27 @@ def sync_inventory(inventory: dict[str, Any], root: Path) -> dict[str, Any]:
         missing_timeout += not fields["timeoutState"]["explicit"]
         if {"pull_request", "push"} & set(fields["triggers"]) and not fields["concurrencyState"]["configured"]:
             supersedable_without += 1
+    # Recompute every summary aggregate from exactly the registered workflow files.
+    # Classifications stay human-reviewed; counts must never silently become stale.
+    registered = [row["path"] for row in synced["records"]]
+    if len(set(registered)) != len(registered) or set(registered) != set(by_path):
+        raise ValueError("workflow inventory missing or duplicate file registration")
     summary = synced["inventorySummary"]
+    summary["workflowCount"] = len(registered)
+    for field, target in (
+        ("lifecycleClass", "lifecycleCounts"),
+        ("proposedDisposition", "dispositionCounts"),
+        ("consequenceClass", "consequenceCounts"),
+    ):
+        tally: dict[str, int] = {}
+        for row in synced["records"]:
+            kind = row[field]
+            tally[kind] = tally.get(kind, 0) + 1
+        # Preserve existing stable key order in the JSON report.
+        existing = list(summary.get(target, {}))
+        summary[target] = {kind: tally.get(kind, 0) for kind in existing}
+        for kind in sorted(set(tally) - set(existing)):
+            summary[target][kind] = tally[kind]
     summary["triggerCounts"] = dict(sorted(counts.items()))
     summary["missingExplicitTimeoutCount"] = missing_timeout
     summary["artifactUploadWithoutExplicitRetentionCount"] = missing_retention
