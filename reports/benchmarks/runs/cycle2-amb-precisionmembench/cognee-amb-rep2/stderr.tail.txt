@@ -1,0 +1,40 @@
+2026-10-15 17:28:06,568 [INFO] [query:relation-type-expands-participants] done in 0.4s — correct=False score=None
+2026-10-15 17:28:06,569 [INFO] [query:relation-participant-open-question-routes-correctly] start — session backend dependency graph
+2026-10-15 17:28:07,550 [INFO] [query:relation-participant-open-question-routes-correctly] answer done in 1.0s (retrieve=981ms)
+2026-10-15 17:28:07,551 [INFO] [query:relation-participant-open-question-routes-correctly] done in 1.0s — correct=False score=None
+2026-10-15 17:28:07,551 [INFO] [query:relation-expansion-respects-scope-filter] start — auth redis failure modes
+2026-10-15 17:28:07,989 [INFO] [query:relation-expansion-respects-scope-filter] answer done in 0.4s (retrieve=438ms)
+2026-10-15 17:28:07,990 [INFO] [query:relation-expansion-respects-scope-filter] done in 0.4s — correct=False score=None
+2026-10-15 17:28:07,990 [INFO] [query:subtype-expertise-retrieval] start — what's my react depth — should you explain hooks to me?
+2026-10-15 17:28:08,364 [INFO] [query:subtype-expertise-retrieval] answer done in 0.4s (retrieve=374ms)
+2026-10-15 17:28:08,365 [INFO] [query:subtype-expertise-retrieval] done in 0.4s — correct=False score=None
+2026-10-15 17:28:08,366 [INFO] [query:pinned-plus-resolved-excluded-from-questions] start — API versioning strategy for v2 migration
+2026-10-15 17:28:08,802 [INFO] [query:pinned-plus-resolved-excluded-from-questions] answer done in 0.4s (retrieve=436ms)
+2026-10-15 17:28:08,802 [INFO] [query:pinned-plus-resolved-excluded-from-questions] done in 0.4s — correct=False score=None
+2026-10-15 17:28:08,803 [INFO] [query:zero-reinforcement-fresh-belief-surfaces] start — how is our Turborepo monorepo structured?
+2026-10-15 17:28:09,328 [INFO] [query:zero-reinforcement-fresh-belief-surfaces] answer done in 0.5s (retrieve=524ms)
+2026-10-15 17:28:09,328 [INFO] [query:zero-reinforcement-fresh-belief-surfaces] done in 0.5s — correct=False score=None
+2026-10-15 17:28:09,328 [INFO] [query:budget-zero-graceful-empty] start — what's our stack?
+2026-10-15 17:28:09,870 [INFO] [query:budget-zero-graceful-empty] answer done in 0.5s (retrieve=541ms)
+2026-10-15 17:28:09,870 [INFO] [query:budget-zero-graceful-empty] done in 0.5s — correct=True score=None
+2026-10-15 17:28:09,870 [INFO] [query:budget-one-pinned-wins-over-relevant] start — MongoDB collection typing patterns
+2026-10-15 17:28:10,374 [INFO] [query:budget-one-pinned-wins-over-relevant] answer done in 0.5s (retrieve=504ms)
+2026-10-15 17:28:10,374 [INFO] [query:budget-one-pinned-wins-over-relevant] done in 0.5s — correct=True score=None
+2026-10-15 17:28:10,374 [INFO] [query:multi-scope-code-writing-dedup-no-double-surface] start — what tools do we use?
+2026-10-15 17:28:10,841 [INFO] [query:multi-scope-code-writing-dedup-no-double-surface] answer done in 0.5s (retrieve=466ms)
+2026-10-15 17:28:10,841 [INFO] [query:multi-scope-code-writing-dedup-no-double-surface] done in 0.5s — correct=False score=None
+2026-10-15 17:28:10,842 [INFO] [query:empty-alias-belief-content-path-only] start — should you give me one recommendation or a list of options?
+2026-10-15 17:28:11,266 [INFO] [query:empty-alias-belief-content-path-only] answer done in 0.4s (retrieve=424ms)
+2026-10-15 17:28:11,267 [INFO] [query:empty-alias-belief-content-path-only] done in 0.4s — correct=False score=None
+2026-10-15 17:28:11,268 [INFO] [query:universal-scope-explicit-query-no-relevant] start — how do I want you to respond to me?
+2026-10-15 17:28:11,780 [INFO] [query:universal-scope-explicit-query-no-relevant] answer done in 0.5s (retrieve=512ms)
+2026-10-15 17:28:11,781 [INFO] [query:universal-scope-explicit-query-no-relevant] done in 0.5s — correct=False score=None
+2026-10-15 17:28:11,781 [INFO] [query:negation-query-still-surfaces-rejected-tool] start — I do NOT want to use Express, what should I use instead?
+2026-10-15 17:28:12,156 [INFO] [query:negation-query-still-surfaces-rejected-tool] answer done in 0.4s (retrieve=375ms)
+2026-10-15 17:28:12,157 [INFO] [query:negation-query-still-surfaces-rejected-tool] done in 0.4s — correct=False score=None
+2026-10-15 17:28:12,157 [INFO] [query:superseded-chain-query-terminal-only] start — TSLint migration path
+2026-10-15 17:28:12,527 [INFO] [query:superseded-chain-query-terminal-only] answer done in 0.4s (retrieve=370ms)
+2026-10-15 17:28:12,527 [INFO] [query:superseded-chain-query-terminal-only] done in 0.4s — correct=False score=None
+2026-10-15 17:28:12,528 [INFO] [query:relation-does-not-appear-as-entity] start — Redis session backend dependency graph
+2026-10-15 17:28:12,954 [INFO] [query:relation-does-not-appear-as-entity] answer done in 0.4s (retrieve=426ms)
+2026-10-15 17:28:12,955 [INFO] [query:relation-does-not-appear-as-entity] done in 0.4s — correct=False score=None

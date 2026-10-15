@@ -1,0 +1,39 @@
+
+Dataset: precisionmembench  Split: single-turn  Memory: cognee-local  Mode: 
+retrieval
+
+Loading queries...
+  77 queries loaded
+Loading documents...
+  35 documents loaded
+Ingesting into cognee-local...
+  ingested in 1362244ms (38921.2ms/doc avg)
+
+  Evaluating ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:33
+
+Saved → 
+/tmp/c2/evidence/cognee-amb-rep1/amb-outputs/precisionmembench/cognee-local/retr
+ieval/single-turn.json
+        Results —        
+precisionmembench/single-
+  turn | cognee-local |  
+        retrieval        
+┏━━━━━━━━━━━━━━━┳━━━━━━━┓
+┃ Metric        ┃ Value ┃
+┡━━━━━━━━━━━━━━━╇━━━━━━━┩
+│ Total queries │    77 │
+│ Correct       │     9 │
+│ Accuracy      │ 11.7% │
+└───────────────┴───────┘
+             PrecisionMemBench             
+┏━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┓
+┃ Metric                 ┃          Value ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━┩
+│ Active passes          │           0/43 │
+│ Structural passes      │           6/25 │
+│ Trivially-empty passes │            3/9 │
+│ Total passes           │           9/77 │
+│ Mean precision         │           0.06 │
+│ Mean recall            │           0.99 │
+│ ID resolution          │ source_id=1371 │
+└────────────────────────┴────────────────┘

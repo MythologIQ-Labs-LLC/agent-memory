@@ -1,0 +1,145 @@
+{
+  "schema_version": "1.0.0",
+  "run_id": "cycle2-amb-cognee-amb-rep2",
+  "normalized_run": {
+    "uri": "reports/benchmarks/runs/cycle2-amb-precisionmembench/cognee-amb-rep2/single-turn.json",
+    "sha256": "4ef78494e0b1bc1caa8374f39be4ff1b86c8262d0f293e21bc3fcc50907166db"
+  },
+  "benchmark": {
+    "id": "amb-precisionmembench-retrieval",
+    "task_profile": "amb-precisionmembench-retrieval:single-turn:query-only",
+    "dataset_revision": "vectorize-io/agent-memory-benchmark@03c1d0f fixtures beliefs.seed.json 35659b3b + retrieval.cases.json 09e99f08",
+    "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+    "selection_id": "full upstream precisionmembench single-turn split",
+    "sample_count": 77,
+    "evaluator_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+    "excluded_count": 0
+  },
+  "system": {
+    "id": "cognee",
+    "revision": "1.6.4@f154b32a9e544dac73e7ddf2010327cf9988edcd",
+    "adapter_id": "reference/competitor_service.py (cognee-local) + reference/amb_service_provider.py",
+    "adapter_revision": "git-blob:9d2b5b22642566b80a8c4fd3152d2dba001fa52d + git-blob:32e0e93e0ed410f65487e4c75a6db32df400b710",
+    "configuration_sha256": "ca85d857478e2c8a7004df0ac15fc22250786813e85e2e3998944760c714a355",
+    "worktree_clean": true,
+    "build_sha256": null
+  },
+  "timing": {
+    "started_at": "2026-10-15T16:52:16Z",
+    "finished_at": "2026-10-15T17:28:17.938000Z",
+    "elapsed_ms": 2161938
+  },
+  "hardware": {
+    "os": "Linux",
+    "os_release": "6.18.44-fc-v114",
+    "architecture": "x86_64",
+    "cpu_model": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+    "cpu_cores": 4,
+    "ram_bytes": 16874930176,
+    "gpus": []
+  },
+  "environment": {
+    "runtime": "CPython",
+    "runtime_version": "3.13.16",
+    "isolation": "cloud_sandbox",
+    "container_digest": null,
+    "dependency_lock_sha256": "8c69ab4eb1d6957583030d539f09da0b19eb830c01b78439823889b7889b1bd6",
+    "network_access": "restricted",
+    "notes": [
+      "CPU (4 vCPU) shared with other benchmark processes; latencies are indicative only, not comparative performance measurements.",
+      "Models (GLiNER, embedder) were cached on first use; HF offline at run time.",
+      "execution.timeout_ms 0 = no runner-level timeout (per-call product timeouts recorded in configuration where they exist)."
+    ]
+  },
+  "inference": {
+    "used": false,
+    "calls": []
+  },
+  "execution": {
+    "command_sha256": "e26669bf63cd835ba76b4026797ceab9fc0fadc6b0bd725f6a54a529e501372a",
+    "argv_redacted": [
+      "/tmp/c2/amb-venv/bin/python",
+      "/tmp/c2/am/reference/run_amb_external.py",
+      "--amb-root",
+      "/tmp/eval/amb",
+      "--",
+      "run",
+      "--dataset",
+      "precisionmembench",
+      "--split",
+      "single-turn",
+      "--memory",
+      "cognee-local",
+      "--mode",
+      "retrieval",
+      "--output-dir",
+      "/tmp/c2/evidence/cognee-amb-rep2/amb-outputs"
+    ],
+    "random_seed": 0,
+    "timeout_ms": 0,
+    "retries": 0,
+    "context_budget_tokens": null,
+    "retrieval_top_k": 20,
+    "stdout_sha256": "72bda43e4e409f861931ebb74c6bcdf15dc9fe575a86a155e0c3efd033ee609c",
+    "stderr_sha256": "2c041d5cb8c3d1c467bc69436dfedee536a748b8a97f61df62b14f33730af37d",
+    "exit_code": 0,
+    "peak_rss_bytes": 956829696,
+    "peak_vram_bytes": null,
+    "latency_p50_ms": null,
+    "latency_p95_ms": null
+  },
+  "costs": {
+    "status": "not_measured",
+    "currency": "USD",
+    "amount": null,
+    "input_tokens": null,
+    "output_tokens": null,
+    "billing_reference_sha256": null
+  },
+  "artifacts": [
+    {
+      "kind": "row_level_results",
+      "uri": "reports/benchmarks/runs/cycle2-amb-precisionmembench/cognee-amb-rep2/single-turn.json",
+      "sha256": "4ef78494e0b1bc1caa8374f39be4ff1b86c8262d0f293e21bc3fcc50907166db"
+    },
+    {
+      "kind": "execution_log",
+      "uri": "reports/benchmarks/runs/cycle2-amb-precisionmembench/cognee-amb-rep2/execution-identity.json",
+      "sha256": "c9121d4e59fcdfc0954723749b41b021bff717dffeafe6203e868ed8fc4aef0a"
+    },
+    {
+      "kind": "execution_log",
+      "uri": "reports/benchmarks/runs/cycle2-amb-precisionmembench/cognee-amb-rep2/stdout.txt",
+      "sha256": "72bda43e4e409f861931ebb74c6bcdf15dc9fe575a86a155e0c3efd033ee609c"
+    },
+    {
+      "kind": "execution_log",
+      "uri": "reports/benchmarks/runs/cycle2-amb-precisionmembench/cognee-amb-rep2/stderr.txt",
+      "sha256": "2c041d5cb8c3d1c467bc69436dfedee536a748b8a97f61df62b14f33730af37d"
+    },
+    {
+      "kind": "other",
+      "uri": "reports/benchmarks/runs/cycle2-amb-precisionmembench/cognee-venv-freeze.txt",
+      "sha256": "8c69ab4eb1d6957583030d539f09da0b19eb830c01b78439823889b7889b1bd6"
+    }
+  ],
+  "redaction": {
+    "reviewed": true,
+    "contains_secrets": false,
+    "contains_private_data": false,
+    "note": "Allowlisted environment with no tokens; argv contains only local paths and flags. Dataset is the public AMB PrecisionMemBench fixture."
+  },
+  "review": {
+    "status": "candidate",
+    "reviewer": null,
+    "decision_ref": null,
+    "limitations": [
+      "Measures retrieval only (AMB retrieval mode, no LLM answer or judge); not AMB's LLM-judged QA, not an official AMB leaderboard entry.",
+      "Protocol tier A: query-only provider (supports_filters=False); AMB's structured scope/type filters are not passed.",
+      "Candidate: requires independent adapter/protocol review before acceptance.",
+      "Measures Cognee's documented no-LLM local GLiNER mode, not its LLM cognify graph mode."
+    ],
+    "comparison_eligibility": "not_assessed"
+  },
+  "authority_effect": "none"
+}
