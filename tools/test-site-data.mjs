@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {makeSnapshot} from './build-site-data.mjs';
+import {makeSnapshot,sampleInfo} from './build-site-data.mjs';
 const REPO='MythologIQ-Labs-LLC/agent-memory', SHA='a'.repeat(40);
 const lane={lane_id:'parity-v1',status:'accepted',accepted_on:'2026-10-01',input_sha256:'b'.repeat(64),harness_revision:SHA,lane_file:'lanes/parity-v1.json',llm_calls:false,accepted_rows:[
 {provider:'agent_memory',role:'control',system_revision:SHA,evidence:'runs/am.json',native:{'recall_all@5':0.6,scored_questions:20}},
@@ -21,3 +21,9 @@ assert.throws(()=>run(dashboard,{...registry,systems:[...registry.systems,regist
 assert.throws(()=>run({...dashboard,competitive_evidence:{frozen_lanes:[{...lane,accepted_rows:lane.accepted_rows.map((r,i)=>i===0?{...r,evidence:'../secret.json'}:r)]}}),/Untrusted evidence path/);
 assert.throws(()=>run({...dashboard,competitive_evidence:{frozen_lanes:[{...lane,accepted_rows:lane.accepted_rows.map((r,i)=>i===0?{...r,native:{'recall_all@5':1.6}}:r)]}}),/Invalid fraction/);
 console.log('PASS: deterministic leaderboard projection, status guards, source pinning, and evidence validation');
+
+assert.equal(sampleInfo({native:{total_passes:'15/77'}},'amb-precisionmembench-retrieval-v1').value,77);
+assert.equal(sampleInfo({native:{total_passes:'6/0'}},'amb-precisionmembench-retrieval-v1').value,null);
+assert.equal(sampleInfo({native:{total_passes:'78/77'}},'amb-precisionmembench-retrieval-v1').value,null);
+assert.equal(sampleInfo({native:{total_passes:'15/77'}},'unrelated-benchmark-v1').value,null);
+assert.equal(sampleInfo({native:{scored_questions:23}},'longmemeval-parity-v1').value,23);

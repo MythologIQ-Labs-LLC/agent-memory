@@ -65,3 +65,9 @@ python -m http.server 8000
 For keyboard/mobile QA, inspect `http://localhost:8000/#coverage`: coverage counts, horizontal-scroll table, columns, evidence gaps, CSV download and focus. **This is an evidence surface, not a new benchmark scoring authority.**
 
 Publication rule: test/review in an isolated branch first; updating the configured `gh-pages` branch runs GitHub's native Pages workflow and must be coordinated with the organization's Actions-spend controls. Do not merge this publication branch into `main`.
+
+## Recovered accepted AMB query denominators
+
+The initial Pages snapshot omitted `sample_count` for six AMB evidence records. The frozen AMB lane's `native.total_passes` includes a `passes/77` population denominator, and each of the six exact raw evidence files at canonical commit `38f6a7dcc358e8ee50a38d703b0addb9d8e660d7` independently records both `input.query_count=77` and `native_summary.total_queries=77`. `data/amb-query-count-audit.json` pins the six raw Git blob identities and the cross-check. Therefore the deterministic site builder now exposes `sample_count: 77` on its 12 AMB mean precision/recall metric observations, with `sample_count_source` explicitly naming the accepted native denominator. This is **total query population**, not the benchmark's separate active/structural subpopulation. No scores, sample selection, raw evidence or acceptance status were changed.
+
+Future unmatched sample denominators remain null. The builder's additional tests reject malformed, zero and out-of-bounds native count strings and do not apply AMB-specific inferences to other benchmark families.

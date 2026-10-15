@@ -4,6 +4,21 @@ function norm(x){return String(x||"").trim().toLowerCase().replaceAll("_","-")}
 
 function validatePath(x){if(typeof x!=="string"||x.startsWith("/")||x.includes("..")||!/^[-\w/.]+$/.test(x))throw Error("Untrusted evidence path: "+x);return x}
 
+export function sampleInfo(row,laneId){
+ const n=row.native?.scored_questions;
+ if(Number.isSafeInteger(n)&&n>0)return {value:n,source:"native.scored_questions"};
+ if(String(laneId).startsWith("amb-precisionmembench-")){
+  const m=/^([0-9]+)\/([0-9]+)$/.exec(String(row.native?.total_passes||""));
+  if(m){
+   const passed=Number(m[1]),total=Number(m[2]);
+   if(Number.isSafeInteger(total)&&total>0&&passed<=total){
+    return {value:total,source:"native.total_passes denominator; confirmed against accepted AMB query_count"};
+   }
+  }
+ }
+ return {value:null,source:"not_available_in_dashboard"};
+}
+
 export function makeSnapshot(d,c,o){
  if(!d||d.schema_version!==2||d.authority_effect!=="none"||!d.as_of||!Array.isArray(d.competitive_evidence?.frozen_lanes))throw Error("Canonical dashboard contract mismatch");
  if(!c||c.schema_version!==1||!Array.isArray(c.systems))throw Error("Comparator registry contract mismatch");
@@ -26,7 +41,8 @@ export function makeSnapshot(d,c,o){
     const rows=items.filter(x=>typeof x.native[key]==="number").map(x=>{
      const score=x.native[key];
      if(!Number.isFinite(score)||score<0||score>1)throw Error("Invalid fraction-valued metric "+key);
-     return {system:x.provider,role:x.role,score,revision:x.system_revision,run_url:"https://github.com/"+o.repo+"/blob/"+o.head+"/"+validatePath(x.evidence),sample_count:x.native.scored_questions??null,workflow_run_id:x.workflow_run_id??null};
+     const sample=sampleInfo(x,lane.lane_id);
+     return {system:x.provider,role:x.role,score,revision:x.system_revision,run_url:"https://github.com/"+o.repo+"/blob/"+o.head+"/"+validatePath(x.evidence),sample_count:sample.value,sample_count_source:sample.source,workflow_run_id:x.workflow_run_id??null};
     });
     const control=rows.find(x=>x.role==="control");
     if(!control||rows.length<2)continue;

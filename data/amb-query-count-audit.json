@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "kind": "historical_publication_sample_count_audit",
+  "authority_effect": "none",
+  "source_commit": "38f6a7dcc358e8ee50a38d703b0addb9d8e660d7",
+  "interpretation": "Query population size for AMB mean precision and mean recall, not the active/structural subpopulation.",
+  "raw_source_records": 6,
+  "all_six_input_and_native_query_counts_agree": true,
+  "records": [
+    {
+      "path": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v1/agent-memory-703be5ba1c7e/evidence.json",
+      "git_blob": "512709f32220c9406b949a103d3c37c0fb51c0c1",
+      "input_query_count": 77,
+      "native_total_queries": 77,
+      "native_total_passes": 15,
+      "lane_id": "amb-precisionmembench-retrieval-v1",
+      "row_provider": "agent-memory",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd"
+    },
+    {
+      "path": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v1/bm25-703be5ba1c7e/evidence.json",
+      "git_blob": "96119a7b0a13177599280c8345ddcf9cd74078b9",
+      "input_query_count": 77,
+      "native_total_queries": 77,
+      "native_total_passes": 8,
+      "lane_id": "amb-precisionmembench-retrieval-v1",
+      "row_provider": "bm25",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd"
+    },
+    {
+      "path": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v1/mem0-explicit-b38d91631169/evidence.json",
+      "git_blob": "2b9d03446affc46a206d4d2673e211dd19ece826",
+      "input_query_count": 77,
+      "native_total_queries": 77,
+      "native_total_passes": 10,
+      "lane_id": "amb-precisionmembench-retrieval-v1",
+      "row_provider": "mem0-oss",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd"
+    },
+    {
+      "path": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v2/agent-memory-ca0f9a748b3b/evidence.json",
+      "git_blob": "9df73f922fe3f406062bb05801456c619ace61c1",
+      "input_query_count": 77,
+      "native_total_queries": 77,
+      "native_total_passes": 15,
+      "lane_id": "amb-precisionmembench-retrieval-v2",
+      "row_provider": "agent-memory",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd"
+    },
+    {
+      "path": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v2/bm25-ca0f9a748b3b/evidence.json",
+      "git_blob": "e8a5646b38c93a8c77c0a37b9991e87d8ef19763",
+      "input_query_count": 77,
+      "native_total_queries": 77,
+      "native_total_passes": 8,
+      "lane_id": "amb-precisionmembench-retrieval-v2",
+      "row_provider": "bm25",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd"
+    },
+    {
+      "path": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v2/mem0-explicit-ca0f9a748b3b/evidence.json",
+      "git_blob": "8431ff7f4974a1107dace27e77bdece391c1b952",
+      "input_query_count": 77,
+      "native_total_queries": 77,
+      "native_total_passes": 10,
+      "lane_id": "amb-precisionmembench-retrieval-v2",
+      "row_provider": "mem0-oss",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd"
+    }
+  ]
+}
