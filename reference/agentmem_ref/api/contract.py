@@ -17,16 +17,29 @@ from typing import Any, Mapping, Sequence
 from ..core import policy, receipts
 from ..memory.procedural_memory import ActionProposal
 from ..runtime.adapter import RecallContext
+from ..runtime.return_selection import SELECTION_BASIS, SELECTION_POLICY_ID, SELECTION_POLICY_VERSION
 
+#: Contract 1.9.0 (#819): ``AgentMemory.recall`` returns the relevance-sufficient selection of
+#: the ranked admitted facts by default (``RETURN_SELECTION_POLICY_ID``); the 1.4.0 ranked prefix
+#: stays available as ``recall(..., return_selection="ranked_prefix")``. Numbered after the
+#: 1.7.0/1.8.0 adopted on the unmerged v8 security stack so the two lines cannot collide;
+#: reconcile the number when they integrate.
 #: Contract 1.6.0 (#732): additive ``remember(..., proposition=...)`` and
 #: ``AgentMemory.open(..., proposition_extractor=...)``; both default off.
-CONTRACT_VERSION = "1.6.0"
+CONTRACT_VERSION = "1.9.0"
 
 #: Return budget (contract 1.4.0, #670): a ranked-prefix policy applied after admission and
 #: after ranking; it reads only the ranked admitted list and is never authority.
 RETURN_POLICY_ID = "ranked-prefix-return-budget"
 RETURN_POLICY_VERSION = "1.0.0"
 RETURN_POLICY_BASIS = "post_admission_ranking_prefix"
+
+#: Return selection (contract 1.9.0, #819): relevance-sufficient candidates of the ranked
+#: admitted list, in ranked order, then the budget. Never authority. The identity is owned by
+#: ``runtime.return_selection``.
+RETURN_SELECTION_POLICY_ID = SELECTION_POLICY_ID
+RETURN_SELECTION_POLICY_VERSION = SELECTION_POLICY_VERSION
+RETURN_SELECTION_BASIS = SELECTION_BASIS
 
 PROPOSAL_SCHEMA = "api-proposal-envelope.schema.json"
 RECALL_CONTEXT_SCHEMA = "api-recall-context.schema.json"
@@ -165,6 +178,41 @@ def apply_return_budget(ranked_admitted: Sequence[str], k: int | None) -> tuple[
     }
 
 
+def apply_return_selection(
+    ranked_admitted: Sequence[str], selected: Sequence[str], k: int | None, summary: Mapping[str, Any],
+) -> tuple[list[str], dict]:
+    """The budgeted prefix of the relevance-sufficient selection and its ``return_policy``.
+
+    ``selected`` must be a subsequence of ``ranked_admitted`` (the selection stage only
+    removes); the budget then applies exactly as in :func:`apply_return_budget`. ``applied``
+    means something admitted was not returned, by insufficiency or by the budget.
+    """
+    admitted = list(ranked_admitted)
+    if k is not None and k < 1:
+        raise ValueError("return budget k must be at least 1")
+    chosen = list(selected)
+    positions = {ref: index for index, ref in enumerate(admitted)}
+    order = [positions.get(ref) for ref in chosen]
+    if None in order or order != sorted(order) or len(set(chosen)) != len(chosen):
+        raise ValueError("selected must be a subsequence of the ranked admitted list")
+    returned = chosen if k is None else chosen[:k]
+    return returned, {
+        "policy_id": RETURN_SELECTION_POLICY_ID,
+        "policy_version": RETURN_SELECTION_POLICY_VERSION,
+        "requested_k": k,
+        "applied": len(returned) < len(admitted),
+        "admitted_count": len(admitted),
+        "returned_count": len(returned),
+        "sufficient_count": len(chosen),
+        "withheld_insufficient_count": int(summary["withheld_insufficient_count"]),
+        "abstained": bool(summary["abstained"]),
+        "informative_query_term_count": int(summary["informative_query_term_count"]),
+        "relative_floor": float(summary["relative_floor"]),
+        "basis": RETURN_SELECTION_BASIS,
+        "authority_effect": "none",
+    }
+
+
 def result(stage: str, compat: str, **fields: Any) -> dict:
     """A result envelope, validated against its schema before it is returned."""
     document = {"contract_version": CONTRACT_VERSION, "compatibility": compat, "stage": stage}
@@ -176,6 +224,8 @@ def result(stage: str, compat: str, **fields: Any) -> dict:
 __all__ = [
     "CONTRACT_VERSION", "CURRENT", "MIGRATION_REQUIRED", "INCOMPATIBLE", "UNKNOWN",
     "RETURN_POLICY_ID", "RETURN_POLICY_VERSION", "RETURN_POLICY_BASIS", "apply_return_budget",
+    "RETURN_SELECTION_POLICY_ID", "RETURN_SELECTION_POLICY_VERSION", "RETURN_SELECTION_BASIS",
+    "apply_return_selection",
     "PUBLIC_PROPOSAL_FIELDS", "TARGET_SCHEMA", "POSTURE_SCHEMA", "ACTION_SCHEMA", "OBSERVATION_SCHEMA", "compatibility", "validate_proposal_envelope",
     "validate_action_envelope", "validate_observation_envelope", "action_from_envelope",
     "validate_recall_context", "validate_target_envelope", "validate_posture_report", "proposal_from_envelope", "recall_context_from_envelope",

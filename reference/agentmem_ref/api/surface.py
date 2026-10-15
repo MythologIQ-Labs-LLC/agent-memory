@@ -30,6 +30,12 @@ from ..core import policy
 from ..memory import action_authority
 from ..runtime import doctor
 from ..runtime.adapter import REPLACEMENT_KINDS, GovernedMemoryAdapter
+from ..runtime.return_selection import (
+    RANKED_PREFIX,
+    RELEVANCE_SUFFICIENT,
+    RETURN_SELECTIONS,
+    select_relevance_sufficient,
+)
 from ..runtime.temporal_intent import declared_temporal, resolve_intent
 from . import contract
 
@@ -255,6 +261,7 @@ SEMANTIC_CANDIDATE_LIMIT = 16
 #: Shadow recall control (contract 1.5.0, #644 T-controller): the controller plans beside the
 #: unchanged default planner; retrieval, admission and ranking are identical in both modes.
 RECALL_CONTROL_DEFAULT = "off"
+RETURN_SELECTION_DEFAULT = RELEVANCE_SUFFICIENT
 RECALL_CONTROL_MODES = ("off", "shadow")
 
 
@@ -836,6 +843,7 @@ class AgentMemory:
         temporal_intent: Mapping[str, Any] | None = None,
         reference_time: str | None = None,
         budget: int | None = None,
+        return_selection: str = RETURN_SELECTION_DEFAULT,
     ) -> dict:
         """Run composed candidate generation followed by one governed admission pass.
 
@@ -843,6 +851,15 @@ class AgentMemory:
         carries at most ``k`` of the ranked admitted facts while ``admitted`` always carries
         the full ranked admitted set; ``return_policy`` records what was returned and why.
         The budget is applied after admission and after ranking and is never authority.
+
+        ``return_selection`` (contract 1.9.0, #819) decides which ranked admitted facts the
+        budget sees. ``"relevance_sufficient"`` (default) keeps exact-identity hits, facts a
+        non-lexical route surfaced, and lexical facts whose informative-term relevance is at
+        least half the best in this recall, and returns nothing when none qualifies (see
+        ``runtime.return_selection``); each admitted fact's decision is in
+        ``admissions[ref]["return_selection"]``. ``"ranked_prefix"`` is the 1.4.0 behaviour:
+        the ranked admitted prefix. Neither changes candidates, admission, ``admitted`` or
+        the ranked order.
 
         ``temporal_intent`` optionally declares what time the query is about
         (``{"mode": "current"|"as_of"|"historical"|"atemporal_or_unspecified"|
@@ -853,6 +870,8 @@ class AgentMemory:
         applicability. Intent only orders admitted candidates (ADR-039, proposed).
         """
         self._require_open()
+        if return_selection not in RETURN_SELECTIONS:
+            raise ValueError(f"return_selection must be one of {RETURN_SELECTIONS}")
         intent = resolve_intent(query, temporal_intent, reference_time=reference_time)
         domains = tuple(target_domain_refs) if target_domain_refs is not None else self._domain_refs()
         envelope = {
@@ -890,8 +909,11 @@ class AgentMemory:
             if candidate in result.refusals:
                 decision["refusal"] = result.refusals[candidate]
             admissions[candidate] = decision
-        returned, return_policy = contract.apply_return_budget(
-            result.ranked_admitted, (validated.get("budget") or {}).get("k"))
+        k = (validated.get("budget") or {}).get("k")
+        if return_selection == RANKED_PREFIX:
+            returned, return_policy = contract.apply_return_budget(result.ranked_admitted, k)
+        else:
+            returned, return_policy = self._select_returned(query, intent, result, admissions, k)
         recall_control = None
         if self._recall_control == "shadow":
             recall_control = self._shadow_recall_control(query, tuple(logical_memory_refs), result, validated)
@@ -906,6 +928,32 @@ class AgentMemory:
             return_policy=return_policy,
             recall_control=recall_control,
         )
+
+    def _select_returned(self, query: str, intent, result, admissions: dict, k: int | None) -> tuple[list[str], dict]:
+        """Relevance-sufficient selection of the ranked admitted list (#819), then the budget.
+
+        Reads only the ranked admitted facts and the routes that surfaced them; records each
+        decision in ``admissions`` (evidence, ``authority_effect: none``).
+        """
+        from ..runtime.runtime_composition import EXACT_IDENTITY_ROUTE, LEXICAL_ROUTE, MULTI_ROUTE_RANKING_POLICY
+
+        substrate = self.runtime.adapter.checkpoint_substrate()
+        routes = {
+            ref: [hit.route_id for hit in result.provenance_for(ref)] for ref in result.ranked_admitted
+        }
+        selected, records, summary = select_relevance_sufficient(
+            result.ranked_admitted,
+            routes,
+            substrate.get_fact,
+            query=query,
+            intent=intent,
+            lexical_route=LEXICAL_ROUTE,
+            exact_identity_route=EXACT_IDENTITY_ROUTE,
+            subordinate_routes=getattr(MULTI_ROUTE_RANKING_POLICY, "subordinate_routes", ()),
+        )
+        for ref, record in records.items():
+            admissions.setdefault(ref, {})["return_selection"] = record
+        return contract.apply_return_selection(result.ranked_admitted, selected, k, summary)
 
     def _shadow_recall_control(self, query: str, logical_memory_refs: tuple[str, ...], result, envelope) -> dict:
         """Plan in shadow beside the executed recall (#644 T-controller S2-S4).

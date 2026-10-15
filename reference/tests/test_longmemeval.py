@@ -186,7 +186,10 @@ class LongMemEvalProfileTests(unittest.TestCase):
             self.assertGreaterEqual(governance["candidate_count_total"], governance["admitted_count_total"])
             self.assertEqual(governance["unmapped_admitted_count_total"], 0)
             for row in backend["rows"]:
-                self.assertEqual(len(row["ranked_top"]), min(row["admitted_count"], M.REPORTED_RANK_DEPTH))
+                # Contract 1.9.0 (#819): `returned` is the relevance-sufficient selection, a subset
+                # of the admitted facts; the runner ranks it to the reported depth.
+                self.assertLessEqual(row["returned_count"], row["admitted_count"])
+                self.assertEqual(len(row["ranked_top"]), min(row["returned_count"], M.REPORTED_RANK_DEPTH))
             self.assertGreater(backend["aggregate"]["headline"]["recall_all@5"], 0.0)
 
     def test_declared_budget_ranks_the_facade_prefix(self) -> None:
@@ -206,7 +209,10 @@ class LongMemEvalProfileTests(unittest.TestCase):
             capped = budgeted["planes"][granularity]["backends"]["agent_memory"]
             self.assertEqual(len(free["rows"]), len(capped["rows"]))
             for row_free, row_capped in zip(free["rows"], capped["rows"]):
-                self.assertEqual(row_free["return_policy"]["applied"], False)
+                # Contract 1.9.0 (#819): unbudgeted, `applied` means only that the selection
+                # withheld something; the budget then truncates the same selection.
+                self.assertEqual(row_free["return_policy"]["applied"],
+                                 row_free["returned_count"] < row_free["admitted_count"])
                 self.assertEqual(row_free["return_policy"]["requested_k"], None)
                 self.assertEqual(row_capped["return_policy"]["requested_k"], 2)
                 self.assertLessEqual(row_capped["returned_count"], 2)
@@ -214,9 +220,12 @@ class LongMemEvalProfileTests(unittest.TestCase):
                 self.assertEqual(row_capped["admitted_count"], row_free["admitted_count"])
             self.assertEqual(
                 capped["governance"]["return_budget_applied_total"],
-                sum(1 for row in free["rows"] if row["admitted_count"] > 2),
+                sum(1 for row in capped["rows"] if row["returned_count"] < row["admitted_count"]),
             )
-            self.assertEqual(free["governance"]["return_budget_applied_total"], 0)
+            self.assertEqual(
+                free["governance"]["return_budget_applied_total"],
+                sum(1 for row in free["rows"] if row["returned_count"] < row["admitted_count"]),
+            )
         with self.assertRaises(ValueError):
             M.configure_agent_memory(budget=0)
         M.configure_agent_memory()

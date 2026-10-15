@@ -137,7 +137,7 @@ class _Case(unittest.TestCase):
 
 class VersionTests(unittest.TestCase):
     def test_versions(self):
-        self.assertEqual(contract.CONTRACT_VERSION, "1.6.0")
+        self.assertEqual(contract.CONTRACT_VERSION, "1.9.0")
         self.assertEqual(ps.CLASSIFIER_VERSION, "1.0.0")
         self.assertEqual(ps.TYPED_CLASSIFIER_VERSION, "1.1.0")
         self.assertEqual(cf.ASSERTION_FILTER_VERSION, "6.1.0")
