@@ -332,6 +332,7 @@ Controls:
 - unreadable, unbound and absent references externally indistinguishable at write and at every public read
 - deletion taint, residue and public withholding follow only the bound derivation
 - deletion completeness preserved for every dependency the writer was entitled to (shared membership at commit, later revocation, physical purge of the source)
+- stores written before the record existed: an explicit governed upgrade reconstructs each legacy edge from durable state only, quarantines undecidable edges (kept bound, reported) and labels the store `legacy_unqualified`, over which no baseline is activated (docs/44 "Legacy upgrade")
 
 ### 19. Promotion-queue flooding
 

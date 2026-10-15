@@ -433,6 +433,15 @@ class InMemoryTemporalGraph:
     def get_fact(self, uuid: str) -> Fact | None:
         return self._facts.get(uuid)
 
+    def rewrite_fact_attributes(self, uuid: str, attributes: Mapping[str, object]) -> None:
+        """Replace one fact's attributes in place (#809 legacy upgrade). Content, identity,
+        provenance references and currentness are untouched; the caller is the governed
+        upgrade, which records what it changed."""
+        fact = self._facts.get(uuid)
+        if fact is None:
+            raise KeyError(uuid)
+        self._facts[uuid] = replace(fact, attributes=dict(attributes))
+
     def get_episode(self, uuid: str) -> Episode | None:
         return self._episodes.get(uuid)
 

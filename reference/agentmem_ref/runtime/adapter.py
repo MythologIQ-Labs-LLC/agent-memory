@@ -43,6 +43,13 @@ from .temporal_intent import DECLARED_TEMPORAL_KEY, declared_temporal, parse_tim
 #: state. Deletion taint, residue and the public withholding read the bound set only.
 DERIVATION_KEY = "canonical_derivation"
 DERIVATION_POLICY = "writer-eligible-at-commit/1"
+#: #809 legacy upgrade: the derivation record a pre-#809 fact receives, reconstructed from durable
+#: state only (reports/validation/809-legacy-upgrade/decision.PREREGISTERED.md).
+RECONSTRUCTED_POLICY = "writer-eligible-reconstructed/1"
+LEGACY_UPGRADE_KEY = "canonical_derivation_upgrade"
+LEGACY_CLASSES = ("eligible", "ineligible_scope", "unknown_reference", "forward_reference",
+                  "membership_undecidable", "order_undecidable", "scope_undecidable")
+LEGACY_UNDECIDABLE = frozenset(("membership_undecidable", "order_undecidable", "scope_undecidable"))
 
 
 class Clock:
@@ -796,6 +803,117 @@ class GovernedMemoryAdapter:
             if self._domain_identity_refusal(ref, self._tenant, context) is None:
                 bound.append(ref)
         return tuple(bound)
+
+    # -- #809 legacy upgrade (reports/validation/809-legacy-upgrade/decision.PREREGISTERED.md) --
+
+    def _legacy_facts(self) -> list[Fact]:
+        return [fact for fact in getattr(self._substrate, "all_facts", tuple)()
+                if DERIVATION_KEY not in (fact.attributes or {})]
+
+    @staticmethod
+    def _id_sequence(ref: str) -> int | None:
+        head, _, tail = str(ref).rpartition("-")
+        return int(tail) if head and tail.isdigit() else None
+
+    def _governance_witness(self, ref: str) -> bool:
+        """Whether this store ever governed ``ref`` as a fact: a scope record, a fact row, a
+        memory binding or a tombstone naming it."""
+        if ref in self._fact_scope or ref in self._fact_memory or ref in self._tombstones:
+            return True
+        if self._substrate.get_fact(ref) is not None:
+            return True
+        return any(ref in (record.get("deleted_fact_uuids") or ()) for record in self._tombstones.values())
+
+    def _classify_legacy_reference(self, fact: Fact, ref: str) -> str:
+        """One class per cited reference of a legacy fact, decided from durable state only:
+        scope records (which survive purge), write provenance, id order, and the current
+        shared-domain keys (never removed by the runtime). Write-time shared membership is not
+        recorded and is never assumed."""
+        if not isinstance(ref, str) or not self._governance_witness(ref):
+            return "unknown_reference"
+        scope_f = self._fact_scope.get(fact.uuid)
+        scope_r = self._fact_scope.get(ref)
+        if scope_f is None or scope_r is None:
+            return "scope_undecidable"
+        own, cited = self._id_sequence(fact.uuid), self._id_sequence(ref)
+        if own is None or cited is None:
+            return "order_undecidable"
+        if cited > own:
+            return "forward_reference"
+        memory_domains, target_domains = set(scope_r["domain_refs"]), set(scope_f["domain_refs"])
+        matching = memory_domains & target_domains
+        if not matching or not set(scope_r.get("required_domain_refs", ())) <= target_domains:
+            return "ineligible_scope"
+        if scope_r.get("project_ref") and scope_r["project_ref"] != scope_f.get("project_ref", ""):
+            return "ineligible_scope"
+        if scope_r.get("task_ref") and scope_r["task_ref"] != scope_f.get("task_ref", ""):
+            return "ineligible_scope"
+        if matching <= set(self._shared_domain_members):
+            return "membership_undecidable"
+        return "eligible"
+
+    def legacy_upgrade_status(self) -> dict:
+        """``fresh`` (no legacy fact, no record), ``legacy_pending`` (legacy facts, no record),
+        or the recorded status of the last upgrade (``legacy_qualified`` / ``legacy_unqualified``)."""
+        record = self.extension_state.get(LEGACY_UPGRADE_KEY)
+        legacy = len(self._legacy_facts())
+        if record is not None:
+            return {"status": record["status"], "legacy_facts": legacy, "record": dict(record)}
+        return {"status": "legacy_pending" if legacy else "fresh", "legacy_facts": legacy, "record": None}
+
+    def upgrade_canonical_derivation(self) -> dict:
+        """Give every legacy fact a reconstructed derivation record (policy
+        ``writer-eligible-reconstructed/1``: ``bound`` = eligible and undecidable references,
+        ``classification`` per reference); ``episode_uuids`` and every other attribute stay
+        verbatim; scope records are never created or altered. Undecidable edges are kept bound
+        and quarantined; a store with any of them reads ``legacy_unqualified``. Idempotent: a
+        later run rewrites nothing and returns the store record. Must run inside the durable
+        runtime's transactional seam so the rewrites publish as one generation."""
+        rewrite = getattr(self._substrate, "rewrite_fact_attributes", None)
+        legacy = self._legacy_facts()
+        existing = self.extension_state.get(LEGACY_UPGRADE_KEY)
+        if existing is not None and not legacy:
+            record = dict(existing)
+            record["runs"] = int(record.get("runs", 1)) + 1
+            record["facts_rewritten"] = 0
+            self.extension_state[LEGACY_UPGRADE_KEY] = record
+            return dict(record)
+        if legacy and rewrite is None:
+            raise RuntimeError("substrate does not support the #809 legacy upgrade (no rewrite_fact_attributes)")
+        edges = {name: 0 for name in LEGACY_CLASSES}
+        quarantined: dict[str, list[str]] = {}
+        for fact in legacy:
+            classification = {ref: self._classify_legacy_reference(fact, ref) for ref in dict.fromkeys(fact.episode_uuids)}
+            bound = [ref for ref, cls in classification.items() if cls == "eligible" or cls in LEGACY_UNDECIDABLE]
+            held = [ref for ref, cls in classification.items() if cls in LEGACY_UNDECIDABLE]
+            for cls in classification.values():
+                edges[cls] += 1
+            if held:
+                quarantined[fact.uuid] = held
+            attributes = dict(fact.attributes or {})
+            attributes[DERIVATION_KEY] = {"policy": RECONSTRUCTED_POLICY, "bound": bound, "classification": classification}
+            rewrite(fact.uuid, attributes)
+        total = len(tuple(getattr(self._substrate, "all_facts", tuple)()))
+        if existing is not None:
+            edges = {k: edges[k] + int(existing.get("edges", {}).get(k, 0)) for k in LEGACY_CLASSES}
+            quarantined = {**{k: list(v) for k, v in existing.get("quarantined", {}).items()}, **quarantined}
+        record = {
+            "policy": RECONSTRUCTED_POLICY,
+            "status": "fresh" if not legacy and existing is None else ("legacy_unqualified" if quarantined else "legacy_qualified"),
+            "facts_total": total,
+            "facts_legacy": len(legacy) + (int(existing.get("facts_legacy", 0)) if existing else 0),
+            "facts_rewritten": len(legacy),
+            "edges": edges,
+            "quarantined": quarantined,
+            "runs": (int(existing.get("runs", 1)) if existing else 0) + 1,
+            "completed_at": self._clock.now(),
+        }
+        if legacy or existing is not None:
+            self.extension_state[LEGACY_UPGRADE_KEY] = dict(record)
+        self._derived_taint_memo = None
+        self._deleted_lineage_cache = None
+        self._semantic_slot_index = None
+        return dict(record)
 
     @staticmethod
     def _derivation_refs(fact: Fact) -> tuple[str, ...]:

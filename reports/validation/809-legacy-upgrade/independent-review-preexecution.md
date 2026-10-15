@@ -86,3 +86,75 @@ Verdict key as in the earlier reviews; BLOCKING = must change before the first e
 - **F-11 (record §3)** Define "legacy fact" (no derivation record) and say that `LegacyOracleDemonstrated` requires the upgrade to be explicit, never implied by `open`.
 
 **One-line verdict: NO** — do not execute the module as committed at `6be46927` on the changed runtime: F-1 makes `CrossScopeStore` and `NoFabrication` mutually unsatisfiable, so one of them would fail on every implementation and the failure would be misread. After F-1 (and the record corrections F-2/F-3/F-4/F-10, which change no expectation, plus F-5..F-8 as test strengthenings), re-baseline on the unmodified head and commit before implementation; with that, the decision is sound in its conclusions (all four durable inputs real; rules decidable; kept-bound quarantine defensible with the stated caveat), the stores are genuinely v7-origin and frozen, and the expectations are derived from the record.
+
+---
+
+## 7. Re-review of the superseding commit `ad52cc9b` (2026-10-15)
+
+**Scope.** `ad52cc9b` (parent `6bdff75b`, which carries the code-review fixes to protected files: `_bound_derivation` loop refactor, reader-context `exclude` in the graph route, `PROTECTED_FACT_ATTRIBUTES` in `checkpoint_migration.py` — no upgrade operation), worktree clean. Read: the diffs `6be46927..ad52cc9b` of `reference/tests/test_809_legacy_upgrade.py` and `reports/validation/809-legacy-upgrade/decision.PREREGISTERED.md`; `NoFabrication._check` at `ad52cc9b` in full; HEAD `adapter.py::_scope_refusal` (1666-1697); `preregistration-baseline-2.log` (head `6bdff75b`, module sha256 `0b018dea…`, `...FFFFFF.`, 9 failed / 4 passed / 12 subtests, the same nine FAILED/SUBFAILED ids as baseline 1); fixture digests (unchanged: `69392381…`, `d157573d…`, `bfb6caea…`). Nothing executed.
+
+### 7.1 Per-item verdicts
+
+| item | change | verdict |
+|---|---|---|
+| F-1 | `edges` expects `unknown_reference: 4` and `scope_undecidable: 0`; `a1`/`a2` records asserted: every classified ref is a `content:sha256:` placeholder, class `unknown_reference`, bound `[]`; record §3/§5 state the placeholder rule and the 7-edge total. | **FIXED.** `CrossScopeStore` and `NoFabrication` now agree (7 = 1 eligible + 2 ineligible + 4 unknown). |
+| F-2 | `scope_undecidable` in `CLASSES`/`UNDECIDABLE` and the docstring; record rule 1 requires no witness at all (`fact_scope`, fact row, `fact_memory`, tombstone) for `unknown_reference`, and quarantines a witnessed reference without a scope record or a citing fact without one. | **FIXED.** |
+| F-3 | table: audit events not durable in the SQLite profile; governed trace in `extension_state["shared_domain_membership_authority"].changes`; `fact_memory` and tombstones added as witnesses; pre-#776 tombstone shape noted. | **FIXED.** |
+| F-4 | rule 4 states the current-keys judgement, the never-removed-key assumption and the conservative direction. | **FIXED.** |
+| F-5 | `NoFabrication` recomputes gates (`_failing_gates`), id order, witness, all-matching-shared; see 7.2/7.3. | **FIXED**, with one non-blocking hardening (7.3). |
+| F-6 | `sc` withheld from `agent:c`; `quarantined == {sm: [s1], sc: [s1], sl: [s1]}`. | **FIXED, DERIVED** (record §5 row 2). |
+| F-7 | `VOLATILE = {runs, completed_at, facts_rewritten}` comparison; `again["facts_legacy"] == 7`; docstring states the no-op-run contract. | **FIXED.** |
+| F-8 | line 209 compares sets. | **FIXED.** |
+| F-9 | record §5a notes the producer-path metadata; fixtures untouched (digests identical). | **FIXED.** |
+| F-10 | record §4 presents readings (a) and (c), states that an unqualified store "still serves the quarantined citers' oracle to its own callers", that (c) is the owner's stricter option needing its own preregistration, and that the status operation is public. | **FIXED.** |
+| F-11 | "legacy fact" defined; the upgrade is explicit and `open` never implies it (pinned by `LegacyOracleDemonstrated`). | **FIXED.** |
+
+Baseline 2 RED/GREEN sets are unchanged from baseline 1 and match the docstring. The intervening protected change in `checkpoint_migration.py` (a migration may not add, alter or remove `write_provenance` or `canonical_derivation`) is consistent with the record: the sanctioned upgrade is a governed runtime operation, not a checkpoint transformer.
+
+### 7.2 Does `_failing_gates` match `_scope_refusal`'s four non-membership gates exactly?
+
+Yes, gate by gate, with the citer's own scope record standing in for the recall context (which is what `_writer_context` built from the same proposal fields at commit):
+- isolation: `_scope_refusal` refuses when `target_domains` is empty or the intersection with `scope["domain_refs"]` is empty (1669-1674); `_failing_gates` fails when `set(scope_r["domain_refs"]) & set(scope_f["domain_refs"])` is empty — an empty target set gives an empty intersection, so the two conditions coincide.
+- required: `required_domains and not required_domains.issubset(target_domains)` (1675) versus `not set(required) <= set(domain_refs)`; the empty set is a subset, so the `required_domains and` guard is implied. Identical.
+- project: `memory_project and context.project_ref != memory_project` (1689-1691) versus `scope_r.get("project_ref") and scope_r["project_ref"] != scope_f.get("project_ref", "")`. Identical, given `context.project_ref == scope_f["project_ref"]`.
+- task: same form (1693-1695). Identical.
+- membership (1678-1687) is deliberately not recomputed; its applicability condition `shared_matches == matching_domains` is exactly the test's `matching <= shared_keys` on a non-empty `matching` (lines 57, 60), and `shared_keys = set(adapter._shared_domain_members)` is the same key set `_scope_refusal` consults.
+`_scope_refusal` returns the first failing gate while `_failing_gates` collects all; for the classification only "any gate fails" is used, so the difference is immaterial. One observation, not a defect: `_failing_gates` reads `scope_r["domain_refs"]` and `scope_f["domain_refs"]` with `[]` (KeyError on a malformed record) where `_scope_refusal` does the same; records restored by `restart_runtime` always carry both keys.
+
+### 7.3 Can the `witness` computation be vacuous?
+
+`witness = ref in scopes or substrate.get_fact(ref) is not None or ref in adapter._fact_memory or ref in tombstoned`, with `tombstoned` = tombstone keys ∪ every `deleted_fact_uuids` (absent in pre-#776 tombstones, handled by `or ()`). It is not vacuous in either direction: for `unknown_reference` it asserts `not witness`, which a real governed reference misclassified as unknown would fail (any of the four sources flips it); for every other class it asserts `witness`, and a placeholder, guess or external id classified as anything but unknown would fail. On the three stores every `ref-NNNN` reference has a scope record and a fact row (or, for a purged id, still the scope record and the tombstone), and every non-fact reference has none, so each branch is exercised. The one weakness: the witness sources are read **after** the upgrade, and only `_fact_scope` is asserted unchanged (line 15); an upgrade that inserted `_fact_memory` entries or tombstone lineage for a reference could manufacture a witness. Far-fetched (the record says `fact_scope` is never created or altered and the upgrade rewrites only the attribute), but cheap to close: snapshot `_fact_memory` and `_tombstones` before the upgrade as well and assert them unchanged. Non-blocking.
+
+Everything else in `_check` is sound: the seq order (`_seq(ref) < _seq(fact.uuid)`, line 50) is required for every class decided after rule 2, matching the rule order; `scope_undecidable` requires a missing scope on either side (41); the bound/unbound split (32-35) follows the record's "bound = eligible + undecidable"; totals and the `legacy_unqualified ⇔ quarantined` equivalence (61-62) close the report against the rows.
+
+### 7.4 Remaining notes
+
+Non-blocking: snapshot `_fact_memory`/`_tombstones` in `NoFabrication` (7.3). Carried from section 3: the choice between readings (a) and (c) is the owner's, now correctly presented as such.
+
+### 7.5 One-line verdict
+
+**YES** — the module as committed at `ad52cc9b` may be executed on the changed runtime once `upgrade_canonical_derivation()` / `legacy_upgrade_status()` are implemented; a failure then is a finding to investigate, never permission to edit the expectations or the record.
+
+---
+
+## 8. Re-review of commit `4b18493f` (2026-10-15): the two first-execution findings
+
+**Scope.** `4b18493f` (parent `ad52cc9b`), read via `git show 4b18493f:<path>` because the worktree carries the uncommitted implementation (`surface.py`, `adapter.py`, `sqlite_substrate.py`, `substrate.py` modified; not reviewed here). Read: the test-module diff `ad52cc9b..4b18493f`, the new `_expect_after`/`test_upgrade_classifies…` and the `NoFabrication._check` snapshot block in full, `first-execution.log` (module sha256 `0b018dea…` = baseline 2; `....F.....`, 9 passed, the two failures with their tracebacks), `preregistration-baseline-3.log` (head `ad52cc9b`, module sha256 `a50cc8d0…`, 9 failed / 4 passed / 12 subtests, the same sets), and `runtime/ranking_policy.py` 411-450 and 595 for the shape of `route_scores` (a flat route→score map), `subordinate_route_scores` and `ordered_before_next_by` (a string). Nothing executed.
+
+### 8.1 Finding (i): recall shapes of `bd` and `bu` differ — harness defect, correctly classified
+
+The traceback shows the first difference at a float (`1.938315` vs `1.591554`) in the recall document; the coordinator's probe attributes all 16 differing fragments to `lexical_relevance_score`, `route_scores`, `raw_score` and `ordered_before_next_by`. I cannot re-run the probe, but the cause is verifiable from the fixture and the module: the v7-written texts are `"… digest foreign deleted"` (bd, three tokens after the query stem), `"… digest foreign live"` (bl, three) and `"… digest unknown"` (bu, two), and each is recalled with its own text as the query, so term overlap and length normalisation differ between bd/bl and bu by construction; the module's `_shape` rounds `*score*` floats to 1e-6, which is far below this difference, does not reach the inner keys of `route_scores`, and does not touch the `ordered_before_next_by` string. In the unit module (fresh stores) the three texts had equal token counts, which is why the same comparison held there. None of the four fields reads the cited reference, its scope or its deletion state: `lexical_relevance_score`/`raw_score` come from text-versus-query scoring, `route_scores` from the routes that produced the candidate (lexical and logical-reference here; the shared-evidence route emits *neighbours* as separate candidates, never a score on the seed, and foreign neighbours are dropped before candidacy), `ordered_before_next_by` from the ranking stage that separated adjacent candidates. So the difference is a property of the frozen fixture texts, not of the runtime, and the fixture cannot be rewritten (frozen, v7-origin). Harness defect: **correctly classified**.
+
+**Does folding those four fields for the unequal-length pairs hide anything?** The comparison that carries the F-R3-2 claim for legacy rows — deleted-foreign versus live-foreign — is `bd` vs `bl`, and it stays at **full fidelity** (line 22); the two texts have equal token counts, so any difference there, including in the four score fields, would be a runtime finding. What the fold removes is only the governed-versus-ungoverned comparison (`bd`/`bl` vs `bu`) *restricted to the four fields*; the rest of the document (candidate multiset, `refusal`, `admission_basis`, `route_provenance`, `rank_position`, history and write semantics) is still compared for all three pairs. A residual channel would have to show up only in a score field and only between "cites a governed foreign fact" and "cites nothing", never between deleted and live; no code path produces that (the scoring inputs are text, query and route membership), and the same pair is pinned at full fidelity on fresh stores by the unit module's `FourReferencesIndistinguishable`. The fold hides nothing an attacker could use. Two small notes: (a) `_fold_scores` leaves `subordinate_route_scores` (ranking_policy 450) unfolded — correct, since it must not be touched when absent, but if it is present and differs for the same token-count reason the test will go RED, not GREEN (safe direction); (b) the "16 fragments" probe output should be committed beside the log so the attribution is checkable, as was done for the replay disclosure.
+
+### 8.2 Finding (ii): `RuntimeCheckpointConflict` — harness defect, correctly classified
+
+The traceback is the stale handle: `a` was opened, performed the upgrade, and was then reused for `self.admitted(a)` after `b` (opened afterwards, at the newer generation) had run governed reads that advanced the generation from 12 to 16; the single-writer generation protocol refuses the stale handle by design (`sqlite_runtime._transactional_operation`). This is the same class of harness fact recorded in section H of the unit-module review (one live facade handle per SQLite store). **Correctly classified.** The serialisation (open B, read, close; open A, read, close; the upgrading handle closed before `_expect_after`, line 57) does not change what is observed: each handle recovers the committed state from disk, which is the post-upgrade view the expectation is about; the stale-handle read was never a legitimate observable. It additionally turns A's `d1`-withheld / `ctl`-admitted assertion into a post-reopen durability check, which strengthens the test.
+
+### 8.3 Other changes and preregistration integrity
+
+`NoFabrication` now snapshots `_fact_scope`, `_fact_memory`, `_tombstones` and the fact set before the upgrade, asserts all four unchanged, and computes `witness` from the snapshots (lines 7-18 of `_check`): the 7.3 hardening, done. No expectation is weakened: the history and write-semantics channels are unchanged, `bd` vs `bl` on recall is now explicitly at full fidelity, and the folded comparisons are the only concession, justified by the frozen texts. Baseline 3 reproduces the fail-first sets on `ad52cc9b` with the superseding module's sha256 recorded; the first-execution log records the module sha256 that was executed (baseline 2's) and the runtime blob ids. The nine tests that passed on the first execution — status, idempotence/durability/restart, shared-membership quarantine, forward reference, fresh store, no-fabrication on all three stores — were not touched except by the strengthening above.
+
+### 8.4 One-line verdict
+
+**YES** — the module as committed at `4b18493f` may be executed on the implemented runtime; both first-execution failures are harness defects whose corrections hide nothing, and a failure on the second execution is a finding to investigate, never permission to edit the expectations.

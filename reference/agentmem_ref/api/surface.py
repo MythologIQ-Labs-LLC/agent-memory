@@ -1312,6 +1312,26 @@ class AgentMemory:
         return contract.result("posture", contract.CURRENT, posture=report)
 
     @_serialized
+    def legacy_upgrade_status(self) -> dict:
+        """#809: whether this store carries facts persisted before canonical derivation was
+        recorded (``fresh`` / ``legacy_pending``) and, once upgraded, the recorded status
+        (``legacy_qualified`` / ``legacy_unqualified``). Read-only; never authority."""
+        self._require_open()
+        return self.runtime.adapter.legacy_upgrade_status()
+
+    @_serialized
+    def upgrade_canonical_derivation(self) -> dict:
+        """#809 legacy upgrade: an explicit governed operation (never implied by ``open``) that
+        gives every pre-#809 fact a derivation record reconstructed from durable state only,
+        keeps undecidable edges bound and quarantined, and labels the store. Published as one
+        durable generation through the runtime's transactional seam. Idempotent."""
+        self._require_open()
+        durable = getattr(self.runtime, "durable_runtime", None)
+        seam = getattr(durable, "run_governed_read", None)
+        operation = self.runtime.adapter.upgrade_canonical_derivation
+        return seam(operation) if callable(seam) else operation()
+
+    @_serialized
     def semantic_retrieval_posture(self) -> dict:
         """Read-only status of the semantic vector route (#669); never authority."""
 
