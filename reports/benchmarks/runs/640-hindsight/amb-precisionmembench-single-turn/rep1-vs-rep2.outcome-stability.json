@@ -1,0 +1,32 @@
+{
+  "cases": 77,
+  "correct_differs": [],
+  "same_returned_set": 76,
+  "same_order": 50,
+  "returned_set_differences": [
+    {
+      "case": "budget-ceiling-evicts-relevant-beliefs",
+      "returned": 2,
+      "budget": 2,
+      "only_rep1": [
+        "b-db-decision"
+      ],
+      "only_rep2": [
+        "b-dead-letter-queue"
+      ]
+    }
+  ],
+  "summary_rep1": {
+    "correct": 9,
+    "mean_precision": 0.0544,
+    "mean_recall": 0.985,
+    "active_passes": 0
+  },
+  "summary_rep2": {
+    "correct": 9,
+    "mean_precision": 0.0544,
+    "mean_recall": 0.985,
+    "active_passes": 0
+  },
+  "note": "retrieved ids parsed from AMB's context listing; order variation is within one host across fresh banks"
+}
