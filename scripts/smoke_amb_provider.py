@@ -15,12 +15,14 @@ import run_amb_external  # noqa: F401  (imports every bridge)
 from amb_agent_memory_bridge import install_amb_agent_memory_provider  # noqa: F401
 from amb_graphiti_bridge import install_amb_graphiti_provider
 from amb_mempalace_bridge import install_amb_mempalace_provider
+from amb_hindsight_bridge import install_amb_hindsight_provider
 
 
 def main() -> int:
     key, amb_root, store, out = sys.argv[1], Path(sys.argv[2]), Path(sys.argv[3]), Path(sys.argv[4])
     install_amb_graphiti_provider(amb_root)
     install_amb_mempalace_provider(amb_root)
+    install_amb_hindsight_provider(amb_root)
     from memory_bench.memory import REGISTRY  # type: ignore[import-not-found]
     from memory_bench.models import Document  # type: ignore[import-not-found]
 

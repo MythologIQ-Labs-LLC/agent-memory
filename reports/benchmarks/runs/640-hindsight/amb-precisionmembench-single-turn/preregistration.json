@@ -1,0 +1,70 @@
+{
+  "schema": "agent-memory/comparator-preregistration/v1",
+  "registered_utc": "2026-10-15T17:05:59Z",
+  "issue": [
+    "#640",
+    "#810"
+  ],
+  "status": "preregistered before execution; candidate, not reviewed or accepted",
+  "system": {
+    "id": "hindsight-chunks-local",
+    "family": "hybrid chunk memory: dense (local e5-small) + text search fused by RRF",
+    "product": "Hindsight OSS 0.10.2 @ 5fc4ce20917b916240cef27c212c387a177f115b (pinned checkout), llm_provider=none, embedded pg0",
+    "bank": "retain_extraction_mode=chunks; observations, temporal, graph, reranking off; text search on (bank_config_sha256 363201677244...)",
+    "embedder": "intfloat/multilingual-e5-small @ 03415a4 ONNX, manifest 4c0e50e7...",
+    "environment": "../subset50/hindsight-venv-freeze.txt",
+    "capability_tier": "no LLM (same tier as agent-memory and bm25)",
+    "not": "AMB's built-in hindsight provider (LLM extraction) or Hindsight's published 66/77 (LLM ingestion + structured filters)"
+  },
+  "adapter": {
+    "file": "reference/amb_hindsight_bridge.py",
+    "git_blob": "9e4d8b5239bbba3c8c29632496944689b4b28cc4",
+    "worker": {
+      "file": "reference/hindsight_amb_worker.py",
+      "git_blob": "b7a5ebf7a120a744b0409a7b213841836d2314c0"
+    },
+    "retain": "one synchronous retain per AMB document; verbatim text; opaque sha256 document_id; one bank per AMB user_id",
+    "recall": "recall(query, top_k=k, max_tokens=65536, budget='mid'); k = AMB per-case retrieval_limit (maxBeliefs, default 20)",
+    "pg0": "separate HOME (/tmp/am-bench/pg0-home-amb) so the instance is distinct from the concurrently running LongMemEval run",
+    "withheld": [
+      "belief ids",
+      "scope tags",
+      "document.context markers",
+      "timestamps",
+      "gold",
+      "query category",
+      "retrieval_filter"
+    ]
+  },
+  "protocol": {
+    "harness": "AMB 03c1d0f1d27da63034f0931121c858faba512383",
+    "dataset": "precisionmembench",
+    "split": "single-turn",
+    "mode": "retrieval",
+    "cases": 77,
+    "fixtures_sha256": {
+      "beliefs.seed.json": "35659b3b9a581b644fc6746e1b4e902c3e7b56c0973b546bf7b0816a69e3de98",
+      "retrieval.cases.json": "09e99f0852280538abe34b03570f65583fdb10df3c554b7150f0f665d5db709c"
+    },
+    "guard": "reference/amb_retrieval_no_llm.py 1.0.0 (unchanged from 1df28f8)",
+    "runner_git_blob": "fd43bd464a8ecf1481a01f3769be6619e185b8d5",
+    "evidence_wrapper": "scripts/run_amb_local_evidence.py (unchanged from 1df28f8), launched with AWS_* unset",
+    "filters": "none (protocol A)"
+  },
+  "runs": {
+    "primary": "rep 1 is the result",
+    "repeat": "rep 2, a full fresh rerun (new banks), as repeatability evidence; never substituted"
+  },
+  "outcomes": [
+    "AMB native correct/77, pass classes, mean precision/recall, per-category passes",
+    "paired per case vs agent-memory rep 1, bm25, mem0-explicit, mempalace (scripts/paired_amb_systems.py) with exact McNemar",
+    "latency, wall time, peak RSS"
+  ],
+  "failure_rules": [
+    "a provider or harness exception fails the run; reported, not scored",
+    "no per-case retries",
+    "no configuration change after registration"
+  ],
+  "comparability": "Same harness, inputs, budgets, scorer, protocol A and capability tier (no LLM) as agent-memory 15/77, bm25 8/77, mempalace 9/77.",
+  "smoke": "synthetic-smoke.json: 4 hand-written documents, 5/5 structural checks passed before this registration"
+}
