@@ -10,7 +10,7 @@
     },
     {
       "path": "reference/agentmem_ref/api/surface.py",
-      "blob": "565a999f311cba6ca0da357c5836aadc15467a29"
+      "blob": "ff685664da430c15c7421e1ede2c470fe765c0fb"
     },
     {
       "path": "reference/agentmem_ref/evidence_sufficiency.py",
@@ -19,6 +19,10 @@
     {
       "path": "reference/agentmem_ref/governed_transition_witness.py",
       "blob": "c638210619d661db2d57490ed684df2b80e9db19"
+    },
+    {
+      "path": "reference/agentmem_ref/memory/checkpoint_migration.py",
+      "blob": "9893e63159a5e392e3e3b939804119fa59d9a65f"
     },
     {
       "path": "reference/agentmem_ref/memory/procedural_memory.py",
@@ -30,7 +34,7 @@
     },
     {
       "path": "reference/agentmem_ref/runtime/adapter.py",
-      "blob": "4a44aa69246114fea5b8cbe46d9cdb9603a94cc0"
+      "blob": "9912f175f3e3370b4f91e55a65f481fa31812254"
     },
     {
       "path": "reference/agentmem_ref/runtime/evidence_sufficiency.py",
@@ -42,7 +46,7 @@
     },
     {
       "path": "reference/agentmem_ref/runtime/recall_control.py",
-      "blob": "c049d23f178f5ea6d12dcec8cd02c47e704fcef9"
+      "blob": "dfb024efd644998145e7016af5592e546301bf89"
     },
     {
       "path": "reference/agentmem_ref/runtime/recall_observation_receipt.py",
@@ -59,6 +63,14 @@
     {
       "path": "reference/agentmem_ref/runtime/runtime_composition.py",
       "blob": "5f0a8666dfc2e3362f347ec1f23cd489a6da9475"
+    },
+    {
+      "path": "reference/agentmem_ref/state/sqlite_substrate.py",
+      "blob": "878a4232ab7d73a13c4fece2628c392d431185fb"
+    },
+    {
+      "path": "reference/agentmem_ref/state/substrate.py",
+      "blob": "767993510016820c84e414a9e060f9b86320733e"
     }
   ],
   "identity_deltas": [
