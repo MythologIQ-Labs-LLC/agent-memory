@@ -211,6 +211,20 @@ def _normal_form_masks(query: str, intent: TemporalIntent, facts: Mapping[str, A
 
 
 _POSSESSIVE_AFTER = ("'s", "\u2019s")
+# A word after a line break, list marker, dash or closing parenthesis starts a clause, as after
+# sentence punctuation: its capital says nothing about names ("- Mark it urgent").
+_CLAUSE_OPENERS = frozenset("-*\u2022\u2013\u2014)")
+
+
+def _starts_clause(text: str, position: int) -> bool:
+    if starts_sentence(text, position):
+        return True
+    end = position
+    while end > 0 and text[end - 1].isspace():
+        if text[end - 1] == "\n":
+            return True
+        end -= 1
+    return end > 0 and text[end - 1] in _CLAUSE_OPENERS
 
 
 def _names_mention(text: str, mention: tuple[str, ...]) -> bool:
@@ -222,9 +236,11 @@ def _names_mention(text: str, mention: tuple[str, ...]) -> bool:
     the person Mark or Will. ``text`` is the fact's original text."""
 
     inner = [m.group(0) for m in _WORD.finditer(text)
-             if m.group(0)[0].isalpha() and m.group(0) != "I" and not starts_sentence(text, m.start())]
-    title_case = len(inner) >= 3 and all(word[0].isupper() for word in inner)
-    case_informative = any(c.islower() for c in text) and not title_case
+             if m.group(0)[0].isalpha() and m.group(0) != "I" and not _starts_clause(text, m.start())]
+    capitalised = sum(1 for word in inner if word[0].isupper())
+    # The query interpreter's rule: when most inner words are capitalised (a heading in title
+    # case, even with lowercase small words) capitals carry no information about names.
+    case_informative = any(c.islower() for c in text) and capitalised * 2 <= len(inner)
     for match in _WORD.finditer(text):
         token = match.group(0)
         if normal_form(token.lower()) not in mention:
@@ -233,7 +249,7 @@ def _names_mention(text: str, mention: tuple[str, ...]) -> bool:
             return True
         if not case_informative or not token[0].isupper():
             continue
-        if not starts_sentence(text, match.start()) or text[match.end():match.end() + 2] in _POSSESSIVE_AFTER:
+        if not _starts_clause(text, match.start()) or text[match.end():match.end() + 2] in _POSSESSIVE_AFTER:
             return True
     return False
 

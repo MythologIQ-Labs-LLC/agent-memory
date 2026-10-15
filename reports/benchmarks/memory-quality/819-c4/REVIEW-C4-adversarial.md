@@ -42,3 +42,25 @@ rules to the fact's original text:
 
 **Accepted note.** A possessive passing mention ("Florist for Mom's anniversary party…") still
 covers Mom. This is erratum 1's conservative reading.
+
+## Re-verification at `6f85868f`
+
+Every earlier reproduction now behaves like C3. `ranked_prefix` is identical. The cost is within
+about 6% of C3 on 0.3–1M-character facts, and grows linearly.
+
+**Should-fix: ordinary note layouts still fooled the name rule.** The cases were headline case
+with lowercase small words, list items, a line break, an em dash, and a closing parenthesis.
+
+**Fixed in the next commit:**
+- The fact-side capitalisation test uses the query interpreter's majority rule.
+- A word after a line break, list marker, dash or closing parenthesis counts as a clause start.
+
+`test_note_layouts` pins the reviewer's seven strings.
+
+**Accepted residual ambiguity, recorded rather than chased.** Spelling cannot separate these from
+genuine names:
+- **Possessive shop names:** "Mark's Hardware …" counts as naming Mark.
+- **Vocatives after a comma:** ", Mark it urgent".
+- **Passing mentions** (erratum 1).
+
+Both rule changes lean toward C3's more inclusive behaviour; coverage never adds more than C3.

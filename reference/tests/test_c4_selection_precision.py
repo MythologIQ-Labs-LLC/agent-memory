@@ -175,6 +175,21 @@ class CapitalisedHomographs(_Facade):
         self.check("Flight booking upgrade is pending. Will confirm later.",
                    "Which seat does Will want for the flight booking upgrade?", "Will prefers the window seat.")
 
+    def test_note_layouts(self):
+        # Re-verification at 6f85868f (r11): headline case, list items, line breaks, dashes.
+        for homograph in ("Bank Transfer Limit Increase Form - Mark as Urgent",
+                          "Bank Transfer Limit Increase: Please Mark it Urgent",
+                          "- Mark the bank transfer limit increase form urgent",
+                          "1) Mark the bank transfer limit increase form urgent",
+                          "Bank transfer limit increase form\nMark it urgent",
+                          "Bank transfer limit increase form \u2014 Mark it urgent",
+                          "Bank transfer limit increase form (see notes) Mark it urgent"):
+            with self.subTest(homograph=homograph):
+                self.tearDown()
+                self.setUp()
+                self.check(homograph, "What did Mark recommend for the bank transfer limit increase?",
+                           "Mark recommended raising it.")
+
     def test_possessive_sentence_start_still_covers(self):
         address = self.put("memory:addr", "Mom's new mailing address is 41 Alder Lane, Ridgefield.")
         self.put("memory:knit", "Mom loves knitting; Mom's cat Pickles sleeps on Mom's yarn basket.")
