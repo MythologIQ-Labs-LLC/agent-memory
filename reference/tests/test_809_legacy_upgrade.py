@@ -32,8 +32,18 @@ domain, project or task gate against the cited fact's scope record: provably unr
 ``eligible`` (passes every gate and the shared-membership gate does not apply),
 ``membership_undecidable`` (every matching isolation domain is a governed shared space, so the
 decision depends on membership at write time, which the v7 runtime did not record: kept bound,
-quarantined, reported), ``order_undecidable`` (ids not comparable: kept bound, quarantined).
-Bound after upgrade = eligible + the two undecidable classes. Store status: ``fresh`` (no legacy
+quarantined, reported), ``order_undecidable`` (ids not comparable: kept bound, quarantined),
+``scope_undecidable`` (the reference has a governance witness, a fact row, a memory binding or a
+tombstone, but no scope record, or the citing fact has none: kept bound, quarantined). Content
+placeholders (``content:sha256:…``, the facade's default evidence ref) are references that name
+no governed fact and classify as ``unknown_reference`` like any other; the cross-scope store
+therefore has 7 classified edges (review F-1). Bound after upgrade = eligible + the three
+undecidable classes. The upgrade is explicit (``upgrade_canonical_derivation``); opening a store
+never implies it, which ``LegacyOracleDemonstrated`` pins (review F-11). A no-op run reports the
+store record's totals (``facts_legacy`` is the count at first upgrade) with ``facts_rewritten`` 0.
+
+Superseded once after independent review (F-1..F-11; the review record is committed beside
+this module); the second fail-first baseline is ``preregistration-baseline-2.log``. Store status: ``fresh`` (no legacy
 fact), ``legacy_pending`` (legacy facts, no record), ``legacy_qualified`` (upgraded, nothing
 quarantined), ``legacy_unqualified`` (upgraded, at least one quarantined edge; activation over
 the store is blocked by the decision record's rule).
@@ -58,8 +68,28 @@ FIXTURES = ROOT / "reference/fixtures/809-legacy-stores"
 REFERENCE = ROOT / "reference"
 TENANT, QUERY, HIST = "tenant:legacy", "Quillon ferry berth", {"mode": "historical"}
 KEY, POLICY = "canonical_derivation", "writer-eligible-reconstructed/1"
-CLASSES = {"unknown_reference", "forward_reference", "ineligible_scope", "eligible", "membership_undecidable", "order_undecidable"}
-UNDECIDABLE = {"membership_undecidable", "order_undecidable"}
+CLASSES = {"unknown_reference", "forward_reference", "ineligible_scope", "eligible", "membership_undecidable", "order_undecidable", "scope_undecidable"}
+UNDECIDABLE = {"membership_undecidable", "order_undecidable", "scope_undecidable"}
+VOLATILE = {"runs", "completed_at", "facts_rewritten"}
+
+
+def _seq(ref: str) -> int | None:
+    head, _, tail = ref.rpartition("-")
+    return int(tail) if head and tail.isdigit() else None
+
+
+def _failing_gates(scope_f: dict, scope_r: dict) -> list[str]:
+    """The four non-membership scope gates, recomputed from the two scope records alone."""
+    failing = []
+    if not set(scope_r["domain_refs"]) & set(scope_f["domain_refs"]):
+        failing.append("isolation")
+    if not set(scope_r.get("required_domain_refs", ())) <= set(scope_f["domain_refs"]):
+        failing.append("required")
+    if scope_r.get("project_ref") and scope_r["project_ref"] != scope_f.get("project_ref", ""):
+        failing.append("project")
+    if scope_r.get("task_ref") and scope_r["task_ref"] != scope_f.get("task_ref", ""):
+        failing.append("task")
+    return failing
 
 
 def _manifest() -> dict:
@@ -195,8 +225,14 @@ class CrossScopeStore(_Store):
         self.assertEqual(report["facts_legacy"], 7)
         self.assertEqual(report["facts_rewritten"], 7)
         self.assertEqual(report["quarantined"], {})
-        self.assertEqual(report["edges"], {"eligible": 1, "ineligible_scope": 2, "unknown_reference": 2,
-                                           "forward_reference": 0, "membership_undecidable": 0, "order_undecidable": 0})
+        self.assertEqual(report["edges"], {"eligible": 1, "ineligible_scope": 2, "unknown_reference": 4,
+                                           "forward_reference": 0, "membership_undecidable": 0, "order_undecidable": 0,
+                                           "scope_undecidable": 0})
+        for k in ("a1", "a2"):  # the seed facts cite only the facade's content placeholder
+            rec = self.record(a, self.ids[k])
+            self.assertEqual(set(rec["classification"].values()), {"unknown_reference"}, k)
+            self.assertTrue(all(ref.startswith("content:sha256:") for ref in rec["classification"]), k)
+            self.assertEqual(list(rec["bound"]), [])
         expected = {"bd": ({self.ids["a1"]: "ineligible_scope"}, []), "bl": ({self.ids["a2"]: "ineligible_scope"}, []),
                     "bu": ({"fact-guess-999999999999": "unknown_reference"}, []),
                     "d1": ({self.ids["a1"]: "eligible"}, [self.ids["a1"]]), "ctl": ({"evidence:ticket-7": "unknown_reference"}, [])}
@@ -206,7 +242,7 @@ class CrossScopeStore(_Store):
                 self.assertEqual(rec["policy"], POLICY)
                 self.assertEqual(rec["classification"], classes)
                 self.assertEqual(list(rec["bound"]), bound)
-                self.assertEqual(list(self.fact(a, self.ids[k]).episode_uuids), list(classes))  # verbatim, nothing dropped
+                self.assertEqual(set(self.fact(a, self.ids[k]).episode_uuids), set(classes))  # verbatim, nothing dropped
         self.assertEqual(a.legacy_upgrade_status()["status"], "legacy_qualified")
         self._expect_after(self.open("project:b"), a)
 
@@ -216,8 +252,8 @@ class CrossScopeStore(_Store):
         again = a.upgrade_canonical_derivation()
         self.assertEqual(again["facts_rewritten"], 0)
         self.assertEqual(again["status"], "legacy_qualified")
-        self.assertEqual({k: v for k, v in again.items() if k not in ("runs", "completed_at")},
-                         {k: v for k, v in first.items() if k not in ("runs", "runs", "completed_at", "facts_rewritten")} | {"facts_rewritten": 0})
+        self.assertEqual({k: v for k, v in again.items() if k not in VOLATILE}, {k: v for k, v in first.items() if k not in VOLATILE})
+        self.assertEqual(again["facts_legacy"], 7)  # the store record's totals, the count at first upgrade
         a.close()
         a = self.open("project:a")
         self.assertEqual(a.legacy_upgrade_status()["status"], "legacy_qualified")
@@ -244,7 +280,7 @@ class SharedMembershipStore(_Store):
         self.assertEqual(report["status"], "legacy_unqualified")
         self.assertEqual(report["edges"]["membership_undecidable"], 3)
         self.assertEqual(report["edges"]["eligible"], 0)
-        self.assertEqual(set(report["quarantined"]), {self.ids["sm"], self.ids["sc"], self.ids["sl"]})
+        self.assertEqual(report["quarantined"], {self.ids[k]: [self.ids["s1"]] for k in ("sm", "sc", "sl")})
         for k in ("sm", "sc", "sl"):
             with self.subTest(fact=k):
                 rec = self.record(o, self.ids[k])
@@ -252,9 +288,9 @@ class SharedMembershipStore(_Store):
                 self.assertEqual(list(rec["bound"]), [self.ids["s1"]])
         self.assertEqual(o.legacy_upgrade_status()["status"], "legacy_unqualified")
         # deletion completeness preserved for the member; the quarantined oracle still reported
-        for actor, k in (("agent:m", "sm"), ("agent:l", "sl")):
+        for actor, k in (("agent:m", "sm"), ("agent:c", "sc"), ("agent:l", "sl")):
             h = self.open("shared:x", actor)
-            self.assertNotIn(self.ids[k], self.admitted(h), k)
+            self.assertNotIn(self.ids[k], self.admitted(h), k)  # sc and sl: the quarantined oracle, reported not hidden
         o.close()
         self.assertEqual(self.restart_status("shared:x", "agent:o")["status"]["status"], "legacy_unqualified")
 
@@ -305,11 +341,15 @@ class NoFabrication(_Store):
         self.setUp()
         h = self.open(scope, actor)
         adapter = h.runtime.adapter
+        substrate = adapter._substrate
         scopes_before = {k: dict(v) for k, v in adapter._fact_scope.items()}
         report = h.upgrade_canonical_derivation()
         self.assertEqual({k: dict(v) for k, v in adapter._fact_scope.items()}, scopes_before)
+        scopes = adapter._fact_scope
+        shared_keys = set(adapter._shared_domain_members)
+        tombstoned = set(adapter._tombstones) | {u for t in adapter._tombstones.values() for u in (t.get("deleted_fact_uuids") or ())}
         total = 0
-        for fact in adapter._substrate.all_facts():
+        for fact in substrate.all_facts():
             rec = (fact.attributes or {}).get(KEY)
             self.assertIsNotNone(rec, fact.uuid)
             if rec["policy"] != POLICY:
@@ -317,19 +357,39 @@ class NoFabrication(_Store):
             classes = rec["classification"]
             self.assertEqual(set(classes), set(fact.episode_uuids))
             self.assertTrue(set(classes.values()) <= CLASSES)
+            scope_f = scopes.get(fact.uuid)
             for ref, cls in classes.items():
                 total += 1
+                witness = ref in scopes or substrate.get_fact(ref) is not None or ref in adapter._fact_memory or ref in tombstoned
                 if cls in UNDECIDABLE or cls == "eligible":
                     self.assertIn(ref, rec["bound"], (fact.uuid, ref, cls))
-                    self.assertIn(ref, adapter._fact_scope)
                 else:
                     self.assertNotIn(ref, rec["bound"], (fact.uuid, ref, cls))
-                if cls == "eligible":
-                    scope_r = adapter._fact_scope[ref]
-                    matching = set(scope_r["domain_refs"]) & set(adapter._fact_scope[fact.uuid]["domain_refs"])
-                    self.assertTrue(matching)
-                    self.assertFalse(matching and all(d in adapter._shared_domain_members for d in matching),
-                                     "an eligible edge never depends on the membership gate")
+                if cls == "unknown_reference":
+                    self.assertFalse(witness, (fact.uuid, ref))
+                    continue
+                self.assertTrue(witness, (fact.uuid, ref, cls))
+                if cls == "scope_undecidable":
+                    self.assertTrue(ref not in scopes or scope_f is None, (fact.uuid, ref))
+                    continue
+                self.assertIsNotNone(scope_f); self.assertIn(ref, scopes)
+                if cls == "forward_reference":
+                    self.assertTrue(_seq(ref) is not None and _seq(fact.uuid) is not None and _seq(ref) > _seq(fact.uuid), (fact.uuid, ref))
+                    continue
+                if cls == "order_undecidable":
+                    self.assertTrue(_seq(ref) is None or _seq(fact.uuid) is None, (fact.uuid, ref))
+                    continue
+                self.assertTrue(_seq(ref) < _seq(fact.uuid), (fact.uuid, ref, cls))
+                failing = _failing_gates(scope_f, scopes[ref])
+                matching = set(scopes[ref]["domain_refs"]) & set(scope_f["domain_refs"])
+                if cls == "ineligible_scope":
+                    self.assertTrue(failing, (fact.uuid, ref))
+                elif cls == "membership_undecidable":
+                    self.assertEqual(failing, [], (fact.uuid, ref))
+                    self.assertTrue(matching and matching <= shared_keys, (fact.uuid, ref))
+                else:  # eligible
+                    self.assertEqual(failing, [], (fact.uuid, ref))
+                    self.assertTrue(matching and not matching <= shared_keys, "an eligible edge never depends on the membership gate")
         self.assertEqual(total, sum(report["edges"].values()))
         self.assertEqual(report["status"] == "legacy_unqualified", bool(report["quarantined"]))
         h.close()
