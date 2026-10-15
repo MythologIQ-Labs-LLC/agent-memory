@@ -83,6 +83,16 @@ class RuntimeFastFeedbackTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "budgets must be positive"):
             MODULE.run(root, "retrieval", 0, 10)
 
+    def test_real_subprocess_timeout_is_reported(self):
+        root = self._root()
+        (root / "reference/tests/test_query_driven_recall.py").write_text(
+            "import time\ntime.sleep(5)\n", encoding="utf-8"
+        )
+        res = MODULE._record_suite(root, "test_query_driven_recall.py", 0.1)
+        self.assertEqual(res["status"], "timed_out")
+        self.assertIn("time budget exhausted", res["stderr_tail"])
+        self.assertLess(res["elapsed_seconds"], 3)
+
     def test_real_subprocess_receipt_surfaces_failure(self):
         root = self._root()
         (root / "reference/tests/test_query_driven_recall.py").write_text(
