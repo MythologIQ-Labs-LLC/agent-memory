@@ -1,0 +1,6 @@
+FAILED tests/test_c7_rank_fusion.py::FusedRanking::test_a_semantic_only_memory_with_the_top_cosine_outranks_weak_lexical_filler
+FAILED tests/test_c7_rank_fusion.py::FusedRanking::test_dense_agreement_outweighs_a_small_bm25_lead
+FAILED tests/test_c7_rank_fusion.py::FusedRanking::test_dense_scoring_failure_falls_back_to_the_base_order
+FAILED tests/test_c7_rank_fusion.py::FusedRanking::test_more_admitted_memories_than_the_limit_skips_fusion
+FAILED tests/test_c7_rank_fusion.py::FusedRanking::test_policy_identity_and_per_memory_fusion_evidence
+5 failed, 4 passed in 2.49s

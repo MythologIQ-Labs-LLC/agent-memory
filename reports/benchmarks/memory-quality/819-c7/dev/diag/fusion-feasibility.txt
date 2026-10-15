@@ -1,0 +1,12 @@
+== C4-required-ranked_prefix
+current  coverage@3 14 @5 19 @10 24 (of 42)  needed in top5 33  others in top5 207
+dense    coverage@3 24 @5 26 @10 28 (of 42)  needed in top5 52  others in top5 188
+rrf@10   coverage@3 20 @5 23 @10 27 (of 42)  needed in top5 41  others in top5 199
+rrf@30   coverage@3 19 @5 23 @10 27 (of 42)  needed in top5 41  others in top5 199
+rrf@60   coverage@3 18 @5 23 @10 27 (of 42)  needed in top5 41  others in top5 199
+== C6-required-relevance_sufficient
+current  coverage@3 14 @5 18 @10 22 (of 42)  needed in top5 32  others in top5 207
+dense    coverage@3 22 @5 23 @10 25 (of 42)  needed in top5 44  others in top5 195
+rrf@10   coverage@3 20 @5 22 @10 25 (of 42)  needed in top5 39  others in top5 200
+rrf@30   coverage@3 19 @5 22 @10 25 (of 42)  needed in top5 39  others in top5 200
+rrf@60   coverage@3 18 @5 22 @10 25 (of 42)  needed in top5 39  others in top5 200
