@@ -1,0 +1,172 @@
+{
+  "schema": "agent-memory-aml-smoke/1",
+  "base_url": "http://127.0.0.1:18080",
+  "run_id": "97056a5a30bb",
+  "checks": [
+    {
+      "check": "health_unauthenticated_2xx",
+      "passed": true,
+      "detail": 200
+    },
+    {
+      "check": "add_rejects_bad_key_401",
+      "passed": true,
+      "detail": 401
+    },
+    {
+      "check": "search_rejects_missing_key_401",
+      "passed": true,
+      "detail": 401
+    },
+    {
+      "check": "add_chunk_0_200_and_exact_echo",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "payload": {
+          "success": true,
+          "request_id": "smoke:97056a5a30bb:conv-a:chunk-0",
+          "user_id": "smoke:97056a5a30bb:user-a",
+          "session_id": "smoke:97056a5a30bb:session-0"
+        }
+      }
+    },
+    {
+      "check": "searchable_immediately_after_add_200",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "returned": 20
+      }
+    },
+    {
+      "check": "add_chunk_1_200_and_exact_echo",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "payload": {
+          "success": true,
+          "request_id": "smoke:97056a5a30bb:conv-a:chunk-1",
+          "user_id": "smoke:97056a5a30bb:user-a",
+          "session_id": "smoke:97056a5a30bb:session-1"
+        }
+      }
+    },
+    {
+      "check": "add_chunk_2_200_and_exact_echo",
+      "passed": true,
+      "detail": {
+        "status": 200,
+        "payload": {
+          "success": true,
+          "request_id": "smoke:97056a5a30bb:conv-a:chunk-2",
+          "user_id": "smoke:97056a5a30bb:user-a",
+          "session_id": "smoke:97056a5a30bb:session-2"
+        }
+      }
+    },
+    {
+      "check": "search_200_with_data_array",
+      "passed": true,
+      "detail": {
+        "status": 200
+      }
+    },
+    {
+      "check": "search_items_have_nonempty_id_and_content",
+      "passed": true,
+      "detail": 45
+    },
+    {
+      "check": "search_scores_descending",
+      "passed": true,
+      "detail": [
+        1.0,
+        0.5,
+        0.333333,
+        0.25,
+        0.2
+      ]
+    },
+    {
+      "check": "search_returns_all_45_acknowledged_messages",
+      "passed": true,
+      "detail": 45
+    },
+    {
+      "check": "search_respects_top_k",
+      "passed": true,
+      "detail": 7
+    },
+    {
+      "check": "search_accepts_options",
+      "passed": true,
+      "detail": 200
+    },
+    {
+      "check": "add_replay_is_idempotent_200",
+      "passed": true,
+      "detail": {
+        "status": 200
+      }
+    },
+    {
+      "check": "add_replay_stores_nothing_new",
+      "passed": true,
+      "detail": 45
+    },
+    {
+      "check": "add_reused_request_id_different_payload_409",
+      "passed": true,
+      "detail": {
+        "status": 409,
+        "payload": {
+          "detail": {
+            "reason": "request_id_reused_with_different_payload"
+          }
+        }
+      }
+    },
+    {
+      "check": "isolation_unknown_user_gets_empty_data",
+      "passed": true,
+      "detail": {
+        "data": []
+      }
+    },
+    {
+      "check": "same_request_id_under_other_user_is_independent_200",
+      "passed": true,
+      "detail": 200
+    },
+    {
+      "check": "isolation_no_cross_user_memory",
+      "passed": true,
+      "detail": [
+        "user: user b only talks about lighthouses"
+      ]
+    },
+    {
+      "check": "search_rejects_blank_query_422",
+      "passed": true,
+      "detail": 422
+    },
+    {
+      "check": "add_rejects_empty_messages_422",
+      "passed": true,
+      "detail": 422
+    }
+  ],
+  "passed": 21,
+  "failed": 0,
+  "latency_ms": {
+    "add": {
+      "n": 3,
+      "max": 175.3
+    },
+    "search": {
+      "n": 2,
+      "max": 11.6
+    }
+  }
+}

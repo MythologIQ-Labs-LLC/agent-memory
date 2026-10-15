@@ -1,0 +1,20 @@
+# systemd unit for a VM deployment (no container). Key in /etc/agent-memory-aml/key (mode 0400, owner aml).
+[Unit]
+Description=Agent Memory AML Cycle 2 Add/Search service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=aml
+Group=aml
+ExecStart=/opt/agent-memory-aml/bin/agent-memory-aml --host 127.0.0.1 --port 8080 --data-dir /var/lib/agent-memory-aml --key-file /etc/agent-memory-aml/key
+Restart=on-failure
+KillSignal=SIGTERM
+TimeoutStopSec=60
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/agent-memory-aml
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
