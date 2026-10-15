@@ -101,20 +101,24 @@ function discoveredProfiles(rows){
 function profiles(){
  const acceptedRows=acceptedProfiles();
  if(scope()==='accepted')return acceptedRows;
- // Curated fallback is strictly for bootstrap/offline operation. Once an
- // independently source-verified feed has loaded, removed records stay removed.
- const candidates=new Map(
-   publicFeedProfiles.length?[]:previewProfiles().map(p=>[p.id,p]));
- for(const p of discoveredProfiles(observed)){
-  const earlier=candidates.get(p.id);
-  if(!earlier||p.metrics[0].rows.length>=earlier.metrics[0].rows.length)
-   candidates.set(p.id,p);
- }
- // Source-verified public feed supersedes manually curated candidate fallbacks.
- // It never supplies accepted authority or changes the historical accepted snapshot.
- for(const p of publicFeedProfiles){
-  if(p&&p.evidence_status!=='accepted'&&Array.isArray(p.metrics))
+ // Once a fully verified public feed is loaded, it is the *only* current
+ // candidate ranking roster. Discovery-only executions remain visible in the
+ // separate live run registry until explicitly registered in the versioned
+ // feed; removing a profile from the feed must also remove it from rankings.
+ const candidates=new Map();
+ if(publicFeedProfiles.length){
+  for(const p of publicFeedProfiles){
+   if(p&&p.evidence_status!=='accepted'&&Array.isArray(p.metrics))
     candidates.set(p.id,p);
+  }
+ } else {
+  // Explicitly historical bootstrap fallback when the public feed is offline.
+  for(const p of previewProfiles())candidates.set(p.id,p);
+  for(const p of discoveredProfiles(observed)){
+   const earlier=candidates.get(p.id);
+   if(!earlier||p.metrics[0].rows.length>=earlier.metrics[0].rows.length)
+    candidates.set(p.id,p);
+  }
  }
  return [...candidates.values(),...acceptedRows];
 }

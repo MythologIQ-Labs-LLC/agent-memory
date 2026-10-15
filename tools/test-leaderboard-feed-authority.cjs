@@ -52,6 +52,23 @@ const candidate={
   'once feed verifies, withdrawn fallback candidate must not be republished');
  assert.ok(board.profiles().some(p=>p.id.startsWith('accepted:')),
   'historically accepted profiles must remain present');
+ // Discovery-only files are not accepted into the current competitive roster
+ // when the verified publication feed intentionally omits that cohort.
+ const discovered=(systemId,score)=>({
+   kind:'manifest',benchmark:'longmemeval-s-retrieval',
+   systemId,name:systemId,score,
+   inputSha:'d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442',
+   selectionId:'size=50|ids_sha256=5266568e2e883b64e92e0da632d5e24c3fd61d8a447de7e629ebf93ef26a7339',
+   evaluatorRevision:'local-v1',sampleCount:50,scoredCount:43,
+   metric:'recall_all@5',plane:'session',review:'candidate',
+   sha:'a'.repeat(40),
+   manifestPath:'reports/benchmarks/runs/execution/session.'+systemId+'.manifest.json'
+ });
+ eventHandlers['agent-memory:candidate-runs']({detail:[
+   discovered('agent_memory',0.837209),discovered('hindsight',0.930233)
+ ]});
+ assert.ok(!board.profiles().some(p=>p.id==='candidate:longmemeval-s:subset50:session'),
+   'discovery-only cohort must wait for a source-verified data feed entry');
  nodes.measuredProfileSelect.value=candidate.id;
  nodes.measuredProfileSelect.handlers.change();
  assert.match(nodes.measuredKpis.innerHTML,/No measured peer/,
