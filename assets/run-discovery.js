@@ -109,8 +109,12 @@ function listFiles(tree,config){
     throw Error('GitHub tree truncated or missing; refusing incomplete source discovery');
   const blobs=tree.tree.filter(e=>e.type==='blob'&&e.path.startsWith(config.prefix)&&
     cleanPath(e.path)&&Number.isInteger(e.size)&&e.size>=0);
-  const manifest=blobs.filter(e=>e.path.endsWith('.manifest.json')&&e.size<=16000);
-  const partial=blobs.filter(e=>e.path.endsWith('.summary.json')&&e.size<=262144);
+  const manifest=blobs.filter(e=>e.path.endsWith('.manifest.json'));
+  const partial=blobs.filter(e=>e.path.endsWith('.summary.json'));
+  // Never silently omit oversized evidence and then cache the source SHA as complete.
+  // Source-head adoption is atomic: any uninspectable declared evidence must block it.
+  if(manifest.some(e=>e.size>16000)||partial.some(e=>e.size>262144))
+    throw Error('Source evidence exceeds audited byte cap; refusing incomplete discovery');
   if(manifest.length>config.max_manifest_files||partial.length>config.max_partial_files)
     throw Error('Source file discovery exceeds audited caps; manual review required');
   return {manifest:manifest.map(x=>x.path).sort(),partial:partial.map(x=>x.path).sort(),

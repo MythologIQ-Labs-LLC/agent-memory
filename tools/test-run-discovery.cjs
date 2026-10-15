@@ -72,8 +72,18 @@ assert.deepEqual(discover.partial,[partialPath]);
 const bigPath='reports/benchmarks/runs/fixture500/session.large.summary.json';
 assert.deepEqual(d.listFiles({truncated:false,tree:[
  {type:'blob',path:bigPath,size:72000}]},config.sources[0]).partial,[bigPath]);
+assert.throws(()=>d.listFiles({truncated:false,tree:[
+ {type:'blob',path:bigPath,size:262145}]},config.sources[0]),/audited byte cap/);
+// A single oversized candidate invalidates the whole revision, even when another
+// manifest is well-formed. Do not cache a silently truncated competitor roster.
+assert.throws(()=>d.listFiles({truncated:false,tree:[
+ {type:'blob',path:pathManifest,size:16001}]},config.sources[0]),/audited byte cap/);
+assert.throws(()=>d.listFiles({truncated:false,tree:[
+ {type:'blob',path:pathManifest,size:6180},
+ {type:'blob',path:bigPath,size:262145}]},config.sources[0]),/audited byte cap/);
 assert.deepEqual(d.listFiles({truncated:false,tree:[
- {type:'blob',path:bigPath,size:262145}]},config.sources[0]).partial,[]);
+ {type:'blob',path:pathManifest,size:16000},
+ {type:'blob',path:bigPath,size:262144}]},config.sources[0]).manifest,[pathManifest]);
 t.truncated=true;assert.throws(()=>d.listFiles(t,config.sources[0]),/truncated/);
 const row=d.createRow(m,pathManifest,'e'.repeat(40),identity,d.extractMetric(report,m,identity));
 assert.equal(row.score,0.930233);
