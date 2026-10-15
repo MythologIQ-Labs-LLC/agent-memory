@@ -70,11 +70,11 @@ def main() -> int:
     from datetime import datetime, timedelta, timezone
     started = datetime.strptime(ex["started_utc"], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
     finished = started + timedelta(seconds=ex["wall_seconds"])
-    artifacts = [{"kind": "evaluator_report", "uri": rel(a.normalized), "sha256": sha(a.normalized)}]
-    if a.rows:
-        artifacts.append({"kind": "row_level_results", "uri": rel(a.rows), "sha256": sha(a.rows)})
-    else:
-        artifacts.append({"kind": "row_level_results", "uri": rel(a.normalized), "sha256": sha(a.normalized)})
+    if a.rows:  # summary and rows are separate files
+        artifacts = [{"kind": "evaluator_report", "uri": rel(a.normalized), "sha256": sha(a.normalized)},
+                     {"kind": "row_level_results", "uri": rel(a.rows), "sha256": sha(a.rows)}]
+    else:  # the frozen runner's report carries the per-question rows itself
+        artifacts = [{"kind": "row_level_results", "uri": rel(a.normalized), "sha256": sha(a.normalized)}]
     for kind, path in (("execution_log", a.exec_record), ("execution_log", a.stdout), ("execution_log", a.stderr), ("other", a.freeze)):
         artifacts.append({"kind": kind, "uri": rel(path), "sha256": sha(path)})
     manifest = {
@@ -99,10 +99,10 @@ def main() -> int:
         "environment": {"runtime": "CPython", "runtime_version": system.get("python", platform.python_version()),
                         "isolation": "cloud_sandbox", "container_digest": None,
                         "dependency_lock_sha256": sha(a.freeze), "network_access": system.get("network_access", "restricted"),
-                        "notes": system.get("notes", [])},
+                        "notes": system.get("notes", []) + ["execution.timeout_ms 0 = no runner-level timeout (per-call product timeouts recorded in configuration where they exist)."]},
         "inference": {"used": bool(system.get("calls")), "calls": system.get("calls", [])},
         "execution": {"command_sha256": hashlib.sha256("\0".join(ex["argv"]).encode()).hexdigest(),
-                      "argv_redacted": ex["argv"], "random_seed": 0, "timeout_ms": None, "retries": 0,
+                      "argv_redacted": ex["argv"], "random_seed": 0, "timeout_ms": 0, "retries": 0,
                       "context_budget_tokens": system.get("context_budget_tokens"), "retrieval_top_k": 50,
                       "stdout_sha256": sha(a.stdout), "stderr_sha256": sha(a.stderr), "exit_code": ex["exit_status"],
                       "peak_rss_bytes": int(ex["peak_rss_mib"] * 1024 * 1024), "peak_vram_bytes": None,

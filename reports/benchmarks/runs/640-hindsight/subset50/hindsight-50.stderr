@@ -1,0 +1,8 @@
+WARNING:hindsight_api.engine.db_utils:[DB POOL] Slow acquire: 0.075s
+WARNING:hindsight_api.engine.db_utils:[DB POOL] Slow acquire: 0.086s
+WARNING:hindsight_api.engine.db_utils:[DB POOL] Slow acquire: 0.068s
+WARNING:hindsight_api.engine.retain.types:Rejected degenerate fact text: type=world, text='👍', entities=[]
+WARNING:hindsight_api.engine.db_utils:[DB POOL] Slow acquire: 0.058s
+WARNING:hindsight_api.engine.db_utils:[DB POOL] Slow acquire: 0.096s
+WARNING:hindsight_api.engine.db_utils:[DB POOL] Slow acquire: 0.085s
+WARNING:hindsight_api.engine.db_utils:[DB POOL] Slow acquire: 0.062s

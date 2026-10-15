@@ -1,0 +1,17 @@
+{
+ "id": "lexical_overlap",
+ "revision": "e4e2a4be9f31a25c8c365584f92c213f3857eb11",
+ "adapter_id": "reference/run_longmemeval.py (lexical_overlap baseline)",
+ "adapter_revision": "git-blob:6b9c237380f1d527e564161c2dac7fe32ada0ef9",
+ "configuration": {
+  "backend": "lexical_overlap"
+ },
+ "calls": [],
+ "network_access": "restricted",
+ "notes": [
+  "Profile-local lexical baseline."
+ ],
+ "limitations": [
+  "Candidate control re-execution; accepted values for this lane live in the canonical dashboard."
+ ]
+}

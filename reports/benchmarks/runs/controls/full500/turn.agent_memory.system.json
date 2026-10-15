@@ -1,0 +1,21 @@
+{
+ "id": "agent_memory",
+ "revision": "e4e2a4be9f31a25c8c365584f92c213f3857eb11",
+ "adapter_id": "reference/run_longmemeval.py (built-in agent_memory backend)",
+ "adapter_revision": "git-blob:6b9c237380f1d527e564161c2dac7fe32ada0ef9",
+ "configuration": {
+  "backend": "agent_memory",
+  "temporal_metadata": "none",
+  "ranking_variant": "default",
+  "budget": null,
+  "semantic_retrieval": "off"
+ },
+ "calls": [],
+ "network_access": "restricted",
+ "notes": [
+  "Agent Memory control, public facade, no model inference; run in an isolated venv without competitor packages."
+ ],
+ "limitations": [
+  "Candidate control re-execution; accepted values for this lane live in the canonical dashboard."
+ ]
+}

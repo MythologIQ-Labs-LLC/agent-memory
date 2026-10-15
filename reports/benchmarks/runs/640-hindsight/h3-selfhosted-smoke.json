@@ -1,0 +1,89 @@
+{
+  "benchmark_lane": null,
+  "benchmark_score": null,
+  "evidence_class": "product_connectivity_and_identity_smoke",
+  "executed_at": "2026-10-15T05:16:41.604486+00:00",
+  "model_snapshot": {
+    "artifacts": {
+      "config.json": {
+        "bytes": 655,
+        "sha256": "69137736cab8b8903a07fe8afaafdda25aac55415a12a55d1bffa9f581abf959"
+      },
+      "onnx/model.onnx": {
+        "bytes": 470268510,
+        "sha256": "ca456c06b3a9505ddfd9131408916dd79290368331e7d76bb621f1cba6bc8665"
+      },
+      "special_tokens_map.json": {
+        "bytes": 167,
+        "sha256": "d05497f1da52c5e09554c0cd874037a083e1dc1b9cfd48034d1c717f1afc07a7"
+      },
+      "tokenizer.json": {
+        "bytes": 17082730,
+        "sha256": "0b44a9d7b51c3c62626640cda0e2c2f70fdacdc25bbbd68038369d14ebdf4c39"
+      },
+      "tokenizer_config.json": {
+        "bytes": 443,
+        "sha256": "a1d6bc8734a6f635dc158508bef000f8e2e5a759c7d92f984b2c86e5ff53425b"
+      }
+    },
+    "dimensions": 384,
+    "manifest_sha256": "4c0e50e7d52121bc5e3ce582959d09d2eaec203ec9c04634c0af9b166f59fd7f",
+    "model": "intfloat/multilingual-e5-small",
+    "revision": "03415a4be176a1620747c692ed433219fabc3def"
+  },
+  "next_gate": "H3 independent deployment verification, then freeze H4 lane before scoring",
+  "probe": {
+    "authority_effect": "none",
+    "bank_config_sha256": "363201677244eb9f005d456b7aa40c9b450e197ffe44230c4062308d887dad0e",
+    "bridge_version": "0.2.0",
+    "ingest_count": 2,
+    "pre_post_config_sha256_equal": true,
+    "probe_documents": [
+      {
+        "native_id_sha256": "4b22da0dfe2a585382e4dfd485806c743943ad36228f0b669751b36d7c6e9c9d",
+        "synthetic_id": "smoke-doc-a",
+        "text_sha256": "5c9cd143e3988defb9533c5c623f5e97e29e70d2c73c45a4604033c754c84ec4"
+      },
+      {
+        "native_id_sha256": "700f44e9f27a591726162648009759e278e7a107d625a91195a46dc33451acf5",
+        "synthetic_id": "smoke-doc-b",
+        "text_sha256": "6cef95e46f00d2899384f956bec596ed7ee9d0803fa3ec9a06bf2982117fb782"
+      }
+    ],
+    "provider_result_count": 2,
+    "query_sha256": "30ba0021ca898675f44443af8343090d5f37f5bb1387c714fd607ce1b08eec98",
+    "repeated_document_id_count": 0,
+    "returned_corpus_ids": [
+      "smoke-doc-b",
+      "smoke-doc-a"
+    ],
+    "unmapped_result_count": 0
+  },
+  "product": {
+    "attestation_verification": "pinned clean source checkout; installed editable product path; same-process HindsightServer constructed with llm_provider=none and no API key; pre/post effective bank config confirmed",
+    "configuration": {
+      "enable_graph_retrieval": false,
+      "enable_observations": false,
+      "enable_reranking": false,
+      "enable_temporal_retrieval": false,
+      "enable_text_search": true,
+      "retain_extraction_mode": "chunks"
+    },
+    "deployment_attestation": {
+      "embedding_provider": "onnx",
+      "llm_provider": "none",
+      "model_revision": "03415a4be176a1620747c692ed433219fabc3def",
+      "paid_llm_credentials_present": false,
+      "product_release": "0.10.2",
+      "product_source_revision": "5fc4ce20917b916240cef27c212c387a177f115b"
+    },
+    "llm_provider_forced_none": true,
+    "model_calls_observed": "not_measured",
+    "release": "0.10.2",
+    "server_isolation": "temporary embedded local PostgreSQL; loopback only",
+    "source_revision": "5fc4ce20917b916240cef27c212c387a177f115b"
+  },
+  "schema_version": "1.0.0",
+  "smoke_id": "hindsight-product-smoke-v1",
+  "status": "selfhosted_product_smoke_pass"
+}

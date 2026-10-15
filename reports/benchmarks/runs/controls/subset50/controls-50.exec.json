@@ -1,0 +1,48 @@
+{
+  "argv": [
+    "python",
+    "reference/run_longmemeval.py",
+    "--backend",
+    "agent_memory",
+    "--backend",
+    "lexical_overlap",
+    "--input",
+    "/tmp/agent-memory-benchmark-data/longmemeval_s_cleaned.json",
+    "--corpus-class",
+    "external_frozen",
+    "--subset-size",
+    "50",
+    "--granularity",
+    "session",
+    "--granularity",
+    "turn",
+    "--output",
+    "/tmp/am-bench/runs/controls-50.json"
+  ],
+  "cwd": "/tmp/am-bench/am",
+  "exit_status": 0,
+  "started_utc": "2026-10-15T04:37:59Z",
+  "wall_seconds": 222.756,
+  "user_cpu_seconds": 108.61,
+  "system_cpu_seconds": 11.562,
+  "peak_rss_mib": 70.8,
+  "env": {
+    "HF_HOME": null,
+    "HF_HUB_OFFLINE": null,
+    "TRANSFORMERS_OFFLINE": null,
+    "JEV_MEM_SOURCE_ROOT": null,
+    "PYTHONHASHSEED": null,
+    "VIRTUAL_ENV": "/tmp/am-bench/am-venv",
+    "OMP_NUM_THREADS": null
+  },
+  "secrets_present": {
+    "OPENAI_API_KEY": false,
+    "TYPESAFE_API_KEY": false,
+    "HF_TOKEN": false
+  },
+  "host": {
+    "platform": "Linux-6.18.44-fc-v114-x86_64-with-glibc2.39",
+    "cpu_count": 4,
+    "python": "3.12.3"
+  }
+}

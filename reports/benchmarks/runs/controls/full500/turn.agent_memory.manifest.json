@@ -1,0 +1,141 @@
+{
+  "schema_version": "1.0.0",
+  "run_id": "controls:full500:turn:agent_memory",
+  "normalized_run": {
+    "uri": "reports/benchmarks/runs/controls/full500/controls-500.json.gz",
+    "sha256": "bf72f996ffe10917404dd1058e136e3d97df8f5026e2eef8c6ad8cb3f53c10f2"
+  },
+  "benchmark": {
+    "id": "longmemeval-s-retrieval",
+    "task_profile": "longmemeval-s-retrieval-parity-v1:turn",
+    "dataset_revision": "xiaowu0162/longmemeval-cleaned longmemeval_s_cleaned.json",
+    "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+    "selection_id": "all|size=500|ids_sha256=7d738ae585fd4014c9d231088ff824864fded501adc07b0e08c2b97a28210c03",
+    "sample_count": 500,
+    "evaluator_revision": "git-blob:6b9c237380f1d527e564161c2dac7fe32ada0ef9",
+    "excluded_count": 81
+  },
+  "system": {
+    "id": "agent_memory",
+    "revision": "e4e2a4be9f31a25c8c365584f92c213f3857eb11",
+    "adapter_id": "reference/run_longmemeval.py (built-in agent_memory backend)",
+    "adapter_revision": "git-blob:6b9c237380f1d527e564161c2dac7fe32ada0ef9",
+    "configuration_sha256": "9e568c26d8e5e454c639b2532b7d69a285e0fe0a00144db7bd1f58a7fc634014",
+    "worktree_clean": true,
+    "build_sha256": null
+  },
+  "timing": {
+    "started_at": "2026-10-15T04:41:42Z",
+    "finished_at": "2026-10-15T05:26:54.562000Z",
+    "elapsed_ms": 2712562
+  },
+  "hardware": {
+    "os": "Linux",
+    "os_release": "6.18.44-fc-v114",
+    "architecture": "x86_64",
+    "cpu_model": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+    "cpu_cores": 4,
+    "ram_bytes": 16874930176,
+    "gpus": []
+  },
+  "environment": {
+    "runtime": "CPython",
+    "runtime_version": "3.12.3",
+    "isolation": "cloud_sandbox",
+    "container_digest": null,
+    "dependency_lock_sha256": "961cb244d673ec52c2cff4d1ca56dd7c1b63959ea0dff9f7251b9fbc88fdf8ec",
+    "network_access": "restricted",
+    "notes": [
+      "Agent Memory control, public facade, no model inference; run in an isolated venv without competitor packages.",
+      "execution.timeout_ms 0 = no runner-level timeout (per-call product timeouts recorded in configuration where they exist)."
+    ]
+  },
+  "inference": {
+    "used": false,
+    "calls": []
+  },
+  "execution": {
+    "command_sha256": "2e65e8fc64a2dbd353994a590e2eb6bb2cd4c21574055d9500c85e4660e977e3",
+    "argv_redacted": [
+      "python",
+      "reference/run_longmemeval.py",
+      "--backend",
+      "agent_memory",
+      "--backend",
+      "lexical_overlap",
+      "--input",
+      "/tmp/agent-memory-benchmark-data/longmemeval_s_cleaned.json",
+      "--corpus-class",
+      "external_frozen",
+      "--granularity",
+      "session",
+      "--granularity",
+      "turn",
+      "--output",
+      "/tmp/am-bench/runs/controls-500.json"
+    ],
+    "random_seed": 0,
+    "timeout_ms": 0,
+    "retries": 0,
+    "context_budget_tokens": null,
+    "retrieval_top_k": 50,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "exit_code": 0,
+    "peak_rss_bytes": 94371840,
+    "peak_vram_bytes": null,
+    "latency_p50_ms": 4185.178,
+    "latency_p95_ms": 4873.27
+  },
+  "costs": {
+    "status": "not_measured",
+    "currency": "USD",
+    "amount": null,
+    "input_tokens": null,
+    "output_tokens": null,
+    "billing_reference_sha256": null
+  },
+  "artifacts": [
+    {
+      "kind": "row_level_results",
+      "uri": "reports/benchmarks/runs/controls/full500/controls-500.json.gz",
+      "sha256": "bf72f996ffe10917404dd1058e136e3d97df8f5026e2eef8c6ad8cb3f53c10f2"
+    },
+    {
+      "kind": "execution_log",
+      "uri": "reports/benchmarks/runs/controls/full500/controls-500.exec.json",
+      "sha256": "83ae30faca80bc1d8088343fa3be57d6759fcd482a43ee78335f740e24763b83"
+    },
+    {
+      "kind": "execution_log",
+      "uri": "reports/benchmarks/runs/controls/full500/controls-500.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "kind": "execution_log",
+      "uri": "reports/benchmarks/runs/controls/full500/controls-500.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "kind": "other",
+      "uri": "reports/benchmarks/runs/controls/full500/am-venv-freeze.txt",
+      "sha256": "961cb244d673ec52c2cff4d1ca56dd7c1b63959ea0dff9f7251b9fbc88fdf8ec"
+    }
+  ],
+  "redaction": {
+    "reviewed": true,
+    "contains_secrets": false,
+    "contains_private_data": false,
+    "note": "Runs used an allowlisted environment with no tokens; argv contains only local paths and flags. Dataset is public LongMemEval-S."
+  },
+  "review": {
+    "status": "candidate",
+    "reviewer": null,
+    "decision_ref": null,
+    "limitations": [
+      "Candidate control re-execution; accepted values for this lane live in the canonical dashboard."
+    ],
+    "comparison_eligibility": "not_assessed"
+  },
+  "authority_effect": "none"
+}
