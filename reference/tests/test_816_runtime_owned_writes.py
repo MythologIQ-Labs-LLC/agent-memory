@@ -375,6 +375,41 @@ class ReviewFindings(_Store):
         self.open().close()
 
 
+    def test_n1_a_holder_of_the_substrate_cannot_declare_its_own_generation(self):
+        memory = self.open()
+        memory.remember("memory:x", "The deploy window is Thursday.")
+        substrate = memory.runtime.adapter.checkpoint_substrate()
+        for capability in (None, object()):
+            with self.subTest(capability=capability):
+                with self.assertRaises(UngovernedDurableWrite):
+                    with substrate.transaction(), substrate.generation_opened(capability):
+                        memory.runtime.adapter.governed_recall("deploy window", memory._handle_recall_context())
+        nested = {}
+
+        def inside():
+            try:
+                with substrate.generation_opened(memory.runtime.durable_runtime.base._generation_capability):
+                    pass
+            except RuntimeError as exc:
+                nested["refused"] = str(exc)
+            return memory.runtime.adapter.mint_id()  # the outer generation still holds its token
+
+        self.assertTrue(memory.runtime.durable_runtime.run_governed_read(inside))
+        self.assertIn("already open", nested["refused"])
+        memory.close()
+        self.open().close()
+
+    def test_n2_an_interrupted_visibility_snapshot_is_not_kept(self):
+        memory = self.open()
+        durable = memory.runtime.durable_runtime
+        with mock.patch.object(sqlite_substrate.SQLiteTemporalGraph, "append_runtime_journal", side_effect=KeyboardInterrupt):
+            with self.assertRaises(KeyboardInterrupt):
+                durable.persist_visibility_snapshot("op:interrupted", {"operation": {"required_projection_ids": []}})
+        self.assertNotIn("op:interrupted", durable.base.visibility_snapshots)
+        memory.recall("anything")
+        memory.close()
+        self.assertNotIn("op:interrupted", self.open().runtime.durable_runtime.base.visibility_snapshots)
+
 _OTHER_PROCESS = textwrap.dedent(
     """
     import sys

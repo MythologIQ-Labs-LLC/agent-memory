@@ -600,6 +600,11 @@ class SQLiteTemporalGraph:
         explicit runtime checkpoint, and recovery refuses them otherwise."""
 
         self._ids._generation_owned = True
+        # The capability that marks a generation (review N1): only the runtime that bound the store
+        # holds it, so a holder of the substrate cannot declare its own transaction a generation.
+        capability = object()
+        self._generation_capability = capability
+        return capability
 
     def require_generation(self) -> None:
         """Raise ``UngovernedDurableWrite`` unless this thread runs the owning runtime's open generation."""
@@ -607,11 +612,16 @@ class SQLiteTemporalGraph:
         self._ids.ensure_allocatable()
 
     @contextmanager
-    def generation_opened(self):
-        """Mark the calling thread as running the owning runtime's generation; call inside ``transaction()``."""
+    def generation_opened(self, capability: object):
+        """Mark the calling thread as running the owning runtime's generation; call inside
+        ``transaction()`` with the capability ``require_runtime_generations`` returned."""
 
+        if capability is None or capability is not getattr(self, "_generation_capability", None):
+            raise UngovernedDurableWrite(UNGOVERNED_WRITE_MESSAGE)
         if not self._connection.in_transaction:
             raise RuntimeError("a runtime generation opens inside a SQLite transaction")
+        if self._ids._generation_thread is not None:
+            raise RuntimeError("a runtime generation is already open")
         self._ids._generation_thread = threading.get_ident()
         try:
             yield

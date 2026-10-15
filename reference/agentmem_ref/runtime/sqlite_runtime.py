@@ -255,7 +255,7 @@ class SQLiteRestartSafeRuntime:
         # #816: the database is the durable source of truth only for what a generation
         # published, so from here on a governed act runs only inside ``_transactional_operation``
         # (a direct adapter call on this handle is refused before anything moves, not half-applied).
-        substrate.require_runtime_generations()
+        self._generation_capability = substrate.require_runtime_generations()
         adapter.require_generation_for_durable_effects(substrate.require_generation)
         self._on_generation_published = None
 
@@ -535,7 +535,7 @@ class SQLiteRestartSafeRuntime:
     def _generation(self):
         """One SQLite transaction that this runtime publishes as a generation (#816)."""
 
-        with self.substrate.transaction(), self.substrate.generation_opened():
+        with self.substrate.transaction(), self.substrate.generation_opened(self._generation_capability):
             yield
 
     def checkpoint(self) -> SQLiteRecoveryEvidence:
@@ -657,7 +657,7 @@ class SQLiteRestartSafeRuntime:
             self.visibility_snapshots[operation_id] = snapshot
             try:
                 return self.checkpoint()
-            except Exception:
+            except BaseException:  # an interrupt rolls the generation back too (review N2)
                 # Undo only what did not commit: a failure after the generation committed (the
                 # owner's binding hook, #816 review F3) must not drop a committed snapshot.
                 if self._observed_generation == generation:
