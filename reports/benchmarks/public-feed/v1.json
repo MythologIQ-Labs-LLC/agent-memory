@@ -2,7 +2,7 @@
   "schema_version": 1,
   "kind": "agent-memory-measured-results-feed",
   "authority_effect": "none",
-  "feed_revision": "2026-10-15-independent819-reviewed",
+  "feed_revision": "2026-10-15-cycle2-amb-query-only-peers",
   "profiles": [
     {
       "id": "candidate:longmemeval-s:subset50:session",
@@ -546,6 +546,120 @@
             ]
           },
           "expected_score": 0.6590909090909091
+        }
+      ]
+    },
+    {
+      "id": "candidate:amb:precisionmembench:77:strict:query-only-peers-cycle2",
+      "title": "AMB PrecisionMemBench · 77 cases · strict retrieval success · query-only peers (cycle 2)",
+      "family": "precisionmembench",
+      "evidence_status": "candidate",
+      "cohort": {
+        "sample_count": 77,
+        "scored_count": 77,
+        "excluded_count": 0,
+        "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+        "selection_id": "full upstream precisionmembench single-turn split"
+      },
+      "evaluator_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+      "protocol": "native upstream AMB evaluator, retrieval mode, no LLM answer/judge; protocol tier A: query-only providers (supports_filters=False), no structured scope/type filters; local CPU, no paid inference",
+      "metric": "strict_case_success",
+      "method_note": "Self-run candidate evidence from claude/810-competitive-cycle2-no-ci, not reviewed or accepted, not official AMB placement. Every external system ran twice: identical verdicts (Letta and Cognee also identical order). Hindsight, Letta and Cognee pass the same 9 cases (6 structural, 3 trivially empty, 0 active): none has a relevance floor, so precision is set by k. Letta and Cognee share the bge-small-en-v1.5 embedder and differ in 2/77 returned sets, so in this tier they largely measure the embedder. Capability tiers are partial: Hindsight without its LLM extraction, Letta archival search without its agent loop. Hindsight's published 66/77 uses LLM ingestion plus structured filters and is a different tier. Agent Memory's 15/77 includes 4 active passes; its precision is still low (0.18), see #819. Missing systems are unmeasured, not zero.",
+      "rows": [
+        {
+          "system": "agent_memory",
+          "label": "Agent Memory (runtime 7c06468-equivalent, query-only)",
+          "role": "control",
+          "status": "candidate",
+          "source_commit": "5cf88cd118dbc2f43cfc418cf2f34298fc7098ea",
+          "artifact": "reports/benchmarks/runs/cycle2-amb-precisionmembench/am-amb-control/single-turn.json",
+          "artifact_sha256": "aa29b353dc62b67845ccaeef0da42d22946d1d56344c660ac1b1811c8d2fbcb9",
+          "extract": {
+            "type": "json_count_fraction",
+            "numerator_path": [
+              "correct"
+            ],
+            "denominator_path": [
+              "total_queries"
+            ]
+          },
+          "expected_score": 0.19480519480519481
+        },
+        {
+          "system": "hindsight_chunks_local",
+          "label": "Hindsight 0.10.2 chunk mode, no LLM (not the LLM product mode)",
+          "role": "comparator",
+          "status": "candidate",
+          "source_commit": "5cf88cd118dbc2f43cfc418cf2f34298fc7098ea",
+          "artifact": "reports/benchmarks/runs/cycle2-amb-precisionmembench/hs-amb-rep1/single-turn.json",
+          "artifact_sha256": "1908f40e8629d64576c25d90fc6fa5df15e4463bb43e73b551d08618ec9b7f95",
+          "extract": {
+            "type": "json_count_fraction",
+            "numerator_path": [
+              "correct"
+            ],
+            "denominator_path": [
+              "total_queries"
+            ]
+          },
+          "expected_score": 0.11688311688311688
+        },
+        {
+          "system": "letta_archival_local",
+          "label": "Letta 0.16.8 archival-memory search only (not the stateful agent)",
+          "role": "comparator",
+          "status": "candidate",
+          "source_commit": "5cf88cd118dbc2f43cfc418cf2f34298fc7098ea",
+          "artifact": "reports/benchmarks/runs/cycle2-amb-precisionmembench/letta-amb-rep1/single-turn.json",
+          "artifact_sha256": "a37d847129d383587262004f41281bce0c522fb3d02ea5cde5fb1c7094d579f2",
+          "extract": {
+            "type": "json_count_fraction",
+            "numerator_path": [
+              "correct"
+            ],
+            "denominator_path": [
+              "total_queries"
+            ]
+          },
+          "expected_score": 0.11688311688311688
+        },
+        {
+          "system": "cognee_gliner_local",
+          "label": "Cognee 1.6.4 local GLiNER mode, no LLM",
+          "role": "comparator",
+          "status": "candidate",
+          "source_commit": "5cf88cd118dbc2f43cfc418cf2f34298fc7098ea",
+          "artifact": "reports/benchmarks/runs/cycle2-amb-precisionmembench/cognee-amb-rep1/single-turn.json",
+          "artifact_sha256": "59a359ef438c777d19b5167e53b17753afa0b28e1db7ff2bedf475168aed3d2b",
+          "extract": {
+            "type": "json_count_fraction",
+            "numerator_path": [
+              "correct"
+            ],
+            "denominator_path": [
+              "total_queries"
+            ]
+          },
+          "expected_score": 0.11688311688311688
+        },
+        {
+          "system": "bm25",
+          "label": "BM25 (AMB built-in baseline)",
+          "role": "baseline",
+          "status": "candidate",
+          "source_commit": "5cf88cd118dbc2f43cfc418cf2f34298fc7098ea",
+          "artifact": "reports/benchmarks/runs/cycle2-amb-precisionmembench/bm25-amb-control/single-turn.json",
+          "artifact_sha256": "04131506e0394382cf4ce3e823fd7b7a3f260159a56ad48a52934730e80ca3da",
+          "extract": {
+            "type": "json_count_fraction",
+            "numerator_path": [
+              "correct"
+            ],
+            "denominator_path": [
+              "total_queries"
+            ]
+          },
+          "expected_score": 0.1038961038961039
         }
       ]
     }
