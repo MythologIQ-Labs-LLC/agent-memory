@@ -97,3 +97,56 @@ not tuning targets.
 - AMB 77: report strict, precision and recall against C3.
 
 **Cost.** Held-out recall p50 latency within +10% of C3; no new storage.
+
+## Erratum (recorded during implementation, before any cohort or benchmark run on C4)
+
+The preregistered test "passing mention does not count as coverage" (`bring ... Rex`) could not
+be satisfied together with "covered entity adds nothing" (`Mom's new mailing address`). Measured
+on those fixtures, the admitted-set relevance of the selected fact to the entity is 0.64 of the
+best for Rex and 0.66 for Mom. No lexical measure available to selection separates a subject from
+a passing mention.
+
+C4 takes the conservative reading the cycle brief asks for: a selected fact that names the entity
+with at least half the best relevance covers it. Two expectations were changed accordingly, and
+the change is visible in the diff:
+
+- the C4 Rex test now asserts that only the vet fact is returned;
+- the slice-1 React/MongoDB test no longer requires the React fact, because the selected
+  error-handling fact names React. MongoDB, which no selected fact names, is still covered.
+
+The diagnostics test fixture gained a third fact so that the dominance path is actually exercised,
+and its expected term count is 2 ("number" is a frame word).
+
+## Erratum 2: dominance never withholds a newer statement (before freeze; held-out v3 unread)
+
+The first C4 working tree met every preregistered unit test. My preregistered regression tracking
+then flagged LongMemEval-S, a seen, diagnostic-only set:
+
+| Session plane | C3 | First C4 working tree |
+|---|---:|---:|
+| recall_all@10 | 0.905 | 0.878 (−0.027, beyond the 0.01 tolerance) |
+| knowledge-update | 0.972 | 0.903 |
+
+Pooled precision rose from 0.381 to 0.469.
+
+The two other C4 mechanisms traded well:
+
+| Mechanism | Returns removed | Gold among them |
+|---|---:|---:|
+| `ranked_above_sufficient` | 409 | 7 |
+| Entity coverage | 39 | 0 |
+
+The loss came from dominance: 14 gold sessions.
+
+The general flaw: a later statement that matches fewer query words is often the update to an
+earlier, fuller one. Withholding it returns a stale state alone, which is worse than an extra fact.
+
+**Repair, chosen on principle and applied once.** A fact is dominated only if it is not newer than
+its dominator, on the first clock both carry: declared valid-from, then declared observed-at, then
+transaction time (the ranking stage's order). If the order is unknown, nothing is withheld.
+
+**Test changes:**
+- The two dominance tests now write the partial facts before the answer.
+- A function-level test pins both orders.
+
+No further LongMemEval-driven changes follow. Its rerun is reported as measured.

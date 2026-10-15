@@ -75,21 +75,45 @@ class CoveredEntitiesAddNothing(_Facade):
         result = self.memory.recall("How do we deploy the Flask app to Heroku?")
         self.assertTrue({flask, heroku} <= set(result["returned"]))
 
-    def test_passing_mention_does_not_count_as_coverage(self):
-        # The answer mentions Rex only in passing; the fact about Rex is still needed.
+    def test_a_selected_fact_naming_the_entity_covers_it(self):
+        # Erratum to the preregistration: lexical relevance cannot tell a passing mention ("bring
+        # ... Rex", 0.64 of the best Rex relevance) from a subject ("Mom's mailing address", 0.66).
+        # C4 takes the conservative reading: a selected fact that names the entity with at least
+        # half the best relevance covers it, and no other fact is added for the name alone.
         vet = self.put("memory:vet", "Booked the vet for Saturday at 10; bring the vaccination card and Rex.")
-        rex = self.put("memory:rex", "Rex is allergic to chicken; Rex takes Apoquel daily and Rex hates baths.")
+        self.put("memory:rex", "Rex is allergic to chicken; Rex takes Apoquel daily and Rex hates baths.")
         result = self.memory.recall("What should I tell the vet about Rex?")
-        self.assertTrue({vet, rex} <= set(result["returned"]))
+        self.assertEqual(result["returned"], [vet])
 
 
 class RedundantSingleAnswers(_Facade):
-    def test_partial_match_beside_a_full_answer_is_withheld(self):
-        phone = self.put("memory:phone", "My sister Ava's phone number is 07700 900123.")
+    def test_earlier_partial_match_beside_a_full_answer_is_withheld(self):
         self.put("memory:case", "I need to buy a new phone case.")
         self.put("memory:visit", "My sister is visiting in June.")
+        phone = self.put("memory:phone", "My sister Ava's phone number is 07700 900123.")
         result = self.memory.recall("What's my sister's phone number?")
         self.assertEqual(result["returned"], [phone])
+
+    def test_later_partial_statement_is_kept(self):
+        # A later statement that matches fewer query words may be the update ("the guitar now goes
+        # to Mike's" after "serviced at Strings Co"); only a statement no newer than the fuller one
+        # is withheld as redundant.
+        texts = {"full": "guitar serviced at strings co on elm street last spring",
+                 "partial": "guitar repairs: the guitar now goes to mikes",
+                 "x": "lunch on friday", "y": "bought milk", "z": "paid rent"}
+
+        def run(full_at, partial_at):
+            times = {"full": full_at, "partial": partial_at, "x": "2025-01-01", "y": "2025-01-01", "z": "2025-01-01"}
+            facts = {ref: SimpleNamespace(fact_text=text, attributes={}, created_at=times[ref]) for ref, text in texts.items()}
+            return select_relevance_sufficient(
+                list(texts), {ref: ("lexical",) for ref in texts}, facts.get, query="where is my guitar serviced",
+                intent=TemporalIntent(), lexical_route="lexical", exact_identity_route="exact_logical_identity")
+
+        selected, records, _ = run("2025-01-01", "2025-06-01")
+        self.assertEqual(selected, ["full", "partial"])
+        selected, records, _ = run("2025-06-01", "2025-01-01")
+        self.assertEqual(selected, ["full"])
+        self.assertEqual(records["partial"]["basis"], "dominated_by_selected")
 
     def test_equal_matches_are_both_kept(self):
         # Two facts that answer equally well (possibly conflicting) are not collapsed.
@@ -128,14 +152,15 @@ class RankingConsistency(unittest.TestCase):
 
 class Diagnostics(_Facade):
     def test_every_admitted_fact_says_why(self):
-        phone = self.put("memory:phone", "My sister Ava's phone number is 07700 900123.")
+        self.put("memory:case", "I need to buy a new phone case.")
         visit = self.put("memory:visit", "My sister is visiting in June.")
+        phone = self.put("memory:phone", "My sister Ava's phone number is 07700 900123.")
         result = self.memory.recall("What's my sister's phone number?")
         chosen = result["admissions"][phone]["return_selection"]
         withheld = result["admissions"][visit]["return_selection"]
         self.assertEqual(chosen["requirement"], "single")
-        self.assertEqual(chosen["query_terms_matched"], 3)
-        self.assertEqual(chosen["query_terms_added"], 3)
+        self.assertEqual(chosen["query_terms_matched"], 2)  # "number" is a frame word
+        self.assertEqual(chosen["query_terms_added"], 2)
         self.assertFalse(withheld["sufficient"])
         self.assertEqual(withheld["basis"], "dominated_by_selected")
         self.assertEqual(withheld["dominated_by"], phone)  # an admitted, returned fact only

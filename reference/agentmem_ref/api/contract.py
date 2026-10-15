@@ -213,6 +213,7 @@ def apply_return_selection(
         **({"information_requirement": dict(summary["information_requirement"])}
            if "information_requirement" in summary else {}),
         **({"query_expansion": dict(summary["query_expansion"])} if summary.get("query_expansion") else {}),
+        **({"dominated_count": int(summary["dominated_count"])} if "dominated_count" in summary else {}),
         **({"lifecycle_successor_count": int(summary["lifecycle_successor_count"])}
            if "lifecycle_successor_count" in summary else {}),
         "basis": RETURN_SELECTION_BASIS,

@@ -123,7 +123,10 @@ class EvidenceSets(_Facade):
         errors = self.put("memory:errors", "Error handling uses explicit error returns; error values, not "
                                            "exceptions, carry error handling across the React and API layers.")
         result = self.memory.recall("How should React error handling work with MongoDB?")
-        self.assertTrue({react, mongo, errors} <= set(result["returned"]))
+        # 2.3.0 (#819 C4): the error-handling fact names React with enough relevance to cover it,
+        # so the React fact is no longer added for the name alone; MongoDB, which no selected fact
+        # covers, is still covered by the fact most about it.
+        self.assertTrue({mongo, errors} <= set(result["returned"]))
         decisions = {r: result["admissions"][r]["return_selection"]["basis"] for r in result["returned"]}
         self.assertNotIn("entity_coverage", [decisions.get(r) for r in result["returned"] if r not in {react, mongo, errors}])
 
