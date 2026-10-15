@@ -162,7 +162,12 @@ function nameFor(id) {return LABELS[id]||String(id).replace(/[_-]/g,' ').replace
 function cohort(m){return m.benchmark.sample_count+' input · '+
     (m.benchmark.selection_id?.startsWith('all|')?'full':'preregistered subset');}
 function createRow(m,path,sha,identity,metric,error) {
-  return {kind:'manifest',name:nameFor(m.system.id),benchmark:m.benchmark.id,
+  return {kind:'manifest',name:nameFor(m.system.id),systemId:m.system.id,
+    benchmark:m.benchmark.id,taskProfile:m.benchmark.task_profile,
+    inputSha:m.benchmark.input_sha256,selectionId:m.benchmark.selection_id,
+    evaluatorRevision:m.benchmark.evaluator_revision,
+    sampleCount:m.benchmark.sample_count,excludedCount:m.benchmark.excluded_count,
+    scoredCount:metric?.scored??null,
     cohort:cohort(m),plane:identity.plane,metric:metric?.metric||null,
     score:metric?.score??null,coverage:metric
       ?metric.scored+'/'+m.benchmark.sample_count+' scored · '+metric.excluded+' excluded'
@@ -261,6 +266,8 @@ async function refresh(force=false) {
       .localeCompare(b.benchmark+'|'+b.cohort+'|'+b.plane+'|'+b.name));
     lastRows=rows;
     render(rows,new Date().toLocaleTimeString(),sources.length,problems);
+    if(typeof root.dispatchEvent==='function' && typeof CustomEvent!=='undefined')
+      root.dispatchEvent(new CustomEvent('agent-memory:candidate-runs',{detail:rows}));
   }catch(e){
     const status=document.getElementById('discoveredRunStatus');
     if(status)status.textContent='Manifest source discovery unavailable: '+e.message+
@@ -268,7 +275,7 @@ async function refresh(force=false) {
   } finally {busy=false;}
 }
 root.AgentMemoryRunDiscovery={validateSources,validateManifest,validateSummary,extractMetric,
-  listFiles,createRow,createPartial,rawUrl,refresh};
+  listFiles,createRow,createPartial,rawUrl,refresh,getLastRows:()=>lastRows.slice()};
 if(typeof module!=='undefined'&&module.exports)module.exports=root.AgentMemoryRunDiscovery;
 if(typeof document!=='undefined'){
  const start=()=>{

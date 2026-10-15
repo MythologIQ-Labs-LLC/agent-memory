@@ -1,0 +1,174 @@
+{
+  "schema_version": 1,
+  "kind": "candidate-measured-evidence-not-accepted",
+  "authority_effect": "none",
+  "as_of": "2026-10-15",
+  "profiles": [
+    {
+      "id": "candidate:longmemeval-s:subset50:session",
+      "family": "longmemeval-s-retrieval",
+      "title": "LongMemEval-S · 50 fixed questions · session retrieval",
+      "evidence_status": "candidate",
+      "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+      "selection_id": "sha256(seed || NUL || question_id) ascending|size=50|ids_sha256=5266568e2e883b64e92e0da632d5e24c3fd61d8a447de7e629ebf93ef26a7339",
+      "sample_count": 50,
+      "scored_count": 43,
+      "excluded_count": 7,
+      "granularity": "session",
+      "evaluator_revision": "git-blob:6b9c237380f1d527e564161c2dac7fe32ada0ef9",
+      "source_commit": "05f5a38782a3341eea1c5e731f014f82c3d3e960",
+      "label": "Candidate same-harness · preregistered 50",
+      "method_note": "Retrieval only; 43 scored, 3 abstention and 4 no-user-target exclusions. Same frozen LongMemEval-S input, selection and metric across these rows. Hindsight is local chunk/ONNX (no LLM); Mem0 is frozen explicit memory; Agent Memory is query-only lexical/governed. Comparative latency is not qualified on shared CPU. Candidate, not independently accepted.",
+      "metrics": [
+        {
+          "metric": "recall_all@5",
+          "rows": [
+            {
+              "system": "hindsight",
+              "label": "Hindsight 0.10.2 · local chunks/ONNX",
+              "role": "comparator",
+              "score": 0.930233,
+              "sample_count": 43,
+              "status": "candidate",
+              "source_revision": "05f5a38782a3341eea1c5e731f014f82c3d3e960",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/05f5a38782a3341eea1c5e731f014f82c3d3e960/reports/benchmarks/runs/640-hindsight/subset50/session.hindsight_chunks_onnx.manifest.json"
+            },
+            {
+              "system": "mem0",
+              "label": "Mem0 OSS 2.2.1 · explicit",
+              "role": "comparator",
+              "score": 0.883721,
+              "sample_count": 43,
+              "status": "candidate",
+              "source_revision": "05f5a38782a3341eea1c5e731f014f82c3d3e960",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/05f5a38782a3341eea1c5e731f014f82c3d3e960/reports/benchmarks/runs/mem0/subset50/session.mem0_explicit.manifest.json"
+            },
+            {
+              "system": "agent_memory",
+              "label": "Agent Memory · frozen control",
+              "role": "control",
+              "score": 0.837209,
+              "sample_count": 43,
+              "status": "candidate",
+              "source_revision": "05f5a38782a3341eea1c5e731f014f82c3d3e960",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/05f5a38782a3341eea1c5e731f014f82c3d3e960/reports/benchmarks/runs/controls/subset50/session.agent_memory.manifest.json"
+            },
+            {
+              "system": "lexical_overlap",
+              "label": "Lexical baseline",
+              "role": "baseline",
+              "score": 0.813953,
+              "sample_count": 43,
+              "status": "candidate",
+              "source_revision": "05f5a38782a3341eea1c5e731f014f82c3d3e960",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/05f5a38782a3341eea1c5e731f014f82c3d3e960/reports/benchmarks/runs/controls/subset50/session.lexical_overlap.manifest.json"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "candidate:longmemeval-s:subset50:turn",
+      "family": "longmemeval-s-retrieval",
+      "title": "LongMemEval-S · 50 fixed questions · turn retrieval",
+      "evidence_status": "candidate",
+      "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+      "selection_id": "sha256(seed || NUL || question_id) ascending|size=50|ids_sha256=5266568e2e883b64e92e0da632d5e24c3fd61d8a447de7e629ebf93ef26a7339",
+      "sample_count": 50,
+      "scored_count": 43,
+      "excluded_count": 7,
+      "granularity": "turn",
+      "evaluator_revision": "git-blob:6b9c237380f1d527e564161c2dac7fe32ada0ef9",
+      "source_commit": "05f5a38782a3341eea1c5e731f014f82c3d3e960",
+      "label": "Candidate same-harness · preregistered 50",
+      "method_note": "Retrieval only; 43 scored, 3 abstention and 4 no-user-target exclusions. Same frozen LongMemEval-S input, selection and metric across these rows. Hindsight is local chunk/ONNX (no LLM); Mem0 is frozen explicit memory; Agent Memory is query-only lexical/governed. Comparative latency is not qualified on shared CPU. Candidate, not independently accepted.",
+      "metrics": [
+        {
+          "metric": "recall_all@10",
+          "rows": [
+            {
+              "system": "hindsight",
+              "label": "Hindsight 0.10.2 · local chunks/ONNX",
+              "role": "comparator",
+              "score": 0.837209,
+              "sample_count": 43,
+              "status": "candidate",
+              "source_revision": "05f5a38782a3341eea1c5e731f014f82c3d3e960",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/05f5a38782a3341eea1c5e731f014f82c3d3e960/reports/benchmarks/runs/640-hindsight/subset50/turn.hindsight_chunks_onnx.manifest.json"
+            },
+            {
+              "system": "mem0",
+              "label": "Mem0 OSS 2.2.1 · explicit",
+              "role": "comparator",
+              "score": 0.651163,
+              "sample_count": 43,
+              "status": "candidate",
+              "source_revision": "05f5a38782a3341eea1c5e731f014f82c3d3e960",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/05f5a38782a3341eea1c5e731f014f82c3d3e960/reports/benchmarks/runs/mem0/subset50/turn.mem0_explicit.manifest.json"
+            },
+            {
+              "system": "agent_memory",
+              "label": "Agent Memory · frozen control",
+              "role": "control",
+              "score": 0.72093,
+              "sample_count": 43,
+              "status": "candidate",
+              "source_revision": "05f5a38782a3341eea1c5e731f014f82c3d3e960",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/05f5a38782a3341eea1c5e731f014f82c3d3e960/reports/benchmarks/runs/controls/subset50/turn.agent_memory.manifest.json"
+            },
+            {
+              "system": "lexical_overlap",
+              "label": "Lexical baseline",
+              "role": "baseline",
+              "score": 0.604651,
+              "sample_count": 43,
+              "status": "candidate",
+              "source_revision": "05f5a38782a3341eea1c5e731f014f82c3d3e960",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/05f5a38782a3341eea1c5e731f014f82c3d3e960/reports/benchmarks/runs/controls/subset50/turn.lexical_overlap.manifest.json"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "candidate:amb:precisionmembench:77:strict",
+      "family": "precisionmembench",
+      "title": "AMB PrecisionMemBench · 77 cases · strict retrieval success",
+      "evidence_status": "reviewed_self_run_unofficial",
+      "source_commit": "1df28f84c236f5369b004465252610bd88ae07c9",
+      "sample_count": 77,
+      "scored_count": 77,
+      "excluded_count": 0,
+      "granularity": "single-turn",
+      "label": "Independently reproduced self-run · not official AMB placement",
+      "method_note": "Full native upstream AMB evaluator at 03c1d0f, same retrieval-only no-LLM protocol for Agent Memory and built-in BM25. Success requires every must-include and must-exclude assertion. Published Hindsight 66/77 uses structured filters and an LLM at ingestion, and is intentionally NOT ranked as a controlled comparator. No official external leaderboard placement.",
+      "metrics": [
+        {
+          "metric": "strict_case_success",
+          "rows": [
+            {
+              "system": "agent_memory",
+              "label": "Agent Memory",
+              "role": "control",
+              "score": 0.19480519480519481,
+              "sample_count": 77,
+              "status": "reviewed_self_run_unofficial",
+              "source_revision": "1df28f84c236f5369b004465252610bd88ae07c9",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/1df28f84c236f5369b004465252610bd88ae07c9/reports/benchmarks/amb-local-execution/2026-10-15-precisionmembench-single-turn/case-outcomes-agent-memory.csv"
+            },
+            {
+              "system": "bm25",
+              "label": "BM25 · same native harness",
+              "role": "baseline",
+              "score": 0.1038961038961039,
+              "sample_count": 77,
+              "status": "reviewed_self_run_unofficial",
+              "source_revision": "1df28f84c236f5369b004465252610bd88ae07c9",
+              "run_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/1df28f84c236f5369b004465252610bd88ae07c9/reports/benchmarks/amb-local-execution/2026-10-15-precisionmembench-single-turn/case-outcomes-bm25.csv"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -10,12 +10,13 @@
 <script defer src="./assets/external-evaluations.js"></script>
 <script defer src="./assets/live-evidence.js"></script>
 <script defer src="./assets/run-discovery.js"></script>
+<script defer src="./assets/measured-leaderboard.js"></script>
 <script defer src="./assets/site.js"></script></head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="topbar"><div class="shell navwrap">
 <a class="brand" href="#top" aria-label="Agent Memory home"><span class="brandmark" aria-hidden="true">◇</span><span>AGENT<span class="brandthin">/</span>MEMORY</span></a>
-<nav aria-label="Primary"><a href="#benchmarks">Accepted</a><a href="#live-runs">Live runs</a><a href="#coverage">Coverage</a><a href="#external-evaluations">External evaluations</a><a href="#competitors">Competitors</a><a href="#architecture">Architecture</a><a href="#reproduce">Reproduce</a></nav>
+<nav aria-label="Primary"><a href="#benchmarks">Leaderboard</a><a href="#live-runs">Live runs</a><a href="#coverage">Coverage</a><a href="#external-evaluations">External evaluations</a><a href="#competitors">Competitors</a><a href="#architecture">Architecture</a><a href="#reproduce">Reproduce</a></nav>
 <a class="gh" href="https://github.com/MythologIQ-Labs-LLC/agent-memory" target="_blank" rel="noopener noreferrer">Repository <span aria-hidden="true">↗</span></a>
 </div></header>
 <main id="main">
@@ -32,10 +33,27 @@
 </div></section>
 <div class="ribbon"><div class="shell ribbon-inner"><span>Every claim has a boundary.</span><span>Every measurement has a method.</span><span>Every omission stays visible.</span></div></div>
 <section class="shell section" id="benchmarks">
-<div class="section-head"><div><p class="eyebrow">01 / Comparative evidence</p><h2>Benchmark leaderboard</h2><p class="sub">Accepted same-harness runs, compared only within their exact evaluation profile. No universal ranking.</p></div><div class="as-of" id="snapshot" aria-live="polite">Loading evidence snapshot…</div></div>
+<div class="section-head"><div><p class="eyebrow">01 / Comparative evidence</p><h2>Benchmark leaderboard</h2><p class="sub">Real measured outcomes, including runs in which Agent Memory trails competitors. Every ranking is specific to its benchmark, population, native metric, and evidence status. Candidate results are visible, not silently accepted.</p></div><div class="as-of" id="snapshot" aria-live="polite">Loading evidence snapshot…</div></div>
+<div class="panel measured-leaderboard" aria-label="Measured benchmark leaderboard">
+<div class="panel-header"><div><h3>Where Agent Memory actually ranks</h3><p>Current measured results first. Switch to accepted-only evidence, or inspect every scored benchmark profile. Unreviewed measurements remain explicitly labeled.</p></div><span class="score-mode mode-candidate" id="measuredMode">Loading evidence…</span></div>
+<div class="filters measured-filters">
+<label>Evidence visibility<select id="measuredScope"><option value="all">All measured results (default)</option><option value="accepted">Accepted results only</option></select></label>
+<label>Benchmark population<select id="measuredProfileSelect" aria-label="Benchmark population"><option>Loading…</option></select></label>
+<label>Native metric<select id="measuredMetricSelect" aria-label="Native metric"><option>Loading…</option></select></label></div>
+<div class="measured-kpis" id="measuredKpis" aria-live="polite"></div>
+<div class="table-scroll"><table class="measured-table"><thead><tr>
+<th>Rank</th><th>Memory system</th><th>Role</th><th>Measured result</th><th>Scored cases</th><th>Gap to leading system</th><th>Evidence status</th><th>Source</th>
+</tr></thead><tbody id="measuredRows"><tr><td colspan="8">Loading measured outcomes…</td></tr></tbody></table></div>
+<p class="fineprint measured-provenance" id="measuredProvenance" aria-live="polite">Each row retains its own evidence status and source commit.</p>
+<p class="fineprint measured-method">The AMB 15/77 strict-success result is a valid native local self-run. The separate published Hindsight 66/77 result uses structured filters and LLM extraction, so it is <strong>not ranked in that query-only comparison</strong>. The 50-question and 500-question LongMemEval populations are never combined. Lower results remain visible because they are precisely what the runtime must improve.</p>
+</div>
+<div class="measured-history">
+<h3>Accepted historical evidence</h3>
+<p class="fineprint">Older qualified, source-pinned profiles follow below. These retain their original acceptance decisions, but may omit newer candidate competitors. Use the measured leaderboard above for the current evidence picture.</p>
+</div>
 <div class="stat-grid" id="stats" aria-label="Evidence coverage"></div>
 <div class="panel leaderboard">
-<div class="panel-header"><div><h3>Explore a measured profile</h3><p>Choose a benchmark and native metric to see the actual peer comparison.</p></div><span class="tag verified">Accepted evidence only · frozen</span></div>
+<div class="panel-header"><div><h3>Browse accepted historical profiles</h3><p>Older, qualified benchmark comparisons. Current candidate results are ranked in the primary leaderboard above.</p></div><span class="tag verified">Accepted evidence only · frozen</span></div>
 <div class="filters"><label>Benchmark profile<select id="profileSelect" aria-label="Benchmark profile"><option>Loading…</option></select></label><label>Native metric<select id="metricSelect" aria-label="Native metric"><option>Loading…</option></select></label></div>
 <div class="metric-summary" id="metricSummary" aria-live="polite"></div>
 <div class="table-scroll"><table><thead><tr><th>System</th><th>Role</th><th class="num">Measured result</th><th class="num">Samples</th><th class="num">Gap to leader</th><th>Evidence</th></tr></thead><tbody id="leaderRows"><tr><td colspan="6">Loading accepted evidence…</td></tr></tbody></table></div>

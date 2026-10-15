@@ -129,3 +129,35 @@
 .discover-review{display:block;color:#adb9c4;font-size:10px;font-weight:500;margin-top:5px;text-transform:capitalize}
 .discover-notes{padding:13px 16px 0;margin:0;color:#aac0cc}
 @media(max-width:760px){.discover-table th,.discover-table td{padding:11px 13px}}
+
+/* Outcome-first main leaderboard. Candidate measurements are first class, but never accepted implicitly. */
+.measured-leaderboard{margin-bottom:32px;border:1px solid #54768b;background:linear-gradient(165deg,#122e3c 0%,#0c1726 56%)}
+.measured-leaderboard>.panel-header{border-bottom:1px solid #335264;align-items:flex-start}
+.measured-leaderboard .panel-header h3{font-size:22px;letter-spacing:-.03em}
+.measured-filters{display:grid;grid-template-columns:1fr 2fr 1fr;gap:16px}
+.measured-filters select{min-width:0;width:100%}
+.score-mode{display:inline-block;font-size:10px;line-height:1.4;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:7px 10px;border:1px solid #64717b;border-radius:6px;color:#e1e8ee;background:#2c3e4c}
+.mode-candidate{color:#f4dba8;border-color:#745e36;background:#3f3320}
+.mode-accepted{color:#9eebdd;border-color:#286a65;background:#143835}
+.measured-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;padding:18px 24px;border-top:1px solid #274554;border-bottom:1px solid #274554}
+.measured-kpi{padding:13px 15px;background:#152e3c;border:1px solid #34586a;border-radius:8px;min-width:0}
+.measured-kpi span{display:block;color:#a9c4d0;font-size:10px;line-height:1.5;min-height:31px}
+.measured-kpi strong{display:block;color:#9ef1e0;font:800 clamp(15px,1.65vw,23px) 'Manrope',system-ui;letter-spacing:-.03em}
+.measured-table{width:100%;border-collapse:collapse;min-width:1090px}
+.measured-table thead th{text-align:left;font-size:10px;line-height:1.4;text-transform:uppercase;letter-spacing:.04em;color:#b1ced9;background:#152f3f}
+.measured-table th,.measured-table td{padding:14px 13px;border-bottom:1px solid #314558;font-size:12px;text-align:left;vertical-align:middle}
+.measured-table tbody th{color:#e6f5f5;min-width:175px}
+.measured-table tbody tr.measured-am{background:#1a3946}
+.measured-table tbody tr.measured-am th{color:#d7fbf1}
+.measured-table a{font-size:11px;color:#8af2dc;text-decoration:underline;text-underline-offset:3px}
+.measured-table .measured-rank{font-weight:800;color:#dcefe9}
+.measured-table .measured-num{font:800 14px 'Manrope',system-ui;color:#e3f9f1}
+.measured-row-state{font-size:10px;color:#d1dfe5;line-height:1.5}
+.measured-provenance,.measured-method{padding:15px 25px 0;margin:0;color:#b6c6cf;line-height:1.8;font-size:11px}
+.measured-method{padding:11px 25px 22px;color:#b3c3ce}
+.measured-method strong{color:#f2e2bb}
+.measured-history{margin:30px 0 17px;padding-top:18px;border-top:1px solid #345061}
+.measured-history h3{font-size:18px;color:#e8f7f5;margin:0 0 7px}
+.measured-history p{color:#a7bcca}
+@media(max-width:1100px){.measured-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.measured-filters{grid-template-columns:1fr 1fr}.measured-filters label:nth-child(2){grid-column:auto}}
+@media(max-width:760px){.measured-filters,.measured-kpis{grid-template-columns:1fr}.measured-leaderboard>.panel-header{flex-direction:column}.measured-kpi span{min-height:0}}
