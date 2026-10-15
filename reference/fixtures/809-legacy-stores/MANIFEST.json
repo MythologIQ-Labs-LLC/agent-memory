@@ -1,0 +1,78 @@
+{
+ "frozen_on": "2026-10-15",
+ "note": "Real recoverable stores written by the v7 runtime, byte-frozen. Every consumer copies a store before opening it (opening publishes a new generation). Fact ids are deterministic (ref-NNNN, one monotonic sequence per store).",
+ "owning_issue": 809,
+ "produced_by": {
+  "how": "python3 produce/<script>.py <v7 checkout>/reference <store dir>; the v7 checkout is a detached worktree at the revision above; each script prints the ids.json of its store",
+  "python": "3.13.16",
+  "revision": "16a248b1e28f455fbf19217114175f0c20df2a01",
+  "runtime": "published Runtime Baseline v7 reference runtime, the FROZEN_RUNTIME_REVISION of examples/gauntlet/agent_memory_runtime_baseline_v7_stdio.py",
+  "sqlite": "3.45.1"
+ },
+ "scripts": {
+  "write_v7_store_cross_scope.py": "57e0394030e5e0a825d4e4cc43a9dad99d0e636432f3bee86313d4e4b15ee8da",
+  "write_v7_store_forward_reference.py": "2574cd91147a5c64fe06ca36c381320f997f09d5895ec45fb45cfe7cf1e017e4",
+  "write_v7_store_shared_membership.py": "1dd24799be70f5830d739797219384b919fc757af02bb0a3ecc168d98dca8884"
+ },
+ "status": "frozen",
+ "stores": {
+  "cross-scope": {
+   "files": {
+    "agent-memory.sqlite3": "6939238136b8049e4e28bbdc75e0f88bd5424562c5aaf2c2fbc637ce15a0fd4c",
+    "configuration-binding.json": "f155671491318c539e0a38f1a03881ac8d6bfb93f98f0906023c36fde736494f",
+    "ids.json": "375ab48ec5b413a4271f89956dce984340487e93b2e2f67d83c3b6ae5ff6054c",
+    "runtime-config.json": "a58850f0a62c2080ca17a333aff3db06e7382c650b62482e7c2bcbb928e87423"
+   },
+   "ids": {
+    "a1": "ref-0004",
+    "a2": "ref-0011",
+    "bd": "ref-0032",
+    "bl": "ref-0039",
+    "bu": "ref-0046",
+    "ctl": "ref-0025",
+    "d1": "ref-0018",
+    "package": "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-v7/reference/agentmem_ref/__init__.py"
+   }
+  },
+  "forward-reference": {
+   "files": {
+    "agent-memory.sqlite3": "d157573d648a1cba8d256a303e0d8e71caf0bc6b66e7fb961660594511b765b1",
+    "configuration-binding.json": "9b2dd44505bcfaf990555d2b2e1bf761b2f166188a606830815974663af8f3d3",
+    "ids.json": "3db0c3b140ef50f054817a7f8c4e754dc4d4a0a81bddb16c6d0fc62e79b31150",
+    "runtime-config.json": "a58850f0a62c2080ca17a333aff3db06e7382c650b62482e7c2bcbb928e87423"
+   },
+   "ids": {
+    "a1": "ref-0004",
+    "fwd": "ref-0014",
+    "late": "ref-0021",
+    "package": "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-v7/reference/agentmem_ref/__init__.py"
+   }
+  },
+  "shared-membership": {
+   "files": {
+    "agent-memory.sqlite3": "bfb6caeaa2d0193d7e0e355f989bb2b64117827d71e214a2e629024798270a4d",
+    "configuration-binding.json": "2512c818b10c115f182417e2a7d0184b29715c330469a1fa9d97eb1b2ebab33a",
+    "ids.json": "0c4b81804a2d0430ec2e9f8b1e091ce0707ba5f55642ee3cdfce24ecdf03d53a",
+    "runtime-config.json": "a58850f0a62c2080ca17a333aff3db06e7382c650b62482e7c2bcbb928e87423"
+   },
+   "ids": {
+    "members_at_write": {
+     "agent:c": false,
+     "agent:l": false,
+     "agent:m": true,
+     "agent:o": true
+    },
+    "members_now": [
+     "agent:o",
+     "agent:m",
+     "agent:l"
+    ],
+    "package": "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-v7/reference/agentmem_ref/__init__.py",
+    "s1": "ref-0004",
+    "sc": "ref-0018",
+    "sl": "ref-0025",
+    "sm": "ref-0011"
+   }
+  }
+ }
+}
