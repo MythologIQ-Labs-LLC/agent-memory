@@ -1,0 +1,23 @@
+{
+  "left": "reports/benchmarks/runs/mem0/subset50/mem0-50.json.gz",
+  "right": "/tmp/am-bench/runs/mem0-subset50-repeat/resumable/session.mem0_explicit.rows.jsonl",
+  "plane": "session",
+  "backend": "mem0_explicit",
+  "scope": "exact",
+  "compared_fields": [
+    "metrics",
+    "status",
+    "runtime_error",
+    "ranked_top",
+    "gold",
+    "question_type"
+  ],
+  "left_questions": 50,
+  "right_questions": 50,
+  "compared_questions": 50,
+  "only_left": 0,
+  "only_right": 0,
+  "differing_questions": 0,
+  "differences": 0,
+  "equal": true
+}

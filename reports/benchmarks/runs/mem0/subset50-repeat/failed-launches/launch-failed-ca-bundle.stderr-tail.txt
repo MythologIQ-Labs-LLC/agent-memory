@@ -1,0 +1,5 @@
+    ctx = ssl.create_default_context(cafile=os.environ["SSL_CERT_FILE"])
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/ssl.py", line 708, in create_default_context
+    context.load_verify_locations(cafile, capath, cadata)
+PermissionError: [Errno 13] Permission denied
