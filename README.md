@@ -45,3 +45,23 @@ node tools/build-site-data.mjs --dashboard /tmp/am-dashboard.json --competitors 
 ```
 
 The builder pins source/evidence links to that exact immutable revision, computes the dashboard Git blob ID, rejects malformed provenance and out-of-range metrics, and fails when a competitor's `measured` / `not_run` status contradicts the accepted lane inputs. It cannot qualify new benchmarks or publish vendor references as same-harness evidence. Avoid editing `data/snapshot.json` by hand. A new dashboard revision requires a fresh deliberate source-head and rebuilt data. This branch is static and does not fetch data from visitors' browsers beyond its own JSON asset.
+
+
+## Peer coverage explorer (publication candidate)
+
+The candidate coverage explorer is read-only UI derived entirely from the source-pinned `data/snapshot.json`:
+- `assets/evidence-transparency.js` computes exact accepted external product counts, per-frozen-profile peer coverage, and published-projection sample-count omissions. Missing/unsupported/unqualified sources never become zero scores.
+- The comparison matrix excludes Agent Memory and lexical/BM25 controls from the competitor count. It counts an external product at most once, no matter how many native metrics it measures.
+- `Export evidence CSV` exports accepted observed metric rows with frozen profile, plane, role, score, sample count (blank if unknown), pinned evidence URL and source revision. The CSV may contain repeated source/run links across native metrics; it is not a list of unique benchmark runs.
+- `tools/test-evidence-transparency.mjs` is a Node 22 offline regression test, including negative cases for altered source hashes, status contradictions and CSV formula injection.
+
+Test locally on this publication candidate branch:
+
+~~~bash
+node tools/test-evidence-transparency.mjs
+python -m http.server 8000
+~~~
+
+For keyboard/mobile QA, inspect `http://localhost:8000/#coverage`: coverage counts, horizontal-scroll table, columns, evidence gaps, CSV download and focus. **This is an evidence surface, not a new benchmark scoring authority.**
+
+Publication rule: test/review in an isolated branch first; updating the configured `gh-pages` branch runs GitHub's native Pages workflow and must be coordinated with the organization's Actions-spend controls. Do not merge this publication branch into `main`.

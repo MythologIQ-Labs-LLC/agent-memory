@@ -6,12 +6,13 @@
 <title>Agent Memory · Evidence, not assertions</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23090f1b'/%3E%3Cpath d='M13 38 32 10l19 28-19 16z' fill='none' stroke='%236de5d7' stroke-width='5' stroke-linejoin='round'/%3E%3Ccircle cx='32' cy='33' r='5' fill='%236de5d7'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="./assets/site.css">
+<script defer src="./assets/evidence-transparency.js"></script>
 <script defer src="./assets/site.js"></script></head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="topbar"><div class="shell navwrap">
 <a class="brand" href="#top" aria-label="Agent Memory home"><span class="brandmark" aria-hidden="true">◇</span><span>AGENT<span class="brandthin">/</span>MEMORY</span></a>
-<nav aria-label="Primary"><a href="#benchmarks">Benchmarks</a><a href="#competitors">Competitors</a><a href="#architecture">Architecture</a><a href="#reproduce">Reproduce</a></nav>
+<nav aria-label="Primary"><a href="#benchmarks">Benchmarks</a><a href="#coverage">Coverage</a><a href="#competitors">Competitors</a><a href="#architecture">Architecture</a><a href="#reproduce">Reproduce</a></nav>
 <a class="gh" href="https://github.com/MythologIQ-Labs-LLC/agent-memory" target="_blank" rel="noopener noreferrer">Repository <span aria-hidden="true">↗</span></a>
 </div></header>
 <main id="main">
@@ -38,23 +39,34 @@
 <div class="fineprint" id="profileNotes"></div>
 </div>
 </section>
+<section class="section coverage-wrap" id="coverage"><div class="shell">
+<div class="section-head"><div><p class="eyebrow">02 / The measurement gap</p><h2>Where the evidence reaches.</h2><p class="sub">A measurable peer is not the same as an untested competitor. This matrix is calculated from accepted source-pinned observations only, without borrowing vendor-published scores.</p></div></div>
+<div class="coverage-summary" id="coverageSummary" aria-label="Accepted external competitor coverage"><div class="coverage-stat"><strong>…</strong><span>Loading coverage evidence</span></div></div>
+<div class="panel coverage-panel">
+<div class="panel-header"><div><h3>Benchmark-by-competitor coverage</h3><p>Each cell indicates whether this exact profile contains an accepted measured result for that external memory system.</p></div><button class="csv-export" id="exportEvidenceCsv" type="button">Export evidence CSV ↓</button></div>
+<div class="table-scroll coverage-scroll"><table class="coverage-matrix" id="coverageMatrix" aria-label="Accepted peer evidence matrix"><tbody><tr><td>Loading source-pinned competitor coverage…</td></tr></tbody></table></div>
+<p class="fineprint">No result means there is no accepted comparable measurement in that profile. It does not mean zero performance, unsupported functionality or product failure. Baselines and Agent Memory are intentionally excluded from the competitor columns.</p>
+</div>
+<div class="provenance-note" id="provenanceGaps" aria-live="polite"><p>Loading source provenance coverage…</p></div>
+<a class="textlink coverage-issue" href="https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/810">Follow the independent competitor execution program ↗</a>
+</div></section>
 <section class="section competitors-wrap" id="competitors"><div class="shell">
-<div class="section-head"><div><p class="eyebrow">02 / Coverage, not just winners</p><h2>The competitive field</h2><p class="sub">A system can be important to evaluate before its first accepted result. Missing is not failing.</p></div></div>
+<div class="section-head"><div><p class="eyebrow">03 / Coverage, not just winners</p><h2>The competitive field</h2><p class="sub">A system can be important to evaluate before its first accepted result. Missing is not failing.</p></div></div>
 <div class="panel"><div class="filters compfilters"><label>Filter competitors<select id="statusFilter"><option value="all">All systems</option><option value="measured">Measured peers</option><option value="not_run">Not yet run</option><option value="published_reference">Published references</option></select></label><a href="https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/810" class="textlink">Parallel benchmark execution tracker ↗</a></div>
 <div class="competitor-grid" id="competitorGrid" aria-live="polite"></div></div>
 <p class="note">The registry is a discovery surface. Inclusion is not an endorsement, compatibility claim or completed benchmark. Some systems may be unsupported for specific profiles.</p></div></section>
 <section class="shell section" id="architecture">
-<div class="section-head"><div><p class="eyebrow">03 / Research & architecture</p><h2>Governance before convenience.</h2><p class="sub">Persistent state is consequential. A retrieved memory does not grant itself authority.</p></div></div>
+<div class="section-head"><div><p class="eyebrow">04 / Research & architecture</p><h2>Governance before convenience.</h2><p class="sub">Persistent state is consequential. A retrieved memory does not grant itself authority.</p></div></div>
 <div class="feature-grid">
 <a class="feature" href="https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/04-governance-and-pama.md"><span class="feature-index">01</span><h3>PAMA & write authority ↗</h3><p>Proposals and probabilistic interpretation cannot bypass admission and policy.</p></a>
 <a class="feature" href="https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/02-lifecycle-state-machine.md"><span class="feature-index">02</span><h3>Lifecycle & currentness ↗</h3><p>Correction, supersession, temporal relevance and deletion have distinct contracts.</p></a>
 <a class="feature" href="https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/ARCHITECTURE_INDEX.md"><span class="feature-index">03</span><h3>Architecture catalog ↗</h3><p>Canonical design intent and ADR states are maintained in the repository.</p></a>
 </div></section>
 <section class="section reproduce-wrap" id="reproduce"><div class="shell reproduce-grid">
-<div><p class="eyebrow">04 / Reproducibility</p><h2>Show the work.<br><em>Then show the work again.</em></h2><p class="sub">Each measured row links to its underlying evidence. Results remain bound to the benchmark input, profile, revision and execution history. A score without comparable execution identity is not a competitive delta.</p><a class="primary alt" href="https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/BENCHMARKS.md">Benchmark documentation ↗</a></div>
+<div><p class="eyebrow">05 / Reproducibility</p><h2>Show the work.<br><em>Then show the work again.</em></h2><p class="sub">Each measured row links to its underlying evidence. Results remain bound to the benchmark input, profile, revision and execution history. A score without comparable execution identity is not a competitive delta.</p><a class="primary alt" href="https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/BENCHMARKS.md">Benchmark documentation ↗</a></div>
 <div class="evidence-check"><h3>Evidence contract</h3><div class="rule"><span>01</span><p>Immutable input digest and system revision</p></div><div class="rule"><span>02</span><p>Native metric and exact evaluation plane</p></div><div class="rule"><span>03</span><p>Execution manifest: clock, hardware, dependencies, inference and costs</p></div><div class="rule"><span>04</span><p>Raw outputs, evaluator, limitations and reproducibility links</p></div><p class="fineprint">Full execution-manifest enforcement is being tracked under <a href="https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/807">#807</a>. Historical runs may not satisfy every proposed field.</p></div>
 </div></section>
-<section class="shell section" id="published"><div class="section-head"><div><p class="eyebrow">05 / External claims</p><h2>Published references</h2><p class="sub">Useful market context. Not scored against our same-harness results.</p></div></div><div id="publishedGrid" class="reference-grid"></div></section>
+<section class="shell section" id="published"><div class="section-head"><div><p class="eyebrow">06 / External claims</p><h2>Published references</h2><p class="sub">Useful market context. Not scored against our same-harness results.</p></div></div><div id="publishedGrid" class="reference-grid"></div></section>
 </main>
 <footer><div class="shell footer-inner"><div><a class="brand" href="#top"><span class="brandmark">◇</span> AGENT<span class="brandthin">/</span>MEMORY</a><p>Built in public by MythologIQ Labs. Evidence over assertion.</p></div><div><a href="https://github.com/MythologIQ-Labs-LLC/agent-memory">Source</a><a href="https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/807">Site roadmap</a><a href="https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/LICENSE">License</a></div></div></footer>
 </body></html>

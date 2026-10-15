@@ -50,6 +50,10 @@ function render(){
  $('metricSelect').addEventListener('change',renderMetric);
  $('statusFilter').addEventListener('change',renderCompetitors);
  updateMetricOptions();renderCompetitors();renderPublished();
+ if (globalThis.AgentMemoryPeerEvidence?.render) {
+   try { globalThis.AgentMemoryPeerEvidence.render(document,catalog); }
+   catch(error) { $('coverageSummary').textContent='Coverage reporting blocked: '+error.message; }
+ }
 }
 fetch('./data/snapshot.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('Snapshot unavailable ('+r.status+')');return r.json()}).then(data=>{
  if(data.schema_version!==1||data.source?.authority_effect!=='none'||!Array.isArray(data.profiles))throw new Error('Unsupported or untrusted snapshot format');
