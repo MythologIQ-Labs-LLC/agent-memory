@@ -1,0 +1,49 @@
+{
+ "Which automobile do we own?": [
+  "f:car"
+ ],
+ "Which animals live with us?": [
+  "f:dog",
+  "f:cat"
+ ],
+ "Who pays my salary?": [
+  "f:job"
+ ],
+ "Who is my boss?": [
+  "f:boss"
+ ],
+ "Where do I exercise?": [
+  "f:gym"
+ ],
+ "What medicine do I take?": [
+  "f:meds"
+ ],
+ "Which drugs must I avoid?": [
+  "f:allergy"
+ ],
+ "Where does my sibling live?": [
+  "f:sister"
+ ],
+ "When do we fly to Japan?": [
+  "f:flight"
+ ],
+ "Where are we staying in Japan?": [
+  "f:hotel"
+ ],
+ "What language am I studying?": [
+  "f:lang"
+ ],
+ "How much do we spend on food?": [
+  "f:budget"
+ ],
+ "How did the vegetable patch do?": [
+  "f:garden"
+ ],
+ "How do guests get online?": [
+  "f:wifi"
+ ],
+ "What pets do we have?": [
+  "f:dog",
+  "f:cat"
+ ]
+}

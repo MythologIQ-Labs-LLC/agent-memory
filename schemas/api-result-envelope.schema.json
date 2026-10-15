@@ -496,17 +496,11 @@
             },
             "semantic_channel": {
               "type": "object",
-              "description": "Selection policy 2.4.0 (#819 C5), present only when the optional semantic route is enabled: the semantic floors applied to admitted facts and how many were selected on semantic evidence. Derived similarity, never authority.",
+              "description": "Selection policy 2.4.0 (#819 C5), present only when the optional semantic route is enabled: the semantic floors applied to admitted facts and how many were selected on semantic evidence. Derived similarity, never authority. `applied`: the floors were applied (all fields present). `unavailable`: the provider failed while scoring, so selection fell back to policy 2.3.0's treatment of route candidates.",
               "additionalProperties": false,
               "required": [
-                "best_similarity",
-                "absolute_floor",
-                "single_margin",
-                "set_floor",
-                "set_margin",
-                "semantic_selected_count",
-                "authority_effect",
-                "plural_answer"
+                "status",
+                "authority_effect"
               ],
               "properties": {
                 "best_similarity": {
@@ -533,6 +527,12 @@
                 },
                 "plural_answer": {
                   "type": "boolean"
+                },
+                "status": {
+                  "enum": [
+                    "applied",
+                    "unavailable"
+                  ]
                 }
               }
             }

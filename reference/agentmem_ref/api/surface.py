@@ -956,9 +956,13 @@ class AgentMemory:
 
         retriever = self._semantic.get("retriever")
         similarity = None
-        if retriever is not None and result.ranked_admitted:
+        channel_unavailable = False
+        if retriever is not None:
             texts = {ref: getattr(substrate.get_fact(ref), "fact_text", "") or "" for ref in result.ranked_admitted}
-            similarity = retriever.similarities(query, texts)
+            try:
+                similarity = retriever.similarities(query, texts) if texts else {}
+            except Exception:  # a provider failure falls back to 2.3.0 selection; it never fails the recall
+                similarity, channel_unavailable = None, True
         selected, records, summary = select_relevance_sufficient(
             result.ranked_admitted,
             routes,
@@ -974,6 +978,8 @@ class AgentMemory:
         )
         for ref, record in records.items():
             admissions.setdefault(ref, {})["return_selection"] = record
+        if channel_unavailable:
+            summary["semantic_channel"] = {"status": "unavailable", "authority_effect": "none"}
         summary["query_expansion"] = dict(getattr(result, "query_expansion", {}) or {})
         return contract.apply_return_selection(result.ranked_admitted, selected, k, summary)
 

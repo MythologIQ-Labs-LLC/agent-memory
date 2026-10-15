@@ -4,7 +4,8 @@
    (``required``), capturing each recall's selection inputs (ranked admitted list, routes, fact
    texts, similarities) at the facade's call into ``select_relevance_sufficient``.
 2. Replay only the selection stage for every point of the preregistered grid
-   (tau in {0.20, ..., 0.50}, delta in {0.05, ..., 0.30}), apply the budget, and score with the
+   (tau in {0.30, ..., 0.50}, delta in {0.05, ..., 0.30}, tau_set <= tau_abs,
+   delta_set >= delta_single + 0.05; erratum 3), apply the budget, and score with the
    held-out runner's own ``score``.
 3. Choose the point with the most dev strict passes subject to the preregistered constraint
    (dev precision >= C4-semantic-on dev precision - 0.05); ties go to higher dev recall, then
@@ -36,7 +37,8 @@ _spec = importlib.util.spec_from_file_location("runner", ROOT / "scripts" / "run
 runner = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(runner)
 
-TAUS = [round(0.20 + 0.05 * i, 2) for i in range(7)]
+# Erratum 3: floors at or above the semantic route's discovery floor (0.30).
+TAUS = [round(0.30 + 0.05 * i, 2) for i in range(5)]
 DELTAS = [round(0.05 + 0.05 * i, 2) for i in range(6)]
 
 
@@ -147,8 +149,8 @@ def main() -> int:
     floor = reference["mean_precision"] - 0.05
     grid = []
     for tau_abs, d_single, tau_set, d_set in itertools.product(TAUS, DELTAS, TAUS, DELTAS):
-        if tau_set > tau_abs:
-            continue  # the set floor never exceeds the single-answer floor
+        if tau_set > tau_abs or d_set < d_single + 0.05 - 1e-9:
+            continue  # erratum 3: the set channel is looser than the single-answer channel
         result = evaluate(rows, (tau_abs, d_single, tau_set, d_set))
         grid.append({"point": [tau_abs, d_single, tau_set, d_set], **{k: v for k, v in result.items() if k != "per_query"}})
     eligible = [g for g in grid if g["mean_precision"] is not None and g["mean_precision"] >= floor and g["safety_violations"] == 0]

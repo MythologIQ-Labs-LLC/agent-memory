@@ -1,0 +1,1086 @@
+[
+ {
+  "scenario": "topic_dense_medical",
+  "query": "What is my blood pressure?",
+  "returned": [
+   "m:bp"
+  ],
+  "admitted": [
+   "m:bp",
+   "m:gp",
+   "m:cardio",
+   "m:dentist",
+   "m:insurance",
+   "m:thyroid"
+  ],
+  "records": {
+   "m:bp": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.705983
+   },
+   "m:cardio": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.127007
+   },
+   "m:gp": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.126124
+   },
+   "m:thyroid": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.107676
+   },
+   "m:dentist": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.017319
+   },
+   "m:insurance": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.040523
+   }
+  },
+  "routes": {
+   "m:bp": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "m:cardio": [
+    "lexical"
+   ],
+   "m:gp": [
+    "lexical"
+   ],
+   "m:thyroid": [
+    "lexical"
+   ],
+   "m:dentist": [
+    "lexical"
+   ],
+   "m:insurance": [
+    "lexical"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": {
+   "best_similarity": 0.705983,
+   "absolute_floor": 0.25,
+   "single_margin": 0.05,
+   "set_floor": 0.25,
+   "set_margin": 0.05,
+   "plural_answer": false,
+   "semantic_selected_count": 0,
+   "authority_effect": "none"
+  },
+  "ms": 125.4,
+  "raw": null
+ },
+ {
+  "scenario": "topic_dense_medical",
+  "query": "Which medicine do I take each morning?",
+  "returned": [
+   "m:thyroid"
+  ],
+  "admitted": [
+   "m:thyroid",
+   "m:allergy",
+   "m:run",
+   "m:diet"
+  ],
+  "records": {
+   "m:thyroid": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.61177
+   },
+   "m:allergy": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.409253
+   },
+   "m:run": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.166484
+   },
+   "m:diet": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.155986
+   }
+  },
+  "routes": {
+   "m:thyroid": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "m:allergy": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "m:run": [
+    "lexical"
+   ],
+   "m:diet": [
+    "lexical"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": {
+   "best_similarity": 0.61177,
+   "absolute_floor": 0.25,
+   "single_margin": 0.05,
+   "set_floor": 0.25,
+   "set_margin": 0.05,
+   "plural_answer": false,
+   "semantic_selected_count": 0,
+   "authority_effect": "none"
+  },
+  "ms": 26.9,
+  "raw": null
+ },
+ {
+  "scenario": "topic_dense_medical",
+  "query": "Who is my heart doctor?",
+  "returned": [
+   "m:gp",
+   "m:cardio"
+  ],
+  "admitted": [
+   "m:gp",
+   "m:cardio",
+   "m:dentist",
+   "m:insurance",
+   "m:thyroid",
+   "m:bp",
+   "m:statin"
+  ],
+  "records": {
+   "m:gp": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.584908
+   },
+   "m:cardio": {
+    "basis": "semantic_relevance",
+    "semantic_similarity": 0.715833
+   },
+   "m:bp": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.174879
+   },
+   "m:thyroid": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.063665
+   },
+   "m:dentist": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.239387
+   },
+   "m:insurance": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.199103
+   },
+   "m:statin": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.320022
+   }
+  },
+  "routes": {
+   "m:gp": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "m:cardio": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "m:bp": [
+    "lexical"
+   ],
+   "m:thyroid": [
+    "lexical"
+   ],
+   "m:dentist": [
+    "lexical"
+   ],
+   "m:insurance": [
+    "lexical"
+   ],
+   "m:statin": [
+    "semantic_vector"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": {
+   "best_similarity": 0.715833,
+   "absolute_floor": 0.25,
+   "single_margin": 0.05,
+   "set_floor": 0.25,
+   "set_margin": 0.05,
+   "plural_answer": false,
+   "semantic_selected_count": 1,
+   "authority_effect": "none"
+  },
+  "ms": 23.7,
+  "raw": null
+ },
+ {
+  "scenario": "topic_dense_medical",
+  "query": "What is my cholesterol level?",
+  "returned": [
+   "m:bp"
+  ],
+  "admitted": [
+   "m:gp",
+   "m:cardio",
+   "m:dentist",
+   "m:insurance",
+   "m:thyroid",
+   "m:bp"
+  ],
+  "records": {
+   "m:cardio": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.153942
+   },
+   "m:gp": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.111353
+   },
+   "m:bp": {
+    "basis": "semantic_relevance",
+    "semantic_similarity": 0.417063
+   },
+   "m:thyroid": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.152327
+   },
+   "m:dentist": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.031722
+   },
+   "m:insurance": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.016208
+   }
+  },
+  "routes": {
+   "m:cardio": [
+    "lexical"
+   ],
+   "m:gp": [
+    "lexical"
+   ],
+   "m:bp": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "m:thyroid": [
+    "lexical"
+   ],
+   "m:dentist": [
+    "lexical"
+   ],
+   "m:insurance": [
+    "lexical"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": {
+   "best_similarity": 0.417063,
+   "absolute_floor": 0.25,
+   "single_margin": 0.05,
+   "set_floor": 0.25,
+   "set_margin": 0.05,
+   "plural_answer": false,
+   "semantic_selected_count": 1,
+   "authority_effect": "none"
+  },
+  "ms": 27.2,
+  "raw": null
+ },
+ {
+  "scenario": "topic_dense_medical",
+  "query": "What is my blood type?",
+  "returned": [
+   "m:bp"
+  ],
+  "admitted": [
+   "m:bp",
+   "m:gp",
+   "m:cardio",
+   "m:dentist",
+   "m:insurance",
+   "m:thyroid"
+  ],
+  "records": {
+   "m:bp": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.380333
+   },
+   "m:cardio": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.209964
+   },
+   "m:gp": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.251554
+   },
+   "m:thyroid": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.118433
+   },
+   "m:dentist": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.024154
+   },
+   "m:insurance": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.041902
+   }
+  },
+  "routes": {
+   "m:bp": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "m:cardio": [
+    "lexical"
+   ],
+   "m:gp": [
+    "lexical"
+   ],
+   "m:thyroid": [
+    "lexical"
+   ],
+   "m:dentist": [
+    "lexical"
+   ],
+   "m:insurance": [
+    "lexical"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": {
+   "best_similarity": 0.380333,
+   "absolute_floor": 0.25,
+   "single_margin": 0.05,
+   "set_floor": 0.25,
+   "set_margin": 0.05,
+   "plural_answer": false,
+   "semantic_selected_count": 0,
+   "authority_effect": "none"
+  },
+  "ms": 26.4,
+  "raw": null
+ },
+ {
+  "scenario": "topic_dense_medical",
+  "query": "When is my next eye exam?",
+  "returned": [
+   "m:dentist"
+  ],
+  "admitted": [
+   "m:gp",
+   "m:cardio",
+   "m:dentist",
+   "m:insurance",
+   "m:thyroid",
+   "m:bp",
+   "m:statin"
+  ],
+  "records": {
+   "m:cardio": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.212865
+   },
+   "m:gp": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.155211
+   },
+   "m:bp": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.20231
+   },
+   "m:thyroid": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.104322
+   },
+   "m:dentist": {
+    "basis": "semantic_relevance",
+    "semantic_similarity": 0.376301
+   },
+   "m:insurance": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.05228
+   },
+   "m:statin": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.316459
+   }
+  },
+  "routes": {
+   "m:cardio": [
+    "lexical"
+   ],
+   "m:gp": [
+    "lexical"
+   ],
+   "m:bp": [
+    "lexical"
+   ],
+   "m:thyroid": [
+    "lexical"
+   ],
+   "m:dentist": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "m:insurance": [
+    "lexical"
+   ],
+   "m:statin": [
+    "semantic_vector"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": {
+   "best_similarity": 0.376301,
+   "absolute_floor": 0.25,
+   "single_margin": 0.05,
+   "set_floor": 0.25,
+   "set_margin": 0.05,
+   "plural_answer": false,
+   "semantic_selected_count": 1,
+   "authority_effect": "none"
+  },
+  "ms": 25.5,
+  "raw": null
+ },
+ {
+  "scenario": "topic_dense_medical",
+  "query": "What medications am I on?",
+  "returned": [
+   "m:allergy",
+   "m:thyroid"
+  ],
+  "admitted": [
+   "m:allergy",
+   "m:run",
+   "m:diet",
+   "m:dentist",
+   "m:thyroid",
+   "m:statin"
+  ],
+  "records": {
+   "m:allergy": {
+    "basis": "semantic_relevance",
+    "semantic_similarity": 0.435315
+   },
+   "m:run": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.098622
+   },
+   "m:diet": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.184259
+   },
+   "m:thyroid": {
+    "basis": "semantic_relevance",
+    "semantic_similarity": 0.431532
+   },
+   "m:statin": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.299582
+   },
+   "m:dentist": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.075611
+   }
+  },
+  "routes": {
+   "m:allergy": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "m:run": [
+    "lexical"
+   ],
+   "m:diet": [
+    "lexical"
+   ],
+   "m:thyroid": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "m:statin": [
+    "lexical"
+   ],
+   "m:dentist": [
+    "lexical"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": {
+   "best_similarity": 0.435315,
+   "absolute_floor": 0.25,
+   "single_margin": 0.05,
+   "set_floor": 0.25,
+   "set_margin": 0.05,
+   "plural_answer": true,
+   "semantic_selected_count": 2,
+   "authority_effect": "none"
+  },
+  "ms": 24.2,
+  "raw": null
+ },
+ {
+  "scenario": "topic_dense_medical",
+  "query": "Which drugs should I avoid?",
+  "returned": [
+   "m:allergy",
+   "m:thyroid"
+  ],
+  "admitted": [
+   "m:allergy",
+   "m:run",
+   "m:diet",
+   "m:thyroid"
+  ],
+  "records": {
+   "m:thyroid": {
+    "basis": "semantic_relevance",
+    "semantic_similarity": 0.35355
+   },
+   "m:allergy": {
+    "basis": "semantic_relevance",
+    "semantic_similarity": 0.343646
+   },
+   "m:run": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.082041
+   },
+   "m:diet": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.184155
+   }
+  },
+  "routes": {
+   "m:thyroid": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "m:allergy": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "m:run": [
+    "lexical"
+   ],
+   "m:diet": [
+    "lexical"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": {
+   "best_similarity": 0.35355,
+   "absolute_floor": 0.25,
+   "single_margin": 0.05,
+   "set_floor": 0.25,
+   "set_margin": 0.05,
+   "plural_answer": true,
+   "semantic_selected_count": 2,
+   "authority_effect": "none"
+  },
+  "ms": 25.4,
+  "raw": null
+ },
+ {
+  "scenario": "topic_dense_medical",
+  "query": "Who is my physician?",
+  "returned": [
+   "m:gp",
+   "m:cardio"
+  ],
+  "admitted": [
+   "m:gp",
+   "m:cardio",
+   "m:dentist",
+   "m:insurance",
+   "m:thyroid",
+   "m:bp",
+   "m:statin"
+  ],
+  "records": {
+   "m:cardio": {
+    "basis": "semantic_relevance",
+    "semantic_similarity": 0.611291
+   },
+   "m:gp": {
+    "basis": "semantic_relevance",
+    "semantic_similarity": 0.618048
+   },
+   "m:bp": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.125192
+   },
+   "m:thyroid": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.076841
+   },
+   "m:dentist": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.303109
+   },
+   "m:insurance": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.206124
+   },
+   "m:statin": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.374579
+   }
+  },
+  "routes": {
+   "m:cardio": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "m:gp": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "m:bp": [
+    "lexical"
+   ],
+   "m:thyroid": [
+    "lexical"
+   ],
+   "m:dentist": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "m:insurance": [
+    "lexical"
+   ],
+   "m:statin": [
+    "semantic_vector"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": {
+   "best_similarity": 0.618048,
+   "absolute_floor": 0.25,
+   "single_margin": 0.05,
+   "set_floor": 0.25,
+   "set_margin": 0.05,
+   "plural_answer": false,
+   "semantic_selected_count": 2,
+   "authority_effect": "none"
+  },
+  "ms": 24.0,
+  "raw": null
+ },
+ {
+  "scenario": "household_abstain",
+  "query": "What is my wifi password?",
+  "returned": [],
+  "admitted": [
+   "h:job"
+  ],
+  "records": {
+   "h:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.155127
+   }
+  },
+  "routes": {
+   "h:job": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": {
+   "best_similarity": 0.155127,
+   "absolute_floor": 0.25,
+   "single_margin": 0.05,
+   "set_floor": 0.25,
+   "set_margin": 0.05,
+   "plural_answer": false,
+   "semantic_selected_count": 0,
+   "authority_effect": "none"
+  },
+  "ms": 90.9,
+  "raw": null
+ },
+ {
+  "scenario": "household_abstain",
+  "query": "When does my passport expire?",
+  "returned": [],
+  "admitted": [
+   "h:job"
+  ],
+  "records": {
+   "h:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": -0.00721
+   }
+  },
+  "routes": {
+   "h:job": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": {
+   "best_similarity": -0.00721,
+   "absolute_floor": 0.25,
+   "single_margin": 0.05,
+   "set_floor": 0.25,
+   "set_margin": 0.05,
+   "plural_answer": false,
+   "semantic_selected_count": 0,
+   "authority_effect": "none"
+  },
+  "ms": 22.0,
+  "raw": null
+ },
+ {
+  "scenario": "household_abstain",
+  "query": "What is the capital of Peru?",
+  "returned": [],
+  "admitted": [
+   "h:job",
+   "h:car",
+   "h:dog",
+   "h:cat"
+  ],
+  "records": {
+   "h:car": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": -0.038112
+   },
+   "h:dog": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": -0.0857
+   },
+   "h:cat": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.013606
+   },
+   "h:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.033603
+   }
+  },
+  "routes": {
+   "h:car": [
+    "lexical"
+   ],
+   "h:dog": [
+    "lexical"
+   ],
+   "h:cat": [
+    "lexical"
+   ],
+   "h:job": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": {
+   "best_similarity": 0.033603,
+   "absolute_floor": 0.25,
+   "single_margin": 0.05,
+   "set_floor": 0.25,
+   "set_margin": 0.05,
+   "plural_answer": false,
+   "semantic_selected_count": 0,
+   "authority_effect": "none"
+  },
+  "ms": 23.8,
+  "raw": null
+ },
+ {
+  "scenario": "household_abstain",
+  "query": "Do we own a boat?",
+  "returned": [],
+  "admitted": [
+   "h:car",
+   "h:cat"
+  ],
+  "records": {
+   "h:car": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.240685
+   },
+   "h:cat": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.103935
+   }
+  },
+  "routes": {
+   "h:car": [
+    "lexical"
+   ],
+   "h:cat": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": {
+   "best_similarity": 0.240685,
+   "absolute_floor": 0.25,
+   "single_margin": 0.05,
+   "set_floor": 0.25,
+   "set_margin": 0.05,
+   "plural_answer": false,
+   "semantic_selected_count": 0,
+   "authority_effect": "none"
+  },
+  "ms": 31.6,
+  "raw": null
+ },
+ {
+  "scenario": "household_abstain",
+  "query": "Which hamster do we have?",
+  "returned": [
+   "h:car",
+   "h:cat"
+  ],
+  "admitted": [
+   "h:car",
+   "h:cat"
+  ],
+  "records": {
+   "h:car": {
+    "basis": "semantic_relevance",
+    "semantic_similarity": 0.271433
+   },
+   "h:cat": {
+    "basis": "semantic_relevance",
+    "semantic_similarity": 0.274361
+   }
+  },
+  "routes": {
+   "h:car": [
+    "lexical"
+   ],
+   "h:cat": [
+    "lexical"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": {
+   "best_similarity": 0.274361,
+   "absolute_floor": 0.25,
+   "single_margin": 0.05,
+   "set_floor": 0.25,
+   "set_margin": 0.05,
+   "plural_answer": false,
+   "semantic_selected_count": 2,
+   "authority_effect": "none"
+  },
+  "ms": 26.4,
+  "raw": null
+ },
+ {
+  "scenario": "household_abstain",
+  "query": "Where does Ana work?",
+  "returned": [
+   "h:bike"
+  ],
+  "admitted": [
+   "h:bike"
+  ],
+  "records": {
+   "h:bike": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.381769
+   }
+  },
+  "routes": {
+   "h:bike": [
+    "lexical",
+    "semantic_vector"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": {
+   "best_similarity": 0.381769,
+   "absolute_floor": 0.25,
+   "single_margin": 0.05,
+   "set_floor": 0.25,
+   "set_margin": 0.05,
+   "plural_answer": false,
+   "semantic_selected_count": 0,
+   "authority_effect": "none"
+  },
+  "ms": 23.4,
+  "raw": null
+ },
+ {
+  "scenario": "household_abstain",
+  "query": "What is my salary?",
+  "returned": [],
+  "admitted": [
+   "h:job"
+  ],
+  "records": {
+   "h:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.199145
+   }
+  },
+  "routes": {
+   "h:job": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": {
+   "best_similarity": 0.199145,
+   "absolute_floor": 0.25,
+   "single_margin": 0.05,
+   "set_floor": 0.25,
+   "set_margin": 0.05,
+   "plural_answer": false,
+   "semantic_selected_count": 0,
+   "authority_effect": "none"
+  },
+  "ms": 24.3,
+  "raw": null
+ },
+ {
+  "scenario": "household_abstain",
+  "query": "Which pets do we have?",
+  "returned": [
+   "h:cat"
+  ],
+  "admitted": [
+   "h:car",
+   "h:cat",
+   "h:dog"
+  ],
+  "records": {
+   "h:car": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.286738
+   },
+   "h:cat": {
+    "basis": "semantic_relevance",
+    "semantic_similarity": 0.419723
+   },
+   "h:dog": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.313935
+   }
+  },
+  "routes": {
+   "h:car": [
+    "lexical"
+   ],
+   "h:cat": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "h:dog": [
+    "semantic_vector"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": {
+   "best_similarity": 0.419723,
+   "absolute_floor": 0.25,
+   "single_margin": 0.05,
+   "set_floor": 0.25,
+   "set_margin": 0.05,
+   "plural_answer": true,
+   "semantic_selected_count": 1,
+   "authority_effect": "none"
+  },
+  "ms": 24.6,
+  "raw": null
+ },
+ {
+  "scenario": "household_abstain",
+  "query": "Which automobile do we own?",
+  "returned": [
+   "h:car"
+  ],
+  "admitted": [
+   "h:car",
+   "h:cat"
+  ],
+  "records": {
+   "h:car": {
+    "basis": "semantic_relevance",
+    "semantic_similarity": 0.266154
+   },
+   "h:cat": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.109775
+   }
+  },
+  "routes": {
+   "h:car": [
+    "lexical"
+   ],
+   "h:cat": [
+    "lexical"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": {
+   "best_similarity": 0.266154,
+   "absolute_floor": 0.25,
+   "single_margin": 0.05,
+   "set_floor": 0.25,
+   "set_margin": 0.05,
+   "plural_answer": false,
+   "semantic_selected_count": 1,
+   "authority_effect": "none"
+  },
+  "ms": 36.1,
+  "raw": null
+ },
+ {
+  "scenario": "household_abstain",
+  "query": "Who do I eat with midweek?",
+  "returned": [
+   "h:lunch",
+   "h:cat"
+  ],
+  "admitted": [
+   "h:lunch",
+   "h:cat"
+  ],
+  "records": {
+   "h:lunch": {
+    "basis": "semantic_relevance",
+    "semantic_similarity": 0.423782
+   },
+   "h:cat": {
+    "basis": "semantic_relevance",
+    "semantic_similarity": 0.387006
+   }
+  },
+  "routes": {
+   "h:lunch": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "h:cat": [
+    "semantic_vector"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": {
+   "best_similarity": 0.423782,
+   "absolute_floor": 0.25,
+   "single_margin": 0.05,
+   "set_floor": 0.25,
+   "set_margin": 0.05,
+   "plural_answer": false,
+   "semantic_selected_count": 2,
+   "authority_effect": "none"
+  },
+  "ms": 25.8,
+  "raw": null
+ }
+]

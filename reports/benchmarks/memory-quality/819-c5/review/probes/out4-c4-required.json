@@ -1,0 +1,1138 @@
+[
+ {
+  "scenario": "dense_meetings",
+  "query": "When is my one-on-one with my boss?",
+  "returned": [
+   "d:answer",
+   "d:12",
+   "d:9"
+  ],
+  "admitted": [
+   "d:answer",
+   "d:12",
+   "d:9",
+   "d:3",
+   "d:7",
+   "d:1",
+   "d:32",
+   "d:11",
+   "d:10",
+   "d:27",
+   "d:14",
+   "d:4",
+   "d:33",
+   "d:30",
+   "d:24",
+   "d:16",
+   "d:39",
+   "d:19",
+   "d:31",
+   "d:6",
+   "d:8",
+   "d:26",
+   "d:17",
+   "d:36",
+   "d:29",
+   "d:34",
+   "d:22",
+   "d:2",
+   "d:35",
+   "d:28",
+   "d:38",
+   "d:13",
+   "d:37",
+   "d:15",
+   "d:23",
+   "d:18",
+   "d:0",
+   "d:25",
+   "d:5",
+   "d:20",
+   "d:21"
+  ],
+  "records": {
+   "d:answer": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "d:0": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:1": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:2": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:3": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:4": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:5": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:6": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:7": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:8": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:9": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "d:10": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:11": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:12": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "d:13": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:14": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:15": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:16": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:17": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:18": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:19": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:20": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:21": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:22": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:23": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:24": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:25": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:26": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:27": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:28": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:29": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:30": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:31": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:32": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:33": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:34": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:35": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:36": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:37": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:38": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:39": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "d:answer": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:0": [
+    "lexical"
+   ],
+   "d:1": [
+    "lexical"
+   ],
+   "d:2": [
+    "lexical"
+   ],
+   "d:3": [
+    "lexical"
+   ],
+   "d:4": [
+    "lexical"
+   ],
+   "d:5": [
+    "lexical"
+   ],
+   "d:6": [
+    "lexical"
+   ],
+   "d:7": [
+    "lexical"
+   ],
+   "d:8": [
+    "lexical"
+   ],
+   "d:9": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:10": [
+    "lexical"
+   ],
+   "d:11": [
+    "lexical"
+   ],
+   "d:12": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:13": [
+    "lexical"
+   ],
+   "d:14": [
+    "lexical"
+   ],
+   "d:15": [
+    "lexical"
+   ],
+   "d:16": [
+    "lexical"
+   ],
+   "d:17": [
+    "lexical"
+   ],
+   "d:18": [
+    "lexical"
+   ],
+   "d:19": [
+    "lexical"
+   ],
+   "d:20": [
+    "lexical"
+   ],
+   "d:21": [
+    "lexical"
+   ],
+   "d:22": [
+    "lexical"
+   ],
+   "d:23": [
+    "lexical"
+   ],
+   "d:24": [
+    "lexical"
+   ],
+   "d:25": [
+    "lexical"
+   ],
+   "d:26": [
+    "lexical"
+   ],
+   "d:27": [
+    "lexical"
+   ],
+   "d:28": [
+    "lexical"
+   ],
+   "d:29": [
+    "lexical"
+   ],
+   "d:30": [
+    "lexical"
+   ],
+   "d:31": [
+    "lexical"
+   ],
+   "d:32": [
+    "lexical"
+   ],
+   "d:33": [
+    "lexical"
+   ],
+   "d:34": [
+    "lexical"
+   ],
+   "d:35": [
+    "lexical"
+   ],
+   "d:36": [
+    "lexical"
+   ],
+   "d:37": [
+    "lexical"
+   ],
+   "d:38": [
+    "lexical"
+   ],
+   "d:39": [
+    "lexical"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 436.4,
+  "raw": null
+ },
+ {
+  "scenario": "dense_meetings",
+  "query": "When do I see my supervisor?",
+  "returned": [
+   "d:answer",
+   "d:9"
+  ],
+  "admitted": [
+   "d:answer",
+   "d:9"
+  ],
+  "records": {
+   "d:answer": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "d:9": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "d:answer": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:9": [
+    "semantic_vector"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 20.3,
+  "raw": null
+ },
+ {
+  "scenario": "dense_meetings",
+  "query": "What meetings do I have?",
+  "returned": [
+   "d:36",
+   "d:23",
+   "d:0",
+   "d:37",
+   "d:17",
+   "d:16",
+   "d:18",
+   "d:30",
+   "d:4",
+   "d:34"
+  ],
+  "admitted": [
+   "d:36",
+   "d:23",
+   "d:0",
+   "d:37",
+   "d:17",
+   "d:16",
+   "d:18",
+   "d:30",
+   "d:4",
+   "d:34",
+   "d:29",
+   "d:19",
+   "d:12",
+   "d:5",
+   "d:35",
+   "d:6",
+   "d:28",
+   "d:14",
+   "d:3",
+   "d:38",
+   "d:7",
+   "d:33",
+   "d:13",
+   "d:24",
+   "d:39",
+   "d:15",
+   "d:1",
+   "d:31",
+   "d:32",
+   "d:11",
+   "d:8",
+   "d:26",
+   "d:25",
+   "d:9",
+   "d:10",
+   "d:20",
+   "d:22",
+   "d:2",
+   "d:21",
+   "d:27"
+  ],
+  "records": {
+   "d:0": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "d:1": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "d:2": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "d:3": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "d:4": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "d:5": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "d:6": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "d:7": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "d:8": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "d:9": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "d:10": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "d:11": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "d:12": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "d:13": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "d:14": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "d:15": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "d:16": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "d:17": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "d:18": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "d:19": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "d:20": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "d:21": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "d:22": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "d:23": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "d:24": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "d:25": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "d:26": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "d:27": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "d:28": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "d:29": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "d:30": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "d:31": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "d:32": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "d:33": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "d:34": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "d:35": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "d:36": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "d:37": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "d:38": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "d:39": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "d:0": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:1": [
+    "lexical"
+   ],
+   "d:2": [
+    "lexical"
+   ],
+   "d:3": [
+    "lexical"
+   ],
+   "d:4": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:5": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:6": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:7": [
+    "lexical"
+   ],
+   "d:8": [
+    "lexical"
+   ],
+   "d:9": [
+    "lexical"
+   ],
+   "d:10": [
+    "lexical"
+   ],
+   "d:11": [
+    "lexical"
+   ],
+   "d:12": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:13": [
+    "lexical"
+   ],
+   "d:14": [
+    "lexical"
+   ],
+   "d:15": [
+    "lexical"
+   ],
+   "d:16": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:17": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:18": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:19": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:20": [
+    "lexical"
+   ],
+   "d:21": [
+    "lexical"
+   ],
+   "d:22": [
+    "lexical"
+   ],
+   "d:23": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:24": [
+    "lexical"
+   ],
+   "d:25": [
+    "lexical"
+   ],
+   "d:26": [
+    "lexical"
+   ],
+   "d:27": [
+    "lexical"
+   ],
+   "d:28": [
+    "lexical"
+   ],
+   "d:29": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:30": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:31": [
+    "lexical"
+   ],
+   "d:32": [
+    "lexical"
+   ],
+   "d:33": [
+    "lexical"
+   ],
+   "d:34": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:35": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:36": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:37": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:38": [
+    "lexical"
+   ],
+   "d:39": [
+    "lexical"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 26.0,
+  "raw": null
+ },
+ {
+  "scenario": "dense_meetings",
+  "query": "When is the next sync about money?",
+  "returned": [
+   "d:answer",
+   "d:17",
+   "d:36",
+   "d:14",
+   "d:6",
+   "d:25"
+  ],
+  "admitted": [
+   "d:answer",
+   "d:17",
+   "d:36",
+   "d:14",
+   "d:6",
+   "d:4",
+   "d:33",
+   "d:30",
+   "d:24",
+   "d:16",
+   "d:39",
+   "d:19",
+   "d:31",
+   "d:8",
+   "d:26",
+   "d:29",
+   "d:34",
+   "d:22",
+   "d:2",
+   "d:35",
+   "d:25",
+   "d:28",
+   "d:38",
+   "d:13",
+   "d:37",
+   "d:15",
+   "d:23",
+   "d:18",
+   "d:0",
+   "d:5",
+   "d:20",
+   "d:21",
+   "d:3",
+   "d:7",
+   "d:1",
+   "d:32",
+   "d:11",
+   "d:12",
+   "d:9",
+   "d:10",
+   "d:27"
+  ],
+  "records": {
+   "d:0": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:2": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:4": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:5": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:6": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "d:8": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:13": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:14": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "d:15": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:16": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:17": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "d:18": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:19": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:20": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:21": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:22": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:23": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:24": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:25": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "d:26": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:28": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:29": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:30": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:31": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:33": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:34": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:35": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:36": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "d:37": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:38": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:39": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:1": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:3": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:7": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:9": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:10": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:11": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:12": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:27": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:32": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:answer": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "d:0": [
+    "lexical"
+   ],
+   "d:2": [
+    "lexical"
+   ],
+   "d:4": [
+    "lexical"
+   ],
+   "d:5": [
+    "lexical"
+   ],
+   "d:6": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:8": [
+    "lexical"
+   ],
+   "d:13": [
+    "lexical"
+   ],
+   "d:14": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:15": [
+    "lexical"
+   ],
+   "d:16": [
+    "lexical"
+   ],
+   "d:17": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:18": [
+    "lexical"
+   ],
+   "d:19": [
+    "lexical"
+   ],
+   "d:20": [
+    "lexical"
+   ],
+   "d:21": [
+    "lexical"
+   ],
+   "d:22": [
+    "lexical"
+   ],
+   "d:23": [
+    "lexical"
+   ],
+   "d:24": [
+    "lexical"
+   ],
+   "d:25": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:26": [
+    "lexical"
+   ],
+   "d:28": [
+    "lexical"
+   ],
+   "d:29": [
+    "lexical"
+   ],
+   "d:30": [
+    "lexical"
+   ],
+   "d:31": [
+    "lexical"
+   ],
+   "d:33": [
+    "lexical"
+   ],
+   "d:34": [
+    "lexical"
+   ],
+   "d:35": [
+    "lexical"
+   ],
+   "d:36": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:37": [
+    "lexical"
+   ],
+   "d:38": [
+    "lexical"
+   ],
+   "d:39": [
+    "lexical"
+   ],
+   "d:1": [
+    "lexical"
+   ],
+   "d:3": [
+    "lexical"
+   ],
+   "d:7": [
+    "lexical"
+   ],
+   "d:9": [
+    "lexical"
+   ],
+   "d:10": [
+    "lexical"
+   ],
+   "d:11": [
+    "lexical"
+   ],
+   "d:12": [
+    "lexical"
+   ],
+   "d:27": [
+    "lexical"
+   ],
+   "d:32": [
+    "lexical"
+   ],
+   "d:answer": [
+    "lexical",
+    "semantic_vector"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 28.8,
+  "raw": null
+ },
+ {
+  "scenario": "dense_meetings",
+  "query": "When do I get my teeth checked?",
+  "returned": [
+   "d:dentist"
+  ],
+  "admitted": [
+   "d:answer",
+   "d:dentist"
+  ],
+  "records": {
+   "d:answer": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "d:dentist": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "d:answer": [
+    "lexical"
+   ],
+   "d:dentist": [
+    "semantic_vector"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 20.4,
+  "raw": null
+ }
+]

@@ -47,3 +47,17 @@ These are diagnosed from the captured inputs. They are expected to recur on unse
    With a 0.25 absolute floor, such abstention queries return the nearest fact. That costs abstention strict passes. Any higher floor gives up more paraphrase recall than it saves.
 3. **Close calls inside the margin.** "Who is my boss?" → manager 0.31 and employer 0.30, so both are returned.
 4. **Aggregate members below the set floor.** Medications 0.45 and 0.16: the second member is out of reach.
+
+
+## Recalibration under erratum 3 (after the independent review)
+
+**Grid:** τ ∈ {0.30, …, 0.50} (no floor below the route's 0.30 discovery floor), τ_set ≤ τ_abs, δ_set ≥ δ_single + 0.05. That gives 225 points.
+
+**Chosen:** τ_abs 0.30, δ_single 0.05, τ_set 0.30, δ_set 0.10. Dev 27/48, precision 0.733, recall 0.675, mean returned 1.02.
+
+**Stop condition:** recall ≥ 0.70 is **not met** by any constrained point (maximum 0.675), so C5 stops ().
+
+**Run files:**
+- : the constrained grid.
+- : the second unconstrained run.
+- The first run's choice is stated in erratum 2.

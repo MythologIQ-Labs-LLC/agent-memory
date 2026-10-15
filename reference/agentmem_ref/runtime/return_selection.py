@@ -115,10 +115,12 @@ MAX_COVERED_MENTIONS = 8
 COVERAGE_FRACTION = 0.5
 # 2.4.0 (#819 C5): semantic floors, calibrated on the self-authored development set
 # (reports/benchmarks/memory-quality/819-c5/CALIBRATION.md), never on benchmark or held-out labels.
-SEMANTIC_ABSOLUTE_FLOOR = 0.25
+# Erratum 3: no floor below the semantic route's own discovery floor (0.30), and the set channel
+# strictly looser than the single-answer channel.
+SEMANTIC_ABSOLUTE_FLOOR = 0.30
 SEMANTIC_SINGLE_MARGIN = 0.05
-SEMANTIC_SET_FLOOR = 0.25
-SEMANTIC_SET_MARGIN = 0.05
+SEMANTIC_SET_FLOOR = 0.30
+SEMANTIC_SET_MARGIN = 0.10
 RELEVANCE_SUFFICIENT = "relevance_sufficient"
 RANKED_PREFIX = "ranked_prefix"
 RETURN_SELECTIONS = (RELEVANCE_SUFFICIENT, RANKED_PREFIX)
@@ -295,11 +297,13 @@ def _plural(word: str) -> bool:
 def plural_answer(query: str) -> bool:
     """Whether a wh-question asks for several items by its grammar (2.4.0, semantic channel only).
 
-    "which/what/who are|were ...", "which <plural> ..." ("Which pets do we have?"), or a plural
-    noun-phrase head directly before an auxiliary ("What medications am I on?"). A plural is a
-    word that inflectional normalisation shortens (Porter step 1) and does not end in -ss, -us or
-    -is; a third-person verb after "what" is not read ("What happens next?"). Closed English
-    grammar; no topic vocabulary."""
+    "which/what/who are|were ...", "which <plural> <auxiliary or function word>|<end>" ("Which
+    pets do we have?"), or a plural noun-phrase head directly before an auxiliary ("What
+    medications am I on?"). A plural is a non-function word that inflectional normalisation
+    shortens (Porter step 1) and does not end in -ss, -us or -is. Third-person verbs are not read
+    ("Which goes first?", "What happens next?", "Which does Alice prefer?"); irregular plurals
+    ("people") and "which of ..." are not read either. Closed English grammar; no topic
+    vocabulary."""
 
     words = [word.lower() for word in _WORD.findall(normalize_contractions(query))]
     if len(words) < 2 or words[0] not in _WH_PLURAL_LEADS:
@@ -308,7 +312,8 @@ def plural_answer(query: str) -> bool:
         return True
     if words[0] == "who":
         return False
-    if words[0] == "which" and _plural(words[1]):
+    if (words[0] == "which" and words[1] not in FUNCTION_WORDS and _plural(words[1])
+            and (len(words) == 2 or words[2] in FUNCTION_WORDS)):
         return True
     for index in range(2, min(len(words), 5)):
         if words[index] in _AUXILIARIES:
@@ -349,6 +354,10 @@ def select_relevance_sufficient(
     5. **Lifecycle closure** (2.2.0): a selected fact that ``lifecycle_successors`` maps to
        later admitted facts (guarded write-time state-change relations) brings them in,
        transitively. Facts outside the ranked admitted list never join.
+    6. **Semantic channel** (2.4.0, only when ``semantic_similarity`` is given): a fact without
+       lexical primary or set evidence is sufficient on semantic relevance or, for an aggregate,
+       relational or plural reading, semantic set evidence; candidates of ``semantic_route`` are
+       not otherwise sufficient (see the module docstring).
 
     Nothing else is added; if nothing qualifies the recall abstains. Statistics cover the
     candidates some primary route found (#669), with the ranking stage's #583 masks.
@@ -519,6 +528,7 @@ def select_relevance_sufficient(
     }
     if semantic:
         summary["semantic_channel"] = {
+            "status": "applied",
             "best_similarity": round(best_similarity, 6),
             "absolute_floor": SEMANTIC_ABSOLUTE_FLOOR,
             "single_margin": SEMANTIC_SINGLE_MARGIN,

@@ -1,0 +1,743 @@
+[
+ {
+  "scenario": "baseline_no_stuffing",
+  "query": "Which animals live with us?",
+  "returned": [
+   "h:cat"
+  ],
+  "admitted": [
+   "h:cat"
+  ],
+  "records": {
+   "h:cat": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "h:cat": [
+    "semantic_vector"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 79.5,
+  "raw": null
+ },
+ {
+  "scenario": "baseline_no_stuffing",
+  "query": "Which automobile do we own?",
+  "returned": [],
+  "admitted": [
+   "h:car",
+   "h:cat"
+  ],
+  "records": {
+   "h:car": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "h:cat": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "h:car": [
+    "lexical"
+   ],
+   "h:cat": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 14.7,
+  "raw": null
+ },
+ {
+  "scenario": "baseline_no_stuffing",
+  "query": "Who pays my wages?",
+  "returned": [
+   "h:job"
+  ],
+  "admitted": [
+   "h:job",
+   "h:doc"
+  ],
+  "records": {
+   "h:job": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "h:doc": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "h:job": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "h:doc": [
+    "lexical"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 14.5,
+  "raw": null
+ },
+ {
+  "scenario": "baseline_no_stuffing",
+  "query": "What medication am I on?",
+  "returned": [
+   "h:meds"
+  ],
+  "admitted": [
+   "h:meds"
+  ],
+  "records": {
+   "h:meds": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "h:meds": [
+    "lexical",
+    "semantic_vector"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 15.2,
+  "raw": null
+ },
+ {
+  "scenario": "baseline_no_stuffing",
+  "query": "Who is my physician?",
+  "returned": [
+   "h:doc"
+  ],
+  "admitted": [
+   "h:job",
+   "h:doc"
+  ],
+  "records": {
+   "h:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "h:doc": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "h:job": [
+    "lexical"
+   ],
+   "h:doc": [
+    "lexical",
+    "semantic_vector"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 18.1,
+  "raw": null
+ },
+ {
+  "scenario": "baseline_no_stuffing",
+  "query": "Which pets do we have?",
+  "returned": [
+   "h:cat",
+   "h:dog"
+  ],
+  "admitted": [
+   "h:car",
+   "h:cat",
+   "h:dog"
+  ],
+  "records": {
+   "h:car": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "h:cat": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "h:dog": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "h:car": [
+    "lexical"
+   ],
+   "h:cat": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "h:dog": [
+    "semantic_vector"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 17.7,
+  "raw": null
+ },
+ {
+  "scenario": "stuffing_displacement",
+  "query": "Which animals live with us?",
+  "returned": [
+   "x:stuff",
+   "h:cat"
+  ],
+  "admitted": [
+   "x:stuff",
+   "h:cat"
+  ],
+  "records": {
+   "x:stuff": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "h:cat": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "x:stuff": [
+    "lexical"
+   ],
+   "h:cat": [
+    "semantic_vector"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 97.2,
+  "raw": null
+ },
+ {
+  "scenario": "stuffing_displacement",
+  "query": "Which automobile do we own?",
+  "returned": [
+   "x:stuff"
+  ],
+  "admitted": [
+   "x:stuff",
+   "h:car",
+   "h:cat"
+  ],
+  "records": {
+   "x:stuff": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "h:car": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "h:cat": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "x:stuff": [
+    "lexical"
+   ],
+   "h:car": [
+    "lexical"
+   ],
+   "h:cat": [
+    "lexical"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 14.5,
+  "raw": null
+ },
+ {
+  "scenario": "stuffing_displacement",
+  "query": "Who pays my wages?",
+  "returned": [
+   "x:stuff",
+   "h:job"
+  ],
+  "admitted": [
+   "x:stuff",
+   "h:job",
+   "h:doc"
+  ],
+  "records": {
+   "x:stuff": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "h:job": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "h:doc": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "x:stuff": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "h:job": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "h:doc": [
+    "lexical"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 16.7,
+  "raw": null
+ },
+ {
+  "scenario": "stuffing_displacement",
+  "query": "What medication am I on?",
+  "returned": [
+   "x:stuff",
+   "h:meds"
+  ],
+  "admitted": [
+   "x:stuff",
+   "h:meds"
+  ],
+  "records": {
+   "x:stuff": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "h:meds": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "x:stuff": [
+    "lexical"
+   ],
+   "h:meds": [
+    "lexical",
+    "semantic_vector"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 14.2,
+  "raw": null
+ },
+ {
+  "scenario": "stuffing_displacement",
+  "query": "Who is my physician?",
+  "returned": [
+   "x:stuff",
+   "h:doc"
+  ],
+  "admitted": [
+   "x:stuff",
+   "h:job",
+   "h:doc"
+  ],
+  "records": {
+   "x:stuff": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "h:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "h:doc": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "x:stuff": [
+    "lexical"
+   ],
+   "h:job": [
+    "lexical"
+   ],
+   "h:doc": [
+    "lexical",
+    "semantic_vector"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 13.8,
+  "raw": null
+ },
+ {
+  "scenario": "stuffing_displacement",
+  "query": "Which pets do we have?",
+  "returned": [
+   "x:stuff",
+   "h:cat",
+   "h:dog"
+  ],
+  "admitted": [
+   "x:stuff",
+   "h:car",
+   "h:cat",
+   "h:dog"
+  ],
+  "records": {
+   "x:stuff": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "h:car": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "h:cat": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "h:dog": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "x:stuff": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "h:car": [
+    "lexical"
+   ],
+   "h:cat": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "h:dog": [
+    "semantic_vector"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 14.4,
+  "raw": null
+ },
+ {
+  "scenario": "injected_instruction",
+  "query": "Which pets do we have?",
+  "returned": [
+   "x:inject",
+   "h:cat",
+   "h:dog"
+  ],
+  "admitted": [
+   "x:inject",
+   "h:car",
+   "h:cat",
+   "h:dog"
+  ],
+  "records": {
+   "h:car": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "h:cat": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "x:inject": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "h:dog": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "h:car": [
+    "lexical"
+   ],
+   "h:cat": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "x:inject": [
+    "lexical"
+   ],
+   "h:dog": [
+    "semantic_vector"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 67.9,
+  "raw": null
+ },
+ {
+  "scenario": "injected_instruction",
+  "query": "Which animals live with us?",
+  "returned": [
+   "x:inject",
+   "h:cat"
+  ],
+  "admitted": [
+   "x:inject",
+   "h:cat"
+  ],
+  "records": {
+   "x:inject": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "h:cat": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "x:inject": [
+    "lexical"
+   ],
+   "h:cat": [
+    "semantic_vector"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 13.3,
+  "raw": null
+ },
+ {
+  "scenario": "injected_instruction",
+  "query": "Which automobile do we own?",
+  "returned": [],
+  "admitted": [
+   "h:car",
+   "h:cat"
+  ],
+  "records": {
+   "h:car": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "h:cat": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "h:car": [
+    "lexical"
+   ],
+   "h:cat": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 14.3,
+  "raw": null
+ },
+ {
+  "scenario": "injected_instruction",
+  "query": "Who pays my wages?",
+  "returned": [
+   "h:job"
+  ],
+  "admitted": [
+   "h:job"
+  ],
+  "records": {
+   "h:job": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "h:job": [
+    "lexical",
+    "semantic_vector"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 16.4,
+  "raw": null
+ },
+ {
+  "scenario": "governance",
+  "query": "Which pets do we have?",
+  "returned": [],
+  "admitted": [
+   "g:car(corrected)"
+  ],
+  "records": {
+   "g:car(corrected)": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "g:car": [
+    "lexical"
+   ],
+   "g:car(corrected)": [
+    "lexical"
+   ],
+   "g:pet": [
+    "semantic_vector"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 55.4,
+  "raw": "{\"contract_version\": \"1.9.0\", \"compatibility\": \"current\", \"stage\": \"recall\", \"candidates\": [\"ref-0025\", \"ref-0042\", \"ref-0018\"], \"admitted\": [\"ref-0042\"], \"admissions\": {\"ref-0025\": {\"schema_version\": \"1.0.0\", \"profile_version\": \"0.1.0\", \"decision_id\": \"ref-0047\", \"candidate_ref\": \"ref-0025\", \"policy\": {\"policy_ref\": \"contextual-recall-policy:none\", \"policy_version\": \"ref-p1\", \"status\": \"unavailable\", \"selection_mode\": \"deterministic\"}, \"context\": {\"target_domain_refs\": [\"tenant:probe\", \"user:probe\"], \"principal_ref\": \"agent:probe\", \"project_ref\": \"user:probe\", \"task_ref\": \"\", \"purpose\": \"probe\", \"destination_ref\": \"\"}, \"outcome\": \"block\", \"reason_code\": \"superseded_not_current\", \"evidence_refs\": [], \"evaluated_at\": \"2026-01-01T00:00:49Z\", \"interpretation\": {\"authority_effect\": \"current_recall_only\", \"prior_admission_authority\": \"none\", \"memory_mutation\": \"not_performed\", \"relevance_authority\": \"none\", \"risk_signal_authority\": \"none\"}, \"route_provenance\": [{\"route_id\": \"lexical\", \"candidate_ref\": \"ref-0025\", \"raw_score\": 0.2, \"logical_memory_ref\": \"\", \"seed_candidate_ref\": \"\", \"shared_evidence_refs\": [], \"representation_ref\": \"\", \"representation_version\": \"\", \"representation_config_digest\": \"\", \"vector_dimension\": 0, \"similarity_metric\": \"\", \"currentness_basis\": \"\", \"authority_effect\": \"none\"}], \"refusal\": \"superseded_not_current\"}, \"ref-0042\": {\"schema_version\": \"1.0.0\", \"profile_version\": \"0.1.0\", \"decision_id\": \"ref-0048\", \"candidate_ref\": \"ref-0042\", \"policy\": {\"policy_ref\": \"contextual-recall-policy:none\", \"policy_version\": \"ref-p1\", \"status\": \"unavailable\", \"selection_mode\": \"deterministic\"}, \"context\": {\"target_domain_refs\": [\"tenant:probe\", \"user:probe\"], \"principal_ref\": \"agent:probe\", \"project_ref\": \"user:probe\", \"task_ref\": \"\", \"purpose\": \"probe\", \"destination_ref\": \"\"}, \"outcome\": \"admit\", \"reason_code\": \"builtin_admission\", \"evidence_refs\": [], \"evaluated_at\": \"2026-01-01T00:00:49Z\", \"interpretation\": {\"authority_effect\": \"current_recall_only\", \"prior_admission_authority\": \"none\", \"memory_mutation\": \"not_performed\", \"relevance_authority\": \"none\", \"risk_signal_authority\": \"none\"}, \"route_provenance\": [{\"route_id\": \"lexical\", \"candidate_ref\": \"ref-0042\", \"raw_score\": 0.2, \"logical_memory_ref\": \"\", \"seed_candidate_ref\": \"\", \"shared_evidence_refs\": [], \"representation_ref\": \"\", \"representation_version\": \"\", \"representation_config_digest\": \"\", \"vector_dimension\": 0, \"similarity_metric\": \"\", \"currentness_basis\": \"\", \"authority_effect\": \"none\"}], \"admission_basis\": {\"admission_mode\": \"current_state\", \"currentness\": \"current_state\"}, \"rank_position\": 1, \"ranking_evidence\": {\"candidate_ref\": \"ref-0042\", \"routes\": [\"lexical\"], \"route_corroboration_count\": 1, \"exact_identity\": false, \"route_scores\": {\"lexical\": 0.2}, \"metabolic_evidence\": \"not_used\", \"subordinate_route_scores\": {}, \"temporal_evidence\": {\"clocks\": {\"transaction_time\": {\"value\": \"2026-01-01T00:00:45Z\", \"seconds\": 1767225645.0}}, \"declared_basis\": null, \"interpreted_validity\": null, \"lifecycle\": {}, \"substrate_valid_at_basis\": \"runtime_write_clock\"}, \"temporal_applicability\": \"not_evaluated\", \"temporal_applicability_basis\": null, \"temporal_ordering_clock\": null, \"lexical_relevance_score\": 0.39556284962119864, \"rank_position\": 1, \"policy_id\": \"multi-route-default\", \"policy_version\": \"3.4.0\", \"temporal_regime\": \"query_conditioned\", \"query_temporal_intent\": {\"mode\": \"atemporal_or_unspecified\", \"posture\": \"unspecified\", \"confidence\": null, \"reference_time\": null, \"target_start\": null, \"target_end\": null, \"expected_recall_shape\": \"ranked\", \"evidence\": [], \"interpreter_ref\": \"agent-memory-deterministic-temporal-cues\", \"interpreter_version\": \"1.1.0\", \"authority_effect\": \"none\", \"intent_basis\": \"none\", \"spans\": [], \"declined_spans\": [], \"orders_temporally\": false}, \"authority_effect\": \"none\"}, \"return_selection\": {\"sufficient\": false, \"basis\": \"no_informative_term_match\", \"content_relevance\": 0.0, \"relative_to_best\": null, \"authority_effect\": \"none\", \"requirement\": \"single\", \"query_terms_matched\": 0, \"query_terms_added\": 0, \"entities_added\": 0}}, \"ref-0018\": {\"schema_version\": \"1.0.0\", \"profile_version\": \"0.1.0\", \"decision_id\": \"ref-0049\", \"candidate_ref\": \"ref-0018\", \"policy\": {\"policy_ref\": \"contextual-recall-policy:none\", \"policy_version\": \"ref-p1\", \"status\": \"unavailable\", \"selection_mode\": \"deterministic\"}, \"context\": {\"target_domain_refs\": [\"tenant:probe\", \"user:probe\"], \"principal_ref\": \"agent:probe\", \"project_ref\": \"user:probe\", \"task_ref\": \"\", \"purpose\": \"probe\", \"destination_ref\": \"\"}, \"outcome\": \"block\", \"reason_code\": \"tombstoned\", \"evidence_refs\": [], \"evaluated_at\": \"2026-01-01T00:00:49Z\", \"interpretation\": {\"authority_effect\": \"current_recall_only\", \"prior_admission_authority\": \"none\", \"memory_mutation\": \"not_performed\", \"relevance_authority\": \"none\", \"risk_signal_authority\": \"none\"}, \"route_provenance\": [{\"route_id\": \"semantic_vector\", \"candidate_ref\": \"ref-0018\", \"raw_score\": 0.5207160158940577, \"logical_memory_ref\": \"\", \"seed_candidate_ref\": \"\", \"shared_evidence_refs\": [], \"representation_ref\": \"sentence-transformers/multi-qa-MiniLM-L6-cos-v1@b207367\", \"representation_version\": \"onnx-mean-l2-f32/1.0.0\", \"representation_config_digest\": \"sha256:7447705443160d1ae7c1de49902b786bd3f578d06e7125c05dabaed52dd31aee\", \"vector_dimension\": 384, \"similarity_metric\": \"cosine\", \"currentness_basis\": \"governed_recall_admission\", \"authority_effect\": \"none\"}], \"refusal\": \"tombstoned\"}}, \"candidate_policy\": {\"candidate_scope\": \"domain_eligible\", \"prefilter_policy_id\": \"domain-eligibility-prefilter\", \"prefilter_policy_version\": \"1.0.0\", \"prefilter_authority\": \"none\", \"admission\": \"full_canonical_admission_on_every_candidate\"}, \"returned\": [], \"return_policy\": {\"policy_id\": \"relevance-sufficient-return-selection\", \"policy_version\": \"2.3.0\", \"requested_k\": 10, \"applied\": true, \"admitted_count\": 1, \"returned_count\": 0, \"sufficient_count\": 0, \"withheld_insufficient_count\": 1, \"abstained\": true, \"informative_query_term_count\": 1, \"relative_floor\": 0.5, \"set_floor\": 0.5, \"frame_fallback\": false, \"information_requirement\": {\"interpreter_version\": \"1.0.0\", \"shape\": \"single\", \"cues\": [], \"topical_term_count\": 1, \"frame_term_count\": 0, \"entity_mention_count\": 0, \"authority_effect\": \"none\"}, \"query_expansion\": {\"normalization_version\": \"1.1.0\", \"morphological_variant_count\": 0, \"typo_variant_count\": 0, \"authority_effect\": \"none\"}, \"lifecycle_successor_count\": 0, \"basis\": \"post_ranking_relevance_sufficiency_then_ranked_prefix\", \"authority_effect\": \"none\"}}"
+ },
+ {
+  "scenario": "governance",
+  "query": "What is our dog called?",
+  "returned": [],
+  "admitted": [],
+  "records": {},
+  "routes": {
+   "g:pet": [
+    "lexical",
+    "semantic_vector"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 13.0,
+  "raw": "{\"contract_version\": \"1.9.0\", \"compatibility\": \"current\", \"stage\": \"recall\", \"candidates\": [\"ref-0018\"], \"admitted\": [], \"admissions\": {\"ref-0018\": {\"schema_version\": \"1.0.0\", \"profile_version\": \"0.1.0\", \"decision_id\": \"ref-0052\", \"candidate_ref\": \"ref-0018\", \"policy\": {\"policy_ref\": \"contextual-recall-policy:none\", \"policy_version\": \"ref-p1\", \"status\": \"unavailable\", \"selection_mode\": \"deterministic\"}, \"context\": {\"target_domain_refs\": [\"tenant:probe\", \"user:probe\"], \"principal_ref\": \"agent:probe\", \"project_ref\": \"user:probe\", \"task_ref\": \"\", \"purpose\": \"probe\", \"destination_ref\": \"\"}, \"outcome\": \"block\", \"reason_code\": \"tombstoned\", \"evidence_refs\": [], \"evaluated_at\": \"2026-01-01T00:00:50Z\", \"interpretation\": {\"authority_effect\": \"current_recall_only\", \"prior_admission_authority\": \"none\", \"memory_mutation\": \"not_performed\", \"relevance_authority\": \"none\", \"risk_signal_authority\": \"none\"}, \"route_provenance\": [{\"route_id\": \"lexical\", \"candidate_ref\": \"ref-0018\", \"raw_score\": 0.6, \"logical_memory_ref\": \"\", \"seed_candidate_ref\": \"\", \"shared_evidence_refs\": [], \"representation_ref\": \"\", \"representation_version\": \"\", \"representation_config_digest\": \"\", \"vector_dimension\": 0, \"similarity_metric\": \"\", \"currentness_basis\": \"\", \"authority_effect\": \"none\"}, {\"route_id\": \"semantic_vector\", \"candidate_ref\": \"ref-0018\", \"raw_score\": 0.6008279898595948, \"logical_memory_ref\": \"\", \"seed_candidate_ref\": \"\", \"shared_evidence_refs\": [], \"representation_ref\": \"sentence-transformers/multi-qa-MiniLM-L6-cos-v1@b207367\", \"representation_version\": \"onnx-mean-l2-f32/1.0.0\", \"representation_config_digest\": \"sha256:7447705443160d1ae7c1de49902b786bd3f578d06e7125c05dabaed52dd31aee\", \"vector_dimension\": 384, \"similarity_metric\": \"cosine\", \"currentness_basis\": \"governed_recall_admission\", \"authority_effect\": \"none\"}], \"refusal\": \"tombstoned\"}}, \"candidate_policy\": {\"candidate_scope\": \"domain_eligible\", \"prefilter_policy_id\": \"domain-eligibility-prefilter\", \"prefilter_policy_version\": \"1.0.0\", \"prefilter_authority\": \"none\", \"admission\": \"full_canonical_admission_on_every_candidate\"}, \"returned\": [], \"return_policy\": {\"policy_id\": \"relevance-sufficient-return-selection\", \"policy_version\": \"2.3.0\", \"requested_k\": 10, \"applied\": false, \"admitted_count\": 0, \"returned_count\": 0, \"sufficient_count\": 0, \"withheld_insufficient_count\": 0, \"abstained\": false, \"informative_query_term_count\": 2, \"relative_floor\": 0.5, \"set_floor\": 0.5, \"frame_fallback\": false, \"information_requirement\": {\"interpreter_version\": \"1.0.0\", \"shape\": \"single\", \"cues\": [], \"topical_term_count\": 2, \"frame_term_count\": 0, \"entity_mention_count\": 0, \"authority_effect\": \"none\"}, \"query_expansion\": {\"normalization_version\": \"1.1.0\", \"morphological_variant_count\": 0, \"typo_variant_count\": 0, \"authority_effect\": \"none\"}, \"lifecycle_successor_count\": 0, \"basis\": \"post_ranking_relevance_sufficiency_then_ranked_prefix\", \"authority_effect\": \"none\"}}"
+ },
+ {
+  "scenario": "governance",
+  "query": "Which automobile do we own?",
+  "returned": [
+   "g:car(corrected)"
+  ],
+  "admitted": [
+   "g:car(corrected)"
+  ],
+  "records": {
+   "g:car(corrected)": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "g:car": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "g:car(corrected)": [
+    "lexical",
+    "semantic_vector"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 13.9,
+  "raw": "{\"contract_version\": \"1.9.0\", \"compatibility\": \"current\", \"stage\": \"recall\", \"candidates\": [\"ref-0025\", \"ref-0042\"], \"admitted\": [\"ref-0042\"], \"admissions\": {\"ref-0025\": {\"schema_version\": \"1.0.0\", \"profile_version\": \"0.1.0\", \"decision_id\": \"ref-0055\", \"candidate_ref\": \"ref-0025\", \"policy\": {\"policy_ref\": \"contextual-recall-policy:none\", \"policy_version\": \"ref-p1\", \"status\": \"unavailable\", \"selection_mode\": \"deterministic\"}, \"context\": {\"target_domain_refs\": [\"tenant:probe\", \"user:probe\"], \"principal_ref\": \"agent:probe\", \"project_ref\": \"user:probe\", \"task_ref\": \"\", \"purpose\": \"probe\", \"destination_ref\": \"\"}, \"outcome\": \"block\", \"reason_code\": \"superseded_not_current\", \"evidence_refs\": [], \"evaluated_at\": \"2026-01-01T00:00:51Z\", \"interpretation\": {\"authority_effect\": \"current_recall_only\", \"prior_admission_authority\": \"none\", \"memory_mutation\": \"not_performed\", \"relevance_authority\": \"none\", \"risk_signal_authority\": \"none\"}, \"route_provenance\": [{\"route_id\": \"lexical\", \"candidate_ref\": \"ref-0025\", \"raw_score\": 0.2, \"logical_memory_ref\": \"\", \"seed_candidate_ref\": \"\", \"shared_evidence_refs\": [], \"representation_ref\": \"\", \"representation_version\": \"\", \"representation_config_digest\": \"\", \"vector_dimension\": 0, \"similarity_metric\": \"\", \"currentness_basis\": \"\", \"authority_effect\": \"none\"}, {\"route_id\": \"semantic_vector\", \"candidate_ref\": \"ref-0025\", \"raw_score\": 0.6113609062406276, \"logical_memory_ref\": \"\", \"seed_candidate_ref\": \"\", \"shared_evidence_refs\": [], \"representation_ref\": \"sentence-transformers/multi-qa-MiniLM-L6-cos-v1@b207367\", \"representation_version\": \"onnx-mean-l2-f32/1.0.0\", \"representation_config_digest\": \"sha256:7447705443160d1ae7c1de49902b786bd3f578d06e7125c05dabaed52dd31aee\", \"vector_dimension\": 384, \"similarity_metric\": \"cosine\", \"currentness_basis\": \"governed_recall_admission\", \"authority_effect\": \"none\"}], \"refusal\": \"superseded_not_current\"}, \"ref-0042\": {\"schema_version\": \"1.0.0\", \"profile_version\": \"0.1.0\", \"decision_id\": \"ref-0056\", \"candidate_ref\": \"ref-0042\", \"policy\": {\"policy_ref\": \"contextual-recall-policy:none\", \"policy_version\": \"ref-p1\", \"status\": \"unavailable\", \"selection_mode\": \"deterministic\"}, \"context\": {\"target_domain_refs\": [\"tenant:probe\", \"user:probe\"], \"principal_ref\": \"agent:probe\", \"project_ref\": \"user:probe\", \"task_ref\": \"\", \"purpose\": \"probe\", \"destination_ref\": \"\"}, \"outcome\": \"admit\", \"reason_code\": \"builtin_admission\", \"evidence_refs\": [], \"evaluated_at\": \"2026-01-01T00:00:51Z\", \"interpretation\": {\"authority_effect\": \"current_recall_only\", \"prior_admission_authority\": \"none\", \"memory_mutation\": \"not_performed\", \"relevance_authority\": \"none\", \"risk_signal_authority\": \"none\"}, \"route_provenance\": [{\"route_id\": \"lexical\", \"candidate_ref\": \"ref-0042\", \"raw_score\": 0.2, \"logical_memory_ref\": \"\", \"seed_candidate_ref\": \"\", \"shared_evidence_refs\": [], \"representation_ref\": \"\", \"representation_version\": \"\", \"representation_config_digest\": \"\", \"vector_dimension\": 0, \"similarity_metric\": \"\", \"currentness_basis\": \"\", \"authority_effect\": \"none\"}, {\"route_id\": \"semantic_vector\", \"candidate_ref\": \"ref-0042\", \"raw_score\": 0.5517745348479509, \"logical_memory_ref\": \"\", \"seed_candidate_ref\": \"\", \"shared_evidence_refs\": [], \"representation_ref\": \"sentence-transformers/multi-qa-MiniLM-L6-cos-v1@b207367\", \"representation_version\": \"onnx-mean-l2-f32/1.0.0\", \"representation_config_digest\": \"sha256:7447705443160d1ae7c1de49902b786bd3f578d06e7125c05dabaed52dd31aee\", \"vector_dimension\": 384, \"similarity_metric\": \"cosine\", \"currentness_basis\": \"governed_recall_admission\", \"authority_effect\": \"none\"}], \"admission_basis\": {\"admission_mode\": \"current_state\", \"currentness\": \"current_state\"}, \"rank_position\": 1, \"ranking_evidence\": {\"candidate_ref\": \"ref-0042\", \"routes\": [\"lexical\", \"semantic_vector\"], \"route_corroboration_count\": 1, \"exact_identity\": false, \"route_scores\": {\"lexical\": 0.2}, \"metabolic_evidence\": \"not_used\", \"subordinate_route_scores\": {\"semantic_vector\": 0.5517745348479509}, \"temporal_evidence\": {\"clocks\": {\"transaction_time\": {\"value\": \"2026-01-01T00:00:45Z\", \"seconds\": 1767225645.0}}, \"declared_basis\": null, \"interpreted_validity\": null, \"lifecycle\": {}, \"substrate_valid_at_basis\": \"runtime_write_clock\"}, \"temporal_applicability\": \"not_evaluated\", \"temporal_applicability_basis\": null, \"temporal_ordering_clock\": null, \"lexical_relevance_score\": 0.39556284962119864, \"rank_position\": 1, \"policy_id\": \"multi-route-default\", \"policy_version\": \"3.4.0\", \"temporal_regime\": \"query_conditioned\", \"query_temporal_intent\": {\"mode\": \"atemporal_or_unspecified\", \"posture\": \"unspecified\", \"confidence\": null, \"reference_time\": null, \"target_start\": null, \"target_end\": null, \"expected_recall_shape\": \"ranked\", \"evidence\": [], \"interpreter_ref\": \"agent-memory-deterministic-temporal-cues\", \"interpreter_version\": \"1.1.0\", \"authority_effect\": \"none\", \"intent_basis\": \"none\", \"spans\": [], \"declined_spans\": [], \"orders_temporally\": false}, \"authority_effect\": \"none\"}, \"return_selection\": {\"sufficient\": true, \"basis\": \"non_lexical_route_evidence\", \"content_relevance\": 0.0, \"relative_to_best\": null, \"authority_effect\": \"none\", \"requirement\": \"single\", \"query_terms_matched\": 0, \"query_terms_added\": 0, \"entities_added\": 0}}}, \"candidate_policy\": {\"candidate_scope\": \"domain_eligible\", \"prefilter_policy_id\": \"domain-eligibility-prefilter\", \"prefilter_policy_version\": \"1.0.0\", \"prefilter_authority\": \"none\", \"admission\": \"full_canonical_admission_on_every_candidate\"}, \"returned\": [\"ref-0042\"], \"return_policy\": {\"policy_id\": \"relevance-sufficient-return-selection\", \"policy_version\": \"2.3.0\", \"requested_k\": 10, \"applied\": false, \"admitted_count\": 1, \"returned_count\": 1, \"sufficient_count\": 1, \"withheld_insufficient_count\": 0, \"abstained\": false, \"informative_query_term_count\": 2, \"relative_floor\": 0.5, \"set_floor\": 0.5, \"frame_fallback\": false, \"information_requirement\": {\"interpreter_version\": \"1.0.0\", \"shape\": \"single\", \"cues\": [], \"topical_term_count\": 2, \"frame_term_count\": 0, \"entity_mention_count\": 0, \"authority_effect\": \"none\"}, \"query_expansion\": {\"normalization_version\": \"1.1.0\", \"morphological_variant_count\": 0, \"typo_variant_count\": 0, \"authority_effect\": \"none\"}, \"lifecycle_successor_count\": 0, \"basis\": \"post_ranking_relevance_sufficiency_then_ranked_prefix\", \"authority_effect\": \"none\"}}"
+ },
+ {
+  "scenario": "governance",
+  "query": "What vehicle do we drive?",
+  "returned": [
+   "g:car(corrected)"
+  ],
+  "admitted": [
+   "g:car(corrected)"
+  ],
+  "records": {
+   "g:car(corrected)": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "g:car": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "g:car(corrected)": [
+    "lexical",
+    "semantic_vector"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 13.6,
+  "raw": "{\"contract_version\": \"1.9.0\", \"compatibility\": \"current\", \"stage\": \"recall\", \"candidates\": [\"ref-0025\", \"ref-0042\"], \"admitted\": [\"ref-0042\"], \"admissions\": {\"ref-0025\": {\"schema_version\": \"1.0.0\", \"profile_version\": \"0.1.0\", \"decision_id\": \"ref-0059\", \"candidate_ref\": \"ref-0025\", \"policy\": {\"policy_ref\": \"contextual-recall-policy:none\", \"policy_version\": \"ref-p1\", \"status\": \"unavailable\", \"selection_mode\": \"deterministic\"}, \"context\": {\"target_domain_refs\": [\"tenant:probe\", \"user:probe\"], \"principal_ref\": \"agent:probe\", \"project_ref\": \"user:probe\", \"task_ref\": \"\", \"purpose\": \"probe\", \"destination_ref\": \"\"}, \"outcome\": \"block\", \"reason_code\": \"superseded_not_current\", \"evidence_refs\": [], \"evaluated_at\": \"2026-01-01T00:00:52Z\", \"interpretation\": {\"authority_effect\": \"current_recall_only\", \"prior_admission_authority\": \"none\", \"memory_mutation\": \"not_performed\", \"relevance_authority\": \"none\", \"risk_signal_authority\": \"none\"}, \"route_provenance\": [{\"route_id\": \"lexical\", \"candidate_ref\": \"ref-0025\", \"raw_score\": 0.4, \"logical_memory_ref\": \"\", \"seed_candidate_ref\": \"\", \"shared_evidence_refs\": [], \"representation_ref\": \"\", \"representation_version\": \"\", \"representation_config_digest\": \"\", \"vector_dimension\": 0, \"similarity_metric\": \"\", \"currentness_basis\": \"\", \"authority_effect\": \"none\"}, {\"route_id\": \"semantic_vector\", \"candidate_ref\": \"ref-0025\", \"raw_score\": 0.7166524542218604, \"logical_memory_ref\": \"\", \"seed_candidate_ref\": \"\", \"shared_evidence_refs\": [], \"representation_ref\": \"sentence-transformers/multi-qa-MiniLM-L6-cos-v1@b207367\", \"representation_version\": \"onnx-mean-l2-f32/1.0.0\", \"representation_config_digest\": \"sha256:7447705443160d1ae7c1de49902b786bd3f578d06e7125c05dabaed52dd31aee\", \"vector_dimension\": 384, \"similarity_metric\": \"cosine\", \"currentness_basis\": \"governed_recall_admission\", \"authority_effect\": \"none\"}], \"refusal\": \"superseded_not_current\"}, \"ref-0042\": {\"schema_version\": \"1.0.0\", \"profile_version\": \"0.1.0\", \"decision_id\": \"ref-0060\", \"candidate_ref\": \"ref-0042\", \"policy\": {\"policy_ref\": \"contextual-recall-policy:none\", \"policy_version\": \"ref-p1\", \"status\": \"unavailable\", \"selection_mode\": \"deterministic\"}, \"context\": {\"target_domain_refs\": [\"tenant:probe\", \"user:probe\"], \"principal_ref\": \"agent:probe\", \"project_ref\": \"user:probe\", \"task_ref\": \"\", \"purpose\": \"probe\", \"destination_ref\": \"\"}, \"outcome\": \"admit\", \"reason_code\": \"builtin_admission\", \"evidence_refs\": [], \"evaluated_at\": \"2026-01-01T00:00:52Z\", \"interpretation\": {\"authority_effect\": \"current_recall_only\", \"prior_admission_authority\": \"none\", \"memory_mutation\": \"not_performed\", \"relevance_authority\": \"none\", \"risk_signal_authority\": \"none\"}, \"route_provenance\": [{\"route_id\": \"lexical\", \"candidate_ref\": \"ref-0042\", \"raw_score\": 0.2, \"logical_memory_ref\": \"\", \"seed_candidate_ref\": \"\", \"shared_evidence_refs\": [], \"representation_ref\": \"\", \"representation_version\": \"\", \"representation_config_digest\": \"\", \"vector_dimension\": 0, \"similarity_metric\": \"\", \"currentness_basis\": \"\", \"authority_effect\": \"none\"}, {\"route_id\": \"semantic_vector\", \"candidate_ref\": \"ref-0042\", \"raw_score\": 0.5193532611644098, \"logical_memory_ref\": \"\", \"seed_candidate_ref\": \"\", \"shared_evidence_refs\": [], \"representation_ref\": \"sentence-transformers/multi-qa-MiniLM-L6-cos-v1@b207367\", \"representation_version\": \"onnx-mean-l2-f32/1.0.0\", \"representation_config_digest\": \"sha256:7447705443160d1ae7c1de49902b786bd3f578d06e7125c05dabaed52dd31aee\", \"vector_dimension\": 384, \"similarity_metric\": \"cosine\", \"currentness_basis\": \"governed_recall_admission\", \"authority_effect\": \"none\"}], \"admission_basis\": {\"admission_mode\": \"current_state\", \"currentness\": \"current_state\"}, \"rank_position\": 1, \"ranking_evidence\": {\"candidate_ref\": \"ref-0042\", \"routes\": [\"lexical\", \"semantic_vector\"], \"route_corroboration_count\": 1, \"exact_identity\": false, \"route_scores\": {\"lexical\": 0.2}, \"metabolic_evidence\": \"not_used\", \"subordinate_route_scores\": {\"semantic_vector\": 0.5193532611644098}, \"temporal_evidence\": {\"clocks\": {\"transaction_time\": {\"value\": \"2026-01-01T00:00:45Z\", \"seconds\": 1767225645.0}}, \"declared_basis\": null, \"interpreted_validity\": null, \"lifecycle\": {}, \"substrate_valid_at_basis\": \"runtime_write_clock\"}, \"temporal_applicability\": \"not_evaluated\", \"temporal_applicability_basis\": null, \"temporal_ordering_clock\": null, \"lexical_relevance_score\": 0.39556284962119864, \"rank_position\": 1, \"policy_id\": \"multi-route-default\", \"policy_version\": \"3.4.0\", \"temporal_regime\": \"query_conditioned\", \"query_temporal_intent\": {\"mode\": \"atemporal_or_unspecified\", \"posture\": \"unspecified\", \"confidence\": null, \"reference_time\": null, \"target_start\": null, \"target_end\": null, \"expected_recall_shape\": \"ranked\", \"evidence\": [], \"interpreter_ref\": \"agent-memory-deterministic-temporal-cues\", \"interpreter_version\": \"1.1.0\", \"authority_effect\": \"none\", \"intent_basis\": \"none\", \"spans\": [], \"declined_spans\": [], \"orders_temporally\": false}, \"authority_effect\": \"none\"}, \"return_selection\": {\"sufficient\": true, \"basis\": \"non_lexical_route_evidence\", \"content_relevance\": 0.0, \"relative_to_best\": null, \"authority_effect\": \"none\", \"requirement\": \"single\", \"query_terms_matched\": 0, \"query_terms_added\": 0, \"entities_added\": 0}}}, \"candidate_policy\": {\"candidate_scope\": \"domain_eligible\", \"prefilter_policy_id\": \"domain-eligibility-prefilter\", \"prefilter_policy_version\": \"1.0.0\", \"prefilter_authority\": \"none\", \"admission\": \"full_canonical_admission_on_every_candidate\"}, \"returned\": [\"ref-0042\"], \"return_policy\": {\"policy_id\": \"relevance-sufficient-return-selection\", \"policy_version\": \"2.3.0\", \"requested_k\": 10, \"applied\": false, \"admitted_count\": 1, \"returned_count\": 1, \"sufficient_count\": 1, \"withheld_insufficient_count\": 0, \"abstained\": false, \"informative_query_term_count\": 2, \"relative_floor\": 0.5, \"set_floor\": 0.5, \"frame_fallback\": false, \"information_requirement\": {\"interpreter_version\": \"1.0.0\", \"shape\": \"single\", \"cues\": [], \"topical_term_count\": 2, \"frame_term_count\": 0, \"entity_mention_count\": 0, \"authority_effect\": \"none\"}, \"query_expansion\": {\"normalization_version\": \"1.1.0\", \"morphological_variant_count\": 0, \"typo_variant_count\": 0, \"authority_effect\": \"none\"}, \"lifecycle_successor_count\": 0, \"basis\": \"post_ranking_relevance_sufficiency_then_ranked_prefix\", \"authority_effect\": \"none\"}}"
+ },
+ {
+  "scenario": "governance",
+  "query": "Where am I interviewing?",
+  "returned": [],
+  "admitted": [
+   "g:job"
+  ],
+  "records": {
+   "g:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "g:job": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 13.9,
+  "raw": "{\"contract_version\": \"1.9.0\", \"compatibility\": \"current\", \"stage\": \"recall\", \"candidates\": [\"ref-0032\"], \"admitted\": [\"ref-0032\"], \"admissions\": {\"ref-0032\": {\"schema_version\": \"1.0.0\", \"profile_version\": \"0.1.0\", \"decision_id\": \"ref-0063\", \"candidate_ref\": \"ref-0032\", \"policy\": {\"policy_ref\": \"contextual-recall-policy:none\", \"policy_version\": \"ref-p1\", \"status\": \"unavailable\", \"selection_mode\": \"deterministic\"}, \"context\": {\"target_domain_refs\": [\"tenant:probe\", \"user:probe\"], \"principal_ref\": \"agent:probe\", \"project_ref\": \"user:probe\", \"task_ref\": \"\", \"purpose\": \"probe\", \"destination_ref\": \"\"}, \"outcome\": \"admit\", \"reason_code\": \"builtin_admission\", \"evidence_refs\": [], \"evaluated_at\": \"2026-01-01T00:00:53Z\", \"interpretation\": {\"authority_effect\": \"current_recall_only\", \"prior_admission_authority\": \"none\", \"memory_mutation\": \"not_performed\", \"relevance_authority\": \"none\", \"risk_signal_authority\": \"none\"}, \"route_provenance\": [{\"route_id\": \"lexical\", \"candidate_ref\": \"ref-0032\", \"raw_score\": 0.25, \"logical_memory_ref\": \"\", \"seed_candidate_ref\": \"\", \"shared_evidence_refs\": [], \"representation_ref\": \"\", \"representation_version\": \"\", \"representation_config_digest\": \"\", \"vector_dimension\": 0, \"similarity_metric\": \"\", \"currentness_basis\": \"\", \"authority_effect\": \"none\"}], \"admission_basis\": {\"admission_mode\": \"current_state\", \"currentness\": \"current_state\"}, \"rank_position\": 1, \"ranking_evidence\": {\"candidate_ref\": \"ref-0032\", \"routes\": [\"lexical\"], \"route_corroboration_count\": 1, \"exact_identity\": false, \"route_scores\": {\"lexical\": 0.25}, \"metabolic_evidence\": \"not_used\", \"subordinate_route_scores\": {}, \"temporal_evidence\": {\"clocks\": {\"transaction_time\": {\"value\": \"2026-01-01T00:00:32Z\", \"seconds\": 1767225632.0}}, \"declared_basis\": null, \"interpreted_validity\": null, \"lifecycle\": {}, \"substrate_valid_at_basis\": \"runtime_write_clock\"}, \"temporal_applicability\": \"not_evaluated\", \"temporal_applicability_basis\": null, \"temporal_ordering_clock\": null, \"lexical_relevance_score\": 0.28768207245178085, \"rank_position\": 1, \"policy_id\": \"multi-route-default\", \"policy_version\": \"3.4.0\", \"temporal_regime\": \"query_conditioned\", \"query_temporal_intent\": {\"mode\": \"atemporal_or_unspecified\", \"posture\": \"unspecified\", \"confidence\": null, \"reference_time\": null, \"target_start\": null, \"target_end\": null, \"expected_recall_shape\": \"ranked\", \"evidence\": [], \"interpreter_ref\": \"agent-memory-deterministic-temporal-cues\", \"interpreter_version\": \"1.1.0\", \"authority_effect\": \"none\", \"intent_basis\": \"none\", \"spans\": [], \"declined_spans\": [], \"orders_temporally\": false}, \"authority_effect\": \"none\"}, \"return_selection\": {\"sufficient\": false, \"basis\": \"no_informative_term_match\", \"content_relevance\": 0.0, \"relative_to_best\": null, \"authority_effect\": \"none\", \"requirement\": \"single\", \"query_terms_matched\": 0, \"query_terms_added\": 0, \"entities_added\": 0}}}, \"candidate_policy\": {\"candidate_scope\": \"domain_eligible\", \"prefilter_policy_id\": \"domain-eligibility-prefilter\", \"prefilter_policy_version\": \"1.0.0\", \"prefilter_authority\": \"none\", \"admission\": \"full_canonical_admission_on_every_candidate\"}, \"returned\": [], \"return_policy\": {\"policy_id\": \"relevance-sufficient-return-selection\", \"policy_version\": \"2.3.0\", \"requested_k\": 10, \"applied\": true, \"admitted_count\": 1, \"returned_count\": 0, \"sufficient_count\": 0, \"withheld_insufficient_count\": 1, \"abstained\": true, \"informative_query_term_count\": 1, \"relative_floor\": 0.5, \"set_floor\": 0.5, \"frame_fallback\": false, \"information_requirement\": {\"interpreter_version\": \"1.0.0\", \"shape\": \"single\", \"cues\": [], \"topical_term_count\": 1, \"frame_term_count\": 0, \"entity_mention_count\": 0, \"authority_effect\": \"none\"}, \"query_expansion\": {\"normalization_version\": \"1.1.0\", \"morphological_variant_count\": 0, \"typo_variant_count\": 0, \"authority_effect\": \"none\"}, \"lifecycle_successor_count\": 0, \"basis\": \"post_ranking_relevance_sufficiency_then_ranked_prefix\", \"authority_effect\": \"none\"}}"
+ },
+ {
+  "scenario": "governance",
+  "query": "Where do I work?",
+  "returned": [
+   "g:job"
+  ],
+  "admitted": [
+   "g:job"
+  ],
+  "records": {
+   "g:job": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "g:job": [
+    "lexical",
+    "semantic_vector"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 13.1,
+  "raw": "{\"contract_version\": \"1.9.0\", \"compatibility\": \"current\", \"stage\": \"recall\", \"candidates\": [\"ref-0032\"], \"admitted\": [\"ref-0032\"], \"admissions\": {\"ref-0032\": {\"schema_version\": \"1.0.0\", \"profile_version\": \"0.1.0\", \"decision_id\": \"ref-0066\", \"candidate_ref\": \"ref-0032\", \"policy\": {\"policy_ref\": \"contextual-recall-policy:none\", \"policy_version\": \"ref-p1\", \"status\": \"unavailable\", \"selection_mode\": \"deterministic\"}, \"context\": {\"target_domain_refs\": [\"tenant:probe\", \"user:probe\"], \"principal_ref\": \"agent:probe\", \"project_ref\": \"user:probe\", \"task_ref\": \"\", \"purpose\": \"probe\", \"destination_ref\": \"\"}, \"outcome\": \"admit\", \"reason_code\": \"builtin_admission\", \"evidence_refs\": [], \"evaluated_at\": \"2026-01-01T00:00:54Z\", \"interpretation\": {\"authority_effect\": \"current_recall_only\", \"prior_admission_authority\": \"none\", \"memory_mutation\": \"not_performed\", \"relevance_authority\": \"none\", \"risk_signal_authority\": \"none\"}, \"route_provenance\": [{\"route_id\": \"lexical\", \"candidate_ref\": \"ref-0032\", \"raw_score\": 0.5, \"logical_memory_ref\": \"\", \"seed_candidate_ref\": \"\", \"shared_evidence_refs\": [], \"representation_ref\": \"\", \"representation_version\": \"\", \"representation_config_digest\": \"\", \"vector_dimension\": 0, \"similarity_metric\": \"\", \"currentness_basis\": \"\", \"authority_effect\": \"none\"}, {\"route_id\": \"semantic_vector\", \"candidate_ref\": \"ref-0032\", \"raw_score\": 0.48254225125325517, \"logical_memory_ref\": \"\", \"seed_candidate_ref\": \"\", \"shared_evidence_refs\": [], \"representation_ref\": \"sentence-transformers/multi-qa-MiniLM-L6-cos-v1@b207367\", \"representation_version\": \"onnx-mean-l2-f32/1.0.0\", \"representation_config_digest\": \"sha256:7447705443160d1ae7c1de49902b786bd3f578d06e7125c05dabaed52dd31aee\", \"vector_dimension\": 384, \"similarity_metric\": \"cosine\", \"currentness_basis\": \"governed_recall_admission\", \"authority_effect\": \"none\"}], \"admission_basis\": {\"admission_mode\": \"current_state\", \"currentness\": \"current_state\"}, \"rank_position\": 1, \"ranking_evidence\": {\"candidate_ref\": \"ref-0032\", \"routes\": [\"lexical\", \"semantic_vector\"], \"route_corroboration_count\": 1, \"exact_identity\": false, \"route_scores\": {\"lexical\": 0.5}, \"metabolic_evidence\": \"not_used\", \"subordinate_route_scores\": {\"semantic_vector\": 0.48254225125325517}, \"temporal_evidence\": {\"clocks\": {\"transaction_time\": {\"value\": \"2026-01-01T00:00:32Z\", \"seconds\": 1767225632.0}}, \"declared_basis\": null, \"interpreted_validity\": null, \"lifecycle\": {}, \"substrate_valid_at_basis\": \"runtime_write_clock\"}, \"temporal_applicability\": \"not_evaluated\", \"temporal_applicability_basis\": null, \"temporal_ordering_clock\": null, \"lexical_relevance_score\": 0.5753641449035617, \"rank_position\": 1, \"policy_id\": \"multi-route-default\", \"policy_version\": \"3.4.0\", \"temporal_regime\": \"query_conditioned\", \"query_temporal_intent\": {\"mode\": \"atemporal_or_unspecified\", \"posture\": \"unspecified\", \"confidence\": null, \"reference_time\": null, \"target_start\": null, \"target_end\": null, \"expected_recall_shape\": \"ranked\", \"evidence\": [], \"interpreter_ref\": \"agent-memory-deterministic-temporal-cues\", \"interpreter_version\": \"1.1.0\", \"authority_effect\": \"none\", \"intent_basis\": \"none\", \"spans\": [], \"declined_spans\": [], \"orders_temporally\": false}, \"authority_effect\": \"none\"}, \"return_selection\": {\"sufficient\": true, \"basis\": \"non_lexical_route_evidence\", \"content_relevance\": 0.28768207245178085, \"relative_to_best\": 1.0, \"authority_effect\": \"none\", \"requirement\": \"single\", \"query_terms_matched\": 1, \"query_terms_added\": 1, \"entities_added\": 0}}}, \"candidate_policy\": {\"candidate_scope\": \"domain_eligible\", \"prefilter_policy_id\": \"domain-eligibility-prefilter\", \"prefilter_policy_version\": \"1.0.0\", \"prefilter_authority\": \"none\", \"admission\": \"full_canonical_admission_on_every_candidate\"}, \"returned\": [\"ref-0032\"], \"return_policy\": {\"policy_id\": \"relevance-sufficient-return-selection\", \"policy_version\": \"2.3.0\", \"requested_k\": 10, \"applied\": false, \"admitted_count\": 1, \"returned_count\": 1, \"sufficient_count\": 1, \"withheld_insufficient_count\": 0, \"abstained\": false, \"informative_query_term_count\": 1, \"relative_floor\": 0.5, \"set_floor\": 0.5, \"frame_fallback\": false, \"information_requirement\": {\"interpreter_version\": \"1.0.0\", \"shape\": \"single\", \"cues\": [], \"topical_term_count\": 1, \"frame_term_count\": 0, \"entity_mention_count\": 0, \"authority_effect\": \"none\"}, \"query_expansion\": {\"normalization_version\": \"1.1.0\", \"morphological_variant_count\": 0, \"typo_variant_count\": 0, \"authority_effect\": \"none\"}, \"lifecycle_successor_count\": 0, \"basis\": \"post_ranking_relevance_sufficiency_then_ranked_prefix\", \"authority_effect\": \"none\"}}"
+ }
+]

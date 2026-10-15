@@ -1,0 +1,916 @@
+[
+ {
+  "scenario": "topic_dense_medical",
+  "query": "What is my blood pressure?",
+  "returned": [
+   "m:bp"
+  ],
+  "admitted": [
+   "m:bp",
+   "m:gp",
+   "m:cardio",
+   "m:dentist",
+   "m:insurance",
+   "m:thyroid"
+  ],
+  "records": {
+   "m:bp": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "m:cardio": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "m:gp": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "m:thyroid": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "m:dentist": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "m:insurance": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "m:bp": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "m:cardio": [
+    "lexical"
+   ],
+   "m:gp": [
+    "lexical"
+   ],
+   "m:thyroid": [
+    "lexical"
+   ],
+   "m:dentist": [
+    "lexical"
+   ],
+   "m:insurance": [
+    "lexical"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 130.6,
+  "raw": null
+ },
+ {
+  "scenario": "topic_dense_medical",
+  "query": "Which medicine do I take each morning?",
+  "returned": [
+   "m:thyroid",
+   "m:allergy"
+  ],
+  "admitted": [
+   "m:thyroid",
+   "m:allergy",
+   "m:run",
+   "m:diet"
+  ],
+  "records": {
+   "m:thyroid": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "m:allergy": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "m:run": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "m:diet": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "m:thyroid": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "m:allergy": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "m:run": [
+    "lexical"
+   ],
+   "m:diet": [
+    "lexical"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 15.7,
+  "raw": null
+ },
+ {
+  "scenario": "topic_dense_medical",
+  "query": "Who is my heart doctor?",
+  "returned": [
+   "m:gp",
+   "m:cardio",
+   "m:statin"
+  ],
+  "admitted": [
+   "m:gp",
+   "m:cardio",
+   "m:dentist",
+   "m:insurance",
+   "m:thyroid",
+   "m:bp",
+   "m:statin"
+  ],
+  "records": {
+   "m:gp": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "m:cardio": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "m:bp": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "m:thyroid": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "m:dentist": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "m:insurance": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "m:statin": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "m:gp": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "m:cardio": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "m:bp": [
+    "lexical"
+   ],
+   "m:thyroid": [
+    "lexical"
+   ],
+   "m:dentist": [
+    "lexical"
+   ],
+   "m:insurance": [
+    "lexical"
+   ],
+   "m:statin": [
+    "semantic_vector"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 16.2,
+  "raw": null
+ },
+ {
+  "scenario": "topic_dense_medical",
+  "query": "What is my cholesterol level?",
+  "returned": [
+   "m:bp"
+  ],
+  "admitted": [
+   "m:gp",
+   "m:cardio",
+   "m:dentist",
+   "m:insurance",
+   "m:thyroid",
+   "m:bp"
+  ],
+  "records": {
+   "m:cardio": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "m:gp": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "m:bp": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "m:thyroid": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "m:dentist": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "m:insurance": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "m:cardio": [
+    "lexical"
+   ],
+   "m:gp": [
+    "lexical"
+   ],
+   "m:bp": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "m:thyroid": [
+    "lexical"
+   ],
+   "m:dentist": [
+    "lexical"
+   ],
+   "m:insurance": [
+    "lexical"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 16.1,
+  "raw": null
+ },
+ {
+  "scenario": "topic_dense_medical",
+  "query": "What is my blood type?",
+  "returned": [
+   "m:bp"
+  ],
+  "admitted": [
+   "m:bp",
+   "m:gp",
+   "m:cardio",
+   "m:dentist",
+   "m:insurance",
+   "m:thyroid"
+  ],
+  "records": {
+   "m:bp": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "m:cardio": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "m:gp": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "m:thyroid": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "m:dentist": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "m:insurance": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "m:bp": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "m:cardio": [
+    "lexical"
+   ],
+   "m:gp": [
+    "lexical"
+   ],
+   "m:thyroid": [
+    "lexical"
+   ],
+   "m:dentist": [
+    "lexical"
+   ],
+   "m:insurance": [
+    "lexical"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 15.3,
+  "raw": null
+ },
+ {
+  "scenario": "topic_dense_medical",
+  "query": "When is my next eye exam?",
+  "returned": [
+   "m:dentist",
+   "m:statin"
+  ],
+  "admitted": [
+   "m:gp",
+   "m:cardio",
+   "m:dentist",
+   "m:insurance",
+   "m:thyroid",
+   "m:bp",
+   "m:statin"
+  ],
+  "records": {
+   "m:cardio": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "m:gp": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "m:bp": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "m:thyroid": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "m:dentist": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "m:insurance": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "m:statin": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "m:cardio": [
+    "lexical"
+   ],
+   "m:gp": [
+    "lexical"
+   ],
+   "m:bp": [
+    "lexical"
+   ],
+   "m:thyroid": [
+    "lexical"
+   ],
+   "m:dentist": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "m:insurance": [
+    "lexical"
+   ],
+   "m:statin": [
+    "semantic_vector"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 17.1,
+  "raw": null
+ },
+ {
+  "scenario": "topic_dense_medical",
+  "query": "What medications am I on?",
+  "returned": [
+   "m:allergy",
+   "m:thyroid"
+  ],
+  "admitted": [
+   "m:allergy",
+   "m:run",
+   "m:diet",
+   "m:dentist",
+   "m:thyroid",
+   "m:statin"
+  ],
+  "records": {
+   "m:allergy": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "m:run": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "m:diet": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "m:thyroid": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "m:statin": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "m:dentist": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "m:allergy": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "m:run": [
+    "lexical"
+   ],
+   "m:diet": [
+    "lexical"
+   ],
+   "m:thyroid": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "m:statin": [
+    "lexical"
+   ],
+   "m:dentist": [
+    "lexical"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 15.0,
+  "raw": null
+ },
+ {
+  "scenario": "topic_dense_medical",
+  "query": "Which drugs should I avoid?",
+  "returned": [
+   "m:allergy",
+   "m:thyroid"
+  ],
+  "admitted": [
+   "m:allergy",
+   "m:run",
+   "m:diet",
+   "m:thyroid"
+  ],
+  "records": {
+   "m:thyroid": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "m:allergy": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "m:run": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "m:diet": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "m:thyroid": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "m:allergy": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "m:run": [
+    "lexical"
+   ],
+   "m:diet": [
+    "lexical"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 14.9,
+  "raw": null
+ },
+ {
+  "scenario": "topic_dense_medical",
+  "query": "Who is my physician?",
+  "returned": [
+   "m:gp",
+   "m:cardio",
+   "m:dentist",
+   "m:statin"
+  ],
+  "admitted": [
+   "m:gp",
+   "m:cardio",
+   "m:dentist",
+   "m:insurance",
+   "m:thyroid",
+   "m:bp",
+   "m:statin"
+  ],
+  "records": {
+   "m:cardio": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "m:gp": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "m:bp": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "m:thyroid": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "m:dentist": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "m:insurance": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "m:statin": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "m:cardio": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "m:gp": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "m:bp": [
+    "lexical"
+   ],
+   "m:thyroid": [
+    "lexical"
+   ],
+   "m:dentist": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "m:insurance": [
+    "lexical"
+   ],
+   "m:statin": [
+    "semantic_vector"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 18.1,
+  "raw": null
+ },
+ {
+  "scenario": "household_abstain",
+  "query": "What is my wifi password?",
+  "returned": [],
+  "admitted": [
+   "h:job"
+  ],
+  "records": {
+   "h:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "h:job": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 76.1,
+  "raw": null
+ },
+ {
+  "scenario": "household_abstain",
+  "query": "When does my passport expire?",
+  "returned": [],
+  "admitted": [
+   "h:job"
+  ],
+  "records": {
+   "h:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "h:job": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 16.4,
+  "raw": null
+ },
+ {
+  "scenario": "household_abstain",
+  "query": "What is the capital of Peru?",
+  "returned": [],
+  "admitted": [
+   "h:job",
+   "h:car",
+   "h:dog",
+   "h:cat"
+  ],
+  "records": {
+   "h:car": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "h:dog": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "h:cat": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "h:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "h:car": [
+    "lexical"
+   ],
+   "h:dog": [
+    "lexical"
+   ],
+   "h:cat": [
+    "lexical"
+   ],
+   "h:job": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 17.5,
+  "raw": null
+ },
+ {
+  "scenario": "household_abstain",
+  "query": "Do we own a boat?",
+  "returned": [],
+  "admitted": [
+   "h:car",
+   "h:cat"
+  ],
+  "records": {
+   "h:car": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "h:cat": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "h:car": [
+    "lexical"
+   ],
+   "h:cat": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 16.7,
+  "raw": null
+ },
+ {
+  "scenario": "household_abstain",
+  "query": "Which hamster do we have?",
+  "returned": [],
+  "admitted": [
+   "h:car",
+   "h:cat"
+  ],
+  "records": {
+   "h:car": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "h:cat": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "h:car": [
+    "lexical"
+   ],
+   "h:cat": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 19.5,
+  "raw": null
+ },
+ {
+  "scenario": "household_abstain",
+  "query": "Where does Ana work?",
+  "returned": [
+   "h:bike"
+  ],
+  "admitted": [
+   "h:bike"
+  ],
+  "records": {
+   "h:bike": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "h:bike": [
+    "lexical",
+    "semantic_vector"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 21.3,
+  "raw": null
+ },
+ {
+  "scenario": "household_abstain",
+  "query": "What is my salary?",
+  "returned": [],
+  "admitted": [
+   "h:job"
+  ],
+  "records": {
+   "h:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "h:job": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 19.2,
+  "raw": null
+ },
+ {
+  "scenario": "household_abstain",
+  "query": "Which pets do we have?",
+  "returned": [
+   "h:cat",
+   "h:dog"
+  ],
+  "admitted": [
+   "h:car",
+   "h:cat",
+   "h:dog"
+  ],
+  "records": {
+   "h:car": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "h:cat": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "h:dog": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "h:car": [
+    "lexical"
+   ],
+   "h:cat": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "h:dog": [
+    "semantic_vector"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 18.6,
+  "raw": null
+ },
+ {
+  "scenario": "household_abstain",
+  "query": "Which automobile do we own?",
+  "returned": [],
+  "admitted": [
+   "h:car",
+   "h:cat"
+  ],
+  "records": {
+   "h:car": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "h:cat": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "h:car": [
+    "lexical"
+   ],
+   "h:cat": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 15.9,
+  "raw": null
+ },
+ {
+  "scenario": "household_abstain",
+  "query": "Who do I eat with midweek?",
+  "returned": [
+   "h:lunch",
+   "h:cat"
+  ],
+  "admitted": [
+   "h:lunch",
+   "h:cat"
+  ],
+  "records": {
+   "h:lunch": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   },
+   "h:cat": {
+    "basis": "non_lexical_route_evidence",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "h:lunch": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "h:cat": [
+    "semantic_vector"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 16.9,
+  "raw": null
+ }
+]

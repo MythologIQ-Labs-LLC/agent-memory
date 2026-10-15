@@ -262,7 +262,8 @@ class PluralAnswerReading(unittest.TestCase):
 
     def test_single_answer_questions_and_third_person_verbs(self):
         for query in ("Which pet gets scared?", "Which bus goes downtown?", "What happens next?", "Who is my boss?",
-                      "What is the status of the order?", "What car do we drive?", "Where do I work?"):
+                      "What is the status of the order?", "What car do we drive?", "Where do I work?",
+                      "Which goes first?", "Which does Alice prefer?"):
             with self.subTest(query=query):
                 self.assertFalse(return_selection.plural_answer(query))
 

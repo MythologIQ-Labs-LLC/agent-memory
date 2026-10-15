@@ -1,0 +1,2115 @@
+[
+ {
+  "scenario": "abstain",
+  "query": "What is my blood type?",
+  "returned": [],
+  "admitted": [
+   "f:boss",
+   "f:sister",
+   "f:job",
+   "f:dog",
+   "f:hotel",
+   "f:wifi",
+   "f:cat"
+  ],
+  "records": {
+   "f:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:boss": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:dog": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:cat": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:sister": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:hotel": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:wifi": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:job": [
+    "lexical"
+   ],
+   "f:boss": [
+    "lexical"
+   ],
+   "f:dog": [
+    "lexical"
+   ],
+   "f:cat": [
+    "lexical"
+   ],
+   "f:sister": [
+    "lexical"
+   ],
+   "f:hotel": [
+    "lexical"
+   ],
+   "f:wifi": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 7.5,
+  "raw": null
+ },
+ {
+  "scenario": "abstain",
+  "query": "Which hamster do we have?",
+  "returned": [],
+  "admitted": [
+   "f:car",
+   "f:budget",
+   "f:cat"
+  ],
+  "records": {
+   "f:car": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:cat": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:budget": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:car": [
+    "lexical"
+   ],
+   "f:cat": [
+    "lexical"
+   ],
+   "f:budget": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 5.4,
+  "raw": null
+ },
+ {
+  "scenario": "abstain",
+  "query": "What is my brother's name?",
+  "returned": [],
+  "admitted": [
+   "f:boss",
+   "f:sister",
+   "f:job",
+   "f:dog",
+   "f:hotel",
+   "f:wifi",
+   "f:cat"
+  ],
+  "records": {
+   "f:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:boss": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:dog": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:cat": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:sister": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:hotel": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:wifi": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:job": [
+    "lexical"
+   ],
+   "f:boss": [
+    "lexical"
+   ],
+   "f:dog": [
+    "lexical"
+   ],
+   "f:cat": [
+    "lexical"
+   ],
+   "f:sister": [
+    "lexical"
+   ],
+   "f:hotel": [
+    "lexical"
+   ],
+   "f:wifi": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 6.2,
+  "raw": null
+ },
+ {
+  "scenario": "abstain",
+  "query": "When is my mortgage payment due?",
+  "returned": [],
+  "admitted": [
+   "f:boss",
+   "f:sister",
+   "f:job",
+   "f:dog",
+   "f:hotel",
+   "f:wifi",
+   "f:cat"
+  ],
+  "records": {
+   "f:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:boss": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:dog": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:cat": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:sister": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:hotel": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:wifi": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:job": [
+    "lexical"
+   ],
+   "f:boss": [
+    "lexical"
+   ],
+   "f:dog": [
+    "lexical"
+   ],
+   "f:cat": [
+    "lexical"
+   ],
+   "f:sister": [
+    "lexical"
+   ],
+   "f:hotel": [
+    "lexical"
+   ],
+   "f:wifi": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 7.4,
+  "raw": null
+ },
+ {
+  "scenario": "abstain",
+  "query": "What colour is our boat?",
+  "returned": [],
+  "admitted": [
+   "f:dog",
+   "f:flight",
+   "f:boss",
+   "f:hotel",
+   "f:wifi",
+   "f:cat",
+   "f:job"
+  ],
+  "records": {
+   "f:dog": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:cat": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:boss": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:flight": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:hotel": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:wifi": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:dog": [
+    "lexical"
+   ],
+   "f:cat": [
+    "lexical"
+   ],
+   "f:job": [
+    "lexical"
+   ],
+   "f:boss": [
+    "lexical"
+   ],
+   "f:flight": [
+    "lexical"
+   ],
+   "f:hotel": [
+    "lexical"
+   ],
+   "f:wifi": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 6.4,
+  "raw": null
+ },
+ {
+  "scenario": "abstain",
+  "query": "Where did I go to university?",
+  "returned": [
+   "f:gym"
+  ],
+  "admitted": [
+   "f:gym",
+   "f:job",
+   "f:allergy",
+   "f:flight",
+   "f:meds",
+   "f:lang"
+  ],
+  "records": {
+   "f:gym": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "f:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:allergy": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:meds": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:flight": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:lang": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:gym": [
+    "lexical"
+   ],
+   "f:job": [
+    "lexical"
+   ],
+   "f:allergy": [
+    "lexical"
+   ],
+   "f:meds": [
+    "lexical"
+   ],
+   "f:flight": [
+    "lexical"
+   ],
+   "f:lang": [
+    "lexical"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 6.8,
+  "raw": null
+ },
+ {
+  "scenario": "abstain",
+  "query": "What is my shoe size?",
+  "returned": [],
+  "admitted": [
+   "f:boss",
+   "f:sister",
+   "f:job",
+   "f:dog",
+   "f:hotel",
+   "f:wifi",
+   "f:cat"
+  ],
+  "records": {
+   "f:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:boss": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:dog": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:cat": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:sister": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:hotel": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:wifi": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:job": [
+    "lexical"
+   ],
+   "f:boss": [
+    "lexical"
+   ],
+   "f:dog": [
+    "lexical"
+   ],
+   "f:cat": [
+    "lexical"
+   ],
+   "f:sister": [
+    "lexical"
+   ],
+   "f:hotel": [
+    "lexical"
+   ],
+   "f:wifi": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 6.2,
+  "raw": null
+ },
+ {
+  "scenario": "abstain",
+  "query": "Who is my dentist?",
+  "returned": [],
+  "admitted": [
+   "f:boss",
+   "f:sister",
+   "f:job",
+   "f:dog",
+   "f:hotel",
+   "f:wifi",
+   "f:cat"
+  ],
+  "records": {
+   "f:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:boss": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:dog": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:cat": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:sister": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:hotel": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:wifi": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:job": [
+    "lexical"
+   ],
+   "f:boss": [
+    "lexical"
+   ],
+   "f:dog": [
+    "lexical"
+   ],
+   "f:cat": [
+    "lexical"
+   ],
+   "f:sister": [
+    "lexical"
+   ],
+   "f:hotel": [
+    "lexical"
+   ],
+   "f:wifi": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 6.6,
+  "raw": null
+ },
+ {
+  "scenario": "abstain",
+  "query": "Which bank do I use?",
+  "returned": [],
+  "admitted": [
+   "f:allergy",
+   "f:meds",
+   "f:lang",
+   "f:gym",
+   "f:job"
+  ],
+  "records": {
+   "f:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:gym": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:meds": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:allergy": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:lang": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:job": [
+    "lexical"
+   ],
+   "f:gym": [
+    "lexical"
+   ],
+   "f:meds": [
+    "lexical"
+   ],
+   "f:allergy": [
+    "lexical"
+   ],
+   "f:lang": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 6.2,
+  "raw": null
+ },
+ {
+  "scenario": "abstain",
+  "query": "What is my favourite film?",
+  "returned": [],
+  "admitted": [
+   "f:boss",
+   "f:sister",
+   "f:job",
+   "f:dog",
+   "f:hotel",
+   "f:wifi",
+   "f:cat"
+  ],
+  "records": {
+   "f:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:boss": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:dog": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:cat": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:sister": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:hotel": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:wifi": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:job": [
+    "lexical"
+   ],
+   "f:boss": [
+    "lexical"
+   ],
+   "f:dog": [
+    "lexical"
+   ],
+   "f:cat": [
+    "lexical"
+   ],
+   "f:sister": [
+    "lexical"
+   ],
+   "f:hotel": [
+    "lexical"
+   ],
+   "f:wifi": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 5.9,
+  "raw": null
+ },
+ {
+  "scenario": "abstain",
+  "query": "When is the company picnic?",
+  "returned": [],
+  "admitted": [
+   "f:wifi",
+   "f:hotel",
+   "f:cat",
+   "f:job",
+   "f:boss",
+   "f:dog",
+   "f:gym",
+   "f:garden"
+  ],
+  "records": {
+   "f:cat": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:hotel": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:wifi": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:dog": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:boss": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:gym": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:garden": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:cat": [
+    "lexical"
+   ],
+   "f:job": [
+    "lexical"
+   ],
+   "f:hotel": [
+    "lexical"
+   ],
+   "f:wifi": [
+    "lexical"
+   ],
+   "f:dog": [
+    "lexical"
+   ],
+   "f:boss": [
+    "lexical"
+   ],
+   "f:gym": [
+    "lexical"
+   ],
+   "f:garden": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 6.2,
+  "raw": null
+ },
+ {
+  "scenario": "abstain",
+  "query": "What is the weather in Osaka tomorrow?",
+  "returned": [
+   "f:hotel",
+   "f:flight"
+  ],
+  "admitted": [
+   "f:hotel",
+   "f:cat",
+   "f:flight",
+   "f:sister",
+   "f:wifi",
+   "f:job",
+   "f:boss",
+   "f:dog",
+   "f:gym",
+   "f:garden"
+  ],
+  "records": {
+   "f:hotel": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "f:cat": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:wifi": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:dog": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:boss": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:gym": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:sister": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:flight": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "f:garden": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:hotel": [
+    "lexical"
+   ],
+   "f:cat": [
+    "lexical"
+   ],
+   "f:job": [
+    "lexical"
+   ],
+   "f:wifi": [
+    "lexical"
+   ],
+   "f:dog": [
+    "lexical"
+   ],
+   "f:boss": [
+    "lexical"
+   ],
+   "f:gym": [
+    "lexical"
+   ],
+   "f:sister": [
+    "lexical"
+   ],
+   "f:flight": [
+    "lexical"
+   ],
+   "f:garden": [
+    "lexical"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 7.0,
+  "raw": null
+ },
+ {
+  "scenario": "abstain",
+  "query": "How much is our rent?",
+  "returned": [],
+  "admitted": [
+   "f:dog",
+   "f:flight",
+   "f:boss",
+   "f:hotel",
+   "f:wifi",
+   "f:cat",
+   "f:job"
+  ],
+  "records": {
+   "f:dog": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:cat": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:boss": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:flight": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:hotel": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:wifi": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:dog": [
+    "lexical"
+   ],
+   "f:cat": [
+    "lexical"
+   ],
+   "f:job": [
+    "lexical"
+   ],
+   "f:boss": [
+    "lexical"
+   ],
+   "f:flight": [
+    "lexical"
+   ],
+   "f:hotel": [
+    "lexical"
+   ],
+   "f:wifi": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 5.7,
+  "raw": null
+ },
+ {
+  "scenario": "abstain",
+  "query": "What is my cholesterol?",
+  "returned": [],
+  "admitted": [
+   "f:boss",
+   "f:sister",
+   "f:job",
+   "f:dog",
+   "f:hotel",
+   "f:wifi",
+   "f:cat"
+  ],
+  "records": {
+   "f:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:boss": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:dog": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:cat": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:sister": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:hotel": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:wifi": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:job": [
+    "lexical"
+   ],
+   "f:boss": [
+    "lexical"
+   ],
+   "f:dog": [
+    "lexical"
+   ],
+   "f:cat": [
+    "lexical"
+   ],
+   "f:sister": [
+    "lexical"
+   ],
+   "f:hotel": [
+    "lexical"
+   ],
+   "f:wifi": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 6.4,
+  "raw": null
+ },
+ {
+  "scenario": "abstain",
+  "query": "Which school do the kids attend?",
+  "returned": [],
+  "admitted": [
+   "f:wifi",
+   "f:hotel",
+   "f:gym",
+   "f:cat",
+   "f:garden",
+   "f:job"
+  ],
+  "records": {
+   "f:cat": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:gym": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:hotel": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:garden": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:wifi": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:cat": [
+    "lexical"
+   ],
+   "f:job": [
+    "lexical"
+   ],
+   "f:gym": [
+    "lexical"
+   ],
+   "f:hotel": [
+    "lexical"
+   ],
+   "f:garden": [
+    "lexical"
+   ],
+   "f:wifi": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 7.3,
+  "raw": null
+ },
+ {
+  "scenario": "abstain",
+  "query": "What instrument do I play?",
+  "returned": [],
+  "admitted": [
+   "f:allergy",
+   "f:meds",
+   "f:lang",
+   "f:gym",
+   "f:job"
+  ],
+  "records": {
+   "f:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:gym": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:meds": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:allergy": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:lang": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:job": [
+    "lexical"
+   ],
+   "f:gym": [
+    "lexical"
+   ],
+   "f:meds": [
+    "lexical"
+   ],
+   "f:allergy": [
+    "lexical"
+   ],
+   "f:lang": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 5.8,
+  "raw": null
+ },
+ {
+  "scenario": "abstain",
+  "query": "Who is our landlord?",
+  "returned": [],
+  "admitted": [
+   "f:dog",
+   "f:flight",
+   "f:boss",
+   "f:hotel",
+   "f:wifi",
+   "f:cat",
+   "f:job"
+  ],
+  "records": {
+   "f:dog": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:cat": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:boss": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:flight": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:hotel": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:wifi": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:dog": [
+    "lexical"
+   ],
+   "f:cat": [
+    "lexical"
+   ],
+   "f:job": [
+    "lexical"
+   ],
+   "f:boss": [
+    "lexical"
+   ],
+   "f:flight": [
+    "lexical"
+   ],
+   "f:hotel": [
+    "lexical"
+   ],
+   "f:wifi": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 6.6,
+  "raw": null
+ },
+ {
+  "scenario": "abstain",
+  "query": "What is my daughter allergic to?",
+  "returned": [
+   "f:allergy"
+  ],
+  "admitted": [
+   "f:allergy",
+   "f:boss",
+   "f:job",
+   "f:sister",
+   "f:gym",
+   "f:flight",
+   "f:dog",
+   "f:hotel",
+   "f:wifi",
+   "f:cat"
+  ],
+  "records": {
+   "f:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:boss": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:allergy": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "f:dog": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:cat": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:gym": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:sister": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:flight": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:hotel": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:wifi": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:job": [
+    "lexical"
+   ],
+   "f:boss": [
+    "lexical"
+   ],
+   "f:allergy": [
+    "lexical"
+   ],
+   "f:dog": [
+    "lexical"
+   ],
+   "f:cat": [
+    "lexical"
+   ],
+   "f:gym": [
+    "lexical"
+   ],
+   "f:sister": [
+    "lexical"
+   ],
+   "f:flight": [
+    "lexical"
+   ],
+   "f:hotel": [
+    "lexical"
+   ],
+   "f:wifi": [
+    "lexical"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 5.9,
+  "raw": null
+ },
+ {
+  "scenario": "abstain",
+  "query": "What did I eat yesterday?",
+  "returned": [],
+  "admitted": [
+   "f:allergy",
+   "f:meds",
+   "f:lang",
+   "f:gym",
+   "f:job"
+  ],
+  "records": {
+   "f:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:gym": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:meds": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:allergy": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:lang": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:job": [
+    "lexical"
+   ],
+   "f:gym": [
+    "lexical"
+   ],
+   "f:meds": [
+    "lexical"
+   ],
+   "f:allergy": [
+    "lexical"
+   ],
+   "f:lang": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 5.2,
+  "raw": null
+ },
+ {
+  "scenario": "abstain",
+  "query": "Which car does Lena drive?",
+  "returned": [
+   "f:car",
+   "f:sister"
+  ],
+  "admitted": [
+   "f:car",
+   "f:sister"
+  ],
+  "records": {
+   "f:car": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "f:sister": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:car": [
+    "lexical"
+   ],
+   "f:sister": [
+    "lexical"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 5.1,
+  "raw": null
+ },
+ {
+  "scenario": "answerable",
+  "query": "Which automobile do we own?",
+  "returned": [],
+  "admitted": [
+   "f:car",
+   "f:budget",
+   "f:cat"
+  ],
+  "records": {
+   "f:car": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:cat": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:budget": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:car": [
+    "lexical"
+   ],
+   "f:cat": [
+    "lexical"
+   ],
+   "f:budget": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 7.3,
+  "raw": null
+ },
+ {
+  "scenario": "answerable",
+  "query": "Which animals live with us?",
+  "returned": [
+   "f:sister"
+  ],
+  "admitted": [
+   "f:sister"
+  ],
+  "records": {
+   "f:sister": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:sister": [
+    "lexical"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 5.1,
+  "raw": null
+ },
+ {
+  "scenario": "answerable",
+  "query": "Who pays my salary?",
+  "returned": [],
+  "admitted": [
+   "f:sister",
+   "f:boss",
+   "f:job"
+  ],
+  "records": {
+   "f:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:boss": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:sister": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:job": [
+    "lexical"
+   ],
+   "f:boss": [
+    "lexical"
+   ],
+   "f:sister": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 8.1,
+  "raw": null
+ },
+ {
+  "scenario": "answerable",
+  "query": "Who is my boss?",
+  "returned": [],
+  "admitted": [
+   "f:boss",
+   "f:sister",
+   "f:job",
+   "f:dog",
+   "f:hotel",
+   "f:wifi",
+   "f:cat"
+  ],
+  "records": {
+   "f:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:boss": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:dog": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:cat": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:sister": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:hotel": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:wifi": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:job": [
+    "lexical"
+   ],
+   "f:boss": [
+    "lexical"
+   ],
+   "f:dog": [
+    "lexical"
+   ],
+   "f:cat": [
+    "lexical"
+   ],
+   "f:sister": [
+    "lexical"
+   ],
+   "f:hotel": [
+    "lexical"
+   ],
+   "f:wifi": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 8.3,
+  "raw": null
+ },
+ {
+  "scenario": "answerable",
+  "query": "Where do I exercise?",
+  "returned": [],
+  "admitted": [
+   "f:job",
+   "f:allergy",
+   "f:meds",
+   "f:lang",
+   "f:gym"
+  ],
+  "records": {
+   "f:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:gym": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:meds": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:allergy": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:lang": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:job": [
+    "lexical"
+   ],
+   "f:gym": [
+    "lexical"
+   ],
+   "f:meds": [
+    "lexical"
+   ],
+   "f:allergy": [
+    "lexical"
+   ],
+   "f:lang": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 7.2,
+  "raw": null
+ },
+ {
+  "scenario": "answerable",
+  "query": "What medicine do I take?",
+  "returned": [
+   "f:meds"
+  ],
+  "admitted": [
+   "f:meds",
+   "f:allergy",
+   "f:lang",
+   "f:gym",
+   "f:job"
+  ],
+  "records": {
+   "f:meds": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "f:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:gym": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:allergy": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:lang": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:meds": [
+    "lexical"
+   ],
+   "f:job": [
+    "lexical"
+   ],
+   "f:gym": [
+    "lexical"
+   ],
+   "f:allergy": [
+    "lexical"
+   ],
+   "f:lang": [
+    "lexical"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 7.3,
+  "raw": null
+ },
+ {
+  "scenario": "answerable",
+  "query": "Which drugs must I avoid?",
+  "returned": [],
+  "admitted": [
+   "f:allergy",
+   "f:meds",
+   "f:lang",
+   "f:gym",
+   "f:job"
+  ],
+  "records": {
+   "f:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:gym": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:meds": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:allergy": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:lang": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:job": [
+    "lexical"
+   ],
+   "f:gym": [
+    "lexical"
+   ],
+   "f:meds": [
+    "lexical"
+   ],
+   "f:allergy": [
+    "lexical"
+   ],
+   "f:lang": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 7.3,
+  "raw": null
+ },
+ {
+  "scenario": "answerable",
+  "query": "Where does my sibling live?",
+  "returned": [
+   "f:sister"
+  ],
+  "admitted": [
+   "f:job",
+   "f:sister",
+   "f:boss"
+  ],
+  "records": {
+   "f:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:sister": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "f:boss": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:job": [
+    "lexical"
+   ],
+   "f:sister": [
+    "lexical"
+   ],
+   "f:boss": [
+    "lexical"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 9.7,
+  "raw": null
+ },
+ {
+  "scenario": "answerable",
+  "query": "When do we fly to Japan?",
+  "returned": [],
+  "admitted": [
+   "f:allergy",
+   "f:car",
+   "f:budget",
+   "f:gym",
+   "f:cat",
+   "f:flight"
+  ],
+  "records": {
+   "f:car": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:cat": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:gym": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:allergy": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:flight": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:budget": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:car": [
+    "lexical"
+   ],
+   "f:cat": [
+    "lexical"
+   ],
+   "f:gym": [
+    "lexical"
+   ],
+   "f:allergy": [
+    "lexical"
+   ],
+   "f:flight": [
+    "lexical"
+   ],
+   "f:budget": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 9.1,
+  "raw": null
+ },
+ {
+  "scenario": "answerable",
+  "query": "Where are we staying in Japan?",
+  "returned": [],
+  "admitted": [
+   "f:job",
+   "f:cat",
+   "f:car",
+   "f:sister",
+   "f:hotel",
+   "f:budget"
+  ],
+  "records": {
+   "f:cat": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:car": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:sister": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:hotel": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:budget": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:cat": [
+    "lexical"
+   ],
+   "f:car": [
+    "lexical"
+   ],
+   "f:job": [
+    "lexical"
+   ],
+   "f:sister": [
+    "lexical"
+   ],
+   "f:hotel": [
+    "lexical"
+   ],
+   "f:budget": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 8.7,
+  "raw": null
+ },
+ {
+  "scenario": "answerable",
+  "query": "What language am I studying?",
+  "returned": [],
+  "admitted": [
+   "f:allergy",
+   "f:lang",
+   "f:meds",
+   "f:gym",
+   "f:job"
+  ],
+  "records": {
+   "f:allergy": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:lang": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:gym": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:meds": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:allergy": [
+    "lexical"
+   ],
+   "f:lang": [
+    "lexical"
+   ],
+   "f:job": [
+    "lexical"
+   ],
+   "f:gym": [
+    "lexical"
+   ],
+   "f:meds": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 8.1,
+  "raw": null
+ },
+ {
+  "scenario": "answerable",
+  "query": "How much do we spend on food?",
+  "returned": [
+   "f:budget"
+  ],
+  "admitted": [
+   "f:budget",
+   "f:car",
+   "f:cat",
+   "f:lang",
+   "f:wifi",
+   "f:gym",
+   "f:flight"
+  ],
+  "records": {
+   "f:budget": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   },
+   "f:car": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:cat": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:gym": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:flight": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:lang": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:wifi": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:budget": [
+    "lexical"
+   ],
+   "f:car": [
+    "lexical"
+   ],
+   "f:cat": [
+    "lexical"
+   ],
+   "f:gym": [
+    "lexical"
+   ],
+   "f:flight": [
+    "lexical"
+   ],
+   "f:lang": [
+    "lexical"
+   ],
+   "f:wifi": [
+    "lexical"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 7.9,
+  "raw": null
+ },
+ {
+  "scenario": "answerable",
+  "query": "How did the vegetable patch do?",
+  "returned": [],
+  "admitted": [
+   "f:wifi",
+   "f:hotel",
+   "f:gym",
+   "f:cat",
+   "f:garden",
+   "f:job"
+  ],
+  "records": {
+   "f:cat": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:job": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:gym": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:hotel": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:garden": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:wifi": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:cat": [
+    "lexical"
+   ],
+   "f:job": [
+    "lexical"
+   ],
+   "f:gym": [
+    "lexical"
+   ],
+   "f:hotel": [
+    "lexical"
+   ],
+   "f:garden": [
+    "lexical"
+   ],
+   "f:wifi": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 8.4,
+  "raw": null
+ },
+ {
+  "scenario": "answerable",
+  "query": "How do guests get online?",
+  "returned": [
+   "f:wifi"
+  ],
+  "admitted": [
+   "f:wifi"
+  ],
+  "records": {
+   "f:wifi": {
+    "basis": "content_relevance",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:wifi": [
+    "lexical"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": null,
+  "ms": 6.8,
+  "raw": null
+ },
+ {
+  "scenario": "answerable",
+  "query": "What pets do we have?",
+  "returned": [],
+  "admitted": [
+   "f:car",
+   "f:budget",
+   "f:cat"
+  ],
+  "records": {
+   "f:car": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:cat": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   },
+   "f:budget": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": null
+   }
+  },
+  "routes": {
+   "f:car": [
+    "lexical"
+   ],
+   "f:cat": [
+    "lexical"
+   ],
+   "f:budget": [
+    "lexical"
+   ]
+  },
+  "abstained": true,
+  "semantic_channel": null,
+  "ms": 6.4,
+  "raw": null
+ }
+]

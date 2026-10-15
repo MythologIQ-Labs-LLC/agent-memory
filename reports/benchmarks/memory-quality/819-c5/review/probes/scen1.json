@@ -1,0 +1,45 @@
+[
+ {"name": "topic_dense_medical",
+  "facts": {
+   "m:bp": "My blood pressure was 128 over 82 at the last checkup.",
+   "m:thyroid": "I take levothyroxine every morning for my thyroid.",
+   "m:statin": "Dr. Okafor started me on atorvastatin in March.",
+   "m:cardio": "My cardiologist is Dr. Okafor at Mercy Hospital.",
+   "m:gp": "My family doctor is Dr. Lindqvist.",
+   "m:allergy": "I am allergic to penicillin.",
+   "m:dentist": "The dentist appointment is on the 14th.",
+   "m:insurance": "Our health insurance is through Blue Ridge Mutual.",
+   "m:run": "I run five kilometres on Saturdays.",
+   "m:diet": "I cut back on salt last year."},
+  "queries": [
+   "What is my blood pressure?",
+   "Which medicine do I take each morning?",
+   "Who is my heart doctor?",
+   "What is my cholesterol level?",
+   "What is my blood type?",
+   "When is my next eye exam?",
+   "What medications am I on?",
+   "Which drugs should I avoid?",
+   "Who is my physician?"
+  ]},
+ {"name": "household_abstain",
+  "facts": {
+   "h:car": "We keep the Corolla in the garage.",
+   "h:bike": "Ana's road bike needs new brake pads.",
+   "h:dog": "Biscuit the beagle hides during thunderstorms.",
+   "h:cat": "Miso, the tabby we adopted, sleeps all day.",
+   "h:job": "My employer is Northwind Logistics.",
+   "h:lunch": "Lunch with Priya on Thursdays."},
+  "queries": [
+   "What is my wifi password?",
+   "When does my passport expire?",
+   "What is the capital of Peru?",
+   "Do we own a boat?",
+   "Which hamster do we have?",
+   "Where does Ana work?",
+   "What is my salary?",
+   "Which pets do we have?",
+   "Which automobile do we own?",
+   "Who do I eat with midweek?"
+  ]}
+]

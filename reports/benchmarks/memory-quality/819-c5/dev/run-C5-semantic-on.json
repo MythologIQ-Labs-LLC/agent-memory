@@ -1,5 +1,5 @@
 {
- "agent_memory_revision": "e0e1b80c8e9ac6eb72714fc1b08c20077b7f88db",
+ "agent_memory_revision": "4f09f2bf35cc0709eab446210bcf913d257b98e2",
  "budget": 10,
  "cohort_sha256": "a1fdb065916e5de4590a0b98df21c88dcb3de99d6847139c2640326d5ba41b51",
  "reference_worktree_dirty": true,
@@ -13,7 +13,7 @@
    "queries": [
     {
      "admitted_count": 2,
-     "elapsed_ms": 673.005,
+     "elapsed_ms": 762.99,
      "id": "hh-1",
      "kind": "single",
      "must_include_count": 1,
@@ -28,7 +28,7 @@
     },
     {
      "admitted_count": 1,
-     "elapsed_ms": 523.954,
+     "elapsed_ms": 695.111,
      "id": "hh-2",
      "kind": "multi",
      "must_include_count": 3,
@@ -41,7 +41,7 @@
     },
     {
      "admitted_count": 9,
-     "elapsed_ms": 513.842,
+     "elapsed_ms": 638.847,
      "id": "hh-3",
      "kind": "single",
      "must_include_count": 1,
@@ -56,7 +56,7 @@
     },
     {
      "admitted_count": 6,
-     "elapsed_ms": 519.599,
+     "elapsed_ms": 568.861,
      "id": "hh-4",
      "kind": "single",
      "must_include_count": 1,
@@ -71,7 +71,7 @@
     },
     {
      "admitted_count": 7,
-     "elapsed_ms": 822.958,
+     "elapsed_ms": 560.062,
      "id": "hh-5",
      "kind": "abstention",
      "must_include_count": 0,
@@ -84,22 +84,20 @@
     },
     {
      "admitted_count": 6,
-     "elapsed_ms": 621.932,
+     "elapsed_ms": 610.832,
      "id": "hh-6",
      "kind": "single",
      "must_include_count": 1,
-     "passed": true,
-     "precision": 1.0,
-     "recall": 1.0,
-     "returned": [
-      "memory:garden"
-     ],
-     "returned_count": 1,
+     "passed": false,
+     "precision": null,
+     "recall": 0.0,
+     "returned": [],
+     "returned_count": 0,
      "safety_violations": []
     },
     {
      "admitted_count": 1,
-     "elapsed_ms": 967.878,
+     "elapsed_ms": 534.935,
      "id": "hh-7",
      "kind": "single",
      "must_include_count": 1,
@@ -121,7 +119,7 @@
    "queries": [
     {
      "admitted_count": 3,
-     "elapsed_ms": 650.554,
+     "elapsed_ms": 681.572,
      "id": "wk-1",
      "kind": "single",
      "must_include_count": 1,
@@ -136,23 +134,22 @@
     },
     {
      "admitted_count": 5,
-     "elapsed_ms": 536.942,
+     "elapsed_ms": 611.299,
      "id": "wk-2",
      "kind": "single",
      "must_include_count": 1,
-     "passed": false,
-     "precision": 0.5,
+     "passed": true,
+     "precision": 1.0,
      "recall": 1.0,
      "returned": [
-      "memory:employer",
       "memory:manager"
      ],
-     "returned_count": 2,
+     "returned_count": 1,
      "safety_violations": []
     },
     {
      "admitted_count": 9,
-     "elapsed_ms": 540.96,
+     "elapsed_ms": 684.498,
      "id": "wk-3",
      "kind": "multi",
      "must_include_count": 2,
@@ -169,22 +166,20 @@
     },
     {
      "admitted_count": 6,
-     "elapsed_ms": 509.107,
+     "elapsed_ms": 552.302,
      "id": "wk-4",
      "kind": "single",
      "must_include_count": 1,
-     "passed": true,
-     "precision": 1.0,
-     "recall": 1.0,
-     "returned": [
-      "memory:commute"
-     ],
-     "returned_count": 1,
+     "passed": false,
+     "precision": null,
+     "recall": 0.0,
+     "returned": [],
+     "returned_count": 0,
      "safety_violations": []
     },
     {
      "admitted_count": 4,
-     "elapsed_ms": 518.391,
+     "elapsed_ms": 556.248,
      "id": "wk-5",
      "kind": "single",
      "must_include_count": 1,
@@ -197,7 +192,7 @@
     },
     {
      "admitted_count": 7,
-     "elapsed_ms": 527.047,
+     "elapsed_ms": 516.78,
      "id": "wk-6",
      "kind": "abstention",
      "must_include_count": 0,
@@ -213,7 +208,7 @@
     },
     {
      "admitted_count": 7,
-     "elapsed_ms": 521.318,
+     "elapsed_ms": 547.748,
      "id": "wk-7",
      "kind": "single",
      "must_include_count": 1,
@@ -231,7 +226,7 @@
     },
     {
      "admitted_count": 3,
-     "elapsed_ms": 524.31,
+     "elapsed_ms": 608.649,
      "id": "wk-8",
      "kind": "single",
      "must_include_count": 1,
@@ -253,7 +248,7 @@
    "queries": [
     {
      "admitted_count": 2,
-     "elapsed_ms": 646.283,
+     "elapsed_ms": 669.684,
      "id": "tr-1",
      "kind": "single",
      "must_include_count": 1,
@@ -269,7 +264,7 @@
     },
     {
      "admitted_count": 2,
-     "elapsed_ms": 507.905,
+     "elapsed_ms": 556.033,
      "id": "tr-2",
      "kind": "multi",
      "must_include_count": 2,
@@ -285,7 +280,7 @@
     },
     {
      "admitted_count": 0,
-     "elapsed_ms": 542.153,
+     "elapsed_ms": 544.062,
      "id": "tr-3",
      "kind": "single",
      "must_include_count": 1,
@@ -298,7 +293,7 @@
     },
     {
      "admitted_count": 8,
-     "elapsed_ms": 586.968,
+     "elapsed_ms": 558.194,
      "id": "tr-4",
      "kind": "single",
      "must_include_count": 1,
@@ -313,7 +308,7 @@
     },
     {
      "admitted_count": 8,
-     "elapsed_ms": 607.41,
+     "elapsed_ms": 587.622,
      "id": "tr-5",
      "kind": "single",
      "must_include_count": 1,
@@ -328,7 +323,7 @@
     },
     {
      "admitted_count": 1,
-     "elapsed_ms": 543.081,
+     "elapsed_ms": 558.316,
      "id": "tr-6",
      "kind": "single",
      "must_include_count": 1,
@@ -341,7 +336,7 @@
     },
     {
      "admitted_count": 8,
-     "elapsed_ms": 566.674,
+     "elapsed_ms": 547.26,
      "id": "tr-7",
      "kind": "abstention",
      "must_include_count": 0,
@@ -363,7 +358,7 @@
    "queries": [
     {
      "admitted_count": 4,
-     "elapsed_ms": 647.005,
+     "elapsed_ms": 802.517,
      "id": "he-1",
      "kind": "multi",
      "must_include_count": 2,
@@ -378,7 +373,7 @@
     },
     {
      "admitted_count": 1,
-     "elapsed_ms": 617.16,
+     "elapsed_ms": 613.85,
      "id": "he-2",
      "kind": "single",
      "must_include_count": 1,
@@ -393,7 +388,7 @@
     },
     {
      "admitted_count": 2,
-     "elapsed_ms": 585.37,
+     "elapsed_ms": 674.035,
      "id": "he-3",
      "kind": "single",
      "must_include_count": 1,
@@ -408,23 +403,20 @@
     },
     {
      "admitted_count": 3,
-     "elapsed_ms": 522.8,
+     "elapsed_ms": 523.145,
      "id": "he-4",
      "kind": "single",
      "must_include_count": 1,
      "passed": false,
-     "precision": 0.5,
-     "recall": 1.0,
-     "returned": [
-      "memory:knee",
-      "memory:gp"
-     ],
-     "returned_count": 2,
+     "precision": null,
+     "recall": 0.0,
+     "returned": [],
+     "returned_count": 0,
      "safety_violations": []
     },
     {
      "admitted_count": 2,
-     "elapsed_ms": 511.657,
+     "elapsed_ms": 542.266,
      "id": "he-5",
      "kind": "single",
      "must_include_count": 1,
@@ -439,7 +431,7 @@
     },
     {
      "admitted_count": 2,
-     "elapsed_ms": 517.757,
+     "elapsed_ms": 561.883,
      "id": "he-6",
      "kind": "abstention",
      "must_include_count": 0,
@@ -454,7 +446,7 @@
     },
     {
      "admitted_count": 3,
-     "elapsed_ms": 519.989,
+     "elapsed_ms": 730.567,
      "id": "he-7",
      "kind": "single",
      "must_include_count": 1,
@@ -476,7 +468,7 @@
    "queries": [
     {
      "admitted_count": 3,
-     "elapsed_ms": 654.469,
+     "elapsed_ms": 669.446,
      "id": "fa-1",
      "kind": "single",
      "must_include_count": 1,
@@ -491,7 +483,7 @@
     },
     {
      "admitted_count": 3,
-     "elapsed_ms": 562.727,
+     "elapsed_ms": 579.411,
      "id": "fa-2",
      "kind": "single",
      "must_include_count": 1,
@@ -506,7 +498,7 @@
     },
     {
      "admitted_count": 2,
-     "elapsed_ms": 536.156,
+     "elapsed_ms": 509.23,
      "id": "fa-3",
      "kind": "single",
      "must_include_count": 1,
@@ -521,7 +513,7 @@
     },
     {
      "admitted_count": 5,
-     "elapsed_ms": 555.919,
+     "elapsed_ms": 575.614,
      "id": "fa-4",
      "kind": "single",
      "must_include_count": 1,
@@ -539,7 +531,7 @@
     },
     {
      "admitted_count": 4,
-     "elapsed_ms": 580.976,
+     "elapsed_ms": 627.402,
      "id": "fa-5",
      "kind": "single",
      "must_include_count": 1,
@@ -555,17 +547,15 @@
     },
     {
      "admitted_count": 5,
-     "elapsed_ms": 511.519,
+     "elapsed_ms": 569.747,
      "id": "fa-6",
      "kind": "abstention",
      "must_include_count": 0,
-     "passed": false,
-     "precision": 0.0,
+     "passed": true,
+     "precision": null,
      "recall": null,
-     "returned": [
-      "memory:sister"
-     ],
-     "returned_count": 1,
+     "returned": [],
+     "returned_count": 0,
      "safety_violations": []
     }
    ]
@@ -577,7 +567,7 @@
    "queries": [
     {
      "admitted_count": 9,
-     "elapsed_ms": 666.508,
+     "elapsed_ms": 696.709,
      "id": "pr-1",
      "kind": "single",
      "must_include_count": 1,
@@ -594,7 +584,7 @@
     },
     {
      "admitted_count": 0,
-     "elapsed_ms": 528.961,
+     "elapsed_ms": 570.057,
      "id": "pr-2",
      "kind": "single",
      "must_include_count": 1,
@@ -607,7 +597,7 @@
     },
     {
      "admitted_count": 8,
-     "elapsed_ms": 519.424,
+     "elapsed_ms": 521.888,
      "id": "pr-3",
      "kind": "multi",
      "must_include_count": 2,
@@ -620,7 +610,7 @@
     },
     {
      "admitted_count": 8,
-     "elapsed_ms": 618.32,
+     "elapsed_ms": 528.583,
      "id": "pr-4",
      "kind": "single",
      "must_include_count": 1,
@@ -635,25 +625,22 @@
     },
     {
      "admitted_count": 10,
-     "elapsed_ms": 597.354,
+     "elapsed_ms": 541.916,
      "id": "pr-5",
      "kind": "single",
      "must_include_count": 1,
      "passed": false,
-     "precision": 0.25,
-     "recall": 1.0,
+     "precision": 0.0,
+     "recall": 0.0,
      "returned": [
-      "memory:injection",
-      "memory:demo",
-      "memory:deadline",
-      "memory:hosting"
+      "memory:injection"
      ],
-     "returned_count": 4,
+     "returned_count": 1,
      "safety_violations": []
     },
     {
      "admitted_count": 9,
-     "elapsed_ms": 553.546,
+     "elapsed_ms": 531.908,
      "id": "pr-6",
      "kind": "abstention",
      "must_include_count": 0,
@@ -673,7 +660,7 @@
    "queries": [
     {
      "admitted_count": 2,
-     "elapsed_ms": 597.953,
+     "elapsed_ms": 613.391,
      "id": "co-1",
      "kind": "single",
      "must_include_count": 1,
@@ -688,7 +675,7 @@
     },
     {
      "admitted_count": 5,
-     "elapsed_ms": 531.609,
+     "elapsed_ms": 579.519,
      "id": "co-2",
      "kind": "single",
      "must_include_count": 1,
@@ -704,7 +691,7 @@
     },
     {
      "admitted_count": 4,
-     "elapsed_ms": 595.568,
+     "elapsed_ms": 529.315,
      "id": "co-3",
      "kind": "single",
      "must_include_count": 1,
@@ -719,7 +706,7 @@
     },
     {
      "admitted_count": 3,
-     "elapsed_ms": 510.896,
+     "elapsed_ms": 515.23,
      "id": "co-4",
      "kind": "single",
      "must_include_count": 1,
@@ -741,7 +728,7 @@
    "queries": [
     {
      "admitted_count": 2,
-     "elapsed_ms": 534.021,
+     "elapsed_ms": 606.293,
      "id": "sc-1",
      "kind": "single",
      "must_include_count": 1,
@@ -756,7 +743,7 @@
     },
     {
      "admitted_count": 2,
-     "elapsed_ms": 514.303,
+     "elapsed_ms": 563.048,
      "id": "sc-2",
      "kind": "abstention",
      "must_include_count": 0,
@@ -769,7 +756,7 @@
     },
     {
      "admitted_count": 0,
-     "elapsed_ms": 513.101,
+     "elapsed_ms": 536.585,
      "id": "sc-3",
      "kind": "abstention",
      "must_include_count": 0,
@@ -803,9 +790,9 @@
     "safety_violations": 0
    },
    "mixed": {
-    "mean_precision": 0.6717,
-    "mean_recall": 0.7429,
-    "mean_returned": 1.268,
+    "mean_precision": 0.6868,
+    "mean_recall": 0.6286,
+    "mean_returned": 1.049,
     "passed": 20,
     "queries": 41,
     "safety_violations": 0
@@ -815,8 +802,8 @@
    "abstention": {
     "mean_precision": 0.0,
     "mean_recall": null,
-    "mean_returned": 0.625,
-    "passed": 4,
+    "mean_returned": 0.5,
+    "passed": 5,
     "queries": 8,
     "safety_violations": 0
    },
@@ -829,24 +816,24 @@
     "safety_violations": 0
    },
    "single": {
-    "mean_precision": 0.8011,
-    "mean_recall": 0.8286,
-    "mean_returned": 1.343,
-    "passed": 22,
+    "mean_precision": 0.8065,
+    "mean_recall": 0.7143,
+    "mean_returned": 1.114,
+    "passed": 21,
     "queries": 35,
     "safety_violations": 0
    }
   },
   "op_failures": 0,
   "overall": {
-   "mean_precision": 0.7149,
-   "mean_recall": 0.775,
-   "mean_returned": 1.208,
+   "mean_precision": 0.7328,
+   "mean_recall": 0.675,
+   "mean_returned": 1.021,
    "passed": 27,
    "queries": 48,
    "safety_violations": 0
   },
-  "recall_latency_ms_p50": 542.153,
-  "recall_latency_ms_p95": 673.005
+  "recall_latency_ms_p50": 569.747,
+  "recall_latency_ms_p95": 730.567
  }
 }

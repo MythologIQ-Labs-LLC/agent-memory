@@ -1,0 +1,1183 @@
+[
+ {
+  "scenario": "dense_meetings",
+  "query": "When is my one-on-one with my boss?",
+  "returned": [
+   "d:answer"
+  ],
+  "admitted": [
+   "d:answer",
+   "d:12",
+   "d:9",
+   "d:3",
+   "d:7",
+   "d:1",
+   "d:32",
+   "d:11",
+   "d:10",
+   "d:27",
+   "d:14",
+   "d:4",
+   "d:33",
+   "d:30",
+   "d:24",
+   "d:16",
+   "d:39",
+   "d:19",
+   "d:31",
+   "d:6",
+   "d:8",
+   "d:26",
+   "d:17",
+   "d:36",
+   "d:29",
+   "d:34",
+   "d:22",
+   "d:2",
+   "d:35",
+   "d:28",
+   "d:38",
+   "d:13",
+   "d:37",
+   "d:15",
+   "d:23",
+   "d:18",
+   "d:0",
+   "d:25",
+   "d:5",
+   "d:20",
+   "d:21"
+  ],
+  "records": {
+   "d:answer": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.529668
+   },
+   "d:0": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.228151
+   },
+   "d:1": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.227344
+   },
+   "d:2": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.14439
+   },
+   "d:3": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.272722
+   },
+   "d:4": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.186177
+   },
+   "d:5": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.173164
+   },
+   "d:6": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.199653
+   },
+   "d:7": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.261281
+   },
+   "d:8": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.069067
+   },
+   "d:9": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.311229
+   },
+   "d:10": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.234434
+   },
+   "d:11": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.244918
+   },
+   "d:12": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.315681
+   },
+   "d:13": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.168718
+   },
+   "d:14": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.199653
+   },
+   "d:15": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.238939
+   },
+   "d:16": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.202763
+   },
+   "d:17": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.214369
+   },
+   "d:18": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.146783
+   },
+   "d:19": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.229182
+   },
+   "d:20": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.274472
+   },
+   "d:21": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.280129
+   },
+   "d:22": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.210699
+   },
+   "d:23": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.232743
+   },
+   "d:24": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.188753
+   },
+   "d:25": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.270568
+   },
+   "d:26": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.150145
+   },
+   "d:27": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.251765
+   },
+   "d:28": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.29195
+   },
+   "d:29": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.219295
+   },
+   "d:30": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.227173
+   },
+   "d:31": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.177691
+   },
+   "d:32": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.27705
+   },
+   "d:33": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.064206
+   },
+   "d:34": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.225854
+   },
+   "d:35": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.210296
+   },
+   "d:36": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.259692
+   },
+   "d:37": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.183251
+   },
+   "d:38": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.267646
+   },
+   "d:39": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.15489
+   }
+  },
+  "routes": {
+   "d:answer": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:0": [
+    "lexical"
+   ],
+   "d:1": [
+    "lexical"
+   ],
+   "d:2": [
+    "lexical"
+   ],
+   "d:3": [
+    "lexical"
+   ],
+   "d:4": [
+    "lexical"
+   ],
+   "d:5": [
+    "lexical"
+   ],
+   "d:6": [
+    "lexical"
+   ],
+   "d:7": [
+    "lexical"
+   ],
+   "d:8": [
+    "lexical"
+   ],
+   "d:9": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:10": [
+    "lexical"
+   ],
+   "d:11": [
+    "lexical"
+   ],
+   "d:12": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:13": [
+    "lexical"
+   ],
+   "d:14": [
+    "lexical"
+   ],
+   "d:15": [
+    "lexical"
+   ],
+   "d:16": [
+    "lexical"
+   ],
+   "d:17": [
+    "lexical"
+   ],
+   "d:18": [
+    "lexical"
+   ],
+   "d:19": [
+    "lexical"
+   ],
+   "d:20": [
+    "lexical"
+   ],
+   "d:21": [
+    "lexical"
+   ],
+   "d:22": [
+    "lexical"
+   ],
+   "d:23": [
+    "lexical"
+   ],
+   "d:24": [
+    "lexical"
+   ],
+   "d:25": [
+    "lexical"
+   ],
+   "d:26": [
+    "lexical"
+   ],
+   "d:27": [
+    "lexical"
+   ],
+   "d:28": [
+    "lexical"
+   ],
+   "d:29": [
+    "lexical"
+   ],
+   "d:30": [
+    "lexical"
+   ],
+   "d:31": [
+    "lexical"
+   ],
+   "d:32": [
+    "lexical"
+   ],
+   "d:33": [
+    "lexical"
+   ],
+   "d:34": [
+    "lexical"
+   ],
+   "d:35": [
+    "lexical"
+   ],
+   "d:36": [
+    "lexical"
+   ],
+   "d:37": [
+    "lexical"
+   ],
+   "d:38": [
+    "lexical"
+   ],
+   "d:39": [
+    "lexical"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": {
+   "best_similarity": 0.529668,
+   "absolute_floor": 0.25,
+   "single_margin": 0.05,
+   "set_floor": 0.25,
+   "set_margin": 0.05,
+   "plural_answer": false,
+   "semantic_selected_count": 0,
+   "authority_effect": "none"
+  },
+  "ms": 491.4,
+  "raw": null
+ },
+ {
+  "scenario": "dense_meetings",
+  "query": "When do I see my supervisor?",
+  "returned": [
+   "d:answer",
+   "d:9"
+  ],
+  "admitted": [
+   "d:answer",
+   "d:9"
+  ],
+  "records": {
+   "d:answer": {
+    "basis": "semantic_relevance",
+    "semantic_similarity": 0.357666
+   },
+   "d:9": {
+    "basis": "semantic_relevance",
+    "semantic_similarity": 0.327888
+   }
+  },
+  "routes": {
+   "d:answer": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:9": [
+    "semantic_vector"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": {
+   "best_similarity": 0.357666,
+   "absolute_floor": 0.25,
+   "single_margin": 0.05,
+   "set_floor": 0.25,
+   "set_margin": 0.05,
+   "plural_answer": false,
+   "semantic_selected_count": 2,
+   "authority_effect": "none"
+  },
+  "ms": 29.1,
+  "raw": null
+ },
+ {
+  "scenario": "dense_meetings",
+  "query": "What meetings do I have?",
+  "returned": [
+   "d:36",
+   "d:23",
+   "d:0",
+   "d:37",
+   "d:17",
+   "d:16",
+   "d:18",
+   "d:30",
+   "d:4",
+   "d:34"
+  ],
+  "admitted": [
+   "d:36",
+   "d:23",
+   "d:0",
+   "d:37",
+   "d:17",
+   "d:16",
+   "d:18",
+   "d:30",
+   "d:4",
+   "d:34",
+   "d:29",
+   "d:19",
+   "d:12",
+   "d:5",
+   "d:35",
+   "d:6",
+   "d:28",
+   "d:14",
+   "d:3",
+   "d:38",
+   "d:7",
+   "d:33",
+   "d:13",
+   "d:24",
+   "d:39",
+   "d:15",
+   "d:1",
+   "d:31",
+   "d:32",
+   "d:11",
+   "d:8",
+   "d:26",
+   "d:25",
+   "d:9",
+   "d:10",
+   "d:20",
+   "d:22",
+   "d:2",
+   "d:21",
+   "d:27"
+  ],
+  "records": {
+   "d:0": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.374331
+   },
+   "d:1": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.303473
+   },
+   "d:2": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.297753
+   },
+   "d:3": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.314353
+   },
+   "d:4": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.353942
+   },
+   "d:5": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.339423
+   },
+   "d:6": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.336139
+   },
+   "d:7": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.30316
+   },
+   "d:8": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.136559
+   },
+   "d:9": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.280021
+   },
+   "d:10": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.297185
+   },
+   "d:11": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.277999
+   },
+   "d:12": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.339825
+   },
+   "d:13": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.334657
+   },
+   "d:14": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.336139
+   },
+   "d:15": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.209086
+   },
+   "d:16": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.356796
+   },
+   "d:17": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.357819
+   },
+   "d:18": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.35621
+   },
+   "d:19": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.347978
+   },
+   "d:20": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.227076
+   },
+   "d:21": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.240648
+   },
+   "d:22": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.29288
+   },
+   "d:23": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.383544
+   },
+   "d:24": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.312636
+   },
+   "d:25": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.247524
+   },
+   "d:26": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.314384
+   },
+   "d:27": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.29463
+   },
+   "d:28": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.27036
+   },
+   "d:29": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.349367
+   },
+   "d:30": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.354159
+   },
+   "d:31": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.296739
+   },
+   "d:32": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.321453
+   },
+   "d:33": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.095098
+   },
+   "d:34": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.350794
+   },
+   "d:35": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.336869
+   },
+   "d:36": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.385392
+   },
+   "d:37": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.373735
+   },
+   "d:38": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.239063
+   },
+   "d:39": {
+    "basis": "content_relevance",
+    "semantic_similarity": 0.300154
+   }
+  },
+  "routes": {
+   "d:0": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:1": [
+    "lexical"
+   ],
+   "d:2": [
+    "lexical"
+   ],
+   "d:3": [
+    "lexical"
+   ],
+   "d:4": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:5": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:6": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:7": [
+    "lexical"
+   ],
+   "d:8": [
+    "lexical"
+   ],
+   "d:9": [
+    "lexical"
+   ],
+   "d:10": [
+    "lexical"
+   ],
+   "d:11": [
+    "lexical"
+   ],
+   "d:12": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:13": [
+    "lexical"
+   ],
+   "d:14": [
+    "lexical"
+   ],
+   "d:15": [
+    "lexical"
+   ],
+   "d:16": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:17": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:18": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:19": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:20": [
+    "lexical"
+   ],
+   "d:21": [
+    "lexical"
+   ],
+   "d:22": [
+    "lexical"
+   ],
+   "d:23": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:24": [
+    "lexical"
+   ],
+   "d:25": [
+    "lexical"
+   ],
+   "d:26": [
+    "lexical"
+   ],
+   "d:27": [
+    "lexical"
+   ],
+   "d:28": [
+    "lexical"
+   ],
+   "d:29": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:30": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:31": [
+    "lexical"
+   ],
+   "d:32": [
+    "lexical"
+   ],
+   "d:33": [
+    "lexical"
+   ],
+   "d:34": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:35": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:36": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:37": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:38": [
+    "lexical"
+   ],
+   "d:39": [
+    "lexical"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": {
+   "best_similarity": 0.385392,
+   "absolute_floor": 0.25,
+   "single_margin": 0.05,
+   "set_floor": 0.25,
+   "set_margin": 0.05,
+   "plural_answer": true,
+   "semantic_selected_count": 0,
+   "authority_effect": "none"
+  },
+  "ms": 40.1,
+  "raw": null
+ },
+ {
+  "scenario": "dense_meetings",
+  "query": "When is the next sync about money?",
+  "returned": [
+   "d:answer",
+   "d:17",
+   "d:36",
+   "d:14",
+   "d:6",
+   "d:16",
+   "d:29",
+   "d:25"
+  ],
+  "admitted": [
+   "d:answer",
+   "d:17",
+   "d:36",
+   "d:14",
+   "d:6",
+   "d:4",
+   "d:33",
+   "d:30",
+   "d:24",
+   "d:16",
+   "d:39",
+   "d:19",
+   "d:31",
+   "d:8",
+   "d:26",
+   "d:29",
+   "d:34",
+   "d:22",
+   "d:2",
+   "d:35",
+   "d:25",
+   "d:28",
+   "d:38",
+   "d:13",
+   "d:37",
+   "d:15",
+   "d:23",
+   "d:18",
+   "d:0",
+   "d:5",
+   "d:20",
+   "d:21",
+   "d:3",
+   "d:7",
+   "d:1",
+   "d:32",
+   "d:11",
+   "d:12",
+   "d:9",
+   "d:10",
+   "d:27"
+  ],
+  "records": {
+   "d:0": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.194722
+   },
+   "d:2": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.186278
+   },
+   "d:4": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.226271
+   },
+   "d:5": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.158898
+   },
+   "d:6": {
+    "basis": "semantic_relevance",
+    "semantic_similarity": 0.309938
+   },
+   "d:8": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.119841
+   },
+   "d:13": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.161618
+   },
+   "d:14": {
+    "basis": "semantic_relevance",
+    "semantic_similarity": 0.309938
+   },
+   "d:15": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.294653
+   },
+   "d:16": {
+    "basis": "semantic_relevance",
+    "semantic_similarity": 0.29977
+   },
+   "d:17": {
+    "basis": "semantic_relevance",
+    "semantic_similarity": 0.347121
+   },
+   "d:18": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.197744
+   },
+   "d:19": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.29488
+   },
+   "d:20": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.273184
+   },
+   "d:21": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.262312
+   },
+   "d:22": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.16444
+   },
+   "d:23": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.180763
+   },
+   "d:24": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.150548
+   },
+   "d:25": {
+    "basis": "semantic_relevance",
+    "semantic_similarity": 0.318721
+   },
+   "d:26": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.198337
+   },
+   "d:28": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.294027
+   },
+   "d:29": {
+    "basis": "semantic_relevance",
+    "semantic_similarity": 0.29933
+   },
+   "d:30": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.19848
+   },
+   "d:31": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.157289
+   },
+   "d:33": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.065122
+   },
+   "d:34": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.2914
+   },
+   "d:35": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.19577
+   },
+   "d:36": {
+    "basis": "semantic_relevance",
+    "semantic_similarity": 0.345958
+   },
+   "d:37": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.153134
+   },
+   "d:38": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.285242
+   },
+   "d:39": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.138492
+   },
+   "d:1": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.159984
+   },
+   "d:3": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.116643
+   },
+   "d:7": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.149038
+   },
+   "d:9": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.141203
+   },
+   "d:10": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.14489
+   },
+   "d:11": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.129253
+   },
+   "d:12": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.176809
+   },
+   "d:27": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.145639
+   },
+   "d:32": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.177358
+   },
+   "d:answer": {
+    "basis": "semantic_relevance",
+    "semantic_similarity": 0.307575
+   }
+  },
+  "routes": {
+   "d:0": [
+    "lexical"
+   ],
+   "d:2": [
+    "lexical"
+   ],
+   "d:4": [
+    "lexical"
+   ],
+   "d:5": [
+    "lexical"
+   ],
+   "d:6": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:8": [
+    "lexical"
+   ],
+   "d:13": [
+    "lexical"
+   ],
+   "d:14": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:15": [
+    "lexical"
+   ],
+   "d:16": [
+    "lexical"
+   ],
+   "d:17": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:18": [
+    "lexical"
+   ],
+   "d:19": [
+    "lexical"
+   ],
+   "d:20": [
+    "lexical"
+   ],
+   "d:21": [
+    "lexical"
+   ],
+   "d:22": [
+    "lexical"
+   ],
+   "d:23": [
+    "lexical"
+   ],
+   "d:24": [
+    "lexical"
+   ],
+   "d:25": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:26": [
+    "lexical"
+   ],
+   "d:28": [
+    "lexical"
+   ],
+   "d:29": [
+    "lexical"
+   ],
+   "d:30": [
+    "lexical"
+   ],
+   "d:31": [
+    "lexical"
+   ],
+   "d:33": [
+    "lexical"
+   ],
+   "d:34": [
+    "lexical"
+   ],
+   "d:35": [
+    "lexical"
+   ],
+   "d:36": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "d:37": [
+    "lexical"
+   ],
+   "d:38": [
+    "lexical"
+   ],
+   "d:39": [
+    "lexical"
+   ],
+   "d:1": [
+    "lexical"
+   ],
+   "d:3": [
+    "lexical"
+   ],
+   "d:7": [
+    "lexical"
+   ],
+   "d:9": [
+    "lexical"
+   ],
+   "d:10": [
+    "lexical"
+   ],
+   "d:11": [
+    "lexical"
+   ],
+   "d:12": [
+    "lexical"
+   ],
+   "d:27": [
+    "lexical"
+   ],
+   "d:32": [
+    "lexical"
+   ],
+   "d:answer": [
+    "lexical",
+    "semantic_vector"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": {
+   "best_similarity": 0.347121,
+   "absolute_floor": 0.25,
+   "single_margin": 0.05,
+   "set_floor": 0.25,
+   "set_margin": 0.05,
+   "plural_answer": false,
+   "semantic_selected_count": 8,
+   "authority_effect": "none"
+  },
+  "ms": 40.8,
+  "raw": null
+ },
+ {
+  "scenario": "dense_meetings",
+  "query": "When do I get my teeth checked?",
+  "returned": [
+   "d:dentist"
+  ],
+  "admitted": [
+   "d:answer",
+   "d:dentist"
+  ],
+  "records": {
+   "d:answer": {
+    "basis": "no_informative_term_match",
+    "semantic_similarity": 0.159812
+   },
+   "d:dentist": {
+    "basis": "semantic_relevance",
+    "semantic_similarity": 0.722711
+   }
+  },
+  "routes": {
+   "d:answer": [
+    "lexical"
+   ],
+   "d:dentist": [
+    "semantic_vector"
+   ]
+  },
+  "abstained": false,
+  "semantic_channel": {
+   "best_similarity": 0.722711,
+   "absolute_floor": 0.25,
+   "single_margin": 0.05,
+   "set_floor": 0.25,
+   "set_margin": 0.05,
+   "plural_answer": false,
+   "semantic_selected_count": 1,
+   "authority_effect": "none"
+  },
+  "ms": 28.0,
+  "raw": null
+ }
+]
