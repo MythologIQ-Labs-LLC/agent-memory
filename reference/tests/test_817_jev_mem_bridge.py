@@ -85,5 +85,34 @@ class SourcePinTests(unittest.TestCase):
         self.assertEqual(identity["configuration"]["qualification"], "candidate until real model+dataset evidence and independent review")
 
 
+class InstrumentationTests(unittest.TestCase):
+    def test_decision_counter_separates_model_calls_cache_and_fallback(self):
+        log = bridge.DecisionCounter()
+        log.emit("jev_decision", operation="typing", source="laya", usage={"input_tokens": 7})
+        log.emit("jev_decision", operation="typing", source="cache", usage={})
+        log.emit("jev_decision", operation="relation", source="laya", usage={"output_tokens": 2})
+        log.emit("jev_fallback", operation="routing", reason="laya_deadline")
+        log.emit("memory_constructed", memory_id="m1")
+        snap = log.snapshot()
+        self.assertEqual(snap["model_decisions"], 2)
+        self.assertEqual(snap["decisions_by_operation"]["typing"], {"laya": 1, "cache": 1})
+        self.assertEqual(snap["fallback_events"], [{"operation": "routing", "reason": "laya_deadline"}])
+        self.assertEqual(snap["usage"], {"input_tokens": 7, "output_tokens": 2})
+        self.assertEqual(snap["events"], {"memory_constructed": 1})
+
+    def test_shared_laya_weights_load_once_per_checkpoint(self):
+        calls = []
+        fake = types.ModuleType("laya")
+        fake.load = lambda model_id_or_path="m", device=None, token=None, subfolder=None: (
+            calls.append((model_id_or_path, device, subfolder)) or object())
+        with patch.dict("sys.modules", {"laya": fake}), patch.dict(bridge._LAYA_AGENTS, clear=True):
+            bridge.share_laya_weights()
+            bridge.share_laya_weights()  # idempotent: never wraps twice
+            first = fake.load("m", device="cpu")
+            self.assertIs(fake.load("m", device="cpu"), first)
+            self.assertIsNot(fake.load("m", device="cpu", subfolder="multilingual"), first)
+        self.assertEqual(calls, [("m", "cpu", None), ("m", "cpu", "multilingual")])
+
+
 if __name__ == "__main__":
     unittest.main()
