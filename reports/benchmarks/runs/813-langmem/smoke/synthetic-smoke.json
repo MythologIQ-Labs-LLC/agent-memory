@@ -1,0 +1,156 @@
+{
+  "provider": "langmem-local",
+  "searches": {
+    "alice_work": {
+      "doc_ids": [
+        "s3",
+        "s1",
+        "s3",
+        "s2"
+      ],
+      "raw": {
+        "provider": "langmem-local",
+        "bridge_version": "0.1.0-candidate",
+        "seconds": 7.1627,
+        "memories": [
+          {
+            "key": "3312fa6a-176a-4dcd-b157-eb7f5e349602",
+            "score": 0.6574313528008181,
+            "content": "content='Alice left Acme Corp and now works at Globex in Denver. This information updates her current employment details, which was previously known as working at Acme Corp in Boston. It also provides new context about her location (Denver) and the company she is currently employed by (Globex).'",
+            "docs": [
+              "s3"
+            ]
+          },
+          {
+            "key": "27077568-3fc1-4c1b-801f-1284352149f8",
+            "score": 0.6483827200158202,
+            "content": "content='Alice works as an engineer at Globex in Denver.'",
+            "docs": [
+              "s1",
+              "s3"
+            ]
+          },
+          {
+            "key": "f0fd2438-9fb1-4a46-a5b4-2799ca72c53e",
+            "score": 0.5994905018859656,
+            "content": "content=\"Alice's favorite editor is Vim.\"",
+            "docs": [
+              "s2"
+            ]
+          }
+        ],
+        "returned_memories": 3
+      }
+    },
+    "alice_editor": {
+      "doc_ids": [
+        "s2",
+        "s1",
+        "s3",
+        "s3"
+      ],
+      "raw": {
+        "provider": "langmem-local",
+        "bridge_version": "0.1.0-candidate",
+        "seconds": 6.9259,
+        "memories": [
+          {
+            "key": "f0fd2438-9fb1-4a46-a5b4-2799ca72c53e",
+            "score": 0.7106395359121963,
+            "content": "content=\"Alice's favorite editor is Vim.\"",
+            "docs": [
+              "s2"
+            ]
+          },
+          {
+            "key": "27077568-3fc1-4c1b-801f-1284352149f8",
+            "score": 0.6123960039683398,
+            "content": "content='Alice works as an engineer at Globex in Denver.'",
+            "docs": [
+              "s1",
+              "s3"
+            ]
+          },
+          {
+            "key": "3312fa6a-176a-4dcd-b157-eb7f5e349602",
+            "score": 0.5594108786228215,
+            "content": "content='Alice left Acme Corp and now works at Globex in Denver. This information updates her current employment details, which was previously known as working at Acme Corp in Boston. It also provides new context about her location (Denver) and the company she is currently employed by (Globex).'",
+            "docs": [
+              "s3"
+            ]
+          }
+        ],
+        "returned_memories": 3
+      }
+    },
+    "bob_from_a": {
+      "doc_ids": [
+        "s3",
+        "s1",
+        "s3",
+        "s2"
+      ],
+      "raw": {
+        "provider": "langmem-local",
+        "bridge_version": "0.1.0-candidate",
+        "seconds": 8.5395,
+        "memories": [
+          {
+            "key": "3312fa6a-176a-4dcd-b157-eb7f5e349602",
+            "score": 0.5041924161282939,
+            "content": "content='Alice left Acme Corp and now works at Globex in Denver. This information updates her current employment details, which was previously known as working at Acme Corp in Boston. It also provides new context about her location (Denver) and the company she is currently employed by (Globex).'",
+            "docs": [
+              "s3"
+            ]
+          },
+          {
+            "key": "27077568-3fc1-4c1b-801f-1284352149f8",
+            "score": 0.4860613444754125,
+            "content": "content='Alice works as an engineer at Globex in Denver.'",
+            "docs": [
+              "s1",
+              "s3"
+            ]
+          },
+          {
+            "key": "f0fd2438-9fb1-4a46-a5b4-2799ca72c53e",
+            "score": 0.4208765307899328,
+            "content": "content=\"Alice's favorite editor is Vim.\"",
+            "docs": [
+              "s2"
+            ]
+          }
+        ],
+        "returned_memories": 3
+      }
+    },
+    "bob_from_b": {
+      "doc_ids": [
+        "s4"
+      ],
+      "raw": {
+        "provider": "langmem-local",
+        "bridge_version": "0.1.0-candidate",
+        "seconds": 8.1012,
+        "memories": [
+          {
+            "key": "1aff7850-23f7-41e6-b806-3da481d546e8",
+            "score": 0.5843440366051847,
+            "content": "content='Bob works at Initech.'",
+            "docs": [
+              "s4"
+            ]
+          }
+        ],
+        "returned_memories": 1
+      }
+    }
+  },
+  "checks": {
+    "alice_work_returns_alice_docs": true,
+    "alice_editor_returns_s2": true,
+    "no_cross_user_leak_a": true,
+    "no_cross_user_leak_b": true,
+    "budget_respected": true
+  }
+}

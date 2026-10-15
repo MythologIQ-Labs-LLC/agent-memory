@@ -1,0 +1,7 @@
+{
+  "alice_work_returns_alice_docs": true,
+  "alice_editor_returns_s2": true,
+  "no_cross_user_leak_a": true,
+  "no_cross_user_leak_b": true,
+  "budget_respected": true
+}
