@@ -1,9 +1,9 @@
 """Retrieval-only no-LLM guard for the frozen AMB CLI.
 
 The unit tests run everywhere. The ``RealFrozenAMB`` tests run only when ``AMB_ROOT`` names a
-checkout of the frozen revision whose dependencies are installed (see
-docs/benchmarks/amb-local-execution.md); they exercise the actual ``memory_bench`` package,
-not a synthetic one.
+checkout of the frozen revision whose dependencies are installed; they exercise the actual
+``memory_bench`` package, not a synthetic one. Setup: the Reproduce section of
+reports/benchmarks/amb-local-execution/2026-10-15-precisionmembench-single-turn/README.md.
 """
 
 from __future__ import annotations

@@ -1,0 +1,40 @@
+
+Dataset: precisionmembench  Split: single-turn  Memory: agent-memory  Mode: 
+retrieval
+
+Loading queries...
+  5 queries loaded
+Loading documents...
+  35 documents loaded
+Ingesting into agent-memory...
+  ingested in 265ms (7.6ms/doc avg)
+
+  Evaluating ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+
+Saved → 
+/tmp/claude-0/-home-user-agent-memory/e3e750d6-aa32-58ce-8a57-ef081d712c0b/scrat
+chpad/evidence-final/smoke-agent-memory-q5/amb-outputs/precisionmembench/agent-m
+emory/retrieval/single-turn.json
+        Results —        
+precisionmembench/single-
+  turn | agent-memory |  
+        retrieval        
+┏━━━━━━━━━━━━━━━┳━━━━━━━┓
+┃ Metric        ┃ Value ┃
+┡━━━━━━━━━━━━━━━╇━━━━━━━┩
+│ Total queries │     5 │
+│ Correct       │     1 │
+│ Accuracy      │ 20.0% │
+└───────────────┴───────┘
+            PrecisionMemBench            
+┏━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┓
+┃ Metric                 ┃        Value ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━┩
+│ Active passes          │          1/4 │
+│ Structural passes      │          0/1 │
+│ Trivially-empty passes │          0/0 │
+│ Total passes           │          1/5 │
+│ Mean precision         │         0.41 │
+│ Mean recall            │         1.00 │
+│ ID resolution          │ source_id=31 │
+└────────────────────────┴──────────────┘

@@ -1,0 +1,414 @@
+{
+  "dataset": "precisionmembench",
+  "split": "single-turn",
+  "category": null,
+  "memory_provider": "agent-memory",
+  "run_name": "agent-memory",
+  "mode": "retrieval",
+  "oracle": false,
+  "total_queries": 5,
+  "correct": 1,
+  "accuracy": 0.2,
+  "mean_precision": 0.4111,
+  "mean_recall": 1.0,
+  "active_passes": 1,
+  "active_total": 4,
+  "ingestion_time_ms": 264.9,
+  "ingested_docs": 35,
+  "description": null,
+  "answer_llm": null,
+  "judge_llm": null,
+  "results": [
+    {
+      "query_id": "happy-stack-repository-layer",
+      "query": "How should I structure my repository layer?",
+      "answer": "4 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (4)\n\n1. [b-comm-recommendation] \u2190 b-comm-recommendation\nrecommendation_style Prefers a single strong recommendation over a menu of options. Shapes how options are presented \u2014 a single defended recommendation rather than an open-ended menu.\n\n2. [b-prose-style-user-edited] \u2190 b-prose-style-user-edited\nprose_output_style prose style documentation tone Documentation prose should be terse and scannable. No marketing fluff. Shapes README, docstring, and comment generation toward terse, scannable prose and away from verbose or marketing-style writing.\n\n3. [b-chapter-structure-q] \u2190 b-chapter-structure-q\nchapter_structure timeline chapter order linear fragmented structure Debating linear vs fragmented timeline for the novel. Shapes responses about novel structure \u2014 prevents premature commitment and surfaces the linear vs fragmented timeline tradeoff.\n\n4. [b-zero-reinforcement-fresh] \u2190 b-zero-reinforcement-fresh\nturborepo_monorepo Turborepo turbo monorepo Monorepo managed by Turborepo. Apps and packages in /apps and /packages directories. Shapes all build and workspace structure answers to assume Turborepo monorepo layout.",
+      "context_tokens": 251,
+      "retrieve_time_ms": 25.6,
+      "gold_answers": [
+        "b-db-decision"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-comm-recommendation; unexpected belief in relevantBeliefs: b-prose-style-user-edited; unexpected belief in relevantBeliefs: b-chapter-structure-q; unexpected belief in relevantBeliefs: b-zero-reinforcement-fresh",
+      "score": null,
+      "meta": {
+        "category": "Type routing and open questions",
+        "description": "Repository layer query: pinned DB decision surfaces; scoped open question surfaces; relevant beliefs depend on query token overlap",
+        "scope": [
+          "domain:code"
+        ],
+        "budget": {},
+        "expect": {
+          "personaPrelude": {
+            "nonEmpty": true
+          },
+          "pinnedFacts": {
+            "mustInclude": [
+              "b-db-decision"
+            ]
+          },
+          "relevantBeliefs": {
+            "shouldOnlyInclude": []
+          },
+          "openQuestions": {
+            "mustInclude": [
+              "b-auth-open-q"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "structural",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-comm-recommendation",
+          "b-prose-style-user-edited",
+          "b-chapter-structure-q",
+          "b-zero-reinforcement-fresh"
+        ],
+        "pinned_beliefs": [
+          "b-db-decision",
+          "b-linting-current"
+        ],
+        "retrieved_questions": [
+          "b-auth-open-q"
+        ],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": null,
+        "pinned_coverage": 1.0,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-comm-recommendation",
+          "unexpected belief in relevantBeliefs: b-prose-style-user-edited",
+          "unexpected belief in relevantBeliefs: b-chapter-structure-q",
+          "unexpected belief in relevantBeliefs: b-zero-reinforcement-fresh"
+        ],
+        "resolution": {
+          "source_id": 4
+        },
+        "retrieved_count": 4
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "Type routing and open questions"
+        ],
+        "Pass type": [
+          "structural"
+        ]
+      }
+    },
+    {
+      "query_id": "happy-alias-match-kubernetes",
+      "query": "what's my k8s deploy story?",
+      "answer": "2 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (2)\n\n1. [b-kubernetes-entity] \u2190 b-kubernetes-entity\nkubernetes k8s kube Deploys services to a Kubernetes cluster on EKS. Uses Helm charts checked into the monorepo. Shapes all deployment and infrastructure answers to assume Kubernetes on EKS rather than bare EC2 or Lambda.\n\n2. [b-ci-gha-entity] \u2190 b-ci-gha-entity\ngithub_actions GHA CI pipeline github actions CI/CD runs on GitHub Actions. Merge to main triggers a deploy to staging; promotion to prod is manual. Shapes all CI/CD and pipeline answers to assume GitHub Actions rather than Jenkins or CircleCI.",
+      "context_tokens": 135,
+      "retrieve_time_ms": 23.0,
+      "gold_answers": [
+        "b-kubernetes-entity"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-ci-gha-entity",
+      "score": null,
+      "meta": {
+        "category": "Alias resolution",
+        "description": "Alias 'k8s' resolves to Kubernetes entity",
+        "scope": [
+          "domain:code"
+        ],
+        "budget": {},
+        "expect": {
+          "pinnedFacts": {
+            "mustInclude": []
+          },
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-kubernetes-entity"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-kubernetes-entity",
+          "b-ci-gha-entity"
+        ],
+        "pinned_beliefs": [
+          "b-db-decision",
+          "b-linting-current"
+        ],
+        "retrieved_questions": [
+          "b-auth-open-q"
+        ],
+        "retrieval_precision": 0.5,
+        "retrieval_recall": 1.0,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-ci-gha-entity"
+        ],
+        "resolution": {
+          "source_id": 2
+        },
+        "retrieved_count": 2
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "Alias resolution"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "alias-kube-resolves",
+      "query": "how does kube schedule pods across our CI pipeline nodes?",
+      "answer": "4 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (4)\n\n1. [b-ci-gha-entity] \u2190 b-ci-gha-entity\ngithub_actions GHA CI pipeline github actions CI/CD runs on GitHub Actions. Merge to main triggers a deploy to staging; promotion to prod is manual. Shapes all CI/CD and pipeline answers to assume GitHub Actions rather than Jenkins or CircleCI.\n\n2. [b-comm-recommendation] \u2190 b-comm-recommendation\nrecommendation_style Prefers a single strong recommendation over a menu of options. Shapes how options are presented \u2014 a single defended recommendation rather than an open-ended menu.\n\n3. [b-protagonist-entity] \u2190 b-protagonist-entity\nmara protagonist Protagonist of the novel. Set in 1970s Lisbon. Does not reconcile with her father; ending is ambiguous. Shapes all plot suggestions \u2014 the father-daughter thread must remain unresolved; prevents any reconciliation arc.\n\n4. [b-kubernetes-entity] \u2190 b-kubernetes-entity\nkubernetes k8s kube Deploys services to a Kubernetes cluster on EKS. Uses Helm charts checked into the monorepo. Shapes all deployment and infrastructure answers to assume Kubernetes on EKS rather than bare EC2 or Lambda.",
+      "context_tokens": 250,
+      "retrieve_time_ms": 22.8,
+      "gold_answers": [
+        "b-ci-gha-entity",
+        "b-kubernetes-entity"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-comm-recommendation; unexpected belief in relevantBeliefs: b-protagonist-entity",
+      "score": null,
+      "meta": {
+        "category": "Alias resolution",
+        "description": "Alias 'kube' drives text search retrieval",
+        "scope": [
+          "domain:code"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-ci-gha-entity",
+              "b-kubernetes-entity"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-ci-gha-entity",
+          "b-comm-recommendation",
+          "b-protagonist-entity",
+          "b-kubernetes-entity"
+        ],
+        "pinned_beliefs": [
+          "b-db-decision",
+          "b-linting-current"
+        ],
+        "retrieved_questions": [
+          "b-auth-open-q"
+        ],
+        "retrieval_precision": 0.5,
+        "retrieval_recall": 1.0,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-comm-recommendation",
+          "unexpected belief in relevantBeliefs: b-protagonist-entity"
+        ],
+        "resolution": {
+          "source_id": 4
+        },
+        "retrieved_count": 4
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "Alias resolution"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "alias-gha-resolves",
+      "query": "GHA secrets config",
+      "answer": "1 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (1)\n\n1. [b-ci-gha-entity] \u2190 b-ci-gha-entity\ngithub_actions GHA CI pipeline github actions CI/CD runs on GitHub Actions. Merge to main triggers a deploy to staging; promotion to prod is manual. Shapes all CI/CD and pipeline answers to assume GitHub Actions rather than Jenkins or CircleCI.",
+      "context_tokens": 74,
+      "retrieve_time_ms": 22.0,
+      "gold_answers": [
+        "b-ci-gha-entity"
+      ],
+      "correct": true,
+      "judge_reason": "pass",
+      "score": null,
+      "meta": {
+        "category": "Alias resolution",
+        "description": "Alias 'GHA' (short form) drives text-search retrieval of b-ci-gha-entity",
+        "scope": [
+          "domain:code"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-ci-gha-entity"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": true,
+        "relevant_beliefs": [
+          "b-ci-gha-entity"
+        ],
+        "pinned_beliefs": [
+          "b-db-decision",
+          "b-linting-current"
+        ],
+        "retrieved_questions": [
+          "b-auth-open-q"
+        ],
+        "retrieval_precision": 1.0,
+        "retrieval_recall": 1.0,
+        "pinned_coverage": null,
+        "failures": [],
+        "resolution": {
+          "source_id": 1
+        },
+        "retrieved_count": 1
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "Alias resolution"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "long-query-rambling-kubernetes",
+      "query": "ok so I've been thinking about this for a while and I know we've talked about infrastructure before but I'm circling back because the team had some pushback in the last review and honestly I'm not sure what the right call is anymore. Basically the question is how we should handle rolling deploys for the landing page when it lands \u2014 should we do Kubernetes native rolling updates or something more custom, and does it matter that the service holds session state in memory?",
+      "answer": "20 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (20)\n\n1. [b-kubernetes-entity] \u2190 b-kubernetes-entity\nkubernetes k8s kube Deploys services to a Kubernetes cluster on EKS. Uses Helm charts checked into the monorepo. Shapes all deployment and infrastructure answers to assume Kubernetes on EKS rather than bare EC2 or Lambda.\n\n2. [b-auth-open-q] \u2190 b-auth-open-q\nauth_strategy JWT session tokens auth service authentication Evaluating JWT vs session tokens for the new auth service. Not decided. Shapes auth-related responses \u2014 prevents premature commitment and surfaces the JWT vs session token tradeoff.\n\n3. [b-comm-pushback] \u2190 b-comm-pushback\nchallenge_mode pushback disagreement Wants explicit pushback when a plan has problems, rather than silent compliance. Shapes conversational posture toward honest disagreement over silent compliance on every turn.\n\n4. [b-redis-code] \u2190 b-redis-code\nredis_cache Redis Redis is used as a cache and rate-limiter in the backend. Single-node, not clustered. Shapes interpretation of 'Redis' in the code scope \u2014 always the caching datastore, not the fictional character.\n\n5. [b-pov-shift-entity] \u2190 b-pov-shift-entity\npov_shift POV point of view perspective shift viewpoint chapter 7 Chapter 7 uses a deliberate POV shift to an unnamed observer. This is the only chapter that breaks close-third. Shapes editorial feedback \u2014 prevents flagging the chapter 7 POV shift as an error; the break is intentional and structurally load-bearing.\n\n6. [b-protagonist-entity] \u2190 b-protagonist-entity\nmara protagonist Protagonist of the novel. Set in 1970s Lisbon. Does not reconcile with her father; ending is ambiguous. Shapes all plot suggestions \u2014 the father-daughter thread must remain unresolved; prevents any reconciliation arc.\n\n7. [b-auth-depends-redis] \u2190 b-auth-depends-redis\nauth_service_depends_on_redis auth redis session backend auth Auth service depends on Redis for session storage. If Redis is down, auth fails open (denies all). Shapes failure-mode analysis \u2014 auth and Redis are coupled; cannot discuss auth resilience without addressing Redis availability.\n\n8. [b-redis-writing] \u2190 b-redis-writing\nredis_character Redis Redis is a supporting character in the novel \u2014 a jazz pianist Mara meets in Lisbon. Shapes interpretation of 'Redis' in the writing scope \u2014 always the jazz pianist character, not the database technology.\n\n9. [b-hosting-resolved] \u2190 b-hosting-resolved\nhosting_decision_old Fly.io self-host hosting Was evaluating whether to self-host on bare metal or use Fly.io for the auth service. Historical record only \u2014 prevents resurfacing the Fly.io vs self-hosting question; resolved in favour of EKS.\n\n10. [b-chapter-structure-q] \u2190 b-chapter-structure-q\nchapter_structure timeline chapter order linear fragmented structure Debating linear vs fragmented timeline for the novel. Shapes responses about novel structure \u2014 prevents premature commitment and surfaces the linear vs fragmented timeline tradeoff.\n\n11. [b-comm-recommendation] \u2190 b-comm-recommendation\nrecommendation_style Prefers a single strong recommendation over a menu of options. Shapes how options are presented \u2014 a single defended recommendation rather than an open-ended menu.\n\n12. [b-prose-style-user-edited] \u2190 b-prose-style-user-edited\nprose_output_style prose style documentation tone Documentation prose should be terse and scannable. No marketing fluff. Shapes README, docstring, and comment generation toward terse, scannable prose and away from verbose or marketing-style writing.\n\n13. [b-comm-response-length] \u2190 b-comm-response-length\nresponse_length verbosity directness Reads responses carefully rather than skimming. Prefers direct answers without lengthy preamble. Shapes response length and opening style. Prevents affirmations and restating the question.\n\n14. [b-narrator-voice] \u2190 b-narrator-voice\nnarrator_voice Close third-person, present tense. No omniscient asides. Shapes all prose drafting for this project toward close third-person, present tense narration.\n\n15. [b-ci-gha-entity] \u2190 b-ci-gha-entity\ngithub_actions GHA CI pipeline github actions CI/CD runs on GitHub Actions. Merge to main triggers a deploy to staging; promotion to prod is manual. Shapes all CI/CD and pipeline answers to assume GitHub Actions rather than Jenkins or CircleCI.\n\n16. [b-pinned-resolved-interaction] \u2190 b-pinned-resolved-interaction\napi_versioning_strategy API versioning v2 migration Was debating URL-path versioning vs header-based versioning for the public API. Historical record only \u2014 resolved in favour of URL-path versioning.\n\n17. [b-react-entity] \u2190 b-react-entity\nreact ReactJS react.js Frontend is React 18 with TanStack Query and Tailwind. Shapes all frontend code answers to assume React 18 with hooks rather than Vue or Svelte.\n\n18. [b-linting-current] \u2190 b-linting-current\nlinting_biome Biome biome linting formatter Uses Biome for linting and formatting. Replaced ESLint and Prettier. Shapes all linting and formatting suggestions toward Biome \u2014 prevents ESLint, TSLint, or Prettier recommendations.\n\n19. [b-vitest-pref] \u2190 b-vitest-pref\ntesting_vitest Vitest vitest jest Uses Vitest for all testing. Replaced Jest. Shapes all testing examples toward Vitest and prevents suggesting Jest, Mocha, or Jasmine.\n\n20. [b-linting-v0] \u2190 b-linting-v0\nlinting_tslint TSLint tslint Previously used TSLint for linting TypeScript. Replaced by ESLint. Historical record only \u2014 prevents resurfacing TSLint configuration advice in current sessions.",
+      "context_tokens": 1206,
+      "retrieve_time_ms": 24.3,
+      "gold_answers": [
+        "b-kubernetes-entity"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-auth-open-q; unexpected belief in relevantBeliefs: b-comm-pushback; unexpected belief in relevantBeliefs: b-redis-code; unexpected belief in relevantBeliefs: b-pov-shift-entity",
+      "score": null,
+      "meta": {
+        "category": "Alias resolution",
+        "description": "Verbose 400+ char query.",
+        "scope": [
+          "domain:code"
+        ],
+        "budget": {},
+        "expect": {
+          "personaPrelude": {
+            "nonEmpty": true
+          },
+          "pinnedFacts": {
+            "mustInclude": []
+          },
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-kubernetes-entity"
+            ]
+          },
+          "openQuestions": {
+            "mustInclude": [
+              "b-auth-open-q"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-kubernetes-entity",
+          "b-auth-open-q",
+          "b-comm-pushback",
+          "b-redis-code",
+          "b-pov-shift-entity",
+          "b-protagonist-entity",
+          "b-auth-depends-redis",
+          "b-redis-writing",
+          "b-hosting-resolved",
+          "b-chapter-structure-q",
+          "b-comm-recommendation",
+          "b-prose-style-user-edited",
+          "b-comm-response-length",
+          "b-narrator-voice",
+          "b-ci-gha-entity",
+          "b-pinned-resolved-interaction",
+          "b-react-entity",
+          "b-vitest-pref"
+        ],
+        "pinned_beliefs": [
+          "b-db-decision",
+          "b-linting-current"
+        ],
+        "retrieved_questions": [
+          "b-auth-open-q"
+        ],
+        "retrieval_precision": 0.05555555555555555,
+        "retrieval_recall": 1.0,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-auth-open-q",
+          "unexpected belief in relevantBeliefs: b-comm-pushback",
+          "unexpected belief in relevantBeliefs: b-redis-code",
+          "unexpected belief in relevantBeliefs: b-pov-shift-entity",
+          "unexpected belief in relevantBeliefs: b-protagonist-entity",
+          "unexpected belief in relevantBeliefs: b-auth-depends-redis",
+          "unexpected belief in relevantBeliefs: b-redis-writing",
+          "unexpected belief in relevantBeliefs: b-hosting-resolved",
+          "unexpected belief in relevantBeliefs: b-chapter-structure-q",
+          "unexpected belief in relevantBeliefs: b-comm-recommendation",
+          "unexpected belief in relevantBeliefs: b-prose-style-user-edited",
+          "unexpected belief in relevantBeliefs: b-comm-response-length",
+          "unexpected belief in relevantBeliefs: b-narrator-voice",
+          "unexpected belief in relevantBeliefs: b-ci-gha-entity",
+          "unexpected belief in relevantBeliefs: b-pinned-resolved-interaction",
+          "unexpected belief in relevantBeliefs: b-react-entity",
+          "unexpected belief in relevantBeliefs: b-vitest-pref"
+        ],
+        "resolution": {
+          "source_id": 20
+        },
+        "retrieved_count": 20
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "Alias resolution"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    }
+  ],
+  "avg_retrieve_time_ms": 23.5,
+  "avg_context_tokens": 383.2
+}
