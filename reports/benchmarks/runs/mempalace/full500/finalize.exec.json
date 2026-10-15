@@ -1,0 +1,58 @@
+{
+  "argv": [
+    "/tmp/am-bench/mempalace-venv/bin/python",
+    "/tmp/am-bench/am2/reference/run_longmemeval_resumable.py",
+    "--input",
+    "/tmp/agent-memory-benchmark-data/longmemeval_s_cleaned.json",
+    "--expected-sha256",
+    "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+    "--granularity",
+    "session",
+    "--granularity",
+    "turn",
+    "--backend",
+    "mempalace_default_local",
+    "--external-backend",
+    "longmemeval_mempalace_bridge:install_longmemeval_mempalace_backend",
+    "--out",
+    "/tmp/am-bench/runs/mempalace-full500",
+    "--finalize"
+  ],
+  "cwd": "/tmp/am-bench/am2/reference",
+  "env": {
+    "HF_HOME": null,
+    "HF_HUB_OFFLINE": "1",
+    "TRANSFORMERS_OFFLINE": null,
+    "JEV_MEM_SOURCE_ROOT": null,
+    "PYTHONHASHSEED": "0",
+    "VIRTUAL_ENV": null,
+    "OMP_NUM_THREADS": null,
+    "HOME": "/home/benchrun"
+  },
+  "run_as_user": "benchrun",
+  "host": {
+    "platform": "Linux-6.18.44-fc-v139-x86_64-with-glibc2.39",
+    "cpu_count": 4,
+    "python": "3.13.16"
+  },
+  "started_utc": "2026-10-15T22:08:35Z",
+  "exit_status": 0,
+  "wall_seconds": 5.247,
+  "user_cpu_seconds": 2.341,
+  "system_cpu_seconds": 2.845,
+  "peak_rss_mib": 126.2,
+  "secrets_present": {
+    "OPENAI_API_KEY": false,
+    "ANTHROPIC_API_KEY": false,
+    "TYPESAFE_API_KEY": false,
+    "HF_TOKEN": false,
+    "GEMINI_API_KEY": false,
+    "GOOGLE_API_KEY": false,
+    "GROQ_API_KEY": false,
+    "AWS_ACCESS_KEY_ID": false,
+    "AWS_SECRET_ACCESS_KEY": false,
+    "GH_TOKEN": false,
+    "GITHUB_TOKEN": false,
+    "LLM_API_KEY": false
+  }
+}

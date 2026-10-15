@@ -1,0 +1,48 @@
+{
+  "argv": [
+    "/tmp/am-bench/mempalace-venv/bin/python",
+    "/tmp/am-bench/am2/reference/run_longmemeval_resumable.py",
+    "--input",
+    "/tmp/agent-memory-benchmark-data/longmemeval_s_cleaned.json",
+    "--expected-sha256",
+    "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+    "--granularity",
+    "session",
+    "--granularity",
+    "turn",
+    "--backend",
+    "mempalace_default_local",
+    "--external-backend",
+    "longmemeval_mempalace_bridge:install_longmemeval_mempalace_backend",
+    "--out",
+    "/tmp/am-bench/runs/mempalace-full500"
+  ],
+  "started_utc": "2026-10-15T14:02:16Z",
+  "wall_seconds": 28963.577,
+  "exit_status": 0,
+  "peak_rss_mib": 706.3,
+  "segments": [
+    {
+      "segment": 1,
+      "started_utc": "2026-10-15T14:02:16Z",
+      "ended": "killed by container restart after turn row 349 (finished 2026-10-15T20:36:54Z)",
+      "wall_seconds": 23678.07,
+      "exec_record": null,
+      "logs": [
+        "mempalace-500.stdout",
+        "mempalace-500.stderr.gz"
+      ],
+      "peak_rss_mib": null,
+      "argv": "not recorded (recorder killed); identical driver, backend, input and selection \u2014 enforced by the frozen preregistration check on resume"
+    },
+    {
+      "segment": 2,
+      "exec_record": "mempalace-500-resume1.exec.json",
+      "started_utc": "2026-10-15T20:40:05Z",
+      "wall_seconds": 5285.507,
+      "exit_status": 0,
+      "peak_rss_mib": 706.3
+    }
+  ],
+  "note": "combined record for the #808 builder; wall_seconds excludes the restart gap; peak_rss_mib is segment 2 only (segment 1 unmeasured)"
+}

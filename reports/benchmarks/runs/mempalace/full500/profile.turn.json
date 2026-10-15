@@ -1,0 +1,266 @@
+{
+  "plane": "turn",
+  "scored_common_questions": 419,
+  "type_counts": {
+    "knowledge-update": 72,
+    "multi-session": 121,
+    "single-session-assistant": 5,
+    "single-session-preference": 30,
+    "single-session-user": 64,
+    "temporal-reasoning": 127
+  },
+  "systems": {
+    "agent_memory": {
+      "budget_curve": {
+        "recall_all@1": 0.1599,
+        "recall_all@3": 0.5084,
+        "recall_all@5": 0.6014,
+        "recall_all@10": 0.7232,
+        "recall_all@30": 0.8282,
+        "recall_all@50": 0.8592,
+        "recall_any@1": 0.5728,
+        "recall_any@3": 0.7876,
+        "recall_any@5": 0.8353,
+        "recall_any@10": 0.8878,
+        "recall_any@30": 0.9499,
+        "recall_any@50": 0.9594,
+        "ndcg_any@1": 0.5728,
+        "ndcg_any@3": 0.6174,
+        "ndcg_any@5": 0.6486,
+        "ndcg_any@10": 0.6816,
+        "ndcg_any@30": 0.7065,
+        "ndcg_any@50": 0.7114
+      },
+      "budget_curve_by_type": {
+        "knowledge-update": {
+          "recall_all@1": 0.0,
+          "recall_all@3": 0.6667,
+          "recall_all@5": 0.7917,
+          "recall_all@10": 0.9306,
+          "recall_all@30": 0.9583,
+          "recall_all@50": 0.9722
+        },
+        "multi-session": {
+          "recall_all@1": 0.0,
+          "recall_all@3": 0.2231,
+          "recall_all@5": 0.3636,
+          "recall_all@10": 0.5372,
+          "recall_all@30": 0.686,
+          "recall_all@50": 0.719
+        },
+        "single-session-assistant": {
+          "recall_all@1": 0.6,
+          "recall_all@3": 0.6,
+          "recall_all@5": 0.6,
+          "recall_all@10": 0.8,
+          "recall_all@30": 1.0,
+          "recall_all@50": 1.0
+        },
+        "single-session-preference": {
+          "recall_all@1": 0.1333,
+          "recall_all@3": 0.2667,
+          "recall_all@5": 0.3,
+          "recall_all@10": 0.4,
+          "recall_all@30": 0.6333,
+          "recall_all@50": 0.7333
+        },
+        "single-session-user": {
+          "recall_all@1": 0.75,
+          "recall_all@3": 0.9062,
+          "recall_all@5": 0.9219,
+          "recall_all@10": 0.9531,
+          "recall_all@30": 0.9844,
+          "recall_all@50": 0.9844
+        },
+        "temporal-reasoning": {
+          "recall_all@1": 0.0945,
+          "recall_all@3": 0.5433,
+          "recall_all@5": 0.6299,
+          "recall_all@10": 0.7402,
+          "recall_all@30": 0.8504,
+          "recall_all@50": 0.8898
+        }
+      },
+      "selectivity": {
+        "mean_returned": 203.39,
+        "mean_corpus": 244,
+        "mean_returned_over_corpus": 0.8347
+      },
+      "cost_seconds": {
+        "ingest_median": 3.9718,
+        "ingest_p90": 4.4157,
+        "recall_median": 0.0511,
+        "recall_p90": 0.0887,
+        "timed_questions": 419
+      }
+    },
+    "hindsight_chunks": {
+      "budget_curve": {
+        "recall_all@1": 0.1671,
+        "recall_all@3": 0.5632,
+        "recall_all@5": 0.7064,
+        "recall_all@10": 0.8353,
+        "recall_all@30": 0.9332,
+        "recall_all@50": 0.957,
+        "recall_any@1": 0.6229,
+        "recall_any@3": 0.8592,
+        "recall_any@5": 0.9045,
+        "recall_any@10": 0.9475,
+        "recall_any@30": 0.9785,
+        "recall_any@50": 0.9905,
+        "ndcg_any@1": 0.6229,
+        "ndcg_any@3": 0.6806,
+        "ndcg_any@5": 0.724,
+        "ndcg_any@10": 0.759,
+        "ndcg_any@30": 0.776,
+        "ndcg_any@50": 0.7797
+      },
+      "budget_curve_by_type": {
+        "knowledge-update": {
+          "recall_all@1": 0.0,
+          "recall_all@3": 0.6944,
+          "recall_all@5": 0.9306,
+          "recall_all@10": 1.0,
+          "recall_all@30": 1.0,
+          "recall_all@50": 1.0
+        },
+        "multi-session": {
+          "recall_all@1": 0.0,
+          "recall_all@3": 0.3554,
+          "recall_all@5": 0.5372,
+          "recall_all@10": 0.7107,
+          "recall_all@30": 0.9008,
+          "recall_all@50": 0.9339
+        },
+        "single-session-assistant": {
+          "recall_all@1": 0.6,
+          "recall_all@3": 0.8,
+          "recall_all@5": 1.0,
+          "recall_all@10": 1.0,
+          "recall_all@30": 1.0,
+          "recall_all@50": 1.0
+        },
+        "single-session-preference": {
+          "recall_all@1": 0.1667,
+          "recall_all@3": 0.2667,
+          "recall_all@5": 0.3667,
+          "recall_all@10": 0.5333,
+          "recall_all@30": 0.8,
+          "recall_all@50": 0.8333
+        },
+        "single-session-user": {
+          "recall_all@1": 0.7656,
+          "recall_all@3": 0.9062,
+          "recall_all@5": 0.9844,
+          "recall_all@10": 1.0,
+          "recall_all@30": 1.0,
+          "recall_all@50": 1.0
+        },
+        "temporal-reasoning": {
+          "recall_all@1": 0.1024,
+          "recall_all@3": 0.5748,
+          "recall_all@5": 0.6693,
+          "recall_all@10": 0.8425,
+          "recall_all@30": 0.9213,
+          "recall_all@50": 0.9606
+        }
+      },
+      "selectivity": {
+        "mean_returned": 49.98,
+        "mean_corpus": 244,
+        "mean_returned_over_corpus": 0.2056
+      },
+      "cost_seconds": {
+        "ingest_median": 35.6993,
+        "ingest_p90": 43.7275,
+        "recall_median": 0.1845,
+        "recall_p90": 0.3078,
+        "timed_questions": 419
+      }
+    },
+    "mempalace": {
+      "budget_curve": {
+        "recall_all@1": 0.1814,
+        "recall_all@3": 0.5155,
+        "recall_all@5": 0.6683,
+        "recall_all@10": 0.8043,
+        "recall_all@30": 0.9021,
+        "recall_all@50": 0.9427,
+        "recall_any@1": 0.5967,
+        "recall_any@3": 0.8401,
+        "recall_any@5": 0.9069,
+        "recall_any@10": 0.9427,
+        "recall_any@30": 0.9714,
+        "recall_any@50": 0.9905,
+        "ndcg_any@1": 0.5967,
+        "ndcg_any@3": 0.6436,
+        "ndcg_any@5": 0.6961,
+        "ndcg_any@10": 0.7294,
+        "ndcg_any@30": 0.7482,
+        "ndcg_any@50": 0.7547
+      },
+      "budget_curve_by_type": {
+        "knowledge-update": {
+          "recall_all@1": 0.0,
+          "recall_all@3": 0.625,
+          "recall_all@5": 0.875,
+          "recall_all@10": 0.9861,
+          "recall_all@30": 1.0,
+          "recall_all@50": 1.0
+        },
+        "multi-session": {
+          "recall_all@1": 0.0,
+          "recall_all@3": 0.2479,
+          "recall_all@5": 0.438,
+          "recall_all@10": 0.6198,
+          "recall_all@30": 0.8264,
+          "recall_all@50": 0.876
+        },
+        "single-session-assistant": {
+          "recall_all@1": 0.8,
+          "recall_all@3": 0.8,
+          "recall_all@5": 1.0,
+          "recall_all@10": 1.0,
+          "recall_all@30": 1.0,
+          "recall_all@50": 1.0
+        },
+        "single-session-preference": {
+          "recall_all@1": 0.2,
+          "recall_all@3": 0.3667,
+          "recall_all@5": 0.4333,
+          "recall_all@10": 0.6667,
+          "recall_all@30": 0.8,
+          "recall_all@50": 0.9667
+        },
+        "single-session-user": {
+          "recall_all@1": 0.7969,
+          "recall_all@3": 0.9375,
+          "recall_all@5": 0.9531,
+          "recall_all@10": 1.0,
+          "recall_all@30": 1.0,
+          "recall_all@50": 1.0
+        },
+        "temporal-reasoning": {
+          "recall_all@1": 0.1181,
+          "recall_all@3": 0.5197,
+          "recall_all@5": 0.6693,
+          "recall_all@10": 0.8031,
+          "recall_all@30": 0.8898,
+          "recall_all@50": 0.937
+        }
+      },
+      "selectivity": {
+        "mean_returned": 48.7,
+        "mean_corpus": 244,
+        "mean_returned_over_corpus": 0.2003
+      },
+      "cost_seconds": {
+        "ingest_median": 43.0804,
+        "ingest_p90": 50.6437,
+        "recall_median": 0.2115,
+        "recall_p90": 0.3056,
+        "timed_questions": 419
+      }
+    }
+  }
+}

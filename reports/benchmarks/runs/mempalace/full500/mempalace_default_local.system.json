@@ -1,0 +1,42 @@
+{
+ "id": "mempalace",
+ "revision": "3.11.0@602d796c699cabba2971982cd9dccbbf46abfe79",
+ "adapter_id": "reference/longmemeval_mempalace_bridge.py",
+ "adapter_revision": "0.1.0-candidate",
+ "configuration": {
+  "path": "own MCP stdio server per question",
+  "add": "mempalace_add_drawer(wing=longmemeval, room=history, verbatim item, opaque source_file)",
+  "search": "mempalace_search(question, limit=50)",
+  "embedder": "chroma ONNX all-MiniLM-L6-v2 (pinned)",
+  "rerank": "product default 0.6 vector + 0.4 BM25",
+  "chunking": "800 characters (default)",
+  "llm": "none"
+ },
+ "calls": [
+  {
+   "purpose": "embedding",
+   "provider": "onnxruntime (chromadb default embedding function)",
+   "model_id": "sentence-transformers/all-MiniLM-L6-v2 (chroma ONNX export)",
+   "model_revision": null,
+   "model_digest": "913d7300ceae3b2dbc2c50d1de4baacab4be7b9380491c27fab7418616a16ec3",
+   "endpoint_class": "local",
+   "parameters": {
+    "dimensions": 384
+   },
+   "prompt_sha256": null,
+   "count": 1
+  }
+ ],
+ "network_access": "restricted",
+ "context_budget_tokens": null,
+ "notes": [
+  "Executed in two segments around a container restart; resumed with the frozen preregistration check; see mempalace-500.exec-combined.json.",
+  "Embedding call count is a placeholder of 1.",
+  "Shared 4-vCPU host; timings indicative."
+ ],
+ "limitations": [
+  "Not MemPalace's published raw ChromaDB benchmark figure.",
+  "Drawer chunking lets several hits of one session use top-50 places; read @30/@50 with care.",
+  "Candidate: requires independent review."
+ ]
+}

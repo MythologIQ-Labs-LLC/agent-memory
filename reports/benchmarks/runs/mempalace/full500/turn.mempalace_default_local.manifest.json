@@ -1,0 +1,164 @@
+{
+  "schema_version": "1.0.0",
+  "run_id": "mempalace-default-local-full500-turn",
+  "normalized_run": {
+    "uri": "turn.mempalace_default_local.summary.json",
+    "sha256": "32c5bc84b1d9006aa58441a757ce924c70883480b8a99a92c363e54f7954ad8f"
+  },
+  "benchmark": {
+    "id": "longmemeval-s-retrieval",
+    "task_profile": "longmemeval-s-retrieval-parity-v1:turn",
+    "dataset_revision": "xiaowu0162/longmemeval-cleaned longmemeval_s_cleaned.json",
+    "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+    "selection_id": "all-500:7d738ae585fd4014c9d231088ff824864fded501adc07b0e08c2b97a28210c03",
+    "sample_count": 500,
+    "evaluator_revision": "reference/run_longmemeval.py@38f6a7d",
+    "excluded_count": 81
+  },
+  "system": {
+    "id": "mempalace",
+    "revision": "3.11.0@602d796c699cabba2971982cd9dccbbf46abfe79",
+    "adapter_id": "reference/longmemeval_mempalace_bridge.py",
+    "adapter_revision": "0.1.0-candidate",
+    "configuration_sha256": "5022a1ccd52ebb2eac50cf915f3f0971a6ac5d76bdb77e73984605da34cf52ba",
+    "worktree_clean": true,
+    "build_sha256": null
+  },
+  "timing": {
+    "started_at": "2026-10-15T14:02:16Z",
+    "finished_at": "2026-10-15T22:04:59.577000Z",
+    "elapsed_ms": 28963577
+  },
+  "hardware": {
+    "os": "Linux",
+    "os_release": "6.18.44-fc-v139",
+    "architecture": "x86_64",
+    "cpu_model": "Intel(R) Xeon(R) Processor",
+    "cpu_cores": 4,
+    "ram_bytes": 16874930176,
+    "gpus": []
+  },
+  "environment": {
+    "runtime": "CPython",
+    "runtime_version": "3.13.16",
+    "isolation": "cloud_sandbox",
+    "container_digest": null,
+    "dependency_lock_sha256": "c1d3a078651e74ec2863168cddb6d385d97136119e97d1d3206542b6d9093186",
+    "network_access": "restricted",
+    "notes": [
+      "Executed in two segments around a container restart; resumed with the frozen preregistration check; see mempalace-500.exec-combined.json.",
+      "Embedding call count is a placeholder of 1.",
+      "Shared 4-vCPU host; timings indicative.",
+      "execution.timeout_ms 0 = no runner-level timeout (per-call product timeouts recorded in configuration where they exist)."
+    ]
+  },
+  "inference": {
+    "used": true,
+    "calls": [
+      {
+        "purpose": "embedding",
+        "provider": "onnxruntime (chromadb default embedding function)",
+        "model_id": "sentence-transformers/all-MiniLM-L6-v2 (chroma ONNX export)",
+        "model_revision": null,
+        "model_digest": "913d7300ceae3b2dbc2c50d1de4baacab4be7b9380491c27fab7418616a16ec3",
+        "endpoint_class": "local",
+        "parameters": {
+          "dimensions": 384
+        },
+        "prompt_sha256": null,
+        "count": 1
+      }
+    ]
+  },
+  "execution": {
+    "command_sha256": "56f2369a8ce88e1d6b8157440e1281afb0563b536ea58d9e4c4090e5dcc1e4bb",
+    "argv_redacted": [
+      "/tmp/am-bench/mempalace-venv/bin/python",
+      "/tmp/am-bench/am2/reference/run_longmemeval_resumable.py",
+      "--input",
+      "/tmp/agent-memory-benchmark-data/longmemeval_s_cleaned.json",
+      "--expected-sha256",
+      "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+      "--granularity",
+      "session",
+      "--granularity",
+      "turn",
+      "--backend",
+      "mempalace_default_local",
+      "--external-backend",
+      "longmemeval_mempalace_bridge:install_longmemeval_mempalace_backend",
+      "--out",
+      "/tmp/am-bench/runs/mempalace-full500"
+    ],
+    "random_seed": 0,
+    "timeout_ms": 0,
+    "retries": 0,
+    "context_budget_tokens": null,
+    "retrieval_top_k": 50,
+    "stdout_sha256": "91f43f8338faf60407dd77d2c302c81d3ae07096b7cde9dac3b9c32271d66581",
+    "stderr_sha256": "e7f20d5d0d534fa5f1d5d1f104d47ea9446500a9428f44633753f2aeb4cabb3e",
+    "exit_code": 0,
+    "peak_rss_bytes": 740609228,
+    "peak_vram_bytes": null,
+    "latency_p50_ms": 44605.0,
+    "latency_p95_ms": 55744.0
+  },
+  "costs": {
+    "status": "not_measured",
+    "currency": "USD",
+    "amount": null,
+    "input_tokens": null,
+    "output_tokens": null,
+    "billing_reference_sha256": null
+  },
+  "artifacts": [
+    {
+      "kind": "evaluator_report",
+      "uri": "turn.mempalace_default_local.summary.json",
+      "sha256": "32c5bc84b1d9006aa58441a757ce924c70883480b8a99a92c363e54f7954ad8f"
+    },
+    {
+      "kind": "row_level_results",
+      "uri": "turn.mempalace_default_local.rows.jsonl",
+      "sha256": "40bd51625ba2de39f3ae14d04f0dab6b6953971f4990575827fe654796f12e50"
+    },
+    {
+      "kind": "execution_log",
+      "uri": "mempalace-500.exec-combined.json",
+      "sha256": "39915d9882af5b9d1008b4c9ebc2d42d0ee0a5f88601618f0127cbe8c1a6c7de"
+    },
+    {
+      "kind": "execution_log",
+      "uri": "mempalace-500-resume1.stdout",
+      "sha256": "91f43f8338faf60407dd77d2c302c81d3ae07096b7cde9dac3b9c32271d66581"
+    },
+    {
+      "kind": "execution_log",
+      "uri": "mempalace-500-resume1.stderr.gz",
+      "sha256": "e7f20d5d0d534fa5f1d5d1f104d47ea9446500a9428f44633753f2aeb4cabb3e"
+    },
+    {
+      "kind": "other",
+      "uri": "../mempalace-venv-freeze.txt",
+      "sha256": "c1d3a078651e74ec2863168cddb6d385d97136119e97d1d3206542b6d9093186"
+    }
+  ],
+  "redaction": {
+    "reviewed": true,
+    "contains_secrets": false,
+    "contains_private_data": false,
+    "note": "Runs used an allowlisted environment with no tokens; argv contains only local paths and flags. Dataset is public LongMemEval-S."
+  },
+  "review": {
+    "status": "candidate",
+    "reviewer": null,
+    "decision_ref": null,
+    "limitations": [
+      "Not MemPalace's published raw ChromaDB benchmark figure.",
+      "Drawer chunking lets several hits of one session use top-50 places; read @30/@50 with care.",
+      "Candidate: requires independent review."
+    ],
+    "comparison_eligibility": "not_assessed"
+  },
+  "authority_effect": "none"
+}
