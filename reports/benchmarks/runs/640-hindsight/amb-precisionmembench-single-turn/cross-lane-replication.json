@@ -1,0 +1,42 @@
+{
+  "purpose": "cross-lane replication of Hindsight chunk-only on AMB PrecisionMemBench 77 by an independently written adapter in another session",
+  "this_lane": {
+    "path": "reports/benchmarks/runs/640-hindsight/amb-precisionmembench-single-turn/rep1/single-turn.json",
+    "sha256": "7ce273289e2b345ac1d5c990d0435369d1cb56bb1b3bfab95f4240ae3263bd1b",
+    "adapter": "reference/amb_hindsight_bridge.py"
+  },
+  "other_lane": {
+    "branch": "claude/810-competitive-cycle2-no-ci",
+    "commit": "692e1850e0e0580b0f4cbd180626698e757d1867",
+    "path": "reports/benchmarks/runs/cycle2-amb-precisionmembench/hs-amb-rep1/single-turn.json",
+    "sha256": "1908f40e8629d64576c25d90fc6fa5df15e4463bb43e73b551d08618ec9b7f95",
+    "adapter": "reference/amb_hindsight_chunks_bridge.py (blob 8afb4563)",
+    "bank_config_sha256": "363201677244eb9f005d456b7aa40c9b450e197ffe44230c4062308d887dad0e (same as this lane)"
+  },
+  "summary": {
+    "correct": [
+      9,
+      9
+    ],
+    "mean_precision": [
+      0.0544,
+      0.0552
+    ],
+    "mean_recall": [
+      0.985,
+      0.9884
+    ]
+  },
+  "per_case": {
+    "cases": 77,
+    "correct_differs": [],
+    "same_returned_set": 75,
+    "same_order": 57,
+    "set_differs": [
+      "budget-ceiling-evicts-relevant-beliefs",
+      "cap-stress-kitchen-sink-exceeds-twelve"
+    ]
+  },
+  "controls_cross_check": "the other lane's agent-memory and bm25 AMB controls are case-for-case identical (same sets and order, 77/77) to the reviewed 1df28f8 evidence",
+  "read_only": "the other lane's files were read from git; nothing in that branch was modified"
+}

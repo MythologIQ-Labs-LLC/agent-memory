@@ -61,3 +61,22 @@ It is still an input difference. *(Disclosed after independent review.)*
 | Process layout | In its pinned interpreter, behind `reference/hindsight_amb_worker.py`, as an unprivileged user, with a separate pg0 home |
 | Bridge | `reference/amb_hindsight_bridge.py` 0.1.0-candidate |
 | Run cost | Wall time 91 s and 79 s; peak RSS 2.3 GiB for the whole CLI plus the worker |
+
+## Cross-lane replication
+
+Another session, on branch `claude/810-competitive-cycle2-no-ci`, ran the same Hindsight
+configuration on AMB 77 with an **independently written adapter**. The bank configuration hash is
+the same, `363201677244…`. File: `cross-lane-replication.json`.
+
+| Measure | This lane | Other lane |
+|---|---|---|
+| Correct cases | 9/77 | 9/77 |
+| Per-case `correct` | identical on all 77 | identical on all 77 |
+| Precision | 0.0544 | 0.0552 |
+| Recall | 0.985 | 0.988 |
+
+- **Returned sets:** identical on 75/77 cases. The 2 that differ are at the budget edge.
+- **Order:** identical on 57/77 cases. This is consistent with the BM25 tie mechanism in
+  `../full500/determinism-probe/`.
+- **Controls:** that lane's Agent Memory and BM25 controls are identical case by case to the
+  reviewed evidence.
