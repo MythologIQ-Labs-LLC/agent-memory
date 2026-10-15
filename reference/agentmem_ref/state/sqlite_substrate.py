@@ -737,7 +737,10 @@ class SQLiteTemporalGraph:
         )
 
     def read_runtime_configuration_binding(self) -> tuple[int, str] | None:
-        """``(generation, payload_json)`` of the binding row; None for a store that has none."""
+        """``(generation, payload_json)`` of the binding row; None only when the table does not exist.
+
+        A table that exists without exactly one binding is malformed (``ValueError``): a generation
+        creates the table and its row together, so an empty table is never a pre-#821 store."""
 
         exists = self._connection.execute(
             "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'runtime_configuration_binding'"
@@ -747,9 +750,9 @@ class SQLiteTemporalGraph:
         rows = self._connection.execute(
             "SELECT generation, payload_json FROM runtime_configuration_binding WHERE singleton = 1"
         ).fetchall()
-        if len(rows) > 1:
-            raise ValueError("SQLite configuration binding table holds more than one binding")
-        return None if not rows else (rows[0][0], rows[0][1])
+        if len(rows) != 1:
+            raise ValueError(f"SQLite configuration binding table holds {len(rows)} bindings")
+        return rows[0][0], rows[0][1]
 
     def backup_to(self, destination: str | Path) -> None:
         target_path = Path(destination)
@@ -1314,6 +1317,17 @@ class SQLiteTemporalGraph:
         if row is None:
             return None
         return int(row[0] or 0), row[1]
+
+    def read_runtime_journal_record(self, generation: int) -> dict | None:
+        row = self._connection.execute(
+            "SELECT payload_json FROM runtime_journal WHERE generation = ?", (int(generation),)
+        ).fetchone()
+        if row is None:
+            return None
+        value = json.loads(row[0])
+        if not isinstance(value, dict):
+            raise ValueError("SQLite runtime journal row is malformed")
+        return value
 
     def read_runtime_journal_tail(self) -> dict | None:
         row = self._connection.execute(

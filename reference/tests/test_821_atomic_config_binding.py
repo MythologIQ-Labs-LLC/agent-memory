@@ -365,12 +365,36 @@ class TamperedBindingsAreRefused(_Store):
                 connection.execute(f"INSERT INTO {BINDING_TABLE} VALUES (1, ?, ?)", (generation, json.dumps(payload)))
         self.refused("corrupt")
 
-    def test_m10_a_deleted_row_is_refused(self):  # FAIL-FIRST
+    def test_m10_a_deleted_row_is_refused(self):  # FAIL-FIRST (amended: M28)
         self.seeded()
         self.assertIsNotNone(_row(self.root))
         with _connect(self.root) as connection:
             connection.execute(f"DELETE FROM {BINDING_TABLE}")
+        self.refused("SQLite configuration binding is corrupt: .* 0 bindings")
+
+    def test_m10_a_dropped_table_is_refused(self):  # amendment 1
+        self.seeded()
+        with _connect(self.root) as connection:
+            connection.execute(f"DROP TABLE {BINDING_TABLE}")
         self.refused("required configuration-bound state missing")
+
+    def test_m28_an_empty_table_never_reaches_a_verifying_legacy_file(self):  # amendment 1 (review F3)
+        from agentmem_ref.runtime.configured_restart import ConfigBindingStore, binding_record
+
+        self.seeded()
+        _, payload = _row(self.root)
+        memory = self.open()
+        durable = memory.runtime.durable_runtime
+        forged = binding_record(plan=durable.plan, base_evidence=durable.base.recovery_evidence)
+        memory.close()
+        self.assertEqual(forged["base"], {k: v for k, v in payload["base"].items() if k != "journal_record_digest"})
+        ConfigBindingStore(self.root).path.write_bytes(_canonical(forged) + b"\n")
+        with _connect(self.root) as connection:
+            connection.execute(f"DELETE FROM {BINDING_TABLE}")
+        before = _tables(self.root)
+        with self.assertRaisesRegex(RuntimeRecoveryError, "corrupt"):
+            AgentMemory.open(self.root, tenant=TENANT, actor_id="agent:a", scope=SCOPE, purpose="821")
+        self.assertEqual(_tables(self.root), before)
 
 
 class OwnershipAndStaleWriters(_Store):
@@ -463,13 +487,20 @@ class LegacyStores(unittest.TestCase):
         self.assertEqual(reopened.runtime.durable_runtime.binding_scheme, "sqlite_transaction")
         self.assertEqual(len(reopened.recall("lunch noon")["returned"]), 1)
 
-    def test_m11_deleting_the_row_of_a_migrated_store_does_not_reach_the_legacy_file(self):  # FAIL-FIRST
+    def test_m11_a_migrated_store_refuses_without_its_row(self):  # FAIL-FIRST (renamed, amendment 1)
         root = self.copy("coherent")
         memory = self.open(root)
         memory.recall("deploy window")
         memory.close()
         with _connect(root) as connection:
             connection.execute(f"DELETE FROM {BINDING_TABLE}")
+        # the table exists, so the row is required and the legacy file is not consulted (M28)
+        with self.assertRaisesRegex(RuntimeRecoveryError, "SQLite configuration binding is corrupt"):
+            self.open(root)
+        with _connect(root) as connection:
+            connection.execute(f"DROP TABLE {BINDING_TABLE}")
+        # with the whole table dropped (the residual of an unkeyed binding) the legacy file is
+        # reached, and it lags the committed generation
         with self.assertRaisesRegex(RuntimeRecoveryError, "does not match recovered base checkpoint: generation"):
             self.open(root)
 
@@ -478,7 +509,7 @@ class LegacyStores(unittest.TestCase):
         memory = self.open(root)
         memory.recall("deploy window")  # generation 4 commits the first row
         with _connect(root) as connection:
-            connection.execute(f"DELETE FROM {BINDING_TABLE}")
+            connection.execute(f"DROP TABLE {BINDING_TABLE}")
         rows = _tables(root)
         with self.assertRaisesRegex(RuntimeCheckpointConflict, "configuration binding for generation 4 is missing"):
             memory.recall("deploy window")
@@ -575,6 +606,142 @@ class CloseRecoveryAndDoctor(_Store):
             connection.execute(f"DELETE FROM {BINDING_TABLE}")
         report = doctor.diagnose(self.root / "runtime-config.json", state_dir=self.root)
         self.assertEqual(report["recovery"]["status"], "failed_closed")
+
+
+
+def _witness(root: Path) -> dict | None:
+    path = Path(root) / "generation-witness.json"
+    return json.loads(path.read_text()) if path.exists() else None
+
+
+def _replace_database(root: Path, source: Path) -> None:
+    for leftover in Path(root).glob("agent-memory.sqlite3*"):
+        leftover.unlink()
+    shutil.copy(source, _db(root))
+
+
+class GenerationWitnessAmendment(_Store):
+    """Amendment 1 (review F1, F2, F5, F6, F8b): M22-M27, M29, M30."""
+
+    def snapshot_database(self) -> Path:
+        copy = Path(self._folder.name) / f"snapshot-{_state_generation(self.root)}.sqlite3"
+        shutil.copy(_db(self.root), copy)
+        return copy
+
+    def test_m22_a_lost_database_is_never_recreated(self):
+        self.seeded()
+        self.assertEqual(_witness(self.root)["generation"], _state_generation(self.root))
+        for leftover in self.root.glob("agent-memory.sqlite3*"):
+            leftover.unlink()
+        with self.assertRaisesRegex(RuntimeRecoveryError, "generation witness exists without SQLite runtime database"):
+            AgentMemory.open(self.root, tenant=TENANT, actor_id="agent:a", scope=SCOPE, purpose="821")
+        self.assertFalse(_db(self.root).exists())
+        from agentmem_ref.runtime.sqlite_runtime import SQLiteConfigBoundRestartRuntime
+
+        with self.assertRaisesRegex(RuntimeRecoveryError, "generation witness exists"):
+            SQLiteConfigBoundRestartRuntime.create(self.root, tenant=TENANT, plan=self._plan())
+        self.assertFalse(_db(self.root).exists())
+        report = doctor.diagnose(self.root / "runtime-config.json", state_dir=self.root)
+        self.assertEqual(report["durable_state"]["status"], "incomplete")
+        self.assertEqual(report["recovery"]["status"], "failed_closed")
+
+    def _plan(self):
+        from agentmem_ref.runtime.runtime_behavior import validate_runtime_behavior_contract
+
+        return validate_runtime_behavior_contract(json.loads((self.root / "runtime-config.json").read_text()))
+
+    def test_m23_a_database_rolled_back_to_an_older_copy_is_refused(self):
+        memory = self.open()
+        memory.remember("memory:x", "The deploy window is Thursday.")
+        memory.close()
+        older = self.snapshot_database()
+        memory = self.open()
+        memory.remember("memory:y", "Lunch is at noon.")
+        memory.close()
+        _replace_database(self.root, older)
+        rows = _tables(self.root)
+        with self.assertRaisesRegex(RuntimeRecoveryError, "behind this store's generation witness"):
+            AgentMemory.open(self.root, tenant=TENANT, actor_id="agent:a", scope=SCOPE, purpose="821")
+        self.assertEqual(_tables(self.root), rows)
+
+    def test_m24_another_store_database_is_refused(self):
+        self.seeded()
+        other_root = Path(self._folder.name) / "other"
+        other = self.open(other_root)
+        for index in range(3):
+            other.remember(f"memory:{index}", f"Another store's fact {index}.")
+        other.close()
+        self.assertGreater(_state_generation(other_root), _witness(self.root)["generation"])
+        _replace_database(self.root, _db(other_root))
+        with self.assertRaisesRegex(RuntimeRecoveryError, "does not continue the history"):
+            AgentMemory.open(self.root, tenant=TENANT, actor_id="agent:a", scope=SCOPE, purpose="821")
+
+    def test_m25_a_lagging_witness_is_accepted(self):
+        self.assertEqual(_run_child(self.root, "none"), 0)
+        self.assertEqual(_run_child(self.root, "none", "Thursday deploy"), 0)
+        before = _state_generation(self.root)
+        self.assertEqual(_run_child(self.root, "post_commit", "Lunch at noon"), CRASH)
+        self.assertEqual(_witness(self.root)["generation"], before)
+        self.assertEqual(_state_generation(self.root), before + 1)
+        self.assert_recovers_committed({"Thursday deploy", "Lunch at noon"})
+
+    def test_m26_a_corrupt_witness_is_refused(self):
+        self.seeded()
+        for content in ("{not json", json.dumps({"schema": "other"}), json.dumps(
+                {**_witness(self.root), "generation": "3"})):
+            with self.subTest(content=content):
+                (self.root / "generation-witness.json").write_text(content)
+                with self.assertRaisesRegex(RuntimeRecoveryError, "generation witness is unreadable"):
+                    AgentMemory.open(self.root, tenant=TENANT, actor_id="agent:a", scope=SCOPE, purpose="821")
+
+    def test_m27_a_failed_witness_write_keeps_the_committed_generation(self):
+        from agentmem_ref.runtime.sqlite_runtime import GenerationWitness
+
+        memory = self.open()
+        memory.remember("memory:x", "The deploy window is Thursday.")
+        durable = memory.runtime.durable_runtime
+        before = _witness(self.root)
+        with mock.patch.object(GenerationWitness, "record", side_effect=OSError("injected ENOSPC")):
+            self.assertTrue(memory.remember("memory:y", "Lunch is at noon.")["committed"])
+        self.assertFalse(durable.generation_witness_current)
+        self.assertEqual(_witness(self.root), before)
+        memory.recall("lunch")
+        self.assertTrue(durable.generation_witness_current)
+        self.assertEqual(_witness(self.root)["generation"], _state_generation(self.root))
+        memory.close()
+        self.assertEqual(len(self.open().recall("lunch noon")["returned"]), 1)
+
+    def test_m29_a_row_rewritten_while_a_handle_is_open_is_refused(self):
+        memory = self.open()
+        memory.remember("memory:x", "The deploy window is Thursday.")
+        generation, payload = _row(self.root)
+        forged = _sealed({**payload, "base": {**payload["base"], "substrate_digest": "sha256:" + "9" * 64}})
+        _write_row(self.root, generation, json.dumps(forged))
+        rows = _tables(self.root)
+        with self.assertRaisesRegex(RuntimeCheckpointConflict, "changed under this handle.*substrate_digest"):
+            memory.remember("memory:y", "Lunch is at noon.")
+        self.assertEqual(_tables(self.root), rows)
+
+    def test_m30_a_visibility_obligation_the_plan_does_not_require_rolls_back(self):
+        memory = self.open()
+        memory.remember("memory:x", "The deploy window is Thursday.")
+        base = memory.runtime.durable_runtime.base
+        rows = _tables(self.root)
+        with self.assertRaisesRegex(RuntimeRecoveryError, "not required by the recovered configuration"):
+            base.persist_visibility_snapshot("op:foreign", {"operation": {"required_projection_ids": ["not-in-plan"]}})
+        self.assertEqual(_tables(self.root), rows)
+        self.assertNotIn("op:foreign", base.visibility_snapshots)
+        memory.close()
+        self.open().close()
+
+    def test_f6_doctor_reports_an_unverified_row_on_failure(self):
+        self.seeded()
+        generation, payload = _row(self.root)
+        _write_row(self.root, generation, json.dumps({**payload, "tenant": "forged"}))
+        report = doctor.diagnose(self.root / "runtime-config.json", state_dir=self.root)
+        self.assertEqual(report["recovery"]["status"], "failed_closed")
+        self.assertTrue(report["durable_state"]["configuration_binding_present"])
+        self.assertEqual(report["durable_state"]["configuration_binding_scheme"], "unverified")
 
 
 if __name__ == "__main__":

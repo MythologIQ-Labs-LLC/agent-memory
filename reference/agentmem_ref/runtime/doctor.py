@@ -290,6 +290,7 @@ def diagnose(
     manifest = root / "runtime-manifest.json"
     sqlite_database = root / "agent-memory.sqlite3"
     config_binding = root / "configuration-binding.json"
+    generation_witness = root / "generation-witness.json"
 
     if manifest.exists() and sqlite_database.exists():
         report["durable_state"] = {
@@ -312,6 +313,18 @@ def diagnose(
         return _mark_recovery_failure(
             report,
             "configuration binding exists without a supported durable runtime state",
+        )
+
+    if generation_witness.exists() and not sqlite_database.exists():
+        # #821: a store a current runtime created; its database is gone, so never "not initialized".
+        report["durable_state"] = {
+            "status": "incomplete",
+            "state_dir": str(root),
+            "generation_witness_present": True,
+        }
+        return _mark_recovery_failure(
+            report,
+            "generation witness exists without SQLite runtime database",
         )
 
     if not root.exists() or (not manifest.exists() and not sqlite_database.exists()):
@@ -357,6 +370,12 @@ def diagnose(
                 "substrate_profile": base_evidence.substrate_profile,
             }
         except RuntimeRecoveryError as exc:
+            from .sqlite_runtime import configuration_binding_row_present
+
+            # #821: what is present, not what verified (nothing was accepted).
+            if configuration_binding_row_present(sqlite_database):
+                report["durable_state"]["configuration_binding_present"] = True
+            report["durable_state"]["configuration_binding_scheme"] = "unverified"
             return _mark_recovery_failure(report, str(exc))
         finally:
             if runtime is not None:

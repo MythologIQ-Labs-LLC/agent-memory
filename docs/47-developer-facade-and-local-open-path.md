@@ -96,7 +96,7 @@ The local open path is fail closed:
 SQLite database present
     -> recover and verify
 
-legacy configuration-binding file present but database absent
+configuration binding file or generation witness present but database absent
     -> refuse as incomplete state
 
 SQLite database corrupt or incompatible
@@ -148,13 +148,14 @@ The SQLite database is the durable source of truth only for what a runtime gener
 Each generation binds the validated runtime configuration (configuration digest, resolved plan, required projections) to the generation it publishes. Until #821 that binding was the file `configuration-binding.json`, written after the SQLite commit: a process that stopped between the two left a committed generation that recovery then refused (`configuration binding does not match recovered base checkpoint`).
 
 - **One transaction.** The binding is now the singleton row `runtime_configuration_binding`, written by the owning runtime inside the generation's own SQLite transaction, after the runtime state and journal row and before `COMMIT` (protocol `sqlite_same_transaction_config_binding_v1`). A generation and its binding commit, or roll back, together. Generation 1 of a new store commits with its binding as well. New stores have no binding file.
-- **What the row binds.** The configuration and plan digests, the plan, the required projections, the tenant, and the generation's substrate, governance, interpretation and journal-tail digests, sealed by a record digest.
-- **Recovery verifies it and repairs nothing.** A row that is corrupt, unsealed, from another tenant or store, stale or replayed, or bound to a different configuration is refused with its own diagnostic. Recovery never falls back from a present row to the file and never writes.
-- **Who can write it.** Only the owning runtime, on the thread running its open generation, after the generation CAS; the binder also requires the replaced row to bind the previous generation under the same plan. A stale handle or another process cannot rebind a newer generation.
-- **A failure while binding** (an exception or an interrupt) rolls back the whole generation; nothing is published.
-- **Stores written before #821** have no row. Their file is verified exactly as before, and the first generation a current runtime publishes writes the row in that generation; the file is then left untouched and never consulted again. A store already stranded by the old window (its file lags the committed generation) stays refused: recovery does not decide which configuration published that generation.
-- **Older runtimes** cannot open a store whose current generation is bound only by a row; they fail closed.
-- `posture()` reports `configuration_binding_scheme` (`sqlite_transaction` or `legacy_file`).
+- **What the row binds.** The configuration and plan digests, the plan, the required projections, the tenant, and the generation's substrate, governance, interpretation and journal-tail digests, with a record digest. That digest is an unkeyed checksum: it detects corruption and mismatches, not a forger who can write the database.
+- **Recovery verifies it and repairs nothing.** A row that is corrupt, from another tenant or store, stale or replayed, or bound to a different configuration is refused with its own diagnostic. Recovery never writes. If the binding table exists, its row is required; the legacy file is read only when there is no table at all.
+- **Who can write it.** The owning runtime, on the thread running its open generation, after the generation CAS. Before replacing the row the binder verifies it, exactly as recovery would, as the binding of the handle's previous generation, so a row changed under an open handle is refused (`RuntimeCheckpointConflict`) and the generation rolls back. A stale handle or another process cannot rebind a newer generation. Storage-level holders (raw SQL, a second `SQLiteTemporalGraph`) remain the privileged layer described above.
+- **A failure while binding** (an exception or an interrupt) rolls back the whole generation; nothing is published. A generation whose visibility obligations the bound configuration does not require is refused the same way instead of committing a state recovery would refuse.
+- **Generation witness.** `generation-witness.json` records the last generation (and its journal record digest) the runtime committed. It is written at create before any transaction and after every COMMIT, never before one, so it may lag the database but never lead it, and a lagging witness is accepted. It only ever refuses: a database behind it (restored from an older copy), a database whose journal disagrees with it (another store's database), an unreadable witness, or a witness whose database is gone. If writing it fails after COMMIT, the generation stays committed and the next generation rewrites it. It is not a keyed or remote anchor: rolling back the whole directory, or deleting the witness, is not detected.
+- **Stores written before #821** have no binding table. Their file is verified exactly as before, and the first generation a current runtime publishes (a `recall` publishes one) writes the row and the witness; the file is then left untouched and is not consulted while the table exists. A store already stranded by the old window (its file lags the committed generation) stays refused: recovery does not decide which configuration published that generation.
+- **Migration is one-way.** Older runtimes cannot open a store whose current generation is bound only by a row; they fail closed. Rolling the software back after a store has been touched therefore needs an explicit, owner-authorized procedure.
+- `posture()` reports `configuration_binding_scheme`: `sqlite_transaction`, `legacy_file`, or `unverified` when recovery failed.
 
 The file-checkpoint profile (`RestartSafeRuntime`, `ConfigBoundRestartRuntime`) is unchanged and still writes its binding file after its manifest.
 

@@ -120,6 +120,8 @@ def _durable_state(root: Path) -> dict:
             state["binding_file_base_generation"] = json.loads(binding_file.read_text())["base"]["generation"]
         except Exception as exc:  # noqa: BLE001 - recorded, not interpreted
             state["binding_file_base_generation"] = f"unreadable: {exc!r}"
+    witness = root / "generation-witness.json"
+    state["witness_generation"] = json.loads(witness.read_text())["generation"] if witness.exists() else None
     leftovers = sorted(p.name for p in root.iterdir() if p.name.startswith(".configuration-binding"))
     state["binding_temp_files"] = leftovers
     if not db.exists():
@@ -226,6 +228,7 @@ def main() -> int:
         print(f"{item['phase']:7} {item['point']:14} crashed={item['crashed']!s:5} "
               f"state_gen={state.get('runtime_state_generation')} journal_gen={state.get('journal_tail_generation')} "
               f"file_gen={state.get('binding_file_base_generation', '-')} row_gen={state.get('binding_row_generation', '-')} "
+              f"witness={state.get('witness_generation', '-')} "
               f"facts={state.get('facts', '-')} -> {item.get('result') or reopen.get('outcome')} "
               f"{'(hook never reached) ' if item.get('hook') else ''}"
               f"{reopen.get('error', '') or (reopen.get('base_generation'), reopen.get('deploy_returned'), reopen.get('lunch_returned'))}")

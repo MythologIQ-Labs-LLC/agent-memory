@@ -301,6 +301,7 @@ _DEFAULT_PROFILE = "rc1-local.json"
 _DEFAULT_CONFIG_NAME = "runtime-config.json"
 _DATABASE_NAME = "agent-memory.sqlite3"
 _BINDING_NAME = "configuration-binding.json"
+_WITNESS_NAME = "generation-witness.json"
 
 
 def _canonical_bytes(value: object) -> bytes:
@@ -517,9 +518,14 @@ class AgentMemory:
         bindings = doctor.load_qualification_bindings(resolved_qualification)
         plan = validate_runtime_behavior_contract(value, qualification_bindings=bindings)
 
-        semantic = _semantic_route(root, semantic_retrieval, representation_dir)
         database = root / _DATABASE_NAME
         binding = root / _BINDING_NAME
+        if not database.exists() and (root / _WITNESS_NAME).exists():
+            # #821: a store a current runtime created has lost its database; never re-create it.
+            raise RuntimeRecoveryError(
+                "incomplete durable state: generation witness exists without SQLite runtime database"
+            )
+        semantic = _semantic_route(root, semantic_retrieval, representation_dir)
         if database.exists():
             runtime = SQLiteConfiguredCompositionRuntime.recover(
                 root,
