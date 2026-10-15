@@ -1,0 +1,25 @@
+{
+  "erratum_id": "811-cognee-subset50-prereg-backend",
+  "recorded": "2026-10-15",
+  "applies_to": "reports/benchmarks/runs/811-cognee/subset50/preregistration.json",
+  "applies_to_sha256": "ede9ec1c681e4dd5911570b92b4a2c06b8b49f6a8f19b54c0bfaa6ca442d9dd5",
+  "defect": "declares backend jev_mem_laya and the Jev-Mem bridge; byte-identical copy of reports/benchmarks/runs/817-jev-mem/subset50/preregistration.json",
+  "correct_fields": [
+    "input.sha256",
+    "selection",
+    "question_ids"
+  ],
+  "additional_gaps": [
+    "model revisions and file hashes not recorded",
+    "summary external_system null"
+  ],
+  "affected_rows": {
+    "path": "reports/benchmarks/runs/811-cognee/subset50/session.cognee_gliner_local.rows.jsonl",
+    "sha256": "7bdd80a049ba11c8baa382690f7118d1e97bdd72f50669ad873cf73f0df04e8b",
+    "count": 15,
+    "status": "exploratory_not_eligible"
+  },
+  "successor_generation": "reports/benchmarks/runs/811-cognee/subset50-g2/",
+  "original_files_modified": false,
+  "source_finding": "https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/811#issuecomment-6192667723"
+}

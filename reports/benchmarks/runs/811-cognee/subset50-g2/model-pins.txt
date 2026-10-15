@@ -1,0 +1,20 @@
+== models--BAAI--bge-small-en-v1.5
+refs/main: 5c38ec7c405ec4b44b94cc5a9bb96e735b38267a
+5c38ec7c405ec4b44b94cc5a9bb96e735b38267a
+d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66  711396  ./tokenizer.json
+9261e7d79b44c8195c1cada2b453e55b00aeb81e907a6664974b4d7776172ab3  366  ./tokenizer_config.json
+== models--fastino--gliner2.5-base-v1
+refs/main: 54785d51df8d86a0d8f2eb212fec15871aad2c4d
+54785d51df8d86a0d8f2eb212fec15871aad2c4d
+d6b515c21ae2100c12267fb42a3f02c1e99ad87580366aebedb161efd74441c7  4103  ./config.json
+d36a845b9f25dcaf1ec45a1c4bdf65ea4ac20596537e14530ec9f660a63aeca4  857  ./encoder_config/config.json
+7274094de2e0c2a37a386f55fc4e23061a954da5bd7a335e7dfe56f2743c277a  774366564  ./model.safetensors
+cbc8ae6037812709c9c26f2a160f8dc48b0440bcb79c8141804259ae2d6adac3  8341713  ./tokenizer.json
+0bf3ea0873234bd9bfdd3853c440395009ac6365a925b91654daed5396d655e1  645  ./tokenizer_config.json
+== models--qdrant--bge-small-en-v1.5-onnx-q
+refs/main: aa8f8b060edb00e03bfdd08813a2949946c8ba55
+13582bcf2effc85b7bf3d3f5532e686bc1c9ce86bb009d10f0ec33cbe92299dd  706  ./config.json
+51f1bd0addd6e859e42c2c8021a5e5461385bb676a649f4b269aa445449f2431  66465124  ./model_optimized.onnx
+5d5b662e421ea9fac075174bb0688ee0d9431699900b90662acd44b2a350503a  695  ./special_tokens_map.json
+d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66  711396  ./tokenizer.json
+0b29c7bfc889e53b36d9dd3e686dd4300f6525110eaa98c76a5dafceb2029f53  1242  ./tokenizer_config.json
