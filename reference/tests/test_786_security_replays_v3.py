@@ -58,7 +58,9 @@ class SecurityReplayV3Fixtures(unittest.TestCase):
             for case in fx["cases"]:
                 with self.subTest(replay=replay_id, case=case["id"]):
                     traced = {o for clause in case["clauses"] for o in clause["observables"]}
-                    self.assertTrue(set(case["expect"]) <= traced, set(case["expect"]) - traced)
+                    controls = set(case.get("controls", ()))
+                    self.assertTrue(controls <= set(case["expect"]) and not (controls & traced), case["id"])
+                    self.assertTrue(set(case["expect"]) <= traced | controls, set(case["expect"]) - traced - controls)
                     self.assertTrue({c["source"] for c in case["clauses"]} <= sources)
                     for clause in case["clauses"]:
                         self.assertGreater(len(clause["clause"]), 20)
