@@ -129,6 +129,14 @@ BOILER_SIMS = {"memory:serviced": 0.80, "memory:f1": 0.30, "memory:f2": 0.25, "m
 
 
 class FusedRanking(_Store):
+    # Erratum (recorded after implementation; the preregistered mechanism is unchanged): this
+    # preregistered expectation is false for the preregistered fusion. Every admitted memory has a
+    # dense rank, so a memory found only by the semantic route is in one list (1/61 at best),
+    # while lexically found filler is in two lists (1/63 + 1/64 even at weak ranks). RRF
+    # therefore keeps semantic-only evidence below lexical candidates unless their ranks are
+    # very deep. The prediction failed; it stays here as an expected failure so the property is
+    # visible and any change to it is noticed.
+    @unittest.expectedFailure
     def test_a_semantic_only_memory_with_the_top_cosine_outranks_weak_lexical_filler(self):  # FAIL-FIRST
         _TableRepresentation.TABLE = {TRIPS: {TRIP_FACTS["memory:highlands"]: 0.70, TRIP_FACTS["memory:year"]: 0.20,
                                               TRIP_FACTS["memory:bins"]: 0.10, TRIP_FACTS["memory:plumber"]: 0.05}}

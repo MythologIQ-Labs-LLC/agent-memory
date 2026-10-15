@@ -951,8 +951,11 @@ class AgentMemory:
         # earlier fact -> later facts that change it.
         reader = getattr(self.runtime.adapter, "lifecycle_successors", None)
         successors = reader(list(result.ranked_admitted)) if callable(reader) else {}
+        # #819 C7: sufficiency is decided on the 3.4.0 order, so rank fusion cannot make a fact
+        # sufficient; the fused order then orders the selected facts and decides the budget cut.
+        base = list(getattr(result, "base_ranked_admitted", None) or result.ranked_admitted)
         selected, records, summary = select_relevance_sufficient(
-            result.ranked_admitted,
+            base,
             routes,
             substrate.get_fact,
             query=query,
@@ -965,6 +968,8 @@ class AgentMemory:
         for ref, record in records.items():
             admissions.setdefault(ref, {})["return_selection"] = record
         summary["query_expansion"] = dict(getattr(result, "query_expansion", {}) or {})
+        chosen = set(selected)
+        selected = [ref for ref in result.ranked_admitted if ref in chosen]
         return contract.apply_return_selection(result.ranked_admitted, selected, k, summary)
 
     def _shadow_recall_control(self, query: str, logical_memory_refs: tuple[str, ...], result, envelope) -> dict:

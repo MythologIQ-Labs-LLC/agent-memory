@@ -343,6 +343,28 @@ _DEMOTED = {
 }
 
 
+#: #819 C7 (#673): reciprocal-rank fusion of admitted evidence. k is the literature default,
+#: fixed before any measurement; equal weights; competition ranks so equal values share a rank.
+FUSION_RRF = "rrf_admitted"
+FUSION_VERSION = "rrf-admitted-1.0.0"
+FUSION_K = 60
+FUSION_STAGE = "fused_relevance_desc:rrf_admitted"
+DENSE_ROUNDING = 6
+FUSED_ROUNDING = 12
+
+
+def competition_ranks(scores: Mapping[str, float]) -> dict[str, int]:
+    """Rank by value, descending; equal values share a rank ("1224"), so a tie is never an order."""
+
+    ranks: dict[str, int] = {}
+    previous, rank = None, 0
+    for position, (ref, value) in enumerate(sorted(scores.items(), key=lambda item: (-item[1], item[0])), start=1):
+        if value != previous:
+            rank, previous = position, value
+        ranks[ref] = rank
+    return ranks
+
+
 def _subordinate_stage_name(route: str) -> str:
     return f"route_score_desc_subordinate:{route}"
 
@@ -368,6 +390,10 @@ class PostAdmissionRankingPolicy:
     # Routes that contribute candidates but order only after every temporal stage
     # (#669, policy 3.2.0). Empty keeps every 3.1.1 identity and ordering unchanged.
     subordinate_routes: tuple[str, ...] = ()
+    # #819 C7: "none" keeps every pre-3.5.0 identity and ordering unchanged. "rrf_admitted"
+    # replaces the corroboration, per-route score and BM25 stages with one fused stage, and
+    # needs ``dense_scores`` at rank time.
+    fusion: str = "none"
 
     def __post_init__(self) -> None:
         if self.temporal_regime not in {"query_conditioned", "universal_newer_first", "none"}:
@@ -378,6 +404,10 @@ class PostAdmissionRankingPolicy:
             raise ValueError(f"unsupported lexical_anti_laundering: {self.lexical_anti_laundering}")
         if self.unspecified_intent_order not in {"none", "newer_first_among_ties"}:
             raise ValueError(f"unsupported unspecified_intent_order: {self.unspecified_intent_order}")
+        if self.fusion not in {"none", FUSION_RRF}:
+            raise ValueError(f"unsupported fusion: {self.fusion}")
+        if self.fusion != "none" and self.lexical_relevance != "bm25_admitted_set":
+            raise ValueError("fusion requires bm25_admitted_set lexical relevance")
         if self.stable_fallback not in {"neutral_digest", "candidate_ref_asc"}:
             raise ValueError(f"unsupported stable_fallback: {self.stable_fallback}")
         if self.lexical_relevance == "bm25_admitted_set" and self.lexical_route not in self.route_score_order:
@@ -391,8 +421,11 @@ class PostAdmissionRankingPolicy:
         stages = []
         if self.temporal_regime == "query_conditioned":
             stages.append("temporal_applicability_tier")
-        stages += ["route_corroboration_count_desc", "exact_identity_desc"]
-        stages += [self._stage_name(route) for route in self.route_score_order]
+        if self.fusion != "none":
+            stages += ["exact_identity_desc", FUSION_STAGE]
+        else:
+            stages += ["route_corroboration_count_desc", "exact_identity_desc"]
+            stages += [self._stage_name(route) for route in self.route_score_order]
         if self.temporal_regime == "query_conditioned":
             stages.append("temporal_order_within_query_regime")
         elif self.temporal_regime == "universal_newer_first":
@@ -418,6 +451,18 @@ class PostAdmissionRankingPolicy:
             "metabolic_evidence": "not_used",
             "authority_effect": "none",
         }
+        if self.fusion != "none":
+            identity["fusion"] = {
+                "method": "reciprocal_rank_fusion",
+                "fusion_version": FUSION_VERSION,
+                "k": FUSION_K,
+                "lists": ["lexical_relevance:bm25_admitted_set", *[f"route_score:{route}" for route in self.route_score_order
+                                                                   if route != self.lexical_route], "dense_similarity"],
+                "weights": "equal",
+                "rank_ties": "competition",
+                "scope": "admitted_set",
+                "authority_effect": "none",
+            }
         if self.subordinate_routes:
             # Present only when used, so every 3.1.1 identity stays byte-identical.
             identity["subordinate_routes"] = list(self.subordinate_routes)
@@ -508,13 +553,17 @@ class PostAdmissionRankingPolicy:
         if self.temporal_regime == "query_conditioned":
             demoted = intent.orders_temporally and evidence["temporal_applicability"] in _DEMOTED.get(intent.mode, set())
             stages.append(("temporal_applicability_tier", 1 if demoted else 0))
-        stages.append(("route_corroboration_count_desc", -evidence["route_corroboration_count"]))
-        stages.append(("exact_identity_desc", -int(evidence["exact_identity"])))
-        for route in self.route_score_order:
-            if route == self.lexical_route and self.lexical_relevance == "bm25_admitted_set":
-                stages.append((self._stage_name(route), -evidence.get("lexical_relevance_score", 0.0)))
-            else:
-                stages.append((self._stage_name(route), -evidence["route_scores"].get(route, 0.0)))
+        if self.fusion != "none":
+            stages.append(("exact_identity_desc", -int(evidence["exact_identity"])))
+            stages.append((FUSION_STAGE, -evidence["fusion"]["fused_score"]))
+        else:
+            stages.append(("route_corroboration_count_desc", -evidence["route_corroboration_count"]))
+            stages.append(("exact_identity_desc", -int(evidence["exact_identity"])))
+            for route in self.route_score_order:
+                if route == self.lexical_route and self.lexical_relevance == "bm25_admitted_set":
+                    stages.append((self._stage_name(route), -evidence.get("lexical_relevance_score", 0.0)))
+                else:
+                    stages.append((self._stage_name(route), -evidence["route_scores"].get(route, 0.0)))
         if self.temporal_regime == "query_conditioned":
             stages.append(("temporal_order_within_query_regime", self._temporal_order_key(evidence, intent)))
         elif self.temporal_regime == "universal_newer_first":
@@ -539,10 +588,17 @@ class PostAdmissionRankingPolicy:
         fact_lookup: Callable[[str], Any],
         query: str = "",
         intent: TemporalIntent | None = None,
+        dense_scores: Mapping[str, float] | None = None,
     ) -> tuple[list[str], dict[str, dict[str, Any]]]:
-        """Order admitted candidates; return (ordered refs, per-candidate evidence)."""
+        """Order admitted candidates; return (ordered refs, per-candidate evidence).
+
+        ``dense_scores`` (#819 C7) is each admitted candidate's query similarity; it is required
+        by, and only read by, a fusion policy.
+        """
 
         intent = intent or TemporalIntent()
+        if self.fusion != "none" and dense_scores is None:
+            raise ValueError("a fusion ranking policy needs dense_scores")
         admitted = list(admitted)
         facts = {candidate_ref: fact_lookup(candidate_ref) for candidate_ref in admitted}
         evidence = {
@@ -576,6 +632,8 @@ class PostAdmissionRankingPolicy:
                         "effective_df_excluded_terms": effective_df_excluded_terms,
                         "authority_effect": "none",
                     }
+        if self.fusion != "none":
+            self._fuse(evidence, dense_scores or {})
         keyed = {ref: self.keyed_stages(evidence[ref], intent) for ref in evidence}
         ordered = sorted(evidence, key=lambda ref: tuple(value for _, value in keyed[ref]))
         identity = self.identity()
@@ -601,6 +659,37 @@ class PostAdmissionRankingPolicy:
                 record["timeline_position"] = timeline.get(candidate_ref)
             record["authority_effect"] = "none"
         return ordered, evidence
+
+    def _fuse(self, evidence: dict[str, dict[str, Any]], dense_scores: Mapping[str, float]) -> None:
+        """Reciprocal-rank fusion over the admitted set (#819 C7); records each candidate's ranks.
+
+        Lists: admitted-set BM25 where positive, each non-lexical ordering route's score where
+        present, and dense similarity (rounded, so float noise never orders). Only admitted
+        candidates are ranked, and the result orders them; it admits nothing.
+        """
+
+        lists: dict[str, dict[str, float]] = {
+            "lexical_rank": {ref: e["lexical_relevance_score"] for ref, e in evidence.items()
+                             if (e.get("lexical_relevance_score") or 0.0) > 0.0},
+        }
+        for route in self.route_score_order:
+            if route != self.lexical_route:
+                lists[f"{route}_rank"] = {ref: e["route_scores"][route] for ref, e in evidence.items()
+                                          if route in e["route_scores"]}
+        dense = {ref: round(float(dense_scores[ref]), DENSE_ROUNDING) for ref in evidence if ref in dense_scores}
+        lists["dense_rank"] = dense
+        ranks = {name: competition_ranks(values) for name, values in lists.items()}
+        for ref, record in evidence.items():
+            mine = {name: ranked[ref] for name, ranked in ranks.items() if ref in ranked}
+            record["fusion"] = {
+                "status": "applied",
+                "fusion_version": FUSION_VERSION,
+                "k": FUSION_K,
+                **mine,
+                "dense_similarity": dense.get(ref),
+                "fused_score": round(sum(1.0 / (FUSION_K + rank) for rank in mine.values()), FUSED_ROUNDING),
+                "authority_effect": "none",
+            }
 
     def _timeline(
         self, ordered: Sequence[str], evidence: Mapping[str, Mapping[str, Any]], intent: TemporalIntent

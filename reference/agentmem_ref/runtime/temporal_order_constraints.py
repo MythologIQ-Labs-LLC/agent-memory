@@ -392,6 +392,7 @@ class ExplicitCurrentConstrainedRankingPolicy(PostAdmissionRankingPolicy):
         fact_lookup: Callable[[str], Any],
         query: str = "",
         intent: TemporalIntent | None = None,
+        dense_scores: Mapping[str, float] | None = None,
     ) -> tuple[list[str], dict[str, dict[str, Any]]]:
         intent = intent or TemporalIntent()
         admitted = list(admitted)
@@ -401,6 +402,7 @@ class ExplicitCurrentConstrainedRankingPolicy(PostAdmissionRankingPolicy):
             fact_lookup,
             query=query,
             intent=intent,
+            dense_scores=dense_scores,
         )
         if not explicit_current_profile(intent):
             return base_order, evidence
@@ -517,6 +519,7 @@ class ExplicitCurrentCrossFactRankingPolicy(ExplicitCurrentConstrainedRankingPol
         query: str = "",
         intent: TemporalIntent | None = None,
         cross_fact: Mapping[str, Mapping[str, Any]] | None = None,
+        dense_scores: Mapping[str, float] | None = None,
     ) -> tuple[list[str], dict[str, dict[str, Any]]]:
         intent = intent or TemporalIntent()
         admitted = list(admitted)
@@ -537,7 +540,8 @@ class ExplicitCurrentCrossFactRankingPolicy(ExplicitCurrentConstrainedRankingPol
                     decisions[target] = {"limited": usable} if usable else {"refusal": "source_has_temporal_basis"}
         token = _CROSS_FACT_DECISIONS.set(decisions)
         try:
-            return super().rank(admitted, hits_by_candidate, fact_lookup, query=query, intent=intent)
+            return super().rank(admitted, hits_by_candidate, fact_lookup, query=query, intent=intent,
+                                dense_scores=dense_scores)
         finally:
             _CROSS_FACT_DECISIONS.reset(token)
 

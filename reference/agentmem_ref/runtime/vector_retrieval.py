@@ -21,7 +21,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import math
-from typing import Callable, Iterable, Protocol, runtime_checkable
+from typing import Callable, Iterable, Protocol, Sequence, runtime_checkable
 
 from ..state.substrate import Fact
 
@@ -184,6 +184,7 @@ class NativeVectorCandidateRetriever:
         self.store = store
         # #819 C6: with a policy, ``minimum_similarity`` is not applied; the policy decides.
         self.proposal_policy = proposal_policy
+        self._last_query: tuple[str, tuple[float, ...]] | None = None  # #819 C7: one embedding per recall
         self.spec = representation.spec
         if not math.isfinite(minimum_similarity):
             raise ValueError("minimum_similarity must be finite")
@@ -234,7 +235,7 @@ class NativeVectorCandidateRetriever:
         if not self.available_for(substrate):
             raise ValueError("substrate does not support canonical fact enumeration")
 
-        query_vector = self._validated_vector(self.representation.embed(query))
+        query_vector = self._query_vector(query)
         if self._norm(query_vector) == 0.0:
             return []
 
@@ -273,6 +274,33 @@ class NativeVectorCandidateRetriever:
         if policy is not None:
             hits = policy.propose(query, hits)
         return hits[:candidate_limit]
+
+    def _query_vector(self, query: str) -> tuple[float, ...]:
+        """The validated query vector; one recall's discovery and fusion share it (#819 C7)."""
+
+        cached = self._last_query
+        if cached is not None and cached[0] == query:
+            return cached[1]
+        vector = self._validated_vector(self.representation.embed(query))
+        self._last_query = (query, vector)
+        return vector
+
+    def similarities(self, query: str, facts: Sequence[Fact]) -> dict[str, float]:
+        """Cosine between the query and each given fact, keyed by fact uuid (#819 C7 fusion).
+
+        Reads only the facts it is given, which are admitted facts. Fact vectors come from the
+        derived-vector store when there is one. Similarity orders; it never admits.
+        """
+
+        query_vector = self._query_vector(query)
+        out: dict[str, float] = {}
+        for fact in facts:
+            if self.store is not None:
+                vector = self._validated_vector(self.store.vector_for(fact.uuid, fact.fact_text, self.representation.embed))
+            else:
+                vector = self._validated_vector(self.representation.embed(fact.fact_text))
+            out[fact.uuid] = 0.0 if self._norm(query_vector) == 0.0 else self._cosine(query_vector, vector)
+        return out
 
     def _validated_vector(self, value: tuple[float, ...]) -> tuple[float, ...]:
         try:

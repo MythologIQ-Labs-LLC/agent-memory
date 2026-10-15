@@ -39,6 +39,8 @@ from .contextual_recall_adapter import admission_mode_for_intent, admit_preselec
 from .projection_governance import ProjectionGovernor
 from .temporal_intent import resolve_intent
 from .temporal_order_constraints import ExplicitCurrentCrossFactRankingPolicy
+from .ranking_policy import FUSION_RRF
+from .representation_onnx import RepresentationUnavailable
 from .vector_retrieval import NativeVectorCandidateRetriever, SEMANTIC_VECTOR_ROUTE
 from ..state.projections import (
     CURRENT,
@@ -113,6 +115,9 @@ class MultiRouteRecallResult:
     admission_mode: str = "current_state"
     admission_basis: dict[str, dict] = field(default_factory=dict)
     query_expansion: dict = field(default_factory=dict)
+    # #819 C7: the 3.4.0 order. Equal to ``ranked_admitted`` unless fusion ordered this recall;
+    # relevance-sufficient selection decides sufficiency on it.
+    base_ranked_admitted: list[str] = field(default_factory=list)
 
     def provenance_for(self, candidate_ref: str) -> tuple[RetrievalRouteHit, ...]:
         return tuple(self.route_hits.get(candidate_ref, ()))
@@ -128,6 +133,24 @@ MULTI_ROUTE_RANKING_POLICY = ExplicitCurrentCrossFactRankingPolicy(
     lexical_route=LEXICAL_ROUTE,
     lexical_relevance="bm25_admitted_set",
 )
+
+
+#: #819 C7 (#673): ranking policy 3.5.0. The same stages as 3.4.0, except that one fused stage
+#: (reciprocal-rank fusion of BM25, shared-evidence and dense ranks over the admitted set)
+#: replaces route corroboration, per-route scores and BM25. Used only when the optional semantic
+#: provider is enabled and dense scoring succeeds; otherwise ranking is exactly 3.4.0.
+FUSED_RANKING_POLICY = ExplicitCurrentCrossFactRankingPolicy(
+    policy_id="multi-route-fused",
+    route_score_order=(SHARED_EVIDENCE_ROUTE, LEXICAL_ROUTE),
+    subordinate_routes=(SEMANTIC_VECTOR_ROUTE,),
+    exact_identity_route=EXACT_IDENTITY_ROUTE,
+    lexical_route=LEXICAL_ROUTE,
+    lexical_relevance="bm25_admitted_set",
+    fusion=FUSION_RRF,
+    version="3.5.0",
+)
+#: Resource bound: above this many admitted memories fusion is skipped (3.4.0 order, recorded).
+FUSION_MAX_ADMITTED = 512
 
 
 class DeterministicMultiRouteRecallPlanner:
@@ -298,15 +321,42 @@ class DeterministicMultiRouteRecallPlanner:
             historical_target_seconds=historical_target,
         )
 
+        # #671: guarded cross-fact currentness evidence (empty outside explicit-current intent)
+        cross_fact = self.adapter.cross_fact_applicability(admission.admitted, intent)
         ranked, ranking_evidence = MULTI_ROUTE_RANKING_POLICY.rank(
             admission.admitted,
             by_candidate,
             substrate.get_fact,
             query=query,
             intent=intent,
-            # #671: guarded cross-fact currentness evidence (empty outside explicit-current intent)
-            cross_fact=self.adapter.cross_fact_applicability(admission.admitted, intent),
+            cross_fact=cross_fact,
         )
+        base_ranked, policy = list(ranked), MULTI_ROUTE_RANKING_POLICY
+        if SEMANTIC_VECTOR_ROUTE in routes_executed and admission.admitted:
+            # #819 C7: fuse only admitted memories; similarity orders and never admits.
+            status = None
+            if len(admission.admitted) > FUSION_MAX_ADMITTED:
+                status = "skipped_over_limit"
+            else:
+                try:
+                    dense = self.vector_retriever.similarities(
+                        query, [substrate.get_fact(ref) for ref in admission.admitted])
+                except RepresentationUnavailable:
+                    status = "unavailable"
+            if status is None:
+                policy = FUSED_RANKING_POLICY
+                ranked, ranking_evidence = policy.rank(
+                    admission.admitted,
+                    by_candidate,
+                    substrate.get_fact,
+                    query=query,
+                    intent=intent,
+                    cross_fact=cross_fact,
+                    dense_scores=dense,
+                )
+            else:
+                for record in ranking_evidence.values():
+                    record["fusion"] = {"status": status, "authority_effect": "none"}
         return MultiRouteRecallResult(
             query=query,
             routes_executed=tuple(routes_executed),
@@ -316,9 +366,10 @@ class DeterministicMultiRouteRecallPlanner:
             decisions=dict(admission.decisions),
             route_hits={ref: hits for ref, hits in by_candidate.items() if ref in admission.candidates},
             ranked_admitted=ranked,
+            base_ranked_admitted=base_ranked,
             policy_version=admission.policy_version,
             evaluated_at=admission.evaluated_at,
-            ranking_policy=MULTI_ROUTE_RANKING_POLICY.identity(),
+            ranking_policy=policy.identity(),
             ranking_evidence=ranking_evidence,
             candidate_policy=dict(admission.candidate_policy),
             admission_mode=admission.admission_mode,
