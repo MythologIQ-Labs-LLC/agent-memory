@@ -1,0 +1,96 @@
+{
+  "schema": "agent-memory/comparator-preregistration/v1",
+  "registered_utc": "2026-10-15T16:53:14Z",
+  "issue": [
+    "#812",
+    "#810"
+  ],
+  "status": "preregistered before execution; candidate, not reviewed or accepted",
+  "system": {
+    "id": "graphiti-local",
+    "family": "temporal knowledge graph memory (LLM extraction, entity/fact edges with validity intervals)",
+    "package": "graphiti-core[falkordblite]==0.31.1",
+    "upstream": "https://github.com/getzep/graphiti",
+    "tag": "v0.31.1",
+    "tag_commit": "5961293865a57844fe13d4eb061deb3501971fb2",
+    "license": "Apache-2.0",
+    "graph_store": "embedded FalkorDB Lite (falkordblite==0.10.0; bundled redis-server sha256 0bc4c257f748..., falkordb.so sha256 fc0297205c62...)",
+    "llm": {
+      "model": "Qwen/Qwen2.5-3B-Instruct-GGUF@7dabda4d13d5 q4_k_m (sha256 626b4a66...)",
+      "server": "llama-cpp-python 0.3.16, n_ctx 16384, 4 threads, seed 0",
+      "client": "OpenAIGenericClient, structured_output_mode=json_schema (Graphiti default), schema-constrained decoding via shim",
+      "temperature": 0.0,
+      "temperature_deviation": "Graphiti default 1.0; 0 declared here before any benchmark execution, for reproducibility"
+    },
+    "embedder": {
+      "model": "nomic-ai/nomic-embed-text-v1.5-GGUF@0188c9bf4097 f16 (sha256 f7af6f66...)",
+      "client": "OpenAIEmbedder",
+      "embedding_dim": 768,
+      "note": "the embedding model of Graphiti's own local example (nomic-embed-text); no task prefixes, as in that example"
+    },
+    "cross_encoder": "OpenAIRerankerClient on the same local LLM config; unused by the default search recipe",
+    "concurrency": "AMB concurrency 1; Graphiti SEMAPHORE_LIMIT=1",
+    "telemetry": "GRAPHITI_TELEMETRY_ENABLED=false",
+    "capability_tier": "LLM at ingestion (local 3B model); retrieval without LLM"
+  },
+  "adapter": {
+    "file": "reference/amb_graphiti_bridge.py",
+    "version": "0.1.0-candidate",
+    "git_blob": "37a538c75e03fe9cd28e2dd2cc3fe3a7a8c40c17",
+    "shim": {
+      "file": "reference/graphiti_llamacpp_shim.py",
+      "git_blob": "e15ef8c4fae65e224a46c4bca11b0d291af67760"
+    },
+    "add": "add_episode per AMB document: name=uuid5(doc id), body=document.content verbatim, source=text, source_description='user memory', reference_time=document.timestamp, group_id=user",
+    "search": "Graphiti.search(query, group_ids=[user], num_results=k), k = AMB per-case retrieval_limit (maxBeliefs, default 20)",
+    "identity_mapping": "edge.episodes -> episode uuid -> AMB document id; one AMB Document per supporting episode in Graphiti order (source_ids=[doc id]); list cut to k; unmapped edges passed through to AMB's resolver and counted",
+    "withheld_from_graphiti": [
+      "belief ids",
+      "scope tags",
+      "document.context markers",
+      "gold",
+      "query category",
+      "retrieval_filter"
+    ]
+  },
+  "protocol": {
+    "harness": "vectorize-io/agent-memory-benchmark",
+    "amb_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+    "amb_scoring_blobs": {
+      "dataset/precisionmembench.py": "47432e9c1bc8119cfc11f00c68620314c6692f9c",
+      "modes/retrieval.py": "416dd4df21709da7b9a04f26260f244baf20b6e7",
+      "runner.py": "190bb2b5d98c697859e534ac5fd8c34038ad9146",
+      "cli.py": "76d5d2772a22e3f777ab21e8135bda18727ea6f6"
+    },
+    "dataset": "precisionmembench",
+    "split": "single-turn",
+    "mode": "retrieval",
+    "cases": 77,
+    "fixtures_sha256": {
+      "beliefs.seed.json": "35659b3b9a581b644fc6746e1b4e902c3e7b56c0973b546bf7b0816a69e3de98",
+      "retrieval.cases.json": "09e99f0852280538abe34b03570f65583fdb10df3c554b7150f0f665d5db709c"
+    },
+    "guard": "reference/amb_retrieval_no_llm.py 1.0.0 (git blob 1d3584f0cfff), unchanged from 1df28f8",
+    "runner": "reference/run_amb_external.py (git blob 3666114e7430) = 1df28f8 plus registration of graphiti-local",
+    "evidence_wrapper": "scripts/run_amb_local_evidence.py (git blob fbf6d7c80bcd), unchanged from 1df28f8",
+    "filters": "none (protocol A: supports_filters=False, the same as agent-memory 15/77 and bm25 8/77)",
+    "command": "python scripts/run_amb_local_evidence.py --amb-root /tmp/agent-memory-benchmark --python /tmp/am-bench/graphiti-amb-venv/bin/python --evidence-dir <dir> --set-env TIKTOKEN_CACHE_DIR=/tmp/am-bench/tiktoken-cache --set-env HF_HUB_OFFLINE=1 --set-env GRAPHITI_LOCAL_BASE_URL=http://127.0.0.1:8089/v1 -- run --dataset precisionmembench --split single-turn --memory graphiti-local --mode retrieval",
+    "environment_freeze_sha256": "67062a7c7bc8aab22fec2357f7000614e64401248339def74fd39e1f56db9764"
+  },
+  "runs": {
+    "primary": "rep 1, the first complete 77-case run; it is the reported result",
+    "repeat": "rep 2, a full fresh rerun (new graph, same models and settings), if host time allows; reported as repeatability evidence, never substituted for rep 1"
+  },
+  "outcomes": [
+    "AMB correct/77 with active/structural/trivially-empty passes, mean precision, mean recall, per-category passes (AMB native)",
+    "per-case paired comparison with agent-memory rep 1 and bm25 from the reviewed 1df28f8 evidence (scripts/compare_amb_runs.py), exact McNemar on discordant cases",
+    "ingestion: per-episode seconds, nodes, edges, invalidated edges; LLM and embedding call counts, prompt/completion tokens and wall seconds from the shim log",
+    "retrieval latency (AMB retrieve_time_ms), wall time, peak RSS"
+  ],
+  "failure_rules": [
+    "a provider or harness exception fails the run; a failed run is reported as failed with its logs and is not scored",
+    "no retry of individual cases or episodes beyond Graphiti's own internal retries",
+    "no change to models, prompts, settings or mapping after this registration; any change is a new, separately registered generation"
+  ],
+  "comparability": "Same harness, inputs, budgets, scorer and protocol A as agent-memory 15/77, but a different capability tier: Graphiti uses an LLM at ingestion (a local 3B model here), Agent Memory and BM25 use none. Reported as a separate profile row; not ranked as same-tier. Not representative of Graphiti with a frontier LLM, and not Zep's hosted product."
+}

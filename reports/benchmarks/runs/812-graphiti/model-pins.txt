@@ -1,0 +1,4 @@
+# Local models served by llama-cpp-python 0.3.16 (freeze: llamacpp-venv-freeze.txt) for the Graphiti comparator (#812)
+# repo@revision  file  sha256 (equals the Hugging Face LFS oid at that revision)  bytes
+Qwen/Qwen2.5-3B-Instruct-GGUF@7dabda4d13d513e3e842b20f0d435c732f172cbe  qwen2.5-3b-instruct-q4_k_m.gguf  626b4a6678b86442240e33df819e00132d3ba7dddfe1cdc4fbb18e0a9615c62d
+nomic-ai/nomic-embed-text-v1.5-GGUF@0188c9bf409793f810680a5a431e7b899c46104c  nomic-embed-text-v1.5.f16.gguf  f7af6f66802f4df86eda10fe9bbcfc75c39562bed48ef6ace719a251cf1c2fdb  274290560
