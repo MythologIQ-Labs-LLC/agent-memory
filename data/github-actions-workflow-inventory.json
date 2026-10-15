@@ -4350,20 +4350,20 @@
     "lifecycleCounts": {
       "required_hot_path": 34,
       "conditional_hot_path": 22,
-      "async_assurance": 20,
+      "async_assurance": 21,
       "manual_exception": 3,
       "one_time": 6
     },
     "dispositionCounts": {
       "KEEP": 34,
       "CONDITIONAL": 22,
-      "ASYNC": 20,
+      "ASYNC": 21,
       "MANUAL": 3,
       "RETIRE": 6
     },
     "consequenceCounts": {
       "protected": 64,
-      "discretionary": 21
+      "discretionary": 22
     },
     "triggerCounts": {
       "issues": 1,
