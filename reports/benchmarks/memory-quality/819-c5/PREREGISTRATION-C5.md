@@ -140,3 +140,17 @@ An improvement that comes from returning many unrelated facts (A3) or from unaut
 ## Diagnostic sets (not pristine)
 
 LongMemEval-S (native runner, both planes) and AMB are diagnostic regression checks only. Their gold is never used for calibration or selection rules.
+
+## Errata
+
+**Erratum 1, recorded before calibration.** It came from the preregistered fail-first test 2 during implementation.
+
+- **The finding.** C4's query interpreter reads "Which pets do we have?" as a single-answer question; only explicit cues ("how many", "all", "list", "total") make it aggregate. This is the recorded C4 residual "plural list questions without an aggregate cue". So mechanism step 4 (semantic set evidence) would never apply to plural list questions, which is the commonest form of the evaluator's aggregate category.
+- **Change.** A closed-grammar *plural-answer* reading (`return_selection.plural_answer`). It applies to:
+  - "which/what/who are|were …";
+  - "which <plural> …";
+  - a plural noun-phrase head directly before an auxiliary ("What medications am I on?").
+
+  A plural is a word that Porter step 1 shortens and that does not end in -ss, -us or -is.
+- **Scope.** The reading enables *semantic set evidence only*. Lexical selection keeps C4's interpreter, so A6 (semantic off → C4's lists) still holds.
+- **Calibration and tests.** It is recorded in `return_policy.semantic_channel.plural_answer`. Calibration includes it, and unit tests pin the grammar both ways (singular -s verbs such as "Which pet gets scared?" are not plural).
