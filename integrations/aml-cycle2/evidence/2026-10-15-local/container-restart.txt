@@ -1,0 +1,7 @@
+# docker image agent-memory-aml:local (sha256:fa172428d9b8...), volume aml-data, 2026-10-15
+# persist.py: Add 10 messages (request_id persist-1, user persist-user), then Search top_k=100
+$ persist.py write                      -> add 200; search 200, 10 results [ref-0004, ref-0011, ref-0018, ...]
+$ docker kill -s KILL aml-local; docker start aml-local
+$ persist.py read                       -> search 200, 10 results [ref-0004, ref-0011, ref-0018, ...]   (unchanged)
+$ persist.py write   (replay of persist-1) -> add 200; search 200, 10 results (unchanged: replay stored nothing)
+$ docker stop aml-local                 -> exit=0 (SIGTERM, graceful)
