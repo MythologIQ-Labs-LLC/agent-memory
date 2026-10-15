@@ -1,0 +1,34 @@
+{
+ "note": "Consumers copy a store before opening it (a generation may be published).",
+ "owning_issue": 821,
+ "produced_by": {
+  "how": "python3 produce/produce.py <checkout>/reference <fixture dir>",
+  "python": "3.13.16",
+  "revision": "d2fc9782570ad4f58ac1cde3d067c1aa4aa5161a",
+  "sqlite": "3.45.1"
+ },
+ "scope": "project:821-legacy",
+ "script_sha256": "acda06d193537d07ebb908a8a532c753858425cb66f12e876413ba425eb580be",
+ "status": "frozen",
+ "stores": {
+  "coherent": {
+   "binding_file_generation": 3,
+   "files": {
+    "agent-memory.sqlite3": "8ae73bb1ba0f7f6312c08ee64077ef82cc5ba49669e5e7dfb486deca4be5dbab",
+    "configuration-binding.json": "1373cbcd800a393674ec68a306cb14361e110b49547455a3778b706eca10de09",
+    "runtime-config.json": "a58850f0a62c2080ca17a333aff3db06e7382c650b62482e7c2bcbb928e87423"
+   },
+   "state_generation": 3
+  },
+  "stranded": {
+   "binding_file_generation": 2,
+   "files": {
+    "agent-memory.sqlite3": "8ae73bb1ba0f7f6312c08ee64077ef82cc5ba49669e5e7dfb486deca4be5dbab",
+    "configuration-binding.json": "d7f0b0051d453c75c3f93c64820fc06edbcb4057f62838e14325e430aebffbb2",
+    "runtime-config.json": "a58850f0a62c2080ca17a333aff3db06e7382c650b62482e7c2bcbb928e87423"
+   },
+   "state_generation": 3
+  }
+ },
+ "tenant": "tenant:821-legacy"
+}
