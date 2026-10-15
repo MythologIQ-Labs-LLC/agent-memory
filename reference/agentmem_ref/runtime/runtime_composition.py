@@ -32,6 +32,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from ..state.substrate import _tokens as route_tokens
 from .adapter import RecallContext, eligible_search
 from .configured_restart import ConfigBoundRestartRuntime
 from .contextual_recall_adapter import admission_mode_for_intent, admit_preselected_candidates
@@ -154,10 +155,10 @@ class DeterministicMultiRouteRecallPlanner:
         if vector_candidate_limit < 0:
             raise ValueError("vector_candidate_limit must be non-negative")
         self.vector_candidate_limit = vector_candidate_limit
-        # #819 C3: discovery-vocabulary tokens by fact uuid (a fact's text never changes under
-        # its uuid). Pruned to the live, eligible set on every recall, so forgotten or
-        # superseded text does not stay resident here.
-        self._vocabulary_tokens: dict[str, frozenset[str]] = {}
+        # #819 C3: discovery-vocabulary entries by fact uuid (a fact's text never changes under
+        # its uuid). Pruned to current facts on every recall, so superseded text does not stay
+        # resident; admissibility is re-checked on every recall, so refused text never counts.
+        self._vocabulary_tokens: dict[str, tuple] = {}
         substrate_reader = getattr(adapter, "checkpoint_substrate", None)
         tenant_reader = getattr(adapter, "checkpoint_tenant", None)
         if not callable(substrate_reader) or not callable(tenant_reader):
@@ -172,17 +173,26 @@ class DeterministicMultiRouteRecallPlanner:
         *,
         logical_memory_refs: tuple[str, ...] = (),
         temporal_intent=None,
+        discovery_expansion: bool = False,
     ) -> MultiRouteRecallResult:
         substrate = self.adapter.checkpoint_substrate()
         tenant = self.adapter.checkpoint_tenant()
 
         hits: list[RetrievalRouteHit] = []
         routes_executed = [LEXICAL_ROUTE, EXACT_IDENTITY_ROUTE]
-        discovery_query, expansion = self._discovery_query(query, substrate, tenant, context)
+        # #819 C3: vocabulary-variant discovery belongs to relevance-sufficient selection only; with
+        # it off (the default here, and ``ranked_prefix``) discovery is exactly the pre-C3 route.
+        discovery_query, expansion = (self._discovery_query(query, substrate, tenant, context)
+                                      if discovery_expansion else (query, {}))
+        written = route_tokens(query) if discovery_query != query else None
         for fact, score in eligible_search(
             substrate, discovery_query, tenant, lambda fact: self.adapter.domain_eligible(fact, context),
             lambda uuid, group_id: self.adapter.domain_eligible_identity(uuid, group_id, context),
         ):
+            if written is not None:
+                # The route's score stays the overlap with the query as written; a fact found
+                # only through a variant scores 0 (its candidacy is the expansion's evidence).
+                score = len(written & route_tokens(fact.fact_text)) / max(len(written), 1)
             hits.append(
                 RetrievalRouteHit(
                     route_id=LEXICAL_ROUTE,
@@ -305,41 +315,44 @@ class DeterministicMultiRouteRecallPlanner:
     def _discovery_query(self, query: str, substrate, tenant: str, context: RecallContext) -> tuple[str, dict]:
         """The lexical route's discovery query: the caller's query plus vocabulary variants (#819 C3).
 
-        The vocabulary is the lexical route's own tokens of facts that are current, not
-        tombstoned, in this tenant and domain-eligible for this recall, so forgotten,
-        superseded and out-of-scope text never shapes discovery. Variants share a normal form
+        The vocabulary is the lexical route's own tokens of current facts that current-state
+        admission would not refuse on identity (``discovery_admissible``: tenant, tombstone,
+        derived-from-forgotten source, dispute, event-invalid, domain), so forgotten,
+        disputed, superseded and out-of-scope text never shapes discovery. Variants share a normal form
         with a query term (``weddings``/``wedding``) or, for a term nothing matches, are one
         edit away (``typsecript``/``typescript``). Only candidate discovery widens: ranking
         still scores the caller's query, and every candidate crosses governed admission.
         """
-        from ..state.substrate import _tokens as route_tokens
         from .lexical_normalization import NORMALIZATION_VERSION, _key, expansion_terms, typo_correction_allowed
         from .return_selection import interpret_query
 
-        live_reader = getattr(self.adapter, "current_live_fact_uuids", None)
-        if not callable(live_reader):
+        current_reader = getattr(self.adapter, "current_fact_uuids", None)
+        admissible = getattr(self.adapter, "discovery_admissible", None)
+        if not callable(current_reader) or not callable(admissible):
             return query, {}
-        live = live_reader()
-        eligible = {uuid for uuid in live if self.adapter.domain_eligible_identity(uuid, tenant, context)}
-        memo = self._vocabulary_tokens
-        for uuid in [uuid for uuid in memo if uuid not in eligible]:
+        current = current_reader()
+        memo = self._vocabulary_tokens  # uuid -> (tokens, episode uuids, event-invalid)
+        for uuid in [uuid for uuid in memo if uuid not in current]:
             del memo[uuid]
-        missing = eligible - memo.keys()
+        missing = current - memo.keys()
         if missing:
             rows = getattr(substrate, "discovery_rows", None)
             if callable(rows):
-                texts = ((uuid, text) for uuid, group_id, text in rows([tenant]) if uuid in missing and group_id == tenant)
+                found = ((uuid, text, episodes, invalid) for uuid, group_id, text, episodes, invalid in rows([tenant])
+                         if uuid in missing and group_id == tenant)
             else:
                 all_facts = getattr(substrate, "all_facts", None)
                 if not callable(all_facts):
                     return query, {}
-                texts = ((fact.uuid, fact.fact_text) for fact in all_facts()
-                         if fact.uuid in missing and fact.group_id == tenant)
-            for uuid, text in texts:
-                memo[uuid] = frozenset(route_tokens(text))
+                found = ((fact.uuid, fact.fact_text, tuple(fact.episode_uuids), fact.is_event_invalid)
+                         for fact in all_facts() if fact.uuid in missing and fact.group_id == tenant)
+            for uuid, text, episodes, invalid in found:
+                memo[uuid] = (frozenset(route_tokens(text)), tuple(episodes), bool(invalid))
         vocabulary: set[str] = set()
-        for uuid in eligible:
-            vocabulary |= memo.get(uuid, frozenset())
+        for uuid in current:
+            entry = memo.get(uuid)
+            if entry is not None and admissible(uuid, tenant, entry[1], entry[2], context):
+                vocabulary |= entry[0]
         reading = interpret_query(query)
         terms = reading.topical_terms or reading.frame_terms
         keys = {_key(token) for token in vocabulary}
@@ -548,6 +561,7 @@ class ConfiguredCompositionRuntime:
         *,
         logical_memory_refs: tuple[str, ...] = (),
         temporal_intent=None,
+        discovery_expansion: bool = False,
     ) -> MultiRouteRecallResult:
         """Multiple candidate routes, one canonical governed admission boundary."""
         self._route_for(RETRIEVAL_CAPABILITY)
@@ -556,6 +570,7 @@ class ConfiguredCompositionRuntime:
             context,
             logical_memory_refs=logical_memory_refs,
             temporal_intent=temporal_intent,
+            discovery_expansion=discovery_expansion,
         )
 
     def projection_admission(self) -> ProjectionAdmission:

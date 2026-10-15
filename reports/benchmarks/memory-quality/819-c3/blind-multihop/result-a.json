@@ -1,0 +1,839 @@
+{
+ "agent_memory_revision": "1df28f84c236f5369b004465252610bd88ae07c9",
+ "budget": 10,
+ "cohort_sha256": "6acef4bf3d81f38472461daa4f7227d7fae39c98647d755891d8ed0b3f1cb343",
+ "reference_worktree_dirty": false,
+ "return_selection": null,
+ "runner": "scripts/run_memory_quality_scenarios.py",
+ "scenarios": [
+  {
+   "category": "multi_hop",
+   "id": "mh-01-sister-employer-parking",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 29.704,
+     "id": "q1",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": 0.25,
+     "recall": 0.5,
+     "returned": [
+      "memory:brightwater_hq",
+      "memory:priyanka_job",
+      "memory:larkspur_flu",
+      "memory:gym_parking"
+     ],
+     "returned_count": 4,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_hop",
+   "id": "mh-02-project-owner-availability",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 25.655,
+     "id": "q1",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": 0.4,
+     "recall": 1.0,
+     "returned": [
+      "memory:standup_time",
+      "memory:halvorsen_deadline",
+      "memory:halvorsen_owner",
+      "memory:lisbon_trip",
+      "memory:beatriz_hours"
+     ],
+     "returned_count": 5,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_hop",
+   "id": "mh-03-dog-food-stockist",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 33.31,
+     "id": "q1",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 1.0,
+     "returned": [
+      "memory:cat_litter",
+      "memory:meal_prep",
+      "memory:northfold_stockist",
+      "memory:biscuit_food"
+     ],
+     "returned_count": 4,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_hop",
+   "id": "mh-04-son-team-training",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 0,
+     "elapsed_ms": 25.688,
+     "id": "q1",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": null,
+     "recall": 0.0,
+     "returned": [],
+     "returned_count": 0,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_hop",
+   "id": "mh-05-dependency-escalation",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 37.419,
+     "id": "q1",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": 1.0,
+     "recall": 0.5,
+     "returned": [
+      "memory:checkout_tax_dep"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_hop",
+   "id": "mh-06-conference-hotel",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 41.987,
+     "id": "q1",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 1.0,
+     "returned": [
+      "memory:kestrel_hotel",
+      "memory:dataweave_venue",
+      "memory:sanne_rotterdam",
+      "memory:hotel_prefs",
+      "memory:dataweave_talk",
+      "memory:pydata_berlin"
+     ],
+     "returned_count": 6,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_hop",
+   "id": "mh-07-gp-out-of-hours",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 36.69,
+     "id": "q1",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 0.5,
+     "returned": [
+      "memory:cranfield_ooh",
+      "memory:emergency_contact"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_hop",
+   "id": "mh-08-car-insurance-claim",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 51.694,
+     "id": "q1",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": 1.0,
+     "recall": 0.5,
+     "returned": [
+      "memory:mechanic",
+      "memory:car_details",
+      "memory:haversham_claims"
+     ],
+     "returned_count": 3,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_hop",
+   "id": "mh-09-client-invoicing",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 42.386,
+     "id": "q1",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": 0.6,
+     "recall": 1.0,
+     "returned": [
+      "memory:invoice_template",
+      "memory:main_client",
+      "memory:orrin_vale",
+      "memory:tidewater_invoices",
+      "memory:accountant"
+     ],
+     "returned_count": 5,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_hop",
+   "id": "mh-10-book-club-address",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 40.687,
+     "id": "q1",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": 0.75,
+     "recall": 1.0,
+     "returned": [
+      "memory:book_club_host",
+      "memory:book_club_book",
+      "memory:marguerite_allergy",
+      "memory:marguerite_address"
+     ],
+     "returned_count": 4,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_hop",
+   "id": "mh-11-service-ci-pipeline",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 33.316,
+     "id": "q1",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": 0.4,
+     "recall": 1.0,
+     "returned": [
+      "memory:ratecard_ci",
+      "memory:my_service",
+      "memory:quotewell_ci",
+      "memory:flaky_tests",
+      "memory:gustavo_new_team"
+     ],
+     "returned_count": 5,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_hop",
+   "id": "mh-12-grandmother-visiting",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 0,
+     "elapsed_ms": 27.013,
+     "id": "q1",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": null,
+     "recall": 0.0,
+     "returned": [],
+     "returned_count": 0,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "single_hop_with_names",
+   "id": "sh-01-cabin-wifi",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 33.626,
+     "id": "q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.2,
+     "recall": 1.0,
+     "returned": [
+      "memory:cabin_wifi",
+      "memory:grange_roast",
+      "memory:home_wifi",
+      "memory:ferris_birthday",
+      "memory:mirela_contact"
+     ],
+     "returned_count": 5,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "single_hop_with_names",
+   "id": "sh-02-offsite-budget-code",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 27.413,
+     "id": "q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.3333333333333333,
+     "recall": 1.0,
+     "returned": [
+      "memory:offsite_code",
+      "memory:yusuf_kids",
+      "memory:thornbury_signal"
+     ],
+     "returned_count": 3,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "single_hop_with_names",
+   "id": "sh-03-passport-expiry",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 39.282,
+     "id": "q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:passport"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "single_hop_with_names",
+   "id": "sh-04-boiler-plumber",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 28.88,
+     "id": "q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 1.0,
+     "returned": [
+      "memory:boiler_fix",
+      "memory:boiler_service",
+      "memory:electrician",
+      "memory:hattie_cat"
+     ],
+     "returned_count": 4,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "single_hop_with_names",
+   "id": "sh-05-dashboard-database",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 42.852,
+     "id": "q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.25,
+     "recall": 1.0,
+     "returned": [
+      "memory:dashboard_source",
+      "memory:ingeborg_ooo",
+      "memory:patrice_desk",
+      "memory:snowflake_spend"
+     ],
+     "returned_count": 4,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "single_hop_with_names",
+   "id": "sh-06-pool-locker",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 39.04,
+     "id": "q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.25,
+     "recall": 1.0,
+     "returned": [
+      "memory:pool_locker",
+      "memory:aldermoor_refurb",
+      "memory:swim_club_social",
+      "memory:marisol"
+     ],
+     "returned_count": 4,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "single_hop_with_names",
+   "id": "sh-07-desk-tracking",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 26.268,
+     "id": "q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.3333333333333333,
+     "recall": 1.0,
+     "returned": [
+      "memory:desk_tracking",
+      "memory:oakline_catalogue",
+      "memory:bram_monitor"
+     ],
+     "returned_count": 3,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "single_hop_with_names",
+   "id": "sh-08-policy-approver",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 41.334,
+     "id": "q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.25,
+     "recall": 1.0,
+     "returned": [
+      "memory:remote_policy",
+      "memory:northgate_office",
+      "memory:adaeze_keynote",
+      "memory:leopold_mentoring"
+     ],
+     "returned_count": 4,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_hop_lifecycle",
+   "id": "lc-01-corrected-first-hop",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 36.68,
+     "id": "q1",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": 0.0,
+     "recall": 0.0,
+     "returned": [
+      "memory:my_office_move",
+      "memory:fernhill_office"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_hop_lifecycle",
+   "id": "lc-02-corrected-second-hop",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 24.017,
+     "id": "q1",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": 0.3333333333333333,
+     "recall": 0.5,
+     "returned": [
+      "memory:yoga_class",
+      "memory:pilates",
+      "memory:saoirse_retreat"
+     ],
+     "returned_count": 3,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_hop_lifecycle",
+   "id": "lc-03-forgotten-first-hop",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 35.154,
+     "id": "q1",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.5,
+     "recall": null,
+     "returned": [
+      "memory:ledger_lamp_office",
+      "memory:tax_deadline"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_hop_lifecycle",
+   "id": "lc-04-forgotten-second-hop",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 41.199,
+     "id": "q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.6666666666666666,
+     "recall": 1.0,
+     "returned": [
+      "memory:leila_nursery",
+      "memory:gym_class",
+      "memory:zainab_shift"
+     ],
+     "returned_count": 3,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_hop_lifecycle",
+   "id": "lc-05-other-scope-first-hop",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 26.657,
+     "id": "q1",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.5,
+     "recall": null,
+     "returned": [
+      "memory:procurement_contact",
+      "memory:corrigan_contract",
+      "memory:brightline_contract",
+      "memory:conflict_policy"
+     ],
+     "returned_count": 4,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 26.28,
+     "id": "q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:delphine_job"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_hop_lifecycle",
+   "id": "lc-06-other-scope-second-hop",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 51.213,
+     "id": "q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.3333333333333333,
+     "recall": 1.0,
+     "returned": [
+      "memory:ines_job",
+      "memory:cafe_wifi",
+      "memory:home_router"
+     ],
+     "returned_count": 3,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 47.972,
+     "id": "q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 1.0,
+     "returned": [
+      "memory:varga_wifi",
+      "memory:client_list"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "abstention_with_names",
+   "id": "ab-01-brother-shoe-size",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 24.944,
+     "id": "q1",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.0,
+     "recall": null,
+     "returned": [
+      "memory:rafael_job"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "abstention_with_names",
+   "id": "ab-02-api-sla",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 22.293,
+     "id": "q1",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.0,
+     "recall": null,
+     "returned": [
+      "memory:kestrel_api_owner",
+      "memory:kestrel_api_auth",
+      "memory:harbor_gateway",
+      "memory:incident_review"
+     ],
+     "returned_count": 4,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "abstention_with_names",
+   "id": "ab-03-anniversary-restaurant",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 27.084,
+     "id": "q1",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.0,
+     "recall": null,
+     "returned": [
+      "memory:anniversary_date",
+      "memory:babysitter",
+      "memory:restaurant_wishlist",
+      "memory:joaquin_diet",
+      "memory:last_dinner"
+     ],
+     "returned_count": 5,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "abstention_with_names",
+   "id": "ab-04-parents-gate-code",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 35.311,
+     "id": "q1",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.0,
+     "recall": null,
+     "returned": [
+      "memory:mum_hip",
+      "memory:parking_larchmont",
+      "memory:larchmont_lift"
+     ],
+     "returned_count": 3,
+     "safety_violations": []
+    }
+   ]
+  }
+ ],
+ "summary": {
+  "by_category": {
+   "abstention_with_names": {
+    "mean_precision": 0.0,
+    "mean_recall": null,
+    "mean_returned": 3.25,
+    "passed": 0,
+    "queries": 4,
+    "safety_violations": 0
+   },
+   "multi_hop": {
+    "mean_precision": 0.59,
+    "mean_recall": 0.6667,
+    "mean_returned": 3.25,
+    "passed": 0,
+    "queries": 12,
+    "safety_violations": 0
+   },
+   "multi_hop_lifecycle": {
+    "mean_precision": 0.4792,
+    "mean_recall": 0.75,
+    "mean_returned": 2.5,
+    "passed": 1,
+    "queries": 8,
+    "safety_violations": 0
+   },
+   "single_hop_with_names": {
+    "mean_precision": 0.3896,
+    "mean_recall": 1.0,
+    "mean_returned": 3.5,
+    "passed": 1,
+    "queries": 8,
+    "safety_violations": 0
+   }
+  },
+  "by_kind": {
+   "abstention": {
+    "mean_precision": 0.1667,
+    "mean_recall": null,
+    "mean_returned": 3.167,
+    "passed": 0,
+    "queries": 6,
+    "safety_violations": 0
+   },
+   "multi": {
+    "mean_precision": 0.5194,
+    "mean_recall": 0.6071,
+    "mean_returned": 3.143,
+    "passed": 0,
+    "queries": 14,
+    "safety_violations": 0
+   },
+   "single": {
+    "mean_precision": 0.4681,
+    "mean_recall": 1.0,
+    "mean_returned": 3.083,
+    "passed": 2,
+    "queries": 12,
+    "safety_violations": 0
+   }
+  },
+  "op_failures": 0,
+  "overall": {
+   "mean_precision": 0.4283,
+   "mean_recall": 0.7885,
+   "mean_returned": 3.125,
+   "passed": 2,
+   "queries": 32,
+   "safety_violations": 0
+  },
+  "recall_latency_ms_p50": 35.154,
+  "recall_latency_ms_p95": 51.213
+ }
+}

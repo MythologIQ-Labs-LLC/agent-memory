@@ -955,9 +955,18 @@ class SQLiteTemporalGraph:
         scored.sort(key=lambda pair: (-pair[1], pair[0].uuid))
         return scored
 
-    def discovery_rows(self, group_ids: list[str] | None) -> list[tuple[str, str, str]]:
-        """``(uuid, group_id, fact_text)`` for the groups, without decoding; read-only (#819 C3)."""
-        return self._identity_rows_for_groups(group_ids)
+    def discovery_rows(self, group_ids: list[str]) -> list[tuple[str, str, str, tuple[str, ...], bool]]:
+        """``(uuid, group_id, fact_text, episode_uuids, event_invalid)`` for the groups, without
+        decoding attributes; read-only (#819 C3 discovery vocabulary)."""
+        if not group_ids:
+            return []
+        placeholders = ",".join("?" for _ in group_ids)
+        rows = self._connection.execute(
+            f"SELECT uuid, group_id, fact_text, episode_uuids_json, invalid_at FROM facts "
+            f"WHERE group_id IN ({placeholders}) ORDER BY uuid",
+            tuple(group_ids),
+        ).fetchall()
+        return [(row[0], row[1], row[2], tuple(json.loads(row[3])), row[4] is not None) for row in rows]
 
     def _identity_rows_for_groups(self, group_ids: list[str] | None) -> list[tuple[str, str, str]]:
         """Candidate-discovery projection: identity and text only, no JSON decoding."""

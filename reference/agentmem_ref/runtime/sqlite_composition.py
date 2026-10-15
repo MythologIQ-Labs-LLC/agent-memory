@@ -96,6 +96,7 @@ class SQLiteConfiguredCompositionRuntime(ConfiguredCompositionRuntime):
         *,
         logical_memory_refs: tuple[str, ...] = (),
         temporal_intent=None,
+        discovery_expansion: bool = False,
     ):
         """Persist preselected-admission decisions and audit evidence atomically."""
         with self.serialization_lock:
@@ -106,6 +107,7 @@ class SQLiteConfiguredCompositionRuntime(ConfiguredCompositionRuntime):
                     context,
                     logical_memory_refs=logical_memory_refs,
                     temporal_intent=temporal_intent,
+                    discovery_expansion=discovery_expansion,
                 )
             )
 

@@ -89,6 +89,34 @@ class QueryInterpretation:
         }
 
 
+_SENTENCE_END = frozenset(".!?:;")
+_OPENERS = frozenset("\"\u201c(")
+
+
+def starts_sentence(text: str, position: int) -> bool:
+    """Whether ``text[:position]`` matches ``(^|[.!?:;]\\s+|["\u201c(]\\s*)$``: nothing before, a
+    sentence end and whitespace, or an opening quote or parenthesis. Linear overall: it reads
+    only the whitespace run before ``position`` (the regex re-scanned the whole prefix per
+    word, which made interpretation quadratic in query length)."""
+
+    # ``$`` also matches before a final newline; reproduce that so behaviour is unchanged.
+    if position > 0 and text[position - 1] == "\n" and _sentence_boundary(text, position - 1):
+        return True
+    return _sentence_boundary(text, position)
+
+
+def _sentence_boundary(text: str, position: int) -> bool:
+    if position == 0:
+        return True
+    end = position
+    while end > 0 and text[end - 1].isspace():
+        end -= 1
+    if end == 0:
+        return False
+    previous = text[end - 1]
+    return (previous in _SENTENCE_END and end < position) or previous in _OPENERS
+
+
 _NEVER_NAMES = frozenset({"i", "not", "no", "never", "nor"})  # emphasis ("I do NOT want"), not names
 
 
@@ -104,7 +132,7 @@ def _is_name_token(text: str, match: re.Match, case_informative: bool, sentence_
         return True  # GHA, DLQ, US
     if any(c.isupper() for c in token[1:]) and any(c.islower() for c in token):
         return True  # ReactJS, TypeScript, GitHub
-    return token[0].isupper() and not sentence_start.search(text[:match.start()])
+    return token[0].isupper() and not starts_sentence(text, match.start())
 
 
 def interpret(query: str, *, function_words: frozenset, normalize, word_re, sentence_start) -> QueryInterpretation:
@@ -114,7 +142,7 @@ def interpret(query: str, *, function_words: frozenset, normalize, word_re, sent
     lowered = text.lower()
     inner = [m.group(0) for m in word_re.finditer(text)
              if m.group(0)[0].isalpha() and m.group(0).lower() != "i"
-             and not sentence_start.search(text[:m.start()])]
+             and not starts_sentence(text, m.start())]
     capitalised = sum(1 for word in inner if word[0].isupper())
     case_informative = any(c.islower() for c in text) and capitalised * 2 <= len(inner)
 

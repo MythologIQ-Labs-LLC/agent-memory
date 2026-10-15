@@ -171,12 +171,11 @@ def _key(token: str) -> str:
     return normal_form(core) if core.isalpha() else core
 
 
-def expansion_terms(query_tokens: Iterable[str], vocabulary: Iterable[str], skip: frozenset = frozenset(),
-                    allow_typos: bool = True) -> dict:
+def expansion_terms(query_tokens: Iterable[str], vocabulary: Iterable[str], allow_typos: bool = True) -> dict:
     """Vocabulary surface forms to add to a discovery query, and what produced them.
 
     ``query_tokens`` and ``vocabulary`` are tokens in the lexical route's own tokenisation. For
-    each query token not in ``skip``: every vocabulary form sharing its normal form
+    each query token: every vocabulary form sharing its normal form
     (``weddings`` -> ``wedding``); and, when no vocabulary form shares it, the forms one edit
     away (``typsecript`` -> ``typescript``) and their normal-form siblings. At most
     ``MAX_EXPANSIONS_PER_TERM`` forms are added per query token.
@@ -191,7 +190,7 @@ def expansion_terms(query_tokens: Iterable[str], vocabulary: Iterable[str], skip
     typo: set[str] = set()
     for token in dict.fromkeys(query_tokens):
         core = "".join(_TOKEN.findall(token))
-        if not core or core in skip:
+        if not core:
             continue
         key = _key(token)
         siblings = set(by_key.get(key, ())) - {token}

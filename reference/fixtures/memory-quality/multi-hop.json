@@ -1,0 +1,398 @@
+{
+ "version": "1",
+ "authoring": "engineer-authored (#819 C3 slice 4), written before any mechanism and without access to any sealed cohort; diagnostic only",
+ "scenarios": [
+  {
+   "id": "bridge-dentist",
+   "category": "multi_hop_bridge",
+   "description": "answer requires a second fact about an entity only the first fact names",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "project:people",
+     "ref": "memory:dentist-link",
+     "text": "My sister Maya sees Dr. Okafor for her teeth."
+    },
+    {
+     "op": "remember",
+     "scope": "project:people",
+     "ref": "memory:dentist-bridge",
+     "text": "Dr. Okafor's practice is on Elm Street, next to the library."
+    },
+    {
+     "op": "remember",
+     "scope": "project:people",
+     "ref": "memory:dentist-noise1",
+     "text": "Dr. Reyes moved her clinic to Harbor Road."
+    },
+    {
+     "op": "remember",
+     "scope": "project:people",
+     "ref": "memory:dentist-noise2",
+     "text": "Maya loves hiking on weekends."
+    }
+   ],
+   "queries": [
+    {
+     "id": "q-dentist",
+     "scope": "project:people",
+     "query": "Where is my sister's dentist located?",
+     "expect": {
+      "must_include": [
+       "memory:dentist-link",
+       "memory:dentist-bridge"
+      ],
+      "may_include": [
+       "memory:dentist-noise2"
+      ],
+      "must_exclude": [
+       {
+        "ref": "memory:dentist-noise1",
+        "reason": "irrelevant"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "bridge-mentor",
+   "category": "multi_hop_bridge",
+   "description": "answer requires a second fact about an entity only the first fact names",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "project:people",
+     "ref": "memory:mentor-link",
+     "text": "My mentor at work is Tomasz."
+    },
+    {
+     "op": "remember",
+     "scope": "project:people",
+     "ref": "memory:mentor-bridge",
+     "text": "Tomasz recommended the book Thinking in Systems."
+    },
+    {
+     "op": "remember",
+     "scope": "project:people",
+     "ref": "memory:mentor-noise1",
+     "text": "Lena recommended a podcast about chess."
+    }
+   ],
+   "queries": [
+    {
+     "id": "q-mentor",
+     "scope": "project:people",
+     "query": "What book did my mentor recommend?",
+     "expect": {
+      "must_include": [
+       "memory:mentor-link",
+       "memory:mentor-bridge"
+      ],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "memory:mentor-noise1",
+        "reason": "irrelevant"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "bridge-landlord",
+   "category": "multi_hop_bridge",
+   "description": "answer requires a second fact about an entity only the first fact names",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "project:people",
+     "ref": "memory:landlord-link",
+     "text": "Our landlord is Mr. Haddad."
+    },
+    {
+     "op": "remember",
+     "scope": "project:people",
+     "ref": "memory:landlord-bridge",
+     "text": "Mr. Haddad can be reached at the office on Quay Lane on Tuesdays."
+    },
+    {
+     "op": "remember",
+     "scope": "project:people",
+     "ref": "memory:landlord-noise1",
+     "text": "The plumber came on Tuesday and fixed the sink."
+    }
+   ],
+   "queries": [
+    {
+     "id": "q-landlord",
+     "scope": "project:people",
+     "query": "When can I reach our landlord?",
+     "expect": {
+      "must_include": [
+       "memory:landlord-link",
+       "memory:landlord-bridge"
+      ],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "memory:landlord-noise1",
+        "reason": "irrelevant"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "bridge-project",
+   "category": "multi_hop_bridge",
+   "description": "answer requires a second fact about an entity only the first fact names",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "project:people",
+     "ref": "memory:project-link",
+     "text": "The billing migration is led by Ingrid."
+    },
+    {
+     "op": "remember",
+     "scope": "project:people",
+     "ref": "memory:project-bridge",
+     "text": "Ingrid is out on parental leave until March."
+    },
+    {
+     "op": "remember",
+     "scope": "project:people",
+     "ref": "memory:project-noise1",
+     "text": "Ravi is out sick today."
+    },
+    {
+     "op": "remember",
+     "scope": "project:people",
+     "ref": "memory:project-noise2",
+     "text": "The billing dashboard shows totals per region."
+    }
+   ],
+   "queries": [
+    {
+     "id": "q-project",
+     "scope": "project:people",
+     "query": "Is the person leading the billing migration available?",
+     "expect": {
+      "must_include": [
+       "memory:project-link",
+       "memory:project-bridge"
+      ],
+      "may_include": [
+       "memory:project-noise2"
+      ],
+      "must_exclude": [
+       {
+        "ref": "memory:project-noise1",
+        "reason": "irrelevant"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "bridge-vet",
+   "category": "multi_hop_bridge",
+   "description": "answer requires a second fact about an entity only the first fact names",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "project:people",
+     "ref": "memory:vet-link",
+     "text": "Our cat Biscuit goes to the Willow Vet clinic."
+    },
+    {
+     "op": "remember",
+     "scope": "project:people",
+     "ref": "memory:vet-bridge",
+     "text": "Willow Vet closes at 5pm on Saturdays."
+    },
+    {
+     "op": "remember",
+     "scope": "project:people",
+     "ref": "memory:vet-noise1",
+     "text": "The pharmacy closes at 9pm."
+    }
+   ],
+   "queries": [
+    {
+     "id": "q-vet",
+     "scope": "project:people",
+     "query": "What time does our cat's vet close on Saturday?",
+     "expect": {
+      "must_include": [
+       "memory:vet-link",
+       "memory:vet-bridge"
+      ],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "memory:vet-noise1",
+        "reason": "irrelevant"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "bridge-school",
+   "category": "multi_hop_bridge",
+   "description": "answer requires a second fact about an entity only the first fact names",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "project:people",
+     "ref": "memory:school-link",
+     "text": "Noah attends Brookfield Elementary."
+    },
+    {
+     "op": "remember",
+     "scope": "project:people",
+     "ref": "memory:school-bridge",
+     "text": "Brookfield Elementary starts at 8:15 every morning."
+    },
+    {
+     "op": "remember",
+     "scope": "project:people",
+     "ref": "memory:school-noise1",
+     "text": "The gym opens at 6 every morning."
+    },
+    {
+     "op": "remember",
+     "scope": "project:people",
+     "ref": "memory:school-noise2",
+     "text": "Noah has a soccer match on Sunday."
+    }
+   ],
+   "queries": [
+    {
+     "id": "q-school",
+     "scope": "project:people",
+     "query": "What time does Noah's school start?",
+     "expect": {
+      "must_include": [
+       "memory:school-link",
+       "memory:school-bridge"
+      ],
+      "may_include": [
+       "memory:school-noise2"
+      ],
+      "must_exclude": [
+       {
+        "ref": "memory:school-noise1",
+        "reason": "irrelevant"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "bridge-db",
+   "category": "multi_hop_bridge",
+   "description": "answer requires a second fact about an entity only the first fact names",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "project:people",
+     "ref": "memory:db-link",
+     "text": "The payments service stores its data in Cassandra."
+    },
+    {
+     "op": "remember",
+     "scope": "project:people",
+     "ref": "memory:db-bridge",
+     "text": "Cassandra backups run nightly at 02:00 UTC."
+    },
+    {
+     "op": "remember",
+     "scope": "project:people",
+     "ref": "memory:db-noise1",
+     "text": "Postgres backups run hourly."
+    },
+    {
+     "op": "remember",
+     "scope": "project:people",
+     "ref": "memory:db-noise2",
+     "text": "The payments service exposes a REST API."
+    }
+   ],
+   "queries": [
+    {
+     "id": "q-db",
+     "scope": "project:people",
+     "query": "When are the payments service's data backups?",
+     "expect": {
+      "must_include": [
+       "memory:db-link",
+       "memory:db-bridge"
+      ],
+      "may_include": [
+       "memory:db-noise2"
+      ],
+      "must_exclude": [
+       {
+        "ref": "memory:db-noise1",
+        "reason": "irrelevant"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "bridge-friend",
+   "category": "multi_hop_bridge",
+   "description": "answer requires a second fact about an entity only the first fact names",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "project:people",
+     "ref": "memory:friend-link",
+     "text": "My college roommate was Jonah."
+    },
+    {
+     "op": "remember",
+     "scope": "project:people",
+     "ref": "memory:friend-bridge",
+     "text": "Jonah now lives in Lisbon and works as an architect."
+    },
+    {
+     "op": "remember",
+     "scope": "project:people",
+     "ref": "memory:friend-noise1",
+     "text": "Clara now lives in Oslo."
+    }
+   ],
+   "queries": [
+    {
+     "id": "q-friend",
+     "scope": "project:people",
+     "query": "Where does my college roommate live now?",
+     "expect": {
+      "must_include": [
+       "memory:friend-link",
+       "memory:friend-bridge"
+      ],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "memory:friend-noise1",
+        "reason": "irrelevant"
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ]
+}

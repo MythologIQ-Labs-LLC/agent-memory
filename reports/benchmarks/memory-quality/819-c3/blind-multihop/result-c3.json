@@ -1,0 +1,795 @@
+{
+ "agent_memory_revision": "4356a55076e0daa83fa7c5f69f0b4ac6d47b5c96",
+ "budget": 10,
+ "cohort_sha256": "6acef4bf3d81f38472461daa4f7227d7fae39c98647d755891d8ed0b3f1cb343",
+ "reference_worktree_dirty": false,
+ "return_selection": null,
+ "runner": "scripts/run_memory_quality_scenarios.py",
+ "scenarios": [
+  {
+   "category": "multi_hop",
+   "id": "mh-01-sister-employer-parking",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 28.707,
+     "id": "q1",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": 0.4,
+     "recall": 1.0,
+     "returned": [
+      "memory:brightwater_hq",
+      "memory:priyanka_job",
+      "memory:gym_parking",
+      "memory:larkspur_parking",
+      "memory:dev_job"
+     ],
+     "returned_count": 5,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_hop",
+   "id": "mh-02-project-owner-availability",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 27.065,
+     "id": "q1",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 1.0,
+     "returned": [
+      "memory:standup_time",
+      "memory:halvorsen_deadline",
+      "memory:halvorsen_owner",
+      "memory:beatriz_hours"
+     ],
+     "returned_count": 4,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_hop",
+   "id": "mh-03-dog-food-stockist",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 38.442,
+     "id": "q1",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": 0.0,
+     "recall": 0.0,
+     "returned": [
+      "memory:meal_prep"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_hop",
+   "id": "mh-04-son-team-training",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 49.961,
+     "id": "q1",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 0.5,
+     "returned": [
+      "memory:leon_team",
+      "memory:rovers_training"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_hop",
+   "id": "mh-05-dependency-escalation",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 28.462,
+     "id": "q1",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": 1.0,
+     "recall": 0.5,
+     "returned": [
+      "memory:checkout_tax_dep"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_hop",
+   "id": "mh-06-conference-hotel",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 66.345,
+     "id": "q1",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": 0.6666666666666666,
+     "recall": 1.0,
+     "returned": [
+      "memory:kestrel_hotel",
+      "memory:dataweave_venue",
+      "memory:dataweave_talk"
+     ],
+     "returned_count": 3,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_hop",
+   "id": "mh-07-gp-out-of-hours",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 25.978,
+     "id": "q1",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": 1.0,
+     "recall": 0.5,
+     "returned": [
+      "memory:cranfield_ooh"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_hop",
+   "id": "mh-08-car-insurance-claim",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 27.503,
+     "id": "q1",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": 1.0,
+     "recall": 0.5,
+     "returned": [
+      "memory:haversham_claims"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_hop",
+   "id": "mh-09-client-invoicing",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 34.244,
+     "id": "q1",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": 0.6666666666666666,
+     "recall": 0.5,
+     "returned": [
+      "memory:invoice_template",
+      "memory:main_client",
+      "memory:orrin_vale"
+     ],
+     "returned_count": 3,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_hop",
+   "id": "mh-10-book-club-address",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 35.414,
+     "id": "q1",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 0.5,
+     "returned": [
+      "memory:book_club_host",
+      "memory:book_club_book"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_hop",
+   "id": "mh-11-service-ci-pipeline",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 29.347,
+     "id": "q1",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 0.5,
+     "returned": [
+      "memory:ratecard_ci",
+      "memory:quotewell_ci"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_hop",
+   "id": "mh-12-grandmother-visiting",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 31.227,
+     "id": "q1",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": 0.6666666666666666,
+     "recall": 0.5,
+     "returned": [
+      "memory:bellfield_hours",
+      "memory:hospital_hours",
+      "memory:carla_visits"
+     ],
+     "returned_count": 3,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "single_hop_with_names",
+   "id": "sh-01-cabin-wifi",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 45.76,
+     "id": "q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:cabin_wifi"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "single_hop_with_names",
+   "id": "sh-02-offsite-budget-code",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 37.09,
+     "id": "q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:offsite_code"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "single_hop_with_names",
+   "id": "sh-03-passport-expiry",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 23.644,
+     "id": "q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:passport"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "single_hop_with_names",
+   "id": "sh-04-boiler-plumber",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 64.272,
+     "id": "q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:boiler_fix",
+      "memory:boiler_service"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "single_hop_with_names",
+   "id": "sh-05-dashboard-database",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 30.298,
+     "id": "q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:dashboard_source"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "single_hop_with_names",
+   "id": "sh-06-pool-locker",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 50.113,
+     "id": "q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:pool_locker"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "single_hop_with_names",
+   "id": "sh-07-desk-tracking",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 31.47,
+     "id": "q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:desk_tracking"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "single_hop_with_names",
+   "id": "sh-08-policy-approver",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 33.415,
+     "id": "q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:remote_policy"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_hop_lifecycle",
+   "id": "lc-01-corrected-first-hop",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 25.831,
+     "id": "q1",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": 0.0,
+     "recall": 0.0,
+     "returned": [
+      "memory:my_office_move",
+      "memory:fernhill_office"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_hop_lifecycle",
+   "id": "lc-02-corrected-second-hop",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 27.769,
+     "id": "q1",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": 1.0,
+     "recall": 0.5,
+     "returned": [
+      "memory:yoga_class"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_hop_lifecycle",
+   "id": "lc-03-forgotten-first-hop",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 29.579,
+     "id": "q1",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": true,
+     "precision": 1.0,
+     "recall": null,
+     "returned": [
+      "memory:ledger_lamp_office"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_hop_lifecycle",
+   "id": "lc-04-forgotten-second-hop",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 41.835,
+     "id": "q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:leila_nursery"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_hop_lifecycle",
+   "id": "lc-05-other-scope-first-hop",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 25.66,
+     "id": "q1",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.6666666666666666,
+     "recall": null,
+     "returned": [
+      "memory:procurement_contact",
+      "memory:corrigan_contract",
+      "memory:brightline_contract"
+     ],
+     "returned_count": 3,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 33.454,
+     "id": "q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:delphine_job"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_hop_lifecycle",
+   "id": "lc-06-other-scope-second-hop",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 50.67,
+     "id": "q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 1.0,
+     "returned": [
+      "memory:ines_job",
+      "memory:cafe_wifi"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 31.562,
+     "id": "q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 1.0,
+     "returned": [
+      "memory:varga_wifi",
+      "memory:client_list"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "abstention_with_names",
+   "id": "ab-01-brother-shoe-size",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 23.886,
+     "id": "q1",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.0,
+     "recall": null,
+     "returned": [
+      "memory:rafael_job"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "abstention_with_names",
+   "id": "ab-02-api-sla",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 49.232,
+     "id": "q1",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.0,
+     "recall": null,
+     "returned": [
+      "memory:kestrel_api_owner",
+      "memory:kestrel_api_auth"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "abstention_with_names",
+   "id": "ab-03-anniversary-restaurant",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 62.764,
+     "id": "q1",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.0,
+     "recall": null,
+     "returned": [
+      "memory:anniversary_date",
+      "memory:babysitter"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "abstention_with_names",
+   "id": "ab-04-parents-gate-code",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 48.024,
+     "id": "q1",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": true,
+     "precision": null,
+     "recall": null,
+     "returned": [],
+     "returned_count": 0,
+     "safety_violations": []
+    }
+   ]
+  }
+ ],
+ "summary": {
+  "by_category": {
+   "abstention_with_names": {
+    "mean_precision": 0.0,
+    "mean_recall": null,
+    "mean_returned": 1.25,
+    "passed": 1,
+    "queries": 4,
+    "safety_violations": 0
+   },
+   "multi_hop": {
+    "mean_precision": 0.6167,
+    "mean_recall": 0.5833,
+    "mean_returned": 2.333,
+    "passed": 0,
+    "queries": 12,
+    "safety_violations": 0
+   },
+   "multi_hop_lifecycle": {
+    "mean_precision": 0.7083,
+    "mean_recall": 0.75,
+    "mean_returned": 1.625,
+    "passed": 3,
+    "queries": 8,
+    "safety_violations": 0
+   },
+   "single_hop_with_names": {
+    "mean_precision": 1.0,
+    "mean_recall": 1.0,
+    "mean_returned": 1.125,
+    "passed": 8,
+    "queries": 8,
+    "safety_violations": 0
+   }
+  },
+  "by_kind": {
+   "abstention": {
+    "mean_precision": 0.3333,
+    "mean_recall": null,
+    "mean_returned": 1.5,
+    "passed": 2,
+    "queries": 6,
+    "safety_violations": 0
+   },
+   "multi": {
+    "mean_precision": 0.6,
+    "mean_recall": 0.5357,
+    "mean_returned": 2.214,
+    "passed": 0,
+    "queries": 14,
+    "safety_violations": 0
+   },
+   "single": {
+    "mean_precision": 0.9167,
+    "mean_recall": 1.0,
+    "mean_returned": 1.25,
+    "passed": 10,
+    "queries": 12,
+    "safety_violations": 0
+   }
+  },
+  "op_failures": 0,
+  "overall": {
+   "mean_precision": 0.6796,
+   "mean_recall": 0.75,
+   "mean_returned": 1.719,
+   "passed": 12,
+   "queries": 32,
+   "safety_violations": 0
+  },
+  "recall_latency_ms_p50": 33.415,
+  "recall_latency_ms_p95": 64.272
+ }
+}

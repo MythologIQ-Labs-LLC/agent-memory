@@ -63,9 +63,16 @@ from what the budget sees, so it cannot surface a fact that governance or curren
 from __future__ import annotations
 
 import re
+from functools import lru_cache
 from typing import Any, Callable, Iterable, Mapping, Sequence
 
-from .ranking_policy import _candidate_term_masks, admitted_set_bm25, relevance_tokens
+from .ranking_policy import (
+    HIGH_RISK_SELF_CLAIMS,
+    admitted_set_bm25,
+    eligible_temporal_query_terms,
+    persisted_self_claims,
+    relevance_tokens,
+)
 from .lexical_normalization import normal_form, normalized_text, typo_correction_allowed, typo_matches
 from .query_interpretation import QueryInterpretation, interpret
 from .temporal_intent import TemporalIntent
@@ -77,6 +84,9 @@ RELATIVE_FLOOR = 0.5
 # 2.0.0: a query that needs several pieces of evidence (aggregate or relational) admits set
 # evidence down to half the single-answer floor.
 SET_FLOOR_FACTOR = 0.5
+# Entity coverage runs one admitted-set BM25 pass per mention; the first mentions in query order
+# are covered (bounded cost for queries that list many identifiers).
+MAX_COVERED_MENTIONS = 8
 RELEVANCE_SUFFICIENT = "relevance_sufficient"
 RANKED_PREFIX = "ranked_prefix"
 RETURN_SELECTIONS = (RELEVANCE_SUFFICIENT, RANKED_PREFIX)
@@ -161,11 +171,32 @@ def informative_terms(query: str) -> tuple[str, ...]:
     return tuple(sorted(terms))
 
 
+@lru_cache(maxsize=256)
 def interpret_query(query: str) -> QueryInterpretation:
     """Topic, frame, entity mentions and information requirement of ``query`` (2.0.0)."""
 
     return interpret(query, function_words=FUNCTION_WORDS, normalize=normalize_contractions,
                      word_re=_WORD, sentence_start=_SENTENCE_START)
+
+
+def _normal_form_masks(query: str, intent: TemporalIntent, facts: Mapping[str, Any],
+                       texts: Mapping[str, str]) -> dict[str, tuple[str, ...]]:
+    """The ranking stage's #583 anti-laundering masks, matched on normal forms (2.1.0).
+
+    Relevance compares normal forms, so the mask must too: a self-claiming fact that writes an
+    inflection of a masked temporal-intent query word ("planned" for "planning") is masked
+    exactly as the word itself would be. Same eligibility and self-claim rules as
+    ``ranking_policy._candidate_term_masks``.
+    """
+
+    eligible = {normal_form(term) for term in eligible_temporal_query_terms(query, intent)}
+    masks: dict[str, tuple[str, ...]] = {}
+    for ref, fact in facts.items():
+        if not eligible or not (HIGH_RISK_SELF_CLAIMS & set(persisted_self_claims(fact))):
+            masks[ref] = ()
+            continue
+        masks[ref] = tuple(sorted(eligible & set(texts.get(ref, "").split())))
+    return masks
 
 
 def _mention_matched(mention: tuple[str, ...], tokens: frozenset[str]) -> bool:
@@ -227,8 +258,7 @@ def select_relevance_sufficient(
         # matches nothing is read as its one-edit neighbours in the admitted text ("typsecript").
         raw_texts = {ref: normalize_contractions(getattr(fact, "fact_text", "") or "") for ref, fact in lexical_scope.items()}
         texts = {ref: normalized_text(text) for ref, text in raw_texts.items()}
-        raw_masks = _candidate_term_masks(query, intent, lexical_scope)
-        masks = {ref: tuple(sorted({normal_form(term) for term in terms})) for ref, terms in raw_masks.items()}
+        masks = _normal_form_masks(query, intent, lexical_scope, texts)
         tokens = {ref: frozenset(text.split()) - frozenset(masks.get(ref, ())) for ref, text in texts.items()}
         normal_vocabulary = frozenset().union(*tokens.values()) if tokens else frozenset()
 
@@ -294,14 +324,15 @@ def select_relevance_sufficient(
     # that mentions it.
     # The fact most about each named entity is in the evidence set (a passing mention elsewhere
     # does not stand in for it); ties go to the higher-ranked fact.
-    for mention in mentions:
+    position = {ref: index for index, ref in enumerate(ranked)}
+    for mention in mentions[:MAX_COVERED_MENTIONS]:
         about = admitted_set_bm25(" ".join(mention), texts, masks) if lexical_scope else {}
         candidates = [ref for ref in ranked
                       if records[ref]["content_relevance"] > 0.0 and about.get(ref, 0.0) > 0.0
                       and _mention_matched(mention, tokens.get(ref, frozenset()))]
         if not candidates:
             continue
-        chosen = max(candidates, key=lambda ref: (about[ref], -ranked.index(ref)))
+        chosen = max(candidates, key=lambda ref: (about[ref], -position[ref]))
         if not records[chosen]["sufficient"]:
             records[chosen].update(sufficient=True, basis="entity_coverage")
     # Lifecycle closure: a returned state must not travel without the admitted later state that

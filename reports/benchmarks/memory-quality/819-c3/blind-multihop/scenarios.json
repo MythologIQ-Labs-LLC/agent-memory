@@ -1,0 +1,2233 @@
+{
+  "version": "1",
+  "authoring": "Blind hand-authored multi-hop / named-entity cohort written without reading runtime source, tests or fixtures (runner input format only).",
+  "scenarios": [
+    {
+      "id": "mh-01-sister-employer-parking",
+      "category": "multi_hop",
+      "description": "Parking at sibling's workplace: sibling->employer, employer->parking.",
+      "operations": [
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:priyanka_job",
+          "text": "My sister Priyanka started as a pharmacist at Larkspur Health back in March, she's on the early shift most weeks."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:larkspur_parking",
+          "text": "Larkspur Health: staff + visitor parking is the multi-storey on Quarry Lane. The surface lot out front is permit-only and they do ticket."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:dev_job",
+          "text": "Cousin Dev works for Brightwater Logistics in the dispatch office, nights mostly."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:brightwater_hq",
+          "text": "Brightwater Logistics moved their HQ out to Calder Business Park last year."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:gym_parking",
+          "text": "Parking at the climbing gym is free after 6pm if you use the side entrance lot."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:larkspur_flu",
+          "text": "got my flu jab at a Larkspur Health pop-up clinic last october, arm was sore for two days"
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:priyanka_birthday",
+          "text": "Priyanka's birthday is 14 August. She loves the lemon drizzle cake from Fenwick's bakery."
+        }
+      ],
+      "queries": [
+        {
+          "id": "q1",
+          "scope": "personal",
+          "query": "Where should I park when I go to meet my sister at her work?",
+          "expect": {
+            "must_include": [
+              "memory:priyanka_job",
+              "memory:larkspur_parking"
+            ],
+            "may_include": [],
+            "must_exclude": [
+              {
+                "ref": "memory:dev_job",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:brightwater_hq",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:gym_parking",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:larkspur_flu",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:priyanka_birthday",
+                "reason": "irrelevant"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "mh-02-project-owner-availability",
+      "category": "multi_hop",
+      "description": "Scheduling with a project owner: project->owner, owner->working hours.",
+      "operations": [
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:halvorsen_owner",
+          "text": "The Halvorsen migration is owned by Beatriz Quintero on the platform team; she took it over from the infra group in the spring."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:beatriz_hours",
+          "text": "Beatriz is based in Lisbon and doesn't take meetings after 4pm her time. Prefers async updates in #platform-sync, and mornings are best for live calls."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:halvorsen_deadline",
+          "text": "Halvorsen migration cutover is targeted for the second week of November; change freeze starts the week before."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:marek_hours",
+          "text": "Marek from data eng is in Kraków, free most mornings, really hates Friday meetings."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:lisbon_trip",
+          "text": "thinking about a long weekend in Lisbon in the spring, Ana recommended staying somewhere in Alfama"
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:standup_time",
+          "text": "Our team standup moved to 9:15 every weekday, call link is pinned in the channel."
+        }
+      ],
+      "queries": [
+        {
+          "id": "q1",
+          "scope": "work",
+          "query": "When's a good time to schedule a call with whoever owns the Halvorsen migration?",
+          "expect": {
+            "must_include": [
+              "memory:halvorsen_owner",
+              "memory:beatriz_hours"
+            ],
+            "may_include": [],
+            "must_exclude": [
+              {
+                "ref": "memory:halvorsen_deadline",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:marek_hours",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:lisbon_trip",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:standup_time",
+                "reason": "irrelevant"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "mh-03-dog-food-stockist",
+      "category": "multi_hop",
+      "description": "Buying the dog's food: dog->food brand, brand->stockist.",
+      "operations": [
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:biscuit_food",
+          "text": "Biscuit (our beagle) has been on Northfold Grain-Free Salmon kibble since the allergy flare-up. Nothing else agrees with his stomach, don't switch brands."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:northfold_stockist",
+          "text": "northfold stuff is only sold at Pawsome Supplies on Ridge Road or direct from their website. the big supermarkets don't carry it at all"
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:pawsome_loyalty",
+          "text": "Pawsome Supplies loyalty card number is 4471-2290, every 5th visit gets 10% off."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:cat_litter",
+          "text": "Get the clumping litter from the Tesco on Ridge Road, it's open till 10."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:biscuit_boosters",
+          "text": "Biscuit's booster vaccinations are due in January at Harbourside Vets."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:meal_prep",
+          "text": "Trying to cut down on takeaway food, meal prepping on Sundays now."
+        }
+      ],
+      "queries": [
+        {
+          "id": "q1",
+          "scope": "personal",
+          "query": "where can I buy more of the dog's food?",
+          "expect": {
+            "must_include": [
+              "memory:biscuit_food",
+              "memory:northfold_stockist"
+            ],
+            "may_include": [
+              "memory:pawsome_loyalty"
+            ],
+            "must_exclude": [
+              {
+                "ref": "memory:cat_litter",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:biscuit_boosters",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:meal_prep",
+                "reason": "irrelevant"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "mh-04-son-team-training",
+      "category": "multi_hop",
+      "description": "Child's football training time: child->club, club->training schedule.",
+      "operations": [
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:kofi_team",
+          "text": "Kofi joined the Ashgrove Rovers under-11s this season, he's mostly playing left back."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:rovers_training",
+          "text": "Ashgrove Rovers juniors train Tuesdays and Thursdays 5:30-7pm at the Millbrook Park pitches. Bring shin pads and a water bottle, no studs on the astro."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:amara_swim",
+          "text": "Amara's swimming lessons are Saturdays at 9am at the Leisure Centre, stage 4 group."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:millbrook_parkrun",
+          "text": "Did the Millbrook Park parkrun in 27:40 - PB!"
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:rovers_fees",
+          "text": "Paid £85 Ashgrove Rovers subs for the autumn term on 3 Sept."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:leon_team",
+          "text": "Kofi's friend Leon plays for Westfield Juniors, they train on Wednesday evenings."
+        }
+      ],
+      "queries": [
+        {
+          "id": "q1",
+          "scope": "personal",
+          "query": "What time does my son's football training start?",
+          "expect": {
+            "must_include": [
+              "memory:kofi_team",
+              "memory:rovers_training"
+            ],
+            "may_include": [],
+            "must_exclude": [
+              {
+                "ref": "memory:amara_swim",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:millbrook_parkrun",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:rovers_fees",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:leon_team",
+                "reason": "irrelevant"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "mh-05-dependency-escalation",
+      "category": "multi_hop",
+      "description": "Escalation for a broken dependency: service->dependency, dependency->owning team on-call.",
+      "operations": [
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:checkout_tax_dep",
+          "text": "Checkout calls out to Ledgerline for all tax calculation; if Ledgerline is slow, checkout times out at 3s and shows the generic error."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:ledgerline_owner",
+          "text": "Ledgerline is owned by the Fiscal Systems team. Their on-call rotation is in PagerDuty under 'fiscal-primary', and the escalation contact is Oluwaseun Adebayo."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:search_dep",
+          "text": "Search relies on the Quiver index service, owned by the Discovery team. Ping #discovery-help for anything Quiver-related."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:ledgerline_rename",
+          "text": "Fun fact: Ledgerline was called TaxBot before the 2023 rebrand, some old dashboards still use that name."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:checkout_flags",
+          "text": "Checkout feature flags live in the LaunchDarkly project 'web-checkout'."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:my_oncall",
+          "text": "My own on-call week is the last week of each month. Swap requests go through Hiroshi."
+        }
+      ],
+      "queries": [
+        {
+          "id": "q1",
+          "scope": "work",
+          "query": "Who should I escalate to if checkout's tax calculations break?",
+          "expect": {
+            "must_include": [
+              "memory:checkout_tax_dep",
+              "memory:ledgerline_owner"
+            ],
+            "may_include": [],
+            "must_exclude": [
+              {
+                "ref": "memory:search_dep",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:ledgerline_rename",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:checkout_flags",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:my_oncall",
+                "reason": "irrelevant"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "mh-06-conference-hotel",
+      "category": "multi_hop",
+      "description": "Hotel for a conference: conference->venue, venue->partner hotel.",
+      "operations": [
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:dataweave_venue",
+          "text": "The DataWeave summit this year is at the Kestrel Conference Centre in Rotterdam, 18-20 November."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:kestrel_hotel",
+          "text": "Kestrel Conference Centre has a partner hotel next door, the Maasview. Booking code DW26 gets the discounted rate, must book before 1 Nov."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:pydata_berlin",
+          "text": "PyData Berlin was at the bcc; stayed at the Motel One by Alexanderplatz - fine but the rooms are tiny."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:sanne_rotterdam",
+          "text": "my old flatmate Sanne lives in Rotterdam now, near the Blaak market, should look her up sometime"
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:hotel_prefs",
+          "text": "I prefer hotels with a gym. Hilton Honors gold, membership number is on the card in my wallet."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:dataweave_talk",
+          "text": "My DataWeave talk is on day 2: 'Lineage without tears', 25 minutes plus Q&A."
+        }
+      ],
+      "queries": [
+        {
+          "id": "q1",
+          "scope": "work",
+          "query": "Which hotel should I book for the DataWeave summit?",
+          "expect": {
+            "must_include": [
+              "memory:dataweave_venue",
+              "memory:kestrel_hotel"
+            ],
+            "may_include": [
+              "memory:hotel_prefs"
+            ],
+            "must_exclude": [
+              {
+                "ref": "memory:pydata_berlin",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:sanne_rotterdam",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:dataweave_talk",
+                "reason": "irrelevant"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "mh-07-gp-out-of-hours",
+      "category": "multi_hop",
+      "description": "Doctor after hours: me->GP practice, practice->out-of-hours number.",
+      "operations": [
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:my_practice",
+          "text": "I'm registered at the Cranfield Road Surgery, usually see Dr Elspeth Moray there."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:cranfield_ooh",
+          "text": "Cranfield Road Surgery: after 6:30pm and at weekends calls divert to the Medlink out-of-hours service, 0300 555 0142."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:physio",
+          "text": "Physio with Ravi at Bodyworks clinic on Thursdays, he gave me the resistance band exercises."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:cranfield_roadworks",
+          "text": "roadworks on Cranfield Road all of October, take the bypass instead"
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:mum_gp",
+          "text": "Mum's GP is at Holloway Medical Centre, she really likes Dr Achebe."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:emergency_contact",
+          "text": "My emergency contact is my partner Lior, 07700 900311."
+        }
+      ],
+      "queries": [
+        {
+          "id": "q1",
+          "scope": "personal",
+          "query": "What number do I call for my doctor after hours?",
+          "expect": {
+            "must_include": [
+              "memory:my_practice",
+              "memory:cranfield_ooh"
+            ],
+            "may_include": [],
+            "must_exclude": [
+              {
+                "ref": "memory:physio",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:cranfield_roadworks",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:mum_gp",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:emergency_contact",
+                "reason": "irrelevant"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "mh-08-car-insurance-claim",
+      "category": "multi_hop",
+      "description": "Car insurance claim: car->insurer, insurer->claims line.",
+      "operations": [
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:car_insurer",
+          "text": "Car insurance renewed with Haversham Mutual, policy HM-55120-K, renews every June."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:haversham_claims",
+          "text": "Haversham Mutual claims line is open 24/7 - 0800 088 4410. Have the policy number and photos of the damage ready before calling."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:home_insurer",
+          "text": "Home contents insurance is with Pellucid Direct. They are awful on the phone, use the web chat."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:dad_pension",
+          "text": "Dad's pension is also with Haversham Mutual, weirdly enough."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:mechanic",
+          "text": "Garage I trust: Ozturk Motors on Gillespie St, Mehmet does honest quotes."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:car_details",
+          "text": "Car is a 2019 grey Skoda Octavia estate, reg ends in KXP."
+        }
+      ],
+      "queries": [
+        {
+          "id": "q1",
+          "scope": "personal",
+          "query": "I just had a fender bender - who do I call to make a claim?",
+          "expect": {
+            "must_include": [
+              "memory:car_insurer",
+              "memory:haversham_claims"
+            ],
+            "may_include": [
+              "memory:mechanic",
+              "memory:car_details"
+            ],
+            "must_exclude": [
+              {
+                "ref": "memory:home_insurer",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:dad_pension",
+                "reason": "irrelevant"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "mh-09-client-invoicing",
+      "category": "multi_hop",
+      "description": "Invoice submission: main client->org, org->invoicing portal.",
+      "operations": [
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:main_client",
+          "text": "My main client this year is Tidewater Foods, roughly 60% of my billable hours."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:tidewater_invoices",
+          "text": "Tidewater Foods requires every invoice to go through their Coupa supplier portal, with the PO number on every line. Net-45 terms, and they reject anything emailed."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:orrin_vale",
+          "text": "Smaller client Orrin & Vale pays by bank transfer; just email the invoice PDF to their accounts address and they pay in about two weeks."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:tidewater_lunch",
+          "text": "Had lunch with the Tidewater Foods marketing people at Rosa's, they want a Q1 campaign pitch by early December."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:invoice_template",
+          "text": "My invoice template is in Google Drive > Admin > Invoices 2026."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:accountant",
+          "text": "Accountant Faisal Rahimi does my year-end; he needs all the documents by 31 January."
+        }
+      ],
+      "queries": [
+        {
+          "id": "q1",
+          "scope": "work",
+          "query": "How do I submit invoices to my biggest client?",
+          "expect": {
+            "must_include": [
+              "memory:main_client",
+              "memory:tidewater_invoices"
+            ],
+            "may_include": [
+              "memory:invoice_template"
+            ],
+            "must_exclude": [
+              {
+                "ref": "memory:orrin_vale",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:tidewater_lunch",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:accountant",
+                "reason": "irrelevant"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "mh-10-book-club-address",
+      "category": "multi_hop",
+      "description": "Book club address: this month's host->person, person->address.",
+      "operations": [
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:book_club_host",
+          "text": "This month's book club is at Marguerite's place, Thursday at 7."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:marguerite_address",
+          "text": "Marguerite lives at 12 Pelham Crescent, flat 3. The buzzer is broken, so text her when you arrive."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:book_club_book",
+          "text": "We're reading The Remains of the Day for book club, I'm about halfway through."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:marguerite_allergy",
+          "text": "Marguerite is allergic to tree nuts - don't bring the walnut brownies."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:theo_address",
+          "text": "Theo moved to 88 Danforth Ave, apartment 5B."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:pelham_cafe",
+          "text": "There's a decent cafe on Pelham Street called Grind Theory, good flat whites."
+        }
+      ],
+      "queries": [
+        {
+          "id": "q1",
+          "scope": "personal",
+          "query": "What's the address for this month's book club?",
+          "expect": {
+            "must_include": [
+              "memory:book_club_host",
+              "memory:marguerite_address"
+            ],
+            "may_include": [
+              "memory:marguerite_allergy"
+            ],
+            "must_exclude": [
+              {
+                "ref": "memory:book_club_book",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:theo_address",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:pelham_cafe",
+                "reason": "irrelevant"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "mh-11-service-ci-pipeline",
+      "category": "multi_hop",
+      "description": "CI pipeline for the service I maintain: me->service, service->pipeline.",
+      "operations": [
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:my_service",
+          "text": "I'm the maintainer of the ratecard service now that Gustavo moved teams."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:ratecard_ci",
+          "text": "ratecard's tests run in the Buildkite pipeline 'pricing-core-ci', not GitHub Actions - the GHA workflow in that repo is lint only."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:gustavo_new_team",
+          "text": "Gustavo is on the search relevance team now but is still happy to answer ratecard history questions."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:quotewell_ci",
+          "text": "The quotewell service's CI is in GitHub Actions, workflow file quotewell.yml."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:flaky_tests",
+          "text": "Heads up: the integration tests that hit the ledger sandbox are flaky on Mondays when the sandbox resets."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:buildkite_token",
+          "text": "Buildkite API token is stored in 1Password under 'BK personal'."
+        }
+      ],
+      "queries": [
+        {
+          "id": "q1",
+          "scope": "work",
+          "query": "Which CI pipeline runs the tests for the service I maintain?",
+          "expect": {
+            "must_include": [
+              "memory:my_service",
+              "memory:ratecard_ci"
+            ],
+            "may_include": [],
+            "must_exclude": [
+              {
+                "ref": "memory:gustavo_new_team",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:quotewell_ci",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:flaky_tests",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:buildkite_token",
+                "reason": "irrelevant"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "mh-12-grandmother-visiting",
+      "category": "multi_hop",
+      "description": "Visiting a relative in care: relative->care home, care home->visiting hours.",
+      "operations": [
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:nonna_home",
+          "text": "Nonna Lucia moved into Bellfield House in July. It was a hard decision but she's settling in, made friends with a lady called Dot who was a seamstress, and the staff seem kind even if the food is a bit bland according to her."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:bellfield_hours",
+          "text": "Bellfield House visiting is 10:30-12 and 2-7:30 daily. Sign in at reception, and no visits during lunch."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:grandpa_mass",
+          "text": "Grandpa Sal's anniversary mass is on 9 Nov at St Brendan's."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:bellfield_newsletter",
+          "text": "signed up for the Bellfield House family newsletter, it comes monthly by email"
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:nonna_likes",
+          "text": "Nonna loves the sfogliatelle from Pasticceria Ruggiero and the Sunday paper crossword."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:carla_visits",
+          "text": "Aunt Carla usually visits Nonna on Sundays - coordinate so we don't both turn up at once."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:hospital_hours",
+          "text": "St Margaret's hospital visiting hours are 2-8pm."
+        }
+      ],
+      "queries": [
+        {
+          "id": "q1",
+          "scope": "personal",
+          "query": "When can I visit my grandmother?",
+          "expect": {
+            "must_include": [
+              "memory:nonna_home",
+              "memory:bellfield_hours"
+            ],
+            "may_include": [
+              "memory:carla_visits",
+              "memory:nonna_likes"
+            ],
+            "must_exclude": [
+              {
+                "ref": "memory:grandpa_mass",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:bellfield_newsletter",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:hospital_hours",
+                "reason": "irrelevant"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sh-01-cabin-wifi",
+      "category": "single_hop_with_names",
+      "description": "Cabin wifi password; answer mentions a relative and a neighbour with their own memories.",
+      "operations": [
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:cabin_wifi",
+          "text": "Wifi at the lake cabin: network 'Ferris_Ext', password loonsong1987. Uncle Ferris set it up and Mirela next door has the spare key if the router needs a reset."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:ferris_birthday",
+          "text": "Uncle Ferris turns 70 on 2 December, party is at the Grange Hotel."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:mirela_contact",
+          "text": "Mirela (cabin neighbour) - 555-0198. She feeds the birds when we're away and hates people parking on her verge."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:grange_roast",
+          "text": "The Grange Hotel does a Sunday roast that's actually decent."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:home_wifi",
+          "text": "Home broadband is the BT hub, the password is on the sticker on the back."
+        }
+      ],
+      "queries": [
+        {
+          "id": "q1",
+          "scope": "personal",
+          "query": "What's the wifi password at the cabin?",
+          "expect": {
+            "must_include": [
+              "memory:cabin_wifi"
+            ],
+            "may_include": [],
+            "must_exclude": [
+              {
+                "ref": "memory:ferris_birthday",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:mirela_contact",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:grange_roast",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:home_wifi",
+                "reason": "irrelevant"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sh-02-offsite-budget-code",
+      "category": "single_hop_with_names",
+      "description": "Offsite budget code; answer names an approver, a venue and an organiser who each have unrelated memories.",
+      "operations": [
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:offsite_code",
+          "text": "Q4 offsite budget code is OPS-4471, approved by Yusuf Danjuma. Venue is Thornbury Barns, organised together with Clementine from the People team."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:yusuf_style",
+          "text": "Yusuf likes decisions written up as one-pagers, no slide decks."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:clementine_leave",
+          "text": "Clementine is on parental leave from January until June."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:thornbury_signal",
+          "text": "Thornbury Barns has no mobile signal past the car park, warn people in advance."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:yusuf_kids",
+          "text": "Yusuf's kids both play cello, he mentioned a recital at the Corn Exchange."
+        }
+      ],
+      "queries": [
+        {
+          "id": "q1",
+          "scope": "work",
+          "query": "What's the budget code for the Q4 offsite?",
+          "expect": {
+            "must_include": [
+              "memory:offsite_code"
+            ],
+            "may_include": [],
+            "must_exclude": [
+              {
+                "ref": "memory:yusuf_style",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:clementine_leave",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:thornbury_signal",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:yusuf_kids",
+                "reason": "irrelevant"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sh-03-passport-expiry",
+      "category": "single_hop_with_names",
+      "description": "Passport expiry; answer names a relative and a city that have unrelated memories.",
+      "operations": [
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:passport",
+          "text": "My passport expires 3 April 2031 - renewed it in Liverpool, Aunt Rosalind drove me to the appointment."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:rosalind",
+          "text": "Aunt Rosalind lives in Formby, loves gardening, call her on Sunday afternoons."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:liverpool_trip",
+          "text": "Liverpool weekend in May: stay at the Baltic Triangle Airbnb again, it was great."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:rosalind_dog",
+          "text": "Rosalind's new spaniel is called Pudding and is completely feral."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:driving_licence",
+          "text": "Driving licence photo needs renewing by 2028."
+        }
+      ],
+      "queries": [
+        {
+          "id": "q1",
+          "scope": "personal",
+          "query": "When does my passport expire?",
+          "expect": {
+            "must_include": [
+              "memory:passport"
+            ],
+            "may_include": [],
+            "must_exclude": [
+              {
+                "ref": "memory:rosalind",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:liverpool_trip",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:rosalind_dog",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:driving_licence",
+                "reason": "irrelevant"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sh-04-boiler-plumber",
+      "category": "single_hop_with_names",
+      "description": "Plumber name; answer mentions a neighbour and a firm that have unrelated memories.",
+      "operations": [
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:boiler_fix",
+          "text": "The boiler was fixed by Gwilym Pryce from Pryce & Daughters Plumbing, recommended by Hattie at no. 14. Cost £240 including the new pressure valve."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:hattie",
+          "text": "Hattie at no. 14 waters our plants when we're away and has a spare key."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:pryce_bathroom",
+          "text": "Pryce & Daughters also quoted about £6k for a full bathroom refit, maybe next year."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:electrician",
+          "text": "Electrician: Sunil Varma, he did the loft rewiring."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:hattie_cat",
+          "text": "hattie's cat keeps getting into our shed, keep the door shut"
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:boiler_service",
+          "text": "Boiler annual service is due each February."
+        }
+      ],
+      "queries": [
+        {
+          "id": "q1",
+          "scope": "personal",
+          "query": "What was the name of the plumber who fixed the boiler?",
+          "expect": {
+            "must_include": [
+              "memory:boiler_fix"
+            ],
+            "may_include": [
+              "memory:boiler_service"
+            ],
+            "must_exclude": [
+              {
+                "ref": "memory:hattie",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:pryce_bathroom",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:electrician",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:hattie_cat",
+                "reason": "irrelevant"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sh-05-dashboard-database",
+      "category": "single_hop_with_names",
+      "description": "Dashboard source database; answer mentions a person and two products that have unrelated memories.",
+      "operations": [
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:dashboard_source",
+          "text": "The exec analytics dashboard (built by Ingeborg's team in Looker) reads from the warehouse_prod database in Snowflake, refreshed hourly."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:ingeborg_ooo",
+          "text": "Ingeborg runs the BI team and is out of office for the whole of December."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:looker_licence",
+          "text": "Looker licence renewal is in March; Patrice handles vendor contracts."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:snowflake_spend",
+          "text": "Snowflake spend spiked in September because of the backfill job, finance flagged it in the monthly review."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:patrice_desk",
+          "text": "Patrice sits on the 3rd floor by the window, easier to catch in person than on Slack."
+        }
+      ],
+      "queries": [
+        {
+          "id": "q1",
+          "scope": "work",
+          "query": "Which database does the exec analytics dashboard read from?",
+          "expect": {
+            "must_include": [
+              "memory:dashboard_source"
+            ],
+            "may_include": [],
+            "must_exclude": [
+              {
+                "ref": "memory:ingeborg_ooo",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:looker_licence",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:snowflake_spend",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:patrice_desk",
+                "reason": "irrelevant"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sh-06-pool-locker",
+      "category": "single_hop_with_names",
+      "description": "Locker combination; answer mentions a coach and a venue with unrelated memories.",
+      "operations": [
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:pool_locker",
+          "text": "Locker at Aldermoor Pool is #212, combination 4-19-33. Marisol from swim club told me to grab one near the showers."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:marisol",
+          "text": "Marisol coaches the Tuesday masters session and is training for a Channel relay next summer."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:aldermoor_refurb",
+          "text": "Aldermoor Pool closes for refurbishment 1-21 December."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:bike_lock",
+          "text": "bike lock code is 0817"
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:swim_club_social",
+          "text": "Swim club Christmas social is at the Anchor pub, Marisol is organising the secret santa."
+        }
+      ],
+      "queries": [
+        {
+          "id": "q1",
+          "scope": "personal",
+          "query": "What's the combination for my locker at the pool?",
+          "expect": {
+            "must_include": [
+              "memory:pool_locker"
+            ],
+            "may_include": [],
+            "must_exclude": [
+              {
+                "ref": "memory:marisol",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:aldermoor_refurb",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:bike_lock",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:swim_club_social",
+                "reason": "irrelevant"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sh-07-desk-tracking",
+      "category": "single_hop_with_names",
+      "description": "Parcel tracking number; answer mentions vendor, courier and colleague with unrelated memories.",
+      "operations": [
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:desk_tracking",
+          "text": "Standing desk from Oakline Furniture shipped via Parcelwise, tracking PW-8820-3371-UK, expected Thursday. Bram from IT said to have it delivered to the side entrance."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:oakline_catalogue",
+          "text": "Oakline Furniture's oak bookshelves would look great in the meeting room, bookmark for the refresh."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:parcelwise_complaint",
+          "text": "Parcelwise lost my sister's parcel at Christmas, she is still furious about it."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:bram_monitor",
+          "text": "Bram from IT is the person to ask for a second monitor or a new dock."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:chair_order",
+          "text": "Ordered an ergonomic chair from Seatcraft, arriving sometime next month."
+        }
+      ],
+      "queries": [
+        {
+          "id": "q1",
+          "scope": "work",
+          "query": "What's the tracking number for the standing desk?",
+          "expect": {
+            "must_include": [
+              "memory:desk_tracking"
+            ],
+            "may_include": [],
+            "must_exclude": [
+              {
+                "ref": "memory:oakline_catalogue",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:parcelwise_complaint",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:bram_monitor",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:chair_order",
+                "reason": "irrelevant"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sh-08-policy-approver",
+      "category": "single_hop_with_names",
+      "description": "Policy approver; answer names an executive, an HR person and an office with unrelated memories.",
+      "operations": [
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:remote_policy",
+          "text": "The updated remote-work policy (3 days a week in office for Northgate staff) was approved by COO Adaeze Nwosu and drafted by Leopold in HR."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:adaeze_ea",
+          "text": "Adaeze Nwosu's EA is Corinne, go through her to get any 1:1 time."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:leopold_mentoring",
+          "text": "Leopold in HR also runs the mentoring scheme sign-ups each January."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:northgate_office",
+          "text": "Northgate office has a new coffee machine and the 4th floor is hot-desk only now."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:adaeze_keynote",
+          "text": "Adaeze is giving the keynote at the Women in Ops conference in Leeds."
+        }
+      ],
+      "queries": [
+        {
+          "id": "q1",
+          "scope": "work",
+          "query": "Who signed off on the new remote work policy?",
+          "expect": {
+            "must_include": [
+              "memory:remote_policy"
+            ],
+            "may_include": [],
+            "must_exclude": [
+              {
+                "ref": "memory:adaeze_ea",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:leopold_mentoring",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:northgate_office",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:adaeze_keynote",
+                "reason": "irrelevant"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "lc-01-corrected-first-hop",
+      "category": "multi_hop_lifecycle",
+      "description": "Brother's office after he changed employer: the first-hop fact is corrected to point to a new org.",
+      "operations": [
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:callum_job",
+          "text": "My brother Callum works at Fernhill Robotics as a test engineer."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:fernhill_office",
+          "text": "Fernhill Robotics' office is on Wharf Street in Leeds, by the canal."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:ostrava_office",
+          "text": "Ostrava Labs is in the Cotton Exchange building in Manchester, 5th floor."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:callum_wedding",
+          "text": "Callum and Freya's wedding is booked for next June in the Dales."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:my_office_move",
+          "text": "Our office is moving to the new Tower Square building in January."
+        },
+        {
+          "op": "correct",
+          "scope": "personal",
+          "ref": "memory:callum_job",
+          "text": "Callum left Fernhill Robotics in August - he works at Ostrava Labs now, doing firmware."
+        }
+      ],
+      "queries": [
+        {
+          "id": "q1",
+          "scope": "personal",
+          "query": "Where's my brother's office these days?",
+          "expect": {
+            "must_include": [
+              "memory:callum_job",
+              "memory:ostrava_office"
+            ],
+            "may_include": [],
+            "must_exclude": [
+              {
+                "ref": "memory:fernhill_office",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:callum_wedding",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:my_office_move",
+                "reason": "irrelevant"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "lc-02-corrected-second-hop",
+      "category": "multi_hop_lifecycle",
+      "description": "Yoga class location after the studio moved: the second-hop fact is corrected.",
+      "operations": [
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:yoga_class",
+          "text": "My Wednesday yoga class is with Saoirse at Lotus Loft."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:lotus_address",
+          "text": "Lotus Loft is at 40 Kingsway, above the bike shop."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:saoirse_retreat",
+          "text": "Saoirse is running a weekend retreat in Connemara in May, early-bird closes in Feb."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:kingsway_bikes",
+          "text": "The bike shop on Kingsway does same-day puncture repairs."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:pilates",
+          "text": "Tried a reformer pilates class at Core Studio, too expensive to keep up."
+        },
+        {
+          "op": "correct",
+          "scope": "personal",
+          "ref": "memory:lotus_address",
+          "text": "Lotus Loft moved from Kingsway to the old library building on Abbey Street in September."
+        }
+      ],
+      "queries": [
+        {
+          "id": "q1",
+          "scope": "personal",
+          "query": "Where is my yoga class held now?",
+          "expect": {
+            "must_include": [
+              "memory:yoga_class",
+              "memory:lotus_address"
+            ],
+            "may_include": [],
+            "must_exclude": [
+              {
+                "ref": "memory:saoirse_retreat",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:kingsway_bikes",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:pilates",
+                "reason": "irrelevant"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "lc-03-forgotten-first-hop",
+      "category": "multi_hop_lifecycle",
+      "description": "Accountant's office after the accountant link was forgotten: the question is no longer answerable.",
+      "operations": [
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:accountant",
+          "text": "My accountant is Hamid Sarraf at Ledger & Lamp, he does the self-assessment."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:ledger_lamp_office",
+          "text": "Ledger & Lamp's office is above the Co-op on Station Road, open Monday to Thursday."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:solicitor",
+          "text": "Solicitor for the house purchase was Eloise Brandt at Marsh Keane."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:station_road_parking",
+          "text": "Station Road has 2-hour free parking behind the library."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:tax_deadline",
+          "text": "Self-assessment deadline is 31 January, don't leave it to the last week again."
+        },
+        {
+          "op": "forget",
+          "scope": "personal",
+          "ref": "memory:accountant",
+          "text": ""
+        }
+      ],
+      "queries": [
+        {
+          "id": "q1",
+          "scope": "personal",
+          "query": "Where is my accountant's office?",
+          "expect": {
+            "must_include": [],
+            "may_include": [
+              "memory:ledger_lamp_office"
+            ],
+            "must_exclude": [
+              {
+                "ref": "memory:accountant",
+                "reason": "forgotten"
+              },
+              {
+                "ref": "memory:solicitor",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:station_road_parking",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:tax_deadline",
+                "reason": "irrelevant"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "lc-04-forgotten-second-hop",
+      "category": "multi_hop_lifecycle",
+      "description": "Nursery pickup time after the nursery's details were forgotten: only the first hop remains.",
+      "operations": [
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:leila_nursery",
+          "text": "My niece Leila goes to Kingfisher Montessori; I do the pickup on Wednesdays."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:kingfisher_pickup",
+          "text": "Kingfisher Montessori pickup is 3:15 sharp, with a late fee after 3:30."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:zainab_shift",
+          "text": "Zainab (Leila's mum) works late shifts at the hospital on Wednesdays."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:kingfisher_fundraiser",
+          "text": "Kingfisher Montessori summer fair raised £1,200, I ran the tombola."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:gym_class",
+          "text": "Wednesday spin class is at 6:30pm, so pickup days are tight."
+        },
+        {
+          "op": "forget",
+          "scope": "personal",
+          "ref": "memory:kingfisher_pickup",
+          "text": ""
+        }
+      ],
+      "queries": [
+        {
+          "id": "q1",
+          "scope": "personal",
+          "query": "What time is pickup at my niece's nursery?",
+          "expect": {
+            "must_include": [
+              "memory:leila_nursery"
+            ],
+            "may_include": [
+              "memory:zainab_shift"
+            ],
+            "must_exclude": [
+              {
+                "ref": "memory:kingfisher_pickup",
+                "reason": "forgotten"
+              },
+              {
+                "ref": "memory:kingfisher_fundraiser",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:gym_class",
+                "reason": "irrelevant"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "lc-05-other-scope-first-hop",
+      "category": "multi_hop_lifecycle",
+      "description": "Contract renewal for a relative's employer, where the relative->employer link lives in the personal scope.",
+      "operations": [
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:delphine_job",
+          "text": "My sister-in-law Delphine works at Corrigan Analytics, she's in their data science team."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:corrigan_contract",
+          "text": "Vendor contract with Corrigan Analytics: I signed it, renewal is due 1 March, 60-day notice period."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:brightline_contract",
+          "text": "Brightline Media contract renews in September, owned by marketing."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:conflict_policy",
+          "text": "Conflict-of-interest declarations go through the compliance portal, reviewed quarterly."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:procurement_contact",
+          "text": "Procurement contact for renewals is Teodora Ilic."
+        }
+      ],
+      "queries": [
+        {
+          "id": "q1",
+          "scope": "work",
+          "query": "When is the contract renewal for my sister-in-law's company?",
+          "expect": {
+            "must_include": [],
+            "may_include": [
+              "memory:corrigan_contract",
+              "memory:procurement_contact"
+            ],
+            "must_exclude": [
+              {
+                "ref": "memory:delphine_job",
+                "reason": "other_scope"
+              },
+              {
+                "ref": "memory:brightline_contract",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:conflict_policy",
+                "reason": "irrelevant"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "scope": "personal",
+          "query": "Where does my sister-in-law work?",
+          "expect": {
+            "must_include": [
+              "memory:delphine_job"
+            ],
+            "may_include": [],
+            "must_exclude": [
+              {
+                "ref": "memory:corrigan_contract",
+                "reason": "other_scope"
+              },
+              {
+                "ref": "memory:brightline_contract",
+                "reason": "other_scope"
+              },
+              {
+                "ref": "memory:conflict_policy",
+                "reason": "other_scope"
+              },
+              {
+                "ref": "memory:procurement_contact",
+                "reason": "other_scope"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "lc-06-other-scope-second-hop",
+      "category": "multi_hop_lifecycle",
+      "description": "Guest wifi at partner's office, where the office details are only in the work scope.",
+      "operations": [
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:ines_job",
+          "text": "My wife Ines works at Varga & Holt, the engineering consultancy on Merchant Quay."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:varga_wifi",
+          "text": "Varga & Holt (client) guest wifi: network VH-Guest, password harbour-lights-22. Reception gives out day badges."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:home_router",
+          "text": "Home router admin login is on the underside of the box, change it someday."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:ines_commute",
+          "text": "Ines cycles to work most days unless it's chucking it down."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:client_list",
+          "text": "Current consulting clients: Varga & Holt, Pemberton Fisher, and the council's transport team."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:cafe_wifi",
+          "text": "Grind Theory cafe wifi password is flatwhite2024."
+        }
+      ],
+      "queries": [
+        {
+          "id": "q1",
+          "scope": "personal",
+          "query": "What's the guest wifi at my wife's office?",
+          "expect": {
+            "must_include": [
+              "memory:ines_job"
+            ],
+            "may_include": [],
+            "must_exclude": [
+              {
+                "ref": "memory:varga_wifi",
+                "reason": "other_scope"
+              },
+              {
+                "ref": "memory:client_list",
+                "reason": "other_scope"
+              },
+              {
+                "ref": "memory:home_router",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:ines_commute",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:cafe_wifi",
+                "reason": "irrelevant"
+              }
+            ]
+          }
+        },
+        {
+          "id": "q2",
+          "scope": "work",
+          "query": "What's the guest wifi password at Varga & Holt?",
+          "expect": {
+            "must_include": [
+              "memory:varga_wifi"
+            ],
+            "may_include": [],
+            "must_exclude": [
+              {
+                "ref": "memory:ines_job",
+                "reason": "other_scope"
+              },
+              {
+                "ref": "memory:home_router",
+                "reason": "other_scope"
+              },
+              {
+                "ref": "memory:ines_commute",
+                "reason": "other_scope"
+              },
+              {
+                "ref": "memory:cafe_wifi",
+                "reason": "other_scope"
+              },
+              {
+                "ref": "memory:client_list",
+                "reason": "irrelevant"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "ab-01-brother-shoe-size",
+      "category": "abstention_with_names",
+      "description": "Asks a personal detail never stored, in a store with several facts about the same relative.",
+      "operations": [
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:rafael_job",
+          "text": "My brother Rafael is a sous chef at Olmo in Brighton."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:rafael_birthday",
+          "text": "Rafael's birthday is 22 March, he wants a proper Japanese knife this year."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:rafael_wife",
+          "text": "Rafael's wife is Mei-Lin, they met at catering college in Bournemouth."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:nephew",
+          "text": "Their son Tomás is 4 and obsessed with diggers."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:rafael_marathon",
+          "text": "rafael ran the brighton marathon in april, 3h52, his feet were wrecked after"
+        }
+      ],
+      "queries": [
+        {
+          "id": "q1",
+          "scope": "personal",
+          "query": "What's my brother's shoe size?",
+          "expect": {
+            "must_include": [],
+            "may_include": [],
+            "must_exclude": [
+              {
+                "ref": "memory:rafael_job",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:rafael_birthday",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:rafael_wife",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:nephew",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:rafael_marathon",
+                "reason": "irrelevant"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "ab-02-api-sla",
+      "category": "abstention_with_names",
+      "description": "Asks for an SLA that was never stored, in a store of service ownership facts.",
+      "operations": [
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:kestrel_api_owner",
+          "text": "The Kestrel API is owned by Nadia Farouk's integrations team."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:kestrel_api_auth",
+          "text": "Kestrel API uses OAuth client credentials; secrets are in Vault under integrations/kestrel."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:harbor_gateway",
+          "text": "Harbor gateway sits in front of Kestrel and the Orchid service, rate-limited to 500 rps per tenant."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:orchid_owner",
+          "text": "Orchid is owned by Pieter van Dijk; he's moving it to Kubernetes this quarter."
+        },
+        {
+          "op": "remember",
+          "scope": "work",
+          "ref": "memory:incident_review",
+          "text": "Last Kestrel incident review was on 2 October, root cause was an expired cert."
+        }
+      ],
+      "queries": [
+        {
+          "id": "q1",
+          "scope": "work",
+          "query": "What uptime SLA have we promised customers for the Kestrel API?",
+          "expect": {
+            "must_include": [],
+            "may_include": [],
+            "must_exclude": [
+              {
+                "ref": "memory:kestrel_api_owner",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:kestrel_api_auth",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:harbor_gateway",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:orchid_owner",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:incident_review",
+                "reason": "irrelevant"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "ab-03-anniversary-restaurant",
+      "category": "abstention_with_names",
+      "description": "Asks which restaurant was booked for an anniversary when no booking was stored.",
+      "operations": [
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:anniversary_date",
+          "text": "Our anniversary with Joaquín is 19 November - ten years this time!"
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:joaquin_diet",
+          "text": "Joaquín doesn't eat shellfish and is off red meat for now."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:restaurant_wishlist",
+          "text": "Places I want to try someday: Sable & Rye, Little Persimmon, and that Georgian place on Hart Street."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:babysitter",
+          "text": "Babysitter Agnieszka is free most Fridays, £12/hour, book a week ahead."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:last_dinner",
+          "text": "Went to Casa Lumbre for Esme's birthday - loud but the tapas were great."
+        }
+      ],
+      "queries": [
+        {
+          "id": "q1",
+          "scope": "personal",
+          "query": "Which restaurant did I book for our anniversary dinner?",
+          "expect": {
+            "must_include": [],
+            "may_include": [],
+            "must_exclude": [
+              {
+                "ref": "memory:anniversary_date",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:joaquin_diet",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:restaurant_wishlist",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:babysitter",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:last_dinner",
+                "reason": "irrelevant"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "ab-04-parents-gate-code",
+      "category": "abstention_with_names",
+      "description": "Asks for a building gate code never stored, in a store with facts about the parents and their home.",
+      "operations": [
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:parents_address",
+          "text": "Mum and Dad's flat is 7 Larchmont Court, Sheffield, second floor."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:parents_names",
+          "text": "Parents: Ewa and Bogdan Kowalczyk. Dad still won't use WhatsApp."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:larchmont_lift",
+          "text": "The lift at Larchmont Court has been broken since August, landlord company is Prestwick Estates."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:mum_hip",
+          "text": "Mum's hip replacement is scheduled at the Northern General in January."
+        },
+        {
+          "op": "remember",
+          "scope": "personal",
+          "ref": "memory:parking_larchmont",
+          "text": "visitor parking at Larchmont is round the back, max 3 hours"
+        }
+      ],
+      "queries": [
+        {
+          "id": "q1",
+          "scope": "personal",
+          "query": "What's the gate code for my parents' building?",
+          "expect": {
+            "must_include": [],
+            "may_include": [],
+            "must_exclude": [
+              {
+                "ref": "memory:parents_address",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:parents_names",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:larchmont_lift",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:mum_hip",
+                "reason": "irrelevant"
+              },
+              {
+                "ref": "memory:parking_larchmont",
+                "reason": "irrelevant"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

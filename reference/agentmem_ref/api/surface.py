@@ -853,13 +853,17 @@ class AgentMemory:
         The budget is applied after admission and after ranking and is never authority.
 
         ``return_selection`` (contract 1.9.0, #819) decides which ranked admitted facts the
-        budget sees. ``"relevance_sufficient"`` (default) keeps exact-identity hits, facts a
-        non-lexical route surfaced, and lexical facts whose informative-term relevance is at
-        least half the best in this recall, and returns nothing when none qualifies (see
-        ``runtime.return_selection``); each admitted fact's decision is in
-        ``admissions[ref]["return_selection"]``. ``"ranked_prefix"`` is the 1.4.0 behaviour:
-        the ranked admitted prefix. Neither changes candidates, admission, ``admitted`` or
-        the ranked order.
+        budget sees. ``"relevance_sufficient"`` (default) builds an evidence set from the
+        ranked admitted facts: exact-identity hits, facts a non-lexical route surfaced, lexical
+        facts with enough topical relevance (a lower floor for aggregate and relational
+        questions), the fact most about each named entity, and the admitted later states that
+        typed lifecycle relations link to them; it returns nothing when none qualifies (see
+        ``runtime.return_selection``). Each admitted fact's decision is in
+        ``admissions[ref]["return_selection"]``. Under this mode only, lexical discovery also
+        searches inflectional and one-edit variants found in the vocabulary of admissible
+        facts, which can add candidates (``return_policy.query_expansion``); every candidate
+        still crosses admission and ranking scores the query as written. ``"ranked_prefix"``
+        is exactly the 1.4.0 behaviour: no expansion, the ranked admitted prefix.
 
         ``temporal_intent`` optionally declares what time the query is about
         (``{"mode": "current"|"as_of"|"historical"|"atemporal_or_unspecified"|
@@ -892,6 +896,7 @@ class AgentMemory:
             context,
             logical_memory_refs=tuple(logical_memory_refs),
             temporal_intent=intent,
+            discovery_expansion=return_selection == RELEVANCE_SUFFICIENT,
         )
         rank = {candidate: index + 1 for index, candidate in enumerate(result.ranked_admitted)}
         admissions: dict[str, dict] = {}

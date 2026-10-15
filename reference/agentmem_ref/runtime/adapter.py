@@ -22,7 +22,7 @@ import json
 from typing import Callable, Mapping, Sequence
 
 import random
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import datetime, timedelta, timezone
 
 from ..core import policy, receipts
@@ -831,8 +831,10 @@ class GovernedMemoryAdapter:
         """#819 C3: for each admitted fact, the admitted facts whose guarded write-time
         state-change relation targets it (pure read).
 
-        The same #671 guards as ``cross_fact_applicability`` (G2-G13: open proposal, same
-        actor, source, tenant, purpose and scope, assertive change, clock order) except G1:
+        Only typed relations (caller-declared or extracted propositions) are followed; text
+        relations from the #550 interpreter are not. The same #671 guards as
+        ``cross_fact_applicability`` (G2-G13: open proposal, same actor, source, tenant,
+        purpose and scope, assertive change, clock order) except G1:
         no currentness or applicability decision is made, so the query's temporal intent does
         not gate it. Return selection uses it only to return a later state alongside the
         earlier one it changes; it never removes, demotes or relabels a fact. Only facts with
@@ -845,10 +847,23 @@ class GovernedMemoryAdapter:
         candidates = [uuid for uuid in admitted if uuid in indexed]
         if len(candidates) < 2:
             return {}
+        def typed_only(uuid):
+            # Closure follows caller-declared or extracted typed propositions only; relations the
+            # #550 interpreter derives from plain text never add a fact to what is returned.
+            fact = self._substrate.get_fact(uuid)
+            if fact is None:
+                return None
+            attributes = dict(fact.attributes or {})
+            stored = dict(attributes.get(semantics.WRITE_SEMANTICS_KEY) or {})
+            stored["relations"] = [relation for relation in stored.get("relations", ()) or ()
+                                   if cross_fact._typed_relation(relation)]
+            attributes[semantics.WRITE_SEMANTICS_KEY] = stored
+            return replace(fact, attributes=attributes)
+
         decisions = cross_fact.evaluate(
             candidates,
             TemporalIntent(),
-            fact_lookup=self._substrate.get_fact,
+            fact_lookup=typed_only,
             proposal_status=self._proposal_status,
             fact_scope=self._fact_scope.get,
             same_scope=self._same_semantic_scope,
@@ -1287,15 +1302,28 @@ class GovernedMemoryAdapter:
     def tombstoned_ids(self) -> set[str]:
         return {record["memory_id"] for record in self._tombstones.values()}
 
-    def current_live_fact_uuids(self) -> frozenset[str]:
-        """Current fact of every logical memory that is not tombstoned (#819 C3). Read-only.
+    def current_fact_uuids(self) -> frozenset[str]:
+        """The current fact of every logical memory (#819 C3). Read-only; grants nothing."""
 
-        Recall uses it to keep forgotten and superseded text out of anything derived for a
-        query (the discovery vocabulary); it grants nothing and admission still decides.
+        return frozenset(uuid for uuid in self._current_fact_by_memory.values() if uuid)
+
+    def discovery_admissible(self, fact_uuid: str, group_id: str, episode_uuids, event_invalid: bool,
+                             context: RecallContext) -> bool:
+        """Current-state admission's refusals, evaluated without the fact body (#819 C3).
+
+        The checks of ``_admission_refusal`` in current-state mode: tenant, tombstone, derived
+        from a tombstoned source, event-invalid (superseded), dispute, and domain eligibility.
+        Recall uses it so that text admission would refuse never shapes the discovery
+        vocabulary. It grants nothing; admission still evaluates every candidate.
         """
-        dead = self.tombstoned_ids()
-        return frozenset(uuid for memory_id, uuid in self._current_fact_by_memory.items()
-                         if uuid and memory_id not in dead)
+
+        if group_id != self._tenant or fact_uuid in self._tombstones or event_invalid:
+            return False
+        if any(source_ref in self._tombstones for source_ref in episode_uuids):
+            return False
+        if fact_uuid in self._disputed:
+            return False
+        return self._domain_identity_refusal(fact_uuid, group_id, context) is None
 
     def record_correction(self, memory_id: str) -> int:
         """A correction advances canonical version; dependents become stale by relation."""
