@@ -1,0 +1,1 @@
+{"url": "http://127.0.0.1:45199/v1", "identity": {"model": "BAAI/bge-small-en-v1.5", "dims": 384, "fastembed": "0.8.0", "onnx_files": {"models--qdrant--bge-small-en-v1.5-onnx-q/snapshots/aa8f8b060edb00e03bfdd08813a2949946c8ba55/model_optimized.onnx": "51f1bd0addd6e859e42c2c8021a5e5461385bb676a649f4b269aa445449f2431"}}, "pid": 3998}

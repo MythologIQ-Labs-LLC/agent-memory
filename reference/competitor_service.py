@@ -1,6 +1,6 @@
 """Loopback JSON service hosting one competitor memory system for the AMB service provider.
 
-Usage: python competitor_service.py --system {cognee-local,langmem-local} --url-file F [system options]
+Usage: python competitor_service.py --system {cognee-local,langmem-local,letta-local} --url-file F [system options]
 Endpoints: POST /prepare {store_dir, reset}; POST /ingest {documents:[{id,text,user_id,timestamp}]};
 POST /retrieve {query,k,user_id} -> {ranked_ids:[...], ...diagnostics}. Runs single-threaded.
 The service never sees AMB's gold, assertions or scope filters, only document text, ids and queries.
@@ -123,15 +123,94 @@ class LangMemLocal:
                 "recall_seconds": round(time.perf_counter() - t, 3), "llm_failures_so_far": len(self.stats["llm_failures"])}
 
 
+class LettaLocal:
+    """Letta 0.16.8 archival memory over its own REST API (no agent loop, no LLM call).
+
+    One Letta agent per AMB user holds that user's archival passages. Each document is one
+    `create_passage` call, which Letta stores as one passage embedded by the agent's
+    embedding config; retrieval is Letta's own `search_archival_memory` (cosine over pgvector)
+    with top_k=k. Provenance is the passage id returned at insert. Tags, dates and filters are
+    not used. The agent's llm_config is required by Letta's schema but is never invoked here.
+    """
+    def __init__(self, a):
+        import urllib.request
+        self.base = a.letta_url.rstrip("/") + "/v1"
+        self.opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+        emb = json.loads(Path(a.embed_url_file).read_text())
+        self.embedding_config = {"embedding_endpoint_type": "openai", "embedding_endpoint": emb["url"],
+                                 "embedding_model": emb["identity"]["model"], "embedding_dim": emb["identity"]["dims"],
+                                 "embedding_chunk_size": 300}
+        self.llm_config = {"model": a.llm_model or "unused", "model_endpoint_type": "openai",
+                           "model_endpoint": a.llm_base_url or "http://127.0.0.1:9/v1", "context_window": 8192}
+        health = self._call("GET", "/health/")
+        self.identity = {"letta": health.get("version"), "embedding": emb["identity"], "llm_invoked": False}
+        self.agents, self.by_passage = {}, {}
+
+    def _call(self, method, path, body=None):
+        import urllib.request
+        req = urllib.request.Request(self.base + path, method=method, headers={"content-type": "application/json"},
+                                     data=None if body is None else json.dumps(body).encode())
+        with self.opener.open(req, timeout=600) as r:
+            raw = r.read()
+        return json.loads(raw) if raw else None
+
+    def prepare(self, store_dir, reset):
+        for aid in self.agents.values():
+            self._call("DELETE", f"/agents/{aid}")
+        self.agents, self.by_passage = {}, {}
+
+    def _agent(self, user):
+        if user not in self.agents:
+            name = f"amb-{hashlib.sha256(user.encode()).hexdigest()[:12]}-{uuid.uuid4().hex[:8]}"
+            agent = self._call("POST", "/agents/", {"name": name, "include_base_tools": False, "memory_blocks": [],
+                                                    "llm_config": self.llm_config, "embedding_config": self.embedding_config})
+            self.agents[user] = agent["id"]
+        return self.agents[user]
+
+    def ingest(self, documents):
+        t, passages, skipped = time.perf_counter(), 0, 0
+        for d in documents:
+            if not d["text"].strip():
+                skipped += 1
+                continue
+            aid = self._agent(d["user_id"] or "test-user")
+            for p in self._call("POST", f"/agents/{aid}/archival-memory", {"text": d["text"]}):
+                self.by_passage[p["id"]] = d["id"]
+                passages += 1
+        return {"ingest_seconds": round(time.perf_counter() - t, 3), "passages": passages, "empty_skipped": skipped,
+                "agents": len(self.agents)}
+
+    def retrieve(self, query, k, user_id):
+        import urllib.parse
+        aid = self.agents.get(user_id or "test-user")
+        if aid is None:
+            return {"ranked_ids": [], "empty_user": True}
+        t = time.perf_counter()
+        res = self._call("GET", f"/agents/{aid}/archival-memory/search?" + urllib.parse.urlencode({"query": query, "top_k": k}))
+        ranked, unmapped = [], 0
+        for r in res["results"]:
+            doc = self.by_passage.get(r["id"])
+            if doc is None:
+                unmapped += 1
+            elif doc not in ranked:
+                ranked.append(doc)
+        return {"ranked_ids": ranked[:k], "passages_returned": res["count"], "unmapped_result_count": unmapped,
+                "recall_seconds": round(time.perf_counter() - t, 3), "llm_calls": 0}
+
+
+SYSTEMS = {"cognee-local": CogneeLocal, "langmem-local": LangMemLocal, "letta-local": LettaLocal}
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--system", required=True, choices=["cognee-local", "langmem-local"])
+    ap.add_argument("--system", required=True, choices=sorted(SYSTEMS))
     ap.add_argument("--url-file", required=True)
     ap.add_argument("--root", default="/tmp/competitor-store")
     ap.add_argument("--llm-model"); ap.add_argument("--llm-base-url")
     ap.add_argument("--embed-model", default="BAAI/bge-small-en-v1.5"); ap.add_argument("--embed-cache")
+    ap.add_argument("--letta-url", default="http://127.0.0.1:8283"); ap.add_argument("--embed-url-file")
     a = ap.parse_args()
-    system = (CogneeLocal if a.system == "cognee-local" else LangMemLocal)(a)
+    system = SYSTEMS[a.system](a)
 
     class H(BaseHTTPRequestHandler):
         def log_message(self, *args):

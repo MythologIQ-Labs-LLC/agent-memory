@@ -1,0 +1,16 @@
+amb-retrieval-no-llm-guard {"authority_effect": "none", "guard": "amb_retrieval_no_llm", "guard_version": "1.0.0", "llm_clients_constructed": 0, "patched_symbols": ["memory_bench.cli._resolve_gemini_key", "memory_bench.cli.get_answer_llm", "memory_bench.runner.GeminiJudge"]}
+2026-10-15 16:32:53,667 [INFO] [query:happy-stack-repository-layer] start — How should I structure my repository layer?
+2026-10-15 16:32:54,060 [INFO] [query:happy-stack-repository-layer] answer done in 0.4s (retrieve=393ms)
+2026-10-15 16:32:54,060 [INFO] [query:happy-stack-repository-layer] done in 0.4s — correct=False score=None
+2026-10-15 16:32:54,395 [INFO] [query:happy-alias-match-kubernetes] start — what's my k8s deploy story?
+2026-10-15 16:32:54,923 [INFO] [query:happy-alias-match-kubernetes] answer done in 0.5s (retrieve=529ms)
+2026-10-15 16:32:54,924 [INFO] [query:happy-alias-match-kubernetes] done in 0.5s — correct=False score=None
+2026-10-15 16:32:54,924 [INFO] [query:alias-kube-resolves] start — how does kube schedule pods across our CI pipeline nodes?
+2026-10-15 16:32:55,332 [INFO] [query:alias-kube-resolves] answer done in 0.4s (retrieve=407ms)
+2026-10-15 16:32:55,332 [INFO] [query:alias-kube-resolves] done in 0.4s — correct=False score=None
+2026-10-15 16:32:55,333 [INFO] [query:alias-gha-resolves] start — GHA secrets config
+2026-10-15 16:32:55,652 [INFO] [query:alias-gha-resolves] answer done in 0.3s (retrieve=320ms)
+2026-10-15 16:32:55,653 [INFO] [query:alias-gha-resolves] done in 0.3s — correct=False score=None
+2026-10-15 16:32:55,653 [INFO] [query:long-query-rambling-kubernetes] start — ok so I've been thinking about this for a while and I know we've talked about in
+2026-10-15 16:32:56,018 [INFO] [query:long-query-rambling-kubernetes] answer done in 0.4s (retrieve=365ms)
+2026-10-15 16:32:56,019 [INFO] [query:long-query-rambling-kubernetes] done in 0.4s — correct=False score=None

@@ -1,0 +1,537 @@
+{
+  "dataset": "precisionmembench",
+  "split": "single-turn",
+  "category": null,
+  "memory_provider": "letta-local",
+  "run_name": "letta-local",
+  "mode": "retrieval",
+  "oracle": false,
+  "total_queries": 5,
+  "correct": 0,
+  "accuracy": 0.0,
+  "mean_precision": 0.0556,
+  "mean_recall": 1.0,
+  "active_passes": 0,
+  "active_total": 4,
+  "ingestion_time_ms": 13926.0,
+  "ingested_docs": 35,
+  "description": null,
+  "answer_llm": null,
+  "judge_llm": null,
+  "results": [
+    {
+      "query_id": "happy-stack-repository-layer",
+      "query": "How should I structure my repository layer?",
+      "answer": "20 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (20)\n\n1. [b-pinned-resolved-interaction] \u2190 b-pinned-resolved-interaction\n\n\n2. [b-zero-reinforcement-fresh] \u2190 b-zero-reinforcement-fresh\n\n\n3. [b-chapter-structure-q] \u2190 b-chapter-structure-q\n\n\n4. [b-react-expertise] \u2190 b-react-expertise\n\n\n5. [b-functional-pipeline] \u2190 b-functional-pipeline\n\n\n6. [b-composition-inheritance] \u2190 b-composition-inheritance\n\n\n7. [b-comm-recommendation] \u2190 b-comm-recommendation\n\n\n8. [b-prose-style-user-edited] \u2190 b-prose-style-user-edited\n\n\n9. [b-linting-current] \u2190 b-linting-current\n\n\n10. [b-db-decision] \u2190 b-db-decision\n\n\n11. [b-ci-gha-entity] \u2190 b-ci-gha-entity\n\n\n12. [b-authorship-mode] \u2190 b-authorship-mode\n\n\n13. [b-comm-response-length] \u2190 b-comm-response-length\n\n\n14. [b-comm-pushback] \u2190 b-comm-pushback\n\n\n15. [b-pov-shift-entity] \u2190 b-pov-shift-entity\n\n\n16. [b-auth-depends-redis] \u2190 b-auth-depends-redis\n\n\n17. [b-react-entity] \u2190 b-react-entity\n\n\n18. [b-redis-code] \u2190 b-redis-code\n\n\n19. [b-auth-open-q] \u2190 b-auth-open-q\n\n\n20. [b-hosting-resolved] \u2190 b-hosting-resolved\n",
+      "context_tokens": 328,
+      "retrieve_time_ms": 392.8,
+      "gold_answers": [
+        "b-db-decision"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-pinned-resolved-interaction; unexpected belief in relevantBeliefs: b-zero-reinforcement-fresh; unexpected belief in relevantBeliefs: b-chapter-structure-q; unexpected belief in relevantBeliefs: b-react-expertise",
+      "score": null,
+      "meta": {
+        "category": "Type routing and open questions",
+        "description": "Repository layer query: pinned DB decision surfaces; scoped open question surfaces; relevant beliefs depend on query token overlap",
+        "scope": [
+          "domain:code"
+        ],
+        "budget": {},
+        "expect": {
+          "personaPrelude": {
+            "nonEmpty": true
+          },
+          "pinnedFacts": {
+            "mustInclude": [
+              "b-db-decision"
+            ]
+          },
+          "relevantBeliefs": {
+            "shouldOnlyInclude": []
+          },
+          "openQuestions": {
+            "mustInclude": [
+              "b-auth-open-q"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "structural",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-pinned-resolved-interaction",
+          "b-zero-reinforcement-fresh",
+          "b-chapter-structure-q",
+          "b-react-expertise",
+          "b-functional-pipeline",
+          "b-composition-inheritance",
+          "b-comm-recommendation",
+          "b-prose-style-user-edited",
+          "b-ci-gha-entity",
+          "b-authorship-mode",
+          "b-comm-response-length",
+          "b-comm-pushback",
+          "b-pov-shift-entity",
+          "b-auth-depends-redis",
+          "b-react-entity",
+          "b-redis-code",
+          "b-auth-open-q",
+          "b-hosting-resolved"
+        ],
+        "pinned_beliefs": [
+          "b-db-decision",
+          "b-linting-current"
+        ],
+        "retrieved_questions": [
+          "b-auth-open-q"
+        ],
+        "retrieval_precision": 0.0,
+        "retrieval_recall": null,
+        "pinned_coverage": 1.0,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-pinned-resolved-interaction",
+          "unexpected belief in relevantBeliefs: b-zero-reinforcement-fresh",
+          "unexpected belief in relevantBeliefs: b-chapter-structure-q",
+          "unexpected belief in relevantBeliefs: b-react-expertise",
+          "unexpected belief in relevantBeliefs: b-functional-pipeline",
+          "unexpected belief in relevantBeliefs: b-composition-inheritance",
+          "unexpected belief in relevantBeliefs: b-comm-recommendation",
+          "unexpected belief in relevantBeliefs: b-prose-style-user-edited",
+          "unexpected belief in relevantBeliefs: b-ci-gha-entity",
+          "unexpected belief in relevantBeliefs: b-authorship-mode",
+          "unexpected belief in relevantBeliefs: b-comm-response-length",
+          "unexpected belief in relevantBeliefs: b-comm-pushback",
+          "unexpected belief in relevantBeliefs: b-pov-shift-entity",
+          "unexpected belief in relevantBeliefs: b-auth-depends-redis",
+          "unexpected belief in relevantBeliefs: b-react-entity",
+          "unexpected belief in relevantBeliefs: b-redis-code",
+          "unexpected belief in relevantBeliefs: b-auth-open-q",
+          "unexpected belief in relevantBeliefs: b-hosting-resolved"
+        ],
+        "resolution": {
+          "source_id": 20
+        },
+        "retrieved_count": 20
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "Type routing and open questions"
+        ],
+        "Pass type": [
+          "structural"
+        ]
+      }
+    },
+    {
+      "query_id": "happy-alias-match-kubernetes",
+      "query": "what's my k8s deploy story?",
+      "answer": "20 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (20)\n\n1. [b-kubernetes-entity] \u2190 b-kubernetes-entity\n\n\n2. [b-ci-gha-entity] \u2190 b-ci-gha-entity\n\n\n3. [b-dead-letter-queue] \u2190 b-dead-letter-queue\n\n\n4. [b-pinned-resolved-interaction] \u2190 b-pinned-resolved-interaction\n\n\n5. [b-hosting-resolved] \u2190 b-hosting-resolved\n\n\n6. [b-auth-depends-redis] \u2190 b-auth-depends-redis\n\n\n7. [b-zero-reinforcement-fresh] \u2190 b-zero-reinforcement-fresh\n\n\n8. [b-react-entity] \u2190 b-react-entity\n\n\n9. [b-pov-shift-entity] \u2190 b-pov-shift-entity\n\n\n10. [b-auth-open-q] \u2190 b-auth-open-q\n\n\n11. [b-react-expertise] \u2190 b-react-expertise\n\n\n12. [b-fastify-pref] \u2190 b-fastify-pref\n\n\n13. [b-functional-pipeline] \u2190 b-functional-pipeline\n\n\n14. [b-redis-code] \u2190 b-redis-code\n\n\n15. [b-authorship-mode] \u2190 b-authorship-mode\n\n\n16. [b-chapter-structure-q] \u2190 b-chapter-structure-q\n\n\n17. [b-db-decision] \u2190 b-db-decision\n\n\n18. [b-sqlalchemy-superseded] \u2190 b-sqlalchemy-superseded\n\n\n19. [b-prose-style-user-edited] \u2190 b-prose-style-user-edited\n\n\n20. [b-comm-pushback] \u2190 b-comm-pushback\n",
+      "context_tokens": 334,
+      "retrieve_time_ms": 528.6,
+      "gold_answers": [
+        "b-kubernetes-entity"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-ci-gha-entity; unexpected belief in relevantBeliefs: b-dead-letter-queue; unexpected belief in relevantBeliefs: b-pinned-resolved-interaction; unexpected belief in relevantBeliefs: b-hosting-resolved",
+      "score": null,
+      "meta": {
+        "category": "Alias resolution",
+        "description": "Alias 'k8s' resolves to Kubernetes entity",
+        "scope": [
+          "domain:code"
+        ],
+        "budget": {},
+        "expect": {
+          "pinnedFacts": {
+            "mustInclude": []
+          },
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-kubernetes-entity"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-kubernetes-entity",
+          "b-ci-gha-entity",
+          "b-dead-letter-queue",
+          "b-pinned-resolved-interaction",
+          "b-hosting-resolved",
+          "b-auth-depends-redis",
+          "b-zero-reinforcement-fresh",
+          "b-react-entity",
+          "b-pov-shift-entity",
+          "b-auth-open-q",
+          "b-react-expertise",
+          "b-fastify-pref",
+          "b-functional-pipeline",
+          "b-redis-code",
+          "b-authorship-mode",
+          "b-chapter-structure-q",
+          "b-sqlalchemy-superseded",
+          "b-prose-style-user-edited"
+        ],
+        "pinned_beliefs": [
+          "b-db-decision",
+          "b-linting-current"
+        ],
+        "retrieved_questions": [
+          "b-auth-open-q"
+        ],
+        "retrieval_precision": 0.05555555555555555,
+        "retrieval_recall": 1.0,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-ci-gha-entity",
+          "unexpected belief in relevantBeliefs: b-dead-letter-queue",
+          "unexpected belief in relevantBeliefs: b-pinned-resolved-interaction",
+          "unexpected belief in relevantBeliefs: b-hosting-resolved",
+          "unexpected belief in relevantBeliefs: b-auth-depends-redis",
+          "unexpected belief in relevantBeliefs: b-zero-reinforcement-fresh",
+          "unexpected belief in relevantBeliefs: b-react-entity",
+          "unexpected belief in relevantBeliefs: b-pov-shift-entity",
+          "unexpected belief in relevantBeliefs: b-auth-open-q",
+          "unexpected belief in relevantBeliefs: b-react-expertise",
+          "unexpected belief in relevantBeliefs: b-fastify-pref",
+          "unexpected belief in relevantBeliefs: b-functional-pipeline",
+          "unexpected belief in relevantBeliefs: b-redis-code",
+          "unexpected belief in relevantBeliefs: b-authorship-mode",
+          "unexpected belief in relevantBeliefs: b-chapter-structure-q",
+          "unexpected belief in relevantBeliefs: b-sqlalchemy-superseded",
+          "unexpected belief in relevantBeliefs: b-prose-style-user-edited"
+        ],
+        "resolution": {
+          "source_id": 20
+        },
+        "retrieved_count": 20
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "Alias resolution"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "alias-kube-resolves",
+      "query": "how does kube schedule pods across our CI pipeline nodes?",
+      "answer": "20 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (20)\n\n1. [b-kubernetes-entity] \u2190 b-kubernetes-entity\n\n\n2. [b-ci-gha-entity] \u2190 b-ci-gha-entity\n\n\n3. [b-functional-pipeline] \u2190 b-functional-pipeline\n\n\n4. [b-redis-code] \u2190 b-redis-code\n\n\n5. [b-zero-reinforcement-fresh] \u2190 b-zero-reinforcement-fresh\n\n\n6. [b-auth-depends-redis] \u2190 b-auth-depends-redis\n\n\n7. [b-pinned-resolved-interaction] \u2190 b-pinned-resolved-interaction\n\n\n8. [b-chapter-structure-q] \u2190 b-chapter-structure-q\n\n\n9. [b-authorship-mode] \u2190 b-authorship-mode\n\n\n10. [b-react-expertise] \u2190 b-react-expertise\n\n\n11. [b-pov-shift-entity] \u2190 b-pov-shift-entity\n\n\n12. [b-dead-letter-queue] \u2190 b-dead-letter-queue\n\n\n13. [b-fastify-pref] \u2190 b-fastify-pref\n\n\n14. [b-hosting-resolved] \u2190 b-hosting-resolved\n\n\n15. [b-db-decision] \u2190 b-db-decision\n\n\n16. [b-linting-current] \u2190 b-linting-current\n\n\n17. [b-comm-pushback] \u2190 b-comm-pushback\n\n\n18. [b-auth-open-q] \u2190 b-auth-open-q\n\n\n19. [b-ts-pref] \u2190 b-ts-pref\n\n\n20. [b-mongo-raw-driver] \u2190 b-mongo-raw-driver\n",
+      "context_tokens": 330,
+      "retrieve_time_ms": 407.3,
+      "gold_answers": [
+        "b-ci-gha-entity",
+        "b-kubernetes-entity"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-functional-pipeline; unexpected belief in relevantBeliefs: b-redis-code; unexpected belief in relevantBeliefs: b-zero-reinforcement-fresh; unexpected belief in relevantBeliefs: b-auth-depends-redis",
+      "score": null,
+      "meta": {
+        "category": "Alias resolution",
+        "description": "Alias 'kube' drives text search retrieval",
+        "scope": [
+          "domain:code"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-ci-gha-entity",
+              "b-kubernetes-entity"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-kubernetes-entity",
+          "b-ci-gha-entity",
+          "b-functional-pipeline",
+          "b-redis-code",
+          "b-zero-reinforcement-fresh",
+          "b-auth-depends-redis",
+          "b-pinned-resolved-interaction",
+          "b-chapter-structure-q",
+          "b-authorship-mode",
+          "b-react-expertise",
+          "b-pov-shift-entity",
+          "b-dead-letter-queue",
+          "b-fastify-pref",
+          "b-hosting-resolved",
+          "b-comm-pushback",
+          "b-auth-open-q",
+          "b-ts-pref",
+          "b-mongo-raw-driver"
+        ],
+        "pinned_beliefs": [
+          "b-db-decision",
+          "b-linting-current"
+        ],
+        "retrieved_questions": [
+          "b-auth-open-q"
+        ],
+        "retrieval_precision": 0.1111111111111111,
+        "retrieval_recall": 1.0,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-functional-pipeline",
+          "unexpected belief in relevantBeliefs: b-redis-code",
+          "unexpected belief in relevantBeliefs: b-zero-reinforcement-fresh",
+          "unexpected belief in relevantBeliefs: b-auth-depends-redis",
+          "unexpected belief in relevantBeliefs: b-pinned-resolved-interaction",
+          "unexpected belief in relevantBeliefs: b-chapter-structure-q",
+          "unexpected belief in relevantBeliefs: b-authorship-mode",
+          "unexpected belief in relevantBeliefs: b-react-expertise",
+          "unexpected belief in relevantBeliefs: b-pov-shift-entity",
+          "unexpected belief in relevantBeliefs: b-dead-letter-queue",
+          "unexpected belief in relevantBeliefs: b-fastify-pref",
+          "unexpected belief in relevantBeliefs: b-hosting-resolved",
+          "unexpected belief in relevantBeliefs: b-comm-pushback",
+          "unexpected belief in relevantBeliefs: b-auth-open-q",
+          "unexpected belief in relevantBeliefs: b-ts-pref",
+          "unexpected belief in relevantBeliefs: b-mongo-raw-driver"
+        ],
+        "resolution": {
+          "source_id": 20
+        },
+        "retrieved_count": 20
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "Alias resolution"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "alias-gha-resolves",
+      "query": "GHA secrets config",
+      "answer": "20 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (20)\n\n1. [b-ci-gha-entity] \u2190 b-ci-gha-entity\n\n\n2. [b-functional-pipeline] \u2190 b-functional-pipeline\n\n\n3. [b-authorship-mode] \u2190 b-authorship-mode\n\n\n4. [b-linting-current] \u2190 b-linting-current\n\n\n5. [b-dead-letter-queue] \u2190 b-dead-letter-queue\n\n\n6. [b-auth-depends-redis] \u2190 b-auth-depends-redis\n\n\n7. [b-react-expertise] \u2190 b-react-expertise\n\n\n8. [b-comm-pushback] \u2190 b-comm-pushback\n\n\n9. [b-auth-open-q] \u2190 b-auth-open-q\n\n\n10. [b-vitest-pref] \u2190 b-vitest-pref\n\n\n11. [b-mongo-raw-driver] \u2190 b-mongo-raw-driver\n\n\n12. [b-pinned-resolved-interaction] \u2190 b-pinned-resolved-interaction\n\n\n13. [b-prose-style-user-edited] \u2190 b-prose-style-user-edited\n\n\n14. [b-pov-shift-entity] \u2190 b-pov-shift-entity\n\n\n15. [b-redis-code] \u2190 b-redis-code\n\n\n16. [b-db-decision] \u2190 b-db-decision\n\n\n17. [b-sqlalchemy-superseded] \u2190 b-sqlalchemy-superseded\n\n\n18. [b-comm-response-length] \u2190 b-comm-response-length\n\n\n19. [b-narrator-superseded] \u2190 b-narrator-superseded\n\n\n20. [b-comm-recommendation] \u2190 b-comm-recommendation\n",
+      "context_tokens": 338,
+      "retrieve_time_ms": 319.7,
+      "gold_answers": [
+        "b-ci-gha-entity"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-functional-pipeline; unexpected belief in relevantBeliefs: b-authorship-mode; unexpected belief in relevantBeliefs: b-dead-letter-queue; unexpected belief in relevantBeliefs: b-auth-depends-redis",
+      "score": null,
+      "meta": {
+        "category": "Alias resolution",
+        "description": "Alias 'GHA' (short form) drives text-search retrieval of b-ci-gha-entity",
+        "scope": [
+          "domain:code"
+        ],
+        "budget": {},
+        "expect": {
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-ci-gha-entity"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-ci-gha-entity",
+          "b-functional-pipeline",
+          "b-authorship-mode",
+          "b-dead-letter-queue",
+          "b-auth-depends-redis",
+          "b-react-expertise",
+          "b-comm-pushback",
+          "b-auth-open-q",
+          "b-vitest-pref",
+          "b-mongo-raw-driver",
+          "b-pinned-resolved-interaction",
+          "b-prose-style-user-edited",
+          "b-pov-shift-entity",
+          "b-redis-code",
+          "b-sqlalchemy-superseded",
+          "b-comm-response-length",
+          "b-narrator-superseded",
+          "b-comm-recommendation"
+        ],
+        "pinned_beliefs": [
+          "b-db-decision",
+          "b-linting-current"
+        ],
+        "retrieved_questions": [
+          "b-auth-open-q"
+        ],
+        "retrieval_precision": 0.05555555555555555,
+        "retrieval_recall": 1.0,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-functional-pipeline",
+          "unexpected belief in relevantBeliefs: b-authorship-mode",
+          "unexpected belief in relevantBeliefs: b-dead-letter-queue",
+          "unexpected belief in relevantBeliefs: b-auth-depends-redis",
+          "unexpected belief in relevantBeliefs: b-react-expertise",
+          "unexpected belief in relevantBeliefs: b-comm-pushback",
+          "unexpected belief in relevantBeliefs: b-auth-open-q",
+          "unexpected belief in relevantBeliefs: b-vitest-pref",
+          "unexpected belief in relevantBeliefs: b-mongo-raw-driver",
+          "unexpected belief in relevantBeliefs: b-pinned-resolved-interaction",
+          "unexpected belief in relevantBeliefs: b-prose-style-user-edited",
+          "unexpected belief in relevantBeliefs: b-pov-shift-entity",
+          "unexpected belief in relevantBeliefs: b-redis-code",
+          "unexpected belief in relevantBeliefs: b-sqlalchemy-superseded",
+          "unexpected belief in relevantBeliefs: b-comm-response-length",
+          "unexpected belief in relevantBeliefs: b-narrator-superseded",
+          "unexpected belief in relevantBeliefs: b-comm-recommendation"
+        ],
+        "resolution": {
+          "source_id": 20
+        },
+        "retrieved_count": 20
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "Alias resolution"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    },
+    {
+      "query_id": "long-query-rambling-kubernetes",
+      "query": "ok so I've been thinking about this for a while and I know we've talked about infrastructure before but I'm circling back because the team had some pushback in the last review and honestly I'm not sure what the right call is anymore. Basically the question is how we should handle rolling deploys for the landing page when it lands \u2014 should we do Kubernetes native rolling updates or something more custom, and does it matter that the service holds session state in memory?",
+      "answer": "20 memories retrieved",
+      "reasoning": "",
+      "context": "## Retrieved memories (20)\n\n1. [b-kubernetes-entity] \u2190 b-kubernetes-entity\n\n\n2. [b-pinned-resolved-interaction] \u2190 b-pinned-resolved-interaction\n\n\n3. [b-auth-depends-redis] \u2190 b-auth-depends-redis\n\n\n4. [b-hosting-resolved] \u2190 b-hosting-resolved\n\n\n5. [b-auth-open-q] \u2190 b-auth-open-q\n\n\n6. [b-ci-gha-entity] \u2190 b-ci-gha-entity\n\n\n7. [b-dead-letter-queue] \u2190 b-dead-letter-queue\n\n\n8. [b-redis-code] \u2190 b-redis-code\n\n\n9. [b-fastify-pref] \u2190 b-fastify-pref\n\n\n10. [b-chapter-structure-q] \u2190 b-chapter-structure-q\n\n\n11. [b-db-decision] \u2190 b-db-decision\n\n\n12. [b-react-entity] \u2190 b-react-entity\n\n\n13. [b-functional-pipeline] \u2190 b-functional-pipeline\n\n\n14. [b-pov-shift-entity] \u2190 b-pov-shift-entity\n\n\n15. [b-linting-current] \u2190 b-linting-current\n\n\n16. [b-zero-reinforcement-fresh] \u2190 b-zero-reinforcement-fresh\n\n\n17. [b-react-expertise] \u2190 b-react-expertise\n\n\n18. [b-sqlalchemy-superseded] \u2190 b-sqlalchemy-superseded\n\n\n19. [b-comm-pushback] \u2190 b-comm-pushback\n\n\n20. [b-comm-recommendation] \u2190 b-comm-recommendation\n",
+      "context_tokens": 332,
+      "retrieve_time_ms": 364.6,
+      "gold_answers": [
+        "b-kubernetes-entity"
+      ],
+      "correct": false,
+      "judge_reason": "unexpected belief in relevantBeliefs: b-pinned-resolved-interaction; unexpected belief in relevantBeliefs: b-auth-depends-redis; unexpected belief in relevantBeliefs: b-hosting-resolved; unexpected belief in relevantBeliefs: b-auth-open-q",
+      "score": null,
+      "meta": {
+        "category": "Alias resolution",
+        "description": "Verbose 400+ char query.",
+        "scope": [
+          "domain:code"
+        ],
+        "budget": {},
+        "expect": {
+          "personaPrelude": {
+            "nonEmpty": true
+          },
+          "pinnedFacts": {
+            "mustInclude": []
+          },
+          "relevantBeliefs": {
+            "shouldOnlyInclude": [
+              "b-kubernetes-entity"
+            ]
+          },
+          "openQuestions": {
+            "mustInclude": [
+              "b-auth-open-q"
+            ]
+          }
+        },
+        "retrieval_limit": 20,
+        "pass_type": "active",
+        "active_pass": false,
+        "relevant_beliefs": [
+          "b-kubernetes-entity",
+          "b-pinned-resolved-interaction",
+          "b-auth-depends-redis",
+          "b-hosting-resolved",
+          "b-auth-open-q",
+          "b-ci-gha-entity",
+          "b-dead-letter-queue",
+          "b-redis-code",
+          "b-fastify-pref",
+          "b-chapter-structure-q",
+          "b-react-entity",
+          "b-functional-pipeline",
+          "b-pov-shift-entity",
+          "b-zero-reinforcement-fresh",
+          "b-react-expertise",
+          "b-sqlalchemy-superseded",
+          "b-comm-pushback",
+          "b-comm-recommendation"
+        ],
+        "pinned_beliefs": [
+          "b-db-decision",
+          "b-linting-current"
+        ],
+        "retrieved_questions": [
+          "b-auth-open-q"
+        ],
+        "retrieval_precision": 0.05555555555555555,
+        "retrieval_recall": 1.0,
+        "pinned_coverage": null,
+        "failures": [
+          "unexpected belief in relevantBeliefs: b-pinned-resolved-interaction",
+          "unexpected belief in relevantBeliefs: b-auth-depends-redis",
+          "unexpected belief in relevantBeliefs: b-hosting-resolved",
+          "unexpected belief in relevantBeliefs: b-auth-open-q",
+          "unexpected belief in relevantBeliefs: b-ci-gha-entity",
+          "unexpected belief in relevantBeliefs: b-dead-letter-queue",
+          "unexpected belief in relevantBeliefs: b-redis-code",
+          "unexpected belief in relevantBeliefs: b-fastify-pref",
+          "unexpected belief in relevantBeliefs: b-chapter-structure-q",
+          "unexpected belief in relevantBeliefs: b-react-entity",
+          "unexpected belief in relevantBeliefs: b-functional-pipeline",
+          "unexpected belief in relevantBeliefs: b-pov-shift-entity",
+          "unexpected belief in relevantBeliefs: b-zero-reinforcement-fresh",
+          "unexpected belief in relevantBeliefs: b-react-expertise",
+          "unexpected belief in relevantBeliefs: b-sqlalchemy-superseded",
+          "unexpected belief in relevantBeliefs: b-comm-pushback",
+          "unexpected belief in relevantBeliefs: b-comm-recommendation"
+        ],
+        "resolution": {
+          "source_id": 20
+        },
+        "retrieved_count": 20
+      },
+      "raw_response": null,
+      "trajectory": null,
+      "git_history": null,
+      "category_axes": {
+        "Category": [
+          "Alias resolution"
+        ],
+        "Pass type": [
+          "active"
+        ]
+      }
+    }
+  ],
+  "avg_retrieve_time_ms": 402.6,
+  "avg_context_tokens": 332.4
+}

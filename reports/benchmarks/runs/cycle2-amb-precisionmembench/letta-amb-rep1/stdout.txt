@@ -1,0 +1,39 @@
+
+Dataset: precisionmembench  Split: single-turn  Memory: letta-local  Mode: 
+retrieval
+
+Loading queries...
+  77 queries loaded
+Loading documents...
+  35 documents loaded
+Ingesting into letta-local...
+  ingested in 14712ms (420.3ms/doc avg)
+
+  Evaluating ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:28
+
+Saved → 
+/tmp/c2/evidence/letta-amb-rep1/amb-outputs/precisionmembench/letta-local/retrie
+val/single-turn.json
+        Results —        
+precisionmembench/single-
+  turn | letta-local |   
+        retrieval        
+┏━━━━━━━━━━━━━━━┳━━━━━━━┓
+┃ Metric        ┃ Value ┃
+┡━━━━━━━━━━━━━━━╇━━━━━━━┩
+│ Total queries │    77 │
+│ Correct       │     9 │
+│ Accuracy      │ 11.7% │
+└───────────────┴───────┘
+             PrecisionMemBench             
+┏━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┓
+┃ Metric                 ┃          Value ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━┩
+│ Active passes          │           0/43 │
+│ Structural passes      │           6/25 │
+│ Trivially-empty passes │            3/9 │
+│ Total passes           │           9/77 │
+│ Mean precision         │           0.06 │
+│ Mean recall            │           0.99 │
+│ ID resolution          │ source_id=1371 │
+└────────────────────────┴────────────────┘
