@@ -68,3 +68,50 @@
 
 .ext-method{font-size:11px;color:#92adbc;line-height:1.7;padding-left:11px;border-left:2px solid #38576a}
 .ext-method strong{color:#c0dfdf}
+
+/* Candidate execution tracker. Does not modify accepted benchmark data. */
+.live-wrap{background:radial-gradient(ellipse at 95% 4%,#183343 0%,transparent 45%),#081521;border-bottom:1px solid #2a4554}
+.live-wrap .section-head{align-items:end}
+.live-refresh{flex-shrink:0;background:#0e2b34;cursor:pointer}
+.live-refresh:disabled{opacity:.7;cursor:wait}
+.live-boundary{padding:19px 22px;border:1px solid #405668;border-left:3px solid #d4ba79;background:#152432;color:#b7cbd5;border-radius:9px;font-size:12px;line-height:1.75;margin-bottom:24px}
+.live-boundary strong{color:#f3e4bc;display:block;font-size:13px}
+.live-comparison{overflow:hidden}
+.live-source{font:11px/1.65 ui-monospace,monospace;color:#93afc1;overflow-wrap:anywhere}
+.live-source code{color:#d4ecee}
+.live-source a{color:#89ebd8;text-decoration:underline;text-underline-offset:3px}
+.live-comparison>.live-source{padding:15px 27px;margin:0;border-bottom:1px solid #2d3e4d}
+.live-table{width:100%;border-collapse:collapse;min-width:810px}
+.live-table th,.live-table td{text-align:left;padding:17px 18px;border-bottom:1px solid #2a3c4c;font-size:12px;vertical-align:middle}
+.live-table thead th{font:800 10px/1.5 'DM Sans',system-ui;letter-spacing:.05em;color:#a3c4d3;text-transform:uppercase}
+.live-table tbody th{font-weight:700;color:#e4f3f4;min-width:225px}
+.live-table a,.live-source-links a{color:#87e9d6;text-decoration:underline;text-underline-offset:3px;font-size:11px;font-weight:700}
+.live-number{color:#8af0da;font:800 16px 'Manrope',system-ui;white-space:nowrap}
+.live-unknown{color:#a0afbf;font-size:11px}
+.live-comparison>.fineprint:last-child{padding:14px 27px;color:#a4bfcb}
+.live-outcomes-head{margin:40px 0 8px}
+.live-outcomes-head h3{font-size:24px;letter-spacing:-.035em;margin-bottom:8px}
+.live-outcomes-head p{color:#adc2ce;font-size:12px}
+.live-external-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:16px}
+.live-external-card{border:1px solid #314b5a;border-radius:12px;background:#101e2d;padding:27px;min-width:0}
+.live-card-label{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#7bdcca}
+.live-external-card h3{font-size:19px;line-height:1.4;margin:13px 0}
+.live-external-card>p{color:#b5c9d5;font-size:12px;line-height:1.7}
+.live-metric-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:19px 0}
+.live-metric-row>div{padding:14px 11px;background:#172c39;border:1px solid #335360;border-radius:7px;min-width:0}
+.live-metric-row span{display:block;color:#b4c7d0;font-size:10px;min-height:31px}
+.live-metric-row strong{display:block;font:800 clamp(16px,1.8vw,24px) 'Manrope',system-ui;color:#7aecd5;white-space:nowrap}
+.live-metric-row small{display:block;color:#90aebd;font-size:10px}
+.live-arena-values{display:grid;gap:8px;margin:19px 0}
+.live-arena-values span{background:#172c39;border:1px solid #345262;border-radius:7px;padding:10px 12px;color:#bfdbdd;font-size:12px}
+.live-arena-values strong{color:#e9f4f2}
+.live-external-card .live-caveat{border-top:1px solid #30485a;margin:20px 0 0;padding-top:12px;font-size:11px;color:#a1b6c4}
+.live-external-card .live-source-links{margin-top:20px}
+.live-auto{color:#9db2c1;font-size:11px;line-height:1.85;margin-top:27px}
+.live-auto a{color:#8be7d8;text-decoration:underline}
+.live-loading{padding:18px 26px;color:#acc7d3;font-size:12px}
+@media(max-width:1080px){.live-metric-row{grid-template-columns:1fr}.live-metric-row span{min-height:0}.topbar nav{gap:10px;font-size:11px}}
+@media(max-width:760px){.live-wrap .section-head{display:flex;flex-direction:column;align-items:stretch}.live-refresh{width:max-content}.live-external-grid{grid-template-columns:1fr}.live-metric-row{grid-template-columns:repeat(3,minmax(0,1fr))}.live-external-card{padding:20px}.live-boundary{padding:16px}.live-table th,.live-table td{padding:12px}}
+@media(max-width:410px){.live-metric-row{grid-template-columns:1fr}}
+
+@media(min-width:761px) and (max-width:1160px){.topbar nav a[href="#coverage"],.topbar nav a[href="#competitors"]{display:none}}

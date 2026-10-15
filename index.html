@@ -8,12 +8,13 @@
 <link rel="stylesheet" href="./assets/site.css">
 <script defer src="./assets/evidence-transparency.js"></script>
 <script defer src="./assets/external-evaluations.js"></script>
+<script defer src="./assets/live-evidence.js"></script>
 <script defer src="./assets/site.js"></script></head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="topbar"><div class="shell navwrap">
 <a class="brand" href="#top" aria-label="Agent Memory home"><span class="brandmark" aria-hidden="true">◇</span><span>AGENT<span class="brandthin">/</span>MEMORY</span></a>
-<nav aria-label="Primary"><a href="#benchmarks">Benchmarks</a><a href="#coverage">Coverage</a><a href="#external-evaluations">External evaluations</a><a href="#competitors">Competitors</a><a href="#architecture">Architecture</a><a href="#reproduce">Reproduce</a></nav>
+<nav aria-label="Primary"><a href="#benchmarks">Accepted</a><a href="#live-runs">Live runs</a><a href="#coverage">Coverage</a><a href="#external-evaluations">External evaluations</a><a href="#competitors">Competitors</a><a href="#architecture">Architecture</a><a href="#reproduce">Reproduce</a></nav>
 <a class="gh" href="https://github.com/MythologIQ-Labs-LLC/agent-memory" target="_blank" rel="noopener noreferrer">Repository <span aria-hidden="true">↗</span></a>
 </div></header>
 <main id="main">
@@ -33,15 +34,32 @@
 <div class="section-head"><div><p class="eyebrow">01 / Comparative evidence</p><h2>Benchmark leaderboard</h2><p class="sub">Accepted same-harness runs, compared only within their exact evaluation profile. No universal ranking.</p></div><div class="as-of" id="snapshot" aria-live="polite">Loading evidence snapshot…</div></div>
 <div class="stat-grid" id="stats" aria-label="Evidence coverage"></div>
 <div class="panel leaderboard">
-<div class="panel-header"><div><h3>Explore a measured profile</h3><p>Choose a benchmark and native metric to see the actual peer comparison.</p></div><span class="tag verified">Accepted evidence only</span></div>
+<div class="panel-header"><div><h3>Explore a measured profile</h3><p>Choose a benchmark and native metric to see the actual peer comparison.</p></div><span class="tag verified">Accepted evidence only · frozen</span></div>
 <div class="filters"><label>Benchmark profile<select id="profileSelect" aria-label="Benchmark profile"><option>Loading…</option></select></label><label>Native metric<select id="metricSelect" aria-label="Native metric"><option>Loading…</option></select></label></div>
 <div class="metric-summary" id="metricSummary" aria-live="polite"></div>
 <div class="table-scroll"><table><thead><tr><th>System</th><th>Role</th><th class="num">Measured result</th><th class="num">Samples</th><th class="num">Gap to leader</th><th>Evidence</th></tr></thead><tbody id="leaderRows"><tr><td colspan="6">Loading accepted evidence…</td></tr></tbody></table></div>
 <div class="fineprint" id="profileNotes"></div>
 </div>
 </section>
+<section class="section live-wrap" id="live-runs"><div class="shell">
+<div class="section-head"><div><p class="eyebrow">02 / Running the systems</p>
+<h2>Live benchmark executions.</h2>
+<p class="sub">Actual committed candidate results from the execution branches, checked at their latest public Git commits. The numbers below are <strong>not official placements or accepted gauntlet scores</strong>. Unlike the qualified leaderboard above, this execution tracker refreshes without a Pages deployment.</p></div>
+<button type="button" class="csv-export live-refresh" id="liveRefresh">Check for new evidence ↻</button></div>
+<div class="live-boundary"><strong>Two evidence levels, deliberately separate.</strong> The leaderboard above is frozen, independently accepted evidence. This section shows completed but unreviewed executions and honest progress for incomplete runs. Missing values never count as zero, and distinct benchmark families are never merged into a universal score.</div>
+<div class="panel live-comparison">
+<div class="panel-header"><div><h3>LongMemEval-S · retrieval-only candidate cohort</h3><p>Preregistered 50-question subset. Forty-three questions are scored per completed plane, seven excluded. Scores reflect native recall-all metrics, not question answering.</p></div><span class="tag">Candidate · not accepted</span></div>
+<div class="fineprint live-source" id="liveCompetitorStatus" aria-live="polite">Checking latest GitHub benchmark commit…</div>
+<div class="table-scroll" id="liveCompetitorRows" aria-live="polite"><p class="live-loading">Retrieving latest pinned competitor evidence…</p></div>
+<p class="fineprint" id="liveCompetitorNotice">An incomplete competitor run is reported by completed question count only, not by extrapolated scores.</p>
+</div>
+<div class="live-outcomes-head"><div><h3>Independent-harness outcomes</h3><p>These are separate experimental protocols. Keep their scoring and evidence boundaries intact.</p></div></div>
+<p class="live-source" id="liveExternalStatus" aria-live="polite">Checking external evaluation branch…</p>
+<div class="live-external-grid" id="liveExternalResults" aria-live="polite"><p class="live-loading">Loading upstream AMB and MemoryArena execution summaries…</p></div>
+<p class="live-auto">Read-only refresh on page load, on demand, and approximately every 15 minutes while this tab is visible. Uses public immutable GitHub commit references, no personal GitHub credentials, no hosted benchmark CI, and no write access. If GitHub is unavailable, qualified historical scores remain available above. <a href="https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/810">Execution ownership and qualification ↗</a></p>
+</div></section>
 <section class="section coverage-wrap" id="coverage"><div class="shell">
-<div class="section-head"><div><p class="eyebrow">02 / The measurement gap</p><h2>Where the evidence reaches.</h2><p class="sub">A measurable peer is not the same as an untested competitor. This matrix is calculated from accepted source-pinned observations only, without borrowing vendor-published scores.</p></div></div>
+<div class="section-head"><div><p class="eyebrow">03 / The measurement gap</p><h2>Where the evidence reaches.</h2><p class="sub">A measurable peer is not the same as an untested competitor. This matrix is calculated from accepted source-pinned observations only, without borrowing vendor-published scores.</p></div></div>
 <div class="coverage-summary" id="coverageSummary" aria-label="Accepted external competitor coverage"><div class="coverage-stat"><strong>…</strong><span>Loading coverage evidence</span></div></div>
 <div class="panel coverage-panel">
 <div class="panel-header"><div><h3>Benchmark-by-competitor coverage</h3><p>Each cell indicates whether this exact profile contains an accepted measured result for that external memory system.</p></div><button class="csv-export" id="exportEvidenceCsv" type="button">Export evidence CSV ↓</button></div>
@@ -52,7 +70,7 @@
 <a class="textlink coverage-issue" href="https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/810">Follow the independent competitor execution program ↗</a>
 </div></section>
 <section class="section external-wrap" id="external-evaluations"><div class="shell">
-<div class="section-head"><div><p class="eyebrow">03 / External accountability</p><h2>External evaluations & competitions.</h2>
+<div class="section-head"><div><p class="eyebrow">04 / External accountability</p><h2>External evaluations & competitions.</h2>
 <p class="sub">We want Agent Memory tested by other evaluators using their own rules, not merely scored by a leaderboard we operate. These are links to independent evaluation programs, not claims of official placement.</p>
 </div></div>
 <div class="ext-truth">
@@ -64,19 +82,19 @@ Our accepted same-harness comparisons above remain separate. External results wi
 <p class="ext-boundary"><strong>Comparison rule:</strong> an AML score, an AMB result, and a MemoryArena task-success measurement are not interchangeable. No imported score changes our accepted leaderboard or creates a cross-program gap without an explicitly qualified shared protocol. See the <a href="https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/810">execution program ↗</a>.</p>
 </div></section>
 <section class="section competitors-wrap" id="competitors"><div class="shell">
-<div class="section-head"><div><p class="eyebrow">04 / Coverage, not just winners</p><h2>The competitive field</h2><p class="sub">A system can be important to evaluate before its first accepted result. Missing is not failing.</p></div></div>
+<div class="section-head"><div><p class="eyebrow">05 / Coverage, not just winners</p><h2>The competitive field</h2><p class="sub">A system can be important to evaluate before its first accepted result. Missing is not failing.</p></div></div>
 <div class="panel"><div class="filters compfilters"><label>Filter competitors<select id="statusFilter"><option value="all">All systems</option><option value="measured">Measured peers</option><option value="not_run">Not yet run</option><option value="published_reference">Published references</option></select></label><a href="https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/810" class="textlink">Parallel benchmark execution tracker ↗</a></div>
 <div class="competitor-grid" id="competitorGrid" aria-live="polite"></div></div>
 <p class="note">The registry is a discovery surface. Inclusion is not an endorsement, compatibility claim or completed benchmark. Some systems may be unsupported for specific profiles.</p></div></section>
 <section class="shell section" id="architecture">
-<div class="section-head"><div><p class="eyebrow">05 / Research & architecture</p><h2>Governance before convenience.</h2><p class="sub">Persistent state is consequential. A retrieved memory does not grant itself authority.</p></div></div>
+<div class="section-head"><div><p class="eyebrow">06 / Research & architecture</p><h2>Governance before convenience.</h2><p class="sub">Persistent state is consequential. A retrieved memory does not grant itself authority.</p></div></div>
 <div class="feature-grid">
 <a class="feature" href="https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/04-governance-and-pama.md"><span class="feature-index">01</span><h3>PAMA & write authority ↗</h3><p>Proposals and probabilistic interpretation cannot bypass admission and policy.</p></a>
 <a class="feature" href="https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/02-lifecycle-state-machine.md"><span class="feature-index">02</span><h3>Lifecycle & currentness ↗</h3><p>Correction, supersession, temporal relevance and deletion have distinct contracts.</p></a>
 <a class="feature" href="https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/ARCHITECTURE_INDEX.md"><span class="feature-index">03</span><h3>Architecture catalog ↗</h3><p>Canonical design intent and ADR states are maintained in the repository.</p></a>
 </div></section>
 <section class="section reproduce-wrap" id="reproduce"><div class="shell reproduce-grid">
-<div><p class="eyebrow">06 / Reproducibility</p><h2>Show the work.<br><em>Then show the work again.</em></h2><p class="sub">Each measured row links to its underlying evidence. Results remain bound to the benchmark input, profile, revision and execution history. A score without comparable execution identity is not a competitive delta.</p><a class="primary alt" href="https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/BENCHMARKS.md">Benchmark documentation ↗</a></div>
+<div><p class="eyebrow">07 / Reproducibility</p><h2>Show the work.<br><em>Then show the work again.</em></h2><p class="sub">Each measured row links to its underlying evidence. Results remain bound to the benchmark input, profile, revision and execution history. A score without comparable execution identity is not a competitive delta.</p><a class="primary alt" href="https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/BENCHMARKS.md">Benchmark documentation ↗</a></div>
 <div class="evidence-check"><h3>Evidence contract</h3><div class="rule"><span>01</span><p>Immutable input digest and system revision</p></div><div class="rule"><span>02</span><p>Native metric and exact evaluation plane</p></div><div class="rule"><span>03</span><p>Execution manifest: clock, hardware, dependencies, inference and costs</p></div><div class="rule"><span>04</span><p>Raw outputs, evaluator, limitations and reproducibility links</p></div><p class="fineprint">Full execution-manifest enforcement is being tracked under <a href="https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/807">#807</a>. Historical runs may not satisfy every proposed field.</p></div>
 </div></section>
 <section class="shell section" id="published"><div class="section-head"><div><p class="eyebrow">06 / External claims</p><h2>Published references</h2><p class="sub">Useful market context. Not scored against our same-harness results.</p></div></div><div id="publishedGrid" class="reference-grid"></div></section>
