@@ -1,6 +1,6 @@
-# Current governance and benchmark state after #594
+# Governance and benchmark state after #594 (historical snapshot)
 
-Status: canonical current-state reconciliation for the RC program after #591 and #594. Historical evidence documents keep their original claims and provenance; where an older status line says #550/#594 is draft or unscored, this document and the #594 `CLOSEOUT.md` are the current disposition.
+**Status: HISTORICAL, revision-bound #591/#594 reconciliation.** This document was the canonical current-state account *at that evidence boundary* (`main` `691251c`), not at later runtime baselines. The original findings and sequence below are intentionally preserved as historical evidence. For present-day execution use [BACKLOG.md](BACKLOG.md), the revision-bound [System State](SYSTEM_STATE.md), the source-owned public API and ranking policy versions, [substrate maturity](43-substrate-inventory-and-maturity.md), the [runtime baseline register](../reports/runtime/baseline-register.json), and the [canonical benchmark dashboard](../reports/benchmarks/dashboard/current.md). Do not execute the former RC dependency chain below as today's instructions.
 
 ## Current boundary
 
@@ -104,7 +104,7 @@ RC treatment:
 - #598 is on the temporal critical path before redesigned #583.
 - #596/#597 are high-priority limitations. They are not automatically RC1 blockers because the current dominant behavior is conservative evidence abstention, not a grant of authority. Reclassify them as blockers only if #580/#583/final RC evidence shows the declared product contract cannot tolerate them.
 
-## Active RC sequence
+## RC sequence at the #594 evidence boundary (historical)
 
 ```text
 #591 complete
@@ -132,7 +132,7 @@ RC1 declaration decision
 
 #586 exception/override precedence remains post-RC unless evidence pulls it forward.
 
-## Documentation authority
+## Documentation authority at the #594 boundary (historical)
 
 For current benchmark posture, use:
 

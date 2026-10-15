@@ -1,5 +1,7 @@
 # Agentic Memory Systems Canonical Architecture
 
+> **Architecture library:** [ARCHITECTURE_INDEX.md](ARCHITECTURE_INDEX.md) is the single catalog for where architectural documents and decisions belong. This document explains the architecture; the catalog does not replace or approve doctrine.
+
 ## Purpose
 
 This document defines the canonical architecture for governed agentic memory systems. It combines native Agent Memory doctrine with clearly bounded implementation and provenance relationships across UOR, EvolveAI, CodeGenome, COREFORGE Vault / Neurospace, FailSafe / Arbiter, and future conforming systems.

@@ -27,6 +27,12 @@ Agent Memory repository
 
 These roles reinforce one another, but they do not inherit authority from one another automatically.
 
+### Entry points and the five-layer project model
+
+The root `README.md` presents the three roles to visitors as three entry points: **Theory** (architecture/governance laboratory), **Benchmarks** (evaluation/benchmark laboratory), and **Runtime** (product/runtime). Those are the same roles with audience-facing names, not a fourth description of the repository.
+
+[`AGENT_MEMORY_PROJECT_MODEL.md`](AGENT_MEMORY_PROJECT_MODEL.md) describes the wider project as five layers: architecture/doctrine/research commons, Memory Evaluation, the Agent Memory Gauntlet, the reference/conformance implementation, and a future distinct production runtime. Per the ruling in [#565](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/565), the three roles describe what this repository *does* operationally today, while the five layers describe how the project is *partitioned* for community, evaluation, qualification, reference implementation, and future product/licensing boundaries ([#556](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/556)). The five-layer model refines the product/runtime role into reference/conformance implementation plus future distinct runtime, and refines the evaluation role into Memory Evaluation plus the public Gauntlet. Neither formulation supersedes the other, and this document remains the operating guidance for the roles.
+
 ## 1. Product and runtime role
 
 Agent Memory is an actual software product surface, not only a theoretical framework.
@@ -227,7 +233,8 @@ The controlling benchmark-remediation architecture issue is #537.
 The repository should make its three roles discoverable:
 
 ```text
-README.md                     product + project overview
+README.md                     Theory / Benchmarks / Runtime entry points + project overview
+docs/README.md                documentation index, mirrored on the same three entry points
 reference/                    executable product/reference implementation
 reference/agentmem_ref/       installed implementation
 schemas/                      machine-readable contracts

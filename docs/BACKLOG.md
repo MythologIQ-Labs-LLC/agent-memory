@@ -97,7 +97,7 @@ Retrieval and representation:
   - #712 and #713 published and bound Runtime Baseline v3.
   - The movement gate transferred to #673, because the subordinate ordering cannot reach the scored k.
 - [ ] **#644**: native controlled recall from the Jev-Mem harvest (call/deadline budgets, stop reasons, route needs, sufficiency, allocation, bounded controller, telemetry).
-  - The T-controller shadow seam merged in #715: contract 1.5.0, Runtime Baseline v4 declared, `-v4` qualification in progress.
+  - The T-controller shadow seam merged in #715 (contract 1.5.0). Its `-v4` lanes and Runtime Baseline v4 public Gauntlet qualification **completed and were evidence-bound on 2026-10-07** (#721/#723; baseline register entry `agent-memory-runtime-baseline-v4`, qualification artifact run `37671546394`). **Enforced** controller budgets, adaptive stopping and live routing remain open as T-controller-2. See Phase B item 1 above.
   - T-controller-2 follows #671 and #673. It covers enforced route, call and deadline budgets, calibrated route needs, sufficiency, adaptive stopping, bounded traversal and a decision cache.
 - [ ] **#688**: typed entity/causal relation vocabulary, bounded relation judgments, and typed graph traversal reachable through the facade.
 - [ ] **#673**: post-admission route fusion, then a separately versioned reranker if justified. Ranking orders admitted candidates and never admits.

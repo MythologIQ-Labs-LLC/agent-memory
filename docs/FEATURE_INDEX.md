@@ -2,18 +2,18 @@
 
 Canonical cross-reference of implemented repository features against their primary source and verification surface. Detailed implementation history belongs in the linked plans and `docs/META_LEDGER.md`; this index stays deliberately compact so its current-state summary can be maintained without duplicating entire audit narratives.
 
-**Last reconciled**: 2026-09-12  
-**Evidence boundary**: `main` `56e44d3cd3cb9c4186596f6a064dd554d14c1940`
+**Feature ledger evidence boundary**: historical feature rows originally verified against `main` `56e44d3cd3cb9c4186596f6a064dd554d14c1940` (2026-09-12).  
+**Current-state reconciliation**: 2026-10-13 against `main` `3eebb6d54e2a218c4fd10cf53c52acac8384c3e6`; feature rows were *not* re-executed. This is a bounded historical inventory, **not an exhaustive live feature or release-status ledger**. For current capability maturity see [System State](SYSTEM_STATE.md) and [Substrate Inventory](43-substrate-inventory-and-maturity.md).
 
 ## Coverage Summary
 
 - Total feature rows: **26**
-- **Verified**: 26
+- **Verified at original row evidence boundaries**: 26
 - **Unverified**: 0
 - **N/A**: 0
 - **Reserved ID**: FX025, held for the Sprint 4b JS/PAMA slice that did not ship
 
-A `verified` row means the repository contains the named implementation and an explicit verification surface at the recorded boundary. It does not mean the feature is production-proven outside the repository.
+A `verified` row means the named implementation and verification surface were evidenced at the original feature boundary. It is not an assertion of exact-head tests, complete present-day coverage, or production qualification. This ledger intentionally does not duplicate every subsequent runtime feature.
 
 ## Reference Runtime, Governance, and Packaging
 
@@ -42,7 +42,7 @@ A `verified` row means the repository contains the named implementation and an e
 | FX021 | An approved medium DashClaw correction parks when it lacks qualifying transition evidence, and CI asserts the park rather than fabricating a commit | `reference/run_dashclaw_external_verdict.py`, `memory/dashclaw_external_verdict.py`, DashClaw workflow | `reference/tests/test_dashclaw_correction_parks.py` | verified |
 | FX022 | `agentmem_ref` is organized into enforced layered subpackages with compatibility aliases for former flat imports | `scripts/restructure_package.py`, `reference/agentmem_ref/_paths.py`, layer packages | `reference/tests/test_package_layout.py` | verified |
 | FX023 | `runtime_config` and `discovery` use the canonical packaged schema resolver; legacy `data-files` packaging is retired | `runtime/runtime_config.py`, `runtime/discovery.py`, `pyproject.toml` | `reference/tests/test_packaged_schema_resolution.py`, wheel smoke | verified |
-| FX024 | Public API contract is schema-backed and versioned; current contract 1.4.0 covers every PRD-001 R1 stage through nine classified surface functions and adds an opt-in return budget (`returned`, `return_policy`) to recall results as policy, never authority | `reference/agentmem_ref/api/contract.py`, `api/surface.py`, `schemas/api-*.schema.json` | `test_api_contract.py`, `test_api_surface.py`, `test_api_dod20.py`, `test_developer_facade.py` | verified |
+| FX024 | Public API contract is schema-backed and versioned; contract 1.4.0 introduced the opt-in post-admission return budget (`returned`, `return_policy`), while the **current API contract is 1.6.0** (subsequent additive changes, default-off proposition/extractor paths). Historical 1.4.0 feature evidence is not current-contract qualification | `reference/agentmem_ref/api/contract.py`, `api/surface.py`, `schemas/api-*.schema.json` | `test_api_contract.py`, `test_api_surface.py`, `test_api_dod20.py`, `test_developer_facade.py` | verified |
 | FX026 | Contract 1.1.0 added read-only `history` and `posture` inspections and corrected additive-minor compatibility direction | `reference/agentmem_ref/api/surface.py`, `api/contract.py` | `reference/tests/test_api_history_posture.py` plus API contract/DoD-20 tests | verified |
 | FX027 | Contract 1.2.0 added governed action authorization and execution witnessing bound to PAMA decisions, with single-consumption state surviving checkpointed restart | `reference/agentmem_ref/memory/action_authority.py`, `api/surface.py`, `core/policy.py` | `test_api_action_authority.py`, `test_action_authority.py`, `test_policy_action_execution.py` | verified |
 
@@ -52,4 +52,4 @@ A `verified` row means the repository contains the named implementation and an e
 
 ## Known Gaps Are Not Hidden Here
 
-A verified feature row may still expose a bounded gap. Current material gaps are tracked in `docs/BACKLOG.md` and live issues, notably #395 (approve/commit attestation asymmetry), #364 (remaining recall/scope authority), #363 (production persistence), and #392 (DashClaw transition-rule discharge). Verification of a narrower feature must not be read as closure of its broader program.
+A verified historical row may still have a current limitation. For current work use [BACKLOG.md](BACKLOG.md), [#410](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/410), [#668](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/668), and [#636](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/636), not the closed #363/#364 or deferred #392 as if they were live blockers. Verification of a narrower feature is not closure of its broader product capability.

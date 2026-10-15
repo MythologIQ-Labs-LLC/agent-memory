@@ -10,7 +10,7 @@
 
 ### Governed persistent cognition for autonomous and agentic systems
 
-A usable governed memory runtime, a canonical architecture and doctrine corpus, and a reproducible evaluation laboratory for testing both against external pressure.
+A canonical memory architecture and doctrine corpus, a reproducible evaluation laboratory, and a usable governed memory runtime that the other two keep honest.
 
 [![Validate Doctrine Evidence](https://github.com/MythologIQ-Labs-LLC/agent-memory/actions/workflows/validate-doctrine-evidence.yml/badge.svg)](https://github.com/MythologIQ-Labs-LLC/agent-memory/actions/workflows/validate-doctrine-evidence.yml)
 ![Architecture](https://img.shields.io/badge/Architecture-Governed%20Cognitive%20Framework-334155)
@@ -18,116 +18,83 @@ A usable governed memory runtime, a canonical architecture and doctrine corpus, 
 [![ADRs](https://img.shields.io/badge/ADRs-Canonical%20Index-2563eb)](docs/adr/README.md)
 [![License](https://img.shields.io/badge/License-Apache--2.0-0b7285)](LICENSE)
 
-**[Documentation](docs/README.md)** · **[Repository operating model](docs/REPOSITORY_OPERATING_MODEL.md)** · **[Benchmarks](BENCHMARKS.md)** · **[Bring a system or a benchmark](docs/CONTRIBUTOR_ARCHITECTURE.md)** · **[Current dashboard](reports/benchmarks/dashboard/current.md)** · **[RC1 tracker](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/410)** · **[PAMA](docs/pama/README.md)** · **[Governance](GOVERNANCE.md)**
+**[Theory](#theory)** · **[Benchmarks](#benchmarks)** · **[Runtime](#runtime)** · **[Documentation index](docs/README.md)** · **[Current dashboard](reports/benchmarks/dashboard/current.md)** · **[Governance](GOVERNANCE.md)**
 
 </div>
 
 ---
 
 > [!IMPORTANT]
-> **Current status: executable governed runtime plus active RC evidence program.**
+> **Current status: executable governed runtime plus an active RC evidence program. Not a production 1.0 claim.**
 >
-> Agent Memory is no longer only a reference architecture. The repository contains a developer-facing `AgentMemory` facade, governed lifecycle operations, restart-safe local persistence, a bounded qualified SQLite substrate, multi-route recall, native semantic/vector and typed temporal/entity/causal machinery, native cognitive metabolism, correction/deletion/history paths, and revision-bound benchmark evidence.
->
-> It is **not** a production 1.0 claim. The current qualified posture is deliberately bounded, especially to the single-host SQLite profile. RC composition remains governed by issue #410. The canonical current benchmark/evidence view is `reports/benchmarks/dashboard/current.md`.
+> The qualified runtime posture is deliberately bounded to the single-host SQLite profile. Distributed or multi-host persistence is not established, and no substrate other than `SQLiteTemporalGraph` is production-qualified. RC composition remains governed by issue [#410](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/410); the current work queue is [`docs/BACKLOG.md`](docs/BACKLOG.md); the canonical benchmark view is [`reports/benchmarks/dashboard/current.md`](reports/benchmarks/dashboard/current.md).
 
-## What Agent Memory owns
+## What Agent Memory is
 
-Agent Memory is the canonical owner of generic memory machinery implemented here. EvolveAI, CodeGenome, COREFORGE, UOR-derived mechanisms, Jev/Jev-Mem, research papers, and other systems may supply implementation ancestry, evidence, mechanisms, comparison surfaces, or downstream integration. They do not remain permanent runtime owners merely because useful ideas were harvested from them.
+Agent Memory's defining intent is **governed, hierarchical, heterogeneous multi-system memory composition**: canonical structured/relational state, lexical and vector retrieval, typed graph and GraphRAG-style derived context, episodic, temporal and procedural memory, and inspectable Markdown/file projections, each chosen for demonstrable task and lifecycle value and all held under one governance boundary where no representation, route score, or projection acquires authority. That composition program is specified in issue [#636](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/636) and is an executable hypothesis, not a shipped capability. Today the **only qualified canonical persistence profile is single-host SQLite** (`sqlite_single_host_v1`); Postgres, Markdown, GraphRAG, and distributed persistence are design intent, experiments, or proposals, never production-qualified substrates.
 
-Agent Memory serves three connected roles:
+## Start here
 
-| Role | What lives here | What it does not mean |
-|---|---|---|
-| **Product / runtime** | Governed memory lifecycle, qualified SQLite path, recall, correction, forgetting, history, posture | Production 1.0 or distributed readiness |
-| **Architecture / governance lab** | ADRs, PAMA, lifecycle/currentness doctrine, memory metabolism, identity/provenance/authority boundaries | Doctrine is immune from falsification |
-| **Evaluation / benchmark lab** | LongMemEval, AgentMemBench/MemDialogue, evaluator-integrity probes, frozen reports, accepted semantic gold, current dashboard | Benchmark score becomes truth or authority |
+Agent Memory serves three audiences through three entry points. They are visitor routes into the project above, not a substitute product definition. Pick the one that matches what you came to do.
 
-The development loop is:
+| Entry point | For | What it is | Current maturity | Start | Then |
+|---|---|---|---|---|---|
+| **[Theory](#theory)** | Researchers studying memory architecture and governance | Doctrine, invariants, lifecycle/currentness semantics, PAMA mutation authority, Architecture Decision Records | Canonical and actively falsified: ADR-001 through ADR-043, each carrying its own `Accepted` / `Proposed` status; ADR-039 (query-conditioned applicability) remains Proposed | [`docs/ARCHITECTURE_INDEX.md`](docs/ARCHITECTURE_INDEX.md), the single architecture catalog and filing policy | [Canonical architecture](docs/AGENTIC_MEMORY_SYSTEMS_CANONICAL_ARCHITECTURE.md) for the explanation, [ADR index](docs/adr/README.md) for accepted decisions, [PAMA](docs/pama/README.md) |
+| **[Benchmarks](#benchmarks)** | Evaluators running controlled comparisons, inspecting evidence, or bringing a system or a benchmark | Benchmark-neutral evaluation machinery, the Agent Memory Gauntlet, frozen revision-bound evidence, the Coverage Atlas, the current dashboard | Accepted external and same-harness evidence exists; leaderboard and freshness projections are in progress; there is deliberately no universal score | [`BENCHMARKS.md`](BENCHMARKS.md) | [Current dashboard](reports/benchmarks/dashboard/current.md), [Coverage Atlas](docs/BENCHMARK_COVERAGE_ATLAS.md), [bring a system or a benchmark](docs/CONTRIBUTOR_ARCHITECTURE.md) |
+| **[Runtime](#runtime)** | Builders integrating governed memory into an agent | The installable `agent-memory-reference` package: `AgentMemory` facade, governed lifecycle, restart-safe persistence, multi-route recall | Usable reference/conformance runtime; one RC-qualified substrate (`sqlite_single_host_v1`); public contract 1.6.0; not production 1.0; not distributed | [Install and open](#runtime) | [`docs/47-developer-facade-and-local-open-path.md`](docs/47-developer-facade-and-local-open-path.md), [substrate maturity](docs/43-substrate-inventory-and-maturity.md), [distributed-runtime roadmap](docs/future/distributed-runtime-roadmap.md) |
 
-```text
-architecture
-    -> implementation
-    -> internal conformance
-    -> external benchmark pressure
-    -> product / architecture gap discovery
-    -> bounded remediation
-    -> same frozen benchmark replay
-```
+The three reinforce one another: benchmarks keep the theory honest, the runtime keeps the benchmarks relevant, and the theory gives the runtime its boundaries. None of them inherits authority from another.
 
-The goal is not to make every benchmark green. The goal is to make the architecture survive independent workloads without silently weakening governance to chase a number.
+### Three roles, five layers
 
-## Governing doctrine
+Those three entry points correspond to the repository's three **operational roles** (product/runtime, architecture/governance laboratory, evaluation/benchmark laboratory) defined in [`docs/REPOSITORY_OPERATING_MODEL.md`](docs/REPOSITORY_OPERATING_MODEL.md). The broader project is additionally partitioned into a **five-layer project model** (architecture/doctrine/research commons, Memory Evaluation, the Agent Memory Gauntlet, the reference/conformance implementation, and a future distinct production runtime) in [`docs/AGENT_MEMORY_PROJECT_MODEL.md`](docs/AGENT_MEMORY_PROJECT_MODEL.md).
+
+The two are not competing descriptions. Per the ruling in issue [#565](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/565): the three roles describe what the repository *does* operationally today; the five layers describe how the project is *partitioned* for community, evaluation, qualification, reference implementation, and future product/licensing boundaries. The five-layer model refines the product/runtime role into "reference/conformance implementation" plus "future distinct production runtime" ([#556](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/556)), and refines the evaluation role into lower-level Memory Evaluation plus the public Gauntlet.
+
+## Theory
 
 **Probabilistic epistemics. Governed consequences.**
 
 **Uncertainty may propose. Authority constrains.**
 
-Current load-bearing invariants include:
+A model, retriever, classifier, temporal signal, decay score, benchmark result, or external verifier may contribute evidence. None creates its own permission to mutate canonical memory or to enter active cognition outside the governed path. The load-bearing invariants include:
 
 ```text
 candidate retrieval != governed recall admission
-ranking != recall admission
 ranking != truth
 relevance != currentness
-classifier output != truth
 classifier confidence != permission
 interpretation != authority
-semantic interpretation != retention/lifecycle policy
-conflict detection != mutation
 proposal != application
 newer != superseding
-staleness != irrelevance
-age != staleness
 recency != authority
-metabolic stability != temporal validity
-reinforcement != currentness
-recommendation != mutation authority
-external verification != Agent Memory authority
 benchmark score != memory authority
 ```
 
-A model, retriever, classifier, temporal signal, decay score, benchmark result, or external verifier may contribute evidence. None creates its own permission to mutate canonical memory or influence active cognition outside the governed path.
+Every architectural lookup starts at [`docs/ARCHITECTURE_INDEX.md`](docs/ARCHITECTURE_INDEX.md), the single catalog that assigns each architecture document one shelf and one owner and states the filing rule for new ones. [`docs/AGENTIC_MEMORY_SYSTEMS_CANONICAL_ARCHITECTURE.md`](docs/AGENTIC_MEMORY_SYSTEMS_CANONICAL_ARCHITECTURE.md) is the underlying architectural explanation; the individual ADRs ([index](docs/adr/README.md)), the schemas, the code, and accepted evidence keep factual authority for their own claims. [PAMA](docs/pama/README.md) and [`docs/04-governance-and-pama.md`](docs/04-governance-and-pama.md) own mutation authority. Implementation or benchmark evidence never silently promotes, supersedes, or rejects an ADR. The active policy and contract versions are owned by code, not prose: `reference/agentmem_ref/runtime/temporal_order_constraints.py` (`POLICY_VERSION`) and `reference/agentmem_ref/api/contract.py` (`CONTRACT_VERSION`). The longer invariant list in [`docs/64-current-governance-and-benchmark-dashboard.md`](docs/64-current-governance-and-benchmark-dashboard.md) is the **historical #591/#594 reconciliation** and reads as of that boundary.
 
-See **[PAMA](docs/pama/README.md)**, **[Governance and PAMA](docs/04-governance-and-pama.md)**, and **[ADR-035](docs/adr/ADR-035-agent-memory-is-a-governed-cognitive-framework.md)**.
+Research briefs, explorations, and ancestry harvests are evidence and provenance, not doctrine; see [`docs/40-aligned-projects-and-intellectual-lineage.md`](docs/40-aligned-projects-and-intellectual-lineage.md) and [`docs/SOURCE_RIGHTS_POLICY.md`](docs/SOURCE_RIGHTS_POLICY.md).
 
-## Current architecture
+## Benchmarks
+
+Benchmarking is a first-class repository function. The canonical current evidence view is **[`reports/benchmarks/dashboard/current.md`](reports/benchmarks/dashboard/current.md)** (machine-readable: `current.json`). Numbers are intentionally not copied into this README; the dashboard distinguishes current accepted evidence, previous accepted evidence and deltas, evidence classes, and non-numeric states such as `not_run`, `blocked`, `unsupported`, and `evidence_gap`. There is no universal aggregate score.
+
+| If you want to | Go to |
+|---|---|
+| Understand the portfolio, evidence classes, and the rules for benchmark-driven change | [`BENCHMARKS.md`](BENCHMARKS.md) |
+| See which memory capabilities are measured, partially covered, or white space | [`docs/BENCHMARK_COVERAGE_ATLAS.md`](docs/BENCHMARK_COVERAGE_ATLAS.md) |
+| Bring a memory system or a benchmark into the laboratory | [`docs/CONTRIBUTOR_ARCHITECTURE.md`](docs/CONTRIBUTOR_ARCHITECTURE.md), then [`docs/GAUNTLET_EXTERNAL_CONTESTANT_QUICKSTART.md`](docs/GAUNTLET_EXTERNAL_CONTESTANT_QUICKSTART.md) |
+| Read how benchmark findings become bounded remediation and frozen replays | [`docs/56-benchmark-gauntlet-remediation-evidence.md`](docs/56-benchmark-gauntlet-remediation-evidence.md), [`docs/72-benchmark-neutral-remediation-loop.md`](docs/72-benchmark-neutral-remediation-loop.md) |
+| Follow the per-metric leaderboard and evidence-freshness work | issues [#779](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/779), [#789](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/789), [#795](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/795) |
 
 ```text
-WRITE
-memory text + explicit metadata
-  -> deterministic/versioned write-time interpretation
-       proposition identity candidate
-       cardinality evidence
-       temporal aspect
-       bounded self-validity
-       change/coexistence/hedging/self-claim markers
-  -> typed evidence / governed proposal
-  -> existing lifecycle
-  -> persisted memory
-
-READ
-query
-  -> temporal intent
-  -> candidate generation
-  -> governed canonical admission
-  -> contextual purpose admission
-  -> temporal applicability
-       caller-declared validity
-       > interpreted self-validity as LIMIT ONLY
-       > unknown
-  -> relevance/routing evidence
-  -> deterministic ordering
-  -> recall
+benchmark score != truth
+benchmark score != authority
+retrieval quality != production readiness
+blocked / not_run / evidence_gap != 0
 ```
 
-Policy is **3.1.0**. Interpreted self-validity may limit a memory's own applicability when caller-declared validity is absent. It may never affirm its own currentness.
-
-ADR-039 remains **Proposed**.
-
-PR #587 / issue #583 remains intentionally **DRAFT / HOLD**. The old lexical-cue-removal candidate must not be revived. Query-side temporal intent (#585) and memory-side aspect evidence (#598) are separate typed contracts that must be calibrated before a redesigned #583.
-
-## Use the runtime
+## Runtime
 
 From a checkout:
 
@@ -152,102 +119,27 @@ with AgentMemory.open("./agent-memory-state", tenant="tenant:local") as memory:
     posture = memory.posture()
 ```
 
-The facade is a convenience layer over the governed public contract. Convenience does not create authority. Corrections, permanent deletion, and other consequential operations remain subject to governance.
+The facade is a convenience layer over the versioned public contract ([`docs/44-public-api-contract.md`](docs/44-public-api-contract.md)). Convenience does not create authority: corrections, permanent deletion, and other consequential operations remain subject to governance. Read [`docs/47-developer-facade-and-local-open-path.md`](docs/47-developer-facade-and-local-open-path.md) for defaults, recovery posture, and the threading contract, and [`docs/45-agent-memory-rc1-implementation-profile.md`](docs/45-agent-memory-rc1-implementation-profile.md) for the bounded RC profile.
 
-See **[Developer Facade and Local Open Path](docs/47-developer-facade-and-local-open-path.md)**.
+### Substrates and maturity
 
-## Implemented product surface
+"No single shape of memory is best for everything" is the design direction. It is not yet a qualified claim across storage technologies. The authoritative inventory is [`docs/43-substrate-inventory-and-maturity.md`](docs/43-substrate-inventory-and-maturity.md); the summary is:
 
-| Surface | Current posture |
+| Substrate / topology | Status |
 |---|---|
-| Developer `AgentMemory.open()/remember()/recall()/correct()/forget()/history()/posture()` facade | Implemented |
-| Canonical semantic memory | Executable governed runtime |
-| Epistemic belief memory | Executable with confidence, evidence, dispute and retraction lineage |
-| Procedural / skill memory | Executable with action-authority separation |
-| Predictive / counterfactual memory | Executable governed surface |
-| Governed recall admission | Executable scope/tenant/project/currentness boundary |
-| Historical-evidence admission | Executable under explicit historical/as-of intent |
-| Multi-route retrieval | Executable with route provenance |
-| Native semantic/vector retrieval | Implemented |
-| Typed temporal/entity/causal traversal | Implemented |
-| Native cognitive metabolism | Implemented deterministic evidence/proposal surface |
-| Write-time proposition/cardinality/aspect/self-validity carrier | Implemented; naturally qualified by #594 |
-| Correction / supersession | Executable and restart-safe in declared reference profile |
-| Forgetting / tombstones | Executable, evidence-bearing and restart-safe |
-| SQLite canonical substrate | Qualified for bounded single-host RC use |
-| Distributed/multi-host persistence | Not established |
-| Production 1.0 readiness | Not claimed |
+| `SQLiteTemporalGraph` (`sqlite_single_host_v1`) | **RC-qualified** single-host canonical substrate; the only production-credible profile |
+| `InMemoryTemporalGraph` | **Reference** implementation; restart/checkpoint correctness proven; not a production persistence recommendation |
+| `GraphitiSubstrate` | **Experimental** adapter; probe path uses a deprecated upstream driver; not qualified |
+| Rust kernel | **Shadow only**; deterministic-primitive parity evidence under [#602](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/602); Python remains the qualified runtime |
+| Postgres, graph databases, Markdown/files, object stores | **Not implemented as substrates**; storage technologies until an Agent Memory profile earns qualification |
+| Distributed / multi-host persistence | **Not established**; see the proposed [distributed-runtime roadmap](docs/future/distributed-runtime-roadmap.md) |
 
-## Current benchmark dashboard
+### Where the runtime stands
 
-The canonical dashboard is **[`reports/benchmarks/dashboard/current.md`](reports/benchmarks/dashboard/current.md)** with machine-readable form at `current.json`. It deliberately distinguishes current accepted evidence, previous accepted evidence and deltas, evidence classes, and non-numeric states such as `not_run`, `blocked`, and `evidence_gap`.
+Current state has source-backed owners, in this order: the code-declared versions above; [`docs/43-substrate-inventory-and-maturity.md`](docs/43-substrate-inventory-and-maturity.md) for what is qualified; `reports/runtime/baseline-register.json` for the current Runtime Baseline; [`docs/BACKLOG.md`](docs/BACKLOG.md) for the work queue and owner rulings; [`docs/SYSTEM_STATE.md`](docs/SYSTEM_STATE.md) for the revision-bound projection; and issues [#410](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/410), [#668](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/668), and [#636](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/636) for live execution state. [`docs/64`](docs/64-current-governance-and-benchmark-dashboard.md) and [`docs/66`](docs/66-pre-1.0-maturity-and-runtime-qualification.md) are reconciliations at the #594 and #600-#602 boundaries respectively; they keep their original claims and are not refreshed. Two boundaries hold regardless of the evidence inside them:
 
-Headline accepted evidence:
-
-| Track | Current evidence |
-|---|---|
-| AgentMemBench exact-source recall@5 | **0.899** |
-| LongMemEval_S session recall_all@5 | **0.823389** |
-| LongMemEval_S turn recall_all@10 | **0.723** |
-| LongMemEval_M recall_all@5 | session **0.708831**, turn **0.532220** |
-| AgentMemBench currentness | new-fact 0.20, staleness 0.80 |
-| LongMemEval_S latest-gold-first | session 0.457, turn 0.557 |
-| #591 search performance | p50 7.7 ms, p95 11.9 ms, wall 38.6 s |
-| #594 Part R proposition status | known precision **0.800**, known recall **0.148**, unknown precision **1.000**, unknown recall **0.848** |
-| #594 source-anchored self-validity demotion | **EVIDENCE GAP**, 0 metric-visible changed rows |
-
-There is no universal aggregate score.
-
-## #594 natural semantic qualification
-
-#594 is **QUALIFIED**.
-
-Phase A mapped defensible LongMemEval_S session dates to `observed_at` and separately tested a host-declared question-date reference time. C, P1, and P2 remained rank-identical. The corpus therefore supplies no metric-visible efficacy case for interpreted self-validity demotion; this is an explicit external evidence gap, not a runtime failure.
-
-Phase B froze 268 natural turns, iterated five versioned annotation drafts without consulting interpreter predictions, accepted v5 through a maintainer gold-freeze review, and only then ran the interpreter.
-
-On the unbiased Part R sample, the dominant failure is **over-ambiguity / under-recognition**: 46 of 54 gold-known turns become `ambiguous`. Known precision remains 0.80 and unknown precision is 1.0. The result is materially weak efficacy but predominantly conservative rather than authority-expanding.
-
-Follow-ons:
-
-- **#596** proposition recognition / over-ambiguity;
-- **#597** canonical property/value boundaries and pre-score normalization;
-- **#598** write-time temporal-aspect calibration.
-
-#598 is on the temporal RC dependency path before redesigned #583. #596/#597 are high-priority interpreter-quality limitations and are not automatic RC blockers while their dominant behavior remains fail-safe ambiguity/abstention.
-
-See **[`reports/benchmarks/replays/594-post-550-semantic-qualification/CLOSEOUT.md`](reports/benchmarks/replays/594-post-550-semantic-qualification/CLOSEOUT.md)**.
-
-## Current known limitations
-
-- **Implicit supersession is not inferred.** A newer independently written contradiction does not automatically make the older memory false or non-current (#531 class B). Governed correction/declared temporal evidence remains the authority-bearing path.
-- **Natural proposition recognition is sparse.** #594 Part R known recall is 0.148 at 0.80 precision; remediation is #596.
-- **Property/value extraction needs a canonicalization contract.** The first #594 score froze an empty alias table before scoring; exact-label slot failures include both benign synonym variation and genuine malformed extraction. #597 owns a pre-score, independently defensible contract.
-- **Write-time temporal aspect needs calibration.** #594 exposed aspect mismatches and over-classification. #598 is separate from query-side #585.
-- **Interpreted self-validity external efficacy remains an evidence gap.** Source-anchored LongMemEval_S produces no metric-visible demotion case.
-- **ADR-039 remains Proposed.** No benchmark result promotes it automatically.
-- **Distributed/multi-host persistence is not established.** The qualified persistence claim is bounded single-host SQLite.
-- **Production 1.0 is not claimed.** RC1 is still an explicit governed declaration decision.
-
-## Active RC sequence
-
-```text
-#591 COMPLETE
-  -> #594 QUALIFIED
-  -> canonical current dashboard COMPLETE
-  -> #585 query-intent span calibration
-  -> #598 write-time temporal-aspect calibration
-  -> redesigned #583
-  -> final #580 replay
-  -> #584 policy ruling
-  -> RC1 declaration decision
-```
-
-#586 exception/override precedence remains post-RC unless evidence pulls it forward.
-
-#596/#597 may be remediated in parallel or promoted onto the critical path if final RC evidence shows the declared product contract cannot tolerate their limitations.
-
-See **[Current governance and benchmark state](docs/64-current-governance-and-benchmark-dashboard.md)** and issue **#410**.
+- the qualified persistence claim is bounded single-host SQLite;
+- production 1.0 is not claimed. RC1 is an explicit governed declaration decision.
 
 ## Repository structure
 
@@ -257,37 +149,35 @@ reference/agentmem_ref/
 ├── state/       canonical substrates, graph/state drivers, projections
 ├── contracts/   capability declarations, qualification, substitution
 ├── runtime/     governed adapter, restart, transactions, composition, CLI
-├── memory/      semantic-adjacent memory modules, epistemic/procedural/etc.
+├── memory/      governed memory kinds: epistemic, procedural, predictive, ...
 ├── api/         versioned public contract surfaces
-├── crg/         Agent Memory Code Reality Graph / code-domain integration
-└── evaluation/  benchmark-neutral validation/comparison/scorecard machinery
+├── crg/         Code Reality Graph / code-domain integration
+├── harness/     characterization harnesses, depth probes, comparators
+└── evaluation/  benchmark-neutral validation, Gauntlet, scorecard machinery
 
-reference/       runtime, runners, benchmark adapters, tests
+reference/       runners, benchmark adapters, tests (`reference/tests/`)
 schemas/         machine-readable contracts
 fixtures/        conformance and adversarial fixtures
-docs/            doctrine, ADRs, product profiles, research, evaluation guidance
-reports/         frozen and normalized benchmark evidence
+docs/            doctrine, ADRs, product profiles, evaluation guidance, plans
+reports/         frozen and normalized benchmark evidence, runtime baselines
 sources/         source/provenance/right-to-reuse records
 ```
 
+The layered package topology is enforced by `reference/tests/test_package_layout.py` from the table in `scripts/restructure_package.py`. The runtime never imports the evaluation package.
+
 ## Evidence and maturity discipline
 
-A repository claim should state whether it is doctrine, product contract, implementation, conformance evidence, benchmark evidence, field evidence, research/ancestry, or hypothesis. Those categories are not interchangeable.
+A repository claim should state whether it is doctrine, product contract, implementation, conformance evidence, benchmark evidence, field evidence, research/ancestry, or hypothesis. Those categories are not interchangeable, and promotion between them is deliberate. Agent Memory is the canonical owner of the generic memory machinery implemented here; EvolveAI, CodeGenome, COREFORGE, UOR-derived mechanisms, and other systems supply ancestry, evidence, or comparison surfaces, not permanent runtime ownership.
 
-The repository's evidence policy is source-neutral: native ideas do not become correct because they originated here, and external ideas do not become correct because they are published or popular. Evidence may support, challenge, narrow, or supersede doctrine through the governed decision process.
-
-See **[GOVERNANCE.md](GOVERNANCE.md)** and **[Evidence Promotion Policy](docs/policies/EVIDENCE_PROMOTION.md)**.
+See [`GOVERNANCE.md`](GOVERNANCE.md), [`docs/policies/EVIDENCE_PROMOTION.md`](docs/policies/EVIDENCE_PROMOTION.md), and [`docs/REPOSITORY_OPERATING_MODEL.md`](docs/REPOSITORY_OPERATING_MODEL.md).
 
 ## Contributing
 
-Start with:
-
-1. **[Repository Operating Model](docs/REPOSITORY_OPERATING_MODEL.md)**
-2. **[Contributing](CONTRIBUTING.md)**
-3. **[Governance](GOVERNANCE.md)**
-4. **[Documentation index](docs/README.md)**
-5. **[Architecture decisions](docs/adr/README.md)**
-6. **[Benchmarks](BENCHMARKS.md)**
+1. [`docs/REPOSITORY_OPERATING_MODEL.md`](docs/REPOSITORY_OPERATING_MODEL.md)
+2. [`CONTRIBUTING.md`](CONTRIBUTING.md)
+3. [`GOVERNANCE.md`](GOVERNANCE.md)
+4. [`docs/README.md`](docs/README.md)
+5. [`docs/CONTRIBUTOR_ARCHITECTURE.md`](docs/CONTRIBUTOR_ARCHITECTURE.md) for systems and benchmarks
 
 Material changes should identify whether they affect runtime behavior, doctrine, evaluation/evidence, contracts/schemas, documentation, or security/governance.
 
@@ -295,4 +185,4 @@ Material changes should identify whether they affect runtime behavior, doctrine,
 
 Agent Memory is licensed under the **Apache License 2.0**. See [`LICENSE`](LICENSE) and [`NOTICE`](NOTICE).
 
-Third-party sources, datasets, benchmark corpora, and referenced implementations retain their own licenses and attribution requirements. See **[SOURCE_RIGHTS_POLICY.md](docs/SOURCE_RIGHTS_POLICY.md)** and the source registry.
+Third-party sources, datasets, benchmark corpora, and referenced implementations retain their own licenses and attribution requirements. See [`docs/SOURCE_RIGHTS_POLICY.md`](docs/SOURCE_RIGHTS_POLICY.md) and the source registry.
