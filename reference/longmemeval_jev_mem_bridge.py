@@ -22,7 +22,7 @@ UPSTREAM_SHA = "7ab0c73c6d8f4f611ad252c1e6ba8083f8df0e44"
 CONFIG_BLOB_SHA = "ae526c67ccadbdbcbca84f2c1459990809a963f9"
 BACKEND = "jev_mem_laya"
 BRIDGE_ID = "reference/longmemeval_jev_mem_bridge.py"
-BRIDGE_VERSION = "0.2.0-candidate"
+BRIDGE_VERSION = "0.2.1-candidate"
 MAX_DEPTH = 50
 
 
@@ -46,6 +46,21 @@ def verify_upstream(root: Path) -> dict[str, Any]:
         raise RuntimeError("Jev-Mem Laya configuration is not the reviewed source blob")
     return {"upstream": UPSTREAM_REPO, "source_revision": head,
             "config_blob": CONFIG_BLOB_SHA, "model_revision_qualified": False}
+
+
+def validate_corpus_ids(items) -> list:
+    """Upstream LongMemEval indexes a repeated haystack session once per occurrence under
+    the same id (the runner validates that repeats carry identical content). Accept that,
+    refuse anything else: empty/non-string ids or one id with different texts."""
+    ids, texts = [], {}
+    for item in items:
+        doc_id, text = item.get("id"), item.get("text")
+        if not isinstance(doc_id, str) or not doc_id or not isinstance(text, str):
+            raise ValueError("benchmark corpus items need non-empty string ids and string text")
+        if texts.setdefault(doc_id, text) != text:
+            raise ValueError(f"benchmark corpus id {doc_id!r} repeats with different text")
+        ids.append(doc_id)
+    return ids
 
 
 def ranked_doc_ids(anchor_nodes: Sequence[Any], allowed_ids: set[str]) -> tuple[list[str], int]:
@@ -141,9 +156,7 @@ class JevMemLayaLongMemEval:
         if not items:
             return {"ranked": [], "unmapped_result_count": 0,
                     "capability": "retrieval_only", "source_revision": UPSTREAM_SHA}
-        ids = [item.get("id") for item in items]
-        if any(not isinstance(s, str) or not s for s in ids) or len(ids) != len(set(ids)):
-            raise ValueError("benchmark corpus item IDs must be unique strings")
+        ids = validate_corpus_ids(items)  # repeats ingest as separate nodes; ranking dedupes by doc_id
         if any(not isinstance(item.get("text"), str) or not isinstance(item.get("date"), str)
                for item in items):
             raise ValueError("missing benchmark text/date; never synthesize missing source data")

@@ -34,10 +34,26 @@ from agentmem_ref.evaluation.hindsight_bridge import (
 
 BACKEND = "hindsight_chunks_onnx"
 BRIDGE_ID = "reference/longmemeval_hindsight_bridge.py"
-BRIDGE_VERSION = "0.1.0-candidate"
+BRIDGE_VERSION = "0.1.1-candidate"
 MAX_DEPTH = 50
 RECALL_MAX_TOKENS = 65536
 RECALL_BUDGET = "mid"  # product default
+REPEAT_SEP = "\x00repeat:"
+
+
+def validate_corpus_ids(items) -> list:
+    """Upstream LongMemEval indexes a repeated haystack session once per occurrence under
+    the same id (the runner validates that repeats carry identical content). Accept that,
+    refuse anything else: empty/non-string ids or one id with different texts."""
+    ids, texts = [], {}
+    for item in items:
+        doc_id, text = item.get("id"), item.get("text")
+        if not isinstance(doc_id, str) or not doc_id or not isinstance(text, str):
+            raise ValueError("benchmark corpus items need non-empty string ids and string text")
+        if texts.setdefault(doc_id, text) != text:
+            raise ValueError(f"benchmark corpus id {doc_id!r} repeats with different text")
+        ids.append(doc_id)
+    return ids
 
 
 class HindsightLongMemEval:
@@ -86,9 +102,7 @@ class HindsightLongMemEval:
                  row_index: int, row: Mapping[str, Any] | None = None) -> dict[str, Any]:
         if not isinstance(question, str) or not question:
             raise ValueError("question must be nonempty")
-        ids = [item.get("id") for item in items]
-        if any(not isinstance(s, str) or not s for s in ids) or len(ids) != len(set(ids)):
-            raise ValueError("benchmark corpus item IDs must be unique strings")
+        ids = validate_corpus_ids(items)
         bank_id = f"am-lme-{uuid.uuid4().hex}"
         self.client.create_bank(bank_id=bank_id, **EXPECTED_BANK_CONFIG)
         try:
@@ -96,11 +110,16 @@ class HindsightLongMemEval:
             config_sha = bridge.qualify_bank()
             skipped = 0
             start = time.perf_counter()
+            occurrences: dict[str, int] = {}
             for item in items:
+                k = occurrences.get(item["id"], 0)
+                occurrences[item["id"]] = k + 1
                 if not item["text"].strip():
                     skipped += 1  # the bridge refuses empty text; never synthesize it
                     continue
-                bridge.retain(CorpusDocument(item["id"], item["text"]))
+                # A repeated upstream session is retained once per occurrence, like upstream
+                # indexing; the k-th repeat gets a distinct key that maps back to the same id.
+                bridge.retain(CorpusDocument(item["id"] if k == 0 else f"{item['id']}{REPEAT_SEP}{k}", item["text"]))
             ingest_seconds = time.perf_counter() - start
             start = time.perf_counter()
             envelope = bridge.recall(question, top_k=MAX_DEPTH, max_tokens=RECALL_MAX_TOKENS, budget=RECALL_BUDGET)
@@ -108,7 +127,12 @@ class HindsightLongMemEval:
         finally:
             self.client.delete_bank(bank_id)
         self.calls += 1
-        return {"ranked": list(envelope.mapped_corpus_ids), "unmapped_result_count": 0,
+        ranked: list[str] = []
+        for key in envelope.mapped_corpus_ids:
+            doc_id = key.split(REPEAT_SEP, 1)[0]
+            if doc_id not in ranked:
+                ranked.append(doc_id)
+        return {"ranked": ranked, "unmapped_result_count": 0,
                 "provider_result_count": len(envelope.raw_native_results),
                 "repeated_native_document_count": len(envelope.repeated_native_document_ids),
                 "retained_count": bridge.ingest_count, "skipped_blank_items": skipped,

@@ -29,7 +29,7 @@ from typing import Any, Mapping, Sequence
 
 BACKEND = "cognee_gliner_local"
 BRIDGE_ID = "reference/longmemeval_cognee_bridge.py"
-BRIDGE_VERSION = "0.1.0-candidate"
+BRIDGE_VERSION = "0.1.1-candidate"
 COGNEE_VERSION = "1.6.4"
 COGNEE_REPOSITORY = "https://github.com/topoteretes/cognee"
 COGNEE_TAG_COMMIT = "f154b32a9e544dac73e7ddf2010327cf9988edcd"
@@ -41,6 +41,33 @@ _FORBIDDEN_ENV = ("OPENAI_API_KEY", "LLM_API_KEY", "ANTHROPIC_API_KEY", "EMBEDDI
 
 def opaque_id(doc_id: str) -> uuid.UUID:
     return uuid.uuid5(ID_NAMESPACE, doc_id)
+
+
+def validate_corpus_ids(items) -> list:
+    """Upstream LongMemEval indexes a repeated haystack session once per occurrence under
+    the same id (the runner validates that repeats carry identical content). Accept that,
+    refuse anything else: empty/non-string ids or one id with different texts."""
+    ids, texts = [], {}
+    for item in items:
+        doc_id, text = item.get("id"), item.get("text")
+        if not isinstance(doc_id, str) or not doc_id or not isinstance(text, str):
+            raise ValueError("benchmark corpus items need non-empty string ids and string text")
+        if texts.setdefault(doc_id, text) != text:
+            raise ValueError(f"benchmark corpus id {doc_id!r} repeats with different text")
+        ids.append(doc_id)
+    return ids
+
+
+def occurrence_ids(ids) -> list:
+    """One opaque native id per corpus occurrence: uuid5(ns, doc_id) for the first, and
+    uuid5(ns, doc_id NUL k) for the k-th repeat, all mapping back to the same doc_id."""
+    seen: dict[str, int] = {}
+    out = []
+    for doc_id in ids:
+        k = seen.get(doc_id, 0)
+        seen[doc_id] = k + 1
+        out.append(opaque_id(doc_id) if k == 0 else uuid.uuid5(ID_NAMESPACE, f"{doc_id}\x00{k}"))
+    return out
 
 
 def ranked_doc_ids(entries: Sequence[Any], by_uuid: Mapping[str, Sequence[str]]) -> tuple[list[str], int, dict[str, int]]:
@@ -98,13 +125,13 @@ class CogneeLocalLongMemEval:
         self.loop = _Loop()
         self.calls = 0
 
-    async def _question(self, question: str, items: Sequence[Mapping[str, str]], dataset: str):
+    async def _question(self, question: str, items: Sequence[Mapping[str, str]], native, dataset: str):
         from cognee.tasks.ingestion.data_item import DataItem
         cognee = self.cognee
         await cognee.prune.prune_data()
         await cognee.prune.prune_system(metadata=True)
-        data = [DataItem(data=item["text"], data_id=opaque_id(item["id"]), literal_text=True)
-                for item in items if item["text"].strip()]
+        data = [DataItem(data=item["text"], data_id=data_id, literal_text=True)
+                for item, data_id in zip(items, native) if item["text"].strip()]
         start = time.perf_counter()
         remembered = await cognee.remember(data, dataset_name=dataset)
         ingest_seconds = time.perf_counter() - start
@@ -117,17 +144,14 @@ class CogneeLocalLongMemEval:
                  row_index: int, row: Mapping[str, Any] | None = None) -> dict[str, Any]:
         if not isinstance(question, str) or not question:
             raise ValueError("question must be nonempty")
-        ids = [item.get("id") for item in items]
-        if any(not isinstance(s, str) or not s for s in ids) or len(ids) != len(set(ids)):
-            raise ValueError("benchmark corpus item IDs must be unique strings")
+        ids = validate_corpus_ids(items)
         if not items:
             return {"ranked": [], "unmapped_result_count": 0, "capability": "retrieval_only"}
-        by_uuid: dict[str, list[str]] = {}
-        for doc_id in ids:
-            by_uuid.setdefault(str(opaque_id(doc_id)), []).append(doc_id)
+        native = occurrence_ids(ids)
+        by_uuid: dict[str, list[str]] = {str(n): [doc_id] for n, doc_id in zip(native, ids)}
         dataset = f"lme_q{row_index}_{uuid.uuid4().hex[:8]}"
         remembered, results, ingest_seconds, recall_seconds, skipped = self.loop.run(
-            self._question(question, items, dataset))
+            self._question(question, items, native, dataset))
         status = getattr(remembered, "status", None) if remembered is not None else None
         ranked, unmapped, kinds = ranked_doc_ids(results or [], by_uuid)
         self.calls += 1
@@ -150,7 +174,7 @@ def identity() -> dict[str, Any]:
             "llm": "none (no key; LLM-dependent stages skip per upstream README)",
             "recall": {"top_k": MAX_DEPTH, "query_type": "default (auto_route)"},
             "remember": "product defaults (self_improvement default) per question dataset",
-            "identity_mapping": "DataItem.data_id = uuid5(namespace, doc_id); ids never in text",
+            "identity_mapping": "DataItem.data_id = uuid5(namespace, doc_id[, NUL k for the k-th repeat]); ids never in text",
             "isolation": "prune_data + prune_system(metadata=True) before every question",
             "gold_access": "none", "qualification": "candidate until independent review",
         },
