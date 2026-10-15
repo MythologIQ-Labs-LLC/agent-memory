@@ -96,7 +96,7 @@ The local open path is fail closed:
 SQLite database present
     -> recover and verify
 
-configuration binding present but database absent
+legacy configuration-binding file present but database absent
     -> refuse as incomplete state
 
 SQLite database corrupt or incompatible
@@ -131,7 +131,7 @@ The SQLite database is the durable source of truth only for what a runtime gener
 - **What happens after a refusal.** The store stays exactly as the last generation left it, and `close()` followed by `open()` recovers normally.
 - **Interrupts roll back.** An exception or interrupt (`KeyboardInterrupt`) inside a generation rolls back the transaction and the adapter's governance state.
 - **Supported paths are unchanged.** These are the facade and the runtime's own governed operations: `handle.runtime.recall`, `retain`, `correct`, `dispute`, `delete_current`, and the durable runtime's `governed_recall`, `commit_proposal`, `governed_delete`, `run_governed_read`, `persist_visibility_snapshot` and `checkpoint`. Each publishes one generation.
-- **The configuration binding follows every base generation.** It is advanced even when the base SQLite runtime is driven directly. A binding failure after the commit never drops what the generation committed.
+- **The configuration binding commits with every base generation (#821).** See "Atomic configuration binding" below. It is advanced even when the base SQLite runtime is driven directly.
 - **What `close()` does.** It publishes nothing, so a refused or failed act can never be bound into durable state by closing.
 - **Integrity checks are not relaxed.** Out-of-band changes to facts, the identifier sequence, the journal, the runtime state or governance rows still fail recovery.
 
@@ -143,7 +143,20 @@ The SQLite database is the durable source of truth only for what a runtime gener
 
 **Before this boundary.** A direct call advanced the identifier sequence in autocommit. That sequence is covered by the canonical substrate digest, so the next `open` failed with `SQLite canonical substrate digest mismatch`. From a stale handle, the same call also broke recovery of a generation another process had committed.
 
-**One limit remains open.** The configuration binding is a separate file written after the SQLite commit. If a process stops between the two, recovery fails closed (`configuration binding does not match recovered base checkpoint`). That window predates #816 and is unchanged by it.
+## Atomic configuration binding (#821)
+
+Each generation binds the validated runtime configuration (configuration digest, resolved plan, required projections) to the generation it publishes. Until #821 that binding was the file `configuration-binding.json`, written after the SQLite commit: a process that stopped between the two left a committed generation that recovery then refused (`configuration binding does not match recovered base checkpoint`).
+
+- **One transaction.** The binding is now the singleton row `runtime_configuration_binding`, written by the owning runtime inside the generation's own SQLite transaction, after the runtime state and journal row and before `COMMIT` (protocol `sqlite_same_transaction_config_binding_v1`). A generation and its binding commit, or roll back, together. Generation 1 of a new store commits with its binding as well. New stores have no binding file.
+- **What the row binds.** The configuration and plan digests, the plan, the required projections, the tenant, and the generation's substrate, governance, interpretation and journal-tail digests, sealed by a record digest.
+- **Recovery verifies it and repairs nothing.** A row that is corrupt, unsealed, from another tenant or store, stale or replayed, or bound to a different configuration is refused with its own diagnostic. Recovery never falls back from a present row to the file and never writes.
+- **Who can write it.** Only the owning runtime, on the thread running its open generation, after the generation CAS; the binder also requires the replaced row to bind the previous generation under the same plan. A stale handle or another process cannot rebind a newer generation.
+- **A failure while binding** (an exception or an interrupt) rolls back the whole generation; nothing is published.
+- **Stores written before #821** have no row. Their file is verified exactly as before, and the first generation a current runtime publishes writes the row in that generation; the file is then left untouched and never consulted again. A store already stranded by the old window (its file lags the committed generation) stays refused: recovery does not decide which configuration published that generation.
+- **Older runtimes** cannot open a store whose current generation is bound only by a row; they fail closed.
+- `posture()` reports `configuration_binding_scheme` (`sqlite_transaction` or `legacy_file`).
+
+The file-checkpoint profile (`RestartSafeRuntime`, `ConfigBoundRestartRuntime`) is unchanged and still writes its binding file after its manifest.
 
 ## Boundaries
 

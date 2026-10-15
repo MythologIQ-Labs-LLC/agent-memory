@@ -712,6 +712,45 @@ class SQLiteTemporalGraph:
             (int(generation), _canonical_bytes(payload).decode("utf-8")),
         )
 
+    # -- the owning runtime's configuration binding (#821) --
+
+    def write_runtime_configuration_binding(self, generation: int, payload: dict) -> None:
+        """Write the owning runtime's configuration binding inside its open generation (#821).
+
+        The row commits or rolls back with the generation it binds. Anywhere else (no generation
+        open on this thread, a bare ``transaction()``, a store no runtime owns)
+        ``UngovernedDurableWrite`` is raised before anything is written. The table is created in
+        that same transaction, so opening a pre-#821 store never changes it."""
+
+        if not self._ids._generation_owned or self._ids._generation_thread != threading.get_ident():
+            raise UngovernedDurableWrite(UNGOVERNED_WRITE_MESSAGE)
+        self._ids.ensure_allocatable()
+        self._connection.execute(
+            "CREATE TABLE IF NOT EXISTS runtime_configuration_binding ("
+            "singleton INTEGER PRIMARY KEY CHECK (singleton = 1), "
+            "generation INTEGER NOT NULL, payload_json TEXT NOT NULL)"
+        )
+        self._connection.execute(
+            "INSERT INTO runtime_configuration_binding(singleton, generation, payload_json) VALUES(1, ?, ?) "
+            "ON CONFLICT(singleton) DO UPDATE SET generation = excluded.generation, payload_json = excluded.payload_json",
+            (int(generation), _canonical_bytes(payload).decode("utf-8")),
+        )
+
+    def read_runtime_configuration_binding(self) -> tuple[int, str] | None:
+        """``(generation, payload_json)`` of the binding row; None for a store that has none."""
+
+        exists = self._connection.execute(
+            "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'runtime_configuration_binding'"
+        ).fetchone()
+        if exists is None:
+            return None
+        rows = self._connection.execute(
+            "SELECT generation, payload_json FROM runtime_configuration_binding WHERE singleton = 1"
+        ).fetchall()
+        if len(rows) > 1:
+            raise ValueError("SQLite configuration binding table holds more than one binding")
+        return None if not rows else (rows[0][0], rows[0][1])
+
     def backup_to(self, destination: str | Path) -> None:
         target_path = Path(destination)
         target_path.parent.mkdir(parents=True, exist_ok=True)

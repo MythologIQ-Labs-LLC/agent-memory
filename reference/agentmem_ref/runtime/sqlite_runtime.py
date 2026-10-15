@@ -19,6 +19,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import sqlite3
 import threading
 from typing import Iterable
 
@@ -28,6 +29,10 @@ from .configured_restart import (
     ConfigBoundRestartRuntime,
     _assert_visibility_matches_plan,
     _profile_from_plan,
+    binding_record,
+    checkpoint_evidence,
+    plan_digest,
+    verify_binding_record,
 )
 from .restart_runtime import (
     CapabilityBinding,
@@ -257,11 +262,22 @@ class SQLiteRestartSafeRuntime:
         # (a direct adapter call on this handle is refused before anything moves, not half-applied).
         self._generation_capability = substrate.require_runtime_generations()
         adapter.require_generation_for_durable_effects(substrate.require_generation)
+        self._generation_binder = None
         self._on_generation_published = None
+
+    def bind_generations(self, binder) -> None:
+        """Run ``binder(substrate, evidence, journal_record_digest, tenant)`` inside every generation
+        this runtime publishes, after its journal row and before COMMIT (#821).
+
+        Whatever the binder writes commits or rolls back with the generation; if it raises, the
+        generation is not published. This is how an owner binds a generation durably."""
+
+        self._generation_binder = binder
 
     def on_generation_published(self, callback) -> None:
         """Run ``callback`` after every generation this runtime publishes (#816), however the
-        governed act reached it, so an owner's binding of the published generation never lags."""
+        governed act reached it. It runs after COMMIT, so it must only update in-memory state;
+        durable binding belongs in ``bind_generations`` (#821)."""
 
         self._on_generation_published = callback
 
@@ -287,6 +303,7 @@ class SQLiteRestartSafeRuntime:
         tenant: str,
         profile: RuntimeProfile,
         verifier_registry=None,
+        generation_binder=None,
     ) -> "SQLiteRestartSafeRuntime":
         root_path = Path(root)
         root_path.mkdir(parents=True, exist_ok=True)
@@ -308,6 +325,8 @@ class SQLiteRestartSafeRuntime:
             observed_generation=0,
             verifier_registry=verifier_registry,
         )
+        # #821: generation 1 commits together with its owner's binding, or not at all.
+        runtime.bind_generations(generation_binder)
         runtime.recovery_evidence = runtime.checkpoint()
         return runtime
 
@@ -475,10 +494,7 @@ class SQLiteRestartSafeRuntime:
         }
         self.substrate.write_runtime_state(state)
         self.substrate.append_runtime_journal(generation, record)
-        if os.environ.get(GOVERNANCE_SELF_CHECK_ENV) == "1":
-            self._self_check_governance(governance_digest)
-        self.adapter.mark_governance_published()
-        return SQLiteRecoveryEvidence(
+        evidence = SQLiteRecoveryEvidence(
             generation=generation,
             durability_profile=SQLITE_DURABILITY_PROFILE,
             substrate_digest=substrate_digest,
@@ -488,6 +504,14 @@ class SQLiteRestartSafeRuntime:
             sqlite_version=self.substrate.sqlite_version,
             recovery_posture="committed_atomic_sqlite_generation",
         )
+        if self._generation_binder is not None:
+            self._generation_binder(
+                self.substrate, evidence, record["record_digest"], self.adapter.checkpoint_tenant()
+            )
+        if os.environ.get(GOVERNANCE_SELF_CHECK_ENV) == "1":
+            self._self_check_governance(governance_digest)
+        self.adapter.mark_governance_published()
+        return evidence
 
     def _governance_residual(self) -> dict:
         try:
@@ -669,6 +693,124 @@ class SQLiteRestartSafeRuntime:
             self.substrate.backup_to(destination)
 
 
+# #821: the configuration binding of a SQLite store is a row its generation's own transaction
+# commits; the file written after COMMIT is read only for stores bound before this protocol.
+SQLITE_CONFIG_BINDING_PROTOCOL = "sqlite_same_transaction_config_binding_v1"
+SQLITE_TRANSACTION_BINDING = "sqlite_transaction"
+LEGACY_FILE_BINDING = "legacy_file"
+
+
+class SQLiteConfigBindingStore:
+    """The configuration binding as a row each generation commits with itself (#821).
+
+    ``publish`` runs inside the generation (``SQLiteRestartSafeRuntime.bind_generations``), so the
+    generation and its binding are one SQLite transaction: there is no state in which one is
+    durable without the other. ``recover`` verifies the row and never repairs it; a store with no
+    row is a pre-#821 store and is verified through its legacy file exactly as before.
+    """
+
+    def __init__(self, root: str | Path) -> None:
+        self.legacy = ConfigBindingStore(root)
+
+    @staticmethod
+    def _sealed(material: dict) -> dict:
+        return {**material, "record_digest": _digest(material)}
+
+    def publish(
+        self,
+        substrate: SQLiteTemporalGraph,
+        *,
+        plan: RuntimeConfigurationPlan,
+        base_evidence: SQLiteRecoveryEvidence,
+        journal_record_digest: str,
+        tenant: str,
+        legacy_generation: int | None,
+    ) -> None:
+        """Write generation G's binding inside G's open transaction.
+
+        Continuity: the row being replaced binds G-1 under this plan, or there is none and G is 1
+        or G-1 is the generation this handle verified through a pre-#821 file
+        (``legacy_generation``). The generation CAS already excludes another writer; this refuses
+        a row that changed under the handle."""
+
+        generation = int(base_evidence.generation)
+        try:
+            current = substrate.read_runtime_configuration_binding()
+            previous = None if current is None else json.loads(current[1])
+            previous_generation = None if current is None else int(current[0])
+        except (TypeError, ValueError, sqlite3.DatabaseError):
+            current, previous, previous_generation = (), None, None
+        if current is None:
+            if generation != 1 and generation - 1 != legacy_generation:
+                raise RuntimeCheckpointConflict(
+                    f"configuration binding for generation {generation - 1} is missing; refusing to bind generation {generation}"
+                )
+        else:
+            if (
+                previous_generation != generation - 1
+                or not isinstance(previous, dict)
+                or previous.get("plan_digest") != plan_digest(plan)
+            ):
+                raise RuntimeCheckpointConflict(
+                    f"configuration binding does not bind generation {generation - 1} under this plan; "
+                    f"refusing to bind generation {generation}"
+                )
+        record = binding_record(plan=plan, base_evidence=base_evidence)
+        record["base"]["journal_record_digest"] = journal_record_digest
+        record.update(binding_protocol=SQLITE_CONFIG_BINDING_PROTOCOL, tenant=tenant)
+        substrate.write_runtime_configuration_binding(generation, self._sealed(record))
+
+    def recover(
+        self,
+        substrate: SQLiteTemporalGraph,
+        *,
+        plan: RuntimeConfigurationPlan,
+        base_evidence: SQLiteRecoveryEvidence,
+        tenant: str,
+        provider_failures=(),
+    ) -> tuple[ConfigBoundRecoveryEvidence, str]:
+        try:
+            current = substrate.read_runtime_configuration_binding()
+        except (ValueError, sqlite3.DatabaseError) as exc:
+            raise RuntimeRecoveryError(f"SQLite configuration binding is corrupt: {exc}") from exc
+        if current is None:
+            evidence = self.legacy.recover(
+                plan=plan, base_evidence=base_evidence, provider_failures=provider_failures
+            )
+            return evidence, LEGACY_FILE_BINDING
+        column, payload = current
+        try:
+            record = json.loads(payload)
+        except (TypeError, ValueError) as exc:
+            raise RuntimeRecoveryError("SQLite configuration binding is corrupt: not JSON") from exc
+        if not isinstance(record, dict):
+            raise RuntimeRecoveryError("SQLite configuration binding is corrupt: not an object")
+        if record.get("binding_protocol") != SQLITE_CONFIG_BINDING_PROTOCOL:
+            raise RuntimeRecoveryError("SQLite configuration binding protocol is unsupported")
+        material = {key: value for key, value in record.items() if key != "record_digest"}
+        if record.get("record_digest") != _digest(material):
+            raise RuntimeRecoveryError("SQLite configuration binding is corrupt: record digest mismatch")
+        base = record.get("base")
+        if not isinstance(base, dict) or base.get("generation") != column:
+            raise RuntimeRecoveryError("SQLite configuration binding is corrupt: its row and record disagree")
+        if record.get("tenant") != tenant:
+            raise RuntimeRecoveryError("SQLite configuration binding belongs to another tenant")
+        if base.get("generation") != base_evidence.generation:
+            raise RuntimeRecoveryError(
+                "SQLite configuration binding is stale or replayed: it binds generation "
+                f"{base.get('generation')!r}, the store committed generation {base_evidence.generation}"
+            )
+        recorded = substrate.read_runtime_binding()
+        if recorded is None or base.get("journal_record_digest") != recorded[1]:
+            raise RuntimeRecoveryError(
+                "configuration binding does not match recovered base checkpoint: journal_record_digest"
+            )
+        evidence = verify_binding_record(
+            record, plan=plan, base_evidence=base_evidence, provider_failures=provider_failures
+        )
+        return evidence, SQLITE_TRANSACTION_BINDING
+
+
 class SQLiteConfigBoundRestartRuntime(ConfigBoundRestartRuntime):
     """Validated runtime plan composed with the transactional SQLite profile."""
 
@@ -682,14 +824,22 @@ class SQLiteConfigBoundRestartRuntime(ConfigBoundRestartRuntime):
         verifier_registry=None,
     ) -> "SQLiteConfigBoundRestartRuntime":
         profile = _profile_from_plan(plan)
+        binding_store = SQLiteConfigBindingStore(root)
+
+        def bind_first(substrate, evidence, journal_record_digest, generation_tenant):
+            binding_store.publish(
+                substrate, plan=plan, base_evidence=evidence, journal_record_digest=journal_record_digest,
+                tenant=generation_tenant, legacy_generation=None,
+            )
+
         base = SQLiteRestartSafeRuntime.create(
             root,
             tenant=tenant,
             profile=profile,
             verifier_registry=verifier_registry,
+            generation_binder=bind_first,
         )
-        binding_store = ConfigBindingStore(root)
-        evidence = binding_store.checkpoint(plan=plan, base_evidence=base.recovery_evidence)
+        evidence = checkpoint_evidence(plan=plan, base_evidence=base.recovery_evidence)
         return cls(base=base, plan=plan, binding_store=binding_store, recovery_evidence=evidence)
 
     @classmethod
@@ -707,27 +857,50 @@ class SQLiteConfigBoundRestartRuntime(ConfigBoundRestartRuntime):
             profile=profile,
             verifier_registry=verifier_registry,
         )
-        _assert_visibility_matches_plan(base.visibility_snapshots, plan)
-        binding_store = ConfigBindingStore(root)
-        evidence = binding_store.recover(
-            plan=plan,
-            base_evidence=base.recovery_evidence,
-            provider_failures=provider_failures,
-        )
-        return cls(base=base, plan=plan, binding_store=binding_store, recovery_evidence=evidence)
+        try:
+            _assert_visibility_matches_plan(base.visibility_snapshots, plan)
+            binding_store = SQLiteConfigBindingStore(root)
+            evidence, scheme = binding_store.recover(
+                base.substrate,
+                plan=plan,
+                base_evidence=base.recovery_evidence,
+                tenant=base.adapter.checkpoint_tenant(),
+                provider_failures=provider_failures,
+            )
+        except BaseException:
+            base.close()
+            raise
+        return cls(base=base, plan=plan, binding_store=binding_store, recovery_evidence=evidence,
+                   binding_scheme=scheme)
 
-    def __init__(self, **kwargs) -> None:
+    def __init__(self, *, binding_scheme: str = SQLITE_TRANSACTION_BINDING, **kwargs) -> None:
         super().__init__(**kwargs)
-        # #816: bind every base generation, including one a caller published by driving the
-        # base runtime directly; the binding store then never trails the SQLite generation.
-        self.base.on_generation_published(self._bind_current_base)
-
-    def _bind_current_base(self) -> ConfigBoundRecoveryEvidence:
-        self.recovery_evidence = self.binding_store.checkpoint(
-            plan=self.plan,
-            base_evidence=self.base.recovery_evidence,
+        # Which binding the last verified or published generation carries: a pre-#821 file until
+        # this handle's first generation commits its row.
+        self.binding_scheme = binding_scheme
+        # The generation a pre-#821 file verified; only the next one may be the first with a row.
+        self._legacy_generation = (
+            self.recovery_evidence.base_generation if binding_scheme == LEGACY_FILE_BINDING else None
         )
-        return self.recovery_evidence
+        # #821: every base generation, however the governed act reached it, commits its binding
+        # in its own transaction; after COMMIT only the in-memory evidence follows.
+        self.base.bind_generations(self._publish_binding)
+        self.base.on_generation_published(self._binding_published)
+
+    def _publish_binding(self, substrate, evidence, journal_record_digest, tenant) -> None:
+        self.binding_store.publish(
+            substrate,
+            plan=self.plan,
+            base_evidence=evidence,
+            journal_record_digest=journal_record_digest,
+            tenant=tenant,
+            legacy_generation=self._legacy_generation,
+        )
+
+    def _binding_published(self) -> None:
+        self.binding_scheme = SQLITE_TRANSACTION_BINDING
+        self._legacy_generation = None
+        self.recovery_evidence = checkpoint_evidence(plan=self.plan, base_evidence=self.base.recovery_evidence)
 
     def checkpoint(self) -> ConfigBoundRecoveryEvidence:
         self.base.checkpoint()

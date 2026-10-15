@@ -341,6 +341,9 @@ def diagnose(
             evidence = runtime.recovery_evidence
             base_evidence = runtime.base.recovery_evidence
             snapshots = dict(runtime.visibility_snapshots)
+            # #821: the binding recovery verified, an in-transaction row or a pre-#821 file.
+            report["durable_state"]["configuration_binding_present"] = True
+            report["durable_state"]["configuration_binding_scheme"] = runtime.binding_scheme
             report["recovery"] = {
                 "status": "recovered",
                 "durability_profile": evidence.durability_profile,

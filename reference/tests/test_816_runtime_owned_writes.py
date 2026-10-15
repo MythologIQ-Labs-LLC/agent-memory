@@ -308,12 +308,15 @@ class ReviewFindings(_Store):
                 self.assertEqual(_rows(self.root), rows)
 
     def test_f3_a_binding_failure_after_commit_keeps_the_committed_visibility_snapshot(self):
-        from agentmem_ref.runtime import configured_restart
+        # #821 moved the durable binding inside the generation (a failure there rolls everything
+        # back: test_821 M6). What still runs after COMMIT is the owner's in-memory evidence update;
+        # a failure there must likewise keep what the generation committed.
+        from agentmem_ref.runtime import sqlite_runtime
 
         memory = self.open()
         durable = memory.runtime.durable_runtime
         snapshot = {"operation": {"required_projection_ids": []}}
-        with mock.patch.object(configured_restart.ConfigBindingStore, "checkpoint",
+        with mock.patch.object(sqlite_runtime, "checkpoint_evidence",
                                side_effect=OSError("injected binding failure")):
             with self.assertRaises(OSError):
                 durable.persist_visibility_snapshot("op:816", snapshot)

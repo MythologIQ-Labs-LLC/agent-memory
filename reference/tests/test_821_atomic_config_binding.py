@@ -355,6 +355,16 @@ class TamperedBindingsAreRefused(_Store):
         _write_row(self.root, old[0], json.dumps(old[1]))
         self.refused("stale or replayed")
 
+    def test_m7_a_rebuilt_table_with_two_bindings_is_refused(self):  # added after the fail-first run
+        self.seeded()
+        generation, payload = _row(self.root)
+        with _connect(self.root) as connection:
+            connection.execute(f"DROP TABLE {BINDING_TABLE}")
+            connection.execute(f"CREATE TABLE {BINDING_TABLE} (singleton INTEGER, generation INTEGER, payload_json TEXT)")
+            for _ in range(2):
+                connection.execute(f"INSERT INTO {BINDING_TABLE} VALUES (1, ?, ?)", (generation, json.dumps(payload)))
+        self.refused("corrupt")
+
     def test_m10_a_deleted_row_is_refused(self):  # FAIL-FIRST
         self.seeded()
         self.assertIsNotNone(_row(self.root))
@@ -462,6 +472,17 @@ class LegacyStores(unittest.TestCase):
             connection.execute(f"DELETE FROM {BINDING_TABLE}")
         with self.assertRaisesRegex(RuntimeRecoveryError, "does not match recovered base checkpoint: generation"):
             self.open(root)
+
+    def test_a5_a_legacy_handle_binds_without_a_row_only_once(self):  # added after the fail-first run
+        root = self.copy("coherent")
+        memory = self.open(root)
+        memory.recall("deploy window")  # generation 4 commits the first row
+        with _connect(root) as connection:
+            connection.execute(f"DELETE FROM {BINDING_TABLE}")
+        rows = _tables(root)
+        with self.assertRaisesRegex(RuntimeCheckpointConflict, "configuration binding for generation 4 is missing"):
+            memory.recall("deploy window")
+        self.assertEqual(_tables(root), rows)
 
     def test_m15_a_store_stranded_by_the_old_window_stays_refused(self):
         root = self.copy("stranded")

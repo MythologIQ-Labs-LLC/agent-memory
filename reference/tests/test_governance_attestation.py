@@ -35,6 +35,7 @@ from agentmem_ref import AgentMemory
 from agentmem_ref.memory import procedural_memory as pm
 from agentmem_ref.restart_runtime import RuntimeRecoveryError
 from agentmem_ref.runtime import sqlite_runtime
+from agentmem_ref.runtime.configured_restart import ConfigBindingStore
 from agentmem_ref.runtime.sqlite_runtime import (
     GOVERNANCE_SELF_CHECK_ENV,
     LEGACY_RUNTIME_STATE_SCHEMA_VERSION,
@@ -421,6 +422,10 @@ class LegacyGovernanceMigrationTests(unittest.TestCase):
                 _exercise(memory)
                 self.legacy_snapshot = _digest(_base(memory)._governance_snapshot())
                 self.db = _base(memory).database_path
+                # A pre-#562 store was bound by the file written after COMMIT; the replaced
+                # publication above bypasses #821's in-transaction binder, so write that file.
+                durable = memory.runtime.durable_runtime
+                ConfigBindingStore(self.root).checkpoint(plan=durable.plan, base_evidence=_base(memory).recovery_evidence)
 
     def tearDown(self) -> None:
         self.temp.cleanup()

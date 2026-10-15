@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.resources
 import json
+import sqlite3
 import tempfile
 import unittest
 from pathlib import Path
@@ -58,7 +59,14 @@ class DeveloperFacade(unittest.TestCase):
             self.assertEqual(retained["stage"], "commit")
             fact_uuid = retained["fact_uuid"]
             self.assertTrue((root / "agent-memory.sqlite3").is_file())
-            self.assertTrue((root / "configuration-binding.json").is_file())
+            # #821: the configuration binding commits inside the SQLite generation; no file.
+            self.assertFalse((root / "configuration-binding.json").exists())
+            with sqlite3.connect(root / "agent-memory.sqlite3") as connection:
+                bound = connection.execute(
+                    "SELECT generation FROM runtime_configuration_binding WHERE singleton = 1").fetchone()
+                state = connection.execute(
+                    "SELECT json_extract(payload_json, '$.generation') FROM runtime_state").fetchone()
+            self.assertEqual(bound, state)
             self.assertTrue((root / "runtime-config.json").is_file())
 
             first = memory.recall("release branch", logical_memory_refs=(TARGET,))
