@@ -1,0 +1,4422 @@
+{
+ "agent_memory_revision": "6a2255c0f46daa1d546758daa93f4402fed14108",
+ "budget": 10,
+ "cohort_sha256": "532f39d0c259a654fb6ade459ab346df5fbffc62fa6145dec6b09556ae863338",
+ "reference_worktree_dirty": false,
+ "return_selection": null,
+ "runner": "scripts/run_memory_quality_scenarios.py",
+ "scenarios": [
+  {
+   "category": "correction",
+   "id": "corr-sister-flight",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 42.036,
+     "id": "corr-sister-flight-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:sis_flight"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 35.097,
+     "id": "corr-sister-flight-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 1.0,
+     "returned": [
+      "memory:sis_flight",
+      "memory:sis_allergy"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 40.667,
+     "id": "corr-sister-flight-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 1.0,
+     "returned": [
+      "memory:sis_allergy",
+      "memory:sis_job"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 35.327,
+     "id": "corr-sister-flight-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": null,
+     "recall": 0.0,
+     "returned": [],
+     "returned_count": 0,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "correction",
+   "id": "corr-pg-upgrade",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 25.5,
+     "id": "corr-pg-upgrade-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 1.0,
+     "returned": [
+      "memory:mig_owner",
+      "memory:mig_date"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 27.071,
+     "id": "corr-pg-upgrade-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 1.0,
+     "returned": [
+      "memory:mig_date",
+      "memory:mig_owner"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 26.445,
+     "id": "corr-pg-upgrade-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:mig_owner"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 30.53,
+     "id": "corr-pg-upgrade-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.6666666666666666,
+     "recall": 1.0,
+     "returned": [
+      "memory:ledger_pg_version",
+      "memory:mig_owner",
+      "memory:mig_date"
+     ],
+     "returned_count": 3,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "correction",
+   "id": "corr-dad-meds",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 32.813,
+     "id": "corr-dad-meds-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 1.0,
+     "returned": [
+      "memory:dad_knee",
+      "memory:dad_med"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 28.187,
+     "id": "corr-dad-meds-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.2,
+     "recall": 1.0,
+     "returned": [
+      "memory:dad_doctor",
+      "memory:dad_bday",
+      "memory:dad_knee",
+      "memory:dad_med",
+      "memory:mom_meds"
+     ],
+     "returned_count": 5,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 28.661,
+     "id": "corr-dad-meds-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.25,
+     "recall": 1.0,
+     "returned": [
+      "memory:dad_doctor",
+      "memory:dad_bday",
+      "memory:dad_knee",
+      "memory:dad_med"
+     ],
+     "returned_count": 4,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 28.373,
+     "id": "corr-dad-meds-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:dad_bday"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "correction",
+   "id": "corr-wifi",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 25.721,
+     "id": "corr-wifi-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:wifi"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 39.571,
+     "id": "corr-wifi-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:guest_wifi"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 34.927,
+     "id": "corr-wifi-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:isp"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 27.665,
+     "id": "corr-wifi-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:router"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 25.706,
+     "id": "corr-wifi-q5",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:office_wifi"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "correction",
+   "id": "corr-client-contact",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 27.953,
+     "id": "corr-client-contact-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 1.0,
+     "returned": [
+      "memory:ridgeway_contact",
+      "memory:harbor_contact"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 28.016,
+     "id": "corr-client-contact-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:devin_new"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 27.568,
+     "id": "corr-client-contact-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:harbor_contract"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 27.61,
+     "id": "corr-client-contact-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 1.0,
+     "returned": [
+      "memory:harbor_volume",
+      "memory:harbor_contact"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 25.445,
+     "id": "corr-client-contact-q5",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 1.0,
+     "returned": [
+      "memory:ridgeway_contact",
+      "memory:harbor_contact"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "correction",
+   "id": "corr-vet-appt",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 28.561,
+     "id": "corr-vet-appt-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:vet_appt"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 30.811,
+     "id": "corr-vet-appt-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.3333333333333333,
+     "recall": 1.0,
+     "returned": [
+      "memory:vet_appt",
+      "memory:vet_bill",
+      "memory:biscuit_food"
+     ],
+     "returned_count": 3,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 32.561,
+     "id": "corr-vet-appt-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:cat_vet"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 24.99,
+     "id": "corr-vet-appt-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:vet_bill"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "correction",
+   "id": "corr-rate-limit",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 25.184,
+     "id": "corr-rate-limit-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.2,
+     "recall": 1.0,
+     "returned": [
+      "memory:rate_limit",
+      "memory:tide_sandbox",
+      "memory:tide_key_rotation",
+      "memory:tide_contact",
+      "memory:internal_rl"
+     ],
+     "returned_count": 5,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 24.625,
+     "id": "corr-rate-limit-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:internal_rl"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 27.517,
+     "id": "corr-rate-limit-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.25,
+     "recall": 1.0,
+     "returned": [
+      "memory:tide_key_rotation",
+      "memory:tide_contact",
+      "memory:tide_sandbox",
+      "memory:rate_limit"
+     ],
+     "returned_count": 4,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 35.643,
+     "id": "corr-rate-limit-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:tide_sandbox"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "correction",
+   "id": "corr-grandma-address",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 37.581,
+     "id": "corr-grandma-address-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.2,
+     "recall": 1.0,
+     "returned": [
+      "memory:grandma_addr",
+      "memory:grandma_card",
+      "memory:grandma_diet",
+      "memory:grandma_phone",
+      "memory:aunt_addr"
+     ],
+     "returned_count": 5,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 25.819,
+     "id": "corr-grandma-address-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 1.0,
+     "recall": 0.0,
+     "returned": [
+      "memory:grandma_card"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 26.134,
+     "id": "corr-grandma-address-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.25,
+     "recall": 1.0,
+     "returned": [
+      "memory:grandma_addr",
+      "memory:grandma_card",
+      "memory:grandma_diet",
+      "memory:grandma_phone"
+     ],
+     "returned_count": 4,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 27.368,
+     "id": "corr-grandma-address-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:grandma_card"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "currentness",
+   "id": "curr-moved-city",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 24.032,
+     "id": "curr-moved-city-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 1.0,
+     "recall": 0.0,
+     "returned": [
+      "memory:live_old"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 28.691,
+     "id": "curr-moved-city-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:live_old",
+      "memory:live_new"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 27.591,
+     "id": "curr-moved-city-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:commute"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 26.516,
+     "id": "curr-moved-city-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": null,
+     "recall": 0.0,
+     "returned": [],
+     "returned_count": 0,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "currentness",
+   "id": "curr-manager",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 30.534,
+     "id": "curr-manager-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 1.0,
+     "recall": 0.0,
+     "returned": [
+      "memory:lead_old"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 27.909,
+     "id": "curr-manager-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": null,
+     "recall": 0.0,
+     "returned": [],
+     "returned_count": 0,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 25.957,
+     "id": "curr-manager-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.6666666666666666,
+     "recall": 1.0,
+     "returned": [
+      "memory:lead_old",
+      "memory:rafael_bday",
+      "memory:lead_new"
+     ],
+     "returned_count": 3,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 25.917,
+     "id": "curr-manager-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:skip_level"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "currentness",
+   "id": "curr-car",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 28.279,
+     "id": "curr-car-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:car_old",
+      "memory:car_new"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 27.038,
+     "id": "curr-car-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 0.0,
+     "returned": [
+      "memory:car_old",
+      "memory:insurance"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 31.581,
+     "id": "curr-car-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:insurance"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 26.749,
+     "id": "curr-car-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:charger"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "currentness",
+   "id": "curr-deploy-tool",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 26.377,
+     "id": "curr-deploy-tool-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:deploy_old",
+      "memory:rollback",
+      "memory:deploy_new"
+     ],
+     "returned_count": 3,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 29.164,
+     "id": "curr-deploy-tool-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:rollback"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 27.386,
+     "id": "curr-deploy-tool-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:jenkins_other",
+      "memory:deploy_old",
+      "memory:deploy_new"
+     ],
+     "returned_count": 3,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 26.617,
+     "id": "curr-deploy-tool-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:storefront_oncall"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "currentness",
+   "id": "curr-habits",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 25.763,
+     "id": "curr-habits-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 1.0,
+     "recall": 0.0,
+     "returned": [
+      "memory:coffee_old"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 24.868,
+     "id": "curr-habits-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 1.0,
+     "recall": 0.0,
+     "returned": [
+      "memory:running_old"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 23.937,
+     "id": "curr-habits-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": null,
+     "recall": 0.0,
+     "returned": [],
+     "returned_count": 0,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 23.785,
+     "id": "curr-habits-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:sleep"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "currentness",
+   "id": "curr-office",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 27.434,
+     "id": "curr-office-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.4,
+     "recall": 1.0,
+     "returned": [
+      "memory:hybrid_old",
+      "memory:office_old",
+      "memory:parking",
+      "memory:hybrid_new",
+      "memory:office_new"
+     ],
+     "returned_count": 5,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 26.421,
+     "id": "curr-office-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.4,
+     "recall": 1.0,
+     "returned": [
+      "memory:hybrid_new",
+      "memory:hybrid_old",
+      "memory:office_old",
+      "memory:parking",
+      "memory:office_new"
+     ],
+     "returned_count": 5,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 27.401,
+     "id": "curr-office-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:parking"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 30.967,
+     "id": "curr-office-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": null,
+     "recall": 0.0,
+     "returned": [],
+     "returned_count": 0,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "currentness",
+   "id": "curr-sister-move",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 27.242,
+     "id": "curr-sister-move-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 1.0,
+     "recall": 0.0,
+     "returned": [
+      "memory:sis_city_old"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 25.338,
+     "id": "curr-sister-move-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.4,
+     "recall": 1.0,
+     "returned": [
+      "memory:noor_bday",
+      "memory:sis_wedding",
+      "memory:sis_partner",
+      "memory:sis_city_old",
+      "memory:sis_city_new"
+     ],
+     "returned_count": 5,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 26.988,
+     "id": "curr-sister-move-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.25,
+     "recall": 0.0,
+     "returned": [
+      "memory:noor_bday",
+      "memory:sis_partner",
+      "memory:sis_wedding",
+      "memory:sis_city_old"
+     ],
+     "returned_count": 4,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 28.58,
+     "id": "curr-sister-move-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:noor_bday"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "entity_redundancy",
+   "id": "ent-mom",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 25.271,
+     "id": "ent-mom-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:mom_ring"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 7,
+     "elapsed_ms": 25.988,
+     "id": "ent-mom-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.14285714285714285,
+     "recall": 1.0,
+     "returned": [
+      "memory:mom_cardio",
+      "memory:mom_bday",
+      "memory:mom_garden",
+      "memory:mom_flowers",
+      "memory:mom_phone",
+      "memory:mom_book_club",
+      "memory:mom_ring"
+     ],
+     "returned_count": 7,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 24.698,
+     "id": "ent-mom-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.25,
+     "recall": 1.0,
+     "returned": [
+      "memory:mom_ring",
+      "memory:mom_bday",
+      "memory:mom_cardio",
+      "memory:mom_book_club"
+     ],
+     "returned_count": 4,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 7,
+     "elapsed_ms": 27.155,
+     "id": "ent-mom-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:mom_phone"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "entity_redundancy",
+   "id": "ent-atlas",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 7,
+     "elapsed_ms": 23.133,
+     "id": "ent-atlas-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:atlas_budget"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 7,
+     "elapsed_ms": 23.495,
+     "id": "ent-atlas-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:atlas_repo"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 7,
+     "elapsed_ms": 23.525,
+     "id": "ent-atlas-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:atlas_pm"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 7,
+     "elapsed_ms": 23.845,
+     "id": "ent-atlas-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:atlas_standup"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "entity_redundancy",
+   "id": "ent-dog",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 25.048,
+     "id": "ent-dog-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:jun_microchip"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 7,
+     "elapsed_ms": 27.243,
+     "id": "ent-dog-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.14285714285714285,
+     "recall": 1.0,
+     "returned": [
+      "memory:jun_sitter",
+      "memory:jun_breed",
+      "memory:jun_microchip",
+      "memory:jun_meds",
+      "memory:jun_weight",
+      "memory:jun_groomer",
+      "memory:jun_toy"
+     ],
+     "returned_count": 7,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 25.12,
+     "id": "ent-dog-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:jun_weight"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 7,
+     "elapsed_ms": 25.132,
+     "id": "ent-dog-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.14285714285714285,
+     "recall": 1.0,
+     "returned": [
+      "memory:jun_groomer",
+      "memory:jun_microchip",
+      "memory:jun_breed",
+      "memory:jun_meds",
+      "memory:jun_weight",
+      "memory:jun_toy",
+      "memory:jun_sitter"
+     ],
+     "returned_count": 7,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "entity_redundancy",
+   "id": "ent-colleague",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 24.742,
+     "id": "ent-colleague-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:kenji_leave"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 35.405,
+     "id": "ent-colleague-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 1.0,
+     "returned": [
+      "memory:kenji_tz",
+      "memory:kenji_leave"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 29.177,
+     "id": "ent-colleague-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 1.0,
+     "returned": [
+      "memory:kenji_review",
+      "memory:kenji_role"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 28.03,
+     "id": "ent-colleague-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 1.0,
+     "returned": [
+      "memory:kenji_talk",
+      "memory:kenji_role"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "entity_redundancy",
+   "id": "ent-cottage",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 7,
+     "elapsed_ms": 26.341,
+     "id": "ent-cottage-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:cot_key"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 7,
+     "elapsed_ms": 31.09,
+     "id": "ent-cottage-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:cot_schedule"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 26.515,
+     "id": "ent-cottage-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 1.0,
+     "returned": [
+      "memory:cot_septic",
+      "memory:cot_boat"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 27.174,
+     "id": "ent-cottage-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:cot_boat"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "entity_redundancy",
+   "id": "ent-customer",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 61.586,
+     "id": "ent-customer-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:q_seats"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 25.732,
+     "id": "ent-customer-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 1.0,
+     "returned": [
+      "memory:q_region",
+      "memory:q_seats"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 24.788,
+     "id": "ent-customer-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 1.0,
+     "returned": [
+      "memory:q_renewal",
+      "memory:q_seats"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 27.468,
+     "id": "ent-customer-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:q_champion"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "entity_redundancy",
+   "id": "ent-dad",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 41.745,
+     "id": "ent-dad-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:dad_shirt"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 27.569,
+     "id": "ent-dad-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.16666666666666666,
+     "recall": 1.0,
+     "returned": [
+      "memory:dad_email",
+      "memory:dad_shirt",
+      "memory:dad_golf",
+      "memory:dad_tv",
+      "memory:dad_ladder",
+      "memory:dad_retire"
+     ],
+     "returned_count": 6,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 26.975,
+     "id": "ent-dad-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.16666666666666666,
+     "recall": 1.0,
+     "returned": [
+      "memory:dad_ladder",
+      "memory:dad_shirt",
+      "memory:dad_email",
+      "memory:dad_golf",
+      "memory:dad_tv",
+      "memory:dad_retire"
+     ],
+     "returned_count": 6,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 32.185,
+     "id": "ent-dad-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:dad_email"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "entity_redundancy",
+   "id": "ent-grafana",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 26.415,
+     "id": "ent-grafana-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:g_dash"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 45.219,
+     "id": "ent-grafana-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:g_owner"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 38.991,
+     "id": "ent-grafana-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:g_login"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 38.38,
+     "id": "ent-grafana-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:g_alert"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_evidence",
+   "id": "multi-subscriptions",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 29.788,
+     "id": "multi-subscriptions-q1",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": null,
+     "recall": 0.0,
+     "returned": [],
+     "returned_count": 0,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 32.09,
+     "id": "multi-subscriptions-q2",
+     "kind": "multi",
+     "must_include_count": 4,
+     "passed": false,
+     "precision": 1.0,
+     "recall": 0.0,
+     "returned": [
+      "memory:sub_nyt"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 28.384,
+     "id": "multi-subscriptions-q3",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:sub_netflix",
+      "memory:sub_spotify"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 24.792,
+     "id": "multi-subscriptions-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:netflix_show"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_evidence",
+   "id": "multi-incident",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 28.442,
+     "id": "multi-incident-q1",
+     "kind": "multi",
+     "must_include_count": 3,
+     "passed": false,
+     "precision": 0.6,
+     "recall": 0.6666666666666666,
+     "returned": [
+      "memory:inc_other",
+      "memory:inc_postmortem",
+      "memory:inc_resolved",
+      "memory:inc_mitigate",
+      "memory:inc_detect"
+     ],
+     "returned_count": 5,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 26.111,
+     "id": "multi-incident-q2",
+     "kind": "multi",
+     "must_include_count": 4,
+     "passed": false,
+     "precision": 0.8333333333333334,
+     "recall": 1.0,
+     "returned": [
+      "memory:inc_resolved",
+      "memory:inc_detect",
+      "memory:inc_other",
+      "memory:inc_postmortem",
+      "memory:inc_mitigate",
+      "memory:inc_start"
+     ],
+     "returned_count": 6,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 27.473,
+     "id": "multi-incident-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:inc_postmortem"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 23.811,
+     "id": "multi-incident-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:inc_other"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_evidence",
+   "id": "multi-birthdays",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 24.738,
+     "id": "multi-birthdays-q1",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": 0.3333333333333333,
+     "recall": 0.5,
+     "returned": [
+      "memory:bd_sam",
+      "memory:bd_party",
+      "memory:bd_amira"
+     ],
+     "returned_count": 3,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 26.363,
+     "id": "multi-birthdays-q2",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": 1.0,
+     "recall": 0.5,
+     "returned": [
+      "memory:bd_amira"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 37.135,
+     "id": "multi-birthdays-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 1.0,
+     "recall": 0.0,
+     "returned": [
+      "memory:bd_amira"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 31.699,
+     "id": "multi-birthdays-q4",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": 0.4,
+     "recall": 1.0,
+     "returned": [
+      "memory:bd_amira",
+      "memory:bd_leo",
+      "memory:bd_party",
+      "memory:niece_school",
+      "memory:gift_amira"
+     ],
+     "returned_count": 5,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_evidence",
+   "id": "multi-japan-trip",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 24.915,
+     "id": "multi-japan-trip-q1",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:jp_hotel_tokyo",
+      "memory:jp_hotel_kyoto",
+      "memory:jp_dates"
+     ],
+     "returned_count": 3,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 24.225,
+     "id": "multi-japan-trip-q2",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": null,
+     "recall": 0.0,
+     "returned": [],
+     "returned_count": 0,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 23.883,
+     "id": "multi-japan-trip-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:jp_hotel_kyoto",
+      "memory:jp_kyoto_list"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 24.541,
+     "id": "multi-japan-trip-q4",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": 1.0,
+     "recall": 0.5,
+     "returned": [
+      "memory:jp_flight"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_evidence",
+   "id": "multi-team-roster",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 30.818,
+     "id": "multi-team-roster-q1",
+     "kind": "multi",
+     "must_include_count": 3,
+     "passed": false,
+     "precision": 0.6666666666666666,
+     "recall": 0.6666666666666666,
+     "returned": [
+      "memory:t_ana",
+      "memory:t_mobile",
+      "memory:t_bilal"
+     ],
+     "returned_count": 3,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 30.369,
+     "id": "multi-team-roster-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.0,
+     "recall": 0.0,
+     "returned": [
+      "memory:t_ana",
+      "memory:t_bilal",
+      "memory:t_dmitri",
+      "memory:t_mobile"
+     ],
+     "returned_count": 4,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 32.562,
+     "id": "multi-team-roster-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:t_mobile"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 43.97,
+     "id": "multi-team-roster-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:t_payments_okr"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_evidence",
+   "id": "multi-roof-quotes",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 42.127,
+     "id": "multi-roof-quotes-q1",
+     "kind": "multi",
+     "must_include_count": 3,
+     "passed": false,
+     "precision": 0.6,
+     "recall": 1.0,
+     "returned": [
+      "memory:roof_leak",
+      "memory:q_roof3",
+      "memory:q_roof2",
+      "memory:q_roof1",
+      "memory:q_window"
+     ],
+     "returned_count": 5,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 37.255,
+     "id": "multi-roof-quotes-q2",
+     "kind": "multi",
+     "must_include_count": 3,
+     "passed": false,
+     "precision": null,
+     "recall": 0.0,
+     "returned": [],
+     "returned_count": 0,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 39.6,
+     "id": "multi-roof-quotes-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.25,
+     "recall": 1.0,
+     "returned": [
+      "memory:roof_leak",
+      "memory:q_roof2",
+      "memory:q_roof1",
+      "memory:grant"
+     ],
+     "returned_count": 4,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 31.925,
+     "id": "multi-roof-quotes-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:roof_leak"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "multi_evidence",
+   "id": "multi-running-log",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 37.382,
+     "id": "multi-running-log-q1",
+     "kind": "multi",
+     "must_include_count": 3,
+     "passed": false,
+     "precision": 0.75,
+     "recall": 1.0,
+     "returned": [
+      "memory:run3",
+      "memory:run1",
+      "memory:swim",
+      "memory:run2"
+     ],
+     "returned_count": 4,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 36.628,
+     "id": "multi-running-log-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.6,
+     "recall": 1.0,
+     "returned": [
+      "memory:run_sept",
+      "memory:shoes",
+      "memory:run2",
+      "memory:run1",
+      "memory:run3"
+     ],
+     "returned_count": 5,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 41.576,
+     "id": "multi-running-log-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:run_sept"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 43.62,
+     "id": "multi-running-log-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:shoes"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "distractor_heavy",
+   "id": "dist-codes",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 30.191,
+     "id": "dist-codes-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:garage_code"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 41.673,
+     "id": "dist-codes-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:locker"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 30.849,
+     "id": "dist-codes-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:alarm_code"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 38.082,
+     "id": "dist-codes-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:safe"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 31.086,
+     "id": "dist-codes-q5",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:garage_code",
+      "memory:alarm_code"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "distractor_heavy",
+   "id": "dist-meetings",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 37.324,
+     "id": "dist-meetings-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:m_vendor"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 27.252,
+     "id": "dist-meetings-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 1.0,
+     "returned": [
+      "memory:m_lunch",
+      "memory:m_vendor_aws"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 26.941,
+     "id": "dist-meetings-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:m_arch"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 28.618,
+     "id": "dist-meetings-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:m_design"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "distractor_heavy",
+   "id": "dist-restaurants",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 41.558,
+     "id": "dist-restaurants-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 1.0,
+     "returned": [
+      "memory:r_dinner_party",
+      "memory:r_anniv"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 42.439,
+     "id": "dist-restaurants-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:r_vegan"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 41.733,
+     "id": "dist-restaurants-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:r_ramen"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "distractor_heavy",
+   "id": "dist-config",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 40.687,
+     "id": "dist-config-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 1.0,
+     "returned": [
+      "memory:cfg_stg",
+      "memory:cfg_db_stg"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 28.729,
+     "id": "dist-config-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:cfg_flag"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 27.827,
+     "id": "dist-config-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:cfg_sentry"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 34.317,
+     "id": "dist-config-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:cfg_timeout"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "distractor_heavy",
+   "id": "dist-health",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 38.184,
+     "id": "dist-health-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:h_derm"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 37.992,
+     "id": "dist-health-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:h_eye"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 35.785,
+     "id": "dist-health-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:h_flu"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 25.772,
+     "id": "dist-health-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:h_blood"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "distractor_heavy",
+   "id": "dist-migrations",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 29.707,
+     "id": "dist-migrations-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 1.0,
+     "returned": [
+      "memory:mg_mysql",
+      "memory:mg_auth"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 27.263,
+     "id": "dist-migrations-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 1.0,
+     "returned": [
+      "memory:mg_mysql",
+      "memory:mg_dns"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 25.364,
+     "id": "dist-migrations-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:mg_kafka"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 25.42,
+     "id": "dist-migrations-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:mg_dns"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "distractor_heavy",
+   "id": "dist-gifts",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 34.191,
+     "id": "dist-gifts-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:g_theo"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 7,
+     "elapsed_ms": 35.312,
+     "id": "dist-gifts-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:g_bookclub"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 35.034,
+     "id": "dist-gifts-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:g_mom"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "distractor_heavy",
+   "id": "dist-deadlines",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 29.593,
+     "id": "dist-deadlines-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:dl_perf"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 27.873,
+     "id": "dist-deadlines-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:dl_talk"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 29.25,
+     "id": "dist-deadlines-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:dl_expense"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 27.521,
+     "id": "dist-deadlines-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:dl_cert"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 28.577,
+     "id": "dist-deadlines-q5",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": 0.0,
+     "recall": 0.0,
+     "returned": [
+      "memory:dl_talk"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "abstention",
+   "id": "abst-sister",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 28.379,
+     "id": "abst-sister-q1",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.0,
+     "recall": null,
+     "returned": [
+      "memory:ines_bday"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 26.288,
+     "id": "abst-sister-q2",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.0,
+     "recall": null,
+     "returned": [
+      "memory:ines_bday"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 31.469,
+     "id": "abst-sister-q3",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.0,
+     "recall": null,
+     "returned": [
+      "memory:ines_bday"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 40.545,
+     "id": "abst-sister-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.25,
+     "recall": 1.0,
+     "returned": [
+      "memory:ines_flight",
+      "memory:ines_dog",
+      "memory:ines_job",
+      "memory:ines_gift"
+     ],
+     "returned_count": 4,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "abstention",
+   "id": "abst-service",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 24.838,
+     "id": "abst-service-q1",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.0,
+     "recall": null,
+     "returned": [
+      "memory:b_latency",
+      "memory:b_lang",
+      "memory:b_queue",
+      "memory:b_owner",
+      "memory:b_templates"
+     ],
+     "returned_count": 5,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 25.04,
+     "id": "abst-service-q2",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.2,
+     "recall": null,
+     "returned": [
+      "memory:b_latency",
+      "memory:b_lang",
+      "memory:b_queue",
+      "memory:b_owner",
+      "memory:b_templates"
+     ],
+     "returned_count": 5,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 25.747,
+     "id": "abst-service-q3",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.2,
+     "recall": null,
+     "returned": [
+      "memory:b_latency",
+      "memory:b_lang",
+      "memory:b_queue",
+      "memory:b_owner",
+      "memory:b_templates"
+     ],
+     "returned_count": 5,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 26.121,
+     "id": "abst-service-q4",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.0,
+     "recall": null,
+     "returned": [
+      "memory:b_latency",
+      "memory:b_lang",
+      "memory:b_queue",
+      "memory:b_owner",
+      "memory:b_templates"
+     ],
+     "returned_count": 5,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 28.907,
+     "id": "abst-service-q5",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:b_lang"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "abstention",
+   "id": "abst-car",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 31.687,
+     "id": "abst-car-q1",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.0,
+     "recall": null,
+     "returned": [
+      "memory:car_model",
+      "memory:car_wash"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 30.537,
+     "id": "abst-car-q2",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": true,
+     "precision": 1.0,
+     "recall": null,
+     "returned": [
+      "memory:car_tires"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 32.217,
+     "id": "abst-car-q3",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": true,
+     "precision": null,
+     "recall": null,
+     "returned": [],
+     "returned_count": 0,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 45.768,
+     "id": "abst-car-q4",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.5,
+     "recall": null,
+     "returned": [
+      "memory:car_model",
+      "memory:car_wash"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 28.966,
+     "id": "abst-car-q5",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:car_tires"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "abstention",
+   "id": "abst-hiring",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 33.458,
+     "id": "abst-hiring-q1",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": true,
+     "precision": null,
+     "recall": null,
+     "returned": [],
+     "returned_count": 0,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 29.423,
+     "id": "abst-hiring-q2",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.0,
+     "recall": null,
+     "returned": [
+      "memory:h_recruiter",
+      "memory:h_req",
+      "memory:h_panel",
+      "memory:h_budget"
+     ],
+     "returned_count": 4,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 24.747,
+     "id": "abst-hiring-q3",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.3333333333333333,
+     "recall": null,
+     "returned": [
+      "memory:h_req",
+      "memory:h_recruiter",
+      "memory:h_panel"
+     ],
+     "returned_count": 3,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 27.214,
+     "id": "abst-hiring-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:h_panel"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "abstention",
+   "id": "abst-appliances",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 38.666,
+     "id": "abst-appliances-q1",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": true,
+     "precision": 1.0,
+     "recall": null,
+     "returned": [
+      "memory:ap_furnace"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 38.545,
+     "id": "abst-appliances-q2",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": true,
+     "precision": null,
+     "recall": null,
+     "returned": [],
+     "returned_count": 0,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 38.089,
+     "id": "abst-appliances-q3",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.0,
+     "recall": null,
+     "returned": [
+      "memory:ap_fridge"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 37.988,
+     "id": "abst-appliances-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:ap_dishwasher"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "abstention",
+   "id": "abst-friend",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 0,
+     "elapsed_ms": 37.527,
+     "id": "abst-friend-q1",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": true,
+     "precision": null,
+     "recall": null,
+     "returned": [],
+     "returned_count": 0,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 45.828,
+     "id": "abst-friend-q2",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": true,
+     "precision": 1.0,
+     "recall": null,
+     "returned": [
+      "memory:mk_kid"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 30.582,
+     "id": "abst-friend-q3",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": true,
+     "precision": 1.0,
+     "recall": null,
+     "returned": [
+      "memory:mk_debt"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 32.769,
+     "id": "abst-friend-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:mk_debt"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "abstention",
+   "id": "abst-finance",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 25.287,
+     "id": "abst-finance-q1",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": true,
+     "precision": 1.0,
+     "recall": null,
+     "returned": [
+      "memory:f_q3"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 24.591,
+     "id": "abst-finance-q2",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.0,
+     "recall": null,
+     "returned": [
+      "memory:f_tool"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 26.211,
+     "id": "abst-finance-q3",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.0,
+     "recall": null,
+     "returned": [
+      "memory:f_training",
+      "memory:f_travel"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 25.087,
+     "id": "abst-finance-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 1.0,
+     "returned": [
+      "memory:f_travel",
+      "memory:f_training"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "forgetting_and_scope",
+   "id": "fs-ex",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 0,
+     "elapsed_ms": 28.4,
+     "id": "fs-ex-q1",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": true,
+     "precision": null,
+     "recall": null,
+     "returned": [],
+     "returned_count": 0,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 0,
+     "elapsed_ms": 30.321,
+     "id": "fs-ex-q2",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": true,
+     "precision": null,
+     "recall": null,
+     "returned": [],
+     "returned_count": 0,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 0,
+     "elapsed_ms": 45.775,
+     "id": "fs-ex-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": null,
+     "recall": 0.0,
+     "returned": [],
+     "returned_count": 0,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 27.06,
+     "id": "fs-ex-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:friend_jordan"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 33.246,
+     "id": "fs-ex-q5",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:work_standup"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "forgetting_and_scope",
+   "id": "fs-project",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 24.586,
+     "id": "fs-project-q1",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": true,
+     "precision": 1.0,
+     "recall": null,
+     "returned": [
+      "memory:proj_vega"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 26.801,
+     "id": "fs-project-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:proj_vega"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 24.475,
+     "id": "fs-project-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:gemma"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 25.723,
+     "id": "fs-project-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:orion_photo"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 27.616,
+     "id": "fs-project-q5",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:telescope"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "forgetting_and_scope",
+   "id": "fs-medical",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 24.134,
+     "id": "fs-medical-q1",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": true,
+     "precision": 1.0,
+     "recall": null,
+     "returned": [
+      "memory:gp"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 24.067,
+     "id": "fs-medical-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:dx_celiac"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 23.688,
+     "id": "fs-medical-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:gp"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 25.391,
+     "id": "fs-medical-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:work_benefits"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 25.831,
+     "id": "fs-medical-q5",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:work_eap"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "forgetting_and_scope",
+   "id": "fs-two-sams",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 42.558,
+     "id": "fs-two-sams-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:sam_bro_help",
+      "memory:sam_bro"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 36.246,
+     "id": "fs-two-sams-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:sam_bro"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 30.959,
+     "id": "fs-two-sams-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:sam_work"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 39.948,
+     "id": "fs-two-sams-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:sam_work_ooo"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 24.234,
+     "id": "fs-two-sams-q5",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.0,
+     "recall": null,
+     "returned": [
+      "memory:sam_work_ooo",
+      "memory:sam_work"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "forgetting_and_scope",
+   "id": "fs-bank",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 41.344,
+     "id": "fs-bank-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:acct_new"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 27.979,
+     "id": "fs-bank-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:tfsa"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 30.209,
+     "id": "fs-bank-q3",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.0,
+     "recall": null,
+     "returned": [
+      "memory:acct_new"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 32.454,
+     "id": "fs-bank-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": null,
+     "recall": 0.0,
+     "returned": [],
+     "returned_count": 0,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 38.384,
+     "id": "fs-bank-q5",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:rrsp_match"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "forgetting_and_scope",
+   "id": "fs-laptops",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 27.82,
+     "id": "fs-laptops-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 1.0,
+     "returned": [
+      "memory:lap_personal_backup",
+      "memory:lap_personal"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 25.037,
+     "id": "fs-laptops-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:lap_personal_backup"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 0,
+     "elapsed_ms": 29.414,
+     "id": "fs-laptops-q3",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": true,
+     "precision": null,
+     "recall": null,
+     "returned": [],
+     "returned_count": 0,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 25.245,
+     "id": "fs-laptops-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:lap_work"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 23.673,
+     "id": "fs-laptops-q5",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:lap_work_vpn"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "forgetting_and_scope",
+   "id": "fs-surprise",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 23.191,
+     "id": "fs-surprise-q1",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.0,
+     "recall": null,
+     "returned": [
+      "memory:mark_allergy",
+      "memory:mark_cake",
+      "memory:rem_party"
+     ],
+     "returned_count": 3,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 23.608,
+     "id": "fs-surprise-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:rem_party"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 23.063,
+     "id": "fs-surprise-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.3333333333333333,
+     "recall": 1.0,
+     "returned": [
+      "memory:mark_allergy",
+      "memory:mark_cake",
+      "memory:rem_party"
+     ],
+     "returned_count": 3,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 22.718,
+     "id": "fs-surprise-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 1.0,
+     "returned": [
+      "memory:work_mark",
+      "memory:work_mark_deal"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "imperfect_query",
+   "id": "imp-household",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 23.588,
+     "id": "imp-household-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:i_passport"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 27.295,
+     "id": "imp-household-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:i_plumber"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 34.961,
+     "id": "imp-household-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:i_paint"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 25.528,
+     "id": "imp-household-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:i_recycle"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "imperfect_query",
+   "id": "imp-work-admin",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 28.401,
+     "id": "imp-work-admin-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:w_vacation"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 36.942,
+     "id": "imp-work-admin-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:w_badge"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 40.777,
+     "id": "imp-work-admin-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:w_conf"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 37.718,
+     "id": "imp-work-admin-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": null,
+     "recall": 0.0,
+     "returned": [],
+     "returned_count": 0,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "imperfect_query",
+   "id": "imp-recipes",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 26.816,
+     "id": "imp-recipes-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 1.0,
+     "returned": [
+      "memory:c_pizza_dough",
+      "memory:c_sourdough"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 29.812,
+     "id": "imp-recipes-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:c_chili"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 24.103,
+     "id": "imp-recipes-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:c_dal"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 23.262,
+     "id": "imp-recipes-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:c_cake"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "imperfect_query",
+   "id": "imp-oncall",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 27.816,
+     "id": "imp-oncall-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:o_runbook"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 35.016,
+     "id": "imp-oncall-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:o_pager"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 0,
+     "elapsed_ms": 23.055,
+     "id": "imp-oncall-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": null,
+     "recall": 0.0,
+     "returned": [],
+     "returned_count": 0,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 24.177,
+     "id": "imp-oncall-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:o_cert"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "imperfect_query",
+   "id": "imp-travel",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 28.931,
+     "id": "imp-travel-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:t_seat"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 28.135,
+     "id": "imp-travel-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:t_aeroplan"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 26.122,
+     "id": "imp-travel-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 1.0,
+     "returned": [
+      "memory:t_insurance",
+      "memory:t_nexus"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 0,
+     "elapsed_ms": 24.849,
+     "id": "imp-travel-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": null,
+     "recall": 0.0,
+     "returned": [],
+     "returned_count": 0,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "imperfect_query",
+   "id": "imp-plants",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 24.133,
+     "id": "imp-plants-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:p_monstera"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 23.782,
+     "id": "imp-plants-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:p_garlic"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 22.904,
+     "id": "imp-plants-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:p_tomato"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 24.896,
+     "id": "imp-plants-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.0,
+     "recall": 0.0,
+     "returned": [
+      "memory:p_garlic",
+      "memory:p_tomato"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "imperfect_query",
+   "id": "imp-conventions",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 35.442,
+     "id": "imp-conventions-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:cv_branch"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 36.462,
+     "id": "imp-conventions-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:cv_review"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 36.812,
+     "id": "imp-conventions-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:cv_python"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 25.608,
+     "id": "imp-conventions-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:cv_release"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "imperfect_query",
+   "id": "imp-home-services",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 40.834,
+     "id": "imp-home-services-q1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.0,
+     "recall": 0.0,
+     "returned": [
+      "memory:hh_gutters"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 40.137,
+     "id": "imp-home-services-q2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:hh_snow"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 37.657,
+     "id": "imp-home-services-q3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:hh_water"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 38.998,
+     "id": "imp-home-services-q4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:hh_gutters"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  }
+ ],
+ "summary": {
+  "by_category": {
+   "abstention": {
+    "mean_precision": 0.4609,
+    "mean_recall": 1.0,
+    "mean_returned": 1.8,
+    "passed": 14,
+    "queries": 30,
+    "safety_violations": 0
+   },
+   "correction": {
+    "mean_precision": 0.7076,
+    "mean_recall": 0.9412,
+    "mean_returned": 1.941,
+    "passed": 16,
+    "queries": 34,
+    "safety_violations": 0
+   },
+   "currentness": {
+    "mean_precision": 0.859,
+    "mean_recall": 0.6071,
+    "mean_returned": 1.714,
+    "passed": 13,
+    "queries": 28,
+    "safety_violations": 0
+   },
+   "distractor_heavy": {
+    "mean_precision": 0.8906,
+    "mean_recall": 0.9688,
+    "mean_returned": 1.188,
+    "passed": 26,
+    "queries": 32,
+    "safety_violations": 0
+   },
+   "entity_redundancy": {
+    "mean_precision": 0.7504,
+    "mean_recall": 1.0,
+    "mean_returned": 2.156,
+    "passed": 20,
+    "queries": 32,
+    "safety_violations": 0
+   },
+   "forgetting_and_scope": {
+    "mean_precision": 0.8391,
+    "mean_recall": 0.9231,
+    "mean_returned": 1.088,
+    "passed": 26,
+    "queries": 34,
+    "safety_violations": 0
+   },
+   "imperfect_query": {
+    "mean_precision": 0.8966,
+    "mean_recall": 0.8438,
+    "mean_returned": 1.0,
+    "passed": 25,
+    "queries": 32,
+    "safety_violations": 0
+   },
+   "multi_evidence": {
+    "mean_precision": 0.8013,
+    "mean_recall": 0.7083,
+    "mean_returned": 2.25,
+    "passed": 11,
+    "queries": 28,
+    "safety_violations": 0
+   }
+  },
+  "by_kind": {
+   "abstention": {
+    "mean_precision": 0.3431,
+    "mean_recall": null,
+    "mean_returned": 1.645,
+    "passed": 14,
+    "queries": 31,
+    "safety_violations": 0
+   },
+   "multi": {
+    "mean_precision": 0.7274,
+    "mean_recall": 0.5784,
+    "mean_returned": 2.471,
+    "passed": 3,
+    "queries": 17,
+    "safety_violations": 0
+   },
+   "single": {
+    "mean_precision": 0.8355,
+    "mean_recall": 0.8911,
+    "mean_returned": 1.554,
+    "passed": 134,
+    "queries": 202,
+    "safety_violations": 0
+   }
+  },
+  "op_failures": 0,
+  "overall": {
+   "mean_precision": 0.7775,
+   "mean_recall": 0.8668,
+   "mean_returned": 1.628,
+   "passed": 151,
+   "queries": 250,
+   "safety_violations": 0
+  },
+  "recall_latency_ms_p50": 27.953,
+  "recall_latency_ms_p95": 41.733
+ }
+}
