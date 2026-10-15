@@ -31,6 +31,8 @@ class RetrievalNoLLMGuardTests(unittest.TestCase):
             (["run", "--mode", "rag"], "rag"),
             (["run", "--split", "s"], None),
             (["run", "--mode"], None),
+            (["run", "--mode", "retrieval", "--mode", "rag"], "rag"),
+            (["run", "--mode=rag", "--mode", "retrieval"], "retrieval"),
         ]
         for args, expected in cases:
             with self.subTest(args=args):

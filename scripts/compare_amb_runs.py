@@ -34,27 +34,47 @@ def _strip_provider_raw(result: dict, ignore_raw: bool) -> dict:
     return result
 
 
-def compare(left: dict, right: dict, *, ignore_raw: bool) -> list[str]:
-    differences: list[str] = []
-    skip = TIMING_SUMMARY_FIELDS | LABEL_SUMMARY_FIELDS | {"results"}
-    for key in sorted(set(left) | set(right)):
+_MISSING = object()
+
+
+def _differ(prefix: str, a: dict, b: dict, skip: set[str], differences: list[str]) -> None:
+    """Compare two mappings key by key; a missing key never equals a present ``None``."""
+
+    for key in sorted(set(a) | set(b)):
         if key in skip:
             continue
-        if left.get(key) != right.get(key):
-            differences.append(f"summary.{key}: {left.get(key)!r} != {right.get(key)!r}")
-    left_cases = {item["query_id"]: item for item in left["results"]}
-    right_cases = {item["query_id"]: item for item in right["results"]}
-    if [item["query_id"] for item in left["results"]] != [item["query_id"] for item in right["results"]]:
+        left_value, right_value = a.get(key, _MISSING), b.get(key, _MISSING)
+        if left_value is _MISSING or right_value is _MISSING:
+            side = "left" if left_value is _MISSING else "right"
+            differences.append(f"{prefix}{key}: missing on {side}")
+        elif left_value != right_value:
+            differences.append(f"{prefix}{key}: {left_value!r} != {right_value!r}")
+
+
+def _cases(payload: dict, side: str, differences: list[str]) -> dict[str, dict]:
+    cases: dict[str, dict] = {}
+    for item in payload["results"]:
+        query_id = item.get("query_id")
+        if query_id in cases:
+            differences.append(f"case {query_id}: duplicate query_id on {side}")
+        cases[query_id] = item
+    return cases
+
+
+def compare(left: dict, right: dict, *, ignore_raw: bool) -> list[str]:
+    differences: list[str] = []
+    _differ("summary.", left, right, TIMING_SUMMARY_FIELDS | LABEL_SUMMARY_FIELDS | {"results"}, differences)
+    left_cases = _cases(left, "left", differences)
+    right_cases = _cases(right, "right", differences)
+    if [item.get("query_id") for item in left["results"]] != [item.get("query_id") for item in right["results"]]:
         differences.append("case order or membership differs")
-    for query_id in sorted(set(left_cases) | set(right_cases)):
+    for query_id in sorted(set(left_cases) | set(right_cases), key=str):
         if query_id not in left_cases or query_id not in right_cases:
             differences.append(f"case {query_id}: present on one side only")
             continue
         a = _strip_provider_raw(left_cases[query_id], ignore_raw)
         b = _strip_provider_raw(right_cases[query_id], ignore_raw)
-        for key in sorted(set(a) | set(b)):
-            if a.get(key) != b.get(key):
-                differences.append(f"case {query_id}.{key}: {a.get(key)!r} != {b.get(key)!r}")
+        _differ(f"case {query_id}.", a, b, set(), differences)
     return differences
 
 
@@ -73,7 +93,8 @@ def main(argv: list[str] | None = None) -> int:
     verdict = {
         "left": str(args.left),
         "right": str(args.right),
-        "cases_compared": len(left["results"]),
+        "left_cases": len(left["results"]),
+        "right_cases": len(right["results"]),
         "ignored_fields": sorted(TIMING_RESULT_FIELDS | TIMING_SUMMARY_FIELDS | LABEL_SUMMARY_FIELDS)
         + (["raw_response"] if args.ignore_raw_response else []),
         "differences": len(differences),

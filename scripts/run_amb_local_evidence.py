@@ -7,7 +7,9 @@ run: both revisions, the interpreter and installed distributions, the exact comm
 status, wall time and peak RSS of the run process, stdout/stderr verbatim, the git blobs of
 the AMB files that load data and score, the dataset fixture digests, and a sha256 of every
 file AMB wrote. Inference credentials are removed from the child environment so a
-retrieval run cannot reach a paid API.
+retrieval run cannot reach a paid API, and variables that change AMB's loading or scoring
+(``AMB_*``, ``OMB_*``, ``PRECISIONMEMBENCH_*``, ``AGENT_MEMORY_AMB_*``) are removed unless set
+explicitly with ``--set-env``; both are recorded.
 
 Example::
 
@@ -51,6 +53,9 @@ AMB_SCORING_FILES = (
     "src/memory_bench/memory/bm25.py",
     "src/memory_bench/utils.py",
 )
+# Variables that change what AMB loads or how it scores, or what the bridge writes. They are
+# removed from the child unless passed explicitly with --set-env, and always recorded.
+SCORING_ENV_PREFIXES = ("AMB_", "OMB_", "PRECISIONMEMBENCH_", "AGENT_MEMORY_AMB_")
 BRIDGE_FILES = (
     "reference/amb_agent_memory_bridge.py",
     "reference/amb_retrieval_no_llm.py",
@@ -120,7 +125,20 @@ def main(argv: list[str] | None = None) -> int:
     outputs = evidence / "amb-outputs"
     outputs.mkdir(parents=True)
 
-    env = {key: value for key, value in os.environ.items() if key not in CREDENTIAL_ENV}
+    def amb_tree() -> dict[str, object]:
+        return {
+            "revision": _git(amb_root, "rev-parse", "HEAD"),
+            "worktree_dirty_paths": [line for line in _git(amb_root, "status", "--porcelain").splitlines() if line],
+            "scoring_blobs": {path: _git(amb_root, "hash-object", path) for path in AMB_SCORING_FILES},
+        }
+
+    amb_before = amb_tree()
+    env = {
+        key: value
+        for key, value in os.environ.items()
+        if key not in CREDENTIAL_ENV and not key.startswith(SCORING_ENV_PREFIXES)
+    }
+    inherited_scoring_env = sorted(key for key in os.environ if key.startswith(SCORING_ENV_PREFIXES))
     for item in args.set_env:
         key, _, value = item.partition("=")
         env[key] = value
@@ -134,9 +152,11 @@ def main(argv: list[str] | None = None) -> int:
     wall_s = time.perf_counter() - t0
     exit_code = os.waitstatus_to_exitcode(status)
 
+    amb_after = amb_tree()
     dataset = _option(args.amb_args, "--dataset")
     fixtures = {}
-    fixture_dir = amb_root / ".datasets" / (dataset or "")
+    data_path = env.get("PRECISIONMEMBENCH_DATA_PATH") if dataset == "precisionmembench" else None
+    fixture_dir = Path(data_path) if data_path else amb_root / ".datasets" / (dataset or "")
     if dataset and fixture_dir.is_dir():
         fixtures = {path.name: _sha256(path) for path in sorted(fixture_dir.iterdir()) if path.is_file()}
 
@@ -146,6 +166,8 @@ def main(argv: list[str] | None = None) -> int:
         "started_utc": started.isoformat(timespec="seconds"),
         "command": [str(part) for part in command],
         "child_env_overrides": sorted(item.partition("=")[0] for item in args.set_env),
+        "scoring_env_removed_from_child": [key for key in inherited_scoring_env if key not in env],
+        "scoring_env_in_child": {key: env[key] for key in sorted(env) if key.startswith(SCORING_ENV_PREFIXES)},
         "credentials_removed": [key for key in CREDENTIAL_ENV if key in os.environ] or [],
         "credentials_present_in_child": [key for key in CREDENTIAL_ENV if key in env],
         "exit_code": exit_code,
@@ -160,11 +182,11 @@ def main(argv: list[str] | None = None) -> int:
         },
         "amb": {
             "repository": "vectorize-io/agent-memory-benchmark",
-            "revision": _git(amb_root, "rev-parse", "HEAD"),
-            "worktree_dirty_paths": [line for line in _git(amb_root, "status", "--porcelain", "--untracked-files=no").splitlines() if line],
-            "scoring_blobs": {path: _git(amb_root, "hash-object", path) for path in AMB_SCORING_FILES},
+            **amb_after,
+            "unchanged_during_run": amb_before == amb_after,
             "uv_lock_sha256": _sha256(amb_root / "uv.lock"),
         },
+        "dataset_fixture_dir": str(fixture_dir) if dataset else None,
         "dataset_fixtures_sha256": fixtures,
         "tiktoken_cache_dir": env.get("TIKTOKEN_CACHE_DIR"),
         "environment": _environment(args.python),

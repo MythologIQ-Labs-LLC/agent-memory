@@ -48,14 +48,18 @@ class RefusingJudge:
 
 
 def requested_mode(amb_args: list[str]) -> str | None:
-    """Return the ``--mode`` value from AMB CLI arguments (AMB's default is ``rag``)."""
+    """Return the ``--mode`` value AMB's CLI will use (AMB's default is ``rag``).
 
+    Click keeps the last occurrence of a repeated option, so this does too.
+    """
+
+    mode = None
     for index, arg in enumerate(amb_args):
         if arg == "--mode" and index + 1 < len(amb_args):
-            return amb_args[index + 1]
-        if arg.startswith("--mode="):
-            return arg.split("=", 1)[1]
-    return None
+            mode = amb_args[index + 1]
+        elif arg.startswith("--mode="):
+            mode = arg.split("=", 1)[1]
+    return mode
 
 
 def install_retrieval_no_llm_guard(cli_module: Any, runner_module: Any) -> dict[str, Any]:
