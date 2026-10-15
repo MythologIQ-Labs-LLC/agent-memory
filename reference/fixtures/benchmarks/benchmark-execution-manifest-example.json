@@ -1,0 +1,112 @@
+{
+  "schema_version": "1.0.0",
+  "run_id": "synthetic:retrieval:control",
+  "normalized_run": {
+    "uri": "reports/benchmarks/normalized/synthetic.json",
+    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "benchmark": {
+    "id": "synthetic-retrieval",
+    "task_profile": "parity-v1:session",
+    "dataset_revision": "dataset-pinned-1",
+    "input_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "selection_id": "frozen-sample-10",
+    "sample_count": 10,
+    "evaluator_revision": "evaluator-revision-123",
+    "excluded_count": 0
+  },
+  "system": {
+    "id": "agent_memory",
+    "revision": "1234567890abcdef1234567890abcdef12345678",
+    "adapter_id": "reference/run_synthetic.py",
+    "adapter_revision": "1234567890abcdef1234567890abcdef12345678",
+    "configuration_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "worktree_clean": true,
+    "build_sha256": null
+  },
+  "timing": {
+    "started_at": "2026-10-14T12:00:00Z",
+    "finished_at": "2026-10-14T12:00:12Z",
+    "elapsed_ms": 12000
+  },
+  "hardware": {
+    "os": "Linux",
+    "os_release": "6.8",
+    "architecture": "x86_64",
+    "cpu_model": "Synthetic CPU placeholder",
+    "cpu_cores": 8,
+    "ram_bytes": 17179869184,
+    "gpus": []
+  },
+  "environment": {
+    "runtime": "CPython",
+    "runtime_version": "3.12.7",
+    "isolation": "container",
+    "container_digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "dependency_lock_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "network_access": "disabled",
+    "notes": [
+      "EXAMPLE ONLY. This is synthetic test input, not an executed benchmark."
+    ]
+  },
+  "inference": {
+    "used": false,
+    "calls": []
+  },
+  "execution": {
+    "command_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "argv_redacted": [
+      "python",
+      "reference/run_synthetic.py",
+      "--fixture"
+    ],
+    "random_seed": 42,
+    "timeout_ms": 60000,
+    "retries": 0,
+    "context_budget_tokens": null,
+    "retrieval_top_k": 5,
+    "stdout_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "stderr_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+    "exit_code": 0,
+    "peak_rss_bytes": 48000000,
+    "peak_vram_bytes": null,
+    "latency_p50_ms": 1.7,
+    "latency_p95_ms": 2.9
+  },
+  "costs": {
+    "status": "not_applicable",
+    "currency": "USD",
+    "amount": null,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "billing_reference_sha256": null
+  },
+  "artifacts": [
+    {
+      "kind": "native_result",
+      "uri": "reports/benchmarks/synthetic/native.json",
+      "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+    },
+    {
+      "kind": "row_level_results",
+      "uri": "reports/benchmarks/synthetic/rows.json",
+      "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+    }
+  ],
+  "redaction": {
+    "reviewed": false,
+    "contains_secrets": false,
+    "contains_private_data": false,
+    "note": "Synthetic fixture, no private data"
+  },
+  "review": {
+    "status": "candidate",
+    "reviewer": null,
+    "decision_ref": null,
+    "limitations": [
+      "Synthetic; not proof of runtime results"
+    ],
+    "comparison_eligibility": "not_assessed"
+  },
+  "authority_effect": "none"
+}

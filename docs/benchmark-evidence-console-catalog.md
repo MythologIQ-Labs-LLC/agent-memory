@@ -275,3 +275,16 @@ The F1 contract tests cover:
 - committed catalog freshness.
 
 This is the boundary that lets #699 and #700 proceed without inventing benchmark semantics in the frontend.
+
+
+## Proposed supplemental execution manifest (issue #807)
+
+New comparative benchmark evidence must be accompanied by a **versioned execution envelope** (schema `schemas/benchmark-execution-manifest.schema.json`, validator `scripts/validate_benchmark_execution_manifest.py`) in addition to the unchanged normalized-run schema. This contract is staged for local acceptance; it is **not yet a requirement retroactively imposed on historical results**, and does not imply the existing published dashboard has complete inference or hardware provenance.
+
+The envelope binds immutable benchmark/input/selection identity, system and adapter revisions, UTC start/end timestamps, host OS/CPU/GPU/RAM, runtime and container/dependency digests where applicable, inference provider/model/revision/parameters/prompt hash (or explicit no-inference), timeouts/retries/seed/retrieval budget, token counts and spending state, raw and row-level output hashes, and an independent review decision.
+
+An existing normalized result remains the metric authority. The envelope is supplementary process provenance; schema-validation success is not security acceptance, external comparability, production qualification, or leaderboard approval. The checker compares overlapping run/benchmark/system/selection fields to the normalized manifest and can verify the normalized file digest from disk. A candidate is non-comparable by default; only an independently accepted record may request `eligible_on_profile`, and existing scorecard equality/comparison contracts remain controlling.
+
+Do not backfill absent historical model versions, timestamps, or hardware with invented defaults. For any new run whose required identity cannot be established, record a blocked or candidate posture and explain limitations. Preserve immutable original evidence when superseding. Redact secrets and private prompts before publishing.
+
+The contract, synthetic fixture, validator and tests are being prepared on an isolated feature branch. They are not considered activated or accepted until reviewed and the tests run independently in a local or cloud workspace without consuming hosted GitHub Actions. See [#807](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/807).

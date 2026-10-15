@@ -1,0 +1,737 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MythologIQ-Labs-LLC/agent-memory/schemas/benchmark-execution-manifest.schema.json",
+  "title": "Benchmark Execution Envelope (separate from normalized run)",
+  "description": "Supplemental execution provenance. Passing this schema never confers benchmark acceptance or score comparability.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "normalized_run",
+    "benchmark",
+    "system",
+    "timing",
+    "hardware",
+    "environment",
+    "inference",
+    "execution",
+    "costs",
+    "artifacts",
+    "redaction",
+    "review",
+    "authority_effect"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "normalized_run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "uri",
+        "sha256"
+      ],
+      "properties": {
+        "uri": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "benchmark": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "task_profile",
+        "dataset_revision",
+        "input_sha256",
+        "selection_id",
+        "sample_count",
+        "evaluator_revision",
+        "excluded_count"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "task_profile": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dataset_revision": {
+          "type": "string",
+          "minLength": 1
+        },
+        "input_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "selection_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sample_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "evaluator_revision": {
+          "type": "string",
+          "minLength": 1
+        },
+        "excluded_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "system": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "revision",
+        "adapter_id",
+        "adapter_revision",
+        "configuration_sha256",
+        "worktree_clean",
+        "build_sha256"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revision": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adapter_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adapter_revision": {
+          "type": "string",
+          "minLength": 1
+        },
+        "configuration_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "worktree_clean": {
+          "type": "boolean"
+        },
+        "build_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "timing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "started_at",
+        "finished_at",
+        "elapsed_ms"
+      ],
+      "properties": {
+        "started_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "finished_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "elapsed_ms": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "hardware": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "os",
+        "os_release",
+        "architecture",
+        "cpu_model",
+        "cpu_cores",
+        "ram_bytes",
+        "gpus"
+      ],
+      "properties": {
+        "os": {
+          "type": "string",
+          "minLength": 1
+        },
+        "os_release": {
+          "type": "string",
+          "minLength": 1
+        },
+        "architecture": {
+          "type": "string",
+          "minLength": 1
+        },
+        "cpu_model": {
+          "type": "string",
+          "minLength": 1
+        },
+        "cpu_cores": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "ram_bytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "gpus": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "model",
+              "vram_bytes"
+            ],
+            "properties": {
+              "model": {
+                "type": "string",
+                "minLength": 1
+              },
+              "vram_bytes": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "runtime",
+        "runtime_version",
+        "isolation",
+        "container_digest",
+        "dependency_lock_sha256",
+        "network_access",
+        "notes"
+      ],
+      "properties": {
+        "runtime": {
+          "type": "string",
+          "minLength": 1
+        },
+        "runtime_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "isolation": {
+          "enum": [
+            "container",
+            "virtual_machine",
+            "bare_metal",
+            "cloud_sandbox",
+            "other"
+          ]
+        },
+        "container_digest": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^sha256:[a-f0-9]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dependency_lock_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "network_access": {
+          "enum": [
+            "disabled",
+            "restricted",
+            "enabled"
+          ]
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "inference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "used",
+        "calls"
+      ],
+      "properties": {
+        "used": {
+          "type": "boolean"
+        },
+        "calls": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/modelCall"
+          }
+        }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "command_sha256",
+        "argv_redacted",
+        "random_seed",
+        "timeout_ms",
+        "retries",
+        "context_budget_tokens",
+        "retrieval_top_k",
+        "stdout_sha256",
+        "stderr_sha256",
+        "exit_code",
+        "peak_rss_bytes",
+        "peak_vram_bytes",
+        "latency_p50_ms",
+        "latency_p95_ms"
+      ],
+      "properties": {
+        "command_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "argv_redacted": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "random_seed": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "timeout_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "retries": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "context_budget_tokens": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "retrieval_top_k": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "stdout_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "stderr_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "exit_code": {
+          "type": "integer"
+        },
+        "peak_rss_bytes": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "peak_vram_bytes": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "latency_p50_ms": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "latency_p95_ms": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "costs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "currency",
+        "amount",
+        "input_tokens",
+        "output_tokens",
+        "billing_reference_sha256"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "measured",
+            "not_measured",
+            "not_applicable"
+          ]
+        },
+        "currency": {
+          "const": "USD"
+        },
+        "amount": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "input_tokens": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "output_tokens": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "billing_reference_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "uri",
+          "sha256"
+        ],
+        "properties": {
+          "kind": {
+            "enum": [
+              "native_result",
+              "row_level_results",
+              "evaluator_report",
+              "execution_log",
+              "input_selection",
+              "other"
+            ]
+          },
+          "uri": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        }
+      }
+    },
+    "redaction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reviewed",
+        "contains_secrets",
+        "contains_private_data",
+        "note"
+      ],
+      "properties": {
+        "reviewed": {
+          "type": "boolean"
+        },
+        "contains_secrets": {
+          "const": false
+        },
+        "contains_private_data": {
+          "const": false
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "reviewer",
+        "decision_ref",
+        "limitations",
+        "comparison_eligibility"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "candidate",
+            "accepted",
+            "rejected",
+            "blocked"
+          ]
+        },
+        "reviewer": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "decision_ref": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "comparison_eligibility": {
+          "enum": [
+            "not_assessed",
+            "not_comparable",
+            "eligible_on_profile"
+          ]
+        }
+      }
+    },
+    "authority_effect": {
+      "const": "none"
+    }
+  },
+  "$defs": {
+    "modelCall": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "purpose",
+        "provider",
+        "model_id",
+        "model_revision",
+        "model_digest",
+        "endpoint_class",
+        "parameters",
+        "prompt_sha256",
+        "count"
+      ],
+      "properties": {
+        "purpose": {
+          "enum": [
+            "generation",
+            "embedding",
+            "judge",
+            "rerank",
+            "other"
+          ]
+        },
+        "provider": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model_revision": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "model_digest": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "endpoint_class": {
+          "enum": [
+            "local",
+            "hosted",
+            "self_hosted"
+          ]
+        },
+        "parameters": {
+          "type": "object",
+          "additionalProperties": {
+            "type": [
+              "string",
+              "number",
+              "boolean",
+              "null"
+            ]
+          }
+        },
+        "prompt_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    }
+  }
+}
