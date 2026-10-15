@@ -41,6 +41,15 @@ no-LLM rows: Agent Memory 15, Mem0 10, MemPalace 9, Hindsight 9, BM25 8.
 - **The smoke shows the same system can apply corrections.** In `../smoke/`, LangMem rewrote a
   superseded memory. In this run's data, consolidation dominates instead.
 
+## Corroboration from another lane
+
+A separate session, on `claude/810-competitive-cycle2-no-ci` at `692e185` in `COVERAGE.md`, ran
+one LangMem `create_memory_store_manager` call with the same class of local 3B model. Given a
+single clear fact, it wrote **0 memories**, with no LLM errors, and took 266 s. That lane
+concluded that a full AMB run with this model measures the model's tool calling rather than
+LangMem. This run agrees: it reached only 4 memories from 35 documents. **Recommendation: do not
+admit this as a LangMem measurement.**
+
 ## Model usage
 
 All inference was local; there was no paid inference.
