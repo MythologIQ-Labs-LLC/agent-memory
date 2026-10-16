@@ -641,6 +641,102 @@
     },
     "authority_effect": {
       "const": "none"
+    },
+    "candidate_class": {
+      "description": "Optional (#808). Marks a self-run record executed outside any frozen same-harness lane. Its presence bars acceptance and comparison eligibility; it never confers authority. Absent on lane rows and historical manifests.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "class",
+        "tier",
+        "system_variant",
+        "not_equivalent_to",
+        "metric_record",
+        "supersedes",
+        "corrections"
+      ],
+      "properties": {
+        "class": {
+          "enum": [
+            "self_run_candidate",
+            "self_run_diagnostic",
+            "self_run_not_comparable"
+          ]
+        },
+        "tier": {
+          "enum": [
+            "no_model",
+            "local_embedding_model",
+            "local_llm_ingestion",
+            "hosted_model"
+          ]
+        },
+        "system_variant": {
+          "type": "string",
+          "minLength": 1
+        },
+        "not_equivalent_to": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "metric_record": {
+          "description": "native_report: normalized_run points at the system's native benchmark report; no memory-benchmark-run record exists, so scorecards and the UI catalog never read it.",
+          "enum": [
+            "native_report",
+            "memory_benchmark_run"
+          ]
+        },
+        "supersedes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "uri",
+              "sha256"
+            ],
+            "properties": {
+              "uri": {
+                "type": "string",
+                "minLength": 1
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            }
+          }
+        },
+        "corrections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "pointer",
+              "original",
+              "corrected",
+              "basis"
+            ],
+            "properties": {
+              "pointer": {
+                "type": "string",
+                "pattern": "^(/[^/]+)+$"
+              },
+              "original": {},
+              "corrected": {},
+              "basis": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
     }
   },
   "$defs": {

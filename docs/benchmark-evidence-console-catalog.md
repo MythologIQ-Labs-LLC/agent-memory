@@ -301,3 +301,30 @@ Local qualification (no hosted CI) tightened the staged checker. These are contr
 - **Opt-in association.** A normalized run may point at its execution manifest through the existing `artifacts` mechanism (`kind: execution_manifest`). It carries no `sha256`, because the manifest already binds the run's digest. The UI catalog projects it as an ordinary evidence pointer; metrics, status and comparison semantics are unchanged, and frozen runs are not migrated.
 
 A synthetic, explicitly non-real accepted fixture with real file digests is in `reference/fixtures/benchmarks/execution-manifest-accepted/`. `scripts/probe_execution_manifest_defects.py` reproduces each defect against an earlier checker revision.
+
+### Self-run candidate evidence class (#808 G1, proposal; not acceptance)
+
+Results executed outside any frozen same-harness lane may be recorded as **self-run** records. A self-run record is a v1 execution manifest with an optional `candidate_class` block. `schema_version` stays `1.0.0`, and manifests without the block are unaffected.
+
+- **Class and tier.** `class` is one of:
+  - `self_run_candidate`;
+  - `self_run_diagnostic`, a check that is never a score;
+  - `self_run_not_comparable`.
+
+  `tier` is `no_model`, `local_embedding_model`, `local_llm_ingestion` or `hosted_model`. It must match the recorded inference calls.
+- **Variant labels.** `system_variant` and `not_equivalent_to` keep variants apart. Examples:
+  - "Hindsight chunk-only" is not Hindsight's LLM product;
+  - "Graphiti with local Qwen2.5-3B" is not Zep;
+  - no self-run record is a frozen lane row.
+- **Isolation.** Self-run records live under `reports/benchmarks/self-run-candidates/` and never point into `reports/benchmarks/normalized/`. That directory is the only input to the scorecards and this catalog, and the scorecard builder reads an explicit lane allowlist. A self-run record therefore cannot enter a comparison set.
+- **Metric record.** `metric_record: native_report` means `normalized_run` names the native benchmark report and no `memory-benchmark-run` record exists.
+- **No masquerade.** A self-run record:
+  - can never be `accepted` or `eligible_on_profile`;
+  - prefixes `run_id` and `task_profile` with `self-run:`;
+  - names no frozen lane id in any profile segment.
+
+  Diagnostic and not-comparable records must declare `comparison_eligibility: not_comparable`. Separately, **any** manifest whose `task_profile` names a frozen lane must point into that lane's imported evidence (`reports/benchmarks/{longmemeval,amb}/<lane_id>/`).
+- **Supersession trail.** `supersedes` names exactly one superseded manifest by path and SHA-256. `corrections` lists every changed field as a JSON pointer, with the original value, the corrected value (`"<absent>"` for a removed field) and a basis. With `--evidence-root`, the checker re-hashes the superseded manifest, verifies each original and corrected value, and refuses any difference that no correction declares. The superseded bytes are never modified.
+- **What the class does not do.** It confers no review authority. Admission still needs the independent review authority described above, and it remains on HOLD.
+
+`scripts/build_self_run_candidate_records.py --evidence-root <checkout>` regenerates the records deterministically and validates each one; `--check` compares against committed records.

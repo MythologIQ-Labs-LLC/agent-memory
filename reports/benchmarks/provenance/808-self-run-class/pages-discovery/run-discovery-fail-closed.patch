@@ -1,0 +1,191 @@
+diff --git a/assets/run-discovery.js b/assets/run-discovery.js
+index 6f86393..2d3d3f6 100644
+--- a/assets/run-discovery.js
++++ b/assets/run-discovery.js
+@@ -9,7 +9,16 @@ const API='https://api.github.com/repos/'+REPO;
+ const RAW='https://raw.githubusercontent.com/'+REPO;
+ const SHA=/^[a-f0-9]{40}$/;
+ const DIGEST=/^[a-f0-9]{64}$/;
+-const SAFE_PATH=/^reports\/benchmarks\/runs\/[a-zA-Z0-9_./-]+$/;
++const SAFE_PATH=/^reports\/benchmarks\/(runs|self-run-candidates)\/[a-zA-Z0-9_./-]+$/;
++const SOURCE_PREFIXES=['reports/benchmarks/runs/','reports/benchmarks/self-run-candidates/'];
++// #808: only these v1 values are displayable; anything else fails closed.
++const REVIEW_STATES=['candidate'];
++const ELIGIBILITY=['not_assessed','not_comparable'];
++const CLASSES=['self_run_candidate','self_run_diagnostic','self_run_not_comparable'];
++const TIERS=['no_model','local_embedding_model','local_llm_ingestion','hosted_model'];
++// Frozen same-harness lane ids. Their rows are imported under reports/benchmarks/{longmemeval,amb}/,
++// never under a discovered source prefix, so a discovered manifest naming one is mislabelled.
++const FROZEN_LANE=/^(longmemeval-s-retrieval-parity|amb-precisionmembench-retrieval)-v\d+$/;
+ const MAX_BODY=8*1024*1024;
+ const html=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const cleanPath=p=>typeof p==='string'&&SAFE_PATH.test(p)&&!p.split('/').includes('..')&&!p.includes('//');
+@@ -25,7 +34,7 @@ function validateSources(config){
+   const seen=new Set();
+   for(const src of config.sources) {
+     if(!/^[a-zA-Z0-9_.-]+(?:\/[a-zA-Z0-9_.-]+)*$/.test(src.branch)||seen.has(src.branch)||
+-       src.prefix!=='reports/benchmarks/runs/'||
++       !SOURCE_PREFIXES.includes(src.prefix)||
+        !Number.isInteger(src.max_manifest_files)||src.max_manifest_files>48||
+        src.max_manifest_files<1||!Number.isInteger(src.max_partial_files)||
+        src.max_partial_files>24||src.max_partial_files<0)throw Error('Invalid source limit or path');
+@@ -47,8 +56,18 @@ function validateManifest(m,path) {
+       !DIGEST.test(m.normalized_run.sha256||'')||
+       !m.system||!m.system.id||!m.system.adapter_revision||
+       !m.execution||m.execution.exit_code!==0||
+-      !m.review||!['candidate','reproduced','reviewed'].includes(m.review.status)||
+-      m.review.comparison_eligibility==='accepted') throw Error('Ineligible source manifest');
++      !m.review||!REVIEW_STATES.includes(m.review.status)||
++      !ELIGIBILITY.includes(m.review.comparison_eligibility)) throw Error('Ineligible source manifest');
++  if(m.benchmark.task_profile.split(':').some(s=>FROZEN_LANE.test(s)))
++    throw Error('Manifest claims a frozen lane profile outside that lane\'s evidence');
++  const cc=m.candidate_class;
++  if(cc!==undefined&&(!cc||!CLASSES.includes(cc.class)||!TIERS.includes(cc.tier)||
++     typeof cc.system_variant!=='string'||!cc.system_variant||
++     !m.run_id.startsWith('self-run:')||!m.benchmark.task_profile.startsWith('self-run:')||
++     (cc.class!=='self_run_candidate'&&m.review.comparison_eligibility!=='not_comparable')))
++    throw Error('Unqualified self-run classification');
++  if(path.startsWith('reports/benchmarks/self-run-candidates/')&&cc===undefined)
++    throw Error('Self-run location requires candidate_class');
+   const last=path.split('/').pop();
+   const match=/^(session|turn)\.([a-zA-Z0-9_-]+)\.manifest\.json$/.exec(last);
+   if(!match||!m.benchmark.task_profile.endsWith(':'+match[1])||
+@@ -117,8 +136,11 @@ function listFiles(tree,config){
+     throw Error('Source evidence exceeds audited byte cap; refusing incomplete discovery');
+   if(manifest.length>config.max_manifest_files||partial.length>config.max_partial_files)
+     throw Error('Source file discovery exceeds audited caps; manual review required');
++  // Sizes of every safe blob in the pinned tree: a self-run record discovered under its own
++  // prefix points at raw evidence under reports/benchmarks/runs/ in the same commit.
++  const tracked=tree.tree.filter(e=>e.type==='blob'&&cleanPath(e.path)&&Number.isInteger(e.size)&&e.size>=0);
+   return {manifest:manifest.map(x=>x.path).sort(),partial:partial.map(x=>x.path).sort(),
+-    known:new Map(blobs.map(x=>[x.path,x.size]))};
++    known:new Map(tracked.map(x=>[x.path,x.size]))};
+ }
+ async function jsonFetch(url) {
+   const response=await fetch(url,{cache:'no-store',headers:{Accept:'application/vnd.github+json'}});
+@@ -172,7 +194,9 @@ const LABELS={agent_memory:'Agent Memory control',lexical_overlap:'Lexical basel
+   mem0:'Mem0 OSS',hindsight:'Hindsight'};
+ function nameFor(id) {return LABELS[id]||String(id).replace(/[_-]/g,' ').replace(/\b\w/g,x=>x.toUpperCase());}
+ function cohort(m){return m.benchmark.sample_count+' input · '+
+-    (m.benchmark.selection_id?.startsWith('all|')?'full':'preregistered subset');}
++    (/^all[-|]/.test(m.benchmark.selection_id||'')?'full':'preregistered subset');}
++function classLabel(m){const cc=m.candidate_class;
++  return cc?cc.class.replace(/_/g,' ')+' · '+cc.tier.replace(/_/g,' '):'unclassified candidate';}
+ function createRow(m,path,sha,identity,metric,error) {
+   return {kind:'manifest',name:nameFor(m.system.id),systemId:m.system.id,
+     benchmark:m.benchmark.id,taskProfile:m.benchmark.task_profile,
+@@ -185,7 +209,8 @@ function createRow(m,path,sha,identity,metric,error) {
+       ?metric.scored+'/'+m.benchmark.sample_count+' scored · '+metric.excluded+' excluded'
+       :'Evidence score withheld ('+String(error||'unsupported native metric')+')',
+     manifestPath:path,runPath:m.normalized_run.uri,
+-    review:m.review.status,sha};
++    review:m.review.status+' · '+classLabel(m),candidateClass:m.candidate_class?.class??null,
++    tier:m.candidate_class?.tier??null,variant:m.candidate_class?.system_variant??null,sha};
+ }
+ function createPartial(path,sha,info){
+   return {kind:'partial',name:nameFor(info.backend),benchmark:'longmemeval-s-retrieval',
+@@ -256,7 +281,9 @@ async function refresh(force=false) {
+               cache.set(m.normalized_run.uri,record);
+             } else if(record.sha256!==m.normalized_run.sha256)throw Error('Conflicting manifest report digests');
+             let metric=null,error=null;
+-            try {metric=extractMetric(record.data,m,identity);} catch(e){error=e.message;}
++            if(m.candidate_class&&m.candidate_class.class!=='self_run_candidate')
++              error='diagnostic or not-comparable self-run record; never a score';
++            else try {metric=extractMetric(record.data,m,identity);} catch(e){error=e.message;}
+             branchRows.push(createRow(m,path,sha,identity,metric,error));
+             if(error)problems.push(m.run_id+': '+error);
+           }catch(e){
+diff --git a/tools/test-run-discovery-self-run.cjs b/tools/test-run-discovery-self-run.cjs
+new file mode 100644
+index 0000000..899890f
+--- /dev/null
++++ b/tools/test-run-discovery-self-run.cjs
+@@ -0,0 +1,66 @@
++'use strict';
++/* #808 G4b: the public consumer fails closed on unknown review states, unqualified eligibility,
++ * frozen-lane profile claims and unqualified self-run classifications. Offline; no GitHub calls.
++ * Run: node tools/test-run-discovery-self-run.cjs
++ */
++const assert=require('node:assert/strict');
++const d=require('../assets/run-discovery.js');
++const clone=x=>structuredClone(x);
++const RUNS='reports/benchmarks/runs/640-hindsight/subset50/';
++const SELF='reports/benchmarks/self-run-candidates/640-hindsight/full500/';
++const base={
++ schema_version:'1.0.0',authority_effect:'none',run_id:'hs:subset50:session:hindsight_chunks_onnx',
++ benchmark:{id:'longmemeval-s-retrieval',task_profile:'agent-memory-longmemeval-retrieval-currentness-v1:session',
++  input_sha256:'a'.repeat(64),sample_count:50,excluded_count:7,selection_id:'size=50'},
++ system:{id:'hindsight',adapter_revision:'git-blob:'+'c'.repeat(40)},
++ normalized_run:{uri:RUNS+'hindsight-50.json',sha256:'d'.repeat(64)},
++ execution:{exit_code:0},review:{status:'candidate',comparison_eligibility:'not_assessed'}
++};
++const legacyPath=RUNS+'session.hindsight_chunks_onnx.manifest.json';
++assert.deepEqual(d.validateManifest(base,legacyPath),{plane:'session',backend:'hindsight_chunks_onnx'});
++const refuse=(fn,path=legacyPath)=>{const x=clone(base);fn(x);assert.throws(()=>d.validateManifest(x,path))};
++// Unknown or non-v1 review states, including the previously allowed non-v1 values.
++for(const status of ['reproduced','reviewed','accepted','rejected','blocked','','Candidate',null,undefined])
++ refuse(x=>{x.review.status=status});
++// Unqualified eligibility strings, including the v1 value that implies acceptance.
++for(const eligibility of ['eligible_on_profile','accepted','eligible','',null,undefined,'NOT_ASSESSED'])
++ refuse(x=>{x.review.comparison_eligibility=eligibility});
++refuse(x=>{delete x.review.comparison_eligibility});
++// Any segment naming a frozen lane is refused.
++for(const profile of ['longmemeval-s-retrieval-parity-v1:session','self-run:longmemeval-s-retrieval-parity-v6:session',
++                      'amb-precisionmembench-retrieval-v3:single-turn:session'])
++ refuse(x=>{x.benchmark.task_profile=profile});
++// Self-run records: location, prefix and class rules.
++const selfRun=clone(base);
++selfRun.run_id='self-run:640-hindsight:full500:session:hindsight_chunks_onnx';
++selfRun.benchmark.task_profile='self-run:agent-memory-longmemeval-retrieval-currentness-v1:session';
++selfRun.normalized_run.uri='reports/benchmarks/runs/640-hindsight/full500/session.hindsight_chunks_onnx.summary.json';
++selfRun.candidate_class={class:'self_run_candidate',tier:'local_embedding_model',
++ system_variant:'Hindsight 0.10.2 chunk-only (llm_provider=none)',not_equivalent_to:['Hindsight LLM product']};
++const selfPath=SELF+'session.hindsight_chunks_onnx.manifest.json';
++assert.deepEqual(d.validateManifest(selfRun,selfPath),{plane:'session',backend:'hindsight_chunks_onnx'});
++const refuseSelf=fn=>{const x=clone(selfRun);fn(x);assert.throws(()=>d.validateManifest(x,selfPath))};
++refuseSelf(x=>{x.candidate_class.class='official'});
++refuseSelf(x=>{x.candidate_class.tier='frontier'});
++refuseSelf(x=>{x.candidate_class.system_variant=''});
++refuseSelf(x=>{x.candidate_class=null});
++refuseSelf(x=>{x.run_id='640-hindsight:full500:session:hindsight_chunks_onnx'});
++refuseSelf(x=>{x.benchmark.task_profile='agent-memory-longmemeval-retrieval-currentness-v1:session'});
++refuseSelf(x=>{x.candidate_class.class='self_run_diagnostic'});            // diagnostic must be not_comparable
++refuseSelf(x=>{delete x.candidate_class});                                   // self-run location requires the class
++const diag=clone(selfRun);diag.candidate_class.class='self_run_diagnostic';diag.review.comparison_eligibility='not_comparable';
++d.validateManifest(diag,selfPath);
++// Source allowlist accepts the isolated self-run prefix but nothing else new.
++const sources={schema_version:1,kind:'public-candidate-manifest-sources',authority_effect:'none',
++ repository:'MythologIQ-Labs-LLC/agent-memory',read_only:true,sources:[
++ {branch:'claude/810-external-exec-no-ci',prefix:'reports/benchmarks/self-run-candidates/',max_manifest_files:48,max_partial_files:0}]};
++assert.equal(d.validateSources(sources).length,1);
++sources.sources[0].prefix='reports/benchmarks/normalized/';assert.throws(()=>d.validateSources(sources));
++// Rows carry the class and tier; a full-500 cohort is labelled full.
++const full=clone(selfRun);full.benchmark.sample_count=500;full.benchmark.excluded_count=81;
++full.benchmark.selection_id='all-500:'+'7'.repeat(64);
++const row=d.createRow(full,selfPath,'e'.repeat(40),{plane:'session',backend:'hindsight_chunks_onnx'},null,'withheld');
++assert.equal(row.cohort,'500 input · full');
++assert.match(row.review,/self run candidate · local embedding model/);
++assert.equal(row.score,null);
++console.log('PASS: unknown review states, unqualified eligibility, frozen-lane labels and unqualified self-run classes fail closed; isolated self-run prefix; class/tier labelling');
+diff --git a/tools/test-run-discovery.cjs b/tools/test-run-discovery.cjs
+index 89d2e6b..a1b4ccc 100644
+--- a/tools/test-run-discovery.cjs
++++ b/tools/test-run-discovery.cjs
+@@ -17,7 +17,7 @@ const BASE='reports/benchmarks/runs/640-hindsight/subset50/';
+ const pathManifest=BASE+'session.hindsight_chunks_onnx.manifest.json';
+ const m={
+  schema_version:'1.0.0',authority_effect:'none',run_id:'hs:subset50:session:hindsight_chunks_onnx',
+- benchmark:{id:'longmemeval-s-retrieval',task_profile:'longmemeval-s-retrieval-parity-v1:session',
++ benchmark:{id:'longmemeval-s-retrieval',task_profile:'agent-memory-longmemeval-retrieval-currentness-v1:session',
+  input_sha256:SHA,sample_count:50,excluded_count:7,
+  selection_id:'size=50|ids_sha256='+'b'.repeat(64)},
+  system:{id:'hindsight',adapter_revision:'git-blob:'+'c'.repeat(40)},
+@@ -33,6 +33,8 @@ mutate(x=>x.execution.exit_code=1,'must run');
+ mutate(x=>x.normalized_run.uri='../../secrets','path traversal');
+ mutate(x=>x.benchmark.excluded_count=51,'invalid population');
+ mutate(x=>x.run_id='wrong:turn:backend','backend binding');
++// #808 P1: a discovered (self-run) manifest may not borrow a frozen lane's profile.
++mutate(x=>x.benchmark.task_profile='longmemeval-s-retrieval-parity-v1:session','frozen lane label');
+ const report={input:{sha256:SHA,question_count:50,selection:{question_ids_sha256:'b'.repeat(64)}},
+  planes:{session:{backends:{hindsight_chunks_onnx:{
+  aggregate:{evaluated_question_count:43,excluded_abstention_count:3,

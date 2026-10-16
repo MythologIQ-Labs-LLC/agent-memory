@@ -9,6 +9,14 @@ A manifest's own ``review`` block is a claim, not authority. ``accepted`` valida
 when an owner-controlled decision record (``--review-authority``) binds the same reviewer,
 decision reference, run id and normalized-run digest, names an executor distinct from the
 reviewer, and every evidence file has been re-hashed.
+
+``candidate_class`` (optional) marks a self-run record executed outside any frozen lane. Such a
+record can never be accepted or comparison-eligible, must carry the ``self-run:`` prefix on its
+run id and task profile, must not name a frozen lane, must live outside the scorecard input
+directory, must match its declared tier, and must explain every difference from the manifest it
+supersedes (verified against the superseded bytes under ``--evidence-root``). Conversely, a
+manifest without it that claims a frozen lane profile must point into that lane's imported
+evidence directory.
 """
 from __future__ import annotations
 
@@ -22,7 +30,15 @@ from pathlib import Path, PurePosixPath
 
 import jsonschema
 
-SCHEMA = Path(__file__).resolve().parents[1] / "schemas/benchmark-execution-manifest.schema.json"
+REPO = Path(__file__).resolve().parents[1]
+SCHEMA = REPO / "schemas/benchmark-execution-manifest.schema.json"
+LANES = REPO / "reference/agentmem_ref/evaluation/lanes"
+LANE_EVIDENCE_FAMILIES = ("longmemeval", "amb")
+SCORECARD_INPUT = "reports/benchmarks/normalized/"
+SELF_RUN_LOCATION = "reports/benchmarks/self-run-candidates/"
+SELF_RUN_PREFIX = "self-run:"
+ABSENT = "<absent>"
+TIER_PURPOSES = {"local_embedding_model": {"embedding", "rerank"}}
 # jsonschema checks "date-time" only when the optional rfc3339-validator package is
 # installed. It is not in the pinned profile, so the format is enforced here.
 RFC3339_UTC = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,9})?Z$")
@@ -74,8 +90,21 @@ def _sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
-def verify_evidence(manifest: dict, evidence_root: Path) -> dict:
-    """Re-hash the normalized run and every artifact under ``evidence_root``; return the parsed normalized run."""
+def _resolve(root: Path, uri: str, label: str) -> Path:
+    _safe_pointer(uri)
+    path = (root / uri).resolve()
+    if root not in path.parents:
+        raise ValueError(f"evidence pointer escapes the evidence root: {uri}")
+    if not path.is_file():
+        raise ValueError(f"missing evidence file for {label}: {uri}")
+    return path
+
+
+def verify_evidence(manifest: dict, evidence_root: Path) -> dict | None:
+    """Re-hash the normalized run and every artifact under ``evidence_root``; return the parsed normalized run.
+
+    A self-run record whose metric record is the native report has no normalized run to parse: None.
+    """
     root = evidence_root.resolve()
     pointers = [("normalized_run", manifest["normalized_run"])] + [(a["kind"], a) for a in manifest["artifacts"]]
     for label, pointer in pointers:
@@ -87,6 +116,8 @@ def verify_evidence(manifest: dict, evidence_root: Path) -> dict:
             raise ValueError(f"missing evidence file for {label}: {pointer['uri']}")
         if _sha256_file(path) != pointer["sha256"]:
             raise ValueError(f"SHA-256 mismatch for {label}: {pointer['uri']}")
+    if (manifest.get("candidate_class") or {}).get("metric_record") == "native_report":
+        return None
     try:
         normalized = json.loads((root / manifest["normalized_run"]["uri"]).read_bytes())
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
@@ -95,6 +126,105 @@ def verify_evidence(manifest: dict, evidence_root: Path) -> dict:
     if not isinstance(normalized, dict):
         raise ValueError("normalized_run is not a JSON object")
     return normalized
+
+
+def frozen_lane_ids() -> set[str]:
+    return {path.stem for path in LANES.glob("*.json")}
+
+
+def _pointer_get(document, pointer: str):
+    node = document
+    for token in pointer.lstrip("/").split("/"):
+        token = token.replace("~1", "/").replace("~0", "~")
+        if isinstance(node, dict) and token in node:
+            node = node[token]
+        elif isinstance(node, list) and token.isdigit() and int(token) < len(node):
+            node = node[int(token)]
+        else:
+            return ABSENT
+    return node
+
+
+def _leaf_differences(old, new, path: str = "") -> list[str]:
+    """JSON pointers where two documents differ; same-length lists compare element-wise, others whole."""
+    if isinstance(old, list) and isinstance(new, list) and len(old) == len(new):
+        return [d for i, (a, b) in enumerate(zip(old, new)) for d in _leaf_differences(a, b, f"{path}/{i}")]
+    if isinstance(old, dict) and isinstance(new, dict):
+        out = []
+        for key in sorted(set(old) | set(new)):
+            child = f"{path}/{key.replace('~', '~0').replace('/', '~1')}"
+            if key not in old or key not in new:
+                out.append(child)
+            else:
+                out.extend(_leaf_differences(old[key], new[key], child))
+        return out
+    return [] if old == new else [path or "/"]
+
+
+def _check_lane_claim(manifest: dict) -> None:
+    """A manifest that names a frozen lane profile must be backed by that lane's imported evidence."""
+    head = manifest["benchmark"]["task_profile"].split(":", 1)[0]
+    if head not in frozen_lane_ids():
+        return
+    roots = tuple(f"reports/benchmarks/{family}/{head}/" for family in LANE_EVIDENCE_FAMILIES)
+    uris = [manifest["normalized_run"]["uri"]] + [a["uri"] for a in manifest["artifacts"]]
+    if not any(uri.startswith(roots) for uri in uris):
+        raise ValueError(f"task_profile claims frozen lane {head!r} but no evidence pointer is inside that lane's "
+                         "imported evidence; a self-run record must use candidate_class and a self-run: profile")
+
+
+def _check_candidate_class(manifest: dict, evidence_root: Path | None, manifest_uri: str | None) -> None:
+    klass = manifest["candidate_class"]
+    review, calls = manifest["review"], manifest["inference"]["calls"]
+    if review["status"] == "accepted":
+        raise ValueError("a self-run record cannot be accepted; acceptance needs a frozen-lane row")
+    allowed = {"not_assessed", "not_comparable"} if klass["class"] == "self_run_candidate" else {"not_comparable"}
+    if review["comparison_eligibility"] not in allowed:
+        raise ValueError(f"{klass['class']} must declare comparison_eligibility in {sorted(allowed)}")
+    profile = manifest["benchmark"]["task_profile"]
+    if not manifest["run_id"].startswith(SELF_RUN_PREFIX) or not profile.startswith(SELF_RUN_PREFIX):
+        raise ValueError("self-run records must prefix run_id and task_profile with 'self-run:'")
+    lanes = frozen_lane_ids()
+    if any(segment in lanes for segment in profile.split(":")):
+        raise ValueError("a self-run task_profile must not name a frozen lane")
+    pointers = [manifest["normalized_run"]["uri"], *(a["uri"] for a in manifest["artifacts"]),
+                *(s["uri"] for s in klass["supersedes"])]
+    if any(uri.startswith(SCORECARD_INPUT) for uri in pointers):
+        raise ValueError("self-run records must not point into the scorecard input directory")
+    if manifest_uri is not None and not manifest_uri.startswith(SELF_RUN_LOCATION):
+        raise ValueError(f"self-run records must live under {SELF_RUN_LOCATION}")
+    endpoints = {c["endpoint_class"] for c in calls}
+    purposes = {c["purpose"] for c in calls}
+    tier = klass["tier"]
+    consistent = {
+        "no_model": not calls,
+        "local_embedding_model": bool(calls) and "hosted" not in endpoints and purposes <= TIER_PURPOSES["local_embedding_model"],
+        "local_llm_ingestion": "hosted" not in endpoints and "generation" in purposes,
+        "hosted_model": "hosted" in endpoints,
+    }[tier]
+    if not consistent:
+        raise ValueError(f"declared tier {tier!r} does not match the recorded inference calls")
+    if evidence_root is None:
+        return
+    root = evidence_root.resolve()
+    if len(klass["supersedes"]) != 1:
+        raise ValueError("a superseding record must name exactly one superseded manifest")
+    old_ref = klass["supersedes"][0]
+    old_path = _resolve(root, old_ref["uri"], "superseded manifest")
+    if _sha256_file(old_path) != old_ref["sha256"]:
+        raise ValueError(f"SHA-256 mismatch for superseded manifest: {old_ref['uri']}")
+    old = json.loads(old_path.read_bytes())
+    current = {k: v for k, v in manifest.items() if k != "candidate_class"}
+    declared = [c["pointer"] for c in klass["corrections"]]
+    for correction in klass["corrections"]:
+        if _pointer_get(old, correction["pointer"]) != correction["original"]:
+            raise ValueError(f"correction {correction['pointer']}: original value does not match the superseded manifest")
+        if _pointer_get(current, correction["pointer"]) != correction["corrected"]:
+            raise ValueError(f"correction {correction['pointer']}: corrected value does not match this record")
+    undeclared = [d for d in _leaf_differences(old, current)
+                  if not any(d == p or d.startswith(p + "/") for p in declared)]
+    if undeclared:
+        raise ValueError(f"undeclared differences from the superseded manifest: {undeclared[:5]}")
 
 
 def _identity(value) -> str:
@@ -140,7 +270,7 @@ def _check_authority(manifest: dict, authority: dict | None, authority_sha256: s
 
 def validate(manifest: dict, normalized: dict | None = None, *, evidence_root: Path | None = None,
              authority: dict | None = None, authority_sha256: str | None = None,
-             expected_authority_sha256: str | None = None) -> None:
+             expected_authority_sha256: str | None = None, manifest_uri: str | None = None) -> None:
     """Raise on any defect. ``normalized`` alone is an identity check only; acceptance needs ``evidence_root``."""
     schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
     jsonschema.Draft202012Validator(schema, format_checker=jsonschema.FormatChecker()).validate(manifest)
@@ -172,6 +302,11 @@ def validate(manifest: dict, normalized: dict | None = None, *, evidence_root: P
         raise ValueError("cost status and amount disagree")
     if any(call["endpoint_class"] == "hosted" for call in calls) and costs["status"] == "not_applicable":
         raise ValueError("hosted inference requires a measured cost (or not_measured), never not_applicable")
+
+    if "candidate_class" in manifest:
+        _check_candidate_class(manifest, evidence_root, manifest_uri)
+    else:
+        _check_lane_claim(manifest)
 
     verified = False
     if evidence_root is not None:
@@ -252,7 +387,11 @@ def main() -> int:
         if args.review_authority:
             authority_bytes = args.review_authority.read_bytes()
             authority, authority_sha256 = json.loads(authority_bytes), hashlib.sha256(authority_bytes).hexdigest()
-        validate(obj, normalized, evidence_root=args.evidence_root, authority=authority,
+        manifest_uri = None
+        if args.evidence_root is not None:
+            manifest_path, root = args.manifest.resolve(), args.evidence_root.resolve()
+            manifest_uri = manifest_path.relative_to(root).as_posix() if root in manifest_path.parents else None
+        validate(obj, normalized, evidence_root=args.evidence_root, authority=authority, manifest_uri=manifest_uri,
                  authority_sha256=authority_sha256, expected_authority_sha256=args.review_authority_sha256)
     except (OSError, ValueError, KeyError, TypeError, AttributeError, json.JSONDecodeError,
             jsonschema.ValidationError) as exc:

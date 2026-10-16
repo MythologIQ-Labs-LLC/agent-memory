@@ -1,0 +1,91 @@
+{
+ "rows": [
+  {
+   "manifest": "reports/benchmarks/runs/controls/subset50/session.agent_memory.manifest.json",
+   "review": "candidate",
+   "score": 0.837209,
+   "coverage": "43/50 scored · 7 excluded"
+  },
+  {
+   "manifest": "reports/benchmarks/runs/640-hindsight/subset50/session.hindsight_chunks_onnx.manifest.json",
+   "review": "candidate",
+   "score": 0.930233,
+   "coverage": "43/50 scored · 7 excluded"
+  },
+  {
+   "manifest": "reports/benchmarks/runs/controls/subset50/session.lexical_overlap.manifest.json",
+   "review": "candidate",
+   "score": 0.813953,
+   "coverage": "43/50 scored · 7 excluded"
+  },
+  {
+   "manifest": "reports/benchmarks/runs/mem0/subset50/session.mem0_explicit.manifest.json",
+   "review": "candidate",
+   "score": 0.883721,
+   "coverage": "43/50 scored · 7 excluded"
+  },
+  {
+   "manifest": "reports/benchmarks/runs/controls/subset50/turn.agent_memory.manifest.json",
+   "review": "candidate",
+   "score": 0.72093,
+   "coverage": "43/50 scored · 7 excluded"
+  },
+  {
+   "manifest": "reports/benchmarks/runs/640-hindsight/subset50/turn.hindsight_chunks_onnx.manifest.json",
+   "review": "candidate",
+   "score": 0.837209,
+   "coverage": "43/50 scored · 7 excluded"
+  },
+  {
+   "manifest": "reports/benchmarks/runs/controls/subset50/turn.lexical_overlap.manifest.json",
+   "review": "candidate",
+   "score": 0.604651,
+   "coverage": "43/50 scored · 7 excluded"
+  },
+  {
+   "manifest": "reports/benchmarks/runs/mem0/subset50/turn.mem0_explicit.manifest.json",
+   "review": "candidate",
+   "score": 0.651163,
+   "coverage": "43/50 scored · 7 excluded"
+  },
+  {
+   "manifest": "reports/benchmarks/runs/controls/full500/session.agent_memory.manifest.json",
+   "review": "candidate",
+   "score": 0.823389,
+   "coverage": "419/500 scored · 81 excluded"
+  },
+  {
+   "manifest": "reports/benchmarks/runs/controls/full500/session.lexical_overlap.manifest.json",
+   "review": "candidate",
+   "score": 0.73031,
+   "coverage": "419/500 scored · 81 excluded"
+  },
+  {
+   "manifest": "reports/benchmarks/runs/controls/full500/turn.agent_memory.manifest.json",
+   "review": "candidate",
+   "score": 0.72315,
+   "coverage": "419/500 scored · 81 excluded"
+  },
+  {
+   "manifest": "reports/benchmarks/runs/controls/full500/turn.lexical_overlap.manifest.json",
+   "review": "candidate",
+   "score": 0.587112,
+   "coverage": "419/500 scored · 81 excluded"
+  }
+ ],
+ "verdicts": {
+  "reports/benchmarks/runs/640-hindsight/subset50/session.hindsight_chunks_onnx.manifest.json": "valid",
+  "reports/benchmarks/runs/640-hindsight/subset50/turn.hindsight_chunks_onnx.manifest.json": "valid",
+  "reports/benchmarks/runs/controls/full500/session.agent_memory.manifest.json": "valid",
+  "reports/benchmarks/runs/controls/full500/session.lexical_overlap.manifest.json": "valid",
+  "reports/benchmarks/runs/controls/full500/turn.agent_memory.manifest.json": "valid",
+  "reports/benchmarks/runs/controls/full500/turn.lexical_overlap.manifest.json": "valid",
+  "reports/benchmarks/runs/controls/subset50/session.agent_memory.manifest.json": "valid",
+  "reports/benchmarks/runs/controls/subset50/session.lexical_overlap.manifest.json": "valid",
+  "reports/benchmarks/runs/controls/subset50/turn.agent_memory.manifest.json": "valid",
+  "reports/benchmarks/runs/controls/subset50/turn.lexical_overlap.manifest.json": "valid",
+  "reports/benchmarks/runs/mem0/subset50/session.mem0_explicit.manifest.json": "valid",
+  "reports/benchmarks/runs/mem0/subset50/turn.mem0_explicit.manifest.json": "valid"
+ },
+ "status": "Read-only manifest discovery · 12 source-plane records · 1 tracked source branches · checked 7:19:18 PM"
+}

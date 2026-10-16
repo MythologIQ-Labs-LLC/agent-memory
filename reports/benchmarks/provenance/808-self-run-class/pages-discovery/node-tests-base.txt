@@ -1,0 +1,10 @@
+tools/test-external-evaluations.cjs: PASS
+tools/test-leaderboard-feed-authority.cjs: PASS
+tools/test-live-evidence.cjs: PASS
+tools/test-measured-leaderboard.cjs: PASS
+tools/test-public-feed-atomic.cjs: PASS
+tools/test-public-measurement-feed.cjs: FAIL if(!feedPath)throw Error('Pass locally materialized benchmark-public-feed/v1.json as the first argument');
+tools/test-run-discovery-refresh.cjs: PASS
+tools/test-run-discovery.cjs: PASS
+tools/test-evidence-transparency.mjs: FAIL AssertionError [ERR_ASSERTION]: The input did not match the regular expression /Unknown metric role/. Input:
+tools/test-site-data.mjs: FAIL SyntaxError: Unexpected token ']'

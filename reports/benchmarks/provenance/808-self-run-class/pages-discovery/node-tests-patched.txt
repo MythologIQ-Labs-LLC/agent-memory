@@ -1,0 +1,11 @@
+tools/test-external-evaluations.cjs: PASS PASS: 3 verified program links; 13 negative/source integrity assertions; DOM output is safely escaped.
+tools/test-leaderboard-feed-authority.cjs: PASS PASS: current data feed overrides fallback, source error visible, no false first-place claim, accepted archive retained.
+tools/test-live-evidence.cjs: PASS PASS: candidate source/parity, no score for partial/failed runs, CSV quote/parser, provenance paths, site integration
+tools/test-measured-leaderboard.cjs: PASS PASS: honest candidate rankings, distinct populations, AMB strict case count, provenance guards, accepted-only filter, l
+tools/test-public-feed-atomic.cjs: PASS PASS: atomic feed publication, same-head retry, source withdrawal, explicit refresh error event; 12 source requests
+tools/test-public-measurement-feed.cjs: SKIP (needs a materialized benchmark-public-feed/v1.json argument; fails identically on base)
+tools/test-run-discovery-refresh.cjs: PASS PASS: 500-question progress, stale-cache warning, unchanged-head retry, corrected evidence projection
+tools/test-run-discovery-self-run.cjs: PASS PASS: unknown review states, unqualified eligibility, frozen-lane labels and unqualified self-run classes fail closed; i
+tools/test-run-discovery.cjs: PASS PASS: source-branch allowlist, manifest integrity, native denominator, no score for unknown/partial/failed, safe paths, 
+tools/test-evidence-transparency.mjs: FAIL AssertionError [ERR_ASSERTION]: The input did not match the regular expression /Unknown metric role/. Input:
+tools/test-site-data.mjs: FAIL SyntaxError: Unexpected token ']'

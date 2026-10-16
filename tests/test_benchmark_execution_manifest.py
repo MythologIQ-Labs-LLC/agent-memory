@@ -358,5 +358,130 @@ class CatalogAssociationTests(unittest.TestCase):
         self.assertEqual(projected["authority_effect"], "none")
 
 
+class SelfRunCandidateTests(unittest.TestCase):
+    """#808 G1: a self-run record is labelled, isolated, tier-consistent and carries a verifiable supersession trail."""
+
+    LOCATION = "reports/benchmarks/self-run-candidates/synthetic/manifest.json"
+    ORIGINAL_URI = "reports/benchmarks/runs/synthetic/manifest.json"
+
+    def setUp(self):
+        import hashlib
+        import tempfile
+        self._tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self._tmp.name)
+        evidence = self.root / "reports/benchmarks/runs/synthetic"
+        evidence.mkdir(parents=True)
+        for name in ("native.json", "rows.jsonl"):
+            (evidence / name).write_bytes((ACCEPTED_DIR / name).read_bytes())
+        original = copy.deepcopy(EXAMPLE)
+        original["normalized_run"] = {"uri": "reports/benchmarks/runs/synthetic/native.json",
+                                      "sha256": hashlib.sha256((evidence / "native.json").read_bytes()).hexdigest()}
+        original["artifacts"] = [{"kind": "row_level_results", "uri": "reports/benchmarks/runs/synthetic/rows.jsonl",
+                                  "sha256": hashlib.sha256((evidence / "rows.jsonl").read_bytes()).hexdigest()}]
+        original["benchmark"]["task_profile"] = "longmemeval-s-retrieval-parity-v1:session"
+        (evidence / "manifest.json").write_text(json.dumps(original), encoding="utf-8")
+        self.original = original
+        record = copy.deepcopy(original)
+        record["run_id"] = "self-run:" + original["run_id"]
+        record["benchmark"]["task_profile"] = "self-run:agent-memory-longmemeval-retrieval-currentness-v1:session"
+        record["candidate_class"] = {
+            "class": "self_run_candidate", "tier": "no_model", "system_variant": "synthetic control",
+            "not_equivalent_to": ["frozen same-harness lane rows"], "metric_record": "native_report",
+            "supersedes": [{"uri": self.ORIGINAL_URI,
+                            "sha256": hashlib.sha256((evidence / "manifest.json").read_bytes()).hexdigest()}],
+            "corrections": [
+                {"pointer": "/run_id", "original": original["run_id"], "corrected": record["run_id"], "basis": "R9"},
+                {"pointer": "/benchmark/task_profile", "original": original["benchmark"]["task_profile"],
+                 "corrected": record["benchmark"]["task_profile"], "basis": "R9"},
+            ],
+        }
+        self.record = record
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def check(self, record, rehash=True, uri=None):
+        validator.validate(copy.deepcopy(record), evidence_root=self.root if rehash else None,
+                           manifest_uri=(uri or self.LOCATION) if rehash else None)
+
+    def refuse(self, change, message, rehash=True, uri=None):
+        record = copy.deepcopy(self.record)
+        change(record)
+        with self.assertRaisesRegex(ValueError, message):
+            self.check(record, rehash, uri)
+
+    def test_valid_record_passes_both_modes(self):
+        self.check(self.record, rehash=False)
+        self.check(self.record)
+
+    def test_original_mislabelled_manifest_is_refused(self):
+        with self.assertRaisesRegex(ValueError, "claims frozen lane"):
+            validator.validate(copy.deepcopy(self.original))
+
+    def test_lane_profile_is_allowed_only_with_lane_evidence(self):
+        value = copy.deepcopy(self.original)
+        value["artifacts"].append({"kind": "other", "uri": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/x/evidence.json",
+                                   "sha256": "a" * 64})
+        validator.validate(value)
+
+    def test_cannot_be_accepted_or_eligible(self):
+        self.refuse(lambda r: r["review"].update(status="accepted", reviewer="x", decision_ref="https://example.org/x"),
+                    "cannot be accepted", rehash=False)
+        self.refuse(lambda r: r["review"].update(comparison_eligibility="eligible_on_profile"), "comparison_eligibility", rehash=False)
+        self.refuse(lambda r: r["candidate_class"].update({"class": "self_run_diagnostic"}), "comparison_eligibility", rehash=False)
+
+    def test_self_run_prefix_and_no_lane_name(self):
+        self.refuse(lambda r: r.update(run_id="synthetic"), "self-run:", rehash=False)
+        self.refuse(lambda r: r["benchmark"].update(task_profile="agent-memory-x:session"), "self-run:", rehash=False)
+        self.refuse(lambda r: r["benchmark"].update(task_profile="self-run:longmemeval-s-retrieval-parity-v6:session"),
+                    "must not name a frozen lane", rehash=False)
+        self.refuse(lambda r: r["benchmark"].update(task_profile="self-run:x:amb-precisionmembench-retrieval-v1"),
+                    "must not name a frozen lane", rehash=False)
+
+    def test_isolated_from_scorecard_inputs(self):
+        self.refuse(lambda r: r["normalized_run"].update(uri="reports/benchmarks/normalized/x.json"),
+                    "scorecard input", rehash=False)
+        self.refuse(lambda r: None, "must live under", uri="reports/benchmarks/runs/synthetic/manifest2.json")
+        self.refuse(lambda r: None, "must live under", uri="reports/benchmarks/normalized/x.json")
+
+    def test_scorecards_and_catalog_never_read_self_run_location(self):
+        import ast
+        for script in ("scripts/build_benchmark_scorecards.py", "scripts/build_benchmark_ui_catalog.py"):
+            source = (ROOT / script).read_text()
+            strings = [n.value for n in ast.walk(ast.parse(source)) if isinstance(n, ast.Constant) and isinstance(n.value, str)]
+            with self.subTest(script=script):
+                self.assertFalse(any("self-run" in value or "reports/benchmarks/runs" in value for value in strings))
+                self.assertIn("normalized", source)
+        self.assertFalse(validator.SELF_RUN_LOCATION.startswith(validator.SCORECARD_INPUT))
+
+    def test_tier_must_match_inference(self):
+        embed = {"purpose": "embedding", "provider": "local", "model_id": "e", "model_revision": "r1", "model_digest": None,
+                 "endpoint_class": "local", "parameters": {}, "prompt_sha256": None, "count": 1}
+        gen = dict(embed, purpose="generation")
+        hosted = dict(gen, endpoint_class="hosted")
+        cases = [("no_model", [embed]), ("local_embedding_model", []), ("local_embedding_model", [gen]),
+                 ("local_llm_ingestion", [embed]), ("local_llm_ingestion", [hosted]), ("hosted_model", [gen])]
+        for tier, calls in cases:
+            with self.subTest(tier=tier, calls=[c["purpose"] + "/" + c["endpoint_class"] for c in calls]):
+                self.refuse(lambda r, tier=tier, calls=calls: (r["candidate_class"].update(tier=tier),
+                                                               r["inference"].update(used=bool(calls), calls=calls),
+                                                               r["costs"].update(status="not_measured")),
+                            "declared tier", rehash=False)
+
+    def test_supersession_trail_is_verified(self):
+        self.refuse(lambda r: r["candidate_class"]["supersedes"][0].update(sha256="0" * 64), "superseded manifest")
+        self.refuse(lambda r: r["candidate_class"]["corrections"][0].update(original="forged"), "original value")
+        self.refuse(lambda r: r["candidate_class"]["corrections"][0].update(corrected="self-run:other"), "corrected value")
+        self.refuse(lambda r: r["candidate_class"]["corrections"].pop(1), "undeclared differences|corrected value")
+        self.refuse(lambda r: r["execution"].update(retries=3), "undeclared differences")
+        self.refuse(lambda r: r["candidate_class"].update(supersedes=[]), "exactly one")
+        self.refuse(lambda r: r["candidate_class"]["supersedes"].append(dict(r["candidate_class"]["supersedes"][0])), "exactly one")
+
+    def test_absent_sentinel_for_corrections(self):
+        self.assertEqual(validator._pointer_get({"a": {}}, "/a/b"), validator.ABSENT)
+        self.assertEqual(validator._pointer_get({"a": [1, 2]}, "/a/1"), 2)
+        self.assertEqual(validator._leaf_differences({"a": 1, "b": [1]}, {"a": 1, "b": [2], "c": 0}), ["/b/0", "/c"])
+        self.assertEqual(validator._leaf_differences({"b": [1]}, {"b": [1, 2]}), ["/b"])  # length change: whole list
+
 if __name__ == "__main__":
     unittest.main()
