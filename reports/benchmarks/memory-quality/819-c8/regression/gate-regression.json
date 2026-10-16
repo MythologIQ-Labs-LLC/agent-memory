@@ -1,0 +1,82 @@
+{
+ "c6-dev-union": {
+  "ranked_prefix C4+sem": {
+   "needed": 78,
+   "recall@10": 0.7051,
+   "needed_top5": 49
+  },
+  "ranked_prefix C8+sem": {
+   "needed": 78,
+   "recall@10": 0.7308,
+   "needed_top5": 51
+  },
+  "R5 recall@10 >= C4+sem": true,
+  "R5 needed_top5 >= C4+sem - 2": true,
+  "relevance_sufficient C6+sem": {
+   "strict": 40,
+   "extras": 23,
+   "no_answer_returning": 4
+  },
+  "relevance_sufficient C8+sem": {
+   "strict": 40,
+   "extras": 23,
+   "no_answer_returning": 4
+  },
+  "S1 returned-set differences (not budget-bound)": [],
+  "returned order changed only": 4,
+  "S2 no worse": true,
+  "I1 route-off list differences": []
+ },
+ "c6-reviewer-set": {
+  "ranked_prefix C4+sem": {
+   "needed": 58,
+   "recall@10": 0.7069,
+   "needed_top5": 31
+  },
+  "ranked_prefix C8+sem": {
+   "needed": 58,
+   "recall@10": 0.7414,
+   "needed_top5": 39
+  },
+  "R5 recall@10 >= C4+sem": true,
+  "R5 needed_top5 >= C4+sem - 2": true,
+  "relevance_sufficient C6+sem": {
+   "strict": 16,
+   "extras": 61,
+   "no_answer_returning": 8
+  },
+  "relevance_sufficient C8+sem": {
+   "strict": 16,
+   "extras": 61,
+   "no_answer_returning": 8
+  },
+  "S1 returned-set differences (not budget-bound)": [],
+  "returned order changed only": 9,
+  "S2 no worse": true,
+  "I1 route-off list differences": []
+ },
+ "c7-dev-set": {
+  "ranked_prefix C4+sem": {
+   "recall@10": 0.5789,
+   "needed_top5": 33
+  },
+  "ranked_prefix C8+sem": {
+   "recall@10": 0.6316,
+   "needed_top5": 41
+  },
+  "R5 recall@10 >= C4+sem": true,
+  "R5 needed_top5 >= C4+sem - 2": true,
+  "S1 returned-set differences": [],
+  "S2 strict/extras C6+sem vs C8": [
+   11,
+   11,
+   45,
+   45
+  ],
+  "I1 route-off differences": [],
+  "measured only: newer-first C4+sem rp / C8 rp": [
+   2,
+   1
+  ]
+ }
+}

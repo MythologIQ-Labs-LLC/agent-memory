@@ -1,0 +1,136 @@
+{
+ "gate": {
+  "R1 all needed in top 5 >= C4+sem + 3": [
+   27,
+   23,
+   true
+  ],
+  "R2 needed in top 5 >= C4+sem + 6": [
+   43,
+   36,
+   true
+  ],
+  "R3 all needed in top 10 >= C4+sem": [
+   35,
+   30,
+   true
+  ],
+  "R3 all needed in top 3 >= C4+sem": [
+   23,
+   21,
+   true
+  ],
+  "R4 queries losing top-5 coverage <= 2": [
+   0,
+   [],
+   true
+  ],
+  "S1 returned sets equal C6+sem (except budget-bound)": [
+   0,
+   [],
+   true
+  ],
+  "S2 strict >= C6+sem": [
+   17,
+   17,
+   true
+  ],
+  "S2 extras <= C6+sem": [
+   61,
+   61,
+   true
+  ],
+  "S2 no-answer returning <= C6+sem": [
+   3,
+   3,
+   true
+  ],
+  "I1 route off equals C4 (ranked_prefix: top 10 and returned)": [
+   0,
+   [],
+   true
+  ],
+  "I1 route off equals C4 (relevance_sufficient: top 10 and returned)": [
+   0,
+   [],
+   true
+  ],
+  "measured only: incidental newer-first, unspecified intent (C4+sem rp / C8 rp / C6+sem rs / C8 rs)": [
+   1,
+   2,
+   1,
+   2,
+   true
+  ],
+  "I4' declared conflicts: C8 keeps every preferred-first ordering C6+sem has (ranked_prefix)": [
+   0,
+   {
+    "broken": [],
+    "temporally_decided_pairs_in_C6": 9,
+    "c6_preferred_first": 9,
+    "c8_preferred_first": 9
+   },
+   true
+  ],
+  "I4' declared conflicts: C8 keeps every preferred-first ordering C6+sem has (relevance_sufficient)": [
+   0,
+   {
+    "broken": [],
+    "temporally_decided_pairs_in_C6": 9,
+    "c6_preferred_first": 9,
+    "c8_preferred_first": 9
+   },
+   true
+  ]
+ },
+ "gained_top5_coverage": [
+  "garden-2",
+  "money-6",
+  "school-6",
+  "tech-4"
+ ],
+ "c8_summary_rp": {
+  "queries": 57,
+  "strict": 1,
+  "needed": 78,
+  "returned": 54,
+  "withheld": 5,
+  "refused": 0,
+  "not_discovered": 19,
+  "extra": 427,
+  "coverage@3": 23,
+  "coverage@5": 27,
+  "coverage@10": 35,
+  "coverage_of": 51,
+  "needed_rank_le5": 43,
+  "needed_rank_6_10": 11,
+  "needed_rank_gt10": 5,
+  "needed_dense_rank_le5": 51,
+  "newer_first": 2,
+  "declared_preferred_first": 9,
+  "abstention_returning": 6,
+  "recall_p50_ms": 25.02
+ },
+ "c8_summary_rs": {
+  "queries": 57,
+  "strict": 17,
+  "needed": 78,
+  "returned": 41,
+  "withheld": 16,
+  "refused": 0,
+  "not_discovered": 21,
+  "extra": 61,
+  "coverage@3": 23,
+  "coverage@5": 26,
+  "coverage@10": 35,
+  "coverage_of": 51,
+  "needed_rank_le5": 42,
+  "needed_rank_6_10": 11,
+  "needed_rank_gt10": 4,
+  "needed_dense_rank_le5": 50,
+  "newer_first": 2,
+  "declared_preferred_first": 9,
+  "abstention_returning": 3,
+  "recall_p50_ms": 28.57
+ }
+}

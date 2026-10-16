@@ -137,6 +137,19 @@ Measured on the independent AMB PrecisionMemBench run (#818): `returned` was the
     - **The nearest memory takes the single slot.** For a single-answer question, a memory phrased like the question (for example "I keep forgetting who my doctor is.") can outrank the answer. Because the margin is relative to the best match, it can also push answers out of the plural window. The writer must already hold write access to the same scope, and the memory is still governed. Answers can be suppressed; nothing is exposed.
     - **The shape reading that chooses K is a closed English grammar and misreads some list questions** (for example "Which animals live with us?").
     - **Genuine answers with best cosine 0.32–0.40 are not proposed.**
+- **Rank fusion** (ranking policy `3.5.0`, #819 C8 candidate; only when the optional `semantic_retrieval` provider is enabled). Admitted memories are ordered by one fused stage instead of the route corroboration count, per-route scores and admitted-set BM25.
+  - **Fused score.** Reciprocal-rank fusion, k = 60, equal weights, over three lists: admitted-set BM25 (> 0), the shared-evidence route score, and dense similarity to the query (rounded to 1e-6). Ranks are competition ranks: equal values share a rank. Only admitted memories are ranked.
+  - **Unchanged stages.** The temporal applicability tier and exact identity stay above the fused stage. Temporal order, explicit-current constraints and cross-fact currentness stay as before.
+  - **Selection.** Under `relevance_sufficient`, sufficiency is decided on the 3.4.0 order, so fusion never makes a fact sufficient. It only orders the selection and decides the budget cut.
+  - **Fallbacks.**
+    - Above 512 admitted memories, fusion is skipped (`fusion.status = "skipped_over_limit"`).
+    - If dense scoring is unavailable, the order is 3.4.0's (`"unavailable"`).
+    - Without the provider, ranking is exactly 3.4.0.
+  - **Evidence.** Each admitted memory's `ranking_evidence.fusion` records its per-list ranks, dense similarity and fused score (`authority_effect: none`).
+  - **Cost.** Fusion reuses the similarities the semantic route computed for the same query, and `ranked_prefix` ranks once.
+  - **Known limits.**
+    - A memory found only by the semantic route is in one list and stays below lexical candidates.
+    - Which of two conflicting statements comes first under unspecified intent is decided by relevance, not time.
 - `returned` = the sufficient facts in ranked order, then the budget. `return_policy` names `relevance-sufficient-return-selection` (`2.3.0` on the C4 candidate, `2.2.0` on C3; `1.0.0`/`1.1.0` were C1/C2) with `sufficient_count`, `withheld_insufficient_count`, `abstained`, `informative_query_term_count`, `relative_floor`, `basis: post_ranking_relevance_sufficiency_then_ranked_prefix`; `applied` means something admitted was not returned. Each admitted fact's decision is `admissions[ref].return_selection` (`sufficient`, `basis`, `content_relevance`, `relative_to_best`, `authority_effect: none`).
 - **Policy, never authority.** Candidates, admission, refusals, `admitted` and the ranked order are unchanged; selection only removes from what the budget sees, so it cannot surface anything governance, currentness or forgetting refused.
 - **`AgentMemory.recall(..., return_selection="ranked_prefix")`** returns exactly the `1.4.0` ranked prefix and `return_policy` (for rank-depth consumers such as recall@k evaluations). The default is `"relevance_sufficient"`.
