@@ -119,6 +119,24 @@ These letter IDs are **virtual library shelves**, not additional filesystem dire
 6. **On conflicting claims**, log the two source paths, the subject area and exact revisions; decide which owner controls that claim. Repair the subordinate/stale text with a pointer. Do **not** resolve disagreement by creating yet another reconciliation summary.
 7. **Verify before merge** with the repository's local Markdown/path validators and an independent five-question cold-start exercise. No hosted CI is required for this editorial test, and tests not run must be labeled NOT RUN.
 
+### Claim ownership declarations (curated, not a second status register)
+
+The IDs below identify **questions and their sole normative owner**, not the answers at today's revision. A derived page may cite the owner but must not become a second source of acceptance. The validator checks unique IDs, known classes, stable repository-local owner paths and declared linkages; it does **not** guess semantic contradictions from arbitrary prose.
+
+<!-- BEGIN CLAIM OWNERS -->
+| Claim ID | Class | Primary owner |
+|---|---|---|
+| public-api-contract | contract | docs/44-public-api-contract.md |
+| canonical-substrate-maturity | qualification | docs/43-substrate-inventory-and-maturity.md |
+| runtime-baseline-identity | baseline | reports/runtime/baseline-register.json |
+| benchmark-measured-outcomes | evidence | reports/benchmarks/dashboard/current.md |
+| architectural-decision-status | doctrine | docs/adr/README.md |
+| roadmap-work-queue | roadmap | docs/BACKLOG.md |
+| release-integration-status | delivery | docs/SYSTEM_STATE.md |
+<!-- END CLAIM OWNERS -->
+
+**Release-integration-status is a revision-bound documentation pointer**, not a replacement for live [#410](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/410). The current decision is always verified against that issue, exact code and baseline evidence. On disputed ownership, mark the claim *unresolved* and record both sources in the governing issue; do not crown the newer document. Before any supersession, record the old owner/revision, new owner/revision, effective acceptance event, and subordinate backlinks.
+
 ## 5. Cold-start path for agents
 
 From [this catalog](ARCHITECTURE_INDEX.md), an agent should be able to answer, with primary-source pointers:
