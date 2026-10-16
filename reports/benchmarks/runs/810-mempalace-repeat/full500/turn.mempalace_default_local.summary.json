@@ -1,0 +1,572 @@
+{
+  "aggregate": {
+    "evaluated_question_count": 419,
+    "excluded_abstention_count": 30,
+    "excluded_no_user_target_count": 51,
+    "headline": {
+      "recall_all@5": 0.668258,
+      "ndcg_any@5": 0.696148,
+      "recall_all@10": 0.804296,
+      "ndcg_any@10": 0.729393,
+      "recall_all@50": 0.942721,
+      "ndcg_any@50": 0.754667
+    },
+    "metrics": {
+      "turn": {
+        "ndcg_any@1": 0.596659,
+        "ndcg_any@10": 0.729393,
+        "ndcg_any@3": 0.643589,
+        "ndcg_any@30": 0.748165,
+        "ndcg_any@5": 0.696148,
+        "ndcg_any@50": 0.754667,
+        "recall_all@1": 0.181384,
+        "recall_all@10": 0.804296,
+        "recall_all@3": 0.515513,
+        "recall_all@30": 0.902148,
+        "recall_all@5": 0.668258,
+        "recall_all@50": 0.942721,
+        "recall_any@1": 0.596659,
+        "recall_any@10": 0.942721,
+        "recall_any@3": 0.840095,
+        "recall_any@30": 0.97136,
+        "recall_any@5": 0.906921,
+        "recall_any@50": 0.990453
+      },
+      "turn_to_session": {
+        "ndcg_any@1": 0.596659,
+        "ndcg_any@10": 0.739063,
+        "ndcg_any@3": 0.667007,
+        "ndcg_any@30": 0.754667,
+        "ndcg_any@5": 0.714111,
+        "ndcg_any@50": 0.754667,
+        "recall_all@1": 0.190931,
+        "recall_all@10": 0.859189,
+        "recall_all@3": 0.589499,
+        "recall_all@30": 0.952267,
+        "recall_all@5": 0.761337,
+        "recall_all@50": 0.952267,
+        "recall_any@1": 0.596659,
+        "recall_any@10": 0.954654,
+        "recall_any@3": 0.880668,
+        "recall_any@30": 0.990453,
+        "recall_any@5": 0.926014,
+        "recall_any@50": 0.990453
+      }
+    },
+    "abstention_diagnostic": {
+      "upstream_metric": false,
+      "question_count": 30,
+      "returned_any_rate": 1.0,
+      "mean_returned_count": 49.066667
+    }
+  },
+  "by_question_type": {
+    "knowledge-update": {
+      "evaluated_question_count": 72,
+      "excluded_abstention_count": 6,
+      "excluded_no_user_target_count": 0,
+      "headline": {
+        "recall_all@5": 0.875,
+        "ndcg_any@5": 0.779839,
+        "recall_all@10": 0.986111,
+        "ndcg_any@10": 0.800564,
+        "recall_all@50": 1.0,
+        "ndcg_any@50": 0.802441
+      },
+      "metrics": {
+        "turn": {
+          "ndcg_any@1": 0.527778,
+          "ndcg_any@10": 0.800564,
+          "ndcg_any@3": 0.698917,
+          "ndcg_any@30": 0.802441,
+          "ndcg_any@5": 0.779839,
+          "ndcg_any@50": 0.802441,
+          "recall_all@1": 0.0,
+          "recall_all@10": 0.986111,
+          "recall_all@3": 0.625,
+          "recall_all@30": 1.0,
+          "recall_all@5": 0.875,
+          "recall_all@50": 1.0,
+          "recall_any@1": 0.527778,
+          "recall_any@10": 1.0,
+          "recall_any@3": 0.902778,
+          "recall_any@30": 1.0,
+          "recall_any@5": 1.0,
+          "recall_any@50": 1.0
+        },
+        "turn_to_session": {
+          "ndcg_any@1": 0.527778,
+          "ndcg_any@10": 0.800564,
+          "ndcg_any@3": 0.747043,
+          "ndcg_any@30": 0.802441,
+          "ndcg_any@5": 0.800564,
+          "ndcg_any@50": 0.802441,
+          "recall_all@1": 0.0,
+          "recall_all@10": 0.986111,
+          "recall_all@3": 0.736111,
+          "recall_all@30": 1.0,
+          "recall_all@5": 0.986111,
+          "recall_all@50": 1.0,
+          "recall_any@1": 0.527778,
+          "recall_any@10": 1.0,
+          "recall_any@3": 1.0,
+          "recall_any@30": 1.0,
+          "recall_any@5": 1.0,
+          "recall_any@50": 1.0
+        }
+      },
+      "abstention_diagnostic": {
+        "upstream_metric": false,
+        "question_count": 6,
+        "returned_any_rate": 1.0,
+        "mean_returned_count": 49.0
+      }
+    },
+    "multi-session": {
+      "evaluated_question_count": 121,
+      "excluded_abstention_count": 12,
+      "excluded_no_user_target_count": 0,
+      "headline": {
+        "recall_all@5": 0.438017,
+        "ndcg_any@5": 0.584584,
+        "recall_all@10": 0.619835,
+        "ndcg_any@10": 0.630288,
+        "recall_all@50": 0.876033,
+        "ndcg_any@50": 0.675226
+      },
+      "metrics": {
+        "turn": {
+          "ndcg_any@1": 0.553719,
+          "ndcg_any@10": 0.630288,
+          "ndcg_any@3": 0.525141,
+          "ndcg_any@30": 0.666757,
+          "ndcg_any@5": 0.584584,
+          "ndcg_any@50": 0.675226,
+          "recall_all@1": 0.0,
+          "recall_all@10": 0.619835,
+          "recall_all@3": 0.247934,
+          "recall_all@30": 0.826446,
+          "recall_all@5": 0.438017,
+          "recall_all@50": 0.876033,
+          "recall_any@1": 0.553719,
+          "recall_any@10": 0.958678,
+          "recall_any@3": 0.85124,
+          "recall_any@30": 0.983471,
+          "recall_any@5": 0.92562,
+          "recall_any@50": 1.0
+        },
+        "turn_to_session": {
+          "ndcg_any@1": 0.553719,
+          "ndcg_any@10": 0.649342,
+          "ndcg_any@3": 0.5442,
+          "ndcg_any@30": 0.675226,
+          "ndcg_any@5": 0.611112,
+          "ndcg_any@50": 0.675226,
+          "recall_all@1": 0.0,
+          "recall_all@10": 0.735537,
+          "recall_all@3": 0.305785,
+          "recall_all@30": 0.900826,
+          "recall_all@5": 0.553719,
+          "recall_all@50": 0.900826,
+          "recall_any@1": 0.553719,
+          "recall_any@10": 0.966942,
+          "recall_any@3": 0.884298,
+          "recall_any@30": 1.0,
+          "recall_any@5": 0.950413,
+          "recall_any@50": 1.0
+        }
+      },
+      "abstention_diagnostic": {
+        "upstream_metric": false,
+        "question_count": 12,
+        "returned_any_rate": 1.0,
+        "mean_returned_count": 49.166667
+      }
+    },
+    "single-session-assistant": {
+      "evaluated_question_count": 5,
+      "excluded_abstention_count": 0,
+      "excluded_no_user_target_count": 51,
+      "headline": {
+        "recall_all@5": 1.0,
+        "ndcg_any@5": 0.886135,
+        "recall_all@10": 1.0,
+        "ndcg_any@10": 0.886135,
+        "recall_all@50": 1.0,
+        "ndcg_any@50": 0.886135
+      },
+      "metrics": {
+        "turn": {
+          "ndcg_any@1": 0.8,
+          "ndcg_any@10": 0.886135,
+          "ndcg_any@3": 0.8,
+          "ndcg_any@30": 0.886135,
+          "ndcg_any@5": 0.886135,
+          "ndcg_any@50": 0.886135,
+          "recall_all@1": 0.8,
+          "recall_all@10": 1.0,
+          "recall_all@3": 0.8,
+          "recall_all@30": 1.0,
+          "recall_all@5": 1.0,
+          "recall_all@50": 1.0,
+          "recall_any@1": 0.8,
+          "recall_any@10": 1.0,
+          "recall_any@3": 0.8,
+          "recall_any@30": 1.0,
+          "recall_any@5": 1.0,
+          "recall_any@50": 1.0
+        },
+        "turn_to_session": {
+          "ndcg_any@1": 0.8,
+          "ndcg_any@10": 0.886135,
+          "ndcg_any@3": 0.886135,
+          "ndcg_any@30": 0.886135,
+          "ndcg_any@5": 0.886135,
+          "ndcg_any@50": 0.886135,
+          "recall_all@1": 0.8,
+          "recall_all@10": 1.0,
+          "recall_all@3": 1.0,
+          "recall_all@30": 1.0,
+          "recall_all@5": 1.0,
+          "recall_all@50": 1.0,
+          "recall_any@1": 0.8,
+          "recall_any@10": 1.0,
+          "recall_any@3": 1.0,
+          "recall_any@30": 1.0,
+          "recall_any@5": 1.0,
+          "recall_any@50": 1.0
+        }
+      },
+      "abstention_diagnostic": {
+        "upstream_metric": false,
+        "question_count": 0,
+        "returned_any_rate": 0.0,
+        "mean_returned_count": 0.0
+      }
+    },
+    "single-session-preference": {
+      "evaluated_question_count": 30,
+      "excluded_abstention_count": 0,
+      "excluded_no_user_target_count": 0,
+      "headline": {
+        "recall_all@5": 0.433333,
+        "ndcg_any@5": 0.483373,
+        "recall_all@10": 0.666667,
+        "ndcg_any@10": 0.547492,
+        "recall_all@50": 0.966667,
+        "ndcg_any@50": 0.604149
+      },
+      "metrics": {
+        "turn": {
+          "ndcg_any@1": 0.333333,
+          "ndcg_any@10": 0.547492,
+          "ndcg_any@3": 0.432226,
+          "ndcg_any@30": 0.579385,
+          "ndcg_any@5": 0.483373,
+          "ndcg_any@50": 0.604149,
+          "recall_all@1": 0.2,
+          "recall_all@10": 0.666667,
+          "recall_all@3": 0.366667,
+          "recall_all@30": 0.8,
+          "recall_all@5": 0.433333,
+          "recall_all@50": 0.966667,
+          "recall_any@1": 0.333333,
+          "recall_any@10": 0.766667,
+          "recall_any@3": 0.533333,
+          "recall_any@30": 0.9,
+          "recall_any@5": 0.633333,
+          "recall_any@50": 1.0
+        },
+        "turn_to_session": {
+          "ndcg_any@1": 0.333333,
+          "ndcg_any@10": 0.560475,
+          "ndcg_any@3": 0.447007,
+          "ndcg_any@30": 0.604149,
+          "ndcg_any@5": 0.513043,
+          "ndcg_any@50": 0.604149,
+          "recall_all@1": 0.333333,
+          "recall_all@10": 0.8,
+          "recall_all@3": 0.566667,
+          "recall_all@30": 1.0,
+          "recall_all@5": 0.7,
+          "recall_all@50": 1.0,
+          "recall_any@1": 0.333333,
+          "recall_any@10": 0.8,
+          "recall_any@3": 0.566667,
+          "recall_any@30": 1.0,
+          "recall_any@5": 0.7,
+          "recall_any@50": 1.0
+        }
+      },
+      "abstention_diagnostic": {
+        "upstream_metric": false,
+        "question_count": 0,
+        "returned_any_rate": 0.0,
+        "mean_returned_count": 0.0
+      }
+    },
+    "single-session-user": {
+      "evaluated_question_count": 64,
+      "excluded_abstention_count": 6,
+      "excluded_no_user_target_count": 0,
+      "headline": {
+        "recall_all@5": 0.953125,
+        "ndcg_any@5": 0.933779,
+        "recall_all@10": 1.0,
+        "ndcg_any@10": 0.949682,
+        "recall_all@50": 1.0,
+        "ndcg_any@50": 0.949682
+      },
+      "metrics": {
+        "turn": {
+          "ndcg_any@1": 0.796875,
+          "ndcg_any@10": 0.949682,
+          "ndcg_any@3": 0.925967,
+          "ndcg_any@30": 0.949682,
+          "ndcg_any@5": 0.933779,
+          "ndcg_any@50": 0.949682,
+          "recall_all@1": 0.796875,
+          "recall_all@10": 1.0,
+          "recall_all@3": 0.9375,
+          "recall_all@30": 1.0,
+          "recall_all@5": 0.953125,
+          "recall_all@50": 1.0,
+          "recall_any@1": 0.796875,
+          "recall_any@10": 1.0,
+          "recall_any@3": 0.9375,
+          "recall_any@30": 1.0,
+          "recall_any@5": 0.953125,
+          "recall_any@50": 1.0
+        },
+        "turn_to_session": {
+          "ndcg_any@1": 0.796875,
+          "ndcg_any@10": 0.949682,
+          "ndcg_any@3": 0.939824,
+          "ndcg_any@30": 0.949682,
+          "ndcg_any@5": 0.939824,
+          "ndcg_any@50": 0.949682,
+          "recall_all@1": 0.796875,
+          "recall_all@10": 1.0,
+          "recall_all@3": 0.96875,
+          "recall_all@30": 1.0,
+          "recall_all@5": 0.96875,
+          "recall_all@50": 1.0,
+          "recall_any@1": 0.796875,
+          "recall_any@10": 1.0,
+          "recall_any@3": 0.96875,
+          "recall_any@30": 1.0,
+          "recall_any@5": 0.96875,
+          "recall_any@50": 1.0
+        }
+      },
+      "abstention_diagnostic": {
+        "upstream_metric": false,
+        "question_count": 6,
+        "returned_any_rate": 1.0,
+        "mean_returned_count": 49.5
+      }
+    },
+    "temporal-reasoning": {
+      "evaluated_question_count": 127,
+      "excluded_abstention_count": 6,
+      "excluded_no_user_target_count": 0,
+      "headline": {
+        "recall_all@5": 0.669291,
+        "ndcg_any@5": 0.678024,
+        "recall_all@10": 0.80315,
+        "ndcg_any@10": 0.709254,
+        "recall_all@50": 0.937008,
+        "ndcg_any@50": 0.735374
+      },
+      "metrics": {
+        "turn": {
+          "ndcg_any@1": 0.629921,
+          "ndcg_any@10": 0.709254,
+          "ndcg_any@3": 0.626545,
+          "ndcg_any@30": 0.727842,
+          "ndcg_any@5": 0.678024,
+          "ndcg_any@50": 0.735374,
+          "recall_all@1": 0.11811,
+          "recall_all@10": 0.80315,
+          "recall_all@3": 0.519685,
+          "recall_all@30": 0.889764,
+          "recall_all@5": 0.669291,
+          "recall_all@50": 0.937008,
+          "recall_any@1": 0.629921,
+          "recall_any@10": 0.905512,
+          "recall_any@3": 0.818898,
+          "recall_any@30": 0.944882,
+          "recall_any@5": 0.874016,
+          "recall_any@50": 0.968504
+        },
+        "turn_to_session": {
+          "ndcg_any@1": 0.629921,
+          "ndcg_any@10": 0.719936,
+          "ndcg_any@3": 0.644495,
+          "ndcg_any@30": 0.735374,
+          "ndcg_any@5": 0.690211,
+          "ndcg_any@50": 0.735374,
+          "recall_all@1": 0.11811,
+          "recall_all@10": 0.84252,
+          "recall_all@3": 0.574803,
+          "recall_all@30": 0.937008,
+          "recall_all@5": 0.732283,
+          "recall_all@50": 0.937008,
+          "recall_any@1": 0.629921,
+          "recall_any@10": 0.929134,
+          "recall_any@3": 0.834646,
+          "recall_any@30": 0.968504,
+          "recall_any@5": 0.889764,
+          "recall_any@50": 0.968504
+        }
+      },
+      "abstention_diagnostic": {
+        "upstream_metric": false,
+        "question_count": 6,
+        "returned_any_rate": 1.0,
+        "mean_returned_count": 48.5
+      }
+    }
+  },
+  "currentness": {
+    "knowledge_update": {
+      "evaluated_question_count": 72,
+      "excluded_abstention_count": 6,
+      "excluded_no_user_target_count": 0,
+      "headline": {
+        "recall_all@5": 0.875,
+        "ndcg_any@5": 0.779839,
+        "recall_all@10": 0.986111,
+        "ndcg_any@10": 0.800564,
+        "recall_all@50": 1.0,
+        "ndcg_any@50": 0.802441
+      },
+      "metrics": {
+        "turn": {
+          "ndcg_any@1": 0.527778,
+          "ndcg_any@10": 0.800564,
+          "ndcg_any@3": 0.698917,
+          "ndcg_any@30": 0.802441,
+          "ndcg_any@5": 0.779839,
+          "ndcg_any@50": 0.802441,
+          "recall_all@1": 0.0,
+          "recall_all@10": 0.986111,
+          "recall_all@3": 0.625,
+          "recall_all@30": 1.0,
+          "recall_all@5": 0.875,
+          "recall_all@50": 1.0,
+          "recall_any@1": 0.527778,
+          "recall_any@10": 1.0,
+          "recall_any@3": 0.902778,
+          "recall_any@30": 1.0,
+          "recall_any@5": 1.0,
+          "recall_any@50": 1.0
+        },
+        "turn_to_session": {
+          "ndcg_any@1": 0.527778,
+          "ndcg_any@10": 0.800564,
+          "ndcg_any@3": 0.747043,
+          "ndcg_any@30": 0.802441,
+          "ndcg_any@5": 0.800564,
+          "ndcg_any@50": 0.802441,
+          "recall_all@1": 0.0,
+          "recall_all@10": 0.986111,
+          "recall_all@3": 0.736111,
+          "recall_all@30": 1.0,
+          "recall_all@5": 0.986111,
+          "recall_all@50": 1.0,
+          "recall_any@1": 0.527778,
+          "recall_any@10": 1.0,
+          "recall_any@3": 1.0,
+          "recall_any@30": 1.0,
+          "recall_any@5": 1.0,
+          "recall_any@50": 1.0
+        }
+      },
+      "abstention_diagnostic": {
+        "upstream_metric": false,
+        "question_count": 6,
+        "returned_any_rate": 1.0,
+        "mean_returned_count": 49.0
+      }
+    },
+    "latest_gold_ranked_first": {
+      "upstream_metric": false,
+      "definition": "among scored knowledge-update questions with gold items on >=2 distinct dates, fraction where the most recently dated gold item is returned ahead of every older gold item",
+      "applicable_question_count": 70,
+      "rate": 0.514286
+    }
+  },
+  "failures": {
+    "runtime_failure_count": 0,
+    "ingestion_failure_count": 0,
+    "out_of_corpus_returned_count": 0
+  },
+  "question_count_completed": 500,
+  "question_count_preregistered": 500,
+  "missing_question_ids": [],
+  "external_system": {
+    "system_id": "mempalace",
+    "system_kind": "external_memory",
+    "system_revision": "3.11.0@602d796c699cabba2971982cd9dccbbf46abfe79",
+    "adapter_id": "reference/longmemeval_mempalace_bridge.py",
+    "adapter_revision": "0.1.0-candidate",
+    "boundary": "MemPalace MCP stdio server, public mempalace_add_drawer / mempalace_search tools, product defaults, local ONNX MiniLM embeddings, no LLM; retrieval only",
+    "configuration": {
+      "repository": "https://github.com/MemPalace/mempalace",
+      "tag": "v3.11.0",
+      "tag_commit": "602d796c699cabba2971982cd9dccbbf46abfe79",
+      "source_checkout_verified": "602d796c699cabba2971982cd9dccbbf46abfe79",
+      "install": {
+        "version": "3.11.0",
+        "package_dir": "/tmp/c2/mempalace-venv/lib/python3.13/site-packages/mempalace",
+        "package_tree_sha256": "5bdf5b112e1790c0089e22d5f9f71e4432b771c8eeaad7cd729e1371a27f192c",
+        "package_file_count": 169,
+        "editable": false,
+        "install_url": "file:///tmp/mempalace-src"
+      },
+      "package_tree_sha256": "5bdf5b112e1790c0089e22d5f9f71e4432b771c8eeaad7cd729e1371a27f192c",
+      "server": "python -s -m mempalace.mcp_server --palace <per-question dir> (stdio JSON-RPC)",
+      "ingest": {
+        "tool": "mempalace_add_drawer",
+        "wing": "longmemeval",
+        "room": "history",
+        "content": "frozen corpus item text, verbatim, one call per non-blank occurrence",
+        "source_file": "opaque uuid5(namespace, doc_id[, NUL k]) key; ids never in text",
+        "product_defaults": "chunk_size 800 chars, no overlap, for content above it; drawer id = hash(wing|room|content), identical content returns already_exists; no closets, no room classification, no entity extraction on this path"
+      },
+      "search": {
+        "tool": "mempalace_search",
+        "limit": 50,
+        "product_defaults": "candidate_strategy vector, vector pool limit*4, hybrid rerank 0.6 vector + 0.4 BM25 (min-max over pool), closet boost (inert: no closets filed), max_distance 1.5, query sanitizer (passthrough <=200 chars), identical >=100-char hits folded across sources into also_in"
+      },
+      "embeddings": {
+        "embedder": "minilm (mempalace default)",
+        "model": "all-MiniLM-L6-v2",
+        "source_url": "https://chroma-onnx-models.s3.amazonaws.com/all-MiniLM-L6-v2/onnx.tar.gz",
+        "upstream": "sentence-transformers/all-MiniLM-L6-v2 (ONNX export distributed by ChromaDB)",
+        "files_sha256": {
+          "onnx.tar.gz": "913d7300ceae3b2dbc2c50d1de4baacab4be7b9380491c27fab7418616a16ec3",
+          "onnx/config.json": "b567c7d5a55b636c95186aaf993f9a8920842b7e05a9e703e68b23cab2c3a670",
+          "onnx/model.onnx": "4f148ba8ae9c2c7fbee4af2b132db8d06c6a6545b47fc83bbb98c3d22b8393e6",
+          "onnx/special_tokens_map.json": "b6d346be366a7d1d48332dbc9fdf3bf8960b5d879522b7799ddba59e76237ee3",
+          "onnx/tokenizer.json": "da0e79933b9ed51798a3ae27893d3c5fa4a201126cef75586296df9b4d2c62a0",
+          "onnx/tokenizer_config.json": "7702051bbc4953b94d47fa1d61b42ed4cbb3c71b501a8dd7183a823f8bea1f20",
+          "onnx/vocab.txt": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3"
+        },
+        "tokenizer": "chromadb truncation/padding 256 tokens",
+        "runtime": "onnxruntime CPUExecutionProvider"
+      },
+      "backend": "chroma (default)",
+      "embedding_threads": "1",
+      "llm": "none: no LLM on the add_drawer/search path; credentials refused; child env is clean",
+      "isolation": "fresh palace + config dir + HOME + server process per question; deleted after recall",
+      "ranked_ids": "returned hit drawer_id (+ also_in refs) mapped via add_drawer results; source_path checked",
+      "gold_access": "none",
+      "qualification": "candidate until independent review",
+      "not_used": "benchmarks/longmemeval_bench.py (its raw mode bypasses the package and measures ChromaDB)"
+    },
+    "authority_effect": "none",
+    "backend": "mempalace_default_local"
+  }
+}

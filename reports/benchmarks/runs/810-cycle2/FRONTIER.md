@@ -31,7 +31,7 @@
 **Repeat status:**
 - Agent Memory: 2,000 of 2,000 control rows identical on a second host.
 - Hindsight: recall_all@{5,10,50} identical across hosts; order and recall_all@3 vary (D2).
-- MemPalace: no LongMemEval repeat yet. This is a gap in the evidence.
+- MemPalace: repeated on an independent host (`../810-mempalace-repeat/full500`, preregistered). Ranked lists identical on 500/500 questions on both planes, so the paired results above are unchanged. Pending independent review.
 
 ### Where the gap comes from
 

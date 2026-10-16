@@ -1,0 +1,229 @@
+{
+  "backend": "mempalace_default_local",
+  "planes": {
+    "session": {
+      "native_summary": {
+        "repeat_aggregate": {
+          "evaluated_question_count": 419,
+          "excluded_abstention_count": 30,
+          "excluded_no_user_target_count": 51,
+          "headline": {
+            "recall_all@5": 0.880668,
+            "ndcg_any@5": 0.901231,
+            "recall_all@10": 0.940334,
+            "ndcg_any@10": 0.915301
+          },
+          "metrics": {
+            "session": {
+              "ndcg_any@1": 0.873508,
+              "ndcg_any@10": 0.915301,
+              "ndcg_any@3": 0.883581,
+              "ndcg_any@30": 0.923288,
+              "ndcg_any@5": 0.901231,
+              "ndcg_any@50": 0.923288,
+              "recall_all@1": 0.243437,
+              "recall_all@10": 0.940334,
+              "recall_all@3": 0.801909,
+              "recall_all@30": 1.0,
+              "recall_all@5": 0.880668,
+              "recall_all@50": 1.0,
+              "recall_any@1": 0.873508,
+              "recall_any@10": 0.98568,
+              "recall_any@3": 0.945107,
+              "recall_any@30": 1.0,
+              "recall_any@5": 0.966587,
+              "recall_any@50": 1.0
+            }
+          },
+          "abstention_diagnostic": {
+            "upstream_metric": false,
+            "question_count": 30,
+            "returned_any_rate": 1.0,
+            "mean_returned_count": 31.3
+          }
+        },
+        "identical_to_original": {
+          "aggregate": true,
+          "by_question_type": true,
+          "currentness": true,
+          "failures": true,
+          "question_count_completed": true
+        }
+      },
+      "agreement": {
+        "questions": 500,
+        "scored": 419,
+        "status_differs": 0,
+        "ranked_list_differs_all": 0,
+        "ranked_list_differs_scored": 0,
+        "metric_differs_scored": {
+          "recall_all@5": 0,
+          "recall_all@10": 0,
+          "recall_all@50": 0
+        },
+        "all_metrics_identical_scored": 419
+      },
+      "paired_vs_agent_memory": {
+        "recall_all@5": {
+          "mempalace": 0.880668,
+          "agent_memory": 0.823389,
+          "mempalace_full_wins": 29,
+          "agent_memory_full_wins": 5,
+          "exact_mcnemar_p": 3.86e-05,
+          "delta_mean": 0.0573,
+          "delta_95ci_bootstrap": [
+            0.031,
+            0.0835
+          ]
+        },
+        "recall_all@10": {
+          "mempalace": 0.940334,
+          "agent_memory": 0.892601,
+          "mempalace_full_wins": 22,
+          "agent_memory_full_wins": 2,
+          "exact_mcnemar_p": 3.59e-05,
+          "delta_mean": 0.0477,
+          "delta_95ci_bootstrap": [
+            0.0263,
+            0.0716
+          ]
+        },
+        "recall_all@50": {
+          "mempalace": 1.0,
+          "agent_memory": 1.0,
+          "mempalace_full_wins": 0,
+          "agent_memory_full_wins": 0,
+          "exact_mcnemar_p": 1.0,
+          "delta_mean": 0.0,
+          "delta_95ci_bootstrap": [
+            0.0,
+            0.0
+          ]
+        }
+      }
+    },
+    "turn": {
+      "native_summary": {
+        "repeat_aggregate": {
+          "evaluated_question_count": 419,
+          "excluded_abstention_count": 30,
+          "excluded_no_user_target_count": 51,
+          "headline": {
+            "recall_all@5": 0.668258,
+            "ndcg_any@5": 0.696148,
+            "recall_all@10": 0.804296,
+            "ndcg_any@10": 0.729393,
+            "recall_all@50": 0.942721,
+            "ndcg_any@50": 0.754667
+          },
+          "metrics": {
+            "turn": {
+              "ndcg_any@1": 0.596659,
+              "ndcg_any@10": 0.729393,
+              "ndcg_any@3": 0.643589,
+              "ndcg_any@30": 0.748165,
+              "ndcg_any@5": 0.696148,
+              "ndcg_any@50": 0.754667,
+              "recall_all@1": 0.181384,
+              "recall_all@10": 0.804296,
+              "recall_all@3": 0.515513,
+              "recall_all@30": 0.902148,
+              "recall_all@5": 0.668258,
+              "recall_all@50": 0.942721,
+              "recall_any@1": 0.596659,
+              "recall_any@10": 0.942721,
+              "recall_any@3": 0.840095,
+              "recall_any@30": 0.97136,
+              "recall_any@5": 0.906921,
+              "recall_any@50": 0.990453
+            },
+            "turn_to_session": {
+              "ndcg_any@1": 0.596659,
+              "ndcg_any@10": 0.739063,
+              "ndcg_any@3": 0.667007,
+              "ndcg_any@30": 0.754667,
+              "ndcg_any@5": 0.714111,
+              "ndcg_any@50": 0.754667,
+              "recall_all@1": 0.190931,
+              "recall_all@10": 0.859189,
+              "recall_all@3": 0.589499,
+              "recall_all@30": 0.952267,
+              "recall_all@5": 0.761337,
+              "recall_all@50": 0.952267,
+              "recall_any@1": 0.596659,
+              "recall_any@10": 0.954654,
+              "recall_any@3": 0.880668,
+              "recall_any@30": 0.990453,
+              "recall_any@5": 0.926014,
+              "recall_any@50": 0.990453
+            }
+          },
+          "abstention_diagnostic": {
+            "upstream_metric": false,
+            "question_count": 30,
+            "returned_any_rate": 1.0,
+            "mean_returned_count": 49.066667
+          }
+        },
+        "identical_to_original": {
+          "aggregate": true,
+          "by_question_type": true,
+          "currentness": true,
+          "failures": true,
+          "question_count_completed": true
+        }
+      },
+      "agreement": {
+        "questions": 500,
+        "scored": 419,
+        "status_differs": 0,
+        "ranked_list_differs_all": 0,
+        "ranked_list_differs_scored": 0,
+        "metric_differs_scored": {
+          "recall_all@5": 0,
+          "recall_all@10": 0,
+          "recall_all@50": 0
+        },
+        "all_metrics_identical_scored": 419
+      },
+      "paired_vs_agent_memory": {
+        "recall_all@5": {
+          "mempalace": 0.668258,
+          "agent_memory": 0.601432,
+          "mempalace_full_wins": 36,
+          "agent_memory_full_wins": 8,
+          "exact_mcnemar_p": 2.54e-05,
+          "delta_mean": 0.0668,
+          "delta_95ci_bootstrap": [
+            0.0358,
+            0.0979
+          ]
+        },
+        "recall_all@10": {
+          "mempalace": 0.804296,
+          "agent_memory": 0.72315,
+          "mempalace_full_wins": 37,
+          "agent_memory_full_wins": 3,
+          "exact_mcnemar_p": 1.95e-08,
+          "delta_mean": 0.0811,
+          "delta_95ci_bootstrap": [
+            0.0525,
+            0.1098
+          ]
+        },
+        "recall_all@50": {
+          "mempalace": 0.942721,
+          "agent_memory": 0.859189,
+          "mempalace_full_wins": 36,
+          "agent_memory_full_wins": 1,
+          "exact_mcnemar_p": 5.53e-10,
+          "delta_mean": 0.0835,
+          "delta_95ci_bootstrap": [
+            0.0573,
+            0.1122
+          ]
+        }
+      }
+    }
+  }
+}

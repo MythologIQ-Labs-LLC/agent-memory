@@ -37,7 +37,7 @@ So the queue below is ranked for execution **after an owner decision on inferenc
 
 **Do now. CPU-feasible, no inference, once the host is not saturated:**
 
-1. **MemPalace LongMemEval repeat,** or a subset repeat. It is the only full-500 peer without a LongMemEval repeat (review G). The external lane owns MemPalace, so coordinate with it rather than duplicate.
+1. ~~MemPalace LongMemEval repeat~~ **done** 2026-10-16: identical on both planes (`../810-mempalace-repeat/full500`). The external lane's original run was not modified.
 2. **Letta full 500, session plane** (about 48 inserts per question at about 55 s, so roughly 8 h on one core). It would move Letta from the subset to the reviewed full-500 lane. Run it only after the Cognee gen-2 and Jev-Mem CPU runs on this host are resolved, because the host is saturated now.
 3. **Independent review of this branch's cycle-2 rows** (Letta, Cognee AMB, the second Hindsight adapter), mirroring `independent-review-810.md`. These rows are currently class B.
 
