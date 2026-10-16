@@ -1,0 +1,2 @@
+FAILED reference/tests/test_benchmark_integration_contract.py::BenchmarkIntegrationContractTests::test_evaluation_only_change_keeps_runtime_baseline_equivalence
+1 failed, 2662 passed, 31 skipped, 1 xfailed, 4 warnings, 1574 subtests passed in 194.54s (0:03:14)
