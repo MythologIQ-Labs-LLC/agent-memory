@@ -323,40 +323,42 @@ class DeterministicMultiRouteRecallPlanner:
 
         # #671: guarded cross-fact currentness evidence (empty outside explicit-current intent)
         cross_fact = self.adapter.cross_fact_applicability(admission.admitted, intent)
-        ranked, ranking_evidence = MULTI_ROUTE_RANKING_POLICY.rank(
-            admission.admitted,
-            by_candidate,
-            substrate.get_fact,
-            query=query,
-            intent=intent,
-            cross_fact=cross_fact,
-        )
-        base_ranked, policy = list(ranked), MULTI_ROUTE_RANKING_POLICY
+        policy, status, dense = MULTI_ROUTE_RANKING_POLICY, None, None
         if SEMANTIC_VECTOR_ROUTE in routes_executed and admission.admitted:
             # #819 C7: fuse only admitted memories; similarity orders and never admits.
-            status = None
             if len(admission.admitted) > FUSION_MAX_ADMITTED:
                 status = "skipped_over_limit"
             else:
                 try:
                     dense = self.vector_retriever.similarities(
                         query, [substrate.get_fact(ref) for ref in admission.admitted])
+                    policy = FUSED_RANKING_POLICY
                 except RepresentationUnavailable:
                     status = "unavailable"
-            if status is None:
-                policy = FUSED_RANKING_POLICY
-                ranked, ranking_evidence = policy.rank(
-                    admission.admitted,
-                    by_candidate,
-                    substrate.get_fact,
-                    query=query,
-                    intent=intent,
-                    cross_fact=cross_fact,
-                    dense_scores=dense,
-                )
-            else:
-                for record in ranking_evidence.values():
-                    record["fusion"] = {"status": status, "authority_effect": "none"}
+        ranked, ranking_evidence = policy.rank(
+            admission.admitted,
+            by_candidate,
+            substrate.get_fact,
+            query=query,
+            intent=intent,
+            cross_fact=cross_fact,
+            dense_scores=dense,
+        )
+        if status is not None:
+            for record in ranking_evidence.values():
+                record["fusion"] = {"status": status, "authority_effect": "none"}
+        base_ranked = list(ranked)
+        if policy is FUSED_RANKING_POLICY and discovery_expansion:
+            # #819 C8: only relevance-sufficient selection reads the 3.4.0 base order, so the
+            # second ranking pass runs only for it (``discovery_expansion`` marks that mode).
+            base_ranked, _ = MULTI_ROUTE_RANKING_POLICY.rank(
+                admission.admitted,
+                by_candidate,
+                substrate.get_fact,
+                query=query,
+                intent=intent,
+                cross_fact=cross_fact,
+            )
         return MultiRouteRecallResult(
             query=query,
             routes_executed=tuple(routes_executed),

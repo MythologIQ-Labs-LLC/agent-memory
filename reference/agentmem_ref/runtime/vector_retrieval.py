@@ -185,6 +185,8 @@ class NativeVectorCandidateRetriever:
         # #819 C6: with a policy, ``minimum_similarity`` is not applied; the policy decides.
         self.proposal_policy = proposal_policy
         self._last_query: tuple[str, tuple[float, ...]] | None = None  # #819 C7: one embedding per recall
+        # #819 C8: the cosines the latest search computed, keyed by fact uuid, for that query only.
+        self._last_scores: tuple[str, dict[str, float]] | None = None
         self.spec = representation.spec
         if not math.isfinite(minimum_similarity):
             raise ValueError("minimum_similarity must be finite")
@@ -228,6 +230,7 @@ class NativeVectorCandidateRetriever:
         ``bounded=False`` ignores any ``proposal_policy`` (#819 C6): the absolute floor and
         ``candidate_limit`` apply exactly as before the policy existed.
         """
+        self._last_scores = None
         if candidate_limit < 0:
             raise ValueError("candidate_limit must be non-negative")
         if candidate_limit == 0:
@@ -240,6 +243,7 @@ class NativeVectorCandidateRetriever:
             return []
 
         policy = self.proposal_policy if bounded else None
+        scanned: dict[str, float] = {}
         hits: list[VectorCandidateHit] = []
         for fact in substrate.all_facts():
             if fact.group_id != group_id:
@@ -256,6 +260,7 @@ class NativeVectorCandidateRetriever:
                     self.representation.embed(fact.fact_text)
                 )
             similarity = self._cosine(query_vector, candidate_vector)
+            scanned[fact.uuid] = similarity
             if policy is None and similarity <= self.minimum_similarity:
                 continue
             hits.append(
@@ -270,6 +275,7 @@ class NativeVectorCandidateRetriever:
                 )
             )
 
+        self._last_scores = (query, scanned)
         hits.sort(key=lambda item: (-item.similarity, item.candidate_ref))
         if policy is not None:
             hits = policy.propose(query, hits)
@@ -293,8 +299,14 @@ class NativeVectorCandidateRetriever:
         """
 
         query_vector = self._query_vector(query)
+        # #819 C8: reuse the cosines this query's search just computed (same function, same
+        # inputs, so the values are identical); compute only facts it did not scan.
+        known = self._last_scores[1] if self._last_scores is not None and self._last_scores[0] == query else {}
         out: dict[str, float] = {}
         for fact in facts:
+            if fact.uuid in known:
+                out[fact.uuid] = known[fact.uuid]
+                continue
             if self.store is not None:
                 vector = self._validated_vector(self.store.vector_for(fact.uuid, fact.fact_text, self.representation.embed))
             else:
