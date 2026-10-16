@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "kind": "read_only_primary_artifact_integrity_rollup",
+  "as_of": "2026-10-13",
+  "source_main_sha": "3eebb6d54e2a218c4fd10cf53c52acac8384c3e6",
+  "primary_artifacts_verified": 36,
+  "unique_paths": 36,
+  "mismatches": 0,
+  "sha256_abc_self_test": true,
+  "checks_only": [
+    "Primary committed UTF-8 JSON artifact hash",
+    "Source report inventory SHA-256 equality"
+  ],
+  "not_verified": [
+    "Compressed LongMemEval row archives",
+    "Every auxiliary artifact",
+    "Independent scorer and importer replay",
+    "Owner acceptance of canonical dashboard updates"
+  ],
+  "source_manifests": [
+    {
+      "path": "reports/benchmarks/audits/2026-10-13-amb-v3-primary-byte-digests.json",
+      "git_blob": "7812bf3aece3a2fb78573ff73f76e83d83b77a5b",
+      "count": 3
+    },
+    {
+      "path": "reports/benchmarks/audits/2026-10-13-longmemeval-v3-primary-byte-digests.json",
+      "git_blob": "3ae8bc866e22584387af3daa3b74e7a3c9f39473",
+      "count": 6
+    },
+    {
+      "path": "reports/benchmarks/audits/2026-10-13-amb-v4-primary-byte-digests.json",
+      "git_blob": "2a580547a68ff396d1463c255d3e01efe239f6ad",
+      "count": 3
+    },
+    {
+      "path": "reports/benchmarks/audits/2026-10-13-longmemeval-v4-primary-byte-digests.json",
+      "git_blob": "ef39951b2c7b887a1a02c19b9f1c8526e3912ce6",
+      "count": 6
+    },
+    {
+      "path": "reports/benchmarks/audits/2026-10-13-amb-v5-primary-byte-digests.json",
+      "git_blob": "49979040d8da6ade469beb9e2e4a7adf6520cfad",
+      "count": 3
+    },
+    {
+      "path": "reports/benchmarks/audits/2026-10-13-longmemeval-v5-primary-byte-digests.json",
+      "git_blob": "d2a0f011c9cd81f718d36303f08212b29daf5fd7",
+      "count": 6
+    },
+    {
+      "path": "reports/benchmarks/audits/2026-10-13-amb-v6-primary-byte-digests.json",
+      "git_blob": "afa53c5475e16a2deee2328abeac8787d49ee024",
+      "count": 3
+    },
+    {
+      "path": "reports/benchmarks/audits/2026-10-13-longmemeval-v6-primary-byte-digests.json",
+      "git_blob": "00717f177b38270cc27b1d88b3d6dcb78be236c8",
+      "count": 6
+    }
+  ],
+  "freeze_chain": [
+    {
+      "v": 3,
+      "freeze_pr": 709,
+      "merge_sha": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+      "declaration_blob": "593fee135b8fbb8a99b619f59406484b0cb063a6",
+      "matched_to_amb_control_report": true
+    },
+    {
+      "v": 4,
+      "freeze_pr": 716,
+      "merge_sha": "f5a79d230a315829b456b9eef1bf0e77df30a902",
+      "declaration_blob": "ac1e498c6690cc6345647c671dd8c18f0a562aac",
+      "matched_to_amb_control_report": true
+    },
+    {
+      "v": 5,
+      "freeze_pr": 729,
+      "merge_sha": "e6f9db7f1db571e56d81511c20c93768987b35d7",
+      "declaration_blob": "e93f4a2d245ddd86119077b117cdca1875e68789",
+      "matched_to_amb_control_report": true
+    },
+    {
+      "v": 6,
+      "freeze_pr": 743,
+      "merge_sha": "24048d55e26d7db27715e78b24a8b795433a5e16",
+      "declaration_blob": "1ac4d7d87b6b86250b7f4497478e36b2ea17f48a",
+      "matched_to_amb_control_report": true
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "audit": "sha256_committed_utf8_primary_artifacts",
+  "source_main_sha": "3eebb6d54e2a218c4fd10cf53c52acac8384c3e6",
+  "sha256_test_vector": "abc:PASS",
+  "scope": "All AMB v5 ordinary primary result artifacts. Auxiliary hashes and scorer replay not verified.",
+  "items": [
+    {
+      "variant": "lane:amb-precisionmembench-retrieval-v5:agent-memory",
+      "source_report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v5/agent-memory-e6f9db7f1db5/evidence.json",
+      "artifact": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v5/agent-memory-e6f9db7f1db5/single-turn.json",
+      "expected_sha256": "edf9b674bc098e11931eb9031707fd866f86c4ff0bd0c078cb59dd03b34bbea3",
+      "computed_sha256": "edf9b674bc098e11931eb9031707fd866f86c4ff0bd0c078cb59dd03b34bbea3",
+      "byte_verified": true,
+      "git_blob": "0935472b4b9bd5860a6fb3397ad2078e4d5c31cb",
+      "run_id": "37683155424"
+    },
+    {
+      "variant": "lane:amb-precisionmembench-retrieval-v5:bm25",
+      "source_report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v5/bm25-e6f9db7f1db5/evidence.json",
+      "artifact": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v5/bm25-e6f9db7f1db5/single-turn.json",
+      "expected_sha256": "6df5bd4e6fbbbeeffdde8cd5d8141bcd20cb7673cab21d9c7f92362528e27595",
+      "computed_sha256": "6df5bd4e6fbbbeeffdde8cd5d8141bcd20cb7673cab21d9c7f92362528e27595",
+      "byte_verified": true,
+      "git_blob": "c378aa6dae11d3deb6a7289a2fdd402b2bc83372",
+      "run_id": "37683159251"
+    },
+    {
+      "variant": "lane:amb-precisionmembench-retrieval-v5:mem0-explicit",
+      "source_report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v5/mem0-explicit-e6f9db7f1db5/evidence.json",
+      "artifact": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v5/mem0-explicit-e6f9db7f1db5/single-turn.json",
+      "expected_sha256": "f0aab7cc086bc3396fa60f9ed4c6d81becb0e1e5437c888ae62f096e07f10560",
+      "computed_sha256": "f0aab7cc086bc3396fa60f9ed4c6d81becb0e1e5437c888ae62f096e07f10560",
+      "byte_verified": true,
+      "git_blob": "90a181e395c6f981686c28d0432d23f1ddcf3ffe",
+      "run_id": "37683163020"
+    }
+  ]
+}

@@ -1,0 +1,247 @@
+{
+  "schema_version": "1.0.0",
+  "audit_kind": "read_only_source_binding_check",
+  "audit_date": "2026-10-13",
+  "source_main_sha": "3eebb6d54e2a218c4fd10cf53c52acac8384c3e6",
+  "descriptor": "reference/agentmem_ref/evaluation/integrations/amb-precisionmembench-retrieval-v1.json",
+  "descriptor_git_blob": "8caa765175192e87aca6875b9282fac46d6d6865",
+  "scope": "v3-v6 imported AMB candidates only; acceptance row exists, complete, and selected metadata fields match source reports. This does not verify raw file SHA-256 bytes, full importer or evaluator replay.",
+  "no_authority": true,
+  "run_count": 13,
+  "runs": [
+    {
+      "variant": "lane:amb-precisionmembench-retrieval-v3:agent-memory",
+      "source_report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v3/agent-memory-04bb286f90f1/evidence.json",
+      "source_report_git_blob": "742ed1b1363ce1a6b32348d083ae37fe2e36ac0d",
+      "workflow_run_id": "37601531946",
+      "system_id": "agent-memory",
+      "system_revision": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+      "report_evidence_class": "same_harness_external_candidate",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "verified": {
+        "accepted_history_status": true,
+        "exact_lane": true,
+        "input_sha256": true,
+        "system_revision": true,
+        "authority_effect_none": true,
+        "full_selection": true
+      }
+    },
+    {
+      "variant": "lane:amb-precisionmembench-retrieval-v3:bm25",
+      "source_report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v3/bm25-04bb286f90f1/evidence.json",
+      "source_report_git_blob": "d6e117e9f2fdfd5d0ecd76521f176f24063e029e",
+      "workflow_run_id": "37601535521",
+      "system_id": "bm25",
+      "system_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+      "report_evidence_class": "same_harness_external_candidate",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "verified": {
+        "accepted_history_status": true,
+        "exact_lane": true,
+        "input_sha256": true,
+        "system_revision": true,
+        "authority_effect_none": true,
+        "full_selection": true
+      }
+    },
+    {
+      "variant": "lane:amb-precisionmembench-retrieval-v3:mem0-explicit",
+      "source_report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v3/mem0-explicit-04bb286f90f1/evidence.json",
+      "source_report_git_blob": "5ef7ab4bdaa428a942b64a1142ffcf6b778da4a4",
+      "workflow_run_id": "37601539010",
+      "system_id": "mem0-oss",
+      "system_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+      "report_evidence_class": "same_harness_external_candidate",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "verified": {
+        "accepted_history_status": true,
+        "exact_lane": true,
+        "input_sha256": true,
+        "system_revision": true,
+        "authority_effect_none": true,
+        "full_selection": true
+      }
+    },
+    {
+      "variant": "lane:amb-precisionmembench-retrieval-v4:agent-memory",
+      "source_report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v4/agent-memory-f5a79d230a31/evidence.json",
+      "source_report_git_blob": "7637750cb46d21844477ca754d6e1e1cfe1abd1b",
+      "workflow_run_id": "37661856397",
+      "system_id": "agent-memory",
+      "system_revision": "f5a79d230a315829b456b9eef1bf0e77df30a902",
+      "report_evidence_class": "same_harness_external_candidate",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "verified": {
+        "accepted_history_status": true,
+        "exact_lane": true,
+        "input_sha256": true,
+        "system_revision": true,
+        "authority_effect_none": true,
+        "full_selection": true
+      }
+    },
+    {
+      "variant": "lane:amb-precisionmembench-retrieval-v4:agent-memory-shadow",
+      "source_report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v4/agent-memory-shadow-f5a79d230a31/evidence.json",
+      "source_report_git_blob": "5d264b1470b20509cdb820d3349fcba22bdf0926",
+      "workflow_run_id": "37661860248",
+      "system_id": "agent-memory",
+      "system_revision": "f5a79d230a315829b456b9eef1bf0e77df30a902",
+      "report_evidence_class": "same_harness_external_candidate",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "verified": {
+        "accepted_history_status": true,
+        "exact_lane": true,
+        "input_sha256": true,
+        "system_revision": true,
+        "authority_effect_none": true,
+        "full_selection": true
+      }
+    },
+    {
+      "variant": "lane:amb-precisionmembench-retrieval-v4:bm25",
+      "source_report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v4/bm25-f5a79d230a31/evidence.json",
+      "source_report_git_blob": "3f96399eefb606f71117fcd4437930039f285ac3",
+      "workflow_run_id": "37661864946",
+      "system_id": "bm25",
+      "system_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+      "report_evidence_class": "same_harness_external_candidate",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "verified": {
+        "accepted_history_status": true,
+        "exact_lane": true,
+        "input_sha256": true,
+        "system_revision": true,
+        "authority_effect_none": true,
+        "full_selection": true
+      }
+    },
+    {
+      "variant": "lane:amb-precisionmembench-retrieval-v4:mem0-explicit",
+      "source_report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v4/mem0-explicit-f5a79d230a31/evidence.json",
+      "source_report_git_blob": "0cce89535a70ea74107b1558d45ebd5cd9d9a2f5",
+      "workflow_run_id": "37661869364",
+      "system_id": "mem0-oss",
+      "system_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+      "report_evidence_class": "same_harness_external_candidate",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "verified": {
+        "accepted_history_status": true,
+        "exact_lane": true,
+        "input_sha256": true,
+        "system_revision": true,
+        "authority_effect_none": true,
+        "full_selection": true
+      }
+    },
+    {
+      "variant": "lane:amb-precisionmembench-retrieval-v5:agent-memory",
+      "source_report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v5/agent-memory-e6f9db7f1db5/evidence.json",
+      "source_report_git_blob": "e8a7aefcacf21a08ea690d893a7ce88cba0364c4",
+      "workflow_run_id": "37683155424",
+      "system_id": "agent-memory",
+      "system_revision": "e6f9db7f1db571e56d81511c20c93768987b35d7",
+      "report_evidence_class": "same_harness_external_candidate",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "verified": {
+        "accepted_history_status": true,
+        "exact_lane": true,
+        "input_sha256": true,
+        "system_revision": true,
+        "authority_effect_none": true,
+        "full_selection": true
+      }
+    },
+    {
+      "variant": "lane:amb-precisionmembench-retrieval-v5:bm25",
+      "source_report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v5/bm25-e6f9db7f1db5/evidence.json",
+      "source_report_git_blob": "5e9a0e9d634474201cde34d4ab6da650ec779213",
+      "workflow_run_id": "37683159251",
+      "system_id": "bm25",
+      "system_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+      "report_evidence_class": "same_harness_external_candidate",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "verified": {
+        "accepted_history_status": true,
+        "exact_lane": true,
+        "input_sha256": true,
+        "system_revision": true,
+        "authority_effect_none": true,
+        "full_selection": true
+      }
+    },
+    {
+      "variant": "lane:amb-precisionmembench-retrieval-v5:mem0-explicit",
+      "source_report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v5/mem0-explicit-e6f9db7f1db5/evidence.json",
+      "source_report_git_blob": "2e5944f10a121aeba4c9aa1f02f25c0ebe9d3ef9",
+      "workflow_run_id": "37683163020",
+      "system_id": "mem0-oss",
+      "system_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+      "report_evidence_class": "same_harness_external_candidate",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "verified": {
+        "accepted_history_status": true,
+        "exact_lane": true,
+        "input_sha256": true,
+        "system_revision": true,
+        "authority_effect_none": true,
+        "full_selection": true
+      }
+    },
+    {
+      "variant": "lane:amb-precisionmembench-retrieval-v6:agent-memory",
+      "source_report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v6/agent-memory-24048d55e26d/evidence.json",
+      "source_report_git_blob": "35473565cbc40a7340eee12bfd6c959e4f32f12b",
+      "workflow_run_id": "37718270129",
+      "system_id": "agent-memory",
+      "system_revision": "24048d55e26d7db27715e78b24a8b795433a5e16",
+      "report_evidence_class": "same_harness_external_candidate",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "verified": {
+        "accepted_history_status": true,
+        "exact_lane": true,
+        "input_sha256": true,
+        "system_revision": true,
+        "authority_effect_none": true,
+        "full_selection": true
+      }
+    },
+    {
+      "variant": "lane:amb-precisionmembench-retrieval-v6:bm25",
+      "source_report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v6/bm25-24048d55e26d/evidence.json",
+      "source_report_git_blob": "3ad46579237f683526fab9eabc622790ed3ff67d",
+      "workflow_run_id": "37718272612",
+      "system_id": "bm25",
+      "system_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+      "report_evidence_class": "same_harness_external_candidate",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "verified": {
+        "accepted_history_status": true,
+        "exact_lane": true,
+        "input_sha256": true,
+        "system_revision": true,
+        "authority_effect_none": true,
+        "full_selection": true
+      }
+    },
+    {
+      "variant": "lane:amb-precisionmembench-retrieval-v6:mem0-explicit",
+      "source_report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v6/mem0-explicit-24048d55e26d/evidence.json",
+      "source_report_git_blob": "f892649789422f12e92eea7ed43a9dbbb706932c",
+      "workflow_run_id": "37718275682",
+      "system_id": "mem0-oss",
+      "system_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+      "report_evidence_class": "same_harness_external_candidate",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "verified": {
+        "accepted_history_status": true,
+        "exact_lane": true,
+        "input_sha256": true,
+        "system_revision": true,
+        "authority_effect_none": true,
+        "full_selection": true
+      }
+    }
+  ]
+}
