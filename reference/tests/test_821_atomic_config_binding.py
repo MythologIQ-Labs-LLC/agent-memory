@@ -24,6 +24,7 @@ import subprocess
 import sys
 import tempfile
 import textwrap
+import time
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -816,6 +817,122 @@ class GenerationWitnessAmendment(_Store):
         self.assertEqual(report["recovery"]["status"], "failed_closed")
         self.assertTrue(report["durable_state"]["configuration_binding_present"])
         self.assertEqual(report["durable_state"]["configuration_binding_scheme"], "unverified")
+
+
+# R-1 (independent integration review of d0d2a97c): two writer processes recording the witness at
+# once. Faults are injected only at the OS boundary (open and rename of witness files), and the
+# interleaving is forced with barrier files, not timing, so it is the same on every run.
+_WITNESS_WRITER = textwrap.dedent(
+    """
+    import builtins, io, os, pathlib, sys, time
+    sys.path.insert(0, sys.argv[1])
+    from agentmem_ref import AgentMemory
+    root, role, text, barrier = sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5]
+    CRASH = %d
+    WITNESS = "generation-witness.json"
+
+    def witness_temporary(path):
+        name = os.path.basename(os.fspath(path))
+        return name.startswith("." + WITNESS) and name.endswith(".tmp")
+
+    def hold_rename_until_released():
+        # A: its temporary is complete and fsynced; rename it only after B has run
+        real = os.replace
+        def replace(source, destination, *a, **k):
+            if os.path.basename(os.fspath(destination)) == WITNESS:
+                open(os.path.join(barrier, "a-holding"), "w").close()
+                deadline = time.monotonic() + 60
+                while not os.path.exists(os.path.join(barrier, "b-done")):
+                    if time.monotonic() > deadline:
+                        raise SystemExit("barrier timeout")
+                    time.sleep(0.01)
+            return real(source, destination, *a, **k)
+        os.replace = replace
+
+    def die_once_a_temporary_is_open_for_writing():
+        # B: killed after opening its temporary for writing and before writing a byte
+        # (equivalently, its write fails with ENOSPC)
+        writing = os.O_WRONLY | os.O_RDWR
+        real_os_open = os.open
+        def os_open(path, flags, *a, **k):
+            fd = real_os_open(path, flags, *a, **k)
+            if flags & writing and witness_temporary(path):
+                os._exit(CRASH)
+            return fd
+        os.open = os_open
+        for owner, attribute in ((builtins, "open"), (io, "open"), (pathlib.Path, "open")):
+            real = getattr(owner, attribute)
+            def opened(*a, _real=real, **k):
+                handle = _real(*a, **k)
+                path = a[0] if a else k.get("file")
+                mode = a[1] if len(a) > 1 else k.get("mode", "r")
+                if any(m in mode for m in "wax+") and witness_temporary(path):
+                    os._exit(CRASH)
+                return handle
+            setattr(owner, attribute, opened)
+
+    memory = AgentMemory.open(root, tenant=%r, actor_id="agent:" + role, scope=%r, purpose="821")
+    if role == "A":
+        hold_rename_until_released()
+    elif role == "B-killed":
+        die_once_a_temporary_is_open_for_writing()
+    memory.remember("memory:" + role, text)
+    memory.close()
+    """
+) % (CRASH, TENANT, SCOPE)
+
+
+class ConcurrentWitnessWriters(_Store):
+    """R-1: the witness a writer publishes is only ever its own complete record."""
+
+    def race(self, b_role: str) -> tuple[int, int]:
+        barrier = Path(self._folder.name) / "barrier"
+        barrier.mkdir()
+        command = [sys.executable, "-c", _WITNESS_WRITER, str(REFERENCE), str(self.root)]
+        a = subprocess.Popen(command + ["A", "Writer A committed this.", str(barrier)],
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        try:
+            deadline = time.monotonic() + 120
+            while not (barrier / "a-holding").exists():
+                if a.poll() is not None or time.monotonic() > deadline:
+                    raise AssertionError(f"writer A never reached its rename: {a.communicate()[1][-2000:]}")
+                time.sleep(0.01)
+            b = subprocess.run(command + [b_role, "Writer B committed this.", str(barrier)],
+                               capture_output=True, text=True, timeout=120)
+        finally:
+            (barrier / "b-done").touch()
+            _, a_err = a.communicate(timeout=120)
+        if a.returncode != 0:
+            raise AssertionError(f"writer A failed ({a.returncode}): {a_err[-2000:]}")
+        return a.returncode, b.returncode
+
+    def test_r1_a_writer_killed_beside_another_never_publishes_an_empty_witness(self):  # FAIL-FIRST (R-1)
+        self.seeded()
+        _, b_code = self.race("B-killed")
+        self.assertEqual(b_code, CRASH)
+        # d0d2a97c: both writers used one temporary name, so A published the inode B had truncated
+        self.assertNotEqual((self.root / "generation-witness.json").read_bytes(), b"", "an empty witness was published")
+        self.assertLessEqual(_witness(self.root)["generation"], _state_generation(self.root))
+        self.assert_recovers_committed(
+            {"The deploy window is Thursday.", "Writer A committed this.", "Writer B committed this."})
+
+    def test_r1_a_late_rename_lets_the_witness_lag_but_never_lead(self):
+        """The documented residual: without a cross-process lock, A can rename its record after B
+        recorded a newer generation, so the witness steps back. It still names a committed
+        generation of this store's own history, so it can only lag; recovery accepts it."""
+
+        self.seeded()
+        _, b_code = self.race("B")
+        self.assertEqual(b_code, 0)
+        witness = _witness(self.root)
+        committed = _state_generation(self.root)
+        self.assertLessEqual(witness["generation"], committed)
+        with _connect(self.root) as connection:
+            journal = connection.execute(
+                "SELECT payload_json FROM runtime_journal WHERE generation = ?", (witness["generation"],)).fetchone()
+        self.assertEqual(json.loads(journal[0])["record_digest"], witness["journal_record_digest"])
+        self.assert_recovers_committed(
+            {"The deploy window is Thursday.", "Writer A committed this.", "Writer B committed this."})
 
 
 if __name__ == "__main__":
