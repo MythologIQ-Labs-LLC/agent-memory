@@ -1,0 +1,21 @@
+{
+ "episodes": 35,
+ "entity_nodes_extracted": 95,
+ "fact_edges_extracted": 47,
+ "edges_marked_invalid_at_ingest": 1,
+ "episodes_with_zero_edges": 0,
+ "ingest_seconds_total": 7890.1,
+ "ingest_seconds_median": 210.0,
+ "llm_chat_calls": 167,
+ "llm_chat_status": [
+  200
+ ],
+ "prompt_tokens": 253829,
+ "completion_tokens": 9010,
+ "embedding_requests": 225,
+ "embedding_status": [
+  200
+ ],
+ "llm_completions_identical_to_rep1": true,
+ "per_episode_counts_identical_to_rep1": true
+}

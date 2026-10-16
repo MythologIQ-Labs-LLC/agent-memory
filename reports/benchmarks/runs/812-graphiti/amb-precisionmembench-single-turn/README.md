@@ -4,7 +4,7 @@
 official AMB entry. It was preregistered before execution (`PREREGISTRATION.md`, pushed in
 `2e82cbb`).
 
-Run 1 is the first *complete* run. Two earlier attempts were aborted during ingestion, one by the
+Run 1 is the first *complete* run, and run 2 repeats it (see Repeatability). Two earlier attempts were aborted during ingestion, one by the
 executor's tool time limit and one by a container restart. Neither scored any case; see
 `aborted-attempt*/`.
 
@@ -28,6 +28,21 @@ executor's tool time limit and one by a container restart. Neither scored any ca
 - **Graphiti's design target scores zero here.** Supersession chain exclusion is **0/3**.
 - **Separate profile.** This row is in the LLM-ingestion tier and is not ranked with the no-LLM
   rows.
+
+## Repeatability: run 2 is byte-identical
+
+Run 2 was a complete, fresh rerun: a new graph and the same models and settings. Its launch
+identity (`rep2/launch-identity.json`) was captured before it started: HEAD `b03a681`, a clean
+worktree, and bridge and shim blobs equal to the preregistration.
+
+| Comparison | Result |
+|---|---|
+| AMB output (`rep1-vs-rep2.json`, `scripts/compare_amb_runs.py`) | **0 differences**: same correctness, sets, order and fact texts on 77/77 cases |
+| Ingestion | identical per episode: 95 nodes, 47 edges, 1 invalidation |
+| LLM | all **167 completions byte-identical** to run 1 (temperature 0, seed 0, one inference slot) |
+| Run 2 cost | 7,890 s of ingestion, faster on a quieter host; peak RSS 1.1 GiB |
+
+Run 2's manifest is `rep2/manifest.json`.
 
 ## Ingestion: extraction yield and cost
 

@@ -1,0 +1,14 @@
+{
+  "left": "reports/benchmarks/runs/812-graphiti/amb-precisionmembench-single-turn/rep1/single-turn.json",
+  "right": "/tmp/am-bench/runs/812-graphiti-amb/rep2/amb-outputs/precisionmembench/graphiti-local/retrieval/single-turn.json",
+  "left_cases": 77,
+  "right_cases": 77,
+  "ignored_fields": [
+    "avg_retrieve_time_ms",
+    "ingestion_time_ms",
+    "retrieve_time_ms",
+    "run_name"
+  ],
+  "differences": 0,
+  "equal": true
+}

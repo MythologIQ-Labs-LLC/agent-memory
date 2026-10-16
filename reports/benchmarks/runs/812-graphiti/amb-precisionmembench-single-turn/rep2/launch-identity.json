@@ -1,0 +1,16 @@
+{"captured_utc": "2026-10-16T00:08:44Z", "head": "b03a681662a3f15acbeadec6d660eb024ed83c26",
+ "dirty": [],
+ "blobs": {
+  "reference/run_amb_external.py": "1208551453a5bac0f47d3b0130131c5a2c727625",
+  "reference/amb_retrieval_no_llm.py": "1d3584f0cfff0ea65dff50b4bcd6bcd57e866f04",
+  "scripts/run_amb_local_evidence.py": "fbf6d7c80bcd328ff9ddb8f543283a6be63ee453",
+  "reference/amb_agent_memory_bridge.py": "3d9ccb31587b55edf4ddb714d6e8ff41d5b03228",
+  "reference/amb_graphiti_bridge.py": "37a538c75e03fe9cd28e2dd2cc3fe3a7a8c40c17",
+  "reference/amb_hindsight_bridge.py": "9e4d8b5239bbba3c8c29632496944689b4b28cc4",
+  "reference/amb_langmem_bridge.py": "d68a34324183aa579232441d752e42a99b43614a",
+  "reference/amb_mem0_explicit_bridge.py": "ce41b1f5766b99cb968b798be3ad6d37c3283228",
+  "reference/amb_mempalace_bridge.py": "b60ba7601234bd8fee0356edccc7a423180597e8",
+  "reference/hindsight_amb_worker.py": "b7a5ebf7a120a744b0409a7b213841836d2314c0",
+  "reference/langmem_amb_worker.py": "ef522d525ae434c8f78e7e570b3e799a674bc69b",
+  "reference/graphiti_llamacpp_shim.py": "e15ef8c4fae65e224a46c4bca11b0d291af67760",
+  "reference/llamacpp_hermes_tools_shim.py": "f9ed28298d45acf9d0a3d836e0b8377bb35bc7ea"}}
