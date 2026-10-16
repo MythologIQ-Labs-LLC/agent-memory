@@ -31,10 +31,10 @@ The #789 status code is in brackets.
 | **MemPalace 3.11.0** | dense with rerank, wing/room structure | **A**: session r@5 0.881, turn r@10 0.804 (no LongMemEval repeat yet) | — | A: 9/77, repeat identical | **A** [executed_unaccepted] |
 | **Mem0 OSS 2.2.1**, explicit (`infer=False`) | vector store, MiniLM | — | A: repeated 100/100 identical | accepted lane v6: 10/77 | **A** [AMB accepted_same_harness; LongMemEval executed_unaccepted] |
 | **Letta 0.16.8**, archival memory only | dense passages over pgvector (component tier, not the stateful agent) | — | **B**: session r@5 0.953, turn r@10 0.814, both planes **repeated** (0 metric differences) | B: 9/77, repeated identical | **B** [executed_unaccepted]. Agent tier N |
-| **Cognee 1.6.4**, local GLiNER, no LLM | graph + vector (fastembed bge-small) | — | C: gen-1 session 0.953, **exploratory** (preregistration erratum). External gen-2: 3/50, stopped per owner directive. This host's duplicate gen-2: **R** (see below) | B: 9/77, repeated identical | **B** on AMB; **C/R** on LongMemEval [executed_unaccepted] |
+| **Cognee 1.6.4**, local GLiNER, no LLM | graph + vector (fastembed bge-small) | — | C: gen-1 session 0.953, **exploratory** (preregistration erratum). External gen-2: 3/50, stopped per owner directive. This host's duplicate gen-2: **R** (see below) | B: 9/77, repeated identical | **B** on AMB; **C** on LongMemEval [executed_unaccepted] |
 | **LangMem 0.0.30** + local Qwen2.5-3B | LLM-managed memories over a vector store | — | — | C: 9/77, precision 0.017, recall 0.093; LLM-ingestion tier; nondeterministic; one run (external) | **C** [executed_unaccepted, separate tier]. A valid LangMem measurement is X (needs a capable model) |
 | **Graphiti 0.31.1** + local 3B | temporal knowledge graph (LLM extraction) | X: compute (about 5 h per question) | X | R/X: attempt 3 relaunched in the external lane, outcome not recorded | **X** [blocked_cost] |
-| **Jev-Mem** `7ab0c73` + Laya | multi-relational graph with a learned controller | X | C/R: CPU fp32 rows 2/50 (external) and 6/50 on this host, partial, no score | — | **X** [blocked_dependency: GPU] |
+| **Jev-Mem** `7ab0c73` + Laya | multi-relational graph with a learned controller | X | C: CPU fp32 rows 2/50 (external) and 8/50 on this host (stopped), partial, no score | — | **X** [blocked_dependency: GPU] |
 | **Supermemory local 0.0.9** | LLM-extracted memories with hybrid search | — | — | — | **X** [blocked_cost and licence review: closed binary, "lite license"] |
 | OpenViking, MemOS, MIRIX, EverOS, TencentDB, A-Mem, Memobase, Honcho | various | — | — | — | **N** [source_qualified or not_started]; see `NEXT-QUEUE.md` |
 | Zep (managed) | managed temporal graph | — | — | — | **X** [blocked: hosted only]; Graphiti is its open-source engine |
@@ -61,9 +61,9 @@ Knowledge-graph-with-LLM (Graphiti) and learned-controller graph (Jev-Mem) are b
 
 | Run | Host | State | Note |
 |---|---|---|---|
-| Cognee gen-2 (`811-cognee/subset50-gen2`, preregistered 16:53Z) | this host | **running**, 10/50 session | **Duplicates** the external lane's gen-2 (`subset50-g2`, preregistered 13:31Z, which I had not seen), and conflicts with the owner directive recorded there at 16:44Z: *"generation 2 must not run for days in its current configuration without a separately reviewed performance solution."* My attempt to stop it was denied by the session's safety classifier, so I am asking the owner. Its rows will not be scored or pooled |
-| Jev-Mem CPU subset50 | this host | running, 6/50 | The external lane recorded Jev-Mem as not resumed (hardware blocker). The CPU fp32 rows must never be pooled with GPU rows. The same multi-day concern applies, so I am asking the owner |
-| #819 C6 held-out evaluation (cohort e4) | this host | running | Independent evaluation lane. The C6 LongMemEval-500 semantic runs I had queued were **cancelled before starting**, under the "no resource-heavy launches while saturated" rule |
+| Cognee gen-2 (`811-cognee/subset50-gen2`, preregistered 16:53Z) | this host | **stopped** at 12/50 (owner-authorised 2026-10-16; a container restart at about 00:14Z ended it first) | It duplicated the external lane's gen-2 and conflicted with the owner directive. Its 12 rows are execution evidence only: never scored, never pooled. `STOPPED-2026-10-16.md` on `claude/817-jev-mem-execution-no-ci` (`38e80cde`) |
+| Jev-Mem CPU subset50 | this host | **stopped** at 8/50 (same authorisation and restart) | Partial CPU fp32 rows, no score; never pooled with GPU rows. `STOPPED-CPU-2026-10-16.md` |
+| #819 C6 held-out evaluation (cohort e4) | this host | **complete** (C6+sem 144/208); text-free per-case record handed to the evaluation lane (`bdbd8a63`) | Independent evaluation lane. The C6 LongMemEval-500 semantic runs I had queued were **cancelled before starting**, under the "no resource-heavy launches while saturated" rule |
 | Graphiti AMB attempt 3 | external lane | unknown | No outcome recorded on the branch, per the review |
 
 ## Typed blockers, with evidence
