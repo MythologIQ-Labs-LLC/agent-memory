@@ -30,7 +30,7 @@ The #789 status code is in brackets.
 | **Hindsight 0.10.2** `5fc4ce2`, chunk-only, no LLM | hybrid dense + BM25 with RRF | **A**: session r@5 0.888, turn r@10 0.835 | A: repeated (recall identical, order varies) | A: 9/77 (external); B: 9/77 (this branch's independent adapter) | **A** [executed_unaccepted]. LLM product tier X |
 | **MemPalace 3.11.0** | dense with rerank, wing/room structure | **A**: session r@5 0.881, turn r@10 0.804; **B** repeat on an independent host (`../810-mempalace-repeat/full500`): ranked lists identical on 500/500 questions on both planes | — | A: 9/77, repeat identical | **A** [executed_unaccepted] |
 | **Mem0 OSS 2.2.1**, explicit (`infer=False`) | vector store, MiniLM | — | A: repeated 100/100 identical | accepted lane v6: 10/77 | **A** [AMB accepted_same_harness; LongMemEval executed_unaccepted] |
-| **Letta 0.16.8**, archival memory only | dense passages over pgvector (component tier, not the stateful agent) | — | **B**: session r@5 0.953, turn r@10 0.814, both planes **repeated** (0 metric differences) | B: 9/77, repeated identical | **B** [executed_unaccepted]. Agent tier N |
+| **Letta 0.16.8**, archival memory only | dense passages over pgvector (component tier, not the stateful agent) | **B**: session r@5 0.857, turn r@10 0.780, turn r@50 0.955 (`../810-letta/full500`, preregistered) | **B**: session r@5 0.953, turn r@10 0.814, both planes **repeated** (0 metric differences); identical metrics to the full-500 rows on the same questions | B: 9/77, repeated identical | **B** [executed_unaccepted]. Agent tier N |
 | **Cognee 1.6.4**, local GLiNER, no LLM | graph + vector (fastembed bge-small) | — | C: gen-1 session 0.953, **exploratory** (preregistration erratum). External gen-2: 3/50, stopped per owner directive. This host's duplicate gen-2: **R** (see below) | B: 9/77, repeated identical | **B** on AMB; **C** on LongMemEval [executed_unaccepted] |
 | **LangMem 0.0.30** + local Qwen2.5-3B | LLM-managed memories over a vector store | — | — | C: 9/77, precision 0.017, recall 0.093; LLM-ingestion tier; nondeterministic; one run (external) | **C** [executed_unaccepted, separate tier]. A valid LangMem measurement is X (needs a capable model) |
 | **Graphiti 0.31.1** + local 3B | temporal knowledge graph (LLM extraction) | X: compute (about 5 h per question) | X | R/X: attempt 3 relaunched in the external lane, outcome not recorded | **X** [blocked_cost] |
@@ -40,7 +40,7 @@ The #789 status code is in brackets.
 | Zep (managed) | managed temporal graph | — | — | — | **X** [blocked: hosted only]; Graphiti is its open-source engine |
 
 **Distinct external products with completed same-harness results:** 6, namely Hindsight, MemPalace, Mem0, Letta (component tier), Cognee (AMB) and LangMem (separate LLM tier, one run). Of these:
-- **2** have reviewed full-500 LongMemEval results: Hindsight and MemPalace.
+- **2** have reviewed full-500 LongMemEval results: Hindsight and MemPalace. Letta has a complete full-500 result pending review (class B), and MemPalace has an identical independent-host repeat.
 - **4** are repeated with matching verdicts on at least one family: Hindsight, Mem0, Letta and Cognee (AMB).
 - **2** are repeated on both families: Hindsight and Letta.
 

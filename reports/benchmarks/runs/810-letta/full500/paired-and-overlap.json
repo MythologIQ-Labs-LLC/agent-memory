@@ -1,0 +1,303 @@
+{
+  "backend": "letta_archival_local",
+  "planes": {
+    "session": {
+      "completed": 500,
+      "scored": 419,
+      "failures": {
+        "runtime_error": 0,
+        "ingestion_refusals": 4,
+        "unmapped_results": 0
+      },
+      "paired": {
+        "agent_memory": {
+          "recall_all@5": {
+            "letta": 0.856802,
+            "other": 0.823389,
+            "letta_full_wins": 42,
+            "other_full_wins": 28,
+            "exact_mcnemar_p": 0.12,
+            "delta_mean": 0.0334,
+            "delta_95ci_bootstrap": [
+              -0.0048,
+              0.074
+            ]
+          },
+          "recall_all@10": {
+            "letta": 0.940334,
+            "other": 0.892601,
+            "letta_full_wins": 38,
+            "other_full_wins": 18,
+            "exact_mcnemar_p": 0.0105,
+            "delta_mean": 0.0477,
+            "delta_95ci_bootstrap": [
+              0.0143,
+              0.0835
+            ]
+          },
+          "recall_all@50": {
+            "letta": 1.0,
+            "other": 1.0,
+            "letta_full_wins": 0,
+            "other_full_wins": 0,
+            "exact_mcnemar_p": 1.0,
+            "delta_mean": 0.0,
+            "delta_95ci_bootstrap": [
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "hindsight_chunks_onnx": {
+          "recall_all@5": {
+            "letta": 0.856802,
+            "other": 0.887828,
+            "letta_full_wins": 21,
+            "other_full_wins": 34,
+            "exact_mcnemar_p": 0.105,
+            "delta_mean": -0.031,
+            "delta_95ci_bootstrap": [
+              -0.0644,
+              0.0048
+            ]
+          },
+          "recall_all@10": {
+            "letta": 0.940334,
+            "other": 0.9642,
+            "letta_full_wins": 10,
+            "other_full_wins": 20,
+            "exact_mcnemar_p": 0.0987,
+            "delta_mean": -0.0239,
+            "delta_95ci_bootstrap": [
+              -0.0501,
+              0.0024
+            ]
+          },
+          "recall_all@50": {
+            "letta": 1.0,
+            "other": 1.0,
+            "letta_full_wins": 0,
+            "other_full_wins": 0,
+            "exact_mcnemar_p": 1.0,
+            "delta_mean": 0.0,
+            "delta_95ci_bootstrap": [
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "mempalace_default_local": {
+          "recall_all@5": {
+            "letta": 0.856802,
+            "other": 0.880668,
+            "letta_full_wins": 22,
+            "other_full_wins": 32,
+            "exact_mcnemar_p": 0.22,
+            "delta_mean": -0.0239,
+            "delta_95ci_bootstrap": [
+              -0.0573,
+              0.0095
+            ]
+          },
+          "recall_all@10": {
+            "letta": 0.940334,
+            "other": 0.940334,
+            "letta_full_wins": 17,
+            "other_full_wins": 17,
+            "exact_mcnemar_p": 1.0,
+            "delta_mean": 0.0,
+            "delta_95ci_bootstrap": [
+              -0.0263,
+              0.0263
+            ]
+          },
+          "recall_all@50": {
+            "letta": 1.0,
+            "other": 1.0,
+            "letta_full_wins": 0,
+            "other_full_wins": 0,
+            "exact_mcnemar_p": 1.0,
+            "delta_mean": 0.0,
+            "delta_95ci_bootstrap": [
+              0.0,
+              0.0
+            ]
+          }
+        }
+      },
+      "subset50_overlap": {
+        "subset50": {
+          "questions": 50,
+          "scored": 43,
+          "ranked_list_differs": 0,
+          "metric_differs_scored": {
+            "recall_all@5": 0,
+            "recall_all@10": 0,
+            "recall_all@50": 0
+          },
+          "same_returned_set_when_order_differs": 0
+        },
+        "subset50-rep2": {
+          "questions": 50,
+          "scored": 43,
+          "ranked_list_differs": 0,
+          "metric_differs_scored": {
+            "recall_all@5": 0,
+            "recall_all@10": 0,
+            "recall_all@50": 0
+          },
+          "same_returned_set_when_order_differs": 0
+        }
+      }
+    },
+    "turn": {
+      "completed": 500,
+      "scored": 419,
+      "failures": {
+        "runtime_error": 0,
+        "ingestion_refusals": 4,
+        "unmapped_results": 0
+      },
+      "paired": {
+        "agent_memory": {
+          "recall_all@5": {
+            "letta": 0.613365,
+            "other": 0.601432,
+            "letta_full_wins": 58,
+            "other_full_wins": 53,
+            "exact_mcnemar_p": 0.704,
+            "delta_mean": 0.0119,
+            "delta_95ci_bootstrap": [
+              -0.0382,
+              0.0621
+            ]
+          },
+          "recall_all@10": {
+            "letta": 0.78043,
+            "other": 0.72315,
+            "letta_full_wins": 58,
+            "other_full_wins": 34,
+            "exact_mcnemar_p": 0.016,
+            "delta_mean": 0.0573,
+            "delta_95ci_bootstrap": [
+              0.0119,
+              0.1002
+            ]
+          },
+          "recall_all@50": {
+            "letta": 0.954654,
+            "other": 0.859189,
+            "letta_full_wins": 50,
+            "other_full_wins": 10,
+            "exact_mcnemar_p": 1.62e-07,
+            "delta_mean": 0.0955,
+            "delta_95ci_bootstrap": [
+              0.0621,
+              0.1313
+            ]
+          }
+        },
+        "hindsight_chunks_onnx": {
+          "recall_all@5": {
+            "letta": 0.613365,
+            "other": 0.706444,
+            "letta_full_wins": 24,
+            "other_full_wins": 63,
+            "exact_mcnemar_p": 3.48e-05,
+            "delta_mean": -0.0931,
+            "delta_95ci_bootstrap": [
+              -0.136,
+              -0.0501
+            ]
+          },
+          "recall_all@10": {
+            "letta": 0.78043,
+            "other": 0.835322,
+            "letta_full_wins": 18,
+            "other_full_wins": 41,
+            "exact_mcnemar_p": 0.00379,
+            "delta_mean": -0.0549,
+            "delta_95ci_bootstrap": [
+              -0.0907,
+              -0.0191
+            ]
+          },
+          "recall_all@50": {
+            "letta": 0.954654,
+            "other": 0.957041,
+            "letta_full_wins": 14,
+            "other_full_wins": 15,
+            "exact_mcnemar_p": 1.0,
+            "delta_mean": -0.0024,
+            "delta_95ci_bootstrap": [
+              -0.0286,
+              0.0239
+            ]
+          }
+        },
+        "mempalace_default_local": {
+          "recall_all@5": {
+            "letta": 0.613365,
+            "other": 0.668258,
+            "letta_full_wins": 32,
+            "other_full_wins": 55,
+            "exact_mcnemar_p": 0.0178,
+            "delta_mean": -0.0549,
+            "delta_95ci_bootstrap": [
+              -0.0979,
+              -0.0119
+            ]
+          },
+          "recall_all@10": {
+            "letta": 0.78043,
+            "other": 0.804296,
+            "letta_full_wins": 28,
+            "other_full_wins": 38,
+            "exact_mcnemar_p": 0.268,
+            "delta_mean": -0.0239,
+            "delta_95ci_bootstrap": [
+              -0.0621,
+              0.0143
+            ]
+          },
+          "recall_all@50": {
+            "letta": 0.954654,
+            "other": 0.942721,
+            "letta_full_wins": 17,
+            "other_full_wins": 12,
+            "exact_mcnemar_p": 0.458,
+            "delta_mean": 0.0119,
+            "delta_95ci_bootstrap": [
+              -0.0119,
+              0.0382
+            ]
+          }
+        }
+      },
+      "subset50_overlap": {
+        "subset50": {
+          "questions": 50,
+          "scored": 43,
+          "ranked_list_differs": 7,
+          "metric_differs_scored": {
+            "recall_all@5": 0,
+            "recall_all@10": 0,
+            "recall_all@50": 0
+          },
+          "same_returned_set_when_order_differs": 6
+        },
+        "subset50-rep2": {
+          "questions": 50,
+          "scored": 43,
+          "ranked_list_differs": 6,
+          "metric_differs_scored": {
+            "recall_all@5": 0,
+            "recall_all@10": 0,
+            "recall_all@50": 0
+          },
+          "same_returned_set_when_order_differs": 5
+        }
+      }
+    }
+  }
+}

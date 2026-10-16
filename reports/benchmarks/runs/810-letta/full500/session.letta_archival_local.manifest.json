@@ -1,0 +1,163 @@
+{
+  "schema_version": "1.0.0",
+  "run_id": "810-letta-full500-session",
+  "normalized_run": {
+    "uri": "reports/benchmarks/runs/810-letta/full500/session.letta_archival_local.summary.json",
+    "sha256": "cfc72a84258ff2b67592fe71b9c78221a6763e4698b4e2c0853fe493939fc35e"
+  },
+  "benchmark": {
+    "id": "longmemeval-s-retrieval",
+    "task_profile": "longmemeval-s-retrieval-parity-v1:session",
+    "dataset_revision": "xiaowu0162/longmemeval-cleaned longmemeval_s_cleaned.json",
+    "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+    "selection_id": "7d738ae585fd4014c9d231088ff824864fded501adc07b0e08c2b97a28210c03",
+    "sample_count": 500,
+    "evaluator_revision": "git-blob:6b9c237380f1d527e564161c2dac7fe32ada0ef9",
+    "excluded_count": 81
+  },
+  "system": {
+    "id": "letta",
+    "revision": "0.16.8@1131535716e8a31c9a437f8695e25ac98f203a24",
+    "adapter_id": "reference/longmemeval_letta_bridge.py",
+    "adapter_revision": "git-blob:2c719e1e6b85ae36b73ba08922dbfc7f338fa164",
+    "configuration_sha256": "62ae972de301d10fa619cad6add4680612b45d994513e50344391ec9865535c8",
+    "worktree_clean": true,
+    "build_sha256": null
+  },
+  "timing": {
+    "started_at": "2026-10-16T02:22:33Z",
+    "finished_at": "2026-10-16T03:58:22.859000Z",
+    "elapsed_ms": 5749859
+  },
+  "hardware": {
+    "os": "Linux",
+    "os_release": "6.18.44-fc-v139",
+    "architecture": "x86_64",
+    "cpu_model": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+    "cpu_cores": 4,
+    "ram_bytes": 16874930176,
+    "gpus": []
+  },
+  "environment": {
+    "runtime": "CPython",
+    "runtime_version": "3.13.16",
+    "isolation": "cloud_sandbox",
+    "container_digest": null,
+    "dependency_lock_sha256": "56baa67ca203b851e2924a7b46616a90241049e90e17011a4be8e13c3dd511a7",
+    "network_access": "restricted",
+    "notes": [
+      "CPU (4 vCPU) shared with the concurrent MemPalace repeat for most of the run; latencies are indicative only, not comparative performance measurements.",
+      "Dependencies resolved with uv --exclude-newer 2026-05-15 (release date); unbounded resolution produced an mcp/pydantic import incompatibility.",
+      "Executed in segments: container reclamation while the session was idle ended several driver invocations; each resumed from the committed rows (input sha and question ids checked on resume).",
+      "execution.timeout_ms 0 = no runner-level timeout (per-call product timeouts recorded in configuration where they exist)."
+    ]
+  },
+  "inference": {
+    "used": true,
+    "calls": [
+      {
+        "purpose": "embedding",
+        "provider": "fastembed ONNX via reference/local_embedding_server.py (loopback OpenAI-compatible)",
+        "model_id": "qdrant/bge-small-en-v1.5-onnx-q (BAAI/bge-small-en-v1.5)",
+        "model_revision": "aa8f8b060edb00e03bfdd08813a2949946c8ba55",
+        "model_digest": "51f1bd0addd6e859e42c2c8021a5e5461385bb676a649f4b269aa445449f2431",
+        "endpoint_class": "local",
+        "parameters": {
+          "dimensions": 384
+        },
+        "prompt_sha256": null,
+        "count": 1
+      }
+    ]
+  },
+  "execution": {
+    "command_sha256": "19ebfd28c8bc37b7fb63a4bea1a4a867a41570c7bec485161998cf6ba2ceddd5",
+    "argv_redacted": [
+      "/tmp/c2/amb-venv/bin/python",
+      "reference/run_longmemeval_resumable.py",
+      "--input",
+      "/tmp/agent-memory-benchmark-data/longmemeval_s_cleaned.json",
+      "--expected-sha256",
+      "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+      "--granularity",
+      "session",
+      "--backend",
+      "letta_archival_local",
+      "--external-backend",
+      "longmemeval_letta_bridge:install_longmemeval_letta_backend",
+      "--out",
+      "reports/benchmarks/runs/810-letta/full500"
+    ],
+    "random_seed": 0,
+    "timeout_ms": 0,
+    "retries": 0,
+    "context_budget_tokens": null,
+    "retrieval_top_k": 50,
+    "stdout_sha256": "7c67d77b61c6853be22c36927e814a3cf00cd2c9acc264904e8aa5083b374303",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "exit_code": 0,
+    "peak_rss_bytes": 67004006,
+    "peak_vram_bytes": null,
+    "latency_p50_ms": 264.214,
+    "latency_p95_ms": 312.068
+  },
+  "costs": {
+    "status": "not_measured",
+    "currency": "USD",
+    "amount": null,
+    "input_tokens": null,
+    "output_tokens": null,
+    "billing_reference_sha256": null
+  },
+  "artifacts": [
+    {
+      "kind": "evaluator_report",
+      "uri": "reports/benchmarks/runs/810-letta/full500/session.letta_archival_local.summary.json",
+      "sha256": "cfc72a84258ff2b67592fe71b9c78221a6763e4698b4e2c0853fe493939fc35e"
+    },
+    {
+      "kind": "row_level_results",
+      "uri": "reports/benchmarks/runs/810-letta/full500/session.letta_archival_local.rows.jsonl",
+      "sha256": "1710781079d6c97ff0ab579b50ab4a953505f2a6e1f30f32ec64bd47ac693730"
+    },
+    {
+      "kind": "execution_log",
+      "uri": "reports/benchmarks/runs/810-letta/full500/execution/letta-full500-session-1792117353.exec.json",
+      "sha256": "75bee3bcb23b23c87dff11234c47f89f4ed00dcf4c6de0b42f69f2d8b24d4496"
+    },
+    {
+      "kind": "execution_log",
+      "uri": "reports/benchmarks/runs/810-letta/full500/execution/letta-full500-session-1792117353.stdout",
+      "sha256": "7c67d77b61c6853be22c36927e814a3cf00cd2c9acc264904e8aa5083b374303"
+    },
+    {
+      "kind": "execution_log",
+      "uri": "reports/benchmarks/runs/810-letta/full500/execution/letta-full500-session-1792117353.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "kind": "other",
+      "uri": "reports/benchmarks/runs/810-letta/full500/letta-venv-freeze.txt",
+      "sha256": "56baa67ca203b851e2924a7b46616a90241049e90e17011a4be8e13c3dd511a7"
+    }
+  ],
+  "redaction": {
+    "reviewed": true,
+    "contains_secrets": false,
+    "contains_private_data": false,
+    "note": "Runs used an allowlisted environment with no tokens; argv contains only local paths and flags. Dataset is public LongMemEval-S."
+  },
+  "review": {
+    "status": "candidate",
+    "reviewer": null,
+    "decision_ref": null,
+    "limitations": [
+      "Retrieval only on the frozen LongMemEval-S evaluator; not LongMemEval QA or LoCoMo QA.",
+      "Measures Letta's archival-memory retrieval API, not Letta's end-to-end self-editing stateful agent.",
+      "Embedder (fastembed bge-small-en-v1.5) is this evaluator's local choice; Letta's defaults are hosted embedders.",
+      "Candidate: requires independent adapter/protocol review before acceptance."
+    ],
+    "comparison_eligibility": "not_assessed"
+  },
+  "authority_effect": "none"
+}

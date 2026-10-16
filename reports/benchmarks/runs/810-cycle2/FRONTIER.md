@@ -26,6 +26,12 @@
 | turn recall_all@10 | 0.7232 | 0.8353 (Hindsight) | **−0.112** | 51/4/364, p = 2.05e-11 | +0.112 [+0.081, +0.146] | MemPalace 0.8043 |
 | turn recall_all@50 | 0.8592 | 0.9570 (Hindsight) | **−0.098** | | | MemPalace 0.9427 |
 
+**Letta (archival, bge-small; class B, pending review; `../810-letta/full500`)** on the same 419 questions:
+- session @5 0.857, session @10 0.940;
+- turn @5 0.613, turn @10 0.780, turn @50 0.955.
+
+It beats Agent Memory at session @10 (38/18, p = 0.0105), turn @10 (58/34, p = 0.016) and turn @50 (50/10, p = 1.6e-7). It trails Hindsight at turn @5 (24/63, p = 3.5e-5) and turn @10 (18/41, p = 0.0038), and trails MemPalace at turn @5 (32/55, p = 0.018). It does not change the frontier.
+
 **#719 posture: `competitive deficit`, P1.** Retrieval is a core claimed capability. The deficit is material, significant on both planes, and holds against both reproduced hybrid peers.
 
 **Repeat status:**
@@ -65,6 +71,8 @@ This is a smaller cohort used to add systems too slow for the full 500. It is ne
 | Mem0 OSS 2.2.1 explicit (MiniLM) | 0.884 | 0.907 | 0.651 | 0.977 | session @5 6/4 (p = 0.754); turn @5 1/6 (p = 0.125) | complete, repeated (100/100 identical) |
 | Cognee 1.6.4 GLiNER, gen-1 | 0.953 | 0.977 | — | — | — | **exploratory** (preregistration erratum); not ranked |
 | Lexical overlap (control) | 0.814 | 0.860 | 0.605 | 0.767 | | control |
+
+**Caution, added 2026-10-16.** The subset overstated Letta. Its session @5 here is 0.953, the best of any system, but on the full 500 it is 0.857, below both hybrid peers (section 1). The subset rows are identical to the full-500 rows on the same questions. The subset is simply too small to rank systems a few points apart.
 
 **#719 posture: `competitive deficit`, P1.** This agrees in direction with section 1. Small-sample p-values are reported as-is: only the turn @50 depth result reaches p < 0.05 on its own.
 

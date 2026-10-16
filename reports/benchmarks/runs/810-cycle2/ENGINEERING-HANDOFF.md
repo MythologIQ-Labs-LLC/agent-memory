@@ -26,6 +26,7 @@
 **Offline counterfactual (not a runtime result):**
 - On the 43-question subset, reciprocal-rank fusion (k=60, deterministic tie-break) of Agent Memory's committed ranking with a pure dense ranking (Letta, bge-small) lifts session recall_all@5 from **0.837 to 0.953**: +5/−0, exact p = 0.0625, Δ +0.116 [+0.023, +0.209].
 - This shows complementarity between the signals. It does not show what the runtime would reach.
+- **Caveat, added 2026-10-16.** On the full 500, Letta alone reaches session @5 0.857, not the 0.953 it reached on the subset (`../810-letta/full500`). The subset fusion lift is therefore likely optimistic. It has not been recomputed at full-500 scale.
 
 **Candidate intervention:** add a dense ordering signal that fuses with the lexical ranking before return selection.
 
@@ -122,6 +123,11 @@ All of these must be validated on a cohort the candidate has not seen. v1, v2 an
   - Dense rankings are not uniformly better. Mem0 with MiniLM gets session @5 0.884, and turn @10 0.651, below Agent Memory's 0.721.
   - The embedder matters. Its quality differs by up to 0.16 recall on the same subset.
 - **Observed:** fusion beats either signal on some cuts. Turn @5 is 0.744 fused, against 0.628 for each alone.
+- **Observed at full-500 scale** (Letta, `../810-letta/full500`):
+  - dense passage retrieval reaches turn @50 0.955, against Agent Memory's 0.859 (50/10, p = 1.6e-7): the reach gap of Gap 2;
+  - its early ordering is weaker than the hybrid peers: turn @5 0.613, against 0.706 for Hindsight.
+
+  Dense alone fixes reach; it does not fix ordering.
 - **Not shown:**
   - that the runtime's pinned MiniLM-QA semantic route would match bge-small;
   - the effect of fusion at full-500 scale.
