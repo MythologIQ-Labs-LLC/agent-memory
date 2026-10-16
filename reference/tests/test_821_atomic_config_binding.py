@@ -372,10 +372,12 @@ class TamperedBindingsAreRefused(_Store):
             connection.execute(f"DELETE FROM {BINDING_TABLE}")
         self.refused("SQLite configuration binding is corrupt: .* 0 bindings")
 
-    def test_m10_a_dropped_table_is_refused(self):  # amendment 1
+    def test_m10_a_dropped_table_is_refused(self):  # amendment 1, review N4
         self.seeded()
         with _connect(self.root) as connection:
             connection.execute(f"DROP TABLE {BINDING_TABLE}")
+        self.refused("binding is missing although this store's generation witness")
+        (self.root / "generation-witness.json").unlink()  # the residual: no witness, no table
         self.refused("required configuration-bound state missing")
 
     def test_m28_an_empty_table_never_reaches_a_verifying_legacy_file(self):  # amendment 1 (review F3)
@@ -499,8 +501,12 @@ class LegacyStores(unittest.TestCase):
             self.open(root)
         with _connect(root) as connection:
             connection.execute(f"DROP TABLE {BINDING_TABLE}")
-        # with the whole table dropped (the residual of an unkeyed binding) the legacy file is
-        # reached, and it lags the committed generation
+        # the witness of the migrating generation still requires the row (review N4)
+        with self.assertRaisesRegex(RuntimeRecoveryError, "binding is missing although this store's generation witness"):
+            self.open(root)
+        (root / "generation-witness.json").unlink()
+        # with the table and the witness gone (the residual of unkeyed local state) the legacy
+        # file is reached, and it lags the committed generation
         with self.assertRaisesRegex(RuntimeRecoveryError, "does not match recovered base checkpoint: generation"):
             self.open(root)
 
@@ -733,6 +739,74 @@ class GenerationWitnessAmendment(_Store):
         self.assertNotIn("op:foreign", base.visibility_snapshots)
         memory.close()
         self.open().close()
+
+    def test_n1_a_writer_committing_during_recovery_never_reads_as_a_rollback(self):
+        """Review N1 (p13): a commit after the reader read the database. Read after it, the witness
+        led the reader's database and the refusal told the operator to remove it. Read before it,
+        the witness can only lag; what remains is the pre-existing F8a race (the binding is read
+        outside the recovery snapshot), which refuses as stale and a reopen succeeds."""
+
+        from agentmem_ref.runtime import sqlite_runtime
+
+        self.seeded()
+        writer = self.open(actor="agent:writer")
+        original = sqlite_runtime.SQLiteRestartSafeRuntime.recover.__func__
+
+        def recover_then_another_commit(cls, *args, **kwargs):
+            base = original(cls, *args, **kwargs)
+            writer.remember("memory:z", "Committed while the reader recovered.")
+            return base
+
+        with mock.patch.object(sqlite_runtime.SQLiteRestartSafeRuntime, "recover",
+                               classmethod(recover_then_another_commit)):
+            with self.assertRaises(RuntimeRecoveryError) as refused:
+                AgentMemory.open(self.root, tenant=TENANT, actor_id="agent:reader", scope=SCOPE, purpose="821")
+        self.assertNotIn("witness", str(refused.exception))
+        self.assertIn("stale or replayed", str(refused.exception))
+        writer.close()
+        self.open().close()
+
+    def test_n2_a_failed_first_open_before_the_database_exists_leaves_nothing_refused(self):
+        from agentmem_ref.state import sqlite_substrate as s
+
+        with mock.patch.object(s.SQLiteTemporalGraph, "__init__", side_effect=OSError("injected")):
+            with self.assertRaises(OSError):
+                AgentMemory.open(self.root, tenant=TENANT, actor_id="agent:a", scope=SCOPE, purpose="821")
+        self.assertIsNone(_witness(self.root))
+        self.open().close()
+
+    def test_n3_an_unreadable_witness_is_refused_and_doctor_reports_it(self):
+        self.seeded()
+        witness = self.root / "generation-witness.json"
+        witness.unlink()
+        witness.mkdir()
+        with self.assertRaisesRegex(RuntimeRecoveryError, "generation witness is unreadable"):
+            AgentMemory.open(self.root, tenant=TENANT, actor_id="agent:a", scope=SCOPE, purpose="821")
+        report = doctor.diagnose(self.root / "runtime-config.json", state_dir=self.root)
+        self.assertEqual(report["recovery"]["status"], "failed_closed")
+
+    def test_n3_an_interrupted_witness_write_reports_the_lag(self):
+        from agentmem_ref.runtime.sqlite_runtime import GenerationWitness
+
+        memory = self.open()
+        with mock.patch.object(GenerationWitness, "record", side_effect=KeyboardInterrupt):
+            with self.assertRaises(KeyboardInterrupt):
+                memory.remember("memory:x", "The deploy window is Thursday.")
+        self.assertFalse(memory.runtime.durable_runtime.generation_witness_current)
+
+    def test_n5_the_refusal_names_the_deliberate_restore_step(self):
+        memory = self.open()
+        memory.remember("memory:x", "The deploy window is Thursday.")
+        memory.close()
+        older = self.snapshot_database()
+        memory = self.open()
+        memory.remember("memory:y", "Lunch is at noon.")
+        memory.close()
+        _replace_database(self.root, older)
+        with self.assertRaisesRegex(RuntimeRecoveryError, "remove generation-witness.json to accept it"):
+            AgentMemory.open(self.root, tenant=TENANT, actor_id="agent:a", scope=SCOPE, purpose="821")
+        (self.root / "generation-witness.json").unlink()  # the operator's deliberate restore
+        self.assertEqual(len(self.open().recall("deploy window")["returned"]), 1)
 
     def test_f6_doctor_reports_an_unverified_row_on_failure(self):
         self.seeded()

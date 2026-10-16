@@ -820,8 +820,14 @@ class SQLiteConfigBindingStore:
         base_evidence: SQLiteRecoveryEvidence,
         tenant: str,
         provider_failures=(),
+        require_row: bool = False,
     ) -> tuple[ConfigBoundRecoveryEvidence, str]:
         current = self._read(substrate)
+        if current is None and require_row:
+            raise RuntimeRecoveryError(
+                "SQLite configuration binding is missing although this store's generation witness "
+                "shows its generations were bound in the database"
+            )
         if current is None:
             evidence = self.legacy.recover(
                 plan=plan, base_evidence=base_evidence, provider_failures=provider_failures
@@ -843,11 +849,18 @@ class GenerationWitness:
     """Advisory high-water mark of the last generation a #821 runtime committed (#821 amendment 1).
 
     ``{schema, generation, journal_record_digest}`` beside the database. It is written only after
-    the COMMIT it names (and with generation 0 at create, before any transaction), so it may lag the
-    database but never lead it, and a lagging witness is accepted. It can only refuse: a database
-    behind it, a database whose verified journal disagrees with it, or a witness with no database.
-    It is not a keyed or remote anchor; a store without one (pre-#821, or deleted) is not refused.
+    the COMMIT it names (and with generation 0 inside generation 1, once the database file exists),
+    so it may lag the database but never lead it, and a lagging witness is accepted. It can only
+    refuse: a database behind it, a database whose verified journal disagrees with it, a witness
+    that cannot be read, or a witness with no database. Recovery reads it before reading the
+    database, so a writer that commits in between can only make it lag (review N1). It is not a
+    keyed or remote anchor; a store without one (pre-#821, or deleted) is not refused.
     """
+
+    RESTORE_HINT = (
+        "explicit operator action is required (if this database was restored deliberately, remove "
+        f"{GENERATION_WITNESS_NAME} to accept it)"
+    )
 
     def __init__(self, root: str | Path) -> None:
         self.path = Path(root) / GENERATION_WITNESS_NAME
@@ -874,13 +887,15 @@ class GenerationWitness:
         finally:
             os.close(directory)
 
-    def verify(self, substrate: SQLiteTemporalGraph, generation: int) -> None:
-        """Refuse a database this store's witness shows is not its latest (call after base recovery)."""
+    def read(self) -> tuple[int, str] | None:
+        """``(generation, journal_record_digest)``, or None when there is no witness."""
 
         try:
             raw = self.path.read_bytes()
         except FileNotFoundError:
-            return
+            return None
+        except OSError as exc:
+            raise RuntimeRecoveryError(f"SQLite generation witness is unreadable: {exc}") from exc
         try:
             witness = json.loads(raw)
             if not isinstance(witness, dict) or witness.get("schema") != GENERATION_WITNESS_SCHEMA:
@@ -891,10 +906,19 @@ class GenerationWitness:
                 raise ValueError("malformed fields")
         except (KeyError, TypeError, ValueError) as exc:
             raise RuntimeRecoveryError(f"SQLite generation witness is unreadable: {exc}") from exc
+        return witnessed, digest
+
+    @classmethod
+    def check(cls, witnessed: tuple[int, str] | None, substrate: SQLiteTemporalGraph, generation: int) -> None:
+        """Refuse a recovered database that a witness read before it shows is not this store's latest."""
+
+        if witnessed is None:
+            return
+        witnessed, digest = witnessed
         if witnessed > generation:
             raise RuntimeRecoveryError(
                 f"SQLite database is behind this store's generation witness ({generation} < {witnessed}): "
-                "it was rolled back or replaced; explicit operator action is required"
+                f"it was rolled back or replaced; {cls.RESTORE_HINT}"
             )
         if witnessed == 0:
             return
@@ -905,7 +929,7 @@ class GenerationWitness:
         if journal is None or journal.get("record_digest") != digest:
             raise RuntimeRecoveryError(
                 f"SQLite database does not continue the history this store witnessed at generation {witnessed}: "
-                "it was replaced; explicit operator action is required"
+                f"it was replaced; {cls.RESTORE_HINT}"
             )
 
 
@@ -947,12 +971,12 @@ class SQLiteConfigBoundRestartRuntime(ConfigBoundRestartRuntime):
         _refuse_witness_without_database(root_path)
         profile = _profile_from_plan(plan)
         binding_store = SQLiteConfigBindingStore(root_path)
-        witness = GenerationWitness(root_path)
-        if not (root_path / "agent-memory.sqlite3").exists():
-            # From here on a lost database is refused, never re-created (amendment 1, F1).
-            witness.record(0, "")
 
         def bind_first(substrate, evidence, journal_record, generation_tenant):
+            # The database file exists now; from here on a lost database is refused, never
+            # re-created (amendment 1, F1; review N2). If generation 1 rolls back, the database
+            # without runtime state is refused anyway (preregistration section 8).
+            GenerationWitness(root_path).record(0, "")
             binding_store.publish(
                 substrate, plan=plan, base_evidence=evidence, journal_record=journal_record,
                 tenant=generation_tenant, previous_evidence=None, legacy_generation=None,
@@ -981,6 +1005,9 @@ class SQLiteConfigBoundRestartRuntime(ConfigBoundRestartRuntime):
     ) -> "SQLiteConfigBoundRestartRuntime":
         root_path = Path(root)
         _refuse_witness_without_database(root_path)
+        # Read the witness before the database (review N1): it only advances after a COMMIT, so a
+        # writer that commits in between can only make this reading lag, never lead.
+        witnessed = GenerationWitness(root_path).read()
         profile = _profile_from_plan(plan)
         base = SQLiteRestartSafeRuntime.recover(
             root_path,
@@ -988,7 +1015,7 @@ class SQLiteConfigBoundRestartRuntime(ConfigBoundRestartRuntime):
             verifier_registry=verifier_registry,
         )
         try:
-            GenerationWitness(root_path).verify(base.substrate, base.recovery_evidence.generation)
+            GenerationWitness.check(witnessed, base.substrate, base.recovery_evidence.generation)
             _assert_visibility_matches_plan(base.visibility_snapshots, plan)
             binding_store = SQLiteConfigBindingStore(root_path)
             evidence, scheme = binding_store.recover(
@@ -997,6 +1024,9 @@ class SQLiteConfigBoundRestartRuntime(ConfigBoundRestartRuntime):
                 base_evidence=base.recovery_evidence,
                 tenant=base.adapter.checkpoint_tenant(),
                 provider_failures=provider_failures,
+                # A witnessed generation was bound in a row; a missing table is not a pre-#821
+                # store (review N4).
+                require_row=witnessed is not None and witnessed[0] >= 1,
             )
         except BaseException:
             base.close()
@@ -1047,6 +1077,7 @@ class SQLiteConfigBoundRestartRuntime(ConfigBoundRestartRuntime):
         retried by the next generation (``generation_witness_current`` reports it)."""
 
         binding = self.base.substrate.read_runtime_binding()
+        self.generation_witness_current = False  # until the write below completes (review N3)
         try:
             self.witness.record(binding[0], binding[1])
         except OSError:

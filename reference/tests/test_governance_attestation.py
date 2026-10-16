@@ -422,10 +422,12 @@ class LegacyGovernanceMigrationTests(unittest.TestCase):
                 _exercise(memory)
                 self.legacy_snapshot = _digest(_base(memory)._governance_snapshot())
                 self.db = _base(memory).database_path
-                # A pre-#562 store was bound by the file written after COMMIT; the replaced
-                # publication above bypasses #821's in-transaction binder, so write that file.
+                # A pre-#562 store was bound by the file written after COMMIT and had no #821
+                # generation witness; the replaced publication above bypasses #821's binder, so
+                # write that file and drop the witness the current create path wrote.
                 durable = memory.runtime.durable_runtime
                 ConfigBindingStore(self.root).checkpoint(plan=durable.plan, base_evidence=_base(memory).recovery_evidence)
+            (Path(self.root) / "generation-witness.json").unlink()
 
     def tearDown(self) -> None:
         self.temp.cleanup()

@@ -129,3 +129,95 @@ The 4 failures are the same tests that fail in the author's recorded base run (`
 - test_benchmark_integration_contract runtime-baseline equivalence
 
 So the change adds no new failures. The Runtime Baseline declaration noted in preregistration §7 is still owed at integration. Output: `probes/out-fullsuite-cand.txt`.
+
+---
+
+## Re-verification at 96a3f59
+
+**Scope.** Candidate `96a3f59703e0ffdf96d1e92a5659601f4c119a27`, which is `4652356` (review and AMENDMENT-1) followed by the repairs. I reviewed it in a fresh detached worktree `review-821/cand2` and modified nothing in `/home/user/agent-memory`. I read AMENDMENT-1 and `git diff 69ccd3a 96a3f59 -- reference/agentmem_ref docs`.
+
+**Tests.**
+- `test_821` and `test_816` pass: 62 tests, which now include M22–M30.
+- Full suite: 3070 tests, `FAILED (failures=4, skipped=24, expected failures=1)`. These are the same 4 pre-existing failures as at `d2fc9782` and `69ccd3a` (`probes/out-fullsuite-cand2.txt`).
+
+**Probes.** p1–p9 were re-run on cand2 (`probes/out-p*-cand2.txt`; for p5, both directions against the base). New probes:
+- p10: kill matrix around the witness.
+- p11: witness attacks.
+- p12: opening a store while another process writes to it.
+- p13: a deterministic version of the p12 race.
+
+I also re-ran the author's `crash_window.py` and `downgrade.py` (`out-authors-*-cand2.txt`).
+
+### Per-finding status
+
+| Finding | Status | Evidence |
+|---|---|---|
+| F1 lost database re-created as empty memory | **FIXED** | `open`, doctor and `create` all refuse: "generation witness exists without SQLite runtime database". Nothing is created (p6, p11 W4). Residual: if the witness is deleted as well, the store is reinitialized (documented). |
+| F2 rollback of the database file only | **FIXED** | Each of these is refused: an older copy of the own database (W1), a `backup_to` copy restored over the live directory (W1), a fork that shares the history prefix at the same or a higher generation (W2), and another store's database at a higher generation (W2) or a lower one (W1) (p6, p11). Residuals: a deleted witness, a witness still at generation 0, and a byte-identical fork are all accepted (expected and documented). |
+| F3 legacy-file fallback while the table exists | **FIXED** | An empty table, or a deleted row with the table kept, is refused as corrupt even when a forged legacy file verifies (p3). Residual: drop the whole table and forge the file is still accepted (documented; see N4). |
+| F4 M21/A10 evidence | **PARTIAL** | `probes/downgrade.py` exists. I ran it at cand2 against `d2fc9782`: both migrated and new stores are `failed_closed`, and the unmigrated store recovers. p5 agrees. The run record is not committed yet; it is promised at freeze. |
+| F5 binder trusted unverified fields of the previous row | **FIXED** | A row rewritten out of band under an open handle makes the next generation fail with `RuntimeCheckpointConflict` and roll back. A later reopen still refuses the corrupted row, so nothing is repaired (p3). |
+| F6 doctor misreported on failure | **FIXED** | `configuration_binding_present: true`, `configuration_binding_scheme: "unverified"` (p8). |
+| F7 one-way migration | **FIXED** (documented in doc 47) | p5 is unchanged: the base refuses a migrated store. |
+| F8a recovery reads not in one snapshot | **OPEN** (pre-existing, out of scope) | Under concurrent writers it is still the dominant source of spurious refusals, on the base as well (p4, p12). See N1. |
+| F8b out-of-plan snapshot through the base runtime | **FIXED** | It is refused and rolled back, and the store stays openable (p9a). |
+| F8c bare base runtime | unchanged (pre-existing) | Fails closed with "stale or replayed" (p9e). |
+| F9 wording, `create` leak | **FIXED**, except the agmi item (**OPEN**, NOTE) | Doc wording is corrected and `create` closes its substrate. `reports/gauntlet/agmi-agent-memory-v1/*` still describes the boundary in terms of the "configuration-binding sidecar", and the external adapter was not re-run (it is not installed here). |
+
+### What held on 96a3f59
+
+- **(1) Crash interleavings.** p10 killed a real child process before, inside and after `GenerationWitness.record` (temp file written; renamed but directory not yet fsynced; after), and between COMMIT and the witness write. It covered create (the gen-0 and gen-1 witnesses), remember, recall, visibility snapshot, and a legacy store's first migrating generation.
+  - The witness never leads a committed database.
+  - Every store that committed a generation reopens to exactly that generation.
+  - A leftover `.generation-witness.json.tmp` is harmless.
+  - p1 (70 kill points) shows 0 violations, and p2 (60 in-process injections) shows 0 problems.
+- **(2) Defeating W1–W4.** Every attempt above was refused except the documented residuals.
+  - W3 refuses malformed witnesses: `true`, `2.0`, `-1`, `"2"`, and non-JSON.
+  - A forged witness can only refuse. A matching witness does not rescue a corrupt row (p11).
+- **(3) The witness never causes acceptance, and nothing writes it outside a generation.** Recovery, `posture()`, `close()` and doctor leave it byte- and mtime-identical. Opening and closing a legacy store creates no witness (p11).
+  - If the witness write fails with `OSError` after COMMIT, the call still reports success. `generation_witness_current` becomes False, and the next generation rewrites the witness.
+- **(4) p3–p9.** Every earlier "held" result still holds. The previous "unexpected" lines in p3 are now the intended F3/F5 refusals.
+- **(5) No new regression against the base:**
+  - Legacy 821 coherent and 809 stores: opening writes nothing; the first generation writes the row and the witness; the legacy file is byte-unchanged.
+  - The stranded store stays refused and byte-identical.
+  - A base-written store opens normally on cand2.
+  - A7: every table is byte-identical to the base except the binding table (p7 diff).
+  - The author's crash window shows no split state.
+
+### New findings
+
+**N1. NOTE (borderline SHOULD-FIX): the witness is checked after base recovery, so a concurrent commit looks like a rollback.**
+- **The race.** `SQLiteConfigBoundRestartRuntime.recover` checks the witness only after `SQLiteRestartSafeRuntime.recover` has read the database. Suppose another process commits and writes its witness in between. The opener then refuses with "SQLite database is behind this store's generation witness (2 < 3): it was rolled back or replaced; explicit operator action is required". Nothing was rolled back, and a reopen succeeds.
+- **Why only a note.** The race itself predates the witness: at `69ccd3a` the same interleaving gave "stale or replayed", and at the base it gave "does not match … generation" (p13, all three revisions). Under a tight write loop, F8a's governance-digest mismatch dominates anyway (p12).
+- **What the witness changes.** It turns a transient race into a diagnostic that tells an operator to intervene. The obvious intervention, deleting the witness, switches the protection off.
+- **Fix.** Read the witness *before* base recovery. It is written only after the COMMIT it names, so a value read at T0 is never ahead of a database read at T1 ≥ T0, and W1/W2 become race-free (the journal is append-only).
+
+**N2. NOTE: a crash or failure during the very first `open` can permanently refuse a directory that never held memory.**
+- **The window.** At create, the gen-0 witness is written before the SQLite file exists. A kill in that window (p10, create `w_renamed` / `w_after` call 1), or any failure there, leaves the witness with no database. Every later `open`, `create` and doctor then refuses with "incomplete durable state", until an operator deletes the witness.
+- **Why it matters.** No data is at risk, but at `69ccd3a` and at the base, a retry simply created the store. The diagnostic also wrongly implies a lost database.
+- **Fix.** Write the gen-0 witness after `SQLiteTemporalGraph` has created the file and before generation 1 commits. A crash there leaves a database file with no state, which is the existing §8 refusal. Alternatively, give a witness at generation 0 with no database its own diagnostic, plus a documented removal step.
+
+**N3. NOTE: a witness that exists but cannot be read escapes as a raw `OSError`.** `GenerationWitness.verify` catches only `FileNotFoundError`.
+- If the witness path is a directory, or unreadable, `open` raises `IsADirectoryError` or `PermissionError` rather than `RuntimeRecoveryError`. It still refuses.
+- `doctor.diagnose`, and therefore `posture()`, crash with that exception instead of reporting `failed_closed` (p11).
+- Related: a `KeyboardInterrupt` during the witness write leaves `generation_witness_current` at True, even though the witness lags (p11).
+- **Fix.** Map every `OSError` to W3, and set the flag to False before writing.
+
+**N4. NOTE (hardening): the witness could close F3's remaining downgrade.** A #821 runtime writes a witness at generation ≥ 1 only after a generation that wrote the binding row. So a store whose witness generation is ≥ 1 but which has no binding table is inconsistent. Refusing it, instead of falling back to the legacy file, closes "drop table + forge file" unless the attacker also deletes the witness.
+
+**N5. NOTE: legitimate disaster recovery now needs a documented step.** Restoring an intentional `backup_to` copy into the live directory is refused (W1, correctly). The message says only "explicit operator action is required", and neither doc 47 nor `backup_to` names the action, which is to remove or replace `generation-witness.json` deliberately.
+
+### Updated verdict
+
+**No blocking findings remain.**
+
+F1, F2, F3, F5, F6, F7, F8b and F9 are fixed, apart from the agmi wording. F4 becomes complete once the downgrade run record is committed. The witness never leads a committed database under any interruption I could produce, never causes acceptance, and is never written by recovery, `close()` or doctor. Nothing regresses against the base on the legacy fixtures or the 809 stores.
+
+Before freeze I recommend:
+- **N1:** read the witness before base recovery. It is a one-line move, and it removes a misleading "operator action required" refusal under concurrent use.
+- **N2:** reorder the gen-0 witness write.
+- **N3:** map `OSError` to W3, so doctor never crashes.
+- **N4:** optional hardening.
+- **N5 and the agmi wording:** documentation.
+
+None of these blocks freezing.
