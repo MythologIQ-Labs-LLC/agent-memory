@@ -1,0 +1,320 @@
+{
+ "tree": "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/review-c8/c6",
+ "selection": "relevance_sufficient",
+ "budget": 3,
+ "rows": [
+  {
+   "key": "bins",
+   "planted": 0,
+   "answer_ranks": [
+    1
+   ],
+   "planted_ranks": [],
+   "planted_above_last_answer": 0,
+   "answers_returned": 1,
+   "planted_returned": 0,
+   "returned": 1
+  },
+  {
+   "key": "bins",
+   "planted": 1,
+   "answer_ranks": [
+    1
+   ],
+   "planted_ranks": [
+    null
+   ],
+   "planted_above_last_answer": 0,
+   "answers_returned": 1,
+   "planted_returned": 0,
+   "returned": 1
+  },
+  {
+   "key": "bins",
+   "planted": 2,
+   "answer_ranks": [
+    1
+   ],
+   "planted_ranks": [
+    null,
+    10
+   ],
+   "planted_above_last_answer": 0,
+   "answers_returned": 1,
+   "planted_returned": 0,
+   "returned": 1
+  },
+  {
+   "key": "bins",
+   "planted": 4,
+   "answer_ranks": [
+    1
+   ],
+   "planted_ranks": [
+    null,
+    12,
+    4,
+    2
+   ],
+   "planted_above_last_answer": 0,
+   "answers_returned": 1,
+   "planted_returned": 0,
+   "returned": 1
+  },
+  {
+   "key": "bins",
+   "planted": 6,
+   "answer_ranks": [
+    1
+   ],
+   "planted_ranks": [
+    null,
+    14,
+    6,
+    3,
+    2,
+    4
+   ],
+   "planted_above_last_answer": 0,
+   "answers_returned": 1,
+   "planted_returned": 0,
+   "returned": 1
+  },
+  {
+   "key": "vet",
+   "planted": 0,
+   "answer_ranks": [
+    1
+   ],
+   "planted_ranks": [],
+   "planted_above_last_answer": 0,
+   "answers_returned": 1,
+   "planted_returned": 0,
+   "returned": 1
+  },
+  {
+   "key": "vet",
+   "planted": 1,
+   "answer_ranks": [
+    1
+   ],
+   "planted_ranks": [
+    10
+   ],
+   "planted_above_last_answer": 0,
+   "answers_returned": 1,
+   "planted_returned": 0,
+   "returned": 1
+  },
+  {
+   "key": "vet",
+   "planted": 2,
+   "answer_ranks": [
+    1
+   ],
+   "planted_ranks": [
+    11,
+    2
+   ],
+   "planted_above_last_answer": 0,
+   "answers_returned": 1,
+   "planted_returned": 0,
+   "returned": 1
+  },
+  {
+   "key": "vet",
+   "planted": 4,
+   "answer_ranks": [
+    1
+   ],
+   "planted_ranks": [
+    13,
+    3,
+    12,
+    2
+   ],
+   "planted_above_last_answer": 0,
+   "answers_returned": 1,
+   "planted_returned": 1,
+   "returned": 2
+  },
+  {
+   "key": "vet",
+   "planted": 6,
+   "answer_ranks": [
+    1
+   ],
+   "planted_ranks": [
+    15,
+    5,
+    14,
+    3,
+    7,
+    2
+   ],
+   "planted_above_last_answer": 0,
+   "answers_returned": 1,
+   "planted_returned": 1,
+   "returned": 2
+  },
+  {
+   "key": "allergy",
+   "planted": 0,
+   "answer_ranks": [
+    1,
+    3
+   ],
+   "planted_ranks": [],
+   "planted_above_last_answer": 0,
+   "answers_returned": 1,
+   "planted_returned": 0,
+   "returned": 1
+  },
+  {
+   "key": "allergy",
+   "planted": 1,
+   "answer_ranks": [
+    1,
+    3
+   ],
+   "planted_ranks": [
+    6
+   ],
+   "planted_above_last_answer": 0,
+   "answers_returned": 1,
+   "planted_returned": 0,
+   "returned": 1
+  },
+  {
+   "key": "allergy",
+   "planted": 2,
+   "answer_ranks": [
+    1,
+    5
+   ],
+   "planted_ranks": [
+    7,
+    6
+   ],
+   "planted_above_last_answer": 0,
+   "answers_returned": 1,
+   "planted_returned": 1,
+   "returned": 2
+  },
+  {
+   "key": "allergy",
+   "planted": 4,
+   "answer_ranks": [
+    1,
+    7
+   ],
+   "planted_ranks": [
+    9,
+    8,
+    2,
+    3
+   ],
+   "planted_above_last_answer": 2,
+   "answers_returned": 1,
+   "planted_returned": 2,
+   "returned": 3
+  },
+  {
+   "key": "allergy",
+   "planted": 6,
+   "answer_ranks": [
+    1,
+    9
+   ],
+   "planted_ranks": [
+    11,
+    10,
+    3,
+    5,
+    4,
+    2
+   ],
+   "planted_above_last_answer": 4,
+   "answers_returned": 1,
+   "planted_returned": 2,
+   "returned": 3
+  },
+  {
+   "key": "wifi",
+   "planted": 0,
+   "answer_ranks": [
+    1
+   ],
+   "planted_ranks": [],
+   "planted_above_last_answer": 0,
+   "answers_returned": 1,
+   "planted_returned": 0,
+   "returned": 1
+  },
+  {
+   "key": "wifi",
+   "planted": 1,
+   "answer_ranks": [
+    1
+   ],
+   "planted_ranks": [
+    9
+   ],
+   "planted_above_last_answer": 0,
+   "answers_returned": 1,
+   "planted_returned": 0,
+   "returned": 1
+  },
+  {
+   "key": "wifi",
+   "planted": 2,
+   "answer_ranks": [
+    1
+   ],
+   "planted_ranks": [
+    9,
+    11
+   ],
+   "planted_above_last_answer": 0,
+   "answers_returned": 1,
+   "planted_returned": 0,
+   "returned": 1
+  },
+  {
+   "key": "wifi",
+   "planted": 4,
+   "answer_ranks": [
+    1
+   ],
+   "planted_ranks": [
+    10,
+    13,
+    2,
+    11
+   ],
+   "planted_above_last_answer": 0,
+   "answers_returned": 1,
+   "planted_returned": 0,
+   "returned": 1
+  },
+  {
+   "key": "wifi",
+   "planted": 6,
+   "answer_ranks": [
+    1
+   ],
+   "planted_ranks": [
+    11,
+    14,
+    2,
+    12,
+    19,
+    5
+   ],
+   "planted_above_last_answer": 0,
+   "answers_returned": 1,
+   "planted_returned": 0,
+   "returned": 1
+  }
+ ]
+}

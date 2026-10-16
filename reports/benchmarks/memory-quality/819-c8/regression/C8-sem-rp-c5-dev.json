@@ -1,5 +1,5 @@
 {
- "agent_memory_revision": "69611b3fd1e2db0d4c9d9639d476350e2d30d290",
+ "agent_memory_revision": "f2626d0e170ea7c70eb6f55aedbf037407cf11b6",
  "budget": 10,
  "cohort_sha256": "a1fdb065916e5de4590a0b98df21c88dcb3de99d6847139c2640326d5ba41b51",
  "reference_worktree_dirty": false,
@@ -13,7 +13,7 @@
    "queries": [
     {
      "admitted_count": 2,
-     "elapsed_ms": 630.453,
+     "elapsed_ms": 652.087,
      "id": "hh-1",
      "kind": "single",
      "must_include_count": 1,
@@ -29,7 +29,7 @@
     },
     {
      "admitted_count": 1,
-     "elapsed_ms": 529.407,
+     "elapsed_ms": 595.66,
      "id": "hh-2",
      "kind": "multi",
      "must_include_count": 3,
@@ -44,7 +44,7 @@
     },
     {
      "admitted_count": 9,
-     "elapsed_ms": 533.549,
+     "elapsed_ms": 527.796,
      "id": "hh-3",
      "kind": "single",
      "must_include_count": 1,
@@ -67,7 +67,7 @@
     },
     {
      "admitted_count": 6,
-     "elapsed_ms": 503.332,
+     "elapsed_ms": 539.132,
      "id": "hh-4",
      "kind": "single",
      "must_include_count": 1,
@@ -87,7 +87,7 @@
     },
     {
      "admitted_count": 7,
-     "elapsed_ms": 523.839,
+     "elapsed_ms": 507.23,
      "id": "hh-5",
      "kind": "abstention",
      "must_include_count": 0,
@@ -108,7 +108,7 @@
     },
     {
      "admitted_count": 6,
-     "elapsed_ms": 503.45,
+     "elapsed_ms": 533.945,
      "id": "hh-6",
      "kind": "single",
      "must_include_count": 1,
@@ -128,7 +128,7 @@
     },
     {
      "admitted_count": 1,
-     "elapsed_ms": 499.089,
+     "elapsed_ms": 515.792,
      "id": "hh-7",
      "kind": "single",
      "must_include_count": 1,
@@ -150,7 +150,7 @@
    "queries": [
     {
      "admitted_count": 3,
-     "elapsed_ms": 670.534,
+     "elapsed_ms": 673.749,
      "id": "wk-1",
      "kind": "single",
      "must_include_count": 1,
@@ -167,7 +167,7 @@
     },
     {
      "admitted_count": 5,
-     "elapsed_ms": 540.098,
+     "elapsed_ms": 531.38,
      "id": "wk-2",
      "kind": "single",
      "must_include_count": 1,
@@ -186,7 +186,7 @@
     },
     {
      "admitted_count": 9,
-     "elapsed_ms": 523.633,
+     "elapsed_ms": 534.639,
      "id": "wk-3",
      "kind": "multi",
      "must_include_count": 2,
@@ -209,7 +209,7 @@
     },
     {
      "admitted_count": 6,
-     "elapsed_ms": 507.853,
+     "elapsed_ms": 549.855,
      "id": "wk-4",
      "kind": "single",
      "must_include_count": 1,
@@ -229,7 +229,7 @@
     },
     {
      "admitted_count": 4,
-     "elapsed_ms": 548.776,
+     "elapsed_ms": 557.807,
      "id": "wk-5",
      "kind": "single",
      "must_include_count": 1,
@@ -247,7 +247,7 @@
     },
     {
      "admitted_count": 7,
-     "elapsed_ms": 511.713,
+     "elapsed_ms": 522.222,
      "id": "wk-6",
      "kind": "abstention",
      "must_include_count": 0,
@@ -268,7 +268,7 @@
     },
     {
      "admitted_count": 7,
-     "elapsed_ms": 522.714,
+     "elapsed_ms": 553.677,
      "id": "wk-7",
      "kind": "single",
      "must_include_count": 1,
@@ -289,7 +289,7 @@
     },
     {
      "admitted_count": 3,
-     "elapsed_ms": 521.136,
+     "elapsed_ms": 509.255,
      "id": "wk-8",
      "kind": "single",
      "must_include_count": 1,
@@ -313,7 +313,7 @@
    "queries": [
     {
      "admitted_count": 1,
-     "elapsed_ms": 616.975,
+     "elapsed_ms": 690.641,
      "id": "tr-1",
      "kind": "single",
      "must_include_count": 1,
@@ -328,7 +328,7 @@
     },
     {
      "admitted_count": 2,
-     "elapsed_ms": 528.064,
+     "elapsed_ms": 523.432,
      "id": "tr-2",
      "kind": "multi",
      "must_include_count": 2,
@@ -344,7 +344,7 @@
     },
     {
      "admitted_count": 0,
-     "elapsed_ms": 536.86,
+     "elapsed_ms": 519.755,
      "id": "tr-3",
      "kind": "single",
      "must_include_count": 1,
@@ -357,7 +357,7 @@
     },
     {
      "admitted_count": 8,
-     "elapsed_ms": 512.803,
+     "elapsed_ms": 564.924,
      "id": "tr-4",
      "kind": "single",
      "must_include_count": 1,
@@ -379,7 +379,7 @@
     },
     {
      "admitted_count": 7,
-     "elapsed_ms": 525.893,
+     "elapsed_ms": 517.036,
      "id": "tr-5",
      "kind": "single",
      "must_include_count": 1,
@@ -400,7 +400,7 @@
     },
     {
      "admitted_count": 1,
-     "elapsed_ms": 528.674,
+     "elapsed_ms": 520.481,
      "id": "tr-6",
      "kind": "single",
      "must_include_count": 1,
@@ -415,7 +415,7 @@
     },
     {
      "admitted_count": 8,
-     "elapsed_ms": 525.494,
+     "elapsed_ms": 505.24,
      "id": "tr-7",
      "kind": "abstention",
      "must_include_count": 0,
@@ -444,7 +444,7 @@
    "queries": [
     {
      "admitted_count": 4,
-     "elapsed_ms": 603.849,
+     "elapsed_ms": 594.271,
      "id": "he-1",
      "kind": "multi",
      "must_include_count": 2,
@@ -462,7 +462,7 @@
     },
     {
      "admitted_count": 1,
-     "elapsed_ms": 516.143,
+     "elapsed_ms": 521.815,
      "id": "he-2",
      "kind": "single",
      "must_include_count": 1,
@@ -477,7 +477,7 @@
     },
     {
      "admitted_count": 2,
-     "elapsed_ms": 575.88,
+     "elapsed_ms": 522.205,
      "id": "he-3",
      "kind": "single",
      "must_include_count": 1,
@@ -493,7 +493,7 @@
     },
     {
      "admitted_count": 3,
-     "elapsed_ms": 516.76,
+     "elapsed_ms": 531.777,
      "id": "he-4",
      "kind": "single",
      "must_include_count": 1,
@@ -510,7 +510,7 @@
     },
     {
      "admitted_count": 2,
-     "elapsed_ms": 534.996,
+     "elapsed_ms": 564.077,
      "id": "he-5",
      "kind": "single",
      "must_include_count": 1,
@@ -526,7 +526,7 @@
     },
     {
      "admitted_count": 2,
-     "elapsed_ms": 553.156,
+     "elapsed_ms": 544.079,
      "id": "he-6",
      "kind": "abstention",
      "must_include_count": 0,
@@ -542,7 +542,7 @@
     },
     {
      "admitted_count": 3,
-     "elapsed_ms": 516.89,
+     "elapsed_ms": 626.288,
      "id": "he-7",
      "kind": "single",
      "must_include_count": 1,
@@ -566,7 +566,7 @@
    "queries": [
     {
      "admitted_count": 3,
-     "elapsed_ms": 617.744,
+     "elapsed_ms": 628.196,
      "id": "fa-1",
      "kind": "single",
      "must_include_count": 1,
@@ -583,7 +583,7 @@
     },
     {
      "admitted_count": 3,
-     "elapsed_ms": 511.318,
+     "elapsed_ms": 519.833,
      "id": "fa-2",
      "kind": "single",
      "must_include_count": 1,
@@ -600,7 +600,7 @@
     },
     {
      "admitted_count": 1,
-     "elapsed_ms": 490.054,
+     "elapsed_ms": 512.042,
      "id": "fa-3",
      "kind": "single",
      "must_include_count": 1,
@@ -615,7 +615,7 @@
     },
     {
      "admitted_count": 5,
-     "elapsed_ms": 494.068,
+     "elapsed_ms": 594.105,
      "id": "fa-4",
      "kind": "single",
      "must_include_count": 1,
@@ -634,7 +634,7 @@
     },
     {
      "admitted_count": 4,
-     "elapsed_ms": 495.132,
+     "elapsed_ms": 521.057,
      "id": "fa-5",
      "kind": "single",
      "must_include_count": 1,
@@ -652,7 +652,7 @@
     },
     {
      "admitted_count": 5,
-     "elapsed_ms": 503.965,
+     "elapsed_ms": 522.865,
      "id": "fa-6",
      "kind": "abstention",
      "must_include_count": 0,
@@ -678,7 +678,7 @@
    "queries": [
     {
      "admitted_count": 9,
-     "elapsed_ms": 661.008,
+     "elapsed_ms": 651.592,
      "id": "pr-1",
      "kind": "single",
      "must_include_count": 1,
@@ -701,7 +701,7 @@
     },
     {
      "admitted_count": 0,
-     "elapsed_ms": 513.896,
+     "elapsed_ms": 508.887,
      "id": "pr-2",
      "kind": "single",
      "must_include_count": 1,
@@ -714,7 +714,7 @@
     },
     {
      "admitted_count": 8,
-     "elapsed_ms": 503.361,
+     "elapsed_ms": 498.67,
      "id": "pr-3",
      "kind": "multi",
      "must_include_count": 2,
@@ -736,7 +736,7 @@
     },
     {
      "admitted_count": 8,
-     "elapsed_ms": 556.845,
+     "elapsed_ms": 510.957,
      "id": "pr-4",
      "kind": "single",
      "must_include_count": 1,
@@ -758,7 +758,7 @@
     },
     {
      "admitted_count": 10,
-     "elapsed_ms": 518.598,
+     "elapsed_ms": 516.921,
      "id": "pr-5",
      "kind": "single",
      "must_include_count": 1,
@@ -782,7 +782,7 @@
     },
     {
      "admitted_count": 9,
-     "elapsed_ms": 575.941,
+     "elapsed_ms": 516.148,
      "id": "pr-6",
      "kind": "abstention",
      "must_include_count": 0,
@@ -812,7 +812,7 @@
    "queries": [
     {
      "admitted_count": 2,
-     "elapsed_ms": 590.617,
+     "elapsed_ms": 587.641,
      "id": "co-1",
      "kind": "single",
      "must_include_count": 1,
@@ -828,7 +828,7 @@
     },
     {
      "admitted_count": 5,
-     "elapsed_ms": 506.501,
+     "elapsed_ms": 509.915,
      "id": "co-2",
      "kind": "single",
      "must_include_count": 1,
@@ -836,8 +836,8 @@
      "precision": 0.4,
      "recall": 1.0,
      "returned": [
-      "memory:gym",
       "memory:address",
+      "memory:gym",
       "memory:gym2",
       "memory:car2",
       "memory:coach"
@@ -847,7 +847,7 @@
     },
     {
      "admitted_count": 4,
-     "elapsed_ms": 503.204,
+     "elapsed_ms": 513.444,
      "id": "co-3",
      "kind": "single",
      "must_include_count": 1,
@@ -865,7 +865,7 @@
     },
     {
      "admitted_count": 3,
-     "elapsed_ms": 536.86,
+     "elapsed_ms": 521.948,
      "id": "co-4",
      "kind": "single",
      "must_include_count": 1,
@@ -889,7 +889,7 @@
    "queries": [
     {
      "admitted_count": 2,
-     "elapsed_ms": 543.501,
+     "elapsed_ms": 584.843,
      "id": "sc-1",
      "kind": "single",
      "must_include_count": 1,
@@ -905,7 +905,7 @@
     },
     {
      "admitted_count": 2,
-     "elapsed_ms": 513.986,
+     "elapsed_ms": 544.737,
      "id": "sc-2",
      "kind": "abstention",
      "must_include_count": 0,
@@ -921,7 +921,7 @@
     },
     {
      "admitted_count": 0,
-     "elapsed_ms": 530.532,
+     "elapsed_ms": 498.335,
      "id": "sc-3",
      "kind": "abstention",
      "must_include_count": 0,
@@ -998,7 +998,7 @@
    "queries": 48,
    "safety_violations": 0
   },
-  "recall_latency_ms_p50": 525.494,
-  "recall_latency_ms_p95": 630.453
+  "recall_latency_ms_p50": 527.796,
+  "recall_latency_ms_p95": 652.087
  }
 }

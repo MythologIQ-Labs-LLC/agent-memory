@@ -11,6 +11,7 @@ Tests marked FAIL-FIRST fail on C7 ``d05bf2b1``; the others hold on C6, C7 and C
 
 from __future__ import annotations
 
+import os
 import sys
 import tempfile
 import unittest
@@ -20,6 +21,7 @@ from unittest import mock
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from agentmem_ref import AgentMemory  # noqa: E402
 from agentmem_ref.runtime import vector_retrieval  # noqa: E402
 from agentmem_ref.runtime.temporal_order_constraints import ExplicitCurrentCrossFactRankingPolicy  # noqa: E402
 from test_c7_rank_fusion import BOILER, BOILER_FACTS, BOILER_SIMS, _Store, _TableRepresentation  # noqa: E402
@@ -119,6 +121,31 @@ class TimeOrderedIntentsKeepTheTemporalOrder(_Store):
 
     def test_now_in_the_question_newer_first(self):  # FAIL-FIRST
         self.case("Who is my manager now?", None, "ranked_prefix")
+
+
+@unittest.skipUnless(os.environ.get("AGENT_MEMORY_REPRESENTATION_DIR") or os.environ.get("AGENT_MEMORY_REQUIRE_REPRESENTATION"),
+                     "pinned representation model not provisioned")
+class TimeOrderedIntentsWithThePinnedModel(unittest.TestCase):
+    """C8 review finding 5: still-valid conflicting pairs under declared current intent, real model."""
+
+    PAIRS = [
+        ("Who is my manager?", "My manager is Joanna Pike.", "My manager is Rahul Mehta."),
+        ("What car do we drive?", "We drive a silver Ford Focus.", "We drive a blue Kia Niro."),
+        ("Who do we bank with?", "We bank with Barclays.", "We bank with Monzo."),
+    ]
+
+    def test_the_newer_statement_ranks_first(self):
+        for query, old_text, new_text in self.PAIRS:
+            with tempfile.TemporaryDirectory() as folder, AgentMemory.open(
+                    folder, tenant="tenant:c8", actor_id="agent:c8", scope="user:c8", purpose="c8",
+                    semantic_retrieval="required") as memory:
+                memory.remember("memory:filler", "The boiler is serviced in May.")
+                old = memory.remember("memory:old", old_text, valid_from="2023-01-01T00:00:00Z")["fact_uuid"]
+                new = memory.remember("memory:new", new_text, valid_from="2025-06-01T00:00:00Z")["fact_uuid"]
+                for selection in ("ranked_prefix", "relevance_sufficient"):
+                    result = memory.recall(query, budget=10, return_selection=selection,
+                                           temporal_intent={"mode": "current", "reference_time": "2026-10-16T00:00:00Z"})
+                    self.assertLess(result["admitted"].index(new), result["admitted"].index(old), (query, selection))
 
 
 if __name__ == "__main__":

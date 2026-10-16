@@ -1,0 +1,266 @@
+{
+ "C4+sem rp": {
+  "R1 cover@5": [
+   23,
+   23
+  ],
+  "R2 needed@5": [
+   36,
+   36
+  ],
+  "cover@3": 21,
+  "cover@10": 30,
+  "queries_with_needed": 51
+ },
+ "C6+sem rp": {
+  "R1 cover@5": [
+   23,
+   23
+  ],
+  "R2 needed@5": [
+   36,
+   36
+  ],
+  "cover@3": 21,
+  "cover@10": 30,
+  "queries_with_needed": 51
+ },
+ "C8 rp": {
+  "R1 cover@5": [
+   27,
+   27
+  ],
+  "R2 needed@5": [
+   43,
+   43
+  ],
+  "cover@3": 23,
+  "cover@10": 35,
+  "queries_with_needed": 51
+ },
+ "R1 margin": 4,
+ "R2 margin": 7,
+ "R4 lost": [],
+ "cover@5 by kind [n, C4+sem, C8]": {
+  "multi": [
+   18,
+   0,
+   1
+  ],
+  "corroborate": [
+   6,
+   2,
+   3
+  ],
+  "distractor": [
+   6,
+   5,
+   5
+  ],
+  "deep": [
+   6,
+   2,
+   4
+  ],
+  "conflict": [
+   6,
+   5,
+   5
+  ],
+  "conflict_declared": [
+   9,
+   9,
+   9
+  ]
+ },
+ "I4' rows": [
+  {
+   "id": "garden-8",
+   "C6rp": true,
+   "C8rp": true,
+   "C6rs": true,
+   "C8rs": true,
+   "applicability_C6": [
+    "applicable",
+    "outside_target_interval"
+   ],
+   "ranks_C6": [
+    1,
+    28
+   ],
+   "ranks_C8": [
+    1,
+    28
+   ]
+  },
+  {
+   "id": "money-8",
+   "C6rp": true,
+   "C8rp": true,
+   "C6rs": true,
+   "C8rs": true,
+   "applicability_C6": [
+    "applicable",
+    "outside_target_interval"
+   ],
+   "ranks_C6": [
+    1,
+    26
+   ],
+   "ranks_C8": [
+    1,
+    26
+   ]
+  },
+  {
+   "id": "school-8",
+   "C6rp": true,
+   "C8rp": true,
+   "C6rs": true,
+   "C8rs": true,
+   "applicability_C6": [
+    "applicable",
+    "outside_target_interval"
+   ],
+   "ranks_C6": [
+    1,
+    24
+   ],
+   "ranks_C8": [
+    1,
+    24
+   ]
+  },
+  {
+   "id": "kitchen-8",
+   "C6rp": true,
+   "C8rp": true,
+   "C6rs": true,
+   "C8rs": true,
+   "applicability_C6": [
+    "applicable",
+    "outside_target_interval"
+   ],
+   "ranks_C6": [
+    1,
+    11
+   ],
+   "ranks_C8": [
+    1,
+    11
+   ]
+  },
+  {
+   "id": "tech-8",
+   "C6rp": true,
+   "C8rp": true,
+   "C6rs": true,
+   "C8rs": true,
+   "applicability_C6": [
+    "applicable",
+    "outside_target_interval"
+   ],
+   "ranks_C6": [
+    1,
+    2
+   ],
+   "ranks_C8": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": "community-8",
+   "C6rp": true,
+   "C8rp": true,
+   "C6rs": true,
+   "C8rs": true,
+   "applicability_C6": [
+    "applicable",
+    "outside_target_interval"
+   ],
+   "ranks_C6": [
+    2,
+    9
+   ],
+   "ranks_C8": [
+    1,
+    9
+   ]
+  },
+  {
+   "id": "asof-1",
+   "C6rp": true,
+   "C8rp": true,
+   "C6rs": true,
+   "C8rs": true,
+   "applicability_C6": [
+    "applicable",
+    "prospectively_applicable"
+   ],
+   "ranks_C6": [
+    1,
+    9
+   ],
+   "ranks_C8": [
+    1,
+    8
+   ]
+  },
+  {
+   "id": "asof-2",
+   "C6rp": true,
+   "C8rp": true,
+   "C6rs": true,
+   "C8rs": true,
+   "applicability_C6": [
+    "applicable",
+    "prospectively_applicable"
+   ],
+   "ranks_C6": [
+    1,
+    14
+   ],
+   "ranks_C8": [
+    1,
+    14
+   ]
+  },
+  {
+   "id": "asof-3",
+   "C6rp": true,
+   "C8rp": true,
+   "C6rs": true,
+   "C8rs": true,
+   "applicability_C6": [
+    "applicable",
+    "outside_target_interval"
+   ],
+   "ranks_C6": [
+    1,
+    4
+   ],
+   "ranks_C8": [
+    1,
+    4
+   ]
+  }
+ ],
+ "I4' pairs with equal applicability (where a temporal ORDER stage, not the tier, could decide)": 0,
+ "S1 differing returned sets": [],
+ "S1 order-only differences": [
+  "garden-1",
+  "garden-2",
+  "garden-5",
+  "money-1",
+  "money-7",
+  "school-1",
+  "school-4",
+  "school-6",
+  "tech-4",
+  "community-4",
+  "community-7",
+  "asof-1"
+ ],
+ "budget-binding C6 queries (returned==10)": []
+}

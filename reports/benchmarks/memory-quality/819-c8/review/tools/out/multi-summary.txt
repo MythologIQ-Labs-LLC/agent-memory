@@ -1,0 +1,5 @@
+C4+sem rp multi queries 17 needed 45 all@5 4 all@10 8 needed@5 19 not admitted 5 all needed returned 8 needed returned 28
+C6+sem rp multi queries 17 needed 45 all@5 4 all@10 8 needed@5 19 not admitted 5 all needed returned 8 needed returned 28
+C8 rp multi queries 17 needed 45 all@5 5 all@10 9 needed@5 24 not admitted 5 all needed returned 9 needed returned 32
+C6+sem rs multi queries 17 needed 45 all@5 4 all@10 9 needed@5 19 not admitted 10 all needed returned 5 needed returned 21
+C8 rs multi queries 17 needed 45 all@5 5 all@10 10 needed@5 24 not admitted 10 all needed returned 5 needed returned 21

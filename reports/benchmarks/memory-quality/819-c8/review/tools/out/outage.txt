@@ -1,0 +1,102 @@
+== c8
+  "posture": "disabled",
+  "policy": [
+   "3.4.0"
+  ],
+  "fusion": [
+   "None"
+  ],
+  "admitted": 4
+ },
+ "open_required": {
+  "opened": false,
+  "error": "RepresentationUnavailable",
+  "msg": "model file missing or not a regular file: /tmp/tmp1vagsj_7/onnx/model.onnx"
+ },
+ "route_scan_query_embed:RepresentationUnavailable": {
+  "ok": false,
+  "error": "RepresentationUnavailable",
+  "msg": "provider down"
+ },
+ "route_scan_fact_embed:RepresentationUnavailable": {
+  "ok": false,
+  "error": "RepresentationUnavailable",
+  "msg": "provider down"
+ },
+ "fusion_similarities:RepresentationUnavailable:ranked_prefix": {
+  "ok": true,
+  "policy": [
+   "3.4.0"
+  ],
+  "fusion": [
+   "unavailable"
+  ],
+  "admitted": 13
+ },
+ "fusion_similarities:RepresentationUnavailable:relevance_sufficient": {
+  "ok": true,
+  "policy": [
+   "3.4.0"
+  ],
+  "fusion": [
+   "unavailable"
+  ],
+  "admitted": 13
+ },
+ "route_scan_query_embed:RuntimeError": {
+  "ok": false,
+  "error": "RuntimeError",
+  "msg": "provider down"
+ },
+ "route_scan_fact_embed:RuntimeError": {
+  "ok": false,
+  "error": "RuntimeError",
+  "msg": "provider down"
+ },
+ "fusion_similarities:RuntimeError": {
+  "ok": false,
+  "error": "RuntimeError",
+  "msg": "provider down"
+ }
+}
+== c6
+{
+ "open_auto": {
+  "opened": true,
+  "posture": "disabled",
+  "policy": [
+   "3.4.0"
+  ],
+  "fusion": [
+   "None"
+  ],
+  "admitted": 4
+ },
+ "open_required": {
+  "opened": false,
+  "error": "RepresentationUnavailable",
+  "msg": "model file missing or not a regular file: /tmp/tmpn3tjxf6t/onnx/model.onnx"
+ },
+ "route_scan_query_embed:RepresentationUnavailable": {
+  "ok": false,
+  "error": "RepresentationUnavailable",
+  "msg": "provider down"
+ },
+ "route_scan_fact_embed:RepresentationUnavailable": {
+  "ok": false,
+  "error": "RepresentationUnavailable",
+  "msg": "provider down"
+ },
+ "fusion_similarities:RepresentationUnavailable": "no similarities() on this tree (no fusion)",
+ "route_scan_query_embed:RuntimeError": {
+  "ok": false,
+  "error": "RuntimeError",
+  "msg": "provider down"
+ },
+ "route_scan_fact_embed:RuntimeError": {
+  "ok": false,
+  "error": "RuntimeError",
+  "msg": "provider down"
+ },
+ "fusion_similarities:RuntimeError": "no similarities() on this tree (no fusion)"
+}

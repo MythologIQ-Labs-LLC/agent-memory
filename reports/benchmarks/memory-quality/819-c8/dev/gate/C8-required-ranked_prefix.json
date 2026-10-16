@@ -22,7 +22,7 @@
   "newer_first": 2,
   "declared_preferred_first": 9,
   "abstention_returning": 6,
-  "recall_p50_ms": 25.02
+  "recall_p50_ms": 25.36
  },
  "rows": [
   {
@@ -96,7 +96,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 386.81,
+   "recall_ms": 387.67,
    "admitted_scores": [
     [
      "memory:stuff-grow",
@@ -203,7 +203,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 25.47,
+   "recall_ms": 26.53,
    "admitted_scores": [
     [
      "memory:plot",
@@ -463,7 +463,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 23.39,
+   "recall_ms": 26.07,
    "admitted_scores": [
     [
      "memory:water-butt",
@@ -707,7 +707,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 26.09,
+   "recall_ms": 28.79,
    "admitted_scores": [
     [
      "memory:filler-garden-2",
@@ -957,7 +957,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 23.19,
+   "recall_ms": 23.79,
    "admitted_scores": [
     [
      "memory:plot",
@@ -1062,7 +1062,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 25.25,
+   "recall_ms": 23.21,
    "admitted_scores": [
     [
      "memory:filler-garden-3",
@@ -1156,7 +1156,7 @@
      1
     ]
    },
-   "recall_ms": 35.0,
+   "recall_ms": 26.6,
    "admitted_scores": [
     [
      "memory:fee-old",
@@ -1340,7 +1340,7 @@
      "bm25": 3.7502733283691385,
      "corroboration": 1,
      "semantic_route": 0.7516150955226305,
-     "ordered_before_next_by": "fused_relevance_desc:rrf_admitted",
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
      "cosine": 0.752,
      "dense_rank": 1
     }
@@ -1354,37 +1354,37 @@
    "top10": [
     "memory:shed-new",
     "memory:beans",
-    "memory:chair",
     "memory:water-butt",
-    "memory:filler-garden-15",
-    "memory:filler-garden-8",
-    "memory:fee-old",
-    "memory:compost",
+    "memory:chair",
     "memory:filler-garden-14",
-    "memory:copper"
+    "memory:filler-garden-15",
+    "memory:fee-old",
+    "memory:squash",
+    "memory:filler-garden-1",
+    "memory:filler-garden-8"
    ],
    "returned": [
     "memory:shed-new",
     "memory:beans",
-    "memory:chair",
     "memory:water-butt",
-    "memory:filler-garden-15",
-    "memory:filler-garden-8",
-    "memory:fee-old",
-    "memory:compost",
+    "memory:chair",
     "memory:filler-garden-14",
-    "memory:copper"
+    "memory:filler-garden-15",
+    "memory:fee-old",
+    "memory:squash",
+    "memory:filler-garden-1",
+    "memory:filler-garden-8"
    ],
    "extra": [
     "memory:beans",
-    "memory:chair",
     "memory:water-butt",
-    "memory:filler-garden-15",
-    "memory:filler-garden-8",
-    "memory:fee-old",
-    "memory:compost",
+    "memory:chair",
     "memory:filler-garden-14",
-    "memory:copper"
+    "memory:filler-garden-15",
+    "memory:fee-old",
+    "memory:squash",
+    "memory:filler-garden-1",
+    "memory:filler-garden-8"
    ],
    "passed": false,
    "newer_first": true,
@@ -1401,7 +1401,7 @@
      28
     ]
    },
-   "recall_ms": 29.98,
+   "recall_ms": 26.94,
    "admitted_scores": [
     [
      "memory:shed-new",
@@ -1416,40 +1416,16 @@
      0.3559
     ],
     [
-     "memory:chair",
-     1.600139472781015,
-     null,
-     0.3615
-    ],
-    [
      "memory:water-butt",
      1.675341850091872,
      null,
      0.3332
     ],
     [
-     "memory:filler-garden-15",
-     1.3995599065345956,
+     "memory:chair",
+     1.600139472781015,
      null,
-     0.3604
-    ],
-    [
-     "memory:filler-garden-8",
-     1.2502531852082317,
-     null,
-     0.404
-    ],
-    [
-     "memory:fee-old",
-     1.379962449379691,
-     null,
-     0.2039
-    ],
-    [
-     "memory:compost",
-     0.07851017655105405,
-     null,
-     0.2785
+     0.3615
     ],
     [
      "memory:filler-garden-14",
@@ -1458,10 +1434,16 @@
      0.1706
     ],
     [
-     "memory:copper",
-     0.06957294104173968,
+     "memory:filler-garden-15",
+     1.3995599065345956,
      null,
-     0.2239
+     0.3604
+    ],
+    [
+     "memory:fee-old",
+     1.379962449379691,
+     null,
+     0.2039
     ],
     [
      "memory:squash",
@@ -1470,28 +1452,16 @@
      0.1476
     ],
     [
-     "memory:filler-garden-4",
-     0.057242290107829046,
+     "memory:filler-garden-1",
+     1.3119095066705553,
      null,
-     0.2482
+     0.0957
     ],
     [
-     "memory:filler-garden-16",
-     0.07183752140114531,
+     "memory:filler-garden-8",
+     1.2502531852082317,
      null,
-     0.1775
-    ],
-    [
-     "memory:filler-garden-7",
-     0.057242290107829046,
-     null,
-     0.2135
-    ],
-    [
-     "memory:plot",
-     0.05186181375304615,
-     null,
-     0.3152
+     0.404
     ],
     [
      "memory:hose-ban",
@@ -1500,46 +1470,16 @@
      0.1468
     ],
     [
-     "memory:filler-garden-0",
-     0.057242290107829046,
+     "memory:compost",
+     0.07851017655105405,
      null,
-     0.1977
+     0.2785
     ],
     [
-     "memory:filler-garden-11",
-     0.05186181375304615,
+     "memory:filler-garden-16",
+     0.07183752140114531,
      null,
-     0.2549
-    ],
-    [
-     "memory:filler-garden-1",
-     1.3119095066705553,
-     null,
-     0.0957
-    ],
-    [
-     "memory:tools",
-     0.057242290107829046,
-     null,
-     0.1657
-    ],
-    [
-     "memory:frost",
-     0.06957294104173968,
-     null,
-     0.1028
-    ],
-    [
-     "memory:filler-garden-12",
-     0.057242290107829046,
-     null,
-     0.1144
-    ],
-    [
-     "memory:filler-garden-5",
-     0.057242290107829046,
-     null,
-     0.1129
+     0.1775
     ],
     [
      "memory:filler-garden-10",
@@ -1548,10 +1488,52 @@
      -0.0758
     ],
     [
-     "memory:fee-new",
-     0.05186181375304615,
+     "memory:copper",
+     0.06957294104173968,
      null,
-     0.1612
+     0.2239
+    ],
+    [
+     "memory:frost",
+     0.06957294104173968,
+     null,
+     0.1028
+    ],
+    [
+     "memory:tools",
+     0.057242290107829046,
+     null,
+     0.1657
+    ],
+    [
+     "memory:filler-garden-5",
+     0.057242290107829046,
+     null,
+     0.1129
+    ],
+    [
+     "memory:filler-garden-0",
+     0.057242290107829046,
+     null,
+     0.1977
+    ],
+    [
+     "memory:filler-garden-7",
+     0.057242290107829046,
+     null,
+     0.2135
+    ],
+    [
+     "memory:filler-garden-4",
+     0.057242290107829046,
+     null,
+     0.2482
+    ],
+    [
+     "memory:filler-garden-12",
+     0.057242290107829046,
+     null,
+     0.1144
     ],
     [
      "memory:filler-garden-6",
@@ -1560,10 +1542,28 @@
      0.0035
     ],
     [
+     "memory:filler-garden-11",
+     0.05186181375304615,
+     null,
+     0.2549
+    ],
+    [
+     "memory:plot",
+     0.05186181375304615,
+     null,
+     0.3152
+    ],
+    [
      "memory:filler-garden-9",
      0.05186181375304615,
      null,
      0.0835
+    ],
+    [
+     "memory:fee-new",
+     0.05186181375304615,
+     null,
+     0.1612
     ],
     [
      "memory:shed-old",
@@ -1615,7 +1615,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 32.23,
+   "recall_ms": 23.25,
    "admitted_scores": [
     [
      "memory:stuff-grow",
@@ -1741,7 +1741,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 380.4,
+   "recall_ms": 368.98,
    "admitted_scores": [
     [
      "memory:stuff-subs",
@@ -1892,7 +1892,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 29.62,
+   "recall_ms": 25.37,
    "admitted_scores": [
     [
      "memory:isa",
@@ -2141,7 +2141,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 26.46,
+   "recall_ms": 22.41,
    "admitted_scores": [
     [
      "memory:stuff-subs",
@@ -2275,7 +2275,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 27.15,
+   "recall_ms": 24.51,
    "admitted_scores": [
     [
      "memory:accountant",
@@ -2459,7 +2459,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 23.67,
+   "recall_ms": 22.12,
    "admitted_scores": [
     [
      "memory:tax-return",
@@ -2602,7 +2602,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 27.7,
+   "recall_ms": 22.68,
    "admitted_scores": [
     [
      "memory:filler-money-8",
@@ -2747,7 +2747,7 @@
      2
     ]
    },
-   "recall_ms": 23.89,
+   "recall_ms": 22.39,
    "admitted_scores": [
     [
      "memory:bank-new",
@@ -2805,7 +2805,7 @@
      "bm25": 3.6974710347604205,
      "corroboration": 1,
      "semantic_route": 0.5168353383983909,
-     "ordered_before_next_by": "fused_relevance_desc:rrf_admitted",
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
      "cosine": 0.517,
      "dense_rank": 3
     }
@@ -2818,37 +2818,37 @@
    "admitted_count": 26,
    "top10": [
     "memory:rate-new",
-    "memory:isa",
     "memory:mortgage",
+    "memory:isa",
     "memory:loan",
     "memory:filler-money-14",
-    "memory:gym-sub",
     "memory:filler-money-15",
-    "memory:charity",
-    "memory:tax-return",
-    "memory:filler-money-11"
+    "memory:gym-sub",
+    "memory:filler-money-9",
+    "memory:filler-money-4",
+    "memory:filler-money-6"
    ],
    "returned": [
     "memory:rate-new",
-    "memory:isa",
     "memory:mortgage",
+    "memory:isa",
     "memory:loan",
     "memory:filler-money-14",
-    "memory:gym-sub",
     "memory:filler-money-15",
-    "memory:charity",
-    "memory:tax-return",
-    "memory:filler-money-11"
+    "memory:gym-sub",
+    "memory:filler-money-9",
+    "memory:filler-money-4",
+    "memory:filler-money-6"
    ],
    "extra": [
     "memory:mortgage",
     "memory:loan",
     "memory:filler-money-14",
-    "memory:gym-sub",
     "memory:filler-money-15",
-    "memory:charity",
-    "memory:tax-return",
-    "memory:filler-money-11"
+    "memory:gym-sub",
+    "memory:filler-money-9",
+    "memory:filler-money-4",
+    "memory:filler-money-6"
    ],
    "passed": false,
    "newer_first": true,
@@ -2865,7 +2865,7 @@
      26
     ]
    },
-   "recall_ms": 30.64,
+   "recall_ms": 27.81,
    "admitted_scores": [
     [
      "memory:rate-new",
@@ -2874,16 +2874,16 @@
      0.5168
     ],
     [
-     "memory:isa",
-     2.1403908027294563,
-     null,
-     0.6442
-    ],
-    [
      "memory:mortgage",
      3.0940352072561845,
      null,
      0.317
+    ],
+    [
+     "memory:isa",
+     2.1403908027294563,
+     null,
+     0.6442
     ],
     [
      "memory:loan",
@@ -2898,16 +2898,76 @@
      0.1507
     ],
     [
+     "memory:filler-money-15",
+     0.08812695896001423,
+     null,
+     0.052
+    ],
+    [
      "memory:gym-sub",
      0.08812695896001423,
      null,
      0.1053
     ],
     [
-     "memory:filler-money-15",
-     0.08812695896001423,
+     "memory:filler-money-9",
+     0.08541071707426036,
      null,
-     0.052
+     0.0176
+    ],
+    [
+     "memory:filler-money-4",
+     0.07038262280622484,
+     null,
+     -0.0192
+    ],
+    [
+     "memory:filler-money-6",
+     0.07038262280622484,
+     null,
+     -0.0115
+    ],
+    [
+     "memory:filler-money-3",
+     0.07038262280622484,
+     null,
+     -0.0098
+    ],
+    [
+     "memory:filler-money-11",
+     0.07038262280622484,
+     null,
+     0.0341
+    ],
+    [
+     "memory:filler-money-5",
+     0.06698019335249096,
+     null,
+     0.0058
+    ],
+    [
+     "memory:cashback",
+     0.06698019335249096,
+     null,
+     0.1577
+    ],
+    [
+     "memory:filler-money-0",
+     0.06698019335249096,
+     null,
+     0.0095
+    ],
+    [
+     "memory:filler-money-10",
+     0.06389155445207537,
+     null,
+     -0.0529
+    ],
+    [
+     "memory:filler-money-7",
+     0.06389155445207537,
+     null,
+     0.0234
     ],
     [
      "memory:charity",
@@ -2922,22 +2982,10 @@
      0.1952
     ],
     [
-     "memory:filler-money-11",
-     0.07038262280622484,
+     "memory:filler-money-8",
+     0.06389155445207537,
      null,
-     0.0341
-    ],
-    [
-     "memory:cashback",
-     0.06698019335249096,
-     null,
-     0.1577
-    ],
-    [
-     "memory:filler-money-9",
-     0.08541071707426036,
-     null,
-     0.0176
+     0.0135
     ],
     [
      "memory:lottery-wish",
@@ -2946,64 +2994,10 @@
      0.1992
     ],
     [
-     "memory:filler-money-3",
-     0.07038262280622484,
-     null,
-     -0.0098
-    ],
-    [
-     "memory:filler-money-6",
-     0.07038262280622484,
-     null,
-     -0.0115
-    ],
-    [
      "memory:bank-new",
      0.05192056262407066,
      null,
      0.187
-    ],
-    [
-     "memory:filler-money-4",
-     0.07038262280622484,
-     null,
-     -0.0192
-    ],
-    [
-     "memory:filler-money-0",
-     0.06698019335249096,
-     null,
-     0.0095
-    ],
-    [
-     "memory:filler-money-7",
-     0.06389155445207537,
-     null,
-     0.0234
-    ],
-    [
-     "memory:filler-money-5",
-     0.06698019335249096,
-     null,
-     0.0058
-    ],
-    [
-     "memory:filler-money-8",
-     0.06389155445207537,
-     null,
-     0.0135
-    ],
-    [
-     "memory:filler-money-10",
-     0.06389155445207537,
-     null,
-     -0.0529
-    ],
-    [
-     "memory:emergency",
-     null,
-     null,
-     0.4039
     ],
     [
      "memory:budget-app",
@@ -3016,6 +3010,12 @@
      null,
      null,
      0.337
+    ],
+    [
+     "memory:emergency",
+     null,
+     null,
+     0.4039
     ],
     [
      "memory:rate-old",
@@ -3076,7 +3076,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 29.12,
+   "recall_ms": 28.65,
    "admitted_scores": [
     [
      "memory:cashback",
@@ -3243,7 +3243,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 372.53,
+   "recall_ms": 362.37,
    "admitted_scores": [
     [
      "memory:stuff-clubs",
@@ -3456,7 +3456,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 23.71,
+   "recall_ms": 22.04,
    "admitted_scores": [
     [
      "memory:stuff-clubs",
@@ -3578,7 +3578,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 24.85,
+   "recall_ms": 31.84,
    "admitted_scores": [
     [
      "memory:stuff-clubs",
@@ -3796,7 +3796,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 25.22,
+   "recall_ms": 25.28,
    "admitted_scores": [
     [
      "memory:reading",
@@ -4004,7 +4004,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 24.14,
+   "recall_ms": 23.52,
    "admitted_scores": [
     [
      "memory:trip",
@@ -4225,7 +4225,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 23.37,
+   "recall_ms": 21.63,
    "admitted_scores": [
     [
      "memory:school-news",
@@ -4385,7 +4385,7 @@
      4
     ]
    },
-   "recall_ms": 25.36,
+   "recall_ms": 26.04,
    "admitted_scores": [
     [
      "memory:stuff-clubs",
@@ -4563,7 +4563,7 @@
      "bm25": 7.353840916254183,
      "corroboration": 1,
      "semantic_route": 0.8281605831825826,
-     "ordered_before_next_by": "fused_relevance_desc:rrf_admitted",
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
      "cosine": 0.828,
      "dense_rank": 2
     }
@@ -4577,37 +4577,37 @@
    "top10": [
     "memory:uniform-new",
     "memory:bus",
-    "memory:pickup-old",
     "memory:stuff-clubs",
     "memory:school-news",
-    "memory:pickup-new",
+    "memory:pickup-old",
     "memory:swim",
     "memory:lunch",
+    "memory:pickup-new",
     "memory:filler-school-13",
-    "memory:filler-school-3"
+    "memory:filler-school-14"
    ],
    "returned": [
     "memory:uniform-new",
     "memory:bus",
-    "memory:pickup-old",
     "memory:stuff-clubs",
     "memory:school-news",
-    "memory:pickup-new",
+    "memory:pickup-old",
     "memory:swim",
     "memory:lunch",
+    "memory:pickup-new",
     "memory:filler-school-13",
-    "memory:filler-school-3"
+    "memory:filler-school-14"
    ],
    "extra": [
     "memory:bus",
-    "memory:pickup-old",
     "memory:stuff-clubs",
     "memory:school-news",
-    "memory:pickup-new",
+    "memory:pickup-old",
     "memory:swim",
     "memory:lunch",
+    "memory:pickup-new",
     "memory:filler-school-13",
-    "memory:filler-school-3"
+    "memory:filler-school-14"
    ],
    "passed": false,
    "newer_first": true,
@@ -4624,7 +4624,7 @@
      24
     ]
    },
-   "recall_ms": 27.96,
+   "recall_ms": 25.78,
    "admitted_scores": [
     [
      "memory:uniform-new",
@@ -4639,12 +4639,6 @@
      0.4801
     ],
     [
-     "memory:pickup-old",
-     1.402288556017796,
-     null,
-     0.5153
-    ],
-    [
      "memory:stuff-clubs",
      2.776747975327329,
      null,
@@ -4657,10 +4651,10 @@
      0.3871
     ],
     [
-     "memory:pickup-new",
-     1.0574373285796435,
+     "memory:pickup-old",
+     1.402288556017796,
      null,
-     0.3273
+     0.5153
     ],
     [
      "memory:swim",
@@ -4675,52 +4669,16 @@
      0.2362
     ],
     [
+     "memory:pickup-new",
+     1.0574373285796435,
+     null,
+     0.3273
+    ],
+    [
      "memory:filler-school-13",
      0.21872938760868263,
      null,
      0.2374
-    ],
-    [
-     "memory:filler-school-3",
-     0.16313349314490053,
-     null,
-     0.256
-    ],
-    [
-     "memory:trip",
-     0.1921645589758598,
-     null,
-     0.1921
-    ],
-    [
-     "memory:filler-school-6",
-     0.14788605285095918,
-     null,
-     0.2958
-    ],
-    [
-     "memory:cubs",
-     0.14128345107009782,
-     null,
-     0.3107
-    ],
-    [
-     "memory:filler-school-2",
-     0.16313349314490053,
-     null,
-     0.1298
-    ],
-    [
-     "memory:pta",
-     0.1551360272984869,
-     null,
-     0.2113
-    ],
-    [
-     "memory:glasses",
-     0.16313349314490053,
-     null,
-     0.0992
     ],
     [
      "memory:filler-school-14",
@@ -4735,16 +4693,34 @@
      0.0637
     ],
     [
+     "memory:trip",
+     0.1921645589758598,
+     null,
+     0.1921
+    ],
+    [
+     "memory:filler-school-3",
+     0.16313349314490053,
+     null,
+     0.256
+    ],
+    [
      "memory:filler-school-5",
      0.16313349314490053,
      null,
      0.0893
     ],
     [
-     "memory:filler-school-9",
-     0.14788605285095918,
+     "memory:filler-school-2",
+     0.16313349314490053,
      null,
-     0.1348
+     0.1298
+    ],
+    [
+     "memory:glasses",
+     0.16313349314490053,
+     null,
+     0.0992
     ],
     [
      "memory:filler-school-10",
@@ -4753,16 +4729,40 @@
      -0.0389
     ],
     [
-     "memory:filler-school-7",
-     0.14788605285095918,
+     "memory:pta",
+     0.1551360272984869,
      null,
-     0.1077
+     0.2113
     ],
     [
      "memory:filler-school-4",
      0.1551360272984869,
      null,
      0.0655
+    ],
+    [
+     "memory:filler-school-9",
+     0.14788605285095918,
+     null,
+     0.1348
+    ],
+    [
+     "memory:filler-school-6",
+     0.14788605285095918,
+     null,
+     0.2958
+    ],
+    [
+     "memory:filler-school-7",
+     0.14788605285095918,
+     null,
+     0.1077
+    ],
+    [
+     "memory:cubs",
+     0.14128345107009782,
+     null,
+     0.3107
     ],
     [
      "memory:uniform-old",
@@ -4823,7 +4823,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 23.37,
+   "recall_ms": 25.14,
    "admitted_scores": [
     [
      "memory:uniform-new",
@@ -5034,7 +5034,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 362.84,
+   "recall_ms": 396.24,
    "admitted_scores": [
     [
      "memory:stuff-diets",
@@ -5129,7 +5129,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 22.95,
+   "recall_ms": 24.05,
    "admitted_scores": [
     [
      "memory:weekly-shop",
@@ -5257,7 +5257,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 23.22,
+   "recall_ms": 25.83,
    "admitted_scores": [
     [
      "memory:knives",
@@ -5440,7 +5440,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 21.05,
+   "recall_ms": 22.71,
    "admitted_scores": [
     [
      "memory:pasta-wish",
@@ -5547,7 +5547,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 24.36,
+   "recall_ms": 24.06,
    "admitted_scores": [
     [
      "memory:freezer",
@@ -5750,7 +5750,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 25.16,
+   "recall_ms": 23.45,
    "admitted_scores": [
     [
      "memory:oven",
@@ -5949,7 +5949,7 @@
      1
     ]
    },
-   "recall_ms": 24.27,
+   "recall_ms": 21.66,
    "admitted_scores": [
     [
      "memory:hob-old",
@@ -5995,7 +5995,7 @@
      "bm25": 2.696635868492347,
      "corroboration": 1,
      "semantic_route": 0.7350108543651666,
-     "ordered_before_next_by": "fused_relevance_desc:rrf_admitted",
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
      "cosine": 0.735,
      "dense_rank": 1
     }
@@ -6008,36 +6008,36 @@
    "admitted_count": 11,
    "top10": [
     "memory:bin-new",
+    "memory:filler-kitchen-1",
     "memory:weekly-shop",
-    "memory:veg-box",
     "memory:filler-kitchen-11",
     "memory:kettle",
-    "memory:filler-kitchen-1",
-    "memory:freezer",
     "memory:filler-kitchen-12",
+    "memory:veg-box",
+    "memory:freezer",
     "memory:filler-kitchen-5",
     "memory:sourdough"
    ],
    "returned": [
     "memory:bin-new",
+    "memory:filler-kitchen-1",
     "memory:weekly-shop",
-    "memory:veg-box",
     "memory:filler-kitchen-11",
     "memory:kettle",
-    "memory:filler-kitchen-1",
-    "memory:freezer",
     "memory:filler-kitchen-12",
+    "memory:veg-box",
+    "memory:freezer",
     "memory:filler-kitchen-5",
     "memory:sourdough"
    ],
    "extra": [
+    "memory:filler-kitchen-1",
     "memory:weekly-shop",
-    "memory:veg-box",
     "memory:filler-kitchen-11",
     "memory:kettle",
-    "memory:filler-kitchen-1",
-    "memory:freezer",
     "memory:filler-kitchen-12",
+    "memory:veg-box",
+    "memory:freezer",
     "memory:filler-kitchen-5",
     "memory:sourdough"
    ],
@@ -6056,7 +6056,7 @@
      11
     ]
    },
-   "recall_ms": 24.46,
+   "recall_ms": 22.7,
    "admitted_scores": [
     [
      "memory:bin-new",
@@ -6065,16 +6065,16 @@
      0.735
     ],
     [
+     "memory:filler-kitchen-1",
+     2.1724480380222246,
+     null,
+     0.0113
+    ],
+    [
      "memory:weekly-shop",
      1.220531856023906,
      null,
      0.3515
-    ],
-    [
-     "memory:veg-box",
-     0.3602640530447002,
-     null,
-     0.3545
     ],
     [
      "memory:filler-kitchen-11",
@@ -6089,22 +6089,22 @@
      0.2848
     ],
     [
-     "memory:filler-kitchen-1",
-     2.1724480380222246,
+     "memory:filler-kitchen-12",
+     0.3602640530447002,
      null,
-     0.0113
+     0.1252
+    ],
+    [
+     "memory:veg-box",
+     0.3602640530447002,
+     null,
+     0.3545
     ],
     [
      "memory:freezer",
      0.3602640530447002,
      null,
      0.232
-    ],
-    [
-     "memory:filler-kitchen-12",
-     0.3602640530447002,
-     null,
-     0.1252
     ],
     [
      "memory:filler-kitchen-5",
@@ -6177,7 +6177,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 24.53,
+   "recall_ms": 24.32,
    "admitted_scores": [
     [
      "memory:kettle",
@@ -6389,7 +6389,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 342.9,
+   "recall_ms": 337.97,
    "admitted_scores": [
     [
      "memory:stuff-backup",
@@ -6523,7 +6523,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 22.09,
+   "recall_ms": 24.55,
    "admitted_scores": [
     [
      "memory:stuff-backup",
@@ -6632,7 +6632,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 23.5,
+   "recall_ms": 34.78,
    "admitted_scores": [
     [
      "memory:tech-blog",
@@ -6711,7 +6711,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 24.6,
+   "recall_ms": 27.7,
    "admitted_scores": [
     [
      "memory:isp-old",
@@ -6923,7 +6923,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 22.54,
+   "recall_ms": 25.05,
    "admitted_scores": [
     [
      "memory:cloud",
@@ -7037,7 +7037,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 22.55,
+   "recall_ms": 27.72,
    "admitted_scores": [
     [
      "memory:filler-tech-2",
@@ -7152,7 +7152,7 @@
      1
     ]
    },
-   "recall_ms": 30.1,
+   "recall_ms": 25.41,
    "admitted_scores": [
     [
      "memory:phone-old",
@@ -7245,7 +7245,7 @@
      2
     ]
    },
-   "recall_ms": 20.89,
+   "recall_ms": 27.42,
    "admitted_scores": [
     [
      "memory:isp-new",
@@ -7312,7 +7312,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 23.57,
+   "recall_ms": 39.37,
    "admitted_scores": [
     [
      "memory:router",
@@ -7538,7 +7538,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 326.36,
+   "recall_ms": 329.11,
    "admitted_scores": [
     [
      "memory:stuff-vol",
@@ -7689,7 +7689,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 23.19,
+   "recall_ms": 23.58,
    "admitted_scores": [
     [
      "memory:choir",
@@ -7832,7 +7832,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 24.97,
+   "recall_ms": 23.61,
    "admitted_scores": [
     [
      "memory:stuff-vol",
@@ -7966,7 +7966,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 27.05,
+   "recall_ms": 25.64,
    "admitted_scores": [
     [
      "memory:filler-community-6",
@@ -8187,7 +8187,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 23.49,
+   "recall_ms": 22.57,
    "admitted_scores": [
     [
      "memory:councillor",
@@ -8330,7 +8330,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 25.09,
+   "recall_ms": 24.12,
    "admitted_scores": [
     [
      "memory:defib",
@@ -8568,7 +8568,7 @@
      2
     ]
    },
-   "recall_ms": 25.02,
+   "recall_ms": 25.62,
    "admitted_scores": [
     [
      "memory:chair-new",
@@ -8736,11 +8736,11 @@
    "needed": {
     "memory:meet-new": {
      "stage": "returned",
-     "rank": 1,
+     "rank": 2,
      "bm25": 1.2510963909240664,
      "corroboration": 1,
      "semantic_route": 0.7109375858665465,
-     "ordered_before_next_by": "fused_relevance_desc:rrf_admitted",
+     "ordered_before_next_by": "explicit_current_unknown_tie_content_identity",
      "cosine": 0.711,
      "dense_rank": 2
     }
@@ -8752,34 +8752,34 @@
    },
    "admitted_count": 9,
    "top10": [
-    "memory:meet-new",
-    "memory:chair-old",
     "memory:stuff-vol",
+    "memory:meet-new",
     "memory:garden-group",
+    "memory:chair-old",
     "memory:chair-new",
-    "memory:choir",
     "memory:news-local",
+    "memory:choir",
     "memory:church-hall",
     "memory:meet-old"
    ],
    "returned": [
-    "memory:meet-new",
-    "memory:chair-old",
     "memory:stuff-vol",
+    "memory:meet-new",
     "memory:garden-group",
+    "memory:chair-old",
     "memory:chair-new",
-    "memory:choir",
     "memory:news-local",
+    "memory:choir",
     "memory:church-hall",
     "memory:meet-old"
    ],
    "extra": [
-    "memory:chair-old",
     "memory:stuff-vol",
     "memory:garden-group",
+    "memory:chair-old",
     "memory:chair-new",
-    "memory:choir",
     "memory:news-local",
+    "memory:choir",
     "memory:church-hall"
    ],
    "passed": false,
@@ -8793,29 +8793,23 @@
      "outside_target_interval"
     ],
     "ranks": [
-     1,
+     2,
      9
     ]
    },
-   "recall_ms": 23.65,
+   "recall_ms": 24.02,
    "admitted_scores": [
-    [
-     "memory:meet-new",
-     1.2510963909240664,
-     null,
-     0.7109
-    ],
-    [
-     "memory:chair-old",
-     0.2489976471105776,
-     null,
-     0.5614
-    ],
     [
      "memory:stuff-vol",
      3.1809912036886976,
      null,
      0.2804
+    ],
+    [
+     "memory:meet-new",
+     1.2510963909240664,
+     null,
+     0.7109
     ],
     [
      "memory:garden-group",
@@ -8824,22 +8818,28 @@
      0.3435
     ],
     [
+     "memory:chair-old",
+     0.2489976471105776,
+     null,
+     0.5614
+    ],
+    [
      "memory:chair-new",
      0.22688272450536184,
      null,
      0.3535
     ],
     [
-     "memory:choir",
-     null,
-     null,
-     0.411
-    ],
-    [
      "memory:news-local",
      null,
      null,
      0.3234
+    ],
+    [
+     "memory:choir",
+     null,
+     null,
+     0.411
     ],
     [
      "memory:church-hall",
@@ -8906,7 +8906,7 @@
    "passed": false,
    "newer_first": null,
    "pair": null,
-   "recall_ms": 26.01,
+   "recall_ms": 25.36,
    "admitted_scores": [
     [
      "memory:church-hall",
@@ -9072,7 +9072,7 @@
      "bm25": 1.4976930151384533,
      "corroboration": 1,
      "semantic_route": 0.360283676698084,
-     "ordered_before_next_by": "fused_relevance_desc:rrf_admitted",
+     "ordered_before_next_by": "route_score_desc_subordinate:semantic_vector",
      "cosine": 0.36,
      "dense_rank": 2
     }
@@ -9088,29 +9088,29 @@
     "memory:insure-old",
     "memory:filler-asof-1",
     "memory:filler-asof-9",
-    "memory:filler-asof-10",
     "memory:filler-asof-3",
+    "memory:filler-asof-10",
     "memory:filler-asof-4",
-    "memory:car-new",
-    "memory:insure-new"
+    "memory:insure-new",
+    "memory:car-new"
    ],
    "returned": [
     "memory:car-old",
     "memory:insure-old",
     "memory:filler-asof-1",
     "memory:filler-asof-9",
-    "memory:filler-asof-10",
     "memory:filler-asof-3",
+    "memory:filler-asof-10",
     "memory:filler-asof-4",
-    "memory:car-new",
-    "memory:insure-new"
+    "memory:insure-new",
+    "memory:car-new"
    ],
    "extra": [
     "memory:insure-old",
     "memory:filler-asof-1",
     "memory:filler-asof-9",
-    "memory:filler-asof-10",
     "memory:filler-asof-3",
+    "memory:filler-asof-10",
     "memory:filler-asof-4",
     "memory:insure-new"
    ],
@@ -9126,10 +9126,10 @@
     ],
     "ranks": [
      1,
-     8
+     9
     ]
    },
-   "recall_ms": 182.73,
+   "recall_ms": 217.38,
    "admitted_scores": [
     [
      "memory:car-old",
@@ -9156,16 +9156,16 @@
      0.062
     ],
     [
-     "memory:filler-asof-10",
-     0.5469813012584507,
-     null,
-     0.0798
-    ],
-    [
      "memory:filler-asof-3",
      0.5469813012584507,
      null,
      -0.0414
+    ],
+    [
+     "memory:filler-asof-10",
+     0.5469813012584507,
+     null,
+     0.0798
     ],
     [
      "memory:filler-asof-4",
@@ -9174,16 +9174,16 @@
      0.0007
     ],
     [
-     "memory:car-new",
-     1.412560991120057,
-     null,
-     0.442
-    ],
-    [
      "memory:insure-new",
      1.5937445861805868,
      null,
      0.2899
+    ],
+    [
+     "memory:car-new",
+     1.412560991120057,
+     null,
+     0.442
     ]
    ]
   },
@@ -9199,7 +9199,7 @@
      "bm25": 1.9126845225288294,
      "corroboration": 1,
      "semantic_route": 0.5823687519164159,
-     "ordered_before_next_by": "fused_relevance_desc:rrf_admitted",
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
      "cosine": 0.582,
      "dense_rank": 1
     }
@@ -9214,36 +9214,36 @@
     "memory:insure-old",
     "memory:filler-asof-9",
     "memory:filler-asof-1",
-    "memory:charger",
-    "memory:filler-asof-4",
-    "memory:garage",
-    "memory:filler-asof-5",
     "memory:filler-asof-10",
+    "memory:filler-asof-4",
     "memory:filler-asof-3",
-    "memory:filler-asof-6"
+    "memory:filler-asof-6",
+    "memory:charger",
+    "memory:filler-asof-0",
+    "memory:garage"
    ],
    "returned": [
     "memory:insure-old",
     "memory:filler-asof-9",
     "memory:filler-asof-1",
-    "memory:charger",
-    "memory:filler-asof-4",
-    "memory:garage",
-    "memory:filler-asof-5",
     "memory:filler-asof-10",
+    "memory:filler-asof-4",
     "memory:filler-asof-3",
-    "memory:filler-asof-6"
+    "memory:filler-asof-6",
+    "memory:charger",
+    "memory:filler-asof-0",
+    "memory:garage"
    ],
    "extra": [
     "memory:filler-asof-9",
     "memory:filler-asof-1",
-    "memory:charger",
-    "memory:filler-asof-4",
-    "memory:garage",
-    "memory:filler-asof-5",
     "memory:filler-asof-10",
+    "memory:filler-asof-4",
     "memory:filler-asof-3",
-    "memory:filler-asof-6"
+    "memory:filler-asof-6",
+    "memory:charger",
+    "memory:filler-asof-0",
+    "memory:garage"
    ],
    "passed": false,
    "newer_first": true,
@@ -9260,7 +9260,7 @@
      14
     ]
    },
-   "recall_ms": 29.77,
+   "recall_ms": 37.72,
    "admitted_scores": [
     [
      "memory:insure-old",
@@ -9281,34 +9281,16 @@
      0.1033
     ],
     [
-     "memory:charger",
-     0.19593209967541056,
+     "memory:filler-asof-10",
+     1.1456115007084646,
      null,
-     0.2372
+     0.0203
     ],
     [
      "memory:filler-asof-4",
      1.0957249307375179,
      null,
      0.1051
-    ],
-    [
-     "memory:garage",
-     0.18634846436520028,
-     null,
-     0.1906
-    ],
-    [
-     "memory:filler-asof-5",
-     0.18634846436520028,
-     null,
-     0.1192
-    ],
-    [
-     "memory:filler-asof-10",
-     1.1456115007084646,
-     null,
-     0.0203
     ],
     [
      "memory:filler-asof-3",
@@ -9323,16 +9305,34 @@
      0.0592
     ],
     [
-     "memory:filler-asof-2",
-     0.18634846436520028,
+     "memory:charger",
+     0.19593209967541056,
      null,
-     0.0602
+     0.2372
     ],
     [
      "memory:filler-asof-0",
      0.19593209967541056,
      null,
      0.0297
+    ],
+    [
+     "memory:garage",
+     0.18634846436520028,
+     null,
+     0.1906
+    ],
+    [
+     "memory:filler-asof-2",
+     0.18634846436520028,
+     null,
+     0.0602
+    ],
+    [
+     "memory:filler-asof-5",
+     0.18634846436520028,
+     null,
+     0.1192
     ],
     [
      "memory:car-old",
@@ -9366,7 +9366,7 @@
      "bm25": 1.2978074870058551,
      "corroboration": 1,
      "semantic_route": 0.5717971424760915,
-     "ordered_before_next_by": "fused_relevance_desc:rrf_admitted",
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
      "cosine": 0.572,
      "dense_rank": 2
     }
@@ -9411,7 +9411,7 @@
      4
     ]
    },
-   "recall_ms": 23.73,
+   "recall_ms": 21.5,
    "admitted_scores": [
     [
      "memory:car-new",

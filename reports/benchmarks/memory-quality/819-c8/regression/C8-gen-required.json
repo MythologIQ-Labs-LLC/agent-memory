@@ -14,7 +14,7 @@
   "extra": 0,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 321.31
+  "ms": 309.33
  },
  {
   "scenario": "fin",
@@ -64,7 +64,7 @@
   "extra": 1,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 33.88
+  "ms": 27.2
  },
  {
   "scenario": "fin",
@@ -81,7 +81,7 @@
   "extra": 0,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 22.37
+  "ms": 23.65
  },
  {
   "scenario": "fin",
@@ -111,7 +111,7 @@
   "extra": 0,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 26.99
+  "ms": 28.8
  },
  {
   "scenario": "fin",
@@ -145,7 +145,7 @@
   "extra": 1,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 23.99
+  "ms": 23.71
  },
  {
   "scenario": "fin",
@@ -162,7 +162,7 @@
   "extra": 0,
   "excluded_returned": [],
   "no_answer": true,
-  "ms": 25.02
+  "ms": 26.65
  },
  {
   "scenario": "fin",
@@ -185,7 +185,7 @@
   "extra": 1,
   "excluded_returned": [],
   "no_answer": true,
-  "ms": 32.72
+  "ms": 28.29
  },
  {
   "scenario": "fin",
@@ -224,7 +224,7 @@
   "extra": 1,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 30.29
+  "ms": 24.82
  },
  {
   "scenario": "fin",
@@ -258,7 +258,7 @@
   "extra": 1,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 28.49
+  "ms": 27.52
  },
  {
   "scenario": "fam",
@@ -308,7 +308,7 @@
   "extra": 5,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 371.99
+  "ms": 327.67
  },
  {
   "scenario": "fam",
@@ -342,7 +342,7 @@
   "extra": 1,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 29.1
+  "ms": 26.04
  },
  {
   "scenario": "fam",
@@ -359,7 +359,7 @@
   "extra": 0,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 27.51
+  "ms": 27.67
  },
  {
   "scenario": "fam",
@@ -409,7 +409,7 @@
   "extra": 5,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 26.18
+  "ms": 27.87
  },
  {
   "scenario": "fam",
@@ -447,7 +447,7 @@
   "extra": 2,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 26.34
+  "ms": 26.78
  },
  {
   "scenario": "fam",
@@ -502,7 +502,7 @@
   "extra": 4,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 30.78
+  "ms": 25.76
  },
  {
   "scenario": "fam",
@@ -536,7 +536,7 @@
   "extra": 2,
   "excluded_returned": [],
   "no_answer": true,
-  "ms": 26.23
+  "ms": 34.99
  },
  {
   "scenario": "fam",
@@ -559,7 +559,7 @@
   "extra": 1,
   "excluded_returned": [],
   "no_answer": true,
-  "ms": 32.01
+  "ms": 28.67
  },
  {
   "scenario": "fam",
@@ -609,7 +609,7 @@
   "extra": 6,
   "excluded_returned": [],
   "no_answer": true,
-  "ms": 25.9
+  "ms": 24.93
  },
  {
   "scenario": "car",
@@ -639,7 +639,7 @@
   "extra": 0,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 291.75
+  "ms": 379.18
  },
  {
   "scenario": "car",
@@ -681,7 +681,7 @@
   "extra": 3,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 26.13
+  "ms": 37.03
  },
  {
   "scenario": "car",
@@ -711,7 +711,7 @@
   "extra": 1,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 39.19
+  "ms": 29.8
  },
  {
   "scenario": "car",
@@ -738,7 +738,7 @@
   "extra": 2,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 27.4
+  "ms": 28.39
  },
  {
   "scenario": "car",
@@ -768,7 +768,7 @@
   "extra": 0,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 29.35
+  "ms": 30.54
  },
  {
   "scenario": "car",
@@ -795,7 +795,7 @@
   "extra": 2,
   "excluded_returned": [],
   "no_answer": true,
-  "ms": 31.4
+  "ms": 29.85
  },
  {
   "scenario": "car",
@@ -822,7 +822,7 @@
   "extra": 2,
   "excluded_returned": [],
   "no_answer": true,
-  "ms": 27.62
+  "ms": 29.21
  },
  {
   "scenario": "car",
@@ -876,7 +876,7 @@
   "extra": 2,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 34.39
+  "ms": 40.97
  },
  {
   "scenario": "car",
@@ -910,7 +910,7 @@
   "extra": 0,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 28.05
+  "ms": 29.28
  },
  {
   "scenario": "adv",
@@ -944,7 +944,7 @@
   "extra": 2,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 352.6
+  "ms": 386.31
  },
  {
   "scenario": "adv",
@@ -978,7 +978,7 @@
   "extra": 2,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 25.21
+  "ms": 30.64
  },
  {
   "scenario": "adv",
@@ -1008,7 +1008,7 @@
   "extra": 1,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 25.87
+  "ms": 26.18
  },
  {
   "scenario": "adv",
@@ -1038,7 +1038,7 @@
   "extra": 1,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 27.98
+  "ms": 26.5
  },
  {
   "scenario": "adv",
@@ -1068,7 +1068,7 @@
   "extra": 1,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 27.8
+  "ms": 41.04
  },
  {
   "scenario": "advctl",
@@ -1085,7 +1085,7 @@
   "extra": 0,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 317.02
+  "ms": 308.44
  },
  {
   "scenario": "advctl",
@@ -1102,7 +1102,7 @@
   "extra": 0,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 26.18
+  "ms": 22.71
  },
  {
   "scenario": "advctl",
@@ -1140,7 +1140,7 @@
   "extra": 1,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 25.27
+  "ms": 25.49
  },
  {
   "scenario": "advctl",
@@ -1170,7 +1170,7 @@
   "extra": 0,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 24.87
+  "ms": 24.24
  },
  {
   "scenario": "advctl",
@@ -1200,7 +1200,7 @@
   "extra": 0,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 30.76
+  "ms": 29.6
  },
  {
   "scenario": "home",
@@ -1253,7 +1253,7 @@
   "extra": 2,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 354.63
+  "ms": 395.55
  },
  {
   "scenario": "home",
@@ -1282,7 +1282,7 @@
   "extra": 0,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 26.63
+  "ms": 23.55
  },
  {
   "scenario": "home",
@@ -1312,7 +1312,7 @@
   "extra": 0,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 28.59
+  "ms": 27.95
  },
  {
   "scenario": "home",
@@ -1342,7 +1342,7 @@
   "extra": 0,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 27.83
+  "ms": 28.52
  },
  {
   "scenario": "home",
@@ -1375,7 +1375,7 @@
   "extra": 2,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 25.25
+  "ms": 25.66
  },
  {
   "scenario": "home",
@@ -1408,7 +1408,7 @@
   "extra": 2,
   "excluded_returned": [],
   "no_answer": true,
-  "ms": 27.21
+  "ms": 26.5
  },
  {
   "scenario": "home",
@@ -1438,7 +1438,7 @@
   "extra": 1,
   "excluded_returned": [],
   "no_answer": true,
-  "ms": 29.14
+  "ms": 31.36
  },
  {
   "scenario": "home",
@@ -1468,7 +1468,7 @@
   "extra": 0,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 29.31
+  "ms": 29.74
  },
  {
   "scenario": "home",
@@ -1495,7 +1495,7 @@
   "extra": 1,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 24.49
+  "ms": 22.66
  },
  {
   "scenario": "fit",
@@ -1534,7 +1534,7 @@
   "extra": 0,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 337.28
+  "ms": 341.29
  },
  {
   "scenario": "fit",
@@ -1582,7 +1582,7 @@
   "extra": 1,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 27.24
+  "ms": 25.37
  },
  {
   "scenario": "fit",
@@ -1612,7 +1612,7 @@
   "extra": 0,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 26.11
+  "ms": 23.97
  },
  {
   "scenario": "fit",
@@ -1629,7 +1629,7 @@
   "extra": 0,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 25.22
+  "ms": 24.14
  },
  {
   "scenario": "fit",
@@ -1658,7 +1658,7 @@
   "extra": 0,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 30.74
+  "ms": 29.4
  },
  {
   "scenario": "fit",
@@ -1675,7 +1675,7 @@
   "extra": 0,
   "excluded_returned": [],
   "no_answer": true,
-  "ms": 24.8
+  "ms": 24.78
  },
  {
   "scenario": "fit",
@@ -1692,7 +1692,7 @@
   "extra": 0,
   "excluded_returned": [],
   "no_answer": true,
-  "ms": 24.67
+  "ms": 24.94
  },
  {
   "scenario": "fit",
@@ -1722,7 +1722,7 @@
   "extra": 0,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 27.49
+  "ms": 24.82
  },
  {
   "scenario": "fit",
@@ -1745,6 +1745,6 @@
   "extra": 1,
   "excluded_returned": [],
   "no_answer": false,
-  "ms": 27.54
+  "ms": 26.0
  }
 ]

@@ -1,0 +1,453 @@
+{
+ "author": "independent reviewer",
+ "scenarios": [
+  {
+   "id": "multi",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:x0",
+     "text": "The bathroom grout needs redoing."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:x1",
+     "text": "There is a fox that visits the garden at night."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:x2",
+     "text": "We buy coffee beans from the roastery on Dalry Road."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:x3",
+     "text": "The kids' bikes are in the garage."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:x4",
+     "text": "My laptop is a 2021 ThinkPad."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:x5",
+     "text": "We get a veg box delivered on Tuesdays."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:x6",
+     "text": "The hall carpet was replaced in 2022."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:x7",
+     "text": "Our street has a bake sale every June."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:x8",
+     "text": "I listen to podcasts on the commute."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:x9",
+     "text": "The dishwasher salt runs out quickly."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:x10",
+     "text": "We have a standing order for the window cleaner."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:x11",
+     "text": "The attic is full of old toys."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:x12",
+     "text": "Grandad grows tomatoes in his greenhouse."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:x13",
+     "text": "The bus stop moved further down the road."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:x14",
+     "text": "We watch a film together on Friday nights."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:x15",
+     "text": "There are two smoke alarms upstairs."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:x16",
+     "text": "The fridge magnet from Lisbon fell off."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:x17",
+     "text": "My reading glasses are by the bed."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:x18",
+     "text": "The neighbours have a new trampoline."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:x19",
+     "text": "We switched to oat milk."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:x20",
+     "text": "The garden tap freezes in winter."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:x21",
+     "text": "I renewed my library card last month."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:x22",
+     "text": "Our cat sleeps on the radiator shelf."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:x23",
+     "text": "The postman comes around eleven."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:b1",
+     "text": "The boiler broke down in January 2024 and Gavin replaced the pump."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:b2",
+     "text": "No heating again last November; the boiler's fan had failed."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:b3",
+     "text": "In March the boiler lost pressure and needed a new valve."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:w1",
+     "text": "My wife, Laura, works at a design studio in Glasgow."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:w2",
+     "text": "Laura's boss at the studio is called Fergus."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:w3",
+     "text": "Fergus drives an old green Land Rover Defender."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:e1",
+     "text": "Ella is coeliac and must avoid gluten."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:e2",
+     "text": "The party menu has pizza, rice salad and fruit skewers."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:g1",
+     "text": "Granny Rose died in 2019."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:g2",
+     "text": "Grandpa Alan still lives in Inverness."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:g3",
+     "text": "Nana Joyce turned ninety this year."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:g4",
+     "text": "Grandpa Bill passed away before I was born."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:c1",
+     "text": "Sam empties the dishwasher after school."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:c2",
+     "text": "Ella feeds Mango in the mornings."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:c3",
+     "text": "I do the ironing on Sunday evenings."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:j1",
+     "text": "My first job out of university was at a call centre."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:j2",
+     "text": "Then I spent five years teaching maths at Leith Academy."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:j3",
+     "text": "I retrained as a software tester in 2019."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:h1",
+     "text": "Flights to Crete cost us 640 pounds."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:h2",
+     "text": "The villa in Crete was 1,100 pounds for the week."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:h3",
+     "text": "We spent about 300 pounds on car hire in Crete."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:a1",
+     "text": "Sam was born in May 2014."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:a2",
+     "text": "Freya, my cousin's daughter, was born in 2012."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:d1",
+     "text": "The boiler service is booked for October."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:d2",
+     "text": "Laura's sister drives a Mini."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:d3",
+     "text": "Ella loves the bouncy castle at parties."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:d4",
+     "text": "We visit Grandpa Alan every Easter."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:d5",
+     "text": "Chores chart is on the fridge."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:d6",
+     "text": "I want to learn Spanish eventually."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:d7",
+     "text": "We are thinking about Crete again next year."
+    },
+    {
+     "op": "remember",
+     "scope": "user:rvm",
+     "ref": "memory:d8",
+     "text": "Sam's birthday party will be at the climbing wall."
+    }
+   ],
+   "queries": [
+    {
+     "id": "mx-boiler-count",
+     "kind": "multi_count",
+     "query": "How many times has the boiler broken down?",
+     "scope": "user:rvm",
+     "expect": {
+      "must_include": [
+       "memory:b1",
+       "memory:b2",
+       "memory:b3"
+      ],
+      "may_include": []
+     }
+    },
+    {
+     "id": "mx-3hop",
+     "kind": "multi_three_hop",
+     "query": "What car does my wife's boss drive?",
+     "scope": "user:rvm",
+     "expect": {
+      "must_include": [
+       "memory:w1",
+       "memory:w2",
+       "memory:w3"
+      ],
+      "may_include": []
+     }
+    },
+    {
+     "id": "mx-constraint",
+     "kind": "multi_constraint",
+     "query": "What can Ella eat at the party?",
+     "scope": "user:rvm",
+     "expect": {
+      "must_include": [
+       "memory:e1",
+       "memory:e2"
+      ],
+      "may_include": []
+     }
+    },
+    {
+     "id": "mx-alive",
+     "kind": "multi_set_difference",
+     "query": "Which of my grandparents are still alive?",
+     "scope": "user:rvm",
+     "expect": {
+      "must_include": [
+       "memory:g1",
+       "memory:g2",
+       "memory:g3",
+       "memory:g4"
+      ],
+      "may_include": []
+     }
+    },
+    {
+     "id": "mx-chores",
+     "kind": "multi_list",
+     "query": "Who does which chores at home?",
+     "scope": "user:rvm",
+     "expect": {
+      "must_include": [
+       "memory:c1",
+       "memory:c2",
+       "memory:c3"
+      ],
+      "may_include": []
+     }
+    },
+    {
+     "id": "mx-jobs",
+     "kind": "multi_sequence",
+     "query": "What jobs have I had, in order?",
+     "scope": "user:rvm",
+     "expect": {
+      "must_include": [
+       "memory:j1",
+       "memory:j2",
+       "memory:j3"
+      ],
+      "may_include": []
+     }
+    },
+    {
+     "id": "mx-holiday",
+     "kind": "multi_sum",
+     "query": "How much did the Crete holiday cost in total?",
+     "scope": "user:rvm",
+     "expect": {
+      "must_include": [
+       "memory:h1",
+       "memory:h2",
+       "memory:h3"
+      ],
+      "may_include": []
+     }
+    },
+    {
+     "id": "mx-older",
+     "kind": "multi_compare",
+     "query": "Who is older, Sam or Freya?",
+     "scope": "user:rvm",
+     "expect": {
+      "must_include": [
+       "memory:a1",
+       "memory:a2"
+      ],
+      "may_include": []
+     }
+    }
+   ]
+  }
+ ]
+}

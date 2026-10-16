@@ -1,0 +1,982 @@
+{
+ "tree": "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/review-c8/c8",
+ "semantic": "required",
+ "selection": "ranked_prefix",
+ "fresh": false,
+ "budget": 10,
+ "rows": [
+  {
+   "scenario": "multi",
+   "id": "mx-boiler-count",
+   "kind": "multi_count",
+   "query": "How many times has the boiler broken down?",
+   "ranked": [
+    "memory:b1",
+    "memory:b3",
+    "memory:b2",
+    "memory:d1",
+    "memory:x13",
+    "memory:x9",
+    "memory:c1",
+    "memory:x0",
+    "memory:x20",
+    "memory:x7",
+    "memory:h2",
+    "memory:e2",
+    "memory:x16",
+    "memory:c3",
+    "memory:x18",
+    "memory:x23",
+    "memory:d5",
+    "memory:x22",
+    "memory:x3",
+    "memory:c2",
+    "memory:x6",
+    "memory:d3",
+    "memory:x10",
+    "memory:x11",
+    "memory:x2",
+    "memory:x17",
+    "memory:x8",
+    "memory:w2",
+    "memory:d8",
+    "memory:x1"
+   ],
+   "returned": [
+    "memory:b1",
+    "memory:b3",
+    "memory:b2",
+    "memory:d1",
+    "memory:x13",
+    "memory:x9",
+    "memory:c1",
+    "memory:x0",
+    "memory:x20",
+    "memory:x7"
+   ],
+   "ms": 568.53,
+   "fusion_status": [
+    "applied"
+   ],
+   "policy_versions": [
+    "3.5.0"
+   ],
+   "needed_rank": {
+    "memory:b1": 1,
+    "memory:b2": 3,
+    "memory:b3": 2
+   },
+   "needed_returned": {
+    "memory:b1": true,
+    "memory:b2": true,
+    "memory:b3": true
+   },
+   "cover": {
+    "@1": false,
+    "@3": true,
+    "@5": true,
+    "@10": true
+   },
+   "planted_rank": {},
+   "extras_returned": [
+    "memory:d1",
+    "memory:x13",
+    "memory:x9",
+    "memory:c1",
+    "memory:x0",
+    "memory:x20",
+    "memory:x7"
+   ],
+   "nonanswers_above_first_needed": 0,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": null,
+   "top5_fusion": [
+    [
+     "memory:b1",
+     0.032786885246,
+     1,
+     1,
+     0.667798,
+     3.7120813118739715
+    ],
+    [
+     "memory:b3",
+     0.03128054741,
+     6,
+     2,
+     0.659542,
+     1.6985974923726848
+    ],
+    [
+     "memory:b2",
+     0.031024531025,
+     6,
+     3,
+     0.59726,
+     1.6985974923726848
+    ],
+    [
+     "memory:d1",
+     0.031009615385,
+     5,
+     4,
+     0.447479,
+     2.0695753066825935
+    ],
+    [
+     "memory:x13",
+     0.030017921147,
+     2,
+     12,
+     0.144128,
+     2.5637615182161015
+    ]
+   ]
+  },
+  {
+   "scenario": "multi",
+   "id": "mx-3hop",
+   "kind": "multi_three_hop",
+   "query": "What car does my wife's boss drive?",
+   "ranked": [
+    "memory:w1",
+    "memory:w2",
+    "memory:h3",
+    "memory:a2",
+    "memory:x4",
+    "memory:x17",
+    "memory:x21",
+    "memory:j1",
+    "memory:d2",
+    "memory:x3",
+    "memory:x13"
+   ],
+   "returned": [
+    "memory:w1",
+    "memory:w2",
+    "memory:h3",
+    "memory:a2",
+    "memory:x4",
+    "memory:x17",
+    "memory:x21",
+    "memory:j1",
+    "memory:d2",
+    "memory:x3"
+   ],
+   "ms": 27.65,
+   "fusion_status": [
+    "applied"
+   ],
+   "policy_versions": [
+    "3.5.0"
+   ],
+   "needed_rank": {
+    "memory:w1": 1,
+    "memory:w2": 2,
+    "memory:w3": null
+   },
+   "needed_returned": {
+    "memory:w1": true,
+    "memory:w2": true,
+    "memory:w3": false
+   },
+   "cover": {
+    "@1": false,
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "planted_rank": {},
+   "extras_returned": [
+    "memory:h3",
+    "memory:a2",
+    "memory:x4",
+    "memory:x17",
+    "memory:x21",
+    "memory:j1",
+    "memory:d2",
+    "memory:x3"
+   ],
+   "nonanswers_above_first_needed": 0,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": null,
+   "top5_fusion": [
+    [
+     "memory:w1",
+     0.032002048131,
+     2,
+     3,
+     0.324191,
+     1.9875584898874168
+    ],
+    [
+     "memory:w2",
+     0.031544957774,
+     1,
+     6,
+     0.274482,
+     3.018995761617865
+    ],
+    [
+     "memory:h3",
+     0.031498015873,
+     3,
+     4,
+     0.314849,
+     1.682059909887562
+    ],
+    [
+     "memory:a2",
+     0.030550373134,
+     4,
+     7,
+     0.126349,
+     1.5782840008227697
+    ],
+    [
+     "memory:x4",
+     0.030090497738,
+     5,
+     8,
+     0.073367,
+     0.37170143255061344
+    ]
+   ]
+  },
+  {
+   "scenario": "multi",
+   "id": "mx-constraint",
+   "kind": "multi_constraint",
+   "query": "What can Ella eat at the party?",
+   "ranked": [
+    "memory:d3",
+    "memory:c2",
+    "memory:d8",
+    "memory:e1",
+    "memory:e2",
+    "memory:x1",
+    "memory:w2",
+    "memory:x3",
+    "memory:c1",
+    "memory:w1",
+    "memory:h2",
+    "memory:c3",
+    "memory:x0",
+    "memory:d5",
+    "memory:x18",
+    "memory:x13",
+    "memory:x11",
+    "memory:j2",
+    "memory:x20",
+    "memory:x23",
+    "memory:x2",
+    "memory:x22",
+    "memory:j1",
+    "memory:b1",
+    "memory:x9",
+    "memory:x17",
+    "memory:x8",
+    "memory:d1",
+    "memory:x16",
+    "memory:x6",
+    "memory:b3",
+    "memory:x10",
+    "memory:b2",
+    "memory:x19",
+    "memory:d2"
+   ],
+   "returned": [
+    "memory:d3",
+    "memory:c2",
+    "memory:d8",
+    "memory:e1",
+    "memory:e2",
+    "memory:x1",
+    "memory:w2",
+    "memory:x3",
+    "memory:c1",
+    "memory:w1"
+   ],
+   "ms": 30.62,
+   "fusion_status": [
+    "applied"
+   ],
+   "policy_versions": [
+    "3.5.0"
+   ],
+   "needed_rank": {
+    "memory:e1": 4,
+    "memory:e2": 5
+   },
+   "needed_returned": {
+    "memory:e1": true,
+    "memory:e2": true
+   },
+   "cover": {
+    "@1": false,
+    "@3": false,
+    "@5": true,
+    "@10": true
+   },
+   "planted_rank": {},
+   "extras_returned": [
+    "memory:d3",
+    "memory:c2",
+    "memory:d8",
+    "memory:x1",
+    "memory:w2",
+    "memory:x3",
+    "memory:c1",
+    "memory:w1"
+   ],
+   "nonanswers_above_first_needed": 3,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": null,
+   "top5_fusion": [
+    [
+     "memory:d3",
+     0.032522474881,
+     1,
+     2,
+     0.668776,
+     4.144561481560717
+    ],
+    [
+     "memory:c2",
+     0.032266458496,
+     3,
+     1,
+     0.697976,
+     2.694233857928178
+    ],
+    [
+     "memory:d8",
+     0.03128054741,
+     2,
+     6,
+     0.40747,
+     3.8746984822514534
+    ],
+    [
+     "memory:e1",
+     0.031257631258,
+     5,
+     3,
+     0.616751,
+     2.399542677803082
+    ],
+    [
+     "memory:e2",
+     0.03125,
+     4,
+     4,
+     0.588782,
+     2.5010745931242804
+    ]
+   ]
+  },
+  {
+   "scenario": "multi",
+   "id": "mx-alive",
+   "kind": "multi_set_difference",
+   "query": "Which of my grandparents are still alive?",
+   "ranked": [
+    "memory:g2",
+    "memory:x11",
+    "memory:x3",
+    "memory:x17",
+    "memory:x15",
+    "memory:j1",
+    "memory:a2",
+    "memory:d7",
+    "memory:w1",
+    "memory:x4",
+    "memory:x21",
+    "memory:g4",
+    "memory:d4",
+    "memory:g1",
+    "memory:g3"
+   ],
+   "returned": [
+    "memory:g2",
+    "memory:x11",
+    "memory:x3",
+    "memory:x17",
+    "memory:x15",
+    "memory:j1",
+    "memory:a2",
+    "memory:d7",
+    "memory:w1",
+    "memory:x4"
+   ],
+   "ms": 30.63,
+   "fusion_status": [
+    "applied"
+   ],
+   "policy_versions": [
+    "3.5.0"
+   ],
+   "needed_rank": {
+    "memory:g1": 14,
+    "memory:g2": 1,
+    "memory:g3": 15,
+    "memory:g4": 12
+   },
+   "needed_returned": {
+    "memory:g1": false,
+    "memory:g2": true,
+    "memory:g3": false,
+    "memory:g4": false
+   },
+   "cover": {
+    "@1": false,
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "planted_rank": {},
+   "extras_returned": [
+    "memory:x11",
+    "memory:x3",
+    "memory:x17",
+    "memory:x15",
+    "memory:j1",
+    "memory:a2",
+    "memory:d7",
+    "memory:w1",
+    "memory:x4"
+   ],
+   "nonanswers_above_first_needed": 0,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": null,
+   "top5_fusion": [
+    [
+     "memory:g2",
+     0.032786885246,
+     1,
+     1,
+     0.60459,
+     2.279245533229144
+    ],
+    [
+     "memory:x11",
+     0.030550373134,
+     4,
+     7,
+     0.272338,
+     1.6239788326637459
+    ],
+    [
+     "memory:x3",
+     0.029857397504,
+     6,
+     8,
+     0.223541,
+     1.015446756059199
+    ],
+    [
+     "memory:x17",
+     0.029761904762,
+     3,
+     12,
+     0.090265,
+     1.650190210341599
+    ],
+    [
+     "memory:x15",
+     0.029469122427,
+     5,
+     11,
+     0.154656,
+     1.0750726331943476
+    ]
+   ]
+  },
+  {
+   "scenario": "multi",
+   "id": "mx-chores",
+   "kind": "multi_list",
+   "query": "Who does which chores at home?",
+   "ranked": [
+    "memory:d5",
+    "memory:w1",
+    "memory:w2",
+    "memory:d3",
+    "memory:x1",
+    "memory:j2",
+    "memory:d8",
+    "memory:j1",
+    "memory:c3"
+   ],
+   "returned": [
+    "memory:d5",
+    "memory:w1",
+    "memory:w2",
+    "memory:d3",
+    "memory:x1",
+    "memory:j2",
+    "memory:d8",
+    "memory:j1",
+    "memory:c3"
+   ],
+   "ms": 29.56,
+   "fusion_status": [
+    "applied"
+   ],
+   "policy_versions": [
+    "3.5.0"
+   ],
+   "needed_rank": {
+    "memory:c1": null,
+    "memory:c2": null,
+    "memory:c3": 9
+   },
+   "needed_returned": {
+    "memory:c1": false,
+    "memory:c2": false,
+    "memory:c3": true
+   },
+   "cover": {
+    "@1": false,
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "planted_rank": {},
+   "extras_returned": [
+    "memory:d5",
+    "memory:w1",
+    "memory:w2",
+    "memory:d3",
+    "memory:x1",
+    "memory:j2",
+    "memory:d8",
+    "memory:j1"
+   ],
+   "nonanswers_above_first_needed": 8,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": null,
+   "top5_fusion": [
+    [
+     "memory:d5",
+     0.032786885246,
+     1,
+     1,
+     0.59155,
+     2.083682626777883
+    ],
+    [
+     "memory:w1",
+     0.031498015873,
+     4,
+     3,
+     0.360228,
+     0.17543943691497368
+    ],
+    [
+     "memory:w2",
+     0.031498015873,
+     3,
+     4,
+     0.347112,
+     0.18334904208584288
+    ],
+    [
+     "memory:d3",
+     0.03128054741,
+     2,
+     6,
+     0.234382,
+     0.2015199037929051
+    ],
+    [
+     "memory:x1",
+     0.031009615385,
+     4,
+     5,
+     0.234837,
+     0.17543943691497368
+    ]
+   ]
+  },
+  {
+   "scenario": "multi",
+   "id": "mx-jobs",
+   "kind": "multi_sequence",
+   "query": "What jobs have I had, in order?",
+   "ranked": [
+    "memory:x10",
+    "memory:c3",
+    "memory:j2",
+    "memory:g4",
+    "memory:j3",
+    "memory:b2",
+    "memory:x8",
+    "memory:d6",
+    "memory:x21",
+    "memory:w1",
+    "memory:x18",
+    "memory:g2",
+    "memory:h3",
+    "memory:c2",
+    "memory:a1",
+    "memory:b1",
+    "memory:g1",
+    "memory:b3",
+    "memory:x12",
+    "memory:x6",
+    "memory:x20",
+    "memory:h2",
+    "memory:x3",
+    "memory:a2",
+    "memory:j1"
+   ],
+   "returned": [
+    "memory:x10",
+    "memory:c3",
+    "memory:j2",
+    "memory:g4",
+    "memory:j3",
+    "memory:b2",
+    "memory:x8",
+    "memory:d6",
+    "memory:x21",
+    "memory:w1"
+   ],
+   "ms": 31.65,
+   "fusion_status": [
+    "applied"
+   ],
+   "policy_versions": [
+    "3.5.0"
+   ],
+   "needed_rank": {
+    "memory:j1": 25,
+    "memory:j2": 3,
+    "memory:j3": 5
+   },
+   "needed_returned": {
+    "memory:j1": false,
+    "memory:j2": true,
+    "memory:j3": true
+   },
+   "cover": {
+    "@1": false,
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "planted_rank": {},
+   "extras_returned": [
+    "memory:x10",
+    "memory:c3",
+    "memory:g4",
+    "memory:b2",
+    "memory:x8",
+    "memory:d6",
+    "memory:x21",
+    "memory:w1"
+   ],
+   "nonanswers_above_first_needed": 2,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": null,
+   "top5_fusion": [
+    [
+     "memory:x10",
+     0.031318815757,
+     1,
+     7,
+     0.226142,
+     4.855977951792784
+    ],
+    [
+     "memory:c3",
+     0.030303030303,
+     6,
+     6,
+     0.232403,
+     1.2663563764149146
+    ],
+    [
+     "memory:j2",
+     0.030158730159,
+     10,
+     3,
+     0.323944,
+     1.0896174292004275
+    ],
+    [
+     "memory:g4",
+     0.030117753623,
+     9,
+     4,
+     0.253504,
+     1.201399601941958
+    ],
+    [
+     "memory:j3",
+     0.029910714286,
+     4,
+     10,
+     0.137262,
+     1.6784137163001829
+    ]
+   ]
+  },
+  {
+   "scenario": "multi",
+   "id": "mx-holiday",
+   "kind": "multi_sum",
+   "query": "How much did the Crete holiday cost in total?",
+   "ranked": [
+    "memory:h1",
+    "memory:h2",
+    "memory:d7",
+    "memory:h3",
+    "memory:g1",
+    "memory:x20",
+    "memory:b3",
+    "memory:x23",
+    "memory:x12",
+    "memory:d1",
+    "memory:c2",
+    "memory:x3",
+    "memory:c1",
+    "memory:b1",
+    "memory:a2",
+    "memory:a1",
+    "memory:x18",
+    "memory:d8",
+    "memory:d3",
+    "memory:x6",
+    "memory:g2",
+    "memory:x13",
+    "memory:e2",
+    "memory:x9",
+    "memory:d5",
+    "memory:c3",
+    "memory:j3",
+    "memory:x0",
+    "memory:x1",
+    "memory:w1",
+    "memory:x11",
+    "memory:x16",
+    "memory:x17",
+    "memory:x8",
+    "memory:b2",
+    "memory:x2",
+    "memory:x22",
+    "memory:w2",
+    "memory:x10"
+   ],
+   "returned": [
+    "memory:h1",
+    "memory:h2",
+    "memory:d7",
+    "memory:h3",
+    "memory:g1",
+    "memory:x20",
+    "memory:b3",
+    "memory:x23",
+    "memory:x12",
+    "memory:d1"
+   ],
+   "ms": 25.21,
+   "fusion_status": [
+    "applied"
+   ],
+   "policy_versions": [
+    "3.5.0"
+   ],
+   "needed_rank": {
+    "memory:h1": 1,
+    "memory:h2": 2,
+    "memory:h3": 4
+   },
+   "needed_returned": {
+    "memory:h1": true,
+    "memory:h2": true,
+    "memory:h3": true
+   },
+   "cover": {
+    "@1": false,
+    "@3": false,
+    "@5": true,
+    "@10": true
+   },
+   "planted_rank": {},
+   "extras_returned": [
+    "memory:d7",
+    "memory:g1",
+    "memory:x20",
+    "memory:b3",
+    "memory:x23",
+    "memory:x12",
+    "memory:d1"
+   ],
+   "nonanswers_above_first_needed": 0,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": null,
+   "top5_fusion": [
+    [
+     "memory:h1",
+     0.032786885246,
+     1,
+     1,
+     0.639501,
+     5.691811026760735
+    ],
+    [
+     "memory:h2",
+     0.032258064516,
+     2,
+     2,
+     0.578717,
+     3.0473851191142582
+    ],
+    [
+     "memory:d7",
+     0.031498015873,
+     4,
+     3,
+     0.530412,
+     2.1556021486414356
+    ],
+    [
+     "memory:h3",
+     0.031498015873,
+     3,
+     4,
+     0.433058,
+     2.799166062819445
+    ],
+    [
+     "memory:g1",
+     0.028778467909,
+     10,
+     9,
+     0.136025,
+     1.1087438785731312
+    ]
+   ]
+  },
+  {
+   "scenario": "multi",
+   "id": "mx-older",
+   "kind": "multi_compare",
+   "query": "Who is older, Sam or Freya?",
+   "ranked": [
+    "memory:a2",
+    "memory:a1",
+    "memory:c1",
+    "memory:x11",
+    "memory:x4",
+    "memory:e1",
+    "memory:d5",
+    "memory:w2",
+    "memory:d1",
+    "memory:x1",
+    "memory:d8",
+    "memory:g2",
+    "memory:g3"
+   ],
+   "returned": [
+    "memory:a2",
+    "memory:a1",
+    "memory:c1",
+    "memory:x11",
+    "memory:x4",
+    "memory:e1",
+    "memory:d5",
+    "memory:w2",
+    "memory:d1",
+    "memory:x1"
+   ],
+   "ms": 23.95,
+   "fusion_status": [
+    "applied"
+   ],
+   "policy_versions": [
+    "3.5.0"
+   ],
+   "needed_rank": {
+    "memory:a1": 2,
+    "memory:a2": 1
+   },
+   "needed_returned": {
+    "memory:a1": true,
+    "memory:a2": true
+   },
+   "cover": {
+    "@1": false,
+    "@3": true,
+    "@5": true,
+    "@10": true
+   },
+   "planted_rank": {},
+   "extras_returned": [
+    "memory:c1",
+    "memory:x11",
+    "memory:x4",
+    "memory:e1",
+    "memory:d5",
+    "memory:w2",
+    "memory:d1",
+    "memory:x1"
+   ],
+   "nonanswers_above_first_needed": 0,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": null,
+   "top5_fusion": [
+    [
+     "memory:a2",
+     0.032786885246,
+     1,
+     1,
+     0.562295,
+     1.8191261196659871
+    ],
+    [
+     "memory:a1",
+     0.032258064516,
+     2,
+     2,
+     0.51735,
+     1.5980234336630559
+    ],
+    [
+     "memory:c1",
+     0.03128054741,
+     2,
+     6,
+     0.294457,
+     1.5980234336630559
+    ],
+    [
+     "memory:x11",
+     0.030076888286,
+     6,
+     7,
+     0.144942,
+     0.38954120147137816
+    ],
+    [
+     "memory:x4",
+     0.029910714286,
+     4,
+     10,
+     0.13111,
+     0.4130863378934225
+    ]
+   ]
+  }
+ ]
+}

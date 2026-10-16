@@ -20,7 +20,7 @@
   "needed_rank_gt10": 4,
   "newer_first": 1,
   "abstention_returning": 4,
-  "recall_p50_ms": 31.7
+  "recall_p50_ms": 31.89
  },
  "rows": [
   {
@@ -84,7 +84,7 @@
    "extra": [],
    "passed": false,
    "newer_first": null,
-   "recall_ms": 495.7,
+   "recall_ms": 514.17,
    "admitted_scores": [
     [
      "memory:stuff-trips",
@@ -227,7 +227,7 @@
    ],
    "passed": false,
    "newer_first": null,
-   "recall_ms": 29.91,
+   "recall_ms": 31.05,
    "admitted_scores": [
     [
      "memory:filler-travel-0",
@@ -370,7 +370,7 @@
    ],
    "passed": false,
    "newer_first": null,
-   "recall_ms": 34.25,
+   "recall_ms": 50.09,
    "admitted_scores": [
     [
      "memory:visa",
@@ -581,7 +581,7 @@
    "extra": [],
    "passed": true,
    "newer_first": null,
-   "recall_ms": 28.08,
+   "recall_ms": 32.27,
    "admitted_scores": [
     [
      "memory:passport",
@@ -674,7 +674,7 @@
    "extra": [],
    "passed": true,
    "newer_first": null,
-   "recall_ms": 27.5,
+   "recall_ms": 28.7,
    "admitted_scores": [
     [
      "memory:insurance",
@@ -785,7 +785,7 @@
    "extra": [],
    "passed": true,
    "newer_first": false,
-   "recall_ms": 30.31,
+   "recall_ms": 28.61,
    "admitted_scores": [
     [
      "memory:airline-old",
@@ -877,7 +877,7 @@
    ],
    "passed": false,
    "newer_first": null,
-   "recall_ms": 34.8,
+   "recall_ms": 32.51,
    "admitted_scores": [
     [
      "memory:kyoto",
@@ -1108,7 +1108,7 @@
    ],
    "passed": false,
    "newer_first": null,
-   "recall_ms": 30.03,
+   "recall_ms": 30.51,
    "admitted_scores": [
     [
      "memory:stuff-trips",
@@ -1273,7 +1273,7 @@
    "extra": [],
    "passed": false,
    "newer_first": null,
-   "recall_ms": 423.38,
+   "recall_ms": 435.11,
    "admitted_scores": [
     [
      "memory:dentist",
@@ -1425,7 +1425,7 @@
    ],
    "passed": false,
    "newer_first": null,
-   "recall_ms": 36.61,
+   "recall_ms": 31.55,
    "admitted_scores": [
     [
      "memory:insurance-h",
@@ -1538,7 +1538,7 @@
    ],
    "passed": false,
    "newer_first": null,
-   "recall_ms": 39.19,
+   "recall_ms": 30.76,
    "admitted_scores": [
     [
      "memory:knee",
@@ -1710,7 +1710,7 @@
    ],
    "passed": false,
    "newer_first": null,
-   "recall_ms": 32.88,
+   "recall_ms": 43.13,
    "admitted_scores": [
     [
      "memory:blood-test",
@@ -1957,7 +1957,7 @@
    ],
    "passed": false,
    "newer_first": null,
-   "recall_ms": 28.54,
+   "recall_ms": 32.04,
    "admitted_scores": [
     [
      "memory:health-article",
@@ -2115,7 +2115,7 @@
    "extra": [],
    "passed": true,
    "newer_first": null,
-   "recall_ms": 29.13,
+   "recall_ms": 28.37,
    "admitted_scores": [
     [
      "memory:stuff-meds",
@@ -2218,7 +2218,7 @@
    ],
    "passed": false,
    "newer_first": false,
-   "recall_ms": 34.24,
+   "recall_ms": 53.21,
    "admitted_scores": [
     [
      "memory:gym-old",
@@ -2408,7 +2408,7 @@
    ],
    "passed": false,
    "newer_first": null,
-   "recall_ms": 27.37,
+   "recall_ms": 31.08,
    "admitted_scores": [
     [
      "memory:blood-test",
@@ -2571,7 +2571,7 @@
    ],
    "passed": false,
    "newer_first": null,
-   "recall_ms": 453.7,
+   "recall_ms": 457.22,
    "admitted_scores": [
     [
      "memory:work-newsletter",
@@ -2746,7 +2746,7 @@
    ],
    "passed": false,
    "newer_first": null,
-   "recall_ms": 31.15,
+   "recall_ms": 49.11,
    "admitted_scores": [
     [
      "memory:stuff-team",
@@ -3003,7 +3003,7 @@
    ],
    "passed": false,
    "newer_first": null,
-   "recall_ms": 34.48,
+   "recall_ms": 39.23,
    "admitted_scores": [
     [
      "memory:deadline",
@@ -3252,7 +3252,7 @@
    "extra": [],
    "passed": true,
    "newer_first": null,
-   "recall_ms": 31.26,
+   "recall_ms": 35.25,
    "admitted_scores": [
     [
      "memory:colleague",
@@ -3460,7 +3460,7 @@
    ],
    "passed": false,
    "newer_first": null,
-   "recall_ms": 28.89,
+   "recall_ms": 32.08,
    "admitted_scores": [
     [
      "memory:training",
@@ -3589,7 +3589,7 @@
    "extra": [],
    "passed": false,
    "newer_first": null,
-   "recall_ms": 26.98,
+   "recall_ms": 29.41,
    "admitted_scores": [
     [
      "memory:manager-old",
@@ -3705,7 +3705,7 @@
    "extra": [],
    "passed": true,
    "newer_first": null,
-   "recall_ms": 30.09,
+   "recall_ms": 29.72,
    "admitted_scores": [
     [
      "memory:filler-work-5",
@@ -3852,7 +3852,7 @@
    "extra": [],
    "passed": false,
    "newer_first": null,
-   "recall_ms": 33.03,
+   "recall_ms": 34.26,
    "admitted_scores": [
     [
      "memory:office",
@@ -4099,7 +4099,7 @@
    "extra": [],
    "passed": false,
    "newer_first": null,
-   "recall_ms": 439.65,
+   "recall_ms": 428.93,
    "admitted_scores": [
     [
      "memory:stuff-repairs",
@@ -4336,7 +4336,7 @@
    ],
    "passed": false,
    "newer_first": null,
-   "recall_ms": 29.9,
+   "recall_ms": 34.73,
    "admitted_scores": [
     [
      "memory:stuff-repairs",
@@ -4559,7 +4559,7 @@
    "extra": [],
    "passed": false,
    "newer_first": null,
-   "recall_ms": 31.22,
+   "recall_ms": 31.37,
    "admitted_scores": [
     [
      "memory:damp",
@@ -4778,7 +4778,7 @@
    "extra": [],
    "passed": true,
    "newer_first": null,
-   "recall_ms": 36.84,
+   "recall_ms": 30.01,
    "admitted_scores": [
     [
      "memory:insurance-home",
@@ -4994,7 +4994,7 @@
    ],
    "passed": false,
    "newer_first": null,
-   "recall_ms": 36.31,
+   "recall_ms": 29.91,
    "admitted_scores": [
     [
      "memory:bike-store",
@@ -5194,7 +5194,7 @@
    "extra": [],
    "passed": false,
    "newer_first": false,
-   "recall_ms": 26.82,
+   "recall_ms": 29.0,
    "admitted_scores": [
     [
      "memory:energy-old",
@@ -5280,7 +5280,7 @@
    "extra": [],
    "passed": true,
    "newer_first": null,
-   "recall_ms": 32.99,
+   "recall_ms": 31.28,
    "admitted_scores": [
     [
      "memory:filler-home-1",
@@ -5523,7 +5523,7 @@
    "extra": [],
    "passed": false,
    "newer_first": null,
-   "recall_ms": 32.17,
+   "recall_ms": 31.89,
    "admitted_scores": [
     [
      "memory:stuff-repairs",
@@ -5740,7 +5740,7 @@
    "extra": [],
    "passed": false,
    "newer_first": null,
-   "recall_ms": 359.96,
+   "recall_ms": 422.07,
    "admitted_scores": [
     [
      "memory:stuff-bdays",
@@ -5829,7 +5829,7 @@
    ],
    "passed": false,
    "newer_first": null,
-   "recall_ms": 31.36,
+   "recall_ms": 31.59,
    "admitted_scores": [
     [
      "memory:family-article",
@@ -6029,7 +6029,7 @@
    "extra": [],
    "passed": true,
    "newer_first": null,
-   "recall_ms": 30.83,
+   "recall_ms": 34.28,
    "admitted_scores": [
     [
      "memory:visit-grandma",
@@ -6203,7 +6203,7 @@
    ],
    "passed": false,
    "newer_first": null,
-   "recall_ms": 29.25,
+   "recall_ms": 31.58,
    "admitted_scores": [
     [
      "memory:gift-dad",
@@ -6348,7 +6348,7 @@
    "extra": [],
    "passed": false,
    "newer_first": null,
-   "recall_ms": 29.88,
+   "recall_ms": 32.5,
    "admitted_scores": [
     [
      "memory:friend-tom",
@@ -6528,7 +6528,7 @@
    "extra": [],
    "passed": true,
    "newer_first": true,
-   "recall_ms": 24.72,
+   "recall_ms": 26.85,
    "admitted_scores": [
     [
      "memory:visit-grandma",
@@ -6600,7 +6600,7 @@
    ],
    "passed": false,
    "newer_first": null,
-   "recall_ms": 33.82,
+   "recall_ms": 27.6,
    "admitted_scores": [
     [
      "memory:stuff-bdays",
@@ -6768,7 +6768,7 @@
    ],
    "passed": false,
    "newer_first": null,
-   "recall_ms": 27.95,
+   "recall_ms": 29.69,
    "admitted_scores": [
     [
      "memory:friend-maya",
@@ -6862,7 +6862,7 @@
      "bm25": 3.3950817549954153,
      "corroboration": 1,
      "semantic_route": null,
-     "ordered_before_next_by": "fused_relevance_desc:rrf_admitted",
+     "ordered_before_next_by": "explicit_current_unknown_tie_content_identity",
      "cosine": null,
      "dense_rank": null
     },
@@ -6878,11 +6878,11 @@
     },
     "memory:course": {
      "stage": "withheld",
-     "rank": 2,
+     "rank": 4,
      "bm25": 1.996289914952625,
      "corroboration": 1,
      "semantic_route": null,
-     "ordered_before_next_by": "fused_relevance_desc:rrf_admitted",
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
      "cosine": null,
      "dense_rank": null
     }
@@ -6895,15 +6895,15 @@
    "admitted_count": 25,
    "top10": [
     "memory:guitar",
-    "memory:course",
-    "memory:piano-old",
-    "memory:bike-club-old",
-    "memory:filler-hobby-13",
-    "memory:bike-club-new",
-    "memory:stuff-hobbies",
     "memory:filler-hobby-6",
+    "memory:filler-hobby-7",
+    "memory:course",
+    "memory:bike-club-old",
     "memory:filler-hobby-5",
-    "memory:filler-hobby-7"
+    "memory:bike-club-new",
+    "memory:filler-hobby-13",
+    "memory:piano-old",
+    "memory:filler-hobby-10"
    ],
    "returned": [
     "memory:guitar"
@@ -6911,47 +6911,11 @@
    "extra": [],
    "passed": false,
    "newer_first": null,
-   "recall_ms": 483.75,
+   "recall_ms": 395.73,
    "admitted_scores": [
     [
      "memory:guitar",
      3.3950817549954153,
-     null,
-     null
-    ],
-    [
-     "memory:course",
-     1.996289914952625,
-     null,
-     null
-    ],
-    [
-     "memory:piano-old",
-     1.3891216099868926,
-     null,
-     null
-    ],
-    [
-     "memory:bike-club-old",
-     1.6644141539738049,
-     null,
-     null
-    ],
-    [
-     "memory:filler-hobby-13",
-     1.4637520689761596,
-     null,
-     null
-    ],
-    [
-     "memory:bike-club-new",
-     1.5029250704705248,
-     null,
-     null
-    ],
-    [
-     "memory:stuff-hobbies",
-     0.2006620849976453,
      null,
      null
     ],
@@ -6962,50 +6926,44 @@
      null
     ],
     [
-     "memory:filler-hobby-5",
-     1.6399662024805126,
-     null,
-     null
-    ],
-    [
      "memory:filler-hobby-7",
      2.1998544881972846,
      null,
      null
     ],
     [
-     "memory:podcast-h",
-     0.19043118331523648,
+     "memory:course",
+     1.996289914952625,
      null,
      null
     ],
     [
-     "memory:book-club",
-     0.25281973885984915,
+     "memory:bike-club-old",
+     1.6644141539738049,
      null,
      null
     ],
     [
-     "memory:strings",
-     0.2006620849976453,
+     "memory:filler-hobby-5",
+     1.6399662024805126,
      null,
      null
     ],
     [
-     "memory:filler-hobby-0",
-     0.19043118331523648,
+     "memory:bike-club-new",
+     1.5029250704705248,
      null,
      null
     ],
     [
-     "memory:filler-hobby-9",
-     0.26167610523747115,
+     "memory:filler-hobby-13",
+     1.4637520689761596,
      null,
      null
     ],
     [
-     "memory:garden-h",
-     0.2248188368031403,
+     "memory:piano-old",
+     1.3891216099868926,
      null,
      null
     ],
@@ -7016,14 +6974,14 @@
      null
     ],
     [
-     "memory:run-race",
-     0.18119293056708463,
+     "memory:filler-hobby-9",
+     0.26167610523747115,
      null,
      null
     ],
     [
-     "memory:filler-hobby-12",
-     0.19043118331523648,
+     "memory:book-club",
+     0.25281973885984915,
      null,
      null
     ],
@@ -7034,8 +6992,62 @@
      null
     ],
     [
+     "memory:garden-h",
+     0.2248188368031403,
+     null,
+     null
+    ],
+    [
+     "memory:strings",
+     0.2006620849976453,
+     null,
+     null
+    ],
+    [
+     "memory:stuff-hobbies",
+     0.2006620849976453,
+     null,
+     null
+    ],
+    [
+     "memory:podcast-h",
+     0.19043118331523648,
+     null,
+     null
+    ],
+    [
      "memory:filler-hobby-3",
      0.19043118331523648,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-12",
+     0.19043118331523648,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-11",
+     0.19043118331523648,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-0",
+     0.19043118331523648,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-2",
+     0.18119293056708463,
+     null,
+     null
+    ],
+    [
+     "memory:run-race",
+     0.18119293056708463,
      null,
      null
     ],
@@ -7048,18 +7060,6 @@
     [
      "memory:filler-hobby-8",
      0.1728095438968,
-     null,
-     null
-    ],
-    [
-     "memory:filler-hobby-11",
-     0.19043118331523648,
-     null,
-     null
-    ],
-    [
-     "memory:filler-hobby-2",
-     0.18119293056708463,
      null,
      null
     ]
@@ -7125,7 +7125,7 @@
    "extra": [],
    "passed": false,
    "newer_first": null,
-   "recall_ms": 28.87,
+   "recall_ms": 27.3,
    "admitted_scores": [
     [
      "memory:bike-club-old",
@@ -7226,7 +7226,7 @@
    ],
    "passed": false,
    "newer_first": null,
-   "recall_ms": 37.95,
+   "recall_ms": 35.93,
    "admitted_scores": [
     [
      "memory:lessons",
@@ -7420,7 +7420,7 @@
    "extra": [],
    "passed": false,
    "newer_first": null,
-   "recall_ms": 31.75,
+   "recall_ms": 28.6,
    "admitted_scores": [
     [
      "memory:bike-club-old",
@@ -7498,7 +7498,7 @@
    ],
    "passed": false,
    "newer_first": null,
-   "recall_ms": 45.47,
+   "recall_ms": 33.27,
    "admitted_scores": [
     [
      "memory:book-club",
@@ -7691,7 +7691,7 @@
    ],
    "passed": false,
    "newer_first": false,
-   "recall_ms": 39.95,
+   "recall_ms": 36.08,
    "admitted_scores": [
     [
      "memory:bike-club-old",
@@ -7893,7 +7893,7 @@
    "extra": [],
    "passed": true,
    "newer_first": null,
-   "recall_ms": 31.7,
+   "recall_ms": 29.19,
    "admitted_scores": [
     [
      "memory:piano-old",
@@ -8029,7 +8029,7 @@
    "extra": [],
    "passed": false,
    "newer_first": null,
-   "recall_ms": 31.21,
+   "recall_ms": 25.65,
    "admitted_scores": [
     [
      "memory:bike-club-old",

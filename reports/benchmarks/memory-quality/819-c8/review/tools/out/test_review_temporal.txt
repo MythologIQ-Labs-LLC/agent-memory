@@ -1,0 +1,10 @@
+== c6
+....                                                                     [100%]
+4 passed in 0.51s
+== c8
+=========================== short test summary info ============================
+FAILED ../tools/test_review_temporal.py::TemporalStageNotReversed::test_as_of_after_both_starts_latest_first
+FAILED ../tools/test_review_temporal.py::TemporalStageNotReversed::test_declared_current_newer_first_ranked_prefix
+FAILED ../tools/test_review_temporal.py::TemporalStageNotReversed::test_declared_current_newer_first_relevance_sufficient
+FAILED ../tools/test_review_temporal.py::TemporalStageNotReversed::test_language_current_newer_first
+4 failed in 0.48s

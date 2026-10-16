@@ -1,0 +1,3608 @@
+{
+ "tree": "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/review-c8/c6",
+ "semantic": "off",
+ "selection": "ranked_prefix",
+ "fresh": false,
+ "budget": 10,
+ "rows": [
+  {
+   "scenario": "household",
+   "id": "h-multi-pets",
+   "kind": "multi_list",
+   "query": "What pets have we had over the years?",
+   "ranked": [
+    "memory:q-wifi",
+    "memory:f1-31",
+    "memory:f1-10",
+    "memory:car-old",
+    "memory:f1-1",
+    "memory:f1-20",
+    "memory:car-new",
+    "memory:f1-4",
+    "memory:f1-7",
+    "memory:f1-25",
+    "memory:pet-cat",
+    "memory:f1-8",
+    "memory:toothpaste",
+    "memory:pharmacy",
+    "memory:gym-new",
+    "memory:pet-fish",
+    "memory:gym-old",
+    "memory:meta-wifi",
+    "memory:f1-6",
+    "memory:f1-0",
+    "memory:f1-26",
+    "memory:f1-17",
+    "memory:f1-2",
+    "memory:inject-bins",
+    "memory:hygienist",
+    "memory:hannah-job",
+    "memory:f1-11",
+    "memory:f1-12",
+    "memory:f1-22",
+    "memory:f1-14",
+    "memory:f1-15",
+    "memory:f1-19",
+    "memory:f1-29",
+    "memory:f1-5",
+    "memory:owen-job",
+    "memory:gp",
+    "memory:f1-16",
+    "memory:sister-married",
+    "memory:pet-food",
+    "memory:wifi",
+    "memory:dentist-name",
+    "memory:pet-vet-note",
+    "memory:f1-9",
+    "memory:barber-new",
+    "memory:barber-old"
+   ],
+   "returned": [
+    "memory:q-wifi",
+    "memory:f1-31",
+    "memory:f1-10",
+    "memory:car-old",
+    "memory:f1-1",
+    "memory:f1-20",
+    "memory:car-new",
+    "memory:f1-4",
+    "memory:f1-7",
+    "memory:f1-25"
+   ],
+   "ms": 15.01,
+   "fusion_status": [
+    "None"
+   ],
+   "policy_versions": [
+    "3.4.0"
+   ],
+   "needed_rank": {
+    "memory:pet-dog": null,
+    "memory:pet-fish": 16,
+    "memory:pet-cat": 11
+   },
+   "needed_returned": {
+    "memory:pet-dog": false,
+    "memory:pet-fish": false,
+    "memory:pet-cat": false
+   },
+   "cover": {
+    "@1": false,
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "planted_rank": {},
+   "extras_returned": [
+    "memory:q-wifi",
+    "memory:f1-31",
+    "memory:f1-10",
+    "memory:car-old",
+    "memory:f1-1",
+    "memory:f1-20",
+    "memory:car-new",
+    "memory:f1-4",
+    "memory:f1-7",
+    "memory:f1-25"
+   ],
+   "nonanswers_above_first_needed": 10,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": null,
+   "top5_fusion": [
+    [
+     "memory:q-wifi",
+     null,
+     null,
+     null,
+     null,
+     3.3349771378611286
+    ],
+    [
+     "memory:f1-31",
+     null,
+     null,
+     null,
+     null,
+     1.744958661216837
+    ],
+    [
+     "memory:f1-10",
+     null,
+     null,
+     null,
+     null,
+     1.6702866398758787
+    ],
+    [
+     "memory:car-old",
+     null,
+     null,
+     null,
+     null,
+     1.6613344442256148
+    ],
+    [
+     "memory:f1-1",
+     null,
+     null,
+     null,
+     null,
+     1.5972420346334935
+    ]
+   ]
+  },
+  {
+   "scenario": "household",
+   "id": "h-multi-chain",
+   "kind": "multi_chain",
+   "query": "What does my brother-in-law do for work?",
+   "ranked": [
+    "memory:f1-28",
+    "memory:barber-new",
+    "memory:f1-18",
+    "memory:sister-married",
+    "memory:f1-9",
+    "memory:q-wifi",
+    "memory:f1-27",
+    "memory:pharmacy",
+    "memory:owen-job",
+    "memory:dentist-name",
+    "memory:dentist-appt",
+    "memory:f1-23",
+    "memory:gym-new",
+    "memory:barber-old"
+   ],
+   "returned": [
+    "memory:f1-28",
+    "memory:barber-new",
+    "memory:f1-18",
+    "memory:sister-married",
+    "memory:f1-9",
+    "memory:q-wifi",
+    "memory:f1-27",
+    "memory:pharmacy",
+    "memory:owen-job",
+    "memory:dentist-name"
+   ],
+   "ms": 10.01,
+   "fusion_status": [
+    "None"
+   ],
+   "policy_versions": [
+    "3.4.0"
+   ],
+   "needed_rank": {
+    "memory:sister-married": 4,
+    "memory:owen-job": 9
+   },
+   "needed_returned": {
+    "memory:sister-married": true,
+    "memory:owen-job": true
+   },
+   "cover": {
+    "@1": false,
+    "@3": false,
+    "@5": false,
+    "@10": true
+   },
+   "planted_rank": {},
+   "extras_returned": [
+    "memory:f1-28",
+    "memory:barber-new",
+    "memory:f1-18",
+    "memory:f1-9",
+    "memory:q-wifi",
+    "memory:f1-27",
+    "memory:pharmacy",
+    "memory:dentist-name"
+   ],
+   "nonanswers_above_first_needed": 3,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": null,
+   "top5_fusion": [
+    [
+     "memory:f1-28",
+     null,
+     null,
+     null,
+     null,
+     3.5676381943544504
+    ],
+    [
+     "memory:barber-new",
+     null,
+     null,
+     null,
+     null,
+     2.6006262437027527
+    ],
+    [
+     "memory:f1-18",
+     null,
+     null,
+     null,
+     null,
+     2.41881914400091
+    ],
+    [
+     "memory:sister-married",
+     null,
+     null,
+     null,
+     null,
+     2.3172964217676935
+    ],
+    [
+     "memory:f1-9",
+     null,
+     null,
+     null,
+     null,
+     2.170083393269325
+    ]
+   ]
+  },
+  {
+   "scenario": "household",
+   "id": "h-multi-allergy",
+   "kind": "multi_exception",
+   "query": "Which family members have food allergies?",
+   "ranked": [
+    "memory:inject-bins",
+    "memory:f1-29",
+    "memory:gp",
+    "memory:pet-food",
+    "memory:hayfever"
+   ],
+   "returned": [
+    "memory:inject-bins",
+    "memory:f1-29",
+    "memory:gp",
+    "memory:pet-food",
+    "memory:hayfever"
+   ],
+   "ms": 8.81,
+   "fusion_status": [
+    "None"
+   ],
+   "policy_versions": [
+    "3.4.0"
+   ],
+   "needed_rank": {
+    "memory:allergy-ella": null,
+    "memory:allergy-grandad": null
+   },
+   "needed_returned": {
+    "memory:allergy-ella": false,
+    "memory:allergy-grandad": false
+   },
+   "cover": {
+    "@1": false,
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "planted_rank": {},
+   "extras_returned": [
+    "memory:inject-bins",
+    "memory:f1-29",
+    "memory:gp",
+    "memory:pet-food"
+   ],
+   "nonanswers_above_first_needed": 5,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": null,
+   "top5_fusion": [
+    [
+     "memory:inject-bins",
+     null,
+     null,
+     null,
+     null,
+     1.1605783110560781
+    ],
+    [
+     "memory:f1-29",
+     null,
+     null,
+     null,
+     null,
+     0.9807003718939347
+    ],
+    [
+     "memory:gp",
+     null,
+     null,
+     null,
+     null,
+     0.9451963359042105
+    ],
+    [
+     "memory:pet-food",
+     null,
+     null,
+     null,
+     null,
+     0.9451963359042105
+    ],
+    [
+     "memory:hayfever",
+     null,
+     null,
+     null,
+     null,
+     0.8256353095776063
+    ]
+   ]
+  },
+  {
+   "scenario": "household",
+   "id": "h-near-dentist",
+   "kind": "near_miss",
+   "query": "What is my dentist's name?",
+   "ranked": [
+    "memory:dentist-appt",
+    "memory:barber-old",
+    "memory:q-wifi",
+    "memory:f1-21",
+    "memory:gym-new",
+    "memory:f1-28",
+    "memory:barber-new",
+    "memory:f1-23",
+    "memory:f1-18",
+    "memory:sister-married",
+    "memory:f1-26",
+    "memory:bins",
+    "memory:f1-12",
+    "memory:f1-29",
+    "memory:f1-5",
+    "memory:f1-4",
+    "memory:gp",
+    "memory:pet-food",
+    "memory:wifi",
+    "memory:hayfever",
+    "memory:pet-cat",
+    "memory:inject-bins"
+   ],
+   "returned": [
+    "memory:dentist-appt",
+    "memory:barber-old",
+    "memory:q-wifi",
+    "memory:f1-21",
+    "memory:gym-new",
+    "memory:f1-28",
+    "memory:barber-new",
+    "memory:f1-23",
+    "memory:f1-18",
+    "memory:sister-married"
+   ],
+   "ms": 11.24,
+   "fusion_status": [
+    "None"
+   ],
+   "policy_versions": [
+    "3.4.0"
+   ],
+   "needed_rank": {
+    "memory:dentist-name": null
+   },
+   "needed_returned": {
+    "memory:dentist-name": false
+   },
+   "cover": {
+    "@1": false,
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "planted_rank": {},
+   "extras_returned": [
+    "memory:dentist-appt",
+    "memory:barber-old",
+    "memory:q-wifi",
+    "memory:f1-21",
+    "memory:gym-new",
+    "memory:f1-28",
+    "memory:barber-new",
+    "memory:f1-23",
+    "memory:f1-18",
+    "memory:sister-married"
+   ],
+   "nonanswers_above_first_needed": 22,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": null,
+   "top5_fusion": [
+    [
+     "memory:dentist-appt",
+     null,
+     null,
+     null,
+     null,
+     4.355074796810793
+    ],
+    [
+     "memory:barber-old",
+     null,
+     null,
+     null,
+     null,
+     2.971508142971984
+    ],
+    [
+     "memory:q-wifi",
+     null,
+     null,
+     null,
+     null,
+     2.885287936334265
+    ],
+    [
+     "memory:f1-21",
+     null,
+     null,
+     null,
+     null,
+     2.8411880838965216
+    ],
+    [
+     "memory:gym-new",
+     null,
+     null,
+     null,
+     null,
+     1.2687213874325605
+    ]
+   ]
+  },
+  {
+   "scenario": "household",
+   "id": "h-near-gp",
+   "kind": "near_miss",
+   "query": "Who is our GP?",
+   "ranked": [
+    "memory:pet-dog",
+    "memory:gp",
+    "memory:f1-3",
+    "memory:f1-13",
+    "memory:f1-20",
+    "memory:dentist-name",
+    "memory:f1-26",
+    "memory:bins",
+    "memory:f1-21",
+    "memory:f1-12",
+    "memory:dentist-appt",
+    "memory:f1-29",
+    "memory:f1-5",
+    "memory:f1-4",
+    "memory:gym-new",
+    "memory:pet-food",
+    "memory:wifi",
+    "memory:q-wifi",
+    "memory:barber-new",
+    "memory:hayfever",
+    "memory:pet-cat",
+    "memory:inject-bins"
+   ],
+   "returned": [
+    "memory:pet-dog",
+    "memory:gp",
+    "memory:f1-3",
+    "memory:f1-13",
+    "memory:f1-20",
+    "memory:dentist-name",
+    "memory:f1-26",
+    "memory:bins",
+    "memory:f1-21",
+    "memory:f1-12"
+   ],
+   "ms": 11.68,
+   "fusion_status": [
+    "None"
+   ],
+   "policy_versions": [
+    "3.4.0"
+   ],
+   "needed_rank": {
+    "memory:gp": 2
+   },
+   "needed_returned": {
+    "memory:gp": true
+   },
+   "cover": {
+    "@1": false,
+    "@3": true,
+    "@5": true,
+    "@10": true
+   },
+   "planted_rank": {},
+   "extras_returned": [
+    "memory:pet-dog",
+    "memory:f1-3",
+    "memory:f1-13",
+    "memory:f1-20",
+    "memory:dentist-name",
+    "memory:f1-26",
+    "memory:bins",
+    "memory:f1-21",
+    "memory:f1-12"
+   ],
+   "nonanswers_above_first_needed": 1,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": null,
+   "top5_fusion": [
+    [
+     "memory:pet-dog",
+     null,
+     null,
+     null,
+     null,
+     3.7068289778046926
+    ],
+    [
+     "memory:gp",
+     null,
+     null,
+     null,
+     null,
+     1.5426708932899793
+    ],
+    [
+     "memory:f1-3",
+     null,
+     null,
+     null,
+     null,
+     1.4447265727084728
+    ],
+    [
+     "memory:f1-13",
+     null,
+     null,
+     null,
+     null,
+     1.3807319728435339
+    ],
+    [
+     "memory:f1-20",
+     null,
+     null,
+     null,
+     null,
+     1.322166220782047
+    ]
+   ]
+  },
+  {
+   "scenario": "household",
+   "id": "h-stuff-wifi",
+   "kind": "stuffing",
+   "query": "What is the wifi password?",
+   "ranked": [
+    "memory:q-wifi",
+    "memory:meta-wifi",
+    "memory:f1-26",
+    "memory:f1-12",
+    "memory:f1-29",
+    "memory:f1-5",
+    "memory:bins",
+    "memory:f1-21",
+    "memory:gym-new",
+    "memory:f1-4",
+    "memory:gp",
+    "memory:pet-food",
+    "memory:dentist-appt",
+    "memory:wifi",
+    "memory:barber-new",
+    "memory:pet-cat",
+    "memory:inject-bins",
+    "memory:hayfever",
+    "memory:f1-8",
+    "memory:toothpaste",
+    "memory:pharmacy",
+    "memory:pet-fish",
+    "memory:gym-old",
+    "memory:f1-6",
+    "memory:f1-0",
+    "memory:f1-17",
+    "memory:f1-2",
+    "memory:hygienist",
+    "memory:hannah-job",
+    "memory:f1-11",
+    "memory:f1-10",
+    "memory:f1-22",
+    "memory:f1-14",
+    "memory:f1-15",
+    "memory:f1-19",
+    "memory:f1-1",
+    "memory:f1-20",
+    "memory:owen-job",
+    "memory:f1-7",
+    "memory:f1-16",
+    "memory:sister-married",
+    "memory:f1-25",
+    "memory:dentist-name",
+    "memory:pet-vet-note",
+    "memory:f1-9",
+    "memory:barber-old"
+   ],
+   "returned": [
+    "memory:q-wifi",
+    "memory:meta-wifi",
+    "memory:f1-26",
+    "memory:f1-12",
+    "memory:f1-29",
+    "memory:f1-5",
+    "memory:bins",
+    "memory:f1-21",
+    "memory:gym-new",
+    "memory:f1-4"
+   ],
+   "ms": 15.6,
+   "fusion_status": [
+    "None"
+   ],
+   "policy_versions": [
+    "3.4.0"
+   ],
+   "needed_rank": {
+    "memory:wifi": 14
+   },
+   "needed_returned": {
+    "memory:wifi": false
+   },
+   "cover": {
+    "@1": false,
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "planted_rank": {
+    "memory:q-wifi": 1,
+    "memory:meta-wifi": 2
+   },
+   "extras_returned": [
+    "memory:q-wifi",
+    "memory:meta-wifi",
+    "memory:f1-26",
+    "memory:f1-12",
+    "memory:f1-29",
+    "memory:f1-5",
+    "memory:bins",
+    "memory:f1-21",
+    "memory:gym-new",
+    "memory:f1-4"
+   ],
+   "nonanswers_above_first_needed": 13,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": null,
+   "top5_fusion": [
+    [
+     "memory:q-wifi",
+     null,
+     null,
+     null,
+     null,
+     12.118295470450757
+    ],
+    [
+     "memory:meta-wifi",
+     null,
+     null,
+     null,
+     null,
+     6.943842099787046
+    ],
+    [
+     "memory:f1-26",
+     null,
+     null,
+     null,
+     null,
+     1.2292107572251434
+    ],
+    [
+     "memory:f1-12",
+     null,
+     null,
+     null,
+     null,
+     1.1734294075056202
+    ],
+    [
+     "memory:f1-29",
+     null,
+     null,
+     null,
+     null,
+     1.122490980882224
+    ]
+   ]
+  },
+  {
+   "scenario": "household",
+   "id": "h-stuff-bins",
+   "kind": "stuffing",
+   "query": "Which day do the bins go out?",
+   "ranked": [
+    "memory:inject-bins",
+    "memory:f1-9",
+    "memory:f1-3",
+    "memory:gym-old",
+    "memory:allergy-grandad",
+    "memory:f1-8",
+    "memory:toothpaste",
+    "memory:pharmacy",
+    "memory:gym-new",
+    "memory:pet-fish",
+    "memory:q-wifi",
+    "memory:meta-wifi",
+    "memory:f1-6",
+    "memory:f1-0",
+    "memory:f1-26",
+    "memory:f1-17",
+    "memory:f1-2",
+    "memory:hygienist",
+    "memory:hannah-job",
+    "memory:f1-11",
+    "memory:f1-12",
+    "memory:f1-10",
+    "memory:f1-22",
+    "memory:f1-14",
+    "memory:f1-15",
+    "memory:f1-19",
+    "memory:f1-1",
+    "memory:f1-29",
+    "memory:f1-5",
+    "memory:f1-20",
+    "memory:f1-4",
+    "memory:owen-job",
+    "memory:f1-7",
+    "memory:gp",
+    "memory:f1-16",
+    "memory:sister-married",
+    "memory:f1-25",
+    "memory:pet-food",
+    "memory:wifi",
+    "memory:dentist-name",
+    "memory:pet-vet-note",
+    "memory:barber-new",
+    "memory:barber-old",
+    "memory:pet-cat"
+   ],
+   "returned": [
+    "memory:inject-bins",
+    "memory:f1-9",
+    "memory:f1-3",
+    "memory:gym-old",
+    "memory:allergy-grandad",
+    "memory:f1-8",
+    "memory:toothpaste",
+    "memory:pharmacy",
+    "memory:gym-new",
+    "memory:pet-fish"
+   ],
+   "ms": 16.04,
+   "fusion_status": [
+    "None"
+   ],
+   "policy_versions": [
+    "3.4.0"
+   ],
+   "needed_rank": {
+    "memory:bins": null
+   },
+   "needed_returned": {
+    "memory:bins": false
+   },
+   "cover": {
+    "@1": false,
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "planted_rank": {
+    "memory:inject-bins": 1
+   },
+   "extras_returned": [
+    "memory:inject-bins",
+    "memory:f1-9",
+    "memory:f1-3",
+    "memory:gym-old",
+    "memory:allergy-grandad",
+    "memory:f1-8",
+    "memory:toothpaste",
+    "memory:pharmacy",
+    "memory:gym-new",
+    "memory:pet-fish"
+   ],
+   "nonanswers_above_first_needed": 44,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": null,
+   "top5_fusion": [
+    [
+     "memory:inject-bins",
+     null,
+     null,
+     null,
+     null,
+     11.672332241189732
+    ],
+    [
+     "memory:f1-9",
+     null,
+     null,
+     null,
+     null,
+     3.2826490091177227
+    ],
+    [
+     "memory:f1-3",
+     null,
+     null,
+     null,
+     null,
+     2.8847790177933
+    ],
+    [
+     "memory:gym-old",
+     null,
+     null,
+     null,
+     null,
+     2.819325552460234
+    ],
+    [
+     "memory:allergy-grandad",
+     null,
+     null,
+     null,
+     null,
+     2.524938879916522
+    ]
+   ]
+  },
+  {
+   "scenario": "household",
+   "id": "h-decl-open-car",
+   "kind": "declared_open",
+   "query": "What car do we drive?",
+   "ranked": [
+    "memory:car-old",
+    "memory:q-wifi",
+    "memory:f1-9",
+    "memory:car-new",
+    "memory:f1-31",
+    "memory:f1-10",
+    "memory:f1-1",
+    "memory:f1-20",
+    "memory:f1-25",
+    "memory:f1-4",
+    "memory:f1-7",
+    "memory:pet-cat"
+   ],
+   "returned": [
+    "memory:car-old",
+    "memory:q-wifi",
+    "memory:f1-9",
+    "memory:car-new",
+    "memory:f1-31",
+    "memory:f1-10",
+    "memory:f1-1",
+    "memory:f1-20",
+    "memory:f1-25",
+    "memory:f1-4"
+   ],
+   "ms": 8.5,
+   "fusion_status": [
+    "None"
+   ],
+   "policy_versions": [
+    "3.4.0"
+   ],
+   "needed_rank": {
+    "memory:car-new": 4
+   },
+   "needed_returned": {
+    "memory:car-new": true
+   },
+   "cover": {
+    "@1": false,
+    "@3": false,
+    "@5": true,
+    "@10": true
+   },
+   "planted_rank": {},
+   "extras_returned": [
+    "memory:q-wifi",
+    "memory:f1-9",
+    "memory:f1-31",
+    "memory:f1-10",
+    "memory:f1-1",
+    "memory:f1-20",
+    "memory:f1-25",
+    "memory:f1-4"
+   ],
+   "nonanswers_above_first_needed": 3,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": {
+    "preferred": "memory:car-new",
+    "other": "memory:car-old",
+    "ranks": [
+     4,
+     1
+    ],
+    "applicability": [
+     "applicable",
+     "applicable"
+    ],
+    "ordered_by": [
+     "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "lexical_relevance_desc:bm25_admitted_set:lexical"
+    ],
+    "preferred_first": false
+   },
+   "top5_fusion": [
+    [
+     "memory:car-old",
+     null,
+     null,
+     null,
+     null,
+     2.0806789018207668
+    ],
+    [
+     "memory:q-wifi",
+     null,
+     null,
+     null,
+     null,
+     2.0205035167077474
+    ],
+    [
+     "memory:f1-9",
+     null,
+     null,
+     null,
+     null,
+     2.0205035167077474
+    ],
+    [
+     "memory:car-new",
+     null,
+     null,
+     null,
+     null,
+     1.9843594327266207
+    ],
+    [
+     "memory:f1-31",
+     null,
+     null,
+     null,
+     null,
+     0.2508007620883207
+    ]
+   ]
+  },
+  {
+   "scenario": "household",
+   "id": "h-asof-car",
+   "kind": "as_of_open",
+   "query": "What car did we drive?",
+   "ranked": [
+    "memory:q-wifi",
+    "memory:car-old",
+    "memory:f1-31",
+    "memory:f1-10",
+    "memory:f1-1",
+    "memory:f1-20",
+    "memory:f1-4",
+    "memory:f1-7",
+    "memory:f1-25",
+    "memory:pet-cat",
+    "memory:car-new"
+   ],
+   "returned": [
+    "memory:q-wifi",
+    "memory:car-old",
+    "memory:f1-31",
+    "memory:f1-10",
+    "memory:f1-1",
+    "memory:f1-20",
+    "memory:f1-4",
+    "memory:f1-7",
+    "memory:f1-25",
+    "memory:pet-cat"
+   ],
+   "ms": 6.58,
+   "fusion_status": [
+    "None"
+   ],
+   "policy_versions": [
+    "3.4.0"
+   ],
+   "needed_rank": {
+    "memory:car-old": 2
+   },
+   "needed_returned": {
+    "memory:car-old": true
+   },
+   "cover": {
+    "@1": false,
+    "@3": true,
+    "@5": true,
+    "@10": true
+   },
+   "planted_rank": {},
+   "extras_returned": [
+    "memory:q-wifi",
+    "memory:f1-31",
+    "memory:f1-10",
+    "memory:f1-1",
+    "memory:f1-20",
+    "memory:f1-4",
+    "memory:f1-7",
+    "memory:f1-25",
+    "memory:pet-cat"
+   ],
+   "nonanswers_above_first_needed": 1,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": {
+    "preferred": "memory:car-old",
+    "other": "memory:car-new",
+    "ranks": [
+     2,
+     11
+    ],
+    "applicability": [
+     "applicable",
+     "prospectively_applicable"
+    ],
+    "ordered_by": [
+     "lexical_relevance_desc:bm25_admitted_set:lexical",
+     null
+    ],
+    "preferred_first": true
+   },
+   "top5_fusion": [
+    [
+     "memory:q-wifi",
+     null,
+     null,
+     null,
+     null,
+     1.9322015815857359
+    ],
+    [
+     "memory:car-old",
+     null,
+     null,
+     null,
+     null,
+     1.8918368325151549
+    ],
+    [
+     "memory:f1-31",
+     null,
+     null,
+     null,
+     null,
+     0.15606481512991077
+    ],
+    [
+     "memory:f1-10",
+     null,
+     null,
+     null,
+     null,
+     0.14147518652003244
+    ],
+    [
+     "memory:f1-1",
+     null,
+     null,
+     null,
+     null,
+     0.1351576206808429
+    ]
+   ]
+  },
+  {
+   "scenario": "household",
+   "id": "h-decl-closed-gym",
+   "kind": "declared_closed",
+   "query": "Which gym do I go to?",
+   "ranked": [
+    "memory:inject-bins",
+    "memory:f1-9",
+    "memory:gym-new",
+    "memory:hygienist",
+    "memory:q-wifi",
+    "memory:barber-old",
+    "memory:f1-17",
+    "memory:f1-12",
+    "memory:f1-23",
+    "memory:pharmacy",
+    "memory:f1-8",
+    "memory:pet-dog",
+    "memory:hayfever",
+    "memory:gym-old"
+   ],
+   "returned": [
+    "memory:inject-bins",
+    "memory:f1-9",
+    "memory:gym-new",
+    "memory:hygienist",
+    "memory:q-wifi",
+    "memory:barber-old",
+    "memory:f1-17",
+    "memory:f1-12",
+    "memory:f1-23",
+    "memory:pharmacy"
+   ],
+   "ms": 7.76,
+   "fusion_status": [
+    "None"
+   ],
+   "policy_versions": [
+    "3.4.0"
+   ],
+   "needed_rank": {
+    "memory:gym-new": 3
+   },
+   "needed_returned": {
+    "memory:gym-new": true
+   },
+   "cover": {
+    "@1": false,
+    "@3": true,
+    "@5": true,
+    "@10": true
+   },
+   "planted_rank": {},
+   "extras_returned": [
+    "memory:inject-bins",
+    "memory:f1-9",
+    "memory:hygienist",
+    "memory:q-wifi",
+    "memory:barber-old",
+    "memory:f1-17",
+    "memory:f1-12",
+    "memory:f1-23",
+    "memory:pharmacy"
+   ],
+   "nonanswers_above_first_needed": 2,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": {
+    "preferred": "memory:gym-new",
+    "other": "memory:gym-old",
+    "ranks": [
+     3,
+     14
+    ],
+    "applicability": [
+     "applicable",
+     "outside_target_interval"
+    ],
+    "ordered_by": [
+     "lexical_relevance_desc:bm25_admitted_set:lexical",
+     null
+    ],
+    "preferred_first": true
+   },
+   "top5_fusion": [
+    [
+     "memory:inject-bins",
+     null,
+     null,
+     null,
+     null,
+     3.203256769875044
+    ],
+    [
+     "memory:f1-9",
+     null,
+     null,
+     null,
+     null,
+     2.2777370524221676
+    ],
+    [
+     "memory:gym-new",
+     null,
+     null,
+     null,
+     null,
+     1.8419957160288416
+    ],
+    [
+     "memory:hygienist",
+     null,
+     null,
+     null,
+     null,
+     1.3431745281526672
+    ],
+    [
+     "memory:q-wifi",
+     null,
+     null,
+     null,
+     null,
+     1.1909802920490375
+    ]
+   ]
+  },
+  {
+   "scenario": "household",
+   "id": "h-hist-gym",
+   "kind": "historical",
+   "query": "Which gym did I go to before?",
+   "ranked": [
+    "memory:gym-old",
+    "memory:inject-bins",
+    "memory:gym-new",
+    "memory:hygienist",
+    "memory:q-wifi",
+    "memory:barber-old",
+    "memory:f1-17",
+    "memory:f1-12",
+    "memory:f1-23",
+    "memory:pharmacy",
+    "memory:f1-8",
+    "memory:pet-dog",
+    "memory:hayfever"
+   ],
+   "returned": [
+    "memory:gym-old",
+    "memory:inject-bins",
+    "memory:gym-new",
+    "memory:hygienist",
+    "memory:q-wifi",
+    "memory:barber-old",
+    "memory:f1-17",
+    "memory:f1-12",
+    "memory:f1-23",
+    "memory:pharmacy"
+   ],
+   "ms": 6.71,
+   "fusion_status": [
+    "None"
+   ],
+   "policy_versions": [
+    "3.4.0"
+   ],
+   "needed_rank": {
+    "memory:gym-old": 1
+   },
+   "needed_returned": {
+    "memory:gym-old": true
+   },
+   "cover": {
+    "@1": true,
+    "@3": true,
+    "@5": true,
+    "@10": true
+   },
+   "planted_rank": {},
+   "extras_returned": [
+    "memory:inject-bins",
+    "memory:hygienist",
+    "memory:q-wifi",
+    "memory:barber-old",
+    "memory:f1-17",
+    "memory:f1-12",
+    "memory:f1-23",
+    "memory:pharmacy"
+   ],
+   "nonanswers_above_first_needed": 0,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": {
+    "preferred": "memory:gym-old",
+    "other": "memory:gym-new",
+    "ranks": [
+     1,
+     3
+    ],
+    "applicability": [
+     "not_evaluated",
+     "not_evaluated"
+    ],
+    "ordered_by": [
+     "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "lexical_relevance_desc:bm25_admitted_set:lexical"
+    ],
+    "preferred_first": true
+   },
+   "top5_fusion": [
+    [
+     "memory:gym-old",
+     null,
+     null,
+     null,
+     null,
+     5.0204021113115935
+    ],
+    [
+     "memory:inject-bins",
+     null,
+     null,
+     null,
+     null,
+     3.091884811975719
+    ],
+    [
+     "memory:gym-new",
+     null,
+     null,
+     null,
+     null,
+     1.7696406637192796
+    ],
+    [
+     "memory:hygienist",
+     null,
+     null,
+     null,
+     null,
+     1.2653184960341286
+    ],
+    [
+     "memory:q-wifi",
+     null,
+     null,
+     null,
+     null,
+     1.1217739607697526
+    ]
+   ]
+  },
+  {
+   "scenario": "household",
+   "id": "h-conflict-barber",
+   "kind": "conflict",
+   "query": "Where do I get my hair cut?",
+   "ranked": [
+    "memory:barber-old",
+    "memory:f1-9",
+    "memory:barber-new",
+    "memory:hygienist",
+    "memory:gym-old",
+    "memory:q-wifi",
+    "memory:f1-28",
+    "memory:dentist-appt",
+    "memory:f1-23",
+    "memory:f1-18",
+    "memory:sister-married",
+    "memory:gym-new"
+   ],
+   "returned": [
+    "memory:barber-old",
+    "memory:f1-9",
+    "memory:barber-new",
+    "memory:hygienist",
+    "memory:gym-old",
+    "memory:q-wifi",
+    "memory:f1-28",
+    "memory:dentist-appt",
+    "memory:f1-23",
+    "memory:f1-18"
+   ],
+   "ms": 6.82,
+   "fusion_status": [
+    "None"
+   ],
+   "policy_versions": [
+    "3.4.0"
+   ],
+   "needed_rank": {
+    "memory:barber-new": 3
+   },
+   "needed_returned": {
+    "memory:barber-new": true
+   },
+   "cover": {
+    "@1": false,
+    "@3": true,
+    "@5": true,
+    "@10": true
+   },
+   "planted_rank": {},
+   "extras_returned": [
+    "memory:f1-9",
+    "memory:hygienist",
+    "memory:gym-old",
+    "memory:q-wifi",
+    "memory:f1-28",
+    "memory:dentist-appt",
+    "memory:f1-23",
+    "memory:f1-18"
+   ],
+   "nonanswers_above_first_needed": 2,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": {
+    "preferred": "memory:barber-new",
+    "other": "memory:barber-old",
+    "ranks": [
+     3,
+     1
+    ],
+    "applicability": [
+     "not_evaluated",
+     "not_evaluated"
+    ],
+    "ordered_by": [
+     "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "lexical_relevance_desc:bm25_admitted_set:lexical"
+    ],
+    "preferred_first": false
+   },
+   "top5_fusion": [
+    [
+     "memory:barber-old",
+     null,
+     null,
+     null,
+     null,
+     6.783534798811256
+    ],
+    [
+     "memory:f1-9",
+     null,
+     null,
+     null,
+     null,
+     2.04414087698435
+    ],
+    [
+     "memory:barber-new",
+     null,
+     null,
+     null,
+     null,
+     1.8871892737155338
+    ],
+    [
+     "memory:hygienist",
+     null,
+     null,
+     null,
+     null,
+     1.1413765782752068
+    ],
+    [
+     "memory:gym-old",
+     null,
+     null,
+     null,
+     null,
+     1.0042081764350113
+    ]
+   ]
+  },
+  {
+   "scenario": "household",
+   "id": "h-noans-boat",
+   "kind": "no_answer",
+   "query": "What is the name of our sailing boat?",
+   "ranked": [
+    "memory:q-wifi",
+    "memory:f1-29",
+    "memory:gp",
+    "memory:f1-14",
+    "memory:sister-married",
+    "memory:f1-3",
+    "memory:f1-20",
+    "memory:f1-13",
+    "memory:dentist-name",
+    "memory:pet-dog",
+    "memory:f1-26",
+    "memory:f1-12",
+    "memory:gym-new",
+    "memory:f1-5",
+    "memory:f1-4",
+    "memory:pet-food",
+    "memory:bins",
+    "memory:f1-21",
+    "memory:wifi",
+    "memory:dentist-appt",
+    "memory:barber-new",
+    "memory:pet-cat",
+    "memory:inject-bins",
+    "memory:hayfever",
+    "memory:f1-8",
+    "memory:toothpaste",
+    "memory:pharmacy",
+    "memory:pet-fish",
+    "memory:gym-old",
+    "memory:meta-wifi",
+    "memory:f1-6",
+    "memory:f1-0",
+    "memory:f1-17",
+    "memory:f1-2",
+    "memory:hygienist",
+    "memory:hannah-job",
+    "memory:f1-11",
+    "memory:f1-10",
+    "memory:f1-22",
+    "memory:f1-15",
+    "memory:f1-19",
+    "memory:f1-1",
+    "memory:owen-job",
+    "memory:f1-7",
+    "memory:f1-16",
+    "memory:f1-25",
+    "memory:pet-vet-note",
+    "memory:f1-9",
+    "memory:barber-old"
+   ],
+   "returned": [
+    "memory:q-wifi",
+    "memory:f1-29",
+    "memory:gp",
+    "memory:f1-14",
+    "memory:sister-married",
+    "memory:f1-3",
+    "memory:f1-20",
+    "memory:f1-13",
+    "memory:dentist-name",
+    "memory:pet-dog"
+   ],
+   "ms": 11.47,
+   "fusion_status": [
+    "None"
+   ],
+   "policy_versions": [
+    "3.4.0"
+   ],
+   "needed_rank": {},
+   "needed_returned": {},
+   "cover": {
+    "@1": false,
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "planted_rank": {},
+   "extras_returned": [
+    "memory:q-wifi",
+    "memory:f1-29",
+    "memory:gp",
+    "memory:f1-14",
+    "memory:sister-married",
+    "memory:f1-3",
+    "memory:f1-20",
+    "memory:f1-13",
+    "memory:dentist-name",
+    "memory:pet-dog"
+   ],
+   "nonanswers_above_first_needed": null,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": null,
+   "top5_fusion": [
+    [
+     "memory:q-wifi",
+     null,
+     null,
+     null,
+     null,
+     4.529514518846624
+    ],
+    [
+     "memory:f1-29",
+     null,
+     null,
+     null,
+     null,
+     3.98510079717797
+    ],
+    [
+     "memory:gp",
+     null,
+     null,
+     null,
+     null,
+     3.2082591100028295
+    ],
+    [
+     "memory:f1-14",
+     null,
+     null,
+     null,
+     null,
+     2.9045021283128816
+    ],
+    [
+     "memory:sister-married",
+     null,
+     null,
+     null,
+     null,
+     2.783343838624461
+    ]
+   ]
+  },
+  {
+   "scenario": "household",
+   "id": "h-noans-dentist-cost",
+   "kind": "no_answer",
+   "query": "How much did the root canal cost?",
+   "ranked": [
+    "memory:f1-8",
+    "memory:toothpaste",
+    "memory:pharmacy",
+    "memory:gym-new",
+    "memory:pet-fish",
+    "memory:gym-old",
+    "memory:q-wifi",
+    "memory:meta-wifi",
+    "memory:f1-6",
+    "memory:f1-0",
+    "memory:f1-26",
+    "memory:f1-17",
+    "memory:f1-2",
+    "memory:inject-bins",
+    "memory:hygienist",
+    "memory:hannah-job",
+    "memory:f1-11",
+    "memory:f1-12",
+    "memory:f1-10",
+    "memory:f1-22",
+    "memory:f1-14",
+    "memory:f1-15",
+    "memory:f1-19",
+    "memory:f1-1",
+    "memory:f1-29",
+    "memory:f1-5",
+    "memory:f1-20",
+    "memory:f1-4",
+    "memory:owen-job",
+    "memory:f1-7",
+    "memory:gp",
+    "memory:f1-16",
+    "memory:sister-married",
+    "memory:f1-25",
+    "memory:pet-food",
+    "memory:wifi",
+    "memory:dentist-name",
+    "memory:pet-vet-note",
+    "memory:f1-9",
+    "memory:barber-new",
+    "memory:barber-old",
+    "memory:pet-cat"
+   ],
+   "returned": [
+    "memory:f1-8",
+    "memory:toothpaste",
+    "memory:pharmacy",
+    "memory:gym-new",
+    "memory:pet-fish",
+    "memory:gym-old",
+    "memory:q-wifi",
+    "memory:meta-wifi",
+    "memory:f1-6",
+    "memory:f1-0"
+   ],
+   "ms": 10.93,
+   "fusion_status": [
+    "None"
+   ],
+   "policy_versions": [
+    "3.4.0"
+   ],
+   "needed_rank": {},
+   "needed_returned": {},
+   "cover": {
+    "@1": false,
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "planted_rank": {},
+   "extras_returned": [
+    "memory:f1-8",
+    "memory:toothpaste",
+    "memory:pharmacy",
+    "memory:gym-new",
+    "memory:pet-fish",
+    "memory:gym-old",
+    "memory:q-wifi",
+    "memory:meta-wifi",
+    "memory:f1-6",
+    "memory:f1-0"
+   ],
+   "nonanswers_above_first_needed": null,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": null,
+   "top5_fusion": [
+    [
+     "memory:f1-8",
+     null,
+     null,
+     null,
+     null,
+     0.018293650153740734
+    ],
+    [
+     "memory:toothpaste",
+     null,
+     null,
+     null,
+     null,
+     0.017481707833502797
+    ],
+    [
+     "memory:pharmacy",
+     null,
+     null,
+     null,
+     null,
+     0.01645361206359785
+    ],
+    [
+     "memory:gym-new",
+     null,
+     null,
+     null,
+     null,
+     0.015983615436979546
+    ],
+    [
+     "memory:pet-fish",
+     null,
+     null,
+     null,
+     null,
+     0.015539723978954546
+    ]
+   ]
+  },
+  {
+   "scenario": "money",
+   "id": "m-multi-compare",
+   "kind": "multi_compare",
+   "query": "Is the gym or the swimming pool cheaper per month?",
+   "ranked": [
+    "memory:gym-fee",
+    "memory:f2-0",
+    "memory:pool-fee",
+    "memory:f2-8",
+    "memory:bank-old",
+    "memory:f2-6",
+    "memory:sub-paper",
+    "memory:f2-21",
+    "memory:f2-20",
+    "memory:passport-drawer",
+    "memory:commute-new",
+    "memory:f2-14",
+    "memory:f2-13",
+    "memory:f2-2",
+    "memory:f2-4",
+    "memory:f2-16",
+    "memory:f2-18",
+    "memory:commute-old",
+    "memory:f2-10",
+    "memory:f2-22",
+    "memory:visa",
+    "memory:sub-netflix",
+    "memory:f2-11",
+    "memory:f2-5",
+    "memory:f2-3",
+    "memory:f2-15",
+    "memory:f2-17",
+    "memory:f2-9",
+    "memory:f2-23",
+    "memory:sub-spotify",
+    "memory:passport-photo",
+    "memory:home-3",
+    "memory:home-2"
+   ],
+   "returned": [
+    "memory:gym-fee",
+    "memory:f2-0",
+    "memory:pool-fee",
+    "memory:f2-8",
+    "memory:bank-old",
+    "memory:f2-6",
+    "memory:sub-paper",
+    "memory:f2-21",
+    "memory:f2-20",
+    "memory:passport-drawer"
+   ],
+   "ms": 10.6,
+   "fusion_status": [
+    "None"
+   ],
+   "policy_versions": [
+    "3.4.0"
+   ],
+   "needed_rank": {
+    "memory:gym-fee": 1,
+    "memory:pool-fee": 3
+   },
+   "needed_returned": {
+    "memory:gym-fee": true,
+    "memory:pool-fee": true
+   },
+   "cover": {
+    "@1": false,
+    "@3": true,
+    "@5": true,
+    "@10": true
+   },
+   "planted_rank": {},
+   "extras_returned": [
+    "memory:f2-0",
+    "memory:f2-8",
+    "memory:bank-old",
+    "memory:f2-6",
+    "memory:sub-paper",
+    "memory:f2-21",
+    "memory:f2-20",
+    "memory:passport-drawer"
+   ],
+   "nonanswers_above_first_needed": 0,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": null,
+   "top5_fusion": [
+    [
+     "memory:gym-fee",
+     null,
+     null,
+     null,
+     null,
+     7.019289799270004
+    ],
+    [
+     "memory:f2-0",
+     null,
+     null,
+     null,
+     null,
+     3.2622544772239284
+    ],
+    [
+     "memory:pool-fee",
+     null,
+     null,
+     null,
+     null,
+     2.7339218926988114
+    ],
+    [
+     "memory:f2-8",
+     null,
+     null,
+     null,
+     null,
+     1.661754115420786
+    ],
+    [
+     "memory:bank-old",
+     null,
+     null,
+     null,
+     null,
+     1.5749858473807683
+    ]
+   ]
+  },
+  {
+   "scenario": "money",
+   "id": "m-multi-homes",
+   "kind": "multi_sequence",
+   "query": "Where have we lived, in order?",
+   "ranked": [
+    "memory:f2-1",
+    "memory:f2-12",
+    "memory:home-viewing",
+    "memory:f2-23",
+    "memory:home-3",
+    "memory:home-2",
+    "memory:f2-3",
+    "memory:passport-drawer",
+    "memory:f2-2",
+    "memory:passport-expiry",
+    "memory:bank-new",
+    "memory:home-1",
+    "memory:q-sub",
+    "memory:f2-14",
+    "memory:visa",
+    "memory:sub-netflix",
+    "memory:f2-5",
+    "memory:f2-17",
+    "memory:f2-9",
+    "memory:f2-20",
+    "memory:meta-sub"
+   ],
+   "returned": [
+    "memory:f2-1",
+    "memory:f2-12",
+    "memory:home-viewing",
+    "memory:f2-23",
+    "memory:home-3",
+    "memory:home-2",
+    "memory:f2-3",
+    "memory:passport-drawer",
+    "memory:f2-2",
+    "memory:passport-expiry"
+   ],
+   "ms": 7.13,
+   "fusion_status": [
+    "None"
+   ],
+   "policy_versions": [
+    "3.4.0"
+   ],
+   "needed_rank": {
+    "memory:home-1": 12,
+    "memory:home-2": 6,
+    "memory:home-3": 5
+   },
+   "needed_returned": {
+    "memory:home-1": false,
+    "memory:home-2": true,
+    "memory:home-3": true
+   },
+   "cover": {
+    "@1": false,
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "planted_rank": {},
+   "extras_returned": [
+    "memory:f2-1",
+    "memory:f2-12",
+    "memory:home-viewing",
+    "memory:f2-23",
+    "memory:f2-3",
+    "memory:passport-drawer",
+    "memory:f2-2",
+    "memory:passport-expiry"
+   ],
+   "nonanswers_above_first_needed": 4,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": null,
+   "top5_fusion": [
+    [
+     "memory:f2-1",
+     null,
+     null,
+     null,
+     null,
+     2.9116505369383443
+    ],
+    [
+     "memory:f2-12",
+     null,
+     null,
+     null,
+     null,
+     2.0496061620637174
+    ],
+    [
+     "memory:home-viewing",
+     null,
+     null,
+     null,
+     null,
+     1.2875674941368718
+    ],
+    [
+     "memory:f2-23",
+     null,
+     null,
+     null,
+     null,
+     1.1357567716100239
+    ],
+    [
+     "memory:home-3",
+     null,
+     null,
+     null,
+     null,
+     1.0900069783802084
+    ]
+   ]
+  },
+  {
+   "scenario": "money",
+   "id": "m-multi-subs",
+   "kind": "multi_list",
+   "query": "Which subscriptions do we pay for?",
+   "ranked": [
+    "memory:q-sub",
+    "memory:meta-sub",
+    "memory:sub-netflix",
+    "memory:visa",
+    "memory:f2-5",
+    "memory:home-2",
+    "memory:pool-fee",
+    "memory:f2-14",
+    "memory:f2-1",
+    "memory:f2-17",
+    "memory:f2-9",
+    "memory:f2-23",
+    "memory:f2-20",
+    "memory:home-3",
+    "memory:home-viewing"
+   ],
+   "returned": [
+    "memory:q-sub",
+    "memory:meta-sub",
+    "memory:sub-netflix",
+    "memory:visa",
+    "memory:f2-5",
+    "memory:home-2",
+    "memory:pool-fee",
+    "memory:f2-14",
+    "memory:f2-1",
+    "memory:f2-17"
+   ],
+   "ms": 6.09,
+   "fusion_status": [
+    "None"
+   ],
+   "policy_versions": [
+    "3.4.0"
+   ],
+   "needed_rank": {
+    "memory:sub-netflix": 3,
+    "memory:sub-spotify": null,
+    "memory:sub-paper": null
+   },
+   "needed_returned": {
+    "memory:sub-netflix": true,
+    "memory:sub-spotify": false,
+    "memory:sub-paper": false
+   },
+   "cover": {
+    "@1": false,
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "planted_rank": {
+    "memory:q-sub": 1,
+    "memory:meta-sub": 2
+   },
+   "extras_returned": [
+    "memory:q-sub",
+    "memory:meta-sub",
+    "memory:visa",
+    "memory:f2-5",
+    "memory:home-2",
+    "memory:pool-fee",
+    "memory:f2-14",
+    "memory:f2-1",
+    "memory:f2-17"
+   ],
+   "nonanswers_above_first_needed": 2,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": null,
+   "top5_fusion": [
+    [
+     "memory:q-sub",
+     null,
+     null,
+     null,
+     null,
+     9.583279598284019
+    ],
+    [
+     "memory:meta-sub",
+     null,
+     null,
+     null,
+     null,
+     4.607233595905483
+    ],
+    [
+     "memory:sub-netflix",
+     null,
+     null,
+     null,
+     null,
+     2.58766998126802
+    ],
+    [
+     "memory:visa",
+     null,
+     null,
+     null,
+     null,
+     0.9324142098632138
+    ],
+    [
+     "memory:f2-5",
+     null,
+     null,
+     null,
+     null,
+     0.9324142098632138
+    ]
+   ]
+  },
+  {
+   "scenario": "money",
+   "id": "m-near-passport",
+   "kind": "near_miss",
+   "query": "When does my passport expire?",
+   "ranked": [
+    "memory:passport-expiry",
+    "memory:f2-16",
+    "memory:sub-spotify",
+    "memory:passport-photo",
+    "memory:f2-12"
+   ],
+   "returned": [
+    "memory:passport-expiry",
+    "memory:f2-16",
+    "memory:sub-spotify",
+    "memory:passport-photo",
+    "memory:f2-12"
+   ],
+   "ms": 4.82,
+   "fusion_status": [
+    "None"
+   ],
+   "policy_versions": [
+    "3.4.0"
+   ],
+   "needed_rank": {
+    "memory:passport-expiry": 1
+   },
+   "needed_returned": {
+    "memory:passport-expiry": true
+   },
+   "cover": {
+    "@1": true,
+    "@3": true,
+    "@5": true,
+    "@10": true
+   },
+   "planted_rank": {},
+   "extras_returned": [
+    "memory:f2-16",
+    "memory:sub-spotify",
+    "memory:passport-photo",
+    "memory:f2-12"
+   ],
+   "nonanswers_above_first_needed": 0,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": null,
+   "top5_fusion": [
+    [
+     "memory:passport-expiry",
+     null,
+     null,
+     null,
+     null,
+     1.9260312221785798
+    ],
+    [
+     "memory:f2-16",
+     null,
+     null,
+     null,
+     null,
+     0.9630156110892899
+    ],
+    [
+     "memory:sub-spotify",
+     null,
+     null,
+     null,
+     null,
+     0.8374048792080783
+    ],
+    [
+     "memory:passport-photo",
+     null,
+     null,
+     null,
+     null,
+     0.8374048792080783
+    ],
+    [
+     "memory:f2-12",
+     null,
+     null,
+     null,
+     null,
+     0.802513009241075
+    ]
+   ]
+  },
+  {
+   "scenario": "money",
+   "id": "m-decl-open-work",
+   "kind": "declared_open",
+   "query": "Where do I work?",
+   "ranked": [
+    "memory:work-old",
+    "memory:q-sub",
+    "memory:work-new",
+    "memory:f2-12",
+    "memory:commute-old",
+    "memory:f2-3",
+    "memory:f2-7",
+    "memory:commute-new"
+   ],
+   "returned": [
+    "memory:work-old",
+    "memory:q-sub",
+    "memory:work-new",
+    "memory:f2-12",
+    "memory:commute-old",
+    "memory:f2-3",
+    "memory:f2-7",
+    "memory:commute-new"
+   ],
+   "ms": 5.45,
+   "fusion_status": [
+    "None"
+   ],
+   "policy_versions": [
+    "3.4.0"
+   ],
+   "needed_rank": {
+    "memory:work-new": 3
+   },
+   "needed_returned": {
+    "memory:work-new": true
+   },
+   "cover": {
+    "@1": false,
+    "@3": true,
+    "@5": true,
+    "@10": true
+   },
+   "planted_rank": {},
+   "extras_returned": [
+    "memory:q-sub",
+    "memory:f2-12",
+    "memory:commute-old",
+    "memory:f2-3",
+    "memory:f2-7",
+    "memory:commute-new"
+   ],
+   "nonanswers_above_first_needed": 2,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": {
+    "preferred": "memory:work-new",
+    "other": "memory:work-old",
+    "ranks": [
+     3,
+     1
+    ],
+    "applicability": [
+     "applicable",
+     "applicable"
+    ],
+    "ordered_by": [
+     "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "lexical_relevance_desc:bm25_admitted_set:lexical"
+    ],
+    "preferred_first": false
+   },
+   "top5_fusion": [
+    [
+     "memory:work-old",
+     null,
+     null,
+     null,
+     null,
+     1.571816519607924
+    ],
+    [
+     "memory:q-sub",
+     null,
+     null,
+     null,
+     null,
+     1.566980145003782
+    ],
+    [
+     "memory:work-new",
+     null,
+     null,
+     null,
+     null,
+     1.503186568478894
+    ],
+    [
+     "memory:f2-12",
+     null,
+     null,
+     null,
+     null,
+     0.2410087531868585
+    ],
+    [
+     "memory:commute-old",
+     null,
+     null,
+     null,
+     null,
+     0.2052177522983117
+    ]
+   ]
+  },
+  {
+   "scenario": "money",
+   "id": "m-asof-work",
+   "kind": "as_of_open",
+   "query": "Where was I working?",
+   "ranked": [
+    "memory:f2-12",
+    "memory:home-1",
+    "memory:commute-old",
+    "memory:work-old",
+    "memory:f2-3",
+    "memory:commute-new",
+    "memory:f2-7",
+    "memory:work-new"
+   ],
+   "returned": [
+    "memory:f2-12",
+    "memory:home-1",
+    "memory:commute-old",
+    "memory:work-old",
+    "memory:f2-3",
+    "memory:commute-new",
+    "memory:f2-7",
+    "memory:work-new"
+   ],
+   "ms": 5.21,
+   "fusion_status": [
+    "None"
+   ],
+   "policy_versions": [
+    "3.4.0"
+   ],
+   "needed_rank": {
+    "memory:work-old": 4
+   },
+   "needed_returned": {
+    "memory:work-old": true
+   },
+   "cover": {
+    "@1": false,
+    "@3": false,
+    "@5": true,
+    "@10": true
+   },
+   "planted_rank": {},
+   "extras_returned": [
+    "memory:f2-12",
+    "memory:home-1",
+    "memory:commute-old",
+    "memory:f2-3",
+    "memory:commute-new",
+    "memory:f2-7"
+   ],
+   "nonanswers_above_first_needed": 3,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": {
+    "preferred": "memory:work-old",
+    "other": "memory:work-new",
+    "ranks": [
+     4,
+     8
+    ],
+    "applicability": [
+     "applicable",
+     "prospectively_applicable"
+    ],
+    "ordered_by": [
+     "lexical_relevance_desc:bm25_admitted_set:lexical",
+     null
+    ],
+    "preferred_first": true
+   },
+   "top5_fusion": [
+    [
+     "memory:f2-12",
+     null,
+     null,
+     null,
+     null,
+     1.426943792992753
+    ],
+    [
+     "memory:home-1",
+     null,
+     null,
+     null,
+     null,
+     1.239809928901451
+    ],
+    [
+     "memory:commute-old",
+     null,
+     null,
+     null,
+     null,
+     0.20246895938646528
+    ],
+    [
+     "memory:work-old",
+     null,
+     null,
+     null,
+     null,
+     0.19299056856993377
+    ],
+    [
+     "memory:f2-3",
+     null,
+     null,
+     null,
+     null,
+     0.18435993444755164
+    ]
+   ]
+  },
+  {
+   "scenario": "money",
+   "id": "m-decl-closed-bank",
+   "kind": "declared_closed",
+   "query": "Where are our savings held?",
+   "ranked": [
+    "memory:bank-new",
+    "memory:f2-11",
+    "memory:yoga-fee",
+    "memory:passport-drawer",
+    "memory:f2-6",
+    "memory:f2-19",
+    "memory:home-1",
+    "memory:bank-old"
+   ],
+   "returned": [
+    "memory:bank-new",
+    "memory:f2-11",
+    "memory:yoga-fee",
+    "memory:passport-drawer",
+    "memory:f2-6",
+    "memory:f2-19",
+    "memory:home-1",
+    "memory:bank-old"
+   ],
+   "ms": 5.46,
+   "fusion_status": [
+    "None"
+   ],
+   "policy_versions": [
+    "3.4.0"
+   ],
+   "needed_rank": {
+    "memory:bank-new": 1
+   },
+   "needed_returned": {
+    "memory:bank-new": true
+   },
+   "cover": {
+    "@1": true,
+    "@3": true,
+    "@5": true,
+    "@10": true
+   },
+   "planted_rank": {},
+   "extras_returned": [
+    "memory:f2-11",
+    "memory:yoga-fee",
+    "memory:passport-drawer",
+    "memory:f2-6",
+    "memory:f2-19",
+    "memory:home-1"
+   ],
+   "nonanswers_above_first_needed": 0,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": {
+    "preferred": "memory:bank-new",
+    "other": "memory:bank-old",
+    "ranks": [
+     1,
+     8
+    ],
+    "applicability": [
+     "applicable",
+     "outside_target_interval"
+    ],
+    "ordered_by": [
+     "explicit_current_unknown_tie_content_identity",
+     null
+    ],
+    "preferred_first": true
+   },
+   "top5_fusion": [
+    [
+     "memory:bank-new",
+     null,
+     null,
+     null,
+     null,
+     1.62043244262019
+    ],
+    [
+     "memory:f2-11",
+     null,
+     null,
+     null,
+     null,
+     0.9504434205787596
+    ],
+    [
+     "memory:yoga-fee",
+     null,
+     null,
+     null,
+     null,
+     0.9504434205787596
+    ],
+    [
+     "memory:passport-drawer",
+     null,
+     null,
+     null,
+     null,
+     0.8629904796437171
+    ],
+    [
+     "memory:f2-6",
+     null,
+     null,
+     null,
+     null,
+     0.5514811070398165
+    ]
+   ]
+  },
+  {
+   "scenario": "money",
+   "id": "m-hist-bank",
+   "kind": "historical",
+   "query": "Which bank had our savings before?",
+   "ranked": [
+    "memory:bank-old",
+    "memory:q-sub",
+    "memory:bank-new",
+    "memory:f2-6",
+    "memory:f2-19",
+    "memory:home-1"
+   ],
+   "returned": [
+    "memory:bank-old",
+    "memory:q-sub",
+    "memory:bank-new",
+    "memory:f2-6",
+    "memory:f2-19",
+    "memory:home-1"
+   ],
+   "ms": 5.62,
+   "fusion_status": [
+    "None"
+   ],
+   "policy_versions": [
+    "3.4.0"
+   ],
+   "needed_rank": {
+    "memory:bank-old": 1
+   },
+   "needed_returned": {
+    "memory:bank-old": true
+   },
+   "cover": {
+    "@1": true,
+    "@3": true,
+    "@5": true,
+    "@10": true
+   },
+   "planted_rank": {},
+   "extras_returned": [
+    "memory:q-sub",
+    "memory:f2-6",
+    "memory:f2-19",
+    "memory:home-1"
+   ],
+   "nonanswers_above_first_needed": 0,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": {
+    "preferred": "memory:bank-old",
+    "other": "memory:bank-new",
+    "ranks": [
+     1,
+     3
+    ],
+    "applicability": [
+     "not_evaluated",
+     "not_evaluated"
+    ],
+    "ordered_by": [
+     "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "lexical_relevance_desc:bm25_admitted_set:lexical"
+    ],
+    "preferred_first": true
+   },
+   "top5_fusion": [
+    [
+     "memory:bank-old",
+     null,
+     null,
+     null,
+     null,
+     1.453774006253765
+    ],
+    [
+     "memory:q-sub",
+     null,
+     null,
+     null,
+     null,
+     1.2788600339938594
+    ],
+    [
+     "memory:bank-new",
+     null,
+     null,
+     null,
+     null,
+     1.1955378340902674
+    ],
+    [
+     "memory:f2-6",
+     null,
+     null,
+     null,
+     null,
+     0.27588939299851994
+    ],
+    [
+     "memory:f2-19",
+     null,
+     null,
+     null,
+     null,
+     0.2617546423135863
+    ]
+   ]
+  },
+  {
+   "scenario": "money",
+   "id": "m-conflict-commute",
+   "kind": "conflict",
+   "query": "How do I get to work?",
+   "ranked": [
+    "memory:q-sub",
+    "memory:f2-10",
+    "memory:work-old",
+    "memory:work-new",
+    "memory:commute-new",
+    "memory:f2-12",
+    "memory:commute-old",
+    "memory:f2-3",
+    "memory:f2-7"
+   ],
+   "returned": [
+    "memory:q-sub",
+    "memory:f2-10",
+    "memory:work-old",
+    "memory:work-new",
+    "memory:commute-new",
+    "memory:f2-12",
+    "memory:commute-old",
+    "memory:f2-3",
+    "memory:f2-7"
+   ],
+   "ms": 6.44,
+   "fusion_status": [
+    "None"
+   ],
+   "policy_versions": [
+    "3.4.0"
+   ],
+   "needed_rank": {
+    "memory:commute-new": 5
+   },
+   "needed_returned": {
+    "memory:commute-new": true
+   },
+   "cover": {
+    "@1": false,
+    "@3": false,
+    "@5": true,
+    "@10": true
+   },
+   "planted_rank": {},
+   "extras_returned": [
+    "memory:q-sub",
+    "memory:f2-10",
+    "memory:work-old",
+    "memory:work-new",
+    "memory:f2-12",
+    "memory:f2-3",
+    "memory:f2-7"
+   ],
+   "nonanswers_above_first_needed": 4,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": {
+    "preferred": "memory:commute-new",
+    "other": "memory:commute-old",
+    "ranks": [
+     5,
+     7
+    ],
+    "applicability": [
+     "not_evaluated",
+     "not_evaluated"
+    ],
+    "ordered_by": [
+     "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "lexical_relevance_desc:bm25_admitted_set:lexical"
+    ],
+    "preferred_first": true
+   },
+   "top5_fusion": [
+    [
+     "memory:q-sub",
+     null,
+     null,
+     null,
+     null,
+     2.8287877442511267
+    ],
+    [
+     "memory:f2-10",
+     null,
+     null,
+     null,
+     null,
+     2.1132475781007285
+    ],
+    [
+     "memory:work-old",
+     null,
+     null,
+     null,
+     null,
+     1.7778784191037063
+    ],
+    [
+     "memory:work-new",
+     null,
+     null,
+     null,
+     null,
+     1.6987965124878908
+    ],
+    [
+     "memory:commute-new",
+     null,
+     null,
+     null,
+     null,
+     1.6264502887699521
+    ]
+   ]
+  },
+  {
+   "scenario": "money",
+   "id": "m-noans-crypto",
+   "kind": "no_answer",
+   "query": "How much bitcoin do we own?",
+   "ranked": [
+    "memory:q-sub",
+    "memory:f2-14",
+    "memory:f2-1",
+    "memory:visa",
+    "memory:sub-netflix",
+    "memory:f2-5",
+    "memory:f2-17",
+    "memory:f2-9",
+    "memory:f2-23",
+    "memory:f2-20",
+    "memory:home-3",
+    "memory:home-2",
+    "memory:home-viewing",
+    "memory:meta-sub"
+   ],
+   "returned": [
+    "memory:q-sub",
+    "memory:f2-14",
+    "memory:f2-1",
+    "memory:visa",
+    "memory:sub-netflix",
+    "memory:f2-5",
+    "memory:f2-17",
+    "memory:f2-9",
+    "memory:f2-23",
+    "memory:f2-20"
+   ],
+   "ms": 7.71,
+   "fusion_status": [
+    "None"
+   ],
+   "policy_versions": [
+    "3.4.0"
+   ],
+   "needed_rank": {},
+   "needed_returned": {},
+   "cover": {
+    "@1": false,
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "planted_rank": {},
+   "extras_returned": [
+    "memory:q-sub",
+    "memory:f2-14",
+    "memory:f2-1",
+    "memory:visa",
+    "memory:sub-netflix",
+    "memory:f2-5",
+    "memory:f2-17",
+    "memory:f2-9",
+    "memory:f2-23",
+    "memory:f2-20"
+   ],
+   "nonanswers_above_first_needed": null,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": null,
+   "top5_fusion": [
+    [
+     "memory:q-sub",
+     null,
+     null,
+     null,
+     null,
+     2.0796807142268707
+    ],
+    [
+     "memory:f2-14",
+     null,
+     null,
+     null,
+     null,
+     0.04246085432647228
+    ],
+    [
+     "memory:f2-1",
+     null,
+     null,
+     null,
+     null,
+     0.03846229853788072
+    ],
+    [
+     "memory:visa",
+     null,
+     null,
+     null,
+     null,
+     0.0367327305094107
+    ],
+    [
+     "memory:sub-netflix",
+     null,
+     null,
+     null,
+     null,
+     0.0367327305094107
+    ]
+   ]
+  },
+  {
+   "scenario": "travel",
+   "id": "t-multi-trips",
+   "kind": "multi_list",
+   "query": "Which countries have we travelled to?",
+   "ranked": [
+    "memory:f3-17",
+    "memory:inject-trips",
+    "memory:bookclub-old#corrected",
+    "memory:phone-new",
+    "memory:f3-1",
+    "memory:trip-wish",
+    "memory:f3-7",
+    "memory:f3-15",
+    "memory:f3-21",
+    "memory:f3-4",
+    "memory:trip-norway",
+    "memory:catsitter",
+    "memory:f3-9",
+    "memory:trip-portugal"
+   ],
+   "returned": [
+    "memory:f3-17",
+    "memory:inject-trips",
+    "memory:bookclub-old#corrected",
+    "memory:phone-new",
+    "memory:f3-1",
+    "memory:trip-wish",
+    "memory:f3-7",
+    "memory:f3-15",
+    "memory:f3-21",
+    "memory:f3-4"
+   ],
+   "ms": 7.34,
+   "fusion_status": [
+    "None"
+   ],
+   "policy_versions": [
+    "3.4.0"
+   ],
+   "needed_rank": {
+    "memory:trip-portugal": 14,
+    "memory:trip-japan": null,
+    "memory:trip-norway": 11
+   },
+   "needed_returned": {
+    "memory:trip-portugal": false,
+    "memory:trip-japan": false,
+    "memory:trip-norway": false
+   },
+   "cover": {
+    "@1": false,
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "planted_rank": {
+    "memory:inject-trips": 2
+   },
+   "extras_returned": [
+    "memory:f3-17",
+    "memory:inject-trips",
+    "memory:bookclub-old#corrected",
+    "memory:phone-new",
+    "memory:f3-1",
+    "memory:trip-wish",
+    "memory:f3-7",
+    "memory:f3-15",
+    "memory:f3-21",
+    "memory:f3-4"
+   ],
+   "nonanswers_above_first_needed": 10,
+   "passed": false,
+   "forbidden_seen": [
+    "memory:trip-secret"
+   ],
+   "pair": null,
+   "top5_fusion": [
+    [
+     "memory:f3-17",
+     null,
+     null,
+     null,
+     null,
+     3.103317979027011
+    ],
+    [
+     "memory:inject-trips",
+     null,
+     null,
+     null,
+     null,
+     1.9787840642917585
+    ],
+    [
+     "memory:bookclub-old#corrected",
+     null,
+     null,
+     null,
+     null,
+     1.0846509285013892
+    ],
+    [
+     "memory:phone-new",
+     null,
+     null,
+     null,
+     null,
+     1.0846509285013892
+    ],
+    [
+     "memory:f3-1",
+     null,
+     null,
+     null,
+     null,
+     1.0846509285013892
+    ]
+   ]
+  },
+  {
+   "scenario": "travel",
+   "id": "t-multi-chain",
+   "kind": "multi_chain",
+   "query": "What instrument does our cat-sitter play?",
+   "ranked": [
+    "memory:f3-4",
+    "memory:keep-chess",
+    "memory:f3-9",
+    "memory:f3-22",
+    "memory:catsitter"
+   ],
+   "returned": [
+    "memory:f3-4",
+    "memory:keep-chess",
+    "memory:f3-9",
+    "memory:f3-22",
+    "memory:catsitter"
+   ],
+   "ms": 4.95,
+   "fusion_status": [
+    "None"
+   ],
+   "policy_versions": [
+    "3.4.0"
+   ],
+   "needed_rank": {
+    "memory:catsitter": 5,
+    "memory:imogen-music": null
+   },
+   "needed_returned": {
+    "memory:catsitter": true,
+    "memory:imogen-music": false
+   },
+   "cover": {
+    "@1": false,
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "planted_rank": {},
+   "extras_returned": [
+    "memory:f3-4",
+    "memory:keep-chess",
+    "memory:f3-9",
+    "memory:f3-22"
+   ],
+   "nonanswers_above_first_needed": 4,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": null,
+   "top5_fusion": [
+    [
+     "memory:f3-4",
+     null,
+     null,
+     null,
+     null,
+     1.8706296070996655
+    ],
+    [
+     "memory:keep-chess",
+     null,
+     null,
+     null,
+     null,
+     0.9395274254529659
+    ],
+    [
+     "memory:f3-9",
+     null,
+     null,
+     null,
+     null,
+     0.8121818406777145
+    ],
+    [
+     "memory:f3-22",
+     null,
+     null,
+     null,
+     null,
+     0.6103342728884841
+    ],
+    [
+     "memory:catsitter",
+     null,
+     null,
+     null,
+     null,
+     0.5000328982700833
+    ]
+   ]
+  },
+  {
+   "scenario": "travel",
+   "id": "t-multi-quit",
+   "kind": "multi_exception",
+   "query": "Which hobbies have I given up?",
+   "ranked": [
+    "memory:f3-17",
+    "memory:f3-20",
+    "memory:quit-guitar",
+    "memory:keep-chess",
+    "memory:phone-new",
+    "memory:quit-running",
+    "memory:trip-wish",
+    "memory:f3-19",
+    "memory:f3-23"
+   ],
+   "returned": [
+    "memory:f3-17",
+    "memory:f3-20",
+    "memory:quit-guitar",
+    "memory:keep-chess",
+    "memory:phone-new",
+    "memory:quit-running",
+    "memory:trip-wish",
+    "memory:f3-19",
+    "memory:f3-23"
+   ],
+   "ms": 5.84,
+   "fusion_status": [
+    "None"
+   ],
+   "policy_versions": [
+    "3.4.0"
+   ],
+   "needed_rank": {
+    "memory:quit-running": 6,
+    "memory:quit-guitar": 3
+   },
+   "needed_returned": {
+    "memory:quit-running": true,
+    "memory:quit-guitar": true
+   },
+   "cover": {
+    "@1": false,
+    "@3": false,
+    "@5": false,
+    "@10": true
+   },
+   "planted_rank": {},
+   "extras_returned": [
+    "memory:f3-17",
+    "memory:f3-20",
+    "memory:keep-chess",
+    "memory:phone-new",
+    "memory:trip-wish",
+    "memory:f3-19",
+    "memory:f3-23"
+   ],
+   "nonanswers_above_first_needed": 2,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": null,
+   "top5_fusion": [
+    [
+     "memory:f3-17",
+     null,
+     null,
+     null,
+     null,
+     2.009745841508394
+    ],
+    [
+     "memory:f3-20",
+     null,
+     null,
+     null,
+     null,
+     1.468594158284
+    ],
+    [
+     "memory:quit-guitar",
+     null,
+     null,
+     null,
+     null,
+     1.4610903001717959
+    ],
+    [
+     "memory:keep-chess",
+     null,
+     null,
+     null,
+     null,
+     0.3047608234548549
+    ],
+    [
+     "memory:phone-new",
+     null,
+     null,
+     null,
+     null,
+     0.3047608234548549
+    ]
+   ]
+  },
+  {
+   "scenario": "travel",
+   "id": "t-near-book",
+   "kind": "near_miss",
+   "query": "What is the book club reading this month?",
+   "ranked": [
+    "memory:bookclub-book",
+    "memory:bookclub-old#corrected",
+    "memory:bookclub-host",
+    "memory:f3-16",
+    "memory:library",
+    "memory:f3-20",
+    "memory:f3-9",
+    "memory:f3-10",
+    "memory:phone-old",
+    "memory:f3-22",
+    "memory:f3-13",
+    "memory:f3-5",
+    "memory:trip-brochure",
+    "memory:f3-18",
+    "memory:imogen-music",
+    "memory:f3-1",
+    "memory:quit-running",
+    "memory:f3-6",
+    "memory:f3-21",
+    "memory:f3-4",
+    "memory:f3-3",
+    "memory:f3-19",
+    "memory:trip-norway",
+    "memory:trip-japan",
+    "memory:f3-0",
+    "memory:trip-portugal",
+    "memory:quit-guitar"
+   ],
+   "returned": [
+    "memory:bookclub-book",
+    "memory:bookclub-old#corrected",
+    "memory:bookclub-host",
+    "memory:f3-16",
+    "memory:library",
+    "memory:f3-20",
+    "memory:f3-9",
+    "memory:f3-10",
+    "memory:phone-old",
+    "memory:f3-22"
+   ],
+   "ms": 8.49,
+   "fusion_status": [
+    "None"
+   ],
+   "policy_versions": [
+    "3.4.0"
+   ],
+   "needed_rank": {
+    "memory:bookclub-book": 1
+   },
+   "needed_returned": {
+    "memory:bookclub-book": true
+   },
+   "cover": {
+    "@1": true,
+    "@3": true,
+    "@5": true,
+    "@10": true
+   },
+   "planted_rank": {},
+   "extras_returned": [
+    "memory:bookclub-old#corrected",
+    "memory:bookclub-host",
+    "memory:f3-16",
+    "memory:library",
+    "memory:f3-20",
+    "memory:f3-9",
+    "memory:f3-10",
+    "memory:phone-old",
+    "memory:f3-22"
+   ],
+   "nonanswers_above_first_needed": 0,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": null,
+   "top5_fusion": [
+    [
+     "memory:bookclub-book",
+     null,
+     null,
+     null,
+     null,
+     9.466225522167711
+    ],
+    [
+     "memory:bookclub-old#corrected",
+     null,
+     null,
+     null,
+     null,
+     4.486026092901287
+    ],
+    [
+     "memory:bookclub-host",
+     null,
+     null,
+     null,
+     null,
+     4.046214223665479
+    ],
+    [
+     "memory:f3-16",
+     null,
+     null,
+     null,
+     null,
+     2.831787748931791
+    ],
+    [
+     "memory:library",
+     null,
+     null,
+     null,
+     null,
+     2.4319989109714193
+    ]
+   ]
+  },
+  {
+   "scenario": "travel",
+   "id": "t-conflict-phone",
+   "kind": "conflict",
+   "query": "What phone do I have?",
+   "ranked": [
+    "memory:f3-17",
+    "memory:phone-new",
+    "memory:phone-old",
+    "memory:f3-14",
+    "memory:keep-chess",
+    "memory:quit-running",
+    "memory:trip-wish",
+    "memory:f3-19",
+    "memory:f3-23",
+    "memory:quit-guitar"
+   ],
+   "returned": [
+    "memory:f3-17",
+    "memory:phone-new",
+    "memory:phone-old",
+    "memory:f3-14",
+    "memory:keep-chess",
+    "memory:quit-running",
+    "memory:trip-wish",
+    "memory:f3-19",
+    "memory:f3-23",
+    "memory:quit-guitar"
+   ],
+   "ms": 5.96,
+   "fusion_status": [
+    "None"
+   ],
+   "policy_versions": [
+    "3.4.0"
+   ],
+   "needed_rank": {
+    "memory:phone-new": 2
+   },
+   "needed_returned": {
+    "memory:phone-new": true
+   },
+   "cover": {
+    "@1": false,
+    "@3": true,
+    "@5": true,
+    "@10": true
+   },
+   "planted_rank": {},
+   "extras_returned": [
+    "memory:f3-17",
+    "memory:f3-14",
+    "memory:keep-chess",
+    "memory:quit-running",
+    "memory:trip-wish",
+    "memory:f3-19",
+    "memory:f3-23",
+    "memory:quit-guitar"
+   ],
+   "nonanswers_above_first_needed": 1,
+   "passed": false,
+   "forbidden_seen": [],
+   "pair": {
+    "preferred": "memory:phone-new",
+    "other": "memory:phone-old",
+    "ranks": [
+     2,
+     3
+    ],
+    "applicability": [
+     "not_evaluated",
+     "not_evaluated"
+    ],
+    "ordered_by": [
+     "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "lexical_relevance_desc:bm25_admitted_set:lexical"
+    ],
+    "preferred_first": true
+   },
+   "top5_fusion": [
+    [
+     "memory:f3-17",
+     null,
+     null,
+     null,
+     null,
+     2.0898271733443448
+    ],
+    [
+     "memory:phone-new",
+     null,
+     null,
+     null,
+     null,
+     1.602824670669723
+    ],
+    [
+     "memory:phone-old",
+     null,
+     null,
+     null,
+     null,
+     1.2700956891375996
+    ],
+    [
+     "memory:f3-14",
+     null,
+     null,
+     null,
+     null,
+     1.20111040728945
+    ],
+    [
+     "memory:keep-chess",
+     null,
+     null,
+     null,
+     null,
+     0.40171426338027294
+    ]
+   ]
+  },
+  {
+   "scenario": "travel",
+   "id": "t-noans-ski",
+   "kind": "no_answer",
+   "query": "Where did we go skiing?",
+   "ranked": [
+    "memory:f3-15",
+    "memory:f3-17",
+    "memory:f3-21",
+    "memory:f3-4",
+    "memory:trip-norway",
+    "memory:catsitter",
+    "memory:f3-9",
+    "memory:trip-portugal"
+   ],
+   "returned": [
+    "memory:f3-15",
+    "memory:f3-17",
+    "memory:f3-21",
+    "memory:f3-4",
+    "memory:trip-norway",
+    "memory:catsitter",
+    "memory:f3-9",
+    "memory:trip-portugal"
+   ],
+   "ms": 6.19,
+   "fusion_status": [
+    "None"
+   ],
+   "policy_versions": [
+    "3.4.0"
+   ],
+   "needed_rank": {},
+   "needed_returned": {},
+   "cover": {
+    "@1": false,
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "planted_rank": {},
+   "extras_returned": [
+    "memory:f3-15",
+    "memory:f3-17",
+    "memory:f3-21",
+    "memory:f3-4",
+    "memory:trip-norway",
+    "memory:catsitter",
+    "memory:f3-9",
+    "memory:trip-portugal"
+   ],
+   "nonanswers_above_first_needed": null,
+   "passed": false,
+   "forbidden_seen": [
+    "memory:trip-secret"
+   ],
+   "pair": null,
+   "top5_fusion": [
+    [
+     "memory:f3-15",
+     null,
+     null,
+     null,
+     null,
+     0.06559162243928532
+    ],
+    [
+     "memory:f3-17",
+     null,
+     null,
+     null,
+     null,
+     0.062251737845488604
+    ],
+    [
+     "memory:f3-21",
+     null,
+     null,
+     null,
+     null,
+     0.05923550290277314
+    ],
+    [
+     "memory:f3-4",
+     null,
+     null,
+     null,
+     null,
+     0.05649804705617516
+    ],
+    [
+     "memory:trip-norway",
+     null,
+     null,
+     null,
+     null,
+     0.05649804705617516
+    ]
+   ]
+  }
+ ]
+}

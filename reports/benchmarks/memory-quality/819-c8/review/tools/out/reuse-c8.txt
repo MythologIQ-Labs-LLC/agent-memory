@@ -1,0 +1,112 @@
+{
+ "1_bit_identity": {
+  "ranked_prefix": {
+   "admitted": 8,
+   "scanned": 8,
+   "reused_eq_recomputed": true,
+   "evidence_eq_round6": true,
+   "non_admitted_in_last_scores": []
+  },
+  "relevance_sufficient": {
+   "admitted": 8,
+   "scanned": 8,
+   "reused_eq_recomputed": true,
+   "evidence_eq_round6": true,
+   "non_admitted_in_last_scores": []
+  }
+ },
+ "4_exposure_after_forget_correct": {
+  "ranked_prefix": {
+   "last_scores_refs": [
+    "memory:a",
+    "memory:b",
+    "memory:c",
+    "memory:d",
+    "memory:e",
+    "memory:f",
+    "memory:g",
+    "memory:h",
+    "memory:h#corrected"
+   ],
+   "admitted": [
+    "memory:a",
+    "memory:b",
+    "memory:c",
+    "memory:d",
+    "memory:f",
+    "memory:g",
+    "memory:h#corrected"
+   ],
+   "candidates": [
+    "memory:a",
+    "memory:b",
+    "memory:c",
+    "memory:d",
+    "memory:e",
+    "memory:f",
+    "memory:g",
+    "memory:h",
+    "memory:h#corrected"
+   ],
+   "forgotten_uuid_in_result": true,
+   "forgotten_text_in_result": false,
+   "superseded_text_in_result": false,
+   "other_scope_text_in_result": false,
+   "fusion_records_only_admitted": true,
+   "refused_candidate_route_scores": {
+    "memory:e": [
+     0.5231602889600633
+    ],
+    "memory:h": [
+     0.5983372235739195
+    ]
+   }
+  },
+  "relevance_sufficient": {
+   "last_scores_refs": [
+    "memory:a",
+    "memory:b",
+    "memory:c",
+    "memory:d",
+    "memory:f",
+    "memory:g",
+    "memory:h#corrected"
+   ],
+   "admitted": [
+    "memory:a",
+    "memory:b",
+    "memory:c",
+    "memory:d",
+    "memory:f",
+    "memory:g",
+    "memory:h#corrected"
+   ],
+   "candidates": [
+    "memory:a",
+    "memory:b",
+    "memory:c",
+    "memory:d",
+    "memory:e",
+    "memory:f",
+    "memory:g",
+    "memory:h",
+    "memory:h#corrected"
+   ],
+   "forgotten_uuid_in_result": true,
+   "forgotten_text_in_result": false,
+   "superseded_text_in_result": false,
+   "other_scope_text_in_result": false,
+   "fusion_records_only_admitted": true,
+   "refused_candidate_route_scores": {
+    "memory:e": [],
+    "memory:h": []
+   }
+  }
+ },
+ "2_live_vs_fresh": {
+  "steps": 8,
+  "identical": true,
+  "diffs": [],
+  "other_scope_step": "([], {}, [])"
+ }
+}

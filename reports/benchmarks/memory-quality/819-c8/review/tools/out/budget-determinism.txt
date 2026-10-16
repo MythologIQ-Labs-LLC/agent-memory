@@ -1,0 +1,19 @@
+== budget effects under relevance_sufficient (C6+sem vs C8)
+budget 1: set-differing queries 3 ['h-decl-closed-gym', 'm-conflict-commute', 't-conflict-phone']; needed returned C6 9 C8 9; strict 11/11; extras 12/11; temporal pairs with preferred returned first 6/6
+    h-decl-closed-gym C6 ['memory:inject-bins'] C8 ['memory:gym-new'] needed ['memory:gym-new']
+    m-conflict-commute C6 ['memory:f2-10'] C8 ['memory:work-new'] needed ['memory:commute-new']
+    t-conflict-phone C6 ['memory:phone-new'] C8 ['memory:phone-old'] needed ['memory:phone-new']
+budget 2: set-differing queries 2 ['h-hist-gym', 'm-conflict-commute']; needed returned C6 15 C8 15; strict 12/13; extras 22/21; temporal pairs with preferred returned first 6/6
+    h-hist-gym C6 ['memory:gym-old', 'memory:inject-bins'] C8 ['memory:gym-old', 'memory:gym-new'] needed ['memory:gym-old']
+    m-conflict-commute C6 ['memory:f2-10', 'memory:work-old'] C8 ['memory:work-new', 'memory:work-old'] needed ['memory:commute-new']
+budget 10: set-differing queries 0 []; needed returned C6 18 C8 18; strict 11/11; extras 26/26; temporal pairs with preferred returned first 6/6
+budget multi-2: set-differing queries 2 ['mx-boiler-count', 'mx-3hop']; needed returned C6 9 C8 9; strict 1/1; extras 5/5; temporal pairs with preferred returned first 0/0
+    mx-boiler-count C6 ['memory:b1', 'memory:d1'] C8 ['memory:b1', 'memory:b3'] needed ['memory:b1', 'memory:b2', 'memory:b3']
+    mx-3hop C6 ['memory:w2', 'memory:w1'] C8 ['memory:w1', 'memory:d2'] needed ['memory:w1', 'memory:w2', 'memory:w3']
+== determinism
+same insertion order, PYTHONHASHSEED=12345 vs default: ranked identical True
+reversed insertion order + seed 7: queries with any ranked difference 4
+  top-5 differences: ['m-conflict-commute']
+    m-conflict-commute [['memory:work-new', 0.032018442623, 4, 1, 0.327036, 1.6987965124878908], ['memory:work-old', 0.031746031746, 3, 3, 0.240643, 1.7778784191037063], ['memory:f2-10', 0.031513647643, 2, 5, 0.141685, 2.1132475781007285], ['memory:commute-new', 0.031513647643, 5, 2, 0.259672, 1.6264502887699521], ['memory:q-sub', 0.031099324976, 1, 8, 0.087578, 2.8287877442511267]] [['memory:work-new', 0.032018442623, 4, 1, 0.327036, 1.6987965124878908], ['memory:work-old', 0.031746031746, 3, 3, 0.240643, 1.7778784191037063], ['memory:commute-new', 0.031513647643, 5, 2, 0.259672, 1.6264502887699521], ['memory:f2-10', 0.031513647643, 2, 5, 0.141685, 2.1132475781007285], ['memory:q-sub', 0.031099324976, 1, 8, 0.087578, 2.8287877442511267]]
+c8-rp.json adjacent exact fused ties within top 5: 2 of 120 adjacent pairs; queries affected 2 of 30
+multi-c8-rp.json adjacent exact fused ties within top 5: 2 of 32 adjacent pairs; queries affected 2 of 8

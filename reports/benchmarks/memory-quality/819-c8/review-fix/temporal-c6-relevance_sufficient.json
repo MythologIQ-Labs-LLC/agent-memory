@@ -1,0 +1,2404 @@
+{
+ "tree": "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-c6",
+ "semantic": "required",
+ "selection": "relevance_sufficient",
+ "rows": [
+  {
+   "family": "open_current",
+   "key": "car",
+   "query": "What car do we drive?",
+   "preferred": "new",
+   "ranks": {
+    "old": 3,
+    "new": 2
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "other",
+    "new"
+   ],
+   "intent_mode": "caller_declared",
+   "applicability": {
+    "old": "applicable",
+    "new": "applicable"
+   },
+   "bm25": {
+    "old": 1.532934230934877,
+    "new": 1.532934230934877
+   },
+   "routes": {
+    "old": [
+     "lexical",
+     "semantic_vector"
+    ],
+    "new": [
+     "lexical"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "temporal_order_within_query_regime"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "open_current",
+   "key": "manager",
+   "query": "Who is my manager?",
+   "preferred": "new",
+   "ranks": {
+    "old": 2,
+    "new": 1
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "new",
+    "old"
+   ],
+   "intent_mode": "caller_declared",
+   "applicability": {
+    "old": "applicable",
+    "new": "applicable"
+   },
+   "bm25": {
+    "old": 3.148995210745464,
+    "new": 3.148995210745464
+   },
+   "routes": {
+    "old": [
+     "lexical"
+    ],
+    "new": [
+     "lexical",
+     "semantic_vector"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "temporal_order_within_query_regime"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "open_current",
+   "key": "isp",
+   "query": "Who is our broadband provider?",
+   "preferred": "new",
+   "ranks": {
+    "old": 2,
+    "new": 1
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "new",
+    "old"
+   ],
+   "intent_mode": "caller_declared",
+   "applicability": {
+    "old": "applicable",
+    "new": "applicable"
+   },
+   "bm25": {
+    "old": 4.534376012387256,
+    "new": 4.534376012387256
+   },
+   "routes": {
+    "old": [
+     "lexical"
+    ],
+    "new": [
+     "lexical",
+     "semantic_vector"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "temporal_order_within_query_regime"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "open_current",
+   "key": "school",
+   "query": "Which school do the kids attend?",
+   "preferred": "new",
+   "ranks": {
+    "old": 2,
+    "new": 1
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "new",
+    "old"
+   ],
+   "intent_mode": "caller_declared",
+   "applicability": {
+    "old": "applicable",
+    "new": "applicable"
+   },
+   "bm25": {
+    "old": 4.285987425772074,
+    "new": 4.285987425772074
+   },
+   "routes": {
+    "old": [
+     "lexical"
+    ],
+    "new": [
+     "lexical",
+     "semantic_vector"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "temporal_order_within_query_regime"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "open_current",
+   "key": "meds",
+   "query": "What medication do I take every morning?",
+   "preferred": "new",
+   "ranks": {
+    "old": 2,
+    "new": 1
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "new",
+    "old"
+   ],
+   "intent_mode": "caller_declared",
+   "applicability": {
+    "old": "applicable",
+    "new": "applicable"
+   },
+   "bm25": {
+    "old": 3.805348721150559,
+    "new": 3.805348721150559
+   },
+   "routes": {
+    "old": [
+     "lexical",
+     "semantic_vector"
+    ],
+    "new": [
+     "lexical",
+     "semantic_vector"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "temporal_order_within_query_regime"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "open_current",
+   "key": "dentist",
+   "query": "Who is our dentist?",
+   "preferred": "new",
+   "ranks": {
+    "old": 2,
+    "new": 1
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "new",
+    "old"
+   ],
+   "intent_mode": "caller_declared",
+   "applicability": {
+    "old": "applicable",
+    "new": "applicable"
+   },
+   "bm25": {
+    "old": 2.756172014607985,
+    "new": 2.756172014607985
+   },
+   "routes": {
+    "old": [
+     "lexical",
+     "semantic_vector"
+    ],
+    "new": [
+     "lexical"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "temporal_order_within_query_regime"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "open_current",
+   "key": "bank",
+   "query": "Who do we bank with?",
+   "preferred": "new",
+   "ranks": {
+    "old": 2,
+    "new": 1
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "new",
+    "old"
+   ],
+   "intent_mode": "caller_declared",
+   "applicability": {
+    "old": "applicable",
+    "new": "applicable"
+   },
+   "bm25": {
+    "old": 2.882108662820632,
+    "new": 2.882108662820632
+   },
+   "routes": {
+    "old": [
+     "lexical",
+     "semantic_vector"
+    ],
+    "new": [
+     "lexical"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "temporal_order_within_query_regime"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "open_current",
+   "key": "teacher",
+   "query": "Who is Ella's teacher?",
+   "preferred": "new",
+   "ranks": {
+    "old": 2,
+    "new": 1
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "new",
+    "old"
+   ],
+   "intent_mode": "caller_declared",
+   "applicability": {
+    "old": "applicable",
+    "new": "applicable"
+   },
+   "bm25": {
+    "old": 4.067288210647973,
+    "new": 4.067288210647973
+   },
+   "routes": {
+    "old": [
+     "lexical",
+     "semantic_vector"
+    ],
+    "new": [
+     "lexical"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "temporal_order_within_query_regime"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "open_current",
+   "key": "gym",
+   "query": "Which gym do I use?",
+   "preferred": "new",
+   "ranks": {
+    "old": 2,
+    "new": 1
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "new",
+    "old"
+   ],
+   "intent_mode": "caller_declared",
+   "applicability": {
+    "old": "applicable",
+    "new": "applicable"
+   },
+   "bm25": {
+    "old": 2.543087036504172,
+    "new": 2.543087036504172
+   },
+   "routes": {
+    "old": [
+     "lexical"
+    ],
+    "new": [
+     "lexical",
+     "semantic_vector"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "temporal_order_within_query_regime"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "open_current",
+   "key": "phone",
+   "query": "What phone do I have?",
+   "preferred": "new",
+   "ranks": {
+    "old": 2,
+    "new": 1
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "new",
+    "old"
+   ],
+   "intent_mode": "caller_declared",
+   "applicability": {
+    "old": "applicable",
+    "new": "applicable"
+   },
+   "bm25": {
+    "old": 2.3672204247590973,
+    "new": 2.3672204247590973
+   },
+   "routes": {
+    "old": [
+     "lexical",
+     "semantic_vector"
+    ],
+    "new": [
+     "lexical"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "temporal_order_within_query_regime"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "lang_current",
+   "key": "car",
+   "query": "What car do we drive now?",
+   "preferred": "new",
+   "ranks": {
+    "old": 3,
+    "new": 2
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "other",
+    "new"
+   ],
+   "intent_mode": "query_language_explicit",
+   "applicability": {
+    "old": "applicable",
+    "new": "applicable"
+   },
+   "bm25": {
+    "old": 1.532934230934877,
+    "new": 1.532934230934877
+   },
+   "routes": {
+    "old": [
+     "lexical",
+     "semantic_vector"
+    ],
+    "new": [
+     "lexical"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "temporal_order_within_query_regime"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "lang_current",
+   "key": "manager",
+   "query": "Who is my manager now?",
+   "preferred": "new",
+   "ranks": {
+    "old": 2,
+    "new": 1
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "new",
+    "old"
+   ],
+   "intent_mode": "query_language_explicit",
+   "applicability": {
+    "old": "applicable",
+    "new": "applicable"
+   },
+   "bm25": {
+    "old": 3.148995210745464,
+    "new": 3.148995210745464
+   },
+   "routes": {
+    "old": [
+     "lexical",
+     "semantic_vector"
+    ],
+    "new": [
+     "lexical"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "temporal_order_within_query_regime"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "lang_current",
+   "key": "isp",
+   "query": "Who is our broadband provider now?",
+   "preferred": "new",
+   "ranks": {
+    "old": 2,
+    "new": 1
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "new",
+    "old"
+   ],
+   "intent_mode": "query_language_explicit",
+   "applicability": {
+    "old": "applicable",
+    "new": "applicable"
+   },
+   "bm25": {
+    "old": 4.534376012387256,
+    "new": 4.534376012387256
+   },
+   "routes": {
+    "old": [
+     "lexical",
+     "semantic_vector"
+    ],
+    "new": [
+     "lexical"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "temporal_order_within_query_regime"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "lang_current",
+   "key": "school",
+   "query": "Which school do the kids attend now?",
+   "preferred": "new",
+   "ranks": {
+    "old": 2,
+    "new": 1
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "new",
+    "old"
+   ],
+   "intent_mode": "query_language_explicit",
+   "applicability": {
+    "old": "applicable",
+    "new": "applicable"
+   },
+   "bm25": {
+    "old": 4.285987425772074,
+    "new": 4.285987425772074
+   },
+   "routes": {
+    "old": [
+     "lexical"
+    ],
+    "new": [
+     "lexical",
+     "semantic_vector"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "temporal_order_within_query_regime"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "lang_current",
+   "key": "meds",
+   "query": "What medication do I take every morning now?",
+   "preferred": "new",
+   "ranks": {
+    "old": 2,
+    "new": 1
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "new",
+    "old"
+   ],
+   "intent_mode": "query_language_explicit",
+   "applicability": {
+    "old": "applicable",
+    "new": "applicable"
+   },
+   "bm25": {
+    "old": 3.805348721150559,
+    "new": 3.805348721150559
+   },
+   "routes": {
+    "old": [
+     "lexical",
+     "semantic_vector"
+    ],
+    "new": [
+     "lexical",
+     "semantic_vector"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "temporal_order_within_query_regime"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "lang_current",
+   "key": "dentist",
+   "query": "Who is our dentist now?",
+   "preferred": "new",
+   "ranks": {
+    "old": 2,
+    "new": 1
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "new",
+    "old"
+   ],
+   "intent_mode": "query_language_explicit",
+   "applicability": {
+    "old": "applicable",
+    "new": "applicable"
+   },
+   "bm25": {
+    "old": 2.756172014607985,
+    "new": 2.756172014607985
+   },
+   "routes": {
+    "old": [
+     "lexical",
+     "semantic_vector"
+    ],
+    "new": [
+     "lexical"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "temporal_order_within_query_regime"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "lang_current",
+   "key": "bank",
+   "query": "Who do we bank with now?",
+   "preferred": "new",
+   "ranks": {
+    "old": 2,
+    "new": 1
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "new",
+    "old"
+   ],
+   "intent_mode": "query_language_explicit",
+   "applicability": {
+    "old": "applicable",
+    "new": "applicable"
+   },
+   "bm25": {
+    "old": 2.882108662820632,
+    "new": 2.882108662820632
+   },
+   "routes": {
+    "old": [
+     "lexical",
+     "semantic_vector"
+    ],
+    "new": [
+     "lexical"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "temporal_order_within_query_regime"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "lang_current",
+   "key": "teacher",
+   "query": "Who is Ella's teacher now?",
+   "preferred": "new",
+   "ranks": {
+    "old": 2,
+    "new": 1
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "new",
+    "old"
+   ],
+   "intent_mode": "query_language_explicit",
+   "applicability": {
+    "old": "applicable",
+    "new": "applicable"
+   },
+   "bm25": {
+    "old": 4.067288210647973,
+    "new": 4.067288210647973
+   },
+   "routes": {
+    "old": [
+     "lexical",
+     "semantic_vector"
+    ],
+    "new": [
+     "lexical"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "temporal_order_within_query_regime"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "lang_current",
+   "key": "gym",
+   "query": "Which gym do I use now?",
+   "preferred": "new",
+   "ranks": {
+    "old": 2,
+    "new": 1
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "new",
+    "old"
+   ],
+   "intent_mode": "query_language_explicit",
+   "applicability": {
+    "old": "applicable",
+    "new": "applicable"
+   },
+   "bm25": {
+    "old": 2.543087036504172,
+    "new": 2.543087036504172
+   },
+   "routes": {
+    "old": [
+     "lexical"
+    ],
+    "new": [
+     "lexical",
+     "semantic_vector"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "temporal_order_within_query_regime"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "lang_current",
+   "key": "phone",
+   "query": "What phone do I have now?",
+   "preferred": "new",
+   "ranks": {
+    "old": 2,
+    "new": 1
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "new",
+    "old"
+   ],
+   "intent_mode": "query_language_explicit",
+   "applicability": {
+    "old": "applicable",
+    "new": "applicable"
+   },
+   "bm25": {
+    "old": 2.3672204247590973,
+    "new": 2.3672204247590973
+   },
+   "routes": {
+    "old": [
+     "lexical",
+     "semantic_vector"
+    ],
+    "new": [
+     "lexical"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "temporal_order_within_query_regime"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "asof_2024",
+   "key": "car",
+   "query": "What car do we drive?",
+   "preferred": "old",
+   "ranks": {
+    "old": 2,
+    "new": 7
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "other",
+    "old"
+   ],
+   "intent_mode": null,
+   "applicability": {
+    "old": "applicable",
+    "new": "prospectively_applicable"
+   },
+   "bm25": {
+    "old": 1.532934230934877,
+    "new": 1.532934230934877
+   },
+   "routes": {
+    "old": [
+     "lexical",
+     "semantic_vector"
+    ],
+    "new": [
+     "lexical"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "lexical_relevance_desc:bm25_admitted_set:lexical"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "asof_2024",
+   "key": "manager",
+   "query": "Who is my manager?",
+   "preferred": "old",
+   "ranks": {
+    "old": 1,
+    "new": 8
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "old",
+    "new"
+   ],
+   "intent_mode": null,
+   "applicability": {
+    "old": "applicable",
+    "new": "prospectively_applicable"
+   },
+   "bm25": {
+    "old": 3.148995210745464,
+    "new": 3.148995210745464
+   },
+   "routes": {
+    "old": [
+     "lexical"
+    ],
+    "new": [
+     "lexical",
+     "semantic_vector"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "lexical_relevance_desc:bm25_admitted_set:lexical"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "asof_2024",
+   "key": "isp",
+   "query": "Who is our broadband provider?",
+   "preferred": "old",
+   "ranks": {
+    "old": 1,
+    "new": 9
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "old",
+    "new"
+   ],
+   "intent_mode": null,
+   "applicability": {
+    "old": "applicable",
+    "new": "prospectively_applicable"
+   },
+   "bm25": {
+    "old": 4.534376012387256,
+    "new": 4.534376012387256
+   },
+   "routes": {
+    "old": [
+     "lexical"
+    ],
+    "new": [
+     "lexical",
+     "semantic_vector"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "lexical_relevance_desc:bm25_admitted_set:lexical"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "asof_2024",
+   "key": "school",
+   "query": "Which school do the kids attend?",
+   "preferred": "old",
+   "ranks": {
+    "old": 1,
+    "new": 17
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "old",
+    "other"
+   ],
+   "intent_mode": null,
+   "applicability": {
+    "old": "applicable",
+    "new": "prospectively_applicable"
+   },
+   "bm25": {
+    "old": 4.285987425772074,
+    "new": 4.285987425772074
+   },
+   "routes": {
+    "old": [
+     "lexical"
+    ],
+    "new": [
+     "lexical",
+     "semantic_vector"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "lexical_relevance_desc:bm25_admitted_set:lexical"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "asof_2024",
+   "key": "meds",
+   "query": "What medication do I take every morning?",
+   "preferred": "old",
+   "ranks": {
+    "old": 1,
+    "new": 7
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "old",
+    "other"
+   ],
+   "intent_mode": null,
+   "applicability": {
+    "old": "applicable",
+    "new": "prospectively_applicable"
+   },
+   "bm25": {
+    "old": 3.805348721150559,
+    "new": 3.805348721150559
+   },
+   "routes": {
+    "old": [
+     "lexical",
+     "semantic_vector"
+    ],
+    "new": [
+     "lexical",
+     "semantic_vector"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "lexical_relevance_desc:bm25_admitted_set:lexical"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "asof_2024",
+   "key": "dentist",
+   "query": "Who is our dentist?",
+   "preferred": "old",
+   "ranks": {
+    "old": 1,
+    "new": 9
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "old",
+    "new"
+   ],
+   "intent_mode": null,
+   "applicability": {
+    "old": "applicable",
+    "new": "prospectively_applicable"
+   },
+   "bm25": {
+    "old": 2.756172014607985,
+    "new": 2.756172014607985
+   },
+   "routes": {
+    "old": [
+     "lexical",
+     "semantic_vector"
+    ],
+    "new": [
+     "lexical"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "lexical_relevance_desc:bm25_admitted_set:lexical"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "asof_2024",
+   "key": "bank",
+   "query": "Who do we bank with?",
+   "preferred": "old",
+   "ranks": {
+    "old": 1,
+    "new": 6
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "old",
+    "new"
+   ],
+   "intent_mode": null,
+   "applicability": {
+    "old": "applicable",
+    "new": "prospectively_applicable"
+   },
+   "bm25": {
+    "old": 2.882108662820632,
+    "new": 2.882108662820632
+   },
+   "routes": {
+    "old": [
+     "lexical",
+     "semantic_vector"
+    ],
+    "new": [
+     "lexical"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "lexical_relevance_desc:bm25_admitted_set:lexical"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "asof_2024",
+   "key": "teacher",
+   "query": "Who is Ella's teacher?",
+   "preferred": "old",
+   "ranks": {
+    "old": 1,
+    "new": 7
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "old",
+    "new"
+   ],
+   "intent_mode": null,
+   "applicability": {
+    "old": "applicable",
+    "new": "prospectively_applicable"
+   },
+   "bm25": {
+    "old": 4.067288210647973,
+    "new": 4.067288210647973
+   },
+   "routes": {
+    "old": [
+     "lexical",
+     "semantic_vector"
+    ],
+    "new": [
+     "lexical"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "lexical_relevance_desc:bm25_admitted_set:lexical"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "asof_2024",
+   "key": "gym",
+   "query": "Which gym do I use?",
+   "preferred": "old",
+   "ranks": {
+    "old": 1,
+    "new": 5
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "old",
+    "new"
+   ],
+   "intent_mode": null,
+   "applicability": {
+    "old": "applicable",
+    "new": "prospectively_applicable"
+   },
+   "bm25": {
+    "old": 2.543087036504172,
+    "new": 2.543087036504172
+   },
+   "routes": {
+    "old": [
+     "lexical"
+    ],
+    "new": [
+     "lexical",
+     "semantic_vector"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "lexical_relevance_desc:bm25_admitted_set:lexical"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "asof_2024",
+   "key": "phone",
+   "query": "What phone do I have?",
+   "preferred": "old",
+   "ranks": {
+    "old": 1,
+    "new": 5
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "old",
+    "new"
+   ],
+   "intent_mode": null,
+   "applicability": {
+    "old": "applicable",
+    "new": "prospectively_applicable"
+   },
+   "bm25": {
+    "old": 2.3672204247590973,
+    "new": 2.3672204247590973
+   },
+   "routes": {
+    "old": [
+     "lexical",
+     "semantic_vector"
+    ],
+    "new": [
+     "lexical"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "lexical_relevance_desc:bm25_admitted_set:lexical"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "historical",
+   "key": "car",
+   "query": "What car do we drive?",
+   "preferred": "old",
+   "ranks": {
+    "old": 2,
+    "new": 3
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "other",
+    "old"
+   ],
+   "intent_mode": null,
+   "applicability": {
+    "old": "not_evaluated",
+    "new": "not_evaluated"
+   },
+   "bm25": {
+    "old": 1.532934230934877,
+    "new": 1.532934230934877
+   },
+   "routes": {
+    "old": [
+     "lexical",
+     "semantic_vector"
+    ],
+    "new": [
+     "lexical"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "route_score_desc_subordinate:semantic_vector",
+    "new": "lexical_relevance_desc:bm25_admitted_set:lexical"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "historical",
+   "key": "manager",
+   "query": "Who is my manager?",
+   "preferred": "old",
+   "ranks": {
+    "old": 2,
+    "new": 1
+   },
+   "preferred_first": false,
+   "returned_first": [
+    "new",
+    "old"
+   ],
+   "intent_mode": null,
+   "applicability": {
+    "old": "not_evaluated",
+    "new": "not_evaluated"
+   },
+   "bm25": {
+    "old": 3.148995210745464,
+    "new": 3.148995210745464
+   },
+   "routes": {
+    "old": [
+     "lexical"
+    ],
+    "new": [
+     "lexical",
+     "semantic_vector"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "route_score_desc_subordinate:semantic_vector"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "historical",
+   "key": "isp",
+   "query": "Who is our broadband provider?",
+   "preferred": "old",
+   "ranks": {
+    "old": 2,
+    "new": 1
+   },
+   "preferred_first": false,
+   "returned_first": [
+    "new",
+    "old"
+   ],
+   "intent_mode": null,
+   "applicability": {
+    "old": "not_evaluated",
+    "new": "not_evaluated"
+   },
+   "bm25": {
+    "old": 4.534376012387256,
+    "new": 4.534376012387256
+   },
+   "routes": {
+    "old": [
+     "lexical"
+    ],
+    "new": [
+     "lexical",
+     "semantic_vector"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "route_score_desc_subordinate:semantic_vector"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "historical",
+   "key": "school",
+   "query": "Which school do the kids attend?",
+   "preferred": "old",
+   "ranks": {
+    "old": 2,
+    "new": 1
+   },
+   "preferred_first": false,
+   "returned_first": [
+    "new",
+    "old"
+   ],
+   "intent_mode": null,
+   "applicability": {
+    "old": "not_evaluated",
+    "new": "not_evaluated"
+   },
+   "bm25": {
+    "old": 4.285987425772074,
+    "new": 4.285987425772074
+   },
+   "routes": {
+    "old": [
+     "lexical"
+    ],
+    "new": [
+     "lexical",
+     "semantic_vector"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "route_score_desc_subordinate:semantic_vector"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "historical",
+   "key": "meds",
+   "query": "What medication do I take every morning?",
+   "preferred": "old",
+   "ranks": {
+    "old": 1,
+    "new": 2
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "old",
+    "new"
+   ],
+   "intent_mode": null,
+   "applicability": {
+    "old": "not_evaluated",
+    "new": "not_evaluated"
+   },
+   "bm25": {
+    "old": 3.805348721150559,
+    "new": 3.805348721150559
+   },
+   "routes": {
+    "old": [
+     "lexical",
+     "semantic_vector"
+    ],
+    "new": [
+     "lexical",
+     "semantic_vector"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "route_score_desc_subordinate:semantic_vector",
+    "new": "lexical_relevance_desc:bm25_admitted_set:lexical"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "historical",
+   "key": "dentist",
+   "query": "Who is our dentist?",
+   "preferred": "old",
+   "ranks": {
+    "old": 1,
+    "new": 2
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "old",
+    "new"
+   ],
+   "intent_mode": null,
+   "applicability": {
+    "old": "not_evaluated",
+    "new": "not_evaluated"
+   },
+   "bm25": {
+    "old": 2.756172014607985,
+    "new": 2.756172014607985
+   },
+   "routes": {
+    "old": [
+     "lexical",
+     "semantic_vector"
+    ],
+    "new": [
+     "lexical"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "route_score_desc_subordinate:semantic_vector",
+    "new": "lexical_relevance_desc:bm25_admitted_set:lexical"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "historical",
+   "key": "bank",
+   "query": "Who do we bank with?",
+   "preferred": "old",
+   "ranks": {
+    "old": 1,
+    "new": 2
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "old",
+    "new"
+   ],
+   "intent_mode": null,
+   "applicability": {
+    "old": "not_evaluated",
+    "new": "not_evaluated"
+   },
+   "bm25": {
+    "old": 2.882108662820632,
+    "new": 2.882108662820632
+   },
+   "routes": {
+    "old": [
+     "lexical",
+     "semantic_vector"
+    ],
+    "new": [
+     "lexical"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "route_score_desc_subordinate:semantic_vector",
+    "new": "lexical_relevance_desc:bm25_admitted_set:lexical"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "historical",
+   "key": "teacher",
+   "query": "Who is Ella's teacher?",
+   "preferred": "old",
+   "ranks": {
+    "old": 1,
+    "new": 2
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "old",
+    "new"
+   ],
+   "intent_mode": null,
+   "applicability": {
+    "old": "not_evaluated",
+    "new": "not_evaluated"
+   },
+   "bm25": {
+    "old": 4.067288210647973,
+    "new": 4.067288210647973
+   },
+   "routes": {
+    "old": [
+     "lexical",
+     "semantic_vector"
+    ],
+    "new": [
+     "lexical"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "route_score_desc_subordinate:semantic_vector",
+    "new": "lexical_relevance_desc:bm25_admitted_set:lexical"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "historical",
+   "key": "gym",
+   "query": "Which gym do I use?",
+   "preferred": "old",
+   "ranks": {
+    "old": 2,
+    "new": 1
+   },
+   "preferred_first": false,
+   "returned_first": [
+    "new",
+    "old"
+   ],
+   "intent_mode": null,
+   "applicability": {
+    "old": "not_evaluated",
+    "new": "not_evaluated"
+   },
+   "bm25": {
+    "old": 2.543087036504172,
+    "new": 2.543087036504172
+   },
+   "routes": {
+    "old": [
+     "lexical"
+    ],
+    "new": [
+     "lexical",
+     "semantic_vector"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "route_score_desc_subordinate:semantic_vector"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "historical",
+   "key": "phone",
+   "query": "What phone do I have?",
+   "preferred": "old",
+   "ranks": {
+    "old": 1,
+    "new": 2
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "old",
+    "new"
+   ],
+   "intent_mode": null,
+   "applicability": {
+    "old": "not_evaluated",
+    "new": "not_evaluated"
+   },
+   "bm25": {
+    "old": 2.3672204247590973,
+    "new": 2.3672204247590973
+   },
+   "routes": {
+    "old": [
+     "lexical",
+     "semantic_vector"
+    ],
+    "new": [
+     "lexical"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "route_score_desc_subordinate:semantic_vector",
+    "new": "lexical_relevance_desc:bm25_admitted_set:lexical"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "unspecified",
+   "key": "car",
+   "query": "What car do we drive?",
+   "preferred": "new",
+   "ranks": {
+    "old": 2,
+    "new": 3
+   },
+   "preferred_first": false,
+   "returned_first": [
+    "other",
+    "old"
+   ],
+   "intent_mode": null,
+   "applicability": {
+    "old": "not_evaluated",
+    "new": "not_evaluated"
+   },
+   "bm25": {
+    "old": 1.532934230934877,
+    "new": 1.532934230934877
+   },
+   "routes": {
+    "old": [
+     "lexical",
+     "semantic_vector"
+    ],
+    "new": [
+     "lexical"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "route_score_desc_subordinate:semantic_vector",
+    "new": "lexical_relevance_desc:bm25_admitted_set:lexical"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "unspecified",
+   "key": "manager",
+   "query": "Who is my manager?",
+   "preferred": "new",
+   "ranks": {
+    "old": 2,
+    "new": 1
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "new",
+    "old"
+   ],
+   "intent_mode": null,
+   "applicability": {
+    "old": "not_evaluated",
+    "new": "not_evaluated"
+   },
+   "bm25": {
+    "old": 3.148995210745464,
+    "new": 3.148995210745464
+   },
+   "routes": {
+    "old": [
+     "lexical"
+    ],
+    "new": [
+     "lexical",
+     "semantic_vector"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "route_score_desc_subordinate:semantic_vector"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "unspecified",
+   "key": "isp",
+   "query": "Who is our broadband provider?",
+   "preferred": "new",
+   "ranks": {
+    "old": 2,
+    "new": 1
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "new",
+    "old"
+   ],
+   "intent_mode": null,
+   "applicability": {
+    "old": "not_evaluated",
+    "new": "not_evaluated"
+   },
+   "bm25": {
+    "old": 4.534376012387256,
+    "new": 4.534376012387256
+   },
+   "routes": {
+    "old": [
+     "lexical"
+    ],
+    "new": [
+     "lexical",
+     "semantic_vector"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "route_score_desc_subordinate:semantic_vector"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "unspecified",
+   "key": "school",
+   "query": "Which school do the kids attend?",
+   "preferred": "new",
+   "ranks": {
+    "old": 2,
+    "new": 1
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "new",
+    "old"
+   ],
+   "intent_mode": null,
+   "applicability": {
+    "old": "not_evaluated",
+    "new": "not_evaluated"
+   },
+   "bm25": {
+    "old": 4.285987425772074,
+    "new": 4.285987425772074
+   },
+   "routes": {
+    "old": [
+     "lexical"
+    ],
+    "new": [
+     "lexical",
+     "semantic_vector"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "route_score_desc_subordinate:semantic_vector"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "unspecified",
+   "key": "meds",
+   "query": "What medication do I take every morning?",
+   "preferred": "new",
+   "ranks": {
+    "old": 1,
+    "new": 2
+   },
+   "preferred_first": false,
+   "returned_first": [
+    "old",
+    "new"
+   ],
+   "intent_mode": null,
+   "applicability": {
+    "old": "not_evaluated",
+    "new": "not_evaluated"
+   },
+   "bm25": {
+    "old": 3.805348721150559,
+    "new": 3.805348721150559
+   },
+   "routes": {
+    "old": [
+     "lexical",
+     "semantic_vector"
+    ],
+    "new": [
+     "lexical",
+     "semantic_vector"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "route_score_desc_subordinate:semantic_vector",
+    "new": "lexical_relevance_desc:bm25_admitted_set:lexical"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "unspecified",
+   "key": "dentist",
+   "query": "Who is our dentist?",
+   "preferred": "new",
+   "ranks": {
+    "old": 1,
+    "new": 2
+   },
+   "preferred_first": false,
+   "returned_first": [
+    "old",
+    "new"
+   ],
+   "intent_mode": null,
+   "applicability": {
+    "old": "not_evaluated",
+    "new": "not_evaluated"
+   },
+   "bm25": {
+    "old": 2.756172014607985,
+    "new": 2.756172014607985
+   },
+   "routes": {
+    "old": [
+     "lexical",
+     "semantic_vector"
+    ],
+    "new": [
+     "lexical"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "route_score_desc_subordinate:semantic_vector",
+    "new": "lexical_relevance_desc:bm25_admitted_set:lexical"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "unspecified",
+   "key": "bank",
+   "query": "Who do we bank with?",
+   "preferred": "new",
+   "ranks": {
+    "old": 1,
+    "new": 2
+   },
+   "preferred_first": false,
+   "returned_first": [
+    "old",
+    "new"
+   ],
+   "intent_mode": null,
+   "applicability": {
+    "old": "not_evaluated",
+    "new": "not_evaluated"
+   },
+   "bm25": {
+    "old": 2.882108662820632,
+    "new": 2.882108662820632
+   },
+   "routes": {
+    "old": [
+     "lexical",
+     "semantic_vector"
+    ],
+    "new": [
+     "lexical"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "route_score_desc_subordinate:semantic_vector",
+    "new": "lexical_relevance_desc:bm25_admitted_set:lexical"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "unspecified",
+   "key": "teacher",
+   "query": "Who is Ella's teacher?",
+   "preferred": "new",
+   "ranks": {
+    "old": 1,
+    "new": 2
+   },
+   "preferred_first": false,
+   "returned_first": [
+    "old",
+    "new"
+   ],
+   "intent_mode": null,
+   "applicability": {
+    "old": "not_evaluated",
+    "new": "not_evaluated"
+   },
+   "bm25": {
+    "old": 4.067288210647973,
+    "new": 4.067288210647973
+   },
+   "routes": {
+    "old": [
+     "lexical",
+     "semantic_vector"
+    ],
+    "new": [
+     "lexical"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "route_score_desc_subordinate:semantic_vector",
+    "new": "lexical_relevance_desc:bm25_admitted_set:lexical"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "unspecified",
+   "key": "gym",
+   "query": "Which gym do I use?",
+   "preferred": "new",
+   "ranks": {
+    "old": 2,
+    "new": 1
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "new",
+    "old"
+   ],
+   "intent_mode": null,
+   "applicability": {
+    "old": "not_evaluated",
+    "new": "not_evaluated"
+   },
+   "bm25": {
+    "old": 2.543087036504172,
+    "new": 2.543087036504172
+   },
+   "routes": {
+    "old": [
+     "lexical"
+    ],
+    "new": [
+     "lexical",
+     "semantic_vector"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "route_score_desc_subordinate:semantic_vector"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "unspecified",
+   "key": "phone",
+   "query": "What phone do I have?",
+   "preferred": "new",
+   "ranks": {
+    "old": 1,
+    "new": 2
+   },
+   "preferred_first": false,
+   "returned_first": [
+    "old",
+    "new"
+   ],
+   "intent_mode": null,
+   "applicability": {
+    "old": "not_evaluated",
+    "new": "not_evaluated"
+   },
+   "bm25": {
+    "old": 2.3672204247590973,
+    "new": 2.3672204247590973
+   },
+   "routes": {
+    "old": [
+     "lexical",
+     "semantic_vector"
+    ],
+    "new": [
+     "lexical"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "route_score_desc_subordinate:semantic_vector",
+    "new": "lexical_relevance_desc:bm25_admitted_set:lexical"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "crossfact",
+   "key": "live",
+   "query": "Where do I live?",
+   "preferred": "new",
+   "ranks": {
+    "old": 1,
+    "new": 2
+   },
+   "preferred_first": false,
+   "returned_first": [
+    "old",
+    "new"
+   ],
+   "intent_mode": "caller_declared",
+   "applicability": {
+    "old": "unknown_temporal_basis",
+    "new": "unknown_temporal_basis"
+   },
+   "bm25": {
+    "old": 1.5888609965102538,
+    "new": 1.2598159579232788
+   },
+   "routes": {
+    "old": [
+     "lexical",
+     "semantic_vector"
+    ],
+    "new": [
+     "lexical"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": "lexical_relevance_desc:bm25_admitted_set:lexical",
+    "new": "lexical_relevance_desc:bm25_admitted_set:lexical"
+   },
+   "policy": "3.4.0"
+  },
+  {
+   "family": "crossfact",
+   "key": "work",
+   "query": "Where do I work?",
+   "preferred": "new",
+   "ranks": {
+    "old": 5,
+    "new": 1
+   },
+   "preferred_first": true,
+   "returned_first": [
+    "new",
+    "old"
+   ],
+   "intent_mode": "caller_declared",
+   "applicability": {
+    "old": "limited_by_cross_fact_state_change",
+    "new": "unknown_temporal_basis"
+   },
+   "bm25": {
+    "old": 1.1191006614620178,
+    "new": 1.1380952978658991
+   },
+   "routes": {
+    "old": [
+     "lexical",
+     "semantic_vector"
+    ],
+    "new": [
+     "lexical"
+    ]
+   },
+   "dense": {
+    "old": null,
+    "new": null
+   },
+   "fused": {
+    "old": null,
+    "new": null
+   },
+   "ordered_by": {
+    "old": null,
+    "new": "lexical_relevance_desc:bm25_admitted_set:lexical"
+   },
+   "policy": "3.4.0"
+  }
+ ]
+}

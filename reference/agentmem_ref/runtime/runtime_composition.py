@@ -127,8 +127,9 @@ class MultiRouteRecallResult:
 MULTI_ROUTE_RANKING_POLICY = ExplicitCurrentCrossFactRankingPolicy(
     policy_id="multi-route-default",
     route_score_order=(SHARED_EVIDENCE_ROUTE, LEXICAL_ROUTE),
-    # #669: the semantic route widens candidates but never outranks relevance or
-    # currentness stages; fusion is #673's decision.
+    # #669: under this 3.4.0 policy the semantic route widens candidates but never outranks
+    # relevance or currentness stages. With the provider enabled, FUSED_RANKING_POLICY (3.5.0,
+    # #819 C8 / #673) orders non-time-ordered recalls instead.
     subordinate_routes=(SEMANTIC_VECTOR_ROUTE,),
     exact_identity_route=EXACT_IDENTITY_ROUTE,
     lexical_route=LEXICAL_ROUTE,

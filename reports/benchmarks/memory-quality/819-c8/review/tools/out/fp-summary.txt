@@ -1,0 +1,7 @@
+c4-rp top1 is non-needed: 20 /26; labelled near-miss in top3: 3 ; near-miss above first needed: 6 ; no-answer top1: ['memory:q-wifi', 'memory:f1-8', 'memory:q-sub', 'memory:f3-15']
+c6-rp top1 is non-needed: 20 /26; labelled near-miss in top3: 3 ; near-miss above first needed: 6 ; no-answer top1: ['memory:q-wifi', 'memory:f1-8', 'memory:q-sub', 'memory:f3-15']
+c8-rp top1 is non-needed: 16 /26; labelled near-miss in top3: 6 ; near-miss above first needed: 6 ; no-answer top1: ['memory:q-wifi', 'memory:toothpaste', 'memory:f2-5', 'memory:f3-15']
+c6-rp [('h-near-dentist', 'memory:dentist-appt', 1), ('m-multi-homes', 'memory:home-viewing', 3), ('t-near-book', 'memory:bookclub-host', 3)]
+   no-answer top3 {'h-noans-boat': ['memory:q-wifi', 'memory:f1-29', 'memory:gp'], 'h-noans-dentist-cost': ['memory:f1-8', 'memory:toothpaste', 'memory:pharmacy'], 'm-noans-crypto': ['memory:q-sub', 'memory:f2-14', 'memory:f2-1'], 't-noans-ski': ['memory:f3-15', 'memory:f3-17', 'memory:f3-21']}
+c8-rp [('h-multi-allergy', 'memory:hayfever', 2), ('h-near-dentist', 'memory:dentist-appt', 1), ('m-multi-homes', 'memory:home-viewing', 2), ('m-near-passport', 'memory:passport-photo', 2), ('t-multi-quit', 'memory:keep-chess', 1), ('t-near-book', 'memory:bookclub-host', 3)]
+   no-answer top3 {'h-noans-boat': ['memory:q-wifi', 'memory:f1-4', 'memory:wifi'], 'h-noans-dentist-cost': ['memory:toothpaste', 'memory:pet-fish', 'memory:f1-8'], 'm-noans-crypto': ['memory:f2-5', 'memory:q-sub', 'memory:sub-netflix'], 't-noans-ski': ['memory:f3-15', 'memory:trip-norway', 'memory:f3-17']}

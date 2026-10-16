@@ -109,7 +109,7 @@
   "newer_first": 2,
   "declared_preferred_first": 9,
   "abstention_returning": 6,
-  "recall_p50_ms": 25.02
+  "recall_p50_ms": 25.36
  },
  "c8_summary_rs": {
   "queries": 57,
@@ -131,6 +131,6 @@
   "newer_first": 2,
   "declared_preferred_first": 9,
   "abstention_returning": 3,
-  "recall_p50_ms": 28.57
+  "recall_p50_ms": 29.37
  }
 }

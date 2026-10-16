@@ -1,0 +1,30 @@
+rep1 c6 n=200 sel=relevance_sufficient shared=False no_reuse=False admitted_med=172 fusion=['none'] p50=67.5ms p95=86.8ms cpu/recall=66.6ms rss_mb=213
+rep1 c8 n=200 sel=relevance_sufficient shared=False no_reuse=False admitted_med=172 fusion=['applied'] p50=79.7ms p95=99.1ms cpu/recall=77.0ms rss_mb=214
+rep2 c6 n=200 sel=relevance_sufficient shared=False no_reuse=False admitted_med=172 fusion=['none'] p50=66.8ms p95=73.9ms cpu/recall=64.1ms rss_mb=213
+rep2 c8 n=200 sel=relevance_sufficient shared=False no_reuse=False admitted_med=172 fusion=['applied'] p50=75.7ms p95=84.2ms cpu/recall=72.4ms rss_mb=213
+rep1 c6 n=200 sel=ranked_prefix shared=False no_reuse=False admitted_med=172 fusion=['none'] p50=58.9ms p95=64.8ms cpu/recall=56.4ms rss_mb=213
+rep1 c8 n=200 sel=ranked_prefix shared=False no_reuse=False admitted_med=172 fusion=['applied'] p50=60.7ms p95=71.6ms cpu/recall=59.7ms rss_mb=213
+rep2 c6 n=200 sel=ranked_prefix shared=False no_reuse=False admitted_med=172 fusion=['none'] p50=58.2ms p95=64.6ms cpu/recall=55.5ms rss_mb=213
+rep2 c8 n=200 sel=ranked_prefix shared=False no_reuse=False admitted_med=172 fusion=['applied'] p50=61.5ms p95=71.8ms cpu/recall=59.5ms rss_mb=213
+rep1 c6 n=1000 sel=relevance_sufficient shared=False no_reuse=False admitted_med=857 fusion=['none'] p50=323.1ms p95=367.0ms cpu/recall=307.8ms rss_mb=218
+rep1 c8 n=1000 sel=relevance_sufficient shared=False no_reuse=False admitted_med=857 fusion=['applied', 'skipped_over_limit'] p50=318.7ms p95=391.0ms cpu/recall=307.2ms rss_mb=219
+rep2 c6 n=1000 sel=relevance_sufficient shared=False no_reuse=False admitted_med=857 fusion=['none'] p50=319.7ms p95=392.3ms cpu/recall=309.3ms rss_mb=218
+rep2 c8 n=1000 sel=relevance_sufficient shared=False no_reuse=False admitted_med=857 fusion=['applied', 'skipped_over_limit'] p50=331.2ms p95=384.3ms cpu/recall=310.8ms rss_mb=216
+rep1 c6 n=1000 sel=ranked_prefix shared=False no_reuse=False admitted_med=854 fusion=['none'] p50=266.6ms p95=315.9ms cpu/recall=256.8ms rss_mb=216
+rep1 c8 n=1000 sel=ranked_prefix shared=False no_reuse=False admitted_med=854 fusion=['applied', 'skipped_over_limit'] p50=263.1ms p95=306.0ms cpu/recall=250.5ms rss_mb=216
+rep2 c6 n=1000 sel=ranked_prefix shared=False no_reuse=False admitted_med=854 fusion=['none'] p50=260.6ms p95=314.3ms cpu/recall=253.4ms rss_mb=213
+rep2 c8 n=1000 sel=ranked_prefix shared=False no_reuse=False admitted_med=854 fusion=['applied', 'skipped_over_limit'] p50=266.3ms p95=308.2ms cpu/recall=258.4ms rss_mb=213
+rep1 c6 n=500 sel=relevance_sufficient shared=True no_reuse=False admitted_med=500 fusion=['none'] p50=174.6ms p95=206.5ms cpu/recall=174.2ms rss_mb=213
+rep1 c8 n=500 sel=relevance_sufficient shared=True no_reuse=False admitted_med=500 fusion=['applied'] p50=199.1ms p95=251.8ms cpu/recall=203.2ms rss_mb=213
+rep2 c6 n=500 sel=relevance_sufficient shared=True no_reuse=False admitted_med=500 fusion=['none'] p50=179.7ms p95=221.3ms cpu/recall=181.7ms rss_mb=213
+rep2 c8 n=500 sel=relevance_sufficient shared=True no_reuse=False admitted_med=500 fusion=['applied'] p50=207.8ms p95=251.6ms cpu/recall=211.4ms rss_mb=213
+rep1 c6 n=500 sel=ranked_prefix shared=True no_reuse=False admitted_med=500 fusion=['none'] p50=144.8ms p95=167.6ms cpu/recall=146.5ms rss_mb=213
+rep1 c8 n=500 sel=ranked_prefix shared=True no_reuse=False admitted_med=500 fusion=['applied'] p50=159.7ms p95=186.3ms cpu/recall=159.9ms rss_mb=213
+rep2 c6 n=500 sel=ranked_prefix shared=True no_reuse=False admitted_med=500 fusion=['none'] p50=147.9ms p95=168.9ms cpu/recall=148.6ms rss_mb=213
+rep2 c8 n=500 sel=ranked_prefix shared=True no_reuse=False admitted_med=500 fusion=['applied'] p50=154.6ms p95=178.6ms cpu/recall=158.0ms rss_mb=213
+rep1 c6 n=520 sel=relevance_sufficient shared=True no_reuse=False admitted_med=520 fusion=['none'] p50=178.5ms p95=239.7ms cpu/recall=184.4ms rss_mb=213
+rep1 c8 n=520 sel=relevance_sufficient shared=True no_reuse=False admitted_med=520 fusion=['skipped_over_limit'] p50=187.3ms p95=215.9ms cpu/recall=185.7ms rss_mb=214
+rep2 c6 n=520 sel=relevance_sufficient shared=True no_reuse=False admitted_med=520 fusion=['none'] p50=184.2ms p95=217.8ms cpu/recall=187.0ms rss_mb=213
+rep2 c8 n=520 sel=relevance_sufficient shared=True no_reuse=False admitted_med=520 fusion=['skipped_over_limit'] p50=182.5ms p95=226.2ms cpu/recall=187.0ms rss_mb=213
+rep1 c8 n=200 sel=relevance_sufficient shared=False no_reuse=True admitted_med=172 fusion=['applied'] p50=102.6ms p95=149.6ms cpu/recall=99.3ms rss_mb=213
+rep2 c8 n=200 sel=relevance_sufficient shared=False no_reuse=True admitted_med=172 fusion=['applied'] p50=98.4ms p95=121.7ms cpu/recall=93.4ms rss_mb=213
