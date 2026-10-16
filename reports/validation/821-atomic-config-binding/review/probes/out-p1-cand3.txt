@@ -1,0 +1,72 @@
+row protocol present: True
+create       after_state     killed=True  before_gen=None after: state=None journal=None row=None file=None [no-state] reopen: REFUSED RuntimeRecoveryError: required SQLite runtime state is missing
+create       after_journal   killed=True  before_gen=None after: state=None journal=None row=None file=None [no-state] reopen: REFUSED RuntimeRecoveryError: required SQLite runtime state is missing
+create       binder_entry    killed=True  before_gen=None after: state=None journal=None row=None file=None [no-state] reopen: REFUSED RuntimeRecoveryError: required SQLite runtime state is missing
+create       after_row       killed=True  before_gen=None after: state=None journal=None row=None file=None [no-state] reopen: REFUSED RuntimeRecoveryError: required SQLite runtime state is missing
+create       before_commit   killed=True  before_gen=None after: state=None journal=None row=None file=None [no-state] reopen: REFUSED RuntimeRecoveryError: required SQLite runtime state is missing
+create       post_commit     killed=True  before_gen=None after: state=1 journal=1 row=1 file=None [row==state] reopen: OK gen=1 scheme=sqlite_transaction
+create       in_published    killed=True  before_gen=None after: state=1 journal=1 row=1 file=None [row==state] reopen: OK gen=1 scheme=sqlite_transaction
+create       owner_callback  killed=True  before_gen=None after: state=1 journal=1 row=1 file=None [row==state] reopen: OK gen=1 scheme=sqlite_transaction
+create       mid_file        killed=False before_gen=None after: state=1 journal=1 row=1 file=None [row==state] reopen: OK gen=1 scheme=sqlite_transaction
+create       post_op         killed=True  before_gen=None after: state=1 journal=1 row=1 file=None [row==state] reopen: OK gen=1 scheme=sqlite_transaction
+remember     after_state     killed=True  before_gen=2 after: state=2 journal=2 row=2 file=None [row==state] reopen: OK gen=2 scheme=sqlite_transaction
+remember     after_journal   killed=True  before_gen=2 after: state=2 journal=2 row=2 file=None [row==state] reopen: OK gen=2 scheme=sqlite_transaction
+remember     binder_entry    killed=True  before_gen=2 after: state=2 journal=2 row=2 file=None [row==state] reopen: OK gen=2 scheme=sqlite_transaction
+remember     after_row       killed=True  before_gen=2 after: state=2 journal=2 row=2 file=None [row==state] reopen: OK gen=2 scheme=sqlite_transaction
+remember     before_commit   killed=True  before_gen=2 after: state=2 journal=2 row=2 file=None [row==state] reopen: OK gen=2 scheme=sqlite_transaction
+remember     post_commit     killed=True  before_gen=2 after: state=3 journal=3 row=3 file=None [row==state] reopen: OK gen=3 scheme=sqlite_transaction
+remember     in_published    killed=True  before_gen=2 after: state=3 journal=3 row=3 file=None [row==state] reopen: OK gen=3 scheme=sqlite_transaction
+remember     owner_callback  killed=True  before_gen=2 after: state=3 journal=3 row=3 file=None [row==state] reopen: OK gen=3 scheme=sqlite_transaction
+remember     mid_file        killed=False before_gen=2 after: state=3 journal=3 row=3 file=None [row==state] reopen: OK gen=3 scheme=sqlite_transaction
+remember     post_op         killed=True  before_gen=2 after: state=3 journal=3 row=3 file=None [row==state] reopen: OK gen=3 scheme=sqlite_transaction
+recall       after_state     killed=True  before_gen=2 after: state=2 journal=2 row=2 file=None [row==state] reopen: OK gen=2 scheme=sqlite_transaction
+recall       after_journal   killed=True  before_gen=2 after: state=2 journal=2 row=2 file=None [row==state] reopen: OK gen=2 scheme=sqlite_transaction
+recall       binder_entry    killed=True  before_gen=2 after: state=2 journal=2 row=2 file=None [row==state] reopen: OK gen=2 scheme=sqlite_transaction
+recall       after_row       killed=True  before_gen=2 after: state=2 journal=2 row=2 file=None [row==state] reopen: OK gen=2 scheme=sqlite_transaction
+recall       before_commit   killed=True  before_gen=2 after: state=2 journal=2 row=2 file=None [row==state] reopen: OK gen=2 scheme=sqlite_transaction
+recall       post_commit     killed=True  before_gen=2 after: state=3 journal=3 row=3 file=None [row==state] reopen: OK gen=3 scheme=sqlite_transaction
+recall       in_published    killed=True  before_gen=2 after: state=3 journal=3 row=3 file=None [row==state] reopen: OK gen=3 scheme=sqlite_transaction
+recall       owner_callback  killed=True  before_gen=2 after: state=3 journal=3 row=3 file=None [row==state] reopen: OK gen=3 scheme=sqlite_transaction
+recall       mid_file        killed=False before_gen=2 after: state=3 journal=3 row=3 file=None [row==state] reopen: OK gen=3 scheme=sqlite_transaction
+recall       post_op         killed=True  before_gen=2 after: state=3 journal=3 row=3 file=None [row==state] reopen: OK gen=3 scheme=sqlite_transaction
+snapshot     after_state     killed=True  before_gen=2 after: state=2 journal=2 row=2 file=None [row==state] reopen: OK gen=2 scheme=sqlite_transaction
+snapshot     after_journal   killed=True  before_gen=2 after: state=2 journal=2 row=2 file=None [row==state] reopen: OK gen=2 scheme=sqlite_transaction
+snapshot     binder_entry    killed=True  before_gen=2 after: state=2 journal=2 row=2 file=None [row==state] reopen: OK gen=2 scheme=sqlite_transaction
+snapshot     after_row       killed=True  before_gen=2 after: state=2 journal=2 row=2 file=None [row==state] reopen: OK gen=2 scheme=sqlite_transaction
+snapshot     before_commit   killed=True  before_gen=2 after: state=2 journal=2 row=2 file=None [row==state] reopen: OK gen=2 scheme=sqlite_transaction
+snapshot     post_commit     killed=True  before_gen=2 after: state=3 journal=3 row=3 file=None [row==state] reopen: OK gen=3 scheme=sqlite_transaction
+snapshot     in_published    killed=True  before_gen=2 after: state=3 journal=3 row=3 file=None [row==state] reopen: OK gen=3 scheme=sqlite_transaction
+snapshot     owner_callback  killed=True  before_gen=2 after: state=3 journal=3 row=3 file=None [row==state] reopen: OK gen=3 scheme=sqlite_transaction
+snapshot     mid_file        killed=False before_gen=2 after: state=3 journal=3 row=3 file=None [row==state] reopen: OK gen=3 scheme=sqlite_transaction
+snapshot     post_op         killed=True  before_gen=2 after: state=3 journal=3 row=3 file=None [row==state] reopen: OK gen=3 scheme=sqlite_transaction
+forget       after_state     killed=True  before_gen=2 after: state=2 journal=2 row=2 file=None [row==state] reopen: OK gen=2 scheme=sqlite_transaction
+forget       after_journal   killed=True  before_gen=2 after: state=2 journal=2 row=2 file=None [row==state] reopen: OK gen=2 scheme=sqlite_transaction
+forget       binder_entry    killed=True  before_gen=2 after: state=2 journal=2 row=2 file=None [row==state] reopen: OK gen=2 scheme=sqlite_transaction
+forget       after_row       killed=True  before_gen=2 after: state=2 journal=2 row=2 file=None [row==state] reopen: OK gen=2 scheme=sqlite_transaction
+forget       before_commit   killed=True  before_gen=2 after: state=2 journal=2 row=2 file=None [row==state] reopen: OK gen=2 scheme=sqlite_transaction
+forget       post_commit     killed=True  before_gen=2 after: state=3 journal=3 row=3 file=None [row==state] reopen: OK gen=3 scheme=sqlite_transaction
+forget       in_published    killed=True  before_gen=2 after: state=3 journal=3 row=3 file=None [row==state] reopen: OK gen=3 scheme=sqlite_transaction
+forget       owner_callback  killed=True  before_gen=2 after: state=3 journal=3 row=3 file=None [row==state] reopen: OK gen=3 scheme=sqlite_transaction
+forget       mid_file        killed=False before_gen=2 after: state=3 journal=3 row=3 file=None [row==state] reopen: OK gen=3 scheme=sqlite_transaction
+forget       post_op         killed=True  before_gen=2 after: state=3 journal=3 row=3 file=None [row==state] reopen: OK gen=3 scheme=sqlite_transaction
+direct_base  after_state     killed=True  before_gen=2 after: state=2 journal=2 row=2 file=None [row==state] reopen: OK gen=2 scheme=sqlite_transaction
+direct_base  after_journal   killed=True  before_gen=2 after: state=2 journal=2 row=2 file=None [row==state] reopen: OK gen=2 scheme=sqlite_transaction
+direct_base  binder_entry    killed=True  before_gen=2 after: state=2 journal=2 row=2 file=None [row==state] reopen: OK gen=2 scheme=sqlite_transaction
+direct_base  after_row       killed=True  before_gen=2 after: state=2 journal=2 row=2 file=None [row==state] reopen: OK gen=2 scheme=sqlite_transaction
+direct_base  before_commit   killed=True  before_gen=2 after: state=2 journal=2 row=2 file=None [row==state] reopen: OK gen=2 scheme=sqlite_transaction
+direct_base  post_commit     killed=True  before_gen=2 after: state=3 journal=3 row=3 file=None [row==state] reopen: OK gen=3 scheme=sqlite_transaction
+direct_base  in_published    killed=True  before_gen=2 after: state=3 journal=3 row=3 file=None [row==state] reopen: OK gen=3 scheme=sqlite_transaction
+direct_base  owner_callback  killed=True  before_gen=2 after: state=3 journal=3 row=3 file=None [row==state] reopen: OK gen=3 scheme=sqlite_transaction
+direct_base  mid_file        killed=False before_gen=2 after: state=3 journal=3 row=3 file=None [row==state] reopen: OK gen=3 scheme=sqlite_transaction
+direct_base  post_op         killed=True  before_gen=2 after: state=3 journal=3 row=3 file=None [row==state] reopen: OK gen=3 scheme=sqlite_transaction
+migrate      after_state     killed=True  before_gen=3 after: state=3 journal=3 row=None file=3 [file==state] reopen: OK gen=3 scheme=legacy_file
+migrate      after_journal   killed=True  before_gen=3 after: state=3 journal=3 row=None file=3 [file==state] reopen: OK gen=3 scheme=legacy_file
+migrate      binder_entry    killed=True  before_gen=3 after: state=3 journal=3 row=None file=3 [file==state] reopen: OK gen=3 scheme=legacy_file
+migrate      after_row       killed=True  before_gen=3 after: state=3 journal=3 row=None file=3 [file==state] reopen: OK gen=3 scheme=legacy_file
+migrate      before_commit   killed=True  before_gen=3 after: state=3 journal=3 row=None file=3 [file==state] reopen: OK gen=3 scheme=legacy_file
+migrate      post_commit     killed=True  before_gen=3 after: state=4 journal=4 row=4 file=3 [row==state] reopen: OK gen=4 scheme=sqlite_transaction
+migrate      in_published    killed=True  before_gen=3 after: state=4 journal=4 row=4 file=3 [row==state] reopen: OK gen=4 scheme=sqlite_transaction
+migrate      owner_callback  killed=True  before_gen=3 after: state=4 journal=4 row=4 file=3 [row==state] reopen: OK gen=4 scheme=sqlite_transaction
+migrate      mid_file        killed=False before_gen=3 after: state=4 journal=4 row=4 file=3 [row==state] reopen: OK gen=4 scheme=sqlite_transaction
+migrate      post_op         killed=True  before_gen=3 after: state=4 journal=4 row=4 file=3 [row==state] reopen: OK gen=4 scheme=sqlite_transaction
+VIOLATIONS: 0

@@ -1,0 +1,3 @@
+trial merge (scratch worktree, not pushed): 6edc28a3 (#691) + d0d2a97 -> auto-merged reference/agentmem_ref/api/surface.py, reference/agentmem_ref/runtime/adapter.py; no conflict
+from reference/: python3 -W ignore -m unittest tests.test_context_package tests.test_821_atomic_config_binding tests.test_816_runtime_owned_writes -> Ran 87 tests, OK
+python3 scripts/demo_context_package.py -> ALL CHECKS PASSED

@@ -221,3 +221,33 @@ Before freeze I recommend:
 - **N5 and the agmi wording:** documentation.
 
 None of these blocks freezing.
+
+---
+
+## Final check at d0d2a97
+
+**Scope.** Commit `d0d2a97`, which follows `96a3f59` and changes only `sqlite_runtime.py` and doc 47. I checked it in a fresh detached worktree, `review-821/cand3`, and modified nothing in `/home/user/agent-memory`.
+
+**Tests.**
+- `test_821`, `test_816` and `test_governance_attestation` pass (91 tests).
+- Full suite: 3075 tests, `FAILED (failures=4, skipped=24, expected failures=1)`. The 4 failures are the same pre-existing ones as at the base (`probes/out-fullsuite-cand3.txt`).
+
+**Probes.** p13, p10, p11 and p6 were re-run, plus p1, p2, p3, p5, p7 and p9 as a regression sweep. p14 is new: it covers a witness write failure inside generation 1, and N4 on migrated legacy stores. Outputs are in `probes/out-*-cand3.txt`.
+
+| Item | Status | Evidence |
+|---|---|---|
+| N1: witness read before base recovery | **FIXED** | The p13 race no longer produces the witness's rollback message. It now produces the pre-existing row diagnostic ("stale or replayed"), which belongs to the F8a race class, and a reopen succeeds. |
+| N2: gen-0 witness written inside generation 1 | **FIXED** | p10 kills inside generation 1, both after and before the gen-0 witness write and before COMMIT. Both leave a database with no runtime state and give the same §8 refusal, with or without the witness. A directory with no database file is no longer bricked. p14: an `OSError` or `KeyboardInterrupt` in that write rolls generation 1 back into the same §8 state. That matches the base, where a binding-file failure at create also refuses the store permanently. |
+| N3: witness read errors | **FIXED** | A witness path that is a directory now gives W3 `RuntimeRecoveryError`, and doctor reports `failed_closed`. After an interrupted witness write, `generation_witness_current` is False (p11). |
+| N4: witness ≥ 1 with no binding table refused | **FIXED, no stranding** | On a legacy store's first migrating generation, a witness write that fails or is interrupted after COMMIT leaves no witness (legacy stores have none), so the store reopens at generation 4; the next generation writes the witness and the store reopens at 5 (p14). Killing between COMMIT and the witness write also reopens (p10 migrate). A cleanly migrated store reopens. "Drop table + forge legacy file" is now refused while the witness exists (p3, p14). The remaining residual is deleting the witness as well (documented). |
+| N5: operator hint | **FIXED** | W1/W2 refusals now end "…remove generation-witness.json to accept it" (p6, p11), and doc 47 is updated. |
+| Regressions | **none** | p1 shows 0 violations and p2 shows 0 problems. In p3, every change from cand2 is a stricter refusal coming from N4. p7 is byte-identical to the base except the binding table. p5: A10 holds and the 809 and 821 legacy stores behave as before. p9a still rolls back. |
+
+**New findings:** none.
+
+**Still open, all non-blocking:**
+- F4 needs its downgrade run record committed at freeze. I re-ran `downgrade.py` at d0d2a97 against `d2fc9782`: migrated and new stores fail closed, the unmigrated store recovers (`probes/out-authors-downgrade-cand3.txt`).
+- F8a: recovery reads are not taken in one read snapshot. This is pre-existing and also present at the base.
+- The agmi gauntlet wording still describes the old sidecar.
+
+**Final verdict: PASS.** No blocking or should-fix findings remain. Freeze is acceptable once the F4 run record is committed at the frozen SHA.

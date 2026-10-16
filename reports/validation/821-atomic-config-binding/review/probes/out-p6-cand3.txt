@@ -1,0 +1,4 @@
+files after DB loss: ['generation-witness.json', 'runtime-config.json'] (before: ['agent-memory.sqlite3', 'generation-witness.json', 'runtime-config.json'] )
+doctor after DB loss: incomplete | failed_closed | blocked_by_recovery_failure
+AgentMemory.open after DB loss: REFUSED RuntimeRecoveryError: incomplete durable state: generation witness exists without SQLite runtime database
+database-only rollback gen 5 -> 3: open = REFUSED RuntimeRecoveryError: SQLite database is behind this store's generation witness (3 < 5): it was rolled back or replaced; explicit operator action is required (if this database was restored deliberately, remove generation-witness.json to accept it)
