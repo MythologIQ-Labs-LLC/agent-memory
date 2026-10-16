@@ -25,7 +25,7 @@ DOCUMENT_LINK = re.compile(r"\[[^\]]+\]\(([0-9]{2}-[^)#\s]+\.md)(?:#[^)\s]*)?(?:
 
 CLAIM_START = "<!-- BEGIN CLAIM OWNERS -->"
 CLAIM_END = "<!-- END CLAIM OWNERS -->"
-CLAIM_ROW = re.compile(r"^\\|\\s*([a-z][a-z0-9-]*)\\s*\\|\\s*([a-z]+)\\s*\\|\\s*(docs/[^| ]+|reports/[^| ]+)\\s*\\|$")
+CLAIM_ROW = re.compile(r"^\|\s*([a-z][a-z0-9-]*)\s*\|\s*([a-z]+)\s*\|\s*(docs/[^| ]+|reports/[^| ]+)\s*\|$")
 CLAIM_CLASSES = {"contract", "qualification", "baseline", "evidence", "doctrine", "roadmap", "delivery"}
 
 
