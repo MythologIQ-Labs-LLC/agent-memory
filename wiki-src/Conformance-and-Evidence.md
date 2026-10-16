@@ -98,7 +98,7 @@ known limitations
 
 ## ADR-020 accepted doctrine and its historical proof bar
 
-[ADR-020](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/adr/ADR-020-probabilistic-discovery-deterministic-governance.md) is **Accepted**, as recorded by the [authoritative ADR status register](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/adr/README.md). Its earlier Proposed-stage acceptance bar required an actual implementation demonstrating the complete governed-consequence chain:
+[ADR-020](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/adr/ADR-020-probabilistic-discovery-deterministic-governance.md) is **Accepted**, as recorded by the [ADR index](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/adr/README.md). Its earlier Proposed-stage acceptance bar required an actual implementation demonstrating the complete governed-consequence chain:
 
 ```text
 estimate / proposal
