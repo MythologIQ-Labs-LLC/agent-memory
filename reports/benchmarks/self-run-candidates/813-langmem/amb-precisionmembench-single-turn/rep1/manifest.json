@@ -1,0 +1,327 @@
+{
+ "schema_version": "1.0.0",
+ "run_id": "self-run:langmem-local-amb-precisionmembench-single-turn-rep1",
+ "normalized_run": {
+  "uri": "reports/benchmarks/runs/813-langmem/amb-precisionmembench-single-turn/rep1/single-turn.json",
+  "sha256": "77ef5a3f43524a0d22a40be17535ff58cf838189063c0a7bc2f62df09078fdde"
+ },
+ "benchmark": {
+  "id": "amb-precisionmembench-retrieval",
+  "task_profile": "self-run:amb-precisionmembench-retrieval:single-turn:protocol-A:llm-ingestion-tier",
+  "dataset_revision": "tenurehq/precisionmembench fixtures via AMB 03c1d0f",
+  "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+  "selection_id": "precisionmembench:single-turn:all",
+  "sample_count": 77,
+  "evaluator_revision": "amb@03c1d0f1d27da63034f0931121c858faba512383",
+  "excluded_count": 0
+ },
+ "system": {
+  "id": "langmem",
+  "revision": "0.0.30@48e3c11f5bb527282c7d5339c6a87a0b35abccfc",
+  "adapter_id": "reference/amb_langmem_bridge.py",
+  "adapter_revision": "git-blob:d68a34324183aa579232441d752e42a99b43614a",
+  "configuration_sha256": "0b9927528b6e9d41e7a41b96c10f195ff27b878463cfeea85a5b1553e6a96aa7",
+  "worktree_clean": true,
+  "build_sha256": null
+ },
+ "timing": {
+  "started_at": "2026-10-15T20:53:24Z",
+  "finished_at": "2026-10-15T22:29:31.964000Z",
+  "elapsed_ms": 5767964
+ },
+ "hardware": {
+  "os": "Linux",
+  "os_release": "6.18.44-fc-v139",
+  "architecture": "x86_64",
+  "cpu_model": "Intel(R) Xeon(R) Processor",
+  "cpu_cores": 4,
+  "ram_bytes": 16874930176,
+  "gpus": []
+ },
+ "environment": {
+  "runtime": "CPython",
+  "runtime_version": "3.13.16",
+  "isolation": "cloud_sandbox",
+  "container_digest": null,
+  "dependency_lock_sha256": "15b24b98e17dd1bb7b5968881db4fa6779ccbf325d3e03f0767bbf769d001f0c",
+  "network_access": "restricted",
+  "notes": [
+   "AMB CLI process environment: ../../812-graphiti/graphiti-amb-venv-freeze.txt; product environment: ../langmem-venv-freeze.txt.",
+   "LLM shared with the concurrently running Graphiti AMB run; latencies are not performance measurements.",
+   "35 chat calls: 72,366 prompt + 4,422 completion tokens, all local; no paid inference.",
+   "execution.timeout_ms 0 = no runner-level timeout (per-call product timeouts recorded in configuration where they exist)."
+  ]
+ },
+ "inference": {
+  "used": true,
+  "calls": [
+   {
+    "purpose": "generation",
+    "provider": "llama-cpp-python 0.3.16 via llamacpp_hermes_tools_shim",
+    "model_id": "Qwen/Qwen2.5-3B-Instruct-GGUF qwen2.5-3b-instruct-q4_k_m.gguf",
+    "model_revision": "7dabda4d13d513e3e842b20f0d435c732f172cbe",
+    "model_digest": "626b4a6678b86442240e33df819e00132d3ba7dddfe1cdc4fbb18e0a9615c62d",
+    "endpoint_class": "local",
+    "parameters": {
+     "temperature": 0,
+     "seed": 0,
+     "context_window_tokens": 16384,
+     "max_output_tokens": null,
+     "top_p": 0.95
+    },
+    "prompt_sha256": "cd2c48b39ff571e76ab02cbeedc66869f655fc6c4bfe6374d0f361ef0e7e5113",
+    "count": 35
+   },
+   {
+    "purpose": "embedding",
+    "provider": "llama-cpp-python 0.3.16 via shim",
+    "model_id": "nomic-ai/nomic-embed-text-v1.5-GGUF nomic-embed-text-v1.5.f16.gguf",
+    "model_revision": "0188c9bf409793f810680a5a431e7b899c46104c",
+    "model_digest": "f7af6f66802f4df86eda10fe9bbcfc75c39562bed48ef6ace719a251cf1c2fdb",
+    "endpoint_class": "local",
+    "parameters": {
+     "dimensions": 768
+    },
+    "prompt_sha256": null,
+    "count": 150
+   }
+  ]
+ },
+ "execution": {
+  "command_sha256": "2a6dde6159b6ad32c107c3819cf779ea42c4c15bbf4a1162938cc681444005d9",
+  "argv_redacted": [
+   "/tmp/am-bench/graphiti-amb-venv/bin/python",
+   "/home/user/ext-exec/reference/run_amb_external.py",
+   "--amb-root",
+   "/tmp/agent-memory-benchmark",
+   "--",
+   "run",
+   "--dataset",
+   "precisionmembench",
+   "--split",
+   "single-turn",
+   "--memory",
+   "langmem-local",
+   "--mode",
+   "retrieval",
+   "--output-dir",
+   "/tmp/am-bench/runs/813-langmem-amb/rep1/amb-outputs"
+  ],
+  "random_seed": 0,
+  "timeout_ms": 0,
+  "retries": 0,
+  "context_budget_tokens": null,
+  "retrieval_top_k": 20,
+  "stdout_sha256": "20f7064f86f125cb014ba309c6aa601995cecbb2b1381e9238d4546a0fd45a5f",
+  "stderr_sha256": "fd5285298622b2ae672e6fe20aedfcf39400a2dfc530452a00e7801fac4410c9",
+  "exit_code": 0,
+  "peak_rss_bytes": 1128162918,
+  "peak_vram_bytes": null,
+  "latency_p50_ms": null,
+  "latency_p95_ms": null
+ },
+ "costs": {
+  "status": "not_applicable",
+  "currency": "USD",
+  "amount": null,
+  "input_tokens": 72366,
+  "output_tokens": 4422,
+  "billing_reference_sha256": null
+ },
+ "artifacts": [
+  {
+   "kind": "native_result",
+   "uri": "reports/benchmarks/runs/813-langmem/amb-precisionmembench-single-turn/rep1/single-turn.json",
+   "sha256": "77ef5a3f43524a0d22a40be17535ff58cf838189063c0a7bc2f62df09078fdde"
+  },
+  {
+   "kind": "execution_log",
+   "uri": "reports/benchmarks/runs/813-langmem/amb-precisionmembench-single-turn/rep1/exec-record.json",
+   "sha256": "9196736b6a1958f7768d0597f9d00a8f9e22497aec3efd7306c7f6ac7f0547bd"
+  },
+  {
+   "kind": "execution_log",
+   "uri": "reports/benchmarks/runs/813-langmem/amb-precisionmembench-single-turn/rep1/stdout.txt",
+   "sha256": "20f7064f86f125cb014ba309c6aa601995cecbb2b1381e9238d4546a0fd45a5f"
+  },
+  {
+   "kind": "execution_log",
+   "uri": "reports/benchmarks/runs/813-langmem/amb-precisionmembench-single-turn/rep1/stderr.txt.gz",
+   "sha256": "fd5285298622b2ae672e6fe20aedfcf39400a2dfc530452a00e7801fac4410c9"
+  },
+  {
+   "kind": "other",
+   "uri": "reports/benchmarks/runs/813-langmem/langmem-venv-freeze.txt",
+   "sha256": "15b24b98e17dd1bb7b5968881db4fa6779ccbf325d3e03f0767bbf769d001f0c"
+  }
+ ],
+ "redaction": {
+  "reviewed": false,
+  "contains_secrets": false,
+  "contains_private_data": false,
+  "note": "Runs used an allowlisted environment with no tokens; argv contains only local paths and flags. Dataset is public PrecisionMemBench (via AMB)."
+ },
+ "review": {
+  "status": "candidate",
+  "reviewer": null,
+  "decision_ref": null,
+  "limitations": [
+   "Local 3B model, not LangMem's documented hosted models.",
+   "LangMem keeps no provenance; per-invoke attribution is an adapter inference.",
+   "Candidate: requires independent review."
+  ],
+  "comparison_eligibility": "not_comparable"
+ },
+ "authority_effect": "none",
+ "candidate_class": {
+  "class": "self_run_not_comparable",
+  "tier": "local_llm_ingestion",
+  "system_variant": "LangMem 0.0.30 with local Qwen2.5-3B-Instruct Q4_K_M tool calling; 4 memories written from 35 documents",
+  "not_equivalent_to": [
+   "a LangMem measurement (the 3B model's tool calling dominates)",
+   "LangMem with its documented hosted models",
+   "frozen same-harness lane rows (official benchmark lanes)"
+  ],
+  "metric_record": "native_report",
+  "supersedes": [
+   {
+    "uri": "reports/benchmarks/runs/813-langmem/amb-precisionmembench-single-turn/rep1/manifest.json",
+    "sha256": "3a3d19f9f2277863ae26aa8ac6e6f761bf0d9d2d8af54ff1b2aa8fbf646a12f1"
+   }
+  ],
+  "corrections": [
+   {
+    "pointer": "/normalized_run/uri",
+    "original": "rep1/single-turn.json",
+    "corrected": "reports/benchmarks/runs/813-langmem/amb-precisionmembench-single-turn/rep1/single-turn.json",
+    "basis": "R1/R2: rebased to repository root; digest unchanged"
+   },
+   {
+    "pointer": "/artifacts/0/uri",
+    "original": "rep1/single-turn.json",
+    "corrected": "reports/benchmarks/runs/813-langmem/amb-precisionmembench-single-turn/rep1/single-turn.json",
+    "basis": "R1/R2: rebased to repository root; digest unchanged"
+   },
+   {
+    "pointer": "/artifacts/0/kind",
+    "original": "row_level_results",
+    "corrected": "native_result",
+    "basis": "R5: native report"
+   },
+   {
+    "pointer": "/artifacts/1/uri",
+    "original": "rep1/exec-record.json",
+    "corrected": "reports/benchmarks/runs/813-langmem/amb-precisionmembench-single-turn/rep1/exec-record.json",
+    "basis": "R1/R2: rebased to repository root; digest unchanged"
+   },
+   {
+    "pointer": "/artifacts/2/uri",
+    "original": "rep1/stdout.txt",
+    "corrected": "reports/benchmarks/runs/813-langmem/amb-precisionmembench-single-turn/rep1/stdout.txt",
+    "basis": "R1/R2: rebased to repository root; digest unchanged"
+   },
+   {
+    "pointer": "/artifacts/3/uri",
+    "original": "rep1/stderr.txt.gz",
+    "corrected": "reports/benchmarks/runs/813-langmem/amb-precisionmembench-single-turn/rep1/stderr.txt.gz",
+    "basis": "R1/R2: rebased to repository root; digest unchanged"
+   },
+   {
+    "pointer": "/artifacts/4/uri",
+    "original": "../langmem-venv-freeze.txt",
+    "corrected": "reports/benchmarks/runs/813-langmem/langmem-venv-freeze.txt",
+    "basis": "R1/R2: rebased to repository root; digest unchanged"
+   },
+   {
+    "pointer": "/benchmark/input_sha256",
+    "original": "35659b3b9a581b644fc6746e1b4e902c3e7b56c0973b546bf7b0816a69e3de98+09e99f0852280538abe34b03570f65583fdb10df3c554b7150f0f665d5db709c",
+    "corrected": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+    "basis": "R3: components equal the amb-precisionmembench-retrieval-v1 fixtures in order; that lane's input_digest_rule value"
+   },
+   {
+    "pointer": "/benchmark/task_profile",
+    "original": "amb-precisionmembench-retrieval:single-turn:protocol-A:llm-ingestion-tier",
+    "corrected": "self-run:amb-precisionmembench-retrieval:single-turn:protocol-A:llm-ingestion-tier",
+    "basis": "R9: self-run outside any frozen lane; runner's own profile"
+   },
+   {
+    "pointer": "/run_id",
+    "original": "langmem-local-amb-precisionmembench-single-turn-rep1",
+    "corrected": "self-run:langmem-local-amb-precisionmembench-single-turn-rep1",
+    "basis": "R9: self-run: prefix"
+   },
+   {
+    "pointer": "/system/adapter_revision",
+    "original": "0.1.0-candidate",
+    "corrected": "git-blob:d68a34324183aa579232441d752e42a99b43614a",
+    "basis": "R7: the adapter file's only blob (single-commit history)"
+   },
+   {
+    "pointer": "/inference/calls/0/purpose",
+    "original": "memory extraction/update (tool calls)",
+    "corrected": "generation",
+    "basis": "R4: v1 enum"
+   },
+   {
+    "pointer": "/inference/calls/0/parameters/n_ctx",
+    "original": 16384,
+    "corrected": "<absent>",
+    "basis": "R8: renamed context_window_tokens"
+   },
+   {
+    "pointer": "/inference/calls/0/parameters/context_window_tokens",
+    "original": "<absent>",
+    "corrected": 16384,
+    "basis": "R8: server flag n_ctx (serving-start-llm.sh)"
+   },
+   {
+    "pointer": "/inference/calls/0/parameters/max_output_tokens",
+    "original": "<absent>",
+    "corrected": null,
+    "basis": "R8: sent in all 35 logged requests as ['null']; not sent per request; pinned llama-cpp-python 0.3.16 chat default max_tokens=None, i.e. bounded only by n_ctx (llama_cpp/server/types.py)"
+   },
+   {
+    "pointer": "/inference/calls/0/parameters/top_p",
+    "original": "<absent>",
+    "corrected": 0.95,
+    "basis": "R8: not sent per request; pinned llama-cpp-python 0.3.16 server default for /v1/chat/completions (llama_cpp/server/types.py top_p_field default=0.95; file sha256 a6c5b3b8... equals the wheel RECORD)"
+   },
+   {
+    "pointer": "/inference/calls/0/prompt_sha256",
+    "original": null,
+    "corrected": "cd2c48b39ff571e76ab02cbeedc66869f655fc6c4bfe6374d0f361ef0e7e5113",
+    "basis": "R8: prompt-set digest of shim-calls.jsonl.gz"
+   },
+   {
+    "pointer": "/costs/status",
+    "original": "not_measured",
+    "corrected": "not_applicable",
+    "basis": "R6: no billed inference"
+   },
+   {
+    "pointer": "/costs/input_tokens",
+    "original": null,
+    "corrected": 72366,
+    "basis": "R6: summed from shim-calls.jsonl.gz chat usage"
+   },
+   {
+    "pointer": "/costs/output_tokens",
+    "original": null,
+    "corrected": 4422,
+    "basis": "R6: summed from shim-calls.jsonl.gz chat usage"
+   },
+   {
+    "pointer": "/redaction/reviewed",
+    "original": true,
+    "corrected": false,
+    "basis": "R11: executor self-check; independent review pending"
+   },
+   {
+    "pointer": "/review/comparison_eligibility",
+    "original": "not_assessed",
+    "corrected": "not_comparable",
+    "basis": "class rule"
+   }
+  ]
+ }
+}

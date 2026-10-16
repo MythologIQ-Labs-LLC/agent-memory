@@ -1,0 +1,256 @@
+{
+ "schema_version": "1.0.0",
+ "run_id": "self-run:640-hindsight-amb-precisionmembench-single-turn-rep1",
+ "normalized_run": {
+  "uri": "reports/benchmarks/runs/640-hindsight/amb-precisionmembench-single-turn/rep1/single-turn.json",
+  "sha256": "7ce273289e2b345ac1d5c990d0435369d1cb56bb1b3bfab95f4240ae3263bd1b"
+ },
+ "benchmark": {
+  "id": "amb-precisionmembench-retrieval",
+  "task_profile": "self-run:amb-precisionmembench-retrieval:single-turn:protocol-A",
+  "dataset_revision": "tenurehq/precisionmembench fixtures via AMB 03c1d0f",
+  "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+  "selection_id": "precisionmembench:single-turn:all",
+  "sample_count": 77,
+  "evaluator_revision": "amb@03c1d0f1d27da63034f0931121c858faba512383",
+  "excluded_count": 0
+ },
+ "system": {
+  "id": "hindsight",
+  "revision": "0.10.2@5fc4ce20917b916240cef27c212c387a177f115b",
+  "adapter_id": "reference/amb_hindsight_bridge.py",
+  "adapter_revision": "git-blob:9e4d8b5239bbba3c8c29632496944689b4b28cc4",
+  "configuration_sha256": "82dd66fb304b3a6d20f47a547a4615b834a680841ccff85acb690c3831d474c3",
+  "worktree_clean": true,
+  "build_sha256": null
+ },
+ "timing": {
+  "started_at": "2026-10-15T17:06:12Z",
+  "finished_at": "2026-10-15T17:07:42.925000Z",
+  "elapsed_ms": 90925
+ },
+ "hardware": {
+  "os": "Linux",
+  "os_release": "6.18.44-fc-v114",
+  "architecture": "x86_64",
+  "cpu_model": "Intel(R) Xeon(R) Processor",
+  "cpu_cores": 4,
+  "ram_bytes": 16874930176,
+  "gpus": []
+ },
+ "environment": {
+  "runtime": "CPython",
+  "runtime_version": "3.13.16",
+  "isolation": "cloud_sandbox",
+  "container_digest": null,
+  "dependency_lock_sha256": "67062a7c7bc8aab22fec2357f7000614e64401248339def74fd39e1f56db9764",
+  "network_access": "restricted",
+  "notes": [
+   "AMB CLI process environment: ../../812-graphiti/graphiti-amb-venv-freeze.txt; product environment: ../subset50/hindsight-venv-freeze.txt.",
+   "Embedding call count is a placeholder of 1.",
+   "Shared 4-vCPU host; timings indicative.",
+   "execution.timeout_ms 0 = no runner-level timeout (per-call product timeouts recorded in configuration where they exist)."
+  ]
+ },
+ "inference": {
+  "used": true,
+  "calls": [
+   {
+    "purpose": "embedding",
+    "provider": "onnxruntime (Hindsight onnx embeddings provider)",
+    "model_id": "intfloat/multilingual-e5-small",
+    "model_revision": "03415a4be176a1620747c692ed433219fabc3def",
+    "model_digest": "ca456c06b3a9505ddfd9131408916dd79290368331e7d76bb621f1cba6bc8665",
+    "endpoint_class": "local",
+    "parameters": {
+     "dimensions": 384
+    },
+    "prompt_sha256": null,
+    "count": 1
+   }
+  ]
+ },
+ "execution": {
+  "command_sha256": "fd583cb8aeadf44f383019d959505b0ee317cc246c89dd5116089f3691e472f8",
+  "argv_redacted": [
+   "/tmp/am-bench/graphiti-amb-venv/bin/python",
+   "/home/user/ext-exec/reference/run_amb_external.py",
+   "--amb-root",
+   "/tmp/agent-memory-benchmark",
+   "--",
+   "run",
+   "--dataset",
+   "precisionmembench",
+   "--split",
+   "single-turn",
+   "--memory",
+   "hindsight-chunks-local",
+   "--mode",
+   "retrieval",
+   "--output-dir",
+   "/tmp/am-bench/runs/810-hindsight-amb/rep1/amb-outputs"
+  ],
+  "random_seed": 0,
+  "timeout_ms": 0,
+  "retries": 0,
+  "context_budget_tokens": 65536,
+  "retrieval_top_k": 20,
+  "stdout_sha256": "5251d4b593564a6aa3f75f5ee627eb5862dfd15aba61830d2295e162a93e07f1",
+  "stderr_sha256": "57d20f25472d23fba44d6fbf1cccb4b877c50f4c596b623d40bcbf8d71feea93",
+  "exit_code": 0,
+  "peak_rss_bytes": 2423259136,
+  "peak_vram_bytes": null,
+  "latency_p50_ms": null,
+  "latency_p95_ms": null
+ },
+ "costs": {
+  "status": "not_applicable",
+  "currency": "USD",
+  "amount": null,
+  "input_tokens": null,
+  "output_tokens": null,
+  "billing_reference_sha256": null
+ },
+ "artifacts": [
+  {
+   "kind": "native_result",
+   "uri": "reports/benchmarks/runs/640-hindsight/amb-precisionmembench-single-turn/rep1/single-turn.json",
+   "sha256": "7ce273289e2b345ac1d5c990d0435369d1cb56bb1b3bfab95f4240ae3263bd1b"
+  },
+  {
+   "kind": "execution_log",
+   "uri": "reports/benchmarks/runs/640-hindsight/amb-precisionmembench-single-turn/rep1/exec-record.json",
+   "sha256": "f9fa9047d8508b4da1ea83cacee51a72524da39d4d135a07087508b4b0658842"
+  },
+  {
+   "kind": "execution_log",
+   "uri": "reports/benchmarks/runs/640-hindsight/amb-precisionmembench-single-turn/rep1/stdout.txt",
+   "sha256": "5251d4b593564a6aa3f75f5ee627eb5862dfd15aba61830d2295e162a93e07f1"
+  },
+  {
+   "kind": "execution_log",
+   "uri": "reports/benchmarks/runs/640-hindsight/amb-precisionmembench-single-turn/rep1/stderr.txt",
+   "sha256": "57d20f25472d23fba44d6fbf1cccb4b877c50f4c596b623d40bcbf8d71feea93"
+  },
+  {
+   "kind": "other",
+   "uri": "reports/benchmarks/runs/812-graphiti/graphiti-amb-venv-freeze.txt",
+   "sha256": "67062a7c7bc8aab22fec2357f7000614e64401248339def74fd39e1f56db9764"
+  }
+ ],
+ "redaction": {
+  "reviewed": false,
+  "contains_secrets": false,
+  "contains_private_data": false,
+  "note": "Runs used an allowlisted environment with no tokens; argv contains only local paths and flags. Dataset is public PrecisionMemBench (via AMB)."
+ },
+ "review": {
+  "status": "candidate",
+  "reviewer": null,
+  "decision_ref": null,
+  "limitations": [
+   "Measures Hindsight's no-LLM chunk retrieval, not its LLM fact-extraction product mode; not comparable to Hindsight's published 66/77 (LLM ingestion + retrieval_filter).",
+   "Retrieval order varies across fresh banks (27/77 cases) with identical scored outcomes.",
+   "Candidate: requires independent review."
+  ],
+  "comparison_eligibility": "not_assessed"
+ },
+ "authority_effect": "none",
+ "candidate_class": {
+  "class": "self_run_candidate",
+  "tier": "local_embedding_model",
+  "system_variant": "Hindsight 0.10.2 chunk-only (llm_provider=none), AMB protocol A, no timestamps supplied",
+  "not_equivalent_to": [
+   "Hindsight's LLM-enabled product",
+   "AMB published Hindsight figure (LLM ingestion plus filters)",
+   "frozen same-harness lane rows (official benchmark lanes)"
+  ],
+  "metric_record": "native_report",
+  "supersedes": [
+   {
+    "uri": "reports/benchmarks/runs/640-hindsight/amb-precisionmembench-single-turn/rep1/manifest.json",
+    "sha256": "8816a3d991ca3111381ef6a180625c9b11d9de5c3549dd2abd1799a70ffe6fc6"
+   }
+  ],
+  "corrections": [
+   {
+    "pointer": "/normalized_run/uri",
+    "original": "rep1/single-turn.json",
+    "corrected": "reports/benchmarks/runs/640-hindsight/amb-precisionmembench-single-turn/rep1/single-turn.json",
+    "basis": "R1/R2: rebased to repository root; digest unchanged"
+   },
+   {
+    "pointer": "/artifacts/0/uri",
+    "original": "rep1/single-turn.json",
+    "corrected": "reports/benchmarks/runs/640-hindsight/amb-precisionmembench-single-turn/rep1/single-turn.json",
+    "basis": "R1/R2: rebased to repository root; digest unchanged"
+   },
+   {
+    "pointer": "/artifacts/0/kind",
+    "original": "row_level_results",
+    "corrected": "native_result",
+    "basis": "R5: native report"
+   },
+   {
+    "pointer": "/artifacts/1/uri",
+    "original": "rep1/exec-record.json",
+    "corrected": "reports/benchmarks/runs/640-hindsight/amb-precisionmembench-single-turn/rep1/exec-record.json",
+    "basis": "R1/R2: rebased to repository root; digest unchanged"
+   },
+   {
+    "pointer": "/artifacts/2/uri",
+    "original": "rep1/stdout.txt",
+    "corrected": "reports/benchmarks/runs/640-hindsight/amb-precisionmembench-single-turn/rep1/stdout.txt",
+    "basis": "R1/R2: rebased to repository root; digest unchanged"
+   },
+   {
+    "pointer": "/artifacts/3/uri",
+    "original": "rep1/stderr.txt",
+    "corrected": "reports/benchmarks/runs/640-hindsight/amb-precisionmembench-single-turn/rep1/stderr.txt",
+    "basis": "R1/R2: rebased to repository root; digest unchanged"
+   },
+   {
+    "pointer": "/artifacts/4/uri",
+    "original": "../../812-graphiti/graphiti-amb-venv-freeze.txt",
+    "corrected": "reports/benchmarks/runs/812-graphiti/graphiti-amb-venv-freeze.txt",
+    "basis": "R1/R2: rebased to repository root; digest unchanged"
+   },
+   {
+    "pointer": "/benchmark/input_sha256",
+    "original": "35659b3b9a581b644fc6746e1b4e902c3e7b56c0973b546bf7b0816a69e3de98+09e99f0852280538abe34b03570f65583fdb10df3c554b7150f0f665d5db709c",
+    "corrected": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+    "basis": "R3: components equal the amb-precisionmembench-retrieval-v1 fixtures in order; that lane's input_digest_rule value"
+   },
+   {
+    "pointer": "/benchmark/task_profile",
+    "original": "amb-precisionmembench-retrieval:single-turn:protocol-A",
+    "corrected": "self-run:amb-precisionmembench-retrieval:single-turn:protocol-A",
+    "basis": "R9: self-run outside any frozen lane; runner's own profile"
+   },
+   {
+    "pointer": "/run_id",
+    "original": "640-hindsight-amb-precisionmembench-single-turn-rep1",
+    "corrected": "self-run:640-hindsight-amb-precisionmembench-single-turn-rep1",
+    "basis": "R9: self-run: prefix"
+   },
+   {
+    "pointer": "/system/adapter_revision",
+    "original": "0.1.0-candidate",
+    "corrected": "git-blob:9e4d8b5239bbba3c8c29632496944689b4b28cc4",
+    "basis": "R7: the adapter file's only blob (single-commit history)"
+   },
+   {
+    "pointer": "/costs/status",
+    "original": "not_measured",
+    "corrected": "not_applicable",
+    "basis": "R6: no billed inference"
+   },
+   {
+    "pointer": "/redaction/reviewed",
+    "original": true,
+    "corrected": false,
+    "basis": "R11: executor self-check; independent review pending"
+   }
+  ]
+ }
+}

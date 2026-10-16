@@ -1,0 +1,254 @@
+{
+ "schema_version": "1.0.0",
+ "run_id": "self-run:mempalace-amb-precisionmembench-single-turn-rep1",
+ "normalized_run": {
+  "uri": "reports/benchmarks/runs/mempalace/amb-precisionmembench-single-turn/rep1/single-turn.json",
+  "sha256": "e1c2a547b1d91d116be3e61c5a4dc2d9b823e817c50a3dcc11fe9a89b19a3435"
+ },
+ "benchmark": {
+  "id": "amb-precisionmembench-retrieval",
+  "task_profile": "self-run:amb-precisionmembench-retrieval:single-turn:protocol-A",
+  "dataset_revision": "tenurehq/precisionmembench fixtures via AMB 03c1d0f",
+  "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+  "selection_id": "precisionmembench:single-turn:all",
+  "sample_count": 77,
+  "evaluator_revision": "amb@03c1d0f1d27da63034f0931121c858faba512383",
+  "excluded_count": 0
+ },
+ "system": {
+  "id": "mempalace",
+  "revision": "3.11.0@602d796c699cabba2971982cd9dccbbf46abfe79",
+  "adapter_id": "reference/amb_mempalace_bridge.py",
+  "adapter_revision": "git-blob:b60ba7601234bd8fee0356edccc7a423180597e8",
+  "configuration_sha256": "ebbe976b968a16a51a6af7995dcee9d76f74dd57ebc26f49cd232205a095eca2",
+  "worktree_clean": true,
+  "build_sha256": null
+ },
+ "timing": {
+  "started_at": "2026-10-15T16:58:49Z",
+  "finished_at": "2026-10-15T16:59:29.703000Z",
+  "elapsed_ms": 40703
+ },
+ "hardware": {
+  "os": "Linux",
+  "os_release": "6.18.44-fc-v114",
+  "architecture": "x86_64",
+  "cpu_model": "Intel(R) Xeon(R) Processor",
+  "cpu_cores": 4,
+  "ram_bytes": 16874930176,
+  "gpus": []
+ },
+ "environment": {
+  "runtime": "CPython",
+  "runtime_version": "3.13.16",
+  "isolation": "cloud_sandbox",
+  "container_digest": null,
+  "dependency_lock_sha256": "67062a7c7bc8aab22fec2357f7000614e64401248339def74fd39e1f56db9764",
+  "network_access": "restricted",
+  "notes": [
+   "AMB CLI process environment: ../../812-graphiti/graphiti-amb-venv-freeze.txt (AMB lock unchanged); product environment: ../mempalace-venv-freeze.txt.",
+   "Embedding call count is a placeholder of 1: per-drawer embedding calls were not instrumented.",
+   "Shared 4-vCPU host; timings indicative.",
+   "execution.timeout_ms 0 = no runner-level timeout (per-call product timeouts recorded in configuration where they exist)."
+  ]
+ },
+ "inference": {
+  "used": true,
+  "calls": [
+   {
+    "purpose": "embedding",
+    "provider": "onnxruntime (chromadb default embedding function)",
+    "model_id": "sentence-transformers/all-MiniLM-L6-v2 (chroma ONNX export)",
+    "model_revision": null,
+    "model_digest": "913d7300ceae3b2dbc2c50d1de4baacab4be7b9380491c27fab7418616a16ec3",
+    "endpoint_class": "local",
+    "parameters": {
+     "dimensions": 384
+    },
+    "prompt_sha256": null,
+    "count": 1
+   }
+  ]
+ },
+ "execution": {
+  "command_sha256": "3c6530823bbd96ca33d808c7b53eaf808d39fcb80be6805474322d2b97147012",
+  "argv_redacted": [
+   "/tmp/am-bench/graphiti-amb-venv/bin/python",
+   "/home/user/ext-exec/reference/run_amb_external.py",
+   "--amb-root",
+   "/tmp/agent-memory-benchmark",
+   "--",
+   "run",
+   "--dataset",
+   "precisionmembench",
+   "--split",
+   "single-turn",
+   "--memory",
+   "mempalace-local",
+   "--mode",
+   "retrieval",
+   "--output-dir",
+   "/tmp/am-bench/runs/810-mempalace-amb/rep1/amb-outputs"
+  ],
+  "random_seed": 0,
+  "timeout_ms": 0,
+  "retries": 0,
+  "context_budget_tokens": null,
+  "retrieval_top_k": 20,
+  "stdout_sha256": "2b22d66e8e200a7d2c5d9455f37ee832c46babc6f9b95bb7a052ec069eadb6e1",
+  "stderr_sha256": "585679a6c3c2e979a55fff953a79c5398935b49b14ab16c1bafdd287f35e0219",
+  "exit_code": 0,
+  "peak_rss_bytes": 1092301619,
+  "peak_vram_bytes": null,
+  "latency_p50_ms": null,
+  "latency_p95_ms": null
+ },
+ "costs": {
+  "status": "not_applicable",
+  "currency": "USD",
+  "amount": null,
+  "input_tokens": null,
+  "output_tokens": null,
+  "billing_reference_sha256": null
+ },
+ "artifacts": [
+  {
+   "kind": "native_result",
+   "uri": "reports/benchmarks/runs/mempalace/amb-precisionmembench-single-turn/rep1/single-turn.json",
+   "sha256": "e1c2a547b1d91d116be3e61c5a4dc2d9b823e817c50a3dcc11fe9a89b19a3435"
+  },
+  {
+   "kind": "execution_log",
+   "uri": "reports/benchmarks/runs/mempalace/amb-precisionmembench-single-turn/rep1/exec-record.json",
+   "sha256": "5ec06d4d4da43e5e7cf49af1aa1aee76f19037c4bdff350d26dd152aec555686"
+  },
+  {
+   "kind": "execution_log",
+   "uri": "reports/benchmarks/runs/mempalace/amb-precisionmembench-single-turn/rep1/stdout.txt",
+   "sha256": "2b22d66e8e200a7d2c5d9455f37ee832c46babc6f9b95bb7a052ec069eadb6e1"
+  },
+  {
+   "kind": "execution_log",
+   "uri": "reports/benchmarks/runs/mempalace/amb-precisionmembench-single-turn/rep1/stderr.txt",
+   "sha256": "585679a6c3c2e979a55fff953a79c5398935b49b14ab16c1bafdd287f35e0219"
+  },
+  {
+   "kind": "other",
+   "uri": "reports/benchmarks/runs/812-graphiti/graphiti-amb-venv-freeze.txt",
+   "sha256": "67062a7c7bc8aab22fec2357f7000614e64401248339def74fd39e1f56db9764"
+  }
+ ],
+ "redaction": {
+  "reviewed": false,
+  "contains_secrets": false,
+  "contains_private_data": false,
+  "note": "Runs used an allowlisted environment with no tokens; argv contains only local paths and flags. Dataset is public PrecisionMemBench (via AMB)."
+ },
+ "review": {
+  "status": "candidate",
+  "reviewer": null,
+  "decision_ref": null,
+  "limitations": [
+   "Candidate: requires independent adapter/protocol review before acceptance.",
+   "Protocol A (no retrieval_filter); timestamps not supplied (MemPalace drawers take none)."
+  ],
+  "comparison_eligibility": "not_assessed"
+ },
+ "authority_effect": "none",
+ "candidate_class": {
+  "class": "self_run_candidate",
+  "tier": "local_embedding_model",
+  "system_variant": "MemPalace 3.11.0 defaults, AMB protocol A, no timestamps supplied",
+  "not_equivalent_to": [
+   "MemPalace published benchmark figures",
+   "frozen same-harness lane rows (official benchmark lanes)"
+  ],
+  "metric_record": "native_report",
+  "supersedes": [
+   {
+    "uri": "reports/benchmarks/runs/mempalace/amb-precisionmembench-single-turn/rep1/manifest.json",
+    "sha256": "cbf636c64b5e6dbd984686e58cd58570b3b5f2831a6d44ce1a8278828c84276f"
+   }
+  ],
+  "corrections": [
+   {
+    "pointer": "/normalized_run/uri",
+    "original": "rep1/single-turn.json",
+    "corrected": "reports/benchmarks/runs/mempalace/amb-precisionmembench-single-turn/rep1/single-turn.json",
+    "basis": "R1/R2: rebased to repository root; digest unchanged"
+   },
+   {
+    "pointer": "/artifacts/0/uri",
+    "original": "rep1/single-turn.json",
+    "corrected": "reports/benchmarks/runs/mempalace/amb-precisionmembench-single-turn/rep1/single-turn.json",
+    "basis": "R1/R2: rebased to repository root; digest unchanged"
+   },
+   {
+    "pointer": "/artifacts/0/kind",
+    "original": "row_level_results",
+    "corrected": "native_result",
+    "basis": "R5: native report"
+   },
+   {
+    "pointer": "/artifacts/1/uri",
+    "original": "rep1/exec-record.json",
+    "corrected": "reports/benchmarks/runs/mempalace/amb-precisionmembench-single-turn/rep1/exec-record.json",
+    "basis": "R1/R2: rebased to repository root; digest unchanged"
+   },
+   {
+    "pointer": "/artifacts/2/uri",
+    "original": "rep1/stdout.txt",
+    "corrected": "reports/benchmarks/runs/mempalace/amb-precisionmembench-single-turn/rep1/stdout.txt",
+    "basis": "R1/R2: rebased to repository root; digest unchanged"
+   },
+   {
+    "pointer": "/artifacts/3/uri",
+    "original": "rep1/stderr.txt",
+    "corrected": "reports/benchmarks/runs/mempalace/amb-precisionmembench-single-turn/rep1/stderr.txt",
+    "basis": "R1/R2: rebased to repository root; digest unchanged"
+   },
+   {
+    "pointer": "/artifacts/4/uri",
+    "original": "../../812-graphiti/graphiti-amb-venv-freeze.txt",
+    "corrected": "reports/benchmarks/runs/812-graphiti/graphiti-amb-venv-freeze.txt",
+    "basis": "R1/R2: rebased to repository root; digest unchanged"
+   },
+   {
+    "pointer": "/benchmark/input_sha256",
+    "original": "35659b3b9a581b644fc6746e1b4e902c3e7b56c0973b546bf7b0816a69e3de98+09e99f0852280538abe34b03570f65583fdb10df3c554b7150f0f665d5db709c",
+    "corrected": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+    "basis": "R3: components equal the amb-precisionmembench-retrieval-v1 fixtures in order; that lane's input_digest_rule value"
+   },
+   {
+    "pointer": "/benchmark/task_profile",
+    "original": "amb-precisionmembench-retrieval:single-turn:protocol-A",
+    "corrected": "self-run:amb-precisionmembench-retrieval:single-turn:protocol-A",
+    "basis": "R9: self-run outside any frozen lane; runner's own profile"
+   },
+   {
+    "pointer": "/run_id",
+    "original": "mempalace-amb-precisionmembench-single-turn-rep1",
+    "corrected": "self-run:mempalace-amb-precisionmembench-single-turn-rep1",
+    "basis": "R9: self-run: prefix"
+   },
+   {
+    "pointer": "/system/adapter_revision",
+    "original": "0.1.0-candidate",
+    "corrected": "git-blob:b60ba7601234bd8fee0356edccc7a423180597e8",
+    "basis": "R7: the adapter file's only blob (single-commit history)"
+   },
+   {
+    "pointer": "/costs/status",
+    "original": "not_measured",
+    "corrected": "not_applicable",
+    "basis": "R6: no billed inference"
+   },
+   {
+    "pointer": "/redaction/reviewed",
+    "original": true,
+    "corrected": false,
+    "basis": "R11: executor self-check; independent review pending"
+   }
+  ]
+ }
+}

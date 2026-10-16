@@ -1,0 +1,215 @@
+{
+ "schema_version": "1.0.0",
+ "run_id": "self-run:640-hindsight:subset50:session:hindsight_chunks_onnx",
+ "normalized_run": {
+  "uri": "reports/benchmarks/runs/640-hindsight/subset50/hindsight-50.json",
+  "sha256": "40d1ec0f08c3da97263408856eb7299ca9585487832236aa2019e259e3201345"
+ },
+ "benchmark": {
+  "id": "longmemeval-s-retrieval",
+  "task_profile": "self-run:agent-memory-longmemeval-retrieval-currentness-v1:session",
+  "dataset_revision": "xiaowu0162/longmemeval-cleaned longmemeval_s_cleaned.json",
+  "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "selection_id": "sha256(seed || NUL || question_id) ascending|size=50|ids_sha256=5266568e2e883b64e92e0da632d5e24c3fd61d8a447de7e629ebf93ef26a7339",
+  "sample_count": 50,
+  "evaluator_revision": "git-blob:6b9c237380f1d527e564161c2dac7fe32ada0ef9",
+  "excluded_count": 7
+ },
+ "system": {
+  "id": "hindsight",
+  "revision": "0.10.2@5fc4ce20917b916240cef27c212c387a177f115b",
+  "adapter_id": "reference/longmemeval_hindsight_bridge.py",
+  "adapter_revision": "git-blob:a14e2eb9db4959b6cf3440a603a4731d66080ec5",
+  "configuration_sha256": "38129e2fb01f5d8d5425f273b8ed72f059ab8512652d7123df082efaf86aff91",
+  "worktree_clean": true,
+  "build_sha256": null
+ },
+ "timing": {
+  "started_at": "2026-10-15T06:00:26Z",
+  "finished_at": "2026-10-15T07:06:08.799000Z",
+  "elapsed_ms": 3942799
+ },
+ "hardware": {
+  "os": "Linux",
+  "os_release": "6.18.44-fc-v114",
+  "architecture": "x86_64",
+  "cpu_model": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+  "cpu_cores": 4,
+  "ram_bytes": 16874930176,
+  "gpus": []
+ },
+ "environment": {
+  "runtime": "CPython",
+  "runtime_version": "3.12.3",
+  "isolation": "cloud_sandbox",
+  "container_digest": null,
+  "dependency_lock_sha256": "c9344cbb6dad368ca39db2f4fc7951b452bc37a3bd3147088bb380e112039ec2",
+  "network_access": "restricted",
+  "notes": [
+   "Self-hosted HindsightServer in-process, embedded PostgreSQL (pg0) on loopback, run as an unprivileged user with an allowlisted environment (no tokens; CA bundle unreadable, so no outbound TLS).",
+   "Embedding call count is a placeholder of 1: per-chunk embedding calls were not instrumented.",
+   "CPU shared with other benchmark processes; latencies are not comparable performance measurements.",
+   "execution.timeout_ms 0 = no runner-level timeout (per-call product timeouts recorded in configuration where they exist)."
+  ]
+ },
+ "inference": {
+  "used": true,
+  "calls": [
+   {
+    "purpose": "embedding",
+    "provider": "onnxruntime (Hindsight onnx embeddings provider)",
+    "model_id": "intfloat/multilingual-e5-small",
+    "model_revision": "03415a4be176a1620747c692ed433219fabc3def",
+    "model_digest": "ca456c06b3a9505ddfd9131408916dd79290368331e7d76bb621f1cba6bc8665",
+    "endpoint_class": "local",
+    "parameters": {
+     "dimensions": 384
+    },
+    "prompt_sha256": null,
+    "count": 1
+   }
+  ]
+ },
+ "execution": {
+  "command_sha256": "85ab8f37efcbd4e4f265cc939b53b17c11f97c7509bf61ee0e798eb34de2d8bc",
+  "argv_redacted": [
+   "/tmp/am-bench/hindsight-venv/bin/python",
+   "/tmp/am-bench/am/reference/run_longmemeval.py",
+   "--external-backend",
+   "longmemeval_hindsight_bridge:install_longmemeval_hindsight_backend",
+   "--backend",
+   "hindsight_chunks_onnx",
+   "--input",
+   "/tmp/agent-memory-benchmark-data/longmemeval_s_cleaned.json",
+   "--corpus-class",
+   "external_frozen",
+   "--output",
+   "/tmp/am-bench/hs-work/hindsight-50.json",
+   "--subset-size",
+   "50",
+   "--granularity",
+   "session",
+   "--granularity",
+   "turn"
+  ],
+  "random_seed": 0,
+  "timeout_ms": 0,
+  "retries": 0,
+  "context_budget_tokens": 65536,
+  "retrieval_top_k": 50,
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_sha256": "b575060d24527c83f5dedea9831a6160f530b044298396e934791fea56d38e2b",
+  "exit_code": 0,
+  "peak_rss_bytes": 2447586099,
+  "peak_vram_bytes": null,
+  "latency_p50_ms": 27349.533,
+  "latency_p95_ms": 32595.594
+ },
+ "costs": {
+  "status": "not_applicable",
+  "currency": "USD",
+  "amount": null,
+  "input_tokens": null,
+  "output_tokens": null,
+  "billing_reference_sha256": null
+ },
+ "artifacts": [
+  {
+   "kind": "native_result",
+   "uri": "reports/benchmarks/runs/640-hindsight/subset50/hindsight-50.json",
+   "sha256": "40d1ec0f08c3da97263408856eb7299ca9585487832236aa2019e259e3201345"
+  },
+  {
+   "kind": "execution_log",
+   "uri": "reports/benchmarks/runs/640-hindsight/subset50/hindsight-50.exec.json",
+   "sha256": "51a33d126ef1d5d9fa956d6be812a63f1637d5d2e61cd3cda10c5672eeeed641"
+  },
+  {
+   "kind": "execution_log",
+   "uri": "reports/benchmarks/runs/640-hindsight/subset50/hindsight-50.stdout",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "kind": "execution_log",
+   "uri": "reports/benchmarks/runs/640-hindsight/subset50/hindsight-50.stderr",
+   "sha256": "b575060d24527c83f5dedea9831a6160f530b044298396e934791fea56d38e2b"
+  },
+  {
+   "kind": "other",
+   "uri": "reports/benchmarks/runs/640-hindsight/subset50/hindsight-venv-freeze.txt",
+   "sha256": "c9344cbb6dad368ca39db2f4fc7951b452bc37a3bd3147088bb380e112039ec2"
+  }
+ ],
+ "redaction": {
+  "reviewed": false,
+  "contains_secrets": false,
+  "contains_private_data": false,
+  "note": "Runs used an allowlisted environment with no tokens; argv contains only local paths and flags. Dataset is public LongMemEval-S."
+ },
+ "review": {
+  "status": "candidate",
+  "reviewer": null,
+  "decision_ref": null,
+  "limitations": [
+   "Measures Hindsight as a credential-free chunk retrieval memory, not its LLM fact-extraction / observation product mode.",
+   "Retain passes no timestamp; temporal retrieval is disabled in this profile.",
+   "Candidate: requires independent adapter/protocol review before acceptance."
+  ],
+  "comparison_eligibility": "not_comparable"
+ },
+ "authority_effect": "none",
+ "candidate_class": {
+  "class": "self_run_diagnostic",
+  "tier": "local_embedding_model",
+  "system_variant": "Hindsight 0.10.2 chunk-only, 50-question subset used for the host-variance probe (superseded by full 500)",
+  "not_equivalent_to": [
+   "Hindsight's LLM-enabled product",
+   "frozen same-harness lane rows (official benchmark lanes)"
+  ],
+  "metric_record": "native_report",
+  "supersedes": [
+   {
+    "uri": "reports/benchmarks/runs/640-hindsight/subset50/session.hindsight_chunks_onnx.manifest.json",
+    "sha256": "5e0204e7df533491951f6b269ff638ebf75cf4314d91a882165b0472c495b8f7"
+   }
+  ],
+  "corrections": [
+   {
+    "pointer": "/artifacts/0/kind",
+    "original": "row_level_results",
+    "corrected": "native_result",
+    "basis": "R5: native report"
+   },
+   {
+    "pointer": "/benchmark/task_profile",
+    "original": "longmemeval-s-retrieval-parity-v1:session",
+    "corrected": "self-run:agent-memory-longmemeval-retrieval-currentness-v1:session",
+    "basis": "R9: self-run outside any frozen lane; runner's own profile"
+   },
+   {
+    "pointer": "/run_id",
+    "original": "640-hindsight:subset50:session:hindsight_chunks_onnx",
+    "corrected": "self-run:640-hindsight:subset50:session:hindsight_chunks_onnx",
+    "basis": "R9: self-run: prefix"
+   },
+   {
+    "pointer": "/costs/status",
+    "original": "not_measured",
+    "corrected": "not_applicable",
+    "basis": "R6: no billed inference"
+   },
+   {
+    "pointer": "/redaction/reviewed",
+    "original": true,
+    "corrected": false,
+    "basis": "R11: executor self-check; independent review pending"
+   },
+   {
+    "pointer": "/review/comparison_eligibility",
+    "original": "not_assessed",
+    "corrected": "not_comparable",
+    "basis": "class rule"
+   }
+  ]
+ }
+}

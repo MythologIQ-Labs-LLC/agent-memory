@@ -1,0 +1,322 @@
+{
+ "schema_version": "1.0.0",
+ "run_id": "self-run:graphiti-local-amb-precisionmembench-single-turn-rep1",
+ "normalized_run": {
+  "uri": "reports/benchmarks/runs/812-graphiti/amb-precisionmembench-single-turn/rep1/single-turn.json",
+  "sha256": "d381acd04b73ef9bd3f30f4baf40a455f809d4dcce9b71ded37cf0e53b9cd6ae"
+ },
+ "benchmark": {
+  "id": "amb-precisionmembench-retrieval",
+  "task_profile": "self-run:amb-precisionmembench-retrieval:single-turn:protocol-A:llm-ingestion-tier",
+  "dataset_revision": "tenurehq/precisionmembench fixtures via AMB 03c1d0f",
+  "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+  "selection_id": "precisionmembench:single-turn:all",
+  "sample_count": 77,
+  "evaluator_revision": "amb@03c1d0f1d27da63034f0931121c858faba512383",
+  "excluded_count": 0
+ },
+ "system": {
+  "id": "graphiti",
+  "revision": "0.31.1@5961293865a57844fe13d4eb061deb3501971fb2",
+  "adapter_id": "reference/amb_graphiti_bridge.py",
+  "adapter_revision": "git-blob:37a538c75e03fe9cd28e2dd2cc3fe3a7a8c40c17",
+  "configuration_sha256": "b5f12661505c5214f59c2c81456a20dbaa40a030df74b48cb0edfc62a2355b72",
+  "worktree_clean": true,
+  "build_sha256": null
+ },
+ "timing": {
+  "started_at": "2026-10-15T20:53:24Z",
+  "finished_at": "2026-10-16T00:05:34.785000Z",
+  "elapsed_ms": 11530785
+ },
+ "hardware": {
+  "os": "Linux",
+  "os_release": "6.18.44-fc-v139",
+  "architecture": "x86_64",
+  "cpu_model": "Intel(R) Xeon(R) Processor",
+  "cpu_cores": 4,
+  "ram_bytes": 16874930176,
+  "gpus": []
+ },
+ "environment": {
+  "runtime": "CPython",
+  "runtime_version": "3.12.3",
+  "isolation": "cloud_sandbox",
+  "container_digest": null,
+  "dependency_lock_sha256": "67062a7c7bc8aab22fec2357f7000614e64401248339def74fd39e1f56db9764",
+  "network_access": "restricted",
+  "notes": [
+   "Launch HEAD 2522e474 (execution-identity records the post-run HEAD b637f8d); bridge and shim blobs equal the preregistration; runner differs from the preregistered blob only by three additive provider registrations.",
+   "167 chat calls, 253,829 prompt + 9,010 completion tokens, all local; 225 embedding requests; all HTTP 200.",
+   "Shared 4-vCPU host; per-episode timings indicative.",
+   "Runs launched with PYTHONHASHSEED=0 (detached launcher).",
+   "execution.timeout_ms 0 = no runner-level timeout (per-call product timeouts recorded in configuration where they exist)."
+  ]
+ },
+ "inference": {
+  "used": true,
+  "calls": [
+   {
+    "purpose": "generation",
+    "provider": "llama-cpp-python 0.3.16 via graphiti_llamacpp_shim",
+    "model_id": "Qwen/Qwen2.5-3B-Instruct-GGUF qwen2.5-3b-instruct-q4_k_m.gguf",
+    "model_revision": "7dabda4d13d513e3e842b20f0d435c732f172cbe",
+    "model_digest": "626b4a6678b86442240e33df819e00132d3ba7dddfe1cdc4fbb18e0a9615c62d",
+    "endpoint_class": "local",
+    "parameters": {
+     "temperature": 0,
+     "seed": 0,
+     "context_window_tokens": 16384,
+     "max_output_tokens": 16384,
+     "top_p": 0.95
+    },
+    "prompt_sha256": "99f22a5c5cdb46cf5d37381e66761210c9a191bc7e162f234ec7a9e1fe994e82",
+    "count": 167
+   },
+   {
+    "purpose": "embedding",
+    "provider": "llama-cpp-python 0.3.16 via shim",
+    "model_id": "nomic-ai/nomic-embed-text-v1.5-GGUF nomic-embed-text-v1.5.f16.gguf",
+    "model_revision": "0188c9bf409793f810680a5a431e7b899c46104c",
+    "model_digest": "f7af6f66802f4df86eda10fe9bbcfc75c39562bed48ef6ace719a251cf1c2fdb",
+    "endpoint_class": "local",
+    "parameters": {
+     "dimensions": 768
+    },
+    "prompt_sha256": null,
+    "count": 225
+   }
+  ]
+ },
+ "execution": {
+  "command_sha256": "4ba1454337605534e0255bd549eca8c5567e33aa95b99455f79296c79650a169",
+  "argv_redacted": [
+   "/tmp/am-bench/graphiti-amb-venv/bin/python",
+   "/home/user/ext-exec/reference/run_amb_external.py",
+   "--amb-root",
+   "/tmp/agent-memory-benchmark",
+   "--",
+   "run",
+   "--dataset",
+   "precisionmembench",
+   "--split",
+   "single-turn",
+   "--memory",
+   "graphiti-local",
+   "--mode",
+   "retrieval",
+   "--output-dir",
+   "/tmp/am-bench/runs/812-graphiti-amb/rep1/amb-outputs"
+  ],
+  "random_seed": 0,
+  "timeout_ms": 0,
+  "retries": 0,
+  "context_budget_tokens": null,
+  "retrieval_top_k": 20,
+  "stdout_sha256": "7d74b08a14b4b4b8dd665baae9b7f8ff1b0ef537e3a3163fbe57da9872744beb",
+  "stderr_sha256": "6db90175b639b6bce9c40111466ab1b166d86938c13bd79178c4f79eeef227a3",
+  "exit_code": 0,
+  "peak_rss_bytes": 1179962572,
+  "peak_vram_bytes": null,
+  "latency_p50_ms": null,
+  "latency_p95_ms": null
+ },
+ "costs": {
+  "status": "not_applicable",
+  "currency": "USD",
+  "amount": null,
+  "input_tokens": 253829,
+  "output_tokens": 9010,
+  "billing_reference_sha256": null
+ },
+ "artifacts": [
+  {
+   "kind": "native_result",
+   "uri": "reports/benchmarks/runs/812-graphiti/amb-precisionmembench-single-turn/rep1/single-turn.json",
+   "sha256": "d381acd04b73ef9bd3f30f4baf40a455f809d4dcce9b71ded37cf0e53b9cd6ae"
+  },
+  {
+   "kind": "execution_log",
+   "uri": "reports/benchmarks/runs/812-graphiti/amb-precisionmembench-single-turn/rep1/exec-record.json",
+   "sha256": "0bb8a43c41f6065f1f795fdd3af75b81816058ca67a835fa8704b0de5edc6328"
+  },
+  {
+   "kind": "execution_log",
+   "uri": "reports/benchmarks/runs/812-graphiti/amb-precisionmembench-single-turn/rep1/stdout.txt",
+   "sha256": "7d74b08a14b4b4b8dd665baae9b7f8ff1b0ef537e3a3163fbe57da9872744beb"
+  },
+  {
+   "kind": "execution_log",
+   "uri": "reports/benchmarks/runs/812-graphiti/amb-precisionmembench-single-turn/rep1/stderr.txt.gz",
+   "sha256": "6db90175b639b6bce9c40111466ab1b166d86938c13bd79178c4f79eeef227a3"
+  },
+  {
+   "kind": "other",
+   "uri": "reports/benchmarks/runs/812-graphiti/graphiti-amb-venv-freeze.txt",
+   "sha256": "67062a7c7bc8aab22fec2357f7000614e64401248339def74fd39e1f56db9764"
+  }
+ ],
+ "redaction": {
+  "reviewed": false,
+  "contains_secrets": false,
+  "contains_private_data": false,
+  "note": "Runs used an allowlisted environment with no tokens; argv contains only local paths and flags. Dataset is public PrecisionMemBench (via AMB)."
+ },
+ "review": {
+  "status": "candidate",
+  "reviewer": null,
+  "decision_ref": null,
+  "limitations": [
+   "Graphiti with a local 3B model, not with a frontier LLM, and not Zep's hosted product.",
+   "Two complete runs: outcome-identical AMB output (differences only in timing fields) and content-identical LLM requests and completion texts (temperature 0, seed 0, single inference slot).",
+   "Candidate: independently reviewed (independent-review-812-graphiti.md), not accepted."
+  ],
+  "comparison_eligibility": "not_assessed"
+ },
+ "authority_effect": "none",
+ "candidate_class": {
+  "class": "self_run_candidate",
+  "tier": "local_llm_ingestion",
+  "system_variant": "Graphiti 0.31.1 (graphiti-core[falkordblite]) with local Qwen2.5-3B-Instruct Q4_K_M at temperature 0 and nomic-embed-text v1.5; AMB protocol A",
+  "not_equivalent_to": [
+   "Zep's hosted product",
+   "Graphiti with a frontier LLM",
+   "frozen same-harness lane rows (official benchmark lanes)"
+  ],
+  "metric_record": "native_report",
+  "supersedes": [
+   {
+    "uri": "reports/benchmarks/runs/812-graphiti/amb-precisionmembench-single-turn/rep1/manifest.json",
+    "sha256": "e77629061765cc65a2a4bcc197150e86e3f22c3814e15cdd068e2e2af0612652"
+   }
+  ],
+  "corrections": [
+   {
+    "pointer": "/normalized_run/uri",
+    "original": "rep1/single-turn.json",
+    "corrected": "reports/benchmarks/runs/812-graphiti/amb-precisionmembench-single-turn/rep1/single-turn.json",
+    "basis": "R1/R2: rebased to repository root; digest unchanged"
+   },
+   {
+    "pointer": "/artifacts/0/uri",
+    "original": "rep1/single-turn.json",
+    "corrected": "reports/benchmarks/runs/812-graphiti/amb-precisionmembench-single-turn/rep1/single-turn.json",
+    "basis": "R1/R2: rebased to repository root; digest unchanged"
+   },
+   {
+    "pointer": "/artifacts/0/kind",
+    "original": "row_level_results",
+    "corrected": "native_result",
+    "basis": "R5: native report"
+   },
+   {
+    "pointer": "/artifacts/1/uri",
+    "original": "rep1/exec-record.json",
+    "corrected": "reports/benchmarks/runs/812-graphiti/amb-precisionmembench-single-turn/rep1/exec-record.json",
+    "basis": "R1/R2: rebased to repository root; digest unchanged"
+   },
+   {
+    "pointer": "/artifacts/2/uri",
+    "original": "rep1/stdout.txt",
+    "corrected": "reports/benchmarks/runs/812-graphiti/amb-precisionmembench-single-turn/rep1/stdout.txt",
+    "basis": "R1/R2: rebased to repository root; digest unchanged"
+   },
+   {
+    "pointer": "/artifacts/3/uri",
+    "original": "rep1/stderr.txt.gz",
+    "corrected": "reports/benchmarks/runs/812-graphiti/amb-precisionmembench-single-turn/rep1/stderr.txt.gz",
+    "basis": "R1/R2: rebased to repository root; digest unchanged"
+   },
+   {
+    "pointer": "/artifacts/4/uri",
+    "original": "../graphiti-amb-venv-freeze.txt",
+    "corrected": "reports/benchmarks/runs/812-graphiti/graphiti-amb-venv-freeze.txt",
+    "basis": "R1/R2: rebased to repository root; digest unchanged"
+   },
+   {
+    "pointer": "/benchmark/input_sha256",
+    "original": "35659b3b9a581b644fc6746e1b4e902c3e7b56c0973b546bf7b0816a69e3de98+09e99f0852280538abe34b03570f65583fdb10df3c554b7150f0f665d5db709c",
+    "corrected": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+    "basis": "R3: components equal the amb-precisionmembench-retrieval-v1 fixtures in order; that lane's input_digest_rule value"
+   },
+   {
+    "pointer": "/benchmark/task_profile",
+    "original": "amb-precisionmembench-retrieval:single-turn:protocol-A:llm-ingestion-tier",
+    "corrected": "self-run:amb-precisionmembench-retrieval:single-turn:protocol-A:llm-ingestion-tier",
+    "basis": "R9: self-run outside any frozen lane; runner's own profile"
+   },
+   {
+    "pointer": "/run_id",
+    "original": "graphiti-local-amb-precisionmembench-single-turn-rep1",
+    "corrected": "self-run:graphiti-local-amb-precisionmembench-single-turn-rep1",
+    "basis": "R9: self-run: prefix"
+   },
+   {
+    "pointer": "/inference/calls/0/purpose",
+    "original": "entity/edge extraction, dedupe, invalidation (structured output)",
+    "corrected": "generation",
+    "basis": "R4: v1 enum"
+   },
+   {
+    "pointer": "/inference/calls/0/parameters/n_ctx",
+    "original": 16384,
+    "corrected": "<absent>",
+    "basis": "R8: renamed context_window_tokens"
+   },
+   {
+    "pointer": "/inference/calls/0/parameters/context_window_tokens",
+    "original": "<absent>",
+    "corrected": 16384,
+    "basis": "R8: server flag n_ctx (serving-start-llm.sh)"
+   },
+   {
+    "pointer": "/inference/calls/0/parameters/max_output_tokens",
+    "original": "<absent>",
+    "corrected": 16384,
+    "basis": "R8: sent in all 167 logged requests as ['16384']"
+   },
+   {
+    "pointer": "/inference/calls/0/parameters/top_p",
+    "original": "<absent>",
+    "corrected": 0.95,
+    "basis": "R8: not sent per request; pinned llama-cpp-python 0.3.16 server default for /v1/chat/completions (llama_cpp/server/types.py top_p_field default=0.95; file sha256 a6c5b3b8... equals the wheel RECORD)"
+   },
+   {
+    "pointer": "/inference/calls/0/prompt_sha256",
+    "original": null,
+    "corrected": "99f22a5c5cdb46cf5d37381e66761210c9a191bc7e162f234ec7a9e1fe994e82",
+    "basis": "R8: prompt-set digest of shim-calls.jsonl.gz"
+   },
+   {
+    "pointer": "/costs/status",
+    "original": "not_measured",
+    "corrected": "not_applicable",
+    "basis": "R6: no billed inference"
+   },
+   {
+    "pointer": "/costs/input_tokens",
+    "original": null,
+    "corrected": 253829,
+    "basis": "R6: summed from shim-calls.jsonl.gz chat usage"
+   },
+   {
+    "pointer": "/costs/output_tokens",
+    "original": null,
+    "corrected": 9010,
+    "basis": "R6: summed from shim-calls.jsonl.gz chat usage"
+   },
+   {
+    "pointer": "/redaction/reviewed",
+    "original": true,
+    "corrected": false,
+    "basis": "R11: executor self-check; independent review pending"
+   },
+   {
+    "pointer": "/review/limitations/1",
+    "original": "Two complete runs: outcome-identical AMB output (differences only in timing fields) and byte-identical LLM requests/completions (temperature 0, seed 0, single inference slot).",
+    "corrected": "Two complete runs: outcome-identical AMB output (differences only in timing fields) and content-identical LLM requests and completion texts (temperature 0, seed 0, single inference slot).",
+    "basis": "RECEIPT-AUDIT.md: raw responses differ in per-call ids"
+   }
+  ]
+ }
+}
