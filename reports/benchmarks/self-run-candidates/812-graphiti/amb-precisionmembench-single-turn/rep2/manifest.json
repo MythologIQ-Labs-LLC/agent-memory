@@ -273,7 +273,7 @@
     "pointer": "/inference/calls/0/parameters/max_output_tokens",
     "original": "<absent>",
     "corrected": 16384,
-    "basis": "R8: sent in all 167 logged requests as ['16384']"
+    "basis": "R8: sent as 16384 in all 167 logged requests"
    },
    {
     "pointer": "/inference/calls/0/parameters/top_p",
@@ -297,13 +297,13 @@
     "pointer": "/costs/input_tokens",
     "original": null,
     "corrected": 253829,
-    "basis": "R6: summed from shim-calls.jsonl.gz chat usage"
+    "basis": "R6: chat-completion usage summed from shim-calls.jsonl.gz (embedding usage excluded)"
    },
    {
     "pointer": "/costs/output_tokens",
     "original": null,
     "corrected": 9010,
-    "basis": "R6: summed from shim-calls.jsonl.gz chat usage"
+    "basis": "R6: chat-completion usage summed from shim-calls.jsonl.gz (embedding usage excluded)"
    },
    {
     "pointer": "/redaction/reviewed",

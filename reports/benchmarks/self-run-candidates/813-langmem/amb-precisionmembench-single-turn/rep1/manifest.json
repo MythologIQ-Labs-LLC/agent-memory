@@ -278,7 +278,7 @@
     "pointer": "/inference/calls/0/parameters/max_output_tokens",
     "original": "<absent>",
     "corrected": null,
-    "basis": "R8: sent in all 35 logged requests as ['null']; not sent per request; pinned llama-cpp-python 0.3.16 chat default max_tokens=None, i.e. bounded only by n_ctx (llama_cpp/server/types.py)"
+    "basis": "R8: not sent in any of 35 logged requests; pinned llama-cpp-python 0.3.16 chat default max_tokens=None, i.e. bounded only by n_ctx (llama_cpp/server/types.py)"
    },
    {
     "pointer": "/inference/calls/0/parameters/top_p",
@@ -302,13 +302,13 @@
     "pointer": "/costs/input_tokens",
     "original": null,
     "corrected": 72366,
-    "basis": "R6: summed from shim-calls.jsonl.gz chat usage"
+    "basis": "R6: chat-completion usage summed from shim-calls.jsonl.gz (embedding usage excluded)"
    },
    {
     "pointer": "/costs/output_tokens",
     "original": null,
     "corrected": 4422,
-    "basis": "R6: summed from shim-calls.jsonl.gz chat usage"
+    "basis": "R6: chat-completion usage summed from shim-calls.jsonl.gz (embedding usage excluded)"
    },
    {
     "pointer": "/redaction/reviewed",
