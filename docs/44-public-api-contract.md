@@ -142,8 +142,9 @@ Measured on the independent AMB PrecisionMemBench run (#818): `returned` was the
   - **Unchanged stages.** The temporal applicability tier and exact identity stay above the fused stage. Temporal order, explicit-current constraints and cross-fact currentness stay as before.
   - **Selection.** Under `relevance_sufficient`, sufficiency is decided on the 3.4.0 order, so fusion never makes a fact sufficient. It only orders the selection and decides the budget cut.
   - **Fallbacks.**
+    - When the intent orders by time (declared `current`, `as_of` or `prospective`, or "now"-style query language), fusion is skipped and ranking is exactly 3.4.0, so the temporal order stage still orders still-valid conflicting statements (`fusion.status = "skipped_temporal_intent"`; C8 review finding 1).
     - Above 512 admitted memories, fusion is skipped (`fusion.status = "skipped_over_limit"`).
-    - If dense scoring is unavailable, the order is 3.4.0's (`"unavailable"`).
+    - If dense scoring raises `RepresentationUnavailable`, the order is 3.4.0's (`"unavailable"`). A failure during the route's own scan raises, as before.
     - Without the provider, ranking is exactly 3.4.0.
   - **Evidence.** Each admitted memory's `ranking_evidence.fusion` records its per-list ranks, dense similarity and fused score (`authority_effect: none`).
   - **Cost.** Fusion reuses the similarities the semantic route computed for the same query, and `ranked_prefix` ranks once.
