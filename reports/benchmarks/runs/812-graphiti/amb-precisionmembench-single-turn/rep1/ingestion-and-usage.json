@@ -1,0 +1,27 @@
+{
+ "episodes": 35,
+ "episodes_failed": 0,
+ "entity_nodes_extracted": 95,
+ "fact_edges_extracted": 47,
+ "edges_marked_invalid_at_ingest": 1,
+ "episodes_with_zero_edges": 0,
+ "ingest_seconds_total": 11455.5,
+ "ingest_seconds_median": 213.6,
+ "queries_with_provider_raw": 0,
+ "edges_returned_mean": null,
+ "unmapped_edges_total": 0,
+ "returned_edges_with_invalid_or_expired": 0,
+ "returned_edges_with_multiple_source_episodes": 0,
+ "llm_chat_calls": 167,
+ "llm_chat_status": [
+  200
+ ],
+ "prompt_tokens": 253829,
+ "completion_tokens": 9010,
+ "llm_wall_seconds": 11179,
+ "embedding_requests": 225,
+ "embedding_status": [
+  200
+ ],
+ "amb_id_resolution": "source_id=1371 (no doc_id/marker/lexical fallback)"
+}

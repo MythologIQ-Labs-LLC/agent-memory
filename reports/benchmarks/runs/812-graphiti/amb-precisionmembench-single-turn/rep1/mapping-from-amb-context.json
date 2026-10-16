@@ -1,0 +1,9 @@
+{
+ "cases": 77,
+ "returned_documents_total": 1391,
+ "returned_documents_mean": 18.06,
+ "cases_with_no_results": 5,
+ "unmapped_edge_documents": 0,
+ "facts_listed_under_more_than_one_belief": 36,
+ "note": "derived from AMB's context listing (AMB does not persist provider raw output); each document = one (edge, supporting episode) pair"
+}

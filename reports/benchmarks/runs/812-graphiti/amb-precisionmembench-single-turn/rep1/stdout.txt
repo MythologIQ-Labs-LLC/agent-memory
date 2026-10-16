@@ -1,0 +1,39 @@
+
+Dataset: precisionmembench  Split: single-turn  Memory: graphiti-local  Mode: 
+retrieval
+
+Loading queries...
+  77 queries loaded
+Loading documents...
+  35 documents loaded
+Ingesting into graphiti-local...
+  ingested in 11455539ms (327301.1ms/doc avg)
+
+  Evaluating ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:09
+
+Saved → 
+/tmp/am-bench/runs/812-graphiti-amb/rep1/amb-outputs/precisionmembench/graphiti-
+local/retrieval/single-turn.json
+        Results —        
+precisionmembench/single-
+ turn | graphiti-local | 
+        retrieval        
+┏━━━━━━━━━━━━━━━┳━━━━━━━┓
+┃ Metric        ┃ Value ┃
+┡━━━━━━━━━━━━━━━╇━━━━━━━┩
+│ Total queries │    77 │
+│ Correct       │     9 │
+│ Accuracy      │ 11.7% │
+└───────────────┴───────┘
+             PrecisionMemBench             
+┏━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┓
+┃ Metric                 ┃          Value ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━┩
+│ Active passes          │           0/43 │
+│ Structural passes      │           6/25 │
+│ Trivially-empty passes │            3/9 │
+│ Total passes           │           9/77 │
+│ Mean precision         │           0.07 │
+│ Mean recall            │           1.00 │
+│ ID resolution          │ source_id=1371 │
+└────────────────────────┴────────────────┘

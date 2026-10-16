@@ -1,0 +1,252 @@
+{
+  "cases": 77,
+  "reference": "agent_memory",
+  "systems": {
+    "agent_memory": {
+      "amb_summary": {
+        "correct": 15,
+        "total_queries": 77,
+        "accuracy": 0.19480519480519481,
+        "mean_precision": 0.1806,
+        "mean_recall": 0.9535,
+        "active_passes": 4,
+        "active_total": 43
+      },
+      "correct": 15,
+      "failures_with_unexpected_belief": 60,
+      "failures_with_missing_belief": 2,
+      "mean_memories_returned": 8.92,
+      "per_category": {
+        "Alias resolution": "3/23",
+        "Budget eviction and capacity": "3/5",
+        "Cold start behavior": "1/1",
+        "Counter-signal retrieval": "0/2",
+        "Cross-user isolation": "1/1",
+        "Design boundary cases": "2/6",
+        "Fuzzy matching and prefix guards": "3/7",
+        "Persona prelude content": "1/4",
+        "Ranking stability": "1/3",
+        "Relation expansion": "0/4",
+        "Scope disambiguation": "0/12",
+        "Supersession chain exclusion": "0/3",
+        "Type routing and open questions": "0/6"
+      }
+    },
+    "bm25": {
+      "amb_summary": {
+        "correct": 8,
+        "total_queries": 77,
+        "accuracy": 0.1038961038961039,
+        "mean_precision": 0.0536,
+        "mean_recall": 0.9651,
+        "active_passes": 0,
+        "active_total": 43
+      },
+      "correct": 8,
+      "failures_with_unexpected_belief": 69,
+      "failures_with_missing_belief": 0,
+      "mean_memories_returned": 18.32,
+      "per_category": {
+        "Alias resolution": "0/23",
+        "Budget eviction and capacity": "3/5",
+        "Cold start behavior": "0/1",
+        "Counter-signal retrieval": "0/2",
+        "Cross-user isolation": "1/1",
+        "Design boundary cases": "2/6",
+        "Fuzzy matching and prefix guards": "0/7",
+        "Persona prelude content": "1/4",
+        "Ranking stability": "1/3",
+        "Relation expansion": "0/4",
+        "Scope disambiguation": "0/12",
+        "Supersession chain exclusion": "0/3",
+        "Type routing and open questions": "0/6"
+      },
+      "paired_vs_agent_memory": {
+        "wins": 0,
+        "losses": 7,
+        "ties": 70,
+        "mcnemar_exact_p": 0.0156
+      }
+    },
+    "mem0_explicit": {
+      "amb_summary": {
+        "correct": 10,
+        "total_queries": 77,
+        "accuracy": 0.12987012987012986,
+        "mean_precision": 0.1049,
+        "mean_recall": 1.0,
+        "active_passes": 0,
+        "active_total": 43
+      },
+      "correct": 10,
+      "failures_with_unexpected_belief": 67,
+      "failures_with_missing_belief": 0,
+      "mean_memories_returned": 8.01,
+      "per_category": {
+        "Alias resolution": "0/23",
+        "Budget eviction and capacity": "3/5",
+        "Cold start behavior": "1/1",
+        "Counter-signal retrieval": "0/2",
+        "Cross-user isolation": "1/1",
+        "Design boundary cases": "2/6",
+        "Fuzzy matching and prefix guards": "0/7",
+        "Persona prelude content": "1/4",
+        "Ranking stability": "1/3",
+        "Relation expansion": "0/4",
+        "Scope disambiguation": "0/12",
+        "Supersession chain exclusion": "0/3",
+        "Type routing and open questions": "1/6"
+      },
+      "paired_vs_agent_memory": {
+        "wins": 1,
+        "losses": 6,
+        "ties": 70,
+        "mcnemar_exact_p": 0.125
+      }
+    },
+    "mempalace": {
+      "amb_summary": {
+        "correct": 9,
+        "total_queries": 77,
+        "accuracy": 0.11688311688311688,
+        "mean_precision": 0.056,
+        "mean_recall": 1.0,
+        "active_passes": 0,
+        "active_total": 43
+      },
+      "correct": 9,
+      "failures_with_unexpected_belief": 68,
+      "failures_with_missing_belief": 0,
+      "mean_memories_returned": 18.06,
+      "per_category": {
+        "Alias resolution": "0/23",
+        "Budget eviction and capacity": "3/5",
+        "Cold start behavior": "1/1",
+        "Counter-signal retrieval": "0/2",
+        "Cross-user isolation": "1/1",
+        "Design boundary cases": "2/6",
+        "Fuzzy matching and prefix guards": "0/7",
+        "Persona prelude content": "1/4",
+        "Ranking stability": "1/3",
+        "Relation expansion": "0/4",
+        "Scope disambiguation": "0/12",
+        "Supersession chain exclusion": "0/3",
+        "Type routing and open questions": "0/6"
+      },
+      "paired_vs_agent_memory": {
+        "wins": 0,
+        "losses": 6,
+        "ties": 71,
+        "mcnemar_exact_p": 0.0312
+      }
+    },
+    "hindsight_chunks": {
+      "amb_summary": {
+        "correct": 9,
+        "total_queries": 77,
+        "accuracy": 0.11688311688311688,
+        "mean_precision": 0.0544,
+        "mean_recall": 0.985,
+        "active_passes": 0,
+        "active_total": 43
+      },
+      "correct": 9,
+      "failures_with_unexpected_belief": 68,
+      "failures_with_missing_belief": 0,
+      "mean_memories_returned": 18.06,
+      "per_category": {
+        "Alias resolution": "0/23",
+        "Budget eviction and capacity": "3/5",
+        "Cold start behavior": "1/1",
+        "Counter-signal retrieval": "0/2",
+        "Cross-user isolation": "1/1",
+        "Design boundary cases": "2/6",
+        "Fuzzy matching and prefix guards": "0/7",
+        "Persona prelude content": "1/4",
+        "Ranking stability": "1/3",
+        "Relation expansion": "0/4",
+        "Scope disambiguation": "0/12",
+        "Supersession chain exclusion": "0/3",
+        "Type routing and open questions": "0/6"
+      },
+      "paired_vs_agent_memory": {
+        "wins": 0,
+        "losses": 6,
+        "ties": 71,
+        "mcnemar_exact_p": 0.0312
+      }
+    },
+    "langmem": {
+      "amb_summary": {
+        "correct": 9,
+        "total_queries": 77,
+        "accuracy": 0.11688311688311688,
+        "mean_precision": 0.0169,
+        "mean_recall": 0.0925,
+        "active_passes": 0,
+        "active_total": 43
+      },
+      "correct": 9,
+      "failures_with_unexpected_belief": 68,
+      "failures_with_missing_belief": 0,
+      "mean_memories_returned": 5.49,
+      "per_category": {
+        "Alias resolution": "0/23",
+        "Budget eviction and capacity": "3/5",
+        "Cold start behavior": "1/1",
+        "Counter-signal retrieval": "0/2",
+        "Cross-user isolation": "1/1",
+        "Design boundary cases": "2/6",
+        "Fuzzy matching and prefix guards": "0/7",
+        "Persona prelude content": "1/4",
+        "Ranking stability": "1/3",
+        "Relation expansion": "0/4",
+        "Scope disambiguation": "0/12",
+        "Supersession chain exclusion": "0/3",
+        "Type routing and open questions": "0/6"
+      },
+      "paired_vs_agent_memory": {
+        "wins": 0,
+        "losses": 6,
+        "ties": 71,
+        "mcnemar_exact_p": 0.0312
+      }
+    },
+    "graphiti": {
+      "amb_summary": {
+        "correct": 9,
+        "total_queries": 77,
+        "accuracy": 0.11688311688311688,
+        "mean_precision": 0.0657,
+        "mean_recall": 0.9961,
+        "active_passes": 0,
+        "active_total": 43
+      },
+      "correct": 9,
+      "failures_with_unexpected_belief": 68,
+      "failures_with_missing_belief": 0,
+      "mean_memories_returned": 18.06,
+      "per_category": {
+        "Alias resolution": "0/23",
+        "Budget eviction and capacity": "3/5",
+        "Cold start behavior": "1/1",
+        "Counter-signal retrieval": "0/2",
+        "Cross-user isolation": "1/1",
+        "Design boundary cases": "2/6",
+        "Fuzzy matching and prefix guards": "0/7",
+        "Persona prelude content": "1/4",
+        "Ranking stability": "1/3",
+        "Relation expansion": "0/4",
+        "Scope disambiguation": "0/12",
+        "Supersession chain exclusion": "0/3",
+        "Type routing and open questions": "0/6"
+      },
+      "paired_vs_agent_memory": {
+        "wins": 0,
+        "losses": 6,
+        "ties": 71,
+        "mcnemar_exact_p": 0.0312
+      }
+    }
+  }
+}
