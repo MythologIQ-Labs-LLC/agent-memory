@@ -19,6 +19,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import secrets
 import sqlite3
 import threading
 from typing import Iterable
@@ -861,6 +862,10 @@ class GenerationWitness:
         "explicit operator action is required (if this database was restored deliberately, remove "
         f"{GENERATION_WITNESS_NAME} to accept it)"
     )
+    UNREADABLE_HINT = (
+        "explicit operator action is required (if the database is this store's own, remove "
+        f"{GENERATION_WITNESS_NAME} to accept it)"
+    )
 
     def __init__(self, root: str | Path) -> None:
         self.path = Path(root) / GENERATION_WITNESS_NAME
@@ -875,17 +880,39 @@ class GenerationWitness:
             "journal_record_digest": journal_record_digest,
         }) + b"\n"
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        temporary = self.path.with_name(f".{self.path.name}.tmp")
-        with temporary.open("wb") as handle:
-            handle.write(payload)
-            handle.flush()
-            os.fsync(handle.fileno())
-        os.replace(temporary, self.path)
+        temporary, descriptor = self._exclusive_temporary()
+        try:
+            with os.fdopen(descriptor, "wb") as handle:
+                handle.write(payload)
+                handle.flush()
+                os.fsync(handle.fileno())
+            os.replace(temporary, self.path)
+        except BaseException:
+            try:
+                os.unlink(temporary)
+            except OSError:
+                pass
+            raise
         directory = os.open(self.path.parent, os.O_RDONLY)
         try:
             os.fsync(directory)
         finally:
             os.close(directory)
+
+    def _exclusive_temporary(self) -> tuple[Path, int]:
+        """A temporary only this writer can have opened (review R-1). With one shared name, a second
+        writer process truncated the inode the first was about to rename, and a crash or ENOSPC in
+        between published an empty witness that refused every open. The mode stays ``0o666`` less
+        the umask, as ``open("wb")`` created it."""
+
+        flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_BINARY", 0)
+        for _ in range(8):
+            temporary = self.path.with_name(f".{self.path.name}.{os.getpid()}.{secrets.token_hex(8)}.tmp")
+            try:
+                return temporary, os.open(temporary, flags, 0o666)
+            except FileExistsError:
+                continue
+        raise FileExistsError(f"no unused temporary name for {self.path.name}")
 
     def read(self) -> tuple[int, str] | None:
         """``(generation, journal_record_digest)``, or None when there is no witness."""
@@ -895,7 +922,8 @@ class GenerationWitness:
         except FileNotFoundError:
             return None
         except OSError as exc:
-            raise RuntimeRecoveryError(f"SQLite generation witness is unreadable: {exc}") from exc
+            raise RuntimeRecoveryError(
+                f"SQLite generation witness is unreadable: {exc}; {self.UNREADABLE_HINT}") from exc
         try:
             witness = json.loads(raw)
             if not isinstance(witness, dict) or witness.get("schema") != GENERATION_WITNESS_SCHEMA:
@@ -905,7 +933,8 @@ class GenerationWitness:
             if type(witnessed) is not int or witnessed < 0 or not isinstance(digest, str):
                 raise ValueError("malformed fields")
         except (KeyError, TypeError, ValueError) as exc:
-            raise RuntimeRecoveryError(f"SQLite generation witness is unreadable: {exc}") from exc
+            raise RuntimeRecoveryError(
+                f"SQLite generation witness is unreadable: {exc}; {self.UNREADABLE_HINT}") from exc
         return witnessed, digest
 
     @classmethod

@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import random
 import shutil
 import sqlite3
@@ -933,6 +934,50 @@ class ConcurrentWitnessWriters(_Store):
         self.assertEqual(json.loads(journal[0])["record_digest"], witness["journal_record_digest"])
         self.assert_recovers_committed(
             {"The deploy window is Thursday.", "Writer A committed this.", "Writer B committed this."})
+
+    def test_r1_another_writer_temporary_is_never_opened_or_truncated(self):
+        from agentmem_ref.runtime import sqlite_runtime
+
+        self.seeded()
+        taken = self.root / f".generation-witness.json.{os.getpid()}.{'0' * 16}.tmp"
+        taken.write_bytes(b"another writer's half-written record")
+        tokens = iter(["0" * 16, "1" * 16])
+        memory = self.open()
+        with mock.patch.object(sqlite_runtime.secrets, "token_hex", lambda _: next(tokens)):
+            self.assertTrue(memory.remember("memory:y", "Lunch is at noon.")["committed"])
+        self.assertEqual(taken.read_bytes(), b"another writer's half-written record")
+        self.assertEqual(_witness(self.root)["generation"], _state_generation(self.root))
+        self.assertEqual(sorted(p.name for p in self.root.glob(".generation-witness.json*")), [taken.name])
+
+    def test_r1_a_failed_witness_write_removes_its_temporary(self):
+        from agentmem_ref.runtime import sqlite_runtime
+
+        memory = self.open()
+        memory.remember("memory:x", "The deploy window is Thursday.")
+        before = _witness(self.root)
+        real_replace = os.replace
+
+        def replace(source, destination, *args, **kwargs):
+            if Path(destination).name == "generation-witness.json":
+                raise OSError(28, "injected ENOSPC")
+            return real_replace(source, destination, *args, **kwargs)
+
+        with mock.patch.object(sqlite_runtime.os, "replace", replace):
+            self.assertTrue(memory.remember("memory:y", "Lunch is at noon.")["committed"])
+        self.assertFalse(memory.runtime.durable_runtime.generation_witness_current)
+        self.assertEqual(_witness(self.root), before)
+        self.assertEqual(list(self.root.glob(".generation-witness.json*")), [])
+        memory.close()
+        self.assertEqual(len(self.open().recall("lunch noon")["returned"]), 1)
+
+    @unittest.skipUnless(os.name == "posix", "POSIX permission bits")
+    def test_r1_the_witness_keeps_the_mode_open_wb_gave_it(self):
+        previous = os.umask(0o027)
+        try:
+            self.seeded()
+        finally:
+            os.umask(previous)
+        self.assertEqual((self.root / "generation-witness.json").stat().st_mode & 0o777, 0o640)
 
 
 if __name__ == "__main__":
