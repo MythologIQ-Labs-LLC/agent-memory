@@ -5,11 +5,10 @@
 C6 makes C4's optional semantic route useful for paraphrase. It does that by capping the route, and the cap gives back the reach that #819 most needs.
 
 - **With the route on, against C4 default (off):** C6 is a real gain. On the e4 cohort it scores +16 / −0 (p = 3.1e-5), and paraphrase goes from 0 to 16 of 16.
-- **Against C4 with the route on:** C6 gains precision and loses recall. Every dataset agrees on the recall loss: the hidden e4 cohort, LongMemEval-S, this evaluator's probes, and the developer's own development and reviewer sets.
+- **Against C4 with the route on:** C6 gains precision and loses recall. Every dataset agrees on the recall loss: the hidden e4 cohort, LongMemEval-S (significant at turn granularity, not at session), this evaluator's probes, and the developer's own development and reviewer sets.
 - **Aggregation is the main casualty.** On e4, multi-evidence aggregation recall is 0.17 for C6 against 0.73 for C4+sem. That is the defect C3/C4 review required change 1 asked to fix, and C6 with the route on leaves it where C4 default had it.
 - **The failed preregistered prediction stands.** The preregistration expected recall against C4+sem to stay level or rise. It fell on every dataset, and the cause is identified below. The strict-pass gain does not cancel the loss: on e4 it is not significant (p = 0.099), and on the probes it reverses (p = 0.035).
 - **No safety, determinism or route-off problem was found.** Route off equals C4 on e4, LongMemEval, the probes and the developer's reviewer set. Two hosts and two interpreters give identical lists.
-
 - **LongMemEval-S 500 tells the same story.**
   - C4's semantic route is a significant gain over route-off (turn recall_all@10: +16 / −2, p = 0.0013).
   - C6 gives most of it back. Against C4+sem it scores +1 / −14 at turn recall_all@10 (p = 0.00098), with Δ recall −0.031 [−0.050, −0.014].
@@ -44,8 +43,9 @@ The arms follow the preregistered order: A, C4 default, C4+sem, C6+sem, C6 with 
 | | A | C4 | C6 off | C4+sem | **C6+sem** |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Strict pass (of 208) | 30 | 128 | 128 | 133 | **144** |
-| Mean recall | — | 0.773 | = C4 | 0.947 | 0.879 |
-| Mean precision | — | 0.727 | = C4 | 0.792 | 0.853 |
+| Mean recall | 0.869 | 0.773 | = C4 | 0.947 | 0.879 |
+| Mean precision | 0.411 | 0.727 | = C4 | 0.792 | 0.853 |
+| Mean returned | 2.80 | 0.85 | = C4 | 1.33 | 1.00 |
 | Recall latency p50 (shared, loaded host) | — | 58 ms | — | 753 ms | 759 ms |
 
 **Route off equals C4 on every recorded field.** That covers strict pass, precision, recall, returned count, leaks and failures, for all 208 cases.
@@ -175,7 +175,7 @@ Paired results:
 
 | Mechanism | Queries | Example (true-answer cosine) |
 | --- | ---: | --- |
-| **`min_best` = 0.40.** The best match is below 0.40, so nothing is proposed. Under this model, true paraphrase and aggregate answers often score 0.30 to 0.40 | 9 | "Which medicines am I on?" (0.37, 0.33, 0.32); "When did my spouse and I get married?" (0.40−); "What do I collect?" (0.30) |
+| **`min_best` = 0.40.** The best match is below 0.40, so nothing is proposed. Under this model, true paraphrase and aggregate answers often score 0.30 to 0.40 | 9 | "Which medicines am I on?" (0.37, 0.33, 0.32); "When did my spouse and I get married?" (0.397); "What do I collect?" (0.30) |
 | **K = 1 because the set reading misses.** Only one member of a set is proposed | 6 | "Remind me of everything I'm allergic to." (0.47, 0.42, 0.41); "Name the cities I've travelled to."; "Tell me about my siblings."; "Where have I lived?"; "Tell me the instruments I play."; "Any pets in the wider family?" |
 | **Question-shaped slot capture.** A note that repeats the question takes the single slot. The relative margin would cut the answers even at K = 3 | 2 | "What should I get Mum for her birthday?": note 0.98, answer 0.50. "Which plants need repotting?": note 0.87, answers 0.44 and 0.34 |
 | **Pool filter and `min_best` together.** The superseded original is the best match, and the pool correctly drops it. The successor's 0.335 is then below `min_best` | 1 | "What's my diet like these days?" |
@@ -244,7 +244,7 @@ The store holds N generated memories. Each run does 1 cold recall, then 40 warm 
 - **AMB PrecisionMemBench with the route on: not run, by design of the existing adapter.**
   - `amb_agent_memory_bridge.py` (`3d9ccb31`) calls `AgentMemory.open` without `semantic_retrieval` (lines 259 and 309). Its only optional open setting is `recall_control`, and `run_amb_external.py` exposes no flag or environment variable for it.
   - Measuring semantic-on AMB would need an adapter change or an open-defaults wrapper. Neither is approved for AMB, so no substitute protocol was created.
-  - C6 with the route off equals C4 on every source tested, so C6's default AMB result is C4's: 39 of 77.
+  - AMB was not re-run for C6 with the route off. Because route-off C6 equals C4 on every source tested, its default AMB result is expected to equal C4's published 39 of 77, but that is an inference, not a measurement.
 - **Probe op failures:** none. The first probe draft had one cross-tenant scenario, which the runtime refused to open (store tenant binding). It was replaced by a cross-principal scope case (`scope2`, same text, `user:other`) before any arm's results were read. That was the only change. The draft file was overwritten and is not preserved; `SHA256SUMS` hashes the set as run.
 - **Host interference:**
   - e4 latencies come from a host shared with Cognee generation 2 and a Jev-Mem run, so they are indicative only.
