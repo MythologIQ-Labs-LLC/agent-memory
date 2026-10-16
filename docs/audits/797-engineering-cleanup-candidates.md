@@ -115,3 +115,16 @@ A grep of every `reference/*.py` basename across workflows, docs, scripts, tests
 3. 2.1 steps (b)/(c) one layer at a time, `harness/` and `contracts/` first (no persisted identities), with the byte-equality tests as the gate.
 4. 2.4 only as part of the #662 workflow consolidation.
 5. 2.2 + 2.3 only when #556 settles the public module surface.
+
+## Disposition addendum (2026-10-16, `main` `38f6a7d`)
+
+The candidate list above is the point-in-time record at `3eebb6d`. Status since then:
+
+| Candidate | Disposition |
+|---|---|
+| 1.1 `reference/README.md` contract and layout drift | closed by the owner in `a392b11` (nine subpackages, no stale contract number) |
+| 1.2 Widen CI link validation to every tracked Markdown file | closed by the owner in `a392b11`, which also runs `scripts/validate_architecture_index.py` and its tests in the existing doctrine workflow (no new job) |
+| 1.3 `docs/PROCESS_SHADOW_GENOME.md` format | unchanged; recorded only |
+| 2.1 to 2.4 code hygiene candidates | unchanged; still proposals, still gated on the evidence-identity caveats above |
+| 2.5 Root `tests/` versus `reference/tests/` | partially settled by practice: the catalog guard's test lives in root `tests/` beside the deficit-ledger test, and both are now discovered by the doctrine workflow; the convention is still undocumented in CONTRIBUTING |
+| 3.1 to 3.3 packaging observations | unchanged |
