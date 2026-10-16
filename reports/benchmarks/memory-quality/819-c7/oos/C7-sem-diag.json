@@ -1,0 +1,538 @@
+{
+ "agent_memory_revision": "d05bf2b1304ca36a6211d472179bde8b11bfd335",
+ "budget": 10,
+ "cohort_sha256": "5a296a7541db7864676f61120956fd6e923aa1a98f03cd8a738e9ed2471d8ce7",
+ "reference_worktree_dirty": false,
+ "return_selection": null,
+ "runner": "scripts/run_memory_quality_scenarios.py",
+ "scenarios": [
+  {
+   "category": "c6-diagnostic",
+   "id": "pets",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 777.824,
+     "id": "pets-1",
+     "kind": "multi",
+     "must_include_count": 3,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 0.3333333333333333,
+     "returned": [
+      "memory:fish",
+      "memory:pets-n8"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 528.595,
+     "id": "pets-2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:vet"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 24,
+     "elapsed_ms": 563.652,
+     "id": "pets-3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:petfood"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 8,
+     "elapsed_ms": 553.011,
+     "id": "pets-4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:dog"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 25,
+     "elapsed_ms": 524.2,
+     "id": "pets-5",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.0,
+     "recall": null,
+     "returned": [
+      "memory:toy"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "c6-diagnostic",
+   "id": "work",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 7,
+     "elapsed_ms": 817.832,
+     "id": "work-1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.0,
+     "recall": 0.0,
+     "returned": [
+      "memory:stuffing"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 25,
+     "elapsed_ms": 527.217,
+     "id": "work-2",
+     "kind": "multi",
+     "must_include_count": 3,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 0.3333333333333333,
+     "returned": [
+      "memory:hire1",
+      "memory:work-n16"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 510.538,
+     "id": "work-3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": null,
+     "recall": 0.0,
+     "returned": [],
+     "returned_count": 0,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 537.471,
+     "id": "work-4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": null,
+     "recall": 0.0,
+     "returned": [],
+     "returned_count": 0,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 552.304,
+     "id": "work-5",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 1.0,
+     "returned": [
+      "memory:stuffing",
+      "memory:manager"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "c6-diagnostic",
+   "id": "health",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 808.246,
+     "id": "health-1",
+     "kind": "multi",
+     "must_include_count": 3,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:med1",
+      "memory:med2",
+      "memory:med3"
+     ],
+     "returned_count": 3,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 575.509,
+     "id": "health-2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:gp"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 535.468,
+     "id": "health-3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:bp"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 545.671,
+     "id": "health-4",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": true,
+     "precision": null,
+     "recall": null,
+     "returned": [],
+     "returned_count": 0,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 582.352,
+     "id": "health-5",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:knee"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "c6-diagnostic",
+   "id": "travel",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 772.869,
+     "id": "travel-1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": null,
+     "recall": 0.0,
+     "returned": [],
+     "returned_count": 0,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 511.253,
+     "id": "travel-2",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": 1.0,
+     "recall": 0.5,
+     "returned": [
+      "memory:flight"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 0,
+     "elapsed_ms": 521.663,
+     "id": "travel-3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": null,
+     "recall": 0.0,
+     "returned": [],
+     "returned_count": 0,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 8,
+     "elapsed_ms": 528.153,
+     "id": "travel-4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": null,
+     "recall": 0.0,
+     "returned": [],
+     "returned_count": 0,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 24,
+     "elapsed_ms": 540.221,
+     "id": "travel-5",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.0,
+     "recall": null,
+     "returned": [
+      "memory:flight"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "c6-diagnostic",
+   "id": "governance",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 758.091,
+     "id": "gov-1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:car"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 21,
+     "elapsed_ms": 564.427,
+     "id": "gov-2",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": true,
+     "precision": null,
+     "recall": null,
+     "returned": [],
+     "returned_count": 0,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 540.187,
+     "id": "gov-3",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": true,
+     "precision": null,
+     "recall": null,
+     "returned": [],
+     "returned_count": 0,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 542.391,
+     "id": "gov-4",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.0,
+     "recall": null,
+     "returned": [
+      "memory:gov-n8"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 7,
+     "elapsed_ms": 515.642,
+     "id": "gov-5",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:oldaddr"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "c6-diagnostic",
+   "id": "project",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 25,
+     "elapsed_ms": 762.267,
+     "id": "proj-1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.5,
+     "recall": 1.0,
+     "returned": [
+      "memory:deadline",
+      "memory:project-n16"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 539.713,
+     "id": "proj-2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": null,
+     "recall": 0.0,
+     "returned": [],
+     "returned_count": 0,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 25,
+     "elapsed_ms": 540.908,
+     "id": "proj-3",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": null,
+     "recall": 0.0,
+     "returned": [],
+     "returned_count": 0,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 25,
+     "elapsed_ms": 532.803,
+     "id": "proj-4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:client"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 510.525,
+     "id": "proj-5",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:hosting"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  }
+ ],
+ "semantic_retrieval": "required",
+ "summary": {
+  "by_category": {
+   "c6-diagnostic": {
+    "mean_precision": 0.7,
+    "mean_recall": 0.5903,
+    "mean_returned": 0.867,
+    "passed": 14,
+    "queries": 30,
+    "safety_violations": 0
+   }
+  },
+  "by_kind": {
+   "abstention": {
+    "mean_precision": 0.0,
+    "mean_recall": null,
+    "mean_returned": 0.5,
+    "passed": 3,
+    "queries": 6,
+    "safety_violations": 0
+   },
+   "multi": {
+    "mean_precision": 0.75,
+    "mean_recall": 0.4333,
+    "mean_returned": 1.6,
+    "passed": 1,
+    "queries": 5,
+    "safety_violations": 0
+   },
+   "single": {
+    "mean_precision": 0.8462,
+    "mean_recall": 0.6316,
+    "mean_returned": 0.789,
+    "passed": 10,
+    "queries": 19,
+    "safety_violations": 0
+   }
+  },
+  "op_failures": 0,
+  "overall": {
+   "mean_precision": 0.7,
+   "mean_recall": 0.5903,
+   "mean_returned": 0.867,
+   "passed": 14,
+   "queries": 30,
+   "safety_violations": 0
+  },
+  "recall_latency_ms_p50": 540.908,
+  "recall_latency_ms_p95": 808.246
+ }
+}

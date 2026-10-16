@@ -1,0 +1,7994 @@
+{
+ "reference": "/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-c7/reference",
+ "semantic": "off",
+ "selection": "relevance_sufficient",
+ "summary": {
+  "queries": 48,
+  "strict": 10,
+  "needed": 76,
+  "returned": 24,
+  "withheld": 21,
+  "refused": 0,
+  "not_discovered": 31,
+  "extra": 39,
+  "coverage@3": 14,
+  "coverage@5": 17,
+  "coverage@10": 22,
+  "coverage_of": 42,
+  "needed_rank_le5": 31,
+  "needed_rank_6_10": 8,
+  "needed_rank_gt10": 6,
+  "newer_first": 2,
+  "abstention_returning": 3,
+  "recall_p50_ms": 10.6
+ },
+ "rows": [
+  {
+   "scenario": "travel",
+   "id": "travel-1",
+   "kind": "multi",
+   "query": "Which trips did I take this year?",
+   "needed": {
+    "memory:lisbon": {
+     "stage": "not_discovered",
+     "rank": null,
+     "bm25": null,
+     "corroboration": null,
+     "semantic_route": null,
+     "ordered_before_next_by": null,
+     "cosine": null,
+     "dense_rank": null
+    },
+    "memory:kyoto": {
+     "stage": "not_discovered",
+     "rank": null,
+     "bm25": null,
+     "corroboration": null,
+     "semantic_route": null,
+     "ordered_before_next_by": null,
+     "cosine": null,
+     "dense_rank": null
+    },
+    "memory:highlands": {
+     "stage": "not_discovered",
+     "rank": null,
+     "bm25": null,
+     "corroboration": null,
+     "semantic_route": null,
+     "ordered_before_next_by": null,
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "admitted_count": 12,
+   "top10": [
+    "memory:stuff-trips",
+    "memory:trip-blog",
+    "memory:visa",
+    "memory:trip-budget",
+    "memory:lounge",
+    "memory:filler-travel-10",
+    "memory:filler-travel-3",
+    "memory:filler-travel-18",
+    "memory:peru-wish",
+    "memory:seat"
+   ],
+   "returned": [
+    "memory:stuff-trips"
+   ],
+   "extra": [],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 10.64,
+   "admitted_scores": [
+    [
+     "memory:stuff-trips",
+     10.73766085718255,
+     null,
+     null
+    ],
+    [
+     "memory:trip-blog",
+     1.9339267843209236,
+     null,
+     null
+    ],
+    [
+     "memory:visa",
+     1.609917300181934,
+     null,
+     null
+    ],
+    [
+     "memory:trip-budget",
+     1.223834686965953,
+     null,
+     null
+    ],
+    [
+     "memory:lounge",
+     1.1712594498170574,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-10",
+     0.5109527798810594,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-3",
+     0.48299791654410174,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-18",
+     0.4579432695763962,
+     null,
+     null
+    ],
+    [
+     "memory:peru-wish",
+     0.41489899358488114,
+     null,
+     null
+    ],
+    [
+     "memory:seat",
+     0.41489899358488114,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-15",
+     0.39627509861099625,
+     null,
+     null
+    ],
+    [
+     "memory:travel-trip-word",
+     0.0,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "travel",
+   "id": "travel-2",
+   "kind": "multi",
+   "query": "Where have I been on holiday recently?",
+   "needed": {
+    "memory:lisbon": {
+     "stage": "not_discovered",
+     "rank": null,
+     "bm25": null,
+     "corroboration": null,
+     "semantic_route": null,
+     "ordered_before_next_by": null,
+     "cosine": null,
+     "dense_rank": null
+    },
+    "memory:kyoto": {
+     "stage": "not_discovered",
+     "rank": null,
+     "bm25": null,
+     "corroboration": null,
+     "semantic_route": null,
+     "ordered_before_next_by": null,
+     "cosine": null,
+     "dense_rank": null
+    },
+    "memory:highlands": {
+     "stage": "not_discovered",
+     "rank": null,
+     "bm25": null,
+     "corroboration": null,
+     "semantic_route": null,
+     "ordered_before_next_by": null,
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "admitted_count": 15,
+   "top10": [
+    "memory:seat",
+    "memory:filler-travel-0",
+    "memory:filler-travel-5",
+    "memory:filler-travel-16",
+    "memory:filler-travel-2",
+    "memory:souvenir",
+    "memory:filler-travel-10",
+    "memory:filler-travel-3",
+    "memory:filler-travel-18",
+    "memory:peru-wish"
+   ],
+   "returned": [
+    "memory:trip-budget",
+    "memory:airline-old"
+   ],
+   "extra": [
+    "memory:trip-budget",
+    "memory:airline-old"
+   ],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 9.72,
+   "admitted_scores": [
+    [
+     "memory:seat",
+     1.4997563171566757,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-0",
+     1.0253091801424183,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-5",
+     0.9244223439039151,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-16",
+     0.9244223439039151,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-2",
+     0.8055302990385338,
+     null,
+     null
+    ],
+    [
+     "memory:souvenir",
+     0.7724162337613713,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-10",
+     0.7615149745283137,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-3",
+     0.7199610046167041,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-18",
+     0.6827073688852916,
+     null,
+     null
+    ],
+    [
+     "memory:peru-wish",
+     0.6186813217859416,
+     null,
+     null
+    ],
+    [
+     "memory:trip-blog",
+     0.5909699818917471,
+     null,
+     null
+    ],
+    [
+     "memory:stuff-trips",
+     0.5909699818917471,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-15",
+     0.5909699818917471,
+     null,
+     null
+    ],
+    [
+     "memory:trip-budget",
+     0.0,
+     null,
+     null
+    ],
+    [
+     "memory:airline-old",
+     0.0,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "travel",
+   "id": "travel-3",
+   "kind": "corroborate",
+   "query": "What did we bring back or buy for the Japan holiday?",
+   "needed": {
+    "memory:adapter": {
+     "stage": "withheld",
+     "rank": 4,
+     "bm25": 3.252806913335566,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": false,
+    "@5": true,
+    "@10": true
+   },
+   "admitted_count": 28,
+   "top10": [
+    "memory:visa",
+    "memory:stuff-trips",
+    "memory:filler-travel-5",
+    "memory:adapter",
+    "memory:trip-budget",
+    "memory:filler-travel-8",
+    "memory:airline-new",
+    "memory:filler-travel-13",
+    "memory:highlands",
+    "memory:airline-old"
+   ],
+   "returned": [
+    "memory:visa",
+    "memory:filler-travel-5",
+    "memory:trip-budget",
+    "memory:airline-old"
+   ],
+   "extra": [
+    "memory:filler-travel-5",
+    "memory:trip-budget",
+    "memory:airline-old"
+   ],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 11.93,
+   "admitted_scores": [
+    [
+     "memory:visa",
+     6.745389049008728,
+     null,
+     null
+    ],
+    [
+     "memory:stuff-trips",
+     3.577682278631276,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-5",
+     3.418440280829955,
+     null,
+     null
+    ],
+    [
+     "memory:adapter",
+     3.252806913335566,
+     null,
+     null
+    ],
+    [
+     "memory:trip-budget",
+     3.0059640308257047,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-8",
+     2.250531532788091,
+     null,
+     null
+    ],
+    [
+     "memory:airline-new",
+     1.7383604805800572,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-13",
+     1.4405235773545342,
+     null,
+     null
+    ],
+    [
+     "memory:highlands",
+     1.3817647651995744,
+     null,
+     null
+    ],
+    [
+     "memory:airline-old",
+     1.3682305217890778,
+     null,
+     null
+    ],
+    [
+     "memory:rome-sister",
+     1.3046388413223038,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-14",
+     0.3637878442560153,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-1",
+     0.3637878442560153,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-19",
+     0.3423334710398871,
+     null,
+     null
+    ],
+    [
+     "memory:ferry",
+     0.3423334710398871,
+     null,
+     null
+    ],
+    [
+     "memory:souvenir",
+     0.32326871198970997,
+     null,
+     null
+    ],
+    [
+     "memory:kyoto",
+     0.3145110560639513,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-12",
+     0.2697880711459678,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-17",
+     0.2697880711459678,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-16",
+     0.2697880711459678,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-11",
+     0.2697880711459678,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-4",
+     0.2697880711459678,
+     null,
+     null
+    ],
+    [
+     "memory:insurance",
+     0.25780594320645706,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-7",
+     0.25780594320645706,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-9",
+     0.25780594320645706,
+     null,
+     null
+    ],
+    [
+     "memory:camera",
+     0.2468428825098612,
+     null,
+     null
+    ],
+    [
+     "memory:lounge",
+     0.23677418610447354,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-2",
+     0.23677418610447354,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "travel",
+   "id": "travel-4",
+   "kind": "distractor",
+   "query": "When does my passport run out?",
+   "needed": {
+    "memory:passport": {
+     "stage": "returned",
+     "rank": 1,
+     "bm25": 2.5167187735868,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": true,
+    "@5": true,
+    "@10": true
+   },
+   "admitted_count": 8,
+   "top10": [
+    "memory:passport",
+    "memory:filler-travel-0",
+    "memory:map-app",
+    "memory:filler-travel-9",
+    "memory:filler-travel-6",
+    "memory:rome-sister",
+    "memory:packing",
+    "memory:filler-travel-15"
+   ],
+   "returned": [
+    "memory:passport"
+   ],
+   "extra": [],
+   "passed": true,
+   "newer_first": null,
+   "recall_ms": 8.29,
+   "admitted_scores": [
+    [
+     "memory:passport",
+     2.5167187735868,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-0",
+     1.9741194798280024,
+     null,
+     null
+    ],
+    [
+     "memory:map-app",
+     1.2016463309561594,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-9",
+     1.2016463309561594,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-6",
+     0.5761045674728913,
+     null,
+     null
+    ],
+    [
+     "memory:rome-sister",
+     0.4860621748722078,
+     null,
+     null
+    ],
+    [
+     "memory:packing",
+     0.46199307130219475,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-15",
+     0.4401952330756168,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "travel",
+   "id": "travel-5",
+   "kind": "deep",
+   "query": "How do I cope with jet lag?",
+   "needed": {
+    "memory:jetlag": {
+     "stage": "not_discovered",
+     "rank": null,
+     "bm25": null,
+     "corroboration": null,
+     "semantic_route": null,
+     "ordered_before_next_by": null,
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "admitted_count": 10,
+   "top10": [
+    "memory:insurance",
+    "memory:filler-travel-19",
+    "memory:filler-travel-10",
+    "memory:filler-travel-3",
+    "memory:filler-travel-18",
+    "memory:peru-wish",
+    "memory:seat",
+    "memory:trip-blog",
+    "memory:stuff-trips",
+    "memory:filler-travel-15"
+   ],
+   "returned": [],
+   "extra": [],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 9.07,
+   "admitted_scores": [
+    [
+     "memory:insurance",
+     1.4467887684220802,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-19",
+     1.3818456316849297,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-10",
+     0.31005815716715546,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-3",
+     0.29309448899387647,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-18",
+     0.2778907402852604,
+     null,
+     null
+    ],
+    [
+     "memory:peru-wish",
+     0.25177046182502705,
+     null,
+     null
+    ],
+    [
+     "memory:seat",
+     0.25177046182502705,
+     null,
+     null
+    ],
+    [
+     "memory:trip-blog",
+     0.2404690445859984,
+     null,
+     null
+    ],
+    [
+     "memory:stuff-trips",
+     0.2404690445859984,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-15",
+     0.2404690445859984,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "travel",
+   "id": "travel-6",
+   "kind": "conflict",
+   "query": "Which airline do we usually fly with?",
+   "needed": {
+    "memory:airline-new": {
+     "stage": "returned",
+     "rank": 1,
+     "bm25": 2.4848811122692847,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": true,
+    "@5": true,
+    "@10": true
+   },
+   "admitted_count": 9,
+   "top10": [
+    "memory:airline-new",
+    "memory:filler-travel-18",
+    "memory:airline-old",
+    "memory:stuff-trips",
+    "memory:insurance",
+    "memory:filler-travel-19",
+    "memory:filler-travel-8",
+    "memory:adapter",
+    "memory:trip-budget"
+   ],
+   "returned": [
+    "memory:airline-new",
+    "memory:airline-old"
+   ],
+   "extra": [],
+   "passed": true,
+   "newer_first": true,
+   "recall_ms": 9.33,
+   "admitted_scores": [
+    [
+     "memory:airline-new",
+     2.4848811122692847,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-18",
+     2.0957773746075503,
+     null,
+     null
+    ],
+    [
+     "memory:airline-old",
+     2.0957773746075503,
+     null,
+     null
+    ],
+    [
+     "memory:stuff-trips",
+     1.8243094097729902,
+     null,
+     null
+    ],
+    [
+     "memory:insurance",
+     1.393245140646397,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-19",
+     1.3330890338274426,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-8",
+     0.8404363383762311,
+     null,
+     null
+    ],
+    [
+     "memory:adapter",
+     0.7678613454034435,
+     null,
+     null
+    ],
+    [
+     "memory:trip-budget",
+     0.7678613454034435,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "travel",
+   "id": "travel-7",
+   "kind": "abstention",
+   "query": "What was the name of the hotel in Paris?",
+   "needed": {},
+   "coverage": {
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "admitted_count": 28,
+   "top10": [
+    "memory:ferry",
+    "memory:kyoto",
+    "memory:filler-travel-16",
+    "memory:map-app",
+    "memory:filler-travel-14",
+    "memory:filler-travel-8",
+    "memory:filler-travel-17",
+    "memory:filler-travel-4",
+    "memory:lisbon",
+    "memory:souvenir"
+   ],
+   "returned": [
+    "memory:hotel-pref"
+   ],
+   "extra": [
+    "memory:hotel-pref"
+   ],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 12.84,
+   "admitted_scores": [
+    [
+     "memory:ferry",
+     3.1976049300641973,
+     null,
+     null
+    ],
+    [
+     "memory:kyoto",
+     2.9095037889456377,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-16",
+     2.499616177587975,
+     null,
+     null
+    ],
+    [
+     "memory:map-app",
+     2.1314973790106464,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-14",
+     1.3382515421357675,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-8",
+     1.2440798113186693,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-17",
+     1.2440798113186693,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-4",
+     1.2440798113186693,
+     null,
+     null
+    ],
+    [
+     "memory:lisbon",
+     1.170601115784229,
+     null,
+     null
+    ],
+    [
+     "memory:souvenir",
+     1.1428084916693546,
+     null,
+     null
+    ],
+    [
+     "memory:highlands",
+     1.090223384464929,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-3",
+     1.0776139469948574,
+     null,
+     null
+    ],
+    [
+     "memory:passport",
+     1.0776139469948574,
+     null,
+     null
+    ],
+    [
+     "memory:packing",
+     0.9323694927377507,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-1",
+     0.36202221886415203,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-19",
+     0.34038075304662946,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-5",
+     0.2678504880470537,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-12",
+     0.2678504880470537,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-11",
+     0.2678504880470537,
+     null,
+     null
+    ],
+    [
+     "memory:insurance",
+     0.2558165563323349,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-7",
+     0.2558165563323349,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-9",
+     0.2558165563323349,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-13",
+     0.244817448296889,
+     null,
+     null
+    ],
+    [
+     "memory:camera",
+     0.244817448296889,
+     null,
+     null
+    ],
+    [
+     "memory:adapter",
+     0.244817448296889,
+     null,
+     null
+    ],
+    [
+     "memory:lounge",
+     0.23472518640079612,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-2",
+     0.23472518640079612,
+     null,
+     null
+    ],
+    [
+     "memory:hotel-pref",
+     0.0,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "travel",
+   "id": "travel-8",
+   "kind": "multi",
+   "query": "What perks or discounts do I have for travelling?",
+   "needed": {
+    "memory:lounge": {
+     "stage": "not_discovered",
+     "rank": null,
+     "bm25": null,
+     "corroboration": null,
+     "semantic_route": null,
+     "ordered_before_next_by": null,
+     "cosine": null,
+     "dense_rank": null
+    },
+    "memory:rail-card": {
+     "stage": "not_discovered",
+     "rank": null,
+     "bm25": null,
+     "corroboration": null,
+     "semantic_route": null,
+     "ordered_before_next_by": null,
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "admitted_count": 15,
+   "top10": [
+    "memory:stuff-trips",
+    "memory:filler-travel-10",
+    "memory:filler-travel-3",
+    "memory:filler-travel-18",
+    "memory:airline-old",
+    "memory:rome-sister",
+    "memory:peru-wish",
+    "memory:visa",
+    "memory:seat",
+    "memory:filler-travel-13"
+   ],
+   "returned": [],
+   "extra": [],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 14.77,
+   "admitted_scores": [
+    [
+     "memory:stuff-trips",
+     1.1941893313454288,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-10",
+     0.7665811666521436,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-3",
+     0.7253999261037793,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-18",
+     0.68841767911586,
+     null,
+     null
+    ],
+    [
+     "memory:airline-old",
+     0.68841767911586,
+     null,
+     null
+    ],
+    [
+     "memory:rome-sister",
+     0.6550233612284576,
+     null,
+     null
+    ],
+    [
+     "memory:peru-wish",
+     0.6247189905067846,
+     null,
+     null
+    ],
+    [
+     "memory:visa",
+     0.6247189905067846,
+     null,
+     null
+    ],
+    [
+     "memory:seat",
+     0.6247189905067846,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-13",
+     0.5970946656727144,
+     null,
+     null
+    ],
+    [
+     "memory:trip-blog",
+     0.5970946656727144,
+     null,
+     null
+    ],
+    [
+     "memory:adapter",
+     0.5970946656727144,
+     null,
+     null
+    ],
+    [
+     "memory:trip-budget",
+     0.5970946656727144,
+     null,
+     null
+    ],
+    [
+     "memory:filler-travel-15",
+     0.5970946656727144,
+     null,
+     null
+    ],
+    [
+     "memory:highlands",
+     0.5718099166558336,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "health",
+   "id": "health-1",
+   "kind": "multi",
+   "query": "What medications am I on?",
+   "needed": {
+    "memory:bp-med": {
+     "stage": "withheld",
+     "rank": 13,
+     "bm25": 0.5945328482922847,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    },
+    "memory:vit-d": {
+     "stage": "not_discovered",
+     "rank": null,
+     "bm25": null,
+     "corroboration": null,
+     "semantic_route": null,
+     "ordered_before_next_by": null,
+     "cosine": null,
+     "dense_rank": null
+    },
+    "memory:allergy-med": {
+     "stage": "not_discovered",
+     "rank": null,
+     "bm25": null,
+     "corroboration": null,
+     "semantic_route": null,
+     "ordered_before_next_by": null,
+     "cosine": null,
+     "dense_rank": null
+    },
+    "memory:statin": {
+     "stage": "not_discovered",
+     "rank": null,
+     "bm25": null,
+     "corroboration": null,
+     "semantic_route": null,
+     "ordered_before_next_by": null,
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "admitted_count": 16,
+   "top10": [
+    "memory:dentist",
+    "memory:filler-health-4",
+    "memory:filler-health-15",
+    "memory:physio",
+    "memory:pharmacy",
+    "memory:mole",
+    "memory:filler-health-1",
+    "memory:filler-health-9",
+    "memory:stuff-meds",
+    "memory:filler-health-2"
+   ],
+   "returned": [],
+   "extra": [],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 10.31,
+   "admitted_scores": [
+    [
+     "memory:dentist",
+     0.8360446029709101,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-4",
+     0.8360446029709101,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-15",
+     0.8360446029709101,
+     null,
+     null
+    ],
+    [
+     "memory:physio",
+     0.7965852706772979,
+     null,
+     null
+    ],
+    [
+     "memory:pharmacy",
+     0.7606828359425465,
+     null,
+     null
+    ],
+    [
+     "memory:mole",
+     0.7606828359425465,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-1",
+     0.7278771071687438,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-9",
+     0.6983058545396653,
+     null,
+     null
+    ],
+    [
+     "memory:stuff-meds",
+     0.659911030922364,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-2",
+     0.659911030922364,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-17",
+     0.6255182736104493,
+     null,
+     null
+    ],
+    [
+     "memory:health-article",
+     0.5945328482922847,
+     null,
+     null
+    ],
+    [
+     "memory:bp-med",
+     0.5945328482922847,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-14",
+     0.5409411549250929,
+     null,
+     null
+    ],
+    [
+     "memory:sleep",
+     0.5409411549250929,
+     null,
+     null
+    ],
+    [
+     "memory:knee",
+     0.5176121563299405,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "health",
+   "id": "health-2",
+   "kind": "multi",
+   "query": "Who looks after my health?",
+   "needed": {
+    "memory:gp": {
+     "stage": "withheld",
+     "rank": 6,
+     "bm25": 0.41713134480783415,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    },
+    "memory:dentist": {
+     "stage": "withheld",
+     "rank": 5,
+     "bm25": 0.4379493601679295,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": false,
+    "@5": false,
+    "@10": true
+   },
+   "admitted_count": 9,
+   "top10": [
+    "memory:insurance-h",
+    "memory:caffeine",
+    "memory:health-podcast",
+    "memory:filler-health-5",
+    "memory:dentist",
+    "memory:gp",
+    "memory:filler-health-14",
+    "memory:mole",
+    "memory:knee"
+   ],
+   "returned": [
+    "memory:insurance-h"
+   ],
+   "extra": [
+    "memory:insurance-h"
+   ],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 8.56,
+   "admitted_scores": [
+    [
+     "memory:insurance-h",
+     2.1425379706103382,
+     null,
+     null
+    ],
+    [
+     "memory:caffeine",
+     1.4833889078131124,
+     null,
+     null
+    ],
+    [
+     "memory:health-podcast",
+     1.3423624975632742,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-5",
+     0.5150665301105432,
+     null,
+     null
+    ],
+    [
+     "memory:dentist",
+     0.4379493601679295,
+     null,
+     null
+    ],
+    [
+     "memory:gp",
+     0.41713134480783415,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-14",
+     0.39820269554764676,
+     null,
+     null
+    ],
+    [
+     "memory:mole",
+     0.39820269554764676,
+     null,
+     null
+    ],
+    [
+     "memory:knee",
+     0.3809173695351284,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "health",
+   "id": "health-3",
+   "kind": "corroborate",
+   "query": "What is going on with my knee?",
+   "needed": {
+    "memory:knee": {
+     "stage": "returned",
+     "rank": 2,
+     "bm25": 2.912585873376616,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    },
+    "memory:physio": {
+     "stage": "returned",
+     "rank": 1,
+     "bm25": 3.5874490189392922,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": true,
+    "@5": true,
+    "@10": true
+   },
+   "admitted_count": 19,
+   "top10": [
+    "memory:physio",
+    "memory:knee",
+    "memory:dentist",
+    "memory:mole",
+    "memory:vit-d",
+    "memory:filler-health-5",
+    "memory:filler-health-18",
+    "memory:gp",
+    "memory:filler-health-1",
+    "memory:filler-health-14"
+   ],
+   "returned": [
+    "memory:physio",
+    "memory:knee",
+    "memory:filler-health-17"
+   ],
+   "extra": [
+    "memory:filler-health-17"
+   ],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 12.96,
+   "admitted_scores": [
+    [
+     "memory:physio",
+     3.5874490189392922,
+     null,
+     null
+    ],
+    [
+     "memory:knee",
+     2.912585873376616,
+     null,
+     null
+    ],
+    [
+     "memory:dentist",
+     2.7659072062752204,
+     null,
+     null
+    ],
+    [
+     "memory:mole",
+     2.5229846935515106,
+     null,
+     null
+    ],
+    [
+     "memory:vit-d",
+     2.1637432258019915,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-5",
+     2.0399333588543076,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-18",
+     1.9737072260012003,
+     null,
+     null
+    ],
+    [
+     "memory:gp",
+     1.6651510818045234,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-1",
+     1.3949463122908519,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-14",
+     1.0667811086870236,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-4",
+     1.0205926011067965,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-15",
+     1.0205926011067965,
+     null,
+     null
+    ],
+    [
+     "memory:pharmacy",
+     0.9309565791297743,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-3",
+     0.5758197748679538,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-0",
+     0.5758197748679538,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-8",
+     0.5493719689312305,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-6",
+     0.5493719689312305,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-12",
+     0.5252470057347127,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-17",
+     0.0,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "health",
+   "id": "health-4",
+   "kind": "corroborate",
+   "query": "What did the blood test show and what am I doing about it?",
+   "needed": {
+    "memory:blood-test": {
+     "stage": "returned",
+     "rank": 2,
+     "bm25": 5.859147463250783,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    },
+    "memory:iron": {
+     "stage": "withheld",
+     "rank": 4,
+     "bm25": 3.365003990687886,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": false,
+    "@5": true,
+    "@10": true
+   },
+   "admitted_count": 33,
+   "top10": [
+    "memory:health-article",
+    "memory:blood-test",
+    "memory:bp-med",
+    "memory:iron",
+    "memory:run",
+    "memory:filler-health-9",
+    "memory:sleep",
+    "memory:stuff-meds",
+    "memory:filler-health-2",
+    "memory:filler-health-17"
+   ],
+   "returned": [
+    "memory:health-article",
+    "memory:blood-test"
+   ],
+   "extra": [
+    "memory:health-article"
+   ],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 15.3,
+   "admitted_scores": [
+    [
+     "memory:health-article",
+     6.306152629856116,
+     null,
+     null
+    ],
+    [
+     "memory:blood-test",
+     5.859147463250783,
+     null,
+     null
+    ],
+    [
+     "memory:bp-med",
+     3.6336077622878378,
+     null,
+     null
+    ],
+    [
+     "memory:iron",
+     3.365003990687886,
+     null,
+     null
+    ],
+    [
+     "memory:run",
+     2.672544867568278,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-9",
+     1.5325704101891795,
+     null,
+     null
+    ],
+    [
+     "memory:sleep",
+     1.4936426293105751,
+     null,
+     null
+    ],
+    [
+     "memory:stuff-meds",
+     1.44862105352629,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-2",
+     1.44862105352629,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-17",
+     1.3733910390312196,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-14",
+     1.1882637446625635,
+     null,
+     null
+    ],
+    [
+     "memory:knee",
+     1.1371685756796794,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-13",
+     0.4579297703092916,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-0",
+     0.4579297703092916,
+     null,
+     null
+    ],
+    [
+     "memory:gym-new",
+     0.443005470761189,
+     null,
+     null
+    ],
+    [
+     "memory:flu-jab",
+     0.443005470761189,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-18",
+     0.429023257709534,
+     null,
+     null
+    ],
+    [
+     "memory:mole",
+     0.429023257709534,
+     null,
+     null
+    ],
+    [
+     "memory:gym-old",
+     0.3529558362516799,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-3",
+     0.33553098861757935,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-7",
+     0.33553098861757935,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-16",
+     0.33553098861757935,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-11",
+     0.33553098861757935,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-4",
+     0.33553098861757935,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-15",
+     0.33553098861757935,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-10",
+     0.33553098861757935,
+     null,
+     null
+    ],
+    [
+     "memory:gp",
+     0.3197456720296781,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-8",
+     0.3197456720296781,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-6",
+     0.3197456720296781,
+     null,
+     null
+    ],
+    [
+     "memory:physio",
+     0.3197456720296781,
+     null,
+     null
+    ],
+    [
+     "memory:pharmacy",
+     0.3053788846480117,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-12",
+     0.3053788846480117,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-1",
+     0.2922476368211029,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "health",
+   "id": "health-5",
+   "kind": "distractor",
+   "query": "Do I have a blood pressure monitor?",
+   "needed": {
+    "memory:bp-cuff-wish": {
+     "stage": "returned",
+     "rank": 1,
+     "bm25": 4.951126835380647,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": true,
+    "@5": true,
+    "@10": true
+   },
+   "admitted_count": 19,
+   "top10": [
+    "memory:bp-cuff-wish",
+    "memory:health-article",
+    "memory:bp-med",
+    "memory:sleep",
+    "memory:blood-test",
+    "memory:filler-health-14",
+    "memory:knee",
+    "memory:filler-health-9",
+    "memory:stuff-meds",
+    "memory:filler-health-2"
+   ],
+   "returned": [
+    "memory:bp-cuff-wish",
+    "memory:health-article",
+    "memory:bp-med"
+   ],
+   "extra": [
+    "memory:bp-med"
+   ],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 10.44,
+   "admitted_scores": [
+    [
+     "memory:bp-cuff-wish",
+     4.951126835380647,
+     null,
+     null
+    ],
+    [
+     "memory:health-article",
+     4.286221578120745,
+     null,
+     null
+    ],
+    [
+     "memory:bp-med",
+     4.286221578120745,
+     null,
+     null
+    ],
+    [
+     "memory:sleep",
+     3.070669205523471,
+     null,
+     null
+    ],
+    [
+     "memory:blood-test",
+     1.7659771134269537,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-14",
+     1.1950653194238616,
+     null,
+     null
+    ],
+    [
+     "memory:knee",
+     1.1429602277304705,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-9",
+     0.8878789366259154,
+     null,
+     null
+    ],
+    [
+     "memory:stuff-meds",
+     0.8383754158684876,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-2",
+     0.8383754158684876,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-17",
+     0.7941004942769151,
+     null,
+     null
+    ],
+    [
+     "memory:gym-old",
+     0.5903003745182992,
+     null,
+     null
+    ],
+    [
+     "memory:vit-d",
+     0.5606901181256243,
+     null,
+     null
+    ],
+    [
+     "memory:run",
+     0.5606901181256243,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-10",
+     0.5606901181256243,
+     null,
+     null
+    ],
+    [
+     "memory:water",
+     0.5339085510307969,
+     null,
+     null
+    ],
+    [
+     "memory:health-podcast",
+     0.5339085510307969,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-12",
+     0.5095688117009473,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-1",
+     0.48735150757018186,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "health",
+   "id": "health-6",
+   "kind": "deep",
+   "query": "Why am I so tired lately?",
+   "needed": {
+    "memory:sleep": {
+     "stage": "withheld",
+     "rank": 8,
+     "bm25": 0.04623204029622266,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": false,
+    "@5": false,
+    "@10": true
+   },
+   "admitted_count": 9,
+   "top10": [
+    "memory:filler-health-9",
+    "memory:stuff-meds",
+    "memory:filler-health-2",
+    "memory:filler-health-17",
+    "memory:health-article",
+    "memory:bp-med",
+    "memory:filler-health-14",
+    "memory:sleep",
+    "memory:knee"
+   ],
+   "returned": [],
+   "extra": [],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 9.83,
+   "admitted_scores": [
+    [
+     "memory:filler-health-9",
+     0.06033142005523635,
+     null,
+     null
+    ],
+    [
+     "memory:stuff-meds",
+     0.05686311272771743,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-2",
+     0.05686311272771743,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-17",
+     0.05377189653245226,
+     null,
+     null
+    ],
+    [
+     "memory:health-article",
+     0.05099944356037803,
+     null,
+     null
+    ],
+    [
+     "memory:bp-med",
+     0.05099944356037803,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-14",
+     0.04623204029622266,
+     null,
+     null
+    ],
+    [
+     "memory:sleep",
+     0.04623204029622266,
+     null,
+     null
+    ],
+    [
+     "memory:knee",
+     0.04416765481441779,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "health",
+   "id": "health-7",
+   "kind": "conflict",
+   "query": "How much does the gym cost each month?",
+   "needed": {
+    "memory:gym-new": {
+     "stage": "returned",
+     "rank": 3,
+     "bm25": 2.396932254657232,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": true,
+    "@5": true,
+    "@10": true
+   },
+   "admitted_count": 25,
+   "top10": [
+    "memory:gym-old",
+    "memory:run",
+    "memory:gym-new",
+    "memory:filler-health-13",
+    "memory:filler-health-0",
+    "memory:flu-jab",
+    "memory:filler-health-18",
+    "memory:mole",
+    "memory:filler-health-3",
+    "memory:filler-health-7"
+   ],
+   "returned": [
+    "memory:gym-old",
+    "memory:gym-new",
+    "memory:filler-health-10"
+   ],
+   "extra": [
+    "memory:filler-health-10"
+   ],
+   "passed": false,
+   "newer_first": false,
+   "recall_ms": 11.59,
+   "admitted_scores": [
+    [
+     "memory:gym-old",
+     5.724355640698442,
+     null,
+     null
+    ],
+    [
+     "memory:run",
+     2.9576023734285273,
+     null,
+     null
+    ],
+    [
+     "memory:gym-new",
+     2.396932254657232,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-13",
+     0.08375077953146651,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-0",
+     0.08375077953146651,
+     null,
+     null
+    ],
+    [
+     "memory:flu-jab",
+     0.08108242419380297,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-18",
+     0.07857884995974153,
+     null,
+     null
+    ],
+    [
+     "memory:mole",
+     0.07857884995974153,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-3",
+     0.06161007958431639,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-7",
+     0.06161007958431639,
+     null,
+     null
+    ],
+    [
+     "memory:blood-test",
+     0.06161007958431639,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-16",
+     0.06161007958431639,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-11",
+     0.06161007958431639,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-4",
+     0.06161007958431639,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-15",
+     0.06161007958431639,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-10",
+     0.06161007958431639,
+     null,
+     null
+    ],
+    [
+     "memory:gp",
+     0.058764786500065336,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-8",
+     0.058764786500065336,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-6",
+     0.058764786500065336,
+     null,
+     null
+    ],
+    [
+     "memory:iron",
+     0.058764786500065336,
+     null,
+     null
+    ],
+    [
+     "memory:physio",
+     0.058764786500065336,
+     null,
+     null
+    ],
+    [
+     "memory:pharmacy",
+     0.056170696454447375,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-12",
+     0.056170696454447375,
+     null,
+     null
+    ],
+    [
+     "memory:sleep",
+     0.056170696454447375,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-1",
+     0.05379594885913535,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "health",
+   "id": "health-8",
+   "kind": "abstention",
+   "query": "What is my blood type?",
+   "needed": {},
+   "coverage": {
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "admitted_count": 16,
+   "top10": [
+    "memory:filler-health-5",
+    "memory:health-article",
+    "memory:bp-med",
+    "memory:blood-test",
+    "memory:dentist",
+    "memory:gp",
+    "memory:mole",
+    "memory:filler-health-14",
+    "memory:knee",
+    "memory:filler-health-3"
+   ],
+   "returned": [
+    "memory:health-article",
+    "memory:bp-med",
+    "memory:blood-test"
+   ],
+   "extra": [
+    "memory:health-article",
+    "memory:bp-med",
+    "memory:blood-test"
+   ],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 9.89,
+   "admitted_scores": [
+    [
+     "memory:filler-health-5",
+     1.6430727497300261,
+     null,
+     null
+    ],
+    [
+     "memory:health-article",
+     1.6423976767134845,
+     null,
+     null
+    ],
+    [
+     "memory:bp-med",
+     1.6423976767134845,
+     null,
+     null
+    ],
+    [
+     "memory:blood-test",
+     1.6423976767134845,
+     null,
+     null
+    ],
+    [
+     "memory:dentist",
+     1.4052813166032685,
+     null,
+     null
+    ],
+    [
+     "memory:gp",
+     1.3406087344393594,
+     null,
+     null
+    ],
+    [
+     "memory:mole",
+     1.2816268652797913,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-14",
+     0.9111816194664365,
+     null,
+     null
+    ],
+    [
+     "memory:knee",
+     0.8727823940631099,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-3",
+     0.4061866966656985,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-0",
+     0.4061866966656985,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-8",
+     0.3874935409226941,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-6",
+     0.3874935409226941,
+     null,
+     null
+    ],
+    [
+     "memory:physio",
+     0.3874935409226941,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-12",
+     0.3704452458133548,
+     null,
+     null
+    ],
+    [
+     "memory:filler-health-1",
+     0.3548338570521247,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "work",
+   "id": "work-1",
+   "kind": "multi",
+   "query": "Which projects am I working on?",
+   "needed": {
+    "memory:proj-atlas": {
+     "stage": "not_discovered",
+     "rank": null,
+     "bm25": null,
+     "corroboration": null,
+     "semantic_route": null,
+     "ordered_before_next_by": null,
+     "cosine": null,
+     "dense_rank": null
+    },
+    "memory:proj-beacon": {
+     "stage": "not_discovered",
+     "rank": null,
+     "bm25": null,
+     "corroboration": null,
+     "semantic_route": null,
+     "ordered_before_next_by": null,
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "admitted_count": 19,
+   "top10": [
+    "memory:raise",
+    "memory:work-newsletter",
+    "memory:filler-work-8",
+    "memory:filler-work-1",
+    "memory:manager-new",
+    "memory:filler-work-16",
+    "memory:filler-work-14",
+    "memory:standup",
+    "memory:filler-work-3",
+    "memory:stuff-team"
+   ],
+   "returned": [
+    "memory:work-newsletter",
+    "memory:proj-old",
+    "memory:work-quote",
+    "memory:pension",
+    "memory:laptop",
+    "memory:training"
+   ],
+   "extra": [
+    "memory:work-newsletter",
+    "memory:proj-old",
+    "memory:work-quote",
+    "memory:pension",
+    "memory:laptop",
+    "memory:training"
+   ],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 10.03,
+   "admitted_scores": [
+    [
+     "memory:raise",
+     3.3260119679665143,
+     null,
+     null
+    ],
+    [
+     "memory:work-newsletter",
+     3.3260119679665143,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-8",
+     1.1784590278722982,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-1",
+     1.1138496999575296,
+     null,
+     null
+    ],
+    [
+     "memory:manager-new",
+     1.0559566000509224,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-16",
+     1.0559566000509224,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-14",
+     1.0037842283061353,
+     null,
+     null
+    ],
+    [
+     "memory:standup",
+     1.0037842283061353,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-3",
+     1.0037842283061353,
+     null,
+     null
+    ],
+    [
+     "memory:stuff-team",
+     0.9565245633721186,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-13",
+     0.9135149130075033,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-0",
+     0.8742066467457309,
+     null,
+     null
+    ],
+    [
+     "memory:hire-2",
+     0.8742066467457309,
+     null,
+     null
+    ],
+    [
+     "memory:office",
+     0.8381416680741941,
+     null,
+     null
+    ],
+    [
+     "memory:proj-old",
+     0.0,
+     null,
+     null
+    ],
+    [
+     "memory:work-quote",
+     0.0,
+     null,
+     null
+    ],
+    [
+     "memory:pension",
+     0.0,
+     null,
+     null
+    ],
+    [
+     "memory:laptop",
+     0.0,
+     null,
+     null
+    ],
+    [
+     "memory:training",
+     0.0,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "work",
+   "id": "work-2",
+   "kind": "multi",
+   "query": "Who are the new people on my team?",
+   "needed": {
+    "memory:hire-1": {
+     "stage": "returned",
+     "rank": 3,
+     "bm25": 4.012117263719016,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    },
+    "memory:hire-2": {
+     "stage": "withheld",
+     "rank": 13,
+     "bm25": 1.3615018776854628,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "admitted_count": 33,
+   "top10": [
+    "memory:stuff-team",
+    "memory:filler-work-3",
+    "memory:hire-1",
+    "memory:proj-atlas",
+    "memory:manager-old",
+    "memory:filler-work-4",
+    "memory:filler-work-14",
+    "memory:laptop",
+    "memory:work-newsletter",
+    "memory:filler-work-0"
+   ],
+   "returned": [
+    "memory:stuff-team",
+    "memory:hire-1",
+    "memory:proj-atlas",
+    "memory:work-newsletter"
+   ],
+   "extra": [
+    "memory:proj-atlas",
+    "memory:work-newsletter"
+   ],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 12.01,
+   "admitted_scores": [
+    [
+     "memory:stuff-team",
+     8.759162077304657,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-3",
+     5.079891725659318,
+     null,
+     null
+    ],
+    [
+     "memory:hire-1",
+     4.012117263719016,
+     null,
+     null
+    ],
+    [
+     "memory:proj-atlas",
+     3.4638807969900918,
+     null,
+     null
+    ],
+    [
+     "memory:manager-old",
+     2.1219896298043364,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-4",
+     2.0008612577013407,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-14",
+     1.8575953750409524,
+     null,
+     null
+    ],
+    [
+     "memory:laptop",
+     1.7083165611782205,
+     null,
+     null
+    ],
+    [
+     "memory:work-newsletter",
+     1.692611575284026,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-0",
+     1.6206422642089566,
+     null,
+     null
+    ],
+    [
+     "memory:standup",
+     1.5605662316430848,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-13",
+     1.5565910771262077,
+     null,
+     null
+    ],
+    [
+     "memory:hire-2",
+     1.3615018776854628,
+     null,
+     null
+    ],
+    [
+     "memory:vpn",
+     0.418180801632576,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-12",
+     0.40430993966196227,
+     null,
+     null
+    ],
+    [
+     "memory:risk",
+     0.3791570171484301,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-17",
+     0.3791570171484301,
+     null,
+     null
+    ],
+    [
+     "memory:commute",
+     0.3569504239531858,
+     null,
+     null
+    ],
+    [
+     "memory:proj-beacon",
+     0.3291082908848373,
+     null,
+     null
+    ],
+    [
+     "memory:proj-old",
+     0.3122469552987071,
+     null,
+     null
+    ],
+    [
+     "memory:manager-new",
+     0.3122469552987071,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-9",
+     0.2970291433978676,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-6",
+     0.2970291433978676,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-15",
+     0.2970291433978676,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-2",
+     0.2970291433978676,
+     null,
+     null
+    ],
+    [
+     "memory:colleague",
+     0.2970291433978676,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-10",
+     0.2970291433978676,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-7",
+     0.28322572365304416,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-5",
+     0.28322572365304416,
+     null,
+     null
+    ],
+    [
+     "memory:expenses",
+     0.27064826553029386,
+     null,
+     null
+    ],
+    [
+     "memory:deadline",
+     0.27064826553029386,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-11",
+     0.27064826553029386,
+     null,
+     null
+    ],
+    [
+     "memory:office",
+     0.24857121668039073,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "work",
+   "id": "work-3",
+   "kind": "corroborate",
+   "query": "When is the Atlas launch and what could get in the way?",
+   "needed": {
+    "memory:deadline": {
+     "stage": "returned",
+     "rank": 6,
+     "bm25": 2.7437937296860895,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    },
+    "memory:risk": {
+     "stage": "withheld",
+     "rank": 3,
+     "bm25": 4.370688704242858,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": false,
+    "@5": false,
+    "@10": true
+   },
+   "admitted_count": 34,
+   "top10": [
+    "memory:office",
+    "memory:filler-work-7",
+    "memory:risk",
+    "memory:proj-atlas",
+    "memory:work-newsletter",
+    "memory:deadline",
+    "memory:review",
+    "memory:filler-work-2",
+    "memory:filler-work-12",
+    "memory:filler-work-6"
+   ],
+   "returned": [
+    "memory:proj-atlas",
+    "memory:deadline",
+    "memory:commute"
+   ],
+   "extra": [
+    "memory:commute"
+   ],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 12.8,
+   "admitted_scores": [
+    [
+     "memory:office",
+     5.752688029868102,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-7",
+     4.3711239334752445,
+     null,
+     null
+    ],
+    [
+     "memory:risk",
+     4.370688704242858,
+     null,
+     null
+    ],
+    [
+     "memory:proj-atlas",
+     2.992681680609164,
+     null,
+     null
+    ],
+    [
+     "memory:work-newsletter",
+     2.7437937296860895,
+     null,
+     null
+    ],
+    [
+     "memory:deadline",
+     2.7437937296860895,
+     null,
+     null
+    ],
+    [
+     "memory:review",
+     2.5688581991715336,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-2",
+     2.5095447634001484,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-12",
+     1.5772438463507388,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-6",
+     1.4588854424621258,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-15",
+     1.4588854424621258,
+     null,
+     null
+    ],
+    [
+     "memory:colleague",
+     1.4588854424621258,
+     null,
+     null
+    ],
+    [
+     "memory:manager-old",
+     1.3108792741610376,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-5",
+     1.3088458830001481,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-1",
+     1.2608934923205544,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-11",
+     1.2497566472081671,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-4",
+     1.2344446213612517,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-0",
+     1.1957722409340708,
+     null,
+     null
+    ],
+    [
+     "memory:conference",
+     1.0820461150105622,
+     null,
+     null
+    ],
+    [
+     "memory:laptop",
+     1.0506593209380228,
+     null,
+     null
+    ],
+    [
+     "memory:hire-1",
+     1.0331959953302388,
+     null,
+     null
+    ],
+    [
+     "memory:work-quote",
+     1.0009835248615342,
+     null,
+     null
+    ],
+    [
+     "memory:stuff-team",
+     1.0009835248615342,
+     null,
+     null
+    ],
+    [
+     "memory:vpn",
+     0.45699201419108015,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-17",
+     0.41346444944451327,
+     null,
+     null
+    ],
+    [
+     "memory:commute",
+     0.38877759646304577,
+     null,
+     null
+    ],
+    [
+     "memory:proj-beacon",
+     0.35874778211615227,
+     null,
+     null
+    ],
+    [
+     "memory:proj-old",
+     0.3400145361558208,
+     null,
+     null
+    ],
+    [
+     "memory:manager-new",
+     0.3400145361558208,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-14",
+     0.323140639291779,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-9",
+     0.323140639291779,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-10",
+     0.323140639291779,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-3",
+     0.323140639291779,
+     null,
+     null
+    ],
+    [
+     "memory:expenses",
+     0.2939635854047078,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "work",
+   "id": "work-4",
+   "kind": "distractor",
+   "query": "Who approves the billing rules?",
+   "needed": {
+    "memory:colleague": {
+     "stage": "returned",
+     "rank": 1,
+     "bm25": 5.544016064928716,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": true,
+    "@5": true,
+    "@10": true
+   },
+   "admitted_count": 26,
+   "top10": [
+    "memory:colleague",
+    "memory:stuff-team",
+    "memory:proj-atlas",
+    "memory:vpn",
+    "memory:filler-work-12",
+    "memory:risk",
+    "memory:filler-work-17",
+    "memory:commute",
+    "memory:proj-beacon",
+    "memory:proj-old"
+   ],
+   "returned": [
+    "memory:colleague"
+   ],
+   "extra": [],
+   "passed": true,
+   "newer_first": null,
+   "recall_ms": 13.79,
+   "admitted_scores": [
+    [
+     "memory:colleague",
+     5.544016064928716,
+     null,
+     null
+    ],
+    [
+     "memory:stuff-team",
+     2.8699531191041197,
+     null,
+     null
+    ],
+    [
+     "memory:proj-atlas",
+     2.440946422392886,
+     null,
+     null
+    ],
+    [
+     "memory:vpn",
+     0.0834935259902252,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-12",
+     0.08076558895005308,
+     null,
+     null
+    ],
+    [
+     "memory:risk",
+     0.07581168388732375,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-17",
+     0.07581168388732375,
+     null,
+     null
+    ],
+    [
+     "memory:commute",
+     0.0714303714571845,
+     null,
+     null
+    ],
+    [
+     "memory:proj-beacon",
+     0.06582193309743743,
+     null,
+     null
+    ],
+    [
+     "memory:proj-old",
+     0.062493857828465886,
+     null,
+     null
+    ],
+    [
+     "memory:manager-new",
+     0.062493857828465886,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-14",
+     0.05948613205062528,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-9",
+     0.05948613205062528,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-6",
+     0.05948613205062528,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-15",
+     0.05948613205062528,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-2",
+     0.05948613205062528,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-10",
+     0.05948613205062528,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-3",
+     0.05948613205062528,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-7",
+     0.05675462598707615,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-5",
+     0.05675462598707615,
+     null,
+     null
+    ],
+    [
+     "memory:work-newsletter",
+     0.05426295948032647,
+     null,
+     null
+    ],
+    [
+     "memory:expenses",
+     0.05426295948032647,
+     null,
+     null
+    ],
+    [
+     "memory:deadline",
+     0.05426295948032647,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-11",
+     0.05426295948032647,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-0",
+     0.05198087239937817,
+     null,
+     null
+    ],
+    [
+     "memory:office",
+     0.04988298965680236,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "work",
+   "id": "work-5",
+   "kind": "deep",
+   "query": "How do I get to work?",
+   "needed": {
+    "memory:commute": {
+     "stage": "returned",
+     "rank": 14,
+     "bm25": 0.3925267521447551,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": null,
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "admitted_count": 14,
+   "top10": [
+    "memory:pension",
+    "memory:laptop",
+    "memory:training",
+    "memory:manager-new",
+    "memory:filler-work-16",
+    "memory:raise",
+    "memory:filler-work-13",
+    "memory:filler-work-8",
+    "memory:filler-work-1",
+    "memory:office"
+   ],
+   "returned": [
+    "memory:pension",
+    "memory:laptop",
+    "memory:training",
+    "memory:commute"
+   ],
+   "extra": [
+    "memory:pension",
+    "memory:laptop",
+    "memory:training"
+   ],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 9.46,
+   "admitted_scores": [
+    [
+     "memory:pension",
+     2.067076362273035,
+     null,
+     null
+    ],
+    [
+     "memory:laptop",
+     1.4960896783808657,
+     null,
+     null
+    ],
+    [
+     "memory:training",
+     1.4960896783808657,
+     null,
+     null
+    ],
+    [
+     "memory:manager-new",
+     1.243141170870984,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-16",
+     1.243141170870984,
+     null,
+     null
+    ],
+    [
+     "memory:raise",
+     1.07650735434998,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-13",
+     1.07650735434998,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-8",
+     0.8355746834147286,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-1",
+     0.7901159571149636,
+     null,
+     null
+    ],
+    [
+     "memory:office",
+     0.5956733582937029,
+     null,
+     null
+    ],
+    [
+     "memory:stuff-team",
+     0.44760288885994337,
+     null,
+     null
+    ],
+    [
+     "memory:proj-atlas",
+     0.44760288885994337,
+     null,
+     null
+    ],
+    [
+     "memory:deadline",
+     0.4276036108470524,
+     null,
+     null
+    ],
+    [
+     "memory:commute",
+     0.3925267521447551,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "work",
+   "id": "work-6",
+   "kind": "conflict",
+   "query": "Who is my manager?",
+   "needed": {
+    "memory:manager-new": {
+     "stage": "not_discovered",
+     "rank": null,
+     "bm25": null,
+     "corroboration": null,
+     "semantic_route": null,
+     "ordered_before_next_by": null,
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "admitted_count": 14,
+   "top10": [
+    "memory:manager-old",
+    "memory:stuff-team",
+    "memory:filler-work-4",
+    "memory:laptop",
+    "memory:hire-1",
+    "memory:filler-work-13",
+    "memory:review",
+    "memory:filler-work-2",
+    "memory:work-quote",
+    "memory:filler-work-7"
+   ],
+   "returned": [
+    "memory:manager-old"
+   ],
+   "extra": [],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 9.0,
+   "admitted_scores": [
+    [
+     "memory:manager-old",
+     4.239289583862606,
+     null,
+     null
+    ],
+    [
+     "memory:stuff-team",
+     3.2431118748609498,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-4",
+     1.2249036118712873,
+     null,
+     null
+    ],
+    [
+     "memory:laptop",
+     1.0436849953204668,
+     null,
+     null
+    ],
+    [
+     "memory:hire-1",
+     0.7799420475088065,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-13",
+     0.7799420475088065,
+     null,
+     null
+    ],
+    [
+     "memory:review",
+     0.21925486251105797,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-2",
+     0.1868171568244905,
+     null,
+     null
+    ],
+    [
+     "memory:work-quote",
+     0.17803723822699485,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-7",
+     0.17803723822699485,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-5",
+     0.17803723822699485,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-11",
+     0.17004554174797765,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-0",
+     0.16274048267527214,
+     null,
+     null
+    ],
+    [
+     "memory:office",
+     0.15603721336599322,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "work",
+   "id": "work-7",
+   "kind": "abstention",
+   "query": "What is my employee ID number?",
+   "needed": {},
+   "coverage": {
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "admitted_count": 14,
+   "top10": [
+    "memory:filler-work-5",
+    "memory:manager-old",
+    "memory:filler-work-4",
+    "memory:laptop",
+    "memory:stuff-team",
+    "memory:hire-1",
+    "memory:filler-work-13",
+    "memory:review",
+    "memory:filler-work-2",
+    "memory:work-quote"
+   ],
+   "returned": [],
+   "extra": [],
+   "passed": true,
+   "newer_first": null,
+   "recall_ms": 9.39,
+   "admitted_scores": [
+    [
+     "memory:filler-work-5",
+     2.4265145875214422,
+     null,
+     null
+    ],
+    [
+     "memory:manager-old",
+     1.3001536631125268,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-4",
+     1.2249036118712873,
+     null,
+     null
+    ],
+    [
+     "memory:laptop",
+     1.0436849953204668,
+     null,
+     null
+    ],
+    [
+     "memory:stuff-team",
+     0.9946345255665023,
+     null,
+     null
+    ],
+    [
+     "memory:hire-1",
+     0.7799420475088065,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-13",
+     0.7799420475088065,
+     null,
+     null
+    ],
+    [
+     "memory:review",
+     0.21925486251105797,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-2",
+     0.1868171568244905,
+     null,
+     null
+    ],
+    [
+     "memory:work-quote",
+     0.17803723822699485,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-7",
+     0.17803723822699485,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-11",
+     0.17004554174797765,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-0",
+     0.16274048267527214,
+     null,
+     null
+    ],
+    [
+     "memory:office",
+     0.15603721336599322,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "work",
+   "id": "work-8",
+   "kind": "multi",
+   "query": "What are the regular deadlines and meetings I need to remember?",
+   "needed": {
+    "memory:expenses": {
+     "stage": "withheld",
+     "rank": 30,
+     "bm25": 0.24165237974867615,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "candidate_ref_neutral_digest",
+     "cosine": null,
+     "dense_rank": null
+    },
+    "memory:standup": {
+     "stage": "not_discovered",
+     "rank": null,
+     "bm25": null,
+     "corroboration": null,
+     "semantic_route": null,
+     "ordered_before_next_by": null,
+     "cosine": null,
+     "dense_rank": null
+    },
+    "memory:review": {
+     "stage": "not_discovered",
+     "rank": null,
+     "bm25": null,
+     "corroboration": null,
+     "semantic_route": null,
+     "ordered_before_next_by": null,
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "admitted_count": 32,
+   "top10": [
+    "memory:office",
+    "memory:filler-work-3",
+    "memory:manager-new",
+    "memory:filler-work-16",
+    "memory:work-newsletter",
+    "memory:raise",
+    "memory:filler-work-13",
+    "memory:filler-work-8",
+    "memory:filler-work-1",
+    "memory:proj-atlas"
+   ],
+   "returned": [],
+   "extra": [],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 12.29,
+   "admitted_scores": [
+    [
+     "memory:office",
+     4.688705666804989,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-3",
+     3.4462787811014657,
+     null,
+     null
+    ],
+    [
+     "memory:manager-new",
+     3.229677866065484,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-16",
+     2.9506819599167264,
+     null,
+     null
+    ],
+    [
+     "memory:work-newsletter",
+     2.6599810891264566,
+     null,
+     null
+    ],
+    [
+     "memory:raise",
+     2.55573397953438,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-13",
+     2.55573397953438,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-8",
+     1.7873793564489544,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-1",
+     1.690308782310297,
+     null,
+     null
+    ],
+    [
+     "memory:proj-atlas",
+     1.5714550267617708,
+     null,
+     null
+    ],
+    [
+     "memory:deadline",
+     1.4087407399815053,
+     null,
+     null
+    ],
+    [
+     "memory:commute",
+     1.3904354937171104,
+     null,
+     null
+    ],
+    [
+     "memory:pension",
+     1.3474432776431606,
+     null,
+     null
+    ],
+    [
+     "memory:stuff-team",
+     1.2215915948277787,
+     null,
+     null
+    ],
+    [
+     "memory:vpn",
+     0.3740237648429935,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-12",
+     0.3615404128584318,
+     null,
+     null
+    ],
+    [
+     "memory:risk",
+     0.338917134443825,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-17",
+     0.338917134443825,
+     null,
+     null
+    ],
+    [
+     "memory:proj-beacon",
+     0.2941478618287204,
+     null,
+     null
+    ],
+    [
+     "memory:proj-old",
+     0.27899590614875774,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-14",
+     0.2653284761486144,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-9",
+     0.2653284761486144,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-6",
+     0.2653284761486144,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-15",
+     0.2653284761486144,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-2",
+     0.2653284761486144,
+     null,
+     null
+    ],
+    [
+     "memory:colleague",
+     0.2653284761486144,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-10",
+     0.2653284761486144,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-7",
+     0.252937588986169,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-5",
+     0.252937588986169,
+     null,
+     null
+    ],
+    [
+     "memory:expenses",
+     0.24165237974867615,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-11",
+     0.24165237974867615,
+     null,
+     null
+    ],
+    [
+     "memory:filler-work-0",
+     0.23133117474087264,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "home",
+   "id": "home-1",
+   "kind": "multi",
+   "query": "What maintenance work has been done on the house?",
+   "needed": {
+    "memory:boiler": {
+     "stage": "withheld",
+     "rank": 20,
+     "bm25": 0.09237400075580071,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    },
+    "memory:roof": {
+     "stage": "withheld",
+     "rank": 8,
+     "bm25": 0.12194036266136442,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "admitted_count": 28,
+   "top10": [
+    "memory:stuff-repairs",
+    "memory:filler-home-2",
+    "memory:filler-home-13",
+    "memory:mortgage",
+    "memory:energy-old",
+    "memory:filler-home-11",
+    "memory:alarm",
+    "memory:roof",
+    "memory:filler-home-16",
+    "memory:bike-store"
+   ],
+   "returned": [],
+   "extra": [],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 12.43,
+   "admitted_scores": [
+    [
+     "memory:stuff-repairs",
+     3.0348621643355833,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-2",
+     2.0015348062917315,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-13",
+     2.0015348062917315,
+     null,
+     null
+    ],
+    [
+     "memory:mortgage",
+     1.9413755950911682,
+     null,
+     null
+    ],
+    [
+     "memory:energy-old",
+     1.909160805535931,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-11",
+     0.12604302906866266,
+     null,
+     null
+    ],
+    [
+     "memory:alarm",
+     0.12194036266136442,
+     null,
+     null
+    ],
+    [
+     "memory:roof",
+     0.12194036266136442,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-16",
+     0.11809635823421108,
+     null,
+     null
+    ],
+    [
+     "memory:bike-store",
+     0.11448730144606879,
+     null,
+     null
+    ],
+    [
+     "memory:shed",
+     0.10248179415157221,
+     null,
+     null
+    ],
+    [
+     "memory:garden",
+     0.09716573566532352,
+     null,
+     null
+    ],
+    [
+     "memory:cleaner",
+     0.09716573566532352,
+     null,
+     null
+    ],
+    [
+     "memory:fridge",
+     0.09716573566532352,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-5",
+     0.09237400075580071,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-1",
+     0.09237400075580071,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-14",
+     0.09237400075580071,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-8",
+     0.09237400075580071,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-9",
+     0.09237400075580071,
+     null,
+     null
+    ],
+    [
+     "memory:boiler",
+     0.09237400075580071,
+     null,
+     null
+    ],
+    [
+     "memory:sofa",
+     0.08803266390565864,
+     null,
+     null
+    ],
+    [
+     "memory:dehumid",
+     0.08803266390565864,
+     null,
+     null
+    ],
+    [
+     "memory:tap",
+     0.08803266390565864,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-6",
+     0.08803266390565864,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-4",
+     0.08803266390565864,
+     null,
+     null
+    ],
+    [
+     "memory:paint",
+     0.08408107300715029,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-10",
+     0.08408107300715029,
+     null,
+     null
+    ],
+    [
+     "memory:damp",
+     0.08408107300715029,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "home",
+   "id": "home-2",
+   "kind": "multi",
+   "query": "What have we bought for the house this year?",
+   "needed": {
+    "memory:sofa": {
+     "stage": "returned",
+     "rank": 3,
+     "bm25": 2.4814423419578975,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    },
+    "memory:fridge": {
+     "stage": "withheld",
+     "rank": 17,
+     "bm25": 0.09716573566532352,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    },
+    "memory:paint": {
+     "stage": "returned",
+     "rank": 2,
+     "bm25": 4.656030732328883,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "admitted_count": 28,
+   "top10": [
+    "memory:stuff-repairs",
+    "memory:paint",
+    "memory:sofa",
+    "memory:filler-home-10",
+    "memory:filler-home-5",
+    "memory:energy-new",
+    "memory:dehumid",
+    "memory:filler-home-11",
+    "memory:alarm",
+    "memory:roof"
+   ],
+   "returned": [
+    "memory:paint",
+    "memory:sofa"
+   ],
+   "extra": [],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 11.04,
+   "admitted_scores": [
+    [
+     "memory:stuff-repairs",
+     11.01374729854268,
+     null,
+     null
+    ],
+    [
+     "memory:paint",
+     4.656030732328883,
+     null,
+     null
+    ],
+    [
+     "memory:sofa",
+     2.4814423419578975,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-10",
+     2.370055902668017,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-5",
+     2.0015348062917315,
+     null,
+     null
+    ],
+    [
+     "memory:energy-new",
+     1.909160805535931,
+     null,
+     null
+    ],
+    [
+     "memory:dehumid",
+     1.9074678963354623,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-11",
+     0.12604302906866266,
+     null,
+     null
+    ],
+    [
+     "memory:alarm",
+     0.12194036266136442,
+     null,
+     null
+    ],
+    [
+     "memory:roof",
+     0.12194036266136442,
+     null,
+     null
+    ],
+    [
+     "memory:mortgage",
+     0.12194036266136442,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-16",
+     0.11809635823421108,
+     null,
+     null
+    ],
+    [
+     "memory:bike-store",
+     0.11448730144606879,
+     null,
+     null
+    ],
+    [
+     "memory:shed",
+     0.10248179415157221,
+     null,
+     null
+    ],
+    [
+     "memory:garden",
+     0.09716573566532352,
+     null,
+     null
+    ],
+    [
+     "memory:cleaner",
+     0.09716573566532352,
+     null,
+     null
+    ],
+    [
+     "memory:fridge",
+     0.09716573566532352,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-1",
+     0.09237400075580071,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-14",
+     0.09237400075580071,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-8",
+     0.09237400075580071,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-9",
+     0.09237400075580071,
+     null,
+     null
+    ],
+    [
+     "memory:boiler",
+     0.09237400075580071,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-2",
+     0.09237400075580071,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-13",
+     0.09237400075580071,
+     null,
+     null
+    ],
+    [
+     "memory:tap",
+     0.08803266390565864,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-6",
+     0.08803266390565864,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-4",
+     0.08803266390565864,
+     null,
+     null
+    ],
+    [
+     "memory:damp",
+     0.08408107300715029,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "home",
+   "id": "home-3",
+   "kind": "corroborate",
+   "query": "What are we doing about the damp?",
+   "needed": {
+    "memory:damp": {
+     "stage": "returned",
+     "rank": 2,
+     "bm25": 2.907072313890517,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    },
+    "memory:dehumid": {
+     "stage": "withheld",
+     "rank": 6,
+     "bm25": 1.9719823855785676,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": false,
+    "@5": false,
+    "@10": true
+   },
+   "admitted_count": 29,
+   "top10": [
+    "memory:home-blog",
+    "memory:damp",
+    "memory:filler-home-2",
+    "memory:bike-store",
+    "memory:filler-home-5",
+    "memory:dehumid",
+    "memory:energy-new",
+    "memory:stuff-repairs",
+    "memory:filler-home-11",
+    "memory:alarm"
+   ],
+   "returned": [
+    "memory:damp"
+   ],
+   "extra": [],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 10.9,
+   "admitted_scores": [
+    [
+     "memory:home-blog",
+     3.067140193808967,
+     null,
+     null
+    ],
+    [
+     "memory:damp",
+     2.907072313890517,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-2",
+     2.671147885594889,
+     null,
+     null
+    ],
+    [
+     "memory:bike-store",
+     2.373335892572438,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-5",
+     2.069350414832447,
+     null,
+     null
+    ],
+    [
+     "memory:dehumid",
+     1.9719823855785676,
+     null,
+     null
+    ],
+    [
+     "memory:energy-new",
+     1.9423407790772587,
+     null,
+     null
+    ],
+    [
+     "memory:stuff-repairs",
+     1.9423407790772587,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-11",
+     0.17334700093000915,
+     null,
+     null
+    ],
+    [
+     "memory:alarm",
+     0.16769649921366941,
+     null,
+     null
+    ],
+    [
+     "memory:roof",
+     0.16769649921366941,
+     null,
+     null
+    ],
+    [
+     "memory:mortgage",
+     0.16769649921366941,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-16",
+     0.16240274180017547,
+     null,
+     null
+    ],
+    [
+     "memory:shed",
+     0.1409263086905805,
+     null,
+     null
+    ],
+    [
+     "memory:garden",
+     0.1336065541496369,
+     null,
+     null
+    ],
+    [
+     "memory:cleaner",
+     0.1336065541496369,
+     null,
+     null
+    ],
+    [
+     "memory:fridge",
+     0.1336065541496369,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-1",
+     0.1270096357551883,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-14",
+     0.1270096357551883,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-8",
+     0.1270096357551883,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-9",
+     0.1270096357551883,
+     null,
+     null
+    ],
+    [
+     "memory:boiler",
+     0.1270096357551883,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-13",
+     0.1270096357551883,
+     null,
+     null
+    ],
+    [
+     "memory:sofa",
+     0.12103351984891392,
+     null,
+     null
+    ],
+    [
+     "memory:tap",
+     0.12103351984891392,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-6",
+     0.12103351984891392,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-4",
+     0.12103351984891392,
+     null,
+     null
+    ],
+    [
+     "memory:paint",
+     0.11559451353338936,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-10",
+     0.11559451353338936,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "home",
+   "id": "home-4",
+   "kind": "distractor",
+   "query": "When does the home insurance renew?",
+   "needed": {
+    "memory:insurance-home": {
+     "stage": "returned",
+     "rank": 1,
+     "bm25": 6.485367598922724,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": true,
+    "@5": true,
+    "@10": true
+   },
+   "admitted_count": 28,
+   "top10": [
+    "memory:insurance-home",
+    "memory:filler-home-6",
+    "memory:home-blog",
+    "memory:filler-home-11",
+    "memory:alarm",
+    "memory:roof",
+    "memory:mortgage",
+    "memory:filler-home-16",
+    "memory:bike-store",
+    "memory:shed"
+   ],
+   "returned": [
+    "memory:insurance-home"
+   ],
+   "extra": [],
+   "passed": true,
+   "newer_first": null,
+   "recall_ms": 11.02,
+   "admitted_scores": [
+    [
+     "memory:insurance-home",
+     6.485367598922724,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-6",
+     2.964258125788349,
+     null,
+     null
+    ],
+    [
+     "memory:home-blog",
+     2.4988555230212364,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-11",
+     0.12561141933985123,
+     null,
+     null
+    ],
+    [
+     "memory:alarm",
+     0.12148603452639595,
+     null,
+     null
+    ],
+    [
+     "memory:roof",
+     0.12148603452639595,
+     null,
+     null
+    ],
+    [
+     "memory:mortgage",
+     0.12148603452639595,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-16",
+     0.11762300857047774,
+     null,
+     null
+    ],
+    [
+     "memory:bike-store",
+     0.1139980852294284,
+     null,
+     null
+    ],
+    [
+     "memory:shed",
+     0.10205412118688811,
+     null,
+     null
+    ],
+    [
+     "memory:garden",
+     0.09671740432880639,
+     null,
+     null
+    ],
+    [
+     "memory:cleaner",
+     0.09671740432880639,
+     null,
+     null
+    ],
+    [
+     "memory:fridge",
+     0.09671740432880639,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-5",
+     0.09191109671869808,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-1",
+     0.09191109671869808,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-14",
+     0.09191109671869808,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-8",
+     0.09191109671869808,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-9",
+     0.09191109671869808,
+     null,
+     null
+    ],
+    [
+     "memory:boiler",
+     0.09191109671869808,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-2",
+     0.09191109671869808,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-13",
+     0.09191109671869808,
+     null,
+     null
+    ],
+    [
+     "memory:sofa",
+     0.08755986689094834,
+     null,
+     null
+    ],
+    [
+     "memory:dehumid",
+     0.08755986689094834,
+     null,
+     null
+    ],
+    [
+     "memory:tap",
+     0.08755986689094834,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-4",
+     0.08755986689094834,
+     null,
+     null
+    ],
+    [
+     "memory:paint",
+     0.08360200384942026,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-10",
+     0.08360200384942026,
+     null,
+     null
+    ],
+    [
+     "memory:damp",
+     0.08360200384942026,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "home",
+   "id": "home-5",
+   "kind": "deep",
+   "query": "Where do the bicycles live?",
+   "needed": {
+    "memory:bike-store": {
+     "stage": "withheld",
+     "rank": 6,
+     "bm25": 0.02377405667483152,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": false,
+    "@5": false,
+    "@10": true
+   },
+   "admitted_count": 26,
+   "top10": [
+    "memory:filler-home-11",
+    "memory:alarm",
+    "memory:roof",
+    "memory:mortgage",
+    "memory:filler-home-16",
+    "memory:bike-store",
+    "memory:shed",
+    "memory:garden",
+    "memory:cleaner",
+    "memory:fridge"
+   ],
+   "returned": [
+    "memory:filler-home-11"
+   ],
+   "extra": [
+    "memory:filler-home-11"
+   ],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 11.1,
+   "admitted_scores": [
+    [
+     "memory:filler-home-11",
+     2.993079530799784,
+     null,
+     null
+    ],
+    [
+     "memory:alarm",
+     0.025316799121284813,
+     null,
+     null
+    ],
+    [
+     "memory:roof",
+     0.025316799121284813,
+     null,
+     null
+    ],
+    [
+     "memory:mortgage",
+     0.025316799121284813,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-16",
+     0.024521186578391897,
+     null,
+     null
+    ],
+    [
+     "memory:bike-store",
+     0.02377405667483152,
+     null,
+     null
+    ],
+    [
+     "memory:shed",
+     0.0212802745061429,
+     null,
+     null
+    ],
+    [
+     "memory:garden",
+     0.020179570652376886,
+     null,
+     null
+    ],
+    [
+     "memory:cleaner",
+     0.020179570652376886,
+     null,
+     null
+    ],
+    [
+     "memory:fridge",
+     0.020179570652376886,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-5",
+     0.01918713275144032,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-1",
+     0.01918713275144032,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-14",
+     0.01918713275144032,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-8",
+     0.01918713275144032,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-9",
+     0.01918713275144032,
+     null,
+     null
+    ],
+    [
+     "memory:boiler",
+     0.01918713275144032,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-2",
+     0.01918713275144032,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-13",
+     0.01918713275144032,
+     null,
+     null
+    ],
+    [
+     "memory:sofa",
+     0.018287735903716552,
+     null,
+     null
+    ],
+    [
+     "memory:dehumid",
+     0.018287735903716552,
+     null,
+     null
+    ],
+    [
+     "memory:tap",
+     0.018287735903716552,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-6",
+     0.018287735903716552,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-4",
+     0.018287735903716552,
+     null,
+     null
+    ],
+    [
+     "memory:paint",
+     0.017468882057281483,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-10",
+     0.017468882057281483,
+     null,
+     null
+    ],
+    [
+     "memory:damp",
+     0.017468882057281483,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "home",
+   "id": "home-6",
+   "kind": "conflict",
+   "query": "What electricity tariff are we on?",
+   "needed": {
+    "memory:energy-new": {
+     "stage": "withheld",
+     "rank": 2,
+     "bm25": 2.24442370232262,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "candidate_ref_neutral_digest",
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": true,
+    "@5": true,
+    "@10": true
+   },
+   "admitted_count": 9,
+   "top10": [
+    "memory:energy-old",
+    "memory:energy-new",
+    "memory:filler-home-2",
+    "memory:bike-store",
+    "memory:filler-home-5",
+    "memory:stuff-repairs",
+    "memory:filler-home-13",
+    "memory:dehumid",
+    "memory:mortgage"
+   ],
+   "returned": [
+    "memory:energy-old"
+   ],
+   "extra": [],
+   "passed": false,
+   "newer_first": false,
+   "recall_ms": 7.83,
+   "admitted_scores": [
+    [
+     "memory:energy-old",
+     4.193314699531039,
+     null,
+     null
+    ],
+    [
+     "memory:energy-new",
+     2.24442370232262,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-2",
+     2.24442370232262,
+     null,
+     null
+    ],
+    [
+     "memory:bike-store",
+     1.2412170442585067,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-5",
+     0.8202983853201368,
+     null,
+     null
+    ],
+    [
+     "memory:stuff-repairs",
+     0.8202983853201368,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-13",
+     0.8202983853201368,
+     null,
+     null
+    ],
+    [
+     "memory:dehumid",
+     0.7818913510941651,
+     null,
+     null
+    ],
+    [
+     "memory:mortgage",
+     0.7818913510941651,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "home",
+   "id": "home-7",
+   "kind": "abstention",
+   "query": "How old is the washing machine?",
+   "needed": {},
+   "coverage": {
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "admitted_count": 30,
+   "top10": [
+    "memory:shed",
+    "memory:internet",
+    "memory:filler-home-3",
+    "memory:filler-home-1",
+    "memory:filler-home-6",
+    "memory:filler-home-4",
+    "memory:bike-store",
+    "memory:filler-home-10",
+    "memory:damp",
+    "memory:energy-old"
+   ],
+   "returned": [],
+   "extra": [],
+   "passed": true,
+   "newer_first": null,
+   "recall_ms": 11.16,
+   "admitted_scores": [
+    [
+     "memory:shed",
+     1.2935840807519037,
+     null,
+     null
+    ],
+    [
+     "memory:internet",
+     1.2570605861283874,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-3",
+     1.1828571846734979,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-1",
+     1.1638412494729238,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-6",
+     1.1082634041673547,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-4",
+     1.1082634041673547,
+     null,
+     null
+    ],
+    [
+     "memory:bike-store",
+     1.070798442413134,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-10",
+     1.057751736522995,
+     null,
+     null
+    ],
+    [
+     "memory:damp",
+     1.057751736522995,
+     null,
+     null
+    ],
+    [
+     "memory:energy-old",
+     1.004901330367121,
+     null,
+     null
+    ],
+    [
+     "memory:council-tax",
+     0.9569134705865902,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-11",
+     0.2176328902506721,
+     null,
+     null
+    ],
+    [
+     "memory:alarm",
+     0.2104087839846675,
+     null,
+     null
+    ],
+    [
+     "memory:roof",
+     0.2104087839846675,
+     null,
+     null
+    ],
+    [
+     "memory:mortgage",
+     0.2104087839846675,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-16",
+     0.20364886350919625,
+     null,
+     null
+    ],
+    [
+     "memory:garden",
+     0.16733135011060668,
+     null,
+     null
+    ],
+    [
+     "memory:cleaner",
+     0.16733135011060668,
+     null,
+     null
+    ],
+    [
+     "memory:fridge",
+     0.16733135011060668,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-5",
+     0.15893991910580285,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-14",
+     0.15893991910580285,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-8",
+     0.15893991910580285,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-9",
+     0.15893991910580285,
+     null,
+     null
+    ],
+    [
+     "memory:boiler",
+     0.15893991910580285,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-2",
+     0.15893991910580285,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-13",
+     0.15893991910580285,
+     null,
+     null
+    ],
+    [
+     "memory:sofa",
+     0.15134993358076454,
+     null,
+     null
+    ],
+    [
+     "memory:dehumid",
+     0.15134993358076454,
+     null,
+     null
+    ],
+    [
+     "memory:tap",
+     0.15134993358076454,
+     null,
+     null
+    ],
+    [
+     "memory:paint",
+     0.14445181034193832,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "home",
+   "id": "home-8",
+   "kind": "multi",
+   "query": "What regular bills do we pay for the house?",
+   "needed": {
+    "memory:council-tax": {
+     "stage": "not_discovered",
+     "rank": null,
+     "bm25": null,
+     "corroboration": null,
+     "semantic_route": null,
+     "ordered_before_next_by": null,
+     "cosine": null,
+     "dense_rank": null
+    },
+    "memory:mortgage": {
+     "stage": "withheld",
+     "rank": 10,
+     "bm25": 0.12194036266136442,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    },
+    "memory:internet": {
+     "stage": "not_discovered",
+     "rank": null,
+     "bm25": null,
+     "corroboration": null,
+     "semantic_route": null,
+     "ordered_before_next_by": null,
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "admitted_count": 28,
+   "top10": [
+    "memory:paint",
+    "memory:filler-home-10",
+    "memory:filler-home-5",
+    "memory:energy-new",
+    "memory:stuff-repairs",
+    "memory:dehumid",
+    "memory:filler-home-11",
+    "memory:alarm",
+    "memory:roof",
+    "memory:mortgage"
+   ],
+   "returned": [],
+   "extra": [],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 10.54,
+   "admitted_scores": [
+    [
+     "memory:paint",
+     2.370055902668017,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-10",
+     2.370055902668017,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-5",
+     2.0015348062917315,
+     null,
+     null
+    ],
+    [
+     "memory:energy-new",
+     1.909160805535931,
+     null,
+     null
+    ],
+    [
+     "memory:stuff-repairs",
+     1.909160805535931,
+     null,
+     null
+    ],
+    [
+     "memory:dehumid",
+     1.9074678963354623,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-11",
+     0.12604302906866266,
+     null,
+     null
+    ],
+    [
+     "memory:alarm",
+     0.12194036266136442,
+     null,
+     null
+    ],
+    [
+     "memory:roof",
+     0.12194036266136442,
+     null,
+     null
+    ],
+    [
+     "memory:mortgage",
+     0.12194036266136442,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-16",
+     0.11809635823421108,
+     null,
+     null
+    ],
+    [
+     "memory:bike-store",
+     0.11448730144606879,
+     null,
+     null
+    ],
+    [
+     "memory:shed",
+     0.10248179415157221,
+     null,
+     null
+    ],
+    [
+     "memory:garden",
+     0.09716573566532352,
+     null,
+     null
+    ],
+    [
+     "memory:cleaner",
+     0.09716573566532352,
+     null,
+     null
+    ],
+    [
+     "memory:fridge",
+     0.09716573566532352,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-1",
+     0.09237400075580071,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-14",
+     0.09237400075580071,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-8",
+     0.09237400075580071,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-9",
+     0.09237400075580071,
+     null,
+     null
+    ],
+    [
+     "memory:boiler",
+     0.09237400075580071,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-2",
+     0.09237400075580071,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-13",
+     0.09237400075580071,
+     null,
+     null
+    ],
+    [
+     "memory:sofa",
+     0.08803266390565864,
+     null,
+     null
+    ],
+    [
+     "memory:tap",
+     0.08803266390565864,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-6",
+     0.08803266390565864,
+     null,
+     null
+    ],
+    [
+     "memory:filler-home-4",
+     0.08803266390565864,
+     null,
+     null
+    ],
+    [
+     "memory:damp",
+     0.08408107300715029,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "family",
+   "id": "family-1",
+   "kind": "multi",
+   "query": "Whose birthdays are coming up?",
+   "needed": {
+    "memory:mum-bday": {
+     "stage": "withheld",
+     "rank": 4,
+     "bm25": 0.0,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": null,
+     "cosine": null,
+     "dense_rank": null
+    },
+    "memory:dad-bday": {
+     "stage": "not_discovered",
+     "rank": null,
+     "bm25": null,
+     "corroboration": null,
+     "semantic_route": null,
+     "ordered_before_next_by": null,
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "admitted_count": 4,
+   "top10": [
+    "memory:stuff-bdays",
+    "memory:filler-family-1",
+    "memory:family-article",
+    "memory:mum-bday"
+   ],
+   "returned": [
+    "memory:stuff-bdays"
+   ],
+   "extra": [],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 7.24,
+   "admitted_scores": [
+    [
+     "memory:stuff-bdays",
+     4.0449606726201175,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-1",
+     0.7018477727845471,
+     null,
+     null
+    ],
+    [
+     "memory:family-article",
+     0.6682932975916603,
+     null,
+     null
+    ],
+    [
+     "memory:mum-bday",
+     0.0,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "family",
+   "id": "family-2",
+   "kind": "multi",
+   "query": "What dietary needs should I plan for when the family visits?",
+   "needed": {
+    "memory:allergy-ella": {
+     "stage": "not_discovered",
+     "rank": null,
+     "bm25": null,
+     "corroboration": null,
+     "semantic_route": null,
+     "ordered_before_next_by": null,
+     "cosine": null,
+     "dense_rank": null
+    },
+    "memory:veg-jo": {
+     "stage": "not_discovered",
+     "rank": null,
+     "bm25": null,
+     "corroboration": null,
+     "semantic_route": null,
+     "ordered_before_next_by": null,
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "admitted_count": 24,
+   "top10": [
+    "memory:filler-family-11",
+    "memory:filler-family-5",
+    "memory:filler-family-15",
+    "memory:stuff-bdays",
+    "memory:filler-family-9",
+    "memory:family-chat",
+    "memory:family-article",
+    "memory:filler-family-6",
+    "memory:babysit",
+    "memory:filler-family-14"
+   ],
+   "returned": [
+    "memory:filler-family-11",
+    "memory:family-chat",
+    "memory:family-article",
+    "memory:visit-grandma"
+   ],
+   "extra": [
+    "memory:filler-family-11",
+    "memory:family-chat",
+    "memory:family-article",
+    "memory:visit-grandma"
+   ],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 15.42,
+   "admitted_scores": [
+    [
+     "memory:filler-family-11",
+     4.000245625486381,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-5",
+     3.069625199620287,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-15",
+     3.0649423328966785,
+     null,
+     null
+    ],
+    [
+     "memory:stuff-bdays",
+     3.0104589381673543,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-9",
+     2.930331282998863,
+     null,
+     null
+    ],
+    [
+     "memory:family-chat",
+     2.5749877118187117,
+     null,
+     null
+    ],
+    [
+     "memory:family-article",
+     2.2296158470893053,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-6",
+     1.810370115100819,
+     null,
+     null
+    ],
+    [
+     "memory:babysit",
+     1.7100005193970773,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-14",
+     1.6201755893898377,
+     null,
+     null
+    ],
+    [
+     "memory:friend-maya",
+     1.585425997091956,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-10",
+     0.496008139484963,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-8",
+     0.3626085382001901,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-1",
+     0.3626085382001901,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-4",
+     0.3626085382001901,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-7",
+     0.3626085382001901,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-12",
+     0.3626085382001901,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-0",
+     0.3626085382001901,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-13",
+     0.3626085382001901,
+     null,
+     null
+    ],
+    [
+     "memory:friend-tom",
+     0.3453718647294064,
+     null,
+     null
+    ],
+    [
+     "memory:mum-bday",
+     0.3453718647294064,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-3",
+     0.3453718647294064,
+     null,
+     null
+    ],
+    [
+     "memory:recipe-mum",
+     0.3453718647294064,
+     null,
+     null
+    ],
+    [
+     "memory:visit-grandma",
+     0.0,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "family",
+   "id": "family-3",
+   "kind": "corroborate",
+   "query": "How is Grandma and when do we see her?",
+   "needed": {
+    "memory:grandma": {
+     "stage": "returned",
+     "rank": 3,
+     "bm25": 2.1443773242976887,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "candidate_ref_neutral_digest",
+     "cosine": null,
+     "dense_rank": null
+    },
+    "memory:visit-grandma": {
+     "stage": "returned",
+     "rank": 1,
+     "bm25": 4.771390370225367,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": true,
+    "@5": true,
+    "@10": true
+   },
+   "admitted_count": 20,
+   "top10": [
+    "memory:visit-grandma",
+    "memory:filler-family-5",
+    "memory:grandma",
+    "memory:filler-family-4",
+    "memory:christmas-old",
+    "memory:dog-sam",
+    "memory:family-article",
+    "memory:friend-maya",
+    "memory:veg-jo",
+    "memory:filler-family-2"
+   ],
+   "returned": [
+    "memory:visit-grandma",
+    "memory:grandma"
+   ],
+   "extra": [],
+   "passed": true,
+   "newer_first": null,
+   "recall_ms": 12.45,
+   "admitted_scores": [
+    [
+     "memory:visit-grandma",
+     4.771390370225367,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-5",
+     2.886285099982075,
+     null,
+     null
+    ],
+    [
+     "memory:grandma",
+     2.1443773242976887,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-4",
+     2.1443773242976887,
+     null,
+     null
+    ],
+    [
+     "memory:christmas-old",
+     1.8326280614252841,
+     null,
+     null
+    ],
+    [
+     "memory:dog-sam",
+     1.5521314742445844,
+     null,
+     null
+    ],
+    [
+     "memory:family-article",
+     1.4774099804323282,
+     null,
+     null
+    ],
+    [
+     "memory:friend-maya",
+     1.2909642245469681,
+     null,
+     null
+    ],
+    [
+     "memory:veg-jo",
+     0.499496203397015,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-2",
+     0.43993388699326363,
+     null,
+     null
+    ],
+    [
+     "memory:allergy-ella",
+     0.43993388699326363,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-0",
+     0.3731835922541902,
+     null,
+     null
+    ],
+    [
+     "memory:friend-tom",
+     0.35521808099295604,
+     null,
+     null
+    ],
+    [
+     "memory:family-chat",
+     0.35521808099295604,
+     null,
+     null
+    ],
+    [
+     "memory:mum-bday",
+     0.35521808099295604,
+     null,
+     null
+    ],
+    [
+     "memory:wedding",
+     0.35521808099295604,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-3",
+     0.35521808099295604,
+     null,
+     null
+    ],
+    [
+     "memory:phone-dad",
+     0.35521808099295604,
+     null,
+     null
+    ],
+    [
+     "memory:recipe-mum",
+     0.35521808099295604,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-9",
+     0.33890288462175633,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "family",
+   "id": "family-4",
+   "kind": "distractor",
+   "query": "What could I get Dad as a present?",
+   "needed": {
+    "memory:gift-dad": {
+     "stage": "returned",
+     "rank": 3,
+     "bm25": 2.1722586542502675,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": true,
+    "@5": true,
+    "@10": true
+   },
+   "admitted_count": 17,
+   "top10": [
+    "memory:stuff-bdays",
+    "memory:filler-family-3",
+    "memory:gift-dad",
+    "memory:filler-family-11",
+    "memory:dad-bday",
+    "memory:filler-family-6",
+    "memory:christmas-old",
+    "memory:phone-dad",
+    "memory:babysit",
+    "memory:filler-family-14"
+   ],
+   "returned": [
+    "memory:gift-dad",
+    "memory:dad-bday",
+    "memory:christmas-old",
+    "memory:phone-dad",
+    "memory:wedding"
+   ],
+   "extra": [
+    "memory:christmas-old",
+    "memory:phone-dad",
+    "memory:wedding"
+   ],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 9.84,
+   "admitted_scores": [
+    [
+     "memory:stuff-bdays",
+     2.6403212422000366,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-3",
+     2.3865717760840788,
+     null,
+     null
+    ],
+    [
+     "memory:gift-dad",
+     2.1722586542502675,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-11",
+     1.8887685251452182,
+     null,
+     null
+    ],
+    [
+     "memory:dad-bday",
+     1.6482457839442557,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-6",
+     1.409656753336457,
+     null,
+     null
+    ],
+    [
+     "memory:christmas-old",
+     1.331434722457483,
+     null,
+     null
+    ],
+    [
+     "memory:phone-dad",
+     1.331434722457483,
+     null,
+     null
+    ],
+    [
+     "memory:babysit",
+     1.3305090530573827,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-14",
+     1.2597766398823376,
+     null,
+     null
+    ],
+    [
+     "memory:friend-maya",
+     0.9952339197313664,
+     null,
+     null
+    ],
+    [
+     "memory:gift-mum",
+     0.8832673701181872,
+     null,
+     null
+    ],
+    [
+     "memory:dog-sam",
+     0.8832673701181872,
+     null,
+     null
+    ],
+    [
+     "memory:grandma",
+     0.8832673701181872,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-7",
+     0.8832673701181872,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-9",
+     0.8022725198766035,
+     null,
+     null
+    ],
+    [
+     "memory:wedding",
+     0.0,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "family",
+   "id": "family-5",
+   "kind": "deep",
+   "query": "Who is leaving the country soon?",
+   "needed": {
+    "memory:friend-tom": {
+     "stage": "withheld",
+     "rank": 2,
+     "bm25": 0.7908121358921667,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "candidate_ref_neutral_digest",
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": true,
+    "@5": true,
+    "@10": true
+   },
+   "admitted_count": 23,
+   "top10": [
+    "memory:filler-family-0",
+    "memory:friend-tom",
+    "memory:family-chat",
+    "memory:mum-bday",
+    "memory:filler-family-3",
+    "memory:recipe-mum",
+    "memory:filler-family-5",
+    "memory:filler-family-9",
+    "memory:veg-jo",
+    "memory:filler-family-2"
+   ],
+   "returned": [],
+   "extra": [],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 11.58,
+   "admitted_scores": [
+    [
+     "memory:filler-family-0",
+     0.8304869085847693,
+     null,
+     null
+    ],
+    [
+     "memory:friend-tom",
+     0.7908121358921667,
+     null,
+     null
+    ],
+    [
+     "memory:family-chat",
+     0.7908121358921667,
+     null,
+     null
+    ],
+    [
+     "memory:mum-bday",
+     0.7908121358921667,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-3",
+     0.7908121358921667,
+     null,
+     null
+    ],
+    [
+     "memory:recipe-mum",
+     0.7908121358921667,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-5",
+     0.7908121358921667,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-9",
+     0.7547552830001669,
+     null,
+     null
+    ],
+    [
+     "memory:veg-jo",
+     0.6814376112104571,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-2",
+     0.6009482614127027,
+     null,
+     null
+    ],
+    [
+     "memory:allergy-ella",
+     0.6009482614127027,
+     null,
+     null
+    ],
+    [
+     "memory:christmas-old",
+     0.48611208314136234,
+     null,
+     null
+    ],
+    [
+     "memory:wedding",
+     0.48611208314136234,
+     null,
+     null
+    ],
+    [
+     "memory:phone-dad",
+     0.48611208314136234,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-10",
+     0.43818962116469795,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-15",
+     0.41002028837553883,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-8",
+     0.31998674953204914,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-1",
+     0.31998674953204914,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-4",
+     0.31998674953204914,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-7",
+     0.31998674953204914,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-12",
+     0.31998674953204914,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-13",
+     0.31998674953204914,
+     null,
+     null
+    ],
+    [
+     "memory:friend-maya",
+     0.26650491089407247,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "family",
+   "id": "family-6",
+   "kind": "conflict",
+   "query": "Where are we spending Christmas?",
+   "needed": {
+    "memory:christmas-new": {
+     "stage": "returned",
+     "rank": 5,
+     "bm25": 0.9704890404424045,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "candidate_ref_neutral_digest",
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": false,
+    "@5": true,
+    "@10": true
+   },
+   "admitted_count": 6,
+   "top10": [
+    "memory:visit-grandma",
+    "memory:stuff-bdays",
+    "memory:filler-family-1",
+    "memory:filler-family-4",
+    "memory:christmas-new",
+    "memory:christmas-old"
+   ],
+   "returned": [
+    "memory:christmas-new",
+    "memory:christmas-old"
+   ],
+   "extra": [],
+   "passed": true,
+   "newer_first": true,
+   "recall_ms": 9.06,
+   "admitted_scores": [
+    [
+     "memory:visit-grandma",
+     1.138637943706222,
+     null,
+     null
+    ],
+    [
+     "memory:stuff-bdays",
+     1.0764676211985014,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-1",
+     1.020734877627342,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-4",
+     1.020734877627342,
+     null,
+     null
+    ],
+    [
+     "memory:christmas-new",
+     0.9704890404424045,
+     null,
+     null
+    ],
+    [
+     "memory:christmas-old",
+     0.9704890404424045,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "family",
+   "id": "family-7",
+   "kind": "abstention",
+   "query": "What is Maya's surname?",
+   "needed": {},
+   "coverage": {
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "admitted_count": 15,
+   "top10": [
+    "memory:stuff-bdays",
+    "memory:filler-family-0",
+    "memory:christmas-old",
+    "memory:mum-bday",
+    "memory:filler-family-3",
+    "memory:phone-dad",
+    "memory:recipe-mum",
+    "memory:veg-jo",
+    "memory:filler-family-2",
+    "memory:allergy-ella"
+   ],
+   "returned": [],
+   "extra": [],
+   "passed": true,
+   "newer_first": null,
+   "recall_ms": 10.33,
+   "admitted_scores": [
+    [
+     "memory:stuff-bdays",
+     2.4868096395652386,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-0",
+     0.9958033065551869,
+     null,
+     null
+    ],
+    [
+     "memory:christmas-old",
+     0.9471308060537569,
+     null,
+     null
+    ],
+    [
+     "memory:mum-bday",
+     0.9471308060537569,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-3",
+     0.9471308060537569,
+     null,
+     null
+    ],
+    [
+     "memory:phone-dad",
+     0.9471308060537569,
+     null,
+     null
+    ],
+    [
+     "memory:recipe-mum",
+     0.9471308060537569,
+     null,
+     null
+    ],
+    [
+     "memory:veg-jo",
+     0.13202669601695446,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-2",
+     0.1159838481661094,
+     null,
+     null
+    ],
+    [
+     "memory:allergy-ella",
+     0.1159838481661094,
+     null,
+     null
+    ],
+    [
+     "memory:friend-tom",
+     0.09330778806122199,
+     null,
+     null
+    ],
+    [
+     "memory:family-chat",
+     0.09330778806122199,
+     null,
+     null
+    ],
+    [
+     "memory:wedding",
+     0.09330778806122199,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-5",
+     0.09330778806122199,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-9",
+     0.0889596515792527,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "family",
+   "id": "family-8",
+   "kind": "multi",
+   "query": "What do I do regularly with friends and family each week or month?",
+   "needed": {
+    "memory:friend-maya": {
+     "stage": "withheld",
+     "rank": 1,
+     "bm25": 5.340447608709509,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    },
+    "memory:visit-grandma": {
+     "stage": "not_discovered",
+     "rank": null,
+     "bm25": null,
+     "corroboration": null,
+     "semantic_route": null,
+     "ordered_before_next_by": null,
+     "cosine": null,
+     "dense_rank": null
+    },
+    "memory:babysit": {
+     "stage": "withheld",
+     "rank": 10,
+     "bm25": 0.9778579732323516,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "admitted_count": 12,
+   "top10": [
+    "memory:friend-maya",
+    "memory:family-article",
+    "memory:stuff-bdays",
+    "memory:family-chat",
+    "memory:brother",
+    "memory:filler-family-15",
+    "memory:dog-sam",
+    "memory:christmas-old",
+    "memory:filler-family-6",
+    "memory:babysit"
+   ],
+   "returned": [
+    "memory:family-article",
+    "memory:family-chat"
+   ],
+   "extra": [
+    "memory:family-article",
+    "memory:family-chat"
+   ],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 10.04,
+   "admitted_scores": [
+    [
+     "memory:friend-maya",
+     5.340447608709509,
+     null,
+     null
+    ],
+    [
+     "memory:family-article",
+     2.6458601547414333,
+     null,
+     null
+    ],
+    [
+     "memory:stuff-bdays",
+     2.3275132831647305,
+     null,
+     null
+    ],
+    [
+     "memory:family-chat",
+     1.609917300181934,
+     null,
+     null
+    ],
+    [
+     "memory:brother",
+     1.5376516857099274,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-15",
+     1.5376516857099274,
+     null,
+     null
+    ],
+    [
+     "memory:dog-sam",
+     1.087030447387091,
+     null,
+     null
+    ],
+    [
+     "memory:christmas-old",
+     1.0359428545594993,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-6",
+     1.034454254641298,
+     null,
+     null
+    ],
+    [
+     "memory:babysit",
+     0.9778579732323516,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-14",
+     0.927133352142489,
+     null,
+     null
+    ],
+    [
+     "memory:filler-family-11",
+     0.8022824767916302,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "hobby",
+   "id": "hobby-1",
+   "kind": "multi",
+   "query": "What am I learning at the moment?",
+   "needed": {
+    "memory:guitar": {
+     "stage": "returned",
+     "rank": 1,
+     "bm25": 3.3950817549954153,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "explicit_current_unknown_tie_content_identity",
+     "cosine": null,
+     "dense_rank": null
+    },
+    "memory:spanish": {
+     "stage": "not_discovered",
+     "rank": null,
+     "bm25": null,
+     "corroboration": null,
+     "semantic_route": null,
+     "ordered_before_next_by": null,
+     "cosine": null,
+     "dense_rank": null
+    },
+    "memory:course": {
+     "stage": "withheld",
+     "rank": 4,
+     "bm25": 1.996289914952625,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "admitted_count": 25,
+   "top10": [
+    "memory:guitar",
+    "memory:filler-hobby-6",
+    "memory:filler-hobby-7",
+    "memory:course",
+    "memory:bike-club-old",
+    "memory:filler-hobby-5",
+    "memory:bike-club-new",
+    "memory:filler-hobby-13",
+    "memory:piano-old",
+    "memory:filler-hobby-10"
+   ],
+   "returned": [
+    "memory:guitar"
+   ],
+   "extra": [],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 12.73,
+   "admitted_scores": [
+    [
+     "memory:guitar",
+     3.3950817549954153,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-6",
+     2.1998544881972846,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-7",
+     2.1998544881972846,
+     null,
+     null
+    ],
+    [
+     "memory:course",
+     1.996289914952625,
+     null,
+     null
+    ],
+    [
+     "memory:bike-club-old",
+     1.6644141539738049,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-5",
+     1.6399662024805126,
+     null,
+     null
+    ],
+    [
+     "memory:bike-club-new",
+     1.5029250704705248,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-13",
+     1.4637520689761596,
+     null,
+     null
+    ],
+    [
+     "memory:piano-old",
+     1.3891216099868926,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-10",
+     1.2605785862373342,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-9",
+     0.26167610523747115,
+     null,
+     null
+    ],
+    [
+     "memory:book-club",
+     0.25281973885984915,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-14",
+     0.2445432306038523,
+     null,
+     null
+    ],
+    [
+     "memory:garden-h",
+     0.2248188368031403,
+     null,
+     null
+    ],
+    [
+     "memory:strings",
+     0.2006620849976453,
+     null,
+     null
+    ],
+    [
+     "memory:stuff-hobbies",
+     0.2006620849976453,
+     null,
+     null
+    ],
+    [
+     "memory:podcast-h",
+     0.19043118331523648,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-3",
+     0.19043118331523648,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-12",
+     0.19043118331523648,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-11",
+     0.19043118331523648,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-0",
+     0.19043118331523648,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-2",
+     0.18119293056708463,
+     null,
+     null
+    ],
+    [
+     "memory:run-race",
+     0.18119293056708463,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-4",
+     0.18119293056708463,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-8",
+     0.1728095438968,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "hobby",
+   "id": "hobby-2",
+   "kind": "multi",
+   "query": "Which sports do I do each week?",
+   "needed": {
+    "memory:climb": {
+     "stage": "not_discovered",
+     "rank": null,
+     "bm25": null,
+     "corroboration": null,
+     "semantic_route": null,
+     "ordered_before_next_by": null,
+     "cosine": null,
+     "dense_rank": null
+    },
+    "memory:swim": {
+     "stage": "not_discovered",
+     "rank": null,
+     "bm25": null,
+     "corroboration": null,
+     "semantic_route": null,
+     "ordered_before_next_by": null,
+     "cosine": null,
+     "dense_rank": null
+    },
+    "memory:bike-club-new": {
+     "stage": "not_discovered",
+     "rank": null,
+     "bm25": null,
+     "corroboration": null,
+     "semantic_route": null,
+     "ordered_before_next_by": null,
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "admitted_count": 5,
+   "top10": [
+    "memory:filler-hobby-5",
+    "memory:bike-club-old",
+    "memory:filler-hobby-13",
+    "memory:piano-old",
+    "memory:filler-hobby-10"
+   ],
+   "returned": [],
+   "extra": [],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 7.72,
+   "admitted_scores": [
+    [
+     "memory:filler-hobby-5",
+     0.10032189924866657,
+     null,
+     null
+    ],
+    [
+     "memory:bike-club-old",
+     0.08897897094165651,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-13",
+     0.08897897094165651,
+     null,
+     null
+    ],
+    [
+     "memory:piano-old",
+     0.08421790828722782,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-10",
+     0.07607654228738839,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "hobby",
+   "id": "hobby-3",
+   "kind": "corroborate",
+   "query": "How is the guitar going and who teaches me?",
+   "needed": {
+    "memory:guitar": {
+     "stage": "returned",
+     "rank": 2,
+     "bm25": 2.8751798533161135,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    },
+    "memory:lessons": {
+     "stage": "returned",
+     "rank": 3,
+     "bm25": 2.4799960178411102,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": true,
+    "@5": true,
+    "@10": true
+   },
+   "admitted_count": 26,
+   "top10": [
+    "memory:sketch",
+    "memory:guitar",
+    "memory:lessons",
+    "memory:filler-hobby-1",
+    "memory:book-club",
+    "memory:filler-hobby-2",
+    "memory:filler-hobby-4",
+    "memory:chess",
+    "memory:filler-hobby-8",
+    "memory:filler-hobby-9"
+   ],
+   "returned": [
+    "memory:guitar",
+    "memory:lessons",
+    "memory:filler-hobby-13"
+   ],
+   "extra": [
+    "memory:filler-hobby-13"
+   ],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 12.4,
+   "admitted_scores": [
+    [
+     "memory:sketch",
+     3.383775577473803,
+     null,
+     null
+    ],
+    [
+     "memory:guitar",
+     2.8751798533161135,
+     null,
+     null
+    ],
+    [
+     "memory:lessons",
+     2.4799960178411102,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-1",
+     1.66712596374409,
+     null,
+     null
+    ],
+    [
+     "memory:book-club",
+     1.6372083234357677,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-2",
+     1.551285280465344,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-4",
+     1.551285280465344,
+     null,
+     null
+    ],
+    [
+     "memory:chess",
+     1.484148723820958,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-8",
+     1.4781880682968205,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-9",
+     0.3106080972044934,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-14",
+     0.2898001113053089,
+     null,
+     null
+    ],
+    [
+     "memory:garden-h",
+     0.266668016014079,
+     null,
+     null
+    ],
+    [
+     "memory:stuff-hobbies",
+     0.23739957523204594,
+     null,
+     null
+    ],
+    [
+     "memory:bike-club-old",
+     0.23739957523204594,
+     null,
+     null
+    ],
+    [
+     "memory:strings",
+     0.23739957523204594,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-7",
+     0.22504930831245978,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-12",
+     0.22504930831245978,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-3",
+     0.22504930831245978,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-11",
+     0.22504930831245978,
+     null,
+     null
+    ],
+    [
+     "memory:podcast-h",
+     0.22504930831245978,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-0",
+     0.22504930831245978,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-6",
+     0.22504930831245978,
+     null,
+     null
+    ],
+    [
+     "memory:bike-club-new",
+     0.2139204963629425,
+     null,
+     null
+    ],
+    [
+     "memory:run-race",
+     0.2139204963629425,
+     null,
+     null
+    ],
+    [
+     "memory:course",
+     0.20384047297411276,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-13",
+     0.0,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "hobby",
+   "id": "hobby-4",
+   "kind": "distractor",
+   "query": "What race have I entered?",
+   "needed": {
+    "memory:run-race": {
+     "stage": "not_discovered",
+     "rank": null,
+     "bm25": null,
+     "corroboration": null,
+     "semantic_route": null,
+     "ordered_before_next_by": null,
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "admitted_count": 5,
+   "top10": [
+    "memory:filler-hobby-5",
+    "memory:bike-club-old",
+    "memory:filler-hobby-13",
+    "memory:piano-old",
+    "memory:filler-hobby-10"
+   ],
+   "returned": [],
+   "extra": [],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 8.13,
+   "admitted_scores": [
+    [
+     "memory:filler-hobby-5",
+     0.10032189924866657,
+     null,
+     null
+    ],
+    [
+     "memory:bike-club-old",
+     0.08897897094165651,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-13",
+     0.08897897094165651,
+     null,
+     null
+    ],
+    [
+     "memory:piano-old",
+     0.08421790828722782,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-10",
+     0.07607654228738839,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "hobby",
+   "id": "hobby-5",
+   "kind": "deep",
+   "query": "What is the reading group doing?",
+   "needed": {
+    "memory:book-club": {
+     "stage": "returned",
+     "rank": 1,
+     "bm25": 4.149048121528404,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": true,
+    "@5": true,
+    "@10": true
+   },
+   "admitted_count": 24,
+   "top10": [
+    "memory:book-club",
+    "memory:bike-club-new",
+    "memory:spanish",
+    "memory:filler-hobby-1",
+    "memory:filler-hobby-2",
+    "memory:filler-hobby-4",
+    "memory:chess",
+    "memory:filler-hobby-8",
+    "memory:filler-hobby-9",
+    "memory:filler-hobby-14"
+   ],
+   "returned": [
+    "memory:book-club",
+    "memory:bike-club-new"
+   ],
+   "extra": [
+    "memory:bike-club-new"
+   ],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 10.6,
+   "admitted_scores": [
+    [
+     "memory:book-club",
+     4.149048121528404,
+     null,
+     null
+    ],
+    [
+     "memory:bike-club-new",
+     2.8135779567405454,
+     null,
+     null
+    ],
+    [
+     "memory:spanish",
+     2.807397727814219,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-1",
+     1.5886622140768156,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-2",
+     1.421766715929617,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-4",
+     1.421766715929617,
+     null,
+     null
+    ],
+    [
+     "memory:chess",
+     1.4168719571353425,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-8",
+     1.3556237888047413,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-9",
+     0.2070765504540829,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-14",
+     0.19342523505714046,
+     null,
+     null
+    ],
+    [
+     "memory:garden-h",
+     0.17787195696455815,
+     null,
+     null
+    ],
+    [
+     "memory:guitar",
+     0.167705155507997,
+     null,
+     null
+    ],
+    [
+     "memory:stuff-hobbies",
+     0.15863774284473608,
+     null,
+     null
+    ],
+    [
+     "memory:bike-club-old",
+     0.15863774284473608,
+     null,
+     null
+    ],
+    [
+     "memory:strings",
+     0.15863774284473608,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-7",
+     0.1505005420718881,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-12",
+     0.1505005420718881,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-3",
+     0.1505005420718881,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-11",
+     0.1505005420718881,
+     null,
+     null
+    ],
+    [
+     "memory:podcast-h",
+     0.1505005420718881,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-0",
+     0.1505005420718881,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-6",
+     0.1505005420718881,
+     null,
+     null
+    ],
+    [
+     "memory:run-race",
+     0.14315739387050389,
+     null,
+     null
+    ],
+    [
+     "memory:course",
+     0.1364974763438985,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "hobby",
+   "id": "hobby-6",
+   "kind": "conflict",
+   "query": "When do I go cycling with the club?",
+   "needed": {
+    "memory:bike-club-new": {
+     "stage": "returned",
+     "rank": 3,
+     "bm25": 4.0153269564472645,
+     "corroboration": 1,
+     "semantic_route": null,
+     "ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": true,
+    "@5": true,
+    "@10": true
+   },
+   "admitted_count": 28,
+   "top10": [
+    "memory:bike-club-old",
+    "memory:filler-hobby-13",
+    "memory:bike-club-new",
+    "memory:climb",
+    "memory:filler-hobby-4",
+    "memory:book-club",
+    "memory:sketch",
+    "memory:filler-hobby-14",
+    "memory:filler-hobby-5",
+    "memory:lessons"
+   ],
+   "returned": [
+    "memory:bike-club-old",
+    "memory:filler-hobby-13",
+    "memory:bike-club-new"
+   ],
+   "extra": [
+    "memory:filler-hobby-13"
+   ],
+   "passed": false,
+   "newer_first": false,
+   "recall_ms": 11.17,
+   "admitted_scores": [
+    [
+     "memory:bike-club-old",
+     8.412111657665768,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-13",
+     4.673606019208766,
+     null,
+     null
+    ],
+    [
+     "memory:bike-club-new",
+     4.0153269564472645,
+     null,
+     null
+    ],
+    [
+     "memory:climb",
+     3.7562212872777194,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-4",
+     3.0840964646074567,
+     null,
+     null
+    ],
+    [
+     "memory:book-club",
+     2.395620472612542,
+     null,
+     null
+    ],
+    [
+     "memory:sketch",
+     1.955796540268815,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-14",
+     1.8815740128193421,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-5",
+     1.759276588748778,
+     null,
+     null
+    ],
+    [
+     "memory:lessons",
+     1.7432191289478143,
+     null,
+     null
+    ],
+    [
+     "memory:piano-old",
+     1.4872346372057064,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-10",
+     1.3482459004818652,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-9",
+     0.4098940568459192,
+     null,
+     null
+    ],
+    [
+     "memory:garden-h",
+     0.3520249104221123,
+     null,
+     null
+    ],
+    [
+     "memory:guitar",
+     0.3317945164822326,
+     null,
+     null
+    ],
+    [
+     "memory:stuff-hobbies",
+     0.31376298356148163,
+     null,
+     null
+    ],
+    [
+     "memory:strings",
+     0.31376298356148163,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-7",
+     0.297590295515359,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-12",
+     0.297590295515359,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-3",
+     0.297590295515359,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-11",
+     0.297590295515359,
+     null,
+     null
+    ],
+    [
+     "memory:podcast-h",
+     0.297590295515359,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-0",
+     0.297590295515359,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-6",
+     0.297590295515359,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-2",
+     0.28300310343796736,
+     null,
+     null
+    ],
+    [
+     "memory:run-race",
+     0.28300310343796736,
+     null,
+     null
+    ],
+    [
+     "memory:course",
+     0.269779149782049,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-8",
+     0.269779149782049,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "hobby",
+   "id": "hobby-7",
+   "kind": "abstention",
+   "query": "What grade did I get in my piano exam?",
+   "needed": {},
+   "coverage": {
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "admitted_count": 13,
+   "top10": [
+    "memory:piano-old",
+    "memory:filler-hobby-10",
+    "memory:filler-hobby-1",
+    "memory:stuff-hobbies",
+    "memory:chess",
+    "memory:filler-hobby-5",
+    "memory:bike-club-old",
+    "memory:filler-hobby-13",
+    "memory:filler-hobby-12",
+    "memory:filler-hobby-9"
+   ],
+   "returned": [
+    "memory:piano-old"
+   ],
+   "extra": [],
+   "passed": true,
+   "newer_first": null,
+   "recall_ms": 9.75,
+   "admitted_scores": [
+    [
+     "memory:piano-old",
+     3.103773898987492,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-10",
+     1.8343149420960732,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-1",
+     1.3205054987838187,
+     null,
+     null
+    ],
+    [
+     "memory:stuff-hobbies",
+     1.1737826655856167,
+     null,
+     null
+    ],
+    [
+     "memory:chess",
+     1.1737826655856167,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-5",
+     1.0870328627172774,
+     null,
+     null
+    ],
+    [
+     "memory:bike-club-old",
+     0.9662514335264688,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-13",
+     0.9662514335264688,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-12",
+     0.9153960949198124,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-9",
+     0.9153960949198124,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-3",
+     0.9153960949198124,
+     null,
+     null
+    ],
+    [
+     "memory:run-race",
+     0.8696262901738218,
+     null,
+     null
+    ],
+    [
+     "memory:course",
+     0.828215514451259,
+     null,
+     null
+    ]
+   ]
+  },
+  {
+   "scenario": "hobby",
+   "id": "hobby-8",
+   "kind": "multi",
+   "query": "What creative things do I do?",
+   "needed": {
+    "memory:photo": {
+     "stage": "not_discovered",
+     "rank": null,
+     "bm25": null,
+     "corroboration": null,
+     "semantic_route": null,
+     "ordered_before_next_by": null,
+     "cosine": null,
+     "dense_rank": null
+    },
+    "memory:sketch": {
+     "stage": "not_discovered",
+     "rank": null,
+     "bm25": null,
+     "corroboration": null,
+     "semantic_route": null,
+     "ordered_before_next_by": null,
+     "cosine": null,
+     "dense_rank": null
+    },
+    "memory:course": {
+     "stage": "not_discovered",
+     "rank": null,
+     "bm25": null,
+     "corroboration": null,
+     "semantic_route": null,
+     "ordered_before_next_by": null,
+     "cosine": null,
+     "dense_rank": null
+    }
+   },
+   "coverage": {
+    "@3": false,
+    "@5": false,
+    "@10": false
+   },
+   "admitted_count": 5,
+   "top10": [
+    "memory:filler-hobby-5",
+    "memory:bike-club-old",
+    "memory:filler-hobby-13",
+    "memory:piano-old",
+    "memory:filler-hobby-10"
+   ],
+   "returned": [],
+   "extra": [],
+   "passed": false,
+   "newer_first": null,
+   "recall_ms": 8.09,
+   "admitted_scores": [
+    [
+     "memory:filler-hobby-5",
+     0.10032189924866657,
+     null,
+     null
+    ],
+    [
+     "memory:bike-club-old",
+     0.08897897094165651,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-13",
+     0.08897897094165651,
+     null,
+     null
+    ],
+    [
+     "memory:piano-old",
+     0.08421790828722782,
+     null,
+     null
+    ],
+    [
+     "memory:filler-hobby-10",
+     0.07607654228738839,
+     null,
+     null
+    ]
+   ]
+  }
+ ]
+}

@@ -1,0 +1,703 @@
+{
+ "agent_memory_revision": "d05bf2b1304ca36a6211d472179bde8b11bfd335",
+ "budget": 10,
+ "cohort_sha256": "5a296a7541db7864676f61120956fd6e923aa1a98f03cd8a738e9ed2471d8ce7",
+ "reference_worktree_dirty": false,
+ "return_selection": "ranked_prefix",
+ "runner": "scripts/run_memory_quality_scenarios.py",
+ "scenarios": [
+  {
+   "category": "c6-diagnostic",
+   "id": "pets",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 770.238,
+     "id": "pets-1",
+     "kind": "multi",
+     "must_include_count": 3,
+     "passed": false,
+     "precision": 0.3333333333333333,
+     "recall": 0.3333333333333333,
+     "returned": [
+      "memory:fish",
+      "memory:pets-n2",
+      "memory:pets-n8"
+     ],
+     "returned_count": 3,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 506.949,
+     "id": "pets-2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.25,
+     "recall": 1.0,
+     "returned": [
+      "memory:dog",
+      "memory:pets-n9",
+      "memory:pets-n19",
+      "memory:vet"
+     ],
+     "returned_count": 4,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 25,
+     "elapsed_ms": 533.948,
+     "id": "pets-3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.1,
+     "recall": 1.0,
+     "returned": [
+      "memory:pets-n1",
+      "memory:petfood",
+      "memory:vet",
+      "memory:pets-n8",
+      "memory:pets-n15",
+      "memory:pets-n14",
+      "memory:pets-n4",
+      "memory:toy",
+      "memory:pets-n0",
+      "memory:pets-n12"
+     ],
+     "returned_count": 10,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 9,
+     "elapsed_ms": 530.244,
+     "id": "pets-4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.1111111111111111,
+     "recall": 1.0,
+     "returned": [
+      "memory:dog",
+      "memory:cat",
+      "memory:pets-n5",
+      "memory:pets-n6",
+      "memory:pets-n12",
+      "memory:pets-n2",
+      "memory:pets-n4",
+      "memory:pets-n19",
+      "memory:toy"
+     ],
+     "returned_count": 9,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 25,
+     "elapsed_ms": 521.701,
+     "id": "pets-5",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.0,
+     "recall": null,
+     "returned": [
+      "memory:cat",
+      "memory:dog",
+      "memory:pets-n2",
+      "memory:pets-n1",
+      "memory:pets-n8",
+      "memory:petfood",
+      "memory:toy",
+      "memory:pets-n12",
+      "memory:pets-n14",
+      "memory:pets-n18"
+     ],
+     "returned_count": 10,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "c6-diagnostic",
+   "id": "work",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 7,
+     "elapsed_ms": 768.226,
+     "id": "work-1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.14285714285714285,
+     "recall": 1.0,
+     "returned": [
+      "memory:stuffing",
+      "memory:manager",
+      "memory:work-n19",
+      "memory:laptop",
+      "memory:work-n2",
+      "memory:work-n6",
+      "memory:work-n4"
+     ],
+     "returned_count": 7,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 25,
+     "elapsed_ms": 546.365,
+     "id": "work-2",
+     "kind": "multi",
+     "must_include_count": 3,
+     "passed": false,
+     "precision": 0.2,
+     "recall": 0.6666666666666666,
+     "returned": [
+      "memory:hire1",
+      "memory:stuffing",
+      "memory:manager",
+      "memory:hire2",
+      "memory:work-n5",
+      "memory:work-n16",
+      "memory:work-n0",
+      "memory:work-n12",
+      "memory:work-n7",
+      "memory:work-n19"
+     ],
+     "returned_count": 10,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 537.638,
+     "id": "work-3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.3333333333333333,
+     "recall": 1.0,
+     "returned": [
+      "memory:manager",
+      "memory:employer",
+      "memory:stuffing"
+     ],
+     "returned_count": 3,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 532.948,
+     "id": "work-4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.16666666666666666,
+     "recall": 1.0,
+     "returned": [
+      "memory:laptop",
+      "memory:stuffing",
+      "memory:work-n16",
+      "memory:employer",
+      "memory:hire3",
+      "memory:manager"
+     ],
+     "returned_count": 6,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 513.687,
+     "id": "work-5",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.2,
+     "recall": 1.0,
+     "returned": [
+      "memory:stuffing",
+      "memory:manager",
+      "memory:employer",
+      "memory:work-n1",
+      "memory:work-n3"
+     ],
+     "returned_count": 5,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "c6-diagnostic",
+   "id": "health",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 751.074,
+     "id": "health-1",
+     "kind": "multi",
+     "must_include_count": 3,
+     "passed": false,
+     "precision": 1.0,
+     "recall": 0.6666666666666666,
+     "returned": [
+      "memory:med1",
+      "memory:med2"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 6,
+     "elapsed_ms": 539.532,
+     "id": "health-2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.16666666666666666,
+     "recall": 1.0,
+     "returned": [
+      "memory:gp",
+      "memory:health-n4",
+      "memory:health-n2",
+      "memory:health-n6",
+      "memory:med3",
+      "memory:health-n19"
+     ],
+     "returned_count": 6,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 548.091,
+     "id": "health-3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.25,
+     "recall": 1.0,
+     "returned": [
+      "memory:bp",
+      "memory:gp",
+      "memory:health-n10",
+      "memory:med1"
+     ],
+     "returned_count": 4,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 7,
+     "elapsed_ms": 540.794,
+     "id": "health-4",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.0,
+     "recall": null,
+     "returned": [
+      "memory:gp",
+      "memory:med3",
+      "memory:health-n4",
+      "memory:health-n2",
+      "memory:health-n19",
+      "memory:health-n6",
+      "memory:bp"
+     ],
+     "returned_count": 7,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 535.041,
+     "id": "health-5",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.2,
+     "recall": 1.0,
+     "returned": [
+      "memory:med1",
+      "memory:knee",
+      "memory:health-n16",
+      "memory:gp",
+      "memory:health-n9"
+     ],
+     "returned_count": 5,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "c6-diagnostic",
+   "id": "travel",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 9,
+     "elapsed_ms": 773.079,
+     "id": "travel-1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.1111111111111111,
+     "recall": 1.0,
+     "returned": [
+      "memory:travel-n14",
+      "memory:travel-n8",
+      "memory:return",
+      "memory:travel-n10",
+      "memory:travel-n3",
+      "memory:travel-n4",
+      "memory:rail",
+      "memory:hotel",
+      "memory:flight"
+     ],
+     "returned_count": 9,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 3,
+     "elapsed_ms": 524.775,
+     "id": "travel-2",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": 0.3333333333333333,
+     "recall": 0.5,
+     "returned": [
+      "memory:flight",
+      "memory:travel-n7",
+      "memory:travel-n12"
+     ],
+     "returned_count": 3,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 0,
+     "elapsed_ms": 520.156,
+     "id": "travel-3",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": null,
+     "recall": 0.0,
+     "returned": [],
+     "returned_count": 0,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 8,
+     "elapsed_ms": 509.798,
+     "id": "travel-4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.0,
+     "recall": 0.0,
+     "returned": [
+      "memory:travel-n7",
+      "memory:travel-n1",
+      "memory:travel-n0",
+      "memory:travel-n5",
+      "memory:return",
+      "memory:travel-n18",
+      "memory:travel-n19",
+      "memory:travel-n12"
+     ],
+     "returned_count": 8,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 24,
+     "elapsed_ms": 506.955,
+     "id": "travel-5",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.0,
+     "recall": null,
+     "returned": [
+      "memory:flight",
+      "memory:rail",
+      "memory:travel-n2",
+      "memory:travel-n1",
+      "memory:travel-n7",
+      "memory:travel-n5",
+      "memory:travel-n17",
+      "memory:travel-n6",
+      "memory:return",
+      "memory:travel-n16"
+     ],
+     "returned_count": 10,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "c6-diagnostic",
+   "id": "governance",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 4,
+     "elapsed_ms": 758.289,
+     "id": "gov-1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.25,
+     "recall": 1.0,
+     "returned": [
+      "memory:car",
+      "memory:oldaddr",
+      "memory:gov-n14",
+      "memory:gov-n3"
+     ],
+     "returned_count": 4,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 21,
+     "elapsed_ms": 518.075,
+     "id": "gov-2",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.0,
+     "recall": null,
+     "returned": [
+      "memory:pin",
+      "memory:gov-n8",
+      "memory:gov-n2",
+      "memory:gov-n14",
+      "memory:gov-n12",
+      "memory:gov-n6",
+      "memory:gov-n4",
+      "memory:gov-n15",
+      "memory:oldaddr",
+      "memory:gov-n11"
+     ],
+     "returned_count": 10,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 530.628,
+     "id": "gov-3",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.0,
+     "recall": null,
+     "returned": [
+      "memory:gov-n7",
+      "memory:gov-n12"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 2,
+     "elapsed_ms": 526.804,
+     "id": "gov-4",
+     "kind": "abstention",
+     "must_include_count": 0,
+     "passed": false,
+     "precision": 0.0,
+     "recall": null,
+     "returned": [
+      "memory:gov-n8",
+      "memory:gov-n2"
+     ],
+     "returned_count": 2,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 7,
+     "elapsed_ms": 540.019,
+     "id": "gov-5",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.14285714285714285,
+     "recall": 1.0,
+     "returned": [
+      "memory:oldaddr",
+      "memory:gov-n9",
+      "memory:gov-n2",
+      "memory:gov-n19",
+      "memory:pin",
+      "memory:gov-n6",
+      "memory:gov-n4"
+     ],
+     "returned_count": 7,
+     "safety_violations": []
+    }
+   ]
+  },
+  {
+   "category": "c6-diagnostic",
+   "id": "project",
+   "op_failures": [],
+   "queries": [
+    {
+     "admitted_count": 26,
+     "elapsed_ms": 779.401,
+     "id": "proj-1",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.1,
+     "recall": 1.0,
+     "returned": [
+      "memory:deadline",
+      "memory:risk1",
+      "memory:project-n6",
+      "memory:project-n3",
+      "memory:project-n4",
+      "memory:project-n1",
+      "memory:project-n11",
+      "memory:project-n14",
+      "memory:project-n17",
+      "memory:project-n18"
+     ],
+     "returned_count": 10,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 5,
+     "elapsed_ms": 531.585,
+     "id": "proj-2",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.0,
+     "recall": 0.0,
+     "returned": [
+      "memory:project-n2",
+      "memory:project-n3",
+      "memory:project-n7",
+      "memory:project-n14",
+      "memory:project-n12"
+     ],
+     "returned_count": 5,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 25,
+     "elapsed_ms": 544.98,
+     "id": "proj-3",
+     "kind": "multi",
+     "must_include_count": 2,
+     "passed": false,
+     "precision": 0.0,
+     "recall": 0.0,
+     "returned": [
+      "memory:project-n4",
+      "memory:project-n15",
+      "memory:project-n0",
+      "memory:project-n8",
+      "memory:project-n17",
+      "memory:project-n16",
+      "memory:project-n1",
+      "memory:project-n3",
+      "memory:project-n5",
+      "memory:project-n7"
+     ],
+     "returned_count": 10,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 25,
+     "elapsed_ms": 511.598,
+     "id": "proj-4",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": false,
+     "precision": 0.1,
+     "recall": 1.0,
+     "returned": [
+      "memory:risk1",
+      "memory:project-n17",
+      "memory:project-n2",
+      "memory:project-n3",
+      "memory:project-n15",
+      "memory:project-n1",
+      "memory:client",
+      "memory:project-n16",
+      "memory:stack",
+      "memory:project-n5"
+     ],
+     "returned_count": 10,
+     "safety_violations": []
+    },
+    {
+     "admitted_count": 1,
+     "elapsed_ms": 510.985,
+     "id": "proj-5",
+     "kind": "single",
+     "must_include_count": 1,
+     "passed": true,
+     "precision": 1.0,
+     "recall": 1.0,
+     "returned": [
+      "memory:hosting"
+     ],
+     "returned_count": 1,
+     "safety_violations": []
+    }
+   ]
+  }
+ ],
+ "semantic_retrieval": "required",
+ "summary": {
+  "by_category": {
+   "c6-diagnostic": {
+    "mean_precision": 0.1894,
+    "mean_recall": 0.7569,
+    "mean_returned": 6.067,
+    "passed": 1,
+    "queries": 30,
+    "safety_violations": 0
+   }
+  },
+  "by_kind": {
+   "abstention": {
+    "mean_precision": 0.0,
+    "mean_recall": null,
+    "mean_returned": 6.833,
+    "passed": 0,
+    "queries": 6,
+    "safety_violations": 0
+   },
+   "multi": {
+    "mean_precision": 0.3733,
+    "mean_recall": 0.4333,
+    "mean_returned": 5.6,
+    "passed": 0,
+    "queries": 5,
+    "safety_violations": 0
+   },
+   "single": {
+    "mean_precision": 0.2014,
+    "mean_recall": 0.8421,
+    "mean_returned": 5.947,
+    "passed": 1,
+    "queries": 19,
+    "safety_violations": 0
+   }
+  },
+  "op_failures": 0,
+  "overall": {
+   "mean_precision": 0.1894,
+   "mean_recall": 0.7569,
+   "mean_returned": 6.067,
+   "passed": 1,
+   "queries": 30,
+   "safety_violations": 0
+  },
+  "recall_latency_ms_p50": 533.948,
+  "recall_latency_ms_p95": 773.079
+ }
+}

@@ -1,0 +1,120 @@
+{
+ "gate": {
+  "R1 all needed in top 5 >= 22": [
+   23,
+   19,
+   true
+  ],
+  "R2 needed in top 5 >= 39": [
+   41,
+   33,
+   true
+  ],
+  "R3 all needed in top 10 >= 24": [
+   27,
+   24,
+   true
+  ],
+  "R3 all needed in top 3 >= 14": [
+   18,
+   14,
+   true
+  ],
+  "R4 queries losing top-5 coverage <= 2": [
+   1,
+   [
+    "work-3"
+   ],
+   true
+  ],
+  "S1 returned sets equal C6+sem (except budget-bound)": [
+   0,
+   [],
+   true
+  ],
+  "S2 strict >= C6+sem": [
+   11,
+   11,
+   true
+  ],
+  "S2 extras <= C6+sem": [
+   45,
+   45,
+   true
+  ],
+  "S2 no-answer returning <= C6+sem": [
+   4,
+   4,
+   true
+  ],
+  "I1 route off equals C4 (ranked_prefix: top 10 and returned)": [
+   0,
+   [],
+   true
+  ],
+  "I1 route off equals C4 (relevance_sufficient: top 10 and returned)": [
+   0,
+   [],
+   true
+  ],
+  "I4 newer-first conflicts >= C4 (2)": [
+   1,
+   2,
+   false
+  ],
+  "I4 newer-first conflicts (relevance_sufficient)": [
+   1,
+   2,
+   false
+  ]
+ },
+ "gained_top5_coverage": [
+  "health-6",
+  "work-2",
+  "home-1",
+  "home-3",
+  "home-5"
+ ],
+ "c7_summary_rp": {
+  "queries": 48,
+  "strict": 0,
+  "needed": 76,
+  "returned": 48,
+  "withheld": 12,
+  "refused": 0,
+  "not_discovered": 16,
+  "extra": 388,
+  "coverage@3": 18,
+  "coverage@5": 23,
+  "coverage@10": 27,
+  "coverage_of": 42,
+  "needed_rank_le5": 41,
+  "needed_rank_6_10": 7,
+  "needed_rank_gt10": 12,
+  "needed_dense_rank_le5": 52,
+  "newer_first": 1,
+  "abstention_returning": 6,
+  "recall_p50_ms": 30.82
+ },
+ "c7_summary_rs": {
+  "queries": 48,
+  "strict": 11,
+  "needed": 76,
+  "returned": 32,
+  "withheld": 17,
+  "refused": 0,
+  "not_discovered": 27,
+  "extra": 45,
+  "coverage@3": 18,
+  "coverage@5": 22,
+  "coverage@10": 25,
+  "coverage_of": 42,
+  "needed_rank_le5": 39,
+  "needed_rank_6_10": 6,
+  "needed_rank_gt10": 4,
+  "needed_dense_rank_le5": 44,
+  "newer_first": 1,
+  "abstention_returning": 4,
+  "recall_p50_ms": 33.81
+ }
+}

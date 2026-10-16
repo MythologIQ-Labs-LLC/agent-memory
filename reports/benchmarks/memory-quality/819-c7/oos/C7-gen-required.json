@@ -1,0 +1,1750 @@
+[
+ {
+  "scenario": "fin",
+  "id": "fin-1",
+  "kind": "aggregate",
+  "query": "What subscriptions am I paying for?",
+  "returned": [],
+  "returned_routes": {},
+  "semantic_proposals": [],
+  "admitted": 7,
+  "pass": false,
+  "needed": 4,
+  "needed_returned": 0,
+  "extra": 0,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 321.92
+ },
+ {
+  "scenario": "fin",
+  "id": "fin-2",
+  "kind": "aggregate",
+  "query": "What do we spend money on every month?",
+  "returned": [
+   "groceries",
+   "fin-n15",
+   "isa"
+  ],
+  "returned_routes": {
+   "groceries": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "fin-n15": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "isa": [
+    "lexical",
+    "semantic_vector"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "groceries",
+    0.442,
+    null
+   ],
+   [
+    "fin-n15",
+    0.306,
+    null
+   ],
+   [
+    "isa",
+    0.288,
+    null
+   ]
+  ],
+  "admitted": 13,
+  "pass": false,
+  "needed": 4,
+  "needed_returned": 1,
+  "extra": 1,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 30.29
+ },
+ {
+  "scenario": "fin",
+  "id": "fin-3",
+  "kind": "paraphrase",
+  "query": "Who does our taxes?",
+  "returned": [],
+  "returned_routes": {},
+  "semantic_proposals": [],
+  "admitted": 3,
+  "pass": false,
+  "needed": 1,
+  "needed_returned": 0,
+  "extra": 0,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 22.72
+ },
+ {
+  "scenario": "fin",
+  "id": "fin-4",
+  "kind": "paraphrase",
+  "query": "When does the fixed rate on the house loan end?",
+  "returned": [
+   "mortgage"
+  ],
+  "returned_routes": {
+   "mortgage": [
+    "lexical",
+    "semantic_vector"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "mortgage",
+    0.66,
+    null
+   ]
+  ],
+  "admitted": 22,
+  "pass": true,
+  "needed": 1,
+  "needed_returned": 1,
+  "extra": 0,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 32.5
+ },
+ {
+  "scenario": "fin",
+  "id": "fin-5",
+  "kind": "paraphrase",
+  "query": "How much does my employer put into my retirement savings?",
+  "returned": [
+   "pension",
+   "isa"
+  ],
+  "returned_routes": {
+   "pension": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "isa": [
+    "lexical"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "pension",
+    0.563,
+    null
+   ]
+  ],
+  "admitted": 2,
+  "pass": false,
+  "needed": 1,
+  "needed_returned": 1,
+  "extra": 1,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 27.11
+ },
+ {
+  "scenario": "fin",
+  "id": "fin-6",
+  "kind": "no-answer",
+  "query": "What is my credit card limit?",
+  "returned": [],
+  "returned_routes": {},
+  "semantic_proposals": [],
+  "admitted": 9,
+  "pass": true,
+  "needed": 0,
+  "needed_returned": 0,
+  "extra": 0,
+  "excluded_returned": [],
+  "no_answer": true,
+  "ms": 27.05
+ },
+ {
+  "scenario": "fin",
+  "id": "fin-7",
+  "kind": "no-answer",
+  "query": "How much did the kitchen extension cost?",
+  "returned": [
+   "sub-news"
+  ],
+  "returned_routes": {
+   "sub-news": [
+    "lexical"
+   ]
+  },
+  "semantic_proposals": [],
+  "admitted": 19,
+  "pass": false,
+  "needed": 0,
+  "needed_returned": 0,
+  "extra": 1,
+  "excluded_returned": [],
+  "no_answer": true,
+  "ms": 31.52
+ },
+ {
+  "scenario": "fin",
+  "id": "fin-8",
+  "kind": "aggregate",
+  "query": "Which insurance policies do we have?",
+  "returned": [
+   "home-ins",
+   "sub-cloud"
+  ],
+  "returned_routes": {
+   "home-ins": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "sub-cloud": [
+    "semantic_vector"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "home-ins",
+    0.425,
+    null
+   ],
+   [
+    "sub-cloud",
+    0.239,
+    null
+   ]
+  ],
+  "admitted": 5,
+  "pass": false,
+  "needed": 2,
+  "needed_returned": 1,
+  "extra": 1,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 24.78
+ },
+ {
+  "scenario": "fin",
+  "id": "fin-9",
+  "kind": "distractor",
+  "query": "Are the bikes insured?",
+  "returned": [
+   "home-ins",
+   "mia-bike"
+  ],
+  "returned_routes": {
+   "home-ins": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "mia-bike": [
+    "lexical"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "home-ins",
+    0.638,
+    null
+   ]
+  ],
+  "admitted": 21,
+  "pass": false,
+  "needed": 1,
+  "needed_returned": 1,
+  "extra": 1,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 30.12
+ },
+ {
+  "scenario": "fam",
+  "id": "fam-1",
+  "kind": "governance",
+  "query": "Who teaches Mia?",
+  "returned": [
+   "mia-pickup",
+   "mia-gym",
+   "mia-teacher-new",
+   "mia-school",
+   "mia-friend",
+   "mia-allergy"
+  ],
+  "returned_routes": {
+   "mia-pickup": [
+    "lexical"
+   ],
+   "mia-gym": [
+    "lexical"
+   ],
+   "mia-teacher-new": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "mia-school": [
+    "lexical"
+   ],
+   "mia-friend": [
+    "lexical"
+   ],
+   "mia-allergy": [
+    "lexical"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "mia-teacher-new",
+    0.623,
+    null
+   ]
+  ],
+  "admitted": 6,
+  "pass": false,
+  "needed": 1,
+  "needed_returned": 1,
+  "extra": 5,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 357.9
+ },
+ {
+  "scenario": "fam",
+  "id": "fam-2",
+  "kind": "paraphrase",
+  "query": "What instruments does Leo play?",
+  "returned": [
+   "leo-band",
+   "leo-school"
+  ],
+  "returned_routes": {
+   "leo-band": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "leo-school": [
+    "lexical"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "leo-band",
+    0.699,
+    null
+   ]
+  ],
+  "admitted": 7,
+  "pass": false,
+  "needed": 1,
+  "needed_returned": 1,
+  "extra": 1,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 25.4
+ },
+ {
+  "scenario": "fam",
+  "id": "fam-3",
+  "kind": "aggregate",
+  "query": "What after-school activities do the kids do?",
+  "returned": [],
+  "returned_routes": {},
+  "semantic_proposals": [],
+  "admitted": 17,
+  "pass": false,
+  "needed": 2,
+  "needed_returned": 0,
+  "extra": 0,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 29.76
+ },
+ {
+  "scenario": "fam",
+  "id": "fam-4",
+  "kind": "paraphrase",
+  "query": "Is there any food Mia must avoid?",
+  "returned": [
+   "mia-school",
+   "mia-friend",
+   "mia-pickup",
+   "mia-allergy",
+   "mia-gym",
+   "mia-teacher-new"
+  ],
+  "returned_routes": {
+   "mia-school": [
+    "lexical"
+   ],
+   "mia-friend": [
+    "lexical"
+   ],
+   "mia-pickup": [
+    "lexical"
+   ],
+   "mia-allergy": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "mia-gym": [
+    "lexical"
+   ],
+   "mia-teacher-new": [
+    "lexical"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "mia-allergy",
+    0.526,
+    null
+   ]
+  ],
+  "admitted": 9,
+  "pass": false,
+  "needed": 1,
+  "needed_returned": 1,
+  "extra": 5,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 28.21
+ },
+ {
+  "scenario": "fam",
+  "id": "fam-5",
+  "kind": "paraphrase",
+  "query": "How does Leo get to school?",
+  "returned": [
+   "leo-tutor",
+   "leo-school",
+   "fam-n0"
+  ],
+  "returned_routes": {
+   "leo-tutor": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "leo-school": [
+    "lexical"
+   ],
+   "fam-n0": [
+    "lexical"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "leo-tutor",
+    0.644,
+    null
+   ]
+  ],
+  "admitted": 10,
+  "pass": false,
+  "needed": 1,
+  "needed_returned": 0,
+  "extra": 2,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 26.21
+ },
+ {
+  "scenario": "fam",
+  "id": "fam-6",
+  "kind": "paraphrase",
+  "query": "Who are Leo's friends?",
+  "returned": [
+   "blazer",
+   "mia-friend",
+   "leo-friends",
+   "leo-school",
+   "leo-band"
+  ],
+  "returned_routes": {
+   "blazer": [
+    "lexical"
+   ],
+   "mia-friend": [
+    "lexical"
+   ],
+   "leo-friends": [
+    "semantic_vector"
+   ],
+   "leo-school": [
+    "semantic_vector"
+   ],
+   "leo-band": [
+    "semantic_vector"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "leo-friends",
+    0.636,
+    null
+   ],
+   [
+    "leo-school",
+    0.561,
+    null
+   ],
+   [
+    "leo-band",
+    0.537,
+    null
+   ]
+  ],
+  "admitted": 6,
+  "pass": false,
+  "needed": 1,
+  "needed_returned": 1,
+  "extra": 4,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 24.41
+ },
+ {
+  "scenario": "fam",
+  "id": "fam-7",
+  "kind": "no-answer",
+  "query": "What did Mia get on her spelling test?",
+  "returned": [
+   "mia-teacher-new",
+   "fam-n0"
+  ],
+  "returned_routes": {
+   "mia-teacher-new": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "fam-n0": [
+    "lexical"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "mia-teacher-new",
+    0.58,
+    null
+   ]
+  ],
+  "admitted": 11,
+  "pass": false,
+  "needed": 0,
+  "needed_returned": 0,
+  "extra": 2,
+  "excluded_returned": [],
+  "no_answer": true,
+  "ms": 27.79
+ },
+ {
+  "scenario": "fam",
+  "id": "fam-8",
+  "kind": "no-answer",
+  "query": "When is the school trip to the zoo?",
+  "returned": [
+   "fam-n13"
+  ],
+  "returned_routes": {
+   "fam-n13": [
+    "lexical"
+   ]
+  },
+  "semantic_proposals": [],
+  "admitted": 20,
+  "pass": false,
+  "needed": 0,
+  "needed_returned": 0,
+  "extra": 1,
+  "excluded_returned": [],
+  "no_answer": true,
+  "ms": 29.95
+ },
+ {
+  "scenario": "fam",
+  "id": "fam-9",
+  "kind": "governance",
+  "query": "Does Leo have a mobile?",
+  "returned": [
+   "leo-tutor",
+   "leo-school",
+   "leo-band",
+   "leo-friends",
+   "leo-bus",
+   "blazer"
+  ],
+  "returned_routes": {
+   "leo-tutor": [
+    "lexical"
+   ],
+   "leo-school": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "leo-band": [
+    "lexical"
+   ],
+   "leo-friends": [
+    "lexical"
+   ],
+   "leo-bus": [
+    "lexical"
+   ],
+   "blazer": [
+    "lexical"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "leo-school",
+    0.44,
+    null
+   ]
+  ],
+  "admitted": 9,
+  "pass": false,
+  "needed": 0,
+  "needed_returned": 0,
+  "extra": 6,
+  "excluded_returned": [],
+  "no_answer": true,
+  "ms": 25.6
+ },
+ {
+  "scenario": "car",
+  "id": "car-1",
+  "kind": "governance",
+  "query": "What vehicle do we own?",
+  "returned": [
+   "car-model-new"
+  ],
+  "returned_routes": {
+   "car-model-new": [
+    "lexical",
+    "semantic_vector"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "car-model-new",
+    0.558,
+    null
+   ]
+  ],
+  "admitted": 3,
+  "pass": true,
+  "needed": 1,
+  "needed_returned": 1,
+  "extra": 0,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 329.18
+ },
+ {
+  "scenario": "car",
+  "id": "car-2",
+  "kind": "paraphrase",
+  "query": "Who services the car?",
+  "returned": [
+   "car-ins",
+   "parking",
+   "garage",
+   "car-n0"
+  ],
+  "returned_routes": {
+   "car-ins": [
+    "lexical"
+   ],
+   "parking": [
+    "lexical"
+   ],
+   "garage": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "car-n0": [
+    "lexical"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "garage",
+    0.554,
+    null
+   ]
+  ],
+  "admitted": 20,
+  "pass": false,
+  "needed": 1,
+  "needed_returned": 1,
+  "extra": 3,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 31.77
+ },
+ {
+  "scenario": "car",
+  "id": "car-3",
+  "kind": "paraphrase",
+  "query": "What happens if we break down on the motorway?",
+  "returned": [
+   "mpg"
+  ],
+  "returned_routes": {
+   "mpg": [
+    "lexical",
+    "semantic_vector"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "mpg",
+    0.496,
+    null
+   ]
+  ],
+  "admitted": 22,
+  "pass": false,
+  "needed": 1,
+  "needed_returned": 0,
+  "extra": 1,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 30.76
+ },
+ {
+  "scenario": "car",
+  "id": "car-4",
+  "kind": "paraphrase",
+  "query": "How do I get to work?",
+  "returned": [
+   "car-n4",
+   "charger"
+  ],
+  "returned_routes": {
+   "car-n4": [
+    "lexical"
+   ],
+   "charger": [
+    "lexical"
+   ]
+  },
+  "semantic_proposals": [],
+  "admitted": 5,
+  "pass": false,
+  "needed": 1,
+  "needed_returned": 0,
+  "extra": 2,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 25.24
+ },
+ {
+  "scenario": "car",
+  "id": "car-5",
+  "kind": "lexical",
+  "query": "How much is parking at the station?",
+  "returned": [
+   "parking"
+  ],
+  "returned_routes": {
+   "parking": [
+    "lexical",
+    "semantic_vector"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "parking",
+    0.794,
+    null
+   ]
+  ],
+  "admitted": 24,
+  "pass": true,
+  "needed": 1,
+  "needed_returned": 1,
+  "extra": 0,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 30.99
+ },
+ {
+  "scenario": "car",
+  "id": "car-6",
+  "kind": "no-answer",
+  "query": "What is the car's registration number?",
+  "returned": [
+   "car-ins",
+   "parking"
+  ],
+  "returned_routes": {
+   "car-ins": [
+    "lexical"
+   ],
+   "parking": [
+    "lexical"
+   ]
+  },
+  "semantic_proposals": [],
+  "admitted": 23,
+  "pass": false,
+  "needed": 0,
+  "needed_returned": 0,
+  "extra": 2,
+  "excluded_returned": [],
+  "no_answer": true,
+  "ms": 29.74
+ },
+ {
+  "scenario": "car",
+  "id": "car-7",
+  "kind": "no-answer",
+  "query": "How much did the Brompton cost?",
+  "returned": [
+   "bike",
+   "parking"
+  ],
+  "returned_routes": {
+   "bike": [
+    "lexical"
+   ],
+   "parking": [
+    "lexical"
+   ]
+  },
+  "semantic_proposals": [],
+  "admitted": 21,
+  "pass": false,
+  "needed": 0,
+  "needed_returned": 0,
+  "extra": 2,
+  "excluded_returned": [],
+  "no_answer": true,
+  "ms": 36.03
+ },
+ {
+  "scenario": "car",
+  "id": "car-8",
+  "kind": "historical",
+  "query": "Which car did we have before?",
+  "returned": [
+   "car-ins",
+   "car-model",
+   "parking",
+   "car-model-new"
+  ],
+  "returned_routes": {
+   "car-ins": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "car-model": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "parking": [
+    "lexical"
+   ],
+   "car-model-new": [
+    "lexical",
+    "semantic_vector"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "car-model-new",
+    0.475,
+    null
+   ],
+   [
+    "car-model",
+    0.402,
+    null
+   ],
+   [
+    "car-ins",
+    0.327,
+    null
+   ]
+  ],
+  "admitted": 8,
+  "pass": false,
+  "needed": 1,
+  "needed_returned": 1,
+  "extra": 2,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 34.84
+ },
+ {
+  "scenario": "car",
+  "id": "car-9",
+  "kind": "aggregate",
+  "query": "What do we pay to cover the car?",
+  "returned": [
+   "car-ins",
+   "breakdown"
+  ],
+  "returned_routes": {
+   "car-ins": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "breakdown": [
+    "lexical"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "car-ins",
+    0.572,
+    null
+   ]
+  ],
+  "admitted": 21,
+  "pass": true,
+  "needed": 2,
+  "needed_returned": 2,
+  "extra": 0,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 30.73
+ },
+ {
+  "scenario": "adv",
+  "id": "adv-1",
+  "kind": "stuffing",
+  "query": "Who is my employer?",
+  "returned": [
+   "stuff-work",
+   "stuff-work2"
+  ],
+  "returned_routes": {
+   "stuff-work": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "stuff-work2": [
+    "lexical"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "stuff-work",
+    0.7,
+    null
+   ]
+  ],
+  "admitted": 12,
+  "pass": false,
+  "needed": 1,
+  "needed_returned": 0,
+  "extra": 2,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 370.06
+ },
+ {
+  "scenario": "adv",
+  "id": "adv-2",
+  "kind": "stuffing",
+  "query": "Where do I work?",
+  "returned": [
+   "stuff-work",
+   "stuff-work2"
+  ],
+  "returned_routes": {
+   "stuff-work": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "stuff-work2": [
+    "lexical"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "stuff-work",
+    0.568,
+    null
+   ]
+  ],
+  "admitted": 5,
+  "pass": false,
+  "needed": 1,
+  "needed_returned": 0,
+  "extra": 2,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 25.68
+ },
+ {
+  "scenario": "adv",
+  "id": "adv-3",
+  "kind": "stuffing",
+  "query": "Which pets do we have?",
+  "returned": [
+   "stuff-pets"
+  ],
+  "returned_routes": {
+   "stuff-pets": [
+    "lexical",
+    "semantic_vector"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "stuff-pets",
+    0.704,
+    null
+   ]
+  ],
+  "admitted": 6,
+  "pass": false,
+  "needed": 2,
+  "needed_returned": 0,
+  "extra": 1,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 24.67
+ },
+ {
+  "scenario": "adv",
+  "id": "adv-4",
+  "kind": "stuffing",
+  "query": "Who is my doctor?",
+  "returned": [
+   "stuff-doc"
+  ],
+  "returned_routes": {
+   "stuff-doc": [
+    "lexical",
+    "semantic_vector"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "stuff-doc",
+    0.728,
+    null
+   ]
+  ],
+  "admitted": 12,
+  "pass": false,
+  "needed": 1,
+  "needed_returned": 0,
+  "extra": 1,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 29.67
+ },
+ {
+  "scenario": "adv",
+  "id": "adv-5",
+  "kind": "stuffing",
+  "query": "What do the pets eat?",
+  "returned": [
+   "stuff-pets"
+  ],
+  "returned_routes": {
+   "stuff-pets": [
+    "lexical",
+    "semantic_vector"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "stuff-pets",
+    0.676,
+    null
+   ]
+  ],
+  "admitted": 23,
+  "pass": false,
+  "needed": 1,
+  "needed_returned": 0,
+  "extra": 1,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 36.02
+ },
+ {
+  "scenario": "advctl",
+  "id": "advctl-1",
+  "kind": "stuffing",
+  "query": "Who is my employer?",
+  "returned": [],
+  "returned_routes": {},
+  "semantic_proposals": [],
+  "admitted": 9,
+  "pass": false,
+  "needed": 1,
+  "needed_returned": 0,
+  "extra": 0,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 311.78
+ },
+ {
+  "scenario": "advctl",
+  "id": "advctl-2",
+  "kind": "stuffing",
+  "query": "Where do I work?",
+  "returned": [],
+  "returned_routes": {},
+  "semantic_proposals": [],
+  "admitted": 2,
+  "pass": false,
+  "needed": 1,
+  "needed_returned": 0,
+  "extra": 0,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 24.17
+ },
+ {
+  "scenario": "advctl",
+  "id": "advctl-3",
+  "kind": "stuffing",
+  "query": "Which pets do we have?",
+  "returned": [
+   "advctl-n16",
+   "dog"
+  ],
+  "returned_routes": {
+   "advctl-n16": [
+    "semantic_vector"
+   ],
+   "dog": [
+    "semantic_vector"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "advctl-n16",
+    0.494,
+    null
+   ],
+   [
+    "dog",
+    0.35,
+    null
+   ]
+  ],
+  "admitted": 6,
+  "pass": false,
+  "needed": 2,
+  "needed_returned": 1,
+  "extra": 1,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 25.72
+ },
+ {
+  "scenario": "advctl",
+  "id": "advctl-4",
+  "kind": "stuffing",
+  "query": "Who is my doctor?",
+  "returned": [
+   "gp"
+  ],
+  "returned_routes": {
+   "gp": [
+    "lexical",
+    "semantic_vector"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "gp",
+    0.542,
+    null
+   ]
+  ],
+  "admitted": 9,
+  "pass": true,
+  "needed": 1,
+  "needed_returned": 1,
+  "extra": 0,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 26.23
+ },
+ {
+  "scenario": "advctl",
+  "id": "advctl-5",
+  "kind": "stuffing",
+  "query": "What do the pets eat?",
+  "returned": [
+   "petfood"
+  ],
+  "returned_routes": {
+   "petfood": [
+    "lexical",
+    "semantic_vector"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "petfood",
+    0.41,
+    null
+   ]
+  ],
+  "admitted": 20,
+  "pass": true,
+  "needed": 1,
+  "needed_returned": 1,
+  "extra": 0,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 30.82
+ },
+ {
+  "scenario": "home",
+  "id": "home-1",
+  "kind": "aggregate",
+  "query": "What dietary restrictions should I plan for at the dinner party?",
+  "returned": [
+   "party",
+   "home-n13",
+   "home-n0",
+   "ines-veg"
+  ],
+  "returned_routes": {
+   "party": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "home-n13": [
+    "lexical"
+   ],
+   "home-n0": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "ines-veg": [
+    "semantic_vector"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "party",
+    0.488,
+    null
+   ],
+   [
+    "ines-veg",
+    0.353,
+    null
+   ],
+   [
+    "home-n0",
+    0.3,
+    null
+   ]
+  ],
+  "admitted": 26,
+  "pass": false,
+  "needed": 3,
+  "needed_returned": 1,
+  "extra": 2,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 334.75
+ },
+ {
+  "scenario": "home",
+  "id": "home-2",
+  "kind": "paraphrase",
+  "query": "Does anyone avoid meat?",
+  "returned": [
+   "ines-veg"
+  ],
+  "returned_routes": {
+   "ines-veg": [
+    "semantic_vector"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "ines-veg",
+    0.419,
+    null
+   ]
+  ],
+  "admitted": 1,
+  "pass": true,
+  "needed": 1,
+  "needed_returned": 1,
+  "extra": 0,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 24.48
+ },
+ {
+  "scenario": "home",
+  "id": "home-3",
+  "kind": "lexical",
+  "query": "What's the name of the bread starter?",
+  "returned": [
+   "starter"
+  ],
+  "returned_routes": {
+   "starter": [
+    "lexical",
+    "semantic_vector"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "starter",
+    0.551,
+    null
+   ]
+  ],
+  "admitted": 22,
+  "pass": true,
+  "needed": 1,
+  "needed_returned": 1,
+  "extra": 0,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 30.43
+ },
+ {
+  "scenario": "home",
+  "id": "home-4",
+  "kind": "paraphrase",
+  "query": "Is the oven accurate?",
+  "returned": [
+   "oven"
+  ],
+  "returned_routes": {
+   "oven": [
+    "lexical",
+    "semantic_vector"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "oven",
+    0.467,
+    null
+   ]
+  ],
+  "admitted": 25,
+  "pass": true,
+  "needed": 1,
+  "needed_returned": 1,
+  "extra": 0,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 32.03
+ },
+ {
+  "scenario": "home",
+  "id": "home-5",
+  "kind": "paraphrase",
+  "query": "What should I cook that everyone loves?",
+  "returned": [
+   "knife",
+   "starter"
+  ],
+  "returned_routes": {
+   "knife": [
+    "semantic_vector"
+   ],
+   "starter": [
+    "lexical"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "knife",
+    0.447,
+    null
+   ]
+  ],
+  "admitted": 4,
+  "pass": false,
+  "needed": 1,
+  "needed_returned": 0,
+  "extra": 2,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 24.01
+ },
+ {
+  "scenario": "home",
+  "id": "home-6",
+  "kind": "no-answer",
+  "query": "What is Sam's favourite dessert?",
+  "returned": [
+   "fav-dish",
+   "sam-spice"
+  ],
+  "returned_routes": {
+   "fav-dish": [
+    "lexical"
+   ],
+   "sam-spice": [
+    "semantic_vector"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "sam-spice",
+    0.595,
+    null
+   ]
+  ],
+  "admitted": 11,
+  "pass": false,
+  "needed": 0,
+  "needed_returned": 0,
+  "extra": 2,
+  "excluded_returned": [],
+  "no_answer": true,
+  "ms": 27.26
+ },
+ {
+  "scenario": "home",
+  "id": "home-7",
+  "kind": "no-answer",
+  "query": "When was the fridge bought?",
+  "returned": [
+   "starter"
+  ],
+  "returned_routes": {
+   "starter": [
+    "lexical",
+    "semantic_vector"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "starter",
+    0.412,
+    null
+   ]
+  ],
+  "admitted": 22,
+  "pass": false,
+  "needed": 0,
+  "needed_returned": 0,
+  "extra": 1,
+  "excluded_returned": [],
+  "no_answer": true,
+  "ms": 32.46
+ },
+ {
+  "scenario": "home",
+  "id": "home-8",
+  "kind": "paraphrase",
+  "query": "Who gave us the knife?",
+  "returned": [
+   "knife"
+  ],
+  "returned_routes": {
+   "knife": [
+    "lexical",
+    "semantic_vector"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "knife",
+    0.588,
+    null
+   ]
+  ],
+  "admitted": 22,
+  "pass": true,
+  "needed": 1,
+  "needed_returned": 1,
+  "extra": 0,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 31.17
+ },
+ {
+  "scenario": "home",
+  "id": "home-9",
+  "kind": "paraphrase",
+  "query": "What drinks do people like?",
+  "returned": [
+   "wine",
+   "party"
+  ],
+  "returned_routes": {
+   "wine": [
+    "lexical"
+   ],
+   "party": [
+    "lexical"
+   ]
+  },
+  "semantic_proposals": [],
+  "admitted": 2,
+  "pass": false,
+  "needed": 1,
+  "needed_returned": 1,
+  "extra": 1,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 22.77
+ },
+ {
+  "scenario": "fit",
+  "id": "fit-1",
+  "kind": "aggregate",
+  "query": "What medications am I on?",
+  "returned": [
+   "med-bp",
+   "vit-d"
+  ],
+  "returned_routes": {
+   "med-bp": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "vit-d": [
+    "semantic_vector"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "med-bp",
+    0.45,
+    null
+   ],
+   [
+    "vit-d",
+    0.29,
+    null
+   ]
+  ],
+  "admitted": 9,
+  "pass": false,
+  "needed": 2,
+  "needed_returned": 1,
+  "extra": 0,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 314.1
+ },
+ {
+  "scenario": "fit",
+  "id": "fit-2",
+  "kind": "aggregate",
+  "query": "What do I take every day?",
+  "returned": [
+   "med-bp",
+   "vit-d",
+   "physio"
+  ],
+  "returned_routes": {
+   "med-bp": [
+    "lexical",
+    "semantic_vector"
+   ],
+   "vit-d": [
+    "semantic_vector"
+   ],
+   "physio": [
+    "semantic_vector"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "med-bp",
+    0.442,
+    null
+   ],
+   [
+    "vit-d",
+    0.368,
+    null
+   ],
+   [
+    "physio",
+    0.338,
+    null
+   ]
+  ],
+  "admitted": 7,
+  "pass": false,
+  "needed": 1,
+  "needed_returned": 1,
+  "extra": 1,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 26.17
+ },
+ {
+  "scenario": "fit",
+  "id": "fit-3",
+  "kind": "paraphrase",
+  "query": "Which race am I preparing for?",
+  "returned": [
+   "race"
+  ],
+  "returned_routes": {
+   "race": [
+    "lexical",
+    "semantic_vector"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "race",
+    0.526,
+    null
+   ]
+  ],
+  "admitted": 7,
+  "pass": true,
+  "needed": 1,
+  "needed_returned": 1,
+  "extra": 0,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 25.94
+ },
+ {
+  "scenario": "fit",
+  "id": "fit-4",
+  "kind": "paraphrase",
+  "query": "Do I have any injuries?",
+  "returned": [],
+  "returned_routes": {},
+  "semantic_proposals": [],
+  "admitted": 3,
+  "pass": false,
+  "needed": 1,
+  "needed_returned": 0,
+  "extra": 0,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 24.59
+ },
+ {
+  "scenario": "fit",
+  "id": "fit-5",
+  "kind": "paraphrase",
+  "query": "When do I see the physiotherapist?",
+  "returned": [
+   "physio"
+  ],
+  "returned_routes": {
+   "physio": [
+    "semantic_vector"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "physio",
+    0.417,
+    null
+   ]
+  ],
+  "admitted": 21,
+  "pass": true,
+  "needed": 1,
+  "needed_returned": 1,
+  "extra": 0,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 46.57
+ },
+ {
+  "scenario": "fit",
+  "id": "fit-6",
+  "kind": "no-answer",
+  "query": "What is my resting heart rate?",
+  "returned": [],
+  "returned_routes": {},
+  "semantic_proposals": [],
+  "admitted": 7,
+  "pass": true,
+  "needed": 0,
+  "needed_returned": 0,
+  "extra": 0,
+  "excluded_returned": [],
+  "no_answer": true,
+  "ms": 25.5
+ },
+ {
+  "scenario": "fit",
+  "id": "fit-7",
+  "kind": "no-answer",
+  "query": "How much do I weigh?",
+  "returned": [],
+  "returned_routes": {},
+  "semantic_proposals": [],
+  "admitted": 3,
+  "pass": true,
+  "needed": 0,
+  "needed_returned": 0,
+  "extra": 0,
+  "excluded_returned": [],
+  "no_answer": true,
+  "ms": 23.59
+ },
+ {
+  "scenario": "fit",
+  "id": "fit-8",
+  "kind": "paraphrase",
+  "query": "Who is my doctor?",
+  "returned": [
+   "gp"
+  ],
+  "returned_routes": {
+   "gp": [
+    "lexical",
+    "semantic_vector"
+   ]
+  },
+  "semantic_proposals": [
+   [
+    "gp",
+    0.471,
+    null
+   ]
+  ],
+  "admitted": 7,
+  "pass": true,
+  "needed": 1,
+  "needed_returned": 1,
+  "extra": 0,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 25.63
+ },
+ {
+  "scenario": "fit",
+  "id": "fit-9",
+  "kind": "paraphrase",
+  "query": "Why am I so tired lately?",
+  "returned": [
+   "fit-n18"
+  ],
+  "returned_routes": {
+   "fit-n18": [
+    "lexical"
+   ]
+  },
+  "semantic_proposals": [],
+  "admitted": 4,
+  "pass": false,
+  "needed": 1,
+  "needed_returned": 0,
+  "extra": 1,
+  "excluded_returned": [],
+  "no_answer": false,
+  "ms": 24.47
+ }
+]

@@ -1,0 +1,8 @@
+wt-c6 run1: rss_mb=215 n=200 semantic=required recall p50 64.3 ms p95 75.1 ms cpu/recall 56.9 ms
+wt-c7 run1: rss_mb=215 n=200 semantic=required recall p50 89.7 ms p95 108.1 ms cpu/recall 76.9 ms
+wt-c6 run2: rss_mb=214 n=200 semantic=required recall p50 68.7 ms p95 94.8 ms cpu/recall 65.3 ms
+wt-c7 run2: rss_mb=213 n=200 semantic=required recall p50 99.1 ms p95 133.2 ms cpu/recall 81.5 ms
+wt-c6 run1: rss_mb=213 n=1000 semantic=required recall p50 302.7 ms p95 372.9 ms cpu/recall 262.0 ms
+wt-c7 run1: rss_mb=213 n=1000 semantic=required recall p50 318.2 ms p95 372.4 ms cpu/recall 280.1 ms
+wt-c6 run2: rss_mb=217 n=1000 semantic=required recall p50 297.5 ms p95 362.9 ms cpu/recall 267.5 ms
+wt-c7 run2: rss_mb=213 n=1000 semantic=required recall p50 317.9 ms p95 371.5 ms cpu/recall 279.7 ms
