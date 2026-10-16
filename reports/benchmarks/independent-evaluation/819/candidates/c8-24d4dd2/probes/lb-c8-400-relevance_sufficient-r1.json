@@ -1,0 +1,1 @@
+{"N": 400, "semantic": "required", "selection": "relevance_sufficient", "admitted_median": 400.0, "warm_p50_ms": 96.8, "warm_p95_ms": 108.4, "peak_rss_mib": 316.1, "fusion_status_seen": ["applied"]}

@@ -1,0 +1,65 @@
+c6 r1 {"N": 200, "semantic": "required", "selection": "relevance_sufficient", "admitted_median": 200.0, "warm_p50_ms": 47.8, "warm_p95_ms": 61.4, "peak_rss_mib": 315.7, "fusion_status_seen": []}
+c8 r1 {"N": 200, "semantic": "required", "selection": "relevance_sufficient", "admitted_median": 200.0, "warm_p50_ms": 52.9, "warm_p95_ms": 64.6, "peak_rss_mib": 314.9, "fusion_status_seen": ["applied"]}
+c4 r1 {"N": 200, "semantic": "required", "selection": "relevance_sufficient", "admitted_median": 200.0, "warm_p50_ms": 43.8, "warm_p95_ms": 53.3, "peak_rss_mib": 317.7, "fusion_status_seen": []}
+c6 r1 {"N": 200, "semantic": "required", "selection": "ranked_prefix", "admitted_median": 200.0, "warm_p50_ms": 38.5, "warm_p95_ms": 49.1, "peak_rss_mib": 315.9, "fusion_status_seen": []}
+c8 r1 {"N": 200, "semantic": "required", "selection": "ranked_prefix", "admitted_median": 200.0, "warm_p50_ms": 41.2, "warm_p95_ms": 51.2, "peak_rss_mib": 317.7, "fusion_status_seen": ["applied"]}
+c4 r1 {"N": 200, "semantic": "required", "selection": "ranked_prefix", "admitted_median": 200.0, "warm_p50_ms": 38.8, "warm_p95_ms": 76.4, "peak_rss_mib": 316.0, "fusion_status_seen": []}
+c6 r1 {"N": 400, "semantic": "required", "selection": "relevance_sufficient", "admitted_median": 400.0, "warm_p50_ms": 83.2, "warm_p95_ms": 101.6, "peak_rss_mib": 315.3, "fusion_status_seen": []}
+c8 r1 {"N": 400, "semantic": "required", "selection": "relevance_sufficient", "admitted_median": 400.0, "warm_p50_ms": 96.8, "warm_p95_ms": 108.4, "peak_rss_mib": 316.1, "fusion_status_seen": ["applied"]}
+c4 r1 {"N": 400, "semantic": "required", "selection": "relevance_sufficient", "admitted_median": 400.0, "warm_p50_ms": 79.6, "warm_p95_ms": 90.1, "peak_rss_mib": 316.6, "fusion_status_seen": []}
+c6 r1 {"N": 400, "semantic": "required", "selection": "ranked_prefix", "admitted_median": 400.0, "warm_p50_ms": 72.6, "warm_p95_ms": 128.4, "peak_rss_mib": 316.0, "fusion_status_seen": []}
+c8 r1 {"N": 400, "semantic": "required", "selection": "ranked_prefix", "admitted_median": 400.0, "warm_p50_ms": 74.7, "warm_p95_ms": 93.6, "peak_rss_mib": 315.6, "fusion_status_seen": ["applied"]}
+c4 r1 {"N": 400, "semantic": "required", "selection": "ranked_prefix", "admitted_median": 400.0, "warm_p50_ms": 69.5, "warm_p95_ms": 80.0, "peak_rss_mib": 315.5, "fusion_status_seen": []}
+c6 r1 {"N": 450, "semantic": "required", "selection": "relevance_sufficient", "admitted_median": 450.0, "warm_p50_ms": 93.4, "warm_p95_ms": 106.1, "peak_rss_mib": 316.7, "fusion_status_seen": []}
+c8 r1 {"N": 450, "semantic": "required", "selection": "relevance_sufficient", "admitted_median": 450.0, "warm_p50_ms": 119.7, "warm_p95_ms": 195.5, "peak_rss_mib": 316.5, "fusion_status_seen": ["applied"]}
+c4 r1 {"N": 450, "semantic": "required", "selection": "relevance_sufficient", "admitted_median": 450.0, "warm_p50_ms": 92.3, "warm_p95_ms": 107.3, "peak_rss_mib": 316.7, "fusion_status_seen": []}
+c6 r1 {"N": 450, "semantic": "required", "selection": "ranked_prefix", "admitted_median": 450.0, "warm_p50_ms": 76.8, "warm_p95_ms": 91.3, "peak_rss_mib": 315.7, "fusion_status_seen": []}
+c8 r1 {"N": 450, "semantic": "required", "selection": "ranked_prefix", "admitted_median": 450.0, "warm_p50_ms": 84.5, "warm_p95_ms": 97.9, "peak_rss_mib": 316.8, "fusion_status_seen": ["applied"]}
+c4 r1 {"N": 450, "semantic": "required", "selection": "ranked_prefix", "admitted_median": 450.0, "warm_p50_ms": 76.9, "warm_p95_ms": 92.2, "peak_rss_mib": 316.2, "fusion_status_seen": []}
+c6 r1 {"N": 500, "semantic": "required", "selection": "relevance_sufficient", "admitted_median": 500.0, "warm_p50_ms": 105.0, "warm_p95_ms": 144.0, "peak_rss_mib": 319.2, "fusion_status_seen": []}
+c8 r1 {"N": 500, "semantic": "required", "selection": "relevance_sufficient", "admitted_median": 500.0, "warm_p50_ms": 125.7, "warm_p95_ms": 133.7, "peak_rss_mib": 319.2, "fusion_status_seen": ["applied"]}
+c4 r1 {"N": 500, "semantic": "required", "selection": "relevance_sufficient", "admitted_median": 500.0, "warm_p50_ms": 99.9, "warm_p95_ms": 114.8, "peak_rss_mib": 316.9, "fusion_status_seen": []}
+c6 r1 {"N": 500, "semantic": "required", "selection": "ranked_prefix", "admitted_median": 500.0, "warm_p50_ms": 86.2, "warm_p95_ms": 124.7, "peak_rss_mib": 316.9, "fusion_status_seen": []}
+c8 r1 {"N": 500, "semantic": "required", "selection": "ranked_prefix", "admitted_median": 500.0, "warm_p50_ms": 92.8, "warm_p95_ms": 117.3, "peak_rss_mib": 318.6, "fusion_status_seen": ["applied"]}
+c4 r1 {"N": 500, "semantic": "required", "selection": "ranked_prefix", "admitted_median": 500.0, "warm_p50_ms": 86.5, "warm_p95_ms": 104.1, "peak_rss_mib": 318.8, "fusion_status_seen": []}
+c6 r1 {"N": 520, "semantic": "required", "selection": "relevance_sufficient", "admitted_median": 520.0, "warm_p50_ms": 104.5, "warm_p95_ms": 118.5, "peak_rss_mib": 318.5, "fusion_status_seen": []}
+c8 r1 {"N": 520, "semantic": "required", "selection": "relevance_sufficient", "admitted_median": 520.0, "warm_p50_ms": 108.7, "warm_p95_ms": 127.6, "peak_rss_mib": 316.9, "fusion_status_seen": ["skipped_over_limit"]}
+c4 r1 {"N": 520, "semantic": "required", "selection": "relevance_sufficient", "admitted_median": 520.0, "warm_p50_ms": 105.0, "warm_p95_ms": 127.3, "peak_rss_mib": 316.4, "fusion_status_seen": []}
+c6 r1 {"N": 520, "semantic": "required", "selection": "ranked_prefix", "admitted_median": 520.0, "warm_p50_ms": 88.2, "warm_p95_ms": 100.7, "peak_rss_mib": 317.0, "fusion_status_seen": []}
+c8 r1 {"N": 520, "semantic": "required", "selection": "ranked_prefix", "admitted_median": 520.0, "warm_p50_ms": 91.5, "warm_p95_ms": 112.6, "peak_rss_mib": 315.9, "fusion_status_seen": ["skipped_over_limit"]}
+c4 r1 {"N": 520, "semantic": "required", "selection": "ranked_prefix", "admitted_median": 520.0, "warm_p50_ms": 92.8, "warm_p95_ms": 122.0, "peak_rss_mib": 316.5, "fusion_status_seen": []}
+c6 r2 {"N": 200, "semantic": "required", "selection": "relevance_sufficient", "admitted_median": 200.0, "warm_p50_ms": 44.7, "warm_p95_ms": 57.7, "peak_rss_mib": 315.5, "fusion_status_seen": []}
+c8 r2 {"N": 200, "semantic": "required", "selection": "relevance_sufficient", "admitted_median": 200.0, "warm_p50_ms": 53.1, "warm_p95_ms": 64.7, "peak_rss_mib": 318.4, "fusion_status_seen": ["applied"]}
+c4 r2 {"N": 200, "semantic": "required", "selection": "relevance_sufficient", "admitted_median": 200.0, "warm_p50_ms": 44.7, "warm_p95_ms": 54.7, "peak_rss_mib": 315.0, "fusion_status_seen": []}
+c6 r2 {"N": 200, "semantic": "required", "selection": "ranked_prefix", "admitted_median": 200.0, "warm_p50_ms": 38.3, "warm_p95_ms": 48.5, "peak_rss_mib": 316.1, "fusion_status_seen": []}
+c8 r2 {"N": 200, "semantic": "required", "selection": "ranked_prefix", "admitted_median": 200.0, "warm_p50_ms": 40.5, "warm_p95_ms": 57.2, "peak_rss_mib": 317.7, "fusion_status_seen": ["applied"]}
+c4 r2 {"N": 200, "semantic": "required", "selection": "ranked_prefix", "admitted_median": 200.0, "warm_p50_ms": 38.5, "warm_p95_ms": 48.6, "peak_rss_mib": 318.3, "fusion_status_seen": []}
+c6 r2 {"N": 400, "semantic": "required", "selection": "relevance_sufficient", "admitted_median": 400.0, "warm_p50_ms": 82.4, "warm_p95_ms": 94.0, "peak_rss_mib": 316.0, "fusion_status_seen": []}
+c8 r2 {"N": 400, "semantic": "required", "selection": "relevance_sufficient", "admitted_median": 400.0, "warm_p50_ms": 100.2, "warm_p95_ms": 116.4, "peak_rss_mib": 316.0, "fusion_status_seen": ["applied"]}
+c4 r2 {"N": 400, "semantic": "required", "selection": "relevance_sufficient", "admitted_median": 400.0, "warm_p50_ms": 85.6, "warm_p95_ms": 117.6, "peak_rss_mib": 318.2, "fusion_status_seen": []}
+c6 r2 {"N": 400, "semantic": "required", "selection": "ranked_prefix", "admitted_median": 400.0, "warm_p50_ms": 70.3, "warm_p95_ms": 82.3, "peak_rss_mib": 316.7, "fusion_status_seen": []}
+c8 r2 {"N": 400, "semantic": "required", "selection": "ranked_prefix", "admitted_median": 400.0, "warm_p50_ms": 73.2, "warm_p95_ms": 83.7, "peak_rss_mib": 315.4, "fusion_status_seen": ["applied"]}
+c4 r2 {"N": 400, "semantic": "required", "selection": "ranked_prefix", "admitted_median": 400.0, "warm_p50_ms": 68.7, "warm_p95_ms": 80.6, "peak_rss_mib": 316.0, "fusion_status_seen": []}
+c6 r2 {"N": 450, "semantic": "required", "selection": "relevance_sufficient", "admitted_median": 450.0, "warm_p50_ms": 90.6, "warm_p95_ms": 134.5, "peak_rss_mib": 316.1, "fusion_status_seen": []}
+c8 r2 {"N": 450, "semantic": "required", "selection": "relevance_sufficient", "admitted_median": 450.0, "warm_p50_ms": 110.4, "warm_p95_ms": 125.6, "peak_rss_mib": 319.1, "fusion_status_seen": ["applied"]}
+c4 r2 {"N": 450, "semantic": "required", "selection": "relevance_sufficient", "admitted_median": 450.0, "warm_p50_ms": 90.2, "warm_p95_ms": 102.1, "peak_rss_mib": 316.8, "fusion_status_seen": []}
+c6 r2 {"N": 450, "semantic": "required", "selection": "ranked_prefix", "admitted_median": 450.0, "warm_p50_ms": 77.1, "warm_p95_ms": 113.9, "peak_rss_mib": 316.1, "fusion_status_seen": []}
+c8 r2 {"N": 450, "semantic": "required", "selection": "ranked_prefix", "admitted_median": 450.0, "warm_p50_ms": 82.4, "warm_p95_ms": 94.8, "peak_rss_mib": 316.3, "fusion_status_seen": ["applied"]}
+c4 r2 {"N": 450, "semantic": "required", "selection": "ranked_prefix", "admitted_median": 450.0, "warm_p50_ms": 77.4, "warm_p95_ms": 91.3, "peak_rss_mib": 316.2, "fusion_status_seen": []}
+c6 r2 {"N": 500, "semantic": "required", "selection": "relevance_sufficient", "admitted_median": 500.0, "warm_p50_ms": 100.4, "warm_p95_ms": 112.9, "peak_rss_mib": 316.4, "fusion_status_seen": []}
+c8 r2 {"N": 500, "semantic": "required", "selection": "relevance_sufficient", "admitted_median": 500.0, "warm_p50_ms": 130.9, "warm_p95_ms": 140.4, "peak_rss_mib": 316.1, "fusion_status_seen": ["applied"]}
+c4 r2 {"N": 500, "semantic": "required", "selection": "relevance_sufficient", "admitted_median": 500.0, "warm_p50_ms": 101.8, "warm_p95_ms": 117.4, "peak_rss_mib": 317.0, "fusion_status_seen": []}
+c6 r2 {"N": 500, "semantic": "required", "selection": "ranked_prefix", "admitted_median": 500.0, "warm_p50_ms": 85.5, "warm_p95_ms": 100.3, "peak_rss_mib": 317.0, "fusion_status_seen": []}
+c8 r2 {"N": 500, "semantic": "required", "selection": "ranked_prefix", "admitted_median": 500.0, "warm_p50_ms": 91.2, "warm_p95_ms": 102.1, "peak_rss_mib": 316.4, "fusion_status_seen": ["applied"]}
+c4 r2 {"N": 500, "semantic": "required", "selection": "ranked_prefix", "admitted_median": 500.0, "warm_p50_ms": 86.7, "warm_p95_ms": 101.1, "peak_rss_mib": 316.9, "fusion_status_seen": []}
+c6 r2 {"N": 520, "semantic": "required", "selection": "relevance_sufficient", "admitted_median": 520.0, "warm_p50_ms": 104.9, "warm_p95_ms": 119.4, "peak_rss_mib": 319.3, "fusion_status_seen": []}
+c8 r2 {"N": 520, "semantic": "required", "selection": "relevance_sufficient", "admitted_median": 520.0, "warm_p50_ms": 107.1, "warm_p95_ms": 164.6, "peak_rss_mib": 316.0, "fusion_status_seen": ["skipped_over_limit"]}
+c4 r2 {"N": 520, "semantic": "required", "selection": "relevance_sufficient", "admitted_median": 520.0, "warm_p50_ms": 105.1, "warm_p95_ms": 121.7, "peak_rss_mib": 316.5, "fusion_status_seen": []}
+c6 r2 {"N": 520, "semantic": "required", "selection": "ranked_prefix", "admitted_median": 520.0, "warm_p50_ms": 87.3, "warm_p95_ms": 100.8, "peak_rss_mib": 319.3, "fusion_status_seen": []}
+c8 r2 {"N": 520, "semantic": "required", "selection": "ranked_prefix", "admitted_median": 520.0, "warm_p50_ms": 89.2, "warm_p95_ms": 103.4, "peak_rss_mib": 316.3, "fusion_status_seen": ["skipped_over_limit"]}
+c4 r2 {"N": 520, "semantic": "required", "selection": "ranked_prefix", "admitted_median": 520.0, "warm_p50_ms": 90.2, "warm_p95_ms": 104.5, "peak_rss_mib": 319.1, "fusion_status_seen": []}
+tie c6 relevance_sufficient {"semantic": "required", "selection": "relevance_sufficient", "queries": 9, "top5_differs": 3, "returned_differs": 2, "exact_fused_ties_in_top5": 0}
+tie c6 ranked_prefix {"semantic": "required", "selection": "ranked_prefix", "queries": 9, "top5_differs": 0, "returned_differs": 0, "exact_fused_ties_in_top5": 0}
+tie c8 relevance_sufficient {"semantic": "required", "selection": "relevance_sufficient", "queries": 9, "top5_differs": 0, "returned_differs": 1, "exact_fused_ties_in_top5": 3}
+tie c8 ranked_prefix {"semantic": "required", "selection": "ranked_prefix", "queries": 9, "top5_differs": 0, "returned_differs": 0, "exact_fused_ties_in_top5": 3}
+probes-done

@@ -2,12 +2,12 @@
 
 **Recommendation: CHANGES REQUIRED.**
 
-C8 delivers a real, clean ranking improvement. Under its default selection that improvement does not reach the caller, and C8 keeps the recall loss that made C6 CHANGES REQUIRED.
+On the sealed cohort, C8 delivers a real ranking improvement. It is not uniform: LongMemEval turn-level top-3 regresses. Under the default selection the improvement does not reach the caller, and C8 keeps the recall loss that made C6 CHANGES REQUIRED.
 
-**Ranking (independently confirmed).** Fusion ranks needed evidence higher.
+**Ranking (independently confirmed on e5).** Fusion ranks needed evidence higher.
 - **Against C6+sem (default selection):** depth recall@5 rises by +0.076 [+0.042, +0.117] on the sealed e5 cohort. All needed evidence is in the top 5 on 11 more queries and 0 fewer.
 - **Against C4+sem under `ranked_prefix`:** the same gain, with identical discovery.
-- **No losses:** fusion causes no strict loss against its own base in either mode.
+- **No e5 losses:** fusion causes no strict loss against its own base in either mode.
 
 **Discovery and selection (unchanged from C6).** Under the default `relevance_sufficient` selection:
 - **Returned sets equal C6's** on 199 of 208 e5 queries. Recall at the budget is identical: Δ 0.000.
@@ -171,7 +171,12 @@ Strict uses exact McNemar. Deltas are per-query bootstrap 95% CIs, 10,000 resamp
 - Fusion slightly reduces question-shaped notes at rank 1 (16 → 14).
 - It does not fix C6's slot capture: answers are returned at recall 0.41 under the default selection, against 0.95 for C4+sem.
 
-{{TIES}}
+**Deterministic ties.**
+- **Same history:** C8+sem's repeat run is identical on all 208 e5 queries, covering returned lists, admitted top 10s and semantic provenance.
+- **Exact fused ties do occur.** A separate tie probe (`probes/tie_probe.py`: 3 stores, 9 queries, written forward and in reverse) found equal fused scores adjacent in the top 5 on 3 of 9 queries.
+- **Insertion order did not change C8's fused top 5** on any of the 9 queries, under either selection.
+- **The returned set did change on one query** ("Where does the cat sleep?": 5 items forward, 3 reversed) under the default selection. C6 shows the same reversal on that query, plus 3 top-5 order changes. This is pre-existing 3.4.0 / sufficiency behaviour, which C8 inherits rather than introduces.
+- **Residual risk.** Tie-breaking still falls back to the uuid digest, so write order remains the last resort (developer review, note 9).
 
 ## 2. LongMemEval-S 500
 
@@ -230,11 +235,99 @@ Bootstrap Δ recall (`tools/paired.py`, session @5 / turn @10):
 
 ## 3. Cost near the fusion boundary (400–520 admitted)
 
-{{COST}}
+**Probe** (`probes/latency_boundary.py`):
+- one store per run, where every memory shares a query word, so admitted ≈ N;
+- 40 warm recalls at budget 5;
+- two repetitions per point, run one after another in this VM.
+
+**Warm p50 in ms** (repetition 1 / repetition 2; peak RSS 316–319 MiB for every arm and point):
+
+| Admitted | C4+sem default | C6+sem default | **C8+sem default** | C8 − C6 | C4+sem `ranked_prefix` | C6+sem `ranked_prefix` | **C8+sem `ranked_prefix`** | C8 − C6 |
+| ---: | --- | --- | --- | --- | --- | --- | --- | --- |
+| 200 | 44.7 / 43.8 | 47.8 / 44.7 | 52.9 / 53.1 | +5 / +8 | 38.5 / 38.8 | 38.5 / 38.3 | 40.5 / 41.2 | +2 / +3 |
+| 400 | 79.6 / 85.6 | 83.2 / 82.4 | **100.2 / 96.8** | **+17 / +14 (+17–20%)** | 68.7 / 69.5 | 70.3 / 72.6 | 74.7 / 73.2 | +4 / +1 |
+| 450 | 92.3 / 90.2 | 93.4 / 90.6 | **110.4 / 119.7** | **+17 / +29 (+18–32%)** | 76.9 / 77.4 | 77.1 / 76.8 | 84.5 / 82.4 | +7 / +6 |
+| 500 | 101.8 / 99.9 | 105.0 / 100.4 | **130.9 / 125.7** | **+26 / +25 (+25%)** | 86.5 / 86.7 | 85.5 / 86.2 | 92.8 / 91.2 | +7 / +5 |
+| 520 (fusion `skipped_over_limit`) | 105.0 / 105.1 | 104.9 / 104.5 | 108.7 / 107.1 | +4 / +3 | 90.2 / 92.8 | 87.3 / 88.2 | 89.2 / 91.5 | +2 / +3 |
+
+**Reading:**
+- **200 admitted:** C8 meets the preregistered I5 bound (p50 ≤ C6+sem + 10 ms) in both repetitions.
+- **400–500 admitted, default selection** (the shipped configuration): C8 costs **+14 to +29 ms (+17% to +32%)** over C6+sem. That exceeds the 1.15× ratio C8's preregistration applied at 1,000 memories, the point where fusion is skipped and the bound is therefore vacuous (developer review, finding 3).
+- **Where the cost comes from:** the second (3.4.0) ranking pass that the default selection needs. Under `ranked_prefix` the increment is only +1 to +7 ms.
+- **Discontinuity at 512.** Above `FUSION_MAX_ADMITTED`, fusion is silently skipped. Cost falls back to C6's, and ranking reverts to 3.4.0. A store that grows past 512 matching memories therefore changes its ranking regime abruptly. This is recorded per memory as `fusion.status`, but it is not visible in the semantic posture.
+- **Memory:** fusion adds none.
 
 ## 4. Verdict and integration recommendations
 
-{{VERDICT}}
+### Verdict: CHANGES REQUIRED
+
+C8's fusion stage is a safe, deterministic **ranking** component that helps on short stores but not uniformly. Two things support that:
+- on fresh sealed data it moves needed evidence up (e5 depth@5 +0.076 against both C6+sem and C4+sem `ranked_prefix`, with no strict losses against its own base);
+- with the route off, or for time-ordered intents, it changes nothing.
+
+It does not make the candidate acceptable for integration qualification, for four reasons.
+
+1. **No evidence gain under the default selection, and C6's recall defect unresolved.**
+   - Under `relevance_sufficient`, C8 returns C6's sets (199/208 identical on e5; identical @10/@50 on LongMemEval).
+   - It therefore keeps C6's loss against C4+sem, the essential comparator: e5 recall −0.227 [−0.287, −0.169], discovery −0.086, and LongMemEval turn @50 0 / −19 (p = 4e-6). The C6 review's mandatory changes 1–5 are not addressed.
+   - **Better ranking, no better evidence:** 51 needed memories that C8 ranks in its top 5 are withheld as insufficient.
+2. **A significant top-rank regression on public long-haystack data.** LongMemEval turn recall_all@3 falls against C6+sem (+16 / −41), C4+sem (+17 / −42) and C4 default (+16 / −42), all with p ≤ 0.0015. Single-evidence and multi-evidence questions are both affected, so the fused order is not uniformly better.
+3. **Cost near the boundary.** Under the default selection, C8 costs +17% to +32% over C6+sem at 400–500 admitted. The preregistered cost criterion was evaluated only where fusion is skipped.
+4. **A ranking-regime cliff at 512 admitted.** It is silent at the API level.
+
+**Not REJECT**, because:
+- there are no safety, governance or temporal-correctness failures;
+- determinism holds;
+- route off is identical to C4;
+- the ranking mechanism itself is worth carrying forward.
+
+### Distinguishing the effects (e5, default selection unless stated)
+
+| Effect | C8 against C6+sem | C8 against C4+sem |
+| --- | --- | --- |
+| Ranking (depth@5) | **+0.076 [+0.042, +0.117]** | +0.040 [−0.006, +0.086]; `ranked_prefix`: **+0.076 [+0.042, +0.117]** |
+| Discovery (needed admitted) | 0.000 | **−0.086 [−0.129, −0.050]**; `ranked_prefix`: 0.000 |
+| Selection completeness (returned / admitted) | 0.663 = 0.663 | 0.663 against **0.862** |
+| Evidence returned at budget | 124 = 124 of 236 | 124 against **181** of 236 |
+
+### Exact-head integration recommendations (for the delivery lane)
+
+- **Do not integrate `24d4dd2697047fc622a6087f7005775133b60209`.** Do not declare a Runtime Baseline successor for it. Do not promote any number from it.
+- **Components that can be carried forward** into a newly preregistered successor, all validated here:
+  - ranking policy 3.5.0 with the time-ordered-intent skip (`f2626d0e`);
+  - similarity reuse;
+  - the single ranking pass under `ranked_prefix`;
+  - route-off identity.
+- **Required in that successor:**
+  1. **Make ranking gains reachable, without inheriting C6's recall loss.** Selection must credit what fusion ranks, or be decided on the order that is returned. On fresh held-out data it must be non-inferior to C4+sem in recall and discovery (lower 95% bound ≥ −0.02), keeping the C6 review's criteria.
+  2. **No significant top-rank loss on LongMemEval-S.** Turn and session recall_all@3, @5 and @10, against C6+sem, C4+sem and C4 default. State in advance how the dense list's influence is bounded at turn granularity. Do not tune it against LongMemEval or e5.
+  3. **Cost at the boundary.** Measure I5 at 400–500 admitted under the default selection, and either meet ≤ 1.15× C6+sem or vectorise or remove the second ranking pass.
+  4. **Boundary transparency.** Report the 512-admitted fallback in `semantic_retrieval_posture()` and in recall-level summaries. Preregister its behaviour, including any hysteresis.
+  5. **Ties.** Break fused ties by a meaningful signal before the uuid digest.
+  6. **Carry the developer review's should-fix items:** posture and docstring wording (now updated in `24d4dd26`), the unreachable dense-failure fallback, the similarity cache key, and the `base_ranked_admitted` labelling.
+- **Unchanged dependencies from C6:**
+  - rebase onto #805 → #815 → #816 and re-run the security replays;
+  - declare a Runtime Baseline successor for the protected files;
+  - version the LongMemEval lane, which should also record the ranking policy and fusion status;
+  - an approved AMB semantic-on adapter option.
+
+### Acceptance criteria for a successor (ACCEPTABLE FOR INTEGRATION QUALIFICATION)
+
+**On a fresh independent sealed cohort (e6):**
+- strict non-inferior to C4+sem and C4 default;
+- recall and discovery non-inferior to C4+sem (lower bound ≥ −0.02);
+- multi-evidence and question-shaped recall ≥ C4+sem's;
+- 0 leaks;
+- no temporal reversal against its base in either selection;
+- route off identical.
+
+**On LongMemEval-S 500, both planes:** no significant loss at @3, @5 or @10 against C4+sem, C6+sem or C4 default.
+
+**Cost:** ≤ C6+sem + 10 ms at 200, and ≤ 1.15× C6+sem at 400–500 admitted under the default selection.
+
+**Determinism:** two runs and two hosts.
+
+Acceptable for qualification would still not make the candidate an activated runtime baseline.
 
 ## 5. Cohort integrity
 
