@@ -35,6 +35,8 @@ CLAIM_ROW = re.compile(
 )
 CLAIM_CLASSES = {"contract", "qualification", "baseline", "evidence", "doctrine", "roadmap", "delivery"}
 ISSUE_CLASSES = {"delivery"}
+# The delivery coordinator is the only governing issue a claim may name (#797 owner ruling).
+ISSUE_OWNERS = {"#410"}
 OWNER_SUFFIXES = (".md", ".json", "/")
 # Owner rulings the table may not drift from (#797): live release decisions, accepted
 # runtime identity and benchmark admission each have exactly one mandated owner.
@@ -51,6 +53,19 @@ NEVER_OWNERS = (
     "docs/SHADOW_GENOME.md",
     "docs/PROCESS_SHADOW_GENOME.md",
     "docs/SYSTEM_STATE.md",
+    "docs/FEATURE_INDEX.md",
+    "docs/README.md",
+    "docs/GOVERNANCE_INDEX.md",
+    "docs/adr/README.md",
+    "docs/prd/README.md",
+    "docs/rfcs/",
+    "docs/BENCHMARK_COVERAGE_ATLAS.md",
+    "docs/benchmark-evidence-console-catalog.md",
+    "docs/GAUNTLET_EXECUTION_ROADMAP.md",
+    "docs/GAUNTLET_EXTERNAL_BENCHMARK_QUALIFICATION_",
+    "docs/RESEARCH_BRIEF.md",
+    "docs/RUNTIME_IDENTITY_NAMING_BRIEF.md",
+    "docs/ecosystem/",
     "docs/plan-",
     "docs/research-",
     "docs/audits/",
@@ -62,7 +77,7 @@ NEVER_OWNERS = (
 # A document whose H1, leading Status/Purpose clause or authority-effect line demotes it is a
 # projection, never an owner. Only the first clause is read, so later changelog prose is ignored.
 DEMOTION_TERM = re.compile(
-    r"\b(historical|revision[- ]bound|superseded|archived|deprecated|retired|snapshot)\b", re.IGNORECASE
+    r"\b(historical|revision[- ]bound|superseded|archived|deprecated|retired)\b", re.IGNORECASE
 )
 STATUS_LINE = re.compile(r"^\W*(?:status|purpose)\W*:\W*(.*)$", re.IGNORECASE)
 NO_AUTHORITY = re.compile(r"^\W*authority effect\W*:\W*none\b", re.IGNORECASE)
@@ -126,6 +141,8 @@ def validate_claim_owners(
         if owner.startswith("#"):
             if kind not in ISSUE_CLASSES:
                 errors.append(f"{claim}: issue owner {owner} only allowed for live delivery claims")
+            if owner not in ISSUE_OWNERS:
+                errors.append(f"{claim}: issue owner {owner} is not the governing delivery issue")
             continue
         if kind in ISSUE_CLASSES:
             errors.append(f"{claim}: {kind} claims must be owned by the governing issue, not {owner}")

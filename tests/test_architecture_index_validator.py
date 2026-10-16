@@ -137,13 +137,22 @@ class ClaimOwnershipTests(unittest.TestCase):
     def test_delivery_and_issue_owner_pairing(self):
         self.assertTrue(has(claim_errors(with_row("| release-integration-status | delivery | docs/SYSTEM_STATE.md |")), "governing issue"))
         self.assertTrue(has(claim_errors(with_row("| architectural-decision-status | doctrine | #410 |")), "only allowed for live delivery"))
+        self.assertTrue(has(claim_errors(with_row("| release-integration-v2 | delivery | #999 |")), "not the governing delivery issue"))
 
     def test_collection_owner_requires_tracked_members(self):
         self.assertEqual(claim_errors(with_row("| architectural-decision-status | doctrine | docs/adr/ |")), [])
         self.assertTrue(has(claim_errors(with_row("| benchmark-admission | qualification | reference/missing/ |")), "no tracked files"))
 
     def test_navigation_history_and_projection_surfaces_are_never_owners(self):
-        for owner in ("docs/SYSTEM_STATE.md", "docs/ARCHITECTURE_INDEX.md", "docs/plan-sprint4a-public-api-contract.md", "docs/programs/"):
+        for owner in (
+            "docs/SYSTEM_STATE.md",
+            "docs/FEATURE_INDEX.md",
+            "docs/ARCHITECTURE_INDEX.md",
+            "docs/adr/README.md",
+            "docs/plan-sprint4a-public-api-contract.md",
+            "docs/programs/",
+            "docs/ecosystem/",
+        ):
             self.assertTrue(has(claim_errors(with_row(f"| x-claim | qualification | {owner} |")), "cannot own a claim"), owner)
 
     def test_self_demoted_owner_is_not_promoted(self):
@@ -163,6 +172,7 @@ class ClaimOwnershipTests(unittest.TestCase):
             "# Inventory\n\n**Purpose:** one current answer; archived prototypes are listed below\n",
             "# Backlog\n\n## Superseded RC1 items\n\n```text\n# historical lanes\n```\n",
             "# Backlog\n\n```text\nStatus: historical lane example\n```\n",
+            "# Backlog\n\n**Status:** current queue, superseding the RC1 snapshot\n",
         ):
             self.assertEqual(claim_errors(row, {owner: head}), [], head)
 
