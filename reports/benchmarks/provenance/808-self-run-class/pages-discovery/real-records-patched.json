@@ -132,6 +132,6 @@
   "reports/benchmarks/self-run-candidates/mempalace/full500/session.mempalace_default_local.manifest.json": "valid",
   "reports/benchmarks/self-run-candidates/mempalace/full500/turn.mempalace_default_local.manifest.json": "valid"
  },
- "status": "Read-only manifest discovery · 16 source-plane records · 2 tracked source branches · checked 7:19:47 PM · 29 validation concern(s)",
+ "status": "Read-only manifest discovery · 16 source-plane records · 2 tracked source branches · checked 7:34:06 PM · 29 validation concern(s)",
  "problems": "Some evidence was withheld: Invalid source manifest reports/benchmarks/runs/640-hindsight/subset50/session.hindsight_chunks_onnx.manifest.json: Manifest claims a frozen lane profile outside that lane's evidence | Invalid source manifest reports/benchmarks/runs/640-hindsight/subset50/turn.hindsight_chunks_onnx.manifest.json: Manifest claims a frozen lane profile outside that lane's evidence | Invalid source manifest reports/benchmarks/runs/controls/full500/session.agent_memory.manifest.json: Manifest claims a frozen lane profile outside that lane's evidence | additional concerns omitted"
 }

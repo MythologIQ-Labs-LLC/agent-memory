@@ -692,6 +692,8 @@
         },
         "supersedes": {
           "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
           "items": {
             "type": "object",
             "additionalProperties": false,
@@ -713,6 +715,7 @@
         },
         "corrections": {
           "type": "array",
+          "minItems": 1,
           "items": {
             "type": "object",
             "additionalProperties": false,

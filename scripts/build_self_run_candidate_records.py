@@ -112,7 +112,8 @@ def lane_input_digest(components: list[str]) -> tuple[str, str]:
 def shim_summary(bundle: Path) -> dict:
     lines = gzip.decompress((bundle / "shim-calls.jsonl.gz").read_bytes()).decode().splitlines()
     chat = [json.loads(line) for line in lines if line and "request" in json.loads(line)]
-    observed = {key: sorted({json.dumps(c["request"].get(key)) for c in chat}) for key in ("max_tokens", "top_p", "seed")}
+    observed = {key: sorted({json.dumps(c["request"][key]) if key in c["request"] else "not sent" for c in chat})
+                for key in ("max_tokens", "top_p", "seed")}
     return {
         "requests": len(chat),
         "prompt_set_sha256": hashlib.sha256(json.dumps([c["request"].get("messages") for c in chat], sort_keys=True,
@@ -210,17 +211,23 @@ def build_one(root: Path, path: Path) -> tuple[str, dict]:
         record.set(f"{base}/parameters/context_window_tokens", call["parameters"]["n_ctx"],
                    "R8: server flag n_ctx (serving-start-llm.sh)")
         observed_max = shim["observed"]["max_tokens"]
-        record.set(f"{base}/parameters/max_output_tokens",
-                   json.loads(observed_max[0]) if len(observed_max) == 1 else None,
-                   f"R8: sent in all {shim['requests']} logged requests as {observed_max}"
-                   + ("" if observed_max != ["null"] else "; " + MAX_TOKENS_BASIS))
+        if observed_max == ["not sent"]:
+            value, basis = None, (f"R8: not sent in any of {shim['requests']} logged requests; "
+                                  + MAX_TOKENS_BASIS.removeprefix("not sent per request; "))
+        elif len(observed_max) == 1:
+            value, basis = json.loads(observed_max[0]), f"R8: sent as {observed_max[0]} in all {shim['requests']} logged requests"
+        else:
+            raise ValueError(f"{rel}: max_tokens varies across requests: {observed_max}")
+        record.set(f"{base}/parameters/max_output_tokens", value, basis)
+        if shim["observed"]["top_p"] != ["not sent"]:
+            raise ValueError(f"{rel}: top_p was sent per request; record the observed value instead of the default")
         record.set(f"{base}/parameters/top_p", 0.95, "R8: " + TOP_P_BASIS)
         record.set(f"{base}/prompt_sha256", shim["prompt_set_sha256"], "R8: prompt-set digest of shim-calls.jsonl.gz")
 
     # R6 costs: unbilled local inference; tokens from the shim log where one exists.
     record.set("/costs/status", "not_applicable", "R6: no billed inference")
     if shim:
-        tokens = "R6: summed from shim-calls.jsonl.gz chat usage"
+        tokens = "R6: chat-completion usage summed from shim-calls.jsonl.gz (embedding usage excluded)"
         record.set("/costs/input_tokens", shim["prompt_tokens"], tokens)
         record.set("/costs/output_tokens", shim["completion_tokens"], tokens)
 

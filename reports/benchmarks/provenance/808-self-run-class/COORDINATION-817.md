@@ -30,7 +30,7 @@ All 12 are **diagnostic**, not scores:
 
 ## Requested change
 
-The superseding records are ready. Each is verified to validate on your branch, because all 84 evidence pointers are byte-identical there.
+The superseding records are ready. Each is verified to validate on your branch, because all 72 evidence pointers and all 12 superseded-manifest pointers resolve to byte-identical blobs there.
 
 1. **Add the 12 records verbatim.** Copy `reports/benchmarks/self-run-candidates/{640-hindsight/subset50,controls,mem0}/**` from `claude/810-external-exec-no-ci`, plus `reports/benchmarks/self-run-candidates/README.md`:
    ```bash

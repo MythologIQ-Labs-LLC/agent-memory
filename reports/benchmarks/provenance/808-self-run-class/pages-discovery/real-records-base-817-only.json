@@ -87,5 +87,6 @@
   "reports/benchmarks/runs/mem0/subset50/session.mem0_explicit.manifest.json": "valid",
   "reports/benchmarks/runs/mem0/subset50/turn.mem0_explicit.manifest.json": "valid"
  },
- "status": "Read-only manifest discovery · 12 source-plane records · 1 tracked source branches · checked 7:19:18 PM"
+ "status": "Read-only manifest discovery · 12 source-plane records · 1 tracked source branches · checked 7:34:07 PM",
+ "problems": "New run manifests are discovered automatically within approved public source branches. All rows are candidate evidence, not leaderboard acceptance."
 }

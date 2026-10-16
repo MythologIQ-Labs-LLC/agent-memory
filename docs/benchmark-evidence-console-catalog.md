@@ -316,15 +316,16 @@ Results executed outside any frozen same-harness lane may be recorded as **self-
   - "Hindsight chunk-only" is not Hindsight's LLM product;
   - "Graphiti with local Qwen2.5-3B" is not Zep;
   - no self-run record is a frozen lane row.
-- **Isolation.** Self-run records live under `reports/benchmarks/self-run-candidates/` and never point into `reports/benchmarks/normalized/`. That directory is the only input to the scorecards and this catalog, and the scorecard builder reads an explicit lane allowlist. A self-run record therefore cannot enter a comparison set.
+- **Isolation.** Self-run records live under `reports/benchmarks/self-run-candidates/`. They never point into `reports/benchmarks/normalized/`, by URI or by resolved path; that directory is the scorecard builder's output and this catalog's only input. The scorecard builder itself reads only an explicit lane `SOURCES` allowlist. A self-run record therefore cannot enter a comparison set.
 - **Metric record.** `metric_record: native_report` means `normalized_run` names the native benchmark report and no `memory-benchmark-run` record exists.
-- **No masquerade.** A self-run record:
+- **No masquerade.** Lane ids are matched in `task_profile` and `run_id` after NFKC normalisation, case folding and removal of whitespace and format characters. A self-run record:
   - can never be `accepted` or `eligible_on_profile`;
   - prefixes `run_id` and `task_profile` with `self-run:`;
-  - names no frozen lane id in any profile segment.
+  - names no frozen lane id.
 
-  Diagnostic and not-comparable records must declare `comparison_eligibility: not_comparable`. Separately, **any** manifest whose `task_profile` names a frozen lane must point into that lane's imported evidence (`reports/benchmarks/{longmemeval,amb}/<lane_id>/`).
-- **Supersession trail.** `supersedes` names exactly one superseded manifest by path and SHA-256. `corrections` lists every changed field as a JSON pointer, with the original value, the corrected value (`"<absent>"` for a removed field) and a basis. With `--evidence-root`, the checker re-hashes the superseded manifest, verifies each original and corrected value, and refuses any difference that no correction declares. The superseded bytes are never modified.
+  Diagnostic and not-comparable records must declare `comparison_eligibility: not_comparable`. Separately, **any** manifest naming a frozen lane must have its `normalized_run` in that lane's imported evidence (`reports/benchmarks/{longmemeval,amb}/<lane_id>/`) or in `normalized/`, and a `native_result` artifact in that lane's imported evidence.
+- **Tiers.** A `self_hosted` endpoint, or a local run with only judge or `other` calls, fits no tier and is refused until a tier is defined for it.
+- **Supersession trail.** `supersedes` names exactly one superseded manifest by path and SHA-256. `corrections` lists every changed field as a JSON pointer, with the original value, the corrected value (`"<absent>"`, a reserved literal, for a removed field) and a basis. With `--evidence-root`, the checker re-hashes the superseded manifest, verifies each original and corrected value type-exactly, and refuses any difference that no correction declares. The record must be a file inside the evidence root. The superseded bytes are never modified.
 - **What the class does not do.** It confers no review authority. Admission still needs the independent review authority described above, and it remains on HOLD.
 
 `scripts/build_self_run_candidate_records.py --evidence-root <checkout>` regenerates the records deterministically and validates each one; `--check` compares against committed records.

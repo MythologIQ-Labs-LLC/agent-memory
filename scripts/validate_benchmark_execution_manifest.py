@@ -25,6 +25,7 @@ import hashlib
 import json
 import re
 import sys
+import unicodedata
 from datetime import datetime
 from pathlib import Path, PurePosixPath
 
@@ -34,11 +35,14 @@ REPO = Path(__file__).resolve().parents[1]
 SCHEMA = REPO / "schemas/benchmark-execution-manifest.schema.json"
 LANES = REPO / "reference/agentmem_ref/evaluation/lanes"
 LANE_EVIDENCE_FAMILIES = ("longmemeval", "amb")
-SCORECARD_INPUT = "reports/benchmarks/normalized/"
+# The scorecard builder's output directory and the UI catalog's only input. Self-run records
+# never point into it (the scorecard builder itself reads an explicit lane SOURCES allowlist).
+NORMALIZED_DIR = "reports/benchmarks/normalized/"
+LANE_ID_PATTERN = re.compile(r"(longmemeval-s-retrieval-parity|amb-precisionmembench-retrieval)-v\d+")
 SELF_RUN_LOCATION = "reports/benchmarks/self-run-candidates/"
 SELF_RUN_PREFIX = "self-run:"
 ABSENT = "<absent>"
-TIER_PURPOSES = {"local_embedding_model": {"embedding", "rerank"}}
+_MISSING = object()  # a pointer that resolves to nothing; encoded as ABSENT in corrections
 # jsonschema checks "date-time" only when the optional rfc3339-validator package is
 # installed. It is not in the pinned profile, so the format is enforced here.
 RFC3339_UTC = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,9})?Z$")
@@ -132,6 +136,24 @@ def frozen_lane_ids() -> set[str]:
     return {path.stem for path in LANES.glob("*.json")}
 
 
+def _fold(text: str) -> str:
+    """Compatibility-normalised, case-folded text without whitespace or invisible format characters."""
+    text = unicodedata.normalize("NFKC", str(text))
+    return "".join(ch for ch in text if not ch.isspace() and unicodedata.category(ch) != "Cf").casefold()
+
+
+def named_lanes(*texts: str) -> set[str]:
+    """Frozen lane ids named anywhere in the texts, after folding case, width, whitespace and format characters."""
+    folded = [_fold(text) for text in texts]
+    found = {lane for lane in frozen_lane_ids() if any(_fold(lane) in f for f in folded)}
+    return found | {m.group(0) for f in folded for m in LANE_ID_PATTERN.finditer(f)}
+
+
+def _canon(value) -> str:
+    """Type-exact comparison key: 0, 0.0, False and "0" all differ."""
+    return json.dumps(value, sort_keys=True, ensure_ascii=False)
+
+
 def _pointer_get(document, pointer: str):
     node = document
     for token in pointer.lstrip("/").split("/"):
@@ -141,12 +163,26 @@ def _pointer_get(document, pointer: str):
         elif isinstance(node, list) and token.isdigit() and int(token) < len(node):
             node = node[int(token)]
         else:
-            return ABSENT
+            return _MISSING
     return node
 
 
+def _encoded(value) -> str:
+    return _canon(ABSENT if value is _MISSING else value)
+
+
+def _contains_sentinel(value) -> bool:
+    if isinstance(value, str):
+        return value == ABSENT
+    if isinstance(value, dict):
+        return any(_contains_sentinel(v) for v in value.values())
+    if isinstance(value, list):
+        return any(_contains_sentinel(v) for v in value)
+    return False
+
+
 def _leaf_differences(old, new, path: str = "") -> list[str]:
-    """JSON pointers where two documents differ; same-length lists compare element-wise, others whole."""
+    """JSON pointers where two documents differ (type-exact); same-length lists compare element-wise."""
     if isinstance(old, list) and isinstance(new, list) and len(old) == len(new):
         return [d for i, (a, b) in enumerate(zip(old, new)) for d in _leaf_differences(a, b, f"{path}/{i}")]
     if isinstance(old, dict) and isinstance(new, dict):
@@ -158,19 +194,35 @@ def _leaf_differences(old, new, path: str = "") -> list[str]:
             else:
                 out.extend(_leaf_differences(old[key], new[key], child))
         return out
-    return [] if old == new else [path or "/"]
+    return [] if _canon(old) == _canon(new) else [path or "/"]
 
 
 def _check_lane_claim(manifest: dict) -> None:
-    """A manifest that names a frozen lane profile must be backed by that lane's imported evidence."""
-    head = manifest["benchmark"]["task_profile"].split(":", 1)[0]
-    if head not in frozen_lane_ids():
+    """A manifest naming a frozen lane (in its task_profile or run_id) must be that lane's own evidence:
+    its normalized run is the lane's normalized record or lies in the lane's imported evidence, and its
+    native result lies in the lane's imported evidence."""
+    lanes = named_lanes(manifest["benchmark"]["task_profile"], manifest["run_id"])
+    if not lanes:
         return
-    roots = tuple(f"reports/benchmarks/{family}/{head}/" for family in LANE_EVIDENCE_FAMILIES)
-    uris = [manifest["normalized_run"]["uri"]] + [a["uri"] for a in manifest["artifacts"]]
-    if not any(uri.startswith(roots) for uri in uris):
-        raise ValueError(f"task_profile claims frozen lane {head!r} but no evidence pointer is inside that lane's "
-                         "imported evidence; a self-run record must use candidate_class and a self-run: profile")
+    roots = tuple(f"reports/benchmarks/{family}/{lane}/" for lane in lanes for family in LANE_EVIDENCE_FAMILIES)
+    normalized_ok = manifest["normalized_run"]["uri"].startswith(roots + (NORMALIZED_DIR,))
+    native_ok = any(a["kind"] == "native_result" and a["uri"].startswith(roots) for a in manifest["artifacts"])
+    if not (normalized_ok and native_ok):
+        raise ValueError(f"manifest names frozen lane(s) {sorted(lanes)} but its normalized run and native result are "
+                         "not that lane's imported evidence; a self-run record must use candidate_class and a self-run: profile")
+
+
+def _tier_consistent(tier: str, calls: list[dict]) -> bool:
+    """no_model: no calls. local_*: every call on a local endpoint. hosted_model: at least one hosted call.
+    self_hosted endpoints, and local runs with only judge/other calls, fit no tier and fail closed."""
+    local = bool(calls) and all(c["endpoint_class"] == "local" for c in calls)
+    purposes = {c["purpose"] for c in calls}
+    return {
+        "no_model": not calls,
+        "local_embedding_model": local and purposes <= {"embedding", "rerank"},
+        "local_llm_ingestion": local and "generation" in purposes,
+        "hosted_model": any(c["endpoint_class"] == "hosted" for c in calls),
+    }[tier]
 
 
 def _check_candidate_class(manifest: dict, evidence_root: Path | None, manifest_uri: str | None) -> None:
@@ -184,42 +236,40 @@ def _check_candidate_class(manifest: dict, evidence_root: Path | None, manifest_
     profile = manifest["benchmark"]["task_profile"]
     if not manifest["run_id"].startswith(SELF_RUN_PREFIX) or not profile.startswith(SELF_RUN_PREFIX):
         raise ValueError("self-run records must prefix run_id and task_profile with 'self-run:'")
-    lanes = frozen_lane_ids()
-    if any(segment in lanes for segment in profile.split(":")):
-        raise ValueError("a self-run task_profile must not name a frozen lane")
+    if named_lanes(profile, manifest["run_id"]):
+        raise ValueError("a self-run task_profile or run_id must not name a frozen lane")
     pointers = [manifest["normalized_run"]["uri"], *(a["uri"] for a in manifest["artifacts"]),
                 *(s["uri"] for s in klass["supersedes"])]
-    if any(uri.startswith(SCORECARD_INPUT) for uri in pointers):
-        raise ValueError("self-run records must not point into the scorecard input directory")
-    if manifest_uri is not None and not manifest_uri.startswith(SELF_RUN_LOCATION):
-        raise ValueError(f"self-run records must live under {SELF_RUN_LOCATION}")
-    endpoints = {c["endpoint_class"] for c in calls}
-    purposes = {c["purpose"] for c in calls}
-    tier = klass["tier"]
-    consistent = {
-        "no_model": not calls,
-        "local_embedding_model": bool(calls) and "hosted" not in endpoints and purposes <= TIER_PURPOSES["local_embedding_model"],
-        "local_llm_ingestion": "hosted" not in endpoints and "generation" in purposes,
-        "hosted_model": "hosted" in endpoints,
-    }[tier]
-    if not consistent:
-        raise ValueError(f"declared tier {tier!r} does not match the recorded inference calls")
+    if any(uri.startswith(NORMALIZED_DIR) for uri in pointers):
+        raise ValueError("self-run records must not point into the normalized-run directory")
+    if _contains_sentinel({k: v for k, v in manifest.items() if k != "candidate_class"}):
+        raise ValueError(f"the literal {ABSENT!r} is reserved for removed fields in corrections")
+    if not _tier_consistent(klass["tier"], calls):
+        raise ValueError(f"declared tier {klass['tier']!r} does not match the recorded inference calls")
     if evidence_root is None:
         return
+    if manifest_uri is None:
+        raise ValueError("a self-run record checked under an evidence root must be a file inside that root")
+    if not manifest_uri.startswith(SELF_RUN_LOCATION):
+        raise ValueError(f"self-run records must live under {SELF_RUN_LOCATION}")
     root = evidence_root.resolve()
-    if len(klass["supersedes"]) != 1:
-        raise ValueError("a superseding record must name exactly one superseded manifest")
+    normalized_dir = (root / NORMALIZED_DIR).resolve()
+    for uri in pointers:
+        if (root / uri).resolve() == normalized_dir or normalized_dir in (root / uri).resolve().parents:
+            raise ValueError("self-run records must not point into the normalized-run directory (resolved)")
     old_ref = klass["supersedes"][0]
     old_path = _resolve(root, old_ref["uri"], "superseded manifest")
     if _sha256_file(old_path) != old_ref["sha256"]:
         raise ValueError(f"SHA-256 mismatch for superseded manifest: {old_ref['uri']}")
     old = json.loads(old_path.read_bytes())
+    if _contains_sentinel(old):
+        raise ValueError(f"superseded manifest contains the reserved literal {ABSENT!r}")
     current = {k: v for k, v in manifest.items() if k != "candidate_class"}
     declared = [c["pointer"] for c in klass["corrections"]]
     for correction in klass["corrections"]:
-        if _pointer_get(old, correction["pointer"]) != correction["original"]:
+        if _encoded(_pointer_get(old, correction["pointer"])) != _canon(correction["original"]):
             raise ValueError(f"correction {correction['pointer']}: original value does not match the superseded manifest")
-        if _pointer_get(current, correction["pointer"]) != correction["corrected"]:
+        if _encoded(_pointer_get(current, correction["pointer"])) != _canon(correction["corrected"]):
             raise ValueError(f"correction {correction['pointer']}: corrected value does not match this record")
     undeclared = [d for d in _leaf_differences(old, current)
                   if not any(d == p or d.startswith(p + "/") for p in declared)]

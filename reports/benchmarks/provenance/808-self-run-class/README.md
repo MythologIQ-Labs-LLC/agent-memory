@@ -21,13 +21,13 @@ In `schemas/benchmark-execution-manifest.schema.json`, there is one new optional
 
 | Guarantee | Rule |
 |---|---|
-| Never enters the accepted comparator set | A self-run record cannot point into `reports/benchmarks/normalized/`, and with `--evidence-root` it must live under `reports/benchmarks/self-run-candidates/`. The scorecard builder reads an explicit lane allowlist, and the catalog reads only `normalized/`; a test asserts neither names a self-run or `runs/` path. `build_benchmark_scorecards.py --check` and `build_benchmark_ui_catalog.py --check` stay current |
+| Never enters the accepted comparator set | A self-run record cannot point into `reports/benchmarks/normalized/`, either by URI or by resolved path, so symlinks are covered. That directory is the scorecard builder's output and the UI catalog's only input. With `--evidence-root`, the record must be a file inside the root and live under `reports/benchmarks/self-run-candidates/`. The scorecard builder reads an explicit lane allowlist, and the catalog reads only `normalized/`; a test asserts neither names a self-run or `runs/` path. `build_benchmark_scorecards.py --check` and `build_benchmark_ui_catalog.py --check` stay current |
 | Never acceptance or eligibility | `accepted` is refused. `eligible_on_profile` is refused. Diagnostic and not-comparable records must say `not_comparable` |
-| Cannot masquerade as a frozen lane | It carries the `self-run:` prefix on `run_id` and `task_profile`, and no profile segment may name a frozen lane id. Conversely, **any** manifest naming a frozen lane profile must point into that lane's imported evidence. All 16 mislabelled originals are now refused |
-| Tier honesty | `no_model` means no calls. `local_embedding_model` means only local embedding or rerank. `local_llm_ingestion` means local generation and nothing hosted. `hosted_model` means at least one hosted call |
-| Auditable supersession | The superseded bytes are re-hashed. Every correction's original and corrected value is verified, and any difference no correction declares is refused (lists are compared element-wise when their length is unchanged) |
+| Cannot masquerade as a frozen lane | Lane ids are matched in `task_profile` **and** `run_id` after NFKC normalisation, case folding and removal of whitespace and invisible format characters, so `LongMemEval-…-V1`, padded and zero-width variants are caught. A self-run record carries the `self-run:` prefix and may name no frozen lane id. Conversely, **any** manifest naming a frozen lane must have its `normalized_run` in that lane's imported evidence or in `normalized/`, **and** a `native_result` artifact in that lane's imported evidence; an unrelated file in the lane directory is not enough. All 16 mislabelled originals are refused. Boundary: lane ids are versioned (`…-vN`). An unversioned family name such as `amb-precisionmembench-retrieval` is a benchmark id, not a lane, and is allowed |
+| Tier honesty | `no_model` means no calls. `local_embedding_model` means every call is on a `local` endpoint and is embedding or rerank. `local_llm_ingestion` means every call is `local` and at least one is generation. `hosted_model` means at least one hosted call. A `self_hosted` endpoint, or a local run with only judge or `other` calls, fits no tier and is refused until the owner defines one |
+| Auditable supersession | The schema requires exactly one superseded manifest and at least one correction, even without an evidence root. With `--evidence-root`, the superseded bytes are re-hashed, and every correction's original and corrected value is verified **type-exactly**, so `0`, `0.0`, `false` and `"0"` differ. Any difference no correction declares is refused; lists are compared element-wise when their length is unchanged. The literal `"<absent>"` is reserved for removed fields and refused as a real value |
 
-**Tests:** `tests/test_benchmark_execution_manifest.py` grew from 44 to **54** tests, all passing on CPython 3.12.3 and 3.13.16. The new `SelfRunCandidateTests` class is hermetic: it builds a temporary evidence root.
+**Tests:** `tests/test_benchmark_execution_manifest.py` grew from 44 to **59** tests, all passing on CPython 3.12.3 and 3.13.16. The new `SelfRunCandidateTests` class is hermetic: it builds a temporary evidence root. Mutation checks confirm that the type-exact comparison and the resolved-path guard are each what makes their tests fail when removed.
 
 ## 3. Corrected records: 21 of 21
 
@@ -59,14 +59,23 @@ R10 is recorded explicitly as `metric_record: native_report`.
 
 **Two values were not measured by the run.** They come from the pinned server source. `top_p = 0.95` is applied to Graphiti and LangMem. `max_tokens = None` applies to LangMem. Both come from llama-cpp-python 0.3.16 `llama_cpp/server/types.py`, whose sha256 `a6c5b3b8…` equals the wheel's RECORD.
 
-**Token counts** were summed from the committed shim logs. Graphiti's sum equals its recorded 253,829 prompt and 9,010 completion tokens. LangMem's is 72,366 and 4,422.
+**Token counts** are chat-completion usage summed from the committed shim logs; embedding usage is excluded. Graphiti's sum equals its recorded 253,829 prompt and 9,010 completion tokens. LangMem's is 72,366 and 4,422.
+
+**`prompt_sha256` for an LLM call record** is a prompt-*set* digest:
+
+```text
+sha256( json.dumps([request["messages"] for each chat request in log order],
+                   sort_keys=True, separators=(",", ":")) )
+```
+
+It is computed over `shim-calls.jsonl.gz`, and the record's `count` is the number of requests.
 
 **Records are under the viewer's 16,000-byte cap** (the largest is 12,389 bytes), because corrections are field-level.
 
 ## 4. The 12 mislabelled manifests on `claude/817-jev-mem-execution-no-ci` (P1)
 
 - **Same bytes.** At `38e80cde`, all 12 are **byte-identical** to audited originals: same git blobs and SHA-256.
-- **Records apply there.** All 84 evidence pointers of the corresponding 12 superseding records resolve to identical blobs on that branch, so the records validate there verbatim.
+- **Records apply there.** All 72 evidence pointers of the corresponding 12 superseding records, plus their 12 superseded-manifest pointers, resolve to identical blobs on that branch, so the records validate there verbatim.
 - **Not changed here.** The branch was not touched. The coordination request is in `COORDINATION-817.md`.
 
 ## 5. Public discovery viewer (G4b): qualified locally, not deployed
@@ -85,11 +94,11 @@ The viewer is `gh-pages` at `4cf72d1f` (`assets/run-discovery.js`).
 | V4 | `cohort()` labels `all-500:` selections "preregistered subset" | low |
 | V5 | Size tracking covers only the source prefix, so records pointing at raw evidence elsewhere in the same commit are refused | blocks self-run display |
 
-**Patch:** `pages-discovery/run-discovery-fail-closed.patch` (+104/−9 across 3 files). It:
+**Patch:** `pages-discovery/run-discovery-fail-closed.patch` (+124/−9 across 3 files). It applies cleanly to `4cf72d1f`. It:
 - allows only v1 `candidate`;
 - allows only `not_assessed` or `not_comparable` eligibility;
-- refuses any profile segment naming a frozen lane;
-- validates `candidate_class`, and requires it under the self-run prefix;
+- refuses a frozen lane id anywhere in `task_profile` or `run_id`, after NFKC, case folding and removal of whitespace and format characters;
+- validates `candidate_class`, including its tier against `inference.calls`, and requires it under the self-run prefix;
 - withholds scores for diagnostic and not-comparable records;
 - labels each row with class and tier;
 - accepts the isolated `reports/benchmarks/self-run-candidates/` source prefix;
@@ -124,3 +133,10 @@ The viewer is `gh-pages` at `4cf72d1f` (`assets/run-discovery.js`).
 | D2 | Apply the 817 relabelling | Owner of `claude/817-jev-mem-execution-no-ci` |
 | D3 | Review, apply and deploy the viewer patch, and allowlist the self-run prefix on `claude/810-external-exec-no-ci` if self-run provenance should be public | Pages owner (#807) |
 | D4 | Independent reviewer and review-authority record | #808 owner; G2 HOLD unchanged |
+
+## 7. Independent review
+
+An adversarial review of `6fe8ad8a` (`independent-review-self-run.md`) returned "changes required, small". Like the earlier reviews, it was launched by the executing session, so it is not independent in the G2 sense.
+
+Every must-fix and should-fix item is fixed in the commit that adds that file, and each of the reviewer's attack scripts is now refused, apart from the documented unversioned-family boundary.
+

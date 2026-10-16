@@ -415,14 +415,41 @@ class SelfRunCandidateTests(unittest.TestCase):
         self.check(self.record)
 
     def test_original_mislabelled_manifest_is_refused(self):
-        with self.assertRaisesRegex(ValueError, "claims frozen lane"):
+        with self.assertRaisesRegex(ValueError, "names frozen lane"):
             validator.validate(copy.deepcopy(self.original))
 
     def test_lane_profile_is_allowed_only_with_lane_evidence(self):
+        lane_dir = "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/x/"
         value = copy.deepcopy(self.original)
-        value["artifacts"].append({"kind": "other", "uri": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/x/evidence.json",
-                                   "sha256": "a" * 64})
+        value["normalized_run"]["uri"] = "reports/benchmarks/normalized/x.json"
+        value["artifacts"] = [{"kind": "native_result", "uri": lane_dir + "report.json", "sha256": "a" * 64}]
         validator.validate(value)
+        # An unrelated file in the lane directory does not make a self-run manifest a lane row.
+        forged = copy.deepcopy(self.original)
+        forged["artifacts"].append({"kind": "other", "uri": lane_dir + "README.md", "sha256": "a" * 64})
+        with self.assertRaisesRegex(ValueError, "names frozen lane"):
+            validator.validate(forged)
+
+    def test_lane_names_are_matched_after_folding(self):
+        variants = ["LongMemEval-S-Retrieval-Parity-V1:session", " longmemeval-s-retrieval-parity-v1:session",
+                    "longmemeval-s-retrieval-parity-v1 :session", "longmemeval-s-retrieval-parity-v1\u200b:session",
+                    "x:longmemeval-s-retrieval-parity-v1:session", "longmemeval-s-retrieval-parity-v1/session",
+                    "\uff4congmemeval-s-retrieval-parity-v1:session", "amb-precisionmembench-retrieval-v9:single-turn"]
+        for profile in variants:
+            with self.subTest(profile=profile):
+                value = copy.deepcopy(self.original)
+                value["benchmark"]["task_profile"] = profile
+                with self.assertRaisesRegex(ValueError, "names frozen lane"):
+                    validator.validate(value)
+                self.refuse(lambda r, p=profile: r["benchmark"].update(task_profile="self-run:" + p),
+                            "must not name a frozen lane", rehash=False)
+        value = copy.deepcopy(self.original)
+        value["benchmark"]["task_profile"] = "agent-memory-x:session"
+        value["run_id"] = "longmemeval-s-retrieval-parity-v1:session:x"
+        with self.assertRaisesRegex(ValueError, "names frozen lane"):
+            validator.validate(value)
+        self.refuse(lambda r: r.update(run_id="self-run:longmemeval-s-retrieval-parity-v1:x"), "must not name a frozen lane",
+                    rehash=False)
 
     def test_cannot_be_accepted_or_eligible(self):
         self.refuse(lambda r: r["review"].update(status="accepted", reviewer="x", decision_ref="https://example.org/x"),
@@ -440,7 +467,7 @@ class SelfRunCandidateTests(unittest.TestCase):
 
     def test_isolated_from_scorecard_inputs(self):
         self.refuse(lambda r: r["normalized_run"].update(uri="reports/benchmarks/normalized/x.json"),
-                    "scorecard input", rehash=False)
+                    "normalized-run directory", rehash=False)
         self.refuse(lambda r: None, "must live under", uri="reports/benchmarks/runs/synthetic/manifest2.json")
         self.refuse(lambda r: None, "must live under", uri="reports/benchmarks/normalized/x.json")
 
@@ -452,15 +479,19 @@ class SelfRunCandidateTests(unittest.TestCase):
             with self.subTest(script=script):
                 self.assertFalse(any("self-run" in value or "reports/benchmarks/runs" in value for value in strings))
                 self.assertIn("normalized", source)
-        self.assertFalse(validator.SELF_RUN_LOCATION.startswith(validator.SCORECARD_INPUT))
+        self.assertFalse(validator.SELF_RUN_LOCATION.startswith(validator.NORMALIZED_DIR))
 
     def test_tier_must_match_inference(self):
         embed = {"purpose": "embedding", "provider": "local", "model_id": "e", "model_revision": "r1", "model_digest": None,
                  "endpoint_class": "local", "parameters": {}, "prompt_sha256": None, "count": 1}
         gen = dict(embed, purpose="generation")
         hosted = dict(gen, endpoint_class="hosted")
+        self_hosted = dict(gen, endpoint_class="self_hosted")
+        judge = dict(embed, purpose="judge")
         cases = [("no_model", [embed]), ("local_embedding_model", []), ("local_embedding_model", [gen]),
-                 ("local_llm_ingestion", [embed]), ("local_llm_ingestion", [hosted]), ("hosted_model", [gen])]
+                 ("local_llm_ingestion", [embed]), ("local_llm_ingestion", [hosted]), ("hosted_model", [gen]),
+                 ("local_llm_ingestion", [self_hosted]), ("local_embedding_model", [dict(embed, endpoint_class="self_hosted")]),
+                 ("local_llm_ingestion", [judge]), ("local_embedding_model", [judge])]
         for tier, calls in cases:
             with self.subTest(tier=tier, calls=[c["purpose"] + "/" + c["endpoint_class"] for c in calls]):
                 self.refuse(lambda r, tier=tier, calls=calls: (r["candidate_class"].update(tier=tier),
@@ -474,11 +505,49 @@ class SelfRunCandidateTests(unittest.TestCase):
         self.refuse(lambda r: r["candidate_class"]["corrections"][0].update(corrected="self-run:other"), "corrected value")
         self.refuse(lambda r: r["candidate_class"]["corrections"].pop(1), "undeclared differences|corrected value")
         self.refuse(lambda r: r["execution"].update(retries=3), "undeclared differences")
-        self.refuse(lambda r: r["candidate_class"].update(supersedes=[]), "exactly one")
-        self.refuse(lambda r: r["candidate_class"]["supersedes"].append(dict(r["candidate_class"]["supersedes"][0])), "exactly one")
+        for change in (lambda r: r["candidate_class"].update(supersedes=[]),
+                       lambda r: r["candidate_class"]["supersedes"].append(dict(r["candidate_class"]["supersedes"][0])),
+                       lambda r: r["candidate_class"].update(corrections=[])):
+            record = copy.deepcopy(self.record)
+            change(record)
+            for rehash in (False, True):
+                with self.subTest(rehash=rehash), self.assertRaisesRegex(Exception, "non-empty|too long"):
+                    self.check(record, rehash)
+
+    def test_trail_comparison_is_type_exact(self):
+        # Values the schema accepts (2020-12 treats 42.0 as an integer) but that are not the original JSON.
+        for change in (lambda r: r["execution"].update(random_seed=42.0), lambda r: r["timing"].update(elapsed_ms=12000.0),
+                       lambda r: r["benchmark"].update(sample_count=10.0), lambda r: r["execution"].update(retries=0.0)):
+            with self.subTest():
+                self.refuse(change, "undeclared differences")
+        # A correction may not claim an original of a different JSON type.
+        self.refuse(lambda r: r["candidate_class"]["corrections"].append(
+            {"pointer": "/execution/retries", "original": False, "corrected": 0, "basis": "x"}), "original value")
+
+    def test_absent_literal_is_reserved(self):
+        self.refuse(lambda r: r["environment"].update(runtime="<absent>"), "reserved", rehash=False)
+
+    def test_location_must_be_known_under_evidence_root(self):
+        with self.assertRaisesRegex(ValueError, "file inside that root"):
+            validator.validate(copy.deepcopy(self.record), evidence_root=self.root, manifest_uri=None)
+
+    def test_pointer_resolving_into_normalized_dir_is_refused(self):
+        import os
+        normalized = self.root / "reports/benchmarks/normalized"
+        normalized.mkdir(parents=True)
+        (normalized / "x.json").write_bytes((self.root / "reports/benchmarks/runs/synthetic/native.json").read_bytes())
+        os.symlink(normalized / "x.json", self.root / "reports/benchmarks/runs/synthetic/link.json")
+        def link(record):
+            before = copy.deepcopy(record["artifacts"])
+            record["artifacts"].append({"kind": "other", "uri": "reports/benchmarks/runs/synthetic/link.json",
+                                        "sha256": record["normalized_run"]["sha256"]})
+            record["candidate_class"]["corrections"].append(
+                {"pointer": "/artifacts", "original": before, "corrected": record["artifacts"], "basis": "test"})
+        self.refuse(link, "normalized-run directory \\(resolved\\)")
 
     def test_absent_sentinel_for_corrections(self):
-        self.assertEqual(validator._pointer_get({"a": {}}, "/a/b"), validator.ABSENT)
+        self.assertIs(validator._pointer_get({"a": {}}, "/a/b"), validator._MISSING)
+        self.assertEqual(validator._encoded(validator._MISSING), json.dumps(validator.ABSENT))
         self.assertEqual(validator._pointer_get({"a": [1, 2]}, "/a/1"), 2)
         self.assertEqual(validator._leaf_differences({"a": 1, "b": [1]}, {"a": 1, "b": [2], "c": 0}), ["/b/0", "/c"])
         self.assertEqual(validator._leaf_differences({"b": [1]}, {"b": [1, 2]}), ["/b"])  # length change: whole list
