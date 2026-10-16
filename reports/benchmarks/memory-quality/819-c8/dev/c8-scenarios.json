@@ -1,0 +1,2324 @@
+{
+ "cohort": "819-c8-development",
+ "author": "engineering (self-authored, synthetic; fresh after C7)",
+ "scenarios": [
+  {
+   "id": "garden",
+   "category": "c8-development",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:plot",
+     "text": "We rent plot 14 at the Elm Road allotments."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:beans",
+     "text": "Runner beans are climbing the canes by the shed."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:spuds",
+     "text": "Two rows of early potatoes went in during April."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:squash",
+     "text": "The butternut squash is sprawling over the path."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:slugs",
+     "text": "Slugs ate every lettuce seedling in May."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:copper",
+     "text": "Copper tape round the raised bed keeps the slugs off."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:water-butt",
+     "text": "A water butt collects rain from the shed roof."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:hose-ban",
+     "text": "There is a hosepipe ban until the end of August."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:seed-wish",
+     "text": "Maybe try growing asparagus one year."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:garden-mag",
+     "text": "A gardening magazine piece listed plants that attract bees."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:fee-old",
+     "text": "The allotment rent is \u00a345 a year.",
+     "observed_at": "2024-03-01T00:00:00Z"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:fee-new",
+     "text": "The council has raised allotment rent to \u00a360 annually.",
+     "observed_at": "2026-02-10T00:00:00Z"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:shed-old",
+     "text": "The shed key is with Malcolm on plot 12.",
+     "valid_from": "2024-01-01T00:00:00Z",
+     "valid_until": "2026-01-01T00:00:00Z"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:shed-new",
+     "text": "The shed key now hangs on the hook inside the gate.",
+     "valid_from": "2026-01-01T00:00:00Z"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:stuff-grow",
+     "text": "What am I growing this year? Remind me."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:compost",
+     "text": "The compost bins are at the far end of the site."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:neighbour",
+     "text": "Rosa on plot 15 swaps courgettes for our beans."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:tools",
+     "text": "Borrowed a strimmer from the site committee."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:frost",
+     "text": "Fleece went over the tender plants during the late frost."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:chair",
+     "text": "A folding chair lives in the shed for tea breaks."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-garden-0",
+     "text": "The hallway clock runs five minutes fast."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-garden-1",
+     "text": "A spare phone charger is in the glovebox."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-garden-2",
+     "text": "Recycling collection moved to Thursdays."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-garden-3",
+     "text": "I like my tea with a splash of milk."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-garden-4",
+     "text": "The front gate squeaks when it rains."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-garden-5",
+     "text": "Stamps are kept in the blue tin."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-garden-6",
+     "text": "My reading glasses live on the bedside table."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-garden-7",
+     "text": "The doorbell battery was replaced in spring."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-garden-8",
+     "text": "There is a parcel locker at the corner shop."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-garden-9",
+     "text": "I keep receipts in a shoebox under the desk."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-garden-10",
+     "text": "The radiator in the study takes ages to warm up."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-garden-11",
+     "text": "Our street gets gritted only after the main road."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-garden-12",
+     "text": "The blender lid cracked but still works."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-garden-13",
+     "text": "I prefer window seats on trains."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-garden-14",
+     "text": "Laundry day is usually Sunday."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-garden-15",
+     "text": "The spare duvet is in the loft."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-garden-16",
+     "text": "The torch in the kitchen drawer needs new batteries."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-garden-17",
+     "text": "I tend to wake up around half six."
+    }
+   ],
+   "queries": [
+    {
+     "id": "garden-1",
+     "kind": "multi",
+     "query": "What vegetables have I planted?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:beans",
+       "memory:spuds",
+       "memory:squash"
+      ],
+      "may_include": [
+       "memory:stuff-grow"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "garden-2",
+     "kind": "multi",
+     "query": "How do we deal with pests on the plot?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:copper"
+      ],
+      "may_include": [
+       "memory:slugs"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "garden-3",
+     "kind": "multi",
+     "query": "Where does our water come from given the restrictions?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:water-butt",
+       "memory:hose-ban"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "garden-4",
+     "kind": "corroborate",
+     "query": "What happened to the lettuces and what did we do about it?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:slugs",
+       "memory:copper"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "garden-5",
+     "kind": "distractor",
+     "query": "Which plot number is ours?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:plot"
+      ],
+      "may_include": [
+       "memory:neighbour"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "garden-6",
+     "kind": "deep",
+     "query": "Who do we trade produce with?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:neighbour"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "garden-7",
+     "kind": "conflict",
+     "query": "How much is the allotment rent?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:fee-new"
+      ],
+      "may_include": [
+       "memory:fee-old"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "garden-8",
+     "kind": "conflict_declared",
+     "query": "Where is the shed key?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:shed-new"
+      ],
+      "may_include": [
+       "memory:shed-old"
+      ],
+      "must_exclude": []
+     },
+     "temporal_intent": {
+      "mode": "current",
+      "reference_time": "2026-10-16T00:00:00Z"
+     }
+    },
+    {
+     "id": "garden-9",
+     "kind": "abstention",
+     "query": "What variety of tomato did we buy?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "money",
+   "category": "c8-development",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:isa",
+     "text": "Saving \u00a3200 a month into a stocks and shares ISA."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:emergency",
+     "text": "Three months of expenses sit in an easy-access account."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:mortgage",
+     "text": "The mortgage overpayment is \u00a3150 each month."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:streaming",
+     "text": "Paying for two streaming services, one with ads."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:gym-sub",
+     "text": "The climbing wall membership comes out on the 3rd."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:phone-sub",
+     "text": "Mobile contract is \u00a318 a month until next spring."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:budget-app",
+     "text": "I track spending in a budgeting app every Sunday."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:tax-return",
+     "text": "Self-assessment is due by the end of January."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:accountant",
+     "text": "Hannah, a friend who is an accountant, checks my return."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:money-article",
+     "text": "Read an article comparing savings accounts and interest rates."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:lottery-wish",
+     "text": "If we ever win the lottery we'll buy a campervan."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:bank-old",
+     "text": "Our joint account is with Northern Building Society.",
+     "observed_at": "2024-05-01T00:00:00Z"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:bank-new",
+     "text": "We moved the joint account to a high-street bank with better app support.",
+     "observed_at": "2026-03-12T00:00:00Z"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:rate-old",
+     "text": "The ISA fund charges 0.45% a year.",
+     "valid_from": "2024-01-01T00:00:00Z",
+     "valid_until": "2026-01-01T00:00:00Z"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:rate-new",
+     "text": "After switching platforms the fund fee dropped to 0.22% a year.",
+     "valid_from": "2026-01-01T00:00:00Z"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:stuff-subs",
+     "text": "Which subscriptions am I paying for? Check later."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:pension",
+     "text": "My workplace pension gets a 5% employer contribution."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:loan",
+     "text": "The car loan finishes in August next year."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:charity",
+     "text": "A monthly donation goes to the local food bank."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:cashback",
+     "text": "The credit card gives 1% cashback on groceries."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-money-0",
+     "text": "A spare phone charger is in the glovebox."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-money-1",
+     "text": "Recycling collection moved to Thursdays."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-money-2",
+     "text": "I like my tea with a splash of milk."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-money-3",
+     "text": "The front gate squeaks when it rains."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-money-4",
+     "text": "Stamps are kept in the blue tin."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-money-5",
+     "text": "My reading glasses live on the bedside table."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-money-6",
+     "text": "The doorbell battery was replaced in spring."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-money-7",
+     "text": "There is a parcel locker at the corner shop."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-money-8",
+     "text": "I keep receipts in a shoebox under the desk."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-money-9",
+     "text": "The radiator in the study takes ages to warm up."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-money-10",
+     "text": "Our street gets gritted only after the main road."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-money-11",
+     "text": "The blender lid cracked but still works."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-money-12",
+     "text": "I prefer window seats on trains."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-money-13",
+     "text": "Laundry day is usually Sunday."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-money-14",
+     "text": "The spare duvet is in the loft."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-money-15",
+     "text": "The torch in the kitchen drawer needs new batteries."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-money-16",
+     "text": "I tend to wake up around half six."
+    }
+   ],
+   "queries": [
+    {
+     "id": "money-1",
+     "kind": "multi",
+     "query": "What regular subscriptions come out of my account?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:streaming",
+       "memory:gym-sub",
+       "memory:phone-sub"
+      ],
+      "may_include": [
+       "memory:stuff-subs",
+       "memory:charity"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "money-2",
+     "kind": "multi",
+     "query": "How am I saving for the future?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:isa",
+       "memory:emergency",
+       "memory:pension"
+      ],
+      "may_include": [
+       "memory:mortgage"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "money-3",
+     "kind": "multi",
+     "query": "What debts am I still paying off?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:mortgage",
+       "memory:loan"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "money-4",
+     "kind": "corroborate",
+     "query": "Who helps with my tax and when is it due?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:accountant",
+       "memory:tax-return"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "money-5",
+     "kind": "distractor",
+     "query": "When is my self-assessment tax return due?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:tax-return"
+      ],
+      "may_include": [
+       "memory:accountant"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "money-6",
+     "kind": "deep",
+     "query": "How do I keep an eye on what I spend?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:budget-app"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "money-7",
+     "kind": "conflict",
+     "query": "Which bank holds our joint account?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:bank-new"
+      ],
+      "may_include": [
+       "memory:bank-old"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "money-8",
+     "kind": "conflict_declared",
+     "query": "What does the ISA fund cost each year?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:rate-new"
+      ],
+      "may_include": [
+       "memory:rate-old",
+       "memory:isa"
+      ],
+      "must_exclude": []
+     },
+     "temporal_intent": {
+      "mode": "current",
+      "reference_time": "2026-10-16T00:00:00Z"
+     }
+    },
+    {
+     "id": "money-9",
+     "kind": "abstention",
+     "query": "What is my credit score?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "school",
+   "category": "c8-development",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:zoe-class",
+     "text": "Zoe is in Year 4 with Mr Adeyemi."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:finn-class",
+     "text": "Finn started reception in September."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:swim",
+     "text": "Zoe has swimming lessons on Tuesday after school."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:cubs",
+     "text": "Finn goes to Beavers at the scout hut on Thursdays."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:piano",
+     "text": "Zoe practises piano for fifteen minutes before dinner."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:reading",
+     "text": "Finn brings home a reading book every Monday."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:nut",
+     "text": "Finn must not have anything containing sesame."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:glasses",
+     "text": "Zoe needs her glasses for the whiteboard."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:trip",
+     "text": "The Year 4 trip to the science museum is in March."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:pta",
+     "text": "I volunteer on the PTA bake sale rota."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:school-news",
+     "text": "The school newsletter covered after-school clubs and fees."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:tutor-wish",
+     "text": "Maybe find a maths tutor next year."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:pickup-old",
+     "text": "Grandad does the Wednesday school pickup.",
+     "observed_at": "2024-09-01T00:00:00Z"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:pickup-new",
+     "text": "Wednesday collection is now covered by the breakfast-and-after-school club.",
+     "observed_at": "2026-04-20T00:00:00Z"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:uniform-old",
+     "text": "School uniform comes from the shop in town.",
+     "valid_from": "2024-01-01T00:00:00Z",
+     "valid_until": "2026-01-01T00:00:00Z"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:uniform-new",
+     "text": "We now order the uniform online from the school's supplier.",
+     "valid_from": "2026-01-01T00:00:00Z"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:stuff-clubs",
+     "text": "Which clubs do the kids go to? Write it down."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:lunch",
+     "text": "Zoe takes a packed lunch; Finn has school dinners."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:bus",
+     "text": "There is no school bus, so we walk."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-school-0",
+     "text": "Recycling collection moved to Thursdays."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-school-1",
+     "text": "I like my tea with a splash of milk."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-school-2",
+     "text": "The front gate squeaks when it rains."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-school-3",
+     "text": "Stamps are kept in the blue tin."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-school-4",
+     "text": "My reading glasses live on the bedside table."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-school-5",
+     "text": "The doorbell battery was replaced in spring."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-school-6",
+     "text": "There is a parcel locker at the corner shop."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-school-7",
+     "text": "I keep receipts in a shoebox under the desk."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-school-8",
+     "text": "The radiator in the study takes ages to warm up."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-school-9",
+     "text": "Our street gets gritted only after the main road."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-school-10",
+     "text": "The blender lid cracked but still works."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-school-11",
+     "text": "I prefer window seats on trains."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-school-12",
+     "text": "Laundry day is usually Sunday."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-school-13",
+     "text": "The spare duvet is in the loft."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-school-14",
+     "text": "The torch in the kitchen drawer needs new batteries."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-school-15",
+     "text": "I tend to wake up around half six."
+    }
+   ],
+   "queries": [
+    {
+     "id": "school-1",
+     "kind": "multi",
+     "query": "What activities do the children do after school?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:swim",
+       "memory:cubs",
+       "memory:piano"
+      ],
+      "may_include": [
+       "memory:stuff-clubs",
+       "memory:pickup-new"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "school-2",
+     "kind": "multi",
+     "query": "What health or diet needs do teachers need to know about?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:nut",
+       "memory:glasses"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "school-3",
+     "kind": "multi",
+     "query": "What year groups are the kids in?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:zoe-class",
+       "memory:finn-class"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "school-4",
+     "kind": "corroborate",
+     "query": "How is Finn getting on with reading and what class is he in?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:reading",
+       "memory:finn-class"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "school-5",
+     "kind": "distractor",
+     "query": "When is the museum trip?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:trip"
+      ],
+      "may_include": [
+       "memory:zoe-class"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "school-6",
+     "kind": "deep",
+     "query": "How do I help out at school?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:pta"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "school-7",
+     "kind": "conflict",
+     "query": "Who collects the kids on Wednesdays?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:pickup-new"
+      ],
+      "may_include": [
+       "memory:pickup-old"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "school-8",
+     "kind": "conflict_declared",
+     "query": "Where do we get the school uniform from?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:uniform-new"
+      ],
+      "may_include": [
+       "memory:uniform-old"
+      ],
+      "must_exclude": []
+     },
+     "temporal_intent": {
+      "mode": "current",
+      "reference_time": "2026-10-16T00:00:00Z"
+     }
+    },
+    {
+     "id": "school-9",
+     "kind": "abstention",
+     "query": "What is the head teacher's name?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "kitchen",
+   "category": "c8-development",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:oven",
+     "text": "The fan oven runs about ten degrees hot."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:sourdough",
+     "text": "Our sourdough starter is called Doughvid and lives in the fridge."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:knives",
+     "text": "The chef's knife needs sharpening every few weeks."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:allergy-guest",
+     "text": "Our friend Leila cannot eat shellfish."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:vegan",
+     "text": "Marcus has been vegan for two years."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:glutenfree",
+     "text": "Priya avoids gluten."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:signature",
+     "text": "Everyone asks for my lamb tagine."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:weekly-shop",
+     "text": "The big food shop happens on Saturday morning."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:veg-box",
+     "text": "A vegetable box is delivered every Friday."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:freezer",
+     "text": "The chest freezer is in the garage."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:cook-show",
+     "text": "Watched a cookery programme about slow cooking."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:pasta-wish",
+     "text": "I'd like to learn to make fresh pasta someday."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:hob-old",
+     "text": "We cook on a gas hob.",
+     "observed_at": "2024-01-15T00:00:00Z"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:hob-new",
+     "text": "The gas hob was replaced with an induction one.",
+     "observed_at": "2026-05-02T00:00:00Z"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:bin-old",
+     "text": "Food waste goes in the green caddy collected Mondays.",
+     "valid_from": "2024-01-01T00:00:00Z",
+     "valid_until": "2026-01-01T00:00:00Z"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:bin-new",
+     "text": "Food waste collection is now on Wednesdays in the brown caddy.",
+     "valid_from": "2026-01-01T00:00:00Z"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:stuff-diets",
+     "text": "Note: whose diets do I need to cater for?"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:spices",
+     "text": "Spices are in the drawer left of the cooker."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:kettle",
+     "text": "The kettle is descaled monthly."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-kitchen-0",
+     "text": "I like my tea with a splash of milk."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-kitchen-1",
+     "text": "The front gate squeaks when it rains."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-kitchen-2",
+     "text": "Stamps are kept in the blue tin."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-kitchen-3",
+     "text": "My reading glasses live on the bedside table."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-kitchen-4",
+     "text": "The doorbell battery was replaced in spring."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-kitchen-5",
+     "text": "There is a parcel locker at the corner shop."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-kitchen-6",
+     "text": "I keep receipts in a shoebox under the desk."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-kitchen-7",
+     "text": "The radiator in the study takes ages to warm up."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-kitchen-8",
+     "text": "Our street gets gritted only after the main road."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-kitchen-9",
+     "text": "The blender lid cracked but still works."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-kitchen-10",
+     "text": "I prefer window seats on trains."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-kitchen-11",
+     "text": "Laundry day is usually Sunday."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-kitchen-12",
+     "text": "The spare duvet is in the loft."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-kitchen-13",
+     "text": "The torch in the kitchen drawer needs new batteries."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-kitchen-14",
+     "text": "I tend to wake up around half six."
+    }
+   ],
+   "queries": [
+    {
+     "id": "kitchen-1",
+     "kind": "multi",
+     "query": "What dietary requirements do my dinner guests have?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:allergy-guest",
+       "memory:vegan",
+       "memory:glutenfree"
+      ],
+      "may_include": [
+       "memory:stuff-diets"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "kitchen-2",
+     "kind": "multi",
+     "query": "How does our food arrive each week?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:weekly-shop",
+       "memory:veg-box"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "kitchen-3",
+     "kind": "multi",
+     "query": "What needs regular maintenance in the kitchen?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:knives",
+       "memory:kettle"
+      ],
+      "may_include": [
+       "memory:oven"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "kitchen-4",
+     "kind": "corroborate",
+     "query": "What should I make when friends come round?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:signature"
+      ],
+      "may_include": [
+       "memory:allergy-guest",
+       "memory:vegan",
+       "memory:glutenfree"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "kitchen-5",
+     "kind": "distractor",
+     "query": "Where is the freezer?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:freezer"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "kitchen-6",
+     "kind": "deep",
+     "query": "Is the oven temperature accurate?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:oven"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "kitchen-7",
+     "kind": "conflict",
+     "query": "What kind of hob do we have?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:hob-new"
+      ],
+      "may_include": [
+       "memory:hob-old"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "kitchen-8",
+     "kind": "conflict_declared",
+     "query": "When is food waste collected?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:bin-new"
+      ],
+      "may_include": [
+       "memory:bin-old"
+      ],
+      "must_exclude": []
+     },
+     "temporal_intent": {
+      "mode": "current",
+      "reference_time": "2026-10-16T00:00:00Z"
+     }
+    },
+    {
+     "id": "kitchen-9",
+     "kind": "abstention",
+     "query": "What brand is the dishwasher?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "tech",
+   "category": "c8-development",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:laptop",
+     "text": "My personal laptop is a three-year-old MacBook Air."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:backup",
+     "text": "Photos back up to an external drive every Sunday night."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:cloud",
+     "text": "Documents sync to a cloud folder automatically."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:router",
+     "text": "The mesh Wi-Fi has three nodes upstairs and down."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:printer",
+     "text": "The printer only works over USB now."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:password",
+     "text": "I use a password manager with a long passphrase."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:2fa",
+     "text": "Two-factor codes come from an authenticator app on my phone."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:tv",
+     "text": "The smart TV needs restarting when apps freeze."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:smart-plug",
+     "text": "Smart plugs turn the lamps on at dusk."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:tech-blog",
+     "text": "A tech blog compared mesh routers and backup drives."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:vr-wish",
+     "text": "Thinking about a VR headset for Christmas."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:phone-old",
+     "text": "My phone is an Android from 2021.",
+     "observed_at": "2024-02-01T00:00:00Z"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:phone-new",
+     "text": "I switched to an iPhone in the summer sale.",
+     "observed_at": "2026-07-14T00:00:00Z"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:isp-old",
+     "text": "Broadband is a 70Mb copper line.",
+     "valid_from": "2024-01-01T00:00:00Z",
+     "valid_until": "2026-01-01T00:00:00Z"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:isp-new",
+     "text": "Broadband is now full-fibre at 900Mb.",
+     "valid_from": "2026-01-01T00:00:00Z"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:stuff-backup",
+     "text": "How are my files backed up? Remind me."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:kindle",
+     "text": "The e-reader charges about once a month."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:speaker",
+     "text": "A speaker in the kitchen plays the radio in the morning."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:cables",
+     "text": "Spare cables are in the labelled box under the stairs."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-tech-0",
+     "text": "The front gate squeaks when it rains."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-tech-1",
+     "text": "Stamps are kept in the blue tin."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-tech-2",
+     "text": "My reading glasses live on the bedside table."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-tech-3",
+     "text": "The doorbell battery was replaced in spring."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-tech-4",
+     "text": "There is a parcel locker at the corner shop."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-tech-5",
+     "text": "I keep receipts in a shoebox under the desk."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-tech-6",
+     "text": "The radiator in the study takes ages to warm up."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-tech-7",
+     "text": "Our street gets gritted only after the main road."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-tech-8",
+     "text": "The blender lid cracked but still works."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-tech-9",
+     "text": "I prefer window seats on trains."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-tech-10",
+     "text": "Laundry day is usually Sunday."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-tech-11",
+     "text": "The spare duvet is in the loft."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-tech-12",
+     "text": "The torch in the kitchen drawer needs new batteries."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-tech-13",
+     "text": "I tend to wake up around half six."
+    }
+   ],
+   "queries": [
+    {
+     "id": "tech-1",
+     "kind": "multi",
+     "query": "How are my files and photos protected against loss?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:backup",
+       "memory:cloud"
+      ],
+      "may_include": [
+       "memory:stuff-backup"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "tech-2",
+     "kind": "multi",
+     "query": "How do I keep my accounts secure?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:password",
+       "memory:2fa"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "tech-3",
+     "kind": "multi",
+     "query": "What home automation do we have?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:smart-plug",
+       "memory:speaker"
+      ],
+      "may_include": [
+       "memory:router",
+       "memory:tv"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "tech-4",
+     "kind": "corroborate",
+     "query": "What is the Wi-Fi setup and what speed is the line?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:router",
+       "memory:isp-new"
+      ],
+      "may_include": [
+       "memory:isp-old"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "tech-5",
+     "kind": "distractor",
+     "query": "How do I print documents?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:printer"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "tech-6",
+     "kind": "deep",
+     "query": "What do I read books on?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:kindle"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "tech-7",
+     "kind": "conflict",
+     "query": "What phone do I have?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:phone-new"
+      ],
+      "may_include": [
+       "memory:phone-old"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "tech-8",
+     "kind": "conflict_declared",
+     "query": "What broadband speed do we get?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:isp-new"
+      ],
+      "may_include": [
+       "memory:isp-old"
+      ],
+      "must_exclude": []
+     },
+     "temporal_intent": {
+      "mode": "current",
+      "reference_time": "2026-10-16T00:00:00Z"
+     }
+    },
+    {
+     "id": "tech-9",
+     "kind": "abstention",
+     "query": "What is the Wi-Fi network name?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "community",
+   "category": "c8-development",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:foodbank",
+     "text": "I sort donations at the food bank on Saturday mornings."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:litter",
+     "text": "The street litter-pick is the first Sunday of the month."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:choir",
+     "text": "Rehearsals for the community choir are on Monday evenings."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:library",
+     "text": "I help at the library's homework club once a fortnight."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:councillor",
+     "text": "Our local councillor is Ms Okonjo."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:petition",
+     "text": "Signed the petition for a zebra crossing on Mill Lane."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:garden-group",
+     "text": "The residents' group planted bulbs along the verge."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:neighbour-help",
+     "text": "I collect Mr Byrne's prescriptions because he can't drive."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:church-hall",
+     "text": "The church hall can be booked for \u00a315 an hour."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:news-local",
+     "text": "The local paper ran a story about volunteering and charities."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:run-wish",
+     "text": "Maybe organise a fun run next summer."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:chair-old",
+     "text": "The residents' association is chaired by Bill Carter.",
+     "observed_at": "2024-06-01T00:00:00Z"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:chair-new",
+     "text": "Sunita Rao took over as chair of the residents' group.",
+     "observed_at": "2026-03-30T00:00:00Z"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:meet-old",
+     "text": "Residents' meetings are held in the pub function room.",
+     "valid_from": "2024-01-01T00:00:00Z",
+     "valid_until": "2026-01-01T00:00:00Z"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:meet-new",
+     "text": "Residents' meetings now take place in the library annexe.",
+     "valid_from": "2026-01-01T00:00:00Z"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:stuff-vol",
+     "text": "Where do I volunteer? List for the CV."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:defib",
+     "text": "There is a defibrillator outside the post office."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:whatsapp",
+     "text": "The street WhatsApp group shares lost-cat alerts."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-community-0",
+     "text": "Stamps are kept in the blue tin."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-community-1",
+     "text": "My reading glasses live on the bedside table."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-community-2",
+     "text": "The doorbell battery was replaced in spring."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-community-3",
+     "text": "There is a parcel locker at the corner shop."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-community-4",
+     "text": "I keep receipts in a shoebox under the desk."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-community-5",
+     "text": "The radiator in the study takes ages to warm up."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-community-6",
+     "text": "Our street gets gritted only after the main road."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-community-7",
+     "text": "The blender lid cracked but still works."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-community-8",
+     "text": "I prefer window seats on trains."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-community-9",
+     "text": "Laundry day is usually Sunday."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-community-10",
+     "text": "The spare duvet is in the loft."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-community-11",
+     "text": "The torch in the kitchen drawer needs new batteries."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-community-12",
+     "text": "I tend to wake up around half six."
+    }
+   ],
+   "queries": [
+    {
+     "id": "community-1",
+     "kind": "multi",
+     "query": "Where do I volunteer my time?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:foodbank",
+       "memory:library",
+       "memory:litter"
+      ],
+      "may_include": [
+       "memory:stuff-vol",
+       "memory:neighbour-help"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "community-2",
+     "kind": "multi",
+     "query": "What regular community events do I attend?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:choir",
+       "memory:litter"
+      ],
+      "may_include": [
+       "memory:foodbank",
+       "memory:library"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "community-3",
+     "kind": "multi",
+     "query": "How do I help my neighbours?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:neighbour-help"
+      ],
+      "may_include": [
+       "memory:whatsapp",
+       "memory:litter"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "community-4",
+     "kind": "corroborate",
+     "query": "What have residents done to improve the street?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:garden-group",
+       "memory:petition"
+      ],
+      "may_include": [
+       "memory:litter"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "community-5",
+     "kind": "distractor",
+     "query": "Who is our local councillor?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:councillor"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "community-6",
+     "kind": "deep",
+     "query": "Where is the nearest defibrillator?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:defib"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "community-7",
+     "kind": "conflict",
+     "query": "Who chairs the residents' group?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:chair-new"
+      ],
+      "may_include": [
+       "memory:chair-old"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "community-8",
+     "kind": "conflict_declared",
+     "query": "Where do residents' meetings happen?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:meet-new"
+      ],
+      "may_include": [
+       "memory:meet-old"
+      ],
+      "must_exclude": []
+     },
+     "temporal_intent": {
+      "mode": "current",
+      "reference_time": "2026-10-16T00:00:00Z"
+     }
+    },
+    {
+     "id": "community-9",
+     "kind": "abstention",
+     "query": "When was the village hall built?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "asof",
+   "category": "c8-development",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:car-old",
+     "text": "We drive a silver Skoda estate.",
+     "valid_from": "2024-01-01T00:00:00Z",
+     "valid_until": "2026-01-01T00:00:00Z"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:car-new",
+     "text": "We now drive a blue electric Kia.",
+     "valid_from": "2026-01-01T00:00:00Z"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:insure-old",
+     "text": "Car insurance was with Direct Line.",
+     "valid_from": "2024-01-01T00:00:00Z",
+     "valid_until": "2026-01-01T00:00:00Z"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:insure-new",
+     "text": "Car insurance moved to Admiral.",
+     "valid_from": "2026-01-01T00:00:00Z"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:garage",
+     "text": "The local garage on Station Road does our servicing."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:charger",
+     "text": "A wall charger was fitted on the driveway."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-asof-0",
+     "text": "My reading glasses live on the bedside table."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-asof-1",
+     "text": "The doorbell battery was replaced in spring."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-asof-2",
+     "text": "There is a parcel locker at the corner shop."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-asof-3",
+     "text": "I keep receipts in a shoebox under the desk."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-asof-4",
+     "text": "The radiator in the study takes ages to warm up."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-asof-5",
+     "text": "Our street gets gritted only after the main road."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-asof-6",
+     "text": "The blender lid cracked but still works."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-asof-7",
+     "text": "I prefer window seats on trains."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-asof-8",
+     "text": "Laundry day is usually Sunday."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-asof-9",
+     "text": "The spare duvet is in the loft."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-asof-10",
+     "text": "The torch in the kitchen drawer needs new batteries."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c8",
+     "ref": "memory:filler-asof-11",
+     "text": "I tend to wake up around half six."
+    }
+   ],
+   "queries": [
+    {
+     "id": "asof-1",
+     "kind": "conflict_declared",
+     "query": "Which car did we have in mid-2025?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:car-old"
+      ],
+      "may_include": [
+       "memory:car-new"
+      ],
+      "must_exclude": []
+     },
+     "temporal_intent": {
+      "mode": "as_of",
+      "reference_time": "2025-06-01T00:00:00Z",
+      "target_start": "2025-06-01T00:00:00Z"
+     }
+    },
+    {
+     "id": "asof-2",
+     "kind": "conflict_declared",
+     "query": "Who insured the car in mid-2025?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:insure-old"
+      ],
+      "may_include": [
+       "memory:insure-new"
+      ],
+      "must_exclude": []
+     },
+     "temporal_intent": {
+      "mode": "as_of",
+      "reference_time": "2025-06-01T00:00:00Z",
+      "target_start": "2025-06-01T00:00:00Z"
+     }
+    },
+    {
+     "id": "asof-3",
+     "kind": "conflict_declared",
+     "query": "What car do we drive?",
+     "scope": "user:c8",
+     "expect": {
+      "must_include": [
+       "memory:car-new"
+      ],
+      "may_include": [
+       "memory:car-old",
+       "memory:charger"
+      ],
+      "must_exclude": []
+     },
+     "temporal_intent": {
+      "mode": "current",
+      "reference_time": "2026-10-16T00:00:00Z"
+     }
+    }
+   ]
+  }
+ ]
+}
