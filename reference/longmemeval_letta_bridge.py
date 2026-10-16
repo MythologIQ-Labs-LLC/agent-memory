@@ -33,7 +33,7 @@ from typing import Any, Mapping, Sequence
 
 BACKEND = "letta_archival_local"
 BRIDGE_ID = "reference/longmemeval_letta_bridge.py"
-BRIDGE_VERSION = "0.1.0-candidate"
+BRIDGE_VERSION = "0.1.1-candidate"  # 0.1.1: also deletes the agent's archive after search (retrieval unchanged)
 LETTA_VERSION = "0.16.8"
 LETTA_REPOSITORY = "https://github.com/letta-ai/letta"
 LETTA_TAG_COMMIT = "1131535716e8a31c9a437f8695e25ac98f203a24"
@@ -112,7 +112,12 @@ class LettaArchivalLongMemEval:
             res = self._call("GET", f"/agents/{aid}/archival-memory/search?{query}")
             recall_seconds = time.perf_counter() - start
         finally:
+            # Letta keeps an agent's archive (and its passages) after the agent is deleted. Delete the
+            # archive too, through Letta's own API, so a long run does not accumulate orphaned passages.
+            archives = self._call("GET", "/archives/?" + urllib.parse.urlencode({"agent_id": aid})) or []
             self._call("DELETE", f"/agents/{aid}")
+            for archive in archives:
+                self._call("DELETE", f"/archives/{archive['id']}")
         ranked, unmapped = [], 0
         for r in res["results"]:
             doc_id = by_passage.get(r["id"])
@@ -140,7 +145,7 @@ def identity() -> dict[str, Any]:
             "llm": "none invoked (agent llm_config points at a closed loopback port)",
             "search": {"top_k": MAX_DEPTH, "tags": None, "date_filters": None},
             "identity_mapping": "passage id returned by create_passage -> doc id; ids never in text",
-            "isolation": "fresh agent (own archive) per question, deleted afterwards",
+            "isolation": "fresh agent (own archive) per question; agent and its archive deleted afterwards (bridge 0.1.1)",
             "oversize_items": "Letta refuses passages above archival_memory_token_limit; counted, not split",
             "gold_access": "none", "qualification": "candidate until independent review",
         },
