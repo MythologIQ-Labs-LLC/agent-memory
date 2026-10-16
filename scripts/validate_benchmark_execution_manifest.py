@@ -27,33 +27,40 @@ SCHEMA = Path(__file__).resolve().parents[1] / "schemas/benchmark-execution-mani
 # installed. It is not in the pinned profile, so the format is enforced here.
 RFC3339_UTC = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,9})?Z$")
 FLOATING_MODEL_REVISIONS = {"", "latest", "main", "master", "head", "default", "stable", "current", "unknown"}
+# Kept from the first checker revision: these substrings are refused anywhere in an argument.
+SENSITIVE_SUBSTRINGS = ("--api-key", "--api_key", "--auth-token", "--password", "--secret", "bearer ")
 CREDENTIAL_FLAG = re.compile(
-    r"^--?[\w-]*(api[-_]?key|access[-_]?key|secret|password|passwd|auth[-_]?token|access[-_]?token"
-    r"|hf[-_]?token|bearer|token)(=|$)", re.IGNORECASE)
-CREDENTIAL_ASSIGNMENT = re.compile(r"^[A-Z0-9_]*(API_KEY|SECRET|PASSWORD|TOKEN(?!S)|ACCESS_KEY)[A-Z0-9_]*=")
+    r"(?:^|[\s'\"=])--?[\w-]*(api[-_]?key|access[-_]?key|secret|password|passwd|auth[-_]?token|access[-_]?token"
+    r"|hf[-_]?token|bearer|token)(?![a-z])", re.IGNORECASE)
+CREDENTIAL_ASSIGNMENT = re.compile(r"(?:^|[\s'\"])[A-Z0-9_]*(API_KEY|SECRET|PASSWORD|TOKEN(?!S)|ACCESS_KEY)[A-Z0-9_]*=")
 CREDENTIAL_VALUE = re.compile(
     r"(\bsk-[A-Za-z0-9_-]{16,}|\bghp_[A-Za-z0-9]{20,}|\bgithub_pat_[A-Za-z0-9_]{20,}|\bAKIA[0-9A-Z]{16}\b"
     r"|\bxox[abpr]-[A-Za-z0-9-]{10,}|\bhf_[A-Za-z0-9]{30,}|\bbearer\s+\S+)", re.IGNORECASE)
 CREDENTIAL_PARAMETER = ("api_key", "api-key", "secret", "password", "authorization", "access_token", "token")
+# Token *counts* are inference settings, not credentials; only these exact names are exempt.
+TOKEN_COUNT_PARAMETERS = {"max_tokens", "max_output_tokens", "max_new_tokens", "context_window_tokens",
+                          "max_input_tokens", "max_completion_tokens", "num_predict_tokens"}
+DECISION_REF = re.compile(r"^https://[A-Za-z0-9.-]+\.[A-Za-z]{2,}/\S+$")
 
 
 def _safe_pointer(value: str) -> None:
     if (not value or PurePosixPath(value).is_absolute() or "://" in value or "\\" in value or ":" in value
-            or "%" in value or value.startswith("~") or any(ord(ch) < 32 for ch in value)
+            or "%" in value or value.startswith("~") or any(not ch.isprintable() for ch in value)
             or any(part in ("", "..", ".") for part in value.split("/"))):
         raise ValueError(f"unsafe evidence pointer: {value!r}")
 
 
 def _check_secrets(manifest: dict) -> None:
     for arg in manifest["execution"]["argv_redacted"]:
-        if CREDENTIAL_FLAG.search(arg) or CREDENTIAL_ASSIGNMENT.search(arg) or CREDENTIAL_VALUE.search(arg):
+        if (any(term in arg.lower() for term in SENSITIVE_SUBSTRINGS) or CREDENTIAL_FLAG.search(arg)
+                or CREDENTIAL_ASSIGNMENT.search(arg) or CREDENTIAL_VALUE.search(arg)):
             raise ValueError("command arguments must not expose sensitive credential flags or values")
     pointers = [manifest["normalized_run"]["uri"]] + [a["uri"] for a in manifest["artifacts"]]
     if any(CREDENTIAL_VALUE.search(p) or re.search(r"(token|key|secret|password)=", p, re.IGNORECASE) for p in pointers):
         raise ValueError("evidence pointers must not carry credential material")
     for call in manifest["inference"]["calls"]:
         for key, value in call["parameters"].items():
-            if "tokens" not in key.lower() and any(term in key.lower() for term in CREDENTIAL_PARAMETER):
+            if key.lower() not in TOKEN_COUNT_PARAMETERS and any(term in key.lower() for term in CREDENTIAL_PARAMETER):
                 raise ValueError("model parameters must not contain credential fields")
             if isinstance(value, str) and CREDENTIAL_VALUE.search(value):
                 raise ValueError("model parameters must not contain credential values")
@@ -80,25 +87,50 @@ def verify_evidence(manifest: dict, evidence_root: Path) -> dict:
             raise ValueError(f"missing evidence file for {label}: {pointer['uri']}")
         if _sha256_file(path) != pointer["sha256"]:
             raise ValueError(f"SHA-256 mismatch for {label}: {pointer['uri']}")
-    return json.loads((root / manifest["normalized_run"]["uri"]).read_bytes())
+    try:
+        normalized = json.loads((root / manifest["normalized_run"]["uri"]).read_bytes())
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise ValueError("normalized_run is not a JSON memory-benchmark-run record "
+                         f"(compressed or non-JSON file: {manifest['normalized_run']['uri']})") from exc
+    if not isinstance(normalized, dict):
+        raise ValueError("normalized_run is not a JSON object")
+    return normalized
 
 
-def _check_authority(manifest: dict, authority: dict | None) -> None:
+def _identity(value) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError("review authority identities must be non-empty strings")
+    return " ".join(value.split()).casefold()
+
+
+def _check_authority(manifest: dict, authority: dict | None, authority_sha256: str | None,
+                     expected_authority_sha256: str | None) -> None:
     review = manifest["review"]
     if authority is None:
         raise ValueError("accepted evidence requires an owner-controlled review authority record; "
                          "a reviewer string in the manifest is a claim, not a decision")
-    if not str(review["decision_ref"]).startswith("https://"):
+    # Whoever writes a manifest can write an authority file too. The digest the owner publishes
+    # (out of band, e.g. on the decision issue) is what binds the record to the owner.
+    if not expected_authority_sha256 or authority_sha256 != expected_authority_sha256:
+        raise ValueError("review authority digest does not match the owner-published digest")
+    if not DECISION_REF.match(str(review["decision_ref"])):
         raise ValueError("decision_ref must be a stable https reference")
-    matches = [d for d in authority.get("decisions", []) if d.get("decision_ref") == review["decision_ref"]]
+    decisions = authority.get("decisions") if isinstance(authority, dict) else None
+    if not isinstance(decisions, list) or not all(isinstance(d, dict) for d in decisions):
+        raise ValueError("review authority must be an object with a list of decision objects")
+    matches = [d for d in decisions if d.get("decision_ref") == review["decision_ref"]]
     if len(matches) != 1:
         raise ValueError("review authority has no unique decision for this decision_ref")
     decision = matches[0]
     if decision.get("decision") != "accepted":
         raise ValueError("review authority decision is not accepted")
-    if decision.get("reviewer") != review["reviewer"]:
+    if _identity(decision.get("reviewer")) != _identity(review["reviewer"]):
         raise ValueError("review authority names a different reviewer")
-    if not decision.get("executor") or decision["executor"] == decision.get("reviewer"):
+    try:
+        independent = _identity(decision.get("executor")) != _identity(decision.get("reviewer"))
+    except ValueError:
+        independent = False
+    if not independent:
         raise ValueError("accepted evidence requires a reviewer independent of the executor")
     if decision.get("run_id") != manifest["run_id"]:
         raise ValueError("review authority decision is bound to a different run_id")
@@ -107,7 +139,8 @@ def _check_authority(manifest: dict, authority: dict | None) -> None:
 
 
 def validate(manifest: dict, normalized: dict | None = None, *, evidence_root: Path | None = None,
-             authority: dict | None = None) -> None:
+             authority: dict | None = None, authority_sha256: str | None = None,
+             expected_authority_sha256: str | None = None) -> None:
     """Raise on any defect. ``normalized`` alone is an identity check only; acceptance needs ``evidence_root``."""
     schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
     jsonschema.Draft202012Validator(schema, format_checker=jsonschema.FormatChecker()).validate(manifest)
@@ -177,10 +210,10 @@ def validate(manifest: dict, normalized: dict | None = None, *, evidence_root: P
             raise ValueError("accepted evidence requires normalized run verification")
         if not verified:
             raise ValueError("accepted evidence requires every evidence file re-hashed under an evidence root")
-        _check_authority(manifest, authority)
+        _check_authority(manifest, authority, authority_sha256, expected_authority_sha256)
 
     if manifest["review"]["comparison_eligibility"] == "eligible_on_profile":
-        if status != "accepted" or normalized is None:
+        if status != "accepted":  # accepted already required a verified normalized run above
             raise ValueError("comparison eligibility requires accepted evidence and verified normalized run")
 
     if normalized is not None:
@@ -205,6 +238,7 @@ def main() -> int:
     parser.add_argument("--normalized-run", type=Path, help="normalized run file; its SHA-256 must match the manifest")
     parser.add_argument("--evidence-root", type=Path, help="repository root at the evidence commit; re-hashes every pointer")
     parser.add_argument("--review-authority", type=Path, help="owner-controlled decision record (required for accepted)")
+    parser.add_argument("--review-authority-sha256", help="digest of that record as published by the owner (required for accepted)")
     args = parser.parse_args()
     try:
         obj = json.loads(args.manifest.read_bytes())
@@ -214,13 +248,14 @@ def main() -> int:
             if hashlib.sha256(data).hexdigest() != obj["normalized_run"]["sha256"]:
                 raise ValueError("normalized run SHA-256 does not match recorded digest")
             normalized = json.loads(data)
-        authority = None
+        authority = authority_sha256 = None
         if args.review_authority:
             authority_bytes = args.review_authority.read_bytes()
-            authority = json.loads(authority_bytes)
-            print(f"review authority sha256 {hashlib.sha256(authority_bytes).hexdigest()}")
-        validate(obj, normalized, evidence_root=args.evidence_root, authority=authority)
-    except (OSError, ValueError, KeyError, TypeError, json.JSONDecodeError, jsonschema.ValidationError) as exc:
+            authority, authority_sha256 = json.loads(authority_bytes), hashlib.sha256(authority_bytes).hexdigest()
+        validate(obj, normalized, evidence_root=args.evidence_root, authority=authority,
+                 authority_sha256=authority_sha256, expected_authority_sha256=args.review_authority_sha256)
+    except (OSError, ValueError, KeyError, TypeError, AttributeError, json.JSONDecodeError,
+            jsonschema.ValidationError) as exc:
         print(f"BLOCKED: {exc.message if isinstance(exc, jsonschema.ValidationError) else exc}", file=sys.stderr)
         return 1
     hashed = "evidence re-hashed" if args.evidence_root else "evidence NOT re-hashed"

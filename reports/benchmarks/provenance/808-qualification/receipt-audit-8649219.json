@@ -1,0 +1,1435 @@
+{
+  "cross_checks": {
+    "amb_cohort_tables_rebuilt": {
+      "reports/benchmarks/runs/640-hindsight/amb-precisionmembench-single-turn/paired-vs-cohort.json": {
+        "identical_as_parsed_json": true,
+        "systems": [
+          "agent_memory",
+          "bm25",
+          "mem0_explicit",
+          "mempalace",
+          "hindsight_chunks"
+        ]
+      },
+      "reports/benchmarks/runs/812-graphiti/amb-precisionmembench-single-turn/paired-vs-cohort.json": {
+        "identical_as_parsed_json": true,
+        "systems": [
+          "agent_memory",
+          "bm25",
+          "mem0_explicit",
+          "mempalace",
+          "hindsight_chunks",
+          "langmem",
+          "graphiti"
+        ]
+      },
+      "reports/benchmarks/runs/813-langmem/amb-precisionmembench-single-turn/paired-vs-cohort.json": {
+        "identical_as_parsed_json": true,
+        "systems": [
+          "agent_memory",
+          "bm25",
+          "mem0_explicit",
+          "mempalace",
+          "hindsight_chunks",
+          "langmem"
+        ]
+      },
+      "reports/benchmarks/runs/mempalace/amb-precisionmembench-single-turn/paired-vs-cohort.json": {
+        "identical_as_parsed_json": true,
+        "systems": [
+          "agent_memory",
+          "bm25",
+          "mem0_explicit",
+          "mempalace"
+        ]
+      }
+    },
+    "amb_reference_rows": {
+      "external_correct": {
+        "graphiti": 9,
+        "hindsight": 9,
+        "langmem": 9,
+        "mempalace": 9
+      },
+      "external_pass_sets_identical": true,
+      "external_passes_within_bm25_passes": {
+        "graphiti": false,
+        "hindsight": false,
+        "langmem": false,
+        "mempalace": false
+      },
+      "lane": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v6",
+      "lane_correct": {
+        "agent-memory": 15,
+        "bm25": 8,
+        "mem0-explicit": 10
+      }
+    },
+    "amb_repeats": {
+      "graphiti": {
+        "cases": 77,
+        "correct_rep1": 9,
+        "correct_rep2": 9,
+        "correctness_identical": 77,
+        "retrieved_answer_identical": 77
+      },
+      "hindsight": {
+        "cases": 77,
+        "correct_rep1": 9,
+        "correct_rep2": 9,
+        "correctness_identical": 77,
+        "retrieved_answer_identical": 77
+      },
+      "langmem": {
+        "cases": 77,
+        "repeat": "none (single complete run)"
+      },
+      "mempalace": {
+        "cases": 77,
+        "correct_rep1": 9,
+        "correct_rep2": 9,
+        "correctness_identical": 77,
+        "retrieved_answer_identical": 77
+      }
+    },
+    "gold_key_reads": {
+      "reference/amb_agent_memory_bridge.py": [],
+      "reference/amb_graphiti_bridge.py": [],
+      "reference/amb_hindsight_bridge.py": [],
+      "reference/amb_langmem_bridge.py": [],
+      "reference/amb_mem0_explicit_bridge.py": [],
+      "reference/amb_mempalace_bridge.py": [],
+      "reference/hindsight_amb_worker.py": [],
+      "reference/langmem_amb_worker.py": [],
+      "reference/longmemeval_cognee_bridge.py": [],
+      "reference/longmemeval_hindsight_bridge.py": [],
+      "reference/longmemeval_jev_mem_bridge.py": [],
+      "reference/longmemeval_mem0_explicit_bridge.py": [],
+      "reference/longmemeval_mempalace_bridge.py": [],
+      "reference/run_amb_external.py": [],
+      "reference/run_longmemeval_resumable.py": []
+    },
+    "graphiti_llm_calls_rep1_vs_rep2": {
+      "chat_requests": [
+        167,
+        167
+      ],
+      "completion_texts_identical": 167,
+      "note": "raw responses carry per-call ids and timestamps, so 'content-identical' is the accurate term",
+      "raw_responses_identical": 0,
+      "requests_identical": 167
+    },
+    "longmemeval_denominators": {
+      "hindsight_chunks_onnx:session": {
+        "distinct_questions": 500,
+        "excluded": 81,
+        "failures": {
+          "ingestion_failure_count": 0,
+          "out_of_corpus_returned_count": 0,
+          "runtime_failure_count": 0
+        },
+        "max_returned": 50,
+        "row_status": {
+          "excluded_abstention": 30,
+          "excluded_no_user_target": 51,
+          "scored": 419
+        },
+        "rows": 500,
+        "runtime_errors": 0,
+        "scored": 419
+      },
+      "hindsight_chunks_onnx:turn": {
+        "distinct_questions": 500,
+        "excluded": 81,
+        "failures": {
+          "ingestion_failure_count": 0,
+          "out_of_corpus_returned_count": 0,
+          "runtime_failure_count": 0
+        },
+        "max_returned": 50,
+        "row_status": {
+          "excluded_abstention": 30,
+          "excluded_no_user_target": 51,
+          "scored": 419
+        },
+        "rows": 500,
+        "runtime_errors": 0,
+        "scored": 419
+      },
+      "mempalace_default_local:session": {
+        "distinct_questions": 500,
+        "excluded": 81,
+        "failures": {
+          "ingestion_failure_count": 0,
+          "out_of_corpus_returned_count": 0,
+          "runtime_failure_count": 0
+        },
+        "max_returned": 40,
+        "row_status": {
+          "excluded_abstention": 30,
+          "excluded_no_user_target": 51,
+          "scored": 419
+        },
+        "rows": 500,
+        "runtime_errors": 0,
+        "scored": 419
+      },
+      "mempalace_default_local:turn": {
+        "distinct_questions": 500,
+        "excluded": 81,
+        "failures": {
+          "ingestion_failure_count": 0,
+          "out_of_corpus_returned_count": 0,
+          "runtime_failure_count": 0
+        },
+        "max_returned": 50,
+        "row_status": {
+          "excluded_abstention": 30,
+          "excluded_no_user_target": 51,
+          "scored": 419
+        },
+        "rows": 500,
+        "runtime_errors": 0,
+        "scored": 419
+      }
+    },
+    "longmemeval_self_run_vs_accepted_lane_v6": {
+      "agent_memory:session": {
+        "lane_rows": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/agent_memory-session-24048d55e26d/report.rows.json.gz",
+        "metrics_identical": 500,
+        "questions_compared": 500,
+        "ranking_identical": 500
+      },
+      "agent_memory:turn": {
+        "lane_rows": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/agent_memory-turn-24048d55e26d/report.rows.json.gz",
+        "metrics_identical": 444,
+        "questions_compared": 500,
+        "ranking_identical": 500
+      },
+      "lexical_overlap:session": {
+        "lane_rows": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/lexical_overlap-session-24048d55e26d/report.rows.json.gz",
+        "metrics_identical": 500,
+        "questions_compared": 500,
+        "ranking_identical": 500
+      },
+      "lexical_overlap:turn": {
+        "lane_rows": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/lexical_overlap-turn-24048d55e26d/report.rows.json.gz",
+        "metrics_identical": 500,
+        "questions_compared": 500,
+        "ranking_identical": 500
+      },
+      "mem0_explicit:session": {
+        "lane_rows": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/mem0_explicit-session-24048d55e26d/report.rows.json.gz",
+        "metrics_identical": 50,
+        "questions_compared": 50,
+        "ranking_identical": 50
+      },
+      "mem0_explicit:turn": {
+        "lane_rows": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/mem0_explicit-turn-24048d55e26d/report.rows.json.gz",
+        "metrics_identical": 50,
+        "questions_compared": 50,
+        "ranking_identical": 44
+      }
+    }
+  },
+  "evidence_commit": "86492194",
+  "manifests": [
+    {
+      "as_committed": "refused: '35659b3b9a581b644fc6746e1b4e902c3e7b56c0973b546bf7b0816a69e3de98+09e99f0852280538abe34b03570f65583fdb10df3c554b7150f0f665d5db709c' does not match '^[a-f0-9]{64",
+      "evidence_rehash": {
+        "failures": [],
+        "files": 6,
+        "matching": 6
+      },
+      "gaps": [
+        {
+          "detail": "points at a runner/evaluator report, not a memory-benchmark-run record; no normalized run exists for this row",
+          "field": "normalized_run",
+          "type": "metadata"
+        },
+        {
+          "detail": "'0.1.0-candidate' is a label; the adapter file has one commit in history, so its only blob 9e4d8b5239bbba3c8c29632496944689b4b28cc4 is recoverable (compare the bundle preregistration)",
+          "field": "system.adapter_revision",
+          "type": "metadata"
+        },
+        {
+          "detail": "two file digests joined with '+'; v1 needs one digest: use the frozen AMB lane's input_sha256 (SHA-256 over the raw fixture bytes in order), which these component digests match",
+          "field": "benchmark.input_sha256",
+          "type": "metadata"
+        },
+        {
+          "detail": "no artifact typed native_result (native output is present under another kind)",
+          "field": "artifacts",
+          "type": "metadata"
+        },
+        {
+          "detail": "not_measured; acceptance needs measured or not_applicable (all inference here is local)",
+          "field": "costs",
+          "type": "metadata"
+        },
+        {
+          "detail": "no reviewer or decision reference; no owner review authority record exists",
+          "field": "review",
+          "type": "governance"
+        },
+        {
+          "detail": "candidate; external rows are accepted only as frozen same-harness lane rows",
+          "field": "review.status",
+          "type": "governance"
+        }
+      ],
+      "input_digest_by_lane_rule": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "manifest": "reports/benchmarks/runs/640-hindsight/amb-precisionmembench-single-turn/rep1/manifest.json",
+      "mechanical_projection": {
+        "changes": [
+          "multi-file input digest replaced by the frozen lane value (rule and value from amb-precisionmembench-retrieval-v1)",
+          "pointer rebased to repository root"
+        ],
+        "result": "valid",
+        "with_evidence_root": "refused: normalized run disagrees on run_id"
+      },
+      "pointer_bases": {
+        "bundle_dir": 6
+      },
+      "run_id": "640-hindsight-amb-precisionmembench-single-turn-rep1"
+    },
+    {
+      "as_committed": "refused: unsafe evidence pointer: '../subset50/hindsight-venv-freeze.txt'",
+      "evidence_rehash": {
+        "failures": [],
+        "files": 7,
+        "matching": 7
+      },
+      "gaps": [
+        {
+          "detail": "claims frozen lane 'longmemeval-s-retrieval-parity-v1' (scorer blob 4acdeccced3c, runner GitHub-hosted ubuntu-24.04) but this is a self-run outside that lane; a consumer grouping by task_profile would pool it with accepted lane rows",
+          "field": "benchmark.task_profile",
+          "type": "metadata"
+        },
+        {
+          "detail": "points at a runner/evaluator report, not a memory-benchmark-run record; no normalized run exists for this row",
+          "field": "normalized_run",
+          "type": "metadata"
+        },
+        {
+          "detail": "no artifact typed native_result (native output is present under another kind)",
+          "field": "artifacts",
+          "type": "metadata"
+        },
+        {
+          "detail": "not_measured; acceptance needs measured or not_applicable (all inference here is local)",
+          "field": "costs",
+          "type": "metadata"
+        },
+        {
+          "detail": "no reviewer or decision reference; no owner review authority record exists",
+          "field": "review",
+          "type": "governance"
+        },
+        {
+          "detail": "candidate; external rows are accepted only as frozen same-harness lane rows",
+          "field": "review.status",
+          "type": "governance"
+        }
+      ],
+      "input_digest_by_lane_rule": null,
+      "manifest": "reports/benchmarks/runs/640-hindsight/full500/session.hindsight_chunks_onnx.manifest.json",
+      "mechanical_projection": {
+        "changes": [
+          "pointer rebased to repository root"
+        ],
+        "result": "valid",
+        "with_evidence_root": "refused: normalized run disagrees on run_id"
+      },
+      "pointer_bases": {
+        "manifest_dir": 7
+      },
+      "run_id": "hindsight-chunks-onnx-full500-session"
+    },
+    {
+      "as_committed": "refused: unsafe evidence pointer: '../subset50/hindsight-venv-freeze.txt'",
+      "evidence_rehash": {
+        "failures": [],
+        "files": 7,
+        "matching": 7
+      },
+      "gaps": [
+        {
+          "detail": "claims frozen lane 'longmemeval-s-retrieval-parity-v1' (scorer blob 4acdeccced3c, runner GitHub-hosted ubuntu-24.04) but this is a self-run outside that lane; a consumer grouping by task_profile would pool it with accepted lane rows",
+          "field": "benchmark.task_profile",
+          "type": "metadata"
+        },
+        {
+          "detail": "points at a runner/evaluator report, not a memory-benchmark-run record; no normalized run exists for this row",
+          "field": "normalized_run",
+          "type": "metadata"
+        },
+        {
+          "detail": "no artifact typed native_result (native output is present under another kind)",
+          "field": "artifacts",
+          "type": "metadata"
+        },
+        {
+          "detail": "not_measured; acceptance needs measured or not_applicable (all inference here is local)",
+          "field": "costs",
+          "type": "metadata"
+        },
+        {
+          "detail": "no reviewer or decision reference; no owner review authority record exists",
+          "field": "review",
+          "type": "governance"
+        },
+        {
+          "detail": "candidate; external rows are accepted only as frozen same-harness lane rows",
+          "field": "review.status",
+          "type": "governance"
+        }
+      ],
+      "input_digest_by_lane_rule": null,
+      "manifest": "reports/benchmarks/runs/640-hindsight/full500/turn.hindsight_chunks_onnx.manifest.json",
+      "mechanical_projection": {
+        "changes": [
+          "pointer rebased to repository root"
+        ],
+        "result": "valid",
+        "with_evidence_root": "refused: normalized run disagrees on run_id"
+      },
+      "pointer_bases": {
+        "manifest_dir": 7
+      },
+      "run_id": "hindsight-chunks-onnx-full500-turn"
+    },
+    {
+      "as_committed": "valid",
+      "evidence_rehash": {
+        "failures": [],
+        "files": 6,
+        "matching": 6
+      },
+      "gaps": [
+        {
+          "detail": "claims frozen lane 'longmemeval-s-retrieval-parity-v1' (scorer blob 4acdeccced3c, runner GitHub-hosted ubuntu-24.04) but this is a self-run outside that lane; a consumer grouping by task_profile would pool it with accepted lane rows",
+          "field": "benchmark.task_profile",
+          "type": "metadata"
+        },
+        {
+          "detail": "points at a runner/evaluator report, not a memory-benchmark-run record; no normalized run exists for this row",
+          "field": "normalized_run",
+          "type": "metadata"
+        },
+        {
+          "detail": "no artifact typed native_result (native output is present under another kind)",
+          "field": "artifacts",
+          "type": "metadata"
+        },
+        {
+          "detail": "not_measured; acceptance needs measured or not_applicable (all inference here is local)",
+          "field": "costs",
+          "type": "metadata"
+        },
+        {
+          "detail": "no reviewer or decision reference; no owner review authority record exists",
+          "field": "review",
+          "type": "governance"
+        },
+        {
+          "detail": "candidate; external rows are accepted only as frozen same-harness lane rows",
+          "field": "review.status",
+          "type": "governance"
+        }
+      ],
+      "input_digest_by_lane_rule": null,
+      "manifest": "reports/benchmarks/runs/640-hindsight/subset50/session.hindsight_chunks_onnx.manifest.json",
+      "mechanical_projection": {
+        "changes": [],
+        "result": "valid",
+        "with_evidence_root": "refused: normalized run disagrees on run_id"
+      },
+      "pointer_bases": {
+        "repo_root": 6
+      },
+      "run_id": "640-hindsight:subset50:session:hindsight_chunks_onnx"
+    },
+    {
+      "as_committed": "valid",
+      "evidence_rehash": {
+        "failures": [],
+        "files": 6,
+        "matching": 6
+      },
+      "gaps": [
+        {
+          "detail": "claims frozen lane 'longmemeval-s-retrieval-parity-v1' (scorer blob 4acdeccced3c, runner GitHub-hosted ubuntu-24.04) but this is a self-run outside that lane; a consumer grouping by task_profile would pool it with accepted lane rows",
+          "field": "benchmark.task_profile",
+          "type": "metadata"
+        },
+        {
+          "detail": "points at a runner/evaluator report, not a memory-benchmark-run record; no normalized run exists for this row",
+          "field": "normalized_run",
+          "type": "metadata"
+        },
+        {
+          "detail": "no artifact typed native_result (native output is present under another kind)",
+          "field": "artifacts",
+          "type": "metadata"
+        },
+        {
+          "detail": "not_measured; acceptance needs measured or not_applicable (all inference here is local)",
+          "field": "costs",
+          "type": "metadata"
+        },
+        {
+          "detail": "no reviewer or decision reference; no owner review authority record exists",
+          "field": "review",
+          "type": "governance"
+        },
+        {
+          "detail": "candidate; external rows are accepted only as frozen same-harness lane rows",
+          "field": "review.status",
+          "type": "governance"
+        }
+      ],
+      "input_digest_by_lane_rule": null,
+      "manifest": "reports/benchmarks/runs/640-hindsight/subset50/turn.hindsight_chunks_onnx.manifest.json",
+      "mechanical_projection": {
+        "changes": [],
+        "result": "valid",
+        "with_evidence_root": "refused: normalized run disagrees on run_id"
+      },
+      "pointer_bases": {
+        "repo_root": 6
+      },
+      "run_id": "640-hindsight:subset50:turn:hindsight_chunks_onnx"
+    },
+    {
+      "as_committed": "refused: '35659b3b9a581b644fc6746e1b4e902c3e7b56c0973b546bf7b0816a69e3de98+09e99f0852280538abe34b03570f65583fdb10df3c554b7150f0f665d5db709c' does not match '^[a-f0-9]{64",
+      "evidence_rehash": {
+        "failures": [],
+        "files": 6,
+        "matching": 6
+      },
+      "gaps": [
+        {
+          "detail": "points at a runner/evaluator report, not a memory-benchmark-run record; no normalized run exists for this row",
+          "field": "normalized_run",
+          "type": "metadata"
+        },
+        {
+          "detail": "two file digests joined with '+'; v1 needs one digest: use the frozen AMB lane's input_sha256 (SHA-256 over the raw fixture bytes in order), which these component digests match",
+          "field": "benchmark.input_sha256",
+          "type": "metadata"
+        },
+        {
+          "detail": "no artifact typed native_result (native output is present under another kind)",
+          "field": "artifacts",
+          "type": "metadata"
+        },
+        {
+          "detail": "not_measured; acceptance needs measured or not_applicable (all inference here is local)",
+          "field": "costs",
+          "type": "metadata"
+        },
+        {
+          "detail": "free text 'entity/edge extraction, dedupe, invalidation (structured output)'",
+          "field": "inference.calls.purpose",
+          "type": "metadata"
+        },
+        {
+          "detail": "Qwen/Qwen2.5-3B-Instruct-GGUF qwen2.5-3b-instruct-q4_k_m.gguf: no prompt digest recorded; the committed shim-calls.jsonl.gz holds all 167 request bodies (prompt-set digest 99f22a5c5cdb46cf..., per-request digests derivable)",
+          "field": "inference.prompt_sha256",
+          "type": "metadata"
+        },
+        {
+          "detail": "Qwen/Qwen2.5-3B-Instruct-GGUF qwen2.5-3b-instruct-q4_k_m.gguf: context_window_tokens recorded under 'n_ctx' = 16384; rename",
+          "field": "inference.parameters",
+          "type": "metadata"
+        },
+        {
+          "detail": "Qwen/Qwen2.5-3B-Instruct-GGUF qwen2.5-3b-instruct-q4_k_m.gguf: max_output_tokens not recorded; observed in shim-calls.jsonl.gz",
+          "field": "inference.parameters",
+          "type": "metadata"
+        },
+        {
+          "detail": "Qwen/Qwen2.5-3B-Instruct-GGUF qwen2.5-3b-instruct-q4_k_m.gguf: top_p not recorded and not sent per request; only a server start flag or the pinned server's default can establish it",
+          "field": "inference.parameters",
+          "type": "evidence"
+        },
+        {
+          "detail": "no reviewer or decision reference; no owner review authority record exists",
+          "field": "review",
+          "type": "governance"
+        },
+        {
+          "detail": "candidate; external rows are accepted only as frozen same-harness lane rows",
+          "field": "review.status",
+          "type": "governance"
+        }
+      ],
+      "input_digest_by_lane_rule": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "manifest": "reports/benchmarks/runs/812-graphiti/amb-precisionmembench-single-turn/rep1/manifest.json",
+      "mechanical_projection": {
+        "changes": [
+          "free-text call purpose mapped to 'generation' (was 'entity/edge extraction, dedupe, invalidation (structured output)')",
+          "multi-file input digest replaced by the frozen lane value (rule and value from amb-precisionmembench-retrieval-v1)",
+          "pointer rebased to repository root"
+        ],
+        "result": "valid",
+        "with_evidence_root": "refused: normalized run disagrees on run_id"
+      },
+      "pointer_bases": {
+        "bundle_dir": 6
+      },
+      "run_id": "graphiti-local-amb-precisionmembench-single-turn-rep1"
+    },
+    {
+      "as_committed": "refused: '35659b3b9a581b644fc6746e1b4e902c3e7b56c0973b546bf7b0816a69e3de98+09e99f0852280538abe34b03570f65583fdb10df3c554b7150f0f665d5db709c' does not match '^[a-f0-9]{64",
+      "evidence_rehash": {
+        "failures": [],
+        "files": 6,
+        "matching": 6
+      },
+      "gaps": [
+        {
+          "detail": "points at a runner/evaluator report, not a memory-benchmark-run record; no normalized run exists for this row",
+          "field": "normalized_run",
+          "type": "metadata"
+        },
+        {
+          "detail": "two file digests joined with '+'; v1 needs one digest: use the frozen AMB lane's input_sha256 (SHA-256 over the raw fixture bytes in order), which these component digests match",
+          "field": "benchmark.input_sha256",
+          "type": "metadata"
+        },
+        {
+          "detail": "no artifact typed native_result (native output is present under another kind)",
+          "field": "artifacts",
+          "type": "metadata"
+        },
+        {
+          "detail": "not_measured; acceptance needs measured or not_applicable (all inference here is local)",
+          "field": "costs",
+          "type": "metadata"
+        },
+        {
+          "detail": "free text 'entity/edge extraction, dedupe, invalidation (structured output)'",
+          "field": "inference.calls.purpose",
+          "type": "metadata"
+        },
+        {
+          "detail": "Qwen/Qwen2.5-3B-Instruct-GGUF qwen2.5-3b-instruct-q4_k_m.gguf: no prompt digest recorded; the committed shim-calls.jsonl.gz holds all 167 request bodies (prompt-set digest 99f22a5c5cdb46cf..., per-request digests derivable)",
+          "field": "inference.prompt_sha256",
+          "type": "metadata"
+        },
+        {
+          "detail": "Qwen/Qwen2.5-3B-Instruct-GGUF qwen2.5-3b-instruct-q4_k_m.gguf: context_window_tokens recorded under 'n_ctx' = 16384; rename",
+          "field": "inference.parameters",
+          "type": "metadata"
+        },
+        {
+          "detail": "Qwen/Qwen2.5-3B-Instruct-GGUF qwen2.5-3b-instruct-q4_k_m.gguf: max_output_tokens not recorded; observed in shim-calls.jsonl.gz",
+          "field": "inference.parameters",
+          "type": "metadata"
+        },
+        {
+          "detail": "Qwen/Qwen2.5-3B-Instruct-GGUF qwen2.5-3b-instruct-q4_k_m.gguf: top_p not recorded and not sent per request; only a server start flag or the pinned server's default can establish it",
+          "field": "inference.parameters",
+          "type": "evidence"
+        },
+        {
+          "detail": "no reviewer or decision reference; no owner review authority record exists",
+          "field": "review",
+          "type": "governance"
+        },
+        {
+          "detail": "candidate; external rows are accepted only as frozen same-harness lane rows",
+          "field": "review.status",
+          "type": "governance"
+        }
+      ],
+      "input_digest_by_lane_rule": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "manifest": "reports/benchmarks/runs/812-graphiti/amb-precisionmembench-single-turn/rep2/manifest.json",
+      "mechanical_projection": {
+        "changes": [
+          "free-text call purpose mapped to 'generation' (was 'entity/edge extraction, dedupe, invalidation (structured output)')",
+          "multi-file input digest replaced by the frozen lane value (rule and value from amb-precisionmembench-retrieval-v1)",
+          "pointer rebased to repository root"
+        ],
+        "result": "valid",
+        "with_evidence_root": "refused: normalized run disagrees on run_id"
+      },
+      "pointer_bases": {
+        "bundle_dir": 6
+      },
+      "run_id": "graphiti-local-amb-precisionmembench-single-turn-rep2"
+    },
+    {
+      "as_committed": "refused: '35659b3b9a581b644fc6746e1b4e902c3e7b56c0973b546bf7b0816a69e3de98+09e99f0852280538abe34b03570f65583fdb10df3c554b7150f0f665d5db709c' does not match '^[a-f0-9]{64",
+      "evidence_rehash": {
+        "failures": [],
+        "files": 6,
+        "matching": 6
+      },
+      "gaps": [
+        {
+          "detail": "points at a runner/evaluator report, not a memory-benchmark-run record; no normalized run exists for this row",
+          "field": "normalized_run",
+          "type": "metadata"
+        },
+        {
+          "detail": "'0.1.0-candidate' is a label; the adapter file has one commit in history, so its only blob d68a34324183aa579232441d752e42a99b43614a is recoverable (compare the bundle preregistration)",
+          "field": "system.adapter_revision",
+          "type": "metadata"
+        },
+        {
+          "detail": "two file digests joined with '+'; v1 needs one digest: use the frozen AMB lane's input_sha256 (SHA-256 over the raw fixture bytes in order), which these component digests match",
+          "field": "benchmark.input_sha256",
+          "type": "metadata"
+        },
+        {
+          "detail": "no artifact typed native_result (native output is present under another kind)",
+          "field": "artifacts",
+          "type": "metadata"
+        },
+        {
+          "detail": "not_measured; acceptance needs measured or not_applicable (all inference here is local)",
+          "field": "costs",
+          "type": "metadata"
+        },
+        {
+          "detail": "free text 'memory extraction/update (tool calls)'",
+          "field": "inference.calls.purpose",
+          "type": "metadata"
+        },
+        {
+          "detail": "Qwen/Qwen2.5-3B-Instruct-GGUF qwen2.5-3b-instruct-q4_k_m.gguf: no prompt digest recorded; the committed shim-calls.jsonl.gz holds all 35 request bodies (prompt-set digest cd2c48b39ff571e7..., per-request digests derivable)",
+          "field": "inference.prompt_sha256",
+          "type": "metadata"
+        },
+        {
+          "detail": "Qwen/Qwen2.5-3B-Instruct-GGUF qwen2.5-3b-instruct-q4_k_m.gguf: context_window_tokens recorded under 'n_ctx' = 16384; rename",
+          "field": "inference.parameters",
+          "type": "metadata"
+        },
+        {
+          "detail": "Qwen/Qwen2.5-3B-Instruct-GGUF qwen2.5-3b-instruct-q4_k_m.gguf: max_output_tokens not recorded and not sent per request; only a server start flag or the pinned server's default can establish it",
+          "field": "inference.parameters",
+          "type": "evidence"
+        },
+        {
+          "detail": "Qwen/Qwen2.5-3B-Instruct-GGUF qwen2.5-3b-instruct-q4_k_m.gguf: top_p not recorded and not sent per request; only a server start flag or the pinned server's default can establish it",
+          "field": "inference.parameters",
+          "type": "evidence"
+        },
+        {
+          "detail": "no reviewer or decision reference; no owner review authority record exists",
+          "field": "review",
+          "type": "governance"
+        },
+        {
+          "detail": "candidate; external rows are accepted only as frozen same-harness lane rows",
+          "field": "review.status",
+          "type": "governance"
+        }
+      ],
+      "input_digest_by_lane_rule": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "manifest": "reports/benchmarks/runs/813-langmem/amb-precisionmembench-single-turn/rep1/manifest.json",
+      "mechanical_projection": {
+        "changes": [
+          "free-text call purpose mapped to 'generation' (was 'memory extraction/update (tool calls)')",
+          "multi-file input digest replaced by the frozen lane value (rule and value from amb-precisionmembench-retrieval-v1)",
+          "pointer rebased to repository root"
+        ],
+        "result": "valid",
+        "with_evidence_root": "refused: normalized run disagrees on run_id"
+      },
+      "pointer_bases": {
+        "bundle_dir": 6
+      },
+      "run_id": "langmem-local-amb-precisionmembench-single-turn-rep1"
+    },
+    {
+      "as_committed": "valid",
+      "evidence_rehash": {
+        "failures": [],
+        "files": 6,
+        "matching": 6
+      },
+      "gaps": [
+        {
+          "detail": "claims frozen lane 'longmemeval-s-retrieval-parity-v1' (scorer blob 4acdeccced3c, runner GitHub-hosted ubuntu-24.04) but this is a self-run outside that lane; a consumer grouping by task_profile would pool it with accepted lane rows",
+          "field": "benchmark.task_profile",
+          "type": "metadata"
+        },
+        {
+          "detail": "points at a runner/evaluator report, not a memory-benchmark-run record; no normalized run exists for this row",
+          "field": "normalized_run",
+          "type": "metadata"
+        },
+        {
+          "detail": "no artifact typed native_result (native output is present under another kind)",
+          "field": "artifacts",
+          "type": "metadata"
+        },
+        {
+          "detail": "not_measured; acceptance needs measured or not_applicable (all inference here is local)",
+          "field": "costs",
+          "type": "metadata"
+        },
+        {
+          "detail": "no reviewer or decision reference; no owner review authority record exists",
+          "field": "review",
+          "type": "governance"
+        },
+        {
+          "detail": "candidate; external rows are accepted only as frozen same-harness lane rows",
+          "field": "review.status",
+          "type": "governance"
+        }
+      ],
+      "input_digest_by_lane_rule": null,
+      "manifest": "reports/benchmarks/runs/controls/full500/session.agent_memory.manifest.json",
+      "mechanical_projection": {
+        "changes": [],
+        "result": "valid",
+        "with_evidence_root": "refused: normalized_run is not a JSON memory-benchmark-run record (compressed or non-JSON file: reports/benchmarks/runs/controls/full500/controls-500.json.gz)"
+      },
+      "pointer_bases": {
+        "repo_root": 6
+      },
+      "run_id": "controls:full500:session:agent_memory"
+    },
+    {
+      "as_committed": "valid",
+      "evidence_rehash": {
+        "failures": [],
+        "files": 6,
+        "matching": 6
+      },
+      "gaps": [
+        {
+          "detail": "claims frozen lane 'longmemeval-s-retrieval-parity-v1' (scorer blob 4acdeccced3c, runner GitHub-hosted ubuntu-24.04) but this is a self-run outside that lane; a consumer grouping by task_profile would pool it with accepted lane rows",
+          "field": "benchmark.task_profile",
+          "type": "metadata"
+        },
+        {
+          "detail": "points at a runner/evaluator report, not a memory-benchmark-run record; no normalized run exists for this row",
+          "field": "normalized_run",
+          "type": "metadata"
+        },
+        {
+          "detail": "no artifact typed native_result (native output is present under another kind)",
+          "field": "artifacts",
+          "type": "metadata"
+        },
+        {
+          "detail": "not_measured; acceptance needs measured or not_applicable (all inference here is local)",
+          "field": "costs",
+          "type": "metadata"
+        },
+        {
+          "detail": "no reviewer or decision reference; no owner review authority record exists",
+          "field": "review",
+          "type": "governance"
+        },
+        {
+          "detail": "candidate; external rows are accepted only as frozen same-harness lane rows",
+          "field": "review.status",
+          "type": "governance"
+        }
+      ],
+      "input_digest_by_lane_rule": null,
+      "manifest": "reports/benchmarks/runs/controls/full500/session.lexical_overlap.manifest.json",
+      "mechanical_projection": {
+        "changes": [],
+        "result": "valid",
+        "with_evidence_root": "refused: normalized_run is not a JSON memory-benchmark-run record (compressed or non-JSON file: reports/benchmarks/runs/controls/full500/controls-500.json.gz)"
+      },
+      "pointer_bases": {
+        "repo_root": 6
+      },
+      "run_id": "controls:full500:session:lexical_overlap"
+    },
+    {
+      "as_committed": "valid",
+      "evidence_rehash": {
+        "failures": [],
+        "files": 6,
+        "matching": 6
+      },
+      "gaps": [
+        {
+          "detail": "claims frozen lane 'longmemeval-s-retrieval-parity-v1' (scorer blob 4acdeccced3c, runner GitHub-hosted ubuntu-24.04) but this is a self-run outside that lane; a consumer grouping by task_profile would pool it with accepted lane rows",
+          "field": "benchmark.task_profile",
+          "type": "metadata"
+        },
+        {
+          "detail": "points at a runner/evaluator report, not a memory-benchmark-run record; no normalized run exists for this row",
+          "field": "normalized_run",
+          "type": "metadata"
+        },
+        {
+          "detail": "no artifact typed native_result (native output is present under another kind)",
+          "field": "artifacts",
+          "type": "metadata"
+        },
+        {
+          "detail": "not_measured; acceptance needs measured or not_applicable (all inference here is local)",
+          "field": "costs",
+          "type": "metadata"
+        },
+        {
+          "detail": "no reviewer or decision reference; no owner review authority record exists",
+          "field": "review",
+          "type": "governance"
+        },
+        {
+          "detail": "candidate; external rows are accepted only as frozen same-harness lane rows",
+          "field": "review.status",
+          "type": "governance"
+        }
+      ],
+      "input_digest_by_lane_rule": null,
+      "manifest": "reports/benchmarks/runs/controls/full500/turn.agent_memory.manifest.json",
+      "mechanical_projection": {
+        "changes": [],
+        "result": "valid",
+        "with_evidence_root": "refused: normalized_run is not a JSON memory-benchmark-run record (compressed or non-JSON file: reports/benchmarks/runs/controls/full500/controls-500.json.gz)"
+      },
+      "pointer_bases": {
+        "repo_root": 6
+      },
+      "run_id": "controls:full500:turn:agent_memory"
+    },
+    {
+      "as_committed": "valid",
+      "evidence_rehash": {
+        "failures": [],
+        "files": 6,
+        "matching": 6
+      },
+      "gaps": [
+        {
+          "detail": "claims frozen lane 'longmemeval-s-retrieval-parity-v1' (scorer blob 4acdeccced3c, runner GitHub-hosted ubuntu-24.04) but this is a self-run outside that lane; a consumer grouping by task_profile would pool it with accepted lane rows",
+          "field": "benchmark.task_profile",
+          "type": "metadata"
+        },
+        {
+          "detail": "points at a runner/evaluator report, not a memory-benchmark-run record; no normalized run exists for this row",
+          "field": "normalized_run",
+          "type": "metadata"
+        },
+        {
+          "detail": "no artifact typed native_result (native output is present under another kind)",
+          "field": "artifacts",
+          "type": "metadata"
+        },
+        {
+          "detail": "not_measured; acceptance needs measured or not_applicable (all inference here is local)",
+          "field": "costs",
+          "type": "metadata"
+        },
+        {
+          "detail": "no reviewer or decision reference; no owner review authority record exists",
+          "field": "review",
+          "type": "governance"
+        },
+        {
+          "detail": "candidate; external rows are accepted only as frozen same-harness lane rows",
+          "field": "review.status",
+          "type": "governance"
+        }
+      ],
+      "input_digest_by_lane_rule": null,
+      "manifest": "reports/benchmarks/runs/controls/full500/turn.lexical_overlap.manifest.json",
+      "mechanical_projection": {
+        "changes": [],
+        "result": "valid",
+        "with_evidence_root": "refused: normalized_run is not a JSON memory-benchmark-run record (compressed or non-JSON file: reports/benchmarks/runs/controls/full500/controls-500.json.gz)"
+      },
+      "pointer_bases": {
+        "repo_root": 6
+      },
+      "run_id": "controls:full500:turn:lexical_overlap"
+    },
+    {
+      "as_committed": "valid",
+      "evidence_rehash": {
+        "failures": [],
+        "files": 6,
+        "matching": 6
+      },
+      "gaps": [
+        {
+          "detail": "claims frozen lane 'longmemeval-s-retrieval-parity-v1' (scorer blob 4acdeccced3c, runner GitHub-hosted ubuntu-24.04) but this is a self-run outside that lane; a consumer grouping by task_profile would pool it with accepted lane rows",
+          "field": "benchmark.task_profile",
+          "type": "metadata"
+        },
+        {
+          "detail": "points at a runner/evaluator report, not a memory-benchmark-run record; no normalized run exists for this row",
+          "field": "normalized_run",
+          "type": "metadata"
+        },
+        {
+          "detail": "no artifact typed native_result (native output is present under another kind)",
+          "field": "artifacts",
+          "type": "metadata"
+        },
+        {
+          "detail": "not_measured; acceptance needs measured or not_applicable (all inference here is local)",
+          "field": "costs",
+          "type": "metadata"
+        },
+        {
+          "detail": "no reviewer or decision reference; no owner review authority record exists",
+          "field": "review",
+          "type": "governance"
+        },
+        {
+          "detail": "candidate; external rows are accepted only as frozen same-harness lane rows",
+          "field": "review.status",
+          "type": "governance"
+        }
+      ],
+      "input_digest_by_lane_rule": null,
+      "manifest": "reports/benchmarks/runs/controls/subset50/session.agent_memory.manifest.json",
+      "mechanical_projection": {
+        "changes": [],
+        "result": "valid",
+        "with_evidence_root": "refused: normalized_run is not a JSON memory-benchmark-run record (compressed or non-JSON file: reports/benchmarks/runs/controls/subset50/controls-50.json.gz)"
+      },
+      "pointer_bases": {
+        "repo_root": 6
+      },
+      "run_id": "controls:subset50:session:agent_memory"
+    },
+    {
+      "as_committed": "valid",
+      "evidence_rehash": {
+        "failures": [],
+        "files": 6,
+        "matching": 6
+      },
+      "gaps": [
+        {
+          "detail": "claims frozen lane 'longmemeval-s-retrieval-parity-v1' (scorer blob 4acdeccced3c, runner GitHub-hosted ubuntu-24.04) but this is a self-run outside that lane; a consumer grouping by task_profile would pool it with accepted lane rows",
+          "field": "benchmark.task_profile",
+          "type": "metadata"
+        },
+        {
+          "detail": "points at a runner/evaluator report, not a memory-benchmark-run record; no normalized run exists for this row",
+          "field": "normalized_run",
+          "type": "metadata"
+        },
+        {
+          "detail": "no artifact typed native_result (native output is present under another kind)",
+          "field": "artifacts",
+          "type": "metadata"
+        },
+        {
+          "detail": "not_measured; acceptance needs measured or not_applicable (all inference here is local)",
+          "field": "costs",
+          "type": "metadata"
+        },
+        {
+          "detail": "no reviewer or decision reference; no owner review authority record exists",
+          "field": "review",
+          "type": "governance"
+        },
+        {
+          "detail": "candidate; external rows are accepted only as frozen same-harness lane rows",
+          "field": "review.status",
+          "type": "governance"
+        }
+      ],
+      "input_digest_by_lane_rule": null,
+      "manifest": "reports/benchmarks/runs/controls/subset50/session.lexical_overlap.manifest.json",
+      "mechanical_projection": {
+        "changes": [],
+        "result": "valid",
+        "with_evidence_root": "refused: normalized_run is not a JSON memory-benchmark-run record (compressed or non-JSON file: reports/benchmarks/runs/controls/subset50/controls-50.json.gz)"
+      },
+      "pointer_bases": {
+        "repo_root": 6
+      },
+      "run_id": "controls:subset50:session:lexical_overlap"
+    },
+    {
+      "as_committed": "valid",
+      "evidence_rehash": {
+        "failures": [],
+        "files": 6,
+        "matching": 6
+      },
+      "gaps": [
+        {
+          "detail": "claims frozen lane 'longmemeval-s-retrieval-parity-v1' (scorer blob 4acdeccced3c, runner GitHub-hosted ubuntu-24.04) but this is a self-run outside that lane; a consumer grouping by task_profile would pool it with accepted lane rows",
+          "field": "benchmark.task_profile",
+          "type": "metadata"
+        },
+        {
+          "detail": "points at a runner/evaluator report, not a memory-benchmark-run record; no normalized run exists for this row",
+          "field": "normalized_run",
+          "type": "metadata"
+        },
+        {
+          "detail": "no artifact typed native_result (native output is present under another kind)",
+          "field": "artifacts",
+          "type": "metadata"
+        },
+        {
+          "detail": "not_measured; acceptance needs measured or not_applicable (all inference here is local)",
+          "field": "costs",
+          "type": "metadata"
+        },
+        {
+          "detail": "no reviewer or decision reference; no owner review authority record exists",
+          "field": "review",
+          "type": "governance"
+        },
+        {
+          "detail": "candidate; external rows are accepted only as frozen same-harness lane rows",
+          "field": "review.status",
+          "type": "governance"
+        }
+      ],
+      "input_digest_by_lane_rule": null,
+      "manifest": "reports/benchmarks/runs/controls/subset50/turn.agent_memory.manifest.json",
+      "mechanical_projection": {
+        "changes": [],
+        "result": "valid",
+        "with_evidence_root": "refused: normalized_run is not a JSON memory-benchmark-run record (compressed or non-JSON file: reports/benchmarks/runs/controls/subset50/controls-50.json.gz)"
+      },
+      "pointer_bases": {
+        "repo_root": 6
+      },
+      "run_id": "controls:subset50:turn:agent_memory"
+    },
+    {
+      "as_committed": "valid",
+      "evidence_rehash": {
+        "failures": [],
+        "files": 6,
+        "matching": 6
+      },
+      "gaps": [
+        {
+          "detail": "claims frozen lane 'longmemeval-s-retrieval-parity-v1' (scorer blob 4acdeccced3c, runner GitHub-hosted ubuntu-24.04) but this is a self-run outside that lane; a consumer grouping by task_profile would pool it with accepted lane rows",
+          "field": "benchmark.task_profile",
+          "type": "metadata"
+        },
+        {
+          "detail": "points at a runner/evaluator report, not a memory-benchmark-run record; no normalized run exists for this row",
+          "field": "normalized_run",
+          "type": "metadata"
+        },
+        {
+          "detail": "no artifact typed native_result (native output is present under another kind)",
+          "field": "artifacts",
+          "type": "metadata"
+        },
+        {
+          "detail": "not_measured; acceptance needs measured or not_applicable (all inference here is local)",
+          "field": "costs",
+          "type": "metadata"
+        },
+        {
+          "detail": "no reviewer or decision reference; no owner review authority record exists",
+          "field": "review",
+          "type": "governance"
+        },
+        {
+          "detail": "candidate; external rows are accepted only as frozen same-harness lane rows",
+          "field": "review.status",
+          "type": "governance"
+        }
+      ],
+      "input_digest_by_lane_rule": null,
+      "manifest": "reports/benchmarks/runs/controls/subset50/turn.lexical_overlap.manifest.json",
+      "mechanical_projection": {
+        "changes": [],
+        "result": "valid",
+        "with_evidence_root": "refused: normalized_run is not a JSON memory-benchmark-run record (compressed or non-JSON file: reports/benchmarks/runs/controls/subset50/controls-50.json.gz)"
+      },
+      "pointer_bases": {
+        "repo_root": 6
+      },
+      "run_id": "controls:subset50:turn:lexical_overlap"
+    },
+    {
+      "as_committed": "valid",
+      "evidence_rehash": {
+        "failures": [],
+        "files": 6,
+        "matching": 6
+      },
+      "gaps": [
+        {
+          "detail": "claims frozen lane 'longmemeval-s-retrieval-parity-v1' (scorer blob 4acdeccced3c, runner GitHub-hosted ubuntu-24.04) but this is a self-run outside that lane; a consumer grouping by task_profile would pool it with accepted lane rows",
+          "field": "benchmark.task_profile",
+          "type": "metadata"
+        },
+        {
+          "detail": "points at a runner/evaluator report, not a memory-benchmark-run record; no normalized run exists for this row",
+          "field": "normalized_run",
+          "type": "metadata"
+        },
+        {
+          "detail": "no artifact typed native_result (native output is present under another kind)",
+          "field": "artifacts",
+          "type": "metadata"
+        },
+        {
+          "detail": "not_measured; acceptance needs measured or not_applicable (all inference here is local)",
+          "field": "costs",
+          "type": "metadata"
+        },
+        {
+          "detail": "no reviewer or decision reference; no owner review authority record exists",
+          "field": "review",
+          "type": "governance"
+        },
+        {
+          "detail": "candidate; external rows are accepted only as frozen same-harness lane rows",
+          "field": "review.status",
+          "type": "governance"
+        }
+      ],
+      "input_digest_by_lane_rule": null,
+      "manifest": "reports/benchmarks/runs/mem0/subset50/session.mem0_explicit.manifest.json",
+      "mechanical_projection": {
+        "changes": [],
+        "result": "valid",
+        "with_evidence_root": "refused: normalized_run is not a JSON memory-benchmark-run record (compressed or non-JSON file: reports/benchmarks/runs/mem0/subset50/mem0-50.json.gz)"
+      },
+      "pointer_bases": {
+        "repo_root": 6
+      },
+      "run_id": "mem0:subset50:session:mem0_explicit"
+    },
+    {
+      "as_committed": "valid",
+      "evidence_rehash": {
+        "failures": [],
+        "files": 6,
+        "matching": 6
+      },
+      "gaps": [
+        {
+          "detail": "claims frozen lane 'longmemeval-s-retrieval-parity-v1' (scorer blob 4acdeccced3c, runner GitHub-hosted ubuntu-24.04) but this is a self-run outside that lane; a consumer grouping by task_profile would pool it with accepted lane rows",
+          "field": "benchmark.task_profile",
+          "type": "metadata"
+        },
+        {
+          "detail": "points at a runner/evaluator report, not a memory-benchmark-run record; no normalized run exists for this row",
+          "field": "normalized_run",
+          "type": "metadata"
+        },
+        {
+          "detail": "no artifact typed native_result (native output is present under another kind)",
+          "field": "artifacts",
+          "type": "metadata"
+        },
+        {
+          "detail": "not_measured; acceptance needs measured or not_applicable (all inference here is local)",
+          "field": "costs",
+          "type": "metadata"
+        },
+        {
+          "detail": "no reviewer or decision reference; no owner review authority record exists",
+          "field": "review",
+          "type": "governance"
+        },
+        {
+          "detail": "candidate; external rows are accepted only as frozen same-harness lane rows",
+          "field": "review.status",
+          "type": "governance"
+        }
+      ],
+      "input_digest_by_lane_rule": null,
+      "manifest": "reports/benchmarks/runs/mem0/subset50/turn.mem0_explicit.manifest.json",
+      "mechanical_projection": {
+        "changes": [],
+        "result": "valid",
+        "with_evidence_root": "refused: normalized_run is not a JSON memory-benchmark-run record (compressed or non-JSON file: reports/benchmarks/runs/mem0/subset50/mem0-50.json.gz)"
+      },
+      "pointer_bases": {
+        "repo_root": 6
+      },
+      "run_id": "mem0:subset50:turn:mem0_explicit"
+    },
+    {
+      "as_committed": "refused: '35659b3b9a581b644fc6746e1b4e902c3e7b56c0973b546bf7b0816a69e3de98+09e99f0852280538abe34b03570f65583fdb10df3c554b7150f0f665d5db709c' does not match '^[a-f0-9]{64",
+      "evidence_rehash": {
+        "failures": [],
+        "files": 6,
+        "matching": 6
+      },
+      "gaps": [
+        {
+          "detail": "points at a runner/evaluator report, not a memory-benchmark-run record; no normalized run exists for this row",
+          "field": "normalized_run",
+          "type": "metadata"
+        },
+        {
+          "detail": "'0.1.0-candidate' is a label; the adapter file has one commit in history, so its only blob b60ba7601234bd8fee0356edccc7a423180597e8 is recoverable (compare the bundle preregistration)",
+          "field": "system.adapter_revision",
+          "type": "metadata"
+        },
+        {
+          "detail": "two file digests joined with '+'; v1 needs one digest: use the frozen AMB lane's input_sha256 (SHA-256 over the raw fixture bytes in order), which these component digests match",
+          "field": "benchmark.input_sha256",
+          "type": "metadata"
+        },
+        {
+          "detail": "no artifact typed native_result (native output is present under another kind)",
+          "field": "artifacts",
+          "type": "metadata"
+        },
+        {
+          "detail": "not_measured; acceptance needs measured or not_applicable (all inference here is local)",
+          "field": "costs",
+          "type": "metadata"
+        },
+        {
+          "detail": "no reviewer or decision reference; no owner review authority record exists",
+          "field": "review",
+          "type": "governance"
+        },
+        {
+          "detail": "candidate; external rows are accepted only as frozen same-harness lane rows",
+          "field": "review.status",
+          "type": "governance"
+        }
+      ],
+      "input_digest_by_lane_rule": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "manifest": "reports/benchmarks/runs/mempalace/amb-precisionmembench-single-turn/rep1/manifest.json",
+      "mechanical_projection": {
+        "changes": [
+          "multi-file input digest replaced by the frozen lane value (rule and value from amb-precisionmembench-retrieval-v1)",
+          "pointer rebased to repository root"
+        ],
+        "result": "valid",
+        "with_evidence_root": "refused: normalized run disagrees on run_id"
+      },
+      "pointer_bases": {
+        "bundle_dir": 6
+      },
+      "run_id": "mempalace-amb-precisionmembench-single-turn-rep1"
+    },
+    {
+      "as_committed": "refused: unsafe evidence pointer: '../mempalace-venv-freeze.txt'",
+      "evidence_rehash": {
+        "failures": [],
+        "files": 7,
+        "matching": 7
+      },
+      "gaps": [
+        {
+          "detail": "claims frozen lane 'longmemeval-s-retrieval-parity-v1' (scorer blob 4acdeccced3c, runner GitHub-hosted ubuntu-24.04) but this is a self-run outside that lane; a consumer grouping by task_profile would pool it with accepted lane rows",
+          "field": "benchmark.task_profile",
+          "type": "metadata"
+        },
+        {
+          "detail": "points at a runner/evaluator report, not a memory-benchmark-run record; no normalized run exists for this row",
+          "field": "normalized_run",
+          "type": "metadata"
+        },
+        {
+          "detail": "'0.1.0-candidate' is a label; the adapter file has one commit in history, so its only blob ea862138a81ec55e53e2dd438c301b311f1d9a15 is recoverable (compare the bundle preregistration)",
+          "field": "system.adapter_revision",
+          "type": "metadata"
+        },
+        {
+          "detail": "no artifact typed native_result (native output is present under another kind)",
+          "field": "artifacts",
+          "type": "metadata"
+        },
+        {
+          "detail": "not_measured; acceptance needs measured or not_applicable (all inference here is local)",
+          "field": "costs",
+          "type": "metadata"
+        },
+        {
+          "detail": "no reviewer or decision reference; no owner review authority record exists",
+          "field": "review",
+          "type": "governance"
+        },
+        {
+          "detail": "candidate; external rows are accepted only as frozen same-harness lane rows",
+          "field": "review.status",
+          "type": "governance"
+        }
+      ],
+      "input_digest_by_lane_rule": null,
+      "manifest": "reports/benchmarks/runs/mempalace/full500/session.mempalace_default_local.manifest.json",
+      "mechanical_projection": {
+        "changes": [
+          "pointer rebased to repository root"
+        ],
+        "result": "valid",
+        "with_evidence_root": "refused: normalized run disagrees on run_id"
+      },
+      "pointer_bases": {
+        "manifest_dir": 7
+      },
+      "run_id": "mempalace-default-local-full500-session"
+    },
+    {
+      "as_committed": "refused: unsafe evidence pointer: '../mempalace-venv-freeze.txt'",
+      "evidence_rehash": {
+        "failures": [],
+        "files": 7,
+        "matching": 7
+      },
+      "gaps": [
+        {
+          "detail": "claims frozen lane 'longmemeval-s-retrieval-parity-v1' (scorer blob 4acdeccced3c, runner GitHub-hosted ubuntu-24.04) but this is a self-run outside that lane; a consumer grouping by task_profile would pool it with accepted lane rows",
+          "field": "benchmark.task_profile",
+          "type": "metadata"
+        },
+        {
+          "detail": "points at a runner/evaluator report, not a memory-benchmark-run record; no normalized run exists for this row",
+          "field": "normalized_run",
+          "type": "metadata"
+        },
+        {
+          "detail": "'0.1.0-candidate' is a label; the adapter file has one commit in history, so its only blob ea862138a81ec55e53e2dd438c301b311f1d9a15 is recoverable (compare the bundle preregistration)",
+          "field": "system.adapter_revision",
+          "type": "metadata"
+        },
+        {
+          "detail": "no artifact typed native_result (native output is present under another kind)",
+          "field": "artifacts",
+          "type": "metadata"
+        },
+        {
+          "detail": "not_measured; acceptance needs measured or not_applicable (all inference here is local)",
+          "field": "costs",
+          "type": "metadata"
+        },
+        {
+          "detail": "no reviewer or decision reference; no owner review authority record exists",
+          "field": "review",
+          "type": "governance"
+        },
+        {
+          "detail": "candidate; external rows are accepted only as frozen same-harness lane rows",
+          "field": "review.status",
+          "type": "governance"
+        }
+      ],
+      "input_digest_by_lane_rule": null,
+      "manifest": "reports/benchmarks/runs/mempalace/full500/turn.mempalace_default_local.manifest.json",
+      "mechanical_projection": {
+        "changes": [
+          "pointer rebased to repository root"
+        ],
+        "result": "valid",
+        "with_evidence_root": "refused: normalized run disagrees on run_id"
+      },
+      "pointer_bases": {
+        "manifest_dir": 7
+      },
+      "run_id": "mempalace-default-local-full500-turn"
+    }
+  ]
+}

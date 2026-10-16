@@ -1,10 +1,17 @@
 test_accepted_fixture_normalized_run_is_schema_valid (test_benchmark_execution_manifest.AcceptanceGuardTests.test_accepted_fixture_normalized_run_is_schema_valid) ... ok
 test_authority_for_other_reviewer_or_run_is_refused (test_benchmark_execution_manifest.AcceptanceGuardTests.test_authority_for_other_reviewer_or_run_is_refused) ... ok
+test_authority_must_match_owner_published_digest (test_benchmark_execution_manifest.AcceptanceGuardTests.test_authority_must_match_owner_published_digest) ... ok
+test_bare_or_hostless_decision_ref (test_benchmark_execution_manifest.AcceptanceGuardTests.test_bare_or_hostless_decision_ref) ... ok
 test_benign_token_counts_are_not_secrets (test_benchmark_execution_manifest.AcceptanceGuardTests.test_benign_token_counts_are_not_secrets) ... ok
+test_cli_binds_authority_file_digest (test_benchmark_execution_manifest.AcceptanceGuardTests.test_cli_binds_authority_file_digest) ... ok
+test_compressed_normalized_run_is_a_clear_refusal (test_benchmark_execution_manifest.AcceptanceGuardTests.test_compressed_normalized_run_is_a_clear_refusal) ... ok
+test_credential_like_parameter_keys (test_benchmark_execution_manifest.AcceptanceGuardTests.test_credential_like_parameter_keys) ... ok
+test_credentials_embedded_in_longer_arguments (test_benchmark_execution_manifest.AcceptanceGuardTests.test_credentials_embedded_in_longer_arguments) ... ok
 test_duplicate_artifact_ids (test_benchmark_execution_manifest.AcceptanceGuardTests.test_duplicate_artifact_ids) ... ok
 test_forged_or_missing_artifact (test_benchmark_execution_manifest.AcceptanceGuardTests.test_forged_or_missing_artifact) ... ok
 test_forged_or_missing_normalized_hash (test_benchmark_execution_manifest.AcceptanceGuardTests.test_forged_or_missing_normalized_hash) ... ok
 test_identity_mismatches_against_hashed_normalized_run (test_benchmark_execution_manifest.AcceptanceGuardTests.test_identity_mismatches_against_hashed_normalized_run) ... ok
+test_malformed_authority_is_refused_not_crashed (test_benchmark_execution_manifest.AcceptanceGuardTests.test_malformed_authority_is_refused_not_crashed) ... ok
 test_malicious_relative_evidence_paths (test_benchmark_execution_manifest.AcceptanceGuardTests.test_malicious_relative_evidence_paths) ... ok
 test_missing_row_level_artifact (test_benchmark_execution_manifest.AcceptanceGuardTests.test_missing_row_level_artifact) ... ok
 test_non_rfc3339_timestamps (test_benchmark_execution_manifest.AcceptanceGuardTests.test_non_rfc3339_timestamps) ... ok
@@ -37,6 +44,6 @@ test_time_reversal (test_benchmark_execution_manifest.ManifestTests.test_time_re
 test_unknown_cost_not_zero (test_benchmark_execution_manifest.ManifestTests.test_unknown_cost_not_zero) ... ok
 
 ----------------------------------------------------------------------
-Ran 37 tests in 0.112s
+Ran 44 tests in 0.422s
 
 OK

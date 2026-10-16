@@ -107,11 +107,18 @@ ACCEPTED = json.loads((ACCEPTED_DIR / "manifest.json").read_text())
 AUTHORITY = json.loads((ACCEPTED_DIR / "review-authority.json").read_text())
 
 
+def digest(authority) -> str:
+    """Stands in for the digest the owner publishes for the record under test."""
+    import hashlib
+    return hashlib.sha256(json.dumps(authority, sort_keys=True).encode()).hexdigest()
+
+
 class AcceptanceGuardTests(unittest.TestCase):
     """#808 items 3-4: a verified synthetic acceptance, and every way to forge or weaken it."""
 
     def accept(self, manifest=None, authority=AUTHORITY, root=ROOT, normalized=None):
-        validator.validate(copy.deepcopy(manifest or ACCEPTED), normalized, evidence_root=root, authority=copy.deepcopy(authority))
+        validator.validate(copy.deepcopy(manifest or ACCEPTED), normalized, evidence_root=root, authority=copy.deepcopy(authority),
+                           authority_sha256=digest(authority), expected_authority_sha256=digest(authority))
 
     def refuse(self, change, message, authority_change=None, root=ROOT):
         value, authority = copy.deepcopy(ACCEPTED), copy.deepcopy(AUTHORITY)
@@ -119,7 +126,8 @@ class AcceptanceGuardTests(unittest.TestCase):
         if authority_change:
             authority_change(authority)
         with self.assertRaisesRegex(Exception, message):
-            validator.validate(value, evidence_root=root, authority=authority)
+            validator.validate(value, evidence_root=root, authority=authority,
+                               authority_sha256=digest(authority), expected_authority_sha256=digest(authority))
 
     def test_verified_synthetic_acceptance_passes(self):
         self.accept()
@@ -144,10 +152,44 @@ class AcceptanceGuardTests(unittest.TestCase):
         self.refuse(lambda x: x["review"].update(decision_ref="https://example.invalid/unknown"), "no unique decision")
         self.refuse(lambda x: x["review"].update(decision_ref="see chat"), "stable https")
 
+    def test_authority_must_match_owner_published_digest(self):
+        for expected in (None, "0" * 64):
+            with self.subTest(expected=expected), self.assertRaisesRegex(Exception, "owner-published digest"):
+                validator.validate(copy.deepcopy(ACCEPTED), evidence_root=ROOT, authority=copy.deepcopy(AUTHORITY),
+                                   authority_sha256=digest(AUTHORITY), expected_authority_sha256=expected)
+
+    def test_cli_binds_authority_file_digest(self):
+        import hashlib
+        import subprocess
+        import sys
+        file_digest = hashlib.sha256((ACCEPTED_DIR / "review-authority.json").read_bytes()).hexdigest()
+        base = [sys.executable, str(ROOT / "scripts/validate_benchmark_execution_manifest.py"), str(ACCEPTED_DIR / "manifest.json"),
+                "--evidence-root", str(ROOT), "--review-authority", str(ACCEPTED_DIR / "review-authority.json")]
+        self.assertEqual(subprocess.run(base + ["--review-authority-sha256", file_digest], capture_output=True).returncode, 0)
+        self.assertEqual(subprocess.run(base, capture_output=True).returncode, 1)
+        self.assertEqual(subprocess.run(base + ["--review-authority-sha256", "0" * 64], capture_output=True).returncode, 1)
+
+    def test_malformed_authority_is_refused_not_crashed(self):
+        for authority in ([], {"decisions": ["x"]}, {"decisions": "x"}, {}):
+            with self.subTest(authority=authority), self.assertRaisesRegex(ValueError, "list of decision objects"):
+                validator.validate(copy.deepcopy(ACCEPTED), evidence_root=ROOT, authority=authority,
+                                   authority_sha256=digest(authority), expected_authority_sha256=digest(authority))
+
+    def test_bare_or_hostless_decision_ref(self):
+        for ref in ("https://", "https:///x", "https://example"):
+            with self.subTest(ref=ref):
+                self.refuse(lambda x, ref=ref: x["review"].update(decision_ref=ref), "stable https",
+                            lambda a, ref=ref: a["decisions"][0].update(decision_ref=ref))
+
     def test_reviewer_must_differ_from_executor(self):
         self.refuse(lambda x: None, "independent of the executor",
                     lambda a: a["decisions"][0].update(executor=a["decisions"][0]["reviewer"]))
         self.refuse(lambda x: None, "independent of the executor", lambda a: a["decisions"][0].pop("executor"))
+        for executor in ("SYNTHETIC-INDEPENDENT-REVIEWER", "synthetic-independent-reviewer ", " synthetic-independent-reviewer",
+                         1, ["x"], {"name": "x"}, ""):
+            with self.subTest(executor=executor):
+                self.refuse(lambda x: None, "independent of the executor",
+                            lambda a, e=executor: a["decisions"][0].update(executor=e))
 
     def test_normalized_identity_dict_alone_cannot_accept(self):
         normalized = json.loads((ACCEPTED_DIR / "normalized.json").read_text())
@@ -223,6 +265,39 @@ class AcceptanceGuardTests(unittest.TestCase):
             with self.subTest(arg=arg):
                 self.refuse(lambda x, arg=arg: x["execution"]["argv_redacted"].append(arg), "credential")
 
+    def test_credentials_embedded_in_longer_arguments(self):
+        # Each of these was refused by the first checker revision and must stay refused.
+        for arg in ("sh -c 'run --api-key=abc123'", "x --auth-token abc", "--secret-key=abc", "--password1=x",
+                    "--api_key:abc", "--api-key-file=/x", "--openai-api-key=abc", "env OPENAI_API_KEY=abc run"):
+            with self.subTest(arg=arg):
+                self.refuse(lambda x, arg=arg: x["execution"]["argv_redacted"].append(arg), "credential")
+
+    def test_credential_like_parameter_keys(self):
+        for key in ("api_key_tokens", "access_tokens", "secret_tokens", "token", "api_key"):
+            call = {"purpose": "embedding", "provider": "local", "model_id": "e", "model_revision": "r1",
+                    "model_digest": None, "endpoint_class": "local", "parameters": {key: "abc"},
+                    "prompt_sha256": None, "count": 1}
+            with self.subTest(key=key):
+                self.refuse(lambda x, call=call: x["inference"].update(used=True, calls=[call]), "credential fields")
+
+    def test_compressed_normalized_run_is_a_clear_refusal(self):
+        import gzip
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            target = root / "reference/fixtures/benchmarks/execution-manifest-accepted"
+            target.mkdir(parents=True)
+            for name in ("native.json", "rows.jsonl"):
+                (target / name).write_bytes((ACCEPTED_DIR / name).read_bytes())
+            packed = gzip.compress((ACCEPTED_DIR / "normalized.json").read_bytes(), mtime=0)
+            (target / "normalized.json").write_bytes(packed)
+            value = copy.deepcopy(ACCEPTED)
+            value["review"].update(status="candidate", comparison_eligibility="not_assessed")
+            import hashlib
+            value["normalized_run"]["sha256"] = hashlib.sha256(packed).hexdigest()
+            with self.assertRaisesRegex(ValueError, "not a JSON memory-benchmark-run"):
+                validator.validate(value, evidence_root=root)
+
     def test_benign_token_counts_are_not_secrets(self):
         value = copy.deepcopy(EXAMPLE)
         value["execution"]["argv_redacted"] += ["--max-tokens", "256", "max_tokens=256", "--retrieval-top-k"]
@@ -242,7 +317,8 @@ class AcceptanceGuardTests(unittest.TestCase):
 
     def test_malicious_relative_evidence_paths(self):
         for uri in ("../outside.json", "/etc/passwd", "a/../../b.json", "a//b.json", "a\\..\\b.json",
-                    "C:/x.json", "~/x.json", "a/%2e%2e/b.json", "file:///etc/passwd", "a/./b.json", "", "a\x00b"):
+                    "C:/x.json", "~/x.json", "a/%2e%2e/b.json", "file:///etc/passwd", "a/./b.json", "", "a\x00b",
+                    "a\x7fb.json", "a\u2028b.json"):
             with self.subTest(uri=uri):
                 self.refuse(lambda x, uri=uri: x["artifacts"][0].update(uri=uri), "unsafe evidence pointer|credential|non-empty")
 

@@ -1,0 +1,2602 @@
+{
+  "by_profile": {
+    "agent-memory-agentmembench-memdialogue-operational-v1": {
+      "artifacts.native_result_sha256": {
+        "not_recorded": 3
+      },
+      "artifacts.row_level_sha256": {
+        "not_recorded": 3
+      },
+      "benchmark.dataset_revision": {
+        "recorded": 3
+      },
+      "benchmark.input_sha256": {
+        "recorded": 3
+      },
+      "costs": {
+        "evidence_gap": 3
+      },
+      "environment.container_digest": {
+        "not_recorded": 3
+      },
+      "environment.dependency_lock": {
+        "not_recorded": 3
+      },
+      "environment.runtime_version": {
+        "recorded": 3
+      },
+      "execution.peak_memory": {
+        "recorded": 3
+      },
+      "execution.seed": {
+        "recorded": 3
+      },
+      "execution.source_blobs": {
+        "not_recorded": 3
+      },
+      "execution.stdout_stderr_digests": {
+        "evidence_gap": 3
+      },
+      "execution.workflow_run_id": {
+        "not_recorded": 3
+      },
+      "hardware.cpu_ram_gpu": {
+        "evidence_gap": 3
+      },
+      "hardware.os": {
+        "recorded": 3
+      },
+      "inference.model_identity": {
+        "evidence_gap": 1,
+        "not_applicable": 2
+      },
+      "system.adapter_revision": {
+        "recorded": 3
+      },
+      "system.configuration_digest": {
+        "recorded": 3
+      },
+      "system.revision": {
+        "recorded": 3
+      },
+      "timing.finished_at": {
+        "not_recorded": 3
+      },
+      "timing.started_at_elapsed": {
+        "recorded": 3
+      }
+    },
+    "agent-memory-longmemeval-retrieval-currentness-v1": {
+      "artifacts.native_result_sha256": {
+        "not_recorded": 12
+      },
+      "artifacts.row_level_sha256": {
+        "not_recorded": 12
+      },
+      "benchmark.dataset_revision": {
+        "not_recorded": 6,
+        "recorded": 6
+      },
+      "benchmark.input_sha256": {
+        "recorded": 12
+      },
+      "costs": {
+        "evidence_gap": 12
+      },
+      "environment.container_digest": {
+        "not_recorded": 12
+      },
+      "environment.dependency_lock": {
+        "not_recorded": 12
+      },
+      "environment.runtime_version": {
+        "recorded": 12
+      },
+      "execution.peak_memory": {
+        "recorded": 12
+      },
+      "execution.seed": {
+        "not_recorded": 12
+      },
+      "execution.source_blobs": {
+        "not_recorded": 12
+      },
+      "execution.stdout_stderr_digests": {
+        "evidence_gap": 12
+      },
+      "execution.workflow_run_id": {
+        "not_recorded": 12
+      },
+      "hardware.cpu_ram_gpu": {
+        "evidence_gap": 12
+      },
+      "hardware.os": {
+        "recorded": 12
+      },
+      "inference.model_identity": {
+        "evidence_gap": 4,
+        "not_applicable": 8
+      },
+      "system.adapter_revision": {
+        "recorded": 12
+      },
+      "system.configuration_digest": {
+        "not_recorded": 12
+      },
+      "system.revision": {
+        "recorded": 12
+      },
+      "timing.finished_at": {
+        "not_recorded": 12
+      },
+      "timing.started_at_elapsed": {
+        "recorded": 12
+      }
+    },
+    "amb-precisionmembench-retrieval-v1:single-turn": {
+      "artifacts.native_result_sha256": {
+        "recorded": 3
+      },
+      "artifacts.row_level_sha256": {
+        "not_recorded": 3
+      },
+      "benchmark.dataset_revision": {
+        "recorded": 3
+      },
+      "benchmark.input_sha256": {
+        "recorded": 3
+      },
+      "costs": {
+        "evidence_gap": 3
+      },
+      "environment.container_digest": {
+        "not_recorded": 3
+      },
+      "environment.dependency_lock": {
+        "recorded": 3
+      },
+      "environment.runtime_version": {
+        "not_recorded": 3
+      },
+      "execution.peak_memory": {
+        "not_recorded": 3
+      },
+      "execution.seed": {
+        "not_recorded": 3
+      },
+      "execution.source_blobs": {
+        "not_recorded": 3
+      },
+      "execution.stdout_stderr_digests": {
+        "evidence_gap": 3
+      },
+      "execution.workflow_run_id": {
+        "recorded": 3
+      },
+      "hardware.cpu_ram_gpu": {
+        "evidence_gap": 3
+      },
+      "hardware.os": {
+        "recorded": 3
+      },
+      "inference.model_identity": {
+        "evidence_gap": 2,
+        "not_applicable": 1
+      },
+      "system.adapter_revision": {
+        "recorded": 3
+      },
+      "system.configuration_digest": {
+        "recorded": 3
+      },
+      "system.revision": {
+        "recorded": 3
+      },
+      "timing.finished_at": {
+        "not_recorded": 3
+      },
+      "timing.started_at_elapsed": {
+        "not_recorded": 3
+      }
+    },
+    "amb-precisionmembench-retrieval-v2:single-turn": {
+      "artifacts.native_result_sha256": {
+        "recorded": 3
+      },
+      "artifacts.row_level_sha256": {
+        "not_recorded": 3
+      },
+      "benchmark.dataset_revision": {
+        "recorded": 3
+      },
+      "benchmark.input_sha256": {
+        "recorded": 3
+      },
+      "costs": {
+        "evidence_gap": 3
+      },
+      "environment.container_digest": {
+        "not_recorded": 3
+      },
+      "environment.dependency_lock": {
+        "recorded": 3
+      },
+      "environment.runtime_version": {
+        "not_recorded": 3
+      },
+      "execution.peak_memory": {
+        "not_recorded": 3
+      },
+      "execution.seed": {
+        "not_recorded": 3
+      },
+      "execution.source_blobs": {
+        "not_recorded": 3
+      },
+      "execution.stdout_stderr_digests": {
+        "evidence_gap": 3
+      },
+      "execution.workflow_run_id": {
+        "recorded": 3
+      },
+      "hardware.cpu_ram_gpu": {
+        "evidence_gap": 3
+      },
+      "hardware.os": {
+        "recorded": 3
+      },
+      "inference.model_identity": {
+        "evidence_gap": 2,
+        "not_applicable": 1
+      },
+      "system.adapter_revision": {
+        "recorded": 3
+      },
+      "system.configuration_digest": {
+        "recorded": 3
+      },
+      "system.revision": {
+        "recorded": 3
+      },
+      "timing.finished_at": {
+        "not_recorded": 3
+      },
+      "timing.started_at_elapsed": {
+        "not_recorded": 3
+      }
+    },
+    "amb-precisionmembench-retrieval-v3:single-turn": {
+      "artifacts.native_result_sha256": {
+        "recorded": 3
+      },
+      "artifacts.row_level_sha256": {
+        "not_recorded": 3
+      },
+      "benchmark.dataset_revision": {
+        "recorded": 3
+      },
+      "benchmark.input_sha256": {
+        "recorded": 3
+      },
+      "costs": {
+        "evidence_gap": 3
+      },
+      "environment.container_digest": {
+        "not_recorded": 3
+      },
+      "environment.dependency_lock": {
+        "recorded": 3
+      },
+      "environment.runtime_version": {
+        "not_recorded": 3
+      },
+      "execution.peak_memory": {
+        "not_recorded": 3
+      },
+      "execution.seed": {
+        "not_recorded": 3
+      },
+      "execution.source_blobs": {
+        "not_recorded": 3
+      },
+      "execution.stdout_stderr_digests": {
+        "evidence_gap": 3
+      },
+      "execution.workflow_run_id": {
+        "recorded": 3
+      },
+      "hardware.cpu_ram_gpu": {
+        "evidence_gap": 3
+      },
+      "hardware.os": {
+        "recorded": 3
+      },
+      "inference.model_identity": {
+        "evidence_gap": 2,
+        "not_applicable": 1
+      },
+      "system.adapter_revision": {
+        "recorded": 3
+      },
+      "system.configuration_digest": {
+        "recorded": 3
+      },
+      "system.revision": {
+        "recorded": 3
+      },
+      "timing.finished_at": {
+        "not_recorded": 3
+      },
+      "timing.started_at_elapsed": {
+        "not_recorded": 3
+      }
+    },
+    "amb-precisionmembench-retrieval-v4:single-turn": {
+      "artifacts.native_result_sha256": {
+        "recorded": 3
+      },
+      "artifacts.row_level_sha256": {
+        "not_recorded": 3
+      },
+      "benchmark.dataset_revision": {
+        "recorded": 3
+      },
+      "benchmark.input_sha256": {
+        "recorded": 3
+      },
+      "costs": {
+        "evidence_gap": 3
+      },
+      "environment.container_digest": {
+        "not_recorded": 3
+      },
+      "environment.dependency_lock": {
+        "recorded": 3
+      },
+      "environment.runtime_version": {
+        "not_recorded": 3
+      },
+      "execution.peak_memory": {
+        "not_recorded": 3
+      },
+      "execution.seed": {
+        "not_recorded": 3
+      },
+      "execution.source_blobs": {
+        "not_recorded": 3
+      },
+      "execution.stdout_stderr_digests": {
+        "evidence_gap": 3
+      },
+      "execution.workflow_run_id": {
+        "recorded": 3
+      },
+      "hardware.cpu_ram_gpu": {
+        "evidence_gap": 3
+      },
+      "hardware.os": {
+        "recorded": 3
+      },
+      "inference.model_identity": {
+        "evidence_gap": 2,
+        "not_applicable": 1
+      },
+      "system.adapter_revision": {
+        "recorded": 3
+      },
+      "system.configuration_digest": {
+        "recorded": 3
+      },
+      "system.revision": {
+        "recorded": 3
+      },
+      "timing.finished_at": {
+        "not_recorded": 3
+      },
+      "timing.started_at_elapsed": {
+        "not_recorded": 3
+      }
+    },
+    "amb-precisionmembench-retrieval-v5:single-turn": {
+      "artifacts.native_result_sha256": {
+        "recorded": 3
+      },
+      "artifacts.row_level_sha256": {
+        "not_recorded": 3
+      },
+      "benchmark.dataset_revision": {
+        "recorded": 3
+      },
+      "benchmark.input_sha256": {
+        "recorded": 3
+      },
+      "costs": {
+        "evidence_gap": 3
+      },
+      "environment.container_digest": {
+        "not_recorded": 3
+      },
+      "environment.dependency_lock": {
+        "recorded": 3
+      },
+      "environment.runtime_version": {
+        "not_recorded": 3
+      },
+      "execution.peak_memory": {
+        "not_recorded": 3
+      },
+      "execution.seed": {
+        "not_recorded": 3
+      },
+      "execution.source_blobs": {
+        "not_recorded": 3
+      },
+      "execution.stdout_stderr_digests": {
+        "evidence_gap": 3
+      },
+      "execution.workflow_run_id": {
+        "recorded": 3
+      },
+      "hardware.cpu_ram_gpu": {
+        "evidence_gap": 3
+      },
+      "hardware.os": {
+        "recorded": 3
+      },
+      "inference.model_identity": {
+        "evidence_gap": 2,
+        "not_applicable": 1
+      },
+      "system.adapter_revision": {
+        "recorded": 3
+      },
+      "system.configuration_digest": {
+        "recorded": 3
+      },
+      "system.revision": {
+        "recorded": 3
+      },
+      "timing.finished_at": {
+        "not_recorded": 3
+      },
+      "timing.started_at_elapsed": {
+        "not_recorded": 3
+      }
+    },
+    "amb-precisionmembench-retrieval-v6:single-turn": {
+      "artifacts.native_result_sha256": {
+        "recorded": 3
+      },
+      "artifacts.row_level_sha256": {
+        "not_recorded": 3
+      },
+      "benchmark.dataset_revision": {
+        "recorded": 3
+      },
+      "benchmark.input_sha256": {
+        "recorded": 3
+      },
+      "costs": {
+        "evidence_gap": 3
+      },
+      "environment.container_digest": {
+        "not_recorded": 3
+      },
+      "environment.dependency_lock": {
+        "recorded": 3
+      },
+      "environment.runtime_version": {
+        "not_recorded": 3
+      },
+      "execution.peak_memory": {
+        "not_recorded": 3
+      },
+      "execution.seed": {
+        "not_recorded": 3
+      },
+      "execution.source_blobs": {
+        "not_recorded": 3
+      },
+      "execution.stdout_stderr_digests": {
+        "evidence_gap": 3
+      },
+      "execution.workflow_run_id": {
+        "recorded": 3
+      },
+      "hardware.cpu_ram_gpu": {
+        "evidence_gap": 3
+      },
+      "hardware.os": {
+        "recorded": 3
+      },
+      "inference.model_identity": {
+        "evidence_gap": 2,
+        "not_applicable": 1
+      },
+      "system.adapter_revision": {
+        "recorded": 3
+      },
+      "system.configuration_digest": {
+        "recorded": 3
+      },
+      "system.revision": {
+        "recorded": 3
+      },
+      "timing.finished_at": {
+        "not_recorded": 3
+      },
+      "timing.started_at_elapsed": {
+        "not_recorded": 3
+      }
+    },
+    "longmemeval-s-retrieval-parity-v1": {
+      "artifacts.native_result_sha256": {
+        "recorded": 6
+      },
+      "artifacts.row_level_sha256": {
+        "recorded": 6
+      },
+      "benchmark.dataset_revision": {
+        "not_recorded": 6
+      },
+      "benchmark.input_sha256": {
+        "recorded": 6
+      },
+      "costs": {
+        "evidence_gap": 6
+      },
+      "environment.container_digest": {
+        "not_recorded": 6
+      },
+      "environment.dependency_lock": {
+        "recorded": 6
+      },
+      "environment.runtime_version": {
+        "recorded": 6
+      },
+      "execution.peak_memory": {
+        "recorded": 6
+      },
+      "execution.seed": {
+        "not_recorded": 6
+      },
+      "execution.source_blobs": {
+        "recorded": 6
+      },
+      "execution.stdout_stderr_digests": {
+        "evidence_gap": 6
+      },
+      "execution.workflow_run_id": {
+        "recorded": 6
+      },
+      "hardware.cpu_ram_gpu": {
+        "evidence_gap": 6
+      },
+      "hardware.os": {
+        "recorded": 6
+      },
+      "inference.model_identity": {
+        "evidence_gap": 4,
+        "not_applicable": 2
+      },
+      "system.adapter_revision": {
+        "recorded": 6
+      },
+      "system.configuration_digest": {
+        "not_recorded": 4,
+        "recorded": 2
+      },
+      "system.revision": {
+        "recorded": 6
+      },
+      "timing.finished_at": {
+        "not_recorded": 6
+      },
+      "timing.started_at_elapsed": {
+        "recorded": 6
+      }
+    },
+    "longmemeval-s-retrieval-parity-v2": {
+      "artifacts.native_result_sha256": {
+        "recorded": 6
+      },
+      "artifacts.row_level_sha256": {
+        "recorded": 6
+      },
+      "benchmark.dataset_revision": {
+        "not_recorded": 6
+      },
+      "benchmark.input_sha256": {
+        "recorded": 6
+      },
+      "costs": {
+        "evidence_gap": 6
+      },
+      "environment.container_digest": {
+        "not_recorded": 6
+      },
+      "environment.dependency_lock": {
+        "recorded": 6
+      },
+      "environment.runtime_version": {
+        "recorded": 6
+      },
+      "execution.peak_memory": {
+        "recorded": 6
+      },
+      "execution.seed": {
+        "not_recorded": 6
+      },
+      "execution.source_blobs": {
+        "recorded": 6
+      },
+      "execution.stdout_stderr_digests": {
+        "evidence_gap": 6
+      },
+      "execution.workflow_run_id": {
+        "recorded": 6
+      },
+      "hardware.cpu_ram_gpu": {
+        "evidence_gap": 6
+      },
+      "hardware.os": {
+        "recorded": 6
+      },
+      "inference.model_identity": {
+        "evidence_gap": 4,
+        "not_applicable": 2
+      },
+      "system.adapter_revision": {
+        "recorded": 6
+      },
+      "system.configuration_digest": {
+        "not_recorded": 4,
+        "recorded": 2
+      },
+      "system.revision": {
+        "recorded": 6
+      },
+      "timing.finished_at": {
+        "not_recorded": 6
+      },
+      "timing.started_at_elapsed": {
+        "recorded": 6
+      }
+    },
+    "longmemeval-s-retrieval-parity-v3": {
+      "artifacts.native_result_sha256": {
+        "recorded": 6
+      },
+      "artifacts.row_level_sha256": {
+        "recorded": 6
+      },
+      "benchmark.dataset_revision": {
+        "not_recorded": 6
+      },
+      "benchmark.input_sha256": {
+        "recorded": 6
+      },
+      "costs": {
+        "evidence_gap": 6
+      },
+      "environment.container_digest": {
+        "not_recorded": 6
+      },
+      "environment.dependency_lock": {
+        "recorded": 6
+      },
+      "environment.runtime_version": {
+        "recorded": 6
+      },
+      "execution.peak_memory": {
+        "recorded": 6
+      },
+      "execution.seed": {
+        "not_recorded": 6
+      },
+      "execution.source_blobs": {
+        "recorded": 6
+      },
+      "execution.stdout_stderr_digests": {
+        "evidence_gap": 6
+      },
+      "execution.workflow_run_id": {
+        "recorded": 6
+      },
+      "hardware.cpu_ram_gpu": {
+        "evidence_gap": 6
+      },
+      "hardware.os": {
+        "recorded": 6
+      },
+      "inference.model_identity": {
+        "evidence_gap": 4,
+        "not_applicable": 2
+      },
+      "system.adapter_revision": {
+        "recorded": 6
+      },
+      "system.configuration_digest": {
+        "not_recorded": 4,
+        "recorded": 2
+      },
+      "system.revision": {
+        "recorded": 6
+      },
+      "timing.finished_at": {
+        "not_recorded": 6
+      },
+      "timing.started_at_elapsed": {
+        "recorded": 6
+      }
+    },
+    "longmemeval-s-retrieval-parity-v4": {
+      "artifacts.native_result_sha256": {
+        "recorded": 6
+      },
+      "artifacts.row_level_sha256": {
+        "recorded": 6
+      },
+      "benchmark.dataset_revision": {
+        "not_recorded": 6
+      },
+      "benchmark.input_sha256": {
+        "recorded": 6
+      },
+      "costs": {
+        "evidence_gap": 6
+      },
+      "environment.container_digest": {
+        "not_recorded": 6
+      },
+      "environment.dependency_lock": {
+        "recorded": 6
+      },
+      "environment.runtime_version": {
+        "recorded": 6
+      },
+      "execution.peak_memory": {
+        "recorded": 6
+      },
+      "execution.seed": {
+        "not_recorded": 6
+      },
+      "execution.source_blobs": {
+        "recorded": 6
+      },
+      "execution.stdout_stderr_digests": {
+        "evidence_gap": 6
+      },
+      "execution.workflow_run_id": {
+        "recorded": 6
+      },
+      "hardware.cpu_ram_gpu": {
+        "evidence_gap": 6
+      },
+      "hardware.os": {
+        "recorded": 6
+      },
+      "inference.model_identity": {
+        "evidence_gap": 4,
+        "not_applicable": 2
+      },
+      "system.adapter_revision": {
+        "recorded": 6
+      },
+      "system.configuration_digest": {
+        "not_recorded": 4,
+        "recorded": 2
+      },
+      "system.revision": {
+        "recorded": 6
+      },
+      "timing.finished_at": {
+        "not_recorded": 6
+      },
+      "timing.started_at_elapsed": {
+        "recorded": 6
+      }
+    },
+    "longmemeval-s-retrieval-parity-v5": {
+      "artifacts.native_result_sha256": {
+        "recorded": 6
+      },
+      "artifacts.row_level_sha256": {
+        "recorded": 6
+      },
+      "benchmark.dataset_revision": {
+        "not_recorded": 6
+      },
+      "benchmark.input_sha256": {
+        "recorded": 6
+      },
+      "costs": {
+        "evidence_gap": 6
+      },
+      "environment.container_digest": {
+        "not_recorded": 6
+      },
+      "environment.dependency_lock": {
+        "recorded": 6
+      },
+      "environment.runtime_version": {
+        "recorded": 6
+      },
+      "execution.peak_memory": {
+        "recorded": 6
+      },
+      "execution.seed": {
+        "not_recorded": 6
+      },
+      "execution.source_blobs": {
+        "recorded": 6
+      },
+      "execution.stdout_stderr_digests": {
+        "evidence_gap": 6
+      },
+      "execution.workflow_run_id": {
+        "recorded": 6
+      },
+      "hardware.cpu_ram_gpu": {
+        "evidence_gap": 6
+      },
+      "hardware.os": {
+        "recorded": 6
+      },
+      "inference.model_identity": {
+        "evidence_gap": 4,
+        "not_applicable": 2
+      },
+      "system.adapter_revision": {
+        "recorded": 6
+      },
+      "system.configuration_digest": {
+        "not_recorded": 4,
+        "recorded": 2
+      },
+      "system.revision": {
+        "recorded": 6
+      },
+      "timing.finished_at": {
+        "not_recorded": 6
+      },
+      "timing.started_at_elapsed": {
+        "recorded": 6
+      }
+    },
+    "longmemeval-s-retrieval-parity-v6": {
+      "artifacts.native_result_sha256": {
+        "recorded": 6
+      },
+      "artifacts.row_level_sha256": {
+        "recorded": 6
+      },
+      "benchmark.dataset_revision": {
+        "not_recorded": 6
+      },
+      "benchmark.input_sha256": {
+        "recorded": 6
+      },
+      "costs": {
+        "evidence_gap": 6
+      },
+      "environment.container_digest": {
+        "not_recorded": 6
+      },
+      "environment.dependency_lock": {
+        "recorded": 6
+      },
+      "environment.runtime_version": {
+        "recorded": 6
+      },
+      "execution.peak_memory": {
+        "recorded": 6
+      },
+      "execution.seed": {
+        "not_recorded": 6
+      },
+      "execution.source_blobs": {
+        "recorded": 6
+      },
+      "execution.stdout_stderr_digests": {
+        "evidence_gap": 6
+      },
+      "execution.workflow_run_id": {
+        "recorded": 6
+      },
+      "hardware.cpu_ram_gpu": {
+        "evidence_gap": 6
+      },
+      "hardware.os": {
+        "recorded": 6
+      },
+      "inference.model_identity": {
+        "evidence_gap": 4,
+        "not_applicable": 2
+      },
+      "system.adapter_revision": {
+        "recorded": 6
+      },
+      "system.configuration_digest": {
+        "not_recorded": 4,
+        "recorded": 2
+      },
+      "system.revision": {
+        "recorded": 6
+      },
+      "timing.finished_at": {
+        "not_recorded": 6
+      },
+      "timing.started_at_elapsed": {
+        "recorded": 6
+      }
+    }
+  },
+  "normalized_runs": 69,
+  "per_run": {
+    "agentmembench-memdialogue-agent_memory-03197cd5c866.json": {
+      "artifacts.native_result_sha256": "not_recorded",
+      "artifacts.row_level_sha256": "not_recorded",
+      "benchmark.dataset_revision": "recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "not_recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "recorded",
+      "execution.source_blobs": "not_recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "not_recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "agentmembench-memdialogue-lexical_overlap-03197cd5c866.json": {
+      "artifacts.native_result_sha256": "not_recorded",
+      "artifacts.row_level_sha256": "not_recorded",
+      "benchmark.dataset_revision": "recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "not_recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "recorded",
+      "execution.source_blobs": "not_recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "not_recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "not_applicable",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "agentmembench-memdialogue-no_memory-03197cd5c866.json": {
+      "artifacts.native_result_sha256": "not_recorded",
+      "artifacts.row_level_sha256": "not_recorded",
+      "benchmark.dataset_revision": "recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "not_recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "recorded",
+      "execution.source_blobs": "not_recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "not_recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "not_applicable",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "amb-precisionmembench-amb-precisionmembench-retrieval-v1-single-turn-agent-memory-703be5ba1c7e.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "not_recorded",
+      "benchmark.dataset_revision": "recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "not_recorded",
+      "execution.peak_memory": "not_recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "not_recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "not_recorded"
+    },
+    "amb-precisionmembench-amb-precisionmembench-retrieval-v1-single-turn-bm25-03c1d0f1d27d.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "not_recorded",
+      "benchmark.dataset_revision": "recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "not_recorded",
+      "execution.peak_memory": "not_recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "not_recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "not_applicable",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "not_recorded"
+    },
+    "amb-precisionmembench-amb-precisionmembench-retrieval-v1-single-turn-mem0-oss-94c3fe9f238f.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "not_recorded",
+      "benchmark.dataset_revision": "recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "not_recorded",
+      "execution.peak_memory": "not_recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "not_recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "not_recorded"
+    },
+    "amb-precisionmembench-amb-precisionmembench-retrieval-v2-single-turn-agent-memory-ca0f9a748b3b.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "not_recorded",
+      "benchmark.dataset_revision": "recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "not_recorded",
+      "execution.peak_memory": "not_recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "not_recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "not_recorded"
+    },
+    "amb-precisionmembench-amb-precisionmembench-retrieval-v2-single-turn-bm25-03c1d0f1d27d.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "not_recorded",
+      "benchmark.dataset_revision": "recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "not_recorded",
+      "execution.peak_memory": "not_recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "not_recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "not_applicable",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "not_recorded"
+    },
+    "amb-precisionmembench-amb-precisionmembench-retrieval-v2-single-turn-mem0-oss-94c3fe9f238f.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "not_recorded",
+      "benchmark.dataset_revision": "recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "not_recorded",
+      "execution.peak_memory": "not_recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "not_recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "not_recorded"
+    },
+    "amb-precisionmembench-amb-precisionmembench-retrieval-v3-single-turn-agent-memory-04bb286f90f1.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "not_recorded",
+      "benchmark.dataset_revision": "recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "not_recorded",
+      "execution.peak_memory": "not_recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "not_recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "not_recorded"
+    },
+    "amb-precisionmembench-amb-precisionmembench-retrieval-v3-single-turn-bm25-03c1d0f1d27d.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "not_recorded",
+      "benchmark.dataset_revision": "recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "not_recorded",
+      "execution.peak_memory": "not_recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "not_recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "not_applicable",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "not_recorded"
+    },
+    "amb-precisionmembench-amb-precisionmembench-retrieval-v3-single-turn-mem0-oss-94c3fe9f238f.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "not_recorded",
+      "benchmark.dataset_revision": "recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "not_recorded",
+      "execution.peak_memory": "not_recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "not_recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "not_recorded"
+    },
+    "amb-precisionmembench-amb-precisionmembench-retrieval-v4-single-turn-agent-memory-f5a79d230a31.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "not_recorded",
+      "benchmark.dataset_revision": "recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "not_recorded",
+      "execution.peak_memory": "not_recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "not_recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "not_recorded"
+    },
+    "amb-precisionmembench-amb-precisionmembench-retrieval-v4-single-turn-bm25-03c1d0f1d27d.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "not_recorded",
+      "benchmark.dataset_revision": "recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "not_recorded",
+      "execution.peak_memory": "not_recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "not_recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "not_applicable",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "not_recorded"
+    },
+    "amb-precisionmembench-amb-precisionmembench-retrieval-v4-single-turn-mem0-oss-94c3fe9f238f.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "not_recorded",
+      "benchmark.dataset_revision": "recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "not_recorded",
+      "execution.peak_memory": "not_recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "not_recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "not_recorded"
+    },
+    "amb-precisionmembench-amb-precisionmembench-retrieval-v5-single-turn-agent-memory-e6f9db7f1db5.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "not_recorded",
+      "benchmark.dataset_revision": "recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "not_recorded",
+      "execution.peak_memory": "not_recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "not_recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "not_recorded"
+    },
+    "amb-precisionmembench-amb-precisionmembench-retrieval-v5-single-turn-bm25-03c1d0f1d27d.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "not_recorded",
+      "benchmark.dataset_revision": "recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "not_recorded",
+      "execution.peak_memory": "not_recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "not_recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "not_applicable",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "not_recorded"
+    },
+    "amb-precisionmembench-amb-precisionmembench-retrieval-v5-single-turn-mem0-oss-94c3fe9f238f.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "not_recorded",
+      "benchmark.dataset_revision": "recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "not_recorded",
+      "execution.peak_memory": "not_recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "not_recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "not_recorded"
+    },
+    "amb-precisionmembench-amb-precisionmembench-retrieval-v6-single-turn-agent-memory-24048d55e26d.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "not_recorded",
+      "benchmark.dataset_revision": "recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "not_recorded",
+      "execution.peak_memory": "not_recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "not_recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "not_recorded"
+    },
+    "amb-precisionmembench-amb-precisionmembench-retrieval-v6-single-turn-bm25-03c1d0f1d27d.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "not_recorded",
+      "benchmark.dataset_revision": "recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "not_recorded",
+      "execution.peak_memory": "not_recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "not_recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "not_applicable",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "not_recorded"
+    },
+    "amb-precisionmembench-amb-precisionmembench-retrieval-v6-single-turn-mem0-oss-94c3fe9f238f.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "not_recorded",
+      "benchmark.dataset_revision": "recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "not_recorded",
+      "execution.peak_memory": "not_recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "not_recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "not_recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v1-session-agent_memory-0b0449a8aa2b.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v1-session-lexical_overlap-0b0449a8aa2b.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "not_applicable",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v1-session-mem0_explicit-94c3fe9f238f.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v1-turn-agent_memory-0b0449a8aa2b.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v1-turn-lexical_overlap-0b0449a8aa2b.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "not_applicable",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v1-turn-mem0_explicit-94c3fe9f238f.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v2-session-agent_memory-ca0f9a748b3b.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v2-session-lexical_overlap-ca0f9a748b3b.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "not_applicable",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v2-session-mem0_explicit-94c3fe9f238f.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v2-turn-agent_memory-ca0f9a748b3b.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v2-turn-lexical_overlap-ca0f9a748b3b.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "not_applicable",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v2-turn-mem0_explicit-94c3fe9f238f.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v3-session-agent_memory-04bb286f90f1.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v3-session-lexical_overlap-04bb286f90f1.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "not_applicable",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v3-session-mem0_explicit-94c3fe9f238f.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v3-turn-agent_memory-04bb286f90f1.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v3-turn-lexical_overlap-04bb286f90f1.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "not_applicable",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v3-turn-mem0_explicit-94c3fe9f238f.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v4-session-agent_memory-f5a79d230a31.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v4-session-lexical_overlap-f5a79d230a31.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "not_applicable",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v4-session-mem0_explicit-94c3fe9f238f.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v4-turn-agent_memory-f5a79d230a31.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v4-turn-lexical_overlap-f5a79d230a31.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "not_applicable",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v4-turn-mem0_explicit-94c3fe9f238f.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v5-session-agent_memory-e6f9db7f1db5.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v5-session-lexical_overlap-e6f9db7f1db5.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "not_applicable",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v5-session-mem0_explicit-94c3fe9f238f.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v5-turn-agent_memory-e6f9db7f1db5.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v5-turn-lexical_overlap-e6f9db7f1db5.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "not_applicable",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v5-turn-mem0_explicit-94c3fe9f238f.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v6-session-agent_memory-24048d55e26d.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v6-session-lexical_overlap-24048d55e26d.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "not_applicable",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v6-session-mem0_explicit-94c3fe9f238f.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v6-turn-agent_memory-24048d55e26d.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v6-turn-lexical_overlap-24048d55e26d.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "not_applicable",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-longmemeval-s-retrieval-parity-v6-turn-mem0_explicit-94c3fe9f238f.json": {
+      "artifacts.native_result_sha256": "recorded",
+      "artifacts.row_level_sha256": "recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-session-agent_memory-409098ffeec5.json": {
+      "artifacts.native_result_sha256": "not_recorded",
+      "artifacts.row_level_sha256": "not_recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "not_recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "not_recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "not_recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-session-agent_memory-f73b872c7f06.json": {
+      "artifacts.native_result_sha256": "not_recorded",
+      "artifacts.row_level_sha256": "not_recorded",
+      "benchmark.dataset_revision": "recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "not_recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "not_recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "not_recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-session-lexical_overlap-409098ffeec5.json": {
+      "artifacts.native_result_sha256": "not_recorded",
+      "artifacts.row_level_sha256": "not_recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "not_recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "not_recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "not_recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "not_applicable",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-session-lexical_overlap-f73b872c7f06.json": {
+      "artifacts.native_result_sha256": "not_recorded",
+      "artifacts.row_level_sha256": "not_recorded",
+      "benchmark.dataset_revision": "recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "not_recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "not_recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "not_recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "not_applicable",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-session-no_memory-409098ffeec5.json": {
+      "artifacts.native_result_sha256": "not_recorded",
+      "artifacts.row_level_sha256": "not_recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "not_recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "not_recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "not_recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "not_applicable",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-session-no_memory-f73b872c7f06.json": {
+      "artifacts.native_result_sha256": "not_recorded",
+      "artifacts.row_level_sha256": "not_recorded",
+      "benchmark.dataset_revision": "recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "not_recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "not_recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "not_recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "not_applicable",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-turn-agent_memory-409098ffeec5.json": {
+      "artifacts.native_result_sha256": "not_recorded",
+      "artifacts.row_level_sha256": "not_recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "not_recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "not_recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "not_recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-turn-agent_memory-f73b872c7f06.json": {
+      "artifacts.native_result_sha256": "not_recorded",
+      "artifacts.row_level_sha256": "not_recorded",
+      "benchmark.dataset_revision": "recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "not_recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "not_recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "not_recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "evidence_gap",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-turn-lexical_overlap-409098ffeec5.json": {
+      "artifacts.native_result_sha256": "not_recorded",
+      "artifacts.row_level_sha256": "not_recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "not_recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "not_recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "not_recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "not_applicable",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-turn-lexical_overlap-f73b872c7f06.json": {
+      "artifacts.native_result_sha256": "not_recorded",
+      "artifacts.row_level_sha256": "not_recorded",
+      "benchmark.dataset_revision": "recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "not_recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "not_recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "not_recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "not_applicable",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-turn-no_memory-409098ffeec5.json": {
+      "artifacts.native_result_sha256": "not_recorded",
+      "artifacts.row_level_sha256": "not_recorded",
+      "benchmark.dataset_revision": "not_recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "not_recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "not_recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "not_recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "not_applicable",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    },
+    "longmemeval-turn-no_memory-f73b872c7f06.json": {
+      "artifacts.native_result_sha256": "not_recorded",
+      "artifacts.row_level_sha256": "not_recorded",
+      "benchmark.dataset_revision": "recorded",
+      "benchmark.input_sha256": "recorded",
+      "costs": "evidence_gap",
+      "environment.container_digest": "not_recorded",
+      "environment.dependency_lock": "not_recorded",
+      "environment.runtime_version": "recorded",
+      "execution.peak_memory": "recorded",
+      "execution.seed": "not_recorded",
+      "execution.source_blobs": "not_recorded",
+      "execution.stdout_stderr_digests": "evidence_gap",
+      "execution.workflow_run_id": "not_recorded",
+      "hardware.cpu_ram_gpu": "evidence_gap",
+      "hardware.os": "recorded",
+      "inference.model_identity": "not_applicable",
+      "system.adapter_revision": "recorded",
+      "system.configuration_digest": "not_recorded",
+      "system.revision": "recorded",
+      "timing.finished_at": "not_recorded",
+      "timing.started_at_elapsed": "recorded"
+    }
+  },
+  "totals": {
+    "artifacts.native_result_sha256": {
+      "not_recorded": 15,
+      "recorded": 54
+    },
+    "artifacts.row_level_sha256": {
+      "not_recorded": 33,
+      "recorded": 36
+    },
+    "benchmark.dataset_revision": {
+      "not_recorded": 42,
+      "recorded": 27
+    },
+    "benchmark.input_sha256": {
+      "recorded": 69
+    },
+    "costs": {
+      "evidence_gap": 69
+    },
+    "environment.container_digest": {
+      "not_recorded": 69
+    },
+    "environment.dependency_lock": {
+      "not_recorded": 15,
+      "recorded": 54
+    },
+    "environment.runtime_version": {
+      "not_recorded": 18,
+      "recorded": 51
+    },
+    "execution.peak_memory": {
+      "not_recorded": 18,
+      "recorded": 51
+    },
+    "execution.seed": {
+      "not_recorded": 66,
+      "recorded": 3
+    },
+    "execution.source_blobs": {
+      "not_recorded": 33,
+      "recorded": 36
+    },
+    "execution.stdout_stderr_digests": {
+      "evidence_gap": 69
+    },
+    "execution.workflow_run_id": {
+      "not_recorded": 15,
+      "recorded": 54
+    },
+    "hardware.cpu_ram_gpu": {
+      "evidence_gap": 69
+    },
+    "hardware.os": {
+      "recorded": 69
+    },
+    "inference.model_identity": {
+      "evidence_gap": 41,
+      "not_applicable": 28
+    },
+    "system.adapter_revision": {
+      "recorded": 69
+    },
+    "system.configuration_digest": {
+      "not_recorded": 36,
+      "recorded": 33
+    },
+    "system.revision": {
+      "recorded": 69
+    },
+    "timing.finished_at": {
+      "not_recorded": 69
+    },
+    "timing.started_at_elapsed": {
+      "not_recorded": 18,
+      "recorded": 51
+    }
+  }
+}
