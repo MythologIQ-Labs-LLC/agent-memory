@@ -260,7 +260,7 @@ Uncertainty does not require universal paralysis. It requires proportional conse
 
 For concurrent mutation of shared durable memory, the overwrite/conflict boundary is resolved before the substrate mutation rather than after it.
 
-Proposed [ADR-024](adr/ADR-024-shared-memory-writes-require-prewrite-claims.md) defines the candidate contract. A writer must first hold a valid claim, lease, lock, compare-and-swap reservation, single-writer queue position, transactional reservation, or equivalent coordination mechanism that binds at least:
+Accepted [ADR-024](adr/ADR-024-shared-memory-writes-require-prewrite-claims.md) defines the contract. A writer must first hold a valid claim, lease, lock, compare-and-swap reservation, single-writer queue position, transactional reservation, or equivalent coordination mechanism that binds at least:
 
 ```text
 actor

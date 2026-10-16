@@ -78,7 +78,7 @@ probabilistic / learned structural discovery
 
 Memory shape may adapt. A probabilistic system may discover and recommend a better shape, but it cannot be the authority that commits canonical structural semantics. Bounded rebuild-only and additive changes may be autonomous under versioned deterministic policy. Semantic migrations, destructive changes, scope/isolation widening, and authority-bearing structure require explicit authority unless a future Accepted ADR defines an exact narrower delegation.
 
-Current PAMA 1.2 remains conservatively review-first for `domain_schema_mutation` until narrower implementation evidence is earned.
+The documented PAMA 1.2 decision-table profile remains review-first for `domain_schema_mutation` at this evidence boundary. The actual governing rule is owned by [PAMA doctrine](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/pama/README.md) and the [decision table](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/33-pama-decision-table.md), not by this Wiki's historical version label.
 
 See **[Governed Uncertainty](Governed-Uncertainty)** and **[Mutable Memory Fabric](Mutable-Memory-Fabric)**.
 

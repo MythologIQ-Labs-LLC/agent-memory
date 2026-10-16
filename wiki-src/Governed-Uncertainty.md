@@ -125,7 +125,7 @@ The architecture therefore requires challenge tests for:
 
 **ADR-020 is Accepted.** Its stronger doctrine-maturity gate was satisfied by executable end-to-end evidence and adversarial negative paths showing uncertain proposals remain inside governed consequence boundaries.
 
-**ADR-032 is Accepted.** It narrows the structural-mutation authority rule without claiming the implementation already supports autonomous low-risk schema adaptation. Current PAMA 1.2 remains conservatively review-first for `domain_schema_mutation`; issue #281 owns the evidence required before a narrower S0/S1 autonomous path is introduced.
+**ADR-032 is Accepted.** It narrows the structural-mutation authority rule without claiming the implementation already supports autonomous low-risk schema adaptation. The documented PAMA 1.2 profile was conservatively review-first for `domain_schema_mutation` at this evidence boundary; Issue #281 (closed 2026-08-15) is historical implementation and decision ancestry for structural-mutation classification, not an active owner; no open issue currently owns further evidence for a narrower autonomous S0/S1 path, so that path is unassigned and not claimed. Current rules belong to [PAMA doctrine](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/pama/README.md) and its [decision table](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/33-pama-decision-table.md), not this Wiki explanation.
 
 Doctrine maturity and implementation maturity remain separate claims.
 
