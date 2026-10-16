@@ -17,7 +17,14 @@ C8 delivers a real, clean ranking improvement. Under its default selection that 
   - strict is +19 / −17 (p = 0.87, not significant).
 - **Ranking gains are withheld.** C8 ranks 170 needed memories into its top 5 (C4+sem: 164, C6+sem: 152), then withholds 51 of them as insufficient (C4+sem: 11). The reason: sufficiency is decided on the 3.4.0 order, and C6's capped proposals, not fusion's dense scores, decide what counts as semantically found.
 
-{{LME_SUMMARY}}
+**LongMemEval-S 500 agrees, and adds a regression.**
+- **No gain where the returned set is fixed.** Against C6+sem, recall at @10 and @50 is identical, because the returned sets are the same.
+- **Top-3 regression at turn granularity.** Fusion reshuffles near the top, and turn recall_all@3 falls significantly:
+  - against C6+sem: +16 / −41, p = 0.0013;
+  - against C4+sem: +17 / −42, p = 0.0015;
+  - against C4 default: +16 / −42, p = 0.0009.
+- **Top-5 is not significantly better** (+23 / −13 against C6+sem).
+- **The C6 deficit stays.** Against C4+sem, C8 inherits C6's turn recall_all@50 deficit: 0 / −19, p = 4e-6.
 
 **Safety and correctness hold:**
 - 0 leaks;
@@ -50,7 +57,7 @@ C8 delivers a real, clean ranking improvement. Under its default selection that 
 - **CPU contention:** steal was 0.25% under a 20-second 4-core load while the competitive bench's Letta and MemPalace runs were active in their own container. Every e5 arm's steal is logged in `run_e5.out.txt` and stayed between 0.085% and 0.211%.
 - **Limit of the check:** the physical host may be shared, which a guest cannot see, but no contention was measurable.
 
-{{ISOLATION_LME}}
+**LongMemEval and probes.** Both LongMemEval runs (15:54–17:25Z) and the cost and tie probes ran afterwards, one at a time, in the same VM.
 
 ## 1. Sealed cohort e5: 208 queries, eight arms and a repeat
 
@@ -168,7 +175,58 @@ Strict uses exact McNemar. Deltas are per-query bootstrap 95% CIs, 10,000 resamp
 
 ## 2. LongMemEval-S 500
 
-{{LME_SECTION}}
+**Configuration.**
+- Unchanged runner `6b9c2373`, `--backend agent_memory --corpus-class external_frozen --granularity session --granularity turn`.
+- Input sha256 `d6f21ea9…`. Every streaming pass agreed.
+- `PYTHONHASHSEED=0`, offline.
+
+**C8 runs** (`candidates/c8-24d4dd2/lme500/`):
+- **C8+sem:** revision `24d4dd26`, clean worktree, mode `required`, digest `74477054…`. Wall 4,375 s, user CPU 3,199 s, peak RSS 363 MiB.
+- **C8 off:** wall 1,048 s, peak RSS 91 MiB.
+- Both exited 0. Each scored 419 questions, with the evaluator's standard exclusions (30 abstention, 51 no-user-target), 0 runtime errors and 0 ingestion failures.
+
+**Comparators.** This lane's committed C4 default, C4+sem and C6+sem runs (`candidates/c6-171e67d/lme500/`): same runner, input, pins and VM type. C4 default there reproduced the earlier host's published run 500/500.
+
+**Route off equals C4.** C8 off returns C4 default's ranked lists on all 500 questions in both planes.
+
+| | C4 | C4+sem | C6+sem | **C8+sem** |
+| --- | ---: | ---: | ---: | ---: |
+| Session recall_all@3 | 0.7947 | 0.8019 | 0.7995 | 0.8138 |
+| Session recall_all@5 | 0.8687 | 0.8807 | 0.8783 | 0.8831 |
+| Session recall_all@10 | 0.9069 | 0.9260 | 0.9189 | 0.9189 |
+| Turn recall_all@3 | 0.5346 | 0.5322 | 0.5322 | **0.4726** |
+| Turn recall_all@5 | 0.6325 | 0.6563 | 0.6372 | 0.6611 |
+| Turn recall_all@10 | 0.7589 | 0.7924 | 0.7613 | 0.7709 |
+| Turn recall_all@50 | 0.8162 | 0.8711 | 0.8258 | 0.8258 |
+| Mean returned (session / turn) | 3.86 / 9.80 | 4.12 / 12.75 | 3.97 / 10.09 | 3.97 / 10.09 |
+
+**Paired results** (wins / losses on recall_all = 1, exact McNemar):
+
+| Pair | Session @3 | Session @5 | Session @10 | Turn @3 | Turn @5 | Turn @10 | Turn @50 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| C6+sem → C8+sem | +12 / −6 (0.24) | +4 / −2 (0.69) | identical | **+16 / −41 (0.0013)** | +23 / −13 (0.13) | +8 / −4 (0.39) | identical |
+| **C4+sem → C8+sem** | +12 / −7 (0.36) | +4 / −3 (1.0) | +1 / −4 (0.38) | **+17 / −42 (0.0015)** | +23 / −21 (0.88) | +9 / −18 (0.12) | **0 / −19 (4e-6)** |
+| C4 → C8+sem | +14 / −6 (0.12) | +8 / −2 (0.11) | +5 / −0 (0.063) | **+16 / −42 (0.0009)** | +25 / −13 (0.073) | +10 / −5 (0.30) | +4 / −0 (0.125) |
+
+Bootstrap Δ recall (`tools/paired.py`, session @5 / turn @10):
+- C6+sem → C8+sem: +0.005 [−0.007, +0.017] / +0.010 [−0.007, +0.026];
+- C4+sem → C8+sem: +0.002 [−0.010, +0.014] / −0.022 [−0.045, +0.002];
+- C4 → C8+sem: +0.014 [0.000, +0.029] / +0.012 [−0.005, +0.031].
+
+**The turn-level top-3 regression.**
+- **It hits both single-evidence and multi-evidence questions.**
+  - One gold turn: +1 / −8 (p = 0.039).
+  - Two or more gold turns: +15 / −33 (p = 0.013).
+- **By question type:** temporal reasoning 22, multi-session 10, knowledge update 8, single-session user 1.
+- **Mechanism.** Gold turns move from ranks 1–3 down to 4–5. Across all gold items, the mean rank change is −0.15 (216 improved, 203 worse). Fusion moves evidence in both directions near the top. At turn granularity, where many short turns are topically similar, the dense list promotes non-gold turns above gold ones often enough to lose top-3 coverage.
+- **Session granularity** shows no such loss.
+- **Not covered by the temporal fix.** Temporal-reasoning questions in LongMemEval are not "time-ordered intents" in C8's sense, so fusion applies to them.
+
+**Cost on LongMemEval.**
+- **Session recall p50:** C6+sem 2.46 s, C8+sem 2.64 s (+7%).
+- **Turn recall p50:** C6+sem 3.16 s, C8+sem 3.26 s (+3%).
+- **Wall time:** 4,155 s against 4,375 s (+5%).
+- **Where it goes:** cold embedding of each fresh haystack dominates. The increment is the second ranking pass under the default selection, plus fusion.
 
 ## 3. Cost near the fusion boundary (400–520 admitted)
 
