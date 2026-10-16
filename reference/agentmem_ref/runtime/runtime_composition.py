@@ -115,8 +115,9 @@ class MultiRouteRecallResult:
     admission_mode: str = "current_state"
     admission_basis: dict[str, dict] = field(default_factory=dict)
     query_expansion: dict = field(default_factory=dict)
-    # #819 C7: the 3.4.0 order. Equal to ``ranked_admitted`` unless fusion ordered this recall;
-    # relevance-sufficient selection decides sufficiency on it.
+    # #819 C7/C8: the 3.4.0 order when fusion ordered a relevance-sufficient recall (selection
+    # decides sufficiency on it); otherwise it equals ``ranked_admitted`` (under ``ranked_prefix``
+    # the base pass is not run, so this is the returned order).
     base_ranked_admitted: list[str] = field(default_factory=list)
 
     def provenance_for(self, candidate_ref: str) -> tuple[RetrievalRouteHit, ...]:
@@ -326,7 +327,13 @@ class DeterministicMultiRouteRecallPlanner:
         policy, status, dense = MULTI_ROUTE_RANKING_POLICY, None, None
         if SEMANTIC_VECTOR_ROUTE in routes_executed and admission.admitted:
             # #819 C7: fuse only admitted memories; similarity orders and never admits.
-            if len(admission.admitted) > FUSION_MAX_ADMITTED:
+            if getattr(intent, "orders_temporally", False):
+                # #819 C8 review finding 1: the temporal order stage sits below the fused stage,
+                # so fusion would let similarity reorder statements that time should order (two
+                # still-valid conflicting statements tied on relevance). Intents that order by
+                # time keep the 3.4.0 ranking exactly.
+                status = "skipped_temporal_intent"
+            elif len(admission.admitted) > FUSION_MAX_ADMITTED:
                 status = "skipped_over_limit"
             else:
                 try:

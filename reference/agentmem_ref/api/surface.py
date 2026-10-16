@@ -363,8 +363,11 @@ class AgentMemory:
         optional extra ``semantic`` is installed and the pinned model verifies;
         otherwise recall stays lexical and ``semantic_retrieval_posture()`` records why.
         ``required`` raises instead of degrading. The route only widens candidates:
-        every candidate still crosses governed admission, and under ranking policy
-        3.2.0 similarity orders only after every relevance and temporal stage.
+        every candidate still crosses governed admission. Similarity orders admitted
+        candidates only: under ranking policy 3.5.0 (#819 C8) it is one of the three
+        reciprocal-rank-fused relevance lists, below the temporal applicability tier and exact
+        identity; recalls whose intent orders by time keep the 3.4.0 ranking, in which
+        similarity orders only after every relevance and temporal stage.
 
         ``recall_control`` (contract 1.5.0, #644) is ``"off"`` (default) or ``"shadow"``.
         In shadow the deterministic System-One controller plans beside the unchanged
@@ -1105,7 +1108,9 @@ class AgentMemory:
                                 else {**retriever.proposal_policy.to_dict(),
                                       "applies_to_return_selection": [RELEVANCE_SUFFICIENT],
                                       "replaces": ["minimum_similarity", "candidate_limit"]}),
-            "ordering": "subordinate: after every relevance and temporal stage (ranking policy 3.2.0)",
+            "ordering": ("fused (ranking policy 3.5.0): one of three reciprocal-rank-fused relevance lists, "
+                         "below temporal applicability and exact identity; time-ordered intents keep 3.4.0, "
+                         "where similarity is subordinate to every relevance and temporal stage"),
             "store": None if store is None else store.posture(),
             "authority_effect": "none",
         }

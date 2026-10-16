@@ -1,0 +1,6 @@
+== on 69611b3f (reviewed head, without the fix)
+FAILED reference/tests/test_c8_fusion_cost.py::TimeOrderedIntentsKeepTheTemporalOrder::test_as_of_after_both_starts_latest_first
+FAILED reference/tests/test_c8_fusion_cost.py::TimeOrderedIntentsKeepTheTemporalOrder::test_declared_current_newer_first_both_selections
+FAILED reference/tests/test_c8_fusion_cost.py::TimeOrderedIntentsKeepTheTemporalOrder::test_now_in_the_question_newer_first
+3 failed, 3 deselected in 0.66s
+== on C6 171e67db: TimeOrdered + TemporalStages tests pass (see above)

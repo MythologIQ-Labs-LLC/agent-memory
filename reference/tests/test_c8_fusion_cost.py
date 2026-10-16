@@ -12,6 +12,7 @@ Tests marked FAIL-FIRST fail on C7 ``d05bf2b1``; the others hold on C6, C7 and C
 from __future__ import annotations
 
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -78,6 +79,46 @@ class TemporalStagesStayAboveFusion(_Store):
             result = memory.recall(query, budget=10, return_selection=selection, temporal_intent={"mode": "current", "reference_time": "2026-10-16T00:00:00Z"})
             admitted = result["admitted"]
             self.assertLess(admitted.index(written_new["fact_uuid"]), admitted.index(written_old["fact_uuid"]), selection)
+
+
+class TimeOrderedIntentsKeepTheTemporalOrder(_Store):
+    """Review finding 1 (blocking, C8 review): two still-valid conflicting statements tied on BM25.
+
+    Under 3.4.0 the temporal order stage puts the newer first. Fusion sits above that stage, so a
+    slightly closer older statement would win. C8 skips fusion for intents that order by time.
+    FAIL-FIRST on 69611b3f; holds on C6.
+    """
+
+    QUERY, OLD, NEW = "Who is my manager?", "My manager is Joanna Pike.", "My manager is Rahul Mehta."
+
+    def case(self, query, intent, selection):
+        _TableRepresentation.TABLE = {query: {self.OLD: 0.70, self.NEW: 0.60}}
+        folder = tempfile.TemporaryDirectory()
+        self.addCleanup(folder.cleanup)
+        memory = self.open(root=Path(folder.name))
+        for index, text in enumerate(["The boiler is serviced in May.", "We walk the dog at seven."]):
+            memory.remember(f"memory:f{index}", text)
+        old = memory.remember("memory:old", self.OLD, valid_from="2023-01-01T00:00:00Z")["fact_uuid"]
+        new = memory.remember("memory:new", self.NEW, valid_from="2025-06-01T00:00:00Z")["fact_uuid"]
+        kwargs = {"temporal_intent": intent} if intent else {}
+        result = memory.recall(query, budget=1, return_selection=selection, **kwargs)
+        evidence = {u: result["admissions"][u]["ranking_evidence"] for u in (old, new)}
+        self.assertEqual(evidence[old].get("lexical_relevance_score"), evidence[new].get("lexical_relevance_score"))
+        self.assertLess(result["admitted"].index(new), result["admitted"].index(old))
+        self.assertEqual(result["returned"], [new])
+        return evidence
+
+    def test_declared_current_newer_first_both_selections(self):  # FAIL-FIRST
+        for selection in ("ranked_prefix", "relevance_sufficient"):
+            evidence = self.case(self.QUERY, {"mode": "current", "reference_time": "2026-10-16T00:00:00Z"}, selection)
+        self.assertNotEqual((evidence[next(iter(evidence))].get("fusion") or {}).get("status"), "applied")
+
+    def test_as_of_after_both_starts_latest_first(self):  # FAIL-FIRST
+        self.case(self.QUERY, {"mode": "as_of", "reference_time": "2026-01-01T00:00:00Z",
+                               "target_start": "2026-01-01T00:00:00Z"}, "ranked_prefix")
+
+    def test_now_in_the_question_newer_first(self):  # FAIL-FIRST
+        self.case("Who is my manager now?", None, "ranked_prefix")
 
 
 if __name__ == "__main__":
