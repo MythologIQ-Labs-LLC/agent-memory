@@ -12,7 +12,7 @@ import re
 import subprocess
 import sys
 from collections import Counter
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
 from pathlib import Path
 
 SHELVES = ("F", "G", "L", "R", "S", "I", "E", "X")
@@ -25,6 +25,8 @@ DOCUMENT_LINK = re.compile(r"\[[^\]]+\]\(([0-9]{2}-[^)#\s]+\.md)(?:#[^)\s]*)?(?:
 
 CLAIM_START = "<!-- BEGIN CLAIM OWNERS -->"
 CLAIM_END = "<!-- END CLAIM OWNERS -->"
+CLAIM_HEADER = "| Claim ID | Class | Primary owner |"
+CLAIM_SEPARATOR = re.compile(r"^\|(?:-{3,}\|){3}$")
 # Owner is either a governing GitHub issue (live delivery decisions only) or a tracked
 # repository path; a path ending in "/" names a collection whose members each own their own entry.
 CLAIM_ROW = re.compile(
@@ -33,26 +35,72 @@ CLAIM_ROW = re.compile(
 )
 CLAIM_CLASSES = {"contract", "qualification", "baseline", "evidence", "doctrine", "roadmap", "delivery"}
 ISSUE_CLASSES = {"delivery"}
-# A document that labels itself historical, revision-bound or superseded is a projection, never an owner.
-DEMOTION_LABEL = re.compile(r"^\W*(status|purpose)\b", re.IGNORECASE)
-DEMOTION_TERM = re.compile(r"\b(historical|revision-bound|superseded|archived)\b", re.IGNORECASE)
+OWNER_SUFFIXES = (".md", ".json", "/")
+# Owner rulings the table may not drift from (#797): live release decisions, accepted
+# runtime identity and benchmark admission each have exactly one mandated owner.
+REQUIRED_CLAIMS = {
+    "release-integration-status": ("delivery", "#410"),
+    "runtime-baseline-identity": ("baseline", "reports/runtime/baseline-register.json"),
+    "benchmark-admission": ("qualification", "reference/agentmem_ref/evaluation/integrations/"),
+}
+# Navigation, history and planning surfaces never own a claim, whatever their banner says.
+NEVER_OWNERS = (
+    "docs/ARCHITECTURE_INDEX.md",
+    "docs/ARCHITECTURE_PLAN.md",
+    "docs/META_LEDGER.md",
+    "docs/SHADOW_GENOME.md",
+    "docs/PROCESS_SHADOW_GENOME.md",
+    "docs/SYSTEM_STATE.md",
+    "docs/plan-",
+    "docs/research-",
+    "docs/audits/",
+    "docs/future/",
+    "docs/programs/",
+    "docs/research/",
+    "docs/templates/",
+)
+# A document whose H1, leading Status/Purpose clause or authority-effect line demotes it is a
+# projection, never an owner. Only the first clause is read, so later changelog prose is ignored.
+DEMOTION_TERM = re.compile(
+    r"\b(historical|revision[- ]bound|superseded|archived|deprecated|retired|snapshot)\b", re.IGNORECASE
+)
+STATUS_LINE = re.compile(r"^\W*(?:status|purpose)\W*:\W*(.*)$", re.IGNORECASE)
+NO_AUTHORITY = re.compile(r"^\W*authority effect\W*:\W*none\b", re.IGNORECASE)
 HEAD_LINES = 12
 
 
 def _demoted(head: str) -> bool:
+    in_fence = False
+    seen_title = False
     for line in head.splitlines()[:HEAD_LINES]:
-        if (line.startswith("#") or DEMOTION_LABEL.match(line)) and DEMOTION_TERM.search(line):
+        if line.lstrip().startswith(("```", "~~~")):
+            in_fence = not in_fence
+            continue
+        if in_fence:
+            continue
+        if line.startswith("# ") and not seen_title:
+            seen_title = True
+            if DEMOTION_TERM.search(line):
+                return True
+            continue
+        if NO_AUTHORITY.match(line):
+            return True
+        status = STATUS_LINE.match(line)
+        if status and DEMOTION_TERM.search(re.split(r"[.;(]", status.group(1), maxsplit=1)[0]):
             return True
     return False
 
 
 def validate_claim_owners(
-    text: str, tracked_paths: set[str], heads: Mapping[str, str] | None = None
+    text: str,
+    tracked_paths: set[str],
+    read_head: Callable[[str], str],
+    required: Mapping[str, tuple[str, str]] = REQUIRED_CLAIMS,
 ) -> list[str]:
     """Check explicit claim routing without inferring which prose is true.
 
-    ``heads`` maps a Markdown owner path to its opening lines so a revision-bound or
-    historical document cannot be promoted to owner; ``main`` always supplies it.
+    ``read_head`` returns a Markdown owner's opening lines so a revision-bound or historical
+    document cannot be promoted to owner; ``required`` pins owner-ruled claims.
     """
     errors: list[str] = []
     if text.count(CLAIM_START) != 1 or text.count(CLAIM_END) != 1:
@@ -60,20 +108,19 @@ def validate_claim_owners(
     if text.index(CLAIM_END) < text.index(CLAIM_START):
         return ["claim owner end marker precedes start marker"]
     section = text.split(CLAIM_START, 1)[1].split(CLAIM_END, 1)[0]
-    seen: set[str] = set()
-    count = 0
+    declared: dict[str, tuple[str, str]] = {}
     for line in section.splitlines():
-        if not line.strip() or line.startswith("| Claim ID") or line.startswith("|---"):
+        row = line.strip()
+        if not row or row == CLAIM_HEADER or CLAIM_SEPARATOR.fullmatch(row):
             continue
-        match = CLAIM_ROW.fullmatch(line.strip())
+        match = CLAIM_ROW.fullmatch(row)
         if not match:
-            errors.append(f"invalid claim owner declaration: {line.strip()}")
+            errors.append(f"invalid claim owner declaration: {row}")
             continue
         claim, kind, owner = match.groups()
-        count += 1
-        if claim in seen:
+        if claim in declared:
             errors.append(f"duplicate claim owner: {claim}")
-        seen.add(claim)
+        declared[claim] = (kind, owner)
         if kind not in CLAIM_CLASSES:
             errors.append(f"{claim}: unknown claim class {kind}")
         if owner.startswith("#"):
@@ -84,16 +131,33 @@ def validate_claim_owners(
             errors.append(f"{claim}: {kind} claims must be owned by the governing issue, not {owner}")
         if ".." in owner.split("/"):
             errors.append(f"{claim}: owner path escapes repository: {owner}")
-        elif owner.endswith("/"):
+            continue
+        if not owner.endswith(OWNER_SUFFIXES):
+            errors.append(f"{claim}: owner must be a Markdown/JSON record or a collection: {owner}")
+        if owner.startswith(NEVER_OWNERS):
+            errors.append(f"{claim}: navigation, history or planning surface cannot own a claim: {owner}")
+        if owner.endswith("/"):
             if not any(path.startswith(owner) for path in tracked_paths):
                 errors.append(f"{claim}: owner collection has no tracked files: {owner}")
         elif owner not in tracked_paths:
             errors.append(f"{claim}: owner path not tracked: {owner}")
-        elif heads is not None and owner.endswith(".md") and _demoted(heads.get(owner, "")):
-            errors.append(f"{claim}: owner is historical or revision-bound: {owner}")
-    if not count:
+        elif owner.endswith(".md"):
+            try:
+                demoted = _demoted(read_head(owner))
+            except (OSError, UnicodeError) as exc:
+                errors.append(f"{claim}: cannot read owner {owner}: {exc}")
+            else:
+                if demoted:
+                    errors.append(f"{claim}: owner is historical, revision-bound or non-authoritative: {owner}")
+    for claim, expected in sorted(required.items()):
+        if claim not in declared:
+            errors.append(f"{claim}: required claim declaration missing")
+        elif declared[claim] != expected:
+            errors.append(f"{claim}: must be declared as {expected[0]} owned by {expected[1]}")
+    if not declared:
         errors.append("claim owner declarations are empty")
     return errors
+
 
 def validate_catalog(text: str, tracked_paths: set[str]) -> list[str]:
     """Return actionable discrepancies without reading source metadata as authority."""
@@ -189,12 +253,12 @@ def main() -> int:
 
     text = catalog.read_text(encoding="utf-8")
     tracked_paths = {path for path in tracked if path}
-    heads = {}
-    for path in tracked_paths:
-        if path.endswith(".md") and path in text:
-            with (root / path).open(encoding="utf-8") as handle:
-                heads[path] = "".join(handle.readline() for _ in range(HEAD_LINES))
-    errors = validate_catalog(text, tracked_paths) + validate_claim_owners(text, tracked_paths, heads)
+
+    def read_head(path: str) -> str:
+        with (root / path).open(encoding="utf-8") as handle:
+            return "".join(handle.readline() for _ in range(HEAD_LINES))
+
+    errors = validate_catalog(text, tracked_paths) + validate_claim_owners(text, tracked_paths, read_head)
     if errors:
         for error in errors:
             print(f"Architecture catalog drift: {error}", file=sys.stderr)
