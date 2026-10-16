@@ -7,13 +7,6 @@
   "source_limit": 4,
   "sources": [
     {
-      "branch": "claude/817-jev-mem-execution-no-ci",
-      "prefix": "reports/benchmarks/runs/",
-      "label": "Competitor execution / frozen controls",
-      "max_manifest_files": 48,
-      "max_partial_files": 24
-    },
-    {
       "branch": "claude/wizardly-cray-bmkfrr",
       "prefix": "reports/benchmarks/runs/",
       "label": "External evaluator integrations",
