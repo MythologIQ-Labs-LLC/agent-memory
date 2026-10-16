@@ -209,3 +209,28 @@ Neither formulation supersedes the other. The layers refine the roles; the roles
 6. `docs/07` and `docs/14` status lines: mark historical or keep as spine.
 7. Atlas §8 vs BENCHMARKS.md LongMemEval_M wording.
 8. Widen CI link validation to all tracked Markdown (workflow edit).
+
+## 11. Disposition addendum (2026-10-16, `main` `38f6a7d`)
+
+Sections 1 to 10 are the point-in-time record at `3eebb6d` and are left as written. This addendum records what landed afterwards so the open-items list above is not read as current.
+
+| Item above | Disposition | Where |
+|---|---|---|
+| Owner decision 1 (ADR index to ADR-043) | closed | owner commit `ed9c48f`, landed via PR #798 (`2ef717e`) |
+| Owner decision 2 (Tier 1 ledger reconciliation) | closed | owner commits `ed9c48f`, `c9eb258`, landed via PR #798 |
+| Owner decision 3 (`CONTRIBUTING.md` line 3; `wiki-src/Home.md` line 7) | closed | `c744cb9` via PR #803 (`7fa9c36`); `a392b11` |
+| Owner decision 4 (tracking issue for the distributed roadmap) | still open | the roadmap remains a `docs/future/` proposal |
+| Owner decision 5 (same-number documents) | closed as "do not rename" | catalog rule in `docs/ARCHITECTURE_INDEX.md` §2 (`41893a2`) |
+| Owner decision 6 (`docs/07`, `docs/14` status lines) | closed | retired as historical stubs with pinned original revisions, `a392b11` |
+| Owner decision 7 (Atlas §8 vs BENCHMARKS.md LongMemEval_M wording) | closed | duplicate registry status table removed from the Atlas, `38f6a7d`; BENCHMARKS.md copied scores and RC schedule removed, `a392b11` |
+| Owner decision 8 (widen CI link validation) | closed | `validate-doctrine-evidence.yml` now checks all non-wiki Markdown and runs the catalog guard, `a392b11` |
+| Section 3: `docs/64` and `docs/65` status lines | closed | `c9eb258` |
+| Section 3: `docs/66` "canonical current-state addendum" self-description | closed | `a392b11` |
+| Section 3: `docs/45` / `docs/47` contract `1.2.0` lines | closed with publication-boundary banners, numbers left as published | `cdf172d` |
+| Section 3: `reference/README.md` contract and "seven subpackages" | closed | `a392b11` |
+| Section 3: `BACKLOG.md` v4 contradiction (lines 69 and 100) | closed | `a392b11` |
+| Section 5: catalog shelf E historical markers for `docs/64` / `docs/66` | closed | `cdf172d` |
+| Section 5: `docs/ARCHITECTURE_PLAN.md` self-status | closed | this branch (status line added; original text preserved) |
+| Section 6 Proposal A (move historical plans) | not taken, as recommended | no moves; collections registered in the catalog §3 |
+| Section 6 Proposal B (BENCHMARKS.md portfolio sections) | taken by the owner | `a392b11` |
+| Drift guard for the catalog | landed | PR #803 (`25bc149`), wired into CI by `a392b11` |
