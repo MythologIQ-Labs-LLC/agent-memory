@@ -1,0 +1,934 @@
+{
+ "source_sha256_note": "e4-percase-textfree.json from bdbd8a63",
+ "c6_off_identical_to_c4_all_fields": 208,
+ "arms": {
+  "A": {
+   "strict": 30,
+   "mean_recall": 0.8693,
+   "mean_precision": 0.4106,
+   "leaks": 0,
+   "eval_failures": 0,
+   "mean_returned": 2.803
+  },
+  "C4": {
+   "strict": 128,
+   "mean_recall": 0.7727,
+   "mean_precision": 0.7273,
+   "leaks": 0,
+   "eval_failures": 0,
+   "mean_returned": 0.846
+  },
+  "C6_off": {
+   "strict": 128,
+   "mean_recall": 0.7727,
+   "mean_precision": 0.7273,
+   "leaks": 0,
+   "eval_failures": 0,
+   "mean_returned": 0.846
+  },
+  "C4_sem": {
+   "strict": 133,
+   "mean_recall": 0.947,
+   "mean_precision": 0.7916,
+   "leaks": 0,
+   "eval_failures": 0,
+   "mean_returned": 1.327
+  },
+  "C6_sem": {
+   "strict": 144,
+   "mean_recall": 0.8788,
+   "mean_precision": 0.8532,
+   "leaks": 0,
+   "eval_failures": 0,
+   "mean_returned": 1.0
+  }
+ },
+ "pairs": {
+  "C4->C6_sem": {
+   "wins": 16,
+   "losses": 0,
+   "mcnemar_exact_p": 3.1e-05,
+   "delta_strict_ci95": [
+    0.0769,
+    0.0433,
+    0.1154
+   ],
+   "delta_recall_ci95": [
+    0.1061,
+    0.0663,
+    0.1496
+   ],
+   "delta_precision_ci95": [
+    0.1259,
+    0.0795,
+    0.1752
+   ],
+   "by_category": {
+    "abstention": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      null,
+      null
+     ]
+    },
+    "conflicting_unreconciled": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "corrected_memory": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "cross_scope_isolation": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "factual_precision": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "irrelevant_context": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "multi_evidence_aggregation": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      0.0,
+      0.1667
+     ]
+    },
+    "multi_hop": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      0.5,
+      0.5
+     ]
+    },
+    "multi_session": {
+     "n": 32,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "paraphrase_recall": {
+     "n": 16,
+     "wins": 16,
+     "losses": 0,
+     "recall": [
+      0.0,
+      1.0
+     ]
+    },
+    "query_disambiguation": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "temporal_currentness": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    }
+   },
+   "win_case_ids": [
+    "e4par-0#q0",
+    "e4par-1#q0",
+    "e4par-2#q0",
+    "e4par-3#q0",
+    "e4par-4#q0",
+    "e4par-5#q0",
+    "e4par-6#q0",
+    "e4par-7#q0",
+    "e4par-8#q0",
+    "e4par-9#q0",
+    "e4par-10#q0",
+    "e4par-11#q0",
+    "e4par-12#q0",
+    "e4par-13#q0",
+    "e4par-14#q0",
+    "e4par-15#q0"
+   ],
+   "loss_case_ids": []
+  },
+  "C4_sem->C6_sem": {
+   "wins": 24,
+   "losses": 13,
+   "mcnemar_exact_p": 0.098872,
+   "delta_strict_ci95": [
+    0.0529,
+    -0.0048,
+    0.1106
+   ],
+   "delta_recall_ci95": [
+    -0.0682,
+    -0.0994,
+    -0.0407
+   ],
+   "delta_precision_ci95": [
+    0.0031,
+    -0.031,
+    0.0347
+   ],
+   "by_category": {
+    "abstention": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      null,
+      null
+     ]
+    },
+    "conflicting_unreconciled": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "corrected_memory": {
+     "n": 16,
+     "wins": 1,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "cross_scope_isolation": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "factual_precision": {
+     "n": 16,
+     "wins": 2,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "irrelevant_context": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "multi_evidence_aggregation": {
+     "n": 16,
+     "wins": 0,
+     "losses": 7,
+     "recall": [
+      0.7292,
+      0.1667
+     ]
+    },
+    "multi_hop": {
+     "n": 16,
+     "wins": 0,
+     "losses": 6,
+     "recall": [
+      0.6875,
+      0.5
+     ]
+    },
+    "multi_session": {
+     "n": 32,
+     "wins": 17,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "paraphrase_recall": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "query_disambiguation": {
+     "n": 16,
+     "wins": 4,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "temporal_currentness": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    }
+   },
+   "win_case_ids": [
+    "e4fact-10#q0",
+    "e4fact-14#q0",
+    "e4dis-2#q0",
+    "e4dis-4#q0",
+    "e4dis-6#q0",
+    "e4dis-8#q0",
+    "e4cor-11#q0",
+    "e4ses-0#q1",
+    "e4ses-1#q0",
+    "e4ses-1#q1",
+    "e4ses-2#q1",
+    "e4ses-3#q0",
+    "e4ses-4#q1",
+    "e4ses-5#q1",
+    "e4ses-7#q1",
+    "e4ses-8#q1",
+    "e4ses-9#q1",
+    "e4ses-10#q1",
+    "e4ses-11#q0",
+    "e4ses-11#q1",
+    "e4ses-12#q1",
+    "e4ses-13#q1",
+    "e4ses-15#q0",
+    "e4ses-15#q1"
+   ],
+   "loss_case_ids": [
+    "e4hop-1#q0",
+    "e4hop-2#q0",
+    "e4hop-7#q0",
+    "e4hop-12#q0",
+    "e4hop-13#q0",
+    "e4hop-14#q0",
+    "e4agg-3#q0",
+    "e4agg-5#q0",
+    "e4agg-7#q0",
+    "e4agg-9#q0",
+    "e4agg-13#q0",
+    "e4agg-14#q0",
+    "e4agg-15#q0"
+   ]
+  },
+  "A->C6_sem": {
+   "wins": 114,
+   "losses": 0,
+   "mcnemar_exact_p": 0.0,
+   "delta_strict_ci95": [
+    0.5481,
+    0.4808,
+    0.6154
+   ],
+   "delta_recall_ci95": [
+    0.0095,
+    -0.0265,
+    0.0492
+   ],
+   "delta_precision_ci95": [
+    0.368,
+    0.3057,
+    0.4278
+   ],
+   "by_category": {
+    "abstention": {
+     "n": 16,
+     "wins": 16,
+     "losses": 0,
+     "recall": [
+      null,
+      null
+     ]
+    },
+    "conflicting_unreconciled": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "corrected_memory": {
+     "n": 16,
+     "wins": 14,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "cross_scope_isolation": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "factual_precision": {
+     "n": 16,
+     "wins": 16,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "irrelevant_context": {
+     "n": 16,
+     "wins": 12,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "multi_evidence_aggregation": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      0.5625,
+      0.1667
+     ]
+    },
+    "multi_hop": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      0.5,
+      0.5
+     ]
+    },
+    "multi_session": {
+     "n": 32,
+     "wins": 24,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "paraphrase_recall": {
+     "n": 16,
+     "wins": 16,
+     "losses": 0,
+     "recall": [
+      0.5,
+      1.0
+     ]
+    },
+    "query_disambiguation": {
+     "n": 16,
+     "wins": 8,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "temporal_currentness": {
+     "n": 16,
+     "wins": 8,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    }
+   },
+   "win_case_ids": [
+    "e4fact-0#q0",
+    "e4fact-1#q0",
+    "e4fact-2#q0",
+    "e4fact-3#q0",
+    "e4fact-4#q0",
+    "e4fact-5#q0",
+    "e4fact-6#q0",
+    "e4fact-7#q0",
+    "e4fact-8#q0",
+    "e4fact-9#q0",
+    "e4fact-10#q0",
+    "e4fact-11#q0",
+    "e4fact-12#q0",
+    "e4fact-13#q0",
+    "e4fact-14#q0",
+    "e4fact-15#q0",
+    "e4dis-0#q0",
+    "e4dis-2#q0",
+    "e4dis-4#q0",
+    "e4dis-6#q0",
+    "e4dis-8#q0",
+    "e4dis-10#q0",
+    "e4dis-12#q0",
+    "e4dis-14#q0",
+    "e4cor-0#q0",
+    "e4cor-1#q0",
+    "e4cor-2#q0",
+    "e4cor-3#q0",
+    "e4cor-4#q0",
+    "e4cor-5#q0",
+    "e4cor-6#q0",
+    "e4cor-8#q0",
+    "e4cor-9#q0",
+    "e4cor-10#q0",
+    "e4cor-11#q0",
+    "e4cor-12#q0",
+    "e4cor-13#q0",
+    "e4cor-14#q0",
+    "e4cur-0#q0",
+    "e4cur-1#q0",
+    "e4cur-3#q0",
+    "e4cur-6#q0",
+    "e4cur-8#q0",
+    "e4cur-12#q0",
+    "e4cur-14#q0",
+    "e4cur-15#q0",
+    "e4abs-0#q0",
+    "e4abs-1#q0",
+    "e4abs-2#q0",
+    "e4abs-3#q0",
+    "e4abs-4#q0",
+    "e4abs-5#q0",
+    "e4abs-6#q0",
+    "e4abs-7#q0",
+    "e4abs-8#q0",
+    "e4abs-9#q0",
+    "e4abs-10#q0",
+    "e4abs-11#q0",
+    "e4abs-12#q0",
+    "e4abs-13#q0",
+    "e4abs-14#q0",
+    "e4abs-15#q0",
+    "e4irr-0#q0",
+    "e4irr-1#q0",
+    "e4irr-2#q0",
+    "e4irr-3#q0",
+    "e4irr-6#q0",
+    "e4irr-7#q0",
+    "e4irr-8#q0",
+    "e4irr-9#q0",
+    "e4irr-10#q0",
+    "e4irr-11#q0",
+    "e4irr-12#q0",
+    "e4irr-14#q0",
+    "e4ses-0#q1",
+    "e4ses-1#q0",
+    "e4ses-1#q1",
+    "e4ses-2#q1",
+    "e4ses-3#q0",
+    "e4ses-3#q1",
+    "e4ses-4#q1",
+    "e4ses-5#q0",
+    "e4ses-5#q1",
+    "e4ses-6#q1",
+    "e4ses-7#q0",
+    "e4ses-7#q1",
+    "e4ses-8#q1",
+    "e4ses-9#q0",
+    "e4ses-9#q1",
+    "e4ses-10#q1",
+    "e4ses-11#q0",
+    "e4ses-11#q1",
+    "e4ses-12#q1",
+    "e4ses-13#q0",
+    "e4ses-13#q1",
+    "e4ses-14#q1",
+    "e4ses-15#q0",
+    "e4ses-15#q1",
+    "e4par-0#q0",
+    "e4par-1#q0",
+    "e4par-2#q0",
+    "e4par-3#q0",
+    "e4par-4#q0",
+    "e4par-5#q0",
+    "e4par-6#q0",
+    "e4par-7#q0",
+    "e4par-8#q0",
+    "e4par-9#q0",
+    "e4par-10#q0",
+    "e4par-11#q0",
+    "e4par-12#q0",
+    "e4par-13#q0",
+    "e4par-14#q0",
+    "e4par-15#q0"
+   ],
+   "loss_case_ids": []
+  },
+  "C4->C4_sem": {
+   "wins": 29,
+   "losses": 24,
+   "mcnemar_exact_p": 0.583132,
+   "delta_strict_ci95": [
+    0.024,
+    -0.0433,
+    0.0913
+   ],
+   "delta_recall_ci95": [
+    0.1742,
+    0.1241,
+    0.2282
+   ],
+   "delta_precision_ci95": [
+    0.1228,
+    0.0665,
+    0.1827
+   ],
+   "by_category": {
+    "abstention": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      null,
+      null
+     ]
+    },
+    "conflicting_unreconciled": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "corrected_memory": {
+     "n": 16,
+     "wins": 0,
+     "losses": 1,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "cross_scope_isolation": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "factual_precision": {
+     "n": 16,
+     "wins": 0,
+     "losses": 2,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "irrelevant_context": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "multi_evidence_aggregation": {
+     "n": 16,
+     "wins": 7,
+     "losses": 0,
+     "recall": [
+      0.0,
+      0.7292
+     ]
+    },
+    "multi_hop": {
+     "n": 16,
+     "wins": 6,
+     "losses": 0,
+     "recall": [
+      0.5,
+      0.6875
+     ]
+    },
+    "multi_session": {
+     "n": 32,
+     "wins": 0,
+     "losses": 17,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "paraphrase_recall": {
+     "n": 16,
+     "wins": 16,
+     "losses": 0,
+     "recall": [
+      0.0,
+      1.0
+     ]
+    },
+    "query_disambiguation": {
+     "n": 16,
+     "wins": 0,
+     "losses": 4,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "temporal_currentness": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    }
+   },
+   "win_case_ids": [
+    "e4hop-1#q0",
+    "e4hop-2#q0",
+    "e4hop-7#q0",
+    "e4hop-12#q0",
+    "e4hop-13#q0",
+    "e4hop-14#q0",
+    "e4agg-3#q0",
+    "e4agg-5#q0",
+    "e4agg-7#q0",
+    "e4agg-9#q0",
+    "e4agg-13#q0",
+    "e4agg-14#q0",
+    "e4agg-15#q0",
+    "e4par-0#q0",
+    "e4par-1#q0",
+    "e4par-2#q0",
+    "e4par-3#q0",
+    "e4par-4#q0",
+    "e4par-5#q0",
+    "e4par-6#q0",
+    "e4par-7#q0",
+    "e4par-8#q0",
+    "e4par-9#q0",
+    "e4par-10#q0",
+    "e4par-11#q0",
+    "e4par-12#q0",
+    "e4par-13#q0",
+    "e4par-14#q0",
+    "e4par-15#q0"
+   ],
+   "loss_case_ids": [
+    "e4fact-10#q0",
+    "e4fact-14#q0",
+    "e4dis-2#q0",
+    "e4dis-4#q0",
+    "e4dis-6#q0",
+    "e4dis-8#q0",
+    "e4cor-11#q0",
+    "e4ses-0#q1",
+    "e4ses-1#q0",
+    "e4ses-1#q1",
+    "e4ses-2#q1",
+    "e4ses-3#q0",
+    "e4ses-4#q1",
+    "e4ses-5#q1",
+    "e4ses-7#q1",
+    "e4ses-8#q1",
+    "e4ses-9#q1",
+    "e4ses-10#q1",
+    "e4ses-11#q0",
+    "e4ses-11#q1",
+    "e4ses-12#q1",
+    "e4ses-13#q1",
+    "e4ses-15#q0",
+    "e4ses-15#q1"
+   ]
+  },
+  "C4->C6_off": {
+   "wins": 0,
+   "losses": 0,
+   "mcnemar_exact_p": 1.0,
+   "delta_strict_ci95": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "delta_recall_ci95": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "delta_precision_ci95": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "by_category": {
+    "abstention": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      null,
+      null
+     ]
+    },
+    "conflicting_unreconciled": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "corrected_memory": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "cross_scope_isolation": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "factual_precision": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "irrelevant_context": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "multi_evidence_aggregation": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      0.0,
+      0.0
+     ]
+    },
+    "multi_hop": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      0.5,
+      0.5
+     ]
+    },
+    "multi_session": {
+     "n": 32,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "paraphrase_recall": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      0.0,
+      0.0
+     ]
+    },
+    "query_disambiguation": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    },
+    "temporal_currentness": {
+     "n": 16,
+     "wins": 0,
+     "losses": 0,
+     "recall": [
+      1.0,
+      1.0
+     ]
+    }
+   },
+   "win_case_ids": [],
+   "loss_case_ids": []
+  }
+ }
+}

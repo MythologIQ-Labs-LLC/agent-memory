@@ -30,12 +30,13 @@ The C6 evaluation started in one session and is finished in another:
 - **First session.** It authored the e4 cohort and committed its hashes in `holdout-e4/COMMITMENT.md` (commit `81b02a25`, 22:49:20Z). That was before C6 was checked out or `FREEZE-C6.md` was read. It then ran the five-arm e4 matrix to completion. At 23:12Z the owner moved that session to #810.
 - **This session.** It started in a fresh container with no access to the first session's files. It never saw the e4 cohort.
 - **The first session's LongMemEval queue** was cancelled at about 23:20Z, before any run had started. The LongMemEval results below are therefore the only C6 and C4+sem runs.
-- **e4 aggregates** were relayed from the first session by `send_message` at 23:24Z (reproduced verbatim in `candidates/c6-171e67d/e4/RELAYED-AGGREGATES.md`). They come from the unchanged scorer (`harness.py` `805d76b1`, cases `976f1f9d`), through the open-defaults wrapper that the e4 commitment preregistered.
-- **The sealed e4 package and per-case rows** are held by the cohort's author. Publishing them waits on that session's owner, because publication is irreversible. This review does not reproduce the e4 runs, and says so wherever it cites them.
+- **e4 aggregates** were relayed from the first session at 23:24Z (`candidates/c6-171e67d/e4/RELAYED-AGGREGATES.md`). With its owner's approval, that session then pushed a text-free per-case record (`holdout-e4/handoff/e4-percase-textfree.json`, sha256 `227f472a…`, commit `bdbd8a63` on `claude/819-independent-evaluation-no-ci`). The record holds per-arm metrics for each of the 208 cases, with no query or memory text. Its `MANIFEST.txt` shows `sha256sum -c` OK against the `81b02a25` hashes, the wrapper hash, the runtime HEADs, the pip freezes and the host state.
+- **This session recomputed every e4 statistic below from that per-case record** (`candidates/c6-171e67d/e4/e4_paired.py` → `e4-paired.json`, the same method as `tools/paired.py`). The results match the relayed aggregates exactly.
+- **This session did not re-run e4.** The cohort content stays sealed with its author.
 
 ## 1. Hidden cohort e4: 208 queries, five preregistered arms
 
-The arms follow the preregistered order: A, C4 default, C4+sem, C6+sem, C6 with the route off. All five completed with 0 evaluation failures, 0 operation refusals, 0 cross-scope leaks, 0 forgotten leaks and 0 stale returns. Figures are as relayed.
+The arms follow the preregistered order: A, C4 default, C4+sem, C6+sem, C6 with the route off. All five completed with 0 evaluation failures, 0 operation refusals, 0 cross-scope leaks, 0 forgotten leaks and 0 stale returns. Figures are recomputed from the per-case record.
 
 | | A | C4 | C6 off | C4+sem | **C6+sem** |
 | --- | ---: | ---: | ---: | ---: | ---: |
@@ -44,15 +45,20 @@ The arms follow the preregistered order: A, C4 default, C4+sem, C6+sem, C6 with 
 | Mean precision | — | 0.727 | = C4 | 0.792 | 0.853 |
 | Recall latency p50 (shared, loaded host) | — | 58 ms | — | 753 ms | 759 ms |
 
-**Route off equals C4.** C6 with the route off returns C4's verdict on all 208 queries.
+**Route off equals C4 on every recorded field.** That covers strict pass, precision, recall, returned count, leaks and failures, for all 208 cases.
 
-Paired results:
+Paired results, recomputed from the per-case record (bootstrap 10,000 resamples, seed 819):
 
-| Pair | Wins / losses | Exact McNemar p | Δ recall [95% CI] |
-| --- | --- | ---: | --- |
-| C4 → C6+sem | +16 / −0 | 3.1e-5 | |
-| **C4+sem → C6+sem** | **+24 / −13** | **0.099** | **−0.068 [−0.099, −0.041]** |
-| A → C6+sem | +114 / −0 | < 1e-6 | +0.010 [−0.028, +0.049] |
+| Pair | Wins / losses | Exact McNemar p | Δ strict rate | Δ recall | Δ precision (both returned) |
+| --- | --- | ---: | --- | --- | --- |
+| C4 → C6+sem | +16 / −0 | 3.1e-5 | +0.077 [+0.043, +0.115] | +0.106 [+0.066, +0.150] | +0.126 [+0.080, +0.175] |
+| **C4+sem → C6+sem** | **+24 / −13** | **0.099** | +0.053 [−0.005, +0.111] | **−0.068 [−0.099, −0.041]** | +0.003 [−0.031, +0.035] |
+| A → C6+sem | +114 / −0 | < 1e-6 | +0.548 [+0.481, +0.615] | +0.010 [−0.027, +0.049] | +0.368 [+0.306, +0.428] |
+| C4 → C4+sem | +29 / −24 | 0.58 | +0.024 [−0.043, +0.091] | +0.174 [+0.124, +0.228] | +0.123 [+0.067, +0.183] |
+
+**Every C6 loss to C4+sem is reach, and every win is precision.** All 13 losses are in aggregation (7) and multi-hop (6). All 24 wins are in multi-session (17), disambiguation (4), factual (2) and corrected (1).
+
+Where both runtimes return something, C6's mean precision is no better than C4+sem's (Δ +0.003). Its strict wins come from returning fewer extras on distractor-dense stores, which shows in strict pass and mean returned count (1.00 against 1.33), not in per-case precision.
 
 By category, strict passes (recall in brackets):
 
@@ -123,7 +129,7 @@ The probes and e4 disagree on strict pass because their stores differ. The probe
 
 | Dimension | Finding | Evidence |
 | --- | --- | --- |
-| **Multi-evidence aggregation** | **Fails.** e4 recall 0.17 (C4+sem 0.73); probe aggregation 8 of 23 needed (C4+sem 18 of 23). The cap (K = 3, margin 0.20, `min_best` 0.40) and the set reading together withhold most aggregate members | §1, §3 |
+| **Multi-evidence aggregation** | **Fails.** e4 recall 0.17 (C4+sem 0.73), 7 of the 13 e4 losses; probe aggregation 8 of 23 needed (C4+sem 18 of 23). The cap (K = 3, margin 0.20, `min_best` 0.40) and the set reading together withhold most aggregate members | §1, §3 |
 | **Paraphrase retrieval** | **Succeeds on e4** (16/16, the same as C4+sem). On the probes it gets 4/8 against C4+sem's 7/8, losing three paraphrases scored 0.33 to 0.40 to `min_best` | §1, §3 |
 | **No-answer abstention** | **No improvement over C4+sem.** It returns something on 5 of 8 probe no-answer queries, against 5 of 8 for C4+sem and 2 of 8 for C4 default. Every case is a near-miss above 0.40 ("sister's favourite film" against "brother loves Star Wars"). e4 abstention is 16/16 for all three. `min_best` measures topical closeness, not answerability (the preregistered limit) | §3 |
 | **Question-shaped slot capture** | **Confirmed** (known limit 1). Two probe losses. The relative margin also narrows the window for plural questions | §3 |
@@ -160,7 +166,7 @@ The store holds N generated memories. Each run does 1 cold recall, then 40 warm 
 ## 6. Reproducibility
 
 - **e4 commitment:** `81b02a25`, before C6 was checked out (first session).
-- **Route off equals C4:** e4 208/208 (relayed); probes 57/57 (this session); developer's reviewer set 55/55 (developer, and replicated here).
+- **Route off equals C4:** e4 208/208 on every field (per-case record); probes 57/57 (this session); developer's reviewer set 55/55 (developer, and replicated here).
 - **Determinism:**
   - two identical C6+sem probe runs;
   - developer runs replicated 55/55 across hosts and interpreters, for C6+sem, C4+sem and C4-off;
@@ -173,7 +179,7 @@ The store holds N generated memories. Each run does 1 cold recall, then 40 warm 
 
 ## 7. Failures, exclusions and incomplete outputs
 
-- **e4:** 0 evaluation failures and 0 operation refusals in all five arms (relayed). The per-case rows and sealed package are held, as explained above.
+- **e4:** 0 evaluation failures, leaks or stale returns in all five arms (per-case record). The relayed run notes also show 0 operation refusals. The text-free per-case record is published; the sealed cohort (generator, cases and texts) is not, by its owner's decision.
 - **LongMemEval:** {{LME_FAILURES}}
 - **AMB PrecisionMemBench with the route on: not run, by design of the existing adapter.**
   - `amb_agent_memory_bridge.py` (`3d9ccb31`) calls `AgentMemory.open` without `semantic_retrieval` (lines 259 and 309). Its only optional open setting is `recall_control`, and `run_amb_external.py` exposes no flag or environment variable for it.

@@ -39,8 +39,9 @@ The sender's raw summary line for the C6+sem arm, from its run log:
 
 > `c6-sem {"queries": 208, "strict_pass": 144, "eval_failures": 0, "mean_precision": 0.8532, "precision_n": 176, "mean_recall": 0.8788, "recall_n": 176, "isolation_leaks": 0, "forgotten_leaks": 0, "stale_returned": 0, "mean_returned": 1.0} {"p50": 758.905, "p95": 956.061, "max": 1239.997}`
 
-## What is not here, and why
+## Update: text-free per-case record published (00:16Z)
 
-- **Per-case e4 rows and the sealed package** (generator, scorer, cases, wrapper and raw results). The author declined to publish them on a peer-session request and asked its owner to confirm, because publication is irreversible.
-- **A content-free per-case file** (case id, category and per-arm metrics, with no query or memory text) was offered as a middle ground. It is also gated on that owner's decision.
-- **e4 is spent** once these aggregates are published. It must not be reused for tuning or for qualifying a later candidate.
+- **What its owner approved and pushed:** the text-free per-case file only. It is at `holdout-e4/handoff/e4-percase-textfree.json` (sha256 `227f472a504238f2ab19767c267754d267434b72a66269591c286d91df0d0da1`), with `MANIFEST.txt` (`c39fe0c9…`), in commit `bdbd8a63` on `claude/819-independent-evaluation-no-ci`.
+- **Recomputation:** this session recomputed every statistic above from it (`e4_paired.py` → `e4-paired.json`), and all of them match.
+- **What stays sealed:** the cohort itself, meaning generator, cases, and query and memory texts. That is the owner's decision.
+- **e4 is spent** now that its results are published. It must not be reused for tuning or for qualifying a later candidate.
