@@ -1,0 +1,36 @@
+{
+  "argv": [
+    "/home/user/eval/venv-c4/bin/python",
+    "harness.py",
+    "cases.json",
+    "results/c4-sem-rs.json.partial",
+    "--semantic",
+    "required",
+    "--representation-dir",
+    "/home/user/eval/semantic-model"
+  ],
+  "cwd": "/home/user/eval/holdout-e5",
+  "exit_status": 0,
+  "started_utc": "2026-10-16T14:36:57Z",
+  "wall_seconds": 678.085,
+  "user_cpu_seconds": 457.707,
+  "system_cpu_seconds": 186.052,
+  "peak_rss_mib": 409.4,
+  "env": {
+    "PYTHONHASHSEED": "0",
+    "AGENT_MEMORY_REPRESENTATION_DIR": null,
+    "HF_HUB_OFFLINE": "1",
+    "OMP_NUM_THREADS": null,
+    "VIRTUAL_ENV": null
+  },
+  "secrets_present": {
+    "OPENAI_API_KEY": false,
+    "ANTHROPIC_API_KEY": false,
+    "HF_TOKEN": false
+  },
+  "host": {
+    "platform": "Linux-6.18.44-fc-v139-x86_64-with-glibc2.39",
+    "cpu_count": 4,
+    "python": "3.12.3"
+  }
+}
