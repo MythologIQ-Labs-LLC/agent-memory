@@ -1,0 +1,19 @@
+{
+ "seed": 1,
+ "kills": 187,
+ "spawned": 189,
+ "witness_refusals_in_writers": 0,
+ "mid_checks": 26,
+ "mid_lags": 10,
+ "final_recover_rc": 0,
+ "final_stderr_tail": "",
+ "final_witness_gen": 477,
+ "final_db_gen": 477,
+ "final_witness_ok": true,
+ "orphan_temporaries": 23,
+ "orphan_sample": [
+  ".generation-witness.json.3219.12cb941ae0abcea4.tmp",
+  ".generation-witness.json.3223.e237b2f372a93000.tmp",
+  ".generation-witness.json.3224.e1fbcb6e996be18d.tmp"
+ ]
+}

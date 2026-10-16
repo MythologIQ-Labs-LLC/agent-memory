@@ -1,0 +1,18 @@
+os.open EDQUOT                         exc=OSError            witness=old  temps=[] fd_leak=[]
+os.open always EEXIST (8 retries)      exc=FileExistsError    witness=old  temps=[] fd_leak=[]
+os.fdopen MemoryError                  exc=MemoryError        witness=old  temps=[] fd_leak=[]
+os.fdopen OSError                      exc=OSError            witness=old  temps=[] fd_leak=[]
+write ENOSPC                           exc=OSError            witness=old  temps=[] fd_leak=[]
+file fsync EIO                         exc=OSError            witness=old  temps=[] fd_leak=[]
+os.replace OSError                     exc=OSError            witness=old  temps=[] fd_leak=[]
+os.replace KeyboardInterrupt           exc=KeyboardInterrupt  witness=old  temps=[] fd_leak=[]
+os.replace done then OSError (NFS)     exc=TimeoutError       witness=new  temps=[] fd_leak=[]
+os.replace done then KeyboardInterrupt exc=KeyboardInterrupt  witness=new  temps=[] fd_leak=[]
+dir fsync EINVAL                       exc=OSError            witness=new  temps=[] fd_leak=[]
+KBI between O_EXCL open and try        exc=KeyboardInterrupt  witness=old  temps=['.generation-witness.json.14601.99b12bc5807e205f.tmp'] fd_leak=['4']
+umask 0022: witness 0644 open('wb') 0644 same
+umask 0077: witness 0600 open('wb') 0600 same
+umask 0027: witness 0640 open('wb') 0640 same
+umask 0002: witness 0664 open('wb') 0664 same
+umask 0000: witness 0666 open('wb') 0666 same
+symlink pre-planted: victim b'victim content' witness (3, 'y') link still symlink True
