@@ -22,6 +22,41 @@ REGISTER = re.compile(r"^\*\*Numbered-document register \(([0-9]+)\):\*\* (.*)$"
 DOCUMENT_LINK = re.compile(r"\[[^\]]+\]\(([0-9]{2}-[^)#\s]+\.md)(?:#[^)\s]*)?(?:\s+\"[^\"]*\")?\)")
 
 
+
+CLAIM_START = "<!-- BEGIN CLAIM OWNERS -->"
+CLAIM_END = "<!-- END CLAIM OWNERS -->"
+CLAIM_ROW = re.compile(r"^\\|\\s*([a-z][a-z0-9-]*)\\s*\\|\\s*([a-z]+)\\s*\\|\\s*(docs/[^| ]+|reports/[^| ]+)\\s*\\|$")
+CLAIM_CLASSES = {"contract", "qualification", "baseline", "evidence", "doctrine", "roadmap", "delivery"}
+
+
+def validate_claim_owners(text: str, tracked_paths: set[str]) -> list[str]:
+    """Check explicit claim routing without inferring which prose is true."""
+    errors: list[str] = []
+    if text.count(CLAIM_START) != 1 or text.count(CLAIM_END) != 1:
+        return ["claim owner declarations require one start and one end marker"]
+    section = text.split(CLAIM_START, 1)[1].split(CLAIM_END, 1)[0]
+    seen: set[str] = set()
+    count = 0
+    for line in section.splitlines():
+        if not line.strip() or line.startswith("| Claim ID") or line.startswith("|---"):
+            continue
+        match = CLAIM_ROW.fullmatch(line.strip())
+        if not match:
+            errors.append(f"invalid claim owner declaration: {line.strip()}")
+            continue
+        claim, kind, owner = match.groups()
+        count += 1
+        if claim in seen:
+            errors.append(f"duplicate claim owner: {claim}")
+        seen.add(claim)
+        if kind not in CLAIM_CLASSES:
+            errors.append(f"{claim}: unknown claim class {kind}")
+        if owner not in tracked_paths:
+            errors.append(f"{claim}: owner path not tracked: {owner}")
+    if not count:
+        errors.append("claim owner declarations are empty")
+    return errors
+
 def validate_catalog(text: str, tracked_paths: set[str]) -> list[str]:
     """Return actionable discrepancies without reading source metadata as authority."""
 
@@ -114,7 +149,8 @@ def main() -> int:
         print(f"Cannot inventory tracked docs: {exc}", file=sys.stderr)
         return 2
 
-    errors = validate_catalog(catalog.read_text(encoding="utf-8"), set(tracked))
+    text = catalog.read_text(encoding="utf-8")
+    errors = validate_catalog(text, set(tracked)) + validate_claim_owners(text, set(tracked))
     if errors:
         for error in errors:
             print(f"Architecture catalog drift: {error}", file=sys.stderr)
