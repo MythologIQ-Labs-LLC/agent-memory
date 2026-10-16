@@ -48,7 +48,8 @@ def canonical_bytes_v2(value: Any) -> bytes:
 
     This module lives outside ``agentmem_ref`` deliberately. It is qualification-only
     and is not wired into persistence, restart, bmerkle, gsect, or another runtime
-    identity surface while ADR-040 remains Proposed.
+    identity surface. ADR-040 is Accepted doctrine; candidate v2 identities stay
+    non-emittable until a separately qualified production activation decision.
     """
 
     if value is None:

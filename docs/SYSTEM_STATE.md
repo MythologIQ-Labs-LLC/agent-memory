@@ -1,7 +1,7 @@
 # System State
 
-**Last reconciled:** 2026-10-13  
-**Evidence boundary:** `main` `3eebb6d54e2a218c4fd10cf53c52acac8384c3e6`  
+**Last reconciled:** 2026-10-14  
+**Evidence boundary:** `main` `38f6a7dcc358e8ee50a38d703b0addb9d8e660d7`; runtime implementation and Baseline v6 unchanged since the earlier source review  
 **Purpose:** concise revision-bound projection of implemented capability and remaining qualification. This file is not a competing implementation, roadmap, ADR, or benchmark authority.
 
 ## Product objective and boundary
@@ -28,7 +28,7 @@ Agent Memory aims to provide governed, hierarchical and **heterogeneous multi-sy
 - [#635](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/635): Gauntlet and revision-bound baseline convergence.
 - [#636](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/636): heterogenous memory-composition experiments and lifecycle across projections. Its broad pre-activation gate is **under sequencing review**; do not silently treat it as lifted.
 - [#668](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/668): product/runtime/evaluation North Star; safety and evidence controls retained.
-- [#797](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/797): documentation consolidation, overlapping current-state source correction, draft [PR #798](https://github.com/MythologIQ-Labs-LLC/agent-memory/pull/798).
+- [#797](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/797): consolidation, catalog guard and pruning landed via merged [#798](https://github.com/MythologIQ-Labs-LLC/agent-memory/pull/798), [#803](https://github.com/MythologIQ-Labs-LLC/agent-memory/pull/803) and follow-on documentation commits; final independently executed exact-head validation remains open.
 
 ## How to update this page
 
