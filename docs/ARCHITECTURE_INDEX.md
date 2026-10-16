@@ -121,7 +121,7 @@ These letter IDs are **virtual library shelves**, not additional filesystem dire
 
 ### Claim ownership declarations (curated, not a second status register)
 
-The IDs below identify **questions and their sole normative owner**, not the answers at today's revision. A derived page may cite the owner but must not become a second source of acceptance. The validator checks unique IDs, known classes, stable repository-local owner paths and declared linkages; it does **not** guess semantic contradictions from arbitrary prose.
+The IDs below identify **questions and their sole normative owner**, not the answers at today's revision. A derived page may cite the owner but must not become a second source of acceptance. The validator checks unique IDs, known classes, tracked repository-local owner paths (a trailing `/` names a collection whose members each own their entry), that live delivery claims name the governing issue, and that no owner labels itself historical or revision-bound; it does **not** guess semantic contradictions from arbitrary prose.
 
 <!-- BEGIN CLAIM OWNERS -->
 | Claim ID | Class | Primary owner |
@@ -129,13 +129,14 @@ The IDs below identify **questions and their sole normative owner**, not the ans
 | public-api-contract | contract | docs/44-public-api-contract.md |
 | canonical-substrate-maturity | qualification | docs/43-substrate-inventory-and-maturity.md |
 | runtime-baseline-identity | baseline | reports/runtime/baseline-register.json |
+| benchmark-admission | qualification | reference/agentmem_ref/evaluation/integrations/ |
 | benchmark-measured-outcomes | evidence | reports/benchmarks/dashboard/current.md |
-| architectural-decision-status | doctrine | docs/adr/README.md |
+| architectural-decision-status | doctrine | docs/adr/ |
 | roadmap-work-queue | roadmap | docs/BACKLOG.md |
-| release-integration-status | delivery | docs/SYSTEM_STATE.md |
+| release-integration-status | delivery | #410 |
 <!-- END CLAIM OWNERS -->
 
-**Release-integration-status is a revision-bound documentation pointer**, not a replacement for live [#410](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/410). The current decision is always verified against that issue, exact code and baseline evidence. On disputed ownership, mark the claim *unresolved* and record both sources in the governing issue; do not crown the newer document. Before any supersession, record the old owner/revision, new owner/revision, effective acceptance event, and subordinate backlinks.
+**Release-integration-status is owned by live [#410](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/410)**; [System State](SYSTEM_STATE.md) is only a revision-bound pointer to it, verified against exact code and baseline evidence. Each ADR file owns its own status; the [ADR index](adr/README.md) routes to them. Benchmark admission is owned by the committed integration descriptors and their validator, not by the dashboard or the [Atlas](BENCHMARK_COVERAGE_ATLAS.md). On disputed ownership, record both sources in the governing issue and leave the declaration unchanged until the owner rules; do not crown the newer document. Before any supersession, record the old owner/revision, new owner/revision, effective acceptance event, and subordinate backlinks.
 
 ## 5. Cold-start path for agents
 

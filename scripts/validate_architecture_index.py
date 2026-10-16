@@ -12,6 +12,7 @@ import re
 import subprocess
 import sys
 from collections import Counter
+from collections.abc import Mapping
 from pathlib import Path
 
 SHELVES = ("F", "G", "L", "R", "S", "I", "E", "X")
@@ -22,18 +23,42 @@ REGISTER = re.compile(r"^\*\*Numbered-document register \(([0-9]+)\):\*\* (.*)$"
 DOCUMENT_LINK = re.compile(r"\[[^\]]+\]\(([0-9]{2}-[^)#\s]+\.md)(?:#[^)\s]*)?(?:\s+\"[^\"]*\")?\)")
 
 
-
 CLAIM_START = "<!-- BEGIN CLAIM OWNERS -->"
 CLAIM_END = "<!-- END CLAIM OWNERS -->"
-CLAIM_ROW = re.compile(r"^\|\s*([a-z][a-z0-9-]*)\s*\|\s*([a-z]+)\s*\|\s*(docs/[^| ]+|reports/[^| ]+)\s*\|$")
+# Owner is either a governing GitHub issue (live delivery decisions only) or a tracked
+# repository path; a path ending in "/" names a collection whose members each own their own entry.
+CLAIM_ROW = re.compile(
+    r"^\|\s*([a-z][a-z0-9-]*)\s*\|\s*([a-z]+)\s*\|\s*"
+    r"(#[1-9][0-9]*|(?:docs|reports|reference|schemas)/[^|\s]+)\s*\|$"
+)
 CLAIM_CLASSES = {"contract", "qualification", "baseline", "evidence", "doctrine", "roadmap", "delivery"}
+ISSUE_CLASSES = {"delivery"}
+# A document that labels itself historical, revision-bound or superseded is a projection, never an owner.
+DEMOTION_LABEL = re.compile(r"^\W*(status|purpose)\b", re.IGNORECASE)
+DEMOTION_TERM = re.compile(r"\b(historical|revision-bound|superseded|archived)\b", re.IGNORECASE)
+HEAD_LINES = 12
 
 
-def validate_claim_owners(text: str, tracked_paths: set[str]) -> list[str]:
-    """Check explicit claim routing without inferring which prose is true."""
+def _demoted(head: str) -> bool:
+    for line in head.splitlines()[:HEAD_LINES]:
+        if (line.startswith("#") or DEMOTION_LABEL.match(line)) and DEMOTION_TERM.search(line):
+            return True
+    return False
+
+
+def validate_claim_owners(
+    text: str, tracked_paths: set[str], heads: Mapping[str, str] | None = None
+) -> list[str]:
+    """Check explicit claim routing without inferring which prose is true.
+
+    ``heads`` maps a Markdown owner path to its opening lines so a revision-bound or
+    historical document cannot be promoted to owner; ``main`` always supplies it.
+    """
     errors: list[str] = []
     if text.count(CLAIM_START) != 1 or text.count(CLAIM_END) != 1:
         return ["claim owner declarations require one start and one end marker"]
+    if text.index(CLAIM_END) < text.index(CLAIM_START):
+        return ["claim owner end marker precedes start marker"]
     section = text.split(CLAIM_START, 1)[1].split(CLAIM_END, 1)[0]
     seen: set[str] = set()
     count = 0
@@ -51,8 +76,21 @@ def validate_claim_owners(text: str, tracked_paths: set[str]) -> list[str]:
         seen.add(claim)
         if kind not in CLAIM_CLASSES:
             errors.append(f"{claim}: unknown claim class {kind}")
-        if owner not in tracked_paths:
+        if owner.startswith("#"):
+            if kind not in ISSUE_CLASSES:
+                errors.append(f"{claim}: issue owner {owner} only allowed for live delivery claims")
+            continue
+        if kind in ISSUE_CLASSES:
+            errors.append(f"{claim}: {kind} claims must be owned by the governing issue, not {owner}")
+        if ".." in owner.split("/"):
+            errors.append(f"{claim}: owner path escapes repository: {owner}")
+        elif owner.endswith("/"):
+            if not any(path.startswith(owner) for path in tracked_paths):
+                errors.append(f"{claim}: owner collection has no tracked files: {owner}")
+        elif owner not in tracked_paths:
             errors.append(f"{claim}: owner path not tracked: {owner}")
+        elif heads is not None and owner.endswith(".md") and _demoted(heads.get(owner, "")):
+            errors.append(f"{claim}: owner is historical or revision-bound: {owner}")
     if not count:
         errors.append("claim owner declarations are empty")
     return errors
@@ -140,17 +178,23 @@ def main() -> int:
         return 1
     try:
         tracked = subprocess.run(
-            ["git", "ls-files", "-z", "--", "docs"],
+            ["git", "ls-files", "-z"],
             cwd=root,
             check=True,
             capture_output=True,
         ).stdout.decode("utf-8").split("\0")
     except (OSError, subprocess.CalledProcessError, UnicodeError) as exc:
-        print(f"Cannot inventory tracked docs: {exc}", file=sys.stderr)
+        print(f"Cannot inventory tracked files: {exc}", file=sys.stderr)
         return 2
 
     text = catalog.read_text(encoding="utf-8")
-    errors = validate_catalog(text, set(tracked)) + validate_claim_owners(text, set(tracked))
+    tracked_paths = {path for path in tracked if path}
+    heads = {}
+    for path in tracked_paths:
+        if path.endswith(".md") and path in text:
+            with (root / path).open(encoding="utf-8") as handle:
+                heads[path] = "".join(handle.readline() for _ in range(HEAD_LINES))
+    errors = validate_catalog(text, tracked_paths) + validate_claim_owners(text, tracked_paths, heads)
     if errors:
         for error in errors:
             print(f"Architecture catalog drift: {error}", file=sys.stderr)
