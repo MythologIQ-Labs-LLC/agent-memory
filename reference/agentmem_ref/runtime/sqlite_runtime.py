@@ -863,8 +863,9 @@ class GenerationWitness:
         f"{GENERATION_WITNESS_NAME} to accept it)"
     )
     UNREADABLE_HINT = (
-        "explicit operator action is required (if the database is this store's own, remove "
-        f"{GENERATION_WITNESS_NAME} to accept it)"
+        "explicit operator action is required (if its permissions or an older runtime are the cause, "
+        f"fix those; if it is damaged and the database is this store's own, remove {GENERATION_WITNESS_NAME} "
+        "to accept it)"
     )
 
     def __init__(self, root: str | Path) -> None:
@@ -882,7 +883,12 @@ class GenerationWitness:
         self.path.parent.mkdir(parents=True, exist_ok=True)
         temporary, descriptor = self._exclusive_temporary()
         try:
-            with os.fdopen(descriptor, "wb") as handle:
+            try:
+                handle = os.fdopen(descriptor, "wb")
+            except BaseException:
+                os.close(descriptor)
+                raise
+            with handle:
                 handle.write(payload)
                 handle.flush()
                 os.fsync(handle.fileno())

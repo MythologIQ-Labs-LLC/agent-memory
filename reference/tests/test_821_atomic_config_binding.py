@@ -902,7 +902,11 @@ class ConcurrentWitnessWriters(_Store):
                                capture_output=True, text=True, timeout=120)
         finally:
             (barrier / "b-done").touch()
-            _, a_err = a.communicate(timeout=120)
+            try:
+                _, a_err = a.communicate(timeout=120)
+            except subprocess.TimeoutExpired:
+                a.kill()
+                raise
         if a.returncode != 0:
             raise AssertionError(f"writer A failed ({a.returncode}): {a_err[-2000:]}")
         return a.returncode, b.returncode
@@ -927,7 +931,7 @@ class ConcurrentWitnessWriters(_Store):
         self.assertEqual(b_code, 0)
         witness = _witness(self.root)
         committed = _state_generation(self.root)
-        self.assertLessEqual(witness["generation"], committed)
+        self.assertLess(witness["generation"], committed)  # A's older record landed last: a strict lag
         with _connect(self.root) as connection:
             journal = connection.execute(
                 "SELECT payload_json FROM runtime_journal WHERE generation = ?", (witness["generation"],)).fetchone()
@@ -969,6 +973,27 @@ class ConcurrentWitnessWriters(_Store):
         self.assertEqual(list(self.root.glob(".generation-witness.json*")), [])
         memory.close()
         self.assertEqual(len(self.open().recall("lunch noon")["returned"]), 1)
+
+    def test_r1_a_temporary_that_cannot_be_wrapped_is_closed_and_removed(self):
+        from agentmem_ref.runtime import sqlite_runtime
+
+        memory = self.open()
+        memory.remember("memory:x", "The deploy window is Thursday.")
+        before = _witness(self.root)
+        with mock.patch.object(sqlite_runtime.os, "fdopen", side_effect=OSError(12, "injected")):
+            self.assertTrue(memory.remember("memory:y", "Lunch is at noon.")["committed"])
+        self.assertFalse(memory.runtime.durable_runtime.generation_witness_current)
+        self.assertEqual(_witness(self.root), before)
+        self.assertEqual(list(self.root.glob(".generation-witness.json*")), [])
+        descriptors = Path("/proc/self/fd")
+        if descriptors.is_dir():  # no descriptor still points at a witness temporary
+            targets = []
+            for entry in descriptors.iterdir():
+                try:
+                    targets.append(os.readlink(entry))
+                except OSError:
+                    pass
+            self.assertEqual([t for t in targets if ".generation-witness.json." in t], [])
 
     @unittest.skipUnless(os.name == "posix", "POSIX permission bits")
     def test_r1_the_witness_keeps_the_mode_open_wb_gave_it(self):
