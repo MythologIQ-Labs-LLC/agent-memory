@@ -1,0 +1,13 @@
+{
+  "decisions": [
+    {
+      "decision": "accepted",
+      "decision_ref": "https://example.invalid/synthetic-decisions/accepted-example",
+      "executor": "synthetic-executor",
+      "normalized_sha256": "63dc43a38638bac80b81a36007fb529c30161b8e007335a8667db29362828693",
+      "reviewer": "synthetic-independent-reviewer",
+      "run_id": "synthetic:retrieval:accepted-example"
+    }
+  ],
+  "note": "EXAMPLE ONLY. Synthetic decision record for tests. A real record must live where only the benchmark owner can write it."
+}

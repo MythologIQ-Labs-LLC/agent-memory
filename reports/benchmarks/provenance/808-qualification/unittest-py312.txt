@@ -1,0 +1,42 @@
+test_accepted_fixture_normalized_run_is_schema_valid (test_benchmark_execution_manifest.AcceptanceGuardTests.test_accepted_fixture_normalized_run_is_schema_valid) ... ok
+test_authority_for_other_reviewer_or_run_is_refused (test_benchmark_execution_manifest.AcceptanceGuardTests.test_authority_for_other_reviewer_or_run_is_refused) ... ok
+test_benign_token_counts_are_not_secrets (test_benchmark_execution_manifest.AcceptanceGuardTests.test_benign_token_counts_are_not_secrets) ... ok
+test_duplicate_artifact_ids (test_benchmark_execution_manifest.AcceptanceGuardTests.test_duplicate_artifact_ids) ... ok
+test_forged_or_missing_artifact (test_benchmark_execution_manifest.AcceptanceGuardTests.test_forged_or_missing_artifact) ... ok
+test_forged_or_missing_normalized_hash (test_benchmark_execution_manifest.AcceptanceGuardTests.test_forged_or_missing_normalized_hash) ... ok
+test_identity_mismatches_against_hashed_normalized_run (test_benchmark_execution_manifest.AcceptanceGuardTests.test_identity_mismatches_against_hashed_normalized_run) ... ok
+test_malicious_relative_evidence_paths (test_benchmark_execution_manifest.AcceptanceGuardTests.test_malicious_relative_evidence_paths) ... ok
+test_missing_row_level_artifact (test_benchmark_execution_manifest.AcceptanceGuardTests.test_missing_row_level_artifact) ... ok
+test_non_rfc3339_timestamps (test_benchmark_execution_manifest.AcceptanceGuardTests.test_non_rfc3339_timestamps) ... ok
+test_normalized_identity_dict_alone_cannot_accept (test_benchmark_execution_manifest.AcceptanceGuardTests.test_normalized_identity_dict_alone_cannot_accept) ... ok
+test_paid_hosted_inference_declared_without_cost (test_benchmark_execution_manifest.AcceptanceGuardTests.test_paid_hosted_inference_declared_without_cost) ... ok
+test_redaction_not_reviewed (test_benchmark_execution_manifest.AcceptanceGuardTests.test_redaction_not_reviewed) ... ok
+test_reviewer_must_differ_from_executor (test_benchmark_execution_manifest.AcceptanceGuardTests.test_reviewer_must_differ_from_executor) ... ok
+test_secrets_in_argv (test_benchmark_execution_manifest.AcceptanceGuardTests.test_secrets_in_argv) ... ok
+test_secrets_in_artifact_pointers_and_parameters (test_benchmark_execution_manifest.AcceptanceGuardTests.test_secrets_in_artifact_pointers_and_parameters) ... ok
+test_self_declared_reviewer_without_authority_is_refused (test_benchmark_execution_manifest.AcceptanceGuardTests.test_self_declared_reviewer_without_authority_is_refused) ... ok
+test_supplied_normalized_must_equal_hashed_file (test_benchmark_execution_manifest.AcceptanceGuardTests.test_supplied_normalized_must_equal_hashed_file) ... ok
+test_symlink_escape_is_refused (test_benchmark_execution_manifest.AcceptanceGuardTests.test_symlink_escape_is_refused) ... ok
+test_unpinned_model_version_blocks_acceptance_only (test_benchmark_execution_manifest.AcceptanceGuardTests.test_unpinned_model_version_blocks_acceptance_only) ... ok
+test_unreconciled_wall_time (test_benchmark_execution_manifest.AcceptanceGuardTests.test_unreconciled_wall_time) ... ok
+test_verified_synthetic_acceptance_passes (test_benchmark_execution_manifest.AcceptanceGuardTests.test_verified_synthetic_acceptance_passes) ... ok
+test_ui_catalog_projects_manifest_pointer_without_changing_metrics (test_benchmark_execution_manifest.CatalogAssociationTests.test_ui_catalog_projects_manifest_pointer_without_changing_metrics) ... ok
+test_acceptance_requires_redaction_review (test_benchmark_execution_manifest.ManifestTests.test_acceptance_requires_redaction_review) ... ok
+test_acceptance_requires_reviewer (test_benchmark_execution_manifest.ManifestTests.test_acceptance_requires_reviewer) ... ok
+test_accepted_generation_requires_prompt_digest (test_benchmark_execution_manifest.ManifestTests.test_accepted_generation_requires_prompt_digest) ... ok
+test_accepted_hosted_model_requires_cost (test_benchmark_execution_manifest.ManifestTests.test_accepted_hosted_model_requires_cost) ... ok
+test_candidate_passes (test_benchmark_execution_manifest.ManifestTests.test_candidate_passes) ... ok
+test_command_credential_guard (test_benchmark_execution_manifest.ManifestTests.test_command_credential_guard) ... ok
+test_duplicate_artifact_path (test_benchmark_execution_manifest.ManifestTests.test_duplicate_artifact_path) ... ok
+test_eligible_must_be_accepted (test_benchmark_execution_manifest.ManifestTests.test_eligible_must_be_accepted) ... ok
+test_false_inference_claim (test_benchmark_execution_manifest.ManifestTests.test_false_inference_claim) ... ok
+test_hardware_required (test_benchmark_execution_manifest.ManifestTests.test_hardware_required) ... ok
+test_no_unsafe_relative_evidence_path (test_benchmark_execution_manifest.ManifestTests.test_no_unsafe_relative_evidence_path) ... ok
+test_normalized_run_identity (test_benchmark_execution_manifest.ManifestTests.test_normalized_run_identity) ... ok
+test_time_reversal (test_benchmark_execution_manifest.ManifestTests.test_time_reversal) ... ok
+test_unknown_cost_not_zero (test_benchmark_execution_manifest.ManifestTests.test_unknown_cost_not_zero) ... ok
+
+----------------------------------------------------------------------
+Ran 37 tests in 0.116s
+
+OK

@@ -1,0 +1,10 @@
+{"case_id": "synthetic-00", "hit_at_5": false, "ranked_ids": ["doc-0", "doc-1"]}
+{"case_id": "synthetic-01", "hit_at_5": true, "ranked_ids": ["doc-1", "doc-2"]}
+{"case_id": "synthetic-02", "hit_at_5": true, "ranked_ids": ["doc-2", "doc-3"]}
+{"case_id": "synthetic-03", "hit_at_5": false, "ranked_ids": ["doc-3", "doc-4"]}
+{"case_id": "synthetic-04", "hit_at_5": true, "ranked_ids": ["doc-4", "doc-5"]}
+{"case_id": "synthetic-05", "hit_at_5": true, "ranked_ids": ["doc-5", "doc-6"]}
+{"case_id": "synthetic-06", "hit_at_5": false, "ranked_ids": ["doc-6", "doc-7"]}
+{"case_id": "synthetic-07", "hit_at_5": true, "ranked_ids": ["doc-7", "doc-8"]}
+{"case_id": "synthetic-08", "hit_at_5": true, "ranked_ids": ["doc-8", "doc-9"]}
+{"case_id": "synthetic-09", "hit_at_5": false, "ranked_ids": ["doc-9", "doc-10"]}

@@ -288,3 +288,16 @@ An existing normalized result remains the metric authority. The envelope is supp
 Do not backfill absent historical model versions, timestamps, or hardware with invented defaults. For any new run whose required identity cannot be established, record a blocked or candidate posture and explain limitations. Preserve immutable original evidence when superseding. Redact secrets and private prompts before publishing.
 
 The contract, synthetic fixture, validator and tests are being prepared on an isolated feature branch. They are not considered activated or accepted until reviewed and the tests run independently in a local or cloud workspace without consuming hosted GitHub Actions. See [#807](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/807).
+
+### Qualification amendments (#808)
+
+Local qualification (no hosted CI) tightened the staged checker. These are contract statements, not new authority:
+
+- **Pointer base.** `normalized_run.uri` and `artifacts[].uri` are POSIX paths relative to the repository root at the evidence commit. `..`, `.`, empty segments, backslashes, drive letters, `~`, percent-encoding, control characters and URLs are refused. `--evidence-root <repo root>` re-hashes every pointed-to file, refuses symlink escape, and binds the normalized-run identity to the hashed bytes. Passing a parsed normalized run alone is an identity check, never acceptance.
+- **Review authority.** A manifest's `review` block is a claim. `accepted` validates only with `--review-authority`, an owner-controlled decision record that binds the same `decision_ref` (https), reviewer, `run_id` and normalized-run digest, and names an executor distinct from the reviewer. The checker cannot prove who wrote that record; it must live where only the benchmark owner can write it. Until such a location is designated, no real manifest can validate as `accepted`.
+- **Timestamps.** `jsonschema` checks `date-time` only when the optional `rfc3339-validator` package is installed, and the pinned profile does not install it. The checker therefore enforces RFC 3339 UTC itself.
+- **Inference and cost.** Hosted inference can never declare cost `not_applicable`. Accepted inference needs a model digest or a pinned revision, not a floating alias (`latest`, `main`, ...).
+- **Credentials.** Credential flags, `*_API_KEY=`/`*_TOKEN=` assignments and well-known key formats are refused in argv, evidence pointers and model parameters. Token *counts* (`--max-tokens`, `max_output_tokens`) are not credentials.
+- **Opt-in association.** A normalized run may point at its execution manifest through the existing `artifacts` mechanism (`kind: execution_manifest`). It carries no `sha256`, because the manifest already binds the run's digest. The UI catalog projects it as an ordinary evidence pointer; metrics, status and comparison semantics are unchanged, and frozen runs are not migrated.
+
+A synthetic, explicitly non-real accepted fixture with real file digests is in `reference/fixtures/benchmarks/execution-manifest-accepted/`. `scripts/probe_execution_manifest_defects.py` reproduces each defect against an earlier checker revision.

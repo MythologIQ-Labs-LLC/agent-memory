@@ -1,0 +1,46 @@
+{
+  "self_declared_acceptance_without_authority": {
+    "original": "PASSED",
+    "candidate": "REFUSED: accepted evidence requires an owner-controlled review authority record; a reviewer string in the manifest is a claim, no"
+  },
+  "forged_artifact_digest": {
+    "original": "PASSED",
+    "candidate": "REFUSED: SHA-256 mismatch for row_level_results: reference/fixtures/benchmarks/execution-manifest-accepted/rows.jsonl"
+  },
+  "artifact_file_absent": {
+    "original": "PASSED",
+    "candidate": "REFUSED: missing evidence file for row_level_results: reference/fixtures/benchmarks/absent.jsonl"
+  },
+  "non_rfc3339_timestamp": {
+    "original": "PASSED",
+    "candidate": "REFUSED: started_at must be an RFC 3339 UTC timestamp"
+  },
+  "hosted_inference_cost_not_applicable": {
+    "original": "PASSED",
+    "candidate": "REFUSED: hosted inference requires a measured cost (or not_measured), never not_applicable"
+  },
+  "backslash_traversal_pointer": {
+    "original": "PASSED",
+    "candidate": "REFUSED: unsafe evidence pointer: 'a\\\\..\\\\..\\\\secret'"
+  },
+  "drive_letter_pointer": {
+    "original": "PASSED",
+    "candidate": "REFUSED: unsafe evidence pointer: 'C:/secret'"
+  },
+  "percent_encoded_traversal": {
+    "original": "PASSED",
+    "candidate": "REFUSED: unsafe evidence pointer: 'a/%2e%2e/%2e%2e/secret'"
+  },
+  "token_flag_in_argv": {
+    "original": "PASSED",
+    "candidate": "REFUSED: command arguments must not expose sensitive credential flags or values"
+  },
+  "api_key_value_in_argv": {
+    "original": "PASSED",
+    "candidate": "REFUSED: command arguments must not expose sensitive credential flags or values"
+  },
+  "floating_model_revision_accepted": {
+    "original": "PASSED",
+    "candidate": "REFUSED: accepted inference requires a pinned model revision, not a floating alias"
+  }
+}

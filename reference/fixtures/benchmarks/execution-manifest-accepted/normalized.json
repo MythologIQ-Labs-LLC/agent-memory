@@ -1,0 +1,107 @@
+{
+  "artifacts": [
+    {
+      "artifact_id": "native-report",
+      "kind": "benchmark_native_results",
+      "sha256": "38bc47c8f15838aa942e40a2c1ba5e816eebfa260b31ed3934b69f4541d5a87d",
+      "uri": "reference/fixtures/benchmarks/execution-manifest-accepted/native.json"
+    },
+    {
+      "artifact_id": "rows",
+      "kind": "row_level_rankings",
+      "sha256": "fa9b9e8549e1e5836651c68124833c77ddb0fa763ff5313426f2257f0ae6f354",
+      "uri": "reference/fixtures/benchmarks/execution-manifest-accepted/rows.jsonl"
+    },
+    {
+      "artifact_id": "execution-manifest",
+      "kind": "execution_manifest",
+      "uri": "reference/fixtures/benchmarks/execution-manifest-accepted/manifest.json"
+    }
+  ],
+  "authority_effect": "none",
+  "benchmark": {
+    "id": "synthetic-retrieval",
+    "input_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "source_revision": "synthetic-source-1",
+    "task_profile": "parity-v1:session"
+  },
+  "dimensions": {
+    "currentness": {
+      "metrics": [],
+      "notes": [
+        "synthetic fixture"
+      ],
+      "status": "not_measured"
+    },
+    "efficiency": {
+      "metrics": [],
+      "notes": [
+        "synthetic fixture"
+      ],
+      "status": "not_measured"
+    },
+    "evaluator_integrity": {
+      "metrics": [],
+      "notes": [
+        "synthetic fixture"
+      ],
+      "status": "not_measured"
+    },
+    "governance": {
+      "metrics": [],
+      "notes": [
+        "synthetic fixture"
+      ],
+      "status": "not_measured"
+    },
+    "reasoning": {
+      "metrics": [],
+      "notes": [
+        "synthetic fixture"
+      ],
+      "status": "not_measured"
+    },
+    "reproducibility": {
+      "metrics": [],
+      "notes": [
+        "synthetic fixture"
+      ],
+      "status": "not_measured"
+    },
+    "retrieval": {
+      "metrics": [
+        {
+          "denominator": 10,
+          "direction": "higher_better",
+          "metric_id": "hit_at_5",
+          "population": "synthetic cases",
+          "state": "measured",
+          "value": 0.6
+        }
+      ],
+      "notes": [
+        "synthetic fixture"
+      ],
+      "status": "measured"
+    }
+  },
+  "execution": {
+    "sample_count": 10,
+    "selection_id": "frozen-sample-10",
+    "selection_method": "all"
+  },
+  "limitations": [
+    "EXAMPLE ONLY. Synthetic; not proof of runtime results."
+  ],
+  "native_results": {
+    "synthetic": true
+  },
+  "run_id": "synthetic:retrieval:accepted-example",
+  "schema_version": "1.0.0",
+  "status": "complete",
+  "system": {
+    "id": "agent_memory",
+    "kind": "agent_memory",
+    "revision": "1234567890abcdef1234567890abcdef12345678"
+  }
+}

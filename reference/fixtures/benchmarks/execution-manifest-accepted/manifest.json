@@ -1,0 +1,112 @@
+{
+  "artifacts": [
+    {
+      "kind": "native_result",
+      "sha256": "38bc47c8f15838aa942e40a2c1ba5e816eebfa260b31ed3934b69f4541d5a87d",
+      "uri": "reference/fixtures/benchmarks/execution-manifest-accepted/native.json"
+    },
+    {
+      "kind": "row_level_results",
+      "sha256": "fa9b9e8549e1e5836651c68124833c77ddb0fa763ff5313426f2257f0ae6f354",
+      "uri": "reference/fixtures/benchmarks/execution-manifest-accepted/rows.jsonl"
+    }
+  ],
+  "authority_effect": "none",
+  "benchmark": {
+    "dataset_revision": "dataset-pinned-1",
+    "evaluator_revision": "evaluator-revision-123",
+    "excluded_count": 0,
+    "id": "synthetic-retrieval",
+    "input_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "sample_count": 10,
+    "selection_id": "frozen-sample-10",
+    "task_profile": "parity-v1:session"
+  },
+  "costs": {
+    "amount": null,
+    "billing_reference_sha256": null,
+    "currency": "USD",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "status": "not_applicable"
+  },
+  "environment": {
+    "container_digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "dependency_lock_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "isolation": "container",
+    "network_access": "disabled",
+    "notes": [
+      "EXAMPLE ONLY. This is synthetic test input, not an executed benchmark."
+    ],
+    "runtime": "CPython",
+    "runtime_version": "3.12.7"
+  },
+  "execution": {
+    "argv_redacted": [
+      "python",
+      "reference/run_synthetic.py",
+      "--fixture"
+    ],
+    "command_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "context_budget_tokens": null,
+    "exit_code": 0,
+    "latency_p50_ms": 1.7,
+    "latency_p95_ms": 2.9,
+    "peak_rss_bytes": 48000000,
+    "peak_vram_bytes": null,
+    "random_seed": 42,
+    "retries": 0,
+    "retrieval_top_k": 5,
+    "stderr_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+    "stdout_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "timeout_ms": 60000
+  },
+  "hardware": {
+    "architecture": "x86_64",
+    "cpu_cores": 8,
+    "cpu_model": "Synthetic CPU placeholder",
+    "gpus": [],
+    "os": "Linux",
+    "os_release": "6.8",
+    "ram_bytes": 17179869184
+  },
+  "inference": {
+    "calls": [],
+    "used": false
+  },
+  "normalized_run": {
+    "sha256": "63dc43a38638bac80b81a36007fb529c30161b8e007335a8667db29362828693",
+    "uri": "reference/fixtures/benchmarks/execution-manifest-accepted/normalized.json"
+  },
+  "redaction": {
+    "contains_private_data": false,
+    "contains_secrets": false,
+    "note": "Synthetic fixture; redaction review is a placeholder for the test, not a real review.",
+    "reviewed": true
+  },
+  "review": {
+    "comparison_eligibility": "eligible_on_profile",
+    "decision_ref": "https://example.invalid/synthetic-decisions/accepted-example",
+    "limitations": [
+      "EXAMPLE ONLY. Synthetic acceptance used to exercise validator guards; confers nothing."
+    ],
+    "reviewer": "synthetic-independent-reviewer",
+    "status": "accepted"
+  },
+  "run_id": "synthetic:retrieval:accepted-example",
+  "schema_version": "1.0.0",
+  "system": {
+    "adapter_id": "reference/run_synthetic.py",
+    "adapter_revision": "1234567890abcdef1234567890abcdef12345678",
+    "build_sha256": null,
+    "configuration_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "id": "agent_memory",
+    "revision": "1234567890abcdef1234567890abcdef12345678",
+    "worktree_clean": true
+  },
+  "timing": {
+    "elapsed_ms": 12000,
+    "finished_at": "2026-10-14T12:00:12Z",
+    "started_at": "2026-10-14T12:00:00Z"
+  }
+}

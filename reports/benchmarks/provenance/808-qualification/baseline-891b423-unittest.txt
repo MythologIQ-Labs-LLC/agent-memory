@@ -1,0 +1,19 @@
+test_acceptance_requires_redaction_review (test_benchmark_execution_manifest.ManifestTests.test_acceptance_requires_redaction_review) ... ok
+test_acceptance_requires_reviewer (test_benchmark_execution_manifest.ManifestTests.test_acceptance_requires_reviewer) ... ok
+test_accepted_generation_requires_prompt_digest (test_benchmark_execution_manifest.ManifestTests.test_accepted_generation_requires_prompt_digest) ... ok
+test_accepted_hosted_model_requires_cost (test_benchmark_execution_manifest.ManifestTests.test_accepted_hosted_model_requires_cost) ... ok
+test_candidate_passes (test_benchmark_execution_manifest.ManifestTests.test_candidate_passes) ... ok
+test_command_credential_guard (test_benchmark_execution_manifest.ManifestTests.test_command_credential_guard) ... ok
+test_duplicate_artifact_path (test_benchmark_execution_manifest.ManifestTests.test_duplicate_artifact_path) ... ok
+test_eligible_must_be_accepted (test_benchmark_execution_manifest.ManifestTests.test_eligible_must_be_accepted) ... ok
+test_false_inference_claim (test_benchmark_execution_manifest.ManifestTests.test_false_inference_claim) ... ok
+test_hardware_required (test_benchmark_execution_manifest.ManifestTests.test_hardware_required) ... ok
+test_no_unsafe_relative_evidence_path (test_benchmark_execution_manifest.ManifestTests.test_no_unsafe_relative_evidence_path) ... ok
+test_normalized_run_identity (test_benchmark_execution_manifest.ManifestTests.test_normalized_run_identity) ... ok
+test_time_reversal (test_benchmark_execution_manifest.ManifestTests.test_time_reversal) ... ok
+test_unknown_cost_not_zero (test_benchmark_execution_manifest.ManifestTests.test_unknown_cost_not_zero) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.013s
+
+OK
