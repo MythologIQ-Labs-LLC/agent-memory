@@ -1,6 +1,15 @@
 # #819 C6: handoff to the repository delivery lane
 
-**Disposition: CHANGES REQUIRED. Do not integrate C6 `171e67db` as frozen.** The full rationale is in `REVIEW-C6.md`. This note says what the delivery lane may and may not do with C6, and what a successor must bring.
+**Disposition: CHANGES REQUIRED. Do not integrate C6 `171e67db` as frozen.**
+
+**Against C4 with the semantic route on, C6 loses recall in every evaluation:**
+- **Hidden e4 cohort:** Δ recall −0.068 [−0.099, −0.041]. Aggregation recall falls from 0.73 to 0.17.
+- **LongMemEval-S, turn recall_all@10:** +1 / −14, p = 0.00098.
+- **Evaluator probes:** +3 / −12, p = 0.035.
+
+**Against C4 default, C6 helps on e4 but not on LongMemEval:**
+- **e4:** +16 / −0.
+- **LongMemEval:** not significant on either plane. The full rationale is in `REVIEW-C6.md`. This note says what the delivery lane may and may not do with C6, and what a successor must bring.
 
 ## What not to do
 

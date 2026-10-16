@@ -8,9 +8,12 @@ C6 makes C4's optional semantic route useful for paraphrase. It does that by cap
 - **Against C4 with the route on:** C6 gains precision and loses recall. Every dataset agrees on the recall loss: the hidden e4 cohort, LongMemEval-S, this evaluator's probes, and the developer's own development and reviewer sets.
 - **Aggregation is the main casualty.** On e4, multi-evidence aggregation recall is 0.17 for C6 against 0.73 for C4+sem. That is the defect C3/C4 review required change 1 asked to fix, and C6 with the route on leaves it where C4 default had it.
 - **The failed preregistered prediction stands.** The preregistration expected recall against C4+sem to stay level or rise. It fell on every dataset, and the cause is identified below. The strict-pass gain does not cancel the loss: on e4 it is not significant (p = 0.099), and on the probes it reverses (p = 0.035).
-- **No safety, determinism or route-off problem was found.**
+- **No safety, determinism or route-off problem was found.** Route off equals C4 on e4, LongMemEval, the probes and the developer's reviewer set. Two hosts and two interpreters give identical lists.
 
-{{LME_SUMMARY}}
+- **LongMemEval-S 500 tells the same story.**
+  - C4's semantic route is a significant gain over route-off (turn recall_all@10: +16 / −2, p = 0.0013).
+  - C6 gives most of it back. Against C4+sem it scores +1 / −14 at turn recall_all@10 (p = 0.00098), with Δ recall −0.031 [−0.050, −0.014].
+  - Against C4 default, C6's gain is not significant on either plane.
 
 | Item | Value |
 | --- | --- |
@@ -81,7 +84,63 @@ What the table shows:
 
 **Cohort status: e4 is spent.** Its aggregates are now published. Cohort content stays with its author.
 
-{{LME_SECTION}}
+## 2. LongMemEval-S, 500 questions
+
+**Configuration.**
+- Unchanged `run_longmemeval.py` (`6b9c2373`) with `--backend agent_memory --corpus-class external_frozen --granularity session --granularity turn`.
+- `--agent-memory-semantic-retrieval required` for the semantic arms, with `AGENT_MEMORY_REPRESENTATION_DIR` pointing at the pinned model.
+- Input `longmemeval_s_cleaned.json`, sha256 `d6f21ea9…`, 277,383,467 bytes. All three streaming passes of every run agreed with it.
+- `PYTHONHASHSEED=0`, `HF_HUB_OFFLINE=1`, no secrets present.
+
+**Outputs.** Each output records its revision with a clean worktree, the semantic mode, and, for the semantic arms, the config digest `74477054…` and representation `multi-qa-MiniLM-L6-cos-v1@b207367`.
+
+**Run timing.**
+- C6+sem: 23:19 to 00:28Z.
+- C4+sem: 23:44 to 00:53Z, overlapping C6+sem.
+- C6 off and C4 default: 00:53 to 01:10Z, together.
+
+All four exited 0. Each scored 419 questions: 30 abstention and 51 no-user-target questions are excluded by the evaluator, as in earlier reviews. There were 0 runtime errors and 0 ingestion failures.
+
+**Headline (scored list under the default `relevance_sufficient` selection)**
+
+| | C4 default | C6 off | C4+sem | **C6+sem** |
+| --- | ---: | ---: | ---: | ---: |
+| Session recall_all@5 | 0.8687 | 0.8687 | 0.8807 | 0.8783 |
+| Session recall_all@10 | 0.9069 | 0.9069 | 0.9260 | 0.9189 |
+| Turn recall_all@5 | 0.6325 | 0.6325 | 0.6563 | 0.6372 |
+| Turn recall_all@10 | 0.7589 | 0.7589 | 0.7924 | **0.7613** |
+| Turn recall_all@50 | 0.8162 | 0.8162 | 0.8711 | 0.8258 |
+| Mean returned (session / turn) | 3.86 / 9.80 | 3.86 / 9.80 | 4.12 / 12.75 | 3.97 / 10.09 |
+
+**Paired results** (wins / losses on recall_all = 1, exact McNemar; Δ recall bootstrap 95% CI from `tools/paired.py`):
+
+| Pair | Session @5 | Session @10 | Turn @5 | Turn @10 | Turn @50 |
+| --- | --- | --- | --- | --- | --- |
+| **C4+sem → C6+sem** | +0 / −1, p = 1.0; Δ −0.002 [−0.007, 0] | +1 / −4, p = 0.38 | **+0 / −8, p = 0.0078** | **+1 / −14, p = 0.00098; Δ −0.031 [−0.050, −0.014]** | **+0 / −19, p = 4e-6** |
+| C4 → C4+sem | +5 / −0, p = 0.063 | +8 / −0, p = 0.0078 | +10 / −0, p = 0.0020 | +16 / −2, p = 0.0013; Δ +0.033 [+0.014, +0.053] | +23 / −0, p < 1e-6 |
+| C4 → C6+sem | +4 / −0, p = 0.125; Δ +0.010 [+0.002, +0.019] | +5 / −0, p = 0.063 | +2 / −0, p = 0.5 | +2 / −1, p = 1.0 | +4 / −0, p = 0.125 |
+| C4 → C6 off | identical | identical | identical | identical | identical |
+
+What the paired results show:
+- **The losses are spread across question types.** At turn @10, C6's 14 losses to C4+sem split into 4 multi-session, 3 knowledge-update, 3 single-session-preference, 2 single-session-user and 2 single-session-assistant. They are not one niche category.
+- **This is the long-haystack form of the e4 and probe finding.** C6's caps (K ≤ 3, `min_best` 0.40, margin 0.20) cut proposals that C4+sem turns into needed evidence. The effect shows most at turn granularity, where the evidence is many short turns.
+- **Route off equals C4.** The ranked lists are identical on all 500 questions in both planes. C4 default here also reproduces the published C4 run from the earlier evaluator host (`candidates/c4-bc2be63/lme500/`) on all 500 questions in both planes.
+
+**Retrieved evidence at each depth.** Per-question `ranked_top`, returned count, recall_all@{1, 3, 5, 10, 30, 50} and `recall_seconds` for each pair are in `lme500/detail-*.json.gz`. The full runner outputs are in `lme500/*-lme500.json.gz`.
+
+**Latency and resources on LongMemEval** (this host; the semantic runs overlapped each other, one core each of four):
+
+| | Session recall p50 / p95 | Turn recall p50 / p95 | Wall | User CPU | Peak RSS |
+| --- | --- | --- | ---: | ---: | ---: |
+| C4 default | 0.034 / 0.061 s | 0.062 / 0.123 s | 1,036 s | 563 s | 93 MiB |
+| C6 off | 0.034 / 0.056 s | 0.062 / 0.123 s | 1,036 s | 562 s | 93 MiB |
+| C4+sem | 2.44 / 2.89 s | 3.12 / 3.72 s | 4,135 s | 2,985 s | 365 MiB |
+| C6+sem | 2.46 / 2.97 s | 3.16 / 3.70 s | 4,154 s | 3,017 s | 383 MiB |
+
+- **Semantic recall costs about 70× lexical recall on LongMemEval.** Each question is a fresh haystack of about 50 sessions or about 500 turns. The route embeds every item at the first recall, so `recall_seconds` is dominated by cold embedding.
+- **C6 and C4+sem cost the same.**
+
+**Reporting gap.** The runner's posture block (`agent_memory_semantic_posture`) records mode, digest, floor and limit, but not the C6 proposal policy. C6's identity in these outputs rests on its revision (`171e67db`, clean worktree) and on its lists differing from C4+sem's (session 99 of 500, turn 356 of 500). A versioned LongMemEval lane should record the proposal policy.
 
 ## 3. Independent adversarial probes (57 queries, evaluator-authored)
 
@@ -137,7 +196,7 @@ The probes and e4 disagree on strict pass because their stores differ. The probe
 | **Historical and as-of** | **C6 is correct.** Its mode-aware pool filter keeps refused memories out of the slot: forgotten, error-corrected and disputed memories in historical recall. **Pre-existing, all runtimes:** as-of recall also returns a successor whose `valid_from` is after the as-of date. A, C4, C4+sem and C6, route on or off, all do this. Old-first ordering is correct. Temporal intent only orders, by design (ADR-039, proposed), so no as-of query can be strict. Not attributable to C6 | `probes2.json`, `out/p2-*.json` |
 | **Cross-scope exclusion** | **Holds.** Other-scope near-duplicates were never returned and their text never appeared in any result: 0 reference leaks and 0 text leaks, also on e4. A store binds one tenant and refuses to open under another, so the route cannot cross tenants within a store (fail-closed). `scope3` fails for every runtime, because "Who is on call this week?" never retrieves "Beta's on-call engineer…". That is a recall miss, not a leak | §3 |
 | **Forgotten, corrected and disputed** | **Holds in current-state recall.** No forgotten, superseded or disputed memory was returned or quoted. `life4` shows the pool filter's one cost: it removes the strongest anchor, so `min_best` then fails on the successor | §3 |
-| **Determinism** | **Holds.** Two fresh C6+sem probe runs are identical, proposals and cosines included. Across hosts, the developer's C6, C4+sem and C4-off returned lists replicate 55/55 on this host under Python 3.12.3 (developer: 3.13.16), and their proposal cosines are identical at the harness's 3-decimal resolution | §6 |
+| **Determinism** | **Holds.** Two fresh C6+sem probe runs are identical, proposals and cosines included. Across hosts, the developer's C6, C4+sem and C4-off returned lists replicate 55/55 on this host under Python 3.12.3 (developer: 3.13.16), and their proposal cosines are identical at the harness's 3-decimal resolution. LongMemEval C4 default here equals the earlier evaluator host's published run, 500/500 in both planes | §6 |
 | **Latency and resources** | **C6 adds nothing over C4+sem. The route itself is costly** | §5 |
 | **Network** | **No egress.** `strace -e connect,sendto` over a semantic-on run records 0 calls. The proxy logged telemetry attempts to `mobile.events.data.microsoft.com`; they came from the container environment and are not attributable to Agent Memory | — |
 
@@ -166,10 +225,11 @@ The store holds N generated memories. Each run does 1 cold recall, then 40 warm 
 ## 6. Reproducibility
 
 - **e4 commitment:** `81b02a25`, before C6 was checked out (first session).
-- **Route off equals C4:** e4 208/208 on every field (per-case record); probes 57/57 (this session); developer's reviewer set 55/55 (developer, and replicated here).
+- **Route off equals C4:** LongMemEval 500/500 ranked lists in both planes (this session); e4 208/208 on every field (per-case record); probes 57/57 (this session); developer's reviewer set 55/55 (developer, and replicated here).
 - **Determinism:**
   - two identical C6+sem probe runs;
   - developer runs replicated 55/55 across hosts and interpreters, for C6+sem, C4+sem and C4-off;
+  - LongMemEval C4 default reproduces the earlier evaluator host's published run on all 500 questions in both planes;
   - the developer reviewer set's aggregates reproduce exactly (C6: 16 strict, recall 0.500, 61 extras; C4+sem: 6, 0.655, 120; C4-off: 11, 0.276, 53).
 - **C6's own tests:**
   - `test_c6_semantic_discovery` with `test_facade_recall_control`: 29 tests, all pass on C6 here.
@@ -180,7 +240,7 @@ The store holds N generated memories. Each run does 1 cold recall, then 40 warm 
 ## 7. Failures, exclusions and incomplete outputs
 
 - **e4:** 0 evaluation failures, leaks or stale returns in all five arms (per-case record). The relayed run notes also show 0 operation refusals. The text-free per-case record is published; the sealed cohort (generator, cases and texts) is not, by its owner's decision.
-- **LongMemEval:** {{LME_FAILURES}}
+- **LongMemEval:** four runs (C4 default, C6 off, C4+sem, C6+sem), all with exit status 0. Each scored 419 of 500 questions, with 0 runtime errors and 0 ingestion failures. The exclusions are the evaluator's standard ones: 30 abstention and 51 no-user-target questions. Outputs were written to `.partial` files and promoted only after exit 0 and a JSON parse, so none is truncated. The raw output hashes are in `lme500/SHA256SUMS-raw-outputs.txt`. Wrapper change at 23:45Z: the first queue script was stopped without touching its running C6+sem child, and a replacement queue ran C4+sem alongside it (`provenance/run_lme.sh`, `run_lme2.sh`). No valid run was restarted. The first evaluator session cancelled its own LongMemEval queue before it started, so no cross-host LongMemEval replica exists for the semantic arms.
 - **AMB PrecisionMemBench with the route on: not run, by design of the existing adapter.**
   - `amb_agent_memory_bridge.py` (`3d9ccb31`) calls `AgentMemory.open` without `semantic_retrieval` (lines 259 and 309). Its only optional open setting is `recall_control`, and `run_amb_external.py` exposes no flag or environment variable for it.
   - Measuring semantic-on AMB would need an adapter change or an open-defaults wrapper. Neither is approved for AMB, so no substitute protocol was created.
@@ -200,7 +260,7 @@ The preregistration (`3d202484`) expected that, against C4+sem, "recall stays th
 | Reviewer set (55) | Developer's reviewer | 0.655 | 0.500 |
 | e4 (208, hidden) | Independent | 0.947 | 0.879 [Δ CI −0.099, −0.041] |
 | Probes (57) | Independent | 0.768 | 0.420 [per-query Δ CI −0.454, −0.196] |
-| LongMemEval-S (session / turn) | Public | {{LME_PRED}} | |
+| LongMemEval-S, turn recall_all@10 | Public | 0.7924 | 0.7613 [Δ CI −0.050, −0.014]; session @10 0.9260 → 0.9189 (n.s.) |
 
 **This is not an incidental trade-off.** The policy causes it:
 - `min_best` sits above the cosine band where this model places true paraphrase and aggregate answers.
@@ -216,7 +276,7 @@ The preregistration (`3d202484`) expected that, against C4+sem, "recall stays th
 - with the route off it is exactly C4;
 - its paraphrase gain and its precision control are real.
 
-It is not acceptable for integration qualification as frozen. The question was whether it makes semantic retrieval useful *without unacceptable recall loss*. It does not: the loss is significant on hidden data, and it falls on aggregation.
+It is not acceptable for integration qualification as frozen. The question was whether it makes semantic retrieval useful *without unacceptable recall loss*. It does not. The loss is significant on hidden data (e4) and on LongMemEval turn retrieval, and on e4 it falls on aggregation. On LongMemEval, C6+sem is not even significantly better than the route off, while C4+sem is.
 
 **Mandatory changes.** These belong in a new, separately preregistered candidate. C6's frozen parameters stay as they are, and none were adjusted after these results.
 
