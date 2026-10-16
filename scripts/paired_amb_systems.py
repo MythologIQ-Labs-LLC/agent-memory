@@ -6,7 +6,8 @@ that all files cover the same case ids. For each system it reports:
 
 * correct cases, overall and per category;
 * how many failures name an unexpected belief (AMB ``judge_reason``), which is a selectivity
-  failure, and how many name a missing belief;
+  failure, and how many name a missing belief. AMB keeps only the first 4 reasons per case, so
+  both are lower bounds;
 * the mean number of memories returned per case (AMB ``answer`` "N memories retrieved");
 * wins, losses and ties against ``--reference`` (default: the first system), with an exact
   McNemar p-value.
@@ -66,8 +67,10 @@ def main(argv: list[str] | None = None) -> int:
             "amb_summary": {k: data.get(k) for k in ("correct", "total_queries", "accuracy", "mean_precision",
                                                      "mean_recall", "active_passes", "active_total")},
             "correct": sum(bool(rows[q]["correct"]) for q in cases),
-            "failures_with_unexpected_belief": sum("unexpected belief" in str(rows[q].get("judge_reason")) for q in failed),
-            "failures_with_missing_belief": sum("missing" in str(rows[q].get("judge_reason")).lower() for q in failed),
+            # AMB's judge_reason lists at most the first 4 failure reasons per case, so these
+            # counts are lower bounds (a case can fail on a reason not shown).
+            "failures_with_unexpected_belief_in_first4_reasons": sum("unexpected belief" in str(rows[q].get("judge_reason")) for q in failed),
+            "failures_with_missing_belief_in_first4_reasons": sum("missing" in str(rows[q].get("judge_reason")).lower() for q in failed),
             "mean_memories_returned": round(sum(returned) / len(returned), 2) if returned else None,
             "per_category": {c: f"{v[0]}/{v[1]}" for c, v in sorted(per_cat.items())},
         }

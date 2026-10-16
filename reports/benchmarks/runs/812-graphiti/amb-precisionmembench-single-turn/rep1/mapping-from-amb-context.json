@@ -4,6 +4,11 @@
  "returned_documents_mean": 18.06,
  "cases_with_no_results": 5,
  "unmapped_edge_documents": 0,
- "facts_listed_under_more_than_one_belief": 36,
- "note": "derived from AMB's context listing (AMB does not persist provider raw output); each document = one (edge, supporting episode) pair"
+ "note": "derived from AMB's context listing (AMB does not persist provider raw output); each document = one (edge, supporting episode) pair",
+ "distinct_fact_texts_returned": 44,
+ "facts_mapped_to_more_than_one_belief": 0,
+ "cases_containing_a_repeated_identical_fact_under_the_same_belief": 36,
+ "repeated_fact_note": "the 3B extractor created three edges with identical fact text for b-error-handling; together they occupy 68 of 1391 returned slots",
+ "returned_vs_resolved_note": "1391 returned vs 1371 source_id resolutions: the difference is the budget-zero case (AMB 'retrieval_limit or 20')",
+ "corrected_after_review": "replaces an earlier, wrong field 'facts_listed_under_more_than_one_belief: 36'"
 }

@@ -49,11 +49,13 @@
  "notes": [
   "Launch HEAD 2522e474 (execution-identity records the post-run HEAD b637f8d); bridge and shim blobs equal the preregistration; runner differs from the preregistered blob only by three additive provider registrations.",
   "167 chat calls, 253,829 prompt + 9,010 completion tokens, all local; 225 embedding requests; all HTTP 200.",
-  "Shared 4-vCPU host; per-episode timings indicative."
+  "Shared 4-vCPU host; per-episode timings indicative.",
+  "Runs launched with PYTHONHASHSEED=0 (detached launcher)."
  ],
  "limitations": [
   "Graphiti with a local 3B model, not with a frontier LLM, and not Zep's hosted product.",
-  "Candidate: requires independent review.",
-  "Two complete runs; byte-identical outcomes and LLM completions (temperature 0, seed 0, single inference slot)."
- ]
+  "Two complete runs: outcome-identical AMB output (differences only in timing fields) and byte-identical LLM requests/completions (temperature 0, seed 0, single inference slot).",
+  "Candidate: independently reviewed (independent-review-812-graphiti.md), not accepted."
+ ],
+ "python": "3.12.3"
 }

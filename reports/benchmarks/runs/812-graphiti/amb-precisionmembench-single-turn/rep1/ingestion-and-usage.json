@@ -7,11 +7,11 @@
  "episodes_with_zero_edges": 0,
  "ingest_seconds_total": 11455.5,
  "ingest_seconds_median": 213.6,
- "queries_with_provider_raw": 0,
+ "queries_with_provider_raw": null,
  "edges_returned_mean": null,
- "unmapped_edges_total": 0,
- "returned_edges_with_invalid_or_expired": 0,
- "returned_edges_with_multiple_source_episodes": 0,
+ "unmapped_edges_total": null,
+ "returned_edges_with_invalid_or_expired": null,
+ "returned_edges_with_multiple_source_episodes": null,
  "llm_chat_calls": 167,
  "llm_chat_status": [
   200
@@ -23,5 +23,7 @@
  "embedding_status": [
   200
  ],
- "amb_id_resolution": "source_id=1371 (no doc_id/marker/lexical fallback)"
+ "amb_id_resolution": "source_id=1371 (no doc_id/marker/lexical fallback)",
+ "unmeasured_note": "AMB does not persist provider raw output; per-query edge fields are not measurable from the run output (null). Mapping facts derived from AMB's context listing are in mapping-from-amb-context.json.",
+ "nodes_edges_note": "entity_nodes_extracted / fact_edges_extracted are sums of per-episode counts, not distinct graph totals"
 }
