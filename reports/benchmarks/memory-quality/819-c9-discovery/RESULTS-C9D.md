@@ -93,7 +93,7 @@ None is a governance refusal or a budget cut. This is the C8 review's "discovery
 | P1 | Route off = C4 | **Met.** Identical returned and admitted lists on all 7 sets (30–57 queries each) |
 | P2 | `ranked_prefix` with the route on = C4+sem | **Met.** Identical on merged, longitudinal and gen (115 queries) |
 | P3 | Five inherited sets, route on = C4+sem | **Met.** Identical returned lists on 238/238 queries (observed before preregistration; disclosed) |
-| P4 | LongMemEval-S, route on = C4+sem | see §4.1 |
+| P4 | LongMemEval-S, route on = C4+sem | **Met.** 40-question turn-plane subset identical apart from timing; 0 refusable candidates (§4.1) |
 | P5 | Longitudinal: discovery gain, returned needed ≥, 0 leaks | **Not met.** Discovery 41/48 = 41/48, returned 28 = 28, strict 0 W / 0 L, 0 leaks. Extras +1 (51 → 52) |
 | P6 | p50 ≤ C4+sem + 10 ms at ~200 memories | **Met.** 71.3 ms against 75.7 ms (§4.2) |
 
@@ -117,7 +117,7 @@ The full per-set table for all five arms is in `evidence/TABLE.md`.
 
 ### 4.1 LongMemEval-S (P4)
 
-The runner only `remember`s unique refs, so no fact is refusable and C9-D cannot differ by construction. Empirical check: a deterministic 40-question subset (`--subset-size 40`, default seed), turn plane, semantic required, input sha256 `d6f21ea9…`. Result: `evidence/LME-PARITY.md`.
+The runner only `remember`s unique refs, so no fact is refusable and C9-D cannot differ by construction. Empirical check: a deterministic 40-question subset (`--subset-size 40`, default seed), turn plane, semantic required, input sha256 `d6f21ea9…`. **Result: identical** apart from timing fields. recall_all@5/@10/@50 = 0.667/0.788/0.879 in both arms, with `refused_candidate_count_total` 0. See `evidence/LME-PARITY.md`.
 
 ### 4.2 Cost (P6): met
 
