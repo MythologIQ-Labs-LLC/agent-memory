@@ -14,9 +14,11 @@
   "needed_in_top_budget": 28,
   "needed_in_top_budget_withheld": 5,
   "extra": 15,
+  "safety_violations": 0,
+  "excluded_returned": 2,
   "no_answer_returning": 1,
   "recall": 0.5435,
-  "recall_p50_ms": 201.62
+  "recall_p50_ms": 54.32
  },
  "rows": [
   {
@@ -81,8 +83,10 @@
     "memory:car"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 1483.73
+   "recall_ms": 235.19
   },
   {
    "scenario": "dev-household",
@@ -151,8 +155,10 @@
    "admitted_count": 1,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 106.04
+   "recall_ms": 24.43
   },
   {
    "scenario": "dev-household",
@@ -259,8 +265,10 @@
     "memory:insurance"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 183.34
+   "recall_ms": 20.2
   },
   {
    "scenario": "dev-household",
@@ -369,8 +377,10 @@
     "memory:boiler"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 57.98
+   "recall_ms": 35.87
   },
   {
    "scenario": "dev-household",
@@ -459,8 +469,10 @@
    "admitted_count": 7,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 345.87
+   "recall_ms": 28.53
   },
   {
    "scenario": "dev-household",
@@ -565,8 +577,10 @@
    "admitted_count": 6,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 38.84
+   "recall_ms": 18.14
   },
   {
    "scenario": "dev-household",
@@ -613,8 +627,10 @@
     "memory:dog"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 285.48
+   "recall_ms": 30.23
   },
   {
    "scenario": "dev-work",
@@ -693,8 +709,10 @@
     "memory:employer"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 860.93
+   "recall_ms": 410.5
   },
   {
    "scenario": "dev-work",
@@ -782,8 +800,10 @@
    "admitted_count": 4,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 121.16
+   "recall_ms": 62.31
   },
   {
    "scenario": "dev-work",
@@ -908,8 +928,10 @@
     "memory:employer",
     "memory:standup"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 354.7
+   "recall_ms": 103.89
   },
   {
    "scenario": "dev-work",
@@ -1014,8 +1036,10 @@
    "admitted_count": 6,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 315.41
+   "recall_ms": 49.36
   },
   {
    "scenario": "dev-work",
@@ -1103,8 +1127,10 @@
    "admitted_count": 4,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 152.56
+   "recall_ms": 56.0
   },
   {
    "scenario": "dev-work",
@@ -1193,8 +1219,10 @@
    "admitted_count": 7,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 288.6
+   "recall_ms": 68.11
   },
   {
    "scenario": "dev-work",
@@ -1308,8 +1336,10 @@
     "memory:employer",
     "memory:hire2"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 43.21
+   "recall_ms": 119.77
   },
   {
    "scenario": "dev-work",
@@ -1388,8 +1418,10 @@
     "memory:budget"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 294.84
+   "recall_ms": 19.89
   },
   {
    "scenario": "dev-travel",
@@ -1436,8 +1468,10 @@
    "extra": [
     "memory:visa"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 473.61
+   "recall_ms": 138.04
   },
   {
    "scenario": "dev-travel",
@@ -1537,8 +1571,10 @@
    "extra": [
     "memory:rail"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 169.47
+   "recall_ms": 57.95
   },
   {
    "scenario": "dev-travel",
@@ -1565,8 +1601,10 @@
    "admitted_count": 0,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 294.94
+   "recall_ms": 33.03
   },
   {
    "scenario": "dev-travel",
@@ -1673,8 +1711,10 @@
     "memory:visa"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 177.49
+   "recall_ms": 55.9
   },
   {
    "scenario": "dev-travel",
@@ -1781,8 +1821,10 @@
    "extra": [
     "memory:visa"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 175.27
+   "recall_ms": 21.34
   },
   {
    "scenario": "dev-travel",
@@ -1825,8 +1867,10 @@
    "admitted_count": 1,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 205.24
+   "recall_ms": 39.35
   },
   {
    "scenario": "dev-travel",
@@ -1920,8 +1964,10 @@
    "extra": [
     "memory:flight"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 201.62
+   "recall_ms": 37.76
   },
   {
    "scenario": "dev-health",
@@ -2049,8 +2095,10 @@
    "extra": [
     "memory:eye"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 555.51
+   "recall_ms": 179.79
   },
   {
    "scenario": "dev-health",
@@ -2099,8 +2147,10 @@
     "memory:gp"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 153.13
+   "recall_ms": 64.69
   },
   {
    "scenario": "dev-health",
@@ -2162,8 +2212,10 @@
     "memory:dentist"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 479.79
+   "recall_ms": 69.9
   },
   {
    "scenario": "dev-health",
@@ -2238,8 +2290,10 @@
    "admitted_count": 3,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 272.97
+   "recall_ms": 63.54
   },
   {
    "scenario": "dev-health",
@@ -2301,8 +2355,10 @@
     "memory:eye"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 74.81
+   "recall_ms": 165.21
   },
   {
    "scenario": "dev-health",
@@ -2331,8 +2387,10 @@
    "admitted_count": 1,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 502.95
+   "recall_ms": 180.72
   },
   {
    "scenario": "dev-health",
@@ -2409,8 +2467,10 @@
     "memory:run"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 126.48
+   "recall_ms": 54.32
   },
   {
    "scenario": "dev-family",
@@ -2472,8 +2532,10 @@
     "memory:mom"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 701.27
+   "recall_ms": 206.94
   },
   {
    "scenario": "dev-family",
@@ -2522,8 +2584,10 @@
     "memory:sister"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 189.4
+   "recall_ms": 34.35
   },
   {
    "scenario": "dev-family",
@@ -2585,8 +2649,10 @@
    "extra": [
     "memory:mom"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 42.76
+   "recall_ms": 18.97
   },
   {
    "scenario": "dev-family",
@@ -2678,8 +2744,10 @@
    "extra": [
     "memory:reunion"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 50.69
+   "recall_ms": 35.74
   },
   {
    "scenario": "dev-family",
@@ -2744,8 +2812,10 @@
     "memory:grandma"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 193.43
+   "recall_ms": 40.14
   },
   {
    "scenario": "dev-family",
@@ -2834,8 +2904,10 @@
    "admitted_count": 5,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 842.65
+   "recall_ms": 26.14
   },
   {
    "scenario": "dev-project",
@@ -2948,8 +3020,12 @@
     "memory:stuffing",
     "memory:stack"
    ],
+   "violations": [],
+   "excluded_returned": [
+    "memory:stuffing"
+   ],
    "passed": false,
-   "recall_ms": 716.73
+   "recall_ms": 258.86
   },
   {
    "scenario": "dev-project",
@@ -2976,8 +3052,10 @@
    "admitted_count": 0,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 254.73
+   "recall_ms": 34.42
   },
   {
    "scenario": "dev-project",
@@ -3097,8 +3175,10 @@
    "admitted_count": 8,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 120.3
+   "recall_ms": 114.41
   },
   {
    "scenario": "dev-project",
@@ -3207,8 +3287,10 @@
     "memory:client"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 225.73
+   "recall_ms": 60.13
   },
   {
    "scenario": "dev-project",
@@ -3317,8 +3399,12 @@
    "extra": [
     "memory:injection"
    ],
+   "violations": [],
+   "excluded_returned": [
+    "memory:injection"
+   ],
    "passed": false,
-   "recall_ms": 347.42
+   "recall_ms": 57.74
   },
   {
    "scenario": "dev-project",
@@ -3407,8 +3493,10 @@
    "admitted_count": 9,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 170.08
+   "recall_ms": 68.41
   },
   {
    "scenario": "dev-correction",
@@ -3451,8 +3539,10 @@
    "admitted_count": 1,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 708.68
+   "recall_ms": 323.86
   },
   {
    "scenario": "dev-correction",
@@ -3546,8 +3636,10 @@
     "memory:gym2"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 177.33
+   "recall_ms": 48.57
   },
   {
    "scenario": "dev-correction",
@@ -3641,8 +3733,10 @@
     "memory:coach"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 93.92
+   "recall_ms": 49.88
   },
   {
    "scenario": "dev-correction",
@@ -3721,8 +3815,10 @@
     "memory:car2"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 199.94
+   "recall_ms": 21.39
   },
   {
    "scenario": "dev-scope",
@@ -3786,8 +3882,10 @@
     "memory:pin"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 206.62
+   "recall_ms": 42.48
   },
   {
    "scenario": "dev-scope",
@@ -3831,8 +3929,10 @@
    "admitted_count": 2,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 126.51
+   "recall_ms": 26.86
   },
   {
    "scenario": "dev-scope",
@@ -3845,8 +3945,10 @@
    "admitted_count": 0,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 111.09
+   "recall_ms": 32.94
   }
  ]
 }

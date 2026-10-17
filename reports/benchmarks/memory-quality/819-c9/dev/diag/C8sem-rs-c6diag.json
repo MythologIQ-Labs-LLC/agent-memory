@@ -14,9 +14,11 @@
   "needed_in_top_budget": 21,
   "needed_in_top_budget_withheld": 4,
   "extra": 8,
+  "safety_violations": 0,
+  "excluded_returned": 2,
   "no_answer_returning": 3,
   "recall": 0.5625,
-  "recall_p50_ms": 259.3
+  "recall_p50_ms": 63.03
  },
  "rows": [
   {
@@ -123,8 +125,10 @@
    "extra": [
     "memory:pets-n8"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 2146.09
+   "recall_ms": 788.05
   },
   {
    "scenario": "pets",
@@ -216,8 +220,10 @@
     "memory:vet"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 122.93
+   "recall_ms": 29.82
   },
   {
    "scenario": "pets",
@@ -324,8 +330,10 @@
     "memory:petfood"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 516.48
+   "recall_ms": 105.03
   },
   {
    "scenario": "pets",
@@ -434,8 +442,10 @@
     "memory:dog"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 546.65
+   "recall_ms": 68.17
   },
   {
    "scenario": "pets",
@@ -528,8 +538,10 @@
    "extra": [
     "memory:toy"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 260.16
+   "recall_ms": 82.88
   },
   {
    "scenario": "work",
@@ -639,8 +651,12 @@
    "extra": [
     "memory:stuffing"
    ],
+   "violations": [],
+   "excluded_returned": [
+    "memory:stuffing"
+   ],
    "passed": false,
-   "recall_ms": 1124.65
+   "recall_ms": 490.81
   },
   {
    "scenario": "work",
@@ -780,8 +796,10 @@
    "extra": [
     "memory:work-n16"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 217.85
+   "recall_ms": 93.45
   },
   {
    "scenario": "work",
@@ -856,8 +874,10 @@
    "admitted_count": 3,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 259.3
+   "recall_ms": 66.2
   },
   {
    "scenario": "work",
@@ -962,8 +982,10 @@
    "admitted_count": 6,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 293.73
+   "recall_ms": 51.3
   },
   {
    "scenario": "work",
@@ -1074,8 +1096,12 @@
    "extra": [
     "memory:stuffing"
    ],
+   "violations": [],
+   "excluded_returned": [
+    "memory:stuffing"
+   ],
    "passed": false,
-   "recall_ms": 96.01
+   "recall_ms": 98.87
   },
   {
    "scenario": "health",
@@ -1186,8 +1212,10 @@
     "memory:med2"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 791.76
+   "recall_ms": 418.37
   },
   {
    "scenario": "health",
@@ -1296,8 +1324,10 @@
     "memory:gp"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 125.22
+   "recall_ms": 63.03
   },
   {
    "scenario": "health",
@@ -1376,8 +1406,10 @@
     "memory:bp"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 69.61
+   "recall_ms": 87.01
   },
   {
    "scenario": "health",
@@ -1466,8 +1498,10 @@
    "admitted_count": 6,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 284.6
+   "recall_ms": 81.34
   },
   {
    "scenario": "health",
@@ -1576,8 +1610,10 @@
     "memory:knee"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 180.69
+   "recall_ms": 57.93
   },
   {
    "scenario": "travel",
@@ -1680,8 +1716,10 @@
    "admitted_count": 6,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 1617.3
+   "recall_ms": 401.18
   },
   {
    "scenario": "travel",
@@ -1771,8 +1809,10 @@
     "memory:flight"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 415.83
+   "recall_ms": 16.0
   },
   {
    "scenario": "travel",
@@ -1799,8 +1839,10 @@
    "admitted_count": 0,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 433.85
+   "recall_ms": 15.64
   },
   {
    "scenario": "travel",
@@ -1903,8 +1945,10 @@
    "admitted_count": 8,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 165.58
+   "recall_ms": 22.49
   },
   {
    "scenario": "travel",
@@ -1998,8 +2042,10 @@
    "extra": [
     "memory:flight"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 102.81
+   "recall_ms": 59.09
   },
   {
    "scenario": "governance",
@@ -2093,8 +2139,10 @@
     "memory:car"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 805.7
+   "recall_ms": 321.4
   },
   {
    "scenario": "governance",
@@ -2183,8 +2231,10 @@
    "admitted_count": 21,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 119.21
+   "recall_ms": 36.77
   },
   {
    "scenario": "governance",
@@ -2228,8 +2278,10 @@
    "admitted_count": 2,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 80.54
+   "recall_ms": 58.41
   },
   {
    "scenario": "governance",
@@ -2277,8 +2329,10 @@
    "extra": [
     "memory:gov-n8"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 294.08
+   "recall_ms": 35.38
   },
   {
    "scenario": "governance",
@@ -2387,8 +2441,10 @@
     "memory:oldaddr"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 212.58
+   "recall_ms": 23.06
   },
   {
    "scenario": "project",
@@ -2500,8 +2556,10 @@
    "extra": [
     "memory:project-n16"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 1046.94
+   "recall_ms": 450.51
   },
   {
    "scenario": "project",
@@ -2604,8 +2662,10 @@
    "admitted_count": 5,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 77.79
+   "recall_ms": 20.3
   },
   {
    "scenario": "project",
@@ -2725,8 +2785,10 @@
    "admitted_count": 25,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 62.1
+   "recall_ms": 30.26
   },
   {
    "scenario": "project",
@@ -2834,8 +2896,10 @@
     "memory:client"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 61.37
+   "recall_ms": 57.12
   },
   {
    "scenario": "project",
@@ -2884,8 +2948,10 @@
     "memory:hosting"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 63.02
+   "recall_ms": 28.42
   }
  ]
 }

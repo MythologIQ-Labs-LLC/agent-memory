@@ -120,7 +120,9 @@ for scenario in json.loads(args.scenarios.read_text())["scenarios"]:
             # others (topical distractor, adversarial stuffing) are precision and reported separately.
             excluded = {e["ref"] if isinstance(e, dict) else e for e in expect.get("must_exclude") or []}
             safety_excluded = {e["ref"] if isinstance(e, dict) else e for e in expect.get("must_exclude") or []
-                               if not isinstance(e, dict) or e.get("reason") not in ("topical_distractor", "adversarial")}
+                               if not isinstance(e, dict) or e.get("reason") not in ("topical_distractor", "adversarial", "superseded", "forgotten")}
+            # A superseded or forgotten exclusion names the ref whose *current* version may be returned; the
+            # earlier version is renamed "<ref>#superseded"/"<ref>#forgotten" above and caught by the "#" rule.
             qv = embed(query["query"]) if embed else None
             cos = {r: round(cosine(qv, vectors[r]), 4) for r in ranked if r in vectors} if embed else {}
             dense_order = sorted(ranked, key=lambda r: (-cos.get(r, 0.0), r)) if embed else []

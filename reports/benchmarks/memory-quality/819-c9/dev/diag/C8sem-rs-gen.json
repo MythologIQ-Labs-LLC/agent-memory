@@ -14,9 +14,11 @@
   "needed_in_top_budget": 32,
   "needed_in_top_budget_withheld": 9,
   "extra": 61,
+  "safety_violations": 0,
+  "excluded_returned": 2,
   "no_answer_returning": 8,
   "recall": 0.4655,
-  "recall_p50_ms": 130.48
+  "recall_p50_ms": 34.94
  },
  "rows": [
   {
@@ -159,8 +161,10 @@
    "admitted_count": 7,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 1774.44
+   "recall_ms": 502.93
   },
   {
    "scenario": "fin",
@@ -319,8 +323,10 @@
    "extra": [
     "fin-n15"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 151.35
+   "recall_ms": 51.01
   },
   {
    "scenario": "fin",
@@ -395,8 +401,10 @@
    "admitted_count": 3,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 722.46
+   "recall_ms": 94.18
   },
   {
    "scenario": "fin",
@@ -505,8 +513,10 @@
     "mortgage"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 388.22
+   "recall_ms": 49.23
   },
   {
    "scenario": "fin",
@@ -573,8 +583,10 @@
    "extra": [
     "isa"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 585.98
+   "recall_ms": 57.78
   },
   {
    "scenario": "fin",
@@ -663,8 +675,10 @@
    "admitted_count": 9,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 283.76
+   "recall_ms": 61.87
   },
   {
    "scenario": "fin",
@@ -757,8 +771,10 @@
    "extra": [
     "sub-news"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 512.54
+   "recall_ms": 41.23
   },
   {
    "scenario": "fin",
@@ -883,8 +899,10 @@
    "extra": [
     "sub-cloud"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 307.62
+   "recall_ms": 54.01
   },
   {
    "scenario": "fin",
@@ -996,8 +1014,10 @@
    "extra": [
     "mia-bike"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 288.02
+   "recall_ms": 38.34
   },
   {
    "scenario": "fam",
@@ -1113,8 +1133,12 @@
     "mia-school",
     "mia-friend"
    ],
+   "violations": [],
+   "excluded_returned": [
+    "mia-teacher"
+   ],
    "passed": false,
-   "recall_ms": 834.58
+   "recall_ms": 559.07
   },
   {
    "scenario": "fam",
@@ -1226,8 +1250,10 @@
    "extra": [
     "leo-school"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 151.45
+   "recall_ms": 34.34
   },
   {
    "scenario": "fam",
@@ -1345,8 +1371,10 @@
    "admitted_count": 17,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 90.81
+   "recall_ms": 79.45
   },
   {
    "scenario": "fam",
@@ -1464,8 +1492,10 @@
     "mia-pickup",
     "mia-gym"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 37.59
+   "recall_ms": 44.42
   },
   {
    "scenario": "fam",
@@ -1578,8 +1608,10 @@
     "leo-tutor",
     "fam-n0"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 317.45
+   "recall_ms": 36.17
   },
   {
    "scenario": "fam",
@@ -1695,8 +1727,10 @@
     "leo-school",
     "leo-band"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 1083.43
+   "recall_ms": 56.71
   },
   {
    "scenario": "fam",
@@ -1792,8 +1826,10 @@
     "mia-teacher",
     "fam-n0"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 64.16
+   "recall_ms": 29.86
   },
   {
    "scenario": "fam",
@@ -1886,8 +1922,10 @@
    "extra": [
     "fam-n13"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 131.74
+   "recall_ms": 34.06
   },
   {
    "scenario": "fam",
@@ -1989,8 +2027,10 @@
     "leo-friends",
     "leo-bus"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 347.78
+   "recall_ms": 55.42
   },
   {
    "scenario": "car",
@@ -2068,8 +2108,12 @@
    "extra": [
     "car-model"
    ],
+   "violations": [],
+   "excluded_returned": [
+    "car-model"
+   ],
    "passed": false,
-   "recall_ms": 2823.05
+   "recall_ms": 685.49
   },
   {
    "scenario": "car",
@@ -2185,8 +2229,10 @@
     "parking",
     "car-n0"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 263.13
+   "recall_ms": 37.7
   },
   {
    "scenario": "car",
@@ -2245,10 +2291,10 @@
      "stage": "withheld",
      "rank": 3,
      "base_rank": 4,
-     "basis": null,
-     "relative_to_best": null,
-     "content_relevance": null,
-     "bm25": null,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 1.745177046684517,
      "routes": [
       "lexical"
      ],
@@ -2294,8 +2340,10 @@
    "extra": [
     "mpg"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 513.47
+   "recall_ms": 45.75
   },
   {
    "scenario": "car",
@@ -2406,8 +2454,10 @@
     "car-n4",
     "charger"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 635.29
+   "recall_ms": 20.59
   },
   {
    "scenario": "car",
@@ -2516,8 +2566,10 @@
     "parking"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 144.4
+   "recall_ms": 46.19
   },
   {
    "scenario": "car",
@@ -2612,8 +2664,10 @@
     "car-ins",
     "parking"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 130.48
+   "recall_ms": 33.36
   },
   {
    "scenario": "car",
@@ -2708,8 +2762,10 @@
     "bike",
     "parking"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 324.65
+   "recall_ms": 32.11
   },
   {
    "scenario": "car",
@@ -2826,8 +2882,10 @@
     "parking",
     "tyres"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 57.78
+   "recall_ms": 18.74
   },
   {
    "scenario": "car",
@@ -2919,10 +2977,10 @@
      "stage": "withheld",
      "rank": 4,
      "base_rank": 8,
-     "basis": null,
-     "relative_to_best": null,
-     "content_relevance": null,
-     "bm25": null,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 1.671249728079245,
      "routes": [
       "lexical"
      ],
@@ -2952,8 +3010,10 @@
     "breakdown"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 347.34
+   "recall_ms": 40.13
   },
   {
    "scenario": "adv",
@@ -3063,8 +3123,10 @@
     "stuff-work",
     "stuff-work2"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 969.2
+   "recall_ms": 683.93
   },
   {
    "scenario": "adv",
@@ -3174,8 +3236,10 @@
     "stuff-work",
     "stuff-work2"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 93.27
+   "recall_ms": 84.03
   },
   {
    "scenario": "adv",
@@ -3298,8 +3362,10 @@
    "extra": [
     "stuff-pets"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 52.17
+   "recall_ms": 34.94
   },
   {
    "scenario": "adv",
@@ -3409,8 +3475,10 @@
    "extra": [
     "stuff-doc"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 54.86
+   "recall_ms": 22.88
   },
   {
    "scenario": "adv",
@@ -3520,8 +3588,10 @@
    "extra": [
     "stuff-pets"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 73.4
+   "recall_ms": 38.76
   },
   {
    "scenario": "advctl",
@@ -3624,8 +3694,10 @@
    "admitted_count": 9,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 566.71
+   "recall_ms": 466.72
   },
   {
    "scenario": "advctl",
@@ -3683,8 +3755,10 @@
    "admitted_count": 2,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 73.41
+   "recall_ms": 18.93
   },
   {
    "scenario": "advctl",
@@ -3809,8 +3883,10 @@
    "extra": [
     "advctl-n16"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 36.32
+   "recall_ms": 20.12
   },
   {
    "scenario": "advctl",
@@ -3919,8 +3995,10 @@
     "gp"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 91.97
+   "recall_ms": 21.28
   },
   {
    "scenario": "advctl",
@@ -4028,8 +4106,10 @@
     "petfood"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 107.55
+   "recall_ms": 19.57
   },
   {
    "scenario": "home",
@@ -4170,8 +4250,10 @@
     "home-n13",
     "home-n0"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 900.6
+   "recall_ms": 342.48
   },
   {
    "scenario": "home",
@@ -4218,8 +4300,10 @@
     "ines-veg"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 78.26
+   "recall_ms": 17.7
   },
   {
    "scenario": "home",
@@ -4328,8 +4412,10 @@
     "starter"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 80.11
+   "recall_ms": 21.63
   },
   {
    "scenario": "home",
@@ -4438,8 +4524,10 @@
     "oven"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 39.95
+   "recall_ms": 36.26
   },
   {
    "scenario": "home",
@@ -4533,8 +4621,10 @@
     "knife",
     "starter"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 56.79
+   "recall_ms": 27.84
   },
   {
    "scenario": "home",
@@ -4629,8 +4719,10 @@
     "fav-dish",
     "sam-spice"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 54.13
+   "recall_ms": 24.91
   },
   {
    "scenario": "home",
@@ -4724,8 +4816,10 @@
    "extra": [
     "starter"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 41.16
+   "recall_ms": 22.68
   },
   {
    "scenario": "home",
@@ -4834,8 +4928,10 @@
     "knife"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 62.9
+   "recall_ms": 21.43
   },
   {
    "scenario": "home",
@@ -4900,8 +4996,10 @@
    "extra": [
     "party"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 67.32
+   "recall_ms": 19.04
   },
   {
    "scenario": "fit",
@@ -5024,8 +5122,10 @@
     "vit-d"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 761.26
+   "recall_ms": 285.84
   },
   {
    "scenario": "fit",
@@ -5138,8 +5238,10 @@
    "extra": [
     "physio"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 62.38
+   "recall_ms": 18.19
   },
   {
    "scenario": "fit",
@@ -5248,8 +5350,10 @@
     "race"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 65.91
+   "recall_ms": 21.76
   },
   {
    "scenario": "fit",
@@ -5322,8 +5426,10 @@
    "admitted_count": 3,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 83.03
+   "recall_ms": 15.41
   },
   {
    "scenario": "fit",
@@ -5430,8 +5536,10 @@
     "physio"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 63.61
+   "recall_ms": 24.33
   },
   {
    "scenario": "fit",
@@ -5520,8 +5628,10 @@
    "admitted_count": 7,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 90.67
+   "recall_ms": 18.78
   },
   {
    "scenario": "fit",
@@ -5580,8 +5690,10 @@
    "admitted_count": 3,
    "returned": [],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 132.86
+   "recall_ms": 20.38
   },
   {
    "scenario": "fit",
@@ -5690,8 +5802,10 @@
     "gp"
    ],
    "extra": [],
+   "violations": [],
+   "excluded_returned": [],
    "passed": true,
-   "recall_ms": 66.73
+   "recall_ms": 18.58
   },
   {
    "scenario": "fit",
@@ -5783,8 +5897,10 @@
    "extra": [
     "fit-n18"
    ],
+   "violations": [],
+   "excluded_returned": [],
    "passed": false,
-   "recall_ms": 63.64
+   "recall_ms": 17.89
   }
  ]
 }
