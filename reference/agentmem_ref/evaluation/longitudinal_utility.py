@@ -32,6 +32,8 @@ import tempfile
 from pathlib import Path
 from typing import Any, Callable, Mapping, Sequence
 
+from .._paths import REFERENCE_ROOT
+
 HARNESS_VERSION = "1.0.0"
 DEFAULT_BUDGET = 5
 NOT_CURRENT_LABELS = frozenset({"outside_target_interval", "prospectively_applicable",
@@ -39,7 +41,7 @@ NOT_CURRENT_LABELS = frozenset({"outside_target_interval", "prospectively_applic
 NOT_CURRENT_REFUSALS = frozenset({"superseded_not_current", "tombstoned", "not_current"})
 OUTCOME_CLASSES = ("stale_used", "incorrect_supersession", "missing_current", "missing_dependency",
                    "history_lost", "isolation_violation", "unnecessary_abstention")
-FIXTURE_PATH = Path(__file__).resolve().parents[2] / "fixtures" / "benchmarks" / "longitudinal-utility" / "scenarios-v1.json"
+FIXTURE_PATH = REFERENCE_ROOT / "fixtures" / "benchmarks" / "longitudinal-utility" / "scenarios-v1.json"
 
 
 class LongitudinalError(ValueError):

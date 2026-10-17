@@ -100,7 +100,7 @@ still return the replaced value as labelled history.
   relation refused under unspecified; hedged / other source / attributed / declared-window
   guards still refuse; unknown mode rejected.
 - Focused existing suites (cross-fact, temporal, ranking, facade, API, contracts, recall,
-  propositions): 629 tests OK. Full-suite comparison against `main`: see `TEST-RECORD.md`.
+  propositions): 629 tests OK. Full suite vs `main`: no new failures after the layout fix (4 pre-existing failures on both); see `TEST-RECORD.md`.
 
 ## Limits
 
