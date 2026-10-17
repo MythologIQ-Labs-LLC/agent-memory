@@ -957,6 +957,10 @@ class AgentMemory:
         # #819 C7: sufficiency is decided on the 3.4.0 order, so rank fusion cannot make a fact
         # sufficient; the fused order then orders the selected facts and decides the budget cut.
         base = list(getattr(result, "base_ranked_admitted", None) or result.ranked_admitted)
+        evidence = getattr(result, "ranking_evidence", {}) or {}
+        dense = {ref: float(record["fusion"]["dense_similarity"]) for ref, record in evidence.items()
+                 if (record.get("fusion") or {}).get("status") == "applied"
+                 and record["fusion"].get("dense_similarity") is not None}
         selected, records, summary = select_relevance_sufficient(
             base,
             routes,
@@ -967,6 +971,9 @@ class AgentMemory:
             exact_identity_route=EXACT_IDENTITY_ROUTE,
             subordinate_routes=getattr(MULTI_ROUTE_RANKING_POLICY, "subordinate_routes", ()),
             lifecycle_successors=successors,
+            # #819 C9: the fused order and its own dense similarities, only when fusion ordered this recall.
+            fused_order=list(result.ranked_admitted) if dense else None,
+            dense_similarity=dense or None,
         )
         for ref, record in records.items():
             admissions.setdefault(ref, {})["return_selection"] = record

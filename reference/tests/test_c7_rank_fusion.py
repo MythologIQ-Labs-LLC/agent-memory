@@ -220,19 +220,26 @@ class Invariants(_Store):
             self.assertNotIn("used to hide", blob)
             self.assertNotIn("ferret", blob)
 
-    def test_fusion_does_not_make_a_below_floor_memory_sufficient(self):
-        # 'serviced' is below the relevance floor on BM25 and its cosine is under the C6 proposal
-        # threshold, so no route makes it sufficient. Fusion may lift it above the best
-        # primary-evidence fact, but sufficiency is decided on the base order.
+    def test_fusion_alone_does_not_make_a_memory_sufficient(self):
+        # Restated by #819 C9 (preregistered in 819-c9/PREREGISTRATION-C9.md). 'serviced' is below the
+        # relevance floor on BM25 and its cosine is under the C6 proposal threshold. Under selection
+        # policy 2.4.0 it is returned as corroborated_rank: it has topical evidence, fusion places it
+        # above 'manual', and it is more similar than 'manual'. 'f1' and 'f2' are as similar but share
+        # no topical term, so fusion and similarity alone still never make them sufficient. The
+        # less-similar case is test_c9_corroborated_selection's
+        # test_a_topical_memory_less_similar_than_the_evidence_stays_withheld.
         sims = {"memory:serviced": 0.35, "memory:f1": 0.30, "memory:f2": 0.25, "memory:manual": 0.10}
         _TableRepresentation.TABLE = {BOILER: {BOILER_FACTS[ref]: value for ref, value in sims.items()}}
         memory = self.open()
         self.seed(memory, BOILER_FACTS)
         result = memory.recall(BOILER, budget=10)
         decisions = {self.refs[u]: d.get("return_selection", {}) for u, d in result["admissions"].items() if u in self.refs}
-        self.assertEqual(decisions["memory:serviced"].get("basis"), "below_relative_floor")
-        self.assertNotIn("memory:serviced", self.ids(result["returned"]))
+        self.assertEqual(decisions["memory:serviced"].get("basis"), "corroborated_rank")
+        self.assertIn("memory:serviced", self.ids(result["returned"]))
         self.assertIn("memory:manual", self.ids(result["returned"]))
+        for ref in ("memory:f1", "memory:f2"):
+            self.assertEqual(decisions[ref].get("basis"), "no_informative_term_match")
+            self.assertNotIn(ref, self.ids(result["returned"]))
 
     def test_exact_ties_order_identically_across_fresh_stores_and_hash_seeds(self):
         script = r'''

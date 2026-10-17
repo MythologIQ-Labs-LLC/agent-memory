@@ -61,6 +61,16 @@ half the best relevance to it is covered; only an uncovered entity brings anothe
 best match is promoted, not ordering noise below it). Each admitted fact's record states the
 requirement served and the query terms and entities it added.
 
+Policy 2.4.0 (#819 C9) adds **corroborated-rank sufficiency**. C8 ranks admitted facts by fusing
+BM25, shared-evidence and dense ranks but decides sufficiency on the 3.4.0 order, so a fact fusion
+placed in the top of the list stayed withheld when its BM25 was below the floor. When fusion
+applied, a ``below_relative_floor`` fact now joins (``corroborated_rank``) if the fused order places
+it above the lowest selected fact *and* its dense similarity is at least the lowest similarity among
+the selected primary evidence. Topical lexical evidence is required, so dense similarity is never the
+only evidence, and it is compared only with evidence already selected on other grounds, never with an
+absolute threshold: with nothing selected there is no anchor and the recall still abstains. The
+similarities are the fused ranking's own; time-ordering intents skip fusion and so this step.
+
 The stage reads only the admitted, ranked list and its evidence. It never changes candidates,
 admission, refusals, ``admitted`` or the ranked order, and it is never authority: a withheld
 fact is still admitted and still visible to a caller that reads ``admitted`` or asks for the
@@ -86,7 +96,7 @@ from .query_interpretation import QueryInterpretation, interpret, starts_sentenc
 from .temporal_intent import TemporalIntent
 
 SELECTION_POLICY_ID = "relevance-sufficient-return-selection"
-SELECTION_POLICY_VERSION = "2.3.0"
+SELECTION_POLICY_VERSION = "2.4.0"
 SELECTION_BASIS = "post_ranking_relevance_sufficiency_then_ranked_prefix"
 RELATIVE_FLOOR = 0.5
 # 2.0.0: a query that needs several pieces of evidence (aggregate or relational) admits set
@@ -312,6 +322,8 @@ def select_relevance_sufficient(
     subordinate_routes: Iterable[str] = (),
     relative_floor: float = RELATIVE_FLOOR,
     lifecycle_successors: Mapping[str, Iterable[str]] | None = None,
+    fused_order: Sequence[str] | None = None,
+    dense_similarity: Mapping[str, float] | None = None,
 ) -> tuple[list[str], dict[str, dict[str, Any]], dict[str, Any]]:
     """Return (the evidence set in ranked order, per-candidate records, summary).
 
@@ -326,7 +338,10 @@ def select_relevance_sufficient(
        fact is selected too (set evidence does not extend it, 2.1.0).
     4. **Entity coverage**: each entity the query names that no selected fact covers is
        covered by its highest-ranked candidate with topical evidence, if any.
-    5. **Lifecycle closure** (2.2.0): a selected fact that ``lifecycle_successors`` maps to
+    5. **Corroborated rank** (2.4.0): given the fused order and its dense similarities, a
+       ``below_relative_floor`` fact placed above the lowest selected fact and at least as similar
+       as the least similar selected primary fact joins. Without both, nothing changes.
+    6. **Lifecycle closure** (2.2.0): a selected fact that ``lifecycle_successors`` maps to
        later admitted facts (guarded write-time state-change relations) brings them in,
        transitively. Facts outside the ranked admitted list never join.
 
@@ -439,6 +454,23 @@ def select_relevance_sufficient(
         if not records[chosen]["sufficient"]:
             records[chosen].update(sufficient=True, basis="entity_coverage")
         entities_added[chosen] = entities_added.get(chosen, 0) + 1
+    # Corroborated rank (2.4.0): fusion's placement counts only with topical evidence and with dense
+    # agreement relative to evidence already selected; similarity alone never makes a fact sufficient.
+    corroborated_count = 0
+    if fused_order is not None and dense_similarity:
+        fused_position = {ref: index for index, ref in enumerate(fused_order)}
+        chosen = [ref for ref in ranked if records[ref]["sufficient"] and ref in fused_position]
+        anchors = [dense_similarity[ref] for ref in chosen
+                   if records[ref]["basis"] in _PRIMARY and ref in dense_similarity]
+        if chosen and anchors:
+            lowest_selected = max(fused_position[ref] for ref in chosen)
+            agreement = min(anchors)
+            for ref in ranked:
+                if (records[ref]["basis"] == "below_relative_floor"
+                        and fused_position.get(ref, lowest_selected) < lowest_selected
+                        and dense_similarity.get(ref, float("-inf")) >= agreement):
+                    records[ref].update(sufficient=True, basis="corroborated_rank")
+                    corroborated_count += 1
     # Lifecycle closure: a returned state must not travel without the admitted later state that
     # the runtime's guarded write-time evidence says changes it. Transitive; admitted only.
     successors = {ref: tuple(lifecycle_successors.get(ref, ())) for ref in ranked} if lifecycle_successors else {}
@@ -468,6 +500,7 @@ def select_relevance_sufficient(
             seen |= matched[ref]
     summary = {
         "lifecycle_successor_count": closure_count,
+        "corroborated_rank_count": corroborated_count,
         "informative_query_term_count": len(evidence_terms),
         "relative_floor": relative_floor,
         "set_floor": set_floor,

@@ -215,6 +215,8 @@ def apply_return_selection(
         **({"query_expansion": dict(summary["query_expansion"])} if summary.get("query_expansion") else {}),
         **({"lifecycle_successor_count": int(summary["lifecycle_successor_count"])}
            if "lifecycle_successor_count" in summary else {}),
+        **({"corroborated_rank_count": int(summary["corroborated_rank_count"])}
+           if "corroborated_rank_count" in summary else {}),
         "basis": RETURN_SELECTION_BASIS,
         "authority_effect": "none",
     }
