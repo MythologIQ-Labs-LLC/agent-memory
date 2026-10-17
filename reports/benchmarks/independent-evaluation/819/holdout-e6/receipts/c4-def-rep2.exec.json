@@ -1,0 +1,40 @@
+{
+  "argv": [
+    "/home/user/eval/venv-c4/bin/python",
+    "/home/user/eval/holdout-e6/harness.py",
+    "/home/user/eval/holdout-e6/cases.json",
+    "/home/user/eval/e6-results/c4-def-rep2.json.partial",
+    "--semantic",
+    "off",
+    "--representation-dir",
+    "/home/user/eval/semantic-model",
+    "--open-kwargs",
+    "{}",
+    "--recall-kwargs",
+    "{}"
+  ],
+  "cwd": "/home/user/eval/am-c4",
+  "exit_status": 0,
+  "started_utc": "2026-10-17T17:43:36Z",
+  "wall_seconds": 36.923,
+  "user_cpu_seconds": 13.145,
+  "system_cpu_seconds": 3.392,
+  "peak_rss_mib": 38.0,
+  "env": {
+    "PYTHONHASHSEED": "0",
+    "AGENT_MEMORY_REPRESENTATION_DIR": null,
+    "HF_HUB_OFFLINE": "1",
+    "OMP_NUM_THREADS": null,
+    "VIRTUAL_ENV": null
+  },
+  "secrets_present": {
+    "OPENAI_API_KEY": false,
+    "ANTHROPIC_API_KEY": false,
+    "HF_TOKEN": false
+  },
+  "host": {
+    "platform": "Linux-6.18.44-fc-v139-x86_64-with-glibc2.39",
+    "cpu_count": 4,
+    "python": "3.13.16"
+  }
+}
