@@ -1,0 +1,3852 @@
+{
+ "reference": "/tmp/claude-0/-home-user-agent-memory/de46b9be-9dfb-5f73-acc8-bb6406f9dc14/scratchpad/wt/c6/reference",
+ "semantic": "required",
+ "budget": 5,
+ "selection": "relevance_sufficient",
+ "summary": {
+  "queries": 48,
+  "strict": 26,
+  "needed": 46,
+  "returned": 25,
+  "withheld": 7,
+  "refused": 0,
+  "not_discovered": 14,
+  "needed_in_top_budget": 28,
+  "needed_in_top_budget_withheld": 5,
+  "extra": 15,
+  "no_answer_returning": 1,
+  "recall": 0.5435,
+  "recall_p50_ms": 218.6
+ },
+ "rows": [
+  {
+   "scenario": "dev-household",
+   "id": "hh-1",
+   "kind": "unlabelled",
+   "query": "What vehicle do we own?",
+   "requirement": "single",
+   "needed": {
+    "memory:car": {
+     "stage": "returned",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.17225472236974856,
+     "routes": [
+      "lexical",
+      "semantic_vector"
+     ],
+     "cosine": 0.483,
+     "dense_rank": 1,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:cat": {
+     "stage": "withheld",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.19363806721564839,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.0987,
+     "dense_rank": 2,
+     "role": "other"
+    },
+    "memory:car": {
+     "stage": "returned",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.17225472236974856,
+     "routes": [
+      "lexical",
+      "semantic_vector"
+     ],
+     "cosine": 0.483,
+     "dense_rank": 1,
+     "role": "must"
+    }
+   },
+   "admitted_count": 2,
+   "returned": [
+    "memory:car"
+   ],
+   "extra": [],
+   "passed": true,
+   "recall_ms": 583.51
+  },
+  {
+   "scenario": "dev-household",
+   "id": "hh-2",
+   "kind": "unlabelled",
+   "query": "Which animals live with us?",
+   "requirement": "single",
+   "needed": {
+    "memory:dog": {
+     "stage": "not_discovered",
+     "rank": null,
+     "base_rank": null,
+     "basis": null,
+     "relative_to_best": null,
+     "content_relevance": null,
+     "bm25": null,
+     "routes": [],
+     "cosine": null,
+     "dense_rank": null,
+     "role": "must"
+    },
+    "memory:cat": {
+     "stage": "not_discovered",
+     "rank": null,
+     "base_rank": null,
+     "basis": null,
+     "relative_to_best": null,
+     "content_relevance": null,
+     "bm25": null,
+     "routes": [],
+     "cosine": null,
+     "dense_rank": null,
+     "role": "must"
+    },
+    "memory:fish": {
+     "stage": "not_discovered",
+     "rank": null,
+     "base_rank": null,
+     "basis": null,
+     "relative_to_best": null,
+     "content_relevance": null,
+     "bm25": null,
+     "routes": [],
+     "cosine": null,
+     "dense_rank": null,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:insurance": {
+     "stage": "withheld",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.28768207245178085,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": -0.028,
+     "dense_rank": 1,
+     "role": "other"
+    }
+   },
+   "admitted_count": 1,
+   "returned": [],
+   "extra": [],
+   "passed": false,
+   "recall_ms": 302.55
+  },
+  {
+   "scenario": "dev-household",
+   "id": "hh-3",
+   "kind": "unlabelled",
+   "query": "When does the house cover come up for renewal?",
+   "requirement": "single",
+   "needed": {
+    "memory:insurance": {
+     "stage": "returned",
+     "rank": 8,
+     "base_rank": 8,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": null,
+     "routes": [
+      "semantic_vector"
+     ],
+     "cosine": 0.5771,
+     "dense_rank": 1,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:car": {
+     "stage": "withheld",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 1.5573264974621508,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.304,
+     "dense_rank": 2,
+     "role": "other"
+    },
+    "memory:wifi": {
+     "stage": "withheld",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.2948478979851073,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.0865,
+     "dense_rank": 6,
+     "role": "other"
+    },
+    "memory:boiler": {
+     "stage": "withheld",
+     "rank": 3,
+     "base_rank": 3,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.28663958266338313,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.219,
+     "dense_rank": 3,
+     "role": "other"
+    },
+    "memory:fish": {
+     "stage": "withheld",
+     "rank": 4,
+     "base_rank": 4,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.21767294482122015,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.0117,
+     "dense_rank": 8,
+     "role": "other"
+    },
+    "memory:cat": {
+     "stage": "withheld",
+     "rank": 5,
+     "base_rank": 5,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.21767294482122015,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.2112,
+     "dense_rank": 5,
+     "role": "other"
+    }
+   },
+   "admitted_count": 8,
+   "returned": [
+    "memory:insurance"
+   ],
+   "extra": [],
+   "passed": true,
+   "recall_ms": 89.4
+  },
+  {
+   "scenario": "dev-household",
+   "id": "hh-4",
+   "kind": "unlabelled",
+   "query": "Who looked at the heating system?",
+   "requirement": "single",
+   "needed": {
+    "memory:boiler": {
+     "stage": "returned",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.10141502146076009,
+     "routes": [
+      "lexical",
+      "semantic_vector"
+     ],
+     "cosine": 0.498,
+     "dense_rank": 1,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:wifi": {
+     "stage": "withheld",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.1043864870922745,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.1752,
+     "dense_rank": 3,
+     "role": "other"
+    },
+    "memory:boiler": {
+     "stage": "returned",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.10141502146076009,
+     "routes": [
+      "lexical",
+      "semantic_vector"
+     ],
+     "cosine": 0.498,
+     "dense_rank": 1,
+     "role": "must"
+    },
+    "memory:fish": {
+     "stage": "withheld",
+     "rank": 3,
+     "base_rank": 3,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.07676947155269828,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.2295,
+     "dense_rank": 2,
+     "role": "other"
+    },
+    "memory:cat": {
+     "stage": "withheld",
+     "rank": 4,
+     "base_rank": 4,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.07676947155269828,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.0424,
+     "dense_rank": 6,
+     "role": "other"
+    },
+    "memory:garden": {
+     "stage": "withheld",
+     "rank": 5,
+     "base_rank": 5,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.07359766477087296,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.1472,
+     "dense_rank": 4,
+     "role": "other"
+    }
+   },
+   "admitted_count": 6,
+   "returned": [
+    "memory:boiler"
+   ],
+   "extra": [],
+   "passed": true,
+   "recall_ms": 23.92
+  },
+  {
+   "scenario": "dev-household",
+   "id": "hh-5",
+   "kind": "unlabelled",
+   "query": "What is the capital of Peru?",
+   "requirement": "single",
+   "needed": {},
+   "top_budget": {
+    "memory:dog": {
+     "stage": "withheld",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 2.22419727798437,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": -0.0761,
+     "dense_rank": 7,
+     "role": "other"
+    },
+    "memory:garden": {
+     "stage": "withheld",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 1.3376258961665726,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.0528,
+     "dense_rank": 4,
+     "role": "other"
+    },
+    "memory:wifi": {
+     "stage": "withheld",
+     "rank": 3,
+     "base_rank": 3,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 1.1315432589862269,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.034,
+     "dense_rank": 5,
+     "role": "other"
+    },
+    "memory:cat": {
+     "stage": "withheld",
+     "rank": 4,
+     "base_rank": 4,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 1.0539155409977954,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.081,
+     "dense_rank": 2,
+     "role": "other"
+    },
+    "memory:boiler": {
+     "stage": "withheld",
+     "rank": 5,
+     "base_rank": 5,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.2807191412085765,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.0643,
+     "dense_rank": 3,
+     "role": "other"
+    }
+   },
+   "admitted_count": 7,
+   "returned": [],
+   "extra": [],
+   "passed": true,
+   "recall_ms": 126.18
+  },
+  {
+   "scenario": "dev-household",
+   "id": "hh-6",
+   "kind": "unlabelled",
+   "query": "How did the vegetable patch do?",
+   "requirement": "single",
+   "needed": {
+    "memory:garden": {
+     "stage": "withheld",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 1.6034352035232824,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.2909,
+     "dense_rank": 1,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:garden": {
+     "stage": "withheld",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 1.6034352035232824,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.2909,
+     "dense_rank": 1,
+     "role": "must"
+    },
+    "memory:wifi": {
+     "stage": "withheld",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.1043864870922745,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.0657,
+     "dense_rank": 6,
+     "role": "other"
+    },
+    "memory:boiler": {
+     "stage": "withheld",
+     "rank": 3,
+     "base_rank": 3,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.10141502146076009,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.0995,
+     "dense_rank": 5,
+     "role": "other"
+    },
+    "memory:fish": {
+     "stage": "withheld",
+     "rank": 4,
+     "base_rank": 4,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.07676947155269828,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.1633,
+     "dense_rank": 2,
+     "role": "other"
+    },
+    "memory:cat": {
+     "stage": "withheld",
+     "rank": 5,
+     "base_rank": 5,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.07676947155269828,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.1361,
+     "dense_rank": 3,
+     "role": "other"
+    }
+   },
+   "admitted_count": 6,
+   "returned": [],
+   "extra": [],
+   "passed": false,
+   "recall_ms": 130.23
+  },
+  {
+   "scenario": "dev-household",
+   "id": "hh-7",
+   "kind": "unlabelled",
+   "query": "Which pet gets scared during storms?",
+   "requirement": "single",
+   "needed": {
+    "memory:dog": {
+     "stage": "returned",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": null,
+     "routes": [
+      "semantic_vector"
+     ],
+     "cosine": 0.6084,
+     "dense_rank": 1,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:dog": {
+     "stage": "returned",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": null,
+     "routes": [
+      "semantic_vector"
+     ],
+     "cosine": 0.6084,
+     "dense_rank": 1,
+     "role": "must"
+    }
+   },
+   "admitted_count": 1,
+   "returned": [
+    "memory:dog"
+   ],
+   "extra": [],
+   "passed": true,
+   "recall_ms": 402.96
+  },
+  {
+   "scenario": "dev-work",
+   "id": "wk-1",
+   "kind": "unlabelled",
+   "query": "Where do I work?",
+   "requirement": "single",
+   "needed": {
+    "memory:employer": {
+     "stage": "returned",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 1.114360645636249,
+     "routes": [
+      "lexical",
+      "semantic_vector"
+     ],
+     "cosine": 0.4163,
+     "dense_rank": 1,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:employer": {
+     "stage": "returned",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 1.114360645636249,
+     "routes": [
+      "lexical",
+      "semantic_vector"
+     ],
+     "cosine": 0.4163,
+     "dense_rank": 1,
+     "role": "must"
+    },
+    "memory:manager": {
+     "stage": "withheld",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.1442615938175646,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.1272,
+     "dense_rank": 3,
+     "role": "other"
+    },
+    "memory:commute": {
+     "stage": "withheld",
+     "rank": 3,
+     "base_rank": 3,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.12428691159667103,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.2417,
+     "dense_rank": 2,
+     "role": "other"
+    }
+   },
+   "admitted_count": 3,
+   "returned": [
+    "memory:employer"
+   ],
+   "extra": [],
+   "passed": true,
+   "recall_ms": 772.79
+  },
+  {
+   "scenario": "dev-work",
+   "id": "wk-2",
+   "kind": "unlabelled",
+   "query": "Who is my boss?",
+   "requirement": "single",
+   "needed": {
+    "memory:manager": {
+     "stage": "not_discovered",
+     "rank": null,
+     "base_rank": null,
+     "basis": null,
+     "relative_to_best": null,
+     "content_relevance": null,
+     "bm25": null,
+     "routes": [],
+     "cosine": null,
+     "dense_rank": null,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:employer": {
+     "stage": "withheld",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 1.0297618291260915,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.2963,
+     "dense_rank": 1,
+     "role": "other"
+    },
+    "memory:laptop": {
+     "stage": "withheld",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.6799023299759973,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.0321,
+     "dense_rank": 4,
+     "role": "other"
+    },
+    "memory:standup": {
+     "stage": "withheld",
+     "rank": 3,
+     "base_rank": 3,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.36376120110307814,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.0885,
+     "dense_rank": 2,
+     "role": "other"
+    },
+    "memory:budget": {
+     "stage": "withheld",
+     "rank": 4,
+     "base_rank": 4,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.36376120110307814,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.049,
+     "dense_rank": 3,
+     "role": "other"
+    }
+   },
+   "admitted_count": 4,
+   "returned": [],
+   "extra": [],
+   "passed": false,
+   "recall_ms": 512.16
+  },
+  {
+   "scenario": "dev-work",
+   "id": "wk-3",
+   "kind": "unlabelled",
+   "query": "Who are the new people on my team this year?",
+   "requirement": "single",
+   "needed": {
+    "memory:hire1": {
+     "stage": "not_discovered",
+     "rank": null,
+     "base_rank": null,
+     "basis": null,
+     "relative_to_best": null,
+     "content_relevance": null,
+     "bm25": null,
+     "routes": [],
+     "cosine": null,
+     "dense_rank": null,
+     "role": "must"
+    },
+    "memory:hire2": {
+     "stage": "returned",
+     "rank": 4,
+     "base_rank": 4,
+     "basis": "content_relevance",
+     "relative_to_best": 1.0,
+     "content_relevance": 1.045018667904632,
+     "bm25": 1.4738305386260482,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.3713,
+     "dense_rank": 1,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:employer": {
+     "stage": "returned",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "content_relevance",
+     "relative_to_best": 0.96044921875,
+     "content_relevance": 1.0036873631681695,
+     "bm25": 2.740912611596769,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.2701,
+     "dense_rank": 2,
+     "role": "other"
+    },
+    "memory:budget": {
+     "stage": "withheld",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 2.3172515913144798,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.0719,
+     "dense_rank": 5,
+     "role": "other"
+    },
+    "memory:parking": {
+     "stage": "withheld",
+     "rank": 3,
+     "base_rank": 3,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 2.0579284933000306,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": -0.0449,
+     "dense_rank": 8,
+     "role": "other"
+    },
+    "memory:hire2": {
+     "stage": "returned",
+     "rank": 4,
+     "base_rank": 4,
+     "basis": "content_relevance",
+     "relative_to_best": 1.0,
+     "content_relevance": 1.045018667904632,
+     "bm25": 1.4738305386260482,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.3713,
+     "dense_rank": 1,
+     "role": "must"
+    },
+    "memory:laptop": {
+     "stage": "withheld",
+     "rank": 5,
+     "base_rank": 5,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 1.3253732222034893,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": -0.0588,
+     "dense_rank": 9,
+     "role": "other"
+    }
+   },
+   "admitted_count": 9,
+   "returned": [
+    "memory:employer",
+    "memory:hire2",
+    "memory:standup"
+   ],
+   "extra": [
+    "memory:employer",
+    "memory:standup"
+   ],
+   "passed": false,
+   "recall_ms": 30.68
+  },
+  {
+   "scenario": "dev-work",
+   "id": "wk-4",
+   "kind": "unlabelled",
+   "query": "How do I get to the office?",
+   "requirement": "single",
+   "needed": {
+    "memory:commute": {
+     "stage": "withheld",
+     "rank": 3,
+     "base_rank": 3,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.7113478185209572,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.2573,
+     "dense_rank": 1,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:manager": {
+     "stage": "withheld",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 2.4061329033430305,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.1242,
+     "dense_rank": 4,
+     "role": "other"
+    },
+    "memory:employer": {
+     "stage": "withheld",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.7371010200742654,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.2162,
+     "dense_rank": 2,
+     "role": "other"
+    },
+    "memory:commute": {
+     "stage": "withheld",
+     "rank": 3,
+     "base_rank": 3,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.7113478185209572,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.2573,
+     "dense_rank": 1,
+     "role": "must"
+    },
+    "memory:offsite": {
+     "stage": "withheld",
+     "rank": 4,
+     "base_rank": 4,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.0844754086726363,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.1483,
+     "dense_rank": 3,
+     "role": "other"
+    },
+    "memory:budget": {
+     "stage": "withheld",
+     "rank": 5,
+     "base_rank": 5,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.07410797215372183,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": -0.0326,
+     "dense_rank": 6,
+     "role": "other"
+    }
+   },
+   "admitted_count": 6,
+   "returned": [],
+   "extra": [],
+   "passed": false,
+   "recall_ms": 80.02
+  },
+  {
+   "scenario": "dev-work",
+   "id": "wk-5",
+   "kind": "unlabelled",
+   "query": "What computer do I use for work?",
+   "requirement": "single",
+   "needed": {
+    "memory:laptop": {
+     "stage": "not_discovered",
+     "rank": null,
+     "base_rank": null,
+     "basis": null,
+     "relative_to_best": null,
+     "content_relevance": null,
+     "bm25": null,
+     "routes": [],
+     "cosine": null,
+     "dense_rank": null,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:budget": {
+     "stage": "withheld",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 1.2393452370972096,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.0242,
+     "dense_rank": 4,
+     "role": "other"
+    },
+    "memory:manager": {
+     "stage": "withheld",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.3821228731212241,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.031,
+     "dense_rank": 3,
+     "role": "other"
+    },
+    "memory:employer": {
+     "stage": "withheld",
+     "rank": 3,
+     "base_rank": 3,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.3533136093885245,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.2467,
+     "dense_rank": 1,
+     "role": "other"
+    },
+    "memory:commute": {
+     "stage": "withheld",
+     "rank": 4,
+     "base_rank": 4,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.32854381398835536,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.0493,
+     "dense_rank": 2,
+     "role": "other"
+    }
+   },
+   "admitted_count": 4,
+   "returned": [],
+   "extra": [],
+   "passed": false,
+   "recall_ms": 161.9
+  },
+  {
+   "scenario": "dev-work",
+   "id": "wk-6",
+   "kind": "unlabelled",
+   "query": "When is the company picnic?",
+   "requirement": "single",
+   "needed": {},
+   "top_budget": {
+    "memory:budget": {
+     "stage": "withheld",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 1.0343179379627125,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": -0.0206,
+     "dense_rank": 7,
+     "role": "other"
+    },
+    "memory:employer": {
+     "stage": "withheld",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.9936678879991125,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.2081,
+     "dense_rank": 4,
+     "role": "other"
+    },
+    "memory:standup": {
+     "stage": "withheld",
+     "rank": 3,
+     "base_rank": 3,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.8266785731844679,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.3848,
+     "dense_rank": 1,
+     "role": "other"
+    },
+    "memory:commute": {
+     "stage": "withheld",
+     "rank": 4,
+     "base_rank": 4,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.2632891080761603,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.2015,
+     "dense_rank": 5,
+     "role": "other"
+    },
+    "memory:offsite": {
+     "stage": "withheld",
+     "rank": 5,
+     "base_rank": 5,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.2366873588145793,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.3392,
+     "dense_rank": 2,
+     "role": "other"
+    }
+   },
+   "admitted_count": 7,
+   "returned": [],
+   "extra": [],
+   "passed": true,
+   "recall_ms": 279.71
+  },
+  {
+   "scenario": "dev-work",
+   "id": "wk-7",
+   "kind": "unlabelled",
+   "query": "Where is the team trip this fall?",
+   "requirement": "single",
+   "needed": {
+    "memory:offsite": {
+     "stage": "withheld",
+     "rank": 6,
+     "base_rank": 6,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 0.2366873588145793,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.4316,
+     "dense_rank": 2,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:employer": {
+     "stage": "returned",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "content_relevance",
+     "relative_to_best": 0.960698689956332,
+     "content_relevance": 0.794189022273288,
+     "bm25": 3.3960438770224783,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.2175,
+     "dense_rank": 5,
+     "role": "other"
+    },
+    "memory:standup": {
+     "stage": "returned",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": 1.0,
+     "content_relevance": 0.8266785731844679,
+     "bm25": 1.6533571463689358,
+     "routes": [
+      "lexical",
+      "semantic_vector"
+     ],
+     "cosine": 0.4378,
+     "dense_rank": 1,
+     "role": "other"
+    },
+    "memory:budget": {
+     "stage": "withheld",
+     "rank": 3,
+     "base_rank": 3,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 1.0343179379627125,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.0322,
+     "dense_rank": 7,
+     "role": "other"
+    },
+    "memory:hire2": {
+     "stage": "returned",
+     "rank": 4,
+     "base_rank": 4,
+     "basis": "content_relevance",
+     "relative_to_best": 1.0,
+     "content_relevance": 0.8266785731844679,
+     "bm25": 1.0343179379627125,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.2469,
+     "dense_rank": 3,
+     "role": "other"
+    },
+    "memory:commute": {
+     "stage": "withheld",
+     "rank": 5,
+     "base_rank": 5,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 0.2632891080761603,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.246,
+     "dense_rank": 4,
+     "role": "other"
+    }
+   },
+   "admitted_count": 7,
+   "returned": [
+    "memory:employer",
+    "memory:standup",
+    "memory:hire2"
+   ],
+   "extra": [
+    "memory:employer",
+    "memory:standup",
+    "memory:hire2"
+   ],
+   "passed": false,
+   "recall_ms": 218.6
+  },
+  {
+   "scenario": "dev-work",
+   "id": "wk-8",
+   "kind": "unlabelled",
+   "query": "How much money do we have to spend next year?",
+   "requirement": "aggregate",
+   "needed": {
+    "memory:budget": {
+     "stage": "returned",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": 1.0,
+     "content_relevance": 0.9529823657022451,
+     "bm25": 1.9059647314044903,
+     "routes": [
+      "lexical",
+      "semantic_vector"
+     ],
+     "cosine": 0.4854,
+     "dense_rank": 1,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:budget": {
+     "stage": "returned",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": 1.0,
+     "content_relevance": 0.9529823657022451,
+     "bm25": 1.9059647314044903,
+     "routes": [
+      "lexical",
+      "semantic_vector"
+     ],
+     "cosine": 0.4854,
+     "dense_rank": 1,
+     "role": "must"
+    },
+    "memory:hire1": {
+     "stage": "withheld",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 0.9953720261206318,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.0855,
+     "dense_rank": 2,
+     "role": "other"
+    },
+    "memory:manager": {
+     "stage": "withheld",
+     "rank": 3,
+     "base_rank": 3,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 0.9953720261206318,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": -0.028,
+     "dense_rank": 3,
+     "role": "other"
+    }
+   },
+   "admitted_count": 3,
+   "returned": [
+    "memory:budget"
+   ],
+   "extra": [],
+   "passed": true,
+   "recall_ms": 176.34
+  },
+  {
+   "scenario": "dev-travel",
+   "id": "tr-1",
+   "kind": "unlabelled",
+   "query": "Where am I staying?",
+   "requirement": "single",
+   "needed": {
+    "memory:hotel": {
+     "stage": "not_discovered",
+     "rank": null,
+     "base_rank": null,
+     "basis": null,
+     "relative_to_best": null,
+     "content_relevance": null,
+     "bm25": null,
+     "routes": [],
+     "cosine": null,
+     "dense_rank": null,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:visa": {
+     "stage": "returned",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "content_relevance",
+     "relative_to_best": 1.0,
+     "content_relevance": 0.28768207245178085,
+     "bm25": 0.0,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.1412,
+     "dense_rank": 1,
+     "role": "other"
+    }
+   },
+   "admitted_count": 1,
+   "returned": [
+    "memory:visa"
+   ],
+   "extra": [
+    "memory:visa"
+   ],
+   "passed": false,
+   "recall_ms": 300.13
+  },
+  {
+   "scenario": "dev-travel",
+   "id": "tr-2",
+   "kind": "unlabelled",
+   "query": "What are my flight times?",
+   "requirement": "aggregate",
+   "needed": {
+    "memory:flight": {
+     "stage": "returned",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": 0.9282868525896413,
+     "content_relevance": 0.17578413045472913,
+     "bm25": 0.17578413045472913,
+     "routes": [
+      "lexical",
+      "semantic_vector"
+     ],
+     "cosine": 0.4384,
+     "dense_rank": 1,
+     "role": "must"
+    },
+    "memory:return": {
+     "stage": "returned",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": 1.0,
+     "content_relevance": 0.18936402036110309,
+     "bm25": 0.18936402036110309,
+     "routes": [
+      "lexical",
+      "semantic_vector"
+     ],
+     "cosine": 0.3648,
+     "dense_rank": 2,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:return": {
+     "stage": "returned",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": 1.0,
+     "content_relevance": 0.18936402036110309,
+     "bm25": 0.18936402036110309,
+     "routes": [
+      "lexical",
+      "semantic_vector"
+     ],
+     "cosine": 0.3648,
+     "dense_rank": 2,
+     "role": "must"
+    },
+    "memory:flight": {
+     "stage": "returned",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": 0.9282868525896413,
+     "content_relevance": 0.17578413045472913,
+     "bm25": 0.17578413045472913,
+     "routes": [
+      "lexical",
+      "semantic_vector"
+     ],
+     "cosine": 0.4384,
+     "dense_rank": 1,
+     "role": "must"
+    },
+    "memory:rail": {
+     "stage": "returned",
+     "rank": 3,
+     "base_rank": 3,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": null,
+     "routes": [
+      "semantic_vector"
+     ],
+     "cosine": 0.2638,
+     "dense_rank": 3,
+     "role": "other"
+    }
+   },
+   "admitted_count": 3,
+   "returned": [
+    "memory:return",
+    "memory:flight",
+    "memory:rail"
+   ],
+   "extra": [
+    "memory:rail"
+   ],
+   "passed": false,
+   "recall_ms": 191.12
+  },
+  {
+   "scenario": "dev-travel",
+   "id": "tr-3",
+   "kind": "unlabelled",
+   "query": "How will I get between cities?",
+   "requirement": null,
+   "needed": {
+    "memory:rail": {
+     "stage": "not_discovered",
+     "rank": null,
+     "base_rank": null,
+     "basis": null,
+     "relative_to_best": null,
+     "content_relevance": null,
+     "bm25": null,
+     "routes": [],
+     "cosine": null,
+     "dense_rank": null,
+     "role": "must"
+    }
+   },
+   "top_budget": {},
+   "admitted_count": 0,
+   "returned": [],
+   "extra": [],
+   "passed": false,
+   "recall_ms": 231.51
+  },
+  {
+   "scenario": "dev-travel",
+   "id": "tr-4",
+   "kind": "unlabelled",
+   "query": "Do I need any paperwork to enter the country?",
+   "requirement": "single",
+   "needed": {
+    "memory:visa": {
+     "stage": "returned",
+     "rank": 8,
+     "base_rank": 8,
+     "basis": "content_relevance",
+     "relative_to_best": 1.0,
+     "content_relevance": 1.8770813487151057,
+     "bm25": 0.0,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.3608,
+     "dense_rank": 1,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:allergy": {
+     "stage": "withheld",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 1.6828494004632015,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.1888,
+     "dense_rank": 2,
+     "role": "other"
+    },
+    "memory:flight": {
+     "stage": "withheld",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 1.1907272366267079,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.0302,
+     "dense_rank": 5,
+     "role": "other"
+    },
+    "memory:hotel": {
+     "stage": "withheld",
+     "rank": 3,
+     "base_rank": 3,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 0.3409187052172294,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.0035,
+     "dense_rank": 8,
+     "role": "other"
+    },
+    "memory:return": {
+     "stage": "withheld",
+     "rank": 4,
+     "base_rank": 4,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 0.32707429079216416,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.0274,
+     "dense_rank": 6,
+     "role": "other"
+    },
+    "memory:museum": {
+     "stage": "withheld",
+     "rank": 5,
+     "base_rank": 5,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 0.32707429079216416,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.0036,
+     "dense_rank": 7,
+     "role": "other"
+    }
+   },
+   "admitted_count": 8,
+   "returned": [
+    "memory:visa"
+   ],
+   "extra": [],
+   "passed": true,
+   "recall_ms": 268.99
+  },
+  {
+   "scenario": "dev-travel",
+   "id": "tr-5",
+   "kind": "unlabelled",
+   "query": "How will I stay connected to the internet?",
+   "requirement": "single",
+   "needed": {
+    "memory:sim": {
+     "stage": "not_discovered",
+     "rank": null,
+     "base_rank": null,
+     "basis": null,
+     "relative_to_best": null,
+     "content_relevance": null,
+     "bm25": null,
+     "routes": [],
+     "cosine": null,
+     "dense_rank": null,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:allergy": {
+     "stage": "withheld",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 1.6828494004632015,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.0544,
+     "dense_rank": 5,
+     "role": "other"
+    },
+    "memory:flight": {
+     "stage": "withheld",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 1.1907272366267079,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.0942,
+     "dense_rank": 2,
+     "role": "other"
+    },
+    "memory:hotel": {
+     "stage": "withheld",
+     "rank": 3,
+     "base_rank": 3,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 0.3409187052172294,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.112,
+     "dense_rank": 1,
+     "role": "other"
+    },
+    "memory:return": {
+     "stage": "withheld",
+     "rank": 4,
+     "base_rank": 4,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 0.32707429079216416,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.061,
+     "dense_rank": 4,
+     "role": "other"
+    },
+    "memory:museum": {
+     "stage": "withheld",
+     "rank": 5,
+     "base_rank": 5,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 0.32707429079216416,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": -0.0388,
+     "dense_rank": 8,
+     "role": "other"
+    }
+   },
+   "admitted_count": 8,
+   "returned": [
+    "memory:visa"
+   ],
+   "extra": [
+    "memory:visa"
+   ],
+   "passed": false,
+   "recall_ms": 250.53
+  },
+  {
+   "scenario": "dev-travel",
+   "id": "tr-6",
+   "kind": "unlabelled",
+   "query": "What should I take because of my food issues?",
+   "requirement": "single",
+   "needed": {
+    "memory:allergy": {
+     "stage": "not_discovered",
+     "rank": null,
+     "base_rank": null,
+     "basis": null,
+     "relative_to_best": null,
+     "content_relevance": null,
+     "bm25": null,
+     "routes": [],
+     "cosine": null,
+     "dense_rank": null,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:sim": {
+     "stage": "withheld",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.28768207245178085,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.099,
+     "dense_rank": 1,
+     "role": "other"
+    }
+   },
+   "admitted_count": 1,
+   "returned": [],
+   "extra": [],
+   "passed": false,
+   "recall_ms": 56.25
+  },
+  {
+   "scenario": "dev-travel",
+   "id": "tr-7",
+   "kind": "unlabelled",
+   "query": "What is the weather forecast for Osaka?",
+   "requirement": "single",
+   "needed": {},
+   "top_budget": {
+    "memory:budgettrip": {
+     "stage": "withheld",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 2.3111760326823054,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.1962,
+     "dense_rank": 4,
+     "role": "other"
+    },
+    "memory:visa": {
+     "stage": "withheld",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 2.0680848844040103,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": -0.0333,
+     "dense_rank": 8,
+     "role": "other"
+    },
+    "memory:flight": {
+     "stage": "returned",
+     "rank": 3,
+     "base_rank": 3,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": 1.0,
+     "content_relevance": 1.6655792249162205,
+     "bm25": 1.6655792249162205,
+     "routes": [
+      "lexical",
+      "semantic_vector"
+     ],
+     "cosine": 0.5892,
+     "dense_rank": 1,
+     "role": "other"
+    },
+    "memory:hotel": {
+     "stage": "withheld",
+     "rank": 4,
+     "base_rank": 4,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 1.0670728943752674,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.1586,
+     "dense_rank": 6,
+     "role": "other"
+    },
+    "memory:rail": {
+     "stage": "withheld",
+     "rank": 5,
+     "base_rank": 5,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 0.9468393288118571,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.1819,
+     "dense_rank": 5,
+     "role": "other"
+    }
+   },
+   "admitted_count": 8,
+   "returned": [
+    "memory:flight"
+   ],
+   "extra": [
+    "memory:flight"
+   ],
+   "passed": false,
+   "recall_ms": 86.56
+  },
+  {
+   "scenario": "dev-health",
+   "id": "he-1",
+   "kind": "unlabelled",
+   "query": "Which medications am I on?",
+   "requirement": "single",
+   "needed": {
+    "memory:med1": {
+     "stage": "returned",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 1.027535407917047,
+     "routes": [
+      "lexical",
+      "semantic_vector"
+     ],
+     "cosine": 0.4539,
+     "dense_rank": 1,
+     "role": "must"
+    },
+    "memory:med2": {
+     "stage": "returned",
+     "rank": 5,
+     "base_rank": 5,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": null,
+     "routes": [
+      "semantic_vector"
+     ],
+     "cosine": 0.2662,
+     "dense_rank": 3,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:med1": {
+     "stage": "returned",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 1.027535407917047,
+     "routes": [
+      "lexical",
+      "semantic_vector"
+     ],
+     "cosine": 0.4539,
+     "dense_rank": 1,
+     "role": "must"
+    },
+    "memory:run": {
+     "stage": "withheld",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.49238475444791363,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": -0.0243,
+     "dense_rank": 5,
+     "role": "other"
+    },
+    "memory:sleep": {
+     "stage": "withheld",
+     "rank": 3,
+     "base_rank": 3,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.43083666014192445,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.1598,
+     "dense_rank": 4,
+     "role": "other"
+    },
+    "memory:eye": {
+     "stage": "returned",
+     "rank": 4,
+     "base_rank": 4,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": null,
+     "routes": [
+      "semantic_vector"
+     ],
+     "cosine": 0.3403,
+     "dense_rank": 2,
+     "role": "other"
+    },
+    "memory:med2": {
+     "stage": "returned",
+     "rank": 5,
+     "base_rank": 5,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": null,
+     "routes": [
+      "semantic_vector"
+     ],
+     "cosine": 0.2662,
+     "dense_rank": 3,
+     "role": "must"
+    }
+   },
+   "admitted_count": 5,
+   "returned": [
+    "memory:med1",
+    "memory:eye",
+    "memory:med2"
+   ],
+   "extra": [
+    "memory:eye"
+   ],
+   "passed": false,
+   "recall_ms": 423.59
+  },
+  {
+   "scenario": "dev-health",
+   "id": "he-2",
+   "kind": "unlabelled",
+   "query": "Who is my family doctor?",
+   "requirement": "single",
+   "needed": {
+    "memory:gp": {
+     "stage": "returned",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.5753641449035617,
+     "routes": [
+      "lexical",
+      "semantic_vector"
+     ],
+     "cosine": 0.4347,
+     "dense_rank": 1,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:gp": {
+     "stage": "returned",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.5753641449035617,
+     "routes": [
+      "lexical",
+      "semantic_vector"
+     ],
+     "cosine": 0.4347,
+     "dense_rank": 1,
+     "role": "must"
+    }
+   },
+   "admitted_count": 1,
+   "returned": [
+    "memory:gp"
+   ],
+   "extra": [],
+   "passed": true,
+   "recall_ms": 713.84
+  },
+  {
+   "scenario": "dev-health",
+   "id": "he-3",
+   "kind": "unlabelled",
+   "query": "When is my next teeth appointment?",
+   "requirement": "single",
+   "needed": {
+    "memory:dentist": {
+     "stage": "returned",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": null,
+     "routes": [
+      "semantic_vector"
+     ],
+     "cosine": 0.6389,
+     "dense_rank": 1,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:gp": {
+     "stage": "withheld",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.5753641449035617,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.2517,
+     "dense_rank": 2,
+     "role": "other"
+    },
+    "memory:dentist": {
+     "stage": "returned",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": null,
+     "routes": [
+      "semantic_vector"
+     ],
+     "cosine": 0.6389,
+     "dense_rank": 1,
+     "role": "must"
+    }
+   },
+   "admitted_count": 2,
+   "returned": [
+    "memory:dentist"
+   ],
+   "extra": [],
+   "passed": true,
+   "recall_ms": 230.47
+  },
+  {
+   "scenario": "dev-health",
+   "id": "he-4",
+   "kind": "unlabelled",
+   "query": "What did the physiotherapist recommend?",
+   "requirement": "single",
+   "needed": {
+    "memory:knee": {
+     "stage": "withheld",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.13353139262452257,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.2789,
+     "dense_rank": 1,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:blood": {
+     "stage": "withheld",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.13922704444263015,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.1085,
+     "dense_rank": 3,
+     "role": "other"
+    },
+    "memory:knee": {
+     "stage": "withheld",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.13353139262452257,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.2789,
+     "dense_rank": 1,
+     "role": "must"
+    },
+    "memory:gp": {
+     "stage": "withheld",
+     "rank": 3,
+     "base_rank": 3,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.12828343396242345,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.2552,
+     "dense_rank": 2,
+     "role": "other"
+    }
+   },
+   "admitted_count": 3,
+   "returned": [],
+   "extra": [],
+   "passed": false,
+   "recall_ms": 406.1
+  },
+  {
+   "scenario": "dev-health",
+   "id": "he-5",
+   "kind": "unlabelled",
+   "query": "How good is my eyesight?",
+   "requirement": "single",
+   "needed": {
+    "memory:eye": {
+     "stage": "returned",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": null,
+     "routes": [
+      "semantic_vector"
+     ],
+     "cosine": 0.5406,
+     "dense_rank": 1,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:gp": {
+     "stage": "withheld",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.5753641449035617,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.1553,
+     "dense_rank": 2,
+     "role": "other"
+    },
+    "memory:eye": {
+     "stage": "returned",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": null,
+     "routes": [
+      "semantic_vector"
+     ],
+     "cosine": 0.5406,
+     "dense_rank": 1,
+     "role": "must"
+    }
+   },
+   "admitted_count": 2,
+   "returned": [
+    "memory:eye"
+   ],
+   "extra": [],
+   "passed": true,
+   "recall_ms": 170.0
+  },
+  {
+   "scenario": "dev-health",
+   "id": "he-6",
+   "kind": "unlabelled",
+   "query": "What is my cholesterol level?",
+   "requirement": "single",
+   "needed": {},
+   "top_budget": {
+    "memory:gp": {
+     "stage": "withheld",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.5753641449035617,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.131,
+     "dense_rank": 1,
+     "role": "other"
+    }
+   },
+   "admitted_count": 1,
+   "returned": [],
+   "extra": [],
+   "passed": true,
+   "recall_ms": 118.18
+  },
+  {
+   "scenario": "dev-health",
+   "id": "he-7",
+   "kind": "unlabelled",
+   "query": "How fast was my last jog?",
+   "requirement": "relational",
+   "needed": {
+    "memory:run": {
+     "stage": "returned",
+     "rank": 3,
+     "base_rank": 3,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": null,
+     "routes": [
+      "semantic_vector"
+     ],
+     "cosine": 0.5437,
+     "dense_rank": 1,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:blood": {
+     "stage": "withheld",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 1.4454254002197908,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.265,
+     "dense_rank": 2,
+     "role": "other"
+    },
+    "memory:gp": {
+     "stage": "withheld",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.6659055883108644,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.0968,
+     "dense_rank": 3,
+     "role": "other"
+    },
+    "memory:run": {
+     "stage": "returned",
+     "rank": 3,
+     "base_rank": 3,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": null,
+     "routes": [
+      "semantic_vector"
+     ],
+     "cosine": 0.5437,
+     "dense_rank": 1,
+     "role": "must"
+    }
+   },
+   "admitted_count": 3,
+   "returned": [
+    "memory:run"
+   ],
+   "extra": [],
+   "passed": true,
+   "recall_ms": 161.93
+  },
+  {
+   "scenario": "dev-family",
+   "id": "fa-1",
+   "kind": "unlabelled",
+   "query": "What present should I get my mother?",
+   "requirement": "single",
+   "needed": {
+    "memory:mom": {
+     "stage": "returned",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": null,
+     "routes": [
+      "semantic_vector"
+     ],
+     "cosine": 0.4025,
+     "dense_rank": 1,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:sister": {
+     "stage": "withheld",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.28768207245178085,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.2538,
+     "dense_rank": 2,
+     "role": "other"
+    },
+    "memory:mom": {
+     "stage": "returned",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": null,
+     "routes": [
+      "semantic_vector"
+     ],
+     "cosine": 0.4025,
+     "dense_rank": 1,
+     "role": "must"
+    }
+   },
+   "admitted_count": 2,
+   "returned": [
+    "memory:mom"
+   ],
+   "extra": [],
+   "passed": true,
+   "recall_ms": 459.56
+  },
+  {
+   "scenario": "dev-family",
+   "id": "fa-2",
+   "kind": "unlabelled",
+   "query": "Where does my sibling live?",
+   "requirement": "single",
+   "needed": {
+    "memory:sister": {
+     "stage": "returned",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": 1.0,
+     "content_relevance": 0.28768207245178085,
+     "bm25": 0.28768207245178085,
+     "routes": [
+      "lexical",
+      "semantic_vector"
+     ],
+     "cosine": 0.516,
+     "dense_rank": 1,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:sister": {
+     "stage": "returned",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": 1.0,
+     "content_relevance": 0.28768207245178085,
+     "bm25": 0.28768207245178085,
+     "routes": [
+      "lexical",
+      "semantic_vector"
+     ],
+     "cosine": 0.516,
+     "dense_rank": 1,
+     "role": "must"
+    }
+   },
+   "admitted_count": 1,
+   "returned": [
+    "memory:sister"
+   ],
+   "extra": [],
+   "passed": true,
+   "recall_ms": 253.27
+  },
+  {
+   "scenario": "dev-family",
+   "id": "fa-3",
+   "kind": "unlabelled",
+   "query": "What would my nephew like as a gift?",
+   "requirement": "single",
+   "needed": {
+    "memory:giftidea": {
+     "stage": "not_discovered",
+     "rank": null,
+     "base_rank": null,
+     "basis": null,
+     "relative_to_best": null,
+     "content_relevance": null,
+     "bm25": null,
+     "routes": [],
+     "cosine": null,
+     "dense_rank": null,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:sister": {
+     "stage": "withheld",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 0.6785375210165272,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.1243,
+     "dense_rank": 2,
+     "role": "other"
+    },
+    "memory:mom": {
+     "stage": "returned",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "content_relevance",
+     "relative_to_best": 1.0,
+     "content_relevance": 0.7261541891580381,
+     "bm25": 0.0,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.2868,
+     "dense_rank": 1,
+     "role": "other"
+    }
+   },
+   "admitted_count": 2,
+   "returned": [
+    "memory:mom"
+   ],
+   "extra": [
+    "memory:mom"
+   ],
+   "passed": false,
+   "recall_ms": 130.97
+  },
+  {
+   "scenario": "dev-family",
+   "id": "fa-4",
+   "kind": "unlabelled",
+   "query": "Who in the family has health problems?",
+   "requirement": "single",
+   "needed": {
+    "memory:dad": {
+     "stage": "not_discovered",
+     "rank": null,
+     "base_rank": null,
+     "basis": null,
+     "relative_to_best": null,
+     "content_relevance": null,
+     "bm25": null,
+     "routes": [],
+     "cosine": null,
+     "dense_rank": null,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:reunion": {
+     "stage": "returned",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "content_relevance",
+     "relative_to_best": 1.0,
+     "content_relevance": 1.1309227690072838,
+     "bm25": 2.0638817866925234,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.2112,
+     "dense_rank": 4,
+     "role": "other"
+    },
+    "memory:nephew": {
+     "stage": "withheld",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 0.7480758250571485,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.2251,
+     "dense_rank": 3,
+     "role": "other"
+    },
+    "memory:grandma": {
+     "stage": "withheld",
+     "rank": 3,
+     "base_rank": 3,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 0.685951881107766,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.3071,
+     "dense_rank": 2,
+     "role": "may"
+    },
+    "memory:sister": {
+     "stage": "withheld",
+     "rank": 4,
+     "base_rank": 4,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 0.685951881107766,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.3435,
+     "dense_rank": 1,
+     "role": "other"
+    }
+   },
+   "admitted_count": 4,
+   "returned": [
+    "memory:reunion"
+   ],
+   "extra": [
+    "memory:reunion"
+   ],
+   "passed": false,
+   "recall_ms": 63.16
+  },
+  {
+   "scenario": "dev-family",
+   "id": "fa-5",
+   "kind": "unlabelled",
+   "query": "When do we phone Grandma?",
+   "requirement": "single",
+   "needed": {
+    "memory:call": {
+     "stage": "returned",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": 1.0,
+     "content_relevance": 0.19650796034852747,
+     "bm25": 0.9435887831998807,
+     "routes": [
+      "lexical",
+      "semantic_vector"
+     ],
+     "cosine": 0.7529,
+     "dense_rank": 1,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:call": {
+     "stage": "returned",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": 1.0,
+     "content_relevance": 0.19650796034852747,
+     "bm25": 0.9435887831998807,
+     "routes": [
+      "lexical",
+      "semantic_vector"
+     ],
+     "cosine": 0.7529,
+     "dense_rank": 1,
+     "role": "must"
+    },
+    "memory:grandma": {
+     "stage": "returned",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "content_relevance",
+     "relative_to_best": 0.8653366583541148,
+     "content_relevance": 0.17004554174797765,
+     "bm25": 0.17004554174797765,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.3873,
+     "dense_rank": 2,
+     "role": "may"
+    }
+   },
+   "admitted_count": 2,
+   "returned": [
+    "memory:call",
+    "memory:grandma"
+   ],
+   "extra": [],
+   "passed": true,
+   "recall_ms": 54.46
+  },
+  {
+   "scenario": "dev-family",
+   "id": "fa-6",
+   "kind": "unlabelled",
+   "query": "What is my brother's job?",
+   "requirement": "single",
+   "needed": {},
+   "top_budget": {
+    "memory:mom": {
+     "stage": "withheld",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 1.7036334963711695,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": -0.0196,
+     "dense_rank": 5,
+     "role": "other"
+    },
+    "memory:sister": {
+     "stage": "withheld",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 1.3510163707803646,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.2811,
+     "dense_rank": 1,
+     "role": "other"
+    },
+    "memory:giftidea": {
+     "stage": "withheld",
+     "rank": 3,
+     "base_rank": 3,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.35581730013772894,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.1309,
+     "dense_rank": 4,
+     "role": "other"
+    },
+    "memory:reunion": {
+     "stage": "withheld",
+     "rank": 4,
+     "base_rank": 4,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.2689541256013937,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.1517,
+     "dense_rank": 2,
+     "role": "other"
+    },
+    "memory:dad": {
+     "stage": "withheld",
+     "rank": 5,
+     "base_rank": 5,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.25843897733722104,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.1402,
+     "dense_rank": 3,
+     "role": "other"
+    }
+   },
+   "admitted_count": 5,
+   "returned": [],
+   "extra": [],
+   "passed": true,
+   "recall_ms": 238.9
+  },
+  {
+   "scenario": "dev-project",
+   "id": "pr-1",
+   "kind": "unlabelled",
+   "query": "When does the dashboard need to be finished?",
+   "requirement": "single",
+   "needed": {
+    "memory:deadline": {
+     "stage": "returned",
+     "rank": 5,
+     "base_rank": 5,
+     "basis": "content_relevance",
+     "relative_to_best": 1.0,
+     "content_relevance": 1.0320452682042502,
+     "bm25": 1.1970380112391343,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.5495,
+     "dense_rank": 2,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:stuffing": {
+     "stage": "returned",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": 0.9291958041958044,
+     "content_relevance": 0.958972132955523,
+     "bm25": 2.7048855867102084,
+     "routes": [
+      "lexical",
+      "semantic_vector"
+     ],
+     "cosine": 0.5643,
+     "dense_rank": 1,
+     "role": "other"
+    },
+    "memory:demo": {
+     "stage": "withheld",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 1.654574440963333,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.2694,
+     "dense_rank": 4,
+     "role": "other"
+    },
+    "memory:risk1": {
+     "stage": "withheld",
+     "rank": 3,
+     "base_rank": 3,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 1.5292630527276811,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.2392,
+     "dense_rank": 5,
+     "role": "other"
+    },
+    "memory:stack": {
+     "stage": "returned",
+     "rank": 4,
+     "base_rank": 4,
+     "basis": "content_relevance",
+     "relative_to_best": 1.0,
+     "content_relevance": 1.0320452682042502,
+     "bm25": 1.2580871176042718,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.3153,
+     "dense_rank": 3,
+     "role": "other"
+    },
+    "memory:deadline": {
+     "stage": "returned",
+     "rank": 5,
+     "base_rank": 5,
+     "basis": "content_relevance",
+     "relative_to_best": 1.0,
+     "content_relevance": 1.0320452682042502,
+     "bm25": 1.1970380112391343,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.5495,
+     "dense_rank": 2,
+     "role": "must"
+    }
+   },
+   "admitted_count": 9,
+   "returned": [
+    "memory:stuffing",
+    "memory:stack",
+    "memory:deadline"
+   ],
+   "extra": [
+    "memory:stuffing",
+    "memory:stack"
+   ],
+   "passed": false,
+   "recall_ms": 757.74
+  },
+  {
+   "scenario": "dev-project",
+   "id": "pr-2",
+   "kind": "unlabelled",
+   "query": "What technologies are we using?",
+   "requirement": null,
+   "needed": {
+    "memory:stack": {
+     "stage": "not_discovered",
+     "rank": null,
+     "base_rank": null,
+     "basis": null,
+     "relative_to_best": null,
+     "content_relevance": null,
+     "bm25": null,
+     "routes": [],
+     "cosine": null,
+     "dense_rank": null,
+     "role": "must"
+    }
+   },
+   "top_budget": {},
+   "admitted_count": 0,
+   "returned": [],
+   "extra": [],
+   "passed": false,
+   "recall_ms": 130.28
+  },
+  {
+   "scenario": "dev-project",
+   "id": "pr-3",
+   "kind": "unlabelled",
+   "query": "What could cause problems for the project?",
+   "requirement": "single",
+   "needed": {
+    "memory:risk1": {
+     "stage": "withheld",
+     "rank": 5,
+     "base_rank": 5,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.05578367914043089,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.1795,
+     "dense_rank": 1,
+     "role": "must"
+    },
+    "memory:risk2": {
+     "stage": "withheld",
+     "rank": 4,
+     "base_rank": 4,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.058016266632432575,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.0536,
+     "dense_rank": 6,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:demo": {
+     "stage": "withheld",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 1.9549068063012014,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.1135,
+     "dense_rank": 5,
+     "role": "other"
+    },
+    "memory:stack": {
+     "stage": "withheld",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.07728342367400681,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": -0.128,
+     "dense_rank": 8,
+     "role": "other"
+    },
+    "memory:client": {
+     "stage": "withheld",
+     "rank": 3,
+     "base_rank": 3,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.060435010811665434,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": -0.0119,
+     "dense_rank": 7,
+     "role": "other"
+    },
+    "memory:risk2": {
+     "stage": "withheld",
+     "rank": 4,
+     "base_rank": 4,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.058016266632432575,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.0536,
+     "dense_rank": 6,
+     "role": "must"
+    },
+    "memory:risk1": {
+     "stage": "withheld",
+     "rank": 5,
+     "base_rank": 5,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.05578367914043089,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.1795,
+     "dense_rank": 1,
+     "role": "must"
+    }
+   },
+   "admitted_count": 8,
+   "returned": [],
+   "extra": [],
+   "passed": false,
+   "recall_ms": 142.39
+  },
+  {
+   "scenario": "dev-project",
+   "id": "pr-4",
+   "kind": "unlabelled",
+   "query": "Who do I talk to at the customer?",
+   "requirement": "single",
+   "needed": {
+    "memory:client": {
+     "stage": "returned",
+     "rank": 4,
+     "base_rank": 4,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.060435010811665434,
+     "routes": [
+      "lexical",
+      "semantic_vector"
+     ],
+     "cosine": 0.4424,
+     "dense_rank": 1,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:demo": {
+     "stage": "withheld",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 1.4147981849944848,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.1971,
+     "dense_rank": 2,
+     "role": "other"
+    },
+    "memory:risk1": {
+     "stage": "withheld",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 1.3059093882872665,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.0969,
+     "dense_rank": 6,
+     "role": "other"
+    },
+    "memory:stack": {
+     "stage": "withheld",
+     "rank": 3,
+     "base_rank": 3,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.07728342367400681,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.1464,
+     "dense_rank": 3,
+     "role": "other"
+    },
+    "memory:client": {
+     "stage": "returned",
+     "rank": 4,
+     "base_rank": 4,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.060435010811665434,
+     "routes": [
+      "lexical",
+      "semantic_vector"
+     ],
+     "cosine": 0.4424,
+     "dense_rank": 1,
+     "role": "must"
+    },
+    "memory:risk2": {
+     "stage": "withheld",
+     "rank": 5,
+     "base_rank": 5,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.058016266632432575,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.0463,
+     "dense_rank": 8,
+     "role": "other"
+    }
+   },
+   "admitted_count": 8,
+   "returned": [
+    "memory:client"
+   ],
+   "extra": [],
+   "passed": true,
+   "recall_ms": 166.86
+  },
+  {
+   "scenario": "dev-project",
+   "id": "pr-5",
+   "kind": "unlabelled",
+   "query": "Where is the system deployed?",
+   "requirement": "single",
+   "needed": {
+    "memory:hosting": {
+     "stage": "withheld",
+     "rank": 10,
+     "base_rank": 10,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 0.2568650619470027,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.2642,
+     "dense_rank": 2,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:injection": {
+     "stage": "returned",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "content_relevance",
+     "relative_to_best": 1.0,
+     "content_relevance": 1.839166305867883,
+     "bm25": 1.8468680073162405,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.1011,
+     "dense_rank": 9,
+     "role": "other"
+    },
+    "memory:stack": {
+     "stage": "withheld",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 1.075118929406298,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.2403,
+     "dense_rank": 4,
+     "role": "other"
+    },
+    "memory:invoice": {
+     "stage": "withheld",
+     "rank": 3,
+     "base_rank": 3,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 0.9783813581783303,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.16,
+     "dense_rank": 6,
+     "role": "other"
+    },
+    "memory:demo": {
+     "stage": "withheld",
+     "rank": 4,
+     "base_rank": 4,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 0.8441156030834809,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.2586,
+     "dense_rank": 3,
+     "role": "other"
+    },
+    "memory:client": {
+     "stage": "withheld",
+     "rank": 5,
+     "base_rank": 5,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 0.8441156030834809,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.1677,
+     "dense_rank": 5,
+     "role": "other"
+    }
+   },
+   "admitted_count": 10,
+   "returned": [
+    "memory:injection"
+   ],
+   "extra": [
+    "memory:injection"
+   ],
+   "passed": false,
+   "recall_ms": 254.41
+  },
+  {
+   "scenario": "dev-project",
+   "id": "pr-6",
+   "kind": "unlabelled",
+   "query": "What is the project's carbon footprint?",
+   "requirement": "single",
+   "needed": {},
+   "top_budget": {
+    "memory:hosting": {
+     "stage": "withheld",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 2.033640667217523,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.2047,
+     "dense_rank": 1,
+     "role": "other"
+    },
+    "memory:stack": {
+     "stage": "withheld",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.8086824768548332,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.0104,
+     "dense_rank": 7,
+     "role": "other"
+    },
+    "memory:invoice": {
+     "stage": "withheld",
+     "rank": 3,
+     "base_rank": 3,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.7476333704896956,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.0486,
+     "dense_rank": 6,
+     "role": "other"
+    },
+    "memory:demo": {
+     "stage": "withheld",
+     "rank": 4,
+     "base_rank": 4,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.6338156286730217,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.0898,
+     "dense_rank": 4,
+     "role": "other"
+    },
+    "memory:client": {
+     "stage": "withheld",
+     "rank": 5,
+     "base_rank": 5,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.6338156286730217,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": -0.0322,
+     "dense_rank": 9,
+     "role": "other"
+    }
+   },
+   "admitted_count": 9,
+   "returned": [],
+   "extra": [],
+   "passed": true,
+   "recall_ms": 82.7
+  },
+  {
+   "scenario": "dev-correction",
+   "id": "co-1",
+   "kind": "unlabelled",
+   "query": "What is our home address?",
+   "requirement": "single",
+   "needed": {
+    "memory:address": {
+     "stage": "not_discovered",
+     "rank": null,
+     "base_rank": null,
+     "basis": null,
+     "relative_to_best": null,
+     "content_relevance": null,
+     "bm25": null,
+     "routes": [],
+     "cosine": null,
+     "dense_rank": null,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:car2": {
+     "stage": "withheld",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.28768207245178085,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": -0.0032,
+     "dense_rank": 1,
+     "role": "other"
+    }
+   },
+   "admitted_count": 1,
+   "returned": [],
+   "extra": [],
+   "passed": false,
+   "recall_ms": 469.52
+  },
+  {
+   "scenario": "dev-correction",
+   "id": "co-2",
+   "kind": "unlabelled",
+   "query": "How much does the gym cost now?",
+   "requirement": "aggregate",
+   "needed": {
+    "memory:gym2": {
+     "stage": "returned",
+     "rank": 3,
+     "base_rank": 3,
+     "basis": "set_evidence",
+     "relative_to_best": 0.3015947833666551,
+     "content_relevance": 0.6099695188927519,
+     "bm25": 1.0583608769871584,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.5729,
+     "dense_rank": 2,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:address": {
+     "stage": "withheld",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 1.1608024647285917,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.0607,
+     "dense_rank": 3,
+     "role": "other"
+    },
+    "memory:gym": {
+     "stage": "returned",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": 1.0,
+     "content_relevance": 2.0224803363100587,
+     "bm25": 1.1191936305228196,
+     "routes": [
+      "lexical",
+      "semantic_vector"
+     ],
+     "cosine": 0.7954,
+     "dense_rank": 1,
+     "role": "may"
+    },
+    "memory:gym2": {
+     "stage": "returned",
+     "rank": 3,
+     "base_rank": 3,
+     "basis": "set_evidence",
+     "relative_to_best": 0.3015947833666551,
+     "content_relevance": 0.6099695188927519,
+     "bm25": 1.0583608769871584,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.5729,
+     "dense_rank": 2,
+     "role": "must"
+    },
+    "memory:car2": {
+     "stage": "withheld",
+     "rank": 4,
+     "base_rank": 4,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 0.4014666810845267,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.0226,
+     "dense_rank": 4,
+     "role": "other"
+    }
+   },
+   "admitted_count": 4,
+   "returned": [
+    "memory:gym",
+    "memory:gym2"
+   ],
+   "extra": [],
+   "passed": true,
+   "recall_ms": 856.55
+  },
+  {
+   "scenario": "dev-correction",
+   "id": "co-3",
+   "kind": "unlabelled",
+   "query": "Who teaches the swimming?",
+   "requirement": "single",
+   "needed": {
+    "memory:coach": {
+     "stage": "returned",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": 1.0,
+     "content_relevance": 1.2039728043259361,
+     "bm25": 1.2039728043259361,
+     "routes": [
+      "lexical",
+      "semantic_vector"
+     ],
+     "cosine": 0.6377,
+     "dense_rank": 1,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:coach": {
+     "stage": "returned",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": 1.0,
+     "content_relevance": 1.2039728043259361,
+     "bm25": 1.2039728043259361,
+     "routes": [
+      "lexical",
+      "semantic_vector"
+     ],
+     "cosine": 0.6377,
+     "dense_rank": 1,
+     "role": "must"
+    },
+    "memory:gym2": {
+     "stage": "withheld",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 0.4436380928142538,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.2347,
+     "dense_rank": 2,
+     "role": "other"
+    },
+    "memory:car2": {
+     "stage": "withheld",
+     "rank": 3,
+     "base_rank": 3,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 0.3973087983114994,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.0437,
+     "dense_rank": 4,
+     "role": "other"
+    },
+    "memory:gym": {
+     "stage": "withheld",
+     "rank": 4,
+     "base_rank": 4,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 0.37589694690549047,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.203,
+     "dense_rank": 3,
+     "role": "other"
+    }
+   },
+   "admitted_count": 4,
+   "returned": [
+    "memory:coach"
+   ],
+   "extra": [],
+   "passed": true,
+   "recall_ms": 291.77
+  },
+  {
+   "scenario": "dev-correction",
+   "id": "co-4",
+   "kind": "unlabelled",
+   "query": "Which company insures the car?",
+   "requirement": "single",
+   "needed": {
+    "memory:car2": {
+     "stage": "returned",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": 1.0,
+     "content_relevance": 1.0925692944940748,
+     "bm25": 1.2413131242530366,
+     "routes": [
+      "lexical",
+      "semantic_vector"
+     ],
+     "cosine": 0.5485,
+     "dense_rank": 1,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:car2": {
+     "stage": "returned",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": 1.0,
+     "content_relevance": 1.0925692944940748,
+     "bm25": 1.2413131242530366,
+     "routes": [
+      "lexical",
+      "semantic_vector"
+     ],
+     "cosine": 0.5485,
+     "dense_rank": 1,
+     "role": "must"
+    },
+    "memory:gym2": {
+     "stage": "withheld",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 0.16608851662131432,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.0253,
+     "dense_rank": 2,
+     "role": "other"
+    },
+    "memory:gym": {
+     "stage": "withheld",
+     "rank": 3,
+     "base_rank": 3,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 0.14072769522105374,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": -0.053,
+     "dense_rank": 3,
+     "role": "other"
+    }
+   },
+   "admitted_count": 3,
+   "returned": [
+    "memory:car2"
+   ],
+   "extra": [],
+   "passed": true,
+   "recall_ms": 73.15
+  },
+  {
+   "scenario": "dev-scope",
+   "id": "sc-1",
+   "kind": "unlabelled",
+   "query": "How do I open the garage?",
+   "requirement": "single",
+   "needed": {
+    "memory:pin": {
+     "stage": "returned",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": 1.0,
+     "content_relevance": 0.7549127709068711,
+     "bm25": 0.9534808030587029,
+     "routes": [
+      "lexical",
+      "semantic_vector"
+     ],
+     "cosine": 0.4861,
+     "dense_rank": 1,
+     "role": "must"
+    }
+   },
+   "top_budget": {
+    "memory:pin": {
+     "stage": "returned",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "non_lexical_route_evidence",
+     "relative_to_best": 1.0,
+     "content_relevance": 0.7549127709068711,
+     "bm25": 0.9534808030587029,
+     "routes": [
+      "lexical",
+      "semantic_vector"
+     ],
+     "cosine": 0.4861,
+     "dense_rank": 1,
+     "role": "must"
+    },
+    "memory:wifi2": {
+     "stage": "withheld",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "no_informative_term_match",
+     "relative_to_best": 0.0,
+     "content_relevance": 0.0,
+     "bm25": 0.2373416715660948,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.1834,
+     "dense_rank": 2,
+     "role": "other"
+    }
+   },
+   "admitted_count": 2,
+   "returned": [
+    "memory:pin"
+   ],
+   "extra": [],
+   "passed": true,
+   "recall_ms": 301.45
+  },
+  {
+   "scenario": "dev-scope",
+   "id": "sc-2",
+   "kind": "unlabelled",
+   "query": "What is the locker combination?",
+   "requirement": "single",
+   "needed": {},
+   "top_budget": {
+    "memory:wifi2": {
+     "stage": "withheld",
+     "rank": 1,
+     "base_rank": 1,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.40587420305630495,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": -0.0018,
+     "dense_rank": 2,
+     "role": "other"
+    },
+    "memory:pin": {
+     "stage": "withheld",
+     "rank": 2,
+     "base_rank": 2,
+     "basis": "no_informative_term_match",
+     "relative_to_best": null,
+     "content_relevance": 0.0,
+     "bm25": 0.3971360643036635,
+     "routes": [
+      "lexical"
+     ],
+     "cosine": 0.1539,
+     "dense_rank": 1,
+     "role": "other"
+    }
+   },
+   "admitted_count": 2,
+   "returned": [],
+   "extra": [],
+   "passed": true,
+   "recall_ms": 145.92
+  },
+  {
+   "scenario": "dev-scope",
+   "id": "sc-3",
+   "kind": "unlabelled",
+   "query": "Are there any celebrations being planned?",
+   "requirement": null,
+   "needed": {},
+   "top_budget": {},
+   "admitted_count": 0,
+   "returned": [],
+   "extra": [],
+   "passed": true,
+   "recall_ms": 181.16
+  }
+ ]
+}

@@ -22,7 +22,7 @@ for path in sys.argv[1:]:
         for ref, t in top.items():
             if t["stage"] != "withheld":
                 continue
-            cls = {"below_relative_floor": "W1", "no_informative_term_match": "W2"}.get(t["basis"], t["basis"])
+            cls = {"below_relative_floor": "W1", "no_informative_term_match": "W2"}.get(t["basis"], str(t["basis"]))
             role = "must" if t["role"] == "must" else "may" if t["role"] == "may" else "other"
             c[(cls, role)] += 1
             if lo is not None and t["cosine"] is not None and t["cosine"] >= lo:
