@@ -1030,7 +1030,7 @@
       }
     },
     "semantic-representation.yml": {
-      "pull_request": null,
+      "pull_request": "paths",
       "push": null,
       "other_triggers": [
         "workflow_dispatch"

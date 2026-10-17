@@ -100,7 +100,7 @@ class WorkflowPolicyTests(unittest.TestCase):
 
     def test_finops_discretionary_benchmarks_are_deliberate_dispatch_only(self):
         # #662: protected reference safety remains in the doctrine umbrella;
-        # these six expensive comparative/measurement workflows are invoked
+        # these five expensive comparative/measurement workflows are invoked
         # deliberately at one reviewed SHA, not on each incremental commit.
         manual = {
             "long-horizon-memory-benchmark.yml",
@@ -108,7 +108,6 @@ class WorkflowPolicyTests(unittest.TestCase):
             "operational-memory-benchmark.yml",
             "precedent-candidate-retrieval.yml",
             "retrieval-quality-benchmark.yml",
-            "semantic-representation.yml",
         }
         policy_workflows = policy()["workflows"]
         inventory = json.loads((REPO_ROOT / estate.INVENTORY).read_text(encoding="utf-8"))
@@ -125,6 +124,10 @@ class WorkflowPolicyTests(unittest.TestCase):
                 self.assertGreater(len(workflow["jobs"]), 0)
                 self.assertTrue(all(job["timeout_minutes"] is not None
                                     for job in workflow["jobs"].values()))
+        # #669's pinned-provider lane is the only CI job that runs the semantic
+        # tests unskipped: path-scoped on PRs touching that route, never on push.
+        semantic = policy_workflows["semantic-representation.yml"]
+        self.assertEqual((semantic["pull_request"], semantic["push"]), ("paths", None))
         self.assertEqual(policy_workflows["validate-doctrine-evidence.yml"][
             "pull_request"], "unfiltered")
 
@@ -303,12 +306,12 @@ class WorkflowPolicyTests(unittest.TestCase):
         self.assertIsNone(envelope["authoritative_billing_minutes"])
         self.assertIsNone(envelope["calculated_dollar_savings"])
         self.assertEqual(envelope["unfiltered_pr_workflow_starts_per_head"], 35)
-        self.assertEqual(envelope["potential_path_scoped_pr_workflows_per_head"], 40)
+        self.assertEqual(envelope["potential_path_scoped_pr_workflows_per_head"], 41)
         self.assertEqual(envelope["main_push_workflows"], 41)
-        self.assertEqual(envelope["potential_all_pr_workflows_per_head"], 75)
+        self.assertEqual(envelope["potential_all_pr_workflows_per_head"], 76)
         self.assertEqual(len(
             envelope["discretionary_benchmarks_not_automatically_triggered"]
-        ), 6)
+        ), 5)
         self.assertIn("validate-doctrine-evidence.yml",
                       envelope["unfiltered_pr_workflow_names"])
         self.assertEqual(envelope["provenance"],

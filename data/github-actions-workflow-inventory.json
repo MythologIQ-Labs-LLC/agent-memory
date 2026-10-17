@@ -3846,10 +3846,11 @@
       ],
       "lifecycleClass": "async_assurance",
       "triggers": [
+        "pull_request",
         "workflow_dispatch"
       ],
       "consequenceClass": "discretionary",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "paths",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
@@ -3876,9 +3877,9 @@
       "reusableWorkflowCalls": [],
       "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
       "proposedDisposition": "ASYNC",
-      "retirementOrReviewCondition": "Manual evaluation remains available; require explicitly reviewed dispatch evidence on material semantic-representation runtime/lane changes and review whether protected checks cover the deterministic invariants.",
+      "retirementOrReviewCondition": "Runs automatically on PRs that touch the semantic runtime modules, requirements-semantic.txt, its tests or the workflow (path-scoped, no push); manual dispatch remains for exact-SHA qualification. Review whether protected checks cover the deterministic invariants.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Added 2026-10-07 for #669: the only CI job that exercises the real pinned representation provider (skips become failures). [#662 FinOps 2026-10-09] Exact-SHA benchmark evidence remains dispatchable; no ordinary PR or main push trigger. Run before release when change affects capability, otherwise do not fabricate an accepted benchmark replay.",
+      "reviewNotes": "Added 2026-10-07 for #669: the only CI job that exercises the real pinned representation provider (skips become failures). [#662 FinOps 2026-10-09] Exact-SHA benchmark evidence remains dispatchable; no main push trigger. [#662 2026-10-17, independent qualification R2] Path-scoped pull_request trigger restored so the pinned-provider tests stay automatic for semantic-route changes. Run before release when change affects capability, otherwise do not fabricate an accepted benchmark replay.",
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
@@ -4367,7 +4368,7 @@
     },
     "triggerCounts": {
       "issues": 1,
-      "pull_request": 75,
+      "pull_request": 76,
       "push": 41,
       "workflow_dispatch": 48
     },

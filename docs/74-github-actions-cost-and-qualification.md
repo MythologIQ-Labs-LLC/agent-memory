@@ -5,7 +5,7 @@
 ## Routine development
 
 1. Work on an **unopened, non-`main` staging branch**. The recorded workflow policy prohibits push triggers outside `main`. Merely pushing that branch does not start the PR- or main-push-triggered workflow estate.
-2. Do not create the PR prematurely. **Creating a PR is the qualification event** that will launch the broad protected suite, currently 35 unfiltered workflows after the six-lane manual conversion.
+2. Do not create the PR prematurely. **Creating a PR is the qualification event** that will launch the broad protected suite, currently 35 unfiltered workflows after the five-lane manual conversion and the path scoping of `semantic-representation.yml`.
 3. Run focused unit, integration and mutation tests on the local checkout or an independently authorized local Claude session. Include the same Python/runtime dependencies and pinned source revision where evidence matters. Use the existing repository smoke/gate scripts instead of remote hosted CI for diagnosis.
 4. Accumulate changes and run the **offline** preflight on the final staged revision: `python scripts/run_finops_local_preflight.py --mode quick`, then `python scripts/run_finops_local_preflight.py --mode full`. This checks exact committed SHA and clean worktree, source-bound workflow/retention policy, the full reference suite and repository tests. The JSON receipt is written outside the checkout in the local temporary directory, contains no test stdout/stderr, and explicitly carries **no release or billing authority**. Run capability-specific benchmark qualification separately where needed.
 5. Review branch-protection status contexts and current billing/remaining budget before opening a PR. Where an external capability needs an authoritative GitHub workflow artifact, run a **deliberate** `workflow_dispatch` exactly once on an approved branch revision, with the executing SHA recorded.
@@ -13,7 +13,7 @@
 
 This is a **development workflow policy**, not a claim that a local passing suite satisfies every provider/model, platform, release or audit obligation. An authorized release still requires whichever protected evidence is mandated by that tranche.
 
-## Six discretionary qualification workloads
+## Five discretionary qualification workloads, and one path-scoped semantic lane
 
 | Workflow | Why automatic PR/main execution was wasteful | Minimum intent for deliberate qualification |
 | --- | --- | --- |
@@ -22,9 +22,10 @@ This is a **development workflow policy**, not a claim that a local passing suit
 | `operational-memory-benchmark.yml` | Runs local representations **and** an isolated V-JEPA comparator job | Failure memory, operational trajectories or representation changes; retain both artifacts |
 | `precedent-candidate-retrieval.yml` | Re-runs precedent tests already included by doctrine and re-emits benchmark evidence | Precedent retrieval, applicability and scope/negative-precedent changes |
 | `retrieval-quality-benchmark.yml` | Runs retrieval and synthetic SWE-context regression suites again, plus repeat/restart benchmark evidence | Candidate generation, ranking, admission, retrieval routes and SWE-context feature work |
-| `semantic-representation.yml` | Pinned ONNX model download/inference is expensive and may be unavailable in regular local suites | Provider/model/digest/embedding/semantic store/facade changes. **Mandatory model-required (no skips) qualification before declaring semantic route ready.** |
 
-The six workflows retain the same job IDs, steps, source/model pins, metrics, evidence checks, artifacts, timeouts, permissions and workflow names. Only their triggers changed to `workflow_dispatch`. The goal is to prevent **routine repetition**, not suppress the benchmark or its obligation. An author/reviewer cannot claim an affected capability is qualified based solely on an ordinary PR's green doctrine check.
+The five workflows retain the same job IDs, steps, source/model pins, metrics, evidence checks, artifacts, timeouts, permissions and workflow names. Only their triggers changed to `workflow_dispatch`. The goal is to prevent **routine repetition**, not suppress the benchmark or its obligation. An author/reviewer cannot claim an affected capability is qualified based solely on an ordinary PR's green doctrine check.
+
+`semantic-representation.yml` is **not** manual-only. It is the only CI job that runs the pinned ONNX provider with `AGENT_MEMORY_REQUIRE_REPRESENTATION=1` (model-dependent tests that skip everywhere else, including the doctrine umbrella, fail here instead). Its unfiltered PR trigger and its `main` push trigger are removed; a path-scoped `pull_request` trigger keeps it automatic for any PR that changes the semantic runtime modules (`representation_onnx.py`, `representation_cache.py`, `vector_retrieval.py`, `semantic_readmission_adapter.py`), `reference/requirements-semantic.txt`, its five test modules or the workflow itself. `workflow_dispatch` remains for exact-SHA qualification. This follows the independent #820 qualification (R2): a prose-only dispatch obligation would have left a shipping runtime route without any automatic unskipped test.
 
 ## Three research post-merge duplicates eliminated
 
@@ -50,7 +51,7 @@ For local work, `scripts/run_finops_local_preflight.py` provides quick/full mode
 
 ## What this does and does not save
 
-Before the bounded changes: **41** always-triggered PR workflows, **81** possible PR workflows, and **50** main-push workflows. Staged outcome: **35** always-triggered PR workflows, **75** possible PR workflows, and **41** main-push workflows, with the same 86 top-level workflow names. Six workflows' historical automatic PR and main-push starts have been replaced by deliberate dispatch; three more research/qualification workflows retain path-scoped PR checks but lose duplicate `main`-push execution. One redundant EvolveAI full-reference-suite pass has also been removed. Forty other PR workflows remain path-scoped. The observed number of runner minutes saved will be different from 6 times a fixed duration and is **not available from this connector**.
+Before the bounded changes: **41** always-triggered PR workflows, **81** possible PR workflows, and **50** main-push workflows. Staged outcome: **35** always-triggered PR workflows, **76** possible PR workflows, and **41** main-push workflows, with the same 86 top-level workflow names. Five workflows' historical automatic PR and main-push starts have been replaced by deliberate dispatch; `semantic-representation.yml` loses its unfiltered PR and `main`-push starts but keeps a path-scoped PR trigger; three more research/qualification workflows retain path-scoped PR checks but lose duplicate `main`-push execution. One redundant EvolveAI full-reference-suite pass has also been removed. Forty-one PR workflows are path-scoped. The observed number of runner minutes saved will be different from 6 times a fixed duration and is **not available from this connector**.
 
 Run `python scripts/sync_workflow_inventory.py --finops-report` to generate a deterministic, non-billing configuration report. It does not know runner billing, free-tier benefits, OS multipliers, real duration, caching, cancellations or authorized release frequency. Billing in GitHub Settings remains the authoritative source.
 

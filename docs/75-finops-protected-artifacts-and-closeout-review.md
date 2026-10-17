@@ -82,6 +82,6 @@ There are **43 workflows** below, representing **50 distinct upload steps**. Thi
 
 ## Continuation policy
 
-The safe run-cost reduction (six manualized benchmark workflows, three PR/main deduplications, and one redundant full-reference pass eliminated) is committed on `finops/662-quiet-staging-and-benchmark-gates`. It remains an unopened **quiet** branch until independent local tests and a deliberate final CI qualification pass. The separate `finops/767-consolidate-qualification-no-ci` branch removes a redundant new workflow from PR #767 before integration. Neither changes protected runtime/benchmarks, frozen evaluations, authority semantics, or branch protection.
+The safe run-cost reduction (five manualized benchmark workflows, `semantic-representation.yml` reduced to a path-scoped PR trigger, three PR/main deduplications, and one redundant full-reference pass eliminated) is committed on `finops/662-quiet-staging-and-benchmark-gates`. It remains an unopened **quiet** branch until independent local tests and a deliberate final CI qualification pass. The separate `finops/767-consolidate-qualification-no-ci` branch removes a redundant new workflow from PR #767 before integration. Neither changes protected runtime/benchmarks, frozen evaluations, authority semantics, or branch protection.
 
 **This document is not evidence that the six retirement candidates are safe to delete.** It makes the unknowns and required proof explicit so the next FinOps changes do not accidentally erase essential evidence.
