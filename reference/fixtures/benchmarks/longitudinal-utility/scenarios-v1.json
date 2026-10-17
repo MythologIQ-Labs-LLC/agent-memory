@@ -1,0 +1,1148 @@
+{
+ "fixture_version": "1.0.0",
+ "description": "Deterministic multi-session agent-utility scenarios (#819 longitudinal lane). Expectations name writes and are read only by the scorer.",
+ "default_budget": 5,
+ "scenarios": [
+  {
+   "id": "pref-editor-state-change",
+   "family": "preference_change",
+   "sessions": [
+    {
+     "writes": [
+      {
+       "id": "w1",
+       "op": "remember",
+       "ref": "pref:editor",
+       "text": "The user prefers the Vim editor for coding"
+      },
+      {
+       "id": "w2",
+       "op": "remember",
+       "ref": "pref:theme",
+       "text": "The user prefers a dark color theme in every editor"
+      }
+     ]
+    },
+    {
+     "writes": [
+      {
+       "id": "w3",
+       "op": "correct",
+       "ref": "pref:editor",
+       "text": "The user prefers the Helix editor for coding",
+       "replacement_kind": "state_change"
+      }
+     ]
+    },
+    {
+     "probes": [
+      {
+       "id": "p1",
+       "query": "Which editor does the user prefer for coding?",
+       "phrasing": "unqualified",
+       "current": [
+        "w3"
+       ],
+       "stale": [
+        "w1"
+       ]
+      },
+      {
+       "id": "p2",
+       "query": "Which editor does the user prefer for coding now?",
+       "phrasing": "explicit_current",
+       "current": [
+        "w3"
+       ],
+       "stale": [
+        "w1"
+       ]
+      },
+      {
+       "id": "p3",
+       "query": "Which editor did the user prefer for coding in the past?",
+       "phrasing": "historical",
+       "temporal_intent": {
+        "mode": "historical"
+       },
+       "current": [
+        "w3"
+       ],
+       "history": [
+        "w1"
+       ]
+      },
+      {
+       "id": "p4",
+       "query": "What color theme does the user like in the editor?",
+       "phrasing": "unqualified",
+       "current": [
+        "w2"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "timezone-error-correction",
+   "family": "corrected_fact",
+   "sessions": [
+    {
+     "writes": [
+      {
+       "id": "w1",
+       "op": "remember",
+       "ref": "profile:timezone",
+       "text": "The user's timezone is Pacific Time"
+      }
+     ]
+    },
+    {
+     "writes": [
+      {
+       "id": "w2",
+       "op": "correct",
+       "ref": "profile:timezone",
+       "text": "The user's timezone is Central European Time",
+       "replacement_kind": "error_correction"
+      }
+     ]
+    },
+    {
+     "probes": [
+      {
+       "id": "p1",
+       "query": "What timezone is the user in?",
+       "phrasing": "unqualified",
+       "current": [
+        "w2"
+       ],
+       "stale": [
+        "w1"
+       ]
+      },
+      {
+       "id": "p2",
+       "query": "Which timezone should I use when scheduling a meeting for the user?",
+       "phrasing": "unqualified",
+       "current": [
+        "w2"
+       ],
+       "stale": [
+        "w1"
+       ]
+      },
+      {
+       "id": "p3",
+       "query": "What timezone was the user in before?",
+       "phrasing": "historical",
+       "temporal_intent": {
+        "mode": "historical"
+       },
+       "current": [
+        "w2"
+       ],
+       "stale": [
+        "w1"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "atlas-ship-date",
+   "family": "superseded_commitment",
+   "sessions": [
+    {
+     "writes": [
+      {
+       "id": "w1",
+       "op": "remember",
+       "ref": "s1:commitment",
+       "text": "We committed to ship the Atlas beta on March 1",
+       "proposition": {
+        "subject": "atlas beta",
+        "attribute": "ship_date",
+        "value": "March 1",
+        "assertion": "state",
+        "cardinality": "single"
+       }
+      }
+     ]
+    },
+    {
+     "writes": [
+      {
+       "id": "w2",
+       "op": "remember",
+       "ref": "s2:dependency",
+       "text": "The Atlas beta cannot ship until the billing migration is finished"
+      }
+     ]
+    },
+    {
+     "writes": [
+      {
+       "id": "w3",
+       "op": "remember",
+       "ref": "s3:commitment",
+       "text": "The Atlas beta ship date moved to April 15",
+       "proposition": {
+        "subject": "atlas beta",
+        "attribute": "ship_date",
+        "value": "April 15",
+        "assertion": "change",
+        "cardinality": "single",
+        "replaces_value": "March 1"
+       }
+      }
+     ]
+    },
+    {
+     "writes": [
+      {
+       "id": "w4",
+       "op": "remember",
+       "ref": "s4:hearsay",
+       "text": "Dana says the Atlas beta ship date moved to May 20",
+       "source_ref": "user:dana",
+       "proposition": {
+        "subject": "atlas beta",
+        "attribute": "ship_date",
+        "value": "May 20",
+        "assertion": "change",
+        "cardinality": "single",
+        "replaces_value": "April 15",
+        "flags": {
+         "attributed_to_other": true
+        }
+       }
+      }
+     ],
+     "probes": [
+      {
+       "id": "p1",
+       "query": "When will the Atlas beta ship?",
+       "phrasing": "unqualified",
+       "current": [
+        "w3"
+       ],
+       "stale": [
+        "w1"
+       ]
+      },
+      {
+       "id": "p2",
+       "query": "When will the Atlas beta ship now?",
+       "phrasing": "explicit_current",
+       "current": [
+        "w3"
+       ],
+       "stale": [
+        "w1"
+       ]
+      },
+      {
+       "id": "p3",
+       "query": "What has to be finished before the Atlas beta can ship?",
+       "phrasing": "unqualified",
+       "current": [
+        "w2"
+       ]
+      },
+      {
+       "id": "p4",
+       "query": "When does the Atlas beta ship and what is blocking it?",
+       "phrasing": "unqualified",
+       "current": [
+        "w3"
+       ],
+       "dependency": [
+        "w2"
+       ],
+       "stale": [
+        "w1"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "atlas-database-migration",
+   "family": "evolving_project",
+   "sessions": [
+    {
+     "writes": [
+      {
+       "id": "w1",
+       "op": "remember",
+       "ref": "project:atlas:database",
+       "text": "Project Atlas stores its data in PostgreSQL"
+      },
+      {
+       "id": "w2",
+       "op": "remember",
+       "ref": "project:atlas:db-credentials",
+       "text": "Atlas database credentials live in the vault path secret/atlas-db"
+      }
+     ]
+    },
+    {
+     "writes": [
+      {
+       "id": "w3",
+       "op": "correct",
+       "ref": "project:atlas:database",
+       "text": "Project Atlas stores its data in CockroachDB",
+       "replacement_kind": "state_change"
+      }
+     ]
+    },
+    {
+     "writes": [
+      {
+       "id": "w4",
+       "op": "remember",
+       "ref": "project:atlas:backups",
+       "text": "Atlas database backups run nightly at 02:00 UTC"
+      }
+     ]
+    },
+    {
+     "probes": [
+      {
+       "id": "p1",
+       "query": "Which database does Project Atlas use?",
+       "phrasing": "unqualified",
+       "current": [
+        "w3"
+       ],
+       "stale": [
+        "w1"
+       ]
+      },
+      {
+       "id": "p2",
+       "query": "How do I connect to the Atlas database?",
+       "phrasing": "unqualified",
+       "current": [
+        "w3"
+       ],
+       "dependency": [
+        "w2"
+       ],
+       "stale": [
+        "w1"
+       ]
+      },
+      {
+       "id": "p3",
+       "query": "When do Atlas database backups run?",
+       "phrasing": "unqualified",
+       "current": [
+        "w4"
+       ]
+      },
+      {
+       "id": "p4",
+       "query": "Which database did Project Atlas use before?",
+       "phrasing": "historical",
+       "temporal_intent": {
+        "mode": "historical"
+       },
+       "current": [
+        "w3"
+       ],
+       "history": [
+        "w1"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "allergies-multivalued",
+   "family": "no_false_supersession",
+   "sessions": [
+    {
+     "writes": [
+      {
+       "id": "w1",
+       "op": "remember",
+       "ref": "s1:allergy",
+       "text": "The user is allergic to peanuts",
+       "proposition": {
+        "subject": "user",
+        "attribute": "allergy",
+        "value": "peanuts",
+        "assertion": "state",
+        "cardinality": "multi"
+       }
+      }
+     ]
+    },
+    {
+     "writes": [
+      {
+       "id": "w2",
+       "op": "remember",
+       "ref": "s2:allergy",
+       "text": "The user is also allergic to shellfish",
+       "proposition": {
+        "subject": "user",
+        "attribute": "allergy",
+        "value": "shellfish",
+        "assertion": "state",
+        "cardinality": "multi"
+       }
+      }
+     ]
+    },
+    {
+     "probes": [
+      {
+       "id": "p1",
+       "query": "What foods is the user allergic to?",
+       "phrasing": "unqualified",
+       "current": [
+        "w1",
+        "w2"
+       ]
+      },
+      {
+       "id": "p2",
+       "query": "What is the user allergic to now?",
+       "phrasing": "explicit_current",
+       "current": [
+        "w1",
+        "w2"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "teammate-languages",
+   "family": "no_false_supersession",
+   "sessions": [
+    {
+     "writes": [
+      {
+       "id": "w1",
+       "op": "remember",
+       "ref": "s1:alice",
+       "text": "Alice's favorite programming language is Go",
+       "proposition": {
+        "subject": "alice",
+        "attribute": "favorite_language",
+        "value": "Go",
+        "assertion": "state",
+        "cardinality": "single"
+       }
+      },
+      {
+       "id": "w2",
+       "op": "remember",
+       "ref": "s1:bob",
+       "text": "Bob's favorite programming language is Kotlin",
+       "proposition": {
+        "subject": "bob",
+        "attribute": "favorite_language",
+        "value": "Kotlin",
+        "assertion": "state",
+        "cardinality": "single"
+       }
+      }
+     ]
+    },
+    {
+     "writes": [
+      {
+       "id": "w3",
+       "op": "remember",
+       "ref": "s2:bob",
+       "text": "Bob's favorite programming language is now Scala",
+       "proposition": {
+        "subject": "bob",
+        "attribute": "favorite_language",
+        "value": "Scala",
+        "assertion": "change",
+        "cardinality": "single",
+        "replaces_value": "Kotlin"
+       }
+      }
+     ]
+    },
+    {
+     "probes": [
+      {
+       "id": "p1",
+       "query": "What is Alice's favorite programming language?",
+       "phrasing": "unqualified",
+       "current": [
+        "w1"
+       ]
+      },
+      {
+       "id": "p2",
+       "query": "What is Bob's favorite programming language?",
+       "phrasing": "unqualified",
+       "current": [
+        "w3"
+       ],
+       "stale": [
+        "w2"
+       ]
+      },
+      {
+       "id": "p3",
+       "query": "What is Bob's favorite programming language now?",
+       "phrasing": "explicit_current",
+       "current": [
+        "w3"
+       ],
+       "stale": [
+        "w2"
+       ]
+      },
+      {
+       "id": "p4",
+       "query": "What is Alice's favorite programming language now?",
+       "phrasing": "explicit_current",
+       "current": [
+        "w1"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "project-scope-isolation",
+   "family": "isolation",
+   "sessions": [
+    {
+     "writes": [
+      {
+       "id": "w1",
+       "op": "remember",
+       "ref": "deploy:target",
+       "text": "The deploy target for this project is the east Kubernetes cluster",
+       "scope": "project:atlas"
+      },
+      {
+       "id": "w2",
+       "op": "remember",
+       "ref": "deploy:target",
+       "text": "The deploy target for this project is the west Kubernetes cluster",
+       "scope": "project:borealis"
+      }
+     ]
+    },
+    {
+     "probes": [
+      {
+       "id": "p1",
+       "query": "What is the deploy target for this project?",
+       "phrasing": "unqualified",
+       "scope": "project:atlas",
+       "current": [
+        "w1"
+       ],
+       "forbidden": [
+        "w2"
+       ]
+      },
+      {
+       "id": "p2",
+       "query": "What is the deploy target for this project?",
+       "phrasing": "unqualified",
+       "scope": "project:borealis",
+       "current": [
+        "w2"
+       ],
+       "forbidden": [
+        "w1"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "privacy-forget",
+   "family": "withdrawn",
+   "sessions": [
+    {
+     "writes": [
+      {
+       "id": "w1",
+       "op": "remember",
+       "ref": "profile:home-address",
+       "text": "The user's home address is 12 Elm Street"
+      },
+      {
+       "id": "w2",
+       "op": "remember",
+       "ref": "profile:office",
+       "text": "The user's office is on the fourth floor of the Harbor building"
+      }
+     ]
+    },
+    {
+     "writes": [
+      {
+       "id": "w3",
+       "op": "forget",
+       "ref": "profile:home-address"
+      }
+     ]
+    },
+    {
+     "probes": [
+      {
+       "id": "p1",
+       "query": "What is the user's home address?",
+       "phrasing": "unqualified",
+       "forbidden": [
+        "w1"
+       ]
+      },
+      {
+       "id": "p2",
+       "query": "Where is the user's office?",
+       "phrasing": "unqualified",
+       "current": [
+        "w2"
+       ],
+       "forbidden": [
+        "w1"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "long-gap-recall",
+   "family": "cross_session_recall",
+   "sessions": [
+    {
+     "writes": [
+      {
+       "id": "w1",
+       "op": "remember",
+       "ref": "pref:package-manager",
+       "text": "The user's preferred package manager is pnpm"
+      },
+      {
+       "id": "n0",
+       "op": "remember",
+       "ref": "note:0",
+       "text": "The team uses GitHub Actions for continuous integration"
+      },
+      {
+       "id": "n1",
+       "op": "remember",
+       "ref": "note:1",
+       "text": "The user's laptop runs macOS Sonoma"
+      },
+      {
+       "id": "n2",
+       "op": "remember",
+       "ref": "note:2",
+       "text": "The marketing site is hosted on Netlify"
+      },
+      {
+       "id": "n3",
+       "op": "remember",
+       "ref": "note:3",
+       "text": "Code review requires one approving reviewer"
+      }
+     ]
+    },
+    {
+     "writes": [
+      {
+       "id": "n4",
+       "op": "remember",
+       "ref": "note:4",
+       "text": "The user writes commit messages in the imperative mood"
+      },
+      {
+       "id": "n5",
+       "op": "remember",
+       "ref": "note:5",
+       "text": "The design system lives in the shared Figma workspace"
+      },
+      {
+       "id": "n6",
+       "op": "remember",
+       "ref": "note:6",
+       "text": "The on-call rotation changes every Monday"
+      },
+      {
+       "id": "n7",
+       "op": "remember",
+       "ref": "note:7",
+       "text": "Integration tests take about twelve minutes"
+      }
+     ]
+    },
+    {
+     "writes": [
+      {
+       "id": "n8",
+       "op": "remember",
+       "ref": "note:8",
+       "text": "The user dislikes trailing whitespace in diffs"
+      },
+      {
+       "id": "n9",
+       "op": "remember",
+       "ref": "note:9",
+       "text": "The analytics dashboard is built with Grafana"
+      },
+      {
+       "id": "n10",
+       "op": "remember",
+       "ref": "note:10",
+       "text": "The mobile app targets iOS 17 and later"
+      },
+      {
+       "id": "n11",
+       "op": "remember",
+       "ref": "note:11",
+       "text": "Feature flags are managed in LaunchDarkly"
+      }
+     ]
+    },
+    {
+     "probes": [
+      {
+       "id": "p1",
+       "query": "Which package manager should I use for the user's projects?",
+       "phrasing": "unqualified",
+       "current": [
+        "w1"
+       ]
+      },
+      {
+       "id": "p2",
+       "query": "What do we use for continuous integration?",
+       "phrasing": "unqualified",
+       "current": [
+        "n0"
+       ]
+      },
+      {
+       "id": "p3",
+       "query": "Where are feature flags managed?",
+       "phrasing": "unqualified",
+       "current": [
+        "n11"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "standup-untyped-change",
+   "family": "untyped_episodic_change",
+   "sessions": [
+    {
+     "writes": [
+      {
+       "id": "w1",
+       "op": "remember",
+       "ref": "s1:note",
+       "text": "The team standup is at 9am"
+      }
+     ]
+    },
+    {
+     "writes": [
+      {
+       "id": "w2",
+       "op": "remember",
+       "ref": "s2:note",
+       "text": "The team standup moved to 10am"
+      }
+     ]
+    },
+    {
+     "probes": [
+      {
+       "id": "p1",
+       "query": "What time is the team standup?",
+       "phrasing": "unqualified",
+       "current": [
+        "w2"
+       ],
+       "stale": [
+        "w1"
+       ]
+      },
+      {
+       "id": "p2",
+       "query": "What time is the team standup now?",
+       "phrasing": "explicit_current",
+       "current": [
+        "w2"
+       ],
+       "stale": [
+        "w1"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "parked-correction",
+   "family": "governed_admission",
+   "sessions": [
+    {
+     "writes": [
+      {
+       "id": "w1",
+       "op": "remember",
+       "ref": "release:branch",
+       "text": "The release branch is main"
+      }
+     ]
+    },
+    {
+     "writes": [
+      {
+       "id": "w2",
+       "op": "correct",
+       "ref": "release:branch",
+       "text": "The release branch is trunk",
+       "replacement_kind": "error_correction",
+       "evidence": false,
+       "expect_committed": false
+      }
+     ]
+    },
+    {
+     "probes": [
+      {
+       "id": "p1",
+       "query": "What is the release branch?",
+       "phrasing": "unqualified",
+       "current": [
+        "w1"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "diet-change",
+   "family": "preference_change",
+   "sessions": [
+    {
+     "writes": [
+      {
+       "id": "w1",
+       "op": "remember",
+       "ref": "s1:diet",
+       "text": "The user is vegetarian",
+       "proposition": {
+        "subject": "user",
+        "attribute": "diet",
+        "value": "vegetarian",
+        "assertion": "state",
+        "cardinality": "single"
+       }
+      },
+      {
+       "id": "w2",
+       "op": "remember",
+       "ref": "s1:cuisine",
+       "text": "The user enjoys Thai food"
+      }
+     ]
+    },
+    {
+     "writes": [
+      {
+       "id": "w3",
+       "op": "remember",
+       "ref": "s2:diet",
+       "text": "The user is now vegan",
+       "proposition": {
+        "subject": "user",
+        "attribute": "diet",
+        "value": "vegan",
+        "assertion": "change",
+        "cardinality": "single",
+        "replaces_value": "vegetarian"
+       }
+      }
+     ]
+    },
+    {
+     "probes": [
+      {
+       "id": "p1",
+       "query": "What diet does the user follow?",
+       "phrasing": "unqualified",
+       "current": [
+        "w3"
+       ],
+       "stale": [
+        "w1"
+       ]
+      },
+      {
+       "id": "p2",
+       "query": "Suggest a restaurant: what diet and cuisine does the user like?",
+       "phrasing": "unqualified",
+       "current": [
+        "w3"
+       ],
+       "dependency": [
+        "w2"
+       ],
+       "stale": [
+        "w1"
+       ]
+      },
+      {
+       "id": "p3",
+       "query": "What diet does the user follow currently?",
+       "phrasing": "explicit_current",
+       "current": [
+        "w3"
+       ],
+       "stale": [
+        "w1"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "typed-change-guards",
+   "family": "no_false_supersession",
+   "sessions": [
+    {
+     "writes": [
+      {
+       "id": "w1",
+       "op": "remember",
+       "ref": "s1:laptop",
+       "text": "The user's work laptop is a ThinkPad",
+       "proposition": {
+        "subject": "user",
+        "attribute": "work_laptop",
+        "value": "ThinkPad",
+        "assertion": "state",
+        "cardinality": "single"
+       }
+      },
+      {
+       "id": "w2",
+       "op": "remember",
+       "ref": "s1:shell",
+       "text": "The user's login shell is zsh",
+       "proposition": {
+        "subject": "user",
+        "attribute": "login_shell",
+        "value": "zsh",
+        "assertion": "state",
+        "cardinality": "single"
+       }
+      },
+      {
+       "id": "w3",
+       "op": "remember",
+       "ref": "s1:region",
+       "text": "The user's cloud region is eu-west-1",
+       "proposition": {
+        "subject": "user",
+        "attribute": "cloud_region",
+        "value": "eu-west-1",
+        "assertion": "state",
+        "cardinality": "single"
+       }
+      }
+     ]
+    },
+    {
+     "writes": [
+      {
+       "id": "w4",
+       "op": "remember",
+       "ref": "s2:laptop",
+       "text": "The user might switch the work laptop to a MacBook",
+       "proposition": {
+        "subject": "user",
+        "attribute": "work_laptop",
+        "value": "MacBook",
+        "assertion": "change",
+        "cardinality": "single",
+        "replaces_value": "ThinkPad",
+        "flags": {
+         "hedged": true
+        }
+       }
+      },
+      {
+       "id": "w5",
+       "op": "remember",
+       "ref": "s2:shell",
+       "text": "The user's login shell is now fish",
+       "source_ref": "tool:dotfiles-scan",
+       "proposition": {
+        "subject": "user",
+        "attribute": "login_shell",
+        "value": "fish",
+        "assertion": "change",
+        "cardinality": "single",
+        "replaces_value": "zsh"
+       }
+      },
+      {
+       "id": "w6",
+       "op": "remember",
+       "ref": "s2:region",
+       "text": "The user's cloud region is now us-east-1",
+       "scope": "project:sandbox",
+       "proposition": {
+        "subject": "user",
+        "attribute": "cloud_region",
+        "value": "us-east-1",
+        "assertion": "change",
+        "cardinality": "single",
+        "replaces_value": "eu-west-1"
+       }
+      }
+     ]
+    },
+    {
+     "probes": [
+      {
+       "id": "p1",
+       "query": "What work laptop does the user have?",
+       "phrasing": "unqualified",
+       "current": [
+        "w1"
+       ]
+      },
+      {
+       "id": "p2",
+       "query": "What is the user's login shell?",
+       "phrasing": "unqualified",
+       "current": [
+        "w2"
+       ]
+      },
+      {
+       "id": "p3",
+       "query": "What is the user's cloud region?",
+       "phrasing": "unqualified",
+       "current": [
+        "w3"
+       ],
+       "forbidden": [
+        "w6"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "language-history",
+   "family": "history_preservation",
+   "sessions": [
+    {
+     "writes": [
+      {
+       "id": "w1",
+       "op": "remember",
+       "ref": "s1:lang",
+       "text": "My favorite language is Python",
+       "proposition": {
+        "subject": "user",
+        "attribute": "favorite_language",
+        "value": "Python",
+        "assertion": "state",
+        "cardinality": "single"
+       }
+      }
+     ]
+    },
+    {
+     "writes": [
+      {
+       "id": "w2",
+       "op": "remember",
+       "ref": "s2:lang",
+       "text": "My favorite language is now Rust",
+       "proposition": {
+        "subject": "user",
+        "attribute": "favorite_language",
+        "value": "Rust",
+        "assertion": "change",
+        "cardinality": "single",
+        "replaces_value": "Python"
+       }
+      }
+     ]
+    },
+    {
+     "probes": [
+      {
+       "id": "p1",
+       "query": "What is my favorite language?",
+       "phrasing": "unqualified",
+       "current": [
+        "w2"
+       ],
+       "stale": [
+        "w1"
+       ]
+      },
+      {
+       "id": "p2",
+       "query": "Which favorite languages have I mentioned over the sessions?",
+       "phrasing": "unqualified",
+       "current": [
+        "w2"
+       ],
+       "history": [
+        "w1"
+       ]
+      },
+      {
+       "id": "p3",
+       "query": "What was my favorite language before Rust?",
+       "phrasing": "historical",
+       "temporal_intent": {
+        "mode": "historical"
+       },
+       "current": [
+        "w2"
+       ],
+       "history": [
+        "w1"
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}
