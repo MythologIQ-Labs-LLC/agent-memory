@@ -222,12 +222,23 @@ class DeterministicMultiRouteRecallPlanner:
             and self.vector_retriever.available_for(substrate)
         ):
             routes_executed.append(SEMANTIC_VECTOR_ROUTE)
+            eligible = lambda fact: self.adapter.domain_eligible(fact, context)  # noqa: E731
+            refusal = getattr(self.adapter, "discovery_refusal", None)
+            if discovery_expansion and callable(refusal):
+                # #819 C9-D: the route keeps only its top ``vector_candidate_limit`` hits, so a
+                # memory admission refuses in this recall's mode (superseded, forgotten, disputed;
+                # in historical recall error-corrected or outside the window) must not take one of
+                # those slots from an admissible memory. Same predicate as admission; only removes,
+                # grants nothing. ``ranked_prefix`` keeps the pre-C9 route, like C3's expansion.
+                mode, target = admission_mode_for_intent(resolve_intent(query, temporal_intent))
+                eligible = lambda fact: (self.adapter.domain_eligible(fact, context)  # noqa: E731
+                                         and refusal(fact, context, mode, target) is None)
             for vector_hit in self.vector_retriever.search(
                 substrate,
                 query,
                 group_id=tenant,
                 candidate_limit=self.vector_candidate_limit,
-                eligible=lambda fact: self.adapter.domain_eligible(fact, context),
+                eligible=eligible,
             ):
                 hits.append(
                     RetrievalRouteHit(

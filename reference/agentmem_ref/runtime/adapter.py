@@ -1325,6 +1325,20 @@ class GovernedMemoryAdapter:
             return False
         return self._domain_identity_refusal(fact_uuid, group_id, context) is None
 
+    def discovery_refusal(self, fact: Fact, context: RecallContext, mode: str = CURRENT_STATE_ADMISSION,
+                          target_seconds: float | None = None) -> str | None:
+        """The refusal admission would give ``fact`` in ``mode``, read before a bounded route ranks it (#819 C9-D).
+
+        Exactly ``_admission_refusal``: tenant, tombstone, derived from a tombstoned source,
+        event-invalid (current state: superseded; historical: no governed state change, an
+        error correction, or outside the target window), dispute, and domain eligibility. A
+        route that keeps only its top hits uses it so that a memory admission would refuse never
+        takes a slot. It reads identity and lifecycle records only, never the fact text, and
+        grants nothing: admission still evaluates every candidate.
+        """
+
+        return self._admission_refusal(fact, context, mode, target_seconds)
+
     def record_correction(self, memory_id: str) -> int:
         """A correction advances canonical version; dependents become stale by relation."""
         self._state_version[memory_id] = self._state_version.get(memory_id, 0) + 1
