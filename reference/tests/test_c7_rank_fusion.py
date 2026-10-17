@@ -143,6 +143,10 @@ class C9SelectionFunnelDiagnostics(_Store):
         funnel = policy["selection_funnel"]
         self.assertEqual(default["admitted"], prefix["admitted"])
         self.assertEqual(funnel["admitted_count"], len(default["admitted"]))
+        self.assertEqual(funnel["candidate_count"], len(default["candidates"]))
+        self.assertEqual(funnel["refused_count"], sum(
+            bool(v.get("refusal")) for v in default["admissions"].values()
+        ))
         self.assertEqual(funnel["sufficient_count"], policy["sufficient_count"])
         self.assertEqual(funnel["returned_count"], len(default["returned"]))
         self.assertEqual(funnel["budget"], 2)
