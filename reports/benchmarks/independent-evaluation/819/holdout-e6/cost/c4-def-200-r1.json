@@ -1,0 +1,1 @@
+{"N": 200, "semantic": "off", "open_kwargs": {}, "recall_kwargs": {}, "admitted_median": 200.0, "returned_median": 5.0, "write_seconds": 1.15, "cold_first_recall_ms": 33.8, "warm_p50_ms": 26.3, "warm_p95_ms": 42.0, "peak_rss_mib": 41.2}
