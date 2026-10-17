@@ -983,6 +983,13 @@ class AgentMemory:
         for ref in withheld:
             basis = str(records.get(ref, {}).get("basis", "unclassified"))
             reasons[basis] = reasons.get(basis, 0) + 1
+        for ref in ranked:
+            # This per-fact evidence is already exposed under admissions[*].return_selection.
+            # Mark only whether an admitted top-k fact was withheld by sufficiency.
+            # It is a diagnostic, never another reason to include a fact.
+            admissions.setdefault(ref, {}).setdefault("return_selection", {})[
+                "ranked_prefix_withheld"
+            ] = ref in withheld
         summary["selection_funnel"] = {
             "admitted_count": len(ranked),
             "sufficient_count": len(selected),
