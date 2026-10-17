@@ -1,0 +1,17 @@
+{"q": "hh-2", "need": "memory:cat", "stage": "never_discovered", "cos": 0.214, "drank": 2, "best": 0.28, "n": 10, "kind": "multi", "query": "Which animals live with us?"}
+{"q": "hh-2", "need": "memory:dog", "stage": "never_discovered", "cos": 0.28, "drank": 1, "best": 0.28, "n": 10, "kind": "multi", "query": "Which animals live with us?"}
+{"q": "hh-2", "need": "memory:fish", "stage": "never_discovered", "cos": 0.181, "drank": 3, "best": 0.28, "n": 10, "kind": "multi", "query": "Which animals live with us?"}
+{"q": "hh-6", "need": "memory:garden", "stage": "admitted_withheld", "cos": 0.291, "drank": 1, "best": 0.291, "n": 10, "kind": "single", "query": "How did the vegetable patch do?"}
+{"q": "wk-3", "need": "memory:hire1", "stage": "never_discovered", "cos": 0.251, "drank": 4, "best": 0.371, "n": 11, "kind": "multi", "query": "Who are the new people on my team this year?"}
+{"q": "wk-4", "need": "memory:commute", "stage": "admitted_withheld", "cos": 0.257, "drank": 1, "best": 0.257, "n": 11, "kind": "single", "query": "How do I get to the office?"}
+{"q": "wk-5", "need": "memory:laptop", "stage": "never_discovered", "cos": 0.263, "drank": 1, "best": 0.263, "n": 11, "kind": "single", "query": "What computer do I use for work?"}
+{"q": "tr-3", "need": "memory:rail", "stage": "never_discovered", "cos": 0.099, "drank": 6, "best": 0.257, "n": 9, "kind": "single", "query": "How will I get between cities?"}
+{"q": "tr-5", "need": "memory:sim", "stage": "never_discovered", "cos": 0.043, "drank": 6, "best": 0.112, "n": 9, "kind": "single", "query": "How will I stay connected to the internet?"}
+{"q": "tr-6", "need": "memory:allergy", "stage": "never_discovered", "cos": 0.262, "drank": 1, "best": 0.262, "n": 9, "kind": "single", "query": "What should I take because of my food issues?"}
+{"q": "he-1", "need": "memory:med2", "stage": "never_discovered", "cos": 0.266, "drank": 3, "best": 0.454, "n": 9, "kind": "multi", "query": "Which medications am I on?"}
+{"q": "he-4", "need": "memory:knee", "stage": "admitted_withheld", "cos": 0.279, "drank": 1, "best": 0.279, "n": 9, "kind": "single", "query": "What did the physiotherapist recommend?"}
+{"q": "fa-3", "need": "memory:giftidea", "stage": "never_discovered", "cos": 0.218, "drank": 4, "best": 0.287, "n": 8, "kind": "single", "query": "What would my nephew like as a gift?"}
+{"q": "pr-2", "need": "memory:stack", "stage": "never_discovered", "cos": 0.099, "drank": 3, "best": 0.128, "n": 10, "kind": "single", "query": "What technologies are we using?"}
+{"q": "pr-3", "need": "memory:risk1", "stage": "admitted_withheld", "cos": 0.179, "drank": 1, "best": 0.179, "n": 10, "kind": "multi", "query": "What could cause problems for the project?"}
+{"q": "pr-3", "need": "memory:risk2", "stage": "admitted_withheld", "cos": 0.054, "drank": 8, "best": 0.179, "n": 10, "kind": "multi", "query": "What could cause problems for the project?"}
+{"q": "pr-5", "need": "memory:hosting", "stage": "admitted_withheld", "cos": 0.264, "drank": 2, "best": 0.279, "n": 10, "kind": "single", "query": "Where is the system deployed?"}

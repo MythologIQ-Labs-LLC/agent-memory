@@ -1,0 +1,22 @@
+{"q": "fin-1", "need": "sub-cloud", "stage": "never_discovered", "cos": 0.231, "drank": 5, "best": 0.4, "n": 30, "kind": "multi", "query": "What subscriptions am I paying for?"}
+{"q": "fin-1", "need": "sub-gym", "stage": "never_discovered", "cos": 0.248, "drank": 4, "best": 0.4, "n": 30, "kind": "multi", "query": "What subscriptions am I paying for?"}
+{"q": "fin-1", "need": "sub-netflix", "stage": "never_discovered", "cos": 0.224, "drank": 6, "best": 0.4, "n": 30, "kind": "multi", "query": "What subscriptions am I paying for?"}
+{"q": "fin-2", "need": "sub-gym", "stage": "admitted_withheld", "cos": 0.205, "drank": 7, "best": 0.442, "n": 30, "kind": "multi", "query": "What do we spend money on every month?"}
+{"q": "fin-2", "need": "sub-netflix", "stage": "admitted_withheld", "cos": 0.198, "drank": 8, "best": 0.442, "n": 30, "kind": "multi", "query": "What do we spend money on every month?"}
+{"q": "fin-2", "need": "sub-news", "stage": "admitted_withheld", "cos": 0.221, "drank": 5, "best": 0.442, "n": 30, "kind": "multi", "query": "What do we spend money on every month?"}
+{"q": "fin-3", "need": "accountant", "stage": "admitted_withheld", "cos": 0.113, "drank": 7, "best": 0.152, "n": 30, "kind": "single", "query": "Who does our taxes?"}
+{"q": "fin-8", "need": "car-ins", "stage": "never_discovered", "cos": 0.216, "drank": 3, "best": 0.425, "n": 30, "kind": "multi", "query": "Which insurance policies do we have?"}
+{"q": "fam-1", "need": "mia-teacher-new", "stage": "never_discovered", "cos": NaN, "drank": null, "best": 0.623, "n": 30, "kind": "single", "query": "Who teaches Mia?"}
+{"q": "fam-3", "need": "leo-band", "stage": "admitted_withheld", "cos": 0.162, "drank": 10, "best": 0.288, "n": 30, "kind": "multi", "query": "What after-school activities do the kids do?"}
+{"q": "fam-3", "need": "mia-gym", "stage": "never_discovered", "cos": 0.288, "drank": 1, "best": 0.288, "n": 30, "kind": "multi", "query": "What after-school activities do the kids do?"}
+{"q": "car-1", "need": "car-model-new", "stage": "never_discovered", "cos": NaN, "drank": null, "best": 0.558, "n": 29, "kind": "single", "query": "What vehicle do we own?"}
+{"q": "car-3", "need": "breakdown", "stage": "never_discovered", "cos": 0.168, "drank": 8, "best": 0.496, "n": 29, "kind": "single", "query": "What happens if we break down on the motorway?"}
+{"q": "adv-1", "need": "work", "stage": "never_discovered", "cos": 0.29, "drank": 4, "best": 0.7, "n": 32, "kind": "single", "query": "Who is my employer?"}
+{"q": "adv-2", "need": "work", "stage": "never_discovered", "cos": 0.182, "drank": 6, "best": 0.568, "n": 32, "kind": "single", "query": "Where do I work?"}
+{"q": "adv-3", "need": "cat", "stage": "admitted_withheld", "cos": 0.266, "drank": 5, "best": 0.704, "n": 32, "kind": "multi", "query": "Which pets do we have?"}
+{"q": "advctl-1", "need": "work", "stage": "never_discovered", "cos": 0.29, "drank": 2, "best": 0.342, "n": 28, "kind": "single", "query": "Who is my employer?"}
+{"q": "advctl-2", "need": "work", "stage": "never_discovered", "cos": 0.182, "drank": 4, "best": 0.343, "n": 28, "kind": "single", "query": "Where do I work?"}
+{"q": "advctl-3", "need": "cat", "stage": "admitted_withheld", "cos": 0.266, "drank": 4, "best": 0.494, "n": 28, "kind": "multi", "query": "Which pets do we have?"}
+{"q": "home-1", "need": "dad-allergy", "stage": "never_discovered", "cos": 0.144, "drank": 13, "best": 0.488, "n": 32, "kind": "multi", "query": "What dietary restrictions should I plan for at the dinner party?"}
+{"q": "home-1", "need": "sam-spice", "stage": "never_discovered", "cos": 0.265, "drank": 5, "best": 0.488, "n": 32, "kind": "multi", "query": "What dietary restrictions should I plan for at the dinner party?"}
+{"q": "fit-1", "need": "med-hay", "stage": "never_discovered", "cos": 0.241, "drank": 3, "best": 0.45, "n": 30, "kind": "multi", "query": "What medications am I on?"}

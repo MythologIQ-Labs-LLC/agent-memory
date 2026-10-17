@@ -1,0 +1,1044 @@
+{
+ "cohort_sha256": "d5699b5d91463d644fdc4044493b291314eb9d95310cddb3881db9ef9b07b21a",
+ "revision": "bc2be6319a3eda96731fdb235f4feba882bcb9be",
+ "rows": [
+  {
+   "admitted_count": 33,
+   "candidate_count": 58,
+   "category": "c9d-merged",
+   "elapsed_ms": 83.063,
+   "id": "health-aggregate",
+   "kind": "multi",
+   "must_include_count": 5,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "refusals": [],
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "sem_hits": 0,
+   "sem_refused": 0,
+   "stages": {
+    "memory:allergy-health": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    },
+    "memory:bp-health": {
+     "rank": 15,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    },
+    "memory:eyedrops-health": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    },
+    "memory:inhaler-health": {
+     "rank": 10,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    },
+    "memory:vitd-health": {
+     "rank": 29,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   },
+   "superseded_returned": 0
+  },
+  {
+   "admitted_count": 20,
+   "candidate_count": 40,
+   "category": "c9d-merged",
+   "elapsed_ms": 55.192,
+   "id": "health-single",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.5,
+   "recall": 1.0,
+   "refusals": [],
+   "returned": [
+    "memory:bp-health",
+    "memory:boiler-house"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "sem_hits": 0,
+   "sem_refused": 0,
+   "stages": {
+    "memory:bp-health": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   },
+   "superseded_returned": 0
+  },
+  {
+   "admitted_count": 50,
+   "candidate_count": 87,
+   "category": "c9d-merged",
+   "elapsed_ms": 67.022,
+   "id": "health-lexical",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "refusals": [],
+   "returned": [
+    "memory:inhaler-health"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "sem_hits": 0,
+   "sem_refused": 0,
+   "stages": {
+    "memory:inhaler-health": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   },
+   "superseded_returned": 0
+  },
+  {
+   "admitted_count": 14,
+   "candidate_count": 31,
+   "category": "c9d-merged",
+   "elapsed_ms": 57.191,
+   "id": "health-stable",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "refusals": [],
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "sem_hits": 0,
+   "sem_refused": 0,
+   "stages": {
+    "memory:s18": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   },
+   "superseded_returned": 0
+  },
+  {
+   "admitted_count": 14,
+   "candidate_count": 32,
+   "category": "c9d-merged",
+   "elapsed_ms": 40.672,
+   "id": "health-absent",
+   "kind": "abstention",
+   "must_include_count": 0,
+   "passed": true,
+   "precision": null,
+   "recall": null,
+   "refusals": [],
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "sem_hits": 0,
+   "sem_refused": 0,
+   "stages": {},
+   "superseded_returned": 0
+  },
+  {
+   "admitted_count": 44,
+   "candidate_count": 77,
+   "category": "c9d-merged",
+   "elapsed_ms": 47.403,
+   "id": "kids-aggregate",
+   "kind": "multi",
+   "must_include_count": 5,
+   "passed": false,
+   "precision": 0.5,
+   "recall": 0.2,
+   "refusals": [],
+   "returned": [
+    "memory:s26",
+    "memory:coding-kids"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "sem_hits": 0,
+   "sem_refused": 0,
+   "stages": {
+    "memory:art-kids": {
+     "rank": 18,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    },
+    "memory:coding-kids": {
+     "rank": 44,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    },
+    "memory:football-kids": {
+     "rank": 40,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    },
+    "memory:piano-kids": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    },
+    "memory:swim-kids": {
+     "rank": 39,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   },
+   "superseded_returned": 0
+  },
+  {
+   "admitted_count": 14,
+   "candidate_count": 26,
+   "category": "c9d-merged",
+   "elapsed_ms": 51.492,
+   "id": "kids-single",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.0,
+   "recall": 0.0,
+   "refusals": [],
+   "returned": [
+    "memory:onboarding-work"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "sem_hits": 0,
+   "sem_refused": 0,
+   "stages": {
+    "memory:football-kids": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   },
+   "superseded_returned": 0
+  },
+  {
+   "admitted_count": 22,
+   "candidate_count": 46,
+   "category": "c9d-merged",
+   "elapsed_ms": 44.209,
+   "id": "kids-lexical",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.5,
+   "recall": 1.0,
+   "refusals": [],
+   "returned": [
+    "memory:swim-kids",
+    "memory:swim-fitness"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "sem_hits": 0,
+   "sem_refused": 0,
+   "stages": {
+    "memory:swim-kids": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   },
+   "superseded_returned": 0
+  },
+  {
+   "admitted_count": 9,
+   "candidate_count": 19,
+   "category": "c9d-merged",
+   "elapsed_ms": 41.667,
+   "id": "kids-stable",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.5,
+   "recall": 1.0,
+   "refusals": [],
+   "returned": [
+    "memory:s29",
+    "memory:football-kids"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "sem_hits": 0,
+   "sem_refused": 0,
+   "stages": {
+    "memory:s29": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   },
+   "superseded_returned": 0
+  },
+  {
+   "admitted_count": 21,
+   "candidate_count": 44,
+   "category": "c9d-merged",
+   "elapsed_ms": 44.351,
+   "id": "kids-absent",
+   "kind": "abstention",
+   "must_include_count": 0,
+   "passed": true,
+   "precision": null,
+   "recall": null,
+   "refusals": [],
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "sem_hits": 0,
+   "sem_refused": 0,
+   "stages": {},
+   "superseded_returned": 0
+  },
+  {
+   "admitted_count": 53,
+   "candidate_count": 91,
+   "category": "c9d-merged",
+   "elapsed_ms": 110.294,
+   "id": "work-aggregate",
+   "kind": "multi",
+   "must_include_count": 5,
+   "passed": false,
+   "precision": 0.0,
+   "recall": 0.0,
+   "refusals": [],
+   "returned": [
+    "memory:eyedrops-health"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "sem_hits": 0,
+   "sem_refused": 0,
+   "stages": {
+    "memory:hiring-work": {
+     "rank": 43,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    },
+    "memory:migration-work": {
+     "rank": 49,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    },
+    "memory:onboarding-work": {
+     "rank": 19,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    },
+    "memory:report-work": {
+     "rank": 33,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    },
+    "memory:vendor-work": {
+     "rank": 13,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   },
+   "superseded_returned": 0
+  },
+  {
+   "admitted_count": 12,
+   "candidate_count": 25,
+   "category": "c9d-merged",
+   "elapsed_ms": 71.357,
+   "id": "work-single",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "refusals": [],
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "sem_hits": 0,
+   "sem_refused": 0,
+   "stages": {
+    "memory:hiring-work": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   },
+   "superseded_returned": 0
+  },
+  {
+   "admitted_count": 44,
+   "candidate_count": 72,
+   "category": "c9d-merged",
+   "elapsed_ms": 48.358,
+   "id": "work-lexical",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "refusals": [],
+   "returned": [
+    "memory:migration-work"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "sem_hits": 0,
+   "sem_refused": 0,
+   "stages": {
+    "memory:migration-work": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   },
+   "superseded_returned": 0
+  },
+  {
+   "admitted_count": 27,
+   "candidate_count": 53,
+   "category": "c9d-merged",
+   "elapsed_ms": 45.262,
+   "id": "work-stable",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.5,
+   "recall": 1.0,
+   "refusals": [],
+   "returned": [
+    "memory:s12",
+    "memory:s5"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "sem_hits": 0,
+   "sem_refused": 0,
+   "stages": {
+    "memory:s12": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   },
+   "superseded_returned": 0
+  },
+  {
+   "admitted_count": 34,
+   "candidate_count": 60,
+   "category": "c9d-merged",
+   "elapsed_ms": 92.594,
+   "id": "work-absent",
+   "kind": "abstention",
+   "must_include_count": 0,
+   "passed": false,
+   "precision": 0.0,
+   "recall": null,
+   "refusals": [],
+   "returned": [
+    "memory:cycle-fitness",
+    "memory:squat-fitness"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "sem_hits": 0,
+   "sem_refused": 0,
+   "stages": {},
+   "superseded_returned": 0
+  },
+  {
+   "admitted_count": 43,
+   "candidate_count": 71,
+   "category": "c9d-merged",
+   "elapsed_ms": 55.456,
+   "id": "house-aggregate",
+   "kind": "multi",
+   "must_include_count": 5,
+   "passed": false,
+   "precision": 0.0,
+   "recall": 0.0,
+   "refusals": [],
+   "returned": [
+    "memory:s7"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "sem_hits": 0,
+   "sem_refused": 0,
+   "stages": {
+    "memory:boiler-house": {
+     "rank": 24,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    },
+    "memory:fence-house": {
+     "rank": 32,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    },
+    "memory:latch-house": {
+     "rank": 7,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    },
+    "memory:roof-house": {
+     "rank": 3,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    },
+    "memory:tap-house": {
+     "rank": 43,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   },
+   "superseded_returned": 0
+  },
+  {
+   "admitted_count": 46,
+   "candidate_count": 76,
+   "category": "c9d-merged",
+   "elapsed_ms": 61.388,
+   "id": "house-single",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.0,
+   "recall": 0.0,
+   "refusals": [],
+   "returned": [
+    "memory:latch-house"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "sem_hits": 0,
+   "sem_refused": 0,
+   "stages": {
+    "memory:boiler-house": {
+     "rank": 8,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   },
+   "superseded_returned": 0
+  },
+  {
+   "admitted_count": 47,
+   "candidate_count": 77,
+   "category": "c9d-merged",
+   "elapsed_ms": 70.705,
+   "id": "house-lexical",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "refusals": [],
+   "returned": [
+    "memory:tap-house"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "sem_hits": 0,
+   "sem_refused": 0,
+   "stages": {
+    "memory:tap-house": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   },
+   "superseded_returned": 0
+  },
+  {
+   "admitted_count": 43,
+   "candidate_count": 73,
+   "category": "c9d-merged",
+   "elapsed_ms": 52.73,
+   "id": "house-stable",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "refusals": [],
+   "returned": [
+    "memory:s16"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "sem_hits": 0,
+   "sem_refused": 0,
+   "stages": {
+    "memory:s16": {
+     "rank": 2,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   },
+   "superseded_returned": 0
+  },
+  {
+   "admitted_count": 47,
+   "candidate_count": 77,
+   "category": "c9d-merged",
+   "elapsed_ms": 72.911,
+   "id": "house-absent",
+   "kind": "abstention",
+   "must_include_count": 0,
+   "passed": true,
+   "precision": null,
+   "recall": null,
+   "refusals": [],
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "sem_hits": 0,
+   "sem_refused": 0,
+   "stages": {},
+   "superseded_returned": 0
+  },
+  {
+   "admitted_count": 8,
+   "candidate_count": 18,
+   "category": "c9d-merged",
+   "elapsed_ms": 55.41,
+   "id": "travel-aggregate",
+   "kind": "multi",
+   "must_include_count": 5,
+   "passed": false,
+   "precision": 0.0,
+   "recall": 0.0,
+   "refusals": [],
+   "returned": [
+    "memory:s0"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "sem_hits": 0,
+   "sem_refused": 0,
+   "stages": {
+    "memory:berlin-travel": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    },
+    "memory:camping-travel": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    },
+    "memory:lisbon-travel": {
+     "rank": 6,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    },
+    "memory:ski-travel": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    },
+    "memory:wedding-travel": {
+     "rank": 8,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   },
+   "superseded_returned": 0
+  },
+  {
+   "admitted_count": 38,
+   "candidate_count": 67,
+   "category": "c9d-merged",
+   "elapsed_ms": 107.944,
+   "id": "travel-single",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.0,
+   "recall": 0.0,
+   "refusals": [],
+   "returned": [
+    "memory:cycle-fitness",
+    "memory:squat-fitness"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "sem_hits": 0,
+   "sem_refused": 0,
+   "stages": {
+    "memory:berlin-travel": {
+     "rank": 22,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   },
+   "superseded_returned": 0
+  },
+  {
+   "admitted_count": 19,
+   "candidate_count": 42,
+   "category": "c9d-merged",
+   "elapsed_ms": 118.142,
+   "id": "travel-lexical",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "refusals": [],
+   "returned": [
+    "memory:lisbon-travel"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "sem_hits": 0,
+   "sem_refused": 0,
+   "stages": {
+    "memory:lisbon-travel": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   },
+   "superseded_returned": 0
+  },
+  {
+   "admitted_count": 19,
+   "candidate_count": 38,
+   "category": "c9d-merged",
+   "elapsed_ms": 51.417,
+   "id": "travel-stable",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "refusals": [],
+   "returned": [
+    "memory:s9"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "sem_hits": 0,
+   "sem_refused": 0,
+   "stages": {
+    "memory:s9": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   },
+   "superseded_returned": 0
+  },
+  {
+   "admitted_count": 17,
+   "candidate_count": 35,
+   "category": "c9d-merged",
+   "elapsed_ms": 46.644,
+   "id": "travel-absent",
+   "kind": "abstention",
+   "must_include_count": 0,
+   "passed": false,
+   "precision": 0.0,
+   "recall": null,
+   "refusals": [],
+   "returned": [
+    "memory:s21",
+    "memory:roof-house"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "sem_hits": 0,
+   "sem_refused": 0,
+   "stages": {},
+   "superseded_returned": 0
+  },
+  {
+   "admitted_count": 9,
+   "candidate_count": 16,
+   "category": "c9d-merged",
+   "elapsed_ms": 50.503,
+   "id": "fitness-aggregate",
+   "kind": "multi",
+   "must_include_count": 5,
+   "passed": false,
+   "precision": 0.0,
+   "recall": 0.0,
+   "refusals": [],
+   "returned": [
+    "memory:vitd-health"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "sem_hits": 0,
+   "sem_refused": 0,
+   "stages": {
+    "memory:cycle-fitness": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    },
+    "memory:rest-fitness": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    },
+    "memory:run-fitness": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    },
+    "memory:squat-fitness": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    },
+    "memory:swim-fitness": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   },
+   "superseded_returned": 0
+  },
+  {
+   "admitted_count": 37,
+   "candidate_count": 64,
+   "category": "c9d-merged",
+   "elapsed_ms": 51.608,
+   "id": "fitness-single",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "refusals": [],
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "sem_hits": 0,
+   "sem_refused": 0,
+   "stages": {
+    "memory:run-fitness": {
+     "rank": 12,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   },
+   "superseded_returned": 0
+  },
+  {
+   "admitted_count": 15,
+   "candidate_count": 33,
+   "category": "c9d-merged",
+   "elapsed_ms": 52.893,
+   "id": "fitness-lexical",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.5,
+   "recall": 1.0,
+   "refusals": [],
+   "returned": [
+    "memory:swim-fitness",
+    "memory:swim-kids"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "sem_hits": 0,
+   "sem_refused": 0,
+   "stages": {
+    "memory:swim-fitness": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   },
+   "superseded_returned": 0
+  },
+  {
+   "admitted_count": 23,
+   "candidate_count": 45,
+   "category": "c9d-merged",
+   "elapsed_ms": 48.658,
+   "id": "fitness-stable",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.5,
+   "recall": 1.0,
+   "refusals": [],
+   "returned": [
+    "memory:s13",
+    "memory:s20"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "sem_hits": 0,
+   "sem_refused": 0,
+   "stages": {
+    "memory:s13": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   },
+   "superseded_returned": 0
+  },
+  {
+   "admitted_count": 27,
+   "candidate_count": 50,
+   "category": "c9d-merged",
+   "elapsed_ms": 71.34,
+   "id": "fitness-absent",
+   "kind": "abstention",
+   "must_include_count": 0,
+   "passed": false,
+   "precision": 0.0,
+   "recall": null,
+   "refusals": [],
+   "returned": [
+    "memory:run-fitness"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "sem_hits": 0,
+   "sem_refused": 0,
+   "stages": {},
+   "superseded_returned": 0
+  }
+ ],
+ "rs": null,
+ "sem": "off"
+}

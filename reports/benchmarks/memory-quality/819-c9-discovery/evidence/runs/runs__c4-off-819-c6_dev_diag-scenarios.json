@@ -1,0 +1,778 @@
+{
+ "cohort_sha256": "5a296a7541db7864676f61120956fd6e923aa1a98f03cd8a738e9ed2471d8ce7",
+ "revision": "bc2be6319a3eda96731fdb235f4feba882bcb9be",
+ "rows": [
+  {
+   "admitted_count": 3,
+   "candidate_count": 3,
+   "category": "c6-diagnostic",
+   "elapsed_ms": 253.815,
+   "id": "pets-1",
+   "kind": "multi",
+   "must_include_count": 3,
+   "passed": false,
+   "precision": 0.5,
+   "recall": 0.3333333333333333,
+   "returned": [
+    "memory:fish",
+    "memory:pets-n8"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {
+    "memory:cat": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    },
+    "memory:dog": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    },
+    "memory:fish": {
+     "rank": 2,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 3,
+   "candidate_count": 3,
+   "category": "c6-diagnostic",
+   "elapsed_ms": 438.344,
+   "id": "pets-2",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {
+    "memory:vet": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 24,
+   "candidate_count": 24,
+   "category": "c6-diagnostic",
+   "elapsed_ms": 106.271,
+   "id": "pets-3",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "returned": [
+    "memory:petfood"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "memory:petfood": {
+     "rank": 7,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 8,
+   "candidate_count": 8,
+   "category": "c6-diagnostic",
+   "elapsed_ms": 104.922,
+   "id": "pets-4",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {
+    "memory:dog": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   }
+  },
+  {
+   "admitted_count": 25,
+   "candidate_count": 25,
+   "category": "c6-diagnostic",
+   "elapsed_ms": 485.184,
+   "id": "pets-5",
+   "kind": "abstention",
+   "must_include_count": 0,
+   "passed": true,
+   "precision": null,
+   "recall": null,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {}
+  },
+  {
+   "admitted_count": 7,
+   "candidate_count": 7,
+   "category": "c6-diagnostic",
+   "elapsed_ms": 3164.713,
+   "id": "work-1",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.0,
+   "recall": 0.0,
+   "returned": [
+    "memory:stuffing"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "memory:manager": {
+     "rank": 2,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   }
+  },
+  {
+   "admitted_count": 25,
+   "candidate_count": 25,
+   "category": "c6-diagnostic",
+   "elapsed_ms": 1557.719,
+   "id": "work-2",
+   "kind": "multi",
+   "must_include_count": 3,
+   "passed": false,
+   "precision": 0.5,
+   "recall": 0.3333333333333333,
+   "returned": [
+    "memory:hire1",
+    "memory:work-n16"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {
+    "memory:hire1": {
+     "rank": 2,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    },
+    "memory:hire2": {
+     "rank": 13,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    },
+    "memory:hire3": {
+     "rank": 22,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   }
+  },
+  {
+   "admitted_count": 3,
+   "candidate_count": 3,
+   "category": "c6-diagnostic",
+   "elapsed_ms": 241.332,
+   "id": "work-3",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {
+    "memory:employer": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   }
+  },
+  {
+   "admitted_count": 6,
+   "candidate_count": 6,
+   "category": "c6-diagnostic",
+   "elapsed_ms": 101.589,
+   "id": "work-4",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {
+    "memory:laptop": {
+     "rank": 2,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   }
+  },
+  {
+   "admitted_count": 5,
+   "candidate_count": 5,
+   "category": "c6-diagnostic",
+   "elapsed_ms": 239.637,
+   "id": "work-5",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.5,
+   "recall": 1.0,
+   "returned": [
+    "memory:stuffing",
+    "memory:manager"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {
+    "memory:manager": {
+     "rank": 2,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 1,
+   "candidate_count": 1,
+   "category": "c6-diagnostic",
+   "elapsed_ms": 94.07,
+   "id": "health-1",
+   "kind": "multi",
+   "must_include_count": 3,
+   "passed": false,
+   "precision": 1.0,
+   "recall": 0.3333333333333333,
+   "returned": [
+    "memory:med1"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "memory:med1": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    },
+    "memory:med2": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    },
+    "memory:med3": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 6,
+   "candidate_count": 6,
+   "category": "c6-diagnostic",
+   "elapsed_ms": 99.793,
+   "id": "health-2",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {
+    "memory:gp": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   }
+  },
+  {
+   "admitted_count": 3,
+   "candidate_count": 3,
+   "category": "c6-diagnostic",
+   "elapsed_ms": 203.933,
+   "id": "health-3",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "returned": [
+    "memory:bp"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "memory:bp": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 6,
+   "candidate_count": 6,
+   "category": "c6-diagnostic",
+   "elapsed_ms": 126.894,
+   "id": "health-4",
+   "kind": "abstention",
+   "must_include_count": 0,
+   "passed": true,
+   "precision": null,
+   "recall": null,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {}
+  },
+  {
+   "admitted_count": 5,
+   "candidate_count": 5,
+   "category": "c6-diagnostic",
+   "elapsed_ms": 164.904,
+   "id": "health-5",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {
+    "memory:knee": {
+     "rank": 5,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   }
+  },
+  {
+   "admitted_count": 6,
+   "candidate_count": 6,
+   "category": "c6-diagnostic",
+   "elapsed_ms": 341.52,
+   "id": "travel-1",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {
+    "memory:hotel": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 3,
+   "candidate_count": 3,
+   "category": "c6-diagnostic",
+   "elapsed_ms": 199.18,
+   "id": "travel-2",
+   "kind": "multi",
+   "must_include_count": 2,
+   "passed": false,
+   "precision": 1.0,
+   "recall": 0.5,
+   "returned": [
+    "memory:flight"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "memory:flight": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    },
+    "memory:return": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 0,
+   "candidate_count": 0,
+   "category": "c6-diagnostic",
+   "elapsed_ms": 51.216,
+   "id": "travel-3",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {
+    "memory:rail": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 8,
+   "candidate_count": 8,
+   "category": "c6-diagnostic",
+   "elapsed_ms": 111.739,
+   "id": "travel-4",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {
+    "memory:sim": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 24,
+   "candidate_count": 24,
+   "category": "c6-diagnostic",
+   "elapsed_ms": 108.15,
+   "id": "travel-5",
+   "kind": "abstention",
+   "must_include_count": 0,
+   "passed": false,
+   "precision": 0.0,
+   "recall": null,
+   "returned": [
+    "memory:flight"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {}
+  },
+  {
+   "admitted_count": 4,
+   "candidate_count": 4,
+   "category": "c6-diagnostic",
+   "elapsed_ms": 42.732,
+   "id": "gov-1",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {
+    "memory:car": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   }
+  },
+  {
+   "admitted_count": 21,
+   "candidate_count": 22,
+   "category": "c6-diagnostic",
+   "elapsed_ms": 80.244,
+   "id": "gov-2",
+   "kind": "abstention",
+   "must_include_count": 0,
+   "passed": true,
+   "precision": null,
+   "recall": null,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {}
+  },
+  {
+   "admitted_count": 2,
+   "candidate_count": 2,
+   "category": "c6-diagnostic",
+   "elapsed_ms": 54.766,
+   "id": "gov-3",
+   "kind": "abstention",
+   "must_include_count": 0,
+   "passed": true,
+   "precision": null,
+   "recall": null,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {}
+  },
+  {
+   "admitted_count": 2,
+   "candidate_count": 3,
+   "category": "c6-diagnostic",
+   "elapsed_ms": 81.463,
+   "id": "gov-4",
+   "kind": "abstention",
+   "must_include_count": 0,
+   "passed": false,
+   "precision": 0.0,
+   "recall": null,
+   "returned": [
+    "memory:gov-n8"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {}
+  },
+  {
+   "admitted_count": 7,
+   "candidate_count": 8,
+   "category": "c6-diagnostic",
+   "elapsed_ms": 73.362,
+   "id": "gov-5",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "returned": [
+    "memory:oldaddr"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "memory:oldaddr": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 25,
+   "candidate_count": 25,
+   "category": "c6-diagnostic",
+   "elapsed_ms": 1653.129,
+   "id": "proj-1",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.5,
+   "recall": 1.0,
+   "returned": [
+    "memory:deadline",
+    "memory:project-n16"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {
+    "memory:deadline": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 5,
+   "candidate_count": 5,
+   "category": "c6-diagnostic",
+   "elapsed_ms": 546.297,
+   "id": "proj-2",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {
+    "memory:stack": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 25,
+   "candidate_count": 25,
+   "category": "c6-diagnostic",
+   "elapsed_ms": 69.729,
+   "id": "proj-3",
+   "kind": "multi",
+   "must_include_count": 2,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {
+    "memory:risk1": {
+     "rank": 25,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    },
+    "memory:risk2": {
+     "rank": 18,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   }
+  },
+  {
+   "admitted_count": 25,
+   "candidate_count": 25,
+   "category": "c6-diagnostic",
+   "elapsed_ms": 240.009,
+   "id": "proj-4",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {
+    "memory:client": {
+     "rank": 19,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   }
+  },
+  {
+   "admitted_count": 1,
+   "candidate_count": 1,
+   "category": "c6-diagnostic",
+   "elapsed_ms": 98.924,
+   "id": "proj-5",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "returned": [
+    "memory:hosting"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "memory:hosting": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  }
+ ],
+ "rs": null,
+ "sem": "off"
+}

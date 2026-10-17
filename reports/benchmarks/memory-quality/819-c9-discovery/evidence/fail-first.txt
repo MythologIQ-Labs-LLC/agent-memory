@@ -1,0 +1,21 @@
+# C9-D tests on C4 bc2be631
+test_route_off_never_reads_discovery_refusal ... ERROR
+test_forgotten_memories_do_not_take_the_targets_slot ... FAIL
+test_historical_recall_keeps_superseded_state_changes ... FAIL
+test_no_slot_change_without_refusable_memories ... ok
+test_ranked_prefix_keeps_the_pre_c9_route (tests.test_c9d_semantic_slots.SemanticSlotTests.test_ranked_prefix_keeps_the_pre_c9_route) ... ok
+test_refusal_is_evaluated_in_the_recalls_admission_mode ... ERROR
+test_superseded_versions_do_not_take_the_targets_slot ... FAIL
+Ran 7 tests in 2.713s
+FAILED (failures=3, errors=2)
+
+# C9-D tests on C9-D ca590e8
+test_route_off_never_reads_discovery_refusal ... ok
+test_forgotten_memories_do_not_take_the_targets_slot ... ok
+test_historical_recall_keeps_superseded_state_changes ... ok
+test_no_slot_change_without_refusable_memories ... ok
+test_ranked_prefix_keeps_the_pre_c9_route (tests.test_c9d_semantic_slots.SemanticSlotTests.test_ranked_prefix_keeps_the_pre_c9_route) ... ok
+test_refusal_is_evaluated_in_the_recalls_admission_mode ... ok
+test_superseded_versions_do_not_take_the_targets_slot ... ok
+Ran 7 tests in 2.879s
+OK

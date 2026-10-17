@@ -1,0 +1,1712 @@
+{
+ "cohort_sha256": "011e9af1bee0d7a6c97937e81b2596b725c0ea0771188c3502fbcea159337837",
+ "revision": "bc2be6319a3eda96731fdb235f4feba882bcb9be",
+ "rows": [
+  {
+   "admitted_count": 7,
+   "candidate_count": 7,
+   "category": "c8-development",
+   "elapsed_ms": 3355.461,
+   "id": "garden-1",
+   "kind": "multi",
+   "must_include_count": 3,
+   "passed": false,
+   "precision": 0.0,
+   "recall": 0.0,
+   "returned": [
+    "memory:frost",
+    "memory:garden-mag"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {
+    "memory:beans": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    },
+    "memory:spuds": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    },
+    "memory:squash": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 30,
+   "candidate_count": 30,
+   "category": "c8-development",
+   "elapsed_ms": 270.355,
+   "id": "garden-2",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.0,
+   "recall": 0.0,
+   "returned": [
+    "memory:shed-old",
+    "memory:plot",
+    "memory:neighbour"
+   ],
+   "returned_count": 3,
+   "safety_violations": [],
+   "stages": {
+    "memory:copper": {
+     "rank": 15,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   }
+  },
+  {
+   "admitted_count": 28,
+   "candidate_count": 28,
+   "category": "c8-development",
+   "elapsed_ms": 197.601,
+   "id": "garden-3",
+   "kind": "multi",
+   "must_include_count": 2,
+   "passed": false,
+   "precision": 1.0,
+   "recall": 0.5,
+   "returned": [
+    "memory:water-butt"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "memory:hose-ban": {
+     "rank": 27,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    },
+    "memory:water-butt": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 31,
+   "candidate_count": 31,
+   "category": "c8-development",
+   "elapsed_ms": 198.097,
+   "id": "garden-4",
+   "kind": "multi",
+   "must_include_count": 2,
+   "passed": false,
+   "precision": 1.0,
+   "recall": 0.5,
+   "returned": [
+    "memory:slugs"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "memory:copper": {
+     "rank": 15,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    },
+    "memory:slugs": {
+     "rank": 31,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 10,
+   "candidate_count": 10,
+   "category": "c8-development",
+   "elapsed_ms": 416.034,
+   "id": "garden-5",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.6666666666666666,
+   "recall": 1.0,
+   "returned": [
+    "memory:shed-old",
+    "memory:neighbour",
+    "memory:plot"
+   ],
+   "returned_count": 3,
+   "safety_violations": [],
+   "stages": {
+    "memory:plot": {
+     "rank": 3,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 3,
+   "candidate_count": 3,
+   "category": "c8-development",
+   "elapsed_ms": 169.686,
+   "id": "garden-6",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {
+    "memory:neighbour": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 28,
+   "candidate_count": 28,
+   "category": "c8-development",
+   "elapsed_ms": 158.128,
+   "id": "garden-7",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.6666666666666666,
+   "recall": 1.0,
+   "returned": [
+    "memory:fee-old",
+    "memory:fee-new",
+    "memory:plot"
+   ],
+   "returned_count": 3,
+   "safety_violations": [],
+   "stages": {
+    "memory:fee-new": {
+     "rank": 2,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 28,
+   "candidate_count": 28,
+   "category": "c8-development",
+   "elapsed_ms": 319.6,
+   "id": "garden-8",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "returned": [
+    "memory:shed-old",
+    "memory:shed-new"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {
+    "memory:shed-new": {
+     "rank": 2,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 6,
+   "candidate_count": 6,
+   "category": "c8-development",
+   "elapsed_ms": 153.395,
+   "id": "garden-9",
+   "kind": "abstention",
+   "must_include_count": 0,
+   "passed": true,
+   "precision": null,
+   "recall": null,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {}
+  },
+  {
+   "admitted_count": 11,
+   "candidate_count": 11,
+   "category": "c8-development",
+   "elapsed_ms": 630.296,
+   "id": "money-1",
+   "kind": "multi",
+   "must_include_count": 3,
+   "passed": false,
+   "precision": 0.6666666666666666,
+   "recall": 0.3333333333333333,
+   "returned": [
+    "memory:emergency",
+    "memory:stuff-subs",
+    "memory:gym-sub"
+   ],
+   "returned_count": 3,
+   "safety_violations": [],
+   "stages": {
+    "memory:gym-sub": {
+     "rank": 4,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    },
+    "memory:phone-sub": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    },
+    "memory:streaming": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 30,
+   "candidate_count": 30,
+   "category": "c8-development",
+   "elapsed_ms": 1625.566,
+   "id": "money-2",
+   "kind": "multi",
+   "must_include_count": 3,
+   "passed": false,
+   "precision": 0.5,
+   "recall": 0.3333333333333333,
+   "returned": [
+    "memory:isa",
+    "memory:money-article"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {
+    "memory:emergency": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    },
+    "memory:isa": {
+     "rank": 2,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    },
+    "memory:pension": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 8,
+   "candidate_count": 8,
+   "category": "c8-development",
+   "elapsed_ms": 576.766,
+   "id": "money-3",
+   "kind": "multi",
+   "must_include_count": 2,
+   "passed": false,
+   "precision": 0.0,
+   "recall": 0.0,
+   "returned": [
+    "memory:stuff-subs",
+    "memory:streaming"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {
+    "memory:loan": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    },
+    "memory:mortgage": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 17,
+   "candidate_count": 17,
+   "category": "c8-development",
+   "elapsed_ms": 78.865,
+   "id": "money-4",
+   "kind": "multi",
+   "must_include_count": 2,
+   "passed": false,
+   "precision": 1.0,
+   "recall": 0.5,
+   "returned": [
+    "memory:tax-return"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "memory:accountant": {
+     "rank": 2,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    },
+    "memory:tax-return": {
+     "rank": 3,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 13,
+   "candidate_count": 13,
+   "category": "c8-development",
+   "elapsed_ms": 69.589,
+   "id": "money-5",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "returned": [
+    "memory:tax-return"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "memory:tax-return": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 12,
+   "candidate_count": 12,
+   "category": "c8-development",
+   "elapsed_ms": 66.73,
+   "id": "money-6",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.5,
+   "recall": 1.0,
+   "returned": [
+    "memory:filler-money-8",
+    "memory:budget-app"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {
+    "memory:budget-app": {
+     "rank": 11,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 7,
+   "candidate_count": 7,
+   "category": "c8-development",
+   "elapsed_ms": 90.447,
+   "id": "money-7",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "returned": [
+    "memory:bank-old",
+    "memory:bank-new"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {
+    "memory:bank-new": {
+     "rank": 2,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 23,
+   "candidate_count": 23,
+   "category": "c8-development",
+   "elapsed_ms": 118.314,
+   "id": "money-8",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "returned": [
+    "memory:rate-old",
+    "memory:rate-new",
+    "memory:isa"
+   ],
+   "returned_count": 3,
+   "safety_violations": [],
+   "stages": {
+    "memory:rate-new": {
+     "rank": 2,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 13,
+   "candidate_count": 13,
+   "category": "c8-development",
+   "elapsed_ms": 163.063,
+   "id": "money-9",
+   "kind": "abstention",
+   "must_include_count": 0,
+   "passed": false,
+   "precision": 0.0,
+   "recall": null,
+   "returned": [
+    "memory:cashback"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {}
+  },
+  {
+   "admitted_count": 24,
+   "candidate_count": 24,
+   "category": "c8-development",
+   "elapsed_ms": 213.333,
+   "id": "school-1",
+   "kind": "multi",
+   "must_include_count": 3,
+   "passed": false,
+   "precision": 0.25,
+   "recall": 0.3333333333333333,
+   "returned": [
+    "memory:school-news",
+    "memory:swim",
+    "memory:pickup-new",
+    "memory:pickup-old",
+    "memory:uniform-old",
+    "memory:uniform-new",
+    "memory:bus",
+    "memory:lunch"
+   ],
+   "returned_count": 8,
+   "safety_violations": [],
+   "stages": {
+    "memory:cubs": {
+     "rank": 24,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    },
+    "memory:piano": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    },
+    "memory:swim": {
+     "rank": 2,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 8,
+   "candidate_count": 8,
+   "category": "c8-development",
+   "elapsed_ms": 82.464,
+   "id": "school-2",
+   "kind": "multi",
+   "must_include_count": 2,
+   "passed": false,
+   "precision": 0.5,
+   "recall": 0.5,
+   "returned": [
+    "memory:glasses",
+    "memory:filler-school-14"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {
+    "memory:glasses": {
+     "rank": 2,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    },
+    "memory:nut": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 24,
+   "candidate_count": 24,
+   "category": "c8-development",
+   "elapsed_ms": 128.042,
+   "id": "school-3",
+   "kind": "multi",
+   "must_include_count": 2,
+   "passed": false,
+   "precision": 0.0,
+   "recall": 0.0,
+   "returned": [
+    "memory:stuff-clubs"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "memory:finn-class": {
+     "rank": 9,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    },
+    "memory:zoe-class": {
+     "rank": 2,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   }
+  },
+  {
+   "admitted_count": 25,
+   "candidate_count": 25,
+   "category": "c8-development",
+   "elapsed_ms": 179.141,
+   "id": "school-4",
+   "kind": "multi",
+   "must_include_count": 2,
+   "passed": false,
+   "precision": 0.5,
+   "recall": 1.0,
+   "returned": [
+    "memory:filler-school-4",
+    "memory:reading",
+    "memory:finn-class",
+    "memory:filler-school-9"
+   ],
+   "returned_count": 4,
+   "safety_violations": [],
+   "stages": {
+    "memory:finn-class": {
+     "rank": 5,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    },
+    "memory:reading": {
+     "rank": 3,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 24,
+   "candidate_count": 24,
+   "category": "c8-development",
+   "elapsed_ms": 98.65,
+   "id": "school-5",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "returned": [
+    "memory:trip"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "memory:trip": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 15,
+   "candidate_count": 15,
+   "category": "c8-development",
+   "elapsed_ms": 91.685,
+   "id": "school-6",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.0,
+   "recall": 0.0,
+   "returned": [
+    "memory:school-news",
+    "memory:pickup-old",
+    "memory:uniform-old",
+    "memory:bus",
+    "memory:swim",
+    "memory:lunch",
+    "memory:uniform-new"
+   ],
+   "returned_count": 7,
+   "safety_violations": [],
+   "stages": {
+    "memory:pta": {
+     "rank": 5,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   }
+  },
+  {
+   "admitted_count": 23,
+   "candidate_count": 23,
+   "category": "c8-development",
+   "elapsed_ms": 65.659,
+   "id": "school-7",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.6666666666666666,
+   "recall": 1.0,
+   "returned": [
+    "memory:stuff-clubs",
+    "memory:pickup-old",
+    "memory:pickup-new"
+   ],
+   "returned_count": 3,
+   "safety_violations": [],
+   "stages": {
+    "memory:pickup-new": {
+     "rank": 23,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 24,
+   "candidate_count": 24,
+   "category": "c8-development",
+   "elapsed_ms": 54.836,
+   "id": "school-8",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.6666666666666666,
+   "recall": 1.0,
+   "returned": [
+    "memory:uniform-new",
+    "memory:uniform-old",
+    "memory:filler-school-9"
+   ],
+   "returned_count": 3,
+   "safety_violations": [],
+   "stages": {
+    "memory:uniform-new": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 24,
+   "candidate_count": 24,
+   "category": "c8-development",
+   "elapsed_ms": 45.63,
+   "id": "school-9",
+   "kind": "abstention",
+   "must_include_count": 0,
+   "passed": true,
+   "precision": null,
+   "recall": null,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {}
+  },
+  {
+   "admitted_count": 4,
+   "candidate_count": 4,
+   "category": "c8-development",
+   "elapsed_ms": 75.89,
+   "id": "kitchen-1",
+   "kind": "multi",
+   "must_include_count": 3,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {
+    "memory:allergy-guest": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    },
+    "memory:glutenfree": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    },
+    "memory:vegan": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 6,
+   "candidate_count": 6,
+   "category": "c8-development",
+   "elapsed_ms": 92.634,
+   "id": "kitchen-2",
+   "kind": "multi",
+   "must_include_count": 2,
+   "passed": false,
+   "precision": 0.3333333333333333,
+   "recall": 0.5,
+   "returned": [
+    "memory:weekly-shop",
+    "memory:bin-old",
+    "memory:bin-new"
+   ],
+   "returned_count": 3,
+   "safety_violations": [],
+   "stages": {
+    "memory:veg-box": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    },
+    "memory:weekly-shop": {
+     "rank": 2,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 22,
+   "candidate_count": 22,
+   "category": "c8-development",
+   "elapsed_ms": 88.897,
+   "id": "kitchen-3",
+   "kind": "multi",
+   "must_include_count": 2,
+   "passed": false,
+   "precision": 0.0,
+   "recall": 0.0,
+   "returned": [
+    "memory:filler-kitchen-13"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "memory:kettle": {
+     "rank": 13,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    },
+    "memory:knives": {
+     "rank": 2,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   }
+  },
+  {
+   "admitted_count": 8,
+   "candidate_count": 8,
+   "category": "c8-development",
+   "elapsed_ms": 314.51,
+   "id": "kitchen-4",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.5,
+   "recall": 0.0,
+   "returned": [
+    "memory:pasta-wish",
+    "memory:allergy-guest"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {
+    "memory:signature": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 23,
+   "candidate_count": 23,
+   "category": "c8-development",
+   "elapsed_ms": 135.245,
+   "id": "kitchen-5",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "returned": [
+    "memory:freezer"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "memory:freezer": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 23,
+   "candidate_count": 23,
+   "category": "c8-development",
+   "elapsed_ms": 119.168,
+   "id": "kitchen-6",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "returned": [
+    "memory:oven"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "memory:oven": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 5,
+   "candidate_count": 5,
+   "category": "c8-development",
+   "elapsed_ms": 97.206,
+   "id": "kitchen-7",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "returned": [
+    "memory:hob-old",
+    "memory:hob-new"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {
+    "memory:hob-new": {
+     "rank": 3,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 11,
+   "candidate_count": 11,
+   "category": "c8-development",
+   "elapsed_ms": 106.055,
+   "id": "kitchen-8",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "returned": [
+    "memory:bin-old",
+    "memory:bin-new"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {
+    "memory:bin-new": {
+     "rank": 2,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 23,
+   "candidate_count": 23,
+   "category": "c8-development",
+   "elapsed_ms": 186.808,
+   "id": "kitchen-9",
+   "kind": "abstention",
+   "must_include_count": 0,
+   "passed": true,
+   "precision": null,
+   "recall": null,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {}
+  },
+  {
+   "admitted_count": 10,
+   "candidate_count": 10,
+   "category": "c8-development",
+   "elapsed_ms": 276.578,
+   "id": "tech-1",
+   "kind": "multi",
+   "must_include_count": 2,
+   "passed": false,
+   "precision": 1.0,
+   "recall": 0.5,
+   "returned": [
+    "memory:stuff-backup",
+    "memory:backup"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {
+    "memory:backup": {
+     "rank": 2,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    },
+    "memory:cloud": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 10,
+   "candidate_count": 10,
+   "category": "c8-development",
+   "elapsed_ms": 97.497,
+   "id": "tech-2",
+   "kind": "multi",
+   "must_include_count": 2,
+   "passed": false,
+   "precision": 0.0,
+   "recall": 0.0,
+   "returned": [
+    "memory:filler-tech-5"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "memory:2fa": {
+     "rank": 10,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    },
+    "memory:password": {
+     "rank": 8,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   }
+  },
+  {
+   "admitted_count": 0,
+   "candidate_count": 0,
+   "category": "c8-development",
+   "elapsed_ms": 72.093,
+   "id": "tech-3",
+   "kind": "multi",
+   "must_include_count": 2,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {
+    "memory:smart-plug": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    },
+    "memory:speaker": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 25,
+   "candidate_count": 25,
+   "category": "c8-development",
+   "elapsed_ms": 163.274,
+   "id": "tech-4",
+   "kind": "multi",
+   "must_include_count": 2,
+   "passed": false,
+   "precision": 1.0,
+   "recall": 0.5,
+   "returned": [
+    "memory:router",
+    "memory:isp-old"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {
+    "memory:isp-new": {
+     "rank": 7,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    },
+    "memory:router": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 7,
+   "candidate_count": 7,
+   "category": "c8-development",
+   "elapsed_ms": 91.707,
+   "id": "tech-5",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.0,
+   "recall": 0.0,
+   "returned": [
+    "memory:cloud"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "memory:printer": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 8,
+   "candidate_count": 8,
+   "category": "c8-development",
+   "elapsed_ms": 67.79,
+   "id": "tech-6",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.0,
+   "recall": 0.0,
+   "returned": [
+    "memory:filler-tech-2"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "memory:kindle": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 7,
+   "candidate_count": 7,
+   "category": "c8-development",
+   "elapsed_ms": 83.042,
+   "id": "tech-7",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.5,
+   "recall": 0.0,
+   "returned": [
+    "memory:phone-old",
+    "memory:2fa"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {
+    "memory:phone-new": {
+     "rank": 6,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   }
+  },
+  {
+   "admitted_count": 3,
+   "candidate_count": 3,
+   "category": "c8-development",
+   "elapsed_ms": 204.209,
+   "id": "tech-8",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.6666666666666666,
+   "recall": 1.0,
+   "returned": [
+    "memory:isp-old",
+    "memory:isp-new",
+    "memory:filler-tech-7"
+   ],
+   "returned_count": 3,
+   "safety_violations": [],
+   "stages": {
+    "memory:isp-new": {
+     "rank": 2,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 24,
+   "candidate_count": 24,
+   "category": "c8-development",
+   "elapsed_ms": 242.003,
+   "id": "tech-9",
+   "kind": "abstention",
+   "must_include_count": 0,
+   "passed": false,
+   "precision": 0.0,
+   "recall": null,
+   "returned": [
+    "memory:router"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {}
+  },
+  {
+   "admitted_count": 9,
+   "candidate_count": 9,
+   "category": "c8-development",
+   "elapsed_ms": 299.886,
+   "id": "community-1",
+   "kind": "multi",
+   "must_include_count": 3,
+   "passed": false,
+   "precision": 0.5,
+   "recall": 0.0,
+   "returned": [
+    "memory:stuff-vol",
+    "memory:news-local"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {
+    "memory:foodbank": {
+     "rank": 6,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    },
+    "memory:library": {
+     "rank": 7,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    },
+    "memory:litter": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 8,
+   "candidate_count": 8,
+   "category": "c8-development",
+   "elapsed_ms": 62.473,
+   "id": "community-2",
+   "kind": "multi",
+   "must_include_count": 2,
+   "passed": false,
+   "precision": 1.0,
+   "recall": 0.5,
+   "returned": [
+    "memory:choir"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "memory:choir": {
+     "rank": 2,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    },
+    "memory:litter": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 8,
+   "candidate_count": 8,
+   "category": "c8-development",
+   "elapsed_ms": 99.02,
+   "id": "community-3",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.0,
+   "recall": 0.0,
+   "returned": [
+    "memory:library"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "memory:neighbour-help": {
+     "rank": 8,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   }
+  },
+  {
+   "admitted_count": 26,
+   "candidate_count": 26,
+   "category": "c8-development",
+   "elapsed_ms": 132.154,
+   "id": "community-4",
+   "kind": "multi",
+   "must_include_count": 2,
+   "passed": false,
+   "precision": 0.25,
+   "recall": 0.5,
+   "returned": [
+    "memory:whatsapp",
+    "memory:filler-community-6",
+    "memory:litter",
+    "memory:garden-group",
+    "memory:chair-old",
+    "memory:meet-new",
+    "memory:meet-old",
+    "memory:chair-new"
+   ],
+   "returned_count": 8,
+   "safety_violations": [],
+   "stages": {
+    "memory:garden-group": {
+     "rank": 6,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    },
+    "memory:petition": {
+     "rank": 25,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   }
+  },
+  {
+   "admitted_count": 9,
+   "candidate_count": 9,
+   "category": "c8-development",
+   "elapsed_ms": 193.861,
+   "id": "community-5",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "returned": [
+    "memory:councillor"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "memory:councillor": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 27,
+   "candidate_count": 27,
+   "category": "c8-development",
+   "elapsed_ms": 147.734,
+   "id": "community-6",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "returned": [
+    "memory:defib"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "memory:defib": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 25,
+   "candidate_count": 25,
+   "category": "c8-development",
+   "elapsed_ms": 158.23,
+   "id": "community-7",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.6666666666666666,
+   "recall": 1.0,
+   "returned": [
+    "memory:garden-group",
+    "memory:chair-new",
+    "memory:chair-old"
+   ],
+   "returned_count": 3,
+   "safety_violations": [],
+   "stages": {
+    "memory:chair-new": {
+     "rank": 2,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 6,
+   "candidate_count": 6,
+   "category": "c8-development",
+   "elapsed_ms": 157.568,
+   "id": "community-8",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "returned": [
+    "memory:meet-new",
+    "memory:meet-old"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {
+    "memory:meet-new": {
+     "rank": 2,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 25,
+   "candidate_count": 25,
+   "category": "c8-development",
+   "elapsed_ms": 106.559,
+   "id": "community-9",
+   "kind": "abstention",
+   "must_include_count": 0,
+   "passed": false,
+   "precision": 0.0,
+   "recall": null,
+   "returned": [
+    "memory:church-hall"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {}
+  },
+  {
+   "admitted_count": 9,
+   "candidate_count": 9,
+   "category": "c8-development",
+   "elapsed_ms": 543.809,
+   "id": "asof-1",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.0,
+   "recall": 0.0,
+   "returned": [
+    "memory:insure-new",
+    "memory:insure-old"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {
+    "memory:car-old": {
+     "rank": 2,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   }
+  },
+  {
+   "admitted_count": 13,
+   "candidate_count": 13,
+   "category": "c8-development",
+   "elapsed_ms": 574.642,
+   "id": "asof-2",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "returned": [
+    "memory:insure-new",
+    "memory:insure-old"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {
+    "memory:insure-old": {
+     "rank": 2,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 4,
+   "candidate_count": 4,
+   "category": "c8-development",
+   "elapsed_ms": 324.387,
+   "id": "asof-3",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.5,
+   "recall": 1.0,
+   "returned": [
+    "memory:car-old",
+    "memory:car-new",
+    "memory:insure-new",
+    "memory:insure-old"
+   ],
+   "returned_count": 4,
+   "safety_violations": [],
+   "stages": {
+    "memory:car-new": {
+     "rank": 2,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  }
+ ],
+ "rs": null,
+ "sem": "off"
+}

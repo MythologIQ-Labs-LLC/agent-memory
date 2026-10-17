@@ -1,0 +1,28 @@
+{"q": "garden-1", "need": "memory:beans", "stage": "never_discovered", "cos": 0.238, "drank": 8, "best": 0.471, "n": 38, "kind": "multi", "query": "What vegetables have I planted?"}
+{"q": "garden-1", "need": "memory:squash", "stage": "never_discovered", "cos": 0.286, "drank": 5, "best": 0.471, "n": 38, "kind": "multi", "query": "What vegetables have I planted?"}
+{"q": "garden-4", "need": "memory:copper", "stage": "admitted_withheld", "cos": 0.095, "drank": 22, "best": 0.463, "n": 38, "kind": "multi", "query": "What happened to the lettuces and what did we do about it?"}
+{"q": "garden-6", "need": "memory:neighbour", "stage": "never_discovered", "cos": 0.15, "drank": 7, "best": 0.214, "n": 38, "kind": "single", "query": "Who do we trade produce with?"}
+{"q": "money-1", "need": "memory:phone-sub", "stage": "never_discovered", "cos": 0.141, "drank": 15, "best": 0.762, "n": 37, "kind": "multi", "query": "What regular subscriptions come out of my account?"}
+{"q": "money-2", "need": "memory:emergency", "stage": "never_discovered", "cos": 0.108, "drank": 18, "best": 0.334, "n": 37, "kind": "multi", "query": "How am I saving for the future?"}
+{"q": "money-2", "need": "memory:pension", "stage": "never_discovered", "cos": 0.078, "drank": 26, "best": 0.334, "n": 37, "kind": "multi", "query": "How am I saving for the future?"}
+{"q": "money-3", "need": "memory:loan", "stage": "never_discovered", "cos": 0.257, "drank": 7, "best": 0.395, "n": 37, "kind": "multi", "query": "What debts am I still paying off?"}
+{"q": "school-1", "need": "memory:cubs", "stage": "admitted_withheld", "cos": 0.208, "drank": 11, "best": 0.448, "n": 35, "kind": "multi", "query": "What activities do the children do after school?"}
+{"q": "school-1", "need": "memory:piano", "stage": "never_discovered", "cos": 0.286, "drank": 6, "best": 0.448, "n": 35, "kind": "multi", "query": "What activities do the children do after school?"}
+{"q": "school-2", "need": "memory:nut", "stage": "never_discovered", "cos": 0.143, "drank": 9, "best": 0.254, "n": 35, "kind": "multi", "query": "What health or diet needs do teachers need to know about?"}
+{"q": "school-3", "need": "memory:finn-class", "stage": "admitted_withheld", "cos": 0.231, "drank": 11, "best": 0.514, "n": 35, "kind": "multi", "query": "What year groups are the kids in?"}
+{"q": "school-3", "need": "memory:zoe-class", "stage": "admitted_withheld", "cos": 0.259, "drank": 6, "best": 0.514, "n": 35, "kind": "multi", "query": "What year groups are the kids in?"}
+{"q": "school-6", "need": "memory:pta", "stage": "admitted_withheld", "cos": 0.161, "drank": 10, "best": 0.285, "n": 35, "kind": "single", "query": "How do I help out at school?"}
+{"q": "kitchen-1", "need": "memory:allergy-guest", "stage": "never_discovered", "cos": 0.283, "drank": 2, "best": 0.568, "n": 34, "kind": "multi", "query": "What dietary requirements do my dinner guests have?"}
+{"q": "kitchen-1", "need": "memory:glutenfree", "stage": "never_discovered", "cos": 0.198, "drank": 7, "best": 0.568, "n": 34, "kind": "multi", "query": "What dietary requirements do my dinner guests have?"}
+{"q": "kitchen-1", "need": "memory:vegan", "stage": "never_discovered", "cos": 0.13, "drank": 16, "best": 0.568, "n": 34, "kind": "multi", "query": "What dietary requirements do my dinner guests have?"}
+{"q": "kitchen-3", "need": "memory:kettle", "stage": "admitted_withheld", "cos": 0.259, "drank": 5, "best": 0.368, "n": 34, "kind": "multi", "query": "What needs regular maintenance in the kitchen?"}
+{"q": "kitchen-4", "need": "memory:signature", "stage": "never_discovered", "cos": 0.119, "drank": 9, "best": 0.266, "n": 34, "kind": "single", "query": "What should I make when friends come round?"}
+{"q": "tech-1", "need": "memory:cloud", "stage": "never_discovered", "cos": 0.164, "drank": 6, "best": 0.464, "n": 33, "kind": "multi", "query": "How are my files and photos protected against loss?"}
+{"q": "tech-2", "need": "memory:2fa", "stage": "admitted_withheld", "cos": 0.136, "drank": 8, "best": 0.455, "n": 33, "kind": "multi", "query": "How do I keep my accounts secure?"}
+{"q": "tech-3", "need": "memory:smart-plug", "stage": "never_discovered", "cos": 0.241, "drank": 3, "best": 0.325, "n": 33, "kind": "multi", "query": "What home automation do we have?"}
+{"q": "tech-3", "need": "memory:speaker", "stage": "never_discovered", "cos": 0.22, "drank": 4, "best": 0.325, "n": 33, "kind": "multi", "query": "What home automation do we have?"}
+{"q": "tech-6", "need": "memory:kindle", "stage": "never_discovered", "cos": 0.173, "drank": 2, "best": 0.29, "n": 33, "kind": "single", "query": "What do I read books on?"}
+{"q": "community-1", "need": "memory:library", "stage": "admitted_withheld", "cos": 0.172, "drank": 13, "best": 0.633, "n": 31, "kind": "multi", "query": "Where do I volunteer my time?"}
+{"q": "community-1", "need": "memory:litter", "stage": "never_discovered", "cos": 0.129, "drank": 19, "best": 0.633, "n": 31, "kind": "multi", "query": "Where do I volunteer my time?"}
+{"q": "community-2", "need": "memory:litter", "stage": "never_discovered", "cos": 0.271, "drank": 9, "best": 0.434, "n": 31, "kind": "multi", "query": "What regular community events do I attend?"}
+{"q": "community-3", "need": "memory:neighbour-help", "stage": "admitted_withheld", "cos": 0.049, "drank": 26, "best": 0.35, "n": 31, "kind": "single", "query": "How do I help my neighbours?"}

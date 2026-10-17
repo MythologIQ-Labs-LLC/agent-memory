@@ -1,0 +1,26 @@
+{"q": "travel-1", "need": "memory:kyoto", "stage": "never_discovered", "cos": 0.265, "drank": 12, "best": 0.962, "n": 45, "kind": "multi", "query": "Which trips did I take this year?"}
+{"q": "travel-1", "need": "memory:lisbon", "stage": "never_discovered", "cos": 0.292, "drank": 10, "best": 0.962, "n": 45, "kind": "multi", "query": "Which trips did I take this year?"}
+{"q": "travel-2", "need": "memory:kyoto", "stage": "never_discovered", "cos": 0.247, "drank": 10, "best": 0.469, "n": 45, "kind": "multi", "query": "Where have I been on holiday recently?"}
+{"q": "travel-8", "need": "memory:rail-card", "stage": "never_discovered", "cos": 0.183, "drank": 17, "best": 0.438, "n": 45, "kind": "multi", "query": "What perks or discounts do I have for travelling?"}
+{"q": "health-1", "need": "memory:allergy-med", "stage": "never_discovered", "cos": 0.239, "drank": 8, "best": 0.67, "n": 44, "kind": "multi", "query": "What medications am I on?"}
+{"q": "health-2", "need": "memory:dentist", "stage": "admitted_withheld", "cos": 0.171, "drank": 10, "best": 0.35, "n": 44, "kind": "multi", "query": "Who looks after my health?"}
+{"q": "health-2", "need": "memory:gp", "stage": "admitted_withheld", "cos": 0.164, "drank": 11, "best": 0.35, "n": 44, "kind": "multi", "query": "Who looks after my health?"}
+{"q": "health-4", "need": "memory:iron", "stage": "admitted_withheld", "cos": 0.118, "drank": 19, "best": 0.636, "n": 44, "kind": "multi", "query": "What did the blood test show and what am I doing about it?"}
+{"q": "work-1", "need": "memory:proj-atlas", "stage": "never_discovered", "cos": 0.078, "drank": 24, "best": 0.352, "n": 42, "kind": "multi", "query": "Which projects am I working on?"}
+{"q": "work-1", "need": "memory:proj-beacon", "stage": "never_discovered", "cos": 0.149, "drank": 13, "best": 0.352, "n": 42, "kind": "multi", "query": "Which projects am I working on?"}
+{"q": "work-3", "need": "memory:risk", "stage": "admitted_withheld", "cos": 0.07, "drank": 30, "best": 0.747, "n": 42, "kind": "multi", "query": "When is the Atlas launch and what could get in the way?"}
+{"q": "work-8", "need": "memory:expenses", "stage": "admitted_withheld", "cos": 0.288, "drank": 4, "best": 0.336, "n": 42, "kind": "multi", "query": "What are the regular deadlines and meetings I need to remember?"}
+{"q": "work-8", "need": "memory:review", "stage": "never_discovered", "cos": 0.211, "drank": 10, "best": 0.336, "n": 42, "kind": "multi", "query": "What are the regular deadlines and meetings I need to remember?"}
+{"q": "home-1", "need": "memory:roof", "stage": "admitted_withheld", "cos": 0.291, "drank": 7, "best": 0.58, "n": 40, "kind": "multi", "query": "What maintenance work has been done on the house?"}
+{"q": "home-2", "need": "memory:fridge", "stage": "admitted_withheld", "cos": 0.135, "drank": 21, "best": 0.488, "n": 40, "kind": "multi", "query": "What have we bought for the house this year?"}
+{"q": "home-3", "need": "memory:dehumid", "stage": "admitted_withheld", "cos": 0.277, "drank": 2, "best": 0.525, "n": 40, "kind": "multi", "query": "What are we doing about the damp?"}
+{"q": "home-8", "need": "memory:council-tax", "stage": "never_discovered", "cos": 0.225, "drank": 7, "best": 0.304, "n": 40, "kind": "multi", "query": "What regular bills do we pay for the house?"}
+{"q": "home-8", "need": "memory:internet", "stage": "never_discovered", "cos": 0.102, "drank": 25, "best": 0.304, "n": 40, "kind": "multi", "query": "What regular bills do we pay for the house?"}
+{"q": "home-8", "need": "memory:mortgage", "stage": "admitted_withheld", "cos": 0.267, "drank": 4, "best": 0.304, "n": 40, "kind": "multi", "query": "What regular bills do we pay for the house?"}
+{"q": "family-2", "need": "memory:allergy-ella", "stage": "never_discovered", "cos": 0.139, "drank": 16, "best": 0.429, "n": 38, "kind": "multi", "query": "What dietary needs should I plan for when the family visits?"}
+{"q": "family-2", "need": "memory:veg-jo", "stage": "never_discovered", "cos": 0.243, "drank": 6, "best": 0.429, "n": 38, "kind": "multi", "query": "What dietary needs should I plan for when the family visits?"}
+{"q": "hobby-1", "need": "memory:course", "stage": "admitted_withheld", "cos": 0.22, "drank": 8, "best": 0.386, "n": 36, "kind": "multi", "query": "What am I learning at the moment?"}
+{"q": "hobby-1", "need": "memory:spanish", "stage": "never_discovered", "cos": 0.115, "drank": 13, "best": 0.386, "n": 36, "kind": "multi", "query": "What am I learning at the moment?"}
+{"q": "hobby-2", "need": "memory:climb", "stage": "never_discovered", "cos": 0.242, "drank": 6, "best": 0.457, "n": 36, "kind": "multi", "query": "Which sports do I do each week?"}
+{"q": "hobby-8", "need": "memory:course", "stage": "never_discovered", "cos": 0.255, "drank": 6, "best": 0.398, "n": 36, "kind": "multi", "query": "What creative things do I do?"}
+{"q": "hobby-8", "need": "memory:photo", "stage": "never_discovered", "cos": 0.054, "drank": 22, "best": 0.398, "n": 36, "kind": "multi", "query": "What creative things do I do?"}

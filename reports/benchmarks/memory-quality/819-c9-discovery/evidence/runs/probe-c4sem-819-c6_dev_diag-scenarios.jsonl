@@ -1,0 +1,12 @@
+{"q": "pets-1", "need": "memory:cat", "stage": "never_discovered", "cos": 0.214, "drank": 5, "best": 0.327, "n": 26, "kind": "multi", "query": "Which animals live with us?"}
+{"q": "pets-1", "need": "memory:dog", "stage": "never_discovered", "cos": 0.28, "drank": 2, "best": 0.327, "n": 26, "kind": "multi", "query": "Which animals live with us?"}
+{"q": "work-2", "need": "memory:hire2", "stage": "admitted_withheld", "cos": 0.172, "drank": 4, "best": 0.349, "n": 27, "kind": "multi", "query": "Who are the new people on my team this year?"}
+{"q": "work-2", "need": "memory:hire3", "stage": "admitted_withheld", "cos": 0.133, "drank": 5, "best": 0.349, "n": 27, "kind": "multi", "query": "Who are the new people on my team this year?"}
+{"q": "work-3", "need": "memory:employer", "stage": "admitted_withheld", "cos": 0.272, "drank": 2, "best": 0.279, "n": 27, "kind": "single", "query": "Where am I employed?"}
+{"q": "health-1", "need": "memory:med3", "stage": "never_discovered", "cos": 0.273, "drank": 3, "best": 0.463, "n": 26, "kind": "multi", "query": "What tablets am I currently taking?"}
+{"q": "travel-2", "need": "memory:return", "stage": "never_discovered", "cos": 0.2, "drank": 5, "best": 0.399, "n": 26, "kind": "multi", "query": "What are all my flight times?"}
+{"q": "travel-3", "need": "memory:rail", "stage": "never_discovered", "cos": 0.121, "drank": 7, "best": 0.293, "n": 26, "kind": "single", "query": "How will I get around between cities?"}
+{"q": "travel-4", "need": "memory:sim", "stage": "never_discovered", "cos": 0.156, "drank": 3, "best": 0.257, "n": 26, "kind": "single", "query": "How will I have internet on my phone?"}
+{"q": "proj-2", "need": "memory:stack", "stage": "never_discovered", "cos": 0.051, "drank": 9, "best": 0.139, "n": 26, "kind": "single", "query": "What technologies are we building with?"}
+{"q": "proj-3", "need": "memory:risk1", "stage": "admitted_withheld", "cos": 0.181, "drank": 4, "best": 0.314, "n": 26, "kind": "multi", "query": "What could cause problems for the project?"}
+{"q": "proj-3", "need": "memory:risk2", "stage": "admitted_withheld", "cos": 0.054, "drank": 14, "best": 0.314, "n": 26, "kind": "multi", "query": "What could cause problems for the project?"}

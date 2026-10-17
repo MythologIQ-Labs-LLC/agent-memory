@@ -1,0 +1,1456 @@
+{
+ "cohort_sha256": "eb3290ab2c0952be3cd3bd8441b47d0f321fa3c3907fc9b0996626a1689891ab",
+ "revision": "bc2be6319a3eda96731fdb235f4feba882bcb9be",
+ "rows": [
+  {
+   "admitted_count": 7,
+   "candidate_count": 7,
+   "category": "reviewer-gen",
+   "elapsed_ms": 329.624,
+   "id": "fin-1",
+   "kind": "multi",
+   "must_include_count": 4,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {
+    "sub-cloud": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    },
+    "sub-gym": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    },
+    "sub-netflix": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    },
+    "sub-news": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 13,
+   "candidate_count": 13,
+   "category": "reviewer-gen",
+   "elapsed_ms": 110.709,
+   "id": "fin-2",
+   "kind": "multi",
+   "must_include_count": 4,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {
+    "groceries": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    },
+    "sub-gym": {
+     "rank": 6,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    },
+    "sub-netflix": {
+     "rank": 4,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    },
+    "sub-news": {
+     "rank": 7,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   }
+  },
+  {
+   "admitted_count": 3,
+   "candidate_count": 3,
+   "category": "reviewer-gen",
+   "elapsed_ms": 470.128,
+   "id": "fin-3",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {
+    "accountant": {
+     "rank": 3,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   }
+  },
+  {
+   "admitted_count": 22,
+   "candidate_count": 22,
+   "category": "reviewer-gen",
+   "elapsed_ms": 374.149,
+   "id": "fin-4",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "returned": [
+    "mortgage"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "mortgage": {
+     "rank": 2,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 2,
+   "candidate_count": 2,
+   "category": "reviewer-gen",
+   "elapsed_ms": 286.964,
+   "id": "fin-5",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.5,
+   "recall": 1.0,
+   "returned": [
+    "pension",
+    "isa"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {
+    "pension": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 9,
+   "candidate_count": 9,
+   "category": "reviewer-gen",
+   "elapsed_ms": 372.218,
+   "id": "fin-6",
+   "kind": "abstention",
+   "must_include_count": 0,
+   "passed": true,
+   "precision": null,
+   "recall": null,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {}
+  },
+  {
+   "admitted_count": 19,
+   "candidate_count": 19,
+   "category": "reviewer-gen",
+   "elapsed_ms": 487.779,
+   "id": "fin-7",
+   "kind": "abstention",
+   "must_include_count": 0,
+   "passed": false,
+   "precision": 0.0,
+   "recall": null,
+   "returned": [
+    "sub-news"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {}
+  },
+  {
+   "admitted_count": 4,
+   "candidate_count": 4,
+   "category": "reviewer-gen",
+   "elapsed_ms": 2626.033,
+   "id": "fin-8",
+   "kind": "multi",
+   "must_include_count": 2,
+   "passed": false,
+   "precision": 1.0,
+   "recall": 0.5,
+   "returned": [
+    "home-ins"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "car-ins": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    },
+    "home-ins": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 21,
+   "candidate_count": 21,
+   "category": "reviewer-gen",
+   "elapsed_ms": 568.973,
+   "id": "fin-9",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.5,
+   "recall": 1.0,
+   "returned": [
+    "home-ins",
+    "mia-bike"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {
+    "home-ins": {
+     "rank": 2,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 6,
+   "candidate_count": 6,
+   "category": "reviewer-gen",
+   "elapsed_ms": 384.944,
+   "id": "fam-1",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.0,
+   "recall": 0.0,
+   "returned": [
+    "mia-pickup",
+    "mia-gym",
+    "mia-school",
+    "mia-friend",
+    "mia-allergy",
+    "mia-teacher"
+   ],
+   "returned_count": 6,
+   "safety_violations": [
+    "mia-teacher"
+   ],
+   "stages": {
+    "mia-teacher-new": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 7,
+   "candidate_count": 8,
+   "category": "reviewer-gen",
+   "elapsed_ms": 126.321,
+   "id": "fam-2",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.25,
+   "recall": 1.0,
+   "returned": [
+    "leo-school",
+    "leo-tutor",
+    "leo-bus",
+    "leo-band"
+   ],
+   "returned_count": 4,
+   "safety_violations": [],
+   "stages": {
+    "leo-band": {
+     "rank": 5,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 17,
+   "candidate_count": 17,
+   "category": "reviewer-gen",
+   "elapsed_ms": 108.152,
+   "id": "fam-3",
+   "kind": "multi",
+   "must_include_count": 2,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {
+    "leo-band": {
+     "rank": 6,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    },
+    "mia-gym": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 9,
+   "candidate_count": 9,
+   "category": "reviewer-gen",
+   "elapsed_ms": 102.595,
+   "id": "fam-4",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.16666666666666666,
+   "recall": 1.0,
+   "returned": [
+    "mia-school",
+    "mia-friend",
+    "mia-pickup",
+    "mia-gym",
+    "mia-allergy",
+    "mia-teacher"
+   ],
+   "returned_count": 6,
+   "safety_violations": [],
+   "stages": {
+    "mia-allergy": {
+     "rank": 8,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 10,
+   "candidate_count": 11,
+   "category": "reviewer-gen",
+   "elapsed_ms": 72.537,
+   "id": "fam-5",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.5,
+   "recall": 0.0,
+   "returned": [
+    "fam-n0",
+    "leo-school"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {
+    "leo-bus": {
+     "rank": 7,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   }
+  },
+  {
+   "admitted_count": 3,
+   "candidate_count": 3,
+   "category": "reviewer-gen",
+   "elapsed_ms": 72.849,
+   "id": "fam-6",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.0,
+   "recall": 0.0,
+   "returned": [
+    "blazer",
+    "mia-friend"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {
+    "leo-friends": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 11,
+   "candidate_count": 11,
+   "category": "reviewer-gen",
+   "elapsed_ms": 104.9,
+   "id": "fam-7",
+   "kind": "abstention",
+   "must_include_count": 0,
+   "passed": false,
+   "precision": 0.0,
+   "recall": null,
+   "returned": [
+    "fam-n0",
+    "mia-pickup"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {}
+  },
+  {
+   "admitted_count": 20,
+   "candidate_count": 20,
+   "category": "reviewer-gen",
+   "elapsed_ms": 99.716,
+   "id": "fam-8",
+   "kind": "abstention",
+   "must_include_count": 0,
+   "passed": false,
+   "precision": 0.0,
+   "recall": null,
+   "returned": [
+    "fam-n13"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {}
+  },
+  {
+   "admitted_count": 9,
+   "candidate_count": 10,
+   "category": "reviewer-gen",
+   "elapsed_ms": 141.723,
+   "id": "fam-9",
+   "kind": "abstention",
+   "must_include_count": 0,
+   "passed": false,
+   "precision": 0.0,
+   "recall": null,
+   "returned": [
+    "leo-tutor",
+    "leo-school",
+    "leo-bus",
+    "leo-band",
+    "leo-friends",
+    "blazer"
+   ],
+   "returned_count": 6,
+   "safety_violations": [],
+   "stages": {}
+  },
+  {
+   "admitted_count": 3,
+   "candidate_count": 3,
+   "category": "reviewer-gen",
+   "elapsed_ms": 466.362,
+   "id": "car-1",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {
+    "car-model-new": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 20,
+   "candidate_count": 20,
+   "category": "reviewer-gen",
+   "elapsed_ms": 186.878,
+   "id": "car-2",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.0,
+   "recall": 0.0,
+   "returned": [
+    "car-ins",
+    "parking",
+    "car-n0"
+   ],
+   "returned_count": 3,
+   "safety_violations": [],
+   "stages": {
+    "garage": {
+     "rank": 10,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   }
+  },
+  {
+   "admitted_count": 22,
+   "candidate_count": 22,
+   "category": "reviewer-gen",
+   "elapsed_ms": 90.507,
+   "id": "car-3",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.0,
+   "recall": 0.0,
+   "returned": [
+    "mpg"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "breakdown": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 5,
+   "candidate_count": 5,
+   "category": "reviewer-gen",
+   "elapsed_ms": 140.641,
+   "id": "car-4",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.0,
+   "recall": 0.0,
+   "returned": [
+    "car-n4",
+    "charger"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {
+    "commute": {
+     "rank": 3,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   }
+  },
+  {
+   "admitted_count": 24,
+   "candidate_count": 24,
+   "category": "reviewer-gen",
+   "elapsed_ms": 99.101,
+   "id": "car-5",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "returned": [
+    "parking"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "parking": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 23,
+   "candidate_count": 23,
+   "category": "reviewer-gen",
+   "elapsed_ms": 150.027,
+   "id": "car-6",
+   "kind": "abstention",
+   "must_include_count": 0,
+   "passed": false,
+   "precision": 0.0,
+   "recall": null,
+   "returned": [
+    "car-ins",
+    "parking"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {}
+  },
+  {
+   "admitted_count": 21,
+   "candidate_count": 21,
+   "category": "reviewer-gen",
+   "elapsed_ms": 123.624,
+   "id": "car-7",
+   "kind": "abstention",
+   "must_include_count": 0,
+   "passed": false,
+   "precision": 0.0,
+   "recall": null,
+   "returned": [
+    "bike",
+    "parking"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {}
+  },
+  {
+   "admitted_count": 7,
+   "candidate_count": 7,
+   "category": "reviewer-gen",
+   "elapsed_ms": 157.36,
+   "id": "car-8",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.0,
+   "recall": 0.0,
+   "returned": [
+    "car-ins",
+    "parking"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {
+    "car-model": {
+     "rank": 7,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   }
+  },
+  {
+   "admitted_count": 21,
+   "candidate_count": 21,
+   "category": "reviewer-gen",
+   "elapsed_ms": 99.827,
+   "id": "car-9",
+   "kind": "multi",
+   "must_include_count": 2,
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "returned": [
+    "breakdown",
+    "car-ins"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {
+    "breakdown": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    },
+    "car-ins": {
+     "rank": 3,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 12,
+   "candidate_count": 12,
+   "category": "reviewer-gen",
+   "elapsed_ms": 77.183,
+   "id": "adv-1",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.0,
+   "recall": 0.0,
+   "returned": [
+    "stuff-work",
+    "stuff-work2"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {
+    "work": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 5,
+   "candidate_count": 5,
+   "category": "reviewer-gen",
+   "elapsed_ms": 76.997,
+   "id": "adv-2",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.0,
+   "recall": 0.0,
+   "returned": [
+    "stuff-work",
+    "stuff-work2"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {
+    "work": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 6,
+   "candidate_count": 6,
+   "category": "reviewer-gen",
+   "elapsed_ms": 72.631,
+   "id": "adv-3",
+   "kind": "multi",
+   "must_include_count": 2,
+   "passed": false,
+   "precision": 0.0,
+   "recall": 0.0,
+   "returned": [
+    "stuff-pets"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "cat": {
+     "rank": 6,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    },
+    "dog": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 12,
+   "candidate_count": 12,
+   "category": "reviewer-gen",
+   "elapsed_ms": 44.634,
+   "id": "adv-4",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.0,
+   "recall": 0.0,
+   "returned": [
+    "stuff-doc"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "gp": {
+     "rank": 4,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   }
+  },
+  {
+   "admitted_count": 23,
+   "candidate_count": 23,
+   "category": "reviewer-gen",
+   "elapsed_ms": 102.515,
+   "id": "adv-5",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.0,
+   "recall": 0.0,
+   "returned": [
+    "stuff-pets"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "petfood": {
+     "rank": 16,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   }
+  },
+  {
+   "admitted_count": 9,
+   "candidate_count": 9,
+   "category": "reviewer-gen",
+   "elapsed_ms": 183.735,
+   "id": "advctl-1",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {
+    "work": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 2,
+   "candidate_count": 2,
+   "category": "reviewer-gen",
+   "elapsed_ms": 209.75,
+   "id": "advctl-2",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {
+    "work": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 4,
+   "candidate_count": 4,
+   "category": "reviewer-gen",
+   "elapsed_ms": 191.535,
+   "id": "advctl-3",
+   "kind": "multi",
+   "must_include_count": 2,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {
+    "cat": {
+     "rank": 4,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    },
+    "dog": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 9,
+   "candidate_count": 9,
+   "category": "reviewer-gen",
+   "elapsed_ms": 154.125,
+   "id": "advctl-4",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {
+    "gp": {
+     "rank": 2,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   }
+  },
+  {
+   "admitted_count": 20,
+   "candidate_count": 20,
+   "category": "reviewer-gen",
+   "elapsed_ms": 154.737,
+   "id": "advctl-5",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "returned": [
+    "petfood"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "petfood": {
+     "rank": 14,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 25,
+   "candidate_count": 25,
+   "category": "reviewer-gen",
+   "elapsed_ms": 219.47,
+   "id": "home-1",
+   "kind": "multi",
+   "must_include_count": 3,
+   "passed": false,
+   "precision": 0.5,
+   "recall": 0.0,
+   "returned": [
+    "party",
+    "home-n13"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {
+    "dad-allergy": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    },
+    "ines-veg": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    },
+    "sam-spice": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 0,
+   "candidate_count": 0,
+   "category": "reviewer-gen",
+   "elapsed_ms": 81.165,
+   "id": "home-2",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {
+    "ines-veg": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 22,
+   "candidate_count": 22,
+   "category": "reviewer-gen",
+   "elapsed_ms": 75.955,
+   "id": "home-3",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "returned": [
+    "starter"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "starter": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 25,
+   "candidate_count": 25,
+   "category": "reviewer-gen",
+   "elapsed_ms": 80.574,
+   "id": "home-4",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "returned": [
+    "oven"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "oven": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 3,
+   "candidate_count": 3,
+   "category": "reviewer-gen",
+   "elapsed_ms": 59.892,
+   "id": "home-5",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.0,
+   "recall": 0.0,
+   "returned": [
+    "starter"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "fav-dish": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 10,
+   "candidate_count": 10,
+   "category": "reviewer-gen",
+   "elapsed_ms": 56.217,
+   "id": "home-6",
+   "kind": "abstention",
+   "must_include_count": 0,
+   "passed": false,
+   "precision": 0.0,
+   "recall": null,
+   "returned": [
+    "fav-dish"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {}
+  },
+  {
+   "admitted_count": 22,
+   "candidate_count": 22,
+   "category": "reviewer-gen",
+   "elapsed_ms": 63.515,
+   "id": "home-7",
+   "kind": "abstention",
+   "must_include_count": 0,
+   "passed": false,
+   "precision": 0.0,
+   "recall": null,
+   "returned": [
+    "starter"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {}
+  },
+  {
+   "admitted_count": 22,
+   "candidate_count": 22,
+   "category": "reviewer-gen",
+   "elapsed_ms": 53.803,
+   "id": "home-8",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "returned": [
+    "knife"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "knife": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 2,
+   "candidate_count": 2,
+   "category": "reviewer-gen",
+   "elapsed_ms": 75.145,
+   "id": "home-9",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.5,
+   "recall": 1.0,
+   "returned": [
+    "wine",
+    "party"
+   ],
+   "returned_count": 2,
+   "safety_violations": [],
+   "stages": {
+    "wine": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 8,
+   "candidate_count": 9,
+   "category": "reviewer-gen",
+   "elapsed_ms": 267.156,
+   "id": "fit-1",
+   "kind": "multi",
+   "must_include_count": 2,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {
+    "med-bp": {
+     "rank": 3,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    },
+    "med-hay": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 5,
+   "candidate_count": 6,
+   "category": "reviewer-gen",
+   "elapsed_ms": 158.983,
+   "id": "fit-2",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "returned": [
+    "med-bp"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "med-bp": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "returned"
+    }
+   }
+  },
+  {
+   "admitted_count": 7,
+   "candidate_count": 8,
+   "category": "reviewer-gen",
+   "elapsed_ms": 66.714,
+   "id": "fit-3",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {
+    "race": {
+     "rank": 2,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   }
+  },
+  {
+   "admitted_count": 3,
+   "candidate_count": 4,
+   "category": "reviewer-gen",
+   "elapsed_ms": 79.841,
+   "id": "fit-4",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {
+    "knee": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 20,
+   "candidate_count": 21,
+   "category": "reviewer-gen",
+   "elapsed_ms": 129.928,
+   "id": "fit-5",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {
+    "physio": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  },
+  {
+   "admitted_count": 7,
+   "candidate_count": 7,
+   "category": "reviewer-gen",
+   "elapsed_ms": 104.979,
+   "id": "fit-6",
+   "kind": "abstention",
+   "must_include_count": 0,
+   "passed": true,
+   "precision": null,
+   "recall": null,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {}
+  },
+  {
+   "admitted_count": 3,
+   "candidate_count": 4,
+   "category": "reviewer-gen",
+   "elapsed_ms": 53.142,
+   "id": "fit-7",
+   "kind": "abstention",
+   "must_include_count": 0,
+   "passed": true,
+   "precision": null,
+   "recall": null,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {}
+  },
+  {
+   "admitted_count": 7,
+   "candidate_count": 7,
+   "category": "reviewer-gen",
+   "elapsed_ms": 42.257,
+   "id": "fit-8",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": null,
+   "recall": 0.0,
+   "returned": [],
+   "returned_count": 0,
+   "safety_violations": [],
+   "stages": {
+    "gp": {
+     "rank": 1,
+     "refusal": null,
+     "routes": [
+      "lexical"
+     ],
+     "stage": "admitted_withheld"
+    }
+   }
+  },
+  {
+   "admitted_count": 4,
+   "candidate_count": 5,
+   "category": "reviewer-gen",
+   "elapsed_ms": 74.905,
+   "id": "fit-9",
+   "kind": "single",
+   "must_include_count": 1,
+   "passed": false,
+   "precision": 0.0,
+   "recall": 0.0,
+   "returned": [
+    "fit-n18"
+   ],
+   "returned_count": 1,
+   "safety_violations": [],
+   "stages": {
+    "sleep": {
+     "rank": null,
+     "refusal": null,
+     "routes": [],
+     "stage": "never_discovered"
+    }
+   }
+  }
+ ],
+ "rs": null,
+ "sem": "off"
+}
