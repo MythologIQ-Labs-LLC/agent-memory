@@ -497,6 +497,8 @@
               "type": "object",
               "additionalProperties": false,
               "required": [
+                "candidate_count",
+                "refused_count",
                 "admitted_count",
                 "sufficient_count",
                 "returned_count",
@@ -538,6 +540,14 @@
                 },
                 "authority_effect": {
                   "const": "none"
+                },
+                "candidate_count": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "refused_count": {
+                  "type": "integer",
+                  "minimum": 0
                 }
               }
             }
