@@ -1,0 +1,3126 @@
+{
+ "cohort": "819-c9d-longitudinal-dev",
+ "authored_by": "runtime engineer (self-authored development data)",
+ "scenarios": [
+  {
+   "id": "health",
+   "category": "c9d-longitudinal",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s0",
+     "text": "Our neighbour Priya waters the plants when we are away."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s1",
+     "text": "The car insurance renews every March."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s2",
+     "text": "I prefer window seats on long flights."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s3",
+     "text": "My sister lives in Galway with her two dogs."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s4",
+     "text": "The wifi password is on a card inside the hall cupboard."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s5",
+     "text": "We get the vegetable box delivered on Thursdays."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s6",
+     "text": "I can't stand coriander."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s7",
+     "text": "The spare house key is with the people at number 12."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s8",
+     "text": "Dad's birthday is on the 3rd of November."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s9",
+     "text": "I keep my passport in the blue folder in the study."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s10",
+     "text": "The recycling goes out every other Monday."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s11",
+     "text": "My dentist is Dr Okafor on Mill Lane."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s12",
+     "text": "I usually take the 7:40 train into town."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s13",
+     "text": "Our cat is called Pepper and she is fourteen."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s14",
+     "text": "I learned to sail at a summer camp in Wales."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s15",
+     "text": "The bank changed my sort code after the merger."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s16",
+     "text": "We painted the living room a pale green last spring."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s17",
+     "text": "My favourite pizza place is Luigi's on the corner."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s18",
+     "text": "I'm allergic to penicillin."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s19",
+     "text": "The broadband contract ends in January."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s20",
+     "text": "I play five-a-side football with old university friends."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s21",
+     "text": "Grandma's recipe book is on the top kitchen shelf."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s22",
+     "text": "I switched my phone plan to the cheaper monthly one."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s23",
+     "text": "We have a standing dinner with the Harrisons on the first Friday of the month."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s24",
+     "text": "The bike lock code is the same as the garage code."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s25",
+     "text": "My library card expires next summer."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s26",
+     "text": "I support the local rugby club."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s27",
+     "text": "The council tax is paid by direct debit."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s28",
+     "text": "I wear reading glasses for screens now."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s29",
+     "text": "The kids' school uniform comes from the shop on Bridge Street."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:bp",
+     "text": "I take 5mg of amlodipine every morning for blood pressure."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:inhaler",
+     "text": "I use the blue inhaler only when wheezy."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:vitd",
+     "text": "I take a vitamin D tablet in winter."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:allergy",
+     "text": "I take cetirizine for hay fever in June."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:eyedrops",
+     "text": "I use lubricating eye drops when my eyes feel dry."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:old-statin",
+     "text": "I used to take a statin but stopped."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:old-iron",
+     "text": "I took iron tablets for a month after the blood test."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d-other",
+     "ref": "memory:o0",
+     "text": "I take metformin twice a day."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d-other",
+     "ref": "memory:o1",
+     "text": "I use a steroid nasal spray."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d-other",
+     "ref": "memory:o2",
+     "text": "I take omega-3 capsules with breakfast."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:bp",
+     "text": "The doctor raised my amlodipine to 10mg each morning."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:inhaler",
+     "text": "I use the brown preventer inhaler twice a day."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:vitd",
+     "text": "I take vitamin D all year round now."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:allergy",
+     "text": "I take cetirizine from May to July."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:eyedrops",
+     "text": "I use the eye drops three times a day."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:bp",
+     "text": "My amlodipine is back down to 5mg, taken at night now."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:inhaler",
+     "text": "The preventer inhaler is down to once a day in the evening."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:vitd",
+     "text": "I take a double dose of vitamin D on Mondays."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:allergy",
+     "text": "I switched from cetirizine to loratadine for hay fever."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:eyedrops",
+     "text": "The optician changed my eye drops to a gel at night."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:bp",
+     "text": "I now take 5mg of amlodipine at bedtime for my blood pressure."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:inhaler",
+     "text": "I take one puff of the preventer inhaler each evening."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:vitd",
+     "text": "Vitamin D is now a weekly 20,000 unit capsule on Mondays."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:allergy",
+     "text": "Loratadine every morning from April to August for hay fever."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:eyedrops",
+     "text": "Eye gel goes in at night; drops during the day only if needed."
+    },
+    {
+     "op": "forget",
+     "scope": "user:c9d",
+     "ref": "memory:old-statin"
+    },
+    {
+     "op": "forget",
+     "scope": "user:c9d",
+     "ref": "memory:old-iron"
+    }
+   ],
+   "queries": [
+    {
+     "id": "health-aggregate",
+     "scope": "user:c9d",
+     "query": "What medication am I on these days?",
+     "family": "aggregate",
+     "expect": {
+      "must_include": [
+       "memory:bp",
+       "memory:inhaler",
+       "memory:vitd",
+       "memory:allergy",
+       "memory:eyedrops"
+      ],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "memory:old-statin",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "memory:old-iron",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "user:c9d-other#memory:o0",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o1",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o2",
+        "reason": "other_scope"
+       }
+      ]
+     }
+    },
+    {
+     "id": "health-single",
+     "scope": "user:c9d",
+     "query": "How do I manage my blood pressure?",
+     "family": "single",
+     "expect": {
+      "must_include": [
+       "memory:bp"
+      ],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "memory:old-statin",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "memory:old-iron",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "user:c9d-other#memory:o0",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o1",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o2",
+        "reason": "other_scope"
+       }
+      ]
+     }
+    },
+    {
+     "id": "health-lexical",
+     "scope": "user:c9d",
+     "query": "When do I use the preventer inhaler?",
+     "family": "lexical",
+     "expect": {
+      "must_include": [
+       "memory:inhaler"
+      ],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "memory:old-statin",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "memory:old-iron",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "user:c9d-other#memory:o0",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o1",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o2",
+        "reason": "other_scope"
+       }
+      ]
+     }
+    },
+    {
+     "id": "health-stable",
+     "scope": "user:c9d",
+     "query": "Which antibiotic must I avoid?",
+     "family": "stable",
+     "expect": {
+      "must_include": [
+       "memory:s18"
+      ],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "memory:old-statin",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "memory:old-iron",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "user:c9d-other#memory:o0",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o1",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o2",
+        "reason": "other_scope"
+       }
+      ]
+     }
+    },
+    {
+     "id": "health-absent",
+     "scope": "user:c9d",
+     "query": "How much insulin do I inject?",
+     "family": "absent",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "memory:old-statin",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "memory:old-iron",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "user:c9d-other#memory:o0",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o1",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o2",
+        "reason": "other_scope"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "kids",
+   "category": "c9d-longitudinal",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s0",
+     "text": "Our neighbour Priya waters the plants when we are away."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s1",
+     "text": "The car insurance renews every March."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s2",
+     "text": "I prefer window seats on long flights."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s3",
+     "text": "My sister lives in Galway with her two dogs."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s4",
+     "text": "The wifi password is on a card inside the hall cupboard."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s5",
+     "text": "We get the vegetable box delivered on Thursdays."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s6",
+     "text": "I can't stand coriander."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s7",
+     "text": "The spare house key is with the people at number 12."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s8",
+     "text": "Dad's birthday is on the 3rd of November."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s9",
+     "text": "I keep my passport in the blue folder in the study."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s10",
+     "text": "The recycling goes out every other Monday."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s11",
+     "text": "My dentist is Dr Okafor on Mill Lane."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s12",
+     "text": "I usually take the 7:40 train into town."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s13",
+     "text": "Our cat is called Pepper and she is fourteen."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s14",
+     "text": "I learned to sail at a summer camp in Wales."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s15",
+     "text": "The bank changed my sort code after the merger."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s16",
+     "text": "We painted the living room a pale green last spring."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s17",
+     "text": "My favourite pizza place is Luigi's on the corner."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s18",
+     "text": "I'm allergic to penicillin."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s19",
+     "text": "The broadband contract ends in January."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s20",
+     "text": "I play five-a-side football with old university friends."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s21",
+     "text": "Grandma's recipe book is on the top kitchen shelf."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s22",
+     "text": "I switched my phone plan to the cheaper monthly one."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s23",
+     "text": "We have a standing dinner with the Harrisons on the first Friday of the month."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s24",
+     "text": "The bike lock code is the same as the garage code."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s25",
+     "text": "My library card expires next summer."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s26",
+     "text": "I support the local rugby club."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s27",
+     "text": "The council tax is paid by direct debit."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s28",
+     "text": "I wear reading glasses for screens now."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s29",
+     "text": "The kids' school uniform comes from the shop on Bridge Street."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:swim",
+     "text": "Maya has swimming lessons on Tuesdays at 5."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:piano",
+     "text": "Leo starts piano with Mrs Grant on Mondays."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:football",
+     "text": "Leo trains with the under-10s on Saturday mornings."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:coding",
+     "text": "Maya joined the coding club at the library."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:art",
+     "text": "Both kids do an art class in the holidays."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:old-drama",
+     "text": "Maya did a drama club last year."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:old-chess",
+     "text": "Leo tried chess club for a term."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d-other",
+     "ref": "memory:o0",
+     "text": "Sam goes to gymnastics on Mondays."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d-other",
+     "ref": "memory:o1",
+     "text": "Ava has ballet on Saturdays."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d-other",
+     "ref": "memory:o2",
+     "text": "The twins do judo on Thursdays."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:swim",
+     "text": "Maya's swimming moved to Wednesdays at 5."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:piano",
+     "text": "Leo's piano lesson is Mondays at 4:30."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:football",
+     "text": "Under-10s football training is Saturdays at 9."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:coding",
+     "text": "Coding club meets every second Saturday."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:art",
+     "text": "The art class runs on Sunday afternoons in term time."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:swim",
+     "text": "Maya's swimming is now Wednesdays at 6 at the leisure centre."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:piano",
+     "text": "Leo's piano lesson moved to Thursdays at 4:30."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:football",
+     "text": "Leo's football training moved to Friday after school."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:coding",
+     "text": "Coding club is now every Saturday at 11."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:art",
+     "text": "Art class moved to Sunday mornings."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:swim",
+     "text": "Maya swims on Wednesday evenings at 6:15 at the leisure centre."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:piano",
+     "text": "Leo has piano with Mrs Grant on Thursdays at 4:45."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:football",
+     "text": "Leo has football training on Fridays at 4 on the school field."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:coding",
+     "text": "Maya goes to coding club at the library every Saturday at 11:30."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:art",
+     "text": "The kids' art class is Sunday mornings at 10 in the church hall."
+    },
+    {
+     "op": "forget",
+     "scope": "user:c9d",
+     "ref": "memory:old-drama"
+    },
+    {
+     "op": "forget",
+     "scope": "user:c9d",
+     "ref": "memory:old-chess"
+    }
+   ],
+   "queries": [
+    {
+     "id": "kids-aggregate",
+     "scope": "user:c9d",
+     "query": "What clubs and lessons do the children have each week?",
+     "family": "aggregate",
+     "expect": {
+      "must_include": [
+       "memory:swim",
+       "memory:piano",
+       "memory:football",
+       "memory:coding",
+       "memory:art"
+      ],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "memory:old-drama",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "memory:old-chess",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "user:c9d-other#memory:o0",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o1",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o2",
+        "reason": "other_scope"
+       }
+      ]
+     }
+    },
+    {
+     "id": "kids-single",
+     "scope": "user:c9d",
+     "query": "When does my son practise with his team?",
+     "family": "single",
+     "expect": {
+      "must_include": [
+       "memory:football"
+      ],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "memory:old-drama",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "memory:old-chess",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "user:c9d-other#memory:o0",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o1",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o2",
+        "reason": "other_scope"
+       }
+      ]
+     }
+    },
+    {
+     "id": "kids-lexical",
+     "scope": "user:c9d",
+     "query": "What time is Maya's swimming?",
+     "family": "lexical",
+     "expect": {
+      "must_include": [
+       "memory:swim"
+      ],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "memory:old-drama",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "memory:old-chess",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "user:c9d-other#memory:o0",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o1",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o2",
+        "reason": "other_scope"
+       }
+      ]
+     }
+    },
+    {
+     "id": "kids-stable",
+     "scope": "user:c9d",
+     "query": "Where do we buy school clothes?",
+     "family": "stable",
+     "expect": {
+      "must_include": [
+       "memory:s29"
+      ],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "memory:old-drama",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "memory:old-chess",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "user:c9d-other#memory:o0",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o1",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o2",
+        "reason": "other_scope"
+       }
+      ]
+     }
+    },
+    {
+     "id": "kids-absent",
+     "scope": "user:c9d",
+     "query": "When is Leo's karate grading?",
+     "family": "absent",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "memory:old-drama",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "memory:old-chess",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "user:c9d-other#memory:o0",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o1",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o2",
+        "reason": "other_scope"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "work",
+   "category": "c9d-longitudinal",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s0",
+     "text": "Our neighbour Priya waters the plants when we are away."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s1",
+     "text": "The car insurance renews every March."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s2",
+     "text": "I prefer window seats on long flights."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s3",
+     "text": "My sister lives in Galway with her two dogs."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s4",
+     "text": "The wifi password is on a card inside the hall cupboard."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s5",
+     "text": "We get the vegetable box delivered on Thursdays."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s6",
+     "text": "I can't stand coriander."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s7",
+     "text": "The spare house key is with the people at number 12."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s8",
+     "text": "Dad's birthday is on the 3rd of November."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s9",
+     "text": "I keep my passport in the blue folder in the study."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s10",
+     "text": "The recycling goes out every other Monday."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s11",
+     "text": "My dentist is Dr Okafor on Mill Lane."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s12",
+     "text": "I usually take the 7:40 train into town."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s13",
+     "text": "Our cat is called Pepper and she is fourteen."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s14",
+     "text": "I learned to sail at a summer camp in Wales."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s15",
+     "text": "The bank changed my sort code after the merger."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s16",
+     "text": "We painted the living room a pale green last spring."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s17",
+     "text": "My favourite pizza place is Luigi's on the corner."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s18",
+     "text": "I'm allergic to penicillin."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s19",
+     "text": "The broadband contract ends in January."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s20",
+     "text": "I play five-a-side football with old university friends."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s21",
+     "text": "Grandma's recipe book is on the top kitchen shelf."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s22",
+     "text": "I switched my phone plan to the cheaper monthly one."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s23",
+     "text": "We have a standing dinner with the Harrisons on the first Friday of the month."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s24",
+     "text": "The bike lock code is the same as the garage code."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s25",
+     "text": "My library card expires next summer."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s26",
+     "text": "I support the local rugby club."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s27",
+     "text": "The council tax is paid by direct debit."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s28",
+     "text": "I wear reading glasses for screens now."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s29",
+     "text": "The kids' school uniform comes from the shop on Bridge Street."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:migration",
+     "text": "The database migration is planned for the spring."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:hiring",
+     "text": "We are hiring two backend engineers."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:report",
+     "text": "The quarterly report is due at the end of the month."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:vendor",
+     "text": "The cloud vendor contract is up for renewal."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:onboarding",
+     "text": "I'm writing the onboarding guide for new starters."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:old-offsite",
+     "text": "I was organising the team offsite."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:old-audit",
+     "text": "I helped with last year's security audit."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d-other",
+     "ref": "memory:o0",
+     "text": "The payments API rewrite is in progress."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d-other",
+     "ref": "memory:o1",
+     "text": "We are hiring a designer."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d-other",
+     "ref": "memory:o2",
+     "text": "The annual budget is due next week."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:migration",
+     "text": "The database migration slipped to June."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:hiring",
+     "text": "We made one offer for the backend roles."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:report",
+     "text": "The quarterly report needs sign-off from finance first."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:vendor",
+     "text": "We asked the cloud vendor for a discount on renewal."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:onboarding",
+     "text": "The onboarding guide has a first draft."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:migration",
+     "text": "The database migration is in testing with two tables left."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:hiring",
+     "text": "One backend engineer accepted; the second role is open."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:report",
+     "text": "Finance signed off; the quarterly report needs the sales figures."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:vendor",
+     "text": "The vendor offered 8% off a two-year renewal."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:onboarding",
+     "text": "The onboarding guide is with the team for comments."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:migration",
+     "text": "The database migration is in final testing and goes live in July."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:hiring",
+     "text": "The second backend role is down to two final candidates."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:report",
+     "text": "The quarterly report is waiting only on the sales figures from Dana."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:vendor",
+     "text": "Legal is reviewing the vendor's two-year renewal at 8% off."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:onboarding",
+     "text": "I'm folding the team's comments into the onboarding guide."
+    },
+    {
+     "op": "forget",
+     "scope": "user:c9d",
+     "ref": "memory:old-offsite"
+    },
+    {
+     "op": "forget",
+     "scope": "user:c9d",
+     "ref": "memory:old-audit"
+    }
+   ],
+   "queries": [
+    {
+     "id": "work-aggregate",
+     "scope": "user:c9d",
+     "query": "What am I busy with at the office right now?",
+     "family": "aggregate",
+     "expect": {
+      "must_include": [
+       "memory:migration",
+       "memory:hiring",
+       "memory:report",
+       "memory:vendor",
+       "memory:onboarding"
+      ],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "memory:old-offsite",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "memory:old-audit",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "user:c9d-other#memory:o0",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o1",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o2",
+        "reason": "other_scope"
+       }
+      ]
+     }
+    },
+    {
+     "id": "work-single",
+     "scope": "user:c9d",
+     "query": "Where are we with recruiting?",
+     "family": "single",
+     "expect": {
+      "must_include": [
+       "memory:hiring"
+      ],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "memory:old-offsite",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "memory:old-audit",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "user:c9d-other#memory:o0",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o1",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o2",
+        "reason": "other_scope"
+       }
+      ]
+     }
+    },
+    {
+     "id": "work-lexical",
+     "scope": "user:c9d",
+     "query": "When does the database migration go live?",
+     "family": "lexical",
+     "expect": {
+      "must_include": [
+       "memory:migration"
+      ],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "memory:old-offsite",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "memory:old-audit",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "user:c9d-other#memory:o0",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o1",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o2",
+        "reason": "other_scope"
+       }
+      ]
+     }
+    },
+    {
+     "id": "work-stable",
+     "scope": "user:c9d",
+     "query": "Which train do I catch to get into town?",
+     "family": "stable",
+     "expect": {
+      "must_include": [
+       "memory:s12"
+      ],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "memory:old-offsite",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "memory:old-audit",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "user:c9d-other#memory:o0",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o1",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o2",
+        "reason": "other_scope"
+       }
+      ]
+     }
+    },
+    {
+     "id": "work-absent",
+     "scope": "user:c9d",
+     "query": "Who is my mentor at work?",
+     "family": "absent",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "memory:old-offsite",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "memory:old-audit",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "user:c9d-other#memory:o0",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o1",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o2",
+        "reason": "other_scope"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "house",
+   "category": "c9d-longitudinal",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s0",
+     "text": "Our neighbour Priya waters the plants when we are away."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s1",
+     "text": "The car insurance renews every March."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s2",
+     "text": "I prefer window seats on long flights."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s3",
+     "text": "My sister lives in Galway with her two dogs."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s4",
+     "text": "The wifi password is on a card inside the hall cupboard."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s5",
+     "text": "We get the vegetable box delivered on Thursdays."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s6",
+     "text": "I can't stand coriander."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s7",
+     "text": "The spare house key is with the people at number 12."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s8",
+     "text": "Dad's birthday is on the 3rd of November."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s9",
+     "text": "I keep my passport in the blue folder in the study."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s10",
+     "text": "The recycling goes out every other Monday."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s11",
+     "text": "My dentist is Dr Okafor on Mill Lane."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s12",
+     "text": "I usually take the 7:40 train into town."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s13",
+     "text": "Our cat is called Pepper and she is fourteen."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s14",
+     "text": "I learned to sail at a summer camp in Wales."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s15",
+     "text": "The bank changed my sort code after the merger."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s16",
+     "text": "We painted the living room a pale green last spring."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s17",
+     "text": "My favourite pizza place is Luigi's on the corner."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s18",
+     "text": "I'm allergic to penicillin."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s19",
+     "text": "The broadband contract ends in January."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s20",
+     "text": "I play five-a-side football with old university friends."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s21",
+     "text": "Grandma's recipe book is on the top kitchen shelf."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s22",
+     "text": "I switched my phone plan to the cheaper monthly one."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s23",
+     "text": "We have a standing dinner with the Harrisons on the first Friday of the month."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s24",
+     "text": "The bike lock code is the same as the garage code."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s25",
+     "text": "My library card expires next summer."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s26",
+     "text": "I support the local rugby club."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s27",
+     "text": "The council tax is paid by direct debit."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s28",
+     "text": "I wear reading glasses for screens now."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s29",
+     "text": "The kids' school uniform comes from the shop on Bridge Street."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:tap",
+     "text": "The kitchen tap is dripping."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:roof",
+     "text": "A roof tile slipped in the storm."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:boiler",
+     "text": "The boiler service is due in October."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:fence",
+     "text": "A fence panel blew down at the back."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:latch",
+     "text": "The bedroom window latch is stiff."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:old-gutter",
+     "text": "The gutter over the porch was blocked."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:old-damp",
+     "text": "There was a damp patch in the bathroom."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d-other",
+     "ref": "memory:o0",
+     "text": "The garage door sticks."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d-other",
+     "ref": "memory:o1",
+     "text": "The loft hatch needs a ladder."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d-other",
+     "ref": "memory:o2",
+     "text": "The shed roof leaks."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:tap",
+     "text": "The kitchen tap needs a new washer."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:roof",
+     "text": "The roofer will look at the slipped tile next week."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:boiler",
+     "text": "The boiler service was moved to November."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:fence",
+     "text": "We bought a replacement fence panel."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:latch",
+     "text": "The bedroom window latch has snapped."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:tap",
+     "text": "The washer didn't fix it; the kitchen tap needs replacing."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:roof",
+     "text": "The roofer says three tiles need replacing."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:boiler",
+     "text": "The engineer found a faulty pressure valve on the boiler."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:fence",
+     "text": "The fence post is rotten too, so the panel can't go up yet."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:latch",
+     "text": "I ordered a replacement window latch online."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:tap",
+     "text": "A new kitchen tap is ordered and the plumber fits it on Friday."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:roof",
+     "text": "Three roof tiles are booked to be replaced after the rain."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:boiler",
+     "text": "The boiler's pressure valve part is on back order."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:fence",
+     "text": "We need a new fence post before the panel goes back up."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:latch",
+     "text": "The replacement window latch arrived but is the wrong size."
+    },
+    {
+     "op": "forget",
+     "scope": "user:c9d",
+     "ref": "memory:old-gutter"
+    },
+    {
+     "op": "forget",
+     "scope": "user:c9d",
+     "ref": "memory:old-damp"
+    }
+   ],
+   "queries": [
+    {
+     "id": "house-aggregate",
+     "scope": "user:c9d",
+     "query": "What jobs around the house are still outstanding?",
+     "family": "aggregate",
+     "expect": {
+      "must_include": [
+       "memory:tap",
+       "memory:roof",
+       "memory:boiler",
+       "memory:fence",
+       "memory:latch"
+      ],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "memory:old-gutter",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "memory:old-damp",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "user:c9d-other#memory:o0",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o1",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o2",
+        "reason": "other_scope"
+       }
+      ]
+     }
+    },
+    {
+     "id": "house-single",
+     "scope": "user:c9d",
+     "query": "What's wrong with the heating?",
+     "family": "single",
+     "expect": {
+      "must_include": [
+       "memory:boiler"
+      ],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "memory:old-gutter",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "memory:old-damp",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "user:c9d-other#memory:o0",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o1",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o2",
+        "reason": "other_scope"
+       }
+      ]
+     }
+    },
+    {
+     "id": "house-lexical",
+     "scope": "user:c9d",
+     "query": "When is the plumber fitting the kitchen tap?",
+     "family": "lexical",
+     "expect": {
+      "must_include": [
+       "memory:tap"
+      ],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "memory:old-gutter",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "memory:old-damp",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "user:c9d-other#memory:o0",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o1",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o2",
+        "reason": "other_scope"
+       }
+      ]
+     }
+    },
+    {
+     "id": "house-stable",
+     "scope": "user:c9d",
+     "query": "What colour did we paint the lounge?",
+     "family": "stable",
+     "expect": {
+      "must_include": [
+       "memory:s16"
+      ],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "memory:old-gutter",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "memory:old-damp",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "user:c9d-other#memory:o0",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o1",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o2",
+        "reason": "other_scope"
+       }
+      ]
+     }
+    },
+    {
+     "id": "house-absent",
+     "scope": "user:c9d",
+     "query": "When is the chimney being swept?",
+     "family": "absent",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "memory:old-gutter",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "memory:old-damp",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "user:c9d-other#memory:o0",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o1",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o2",
+        "reason": "other_scope"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "travel",
+   "category": "c9d-longitudinal",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s0",
+     "text": "Our neighbour Priya waters the plants when we are away."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s1",
+     "text": "The car insurance renews every March."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s2",
+     "text": "I prefer window seats on long flights."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s3",
+     "text": "My sister lives in Galway with her two dogs."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s4",
+     "text": "The wifi password is on a card inside the hall cupboard."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s5",
+     "text": "We get the vegetable box delivered on Thursdays."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s6",
+     "text": "I can't stand coriander."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s7",
+     "text": "The spare house key is with the people at number 12."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s8",
+     "text": "Dad's birthday is on the 3rd of November."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s9",
+     "text": "I keep my passport in the blue folder in the study."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s10",
+     "text": "The recycling goes out every other Monday."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s11",
+     "text": "My dentist is Dr Okafor on Mill Lane."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s12",
+     "text": "I usually take the 7:40 train into town."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s13",
+     "text": "Our cat is called Pepper and she is fourteen."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s14",
+     "text": "I learned to sail at a summer camp in Wales."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s15",
+     "text": "The bank changed my sort code after the merger."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s16",
+     "text": "We painted the living room a pale green last spring."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s17",
+     "text": "My favourite pizza place is Luigi's on the corner."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s18",
+     "text": "I'm allergic to penicillin."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s19",
+     "text": "The broadband contract ends in January."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s20",
+     "text": "I play five-a-side football with old university friends."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s21",
+     "text": "Grandma's recipe book is on the top kitchen shelf."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s22",
+     "text": "I switched my phone plan to the cheaper monthly one."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s23",
+     "text": "We have a standing dinner with the Harrisons on the first Friday of the month."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s24",
+     "text": "The bike lock code is the same as the garage code."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s25",
+     "text": "My library card expires next summer."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s26",
+     "text": "I support the local rugby club."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s27",
+     "text": "The council tax is paid by direct debit."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s28",
+     "text": "I wear reading glasses for screens now."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s29",
+     "text": "The kids' school uniform comes from the shop on Bridge Street."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:lisbon",
+     "text": "We are thinking about Lisbon in May."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:wedding",
+     "text": "Tom's wedding is in York in the summer."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:ski",
+     "text": "We might go skiing in February."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:berlin",
+     "text": "I may present at a conference in Berlin."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:camping",
+     "text": "We want a camping weekend in the Lakes."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:old-paris",
+     "text": "We talked about a weekend in Paris."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:old-cruise",
+     "text": "Mum suggested a cruise."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d-other",
+     "ref": "memory:o0",
+     "text": "We are going to Crete in July."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d-other",
+     "ref": "memory:o1",
+     "text": "A road trip to Scotland in April."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d-other",
+     "ref": "memory:o2",
+     "text": "A weekend in Bruges in March."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:lisbon",
+     "text": "Flights to Lisbon are booked for the 12th of May."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:wedding",
+     "text": "Tom's wedding in York is on the 2nd of August."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:ski",
+     "text": "The ski week is booked for half term in Austria."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:berlin",
+     "text": "My Berlin conference talk was accepted."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:camping",
+     "text": "The camping weekend is pencilled in for June."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:lisbon",
+     "text": "The Lisbon flight moved to the 14th of May."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:wedding",
+     "text": "We booked a hotel near the minster for Tom's wedding."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:ski",
+     "text": "The ski chalet changed to one in Söll."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:berlin",
+     "text": "The Berlin conference is the 9th and 10th of October."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:camping",
+     "text": "We booked a pitch at Great Langdale for June."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:lisbon",
+     "text": "We fly to Lisbon on the 14th of May and stay in Alfama."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:wedding",
+     "text": "For Tom's wedding we take the train to York on the 1st of August."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:ski",
+     "text": "Our ski week in Söll starts on the 15th of February."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:berlin",
+     "text": "I'm flying to Berlin for the conference on the 8th of October."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:camping",
+     "text": "Our Great Langdale camping weekend is the 20th to 22nd of June."
+    },
+    {
+     "op": "forget",
+     "scope": "user:c9d",
+     "ref": "memory:old-paris"
+    },
+    {
+     "op": "forget",
+     "scope": "user:c9d",
+     "ref": "memory:old-cruise"
+    }
+   ],
+   "queries": [
+    {
+     "id": "travel-aggregate",
+     "scope": "user:c9d",
+     "query": "Where are we going away this year?",
+     "family": "aggregate",
+     "expect": {
+      "must_include": [
+       "memory:lisbon",
+       "memory:wedding",
+       "memory:ski",
+       "memory:berlin",
+       "memory:camping"
+      ],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "memory:old-paris",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "memory:old-cruise",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "user:c9d-other#memory:o0",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o1",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o2",
+        "reason": "other_scope"
+       }
+      ]
+     }
+    },
+    {
+     "id": "travel-single",
+     "scope": "user:c9d",
+     "query": "When is my work trip to Germany?",
+     "family": "single",
+     "expect": {
+      "must_include": [
+       "memory:berlin"
+      ],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "memory:old-paris",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "memory:old-cruise",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "user:c9d-other#memory:o0",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o1",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o2",
+        "reason": "other_scope"
+       }
+      ]
+     }
+    },
+    {
+     "id": "travel-lexical",
+     "scope": "user:c9d",
+     "query": "When do we fly to Lisbon?",
+     "family": "lexical",
+     "expect": {
+      "must_include": [
+       "memory:lisbon"
+      ],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "memory:old-paris",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "memory:old-cruise",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "user:c9d-other#memory:o0",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o1",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o2",
+        "reason": "other_scope"
+       }
+      ]
+     }
+    },
+    {
+     "id": "travel-stable",
+     "scope": "user:c9d",
+     "query": "Where do I keep my passport?",
+     "family": "stable",
+     "expect": {
+      "must_include": [
+       "memory:s9"
+      ],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "memory:old-paris",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "memory:old-cruise",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "user:c9d-other#memory:o0",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o1",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o2",
+        "reason": "other_scope"
+       }
+      ]
+     }
+    },
+    {
+     "id": "travel-absent",
+     "scope": "user:c9d",
+     "query": "Which hotel did we book in Rome?",
+     "family": "absent",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "memory:old-paris",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "memory:old-cruise",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "user:c9d-other#memory:o0",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o1",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o2",
+        "reason": "other_scope"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "fitness",
+   "category": "c9d-longitudinal",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s0",
+     "text": "Our neighbour Priya waters the plants when we are away."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s1",
+     "text": "The car insurance renews every March."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s2",
+     "text": "I prefer window seats on long flights."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s3",
+     "text": "My sister lives in Galway with her two dogs."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s4",
+     "text": "The wifi password is on a card inside the hall cupboard."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s5",
+     "text": "We get the vegetable box delivered on Thursdays."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s6",
+     "text": "I can't stand coriander."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s7",
+     "text": "The spare house key is with the people at number 12."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s8",
+     "text": "Dad's birthday is on the 3rd of November."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s9",
+     "text": "I keep my passport in the blue folder in the study."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s10",
+     "text": "The recycling goes out every other Monday."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s11",
+     "text": "My dentist is Dr Okafor on Mill Lane."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s12",
+     "text": "I usually take the 7:40 train into town."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s13",
+     "text": "Our cat is called Pepper and she is fourteen."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s14",
+     "text": "I learned to sail at a summer camp in Wales."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s15",
+     "text": "The bank changed my sort code after the merger."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s16",
+     "text": "We painted the living room a pale green last spring."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s17",
+     "text": "My favourite pizza place is Luigi's on the corner."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s18",
+     "text": "I'm allergic to penicillin."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s19",
+     "text": "The broadband contract ends in January."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s20",
+     "text": "I play five-a-side football with old university friends."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s21",
+     "text": "Grandma's recipe book is on the top kitchen shelf."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s22",
+     "text": "I switched my phone plan to the cheaper monthly one."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s23",
+     "text": "We have a standing dinner with the Harrisons on the first Friday of the month."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s24",
+     "text": "The bike lock code is the same as the garage code."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s25",
+     "text": "My library card expires next summer."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s26",
+     "text": "I support the local rugby club."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s27",
+     "text": "The council tax is paid by direct debit."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s28",
+     "text": "I wear reading glasses for screens now."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:s29",
+     "text": "The kids' school uniform comes from the shop on Bridge Street."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:squat",
+     "text": "I'm aiming to squat 80kg."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:run",
+     "text": "My long run is 8km on Sundays."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:swim",
+     "text": "I swim once a week at lunchtime."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:rest",
+     "text": "Friday is my rest day."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:cycle",
+     "text": "I'd like to cycle to work."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:old-tennis",
+     "text": "I played tennis on Saturdays."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d",
+     "ref": "memory:old-boxing",
+     "text": "I tried a boxing class."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d-other",
+     "ref": "memory:o0",
+     "text": "I do pilates on Mondays."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d-other",
+     "ref": "memory:o1",
+     "text": "I row 5km on the machine."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9d-other",
+     "ref": "memory:o2",
+     "text": "I climb at the wall on Fridays."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:squat",
+     "text": "I squatted 80kg; the next goal is 90kg."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:run",
+     "text": "My Sunday long run is up to 12km."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:swim",
+     "text": "I swim twice a week, Tuesday and Thursday lunchtimes."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:rest",
+     "text": "I take Wednesdays and Fridays off training."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:cycle",
+     "text": "I cycle to work on Mondays."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:squat",
+     "text": "I'm squatting 85kg for sets of five."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:run",
+     "text": "The Sunday long run is 15km at an easy pace."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:swim",
+     "text": "Swimming dropped to Thursdays only."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:rest",
+     "text": "Wednesday is now a yoga day instead of a rest day."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:cycle",
+     "text": "I cycle to work on Mondays and Wednesdays."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:squat",
+     "text": "I'm working up to 90kg squats for sets of five."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:run",
+     "text": "I run 18km slowly on Sunday mornings to build for the half marathon."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:swim",
+     "text": "I swim 40 lengths on Thursday lunchtimes."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:rest",
+     "text": "Only Friday is a full rest day; Wednesday is yoga."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9d",
+     "ref": "memory:cycle",
+     "text": "I cycle the 9km to work three days a week."
+    },
+    {
+     "op": "forget",
+     "scope": "user:c9d",
+     "ref": "memory:old-tennis"
+    },
+    {
+     "op": "forget",
+     "scope": "user:c9d",
+     "ref": "memory:old-boxing"
+    }
+   ],
+   "queries": [
+    {
+     "id": "fitness-aggregate",
+     "scope": "user:c9d",
+     "query": "What does my weekly exercise routine look like?",
+     "family": "aggregate",
+     "expect": {
+      "must_include": [
+       "memory:squat",
+       "memory:run",
+       "memory:swim",
+       "memory:rest",
+       "memory:cycle"
+      ],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "memory:old-tennis",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "memory:old-boxing",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "user:c9d-other#memory:o0",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o1",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o2",
+        "reason": "other_scope"
+       }
+      ]
+     }
+    },
+    {
+     "id": "fitness-single",
+     "scope": "user:c9d",
+     "query": "How far am I going on my weekend jog?",
+     "family": "single",
+     "expect": {
+      "must_include": [
+       "memory:run"
+      ],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "memory:old-tennis",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "memory:old-boxing",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "user:c9d-other#memory:o0",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o1",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o2",
+        "reason": "other_scope"
+       }
+      ]
+     }
+    },
+    {
+     "id": "fitness-lexical",
+     "scope": "user:c9d",
+     "query": "How many lengths do I swim?",
+     "family": "lexical",
+     "expect": {
+      "must_include": [
+       "memory:swim"
+      ],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "memory:old-tennis",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "memory:old-boxing",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "user:c9d-other#memory:o0",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o1",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o2",
+        "reason": "other_scope"
+       }
+      ]
+     }
+    },
+    {
+     "id": "fitness-stable",
+     "scope": "user:c9d",
+     "query": "How old is our cat?",
+     "family": "stable",
+     "expect": {
+      "must_include": [
+       "memory:s13"
+      ],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "memory:old-tennis",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "memory:old-boxing",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "user:c9d-other#memory:o0",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o1",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o2",
+        "reason": "other_scope"
+       }
+      ]
+     }
+    },
+    {
+     "id": "fitness-absent",
+     "scope": "user:c9d",
+     "query": "What is my marathon personal best?",
+     "family": "absent",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": [
+       {
+        "ref": "memory:old-tennis",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "memory:old-boxing",
+        "reason": "forgotten"
+       },
+       {
+        "ref": "user:c9d-other#memory:o0",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o1",
+        "reason": "other_scope"
+       },
+       {
+        "ref": "user:c9d-other#memory:o2",
+        "reason": "other_scope"
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ]
+}
