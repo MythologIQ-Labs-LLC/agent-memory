@@ -1,0 +1,5 @@
+needed memories (7 dev sets incl. merged): 384
+not returned by C4+sem (simulated): 143
+ with any topical lexical match: 0
+ cosine <= 0.30: 143
+ dense rank 1: 8  ranks 2-3: 20  >3: 115

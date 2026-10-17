@@ -1,0 +1,24 @@
+C4 (cos>0.30)                                    strict  56/298 needed 241/384 extras  558 abstain 11/51
+rankK & rel>=0.9                                 strict  99/298 needed 193/384 extras  272 abstain 1/51
+cos>0.30 & topical                               strict  78/298 needed 127/384 extras  236 abstain 28/51
+topical & rank<=K                                strict  85/298 needed 122/384 extras  195 abstain 28/51
+topical & rank<=3                                strict  80/298 needed 125/384 extras  215 abstain 28/51
+(rankK&rel>=.9) | (topical&rank<=3)              strict  94/298 needed 196/384 extras  292 abstain 1/51
+(cos>.3&rankK&rel>=.9) | (topical&rank<=3)       strict  99/298 needed 188/384 extras  259 abstain 11/51
+(cos>.3&rank<=K) | (topical&rank<=3)             strict  94/298 needed 190/384 extras  273 abstain 11/51
+(cos>.3&rank<=K) | (topical&cos>.3)              strict  92/298 needed 192/384 extras  294 abstain 11/51
+(cos>.3&rank<=K) | (topical&rank<=10)            strict  90/298 needed 192/384 extras  300 abstain 11/51
+--- reach-preserving family
+C4 & (rel>=0.5 | topical)                            strict  65 needed 233 extras  484 abstain 11/51
+C4 & (rel>=0.5 | topical) | (topical&rank<=3)        strict  65 needed 233 extras  485 abstain 11/51
+C4 & rel>=0.5                                        strict  68 needed 233 extras  467 abstain 11/51
+C4 & (rel>=0.6 | topical)                            strict  72 needed 232 extras  432 abstain 11/51
+C4 & (rel>=0.6 | topical) | (topical&rank<=3)        strict  72 needed 232 extras  433 abstain 11/51
+C4 & rel>=0.6                                        strict  76 needed 231 extras  412 abstain 11/51
+C4 & (rel>=0.7 | topical)                            strict  84 needed 222 extras  373 abstain 11/51
+C4 & (rel>=0.7 | topical) | (topical&rank<=3)        strict  84 needed 222 extras  374 abstain 11/51
+C4 & rel>=0.7                                        strict  90 needed 219 extras  343 abstain 11/51
+C4 & (rel>=0.8 | topical)                            strict  88 needed 207 extras  341 abstain 11/51
+C4 & (rel>=0.8 | topical) | (topical&rank<=3)        strict  88 needed 207 extras  342 abstain 11/51
+C4 & rel>=0.8                                        strict  95 needed 202 extras  302 abstain 11/51
+C4 | (topical & rank<=3)                             strict  56 needed 241 extras  559 abstain 11/51
