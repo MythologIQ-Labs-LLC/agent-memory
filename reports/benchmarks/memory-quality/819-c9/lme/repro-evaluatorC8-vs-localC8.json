@@ -1,0 +1,136 @@
+{
+ "base": "/tmp/claude-0/-home-user-agent-memory/de46b9be-9dfb-5f73-acc8-bb6406f9dc14/scratchpad/evalc8/c8-sem-lme500.json.gz",
+ "candidate": "/tmp/claude-0/-home-user-agent-memory/de46b9be-9dfb-5f73-acc8-bb6406f9dc14/scratchpad/lme/c8-sem-lme500.json",
+ "base_revision": "24d4dd2697047fc622a6087f7005775133b60209",
+ "candidate_revision": "24d4dd2697047fc622a6087f7005775133b60209",
+ "planes": {
+  "session": {
+   "paired_n": 419,
+   "identical_ranked_top": 419,
+   "runtime_errors": [
+    0,
+    0
+   ],
+   "recall_all@3": {
+    "base": 0.8138,
+    "candidate": 0.8138,
+    "improved": 0,
+    "regressed": 0,
+    "mcnemar_p": 1.0,
+    "delta": 0.0,
+    "delta_ci95": [
+     0.0,
+     0.0
+    ],
+    "improved_ids": [],
+    "regressed_ids": []
+   },
+   "recall_all@5": {
+    "base": 0.8831,
+    "candidate": 0.8831,
+    "improved": 0,
+    "regressed": 0,
+    "mcnemar_p": 1.0,
+    "delta": 0.0,
+    "delta_ci95": [
+     0.0,
+     0.0
+    ],
+    "improved_ids": [],
+    "regressed_ids": []
+   },
+   "recall_all@10": {
+    "base": 0.9189,
+    "candidate": 0.9189,
+    "improved": 0,
+    "regressed": 0,
+    "mcnemar_p": 1.0,
+    "delta": 0.0,
+    "delta_ci95": [
+     0.0,
+     0.0
+    ],
+    "improved_ids": [],
+    "regressed_ids": []
+   },
+   "recall_all@50": {
+    "base": 0.9189,
+    "candidate": 0.9189,
+    "improved": 0,
+    "regressed": 0,
+    "mcnemar_p": 1.0,
+    "delta": 0.0,
+    "delta_ci95": [
+     0.0,
+     0.0
+    ],
+    "improved_ids": [],
+    "regressed_ids": []
+   }
+  },
+  "turn": {
+   "paired_n": 419,
+   "identical_ranked_top": 419,
+   "runtime_errors": [
+    0,
+    0
+   ],
+   "recall_all@3": {
+    "base": 0.4726,
+    "candidate": 0.4726,
+    "improved": 0,
+    "regressed": 0,
+    "mcnemar_p": 1.0,
+    "delta": 0.0,
+    "delta_ci95": [
+     0.0,
+     0.0
+    ],
+    "improved_ids": [],
+    "regressed_ids": []
+   },
+   "recall_all@5": {
+    "base": 0.6611,
+    "candidate": 0.6611,
+    "improved": 0,
+    "regressed": 0,
+    "mcnemar_p": 1.0,
+    "delta": 0.0,
+    "delta_ci95": [
+     0.0,
+     0.0
+    ],
+    "improved_ids": [],
+    "regressed_ids": []
+   },
+   "recall_all@10": {
+    "base": 0.7709,
+    "candidate": 0.7709,
+    "improved": 0,
+    "regressed": 0,
+    "mcnemar_p": 1.0,
+    "delta": 0.0,
+    "delta_ci95": [
+     0.0,
+     0.0
+    ],
+    "improved_ids": [],
+    "regressed_ids": []
+   },
+   "recall_all@50": {
+    "base": 0.8258,
+    "candidate": 0.8258,
+    "improved": 0,
+    "regressed": 0,
+    "mcnemar_p": 1.0,
+    "delta": 0.0,
+    "delta_ci95": [
+     0.0,
+     0.0
+    ],
+    "improved_ids": [],
+    "regressed_ids": []
+   }
+  }
+ }
+}

@@ -1,0 +1,220 @@
+{
+ "base": "/tmp/claude-0/-home-user-agent-memory/de46b9be-9dfb-5f73-acc8-bb6406f9dc14/scratchpad/lme/c8-sem-lme500.json",
+ "candidate": "/tmp/claude-0/-home-user-agent-memory/de46b9be-9dfb-5f73-acc8-bb6406f9dc14/scratchpad/lme/c9-sem-lme500.json",
+ "base_revision": "24d4dd2697047fc622a6087f7005775133b60209",
+ "candidate_revision": "4c64d8267f13b5cf54c003aed669ed4448edfc61",
+ "planes": {
+  "session": {
+   "paired_n": 419,
+   "identical_ranked_top": 342,
+   "runtime_errors": [
+    0,
+    0
+   ],
+   "recall_all@3": {
+    "base": 0.8138,
+    "candidate": 0.7971,
+    "improved": 0,
+    "regressed": 7,
+    "mcnemar_p": 0.01562,
+    "delta": -0.0167,
+    "delta_ci95": [
+     -0.0286,
+     -0.0048
+    ],
+    "improved_ids": [],
+    "regressed_ids": [
+     "10d9b85a",
+     "129d1232",
+     "60472f9c",
+     "61f8c8f8",
+     "81507db6",
+     "b9cfe692",
+     "gpt4_7a0daae1"
+    ]
+   },
+   "recall_all@5": {
+    "base": 0.8831,
+    "candidate": 0.8735,
+    "improved": 0,
+    "regressed": 4,
+    "mcnemar_p": 0.125,
+    "delta": -0.0095,
+    "delta_ci95": [
+     -0.0191,
+     0.0
+    ],
+    "improved_ids": [],
+    "regressed_ids": [
+     "129d1232",
+     "1c0ddc50",
+     "61f8c8f8",
+     "gpt4_2487a7cb"
+    ]
+   },
+   "recall_all@10": {
+    "base": 0.9189,
+    "candidate": 0.9212,
+    "improved": 3,
+    "regressed": 2,
+    "mcnemar_p": 1.0,
+    "delta": 0.0024,
+    "delta_ci95": [
+     -0.0072,
+     0.0119
+    ],
+    "improved_ids": [
+     "0977f2af",
+     "gpt4_2f56ae70",
+     "gpt4_d6585ce8"
+    ],
+    "regressed_ids": [
+     "d6233ab6",
+     "gpt4_7f6b06db"
+    ]
+   },
+   "recall_all@50": {
+    "base": 0.9189,
+    "candidate": 0.9284,
+    "improved": 4,
+    "regressed": 0,
+    "mcnemar_p": 0.125,
+    "delta": 0.0095,
+    "delta_ci95": [
+     0.0024,
+     0.0191
+    ],
+    "improved_ids": [
+     "0977f2af",
+     "38146c39",
+     "gpt4_2f56ae70",
+     "gpt4_d6585ce8"
+    ],
+    "regressed_ids": []
+   }
+  },
+  "turn": {
+   "paired_n": 419,
+   "identical_ranked_top": 264,
+   "runtime_errors": [
+    0,
+    0
+   ],
+   "recall_all@3": {
+    "base": 0.4726,
+    "candidate": 0.4797,
+    "improved": 5,
+    "regressed": 2,
+    "mcnemar_p": 0.45312,
+    "delta": 0.0072,
+    "delta_ci95": [
+     -0.0048,
+     0.0215
+    ],
+    "improved_ids": [
+     "32260d93",
+     "42ec0761",
+     "505af2f5",
+     "561fabcd",
+     "73d42213"
+    ],
+    "regressed_ids": [
+     "bc8a6e93",
+     "gpt4_d31cdae3"
+    ]
+   },
+   "recall_all@5": {
+    "base": 0.6611,
+    "candidate": 0.6563,
+    "improved": 7,
+    "regressed": 9,
+    "mcnemar_p": 0.80362,
+    "delta": -0.0048,
+    "delta_ci95": [
+     -0.0263,
+     0.0143
+    ],
+    "improved_ids": [
+     "32260d93",
+     "42ec0761",
+     "505af2f5",
+     "561fabcd",
+     "73d42213",
+     "d01c6aa8",
+     "gpt4_e05b82a6"
+    ],
+    "regressed_ids": [
+     "1d4e3b97",
+     "41698283",
+     "5025383b",
+     "c8090214",
+     "cc6d1ec1",
+     "ce6d2d27",
+     "d24813b1",
+     "gpt4_76048e76",
+     "gpt4_9a159967"
+    ]
+   },
+   "recall_all@10": {
+    "base": 0.7709,
+    "candidate": 0.7804,
+    "improved": 9,
+    "regressed": 5,
+    "mcnemar_p": 0.42395,
+    "delta": 0.0095,
+    "delta_ci95": [
+     -0.0095,
+     0.0286
+    ],
+    "improved_ids": [
+     "32260d93",
+     "42ec0761",
+     "505af2f5",
+     "561fabcd",
+     "73d42213",
+     "91b15a6e",
+     "afdc33df",
+     "d01c6aa8",
+     "gpt4_e05b82a6"
+    ],
+    "regressed_ids": [
+     "1d4e3b97",
+     "28dc39ac",
+     "5025383b",
+     "d6233ab6",
+     "gpt4_a1b77f9c"
+    ]
+   },
+   "recall_all@50": {
+    "base": 0.8258,
+    "candidate": 0.8616,
+    "improved": 15,
+    "regressed": 0,
+    "mcnemar_p": 6e-05,
+    "delta": 0.0358,
+    "delta_ci95": [
+     0.0191,
+     0.0549
+    ],
+    "improved_ids": [
+     "0977f2af",
+     "0a34ad58",
+     "0a995998",
+     "1c0ddc50",
+     "32260d93",
+     "42ec0761",
+     "505af2f5",
+     "561fabcd",
+     "73d42213",
+     "91b15a6e",
+     "afdc33df",
+     "c4a1ceb8",
+     "d01c6aa8",
+     "gpt4_45189cb4",
+     "gpt4_e05b82a6"
+    ],
+    "regressed_ids": []
+   }
+  }
+ }
+}

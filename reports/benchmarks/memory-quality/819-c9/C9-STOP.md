@@ -66,7 +66,11 @@ Files: `runtime/return_selection.py`, `api/surface.py`, `api/contract.py` (`corr
   (`test_fusion_alone_does_not_make_a_memory_sufficient`).
 - Focused suites (C4, C6, C7, C8, evidence-set, relevance-sufficient, lifecycle, API contract, API surface,
   developer facade, AMB bridge, LongMemEval runner): 111 + 104 tests, the existing expected failure only.
-- Full suite at `4c64d826`: see section 6.
+- Full suite at `4c64d826` (`full-suite-4c64d826.log`): 2,697 run, 33 skipped, 1 expected failure, 4
+  failures and 1 error. All five fail identically on unchanged C8 `24d4dd26`:
+  - the Runtime Baseline guard (by design, no successor declared);
+  - three gauntlet tests that report `blocked` in this container;
+  - one fixture path resolved from another working directory.
 
 ## 4. Gate (budget 5, route on, default selection unless stated; `dev/comparison.json`)
 
@@ -79,7 +83,8 @@ Files: `runtime/return_selection.py`, `api/surface.py`, `api/contract.py` (`corr
 | I2 `ranked_prefix` identical to C8 (C9 set) | identical on all 55 | met |
 | I3 safety violations | 0 on every set and arm | met |
 | I4 determinism (`PYTHONHASHSEED` 0, 1, 12345) | identical returned lists and top-5 orders | met |
-| I5 cost | no extra model call by construction; see section 6 for latency | see section 6 |
+| I5 cost | no extra model call by construction; contended p50 not higher (section 6) | met (contended measurement) |
+| L1 LongMemEval-S (secondary) | full 500, both planes: session @3 +0/−7, p = 0.016; turn @50 +15/−0 | **significant loss reported (defect)** |
 
 What 2.4.0 changed (6 of 293 queries):
 
@@ -117,10 +122,38 @@ C9 is C6/C8 to within 2 needed memories. Its strict advantage over C4+sem, and i
 
 ## 6. LongMemEval-S and cost
 
-LONGMEMEVAL_PLACEHOLDER
+**Protocol.** LongMemEval-S cleaned, sha256 `d6f21ea9…`, all 500 questions (419 scored), both planes,
+`--agent-memory-semantic-retrieval required`, default selection, no budget, `PYTHONHASHSEED=0`: the
+evaluator's C8 protocol (`lme/run_lme.sh`). C8 and C9 ran concurrently on the same host. 0 runtime errors.
+
+**Reproduction.** Local C8 equals the evaluator's published C8 output (`c8-sem-lme500.json.gz` at
+`33bb9c01`) on 419 of 419 ranked lists on both planes (`lme/repro-evaluatorC8-vs-localC8.json`).
+
+**C8+sem → C9+sem** (`lme/paired-C8sem-vs-C9sem.json`; recall_all@k, exact McNemar, bootstrap 95% CI):
+
+| Plane | @3 | @5 | @10 | @50 |
+|---|---|---|---|---|
+| Session | 0.814 → 0.797, **+0/−7, p = 0.016**, Δ −0.017 [−0.029, −0.005] | 0.883 → 0.874, +0/−4, p = 0.13 | 0.919 → 0.921, +3/−2 | 0.919 → 0.928, +4/−0, p = 0.13 |
+| Turn | 0.473 → 0.480, +5/−2, p = 0.45 | 0.661 → 0.656, +7/−9, p = 0.80 | 0.771 → 0.780, +9/−5, p = 0.42 | 0.826 → 0.862, **+15/−0, p = 6e-5** |
+
+- **Defect: a significant session-plane @3 regression.** In all 7 regressed questions the gold memories
+  are still returned, but a recovered memory is inserted above one of them. Rule 2 lets a recovered
+  memory sit anywhere above the lowest selected memory, including above gold evidence. This is a
+  preregistered-reportable loss (L1).
+- **Gain: turn-plane @50 recall** (+15/−0). This is deep-list recall, not top-of-list quality.
+- **Far more active than on the development sets.** 312 corroborations on the session plane (mean
+  returned 3.97 → 4.71) and 1,149 on the turn plane (10.09 → 12.84).
+- **Cost.** Recall p50 per question: session 2.90 s → 2.93 s, turn 3.61 s → 3.60 s. Dense similarities
+  are reused from fusion, so there are no extra model calls. On the C9 set, measured concurrently with
+  the other arms, p50 was 28.2 ms against C8's 35.0 ms. These are contended measurements, so I5 is met
+  only within that noise; no isolated latency run was made.
 
 ## 7. Unresolved defects (stated plainly)
 
+0. **C9's own defect: top-of-list displacement.** On LongMemEval-S the session plane loses at @3 (+0/−7,
+   p = 0.016) because a recovered memory can rank above gold evidence. Any successor that credits
+   rank-placed evidence must not let it displace evidence selected on stronger grounds; for example, it
+   could insert only below the lowest primary memory. That would be a new preregistration, not a tweak to C9.
 1. **Paraphrase evidence is unrecoverable at selection without trusting similarity alone.** This is the bulk
    of the e5 "51 withheld". The fix belongs to the semantic route's proposal policy (C6's K cap and 0.40
    `min_best`), which the evaluator already asked to replace. That is discovery work, outside this lane.
@@ -134,6 +167,7 @@ LONGMEMEVAL_PLACEHOLDER
 
 ## Recommendation
 
-**Do not adopt 2.4.0.** It is safe (all invariants met) but does not move user-visible quality. Keep `ranked_prefix`
+**Do not adopt 2.4.0.** It meets every safety invariant but does not move user-visible quality on the
+development sets, and it regresses LongMemEval-S session @3. Keep `ranked_prefix`
 and C6/C8 status as decided by the evaluator. The next hypothesis should target the proposal stage with a
 signal other than cosine alone, preregistered against fresh e6, in the discovery lane.
