@@ -19,6 +19,10 @@ from ..memory.procedural_memory import ActionProposal
 from ..runtime.adapter import RecallContext
 from ..runtime.return_selection import SELECTION_BASIS, SELECTION_POLICY_ID, SELECTION_POLICY_VERSION
 
+#: Contract 1.10.0 (#819 C9): the relevance-sufficient ``return_policy`` carries an additive
+#: ``selection_funnel`` diagnostic (aggregate counts, never authority). The 1.9.0 result schema
+#: rejects it (``additionalProperties: false``), so a 1.9.0 consumer must see a newer minor
+#: (ADR-030 ``migration_required``) rather than an unknown field under the same version.
 #: Contract 1.9.0 (#819): ``AgentMemory.recall`` returns the relevance-sufficient selection of
 #: the ranked admitted facts by default (``RETURN_SELECTION_POLICY_ID``); the 1.4.0 ranked prefix
 #: stays available as ``recall(..., return_selection="ranked_prefix")``. Numbered after the
@@ -26,7 +30,7 @@ from ..runtime.return_selection import SELECTION_BASIS, SELECTION_POLICY_ID, SEL
 #: reconcile the number when they integrate.
 #: Contract 1.6.0 (#732): additive ``remember(..., proposition=...)`` and
 #: ``AgentMemory.open(..., proposition_extractor=...)``; both default off.
-CONTRACT_VERSION = "1.9.0"
+CONTRACT_VERSION = "1.10.0"
 
 #: Return budget (contract 1.4.0, #670): a ranked-prefix policy applied after admission and
 #: after ranking; it reads only the ranked admitted list and is never authority.
