@@ -128,6 +128,53 @@ BOILER_FACTS = {
 BOILER_SIMS = {"memory:serviced": 0.80, "memory:f1": 0.30, "memory:f2": 0.25, "memory:manual": 0.10}
 
 
+class C9SelectionFunnelDiagnostics(_Store):
+    """C9 observes evidence withheld by selection without changing ranking or return."""
+
+    def test_selection_funnel_matches_top_k_and_never_promotes_evidence(self):
+        _TableRepresentation.TABLE = {
+            BOILER: {BOILER_FACTS[ref]: value for ref, value in BOILER_SIMS.items()}
+        }
+        memory = self.open()
+        self.seed(memory, BOILER_FACTS)
+        default = memory.recall(BOILER, budget=2, return_selection="relevance_sufficient")
+        prefix = memory.recall(BOILER, budget=2, return_selection="ranked_prefix")
+        policy = default["return_policy"]
+        funnel = policy["selection_funnel"]
+        self.assertEqual(default["admitted"], prefix["admitted"])
+        self.assertEqual(funnel["admitted_count"], len(default["admitted"]))
+        self.assertEqual(funnel["sufficient_count"], policy["sufficient_count"])
+        self.assertEqual(funnel["returned_count"], len(default["returned"]))
+        self.assertEqual(funnel["budget"], 2)
+        self.assertEqual(funnel["authority_effect"], "none")
+        withheld = [
+            ref for ref in prefix["returned"]
+            if default["admissions"][ref]["return_selection"]["ranked_prefix_withheld"]
+        ]
+        self.assertEqual(funnel["ranked_prefix_withheld_count"], len(withheld))
+        self.assertEqual(sum(funnel["ranked_prefix_withheld_bases"].values()), len(withheld))
+        self.assertTrue(set(default["returned"]).issubset(set(default["admitted"])))
+        for ref in default["returned"]:
+            self.assertFalse(default["admissions"][ref]["return_selection"]["ranked_prefix_withheld"])
+
+    def test_unbudgeted_selection_accounting_and_determinism(self):
+        _TableRepresentation.TABLE = {
+            BOILER: {BOILER_FACTS[ref]: value for ref, value in BOILER_SIMS.items()}
+        }
+        memory = self.open()
+        self.seed(memory, BOILER_FACTS)
+        first = memory.recall(BOILER, return_selection="relevance_sufficient")
+        second = memory.recall(BOILER, return_selection="relevance_sufficient")
+        self.assertEqual(first, second)
+        funnel = first["return_policy"]["selection_funnel"]
+        self.assertIsNone(funnel["budget"])
+        self.assertEqual(funnel["returned_count"], len(first["returned"]))
+        self.assertEqual(
+            funnel["ranked_prefix_withheld_count"],
+            len(first["admitted"]) - funnel["sufficient_count"],
+        )
+
+
 class FusedRanking(_Store):
     # Erratum (recorded after implementation; the preregistered mechanism is unchanged): this
     # preregistered expectation is false for the preregistered fusion. Every admitted memory has a
