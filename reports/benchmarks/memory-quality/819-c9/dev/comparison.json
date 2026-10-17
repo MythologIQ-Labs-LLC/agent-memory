@@ -1,0 +1,566 @@
+{
+ "c9set": {
+  "C9sem vs C4off-rs": {
+   "strict": [
+    35,
+    31
+   ],
+   "strict_wins": 5,
+   "strict_losses": 1,
+   "mcnemar_p": 0.2188,
+   "needed_returned": [
+    33,
+    23
+   ],
+   "needed": 45,
+   "extras": [
+    27,
+    21
+   ],
+   "no_answer_returning": [
+    7,
+    6
+   ],
+   "safety_violations_c9": 0
+  },
+  "C9sem vs C4sem-rs": {
+   "strict": [
+    35,
+    23
+   ],
+   "strict_wins": 14,
+   "strict_losses": 2,
+   "mcnemar_p": 0.0042,
+   "needed_returned": [
+    33,
+    36
+   ],
+   "needed": 45,
+   "extras": [
+    27,
+    64
+   ],
+   "no_answer_returning": [
+    7,
+    12
+   ],
+   "safety_violations_c9": 0
+  },
+  "C9sem vs C6sem-rs": {
+   "strict": [
+    35,
+    35
+   ],
+   "strict_wins": 0,
+   "strict_losses": 0,
+   "mcnemar_p": 1.0,
+   "needed_returned": [
+    33,
+    32
+   ],
+   "needed": 45,
+   "extras": [
+    27,
+    26
+   ],
+   "no_answer_returning": [
+    7,
+    7
+   ],
+   "safety_violations_c9": 0
+  },
+  "C9sem vs C8sem-rs": {
+   "strict": [
+    35,
+    35
+   ],
+   "strict_wins": 0,
+   "strict_losses": 0,
+   "mcnemar_p": 1.0,
+   "needed_returned": [
+    33,
+    32
+   ],
+   "needed": 45,
+   "extras": [
+    27,
+    26
+   ],
+   "no_answer_returning": [
+    7,
+    7
+   ],
+   "safety_violations_c9": 0
+  }
+ },
+ "c8set": {
+  "C9sem vs C4off-rs": {
+   "strict": [
+    17,
+    16
+   ],
+   "strict_wins": 1,
+   "strict_losses": 0,
+   "mcnemar_p": 1.0,
+   "needed_returned": [
+    42,
+    35
+   ],
+   "needed": 78,
+   "extras": [
+    53,
+    48
+   ],
+   "no_answer_returning": [
+    3,
+    3
+   ],
+   "safety_violations_c9": 0
+  },
+  "C9sem vs C4sem-rs": {
+   "strict": [
+    17,
+    8
+   ],
+   "strict_wins": 11,
+   "strict_losses": 2,
+   "mcnemar_p": 0.0225,
+   "needed_returned": [
+    42,
+    48
+   ],
+   "needed": 78,
+   "extras": [
+    53,
+    112
+   ],
+   "no_answer_returning": [
+    3,
+    4
+   ],
+   "safety_violations_c9": 0
+  },
+  "C9sem vs C6sem-rs": {
+   "strict": [
+    17,
+    17
+   ],
+   "strict_wins": 0,
+   "strict_losses": 0,
+   "mcnemar_p": 1.0,
+   "needed_returned": [
+    42,
+    41
+   ],
+   "needed": 78,
+   "extras": [
+    53,
+    52
+   ],
+   "no_answer_returning": [
+    3,
+    3
+   ],
+   "safety_violations_c9": 0
+  },
+  "C9sem vs C8sem-rs": {
+   "strict": [
+    17,
+    17
+   ],
+   "strict_wins": 0,
+   "strict_losses": 0,
+   "mcnemar_p": 1.0,
+   "needed_returned": [
+    42,
+    41
+   ],
+   "needed": 78,
+   "extras": [
+    53,
+    52
+   ],
+   "no_answer_returning": [
+    3,
+    3
+   ],
+   "safety_violations_c9": 0
+  }
+ },
+ "c7set": {
+  "C9sem vs C4off-rs": {
+   "strict": [
+    11,
+    10
+   ],
+   "strict_wins": 2,
+   "strict_losses": 1,
+   "mcnemar_p": 1.0,
+   "needed_returned": [
+    32,
+    24
+   ],
+   "needed": 76,
+   "extras": [
+    45,
+    38
+   ],
+   "no_answer_returning": [
+    4,
+    3
+   ],
+   "safety_violations_c9": 0
+  },
+  "C9sem vs C4sem-rs": {
+   "strict": [
+    11,
+    4
+   ],
+   "strict_wins": 9,
+   "strict_losses": 2,
+   "mcnemar_p": 0.0654,
+   "needed_returned": [
+    32,
+    46
+   ],
+   "needed": 76,
+   "extras": [
+    45,
+    98
+   ],
+   "no_answer_returning": [
+    4,
+    6
+   ],
+   "safety_violations_c9": 0
+  },
+  "C9sem vs C6sem-rs": {
+   "strict": [
+    11,
+    11
+   ],
+   "strict_wins": 0,
+   "strict_losses": 0,
+   "mcnemar_p": 1.0,
+   "needed_returned": [
+    32,
+    32
+   ],
+   "needed": 76,
+   "extras": [
+    45,
+    43
+   ],
+   "no_answer_returning": [
+    4,
+    4
+   ],
+   "safety_violations_c9": 0
+  },
+  "C9sem vs C8sem-rs": {
+   "strict": [
+    11,
+    11
+   ],
+   "strict_wins": 0,
+   "strict_losses": 0,
+   "mcnemar_p": 1.0,
+   "needed_returned": [
+    32,
+    32
+   ],
+   "needed": 76,
+   "extras": [
+    45,
+    43
+   ],
+   "no_answer_returning": [
+    4,
+    4
+   ],
+   "safety_violations_c9": 0
+  }
+ },
+ "c6diag": {
+  "C9sem vs C4off-rs": {
+   "strict": [
+    14,
+    8
+   ],
+   "strict_wins": 7,
+   "strict_losses": 1,
+   "mcnemar_p": 0.0703,
+   "needed_returned": [
+    18,
+    10
+   ],
+   "needed": 32,
+   "extras": [
+    8,
+    7
+   ],
+   "no_answer_returning": [
+    3,
+    2
+   ],
+   "safety_violations_c9": 0
+  },
+  "C9sem vs C4sem-rs": {
+   "strict": [
+    14,
+    8
+   ],
+   "strict_wins": 7,
+   "strict_losses": 1,
+   "mcnemar_p": 0.0703,
+   "needed_returned": [
+    18,
+    20
+   ],
+   "needed": 32,
+   "extras": [
+    8,
+    22
+   ],
+   "no_answer_returning": [
+    3,
+    4
+   ],
+   "safety_violations_c9": 0
+  },
+  "C9sem vs C6sem-rs": {
+   "strict": [
+    14,
+    14
+   ],
+   "strict_wins": 0,
+   "strict_losses": 0,
+   "mcnemar_p": 1.0,
+   "needed_returned": [
+    18,
+    18
+   ],
+   "needed": 32,
+   "extras": [
+    8,
+    8
+   ],
+   "no_answer_returning": [
+    3,
+    3
+   ],
+   "safety_violations_c9": 0
+  },
+  "C9sem vs C8sem-rs": {
+   "strict": [
+    14,
+    14
+   ],
+   "strict_wins": 0,
+   "strict_losses": 0,
+   "mcnemar_p": 1.0,
+   "needed_returned": [
+    18,
+    18
+   ],
+   "needed": 32,
+   "extras": [
+    8,
+    8
+   ],
+   "no_answer_returning": [
+    3,
+    3
+   ],
+   "safety_violations_c9": 0
+  }
+ },
+ "c5dev": {
+  "C9sem vs C4off-rs": {
+   "strict": [
+    26,
+    16
+   ],
+   "strict_wins": 11,
+   "strict_losses": 1,
+   "mcnemar_p": 0.0063,
+   "needed_returned": [
+    25,
+    12
+   ],
+   "needed": 46,
+   "extras": [
+    15,
+    13
+   ],
+   "no_answer_returning": [
+    1,
+    1
+   ],
+   "safety_violations_c9": 0
+  },
+  "C9sem vs C4sem-rs": {
+   "strict": [
+    26,
+    22
+   ],
+   "strict_wins": 7,
+   "strict_losses": 3,
+   "mcnemar_p": 0.3438,
+   "needed_returned": [
+    25,
+    29
+   ],
+   "needed": 46,
+   "extras": [
+    15,
+    27
+   ],
+   "no_answer_returning": [
+    1,
+    3
+   ],
+   "safety_violations_c9": 0
+  },
+  "C9sem vs C6sem-rs": {
+   "strict": [
+    26,
+    26
+   ],
+   "strict_wins": 0,
+   "strict_losses": 0,
+   "mcnemar_p": 1.0,
+   "needed_returned": [
+    25,
+    25
+   ],
+   "needed": 46,
+   "extras": [
+    15,
+    15
+   ],
+   "no_answer_returning": [
+    1,
+    1
+   ],
+   "safety_violations_c9": 0
+  },
+  "C9sem vs C8sem-rs": {
+   "strict": [
+    26,
+    26
+   ],
+   "strict_wins": 0,
+   "strict_losses": 0,
+   "mcnemar_p": 1.0,
+   "needed_returned": [
+    25,
+    25
+   ],
+   "needed": 46,
+   "extras": [
+    15,
+    15
+   ],
+   "no_answer_returning": [
+    1,
+    1
+   ],
+   "safety_violations_c9": 0
+  }
+ },
+ "gen": {
+  "C9sem vs C4off-rs": {
+   "strict": [
+    15,
+    11
+   ],
+   "strict_wins": 5,
+   "strict_losses": 1,
+   "mcnemar_p": 0.2188,
+   "needed_returned": [
+    27,
+    15
+   ],
+   "needed": 58,
+   "extras": [
+    65,
+    51
+   ],
+   "no_answer_returning": [
+    8,
+    8
+   ],
+   "safety_violations_c9": 0
+  },
+  "C9sem vs C4sem-rs": {
+   "strict": [
+    15,
+    6
+   ],
+   "strict_wins": 10,
+   "strict_losses": 1,
+   "mcnemar_p": 0.0117,
+   "needed_returned": [
+    27,
+    36
+   ],
+   "needed": 58,
+   "extras": [
+    65,
+    108
+   ],
+   "no_answer_returning": [
+    8,
+    10
+   ],
+   "safety_violations_c9": 0
+  },
+  "C9sem vs C6sem-rs": {
+   "strict": [
+    15,
+    15
+   ],
+   "strict_wins": 0,
+   "strict_losses": 0,
+   "mcnemar_p": 1.0,
+   "needed_returned": [
+    27,
+    27
+   ],
+   "needed": 58,
+   "extras": [
+    65,
+    61
+   ],
+   "no_answer_returning": [
+    8,
+    8
+   ],
+   "safety_violations_c9": 0
+  },
+  "C9sem vs C8sem-rs": {
+   "strict": [
+    15,
+    15
+   ],
+   "strict_wins": 0,
+   "strict_losses": 0,
+   "mcnemar_p": 1.0,
+   "needed_returned": [
+    27,
+    27
+   ],
+   "needed": 58,
+   "extras": [
+    65,
+    61
+   ],
+   "no_answer_returning": [
+    8,
+    8
+   ],
+   "safety_violations_c9": 0
+  }
+ }
+}
