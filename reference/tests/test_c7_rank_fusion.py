@@ -165,11 +165,24 @@ class C9SelectionFunnelDiagnostics(_Store):
         _TableRepresentation.TABLE = {
             BOILER: {BOILER_FACTS[ref]: value for ref, value in BOILER_SIMS.items()}
         }
-        memory = self.open()
-        self.seed(memory, BOILER_FACTS)
-        first = memory.recall(BOILER, return_selection="relevance_sufficient")
-        second = memory.recall(BOILER, return_selection="relevance_sufficient")
+        # Each recall mints counter-based decision ids and clock readings, so repeat recalls on one
+        # store differ there by design; determinism is compared across identically seeded stores.
+        results = []
+        for index in range(2):
+            root = self.root / f"store-{index}"
+            root.mkdir()
+            memory = self.open(root=root)
+            self.seed(memory, BOILER_FACTS)
+            results.append(memory.recall(BOILER, return_selection="relevance_sufficient"))
+        first, second = results
         self.assertEqual(first, second)
+        repeat = memory.recall(BOILER, return_selection="relevance_sufficient")
+        for key in ("candidates", "admitted", "returned", "return_policy"):
+            self.assertEqual(repeat[key], second[key])
+        self.assertEqual(
+            {ref: d["return_selection"] for ref, d in repeat["admissions"].items()},
+            {ref: d["return_selection"] for ref, d in second["admissions"].items()},
+        )
         funnel = first["return_policy"]["selection_funnel"]
         self.assertIsNone(funnel["budget"])
         self.assertEqual(funnel["returned_count"], len(first["returned"]))
@@ -177,6 +190,29 @@ class C9SelectionFunnelDiagnostics(_Store):
             funnel["ranked_prefix_withheld_count"],
             len(first["admitted"]) - funnel["sufficient_count"],
         )
+
+    def test_refused_candidates_are_counted_and_never_marked_withheld(self):
+        # A corrected memory's superseded statement is still discovered but refused admission,
+        # so the funnel must count it as a refusal, not as admitted or withheld evidence.
+        query = "Where do I work?"
+        old, corrected = "I work for Contoso Retail.", "I work for Fabrikam Logistics now."
+        _TableRepresentation.TABLE = {query: {old: 0.90, corrected: 0.80}}
+        memory = self.open()
+        self.seed(memory, {"memory:job": old})
+        self.assertTrue(memory.correct("memory:job", corrected, evidence=_evidence())["committed"])
+        for budget in (None, 1):
+            kwargs = {} if budget is None else {"budget": budget}
+            result = memory.recall(query, return_selection="relevance_sufficient", **kwargs)
+            funnel = result["return_policy"]["selection_funnel"]
+            refused = [ref for ref in result["candidates"] if result["admissions"][ref].get("refusal")]
+            self.assertGreaterEqual(len(refused), 1, result["admissions"])
+            self.assertEqual(funnel["refused_count"], len(refused))
+            self.assertEqual(funnel["candidate_count"], funnel["refused_count"] + funnel["admitted_count"])
+            self.assertFalse(set(refused) & set(result["admitted"]))
+            for ref in refused:
+                self.assertNotIn("ranked_prefix_withheld", result["admissions"][ref].get("return_selection", {}))
+            self.assertEqual(funnel["budget"], budget)
+            self.assertEqual(funnel["returned_count"], len(result["returned"]))
 
 
 class FusedRanking(_Store):

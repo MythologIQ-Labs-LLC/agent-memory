@@ -976,6 +976,9 @@ class AgentMemory:
         # C9 diagnostic only: account for relevant evidence withheld by the selection stage.
         # This never alters admission, policy sufficiency, ranked order or returned facts.
         # Aggregates only: no private memory text, refs or gold labels in the posture.
+        # "Ranked prefix" is the top k of this recall's own ranked admitted list, not the output of a
+        # separate ranked_prefix recall: that mode runs without discovery expansion, so its admitted
+        # list can differ.
         ranked = list(result.ranked_admitted)
         prefix = ranked if k is None else ranked[:k]
         withheld = [ref for ref in prefix if ref not in chosen]

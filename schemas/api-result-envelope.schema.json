@@ -494,6 +494,7 @@
               }
             },
             "selection_funnel": {
+              "description": "#819 C9 diagnostic, aggregates only (no memory text or refs); never authority and never an input to selection. All counts describe this recall: candidate_count = refused_count + admitted_count; returned_count = min(sufficient_count, budget). ranked_prefix_withheld_count counts admitted facts in the top `budget` of this recall's own ranked admitted list (all of it when unbudgeted) that selection did not find sufficient, keyed by their per-fact `return_selection.basis` in ranked_prefix_withheld_bases; each admitted fact's `admissions[ref].return_selection.ranked_prefix_withheld` marks the same facts. It is not a comparison with a separate `return_selection=\"ranked_prefix\"` recall, whose discovery (and so its admitted list) can differ.",
               "type": "object",
               "additionalProperties": false,
               "required": [
