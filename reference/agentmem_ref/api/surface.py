@@ -973,6 +973,25 @@ class AgentMemory:
         summary["query_expansion"] = dict(getattr(result, "query_expansion", {}) or {})
         chosen = set(selected)
         selected = [ref for ref in result.ranked_admitted if ref in chosen]
+        # C9 diagnostic only: account for relevant evidence withheld by the selection stage.
+        # This never alters admission, policy sufficiency, ranked order or returned facts.
+        # Aggregates only: no private memory text, refs or gold labels in the posture.
+        ranked = list(result.ranked_admitted)
+        prefix = ranked if k is None else ranked[:k]
+        withheld = [ref for ref in prefix if ref not in chosen]
+        reasons: dict[str, int] = {}
+        for ref in withheld:
+            basis = str(records.get(ref, {}).get("basis", "unclassified"))
+            reasons[basis] = reasons.get(basis, 0) + 1
+        summary["selection_funnel"] = {
+            "admitted_count": len(ranked),
+            "sufficient_count": len(selected),
+            "returned_count": len(selected) if k is None else min(len(selected), k),
+            "ranked_prefix_withheld_count": len(withheld),
+            "ranked_prefix_withheld_bases": dict(sorted(reasons.items())),
+            "budget": k,
+            "authority_effect": "none",
+        }
         return contract.apply_return_selection(result.ranked_admitted, selected, k, summary)
 
     def _shadow_recall_control(self, query: str, logical_memory_refs: tuple[str, ...], result, envelope) -> dict:
