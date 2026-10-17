@@ -1,0 +1,10 @@
+{
+ "facts_with_unspecified_activation": 0,
+ "open_option": "typed_replacement",
+ "opens": 1000,
+ "recalls": 1000,
+ "recalls_with_cross_fact_label": 0,
+ "recalls_with_unspecified_activation": 0,
+ "remembers": 146283,
+ "typed_propositions_declared": 0
+}

@@ -106,8 +106,10 @@ still return the replaced value as labelled history.
 
 - Self-authored fixture, 40 probes, one author. The fix can only act where typed
   propositions exist: callers who declare them, or an opted-in extractor. Default
-  LongMemEval and AMB bridges declare none, so those lanes are unaffected by construction,
-  and so is any untyped workload.
+  LongMemEval and AMB bridges declare none. With the option on, both lanes were measured
+  identical to off and to `main` (AMB 15/77 case-identical; LongMemEval-S 500 session and turn
+  row-identical in ranking and metrics; activation fired 0 times): see
+  [`external-lanes/README.md`](external-lanes/README.md). The same holds for any untyped workload.
 - Demotion orders within the returned budget; with a very small budget the labelled replaced
   value can fall out of `returned` (it stays in `admitted`).
 - Not an independent evaluation; e6 was neither read nor used.
