@@ -492,6 +492,54 @@
                   "const": "none"
                 }
               }
+            },
+            "selection_funnel": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "admitted_count",
+                "sufficient_count",
+                "returned_count",
+                "ranked_prefix_withheld_count",
+                "ranked_prefix_withheld_bases",
+                "budget",
+                "authority_effect"
+              ],
+              "properties": {
+                "admitted_count": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "sufficient_count": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "returned_count": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "ranked_prefix_withheld_count": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "ranked_prefix_withheld_bases": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                },
+                "budget": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "minimum": 1
+                },
+                "authority_effect": {
+                  "const": "none"
+                }
+              }
             }
           }
         }
