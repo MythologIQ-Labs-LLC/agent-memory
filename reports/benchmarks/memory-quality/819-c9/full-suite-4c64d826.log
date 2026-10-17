@@ -1,0 +1,261 @@
+/tmp/claude-0/-home-user-agent-memory/de46b9be-9dfb-5f73-acc8-bb6406f9dc14/scratchpad/wt/c9/reference/tests/test_security_finding.py:79: SyntaxWarning: invalid escape sequence '\+'
+  with self.assertRaisesRegex(ValueError, "passed \+ fails"):
+.....................................ssssssssssss..........................................................................ss..............................................................................................F..................F..............................................................................................................x..............s...................................................................................................................................................................................................................................................................................................................................................................{"family_over": {}, "family_short": {"N1": 8, "N10": 8, "N11": 8, "N12": 8, "N13": 8, "N2": 8, "N3": 8, "N4": 8, "N5": 8, "N6": 8, "N7": 8, "N8": 8, "N9": 8, "P1": 12, "P10": 12, "P11": 12, "P12": 12, "P13": 12, "P2": 12, "P3": 12, "P4": 12, "P5": 12, "P6": 12, "P7": 11, "P8": 12, "P9": 12, "R1": 8, "R2": 8, "R3": 8, "R4": 8, "R5": 8, "R6": 8, "R7": 8}}
+rejections: 0
+{"family_over": {}, "family_short": {"N1": 8, "N10": 8, "N11": 8, "N12": 8, "N13": 8, "N2": 8, "N3": 8, "N4": 8, "N5": 8, "N6": 8, "N7": 8, "N8": 8, "N9": 8, "P1": 12, "P10": 12, "P11": 12, "P12": 12, "P13": 12, "P2": 12, "P3": 12, "P4": 12, "P5": 12, "P6": 12, "P7": 11, "P8": 12, "P9": 12, "R1": 8, "R2": 8, "R3": 8, "R4": 8, "R5": 8, "R6": 8, "R7": 8}}
+rejections: 14
+INVALID ATTEMPT: variants.json is missing but part file(s) exist: ['variants_part2.json']
+.........................................................................................................................................................................................................................................................................................................................s......................................................................................................F......F....................../tmp/claude-0/-home-user-agent-memory/de46b9be-9dfb-5f73-acc8-bb6406f9dc14/scratchpad/wt/c9/reference/agentmem_ref/state/sqlite_substrate.py:352: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f9fdf25c130>
+  per_bucket = {section: [[] for _ in range(GOVERNANCE_BUCKETS)] for section in GOVERNANCE_MAP_SECTIONS}
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/tmp/claude-0/-home-user-agent-memory/de46b9be-9dfb-5f73-acc8-bb6406f9dc14/scratchpad/wt/c9/reference/agentmem_ref/state/sqlite_substrate.py:352: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f9fdf25c040>
+  per_bucket = {section: [[] for _ in range(GOVERNANCE_BUCKETS)] for section in GOVERNANCE_MAP_SECTIONS}
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/tmp/claude-0/-home-user-agent-memory/de46b9be-9dfb-5f73-acc8-bb6406f9dc14/scratchpad/wt/c9/reference/agentmem_ref/state/sqlite_substrate.py:352: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f9fdf25cd60>
+  per_bucket = {section: [[] for _ in range(GOVERNANCE_BUCKETS)] for section in GOVERNANCE_MAP_SECTIONS}
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/tmp/claude-0/-home-user-agent-memory/de46b9be-9dfb-5f73-acc8-bb6406f9dc14/scratchpad/wt/c9/reference/agentmem_ref/state/sqlite_substrate.py:352: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f9fdf25cf40>
+  per_bucket = {section: [[] for _ in range(GOVERNANCE_BUCKETS)] for section in GOVERNANCE_MAP_SECTIONS}
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/tmp/claude-0/-home-user-agent-memory/de46b9be-9dfb-5f73-acc8-bb6406f9dc14/scratchpad/wt/c9/reference/agentmem_ref/state/sqlite_substrate.py:352: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f9fdf25ce50>
+  per_bucket = {section: [[] for _ in range(GOVERNANCE_BUCKETS)] for section in GOVERNANCE_MAP_SECTIONS}
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/tmp/claude-0/-home-user-agent-memory/de46b9be-9dfb-5f73-acc8-bb6406f9dc14/scratchpad/wt/c9/reference/agentmem_ref/state/sqlite_substrate.py:352: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f9fdf25cb80>
+  per_bucket = {section: [[] for _ in range(GOVERNANCE_BUCKETS)] for section in GOVERNANCE_MAP_SECTIONS}
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/tmp/claude-0/-home-user-agent-memory/de46b9be-9dfb-5f73-acc8-bb6406f9dc14/scratchpad/wt/c9/reference/agentmem_ref/state/sqlite_substrate.py:352: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f9fdf25cc70>
+  per_bucket = {section: [[] for _ in range(GOVERNANCE_BUCKETS)] for section in GOVERNANCE_MAP_SECTIONS}
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+....../usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f9fdf25d210>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f9fdf25dd50>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f9fdf25cf40>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f9fdf25c040>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f9fdf25cd60>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f9fdf25d990>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+....../usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f9fdf25ca90>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f9fe5851990>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f9fdf25d4e0>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f9fdf25e4d0>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f9fdf25d3f0>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+......./usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f9fdf25cc70>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f9fdf25c130>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f9fdf25e110>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+../usr/local/lib/python3.13/dist-packages/jsonschema/exceptions.py:84: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f9fe5851990>
+  self.context = list(context)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+../usr/local/lib/python3.13/dist-packages/jsonschema/exceptions.py:69: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f9fdf25cf40>
+  super().__init__(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/local/lib/python3.13/dist-packages/jsonschema/exceptions.py:69: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f9fdf25d4e0>
+  super().__init__(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.................................................sssssss..........................................................................................[
+  {
+    "run_id": "124",
+    "destination": "/tmp/tmputqtztjs/out/amb-precisionmembench-retrieval-v1/agent-memory-cccccccccccc",
+    "row_id": "agent-memory-public-facade",
+    "native_summary": {
+      "accuracy": 0.025974025974025976,
+      "active_passes": 2,
+      "active_total": 43,
+      "answer_llm": null,
+      "correct": 2,
+      "id_resolution": {
+        "source_id": 231
+      },
+      "ingested_docs": 35,
+      "ingestion_time_ms": 12.5,
+      "judge_llm": null,
+      "mean_precision": 0.5,
+      "mean_recall": 1.0,
+      "mean_retrieve_ms": 10.0,
+      "shape_note": "recomputed from results[].meta exactly as the frozen harness's summarize_run does; active_passes/active_total is the upstream-comparable number",
+      "structural_passes": 0,
+      "structural_total": 25,
+      "total_passes": 2,
+      "total_queries": 77,
+      "trivially_empty_passes": 0,
+      "trivially_empty_total": 9
+    }
+  }
+]
+.[
+  {
+    "run_id": "123",
+    "destination": "/tmp/tmpss97szol/out/amb-precisionmembench-retrieval-v1/mem0-explicit-bbbbbbbbbbbb",
+    "row_id": "mem0-oss-2.2.1-explicit-memory",
+    "native_summary": {
+      "accuracy": 0.05194805194805195,
+      "active_passes": 4,
+      "active_total": 43,
+      "answer_llm": null,
+      "correct": 4,
+      "id_resolution": {
+        "source_id": 231
+      },
+      "ingested_docs": 35,
+      "ingestion_time_ms": 12.5,
+      "judge_llm": null,
+      "mean_precision": 0.5,
+      "mean_recall": 1.0,
+      "mean_retrieve_ms": 10.0,
+      "shape_note": "recomputed from results[].meta exactly as the frozen harness's summarize_run does; active_passes/active_total is the upstream-comparable number",
+      "structural_passes": 0,
+      "structural_total": 25,
+      "total_passes": 4,
+      "total_queries": 77,
+      "trivially_empty_passes": 0,
+      "trivially_empty_total": 9
+    }
+  }
+]
+..[
+  {
+    "run_id": "301",
+    "destination": "/tmp/tmpe7fr8qd0/out/amb-precisionmembench-retrieval-v2/agent-memory-eeeeeeeeeeee",
+    "row_id": "agent-memory-public-facade",
+    "native_summary": {
+      "accuracy": 0.03896103896103896,
+      "active_passes": 3,
+      "active_total": 43,
+      "answer_llm": null,
+      "correct": 3,
+      "id_resolution": {
+        "source_id": 231
+      },
+      "ingested_docs": 35,
+      "ingestion_time_ms": 12.5,
+      "judge_llm": null,
+      "mean_precision": 0.5,
+      "mean_recall": 1.0,
+      "mean_retrieve_ms": 10.0,
+      "shape_note": "recomputed from results[].meta exactly as the frozen harness's summarize_run does; active_passes/active_total is the upstream-comparable number",
+      "structural_passes": 0,
+      "structural_total": 25,
+      "total_passes": 3,
+      "total_queries": 77,
+      "trivially_empty_passes": 0,
+      "trivially_empty_total": 9
+    }
+  }
+]
+................../usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f9fe4f11e40>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f9fe4f136a0>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f9fe4f13880>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f9fe4f13100>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+............................/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f9fe5752a70>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f9fe4f13c40>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.E...............................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................Runtime Baseline equivalence: PASS; baseline=agent-memory-runtime-baseline-v1; frozen=6bc6b42f246215331f00123b1b47c63f7930704f; candidate=HEAD; explicit non-runtime exclusions=reference/agentmem_ref/evaluation
+.............................................................................................................................................................................................................sssssssss.................................................................................................................................................inventory mechanical fields differ from the workflow YAML; run --write
+.............................................................................................................................<unknown>:79: SyntaxWarning: invalid escape sequence '\+'
+.............s.............../usr/lib/python3.13/multiprocessing/popen_fork.py:73: DeprecationWarning: This process (pid=3896) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  self.pid = os.fork()
+...............................................................................................................................................
+======================================================================
+ERROR: test_wave2_harvest_matrix_records_uor_r4_disposition (tests.test_keyed_rebinding_benchmark.KeyedRebindingBenchmarkTests.test_wave2_harvest_matrix_records_uor_r4_disposition)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-agent-memory/de46b9be-9dfb-5f73-acc8-bb6406f9dc14/scratchpad/wt/c9/reference/tests/test_keyed_rebinding_benchmark.py", line 53, in test_wave2_harvest_matrix_records_uor_r4_disposition
+    Path("reference/fixtures/harvest-closeout-wave2.json").read_text(encoding="utf-8")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'reference/fixtures/harvest-closeout-wave2.json'
+
+======================================================================
+FAIL: test_gauntlet_bound_profile_runs_baselines_and_external_contestant (tests.test_benchmark_author_golden_path.BenchmarkAuthorGoldenPathTests.test_gauntlet_bound_profile_runs_baselines_and_external_contestant)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-agent-memory/de46b9be-9dfb-5f73-acc8-bb6406f9dc14/scratchpad/wt/c9/reference/tests/test_benchmark_author_golden_path.py", line 87, in test_gauntlet_bound_profile_runs_baselines_and_external_contestant
+    self.assertEqual(qualification["status"], "complete", qualification.get("failure"))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'blocked' != 'complete'
+- blocked
++ complete
+ : {'source': 'system_adapter', 'code': 'adapter_eof', 'message': 'adapter process closed stdout before producing a response'}
+
+======================================================================
+FAIL: test_evaluation_only_change_keeps_runtime_baseline_equivalence (tests.test_benchmark_integration_contract.BenchmarkIntegrationContractTests.test_evaluation_only_change_keeps_runtime_baseline_equivalence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-agent-memory/de46b9be-9dfb-5f73-acc8-bb6406f9dc14/scratchpad/wt/c9/reference/tests/test_benchmark_integration_contract.py", line 379, in test_evaluation_only_change_keeps_runtime_baseline_equivalence
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : candidate HEAD changes the protected Runtime Baseline source surface relative to e98e6e7b776aa2dd680e84f3ed4773ad2afa4ae1 and the register declares no successor: reference/agentmem_ref/api/contract.py, reference/agentmem_ref/api/surface.py, reference/agentmem_ref/lexical_normalization.py, reference/agentmem_ref/query_interpretation.py, reference/agentmem_ref/return_selection.py, reference/agentmem_ref/runtime/adapter.py, reference/agentmem_ref/runtime/lexical_normalization.py, reference/agentmem_ref/runtime/query_interpretation.py, reference/agentmem_ref/runtime/ranking_policy.py, reference/agentmem_ref/runtime/return_selection.py, reference/agentmem_ref/runtime/runtime_composition.py, reference/agentmem_ref/runtime/sqlite_composition.py, reference/agentmem_ref/runtime/temporal_order_constraints.py, reference/agentmem_ref/runtime/vector_retrieval.py, reference/agentmem_ref/state/sqlite_substrate.py
+
+
+======================================================================
+FAIL: test_real_agent_memory_public_facade_qualifies_first_durability_slice (tests.test_gauntlet_durability.DurabilityRecoveryGauntletTests.test_real_agent_memory_public_facade_qualifies_first_durability_slice)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-agent-memory/de46b9be-9dfb-5f73-acc8-bb6406f9dc14/scratchpad/wt/c9/reference/tests/test_gauntlet_durability.py", line 69, in test_real_agent_memory_public_facade_qualifies_first_durability_slice
+    self.assertEqual(result["status"], "complete", result)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'blocked' != 'complete'
+- blocked
++ complete
+ : {'schema_version': '0.1.0', 'run_id': 'gauntlet-durability-recovery-alpha-v1-agent-memory-runtime-baseline-v1-b73b80f0429d', 'profile': {'profile_id': 'durability-recovery-alpha-v1', 'kind': 'gauntlet_native_gap', 'description': 'Claim-driven durability/recovery alpha for public reopen recovery, durable correction/deletion, deterministic recovered observation, scope isolation, and truthful checkpoint capability posture. Behavioral outcome and evidence sufficiency are reported separately.'}, 'benchmark_integration': None, 'system': {'id': 'agent-memory-runtime-baseline-v1', 'kind': 'agent_memory', 'revision': 'git-commit:f2aef57293b516e065cad5d0afea26ac7e3c28a9'}, 'adapter': {'id': 'agent-memory-public-durability-adapter', 'version': '0.1.0', 'revision': 'git-blob:76b58bafa04ea7e10d9cf3f7ec915393cd586a40', 'transport': 'stdio'}, 'manifest_digest_sha256': '096d2a163576c52ae339644f44850585ef1cfa4c343f123fc75ed1c4f222e020', 'negotiation': {'contract_family': 'agent-memory-gauntlet-capability-negotiation', 'contract_version': '0.1.0', 'profile_id': 'durability-recovery-alpha-v1', 'system_id': 'agent-memory-runtime-baseline-v1', 'adapter_id': 'agent-memory-public-durability-adapter', 'manifest_digest': '096d2a163576c52ae339644f44850585ef1cfa4c343f123fc75ed1c4f222e020', 'outcome': 'eligible_with_limitations', 'reason': 'required capabilities satisfied; one or more optional dimensions unavailable', 'required': [{'capability': 'describe', 'declared_support': 'mapped', 'accepted_support': ['native', 'mapped', 'derived'], 'state': 'satisfied'}, {'capability': 'recall', 'declared_support': 'native', 'accepted_support': ['native', 'mapped', 'derived'], 'state': 'satisfied'}, {'capability': 'recover', 'declared_support': 'mapped', 'accepted_support': ['native', 'mapped'], 'state': 'satisfied'}, {'capability': 'remember', 'declared_support': 'native', 'accepted_support': ['native', 'mapped', 'derived'], 'state': 'satisfied'}, {'capability': 'reset', 'declared_support': 'mapped', 'accepted_support': ['native', 'mapped', 'derived'], 'state': 'satisfied'}], 'optional': [{'capability': 'checkpoint', 'declared_support': 'unsupported', 'accepted_support': ['native', 'mapped', 'derived'], 'state': 'unsupported_optional'}, {'capability': 'correct', 'declared_support': 'unsupported', 'accepted_support': ['native', 'mapped', 'derived'], 'state': 'unsupported_optional'}, {'capability': 'deterministic_recovery', 'declared_support': 'native', 'accepted_support': ['native', 'mapped', 'derived'], 'state': 'satisfied'}, {'capability': 'durable_correction', 'declared_support': 'unsupported', 'accepted_support': ['native', 'mapped', 'derived'], 'state': 'unsupported_optional'}, {'capability': 'durable_deletion', 'declared_support': 'native', 'accepted_support': ['native', 'mapped', 'derived'], 'state': 'satisfied'}, {'capability': 'forget', 'declared_support': 'native', 'accepted_support': ['native', 'mapped', 'derived'], 'state': 'satisfied'}, {'capability': 'history', 'declared_support': 'native', 'accepted_support': ['native', 'mapped', 'derived'], 'state': 'satisfied'}, {'capability': 'restart_recovery', 'declared_support': 'native', 'accepted_support': ['native', 'mapped', 'derived'], 'state': 'satisfied'}, {'capability': 'scope_isolation', 'declared_support': 'native', 'accepted_support': ['native', 'mapped', 'derived'], 'state': 'satisfied'}], 'authority_effect': 'none'}, 'authority_effect': 'none', 'artifacts': {'adapter_manifest': {'path': '/tmp/tmpe1cszoab/runs/gauntlet-durability-recovery-alpha-v1-agent-memory-runtime-baseline-v1-b73b80f0429d/adapter-manifest.json', 'sha256': '096d2a163576c52ae339644f44850585ef1cfa4c343f123fc75ed1c4f222e020'}, 'native_results': {'path': '/tmp/tmpe1cszoab/runs/gauntlet-durability-recovery-alpha-v1-agent-memory-runtime-baseline-v1-b73b80f0429d/native-results.json', 'sha256': 'c3a4a62803051a01005c5b0eb718d56e4e0374f9e95a2c7915407b6a39390cdd'}, 'normalized_run': {'path': '/tmp/tmpe1cszoab/runs/gauntlet-durability-recovery-alpha-v1-agent-memory-runtime-baseline-v1-b73b80f0429d/normalized-run.json', 'sha256': '52101a9a1051b1aa1bb4ff3e1862393ae2ebc56da8b40999d871a8c180bf45e7'}, 'qualification': {'path': '/tmp/tmpe1cszoab/runs/gauntlet-durability-recovery-alpha-v1-agent-memory-runtime-baseline-v1-b73b80f0429d/qualification.json', 'sha256': 'efe25b6ff57688b27867ab75318a06d12fc84c0bceff4365bba0e6ebae11c463'}}, 'status': 'blocked', 'coverage': {'retrieval': 'blocked', 'currentness': 'blocked', 'reasoning': 'blocked', 'governance': 'blocked', 'efficiency': 'blocked', 'evaluator_integrity': 'blocked', 'reproducibility': 'measured'}, 'failure': {'source': 'system_adapter', 'code': 'adapter_eof', 'message': 'adapter process closed stdout before producing a response'}}
+
+======================================================================
+FAIL: test_external_example_requires_opt_in_and_completes_probe (tests.test_gauntlet_external_example.ExternalGauntletExampleTests.test_external_example_requires_opt_in_and_completes_probe)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-agent-memory/de46b9be-9dfb-5f73-acc8-bb6406f9dc14/scratchpad/wt/c9/reference/tests/test_gauntlet_external_example.py", line 63, in test_external_example_requires_opt_in_and_completes_probe
+    self.assertEqual(completed["status"], "complete")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'blocked' != 'complete'
+- blocked
++ complete
+
+
+----------------------------------------------------------------------
+Ran 2697 tests in 159.610s
+
+FAILED (failures=4, errors=1, skipped=33, expected failures=1)
