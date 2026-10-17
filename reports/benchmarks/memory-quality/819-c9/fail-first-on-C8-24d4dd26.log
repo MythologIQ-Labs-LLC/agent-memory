@@ -1,0 +1,38 @@
+test_a_recovered_state_brings_its_lifecycle_successor (tests.test_c9_corroborated_selection.CorroboratedRecovery.test_a_recovered_state_brings_its_lifecycle_successor) ... FAIL
+test_topical_memory_fused_above_and_as_similar_as_the_evidence_is_returned (tests.test_c9_corroborated_selection.CorroboratedRecovery.test_topical_memory_fused_above_and_as_similar_as_the_evidence_is_returned) ... FAIL
+test_a_memory_without_topical_match_stays_withheld_at_the_top_cosine (tests.test_c9_corroborated_selection.FalsePositiveControls.test_a_memory_without_topical_match_stays_withheld_at_the_top_cosine) ... ok
+test_a_recall_with_no_topical_evidence_still_abstains (tests.test_c9_corroborated_selection.FalsePositiveControls.test_a_recall_with_no_topical_evidence_still_abstains) ... ok
+test_a_topical_memory_fused_below_the_selected_evidence_stays_withheld (tests.test_c9_corroborated_selection.FalsePositiveControls.test_a_topical_memory_fused_below_the_selected_evidence_stays_withheld) ... ok
+test_a_topical_memory_less_similar_than_the_evidence_stays_withheld (tests.test_c9_corroborated_selection.FalsePositiveControls.test_a_topical_memory_less_similar_than_the_evidence_stays_withheld) ... ok
+test_route_off_selection_is_unchanged (tests.test_c9_corroborated_selection.RouteOff.test_route_off_selection_is_unchanged) ... ok
+test_declared_current_intent_keeps_the_temporal_order (tests.test_c9_corroborated_selection.SafetyControls.test_declared_current_intent_keeps_the_temporal_order) ... ok
+test_superseded_forgotten_and_other_scope_memories_are_never_returned (tests.test_c9_corroborated_selection.SafetyControls.test_superseded_forgotten_and_other_scope_memories_are_never_returned) ... ok
+
+======================================================================
+FAIL: test_a_recovered_state_brings_its_lifecycle_successor (tests.test_c9_corroborated_selection.CorroboratedRecovery.test_a_recovered_state_brings_its_lifecycle_successor)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_c9_corroborated_selection.py", line 92, in test_a_recovered_state_brings_its_lifecycle_successor
+    self.assertEqual(basis["memory:home1"], "corroborated_rank")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'below_relative_floor' != 'corroborated_rank'
+- below_relative_floor
++ corroborated_rank
+
+
+======================================================================
+FAIL: test_topical_memory_fused_above_and_as_similar_as_the_evidence_is_returned (tests.test_c9_corroborated_selection.CorroboratedRecovery.test_topical_memory_fused_above_and_as_similar_as_the_evidence_is_returned)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_c9_corroborated_selection.py", line 78, in test_topical_memory_fused_above_and_as_similar_as_the_evidence_is_returned
+    self.assertEqual(self.basis(result)["memory:serviced"], "corroborated_rank")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'below_relative_floor' != 'corroborated_rank'
+- below_relative_floor
++ corroborated_rank
+
+
+----------------------------------------------------------------------
+Ran 9 tests in 1.138s
+
+FAILED (failures=2)

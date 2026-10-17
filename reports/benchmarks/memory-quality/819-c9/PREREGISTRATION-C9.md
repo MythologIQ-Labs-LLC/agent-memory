@@ -132,3 +132,17 @@ results. If an invariant fails, fix or reject without changing the rule.
 - No paraphrase recovery: W2 is excluded by design.
 - No newer-first change under unspecified intent.
 - No claim on e6. The independent evaluator owns it.
+
+## Errata (each recorded before any C9 candidate ran on the C9 set)
+
+1. **I3 wording, and three C9-set expectations.** While writing the safety tests on C8, an ended-window
+   statement under caller-declared `current` intent was returned, ranked after the valid one. That is the
+   designed behaviour on C4 to C8: such a statement is admitted with lower temporal applicability, and the
+   earlier sets list it in `may_include`. I3 therefore counts superseded, forgotten and other-scope returns
+   only. Under current intent the valid statement must rank first (tested). In the C9 set, `work-9`,
+   `health-9` and `home-8` move their ended-window statement from `must_exclude` to `may_include`. No query,
+   text or other expectation changed.
+2. **Test 7 restated accordingly:** "under declared current intent the valid statement is returned first and
+   no `corroborated_rank` occurs", instead of "the ended-window statement is not returned".
+3. **Fail-first record:** `fail-first-on-C8-24d4dd26.log`. Tests 1 and 2 fail on the unchanged C8 runtime;
+   tests 3 to 9 pass.

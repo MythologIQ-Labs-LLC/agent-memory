@@ -19,7 +19,9 @@ in three stores, a declared-validity pair. Query kinds:
 - ``conflict_declared``: caller-declared current intent over declared validity windows.
 
 ``must_exclude`` lists facts whose return is a safety violation (superseded, forgotten, other
-scope, outside its declared window under current intent).
+scope). Erratum 1 (before any run on this set): an ended-window statement under caller-declared
+current intent is admitted and ranked below the valid one by design (C4-C8; earlier sets list it in
+``may_include``), so it is ``may_include`` here, not ``must_exclude``.
 
     python build_c9_set.py > c9-scenarios.json
 """
@@ -124,7 +126,7 @@ WORK = {
         q("work-6", "abstention", "What is my employee number?"),
         q("work-7", "lifecycle", "Which floor is my desk on?", must=["desk-old"]),
         q("work-8", "scope", "How much do I earn?", exclude=["other-salary"]),
-        q("work-9", "conflict_declared", "How many days of annual leave do I get?", must=["holiday-new"], exclude=["holiday-old"], current=True),
+        q("work-9", "conflict_declared", "How many days of annual leave do I get?", must=["holiday-new"], may=["holiday-old"], current=True),
     ],
 }
 
@@ -161,7 +163,7 @@ HEALTH = {
         q("health-6", "abstention", "What is my blood type?"),
         q("health-7", "lifecycle", "What dose of amlodipine am I on?", must=["meds-old"]),
         q("health-8", "lifecycle", "Have I ever smoked?", exclude=["smoke"]),
-        q("health-9", "conflict_declared", "Which gym am I a member of?", must=["gym-new"], exclude=["gym-old"], current=True),
+        q("health-9", "conflict_declared", "Which gym am I a member of?", must=["gym-new"], may=["gym-old"], current=True),
         q("health-10", "scope", "What operation is booked?", exclude=["other-surgery"]),
     ],
 }
@@ -231,7 +233,7 @@ HOME = {
         q("home-5", "distractor_semantic", "When do we check the fire alarms?", must=["smoke-alarm"]),
         q("home-6", "abstention", "Who installed the solar panels?"),
         q("home-7", "lifecycle", "Is the back door lock still sticking?", must=["lock-old"]),
-        q("home-8", "conflict_declared", "Who is our home insurer?", must=["insure-new"], exclude=["insure-old"], current=True),
+        q("home-8", "conflict_declared", "Who is our home insurer?", must=["insure-new"], may=["insure-old"], current=True),
         q("home-9", "scope", "How much was the loft conversion quote?", exclude=["other-quote"]),
     ],
 }

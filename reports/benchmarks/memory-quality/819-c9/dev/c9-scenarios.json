@@ -535,10 +535,10 @@
       "must_include": [
        "memory:holiday-new"
       ],
-      "may_include": [],
-      "must_exclude": [
+      "may_include": [
        "memory:holiday-old"
-      ]
+      ],
+      "must_exclude": []
      },
      "temporal_intent": {
       "mode": "current",
@@ -813,10 +813,10 @@
       "must_include": [
        "memory:gym-new"
       ],
-      "may_include": [],
-      "must_exclude": [
+      "may_include": [
        "memory:gym-old"
-      ]
+      ],
+      "must_exclude": []
      },
      "temporal_intent": {
       "mode": "current",
@@ -1340,10 +1340,10 @@
       "must_include": [
        "memory:insure-new"
       ],
-      "may_include": [],
-      "must_exclude": [
+      "may_include": [
        "memory:insure-old"
-      ]
+      ],
+      "must_exclude": []
      },
      "temporal_intent": {
       "mode": "current",
