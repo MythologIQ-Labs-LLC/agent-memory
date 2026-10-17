@@ -1,0 +1,653 @@
+{
+ "arm": "baseline",
+ "cases": [
+  {
+   "classes": [],
+   "cross_session_needed": 1,
+   "cross_session_recalled": 1,
+   "family": "preference_change",
+   "phrasing": "unqualified",
+   "probe_id": "p1",
+   "returned_count": 2,
+   "scenario_id": "pref-editor-state-change",
+   "success": true
+  },
+  {
+   "classes": [],
+   "cross_session_needed": 1,
+   "cross_session_recalled": 1,
+   "family": "preference_change",
+   "phrasing": "explicit_current",
+   "probe_id": "p2",
+   "returned_count": 2,
+   "scenario_id": "pref-editor-state-change",
+   "success": true
+  },
+  {
+   "classes": [],
+   "cross_session_needed": 2,
+   "cross_session_recalled": 2,
+   "family": "preference_change",
+   "phrasing": "historical",
+   "probe_id": "p3",
+   "returned_count": 3,
+   "scenario_id": "pref-editor-state-change",
+   "success": true
+  },
+  {
+   "classes": [],
+   "cross_session_needed": 1,
+   "cross_session_recalled": 1,
+   "family": "preference_change",
+   "phrasing": "unqualified",
+   "probe_id": "p4",
+   "returned_count": 2,
+   "scenario_id": "pref-editor-state-change",
+   "success": true
+  },
+  {
+   "classes": [],
+   "cross_session_needed": 1,
+   "cross_session_recalled": 1,
+   "family": "corrected_fact",
+   "phrasing": "unqualified",
+   "probe_id": "p1",
+   "returned_count": 1,
+   "scenario_id": "timezone-error-correction",
+   "success": true
+  },
+  {
+   "classes": [],
+   "cross_session_needed": 1,
+   "cross_session_recalled": 1,
+   "family": "corrected_fact",
+   "phrasing": "unqualified",
+   "probe_id": "p2",
+   "returned_count": 1,
+   "scenario_id": "timezone-error-correction",
+   "success": true
+  },
+  {
+   "classes": [],
+   "cross_session_needed": 1,
+   "cross_session_recalled": 1,
+   "family": "corrected_fact",
+   "phrasing": "historical",
+   "probe_id": "p3",
+   "returned_count": 1,
+   "scenario_id": "timezone-error-correction",
+   "success": true
+  },
+  {
+   "classes": [
+    "stale_used"
+   ],
+   "cross_session_needed": 1,
+   "cross_session_recalled": 1,
+   "family": "superseded_commitment",
+   "phrasing": "unqualified",
+   "probe_id": "p1",
+   "returned_count": 4,
+   "scenario_id": "atlas-ship-date",
+   "success": false
+  },
+  {
+   "classes": [
+    "stale_used"
+   ],
+   "cross_session_needed": 1,
+   "cross_session_recalled": 1,
+   "family": "superseded_commitment",
+   "phrasing": "explicit_current",
+   "probe_id": "p2",
+   "returned_count": 4,
+   "scenario_id": "atlas-ship-date",
+   "success": false
+  },
+  {
+   "classes": [],
+   "cross_session_needed": 1,
+   "cross_session_recalled": 1,
+   "family": "superseded_commitment",
+   "phrasing": "unqualified",
+   "probe_id": "p3",
+   "returned_count": 4,
+   "scenario_id": "atlas-ship-date",
+   "success": true
+  },
+  {
+   "classes": [
+    "stale_used"
+   ],
+   "cross_session_needed": 2,
+   "cross_session_recalled": 2,
+   "family": "superseded_commitment",
+   "phrasing": "unqualified",
+   "probe_id": "p4",
+   "returned_count": 4,
+   "scenario_id": "atlas-ship-date",
+   "success": false
+  },
+  {
+   "classes": [],
+   "cross_session_needed": 1,
+   "cross_session_recalled": 1,
+   "family": "evolving_project",
+   "phrasing": "unqualified",
+   "probe_id": "p1",
+   "returned_count": 3,
+   "scenario_id": "atlas-database-migration",
+   "success": true
+  },
+  {
+   "classes": [],
+   "cross_session_needed": 2,
+   "cross_session_recalled": 2,
+   "family": "evolving_project",
+   "phrasing": "unqualified",
+   "probe_id": "p2",
+   "returned_count": 3,
+   "scenario_id": "atlas-database-migration",
+   "success": true
+  },
+  {
+   "classes": [],
+   "cross_session_needed": 1,
+   "cross_session_recalled": 1,
+   "family": "evolving_project",
+   "phrasing": "unqualified",
+   "probe_id": "p3",
+   "returned_count": 3,
+   "scenario_id": "atlas-database-migration",
+   "success": true
+  },
+  {
+   "classes": [],
+   "cross_session_needed": 2,
+   "cross_session_recalled": 2,
+   "family": "evolving_project",
+   "phrasing": "historical",
+   "probe_id": "p4",
+   "returned_count": 4,
+   "scenario_id": "atlas-database-migration",
+   "success": true
+  },
+  {
+   "classes": [],
+   "cross_session_needed": 2,
+   "cross_session_recalled": 2,
+   "family": "no_false_supersession",
+   "phrasing": "unqualified",
+   "probe_id": "p1",
+   "returned_count": 2,
+   "scenario_id": "allergies-multivalued",
+   "success": true
+  },
+  {
+   "classes": [],
+   "cross_session_needed": 2,
+   "cross_session_recalled": 2,
+   "family": "no_false_supersession",
+   "phrasing": "explicit_current",
+   "probe_id": "p2",
+   "returned_count": 2,
+   "scenario_id": "allergies-multivalued",
+   "success": true
+  },
+  {
+   "classes": [],
+   "cross_session_needed": 1,
+   "cross_session_recalled": 1,
+   "family": "no_false_supersession",
+   "phrasing": "unqualified",
+   "probe_id": "p1",
+   "returned_count": 3,
+   "scenario_id": "teammate-languages",
+   "success": true
+  },
+  {
+   "classes": [
+    "stale_used"
+   ],
+   "cross_session_needed": 1,
+   "cross_session_recalled": 1,
+   "family": "no_false_supersession",
+   "phrasing": "unqualified",
+   "probe_id": "p2",
+   "returned_count": 3,
+   "scenario_id": "teammate-languages",
+   "success": false
+  },
+  {
+   "classes": [],
+   "cross_session_needed": 1,
+   "cross_session_recalled": 1,
+   "family": "no_false_supersession",
+   "phrasing": "explicit_current",
+   "probe_id": "p3",
+   "returned_count": 3,
+   "scenario_id": "teammate-languages",
+   "success": true
+  },
+  {
+   "classes": [],
+   "cross_session_needed": 1,
+   "cross_session_recalled": 1,
+   "family": "no_false_supersession",
+   "phrasing": "explicit_current",
+   "probe_id": "p4",
+   "returned_count": 3,
+   "scenario_id": "teammate-languages",
+   "success": true
+  },
+  {
+   "classes": [],
+   "cross_session_needed": 1,
+   "cross_session_recalled": 1,
+   "family": "isolation",
+   "phrasing": "unqualified",
+   "probe_id": "p1",
+   "returned_count": 1,
+   "scenario_id": "project-scope-isolation",
+   "success": true
+  },
+  {
+   "classes": [],
+   "cross_session_needed": 1,
+   "cross_session_recalled": 1,
+   "family": "isolation",
+   "phrasing": "unqualified",
+   "probe_id": "p2",
+   "returned_count": 1,
+   "scenario_id": "project-scope-isolation",
+   "success": true
+  },
+  {
+   "classes": [],
+   "cross_session_needed": 0,
+   "cross_session_recalled": 0,
+   "family": "withdrawn",
+   "phrasing": "unqualified",
+   "probe_id": "p1",
+   "returned_count": 1,
+   "scenario_id": "privacy-forget",
+   "success": true
+  },
+  {
+   "classes": [],
+   "cross_session_needed": 1,
+   "cross_session_recalled": 1,
+   "family": "withdrawn",
+   "phrasing": "unqualified",
+   "probe_id": "p2",
+   "returned_count": 1,
+   "scenario_id": "privacy-forget",
+   "success": true
+  },
+  {
+   "classes": [],
+   "cross_session_needed": 1,
+   "cross_session_recalled": 1,
+   "family": "cross_session_recall",
+   "phrasing": "unqualified",
+   "probe_id": "p1",
+   "returned_count": 5,
+   "scenario_id": "long-gap-recall",
+   "success": true
+  },
+  {
+   "classes": [],
+   "cross_session_needed": 1,
+   "cross_session_recalled": 1,
+   "family": "cross_session_recall",
+   "phrasing": "unqualified",
+   "probe_id": "p2",
+   "returned_count": 2,
+   "scenario_id": "long-gap-recall",
+   "success": true
+  },
+  {
+   "classes": [],
+   "cross_session_needed": 1,
+   "cross_session_recalled": 1,
+   "family": "cross_session_recall",
+   "phrasing": "unqualified",
+   "probe_id": "p3",
+   "returned_count": 1,
+   "scenario_id": "long-gap-recall",
+   "success": true
+  },
+  {
+   "classes": [
+    "stale_used"
+   ],
+   "cross_session_needed": 1,
+   "cross_session_recalled": 1,
+   "family": "untyped_episodic_change",
+   "phrasing": "unqualified",
+   "probe_id": "p1",
+   "returned_count": 2,
+   "scenario_id": "standup-untyped-change",
+   "success": false
+  },
+  {
+   "classes": [
+    "stale_used"
+   ],
+   "cross_session_needed": 1,
+   "cross_session_recalled": 1,
+   "family": "untyped_episodic_change",
+   "phrasing": "explicit_current",
+   "probe_id": "p2",
+   "returned_count": 2,
+   "scenario_id": "standup-untyped-change",
+   "success": false
+  },
+  {
+   "classes": [],
+   "cross_session_needed": 1,
+   "cross_session_recalled": 1,
+   "family": "governed_admission",
+   "phrasing": "unqualified",
+   "probe_id": "p1",
+   "returned_count": 1,
+   "scenario_id": "parked-correction",
+   "success": true
+  },
+  {
+   "classes": [
+    "stale_used"
+   ],
+   "cross_session_needed": 1,
+   "cross_session_recalled": 1,
+   "family": "preference_change",
+   "phrasing": "unqualified",
+   "probe_id": "p1",
+   "returned_count": 3,
+   "scenario_id": "diet-change",
+   "success": false
+  },
+  {
+   "classes": [
+    "stale_used"
+   ],
+   "cross_session_needed": 2,
+   "cross_session_recalled": 2,
+   "family": "preference_change",
+   "phrasing": "unqualified",
+   "probe_id": "p2",
+   "returned_count": 3,
+   "scenario_id": "diet-change",
+   "success": false
+  },
+  {
+   "classes": [],
+   "cross_session_needed": 1,
+   "cross_session_recalled": 1,
+   "family": "preference_change",
+   "phrasing": "explicit_current",
+   "probe_id": "p3",
+   "returned_count": 3,
+   "scenario_id": "diet-change",
+   "success": true
+  },
+  {
+   "classes": [],
+   "cross_session_needed": 1,
+   "cross_session_recalled": 1,
+   "family": "no_false_supersession",
+   "phrasing": "unqualified",
+   "probe_id": "p1",
+   "returned_count": 5,
+   "scenario_id": "typed-change-guards",
+   "success": true
+  },
+  {
+   "classes": [],
+   "cross_session_needed": 1,
+   "cross_session_recalled": 1,
+   "family": "no_false_supersession",
+   "phrasing": "unqualified",
+   "probe_id": "p2",
+   "returned_count": 5,
+   "scenario_id": "typed-change-guards",
+   "success": true
+  },
+  {
+   "classes": [],
+   "cross_session_needed": 1,
+   "cross_session_recalled": 1,
+   "family": "no_false_supersession",
+   "phrasing": "unqualified",
+   "probe_id": "p3",
+   "returned_count": 5,
+   "scenario_id": "typed-change-guards",
+   "success": true
+  },
+  {
+   "classes": [
+    "stale_used"
+   ],
+   "cross_session_needed": 1,
+   "cross_session_recalled": 1,
+   "family": "history_preservation",
+   "phrasing": "unqualified",
+   "probe_id": "p1",
+   "returned_count": 2,
+   "scenario_id": "language-history",
+   "success": false
+  },
+  {
+   "classes": [],
+   "cross_session_needed": 2,
+   "cross_session_recalled": 2,
+   "family": "history_preservation",
+   "phrasing": "unqualified",
+   "probe_id": "p2",
+   "returned_count": 2,
+   "scenario_id": "language-history",
+   "success": true
+  },
+  {
+   "classes": [],
+   "cross_session_needed": 2,
+   "cross_session_recalled": 2,
+   "family": "history_preservation",
+   "phrasing": "historical",
+   "probe_id": "p3",
+   "returned_count": 2,
+   "scenario_id": "language-history",
+   "success": true
+  }
+ ],
+ "fixture_digest": "sha256:20a6144de8e86a8416a6d1a4c4cb4f22fda6519e511d711002ef2871b1fa1fd5",
+ "harness_version": "1.0.0",
+ "open_kwargs": {},
+ "source_revision": "027da3368a5811205fe7d48be22433e36c56d08f",
+ "summary": {
+  "by_family": {
+   "corrected_fact": {
+    "cross_session_recall": "3/3",
+    "history_lost": 0,
+    "incorrect_supersession": 0,
+    "isolation_violation": 0,
+    "missing_current": 0,
+    "missing_dependency": 0,
+    "probes": 3,
+    "stale_used": 0,
+    "success": 3,
+    "unnecessary_abstention": 0
+   },
+   "cross_session_recall": {
+    "cross_session_recall": "3/3",
+    "history_lost": 0,
+    "incorrect_supersession": 0,
+    "isolation_violation": 0,
+    "missing_current": 0,
+    "missing_dependency": 0,
+    "probes": 3,
+    "stale_used": 0,
+    "success": 3,
+    "unnecessary_abstention": 0
+   },
+   "evolving_project": {
+    "cross_session_recall": "6/6",
+    "history_lost": 0,
+    "incorrect_supersession": 0,
+    "isolation_violation": 0,
+    "missing_current": 0,
+    "missing_dependency": 0,
+    "probes": 4,
+    "stale_used": 0,
+    "success": 4,
+    "unnecessary_abstention": 0
+   },
+   "governed_admission": {
+    "cross_session_recall": "1/1",
+    "history_lost": 0,
+    "incorrect_supersession": 0,
+    "isolation_violation": 0,
+    "missing_current": 0,
+    "missing_dependency": 0,
+    "probes": 1,
+    "stale_used": 0,
+    "success": 1,
+    "unnecessary_abstention": 0
+   },
+   "history_preservation": {
+    "cross_session_recall": "5/5",
+    "history_lost": 0,
+    "incorrect_supersession": 0,
+    "isolation_violation": 0,
+    "missing_current": 0,
+    "missing_dependency": 0,
+    "probes": 3,
+    "stale_used": 1,
+    "success": 2,
+    "unnecessary_abstention": 0
+   },
+   "isolation": {
+    "cross_session_recall": "2/2",
+    "history_lost": 0,
+    "incorrect_supersession": 0,
+    "isolation_violation": 0,
+    "missing_current": 0,
+    "missing_dependency": 0,
+    "probes": 2,
+    "stale_used": 0,
+    "success": 2,
+    "unnecessary_abstention": 0
+   },
+   "no_false_supersession": {
+    "cross_session_recall": "11/11",
+    "history_lost": 0,
+    "incorrect_supersession": 0,
+    "isolation_violation": 0,
+    "missing_current": 0,
+    "missing_dependency": 0,
+    "probes": 9,
+    "stale_used": 1,
+    "success": 8,
+    "unnecessary_abstention": 0
+   },
+   "preference_change": {
+    "cross_session_recall": "9/9",
+    "history_lost": 0,
+    "incorrect_supersession": 0,
+    "isolation_violation": 0,
+    "missing_current": 0,
+    "missing_dependency": 0,
+    "probes": 7,
+    "stale_used": 2,
+    "success": 5,
+    "unnecessary_abstention": 0
+   },
+   "superseded_commitment": {
+    "cross_session_recall": "5/5",
+    "history_lost": 0,
+    "incorrect_supersession": 0,
+    "isolation_violation": 0,
+    "missing_current": 0,
+    "missing_dependency": 0,
+    "probes": 4,
+    "stale_used": 3,
+    "success": 1,
+    "unnecessary_abstention": 0
+   },
+   "untyped_episodic_change": {
+    "cross_session_recall": "2/2",
+    "history_lost": 0,
+    "incorrect_supersession": 0,
+    "isolation_violation": 0,
+    "missing_current": 0,
+    "missing_dependency": 0,
+    "probes": 2,
+    "stale_used": 2,
+    "success": 0,
+    "unnecessary_abstention": 0
+   },
+   "withdrawn": {
+    "cross_session_recall": "1/1",
+    "history_lost": 0,
+    "incorrect_supersession": 0,
+    "isolation_violation": 0,
+    "missing_current": 0,
+    "missing_dependency": 0,
+    "probes": 2,
+    "stale_used": 0,
+    "success": 2,
+    "unnecessary_abstention": 0
+   }
+  },
+  "by_phrasing": {
+   "explicit_current": {
+    "cross_session_recall": "8/8",
+    "history_lost": 0,
+    "incorrect_supersession": 0,
+    "isolation_violation": 0,
+    "missing_current": 0,
+    "missing_dependency": 0,
+    "probes": 7,
+    "stale_used": 2,
+    "success": 5,
+    "unnecessary_abstention": 0
+   },
+   "historical": {
+    "cross_session_recall": "7/7",
+    "history_lost": 0,
+    "incorrect_supersession": 0,
+    "isolation_violation": 0,
+    "missing_current": 0,
+    "missing_dependency": 0,
+    "probes": 4,
+    "stale_used": 0,
+    "success": 4,
+    "unnecessary_abstention": 0
+   },
+   "unqualified": {
+    "cross_session_recall": "33/33",
+    "history_lost": 0,
+    "incorrect_supersession": 0,
+    "isolation_violation": 0,
+    "missing_current": 0,
+    "missing_dependency": 0,
+    "probes": 29,
+    "stale_used": 7,
+    "success": 22,
+    "unnecessary_abstention": 0
+   }
+  },
+  "overall": {
+   "cross_session_recall": "48/48",
+   "history_lost": 0,
+   "incorrect_supersession": 0,
+   "isolation_violation": 0,
+   "missing_current": 0,
+   "missing_dependency": 0,
+   "probes": 40,
+   "stale_used": 9,
+   "success": 31,
+   "unnecessary_abstention": 0
+  }
+ }
+}
