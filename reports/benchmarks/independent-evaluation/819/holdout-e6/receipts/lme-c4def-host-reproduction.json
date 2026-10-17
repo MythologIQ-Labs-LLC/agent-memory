@@ -1,0 +1,100 @@
+{
+ "session": {
+  "n": 419,
+  "only_base": 0,
+  "only_cand": 0,
+  "recall_all@10": {
+   "base": 0.9069,
+   "cand": 0.9069,
+   "delta_ci95": [
+    0.0,
+    0.0
+   ],
+   "full_losses": 0,
+   "full_wins": 0,
+   "p_exact_mcnemar": 1.0
+  },
+  "recall_all@3": {
+   "base": 0.7947,
+   "cand": 0.7947,
+   "delta_ci95": [
+    0.0,
+    0.0
+   ],
+   "full_losses": 0,
+   "full_wins": 0,
+   "p_exact_mcnemar": 1.0
+  },
+  "recall_all@5": {
+   "base": 0.8687,
+   "cand": 0.8687,
+   "delta_ci95": [
+    0.0,
+    0.0
+   ],
+   "full_losses": 0,
+   "full_wins": 0,
+   "p_exact_mcnemar": 1.0
+  },
+  "recall_all@50": {
+   "base": 0.9069,
+   "cand": 0.9069,
+   "delta_ci95": [
+    0.0,
+    0.0
+   ],
+   "full_losses": 0,
+   "full_wins": 0,
+   "p_exact_mcnemar": 1.0
+  }
+ },
+ "turn": {
+  "n": 419,
+  "only_base": 0,
+  "only_cand": 0,
+  "recall_all@10": {
+   "base": 0.7589,
+   "cand": 0.7589,
+   "delta_ci95": [
+    0.0,
+    0.0
+   ],
+   "full_losses": 0,
+   "full_wins": 0,
+   "p_exact_mcnemar": 1.0
+  },
+  "recall_all@3": {
+   "base": 0.5346,
+   "cand": 0.5346,
+   "delta_ci95": [
+    0.0,
+    0.0
+   ],
+   "full_losses": 0,
+   "full_wins": 0,
+   "p_exact_mcnemar": 1.0
+  },
+  "recall_all@5": {
+   "base": 0.6325,
+   "cand": 0.6325,
+   "delta_ci95": [
+    0.0,
+    0.0
+   ],
+   "full_losses": 0,
+   "full_wins": 0,
+   "p_exact_mcnemar": 1.0
+  },
+  "recall_all@50": {
+   "base": 0.8162,
+   "cand": 0.8162,
+   "delta_ci95": [
+    0.0,
+    0.0
+   ],
+   "full_losses": 0,
+   "full_wins": 0,
+   "p_exact_mcnemar": 1.0
+  }
+ }
+}
