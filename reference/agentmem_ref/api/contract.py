@@ -215,6 +215,7 @@ def apply_return_selection(
         **({"query_expansion": dict(summary["query_expansion"])} if summary.get("query_expansion") else {}),
         **({"lifecycle_successor_count": int(summary["lifecycle_successor_count"])}
            if "lifecycle_successor_count" in summary else {}),
+        **({"selection_funnel": dict(summary["selection_funnel"])} if "selection_funnel" in summary else {}),
         "basis": RETURN_SELECTION_BASIS,
         "authority_effect": "none",
     }
