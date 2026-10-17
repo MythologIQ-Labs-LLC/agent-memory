@@ -1,0 +1,132 @@
+{
+ "probe_set": "819-e-probes-2",
+ "budget": 5,
+ "scenarios": [
+  {
+   "id": "w1",
+   "category": "asof_window",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "job",
+     "text": "I work at Halden Robotics.",
+     "scope": "user:probe",
+     "observed_at": "2021-01-01T00:00:00Z"
+    },
+    {
+     "op": "correct",
+     "ref": "job",
+     "as": "job@new",
+     "text": "I work at Vireo Health now.",
+     "scope": "user:probe",
+     "replacement_kind": "state_change",
+     "valid_from": "2024-01-01T00:00:00Z"
+    }
+   ],
+   "queries": [
+    {
+     "id": "w1-asof2022",
+     "query": "Where do I work?",
+     "must": [
+      "job"
+     ],
+     "may": [],
+     "exclude": [
+      "job@new"
+     ],
+     "scope": "user:probe",
+     "temporal_intent": {
+      "mode": "as_of",
+      "reference_time": "2022-06-01T00:00:00Z",
+      "target_start": "2022-06-01T00:00:00Z"
+     }
+    },
+    {
+     "id": "w1-now",
+     "query": "Where do I work?",
+     "must": [
+      "job@new"
+     ],
+     "may": [],
+     "exclude": [
+      "job"
+     ],
+     "scope": "user:probe"
+    },
+    {
+     "id": "w1-hist",
+     "query": "Where did I work before?",
+     "must": [
+      "job"
+     ],
+     "may": [
+      "job@new"
+     ],
+     "exclude": [],
+     "scope": "user:probe",
+     "temporal_intent": {
+      "mode": "historical"
+     }
+    }
+   ]
+  },
+  {
+   "id": "w2",
+   "category": "asof_window",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "home",
+     "text": "Our home is a canal boat moored near Oxford.",
+     "scope": "user:probe",
+     "observed_at": "2020-01-01T00:00:00Z"
+    },
+    {
+     "op": "correct",
+     "ref": "home",
+     "as": "home@new",
+     "text": "Our home is a terraced house in Reading.",
+     "scope": "user:probe",
+     "replacement_kind": "state_change",
+     "valid_from": "2023-01-01T00:00:00Z"
+    }
+   ],
+   "queries": [
+    {
+     "id": "w2-asof2021",
+     "query": "What was our home like?",
+     "must": [
+      "home"
+     ],
+     "may": [],
+     "exclude": [
+      "home@new"
+     ],
+     "scope": "user:probe",
+     "temporal_intent": {
+      "mode": "as_of",
+      "reference_time": "2021-06-01T00:00:00Z",
+      "target_start": "2021-06-01T00:00:00Z"
+     }
+    },
+    {
+     "id": "w2-asof2021-para",
+     "query": "Where were we living at that point?",
+     "must": [
+      "home"
+     ],
+     "may": [],
+     "exclude": [
+      "home@new"
+     ],
+     "scope": "user:probe",
+     "temporal_intent": {
+      "mode": "as_of",
+      "reference_time": "2021-06-01T00:00:00Z",
+      "target_start": "2021-06-01T00:00:00Z"
+     }
+    }
+   ]
+  }
+ ]
+}

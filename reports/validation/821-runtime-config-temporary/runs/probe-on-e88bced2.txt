@@ -1,0 +1,49 @@
+{
+ "tree": "e88bced2",
+ "race": [
+  {
+   "A_rc": 1,
+   "A": " JSON: {source}\") from exc\nagentmem_ref.runtime.doctor.DiagnosticInputError: runtime configuration is not valid JSON: /tmp/rc-36bcbg3f/store/runtime-config.json",
+   "B_rc": -9,
+   "config_bytes": 0,
+   "reopen": {
+    "rc": 1,
+    "out": "ror(f\"runtime configuration is not valid JSON: {source}\") from exc\nagentmem_ref.runtime.doctor.DiagnosticInputError: runtime configuration is not valid JSON: /tmp/rc-36bcbg3f/store/runtime-config.json"
+   }
+  },
+  {
+   "A_rc": 1,
+   "A": " JSON: {source}\") from exc\nagentmem_ref.runtime.doctor.DiagnosticInputError: runtime configuration is not valid JSON: /tmp/rc-wrq_bi9_/store/runtime-config.json",
+   "B_rc": -9,
+   "config_bytes": 0,
+   "reopen": {
+    "rc": 1,
+    "out": "ror(f\"runtime configuration is not valid JSON: {source}\") from exc\nagentmem_ref.runtime.doctor.DiagnosticInputError: runtime configuration is not valid JSON: /tmp/rc-wrq_bi9_/store/runtime-config.json"
+   }
+  },
+  {
+   "A_rc": 1,
+   "A": " JSON: {source}\") from exc\nagentmem_ref.runtime.doctor.DiagnosticInputError: runtime configuration is not valid JSON: /tmp/rc-o7uaow5l/store/runtime-config.json",
+   "B_rc": -9,
+   "config_bytes": 0,
+   "reopen": {
+    "rc": 1,
+    "out": "ror(f\"runtime configuration is not valid JSON: {source}\") from exc\nagentmem_ref.runtime.doctor.DiagnosticInputError: runtime configuration is not valid JSON: /tmp/rc-o7uaow5l/store/runtime-config.json"
+   }
+  }
+ ],
+ "symlink": {
+  "open": {
+   "rc": 0,
+   "out": "OK True"
+  },
+  "target_unchanged": false,
+  "config_is_symlink": true
+ },
+ "fifo": {
+  "open": {
+   "rc": "HANG",
+   "out": "no exit within 15 s"
+  }
+ }
+}

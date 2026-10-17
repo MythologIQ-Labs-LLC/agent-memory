@@ -1,0 +1,76 @@
+{
+ "kind": "lme",
+ "plane": "turn",
+ "paired_n": 419,
+ "base_pass": 318,
+ "cand_pass": 319,
+ "classes": {
+  "improved": 2,
+  "regressed": 1,
+  "unchanged_fail": 99,
+  "unchanged_pass": 317
+ },
+ "mcnemar_exact_p": 1.0,
+ "delta_pass_rate_ci95": [
+  0.0024,
+  -0.0048,
+  0.0119
+ ],
+ "delta_precision_ci95": null,
+ "delta_recall_ci95": [
+  0.0024,
+  -0.0048,
+  0.0119
+ ],
+ "by_group": {
+  "knowledge-update": {
+   "n": 72,
+   "base_pass": 66,
+   "cand_pass": 67,
+   "improved": 1,
+   "regressed": 0
+  },
+  "multi-session": {
+   "n": 121,
+   "base_pass": 72,
+   "cand_pass": 72,
+   "improved": 0,
+   "regressed": 0
+  },
+  "single-session-assistant": {
+   "n": 5,
+   "base_pass": 3,
+   "cand_pass": 3,
+   "improved": 0,
+   "regressed": 0
+  },
+  "single-session-preference": {
+   "n": 30,
+   "base_pass": 15,
+   "cand_pass": 15,
+   "improved": 0,
+   "regressed": 0
+  },
+  "single-session-user": {
+   "n": 64,
+   "base_pass": 60,
+   "cand_pass": 61,
+   "improved": 1,
+   "regressed": 0
+  },
+  "temporal-reasoning": {
+   "n": 127,
+   "base_pass": 102,
+   "cand_pass": 101,
+   "improved": 0,
+   "regressed": 1
+  }
+ },
+ "improved_ids": [
+  "59524333",
+  "75499fd8"
+ ],
+ "regressed_ids": [
+  "gpt4_e061b84g"
+ ]
+}

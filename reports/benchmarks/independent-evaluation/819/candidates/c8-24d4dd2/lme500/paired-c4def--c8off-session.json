@@ -1,0 +1,69 @@
+{
+ "kind": "lme",
+ "plane": "session",
+ "paired_n": 419,
+ "base_pass": 364,
+ "cand_pass": 364,
+ "classes": {
+  "unchanged_fail": 55,
+  "unchanged_pass": 364
+ },
+ "mcnemar_exact_p": 1.0,
+ "delta_pass_rate_ci95": [
+  0.0,
+  0.0,
+  0.0
+ ],
+ "delta_precision_ci95": null,
+ "delta_recall_ci95": [
+  0.0,
+  0.0,
+  0.0
+ ],
+ "by_group": {
+  "knowledge-update": {
+   "n": 72,
+   "base_pass": 70,
+   "cand_pass": 70,
+   "improved": 0,
+   "regressed": 0
+  },
+  "multi-session": {
+   "n": 121,
+   "base_pass": 94,
+   "cand_pass": 94,
+   "improved": 0,
+   "regressed": 0
+  },
+  "single-session-assistant": {
+   "n": 5,
+   "base_pass": 5,
+   "cand_pass": 5,
+   "improved": 0,
+   "regressed": 0
+  },
+  "single-session-preference": {
+   "n": 30,
+   "base_pass": 23,
+   "cand_pass": 23,
+   "improved": 0,
+   "regressed": 0
+  },
+  "single-session-user": {
+   "n": 64,
+   "base_pass": 63,
+   "cand_pass": 63,
+   "improved": 0,
+   "regressed": 0
+  },
+  "temporal-reasoning": {
+   "n": 127,
+   "base_pass": 109,
+   "cand_pass": 109,
+   "improved": 0,
+   "regressed": 0
+  }
+ },
+ "improved_ids": [],
+ "regressed_ids": []
+}

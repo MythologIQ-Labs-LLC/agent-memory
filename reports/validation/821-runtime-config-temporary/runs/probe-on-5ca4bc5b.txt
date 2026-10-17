@@ -1,0 +1,49 @@
+{
+ "tree": "5ca4bc5b",
+ "race": [
+  {
+   "A_rc": 0,
+   "A": "OK True",
+   "B_rc": -9,
+   "config_bytes": 8151,
+   "reopen": {
+    "rc": 0,
+    "out": "OK True"
+   }
+  },
+  {
+   "A_rc": 0,
+   "A": "OK True",
+   "B_rc": -9,
+   "config_bytes": 8151,
+   "reopen": {
+    "rc": 0,
+    "out": "OK True"
+   }
+  },
+  {
+   "A_rc": 0,
+   "A": "OK True",
+   "B_rc": -9,
+   "config_bytes": 8151,
+   "reopen": {
+    "rc": 0,
+    "out": "OK True"
+   }
+  }
+ ],
+ "symlink": {
+  "open": {
+   "rc": 0,
+   "out": "OK True"
+  },
+  "target_unchanged": true,
+  "config_is_symlink": false
+ },
+ "fifo": {
+  "open": {
+   "rc": 0,
+   "out": "OK True"
+  }
+ }
+}

@@ -1,0 +1,114 @@
+test_an_opener_killed_beside_another_never_publishes_an_empty_configuration (tests._rc_probe_test.ConcurrentFirstOpens.test_an_opener_killed_beside_another_never_publishes_an_empty_configuration) ... FAIL
+test_a_fifo_at_the_old_fixed_name_does_not_block_the_first_open (tests._rc_probe_test.PlantedTemporaryPaths.test_a_fifo_at_the_old_fixed_name_does_not_block_the_first_open) ... FAIL
+test_a_symlink_at_the_old_fixed_name_is_never_followed (tests._rc_probe_test.PlantedTemporaryPaths.test_a_symlink_at_the_old_fixed_name_is_never_followed) ... FAIL
+test_a_failed_write_removes_its_temporary_and_publishes_nothing (tests._rc_probe_test.TemporaryHygiene.test_a_failed_write_removes_its_temporary_and_publishes_nothing) ... FAIL
+test_a_temporary_that_cannot_be_wrapped_is_closed_and_removed (tests._rc_probe_test.TemporaryHygiene.test_a_temporary_that_cannot_be_wrapped_is_closed_and_removed) ... FAIL
+test_another_writer_temporary_is_never_opened_or_truncated (tests._rc_probe_test.TemporaryHygiene.test_another_writer_temporary_is_never_opened_or_truncated) ... ERROR
+test_the_configuration_keeps_the_mode_open_w_gave_it (tests._rc_probe_test.TemporaryHygiene.test_the_configuration_keeps_the_mode_open_w_gave_it) ... ok
+
+======================================================================
+ERROR: test_another_writer_temporary_is_never_opened_or_truncated (tests._rc_probe_test.TemporaryHygiene.test_another_writer_temporary_is_never_opened_or_truncated)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/_rc_probe_test.py", line 175, in test_another_writer_temporary_is_never_opened_or_truncated
+    with mock.patch.object(surface.secrets, "token_hex", lambda _n: next(tokens)):
+                           ^^^^^^^^^^^^^^^
+AttributeError: module 'agentmem_ref.api.surface' has no attribute 'secrets'
+
+======================================================================
+FAIL: test_an_opener_killed_beside_another_never_publishes_an_empty_configuration (tests._rc_probe_test.ConcurrentFirstOpens.test_an_opener_killed_beside_another_never_publishes_an_empty_configuration)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/_rc_probe_test.py", line 139, in test_an_opener_killed_beside_another_never_publishes_an_empty_configuration
+    self.assertEqual(self.race(), CRASH)
+                     ^^^^^^^^^^^
+  File "/home/user/eval/am-821-r1/reference/tests/_rc_probe_test.py", line 135, in race
+    raise AssertionError(f"opener A failed ({a.returncode}): {a_err[-2000:]}")
+AssertionError: opener A failed (1): Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/agentmem_ref/runtime/doctor.py", line 51, in load_configuration_value
+    value = json.loads(source.read_text(encoding="utf-8"))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<string>", line 39, in <module>
+  File "/home/user/eval/am-821-r1/reference/agentmem_ref/api/surface.py", line 517, in open
+    value = doctor.load_configuration_value(resolved_config)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/am-821-r1/reference/agentmem_ref/runtime/doctor.py", line 55, in load_configuration_value
+    raise DiagnosticInputError(f"runtime configuration is not valid JSON: {source}") from exc
+agentmem_ref.runtime.doctor.DiagnosticInputError: runtime configuration is not valid JSON: /tmp/tmpar485g_r/store/runtime-config.json
+
+
+======================================================================
+FAIL: test_a_fifo_at_the_old_fixed_name_does_not_block_the_first_open (tests._rc_probe_test.PlantedTemporaryPaths.test_a_fifo_at_the_old_fixed_name_does_not_block_the_first_open)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/_rc_probe_test.py", line 158, in test_a_fifo_at_the_old_fixed_name_does_not_block_the_first_open
+    done = subprocess.run([sys.executable, "-c", _PLAIN_OPEN, str(REFERENCE), str(self.root)],
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 550, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 1209, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 2116, in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+  File "/usr/lib/python3.12/subprocess.py", line 1253, in _check_timeout
+    raise TimeoutExpired(
+subprocess.TimeoutExpired: Command '['/home/user/eval/venv-neutral/bin/python', '-c', '\nimport sys\nsys.path.insert(0, sys.argv[1])\nfrom agentmem_ref import AgentMemory\nwith AgentMemory.open(sys.argv[2], tenant="tenant:rc", actor_id="agent:rc", scope="project:rc",\n                      purpose="runtime-config temporary") as memory:\n    memory.remember("memory:plain", "A plain open committed this.")\n', '/home/user/eval/am-821-r1/reference', '/tmp/tmpgv6jsx3x/store']' timed out after 30 seconds
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/_rc_probe_test.py", line 161, in test_a_fifo_at_the_old_fixed_name_does_not_block_the_first_open
+    self.fail("the first open blocked on a FIFO at the configuration's temporary name")
+AssertionError: the first open blocked on a FIFO at the configuration's temporary name
+
+======================================================================
+FAIL: test_a_symlink_at_the_old_fixed_name_is_never_followed (tests._rc_probe_test.PlantedTemporaryPaths.test_a_symlink_at_the_old_fixed_name_is_never_followed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/_rc_probe_test.py", line 152, in test_a_symlink_at_the_old_fixed_name_is_never_followed
+    self.assertEqual(target.read_text(), "must not change\n")
+AssertionError: '{\n  "schema_version": "1.0.0",\n  "runti[8307 chars]n}\n' != 'must not change\n'
+Diff is 8572 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_a_failed_write_removes_its_temporary_and_publishes_nothing (tests._rc_probe_test.TemporaryHygiene.test_a_failed_write_removes_its_temporary_and_publishes_nothing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/_rc_probe_test.py", line 192, in test_a_failed_write_removes_its_temporary_and_publishes_nothing
+    self.assertEqual(self.temporaries(), [])
+AssertionError: Lists differ: ['.runtime-config.json.tmp'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'.runtime-config.json.tmp'
+
+- ['.runtime-config.json.tmp']
++ []
+
+======================================================================
+FAIL: test_a_temporary_that_cannot_be_wrapped_is_closed_and_removed (tests._rc_probe_test.TemporaryHygiene.test_a_temporary_that_cannot_be_wrapped_is_closed_and_removed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/_rc_probe_test.py", line 205, in test_a_temporary_that_cannot_be_wrapped_is_closed_and_removed
+    with self.assertRaises(OSError):
+AssertionError: OSError not raised
+
+----------------------------------------------------------------------
+Ran 7 tests in 30.516s
+
+FAILED (failures=5, errors=1)

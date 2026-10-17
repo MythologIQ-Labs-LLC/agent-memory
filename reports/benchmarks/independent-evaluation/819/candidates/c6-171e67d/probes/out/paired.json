@@ -1,0 +1,744 @@
+{
+ "C4-def->C6-sem": {
+  "n": 57,
+  "strict": [
+   22,
+   24
+  ],
+  "wins": 5,
+  "losses": 3,
+  "ties": 49,
+  "mcnemar_exact_p": 0.726562,
+  "delta_strict_ci95": [
+   0.0351,
+   -0.0526,
+   0.1404
+  ],
+  "delta_needed_recall_per_query_ci95": [
+   0.1958,
+   0.0958,
+   0.3083
+  ],
+  "needed_returned": [
+   14,
+   29,
+   69
+  ],
+  "extras": [
+   4,
+   7
+  ],
+  "excluded_returned": [
+   0,
+   0
+  ],
+  "by_category": {
+   "aggregation": {
+    "n": 8,
+    "strict": [
+     0,
+     1
+    ],
+    "needed_returned": [
+     1,
+     8,
+     23
+    ]
+   },
+   "cross_scope": {
+    "n": 4,
+    "strict": [
+     3,
+     3
+    ],
+    "needed_returned": [
+     0,
+     0,
+     1
+    ]
+   },
+   "historical": {
+    "n": 6,
+    "strict": [
+     3,
+     3
+    ],
+    "needed_returned": [
+     0,
+     0,
+     3
+    ]
+   },
+   "lifecycle": {
+    "n": 6,
+    "strict": [
+     5,
+     5
+    ],
+    "needed_returned": [
+     2,
+     2,
+     3
+    ]
+   },
+   "list_shape": {
+    "n": 10,
+    "strict": [
+     1,
+     1
+    ],
+    "needed_returned": [
+     6,
+     10,
+     23
+    ]
+   },
+   "no_answer": {
+    "n": 8,
+    "strict": [
+     6,
+     3
+    ],
+    "needed_returned": [
+     0,
+     0,
+     0
+    ]
+   },
+   "paraphrase": {
+    "n": 8,
+    "strict": [
+     0,
+     4
+    ],
+    "needed_returned": [
+     0,
+     4,
+     8
+    ]
+   },
+   "question_shaped": {
+    "n": 7,
+    "strict": [
+     4,
+     4
+    ],
+    "needed_returned": [
+     5,
+     5,
+     8
+    ]
+   }
+  },
+  "win_ids": [
+   "agg1",
+   "para2",
+   "para3",
+   "para4",
+   "para5"
+  ],
+  "loss_ids": [
+   "noans1",
+   "noans5",
+   "noans7"
+  ]
+ },
+ "C4-sem->C6-sem": {
+  "n": 57,
+  "strict": [
+   33,
+   24
+  ],
+  "wins": 3,
+  "losses": 12,
+  "ties": 42,
+  "mcnemar_exact_p": 0.035156,
+  "delta_strict_ci95": [
+   -0.1579,
+   -0.2807,
+   -0.0351
+  ],
+  "delta_needed_recall_per_query_ci95": [
+   -0.325,
+   -0.4542,
+   -0.1958
+  ],
+  "needed_returned": [
+   53,
+   29,
+   69
+  ],
+  "extras": [
+   13,
+   7
+  ],
+  "excluded_returned": [
+   1,
+   0
+  ],
+  "by_category": {
+   "aggregation": {
+    "n": 8,
+    "strict": [
+     3,
+     1
+    ],
+    "needed_returned": [
+     18,
+     8,
+     23
+    ]
+   },
+   "cross_scope": {
+    "n": 4,
+    "strict": [
+     3,
+     3
+    ],
+    "needed_returned": [
+     0,
+     0,
+     1
+    ]
+   },
+   "historical": {
+    "n": 6,
+    "strict": [
+     3,
+     3
+    ],
+    "needed_returned": [
+     1,
+     0,
+     3
+    ]
+   },
+   "lifecycle": {
+    "n": 6,
+    "strict": [
+     6,
+     5
+    ],
+    "needed_returned": [
+     3,
+     2,
+     3
+    ]
+   },
+   "list_shape": {
+    "n": 10,
+    "strict": [
+     3,
+     1
+    ],
+    "needed_returned": [
+     16,
+     10,
+     23
+    ]
+   },
+   "no_answer": {
+    "n": 8,
+    "strict": [
+     3,
+     3
+    ],
+    "needed_returned": [
+     0,
+     0,
+     0
+    ]
+   },
+   "paraphrase": {
+    "n": 8,
+    "strict": [
+     7,
+     4
+    ],
+    "needed_returned": [
+     7,
+     4,
+     8
+    ]
+   },
+   "question_shaped": {
+    "n": 7,
+    "strict": [
+     5,
+     4
+    ],
+    "needed_returned": [
+     8,
+     5,
+     8
+    ]
+   }
+  },
+  "win_ids": [
+   "agg1",
+   "qshape4",
+   "list10"
+  ],
+  "loss_ids": [
+   "agg2",
+   "agg3",
+   "agg6",
+   "para6",
+   "para7",
+   "para8",
+   "qshape3",
+   "qshape7",
+   "list3",
+   "list5",
+   "list8",
+   "life4"
+  ]
+ },
+ "A-def->C6-sem": {
+  "n": 57,
+  "strict": [
+   3,
+   24
+  ],
+  "wins": 21,
+  "losses": 0,
+  "ties": 36,
+  "mcnemar_exact_p": 1e-06,
+  "delta_strict_ci95": [
+   0.3684,
+   0.2456,
+   0.4912
+  ],
+  "delta_needed_recall_per_query_ci95": [
+   -0.0292,
+   -0.1625,
+   0.1
+  ],
+  "needed_returned": [
+   30,
+   29,
+   69
+  ],
+  "extras": [
+   116,
+   7
+  ],
+  "excluded_returned": [
+   2,
+   0
+  ],
+  "by_category": {
+   "aggregation": {
+    "n": 8,
+    "strict": [
+     0,
+     1
+    ],
+    "needed_returned": [
+     8,
+     8,
+     23
+    ]
+   },
+   "cross_scope": {
+    "n": 4,
+    "strict": [
+     1,
+     3
+    ],
+    "needed_returned": [
+     0,
+     0,
+     1
+    ]
+   },
+   "historical": {
+    "n": 6,
+    "strict": [
+     0,
+     3
+    ],
+    "needed_returned": [
+     2,
+     0,
+     3
+    ]
+   },
+   "lifecycle": {
+    "n": 6,
+    "strict": [
+     1,
+     5
+    ],
+    "needed_returned": [
+     2,
+     2,
+     3
+    ]
+   },
+   "list_shape": {
+    "n": 10,
+    "strict": [
+     0,
+     1
+    ],
+    "needed_returned": [
+     9,
+     10,
+     23
+    ]
+   },
+   "no_answer": {
+    "n": 8,
+    "strict": [
+     1,
+     3
+    ],
+    "needed_returned": [
+     0,
+     0,
+     0
+    ]
+   },
+   "paraphrase": {
+    "n": 8,
+    "strict": [
+     0,
+     4
+    ],
+    "needed_returned": [
+     3,
+     4,
+     8
+    ]
+   },
+   "question_shaped": {
+    "n": 7,
+    "strict": [
+     0,
+     4
+    ],
+    "needed_returned": [
+     6,
+     5,
+     8
+    ]
+   }
+  },
+  "win_ids": [
+   "agg1",
+   "para2",
+   "para3",
+   "para4",
+   "para5",
+   "noans4",
+   "noans6",
+   "qshape1",
+   "qshape2",
+   "qshape4",
+   "qshape5",
+   "list10",
+   "hist2",
+   "hist3",
+   "hist5",
+   "scope1",
+   "scope2",
+   "life1",
+   "life2",
+   "life3",
+   "life5"
+  ],
+  "loss_ids": []
+ },
+ "C4-def->C4-sem": {
+  "n": 57,
+  "strict": [
+   22,
+   33
+  ],
+  "wins": 16,
+  "losses": 5,
+  "ties": 36,
+  "mcnemar_exact_p": 0.026604,
+  "delta_strict_ci95": [
+   0.193,
+   0.0351,
+   0.3509
+  ],
+  "delta_needed_recall_per_query_ci95": [
+   0.5208,
+   0.3792,
+   0.6583
+  ],
+  "needed_returned": [
+   14,
+   53,
+   69
+  ],
+  "extras": [
+   4,
+   13
+  ],
+  "excluded_returned": [
+   0,
+   1
+  ],
+  "by_category": {
+   "aggregation": {
+    "n": 8,
+    "strict": [
+     0,
+     3
+    ],
+    "needed_returned": [
+     1,
+     18,
+     23
+    ]
+   },
+   "cross_scope": {
+    "n": 4,
+    "strict": [
+     3,
+     3
+    ],
+    "needed_returned": [
+     0,
+     0,
+     1
+    ]
+   },
+   "historical": {
+    "n": 6,
+    "strict": [
+     3,
+     3
+    ],
+    "needed_returned": [
+     0,
+     1,
+     3
+    ]
+   },
+   "lifecycle": {
+    "n": 6,
+    "strict": [
+     5,
+     6
+    ],
+    "needed_returned": [
+     2,
+     3,
+     3
+    ]
+   },
+   "list_shape": {
+    "n": 10,
+    "strict": [
+     1,
+     3
+    ],
+    "needed_returned": [
+     6,
+     16,
+     23
+    ]
+   },
+   "no_answer": {
+    "n": 8,
+    "strict": [
+     6,
+     3
+    ],
+    "needed_returned": [
+     0,
+     0,
+     0
+    ]
+   },
+   "paraphrase": {
+    "n": 8,
+    "strict": [
+     0,
+     7
+    ],
+    "needed_returned": [
+     0,
+     7,
+     8
+    ]
+   },
+   "question_shaped": {
+    "n": 7,
+    "strict": [
+     4,
+     5
+    ],
+    "needed_returned": [
+     5,
+     8,
+     8
+    ]
+   }
+  },
+  "win_ids": [
+   "agg2",
+   "agg3",
+   "agg6",
+   "para2",
+   "para3",
+   "para4",
+   "para5",
+   "para6",
+   "para7",
+   "para8",
+   "qshape3",
+   "qshape7",
+   "list3",
+   "list5",
+   "list8",
+   "life4"
+  ],
+  "loss_ids": [
+   "noans1",
+   "noans5",
+   "noans7",
+   "qshape4",
+   "list10"
+  ]
+ },
+ "C4-def->C6-off": {
+  "n": 57,
+  "strict": [
+   22,
+   22
+  ],
+  "wins": 0,
+  "losses": 0,
+  "ties": 57,
+  "mcnemar_exact_p": 1.0,
+  "delta_strict_ci95": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "delta_needed_recall_per_query_ci95": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "needed_returned": [
+   14,
+   14,
+   69
+  ],
+  "extras": [
+   4,
+   4
+  ],
+  "excluded_returned": [
+   0,
+   0
+  ],
+  "by_category": {
+   "aggregation": {
+    "n": 8,
+    "strict": [
+     0,
+     0
+    ],
+    "needed_returned": [
+     1,
+     1,
+     23
+    ]
+   },
+   "cross_scope": {
+    "n": 4,
+    "strict": [
+     3,
+     3
+    ],
+    "needed_returned": [
+     0,
+     0,
+     1
+    ]
+   },
+   "historical": {
+    "n": 6,
+    "strict": [
+     3,
+     3
+    ],
+    "needed_returned": [
+     0,
+     0,
+     3
+    ]
+   },
+   "lifecycle": {
+    "n": 6,
+    "strict": [
+     5,
+     5
+    ],
+    "needed_returned": [
+     2,
+     2,
+     3
+    ]
+   },
+   "list_shape": {
+    "n": 10,
+    "strict": [
+     1,
+     1
+    ],
+    "needed_returned": [
+     6,
+     6,
+     23
+    ]
+   },
+   "no_answer": {
+    "n": 8,
+    "strict": [
+     6,
+     6
+    ],
+    "needed_returned": [
+     0,
+     0,
+     0
+    ]
+   },
+   "paraphrase": {
+    "n": 8,
+    "strict": [
+     0,
+     0
+    ],
+    "needed_returned": [
+     0,
+     0,
+     8
+    ]
+   },
+   "question_shaped": {
+    "n": 7,
+    "strict": [
+     4,
+     4
+    ],
+    "needed_returned": [
+     5,
+     5,
+     8
+    ]
+   }
+  },
+  "win_ids": [],
+  "loss_ids": []
+ }
+}
