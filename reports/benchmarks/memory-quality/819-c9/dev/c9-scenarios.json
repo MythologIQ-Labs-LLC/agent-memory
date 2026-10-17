@@ -1,0 +1,1623 @@
+{
+ "set": "819-c9-dev",
+ "scenarios": [
+  {
+   "id": "pets",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:vet-diet",
+     "text": "The vet put Biscuit on a reduced-calorie kibble."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:vet-weight",
+     "text": "Biscuit weighed 31 kilos at the last check-up, two over target."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:walks",
+     "text": "Biscuit gets two long walks a day, one before work."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:cat-name",
+     "text": "Our tabby is called Pepper."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:cat-indoor",
+     "text": "Pepper stays indoors since the road outside got busier."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:insurance",
+     "text": "Both animals are covered by PetPlan with a \u00a399 excess."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:sitter",
+     "text": "Hannah next door feeds Pepper when we are away."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:flea",
+     "text": "Flea treatment goes on the first of every month."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:kennel",
+     "text": "Biscuit boards at Oakfield Kennels when we fly."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:dog-food-article",
+     "text": "Read a blog post ranking dog food brands by protein."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:q-pets",
+     "text": "What does the vet want Biscuit eating? Check."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:groomer",
+     "text": "Biscuit is groomed every eight weeks at Paws and Claws."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:chip-old",
+     "text": "Pepper's microchip is registered to our old address."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9",
+     "ref": "memory:chip-old",
+     "text": "Pepper's microchip now lists our current address."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:fish",
+     "text": "We had goldfish years ago but the tank went to a neighbour."
+    },
+    {
+     "op": "forget",
+     "scope": "user:c9",
+     "ref": "memory:fish",
+     "text": ""
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9-other",
+     "ref": "memory:other-dog",
+     "text": "Biscuit is allergic to chicken."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-pets-0",
+     "text": "The hall carpet needs a deep clean."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-pets-1",
+     "text": "Bought a new lead in red."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-pets-2",
+     "text": "The park closes at dusk in winter."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-pets-3",
+     "text": "Squirrels raid the bird feeder."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-pets-4",
+     "text": "The vacuum struggles with long hair."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-pets-5",
+     "text": "Our garden fence has a gap by the gate."
+    }
+   ],
+   "queries": [
+    {
+     "id": "pets-1",
+     "kind": "multi_weak",
+     "query": "What has the vet said about Biscuit's weight and food?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:vet-diet",
+       "memory:vet-weight"
+      ],
+      "may_include": [
+       "memory:q-pets"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "pets-2",
+     "kind": "paraphrase",
+     "query": "Who looks after the cat while we travel?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:sitter"
+      ],
+      "may_include": [
+       "memory:kennel"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "pets-3",
+     "kind": "paraphrase",
+     "query": "How much exercise does the dog get?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:walks"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "pets-4",
+     "kind": "distractor_topical",
+     "query": "Which dog food brand do we buy?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [],
+      "may_include": [
+       "memory:vet-diet",
+       "memory:dog-food-article"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "pets-5",
+     "kind": "distractor_semantic",
+     "query": "What is the excess on the pet insurance?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:insurance"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "pets-6",
+     "kind": "abstention",
+     "query": "When was Pepper last vaccinated?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "pets-7",
+     "kind": "lifecycle",
+     "query": "What address is on Pepper's microchip?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:chip-old"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "pets-8",
+     "kind": "lifecycle",
+     "query": "What happened to the goldfish?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": [
+       "memory:fish"
+      ]
+     }
+    },
+    {
+     "id": "pets-9",
+     "kind": "scope",
+     "query": "What is Biscuit allergic to?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": [
+       "memory:other-dog"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "work",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:standup",
+     "text": "Daily standup is at 9:30 on the team call."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:manager",
+     "text": "My line manager is Dev Okafor."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:project-a",
+     "text": "I lead the billing migration, due in March."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:project-b",
+     "text": "I also review pull requests for the search team."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:laptop",
+     "text": "The work laptop is a 14-inch ThinkPad."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:wfh",
+     "text": "I am in the office Tuesday and Thursday, home otherwise."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:commute",
+     "text": "The train into the office takes forty minutes."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:review",
+     "text": "My performance review is scheduled for late November."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:training",
+     "text": "Signed up for a data engineering course through the company budget."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:q-work",
+     "text": "Which projects am I on? Update the CV."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:office-news",
+     "text": "The company newsletter announced a new office in Leeds."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:desk-old",
+     "text": "My desk is on the third floor by the window."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9",
+     "ref": "memory:desk-old",
+     "text": "My desk moved to the second floor near the kitchen."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:side",
+     "text": "I freelanced logo designs on weekends."
+    },
+    {
+     "op": "forget",
+     "scope": "user:c9",
+     "ref": "memory:side",
+     "text": ""
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9-other",
+     "ref": "memory:other-salary",
+     "text": "My salary is 52,000 before tax."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:holiday-old",
+     "text": "I have 25 days of annual leave.",
+     "valid_from": "2024-01-01T00:00:00Z",
+     "valid_until": "2026-01-01T00:00:00Z"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:holiday-new",
+     "text": "Annual leave went up to 28 days this year.",
+     "valid_from": "2026-01-01T00:00:00Z"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-work-0",
+     "text": "The printer jams on double-sided jobs."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-work-1",
+     "text": "Coffee machine is on the ground floor."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-work-2",
+     "text": "Parking permits renew in April."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-work-3",
+     "text": "The lift is slow in the mornings."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-work-4",
+     "text": "Someone keeps taking my mug."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-work-5",
+     "text": "Fire drill was on Wednesday."
+    }
+   ],
+   "queries": [
+    {
+     "id": "work-1",
+     "kind": "multi_weak",
+     "query": "What projects am I working on?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:project-a",
+       "memory:project-b"
+      ],
+      "may_include": [
+       "memory:q-work"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "work-2",
+     "kind": "paraphrase",
+     "query": "Who is my boss?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:manager"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "work-3",
+     "kind": "paraphrase",
+     "query": "Which days do I go in?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:wfh"
+      ],
+      "may_include": [
+       "memory:commute"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "work-4",
+     "kind": "distractor_topical",
+     "query": "Where is the new office?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:office-news"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "work-5",
+     "kind": "distractor_semantic",
+     "query": "What time is the morning meeting?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:standup"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "work-6",
+     "kind": "abstention",
+     "query": "What is my employee number?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "work-7",
+     "kind": "lifecycle",
+     "query": "Which floor is my desk on?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:desk-old"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "work-8",
+     "kind": "scope",
+     "query": "How much do I earn?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": [
+       "memory:other-salary"
+      ]
+     }
+    },
+    {
+     "id": "work-9",
+     "kind": "conflict_declared",
+     "query": "How many days of annual leave do I get?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:holiday-new"
+      ],
+      "may_include": [],
+      "must_exclude": [
+       "memory:holiday-old"
+      ]
+     },
+     "temporal_intent": {
+      "mode": "current",
+      "reference_time": "2026-10-17T00:00:00Z"
+     }
+    }
+   ]
+  },
+  {
+   "id": "health",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:gp",
+     "text": "Our GP surgery is Riverside Medical Centre."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:inhaler",
+     "text": "I use a blue inhaler before running."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:bp",
+     "text": "Blood pressure was 128 over 82 at the pharmacy."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:knee",
+     "text": "The physio gave me knee exercises after the parkrun injury."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:dentist",
+     "text": "The dentist check-up is every six months with Dr Shah."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:glasses",
+     "text": "My distance prescription is minus 1.75 in both eyes."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:sleep",
+     "text": "I usually get about six hours a night."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:run",
+     "text": "I run 5k three times a week."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:allergy",
+     "text": "Hay fever starts in May; I take cetirizine."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:q-health",
+     "text": "When is the dentist next? Ask reception."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:health-article",
+     "text": "Article said most adults need seven to nine hours of sleep."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:meds-old",
+     "text": "I take 10mg of amlodipine each morning."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9",
+     "ref": "memory:meds-old",
+     "text": "The amlodipine dose was raised to 5mg twice daily."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:smoke",
+     "text": "I smoked socially at university."
+    },
+    {
+     "op": "forget",
+     "scope": "user:c9",
+     "ref": "memory:smoke",
+     "text": ""
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9-other",
+     "ref": "memory:other-surgery",
+     "text": "Booked a hernia operation for January."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:gym-old",
+     "text": "Gym membership is with PureGym.",
+     "valid_from": "2024-01-01T00:00:00Z",
+     "valid_until": "2026-03-01T00:00:00Z"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:gym-new",
+     "text": "Switched the gym to the council leisure centre.",
+     "valid_from": "2026-03-01T00:00:00Z"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-health-0",
+     "text": "The bathroom scales need a battery."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-health-1",
+     "text": "Bought a foam roller."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-health-2",
+     "text": "Herbal tea in the evenings."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-health-3",
+     "text": "The pharmacy closes at six."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-health-4",
+     "text": "Need new running socks."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-health-5",
+     "text": "Water bottle left at the office."
+    }
+   ],
+   "queries": [
+    {
+     "id": "health-1",
+     "kind": "multi_weak",
+     "query": "What do I do to manage my breathing and allergies?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:inhaler",
+       "memory:allergy"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "health-2",
+     "kind": "paraphrase",
+     "query": "How far do I jog each week?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:run"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "health-3",
+     "kind": "paraphrase",
+     "query": "What's my eyesight like?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:glasses"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "health-4",
+     "kind": "distractor_topical",
+     "query": "How many hours of sleep do I get?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:sleep"
+      ],
+      "may_include": [
+       "memory:health-article"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "health-5",
+     "kind": "distractor_semantic",
+     "query": "Who treated my injured knee?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:knee"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "health-6",
+     "kind": "abstention",
+     "query": "What is my blood type?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "health-7",
+     "kind": "lifecycle",
+     "query": "What dose of amlodipine am I on?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:meds-old"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "health-8",
+     "kind": "lifecycle",
+     "query": "Have I ever smoked?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": [
+       "memory:smoke"
+      ]
+     }
+    },
+    {
+     "id": "health-9",
+     "kind": "conflict_declared",
+     "query": "Which gym am I a member of?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:gym-new"
+      ],
+      "may_include": [],
+      "must_exclude": [
+       "memory:gym-old"
+      ]
+     },
+     "temporal_intent": {
+      "mode": "current",
+      "reference_time": "2026-10-17T00:00:00Z"
+     }
+    },
+    {
+     "id": "health-10",
+     "kind": "scope",
+     "query": "What operation is booked?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": [
+       "memory:other-surgery"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "travel",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:passport",
+     "text": "My passport expires in June 2029."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:lisbon",
+     "text": "We spent a week in Lisbon in April."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:lisbon-hotel",
+     "text": "The Lisbon hotel was in Alfama, up a steep hill."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:japan-plan",
+     "text": "Saving up for Japan in spring 2027."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:airline",
+     "text": "We usually fly with easyJet from Bristol."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:seasick",
+     "text": "I get seasick on ferries, so we avoid boat trips."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:camping",
+     "text": "Camped in the Lake District in August with the kids."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:rail",
+     "text": "We have a family railcard that renews each October."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:q-travel",
+     "text": "Where did we go this year? For the photo book."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:travel-article",
+     "text": "Read about the best cities for a long weekend in Europe."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:ehic-old",
+     "text": "Our travel insurance is through the bank account."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9",
+     "ref": "memory:ehic-old",
+     "text": "Travel insurance is now a standalone annual policy from Staysure."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:cruise",
+     "text": "We once looked into a Baltic cruise."
+    },
+    {
+     "op": "forget",
+     "scope": "user:c9",
+     "ref": "memory:cruise",
+     "text": ""
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9-other",
+     "ref": "memory:other-trip",
+     "text": "Booked flights to Iceland in November."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-travel-0",
+     "text": "The suitcase wheel is broken."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-travel-1",
+     "text": "Lost a sock in the dryer."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-travel-2",
+     "text": "Need to renew the car tax."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-travel-3",
+     "text": "The neighbours' cat visits daily."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-travel-4",
+     "text": "Bought a new phone charger."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-travel-5",
+     "text": "Bins go out on Tuesday."
+    }
+   ],
+   "queries": [
+    {
+     "id": "travel-1",
+     "kind": "multi_weak",
+     "query": "Which trips have we taken this year?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:lisbon",
+       "memory:camping"
+      ],
+      "may_include": [
+       "memory:q-travel",
+       "memory:lisbon-hotel"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "travel-2",
+     "kind": "paraphrase",
+     "query": "Where are we going on our next big holiday?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:japan-plan"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "travel-3",
+     "kind": "paraphrase",
+     "query": "Why don't we take boats?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:seasick"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "travel-4",
+     "kind": "distractor_topical",
+     "query": "Where did we stay in Lisbon?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:lisbon-hotel"
+      ],
+      "may_include": [
+       "memory:lisbon"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "travel-5",
+     "kind": "distractor_semantic",
+     "query": "Which airport do we usually fly from?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:airline"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "travel-6",
+     "kind": "abstention",
+     "query": "What is our frequent flyer number?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "travel-7",
+     "kind": "lifecycle",
+     "query": "Who provides our travel insurance?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:ehic-old"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "travel-8",
+     "kind": "lifecycle",
+     "query": "Did we look at a cruise?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": [
+       "memory:cruise"
+      ]
+     }
+    },
+    {
+     "id": "travel-9",
+     "kind": "scope",
+     "query": "Have we booked flights to Iceland?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": [
+       "memory:other-trip"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "home",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:roof",
+     "text": "A roofer replaced three slipped tiles in March."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:damp",
+     "text": "There is damp in the back bedroom by the window."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:electrician",
+     "text": "Sparks Ltd rewired the kitchen sockets."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:plumber",
+     "text": "The plumber fixed the leaking stopcock under the sink."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:paint",
+     "text": "The lounge is painted in Farrow and Ball Elephant's Breath."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:gutters",
+     "text": "Gutters get cleared every autumn by a window cleaner."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:smoke-alarm",
+     "text": "Smoke alarms are tested on the first Sunday of the month."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:boiler-age",
+     "text": "The combi boiler is eleven years old."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:q-home",
+     "text": "What repairs are outstanding? Make a list."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:diy-article",
+     "text": "Watched a video on fixing squeaky floorboards."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:lock-old",
+     "text": "The back door lock sticks in cold weather."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9",
+     "ref": "memory:lock-old",
+     "text": "The back door lock was replaced and works fine now."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:shed-plan",
+     "text": "Thought about building a garden office."
+    },
+    {
+     "op": "forget",
+     "scope": "user:c9",
+     "ref": "memory:shed-plan",
+     "text": ""
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9-other",
+     "ref": "memory:other-quote",
+     "text": "Got a \u00a39,000 quote for a loft conversion."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:insure-old",
+     "text": "Home insurance is with Aviva.",
+     "valid_from": "2024-01-01T00:00:00Z",
+     "valid_until": "2026-05-01T00:00:00Z"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:insure-new",
+     "text": "Home insurance moved to LV in May.",
+     "valid_from": "2026-05-01T00:00:00Z"
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-home-0",
+     "text": "The dog barks at the postman."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-home-1",
+     "text": "We need more coat hooks."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-home-2",
+     "text": "Book club meets on Fridays."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-home-3",
+     "text": "The TV remote needs batteries."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-home-4",
+     "text": "Bought a doormat with a cactus print."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-home-5",
+     "text": "Bins were missed last week."
+    }
+   ],
+   "queries": [
+    {
+     "id": "home-1",
+     "kind": "multi_weak",
+     "query": "What work have tradespeople done on the house?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:roof",
+       "memory:electrician",
+       "memory:plumber"
+      ],
+      "may_include": [
+       "memory:gutters"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "home-2",
+     "kind": "paraphrase",
+     "query": "Is there any mould problem?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:damp"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "home-3",
+     "kind": "paraphrase",
+     "query": "What colour are the living room walls?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:paint"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "home-4",
+     "kind": "distractor_topical",
+     "query": "How old is the boiler?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:boiler-age"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "home-5",
+     "kind": "distractor_semantic",
+     "query": "When do we check the fire alarms?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:smoke-alarm"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "home-6",
+     "kind": "abstention",
+     "query": "Who installed the solar panels?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "home-7",
+     "kind": "lifecycle",
+     "query": "Is the back door lock still sticking?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:lock-old"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "home-8",
+     "kind": "conflict_declared",
+     "query": "Who is our home insurer?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:insure-new"
+      ],
+      "may_include": [],
+      "must_exclude": [
+       "memory:insure-old"
+      ]
+     },
+     "temporal_intent": {
+      "mode": "current",
+      "reference_time": "2026-10-17T00:00:00Z"
+     }
+    },
+    {
+     "id": "home-9",
+     "kind": "scope",
+     "query": "How much was the loft conversion quote?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": [
+       "memory:other-quote"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "hobbies",
+   "operations": [
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:guitar",
+     "text": "I am learning fingerstyle guitar from online lessons."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:choir-no",
+     "text": "I left the choir last year."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:pottery",
+     "text": "Pottery class runs Wednesday nights at the arts centre."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:books",
+     "text": "Currently reading a biography of Ada Lovelace."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:chess",
+     "text": "My online chess rating is about 1400."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:photo",
+     "text": "I shoot film on an old Olympus OM-1."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:knit",
+     "text": "Knitting a jumper for my nephew, halfway through the back."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:bird",
+     "text": "Started a garden bird count for the RSPB survey."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:q-hobby",
+     "text": "What hobbies am I doing this autumn? For the newsletter."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:hobby-article",
+     "text": "An article listed hobbies that reduce stress."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:club-old",
+     "text": "The camera club meets in the church hall."
+    },
+    {
+     "op": "correct",
+     "scope": "user:c9",
+     "ref": "memory:club-old",
+     "text": "The camera club now meets in the library meeting room."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:darts",
+     "text": "Played darts at the pub on Thursdays."
+    },
+    {
+     "op": "forget",
+     "scope": "user:c9",
+     "ref": "memory:darts",
+     "text": ""
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9-other",
+     "ref": "memory:other-hobby",
+     "text": "I race pigeons at weekends."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-hobbies-0",
+     "text": "The hallway bulb is out."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-hobbies-1",
+     "text": "Need to ring the bank."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-hobbies-2",
+     "text": "Bought oat milk by mistake."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-hobbies-3",
+     "text": "The cat sleeps on the radiator."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-hobbies-4",
+     "text": "Car wash on Saturday."
+    },
+    {
+     "op": "remember",
+     "scope": "user:c9",
+     "ref": "memory:filler-hobbies-5",
+     "text": "Library books due next week."
+    }
+   ],
+   "queries": [
+    {
+     "id": "hobbies-1",
+     "kind": "multi_weak",
+     "query": "What crafts and classes am I doing?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:pottery",
+       "memory:knit"
+      ],
+      "may_include": [
+       "memory:q-hobby",
+       "memory:guitar"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "hobbies-2",
+     "kind": "paraphrase",
+     "query": "What instrument am I learning?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:guitar"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "hobbies-3",
+     "kind": "paraphrase",
+     "query": "What camera do I use?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:photo"
+      ],
+      "may_include": [
+       "memory:club-old"
+      ],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "hobbies-4",
+     "kind": "distractor_topical",
+     "query": "What am I reading at the moment?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:books"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "hobbies-5",
+     "kind": "distractor_semantic",
+     "query": "Do I still sing with a group?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:choir-no"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "hobbies-6",
+     "kind": "abstention",
+     "query": "What is my golf handicap?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "hobbies-7",
+     "kind": "lifecycle",
+     "query": "Where does the camera club meet?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [
+       "memory:club-old"
+      ],
+      "may_include": [],
+      "must_exclude": []
+     }
+    },
+    {
+     "id": "hobbies-8",
+     "kind": "lifecycle",
+     "query": "Do I play darts?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": [
+       "memory:darts"
+      ]
+     }
+    },
+    {
+     "id": "hobbies-9",
+     "kind": "scope",
+     "query": "Do I race pigeons?",
+     "scope": "user:c9",
+     "expect": {
+      "must_include": [],
+      "may_include": [],
+      "must_exclude": [
+       "memory:other-hobby"
+      ]
+     }
+    }
+   ]
+  }
+ ]
+}
