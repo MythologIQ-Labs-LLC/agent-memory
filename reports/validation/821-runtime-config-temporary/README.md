@@ -26,7 +26,8 @@
   - All 7 security replays: PASS, with observations identical to #816.
   - Crash-window probe: identical to `e88bced2` once hashes are masked.
   - `adv821 --reps 3`: all OK. The only differences are process IDs and the counts from the timed kill loops.
-- **Full suites:** the results are in `runs/` once they finish.
+- **Full suites:** 3088 tests (3081 + 7 new). Without the model and with it, the failure set is identical to `e88bced2`. That set is the 4 baseline-freeze guards: `test_644` identity, two `test_770` freshness, and `test_benchmark_integration_contract` Runtime Baseline equivalence.
+- **Records:** `runs/tests-on-*.log` and `runs/probe-on-*.txt` hold the fail-first records on both trees. Both worktrees were clean before and after.
 
 ## Not changed (same fixed-temp pattern, outside this request)
 

@@ -12,3 +12,5 @@ replay public-tombstone-redaction-and-observer-separation-v3      PASS  src=5ca4
 replay evidence-reference-authorization-v1                        PASS  src=5ca4bc5b obs=70da7a3a6ff5 vs816=IDENTICAL
 crash_window rc=0 create  mid_bind_row   crashed=True  state_gen=None journal_gen=None file_gen=- row_gen=no_table witness=0 facts=0 -> failed_closed RuntimeRecoveryError: required SQLite runtime state is missing revision 5ca4bc5be2fa561b1100c5f9346c02ef9e80d148 runtime_tree_dirty=False 
 adv821 rc=0 {"head": "5ca4bc5be2", "summary": {"A1": {"reopen_ok": 3, "n": 3}, "A2": {"reopen_ok": 3, "n": 3}, "A3": {"reopen_ok": 3, "n": 3}, "B": "see json", "C": {"reopen_ok": 3, "n": 3}, "D": "see json", "E": "see json", "G": "see json"}}
+full-nomodel rc=1 FAILED (failures=4, skipped=35, expected failures=1) Ran 3088 tests in 274.609s
+full-model rc=1 FAILED (failures=4, skipped=30, expected failures=1) Ran 3088 tests in 274.403s
