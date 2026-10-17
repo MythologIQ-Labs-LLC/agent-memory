@@ -991,6 +991,8 @@ class AgentMemory:
                 "ranked_prefix_withheld"
             ] = ref in withheld
         summary["selection_funnel"] = {
+            "candidate_count": len(result.candidates),
+            "refused_count": len(result.refusals),
             "admitted_count": len(ranked),
             "sufficient_count": len(selected),
             "returned_count": len(selected) if k is None else min(len(selected), k),
