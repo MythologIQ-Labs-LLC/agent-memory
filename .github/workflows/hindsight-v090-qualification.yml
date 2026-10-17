@@ -182,3 +182,4 @@ jobs:
           name: hindsight-v090-qualification-${{ env.AGENT_MEMORY_COMMIT }}
           path: artifacts/hindsight-v090
           if-no-files-found: warn
+          retention-days: 90

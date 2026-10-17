@@ -96,6 +96,6 @@ Higher retrieval recall never compensates for a non-zero unsafe-equivalence, sco
 
 ## Exact-head evidence
 
-`.github/workflows/precedent-candidate-retrieval.yml` runs schema validation, the new focused tests, the existing #181 precedent-applicability tests, and the bounded harness on every push and pull request. It uploads `precedent-candidate-retrieval.json` as the `precedent-candidate-retrieval-evidence` artifact, bound to the pull-request head SHA.
+`.github/workflows/precedent-candidate-retrieval.yml` runs schema validation, the new focused tests, the existing #181 precedent-applicability tests, and the bounded harness. Since #662 it runs only on deliberate `workflow_dispatch` at an exact SHA; the focused and #181 tests also run in the protected doctrine umbrella on every PR. It uploads `precedent-candidate-retrieval.json` as the `precedent-candidate-retrieval-evidence` artifact (30-day retention), bound to the dispatched SHA.
 
 The artifact is evidence of retrieval and deterministic-applicability behavior. It is not permission, a policy decision, or a standing grant.
