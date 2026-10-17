@@ -209,6 +209,8 @@ class GovernedMemoryAdapter:
         self._substrate = substrate
         self._tenant = tenant
         self._clock = clock or Clock()
+        # #819 longitudinal lane: read-path option set by the opening handle, never persisted.
+        self.unspecified_intent_currentness = "off"
         self._selector = selector or DeterministicSelector()
         # GAP-SEC-08 (LD1): draw identifiers from the substrate when it offers
         # a counter, so adapters sharing a substrate cannot mint colliding ids.
@@ -813,7 +815,11 @@ class GovernedMemoryAdapter:
         return sorted(proposals, key=lambda item: item["proposal_id"])
 
     def cross_fact_applicability(self, admitted, intent) -> dict:
-        """#671 C2: cross-fact currentness evidence for an explicit-current recall (pure read)."""
+        """#671 C2: cross-fact currentness evidence for an explicit-current recall (pure read).
+
+        With ``unspecified_intent_currentness == "typed_replacement"`` (opt-in, #819) a recall
+        with no temporal cue also evaluates typed relations under the same guards.
+        """
 
         from .temporal_order_constraints import explicit_current_profile
 
@@ -825,6 +831,7 @@ class GovernedMemoryAdapter:
             fact_scope=self._fact_scope.get,
             same_scope=self._same_semantic_scope,
             explicit_current=explicit_current_profile,
+            unspecified_typed=self.unspecified_intent_currentness == "typed_replacement",
         )
 
     def _proposal_status(self, proposal: dict) -> str:

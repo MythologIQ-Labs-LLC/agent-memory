@@ -34,7 +34,7 @@ from typing import Any, Callable, Mapping, Sequence
 
 from . import proposition_semantics as semantics
 from . import typed_proposition as typed
-from .temporal_intent import DECLARED_TEMPORAL_KEY, TemporalIntent, parse_time
+from .temporal_intent import ATEMPORAL, DECLARED_TEMPORAL_KEY, UNSPECIFIED, TemporalIntent, parse_time
 
 WRITE_PROVENANCE_KEY = "write_provenance"
 WRITE_PROVENANCE_VERSION = "1.0.0"
@@ -45,6 +45,11 @@ SOURCE_REF_MAX = 256
 ACCEPTED_RELATION_BASES = ("single_valued_replacement_marker",)
 ACCEPTED_RELATION_BASIS_PREFIXES = ("explicit_termination:",)
 GUARDS = tuple(f"G{index}" for index in range(1, 14))
+# #819 longitudinal lane: the one query class for which unspecified intent may use this
+# evidence (ADR-039 "unless the policy explicitly justifies that default ... and records the
+# inference"). Opt-in per handle; only typed relations qualify; every guard G2-G13 still holds.
+UNSPECIFIED_TYPED_ACTIVATION = "unspecified_intent_typed_replacement_v1"
+EXPLICIT_CURRENT_ACTIVATION = "explicit_current"
 
 
 def default_source_ref(actor_id: str) -> str:
@@ -247,14 +252,25 @@ def evaluate(
     fact_scope: Callable[[str], Mapping[str, Any] | None],
     same_scope: Callable[[Mapping[str, Any] | None, Mapping[str, Any]], bool],
     explicit_current: Callable[[TemporalIntent], bool],
+    unspecified_typed: bool = False,
 ) -> dict[str, dict[str, Any]]:
     """C2: {target_uuid: {"accepted": [evidence...], "refusal": reason | None}} (pure read).
 
     Under any intent outside the explicit-current profile (G1) nothing is returned, so
     historical, as-of, atemporal and inferred recalls carry no cross-fact field at all.
+
+    The single exception is opt-in (``unspecified_typed``): a recall with no temporal cue at
+    all (mode ``atemporal_or_unspecified``, posture ``unspecified``) evaluates *typed*
+    relations only, under the same guards G2-G13; an interpreted (text-only) relation is
+    refused with ``unspecified_intent_requires_typed_relation``. Accepted evidence records
+    ``activation`` so the inference is visible.
     """
 
-    if not explicit_current(intent):
+    if explicit_current(intent):
+        activation = EXPLICIT_CURRENT_ACTIVATION
+    elif unspecified_typed and intent.mode == ATEMPORAL and intent.posture == UNSPECIFIED:
+        activation = UNSPECIFIED_TYPED_ACTIVATION
+    else:
         return {}
     admitted = list(admitted)
     admitted_set = set(admitted)
@@ -280,6 +296,8 @@ def evaluate(
             target_attributes = (getattr(target, "attributes", None) or {}) if target is not None else {}
             reason = _refusal(source, target, source_attributes, target_attributes, write_semantics, relation,
                               source_uuid, target_uuid, proposal_status, fact_scope, same_scope)
+            if reason is None and activation == UNSPECIFIED_TYPED_ACTIVATION and not _typed_relation(relation):
+                reason = "unspecified_intent_requires_typed_relation"
             if reason is None:
                 staged.append((source_uuid, target_uuid, relation))
             else:
@@ -296,6 +314,7 @@ def evaluate(
             "relation_basis": relation["basis"],
             "guards": list(GUARDS),
             "assertion_filter_version": ASSERTION_FILTER_VERSION,
+            **({"activation": activation} if activation == UNSPECIFIED_TYPED_ACTIVATION else {}),
             "authority_effect": "none",
         })
     return out
@@ -346,6 +365,7 @@ __all__ = [
     "ASSERTION_FILTER_VERSION",
     "CROSS_FACT_BASIS",
     "CROSS_FACT_LABEL",
+    "UNSPECIFIED_TYPED_ACTIVATION",
     "WRITE_PROVENANCE_KEY",
     "assertion_refusal",
     "typed_assertion_refusal",

@@ -256,6 +256,8 @@ SEMANTIC_CANDIDATE_LIMIT = 16
 #: unchanged default planner; retrieval, admission and ranking are identical in both modes.
 RECALL_CONTROL_DEFAULT = "off"
 RECALL_CONTROL_MODES = ("off", "shadow")
+UNSPECIFIED_INTENT_CURRENTNESS_DEFAULT = "off"
+UNSPECIFIED_INTENT_CURRENTNESS_MODES = ("off", "typed_replacement")
 
 
 def _semantic_route(root: Path, mode: str, representation_dir: str | Path | None) -> dict:
@@ -347,6 +349,7 @@ class AgentMemory:
         representation_dir: str | Path | None = None,
         recall_control: str = RECALL_CONTROL_DEFAULT,
         proposition_extractor: Any = None,
+        unspecified_intent_currentness: str = UNSPECIFIED_INTENT_CURRENTNESS_DEFAULT,
     ) -> "AgentMemory":
         """Create or recover one qualified local SQLite composition.
 
@@ -373,6 +376,15 @@ class AgentMemory:
         persisted with the fact; it is never recomputed, and recovery never calls an
         extractor. A failure or refusal persists no typed proposition and the write commits.
 
+        ``unspecified_intent_currentness`` (#819 longitudinal lane, experimental) is ``"off"``
+        (default) or ``"typed_replacement"``. With ``typed_replacement``, a recall whose query
+        carries no temporal cue and no declared intent also uses the guarded cross-fact
+        evidence that explicit-current recall uses, restricted to typed propositions
+        (caller-declared or extracted): a fact whose typed value an open, same-source,
+        same-scope ``change`` replaced is labelled ``limited_by_cross_fact_state_change``
+        (``cross_fact_activation`` records the inference) and ordered after unlimited facts.
+        It stays admitted and returned within budget; nothing is refused, applied or mutated.
+
         Existing durable state is never replaced by a fresh runtime. A partial
         state marker fails closed so a damaged or incomplete runtime cannot be
         silently reinitialized as empty memory.
@@ -387,6 +399,8 @@ class AgentMemory:
             raise ValueError("tenant, actor_id, charter_version, and scope must be non-empty")
         if recall_control not in RECALL_CONTROL_MODES:
             raise ValueError(f"recall_control must be one of {RECALL_CONTROL_MODES}")
+        if unspecified_intent_currentness not in UNSPECIFIED_INTENT_CURRENTNESS_MODES:
+            raise ValueError(f"unspecified_intent_currentness must be one of {UNSPECIFIED_INTENT_CURRENTNESS_MODES}")
         _checked_extractor(proposition_extractor)
 
         if config_path is None:
@@ -430,6 +444,7 @@ class AgentMemory:
             raise RuntimeRecoveryError(
                 f"requested tenant {tenant!r} does not match recovered runtime tenant {actual_tenant!r}"
             )
+        runtime.adapter.unspecified_intent_currentness = unspecified_intent_currentness
         return cls(
             root=root,
             config_path=resolved_config,

@@ -34,8 +34,13 @@ from .proposition_semantics import (
     STATE_CHANGE_CANDIDATE,
     WRITE_SEMANTICS_KEY,
 )
-from .cross_fact_currentness import CROSS_FACT_BASIS, CROSS_FACT_LABEL
-from .ranking_policy import PostAdmissionRankingPolicy, temporal_applicability, typed_temporal_evidence
+from .cross_fact_currentness import CROSS_FACT_BASIS, CROSS_FACT_LABEL, UNSPECIFIED_TYPED_ACTIVATION
+from .ranking_policy import (
+    PostAdmissionRankingPolicy,
+    _validity_window,
+    temporal_applicability,
+    typed_temporal_evidence,
+)
 from .temporal_intent import (
     CALLER_DECLARED,
     CURRENT,
@@ -505,9 +510,24 @@ class ExplicitCurrentCrossFactRankingPolicy(ExplicitCurrentConstrainedRankingPol
                 record["temporal_applicability"] = CROSS_FACT_LABEL
                 record["temporal_applicability_basis"] = CROSS_FACT_BASIS
                 record["cross_fact_limitation"] = [dict(item) for item in decision["limited"]]
+                if decision.get("activation"):
+                    record["cross_fact_activation"] = decision["activation"]
             else:
                 record["cross_fact_refusal_reason"] = decision["refusal"]
         return record
+
+    def keyed_stages(self, evidence: Mapping[str, Any], intent: TemporalIntent | None = None) -> list[tuple[str, Any]]:
+        """#819: a target limited under the unspecified-intent activation takes the demoted tier.
+
+        That intent does not order temporally, so the inherited tier stage would ignore the
+        label; this is the only addition, and only a limited target can carry the activation.
+        """
+
+        stages = super().keyed_stages(evidence, intent)
+        if (evidence.get("cross_fact_activation") == UNSPECIFIED_TYPED_ACTIVATION
+                and stages and stages[0][0] == "temporal_applicability_tier"):
+            stages[0] = ("temporal_applicability_tier", 1)
+        return stages
 
     def rank(
         self,
@@ -523,6 +543,13 @@ class ExplicitCurrentCrossFactRankingPolicy(ExplicitCurrentConstrainedRankingPol
         decisions: dict[str, dict[str, Any]] = {}
         if cross_fact:
             labels = {ref: temporal_applicability(intent, typed_temporal_evidence(fact_lookup(ref))) for ref in admitted}
+            unspecified = any(item.get("activation") == UNSPECIFIED_TYPED_ACTIVATION
+                              for record in cross_fact.values() for item in record.get("accepted") or ())
+            if unspecified:
+                # #819: this intent evaluates no applicability, so "no validity window at all"
+                # stands in for the explicit-current UNKNOWN_TEMPORAL_BASIS label.
+                labels = {ref: UNKNOWN_TEMPORAL_BASIS if _validity_window(typed_temporal_evidence(fact_lookup(ref)))[2] is None
+                          else "has_validity_window" for ref in admitted}
             for target, record in cross_fact.items():
                 if target not in labels:
                     continue
@@ -535,6 +562,8 @@ class ExplicitCurrentCrossFactRankingPolicy(ExplicitCurrentConstrainedRankingPol
                     # single pass: a source's own pre-cross-fact label decides its eligibility
                     usable = [item for item in accepted if labels.get(item["source_fact_uuid"]) == UNKNOWN_TEMPORAL_BASIS]
                     decisions[target] = {"limited": usable} if usable else {"refusal": "source_has_temporal_basis"}
+                    if usable and unspecified:
+                        decisions[target]["activation"] = UNSPECIFIED_TYPED_ACTIVATION
         token = _CROSS_FACT_DECISIONS.set(decisions)
         try:
             return super().rank(admitted, hits_by_candidate, fact_lookup, query=query, intent=intent)
