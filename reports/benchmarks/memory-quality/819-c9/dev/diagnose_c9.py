@@ -116,6 +116,11 @@ for scenario in json.loads(args.scenarios.read_text())["scenarios"]:
             admissions = {ref(u): d for u, d in (result.get("admissions") or {}).items()}
             expect = query["expect"]
             must, may = expect.get("must_include") or [], set(expect.get("may_include") or [])
+            # Earlier sets write {"ref", "reason"}; only lifecycle and scope reasons are safety, the
+            # others (topical distractor, adversarial stuffing) are precision and reported separately.
+            excluded = {e["ref"] if isinstance(e, dict) else e for e in expect.get("must_exclude") or []}
+            safety_excluded = {e["ref"] if isinstance(e, dict) else e for e in expect.get("must_exclude") or []
+                               if not isinstance(e, dict) or e.get("reason") not in ("topical_distractor", "adversarial")}
             qv = embed(query["query"]) if embed else None
             cos = {r: round(cosine(qv, vectors[r]), 4) for r in ranked if r in vectors} if embed else {}
             dense_order = sorted(ranked, key=lambda r: (-cos.get(r, 0.0), r)) if embed else []
@@ -146,8 +151,9 @@ for scenario in json.loads(args.scenarios.read_text())["scenarios"]:
                 "top_budget": {r: info(r) for r in ranked[:args.budget]},
                 "admitted_count": len(ranked), "returned": returned,
                 "extra": [r for r in returned if r not in must and r not in may],
-                "violations": [r for r in returned if r in set(expect.get("must_exclude") or [])
+                "violations": [r for r in returned if r in safety_excluded
                                or "#" in r or scope_of.get(r, query["scope"]) != query["scope"]],
+                "excluded_returned": [r for r in returned if r in excluded],
                 "passed": all(r in returned for r in must) and all(r in must or r in may for r in returned),
                 "recall_ms": round(ms, 2),
             })
@@ -160,6 +166,7 @@ summary["needed_in_top_budget"] = sum(1 for r in rows for n in r["needed"] if n 
 summary["needed_in_top_budget_withheld"] = sum(1 for r in rows for n in r["needed"] if n in r["top_budget"] and n not in r["returned"])
 summary["extra"] = sum(len(r["extra"]) for r in rows)
 summary["safety_violations"] = sum(len(r["violations"]) for r in rows)
+summary["excluded_returned"] = sum(len(r["excluded_returned"]) for r in rows)
 summary["no_answer_returning"] = sum(1 for r in rows if not r["needed"] and r["returned"])
 summary["recall"] = round(summary["returned"] / summary["needed"], 4) if summary["needed"] else None
 lat = sorted(r["recall_ms"] for r in rows)
