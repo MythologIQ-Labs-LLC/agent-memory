@@ -1,5 +1,6 @@
 # #821 follow-up: `runtime-config.json` through an exclusive temporary
 
+- **Superseded by `../821-fixed-temporaries/` (`f76ff127`).** The surface blob there is `fcd44000`, not `1a2630cd`.
 - **Change:** `5ca4bc5be2fa561b1100c5f9346c02ef9e80d148`, parent `e88bced2` (the #821 R-1 repair). Its `reference/` tree is `9d175984`. It is carried here as `0001-runtime-config-exclusive-temporary.patch`, and has not been pushed to any implementation branch.
 - **Protected file:** `reference/agentmem_ref/api/surface.py` changes from blob `ba8924d4` to `1a2630cd`. A Runtime Baseline successor must bind the new blob.
 - **Independence:** this session authored the change, so it cannot qualify it. Another reviewer must re-qualify it. The #821 R-1 qualification of `e88bced2` is unaffected.

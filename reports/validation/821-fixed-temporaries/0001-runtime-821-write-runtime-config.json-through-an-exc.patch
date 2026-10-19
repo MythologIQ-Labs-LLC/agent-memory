@@ -1,0 +1,330 @@
+From 5ca4bc5be2fa561b1100c5f9346c02ef9e80d148 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sat, 17 Oct 2026 18:49:25 +0000
+Subject: [PATCH 1/2] runtime(#821): write runtime-config.json through an
+ exclusive per-writer temporary [skip ci]
+
+AgentMemory.open writes the packaged default runtime-config.json when a store
+has none. It wrote through one shared .runtime-config.json.tmp opened with
+truncation, the pattern R-1 found in the generation witness. On e88bced2:
+- two openers of a new store could truncate each other's inode; a crash in
+  between published an empty configuration, and every later open refused
+  (runtime configuration is not valid JSON);
+- a symlink planted at that name was followed, overwriting a file outside the
+  store, and the configuration became the symlink;
+- a FIFO planted there blocked the first open.
+
+_atomic_write_text now creates .runtime-config.json.<pid>.<random>.tmp with
+O_CREAT|O_EXCL (mode 0o666 less umask, as before). It keeps write, fsync and
+os.replace, and on any failure before the rename closes its descriptor and
+removes only its own temporary.
+
+tests/test_821_runtime_config_temporary.py adds 7 tests. The race, symlink,
+FIFO and failure-hygiene tests fail on e88bced2 (6 of 7) and pass here (7/7,
+3 runs).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_011h1ADQyj3ZTu9UHgBAhocF
+---
+ reference/agentmem_ref/api/surface.py         |  48 +++-
+ .../test_821_runtime_config_temporary.py      | 222 ++++++++++++++++++
+ 2 files changed, 262 insertions(+), 8 deletions(-)
+ create mode 100644 reference/tests/test_821_runtime_config_temporary.py
+
+diff --git a/reference/agentmem_ref/api/surface.py b/reference/agentmem_ref/api/surface.py
+index ba8924d4..1a2630cd 100644
+--- a/reference/agentmem_ref/api/surface.py
++++ b/reference/agentmem_ref/api/surface.py
+@@ -24,6 +24,7 @@ import importlib.resources
+ import json
+ import os
+ from pathlib import Path
++import secrets
+ from typing import Any, Callable, Mapping, Sequence
+ 
+ from ..core import policy
+@@ -323,14 +324,45 @@ def _packaged_profile_text() -> str:
+ 
+ def _atomic_write_text(path: Path, text: str) -> None:
+     path.parent.mkdir(parents=True, exist_ok=True)
+-    temporary = path.with_name(f".{path.name}.tmp")
+-    with temporary.open("w", encoding="utf-8", newline="\n") as handle:
+-        handle.write(text)
+-        if not text.endswith("\n"):
+-            handle.write("\n")
+-        handle.flush()
+-        os.fsync(handle.fileno())
+-    os.replace(temporary, path)
++    temporary, descriptor = _exclusive_temporary(path)
++    try:
++        try:
++            handle = os.fdopen(descriptor, "w", encoding="utf-8", newline="\n")
++        except BaseException:
++            os.close(descriptor)
++            raise
++        with handle:
++            handle.write(text)
++            if not text.endswith("\n"):
++                handle.write("\n")
++            handle.flush()
++            os.fsync(handle.fileno())
++        os.replace(temporary, path)
++    except BaseException:
++        try:
++            os.unlink(temporary)
++        except OSError:
++            pass
++        raise
++
++
++def _exclusive_temporary(path: Path) -> tuple[Path, int]:
++    """A temporary only this writer can have opened (#821, as for the generation witness).
++
++    With one shared ``.<name>.tmp``, two processes opening a new store could truncate each
++    other's inode, and a crash in between published an empty ``runtime-config.json`` that refused
++    every later open; a pre-planted symlink or FIFO at that predictable name was followed or
++    blocked on. ``O_EXCL`` with an unpredictable name refuses any existing path. The mode stays
++    ``0o666`` less the umask, as ``open("w")`` created it."""
++
++    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_BINARY", 0)
++    for _ in range(8):
++        temporary = path.with_name(f".{path.name}.{os.getpid()}.{secrets.token_hex(8)}.tmp")
++        try:
++            return temporary, os.open(temporary, flags, 0o666)
++        except FileExistsError:
++            continue
++    raise FileExistsError(f"no unused temporary name for {path.name}")
+ 
+ 
+ def _checked_extractor(extractor: Any) -> Any:
+diff --git a/reference/tests/test_821_runtime_config_temporary.py b/reference/tests/test_821_runtime_config_temporary.py
+new file mode 100644
+index 00000000..4ee7ed20
+--- /dev/null
++++ b/reference/tests/test_821_runtime_config_temporary.py
+@@ -0,0 +1,222 @@
++"""#821 follow-up: ``runtime-config.json`` is written through a temporary only its writer can open.
++
++``AgentMemory.open`` writes the packaged default ``runtime-config.json`` when a store has none.
++Up to ``e88bced2`` it did so through one shared ``.runtime-config.json.tmp`` opened with
++truncation, the same pattern R-1 found in the generation witness:
++
++- two processes opening a new store could truncate each other's inode, and a crash in between
++  published an empty configuration, so every later open refused with
++  ``runtime configuration is not valid JSON``;
++- a symlink planted at the predictable name was followed, overwriting a file outside the store,
++  and the configuration itself became that symlink;
++- a FIFO planted there blocked the first open forever.
++
++Faults are injected at the OS boundary only, in real child processes. Tests marked FAIL-FIRST fail
++on ``e88bced2``.
++"""
++
++from __future__ import annotations
++
++import json
++import os
++import subprocess
++import sys
++import tempfile
++import time
++import unittest
++from pathlib import Path
++from unittest import mock
++
++sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
++
++from agentmem_ref import AgentMemory  # noqa: E402
++from agentmem_ref.api import surface  # noqa: E402
++
++REFERENCE = Path(__file__).resolve().parents[1]
++CONFIG = "runtime-config.json"
++OPEN = dict(tenant="tenant:rc", actor_id="agent:rc", scope="project:rc", purpose="runtime-config temporary")
++CRASH = 77
++
++# argv: reference root role barrier. Role A holds its rename until B is done; role B dies as soon
++# as it has opened a configuration temporary for writing, before writing a byte.
++_OPENER = r"""
++import io, os, sys, time, builtins, pathlib
++sys.path.insert(0, sys.argv[1])
++root, role, barrier = sys.argv[2], sys.argv[3], pathlib.Path(sys.argv[4])
++
++def _temporary(path):
++    try:
++        name = os.path.basename(os.fspath(path))
++    except TypeError:
++        return False
++    return name.startswith(".runtime-config.json") and name.endswith(".tmp")
++
++_io_open, _os_open, _replace = io.open, os.open, os.replace
++
++def io_open(path, mode="r", *args, **kwargs):
++    handle = _io_open(path, mode, *args, **kwargs)
++    if role == "B" and _temporary(path) and any(c in mode for c in "wax+"):
++        os._exit(77)
++    return handle
++
++def os_open(path, flags, *args, **kwargs):
++    descriptor = _os_open(path, flags, *args, **kwargs)
++    if role == "B" and _temporary(path) and flags & (os.O_WRONLY | os.O_RDWR):
++        os._exit(77)
++    return descriptor
++
++def replace(source, destination, *args, **kwargs):
++    if role == "A" and os.path.basename(os.fspath(destination)) == "runtime-config.json":
++        (barrier / "a-holding").touch()
++        deadline = time.monotonic() + 120
++        while not (barrier / "b-done").exists() and time.monotonic() < deadline:
++            time.sleep(0.01)
++    return _replace(source, destination, *args, **kwargs)
++
++io.open = builtins.open = io_open
++os.open = os_open
++os.replace = replace
++from agentmem_ref import AgentMemory
++with AgentMemory.open(root, tenant="tenant:rc", actor_id="agent:rc", scope="project:rc",
++                      purpose="runtime-config temporary") as memory:
++    memory.remember("memory:" + role, "Writer " + role + " committed this.")
++"""
++
++_PLAIN_OPEN = r"""
++import sys
++sys.path.insert(0, sys.argv[1])
++from agentmem_ref import AgentMemory
++with AgentMemory.open(sys.argv[2], tenant="tenant:rc", actor_id="agent:rc", scope="project:rc",
++                      purpose="runtime-config temporary") as memory:
++    memory.remember("memory:plain", "A plain open committed this.")
++"""
++
++
++class _Folder(unittest.TestCase):
++    def setUp(self) -> None:
++        self._folder = tempfile.TemporaryDirectory()
++        self.addCleanup(self._folder.cleanup)
++        self.base = Path(self._folder.name)
++        self.root = self.base / "store"
++        self.root.mkdir()
++
++    def temporaries(self) -> list[str]:
++        return sorted(p.name for p in self.root.iterdir() if p.name.startswith(f".{CONFIG}"))
++
++    def assert_opens_with_a_valid_configuration(self) -> None:
++        with AgentMemory.open(self.root, **OPEN) as memory:
++            self.assertTrue(memory.remember("memory:after", "Opened after the race.")["committed"])
++        config = self.root / CONFIG
++        self.assertFalse(config.is_symlink(), "the configuration must be a regular file")
++        self.assertIsInstance(json.loads(config.read_bytes()), dict)
++
++
++class ConcurrentFirstOpens(_Folder):
++    def race(self) -> int:
++        barrier = self.base / "barrier"
++        barrier.mkdir()
++        command = [sys.executable, "-c", _OPENER, str(REFERENCE), str(self.root)]
++        a = subprocess.Popen(command + ["A", str(barrier)], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
++        try:
++            deadline = time.monotonic() + 120
++            while not (barrier / "a-holding").exists():
++                if a.poll() is not None or time.monotonic() > deadline:
++                    raise AssertionError(f"opener A never reached its rename: {a.communicate()[1][-2000:]}")
++                time.sleep(0.01)
++            b = subprocess.run(command + ["B", str(barrier)], capture_output=True, text=True, timeout=120)
++        finally:
++            (barrier / "b-done").touch()
++            try:
++                _, a_err = a.communicate(timeout=120)
++            except subprocess.TimeoutExpired:
++                a.kill()
++                raise
++        if a.returncode != 0:
++            raise AssertionError(f"opener A failed ({a.returncode}): {a_err[-2000:]}")
++        return b.returncode
++
++    def test_an_opener_killed_beside_another_never_publishes_an_empty_configuration(self):  # FAIL-FIRST
++        self.assertEqual(self.race(), CRASH)
++        # e88bced2: both openers used one temporary name, so A published the inode B had truncated
++        self.assertNotEqual((self.root / CONFIG).read_bytes(), b"", "an empty configuration was published")
++        self.assert_opens_with_a_valid_configuration()
++
++
++class PlantedTemporaryPaths(_Folder):
++    def test_a_symlink_at_the_old_fixed_name_is_never_followed(self):  # FAIL-FIRST
++        target = self.base / "outside-the-store.txt"
++        target.write_text("must not change\n")
++        os.symlink(target, self.root / f".{CONFIG}.tmp")
++        with AgentMemory.open(self.root, **OPEN) as memory:
++            memory.remember("memory:s", "Opened beside a planted symlink.")
++        self.assertEqual(target.read_text(), "must not change\n")
++        self.assert_opens_with_a_valid_configuration()
++
++    def test_a_fifo_at_the_old_fixed_name_does_not_block_the_first_open(self):  # FAIL-FIRST
++        os.mkfifo(self.root / f".{CONFIG}.tmp")
++        try:
++            done = subprocess.run([sys.executable, "-c", _PLAIN_OPEN, str(REFERENCE), str(self.root)],
++                                  capture_output=True, text=True, timeout=30)
++        except subprocess.TimeoutExpired:
++            self.fail("the first open blocked on a FIFO at the configuration's temporary name")
++        self.assertEqual(done.returncode, 0, done.stderr[-2000:])
++        self.assert_opens_with_a_valid_configuration()
++
++
++class TemporaryHygiene(_Folder):
++    """Unit level: faults reach only the configuration write (``surface.os`` is the global ``os``)."""
++
++    TEXT = '{"profile": "hygiene"}'
++
++    def test_another_writer_temporary_is_never_opened_or_truncated(self):
++        taken = self.root / f".{CONFIG}.{os.getpid()}.{'0' * 16}.tmp"
++        taken.write_bytes(b"another writer's bytes")
++        tokens = iter(["0" * 16, "1" * 16])
++        with mock.patch.object(surface.secrets, "token_hex", lambda _n: next(tokens)):
++            surface._atomic_write_text(self.root / CONFIG, self.TEXT)
++        self.assertEqual(taken.read_bytes(), b"another writer's bytes")
++        self.assertEqual(json.loads((self.root / CONFIG).read_bytes()), {"profile": "hygiene"})
++        self.assertEqual(self.temporaries(), [taken.name])
++
++    def test_a_failed_write_removes_its_temporary_and_publishes_nothing(self):
++        real_fsync = os.fsync
++
++        def failing_fsync(descriptor):
++            raise OSError(28, "No space left on device (injected)")
++
++        with mock.patch.object(surface.os, "fsync", failing_fsync):
++            with self.assertRaises(OSError):
++                surface._atomic_write_text(self.root / CONFIG, self.TEXT)
++        self.assertIs(os.fsync, real_fsync)
++        self.assertFalse((self.root / CONFIG).exists())
++        self.assertEqual(self.temporaries(), [])
++        self.assert_opens_with_a_valid_configuration()
++
++    def test_a_temporary_that_cannot_be_wrapped_is_closed_and_removed(self):
++        closed = []
++        real_close = os.close
++
++        def tracking_close(descriptor):
++            closed.append(descriptor)
++            return real_close(descriptor)
++
++        with mock.patch.object(surface.os, "fdopen", side_effect=OSError("injected")), \
++                mock.patch.object(surface.os, "close", tracking_close):
++            with self.assertRaises(OSError):
++                surface._atomic_write_text(self.root / CONFIG, self.TEXT)
++        self.assertTrue(closed, "the exclusive descriptor must be closed")
++        self.assertFalse((self.root / CONFIG).exists())
++        self.assertEqual(self.temporaries(), [])
++
++    def test_the_configuration_keeps_the_mode_open_w_gave_it(self):
++        previous = os.umask(0o027)
++        try:
++            with AgentMemory.open(self.root, **OPEN):
++                pass
++        finally:
++            os.umask(previous)
++        self.assertEqual((self.root / CONFIG).stat().st_mode & 0o777, 0o640)
++
++
++if __name__ == "__main__":
++    unittest.main()
+-- 
+2.43.0
+

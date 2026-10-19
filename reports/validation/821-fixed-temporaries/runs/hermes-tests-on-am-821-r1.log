@@ -1,0 +1,70 @@
+test_a_failed_rename_removes_the_temporary_and_keeps_the_previous_config (tests.test_config_temporary.SaveConfigTemporary.test_a_failed_rename_removes_the_temporary_and_keeps_the_previous_config) ... FAIL
+test_a_fifo_at_the_old_fixed_name_does_not_block (tests.test_config_temporary.SaveConfigTemporary.test_a_fifo_at_the_old_fixed_name_does_not_block) ... FAIL
+test_a_symlink_at_the_old_fixed_name_is_never_followed (tests.test_config_temporary.SaveConfigTemporary.test_a_symlink_at_the_old_fixed_name_is_never_followed) ... FAIL
+test_another_writer_temporary_is_never_opened_or_truncated (tests.test_config_temporary.SaveConfigTemporary.test_another_writer_temporary_is_never_opened_or_truncated) ... ok
+test_the_config_is_0600_whatever_the_umask (tests.test_config_temporary.SaveConfigTemporary.test_the_config_is_0600_whatever_the_umask) ... ok
+
+======================================================================
+FAIL: test_a_failed_rename_removes_the_temporary_and_keeps_the_previous_config (tests.test_config_temporary.SaveConfigTemporary.test_a_failed_rename_removes_the_temporary_and_keeps_the_previous_config)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-rc/integrations/hermes-agent-memory/tests/test_config_temporary.py", line 74, in test_a_failed_rename_removes_the_temporary_and_keeps_the_previous_config
+    self.assertEqual(self.temporaries(), [])
+AssertionError: Lists differ: ['config.tmp'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'config.tmp'
+
+- ['config.tmp']
++ []
+
+======================================================================
+FAIL: test_a_fifo_at_the_old_fixed_name_does_not_block (tests.test_config_temporary.SaveConfigTemporary.test_a_fifo_at_the_old_fixed_name_does_not_block)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-rc/integrations/hermes-agent-memory/tests/test_config_temporary.py", line 61, in test_a_fifo_at_the_old_fixed_name_does_not_block
+    done = subprocess.run([sys.executable, "-c", script, str(SOURCE), str(self.home)],
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 550, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 1209, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 2116, in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+  File "/usr/lib/python3.12/subprocess.py", line 1253, in _check_timeout
+    raise TimeoutExpired(
+subprocess.TimeoutExpired: Command '['/home/user/eval/venv-neutral/bin/python', '-c', "import sys; sys.path.insert(0, sys.argv[1]);from agent_memory_hermes.config import IntegrationConfig, save_config;save_config(sys.argv[2], IntegrationConfig(mode='observe'))", '/home/user/eval/am-821-r1/integrations/hermes-agent-memory/src', '/tmp/tmpczmhcnlf/home']' timed out after 15 seconds
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-rc/integrations/hermes-agent-memory/tests/test_config_temporary.py", line 64, in test_a_fifo_at_the_old_fixed_name_does_not_block
+    self.fail("save_config blocked on a FIFO at its old temporary name")
+AssertionError: save_config blocked on a FIFO at its old temporary name
+
+======================================================================
+FAIL: test_a_symlink_at_the_old_fixed_name_is_never_followed (tests.test_config_temporary.SaveConfigTemporary.test_a_symlink_at_the_old_fixed_name_is_never_followed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-rc/integrations/hermes-agent-memory/tests/test_config_temporary.py", line 49, in test_a_symlink_at_the_old_fixed_name_is_never_followed
+    self.assertEqual(target.read_text(), "must not change\n")
+AssertionError: '{\n  "expected_hermes_revision": "165c889[214 chars]n}\n' != 'must not change\n'
++ must not change
+- {
+-   "expected_hermes_revision": "165c889e5b4277b56dadd42949a4112c1e6175a6",
+-   "governor_command": [],
+-   "governor_required": true,
+-   "governor_timeout_seconds": 10.0,
+-   "mode": "observe",
+-   "record_payloads": false,
+-   "require_exact_profile": true
+- }
+
+
+----------------------------------------------------------------------
+Ran 5 tests in 15.029s
+
+FAILED (failures=3)

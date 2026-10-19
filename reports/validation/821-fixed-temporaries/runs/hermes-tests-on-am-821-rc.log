@@ -1,0 +1,10 @@
+test_a_failed_rename_removes_the_temporary_and_keeps_the_previous_config (tests.test_config_temporary.SaveConfigTemporary.test_a_failed_rename_removes_the_temporary_and_keeps_the_previous_config) ... ok
+test_a_fifo_at_the_old_fixed_name_does_not_block (tests.test_config_temporary.SaveConfigTemporary.test_a_fifo_at_the_old_fixed_name_does_not_block) ... ok
+test_a_symlink_at_the_old_fixed_name_is_never_followed (tests.test_config_temporary.SaveConfigTemporary.test_a_symlink_at_the_old_fixed_name_is_never_followed) ... ok
+test_another_writer_temporary_is_never_opened_or_truncated (tests.test_config_temporary.SaveConfigTemporary.test_another_writer_temporary_is_never_opened_or_truncated) ... ok
+test_the_config_is_0600_whatever_the_umask (tests.test_config_temporary.SaveConfigTemporary.test_the_config_is_0600_whatever_the_umask) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.064s
+
+OK
