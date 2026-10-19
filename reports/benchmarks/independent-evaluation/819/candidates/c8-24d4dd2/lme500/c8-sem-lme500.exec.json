@@ -1,0 +1,44 @@
+{
+  "argv": [
+    "/home/user/eval/venv-c8/bin/python",
+    "reference/run_longmemeval.py",
+    "--backend",
+    "agent_memory",
+    "--input",
+    "/home/user/eval/data/longmemeval_s_cleaned.json",
+    "--corpus-class",
+    "external_frozen",
+    "--granularity",
+    "session",
+    "--granularity",
+    "turn",
+    "--agent-memory-semantic-retrieval",
+    "required",
+    "--output",
+    "/home/user/eval/evidence/c8-sem-lme500.json.partial"
+  ],
+  "cwd": "/home/user/eval/am-c8",
+  "exit_status": 0,
+  "started_utc": "2026-10-16T15:54:47Z",
+  "wall_seconds": 4375.216,
+  "user_cpu_seconds": 3198.974,
+  "system_cpu_seconds": 288.542,
+  "peak_rss_mib": 362.5,
+  "env": {
+    "PYTHONHASHSEED": "0",
+    "AGENT_MEMORY_REPRESENTATION_DIR": "/home/user/eval/semantic-model",
+    "HF_HUB_OFFLINE": "1",
+    "OMP_NUM_THREADS": null,
+    "VIRTUAL_ENV": null
+  },
+  "secrets_present": {
+    "OPENAI_API_KEY": false,
+    "ANTHROPIC_API_KEY": false,
+    "HF_TOKEN": false
+  },
+  "host": {
+    "platform": "Linux-6.18.44-fc-v139-x86_64-with-glibc2.39",
+    "cpu_count": 4,
+    "python": "3.12.3"
+  }
+}

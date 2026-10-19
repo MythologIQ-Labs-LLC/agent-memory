@@ -1,0 +1,20 @@
+test_a_writer_killed_beside_another_never_publishes_a_truncated_file (tests.test_821_fixed_temporaries.ConcurrentWriters.test_a_writer_killed_beside_another_never_publishes_a_truncated_file) ... ok
+test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer (tests.test_821_fixed_temporaries.PlantedTemporaryPaths.test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer) ... ok
+test_a_symlink_at_the_old_fixed_name_is_never_followed (tests.test_821_fixed_temporaries.PlantedTemporaryPaths.test_a_symlink_at_the_old_fixed_name_is_never_followed) ... ok
+test_a_failed_rename_leaves_the_previous_file_intact (tests.test_821_fixed_temporaries.TemporaryHygiene.test_a_failed_rename_leaves_the_previous_file_intact) ... ok
+test_a_failed_rename_removes_the_temporary_and_publishes_nothing (tests.test_821_fixed_temporaries.TemporaryHygiene.test_a_failed_rename_removes_the_temporary_and_publishes_nothing) ... ok
+test_another_writer_temporary_is_never_opened_or_truncated (tests.test_821_fixed_temporaries.TemporaryHygiene.test_another_writer_temporary_is_never_opened_or_truncated) ... ok
+test_contents_are_byte_identical_to_the_fixed_name_writers (tests.test_821_fixed_temporaries.TemporaryHygiene.test_contents_are_byte_identical_to_the_fixed_name_writers) ... ok
+test_the_file_keeps_the_mode_open_wb_gave_it (tests.test_821_fixed_temporaries.TemporaryHygiene.test_the_file_keeps_the_mode_open_wb_gave_it) ... ok
+test_an_opener_killed_beside_another_never_publishes_an_empty_configuration (tests.test_821_runtime_config_temporary.ConcurrentFirstOpens.test_an_opener_killed_beside_another_never_publishes_an_empty_configuration) ... ok
+test_a_fifo_at_the_old_fixed_name_does_not_block_the_first_open (tests.test_821_runtime_config_temporary.PlantedTemporaryPaths.test_a_fifo_at_the_old_fixed_name_does_not_block_the_first_open) ... ok
+test_a_symlink_at_the_old_fixed_name_is_never_followed (tests.test_821_runtime_config_temporary.PlantedTemporaryPaths.test_a_symlink_at_the_old_fixed_name_is_never_followed) ... ok
+test_a_failed_write_removes_its_temporary_and_publishes_nothing (tests.test_821_runtime_config_temporary.TemporaryHygiene.test_a_failed_write_removes_its_temporary_and_publishes_nothing) ... ok
+test_a_temporary_that_cannot_be_wrapped_is_closed_and_removed (tests.test_821_runtime_config_temporary.TemporaryHygiene.test_a_temporary_that_cannot_be_wrapped_is_closed_and_removed) ... ok
+test_another_writer_temporary_is_never_opened_or_truncated (tests.test_821_runtime_config_temporary.TemporaryHygiene.test_another_writer_temporary_is_never_opened_or_truncated) ... ok
+test_the_configuration_keeps_the_mode_open_w_gave_it (tests.test_821_runtime_config_temporary.TemporaryHygiene.test_the_configuration_keeps_the_mode_open_w_gave_it) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 4.724s
+
+OK

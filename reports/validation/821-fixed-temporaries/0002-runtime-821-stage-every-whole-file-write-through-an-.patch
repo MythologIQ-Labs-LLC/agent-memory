@@ -1,0 +1,872 @@
+From f76ff127b32e241b4afc822d5440e1f39a67b13d Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Mon, 19 Oct 2026 18:26:23 +0000
+Subject: [PATCH 2/2] runtime(#821): stage every whole-file write through an
+ exclusive per-writer temporary [skip ci]
+
+Six more writers staged into one fixed name opened with truncation, the
+pattern R-1 found in the generation witness and runtime-config.json:
+restart_runtime._atomic_json_write (file-checkpoint profile), the
+checkpoint_transactions journal restore, configured_restart._atomic_json_write
+(legacy binding file), checkpoint_migration._atomic_json_write,
+evaluation.contract.write_run and gauntlet_orchestrator._write_json. On
+5ca4bc5b, for every one of them: a writer killed beside another published an
+empty file; a symlink at the fixed name was followed; a FIFO there blocked
+the writer; a failed rename left the temporary behind.
+
+agentmem_ref/core/atomic_files.py (core layer, standard library only, so
+every layer and the evaluation package can use it without importing the
+runtime; registered in scripts/restructure_package.py with its alias) creates
+.<name>.<pid>.<random>.tmp with O_CREAT|O_EXCL (mode 0o666 less umask, as
+before), writes, fsyncs where the writer did, renames, and on any failure
+before the rename closes and removes only its own temporary. All seven
+writers, runtime-config.json included, now use it; function names,
+signatures, bytes written and directory fsyncs are unchanged. The two
+evaluation writers keep their no-fsync behaviour.
+
+The Hermes integration's save_config had the same defect at config.tmp, and
+its chmod also followed the symlink; it now creates its temporary exclusively
+at 0600.
+
+Tests: reference/tests/test_821_fixed_temporaries.py (8, per writer) and
+integrations/hermes-agent-memory/tests/test_config_temporary.py (5). The race,
+symlink, FIFO and failed-rename tests fail on 5ca4bc5b / e88bced2 and pass
+here.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_011h1ADQyj3ZTu9UHgBAhocF
+---
+ .../src/agent_memory_hermes/config.py         |  43 ++-
+ .../tests/test_config_temporary.py            |  96 +++++++
+ reference/agentmem_ref/api/surface.py         |  43 +--
+ reference/agentmem_ref/atomic_files.py        |   4 +
+ reference/agentmem_ref/core/atomic_files.py   |  56 ++++
+ reference/agentmem_ref/evaluation/contract.py |   6 +-
+ .../evaluation/gauntlet_orchestrator.py       |   6 +-
+ .../memory/checkpoint_migration.py            |   9 +-
+ .../runtime/checkpoint_transactions.py        |   8 +-
+ .../runtime/configured_restart.py             |  10 +-
+ .../agentmem_ref/runtime/restart_runtime.py   |   9 +-
+ reference/tests/test_821_fixed_temporaries.py | 266 ++++++++++++++++++
+ .../test_821_runtime_config_temporary.py      |  11 +-
+ scripts/restructure_package.py                |   2 +-
+ 14 files changed, 482 insertions(+), 87 deletions(-)
+ create mode 100644 integrations/hermes-agent-memory/tests/test_config_temporary.py
+ create mode 100644 reference/agentmem_ref/atomic_files.py
+ create mode 100644 reference/agentmem_ref/core/atomic_files.py
+ create mode 100644 reference/tests/test_821_fixed_temporaries.py
+
+diff --git a/integrations/hermes-agent-memory/src/agent_memory_hermes/config.py b/integrations/hermes-agent-memory/src/agent_memory_hermes/config.py
+index 43569988..9a0c4ab8 100644
+--- a/integrations/hermes-agent-memory/src/agent_memory_hermes/config.py
++++ b/integrations/hermes-agent-memory/src/agent_memory_hermes/config.py
+@@ -6,6 +6,7 @@ import json
+ import os
+ from dataclasses import asdict, dataclass, replace
+ from pathlib import Path
++import secrets
+ import shlex
+ import subprocess
+ from typing import Any, Mapping, Sequence
+@@ -108,13 +109,47 @@ def save_config(hermes_home: str | Path, config: IntegrationConfig) -> Path:
+     config.validate()
+     path = config_path(hermes_home)
+     path.parent.mkdir(parents=True, exist_ok=True)
+-    tmp = path.with_suffix(".tmp")
+-    tmp.write_text(json.dumps(config.to_dict(), indent=2, sort_keys=True) + "\n", encoding="utf-8")
+-    os.chmod(tmp, 0o600)
+-    os.replace(tmp, path)
++    _replace_private(path, (json.dumps(config.to_dict(), indent=2, sort_keys=True) + "\n").encode("utf-8"))
+     return path
+ 
+ 
++def _replace_private(path: Path, payload: bytes) -> None:
++    """Write ``payload`` to a temporary only this writer can have opened, mode 0600, then rename it
++    onto ``path``. A shared ``<stem>.tmp`` let two writers truncate each other's file, and a symlink
++    planted there was followed by the write and the chmod; ``O_EXCL`` with an unpredictable name
++    refuses any existing path. On failure the temporary is removed and ``path`` is untouched."""
++
++    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_BINARY", 0)
++    for _ in range(8):
++        temporary = path.with_name(f".{path.name}.{os.getpid()}.{secrets.token_hex(8)}.tmp")
++        try:
++            descriptor = os.open(temporary, flags, 0o600)
++            break
++        except FileExistsError:
++            continue
++    else:
++        raise FileExistsError(f"no unused temporary name for {path.name}")
++    try:
++        try:
++            if hasattr(os, "fchmod"):
++                os.fchmod(descriptor, 0o600)
++            else:  # pragma: no cover - Windows keeps only the read-only bit
++                os.chmod(temporary, 0o600)
++            handle = os.fdopen(descriptor, "wb")
++        except BaseException:
++            os.close(descriptor)
++            raise
++        with handle:
++            handle.write(payload)
++        os.replace(temporary, path)
++    except BaseException:
++        try:
++            os.unlink(temporary)
++        except OSError:
++            pass
++        raise
++
++
+ def detect_hermes_revision() -> str:
+     """Return the exact Hermes git revision when deterministically discoverable.
+ 
+diff --git a/integrations/hermes-agent-memory/tests/test_config_temporary.py b/integrations/hermes-agent-memory/tests/test_config_temporary.py
+new file mode 100644
+index 00000000..add6a720
+--- /dev/null
++++ b/integrations/hermes-agent-memory/tests/test_config_temporary.py
+@@ -0,0 +1,96 @@
++"""#821 follow-up: ``save_config`` stages through a temporary only it can open.
++
++Up to ``5ca4bc5b`` it wrote ``config.tmp`` (``with_suffix``), then chmodded and renamed it. A symlink
++planted at that name was followed by both the write and the chmod, so a file elsewhere was
++overwritten and made 0600; a FIFO there blocked; a failed rename left the temporary behind. Tests
++marked FAIL-FIRST fail on ``5ca4bc5b``.
++"""
++
++from __future__ import annotations
++
++import json
++import os
++from pathlib import Path
++import subprocess
++import sys
++import tempfile
++import unittest
++from unittest import mock
++
++from agent_memory_hermes.config import IntegrationConfig, config_path, save_config
++
++SOURCE = Path(sys.modules["agent_memory_hermes.config"].__file__).resolve().parents[1]
++CONFIG = IntegrationConfig(mode="observe")
++
++
++class SaveConfigTemporary(unittest.TestCase):
++    def setUp(self) -> None:
++        self._folder = tempfile.TemporaryDirectory()
++        self.addCleanup(self._folder.cleanup)
++        self.base = Path(self._folder.name)
++        self.home = self.base / "home"
++        self.path = config_path(self.home)
++        self.path.parent.mkdir(parents=True)
++
++    def temporaries(self) -> list[str]:
++        return sorted(p.name for p in self.path.parent.iterdir() if p.name != self.path.name)
++
++    def assert_saved(self) -> None:
++        self.assertFalse(self.path.is_symlink())
++        self.assertEqual(json.loads(self.path.read_text(encoding="utf-8")), CONFIG.to_dict())
++        self.assertEqual(self.path.stat().st_mode & 0o777, 0o600)
++
++    def test_a_symlink_at_the_old_fixed_name_is_never_followed(self):  # FAIL-FIRST
++        target = self.base / "outside.txt"
++        target.write_text("must not change\n")
++        target.chmod(0o644)
++        os.symlink(target, self.path.with_suffix(".tmp"))
++        save_config(self.home, CONFIG)
++        self.assertEqual(target.read_text(), "must not change\n")
++        self.assertEqual(target.stat().st_mode & 0o777, 0o644)
++        self.assert_saved()
++
++    def test_a_fifo_at_the_old_fixed_name_does_not_block(self):  # FAIL-FIRST
++        os.mkfifo(self.path.with_suffix(".tmp"))
++        script = (
++            "import sys; sys.path.insert(0, sys.argv[1]);"
++            "from agent_memory_hermes.config import IntegrationConfig, save_config;"
++            "save_config(sys.argv[2], IntegrationConfig(mode='observe'))"
++        )
++        try:
++            done = subprocess.run([sys.executable, "-c", script, str(SOURCE), str(self.home)],
++                                  capture_output=True, text=True, timeout=15)
++        except subprocess.TimeoutExpired:
++            self.fail("save_config blocked on a FIFO at its old temporary name")
++        self.assertEqual(done.returncode, 0, done.stderr[-2000:])
++        self.assert_saved()
++
++    def test_a_failed_rename_removes_the_temporary_and_keeps_the_previous_config(self):  # FAIL-FIRST
++        self.path.write_text("previous\n")
++        with mock.patch("os.replace", side_effect=OSError("injected")):
++            with self.assertRaises(OSError):
++                save_config(self.home, CONFIG)
++        self.assertEqual(self.path.read_text(), "previous\n")
++        self.assertEqual(self.temporaries(), [])
++
++    def test_another_writer_temporary_is_never_opened_or_truncated(self):
++        taken = self.path.with_name(f".{self.path.name}.{os.getpid()}.{'0' * 16}.tmp")
++        taken.write_bytes(b"another writer's bytes")
++        tokens = iter(["0" * 16, "1" * 16])
++        with mock.patch("secrets.token_hex", lambda _n: next(tokens)):
++            save_config(self.home, CONFIG)
++        self.assertEqual(taken.read_bytes(), b"another writer's bytes")
++        self.assertEqual(self.temporaries(), [taken.name])
++        self.assert_saved()
++
++    def test_the_config_is_0600_whatever_the_umask(self):
++        previous = os.umask(0)
++        try:
++            save_config(self.home, CONFIG)
++        finally:
++            os.umask(previous)
++        self.assert_saved()
++
++
++if __name__ == "__main__":
++    unittest.main()
+diff --git a/reference/agentmem_ref/api/surface.py b/reference/agentmem_ref/api/surface.py
+index 1a2630cd..fcd44000 100644
+--- a/reference/agentmem_ref/api/surface.py
++++ b/reference/agentmem_ref/api/surface.py
+@@ -22,11 +22,10 @@ import threading
+ import hashlib
+ import importlib.resources
+ import json
+-import os
+ from pathlib import Path
+-import secrets
+ from typing import Any, Callable, Mapping, Sequence
+ 
++from ..core.atomic_files import replace_with_bytes
+ from ..core import policy
+ from ..memory import action_authority
+ from ..runtime import doctor
+@@ -324,45 +323,7 @@ def _packaged_profile_text() -> str:
+ 
+ def _atomic_write_text(path: Path, text: str) -> None:
+     path.parent.mkdir(parents=True, exist_ok=True)
+-    temporary, descriptor = _exclusive_temporary(path)
+-    try:
+-        try:
+-            handle = os.fdopen(descriptor, "w", encoding="utf-8", newline="\n")
+-        except BaseException:
+-            os.close(descriptor)
+-            raise
+-        with handle:
+-            handle.write(text)
+-            if not text.endswith("\n"):
+-                handle.write("\n")
+-            handle.flush()
+-            os.fsync(handle.fileno())
+-        os.replace(temporary, path)
+-    except BaseException:
+-        try:
+-            os.unlink(temporary)
+-        except OSError:
+-            pass
+-        raise
+-
+-
+-def _exclusive_temporary(path: Path) -> tuple[Path, int]:
+-    """A temporary only this writer can have opened (#821, as for the generation witness).
+-
+-    With one shared ``.<name>.tmp``, two processes opening a new store could truncate each
+-    other's inode, and a crash in between published an empty ``runtime-config.json`` that refused
+-    every later open; a pre-planted symlink or FIFO at that predictable name was followed or
+-    blocked on. ``O_EXCL`` with an unpredictable name refuses any existing path. The mode stays
+-    ``0o666`` less the umask, as ``open("w")`` created it."""
+-
+-    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_BINARY", 0)
+-    for _ in range(8):
+-        temporary = path.with_name(f".{path.name}.{os.getpid()}.{secrets.token_hex(8)}.tmp")
+-        try:
+-            return temporary, os.open(temporary, flags, 0o666)
+-        except FileExistsError:
+-            continue
+-    raise FileExistsError(f"no unused temporary name for {path.name}")
++    replace_with_bytes(path, (text if text.endswith("\n") else text + "\n").encode("utf-8"))
+ 
+ 
+ def _checked_extractor(extractor: Any) -> Any:
+diff --git a/reference/agentmem_ref/atomic_files.py b/reference/agentmem_ref/atomic_files.py
+new file mode 100644
+index 00000000..bfd2b7cb
+--- /dev/null
++++ b/reference/agentmem_ref/atomic_files.py
+@@ -0,0 +1,4 @@
++"""Compatibility alias -- this module lives at ``agentmem_ref.core.atomic_files``."""
++import sys
++from .core import atomic_files as _real
++sys.modules[__name__] = _real
+diff --git a/reference/agentmem_ref/core/atomic_files.py b/reference/agentmem_ref/core/atomic_files.py
+new file mode 100644
+index 00000000..d27a5372
+--- /dev/null
++++ b/reference/agentmem_ref/core/atomic_files.py
+@@ -0,0 +1,56 @@
++"""Whole-file replacement through a temporary only its writer can have opened (#821).
++
++Writers used to stage into one shared ``.<name>.tmp`` (or ``<name>.tmp``) opened with truncation.
++Two processes writing the same file could truncate each other's inode, so a crash between them
++published an empty file; a symlink planted at that predictable name was followed, overwriting a
++file elsewhere; a FIFO planted there blocked the writer. ``O_EXCL`` with an unpredictable name
++refuses any existing path. Standard library only: the evaluation package uses it without importing
++the runtime.
++"""
++
++from __future__ import annotations
++
++import os
++from pathlib import Path
++import secrets
++
++
++def exclusive_temporary(path: Path) -> tuple[Path, int]:
++    """Create ``.<name>.<pid>.<random>.tmp`` beside ``path`` and return it with its descriptor.
++
++    The mode stays ``0o666`` less the umask, as ``open("wb")`` created it."""
++
++    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_BINARY", 0)
++    for _ in range(8):
++        temporary = path.with_name(f".{path.name}.{os.getpid()}.{secrets.token_hex(8)}.tmp")
++        try:
++            return temporary, os.open(temporary, flags, 0o666)
++        except FileExistsError:
++            continue
++    raise FileExistsError(f"no unused temporary name for {path.name}")
++
++
++def replace_with_bytes(path: Path, payload: bytes, *, durable: bool = True) -> None:
++    """Write ``payload`` to an exclusive temporary (fsynced when ``durable``) and rename it onto
++    ``path``. On any failure before the rename, the temporary is closed and removed and ``path`` is
++    untouched. The caller creates the directory and, where it needs to, fsyncs it afterwards."""
++
++    temporary, descriptor = exclusive_temporary(path)
++    try:
++        try:
++            handle = os.fdopen(descriptor, "wb")
++        except BaseException:
++            os.close(descriptor)
++            raise
++        with handle:
++            handle.write(payload)
++            if durable:
++                handle.flush()
++                os.fsync(handle.fileno())
++        os.replace(temporary, path)
++    except BaseException:
++        try:
++            os.unlink(temporary)
++        except OSError:
++            pass
++        raise
+diff --git a/reference/agentmem_ref/evaluation/contract.py b/reference/agentmem_ref/evaluation/contract.py
+index e029f0fc..19eb08af 100644
+--- a/reference/agentmem_ref/evaluation/contract.py
++++ b/reference/agentmem_ref/evaluation/contract.py
+@@ -14,13 +14,13 @@ import hashlib
+ import importlib.resources
+ import json
+ import math
+-import os
+ from pathlib import Path
+ from typing import Any, Mapping
+ 
+ from jsonschema import Draft202012Validator, FormatChecker
+ from jsonschema.exceptions import ValidationError
+ 
++from ..core.atomic_files import replace_with_bytes
+ from .._paths import PACKAGE_NAME, REPO_ROOT
+ 
+ SCHEMA_VERSION = "1.0.0"
+@@ -233,9 +233,7 @@ def write_run(path: str | Path, document: Mapping[str, Any]) -> str:
+     payload = canonical_json_bytes(document)
+     digest = hashlib.sha256(payload).hexdigest()
+     location.parent.mkdir(parents=True, exist_ok=True)
+-    temporary = location.with_name(location.name + ".tmp")
+-    temporary.write_bytes(payload)
+-    os.replace(temporary, location)
++    replace_with_bytes(location, payload, durable=False)
+     return digest
+ 
+ 
+diff --git a/reference/agentmem_ref/evaluation/gauntlet_orchestrator.py b/reference/agentmem_ref/evaluation/gauntlet_orchestrator.py
+index e3e3259c..2444f026 100644
+--- a/reference/agentmem_ref/evaluation/gauntlet_orchestrator.py
++++ b/reference/agentmem_ref/evaluation/gauntlet_orchestrator.py
+@@ -10,7 +10,6 @@ from __future__ import annotations
+ import hashlib
+ import importlib
+ import json
+-import os
+ import platform
+ import sys
+ import time
+@@ -20,6 +19,7 @@ from datetime import datetime, timezone
+ from pathlib import Path
+ from typing import Any
+ 
++from ..core.atomic_files import replace_with_bytes
+ from .contract import DIMENSIONS, dimension_report, metric_observation, validate_run, write_run
+ from .gauntlet_contract import (
+     GauntletContractError,
+@@ -54,9 +54,7 @@ def _write_json(path: Path, value: Mapping[str, Any]) -> str:
+     payload = _canonical_json_bytes(value)
+     digest = hashlib.sha256(payload).hexdigest()
+     path.parent.mkdir(parents=True, exist_ok=True)
+-    temporary = path.with_name(path.name + ".tmp")
+-    temporary.write_bytes(payload)
+-    os.replace(temporary, path)
++    replace_with_bytes(path, payload, durable=False)
+     return digest
+ 
+ 
+diff --git a/reference/agentmem_ref/memory/checkpoint_migration.py b/reference/agentmem_ref/memory/checkpoint_migration.py
+index 9893e631..d12ca921 100644
+--- a/reference/agentmem_ref/memory/checkpoint_migration.py
++++ b/reference/agentmem_ref/memory/checkpoint_migration.py
+@@ -22,6 +22,7 @@ import os
+ from pathlib import Path
+ from typing import Callable, Mapping
+ 
++from ..core.atomic_files import replace_with_bytes
+ from .structural_mutation import (
+     ACTIVE,
+     AUTHORIZED,
+@@ -211,13 +212,7 @@ def _fsync_directory(path: Path) -> None:
+ 
+ def _atomic_json_write(path: Path, value: Mapping[str, object]) -> None:
+     path.parent.mkdir(parents=True, exist_ok=True)
+-    tmp = path.with_name(f".{path.name}.tmp")
+-    payload = _canonical_bytes(dict(value)) + b"\n"
+-    with tmp.open("wb") as handle:
+-        handle.write(payload)
+-        handle.flush()
+-        os.fsync(handle.fileno())
+-    os.replace(tmp, path)
++    replace_with_bytes(path, _canonical_bytes(dict(value)) + b"\n")
+     _fsync_directory(path.parent)
+ 
+ 
+diff --git a/reference/agentmem_ref/runtime/checkpoint_transactions.py b/reference/agentmem_ref/runtime/checkpoint_transactions.py
+index 9306514b..4999757a 100644
+--- a/reference/agentmem_ref/runtime/checkpoint_transactions.py
++++ b/reference/agentmem_ref/runtime/checkpoint_transactions.py
+@@ -15,6 +15,7 @@ from contextlib import contextmanager
+ from dataclasses import dataclass
+ from typing import Iterator, Mapping
+ 
++from ..core.atomic_files import replace_with_bytes
+ from . import restart_runtime as _rr
+ 
+ # Recovery must remain able to restore the pre-transaction bundle when a test or
+@@ -284,13 +285,8 @@ class CheckpointTransactionSupport:
+     def _atomic_journal_write(self, records: tuple[dict, ...]) -> None:
+         path = self._store.journal_path
+         path.parent.mkdir(parents=True, exist_ok=True)
+-        tmp = path.with_name(f".{path.name}.tmp")
+         payload = b"".join(
+             _rr._canonical_bytes(dict(record)) + b"\n" for record in records
+         )
+-        with tmp.open("wb") as handle:
+-            handle.write(payload)
+-            handle.flush()
+-            _rr.os.fsync(handle.fileno())
+-        _rr.os.replace(tmp, path)
++        replace_with_bytes(path, payload)
+         _RECOVERY_FSYNC_DIRECTORY(path.parent)
+\ No newline at end of file
+diff --git a/reference/agentmem_ref/runtime/configured_restart.py b/reference/agentmem_ref/runtime/configured_restart.py
+index 11ec6ac9..35ed03f8 100644
+--- a/reference/agentmem_ref/runtime/configured_restart.py
++++ b/reference/agentmem_ref/runtime/configured_restart.py
+@@ -16,10 +16,10 @@ from __future__ import annotations
+ from dataclasses import asdict, dataclass
+ import hashlib
+ import json
+-import os
+ from pathlib import Path
+ from typing import Iterable, Mapping
+ 
++from ..core.atomic_files import replace_with_bytes
+ from ..contracts.component_fallback import ProviderFailure
+ from .restart_runtime import (
+     CapabilityBinding,
+@@ -99,13 +99,7 @@ def _digest(value: object) -> str:
+ 
+ def _atomic_json_write(path: Path, value: Mapping[str, object]) -> None:
+     path.parent.mkdir(parents=True, exist_ok=True)
+-    temporary = path.with_name(f".{path.name}.tmp")
+-    payload = _canonical_bytes(value) + b"\n"
+-    with temporary.open("wb") as handle:
+-        handle.write(payload)
+-        handle.flush()
+-        os.fsync(handle.fileno())
+-    os.replace(temporary, path)
++    replace_with_bytes(path, _canonical_bytes(value) + b"\n")
+ 
+ 
+ def _read_json(path: Path) -> dict:
+diff --git a/reference/agentmem_ref/runtime/restart_runtime.py b/reference/agentmem_ref/runtime/restart_runtime.py
+index 85014e40..8f5d520b 100644
+--- a/reference/agentmem_ref/runtime/restart_runtime.py
++++ b/reference/agentmem_ref/runtime/restart_runtime.py
+@@ -39,6 +39,7 @@ try:  # POSIX reference profile: flock releases automatically if a process dies.
+ except ImportError:  # pragma: no cover - exercised only on non-POSIX hosts.
+     fcntl = None
+ 
++from ..core.atomic_files import replace_with_bytes
+ from .adapter import Clock, GovernedMemoryAdapter
+ from ..core.readmission import RejectedValueRegistry
+ from ..state.substrate import (
+@@ -491,13 +492,7 @@ def _fsync_directory(path: Path) -> None:
+ def _atomic_json_write(path: Path, value: dict | bytes) -> None:
+     """Write ``value`` as one canonical JSON line, atomically; ``bytes`` are written as given."""
+     path.parent.mkdir(parents=True, exist_ok=True)
+-    tmp = path.with_name(f".{path.name}.tmp")
+-    payload = _canonical_bytes(value) + b"\n"
+-    with tmp.open("wb") as handle:
+-        handle.write(payload)
+-        handle.flush()
+-        os.fsync(handle.fileno())
+-    os.replace(tmp, path)
++    replace_with_bytes(path, _canonical_bytes(value) + b"\n")
+     _fsync_directory(path.parent)
+ 
+ 
+diff --git a/reference/tests/test_821_fixed_temporaries.py b/reference/tests/test_821_fixed_temporaries.py
+new file mode 100644
+index 00000000..1b808479
+--- /dev/null
++++ b/reference/tests/test_821_fixed_temporaries.py
+@@ -0,0 +1,266 @@
++"""#821 follow-up: every whole-file writer stages through a temporary only it can open.
++
++Up to ``5ca4bc5b`` six writers staged into one fixed name opened with truncation, the pattern R-1
++found in the generation witness and ``runtime-config.json``:
++
++- ``runtime.restart_runtime._atomic_json_write`` (file-checkpoint profile), ``.<name>.tmp``
++- ``runtime.checkpoint_transactions`` journal restore, ``.<name>.tmp``
++- ``runtime.configured_restart._atomic_json_write`` (legacy binding file), ``.<name>.tmp``
++- ``memory.checkpoint_migration._atomic_json_write``, ``.<name>.tmp``
++- ``evaluation.contract.write_run``, ``<name>.tmp``
++- ``evaluation.gauntlet_orchestrator._write_json``, ``<name>.tmp``
++
++A writer killed beside another truncated the inode the other was about to rename, publishing an
++empty file; a symlink at the fixed name was followed; a FIFO there blocked the writer; a failed
++write left its temporary behind. The checkpoint writers also hold the checkpoint lock, so for them
++the race needs a second writer outside it; the planted paths and the hygiene do not.
++
++All of them now go through ``core.atomic_files``. Faults are injected at the OS boundary only. Tests marked FAIL-FIRST fail on ``5ca4bc5b``.
++"""
++
++from __future__ import annotations
++
++import json
++import os
++import subprocess
++import sys
++import tempfile
++import time
++import unittest
++from pathlib import Path
++from types import SimpleNamespace
++from unittest import mock
++
++sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
++
++from agentmem_ref.evaluation import contract  # noqa: E402
++from agentmem_ref.evaluation import gauntlet_orchestrator  # noqa: E402
++from agentmem_ref.memory import checkpoint_migration  # noqa: E402
++from agentmem_ref.runtime import checkpoint_transactions, configured_restart, restart_runtime  # noqa: E402
++from tests.test_memory_evaluation_cli import _report  # noqa: E402
++
++REFERENCE = Path(__file__).resolve().parents[1]
++CRASH = 77
++VALUE = {"generation": 7, "note": "durable value", "records": list(range(32))}
++RECORDS = ({"generation": 1, "kind": "commit"}, {"generation": 2, "kind": "commit"})
++
++
++def _journal(path: Path) -> None:
++    store = SimpleNamespace(_store=SimpleNamespace(journal_path=path))
++    checkpoint_transactions.CheckpointTransactionSupport._atomic_journal_write(store, RECORDS)
++
++
++# writer id -> (write ``path`` with that writer, the fixed temporary name it used to stage into)
++WRITERS = {
++    "restart_runtime": (lambda p: restart_runtime._atomic_json_write(p, VALUE), lambda n: f".{n}.tmp"),
++    "checkpoint_transactions": (_journal, lambda n: f".{n}.tmp"),
++    "configured_restart": (lambda p: configured_restart._atomic_json_write(p, VALUE), lambda n: f".{n}.tmp"),
++    "checkpoint_migration": (lambda p: checkpoint_migration._atomic_json_write(p, VALUE), lambda n: f".{n}.tmp"),
++    "evaluation_contract": (lambda p: contract.write_run(p, _report("agent-memory", 0.7)), lambda n: f"{n}.tmp"),
++    "gauntlet_orchestrator": (lambda p: gauntlet_orchestrator._write_json(p, VALUE), lambda n: f"{n}.tmp"),
++}
++NAME = "state.json"
++
++# argv: reference writer path role barrier. Role A holds its rename until B is done; role B dies as
++# soon as it has opened a temporary of the target for writing, before writing a byte.
++_WRITER = r"""
++import io, os, sys, time, builtins, pathlib
++sys.path.insert(0, sys.argv[1])
++writer, target, role, barrier = sys.argv[2], pathlib.Path(sys.argv[3]), sys.argv[4], pathlib.Path(sys.argv[5])
++
++def _temporary(path):
++    try:
++        name = os.path.basename(os.fspath(path))
++    except TypeError:
++        return False
++    return name != target.name and target.name in name and name.endswith(".tmp")
++
++_io_open, _os_open, _replace = io.open, os.open, os.replace
++
++def io_open(path, mode="r", *args, **kwargs):
++    handle = _io_open(path, mode, *args, **kwargs)
++    if role == "B" and _temporary(path) and any(c in mode for c in "wax+"):
++        os._exit(77)
++    return handle
++
++def os_open(path, flags, *args, **kwargs):
++    descriptor = _os_open(path, flags, *args, **kwargs)
++    if role == "B" and _temporary(path) and flags & (os.O_WRONLY | os.O_RDWR):
++        os._exit(77)
++    return descriptor
++
++def replace(source, destination, *args, **kwargs):
++    if role == "A" and os.path.basename(os.fspath(destination)) == target.name:
++        (barrier / "a-holding").touch()
++        deadline = time.monotonic() + 120
++        while not (barrier / "b-done").exists() and time.monotonic() < deadline:
++            time.sleep(0.01)
++    return _replace(source, destination, *args, **kwargs)
++
++io.open = builtins.open = io_open
++os.open = os_open
++os.replace = replace
++from tests.test_821_fixed_temporaries import WRITERS
++WRITERS[writer][0](target)
++"""
++
++_PLAIN_WRITE = r"""
++import sys, pathlib
++sys.path.insert(0, sys.argv[1])
++from tests.test_821_fixed_temporaries import WRITERS
++WRITERS[sys.argv[2]][0](pathlib.Path(sys.argv[3]))
++"""
++
++
++class _Folder(unittest.TestCase):
++    def setUp(self) -> None:
++        self._folder = tempfile.TemporaryDirectory()
++        self.addCleanup(self._folder.cleanup)
++        self.base = Path(self._folder.name)
++
++    def folder(self, writer: str) -> Path:
++        root = self.base / writer
++        root.mkdir()
++        return root
++
++    def expected(self, writer: str) -> bytes:
++        root = self.base / f"expected-{writer}"
++        root.mkdir()
++        WRITERS[writer][0](root / NAME)
++        return (root / NAME).read_bytes()
++
++    def temporaries(self, root: Path) -> list[str]:
++        return sorted(p.name for p in root.iterdir() if p.name != NAME and NAME in p.name)
++
++    def child(self, script: str, *args: str, timeout: float = 120) -> subprocess.CompletedProcess:
++        environment = dict(os.environ, PYTHONPATH=os.pathsep.join(filter(None, [str(REFERENCE), os.environ.get("PYTHONPATH")])))
++        return subprocess.run([sys.executable, "-c", script, str(REFERENCE), *args],
++                              capture_output=True, text=True, timeout=timeout, env=environment)
++
++
++class ConcurrentWriters(_Folder):
++    def race(self, writer: str, root: Path) -> int:
++        barrier = self.base / f"barrier-{writer}"
++        barrier.mkdir()
++        environment = dict(os.environ, PYTHONPATH=os.pathsep.join(filter(None, [str(REFERENCE), os.environ.get("PYTHONPATH")])))
++        command = [sys.executable, "-c", _WRITER, str(REFERENCE), writer, str(root / NAME)]
++        a = subprocess.Popen(command + ["A", str(barrier)], stdout=subprocess.PIPE, stderr=subprocess.PIPE,
++                             text=True, env=environment)
++        try:
++            deadline = time.monotonic() + 120
++            while not (barrier / "a-holding").exists():
++                if a.poll() is not None or time.monotonic() > deadline:
++                    raise AssertionError(f"writer A never reached its rename: {a.communicate()[1][-2000:]}")
++                time.sleep(0.01)
++            b = subprocess.run(command + ["B", str(barrier)], capture_output=True, text=True, timeout=120, env=environment)
++        finally:
++            (barrier / "b-done").touch()
++            try:
++                _, a_err = a.communicate(timeout=120)
++            except subprocess.TimeoutExpired:
++                a.kill()
++                raise
++        if a.returncode != 0:
++            raise AssertionError(f"writer A failed ({a.returncode}): {a_err[-2000:]}")
++        return b.returncode
++
++    def test_a_writer_killed_beside_another_never_publishes_a_truncated_file(self):  # FAIL-FIRST
++        for writer in WRITERS:
++            with self.subTest(writer=writer):
++                root = self.folder(writer)
++                self.assertEqual(self.race(writer, root), CRASH)
++                # 5ca4bc5b: both used one temporary name, so A published the inode B had truncated
++                self.assertEqual((root / NAME).read_bytes(), self.expected(writer))
++
++
++class PlantedTemporaryPaths(_Folder):
++    def test_a_symlink_at_the_old_fixed_name_is_never_followed(self):  # FAIL-FIRST
++        for writer, (write, fixed) in WRITERS.items():
++            with self.subTest(writer=writer):
++                root = self.folder(writer)
++                target = self.base / f"outside-{writer}.txt"
++                target.write_text("must not change\n")
++                os.symlink(target, root / fixed(NAME))
++                write(root / NAME)
++                self.assertEqual(target.read_text(), "must not change\n")
++                self.assertFalse((root / NAME).is_symlink())
++                self.assertEqual((root / NAME).read_bytes(), self.expected(writer))
++
++    def test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer(self):  # FAIL-FIRST
++        for writer, (_write, fixed) in WRITERS.items():
++            with self.subTest(writer=writer):
++                root = self.folder(writer)
++                os.mkfifo(root / fixed(NAME))
++                try:
++                    done = self.child(_PLAIN_WRITE, writer, str(root / NAME), timeout=15)
++                except subprocess.TimeoutExpired:
++                    self.fail(f"{writer} blocked on a FIFO at its old temporary name")
++                self.assertEqual(done.returncode, 0, done.stderr[-2000:])
++                self.assertEqual((root / NAME).read_bytes(), self.expected(writer))
++
++
++class TemporaryHygiene(_Folder):
++    def test_a_failed_rename_removes_the_temporary_and_publishes_nothing(self):  # FAIL-FIRST
++        for writer, (write, _fixed) in WRITERS.items():
++            with self.subTest(writer=writer):
++                root = self.folder(writer)
++                with mock.patch("os.replace", side_effect=OSError(28, "No space left on device (injected)")):
++                    with self.assertRaises(OSError):
++                        write(root / NAME)
++                self.assertFalse((root / NAME).exists())
++                self.assertEqual(self.temporaries(root), [])
++
++    def test_a_failed_rename_leaves_the_previous_file_intact(self):
++        for writer, (write, _fixed) in WRITERS.items():
++            with self.subTest(writer=writer):
++                root = self.folder(writer)
++                (root / NAME).write_bytes(b"previous\n")
++                with mock.patch("os.replace", side_effect=OSError("injected")):
++                    with self.assertRaises(OSError):
++                        write(root / NAME)
++                self.assertEqual((root / NAME).read_bytes(), b"previous\n")
++
++    def test_another_writer_temporary_is_never_opened_or_truncated(self):
++        for writer, (write, _fixed) in WRITERS.items():
++            with self.subTest(writer=writer):
++                root = self.folder(writer)
++                taken = root / f".{NAME}.{os.getpid()}.{'0' * 16}.tmp"
++                taken.write_bytes(b"another writer's bytes")
++                tokens = iter(["0" * 16, "1" * 16])
++                with mock.patch("secrets.token_hex", lambda _n: next(tokens)):
++                    write(root / NAME)
++                self.assertEqual(taken.read_bytes(), b"another writer's bytes")
++                self.assertEqual((root / NAME).read_bytes(), self.expected(writer))
++                self.assertEqual(self.temporaries(root), [taken.name])
++
++    def test_the_file_keeps_the_mode_open_wb_gave_it(self):
++        for writer, (write, _fixed) in WRITERS.items():
++            with self.subTest(writer=writer):
++                root = self.folder(writer)
++                previous = os.umask(0o027)
++                try:
++                    write(root / NAME)
++                finally:
++                    os.umask(previous)
++                self.assertEqual((root / NAME).stat().st_mode & 0o777, 0o640)
++
++    def test_contents_are_byte_identical_to_the_fixed_name_writers(self):
++        canonical = (json.dumps(VALUE, sort_keys=True, separators=(",", ":"), ensure_ascii=False) + "\n").encode()
++        journal = b"".join(
++            (json.dumps(r, sort_keys=True, separators=(",", ":"), ensure_ascii=False) + "\n").encode() for r in RECORDS
++        )
++        expected = {
++            "restart_runtime": canonical,
++            "checkpoint_transactions": journal,
++            "configured_restart": canonical,
++            "checkpoint_migration": canonical,
++            "evaluation_contract": contract.canonical_json_bytes(_report("agent-memory", 0.7)),
++            "gauntlet_orchestrator": canonical,
++        }
++        for writer in WRITERS:
++            with self.subTest(writer=writer):
++                self.assertEqual(self.expected(writer), expected[writer])
++
++
++if __name__ == "__main__":
++    unittest.main()
+diff --git a/reference/tests/test_821_runtime_config_temporary.py b/reference/tests/test_821_runtime_config_temporary.py
+index 4ee7ed20..05eb87a6 100644
+--- a/reference/tests/test_821_runtime_config_temporary.py
++++ b/reference/tests/test_821_runtime_config_temporary.py
+@@ -30,6 +30,7 @@ from unittest import mock
+ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+ 
+ from agentmem_ref import AgentMemory  # noqa: E402
++from agentmem_ref.core import atomic_files  # noqa: E402
+ from agentmem_ref.api import surface  # noqa: E402
+ 
+ REFERENCE = Path(__file__).resolve().parents[1]
+@@ -164,7 +165,7 @@ class PlantedTemporaryPaths(_Folder):
+ 
+ 
+ class TemporaryHygiene(_Folder):
+-    """Unit level: faults reach only the configuration write (``surface.os`` is the global ``os``)."""
++    """Unit level: faults reach only the configuration write (``atomic_files.os`` is the global ``os``)."""
+ 
+     TEXT = '{"profile": "hygiene"}'
+ 
+@@ -172,7 +173,7 @@ class TemporaryHygiene(_Folder):
+         taken = self.root / f".{CONFIG}.{os.getpid()}.{'0' * 16}.tmp"
+         taken.write_bytes(b"another writer's bytes")
+         tokens = iter(["0" * 16, "1" * 16])
+-        with mock.patch.object(surface.secrets, "token_hex", lambda _n: next(tokens)):
++        with mock.patch.object(atomic_files.secrets, "token_hex", lambda _n: next(tokens)):
+             surface._atomic_write_text(self.root / CONFIG, self.TEXT)
+         self.assertEqual(taken.read_bytes(), b"another writer's bytes")
+         self.assertEqual(json.loads((self.root / CONFIG).read_bytes()), {"profile": "hygiene"})
+@@ -184,7 +185,7 @@ class TemporaryHygiene(_Folder):
+         def failing_fsync(descriptor):
+             raise OSError(28, "No space left on device (injected)")
+ 
+-        with mock.patch.object(surface.os, "fsync", failing_fsync):
++        with mock.patch.object(atomic_files.os, "fsync", failing_fsync):
+             with self.assertRaises(OSError):
+                 surface._atomic_write_text(self.root / CONFIG, self.TEXT)
+         self.assertIs(os.fsync, real_fsync)
+@@ -200,8 +201,8 @@ class TemporaryHygiene(_Folder):
+             closed.append(descriptor)
+             return real_close(descriptor)
+ 
+-        with mock.patch.object(surface.os, "fdopen", side_effect=OSError("injected")), \
+-                mock.patch.object(surface.os, "close", tracking_close):
++        with mock.patch.object(atomic_files.os, "fdopen", side_effect=OSError("injected")), \
++                mock.patch.object(atomic_files.os, "close", tracking_close):
+             with self.assertRaises(OSError):
+                 surface._atomic_write_text(self.root / CONFIG, self.TEXT)
+         self.assertTrue(closed, "the exclusive descriptor must be closed")
+diff --git a/scripts/restructure_package.py b/scripts/restructure_package.py
+index f1344232..f762103b 100644
+--- a/scripts/restructure_package.py
++++ b/scripts/restructure_package.py
+@@ -38,7 +38,7 @@ LAYERS: dict[str, tuple[str, ...]] = {
+     "core": (
+         "policy", "receipts", "evidence_qualification", "verification",
+         "pending_verification", "resumption", "readmission", "contextual_recall",
+-        "governance_projection", "portable_evidence",
++        "governance_projection", "portable_evidence", "atomic_files",
+     ),
+     "state": (
+         "substrate", "sqlite_substrate", "graphiti_driver", "projections", "residue", "visibility",
+-- 
+2.43.0
+

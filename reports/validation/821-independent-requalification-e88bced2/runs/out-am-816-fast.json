@@ -1,0 +1,357 @@
+{
+ "tree": "/home/user/eval/am-816",
+ "head": "e13d8c58c3d5521be50c8d32feacf2710c7fc6c5",
+ "cases": {
+  "A1": {
+   "b_fault": "kill_after_temp_open",
+   "reps": [
+    {
+     "A_rc": 0,
+     "A_out": "ACK alpha-0",
+     "B_rc": 0,
+     "B_out": "ACK beta-0",
+     "witness": {
+      "exists": false,
+      "is_symlink": false,
+      "temps": []
+     },
+     "reopen": {
+      "ok": true,
+      "admitted": 3
+     },
+     "facts": {
+      "alpha-0": true,
+      "beta-0": true
+     }
+    },
+    {
+     "A_rc": 0,
+     "A_out": "ACK alpha-0",
+     "B_rc": 0,
+     "B_out": "ACK beta-0",
+     "witness": {
+      "exists": false,
+      "is_symlink": false,
+      "temps": []
+     },
+     "reopen": {
+      "ok": true,
+      "admitted": 3
+     },
+     "facts": {
+      "alpha-0": true,
+      "beta-0": true
+     }
+    },
+    {
+     "A_rc": 0,
+     "A_out": "ACK alpha-0",
+     "B_rc": 0,
+     "B_out": "ACK beta-0",
+     "witness": {
+      "exists": false,
+      "is_symlink": false,
+      "temps": []
+     },
+     "reopen": {
+      "ok": true,
+      "admitted": 3
+     },
+     "facts": {
+      "alpha-0": true,
+      "beta-0": true
+     }
+    }
+   ],
+   "reopen_ok": 3,
+   "n": 3
+  },
+  "A2": {
+   "b_fault": "kill_at_temp_fsync",
+   "reps": [
+    {
+     "A_rc": 0,
+     "A_out": "ACK alpha-0",
+     "B_rc": 0,
+     "B_out": "ACK beta-0",
+     "witness": {
+      "exists": false,
+      "is_symlink": false,
+      "temps": []
+     },
+     "reopen": {
+      "ok": true,
+      "admitted": 3
+     },
+     "facts": {
+      "alpha-0": true,
+      "beta-0": true
+     }
+    },
+    {
+     "A_rc": 0,
+     "A_out": "ACK alpha-0",
+     "B_rc": 0,
+     "B_out": "ACK beta-0",
+     "witness": {
+      "exists": false,
+      "is_symlink": false,
+      "temps": []
+     },
+     "reopen": {
+      "ok": true,
+      "admitted": 3
+     },
+     "facts": {
+      "alpha-0": true,
+      "beta-0": true
+     }
+    },
+    {
+     "A_rc": 0,
+     "A_out": "ACK alpha-0",
+     "B_rc": 0,
+     "B_out": "ACK beta-0",
+     "witness": {
+      "exists": false,
+      "is_symlink": false,
+      "temps": []
+     },
+     "reopen": {
+      "ok": true,
+      "admitted": 3
+     },
+     "facts": {
+      "alpha-0": true,
+      "beta-0": true
+     }
+    }
+   ],
+   "reopen_ok": 3,
+   "n": 3
+  },
+  "A3": {
+   "b_fault": "enospc_at_temp_fsync",
+   "reps": [
+    {
+     "A_rc": 0,
+     "A_out": "ACK alpha-0",
+     "B_rc": 0,
+     "B_out": "ACK beta-0",
+     "witness": {
+      "exists": false,
+      "is_symlink": false,
+      "temps": []
+     },
+     "reopen": {
+      "ok": true,
+      "admitted": 3
+     },
+     "facts": {
+      "alpha-0": true,
+      "beta-0": true
+     }
+    },
+    {
+     "A_rc": 0,
+     "A_out": "ACK alpha-0",
+     "B_rc": 0,
+     "B_out": "ACK beta-0",
+     "witness": {
+      "exists": false,
+      "is_symlink": false,
+      "temps": []
+     },
+     "reopen": {
+      "ok": true,
+      "admitted": 3
+     },
+     "facts": {
+      "alpha-0": true,
+      "beta-0": true
+     }
+    },
+    {
+     "A_rc": 0,
+     "A_out": "ACK alpha-0",
+     "B_rc": 0,
+     "B_out": "ACK beta-0",
+     "witness": {
+      "exists": false,
+      "is_symlink": false,
+      "temps": []
+     },
+     "reopen": {
+      "ok": true,
+      "admitted": 3
+     },
+     "facts": {
+      "alpha-0": true,
+      "beta-0": true
+     }
+    }
+   ],
+   "reopen_ok": 3,
+   "n": 3
+  },
+  "B": {
+   "kill_after_temp_open": {
+    "rc": 0,
+    "after_kill": {
+     "witness": {
+      "exists": false,
+      "is_symlink": false,
+      "temps": []
+     },
+     "reopen": {
+      "ok": true,
+      "admitted": 2
+     },
+     "facts": {
+      "kappa-0": true
+     }
+    },
+    "after_20": {
+     "witness": {
+      "exists": false,
+      "is_symlink": false,
+      "temps": []
+     },
+     "reopen": {
+      "ok": true,
+      "admitted": 22
+     },
+     "acks": 20
+    }
+   },
+   "kill_at_temp_fsync": {
+    "rc": 0,
+    "after_kill": {
+     "witness": {
+      "exists": false,
+      "is_symlink": false,
+      "temps": []
+     },
+     "reopen": {
+      "ok": true,
+      "admitted": 2
+     },
+     "facts": {
+      "kappa-0": true
+     }
+    },
+    "after_20": {
+     "witness": {
+      "exists": false,
+      "is_symlink": false,
+      "temps": []
+     },
+     "reopen": {
+      "ok": true,
+      "admitted": 22
+     },
+     "acks": 20
+    }
+   },
+   "kill_before_witness_replace": {
+    "rc": 0,
+    "after_kill": {
+     "witness": {
+      "exists": false,
+      "is_symlink": false,
+      "temps": []
+     },
+     "reopen": {
+      "ok": true,
+      "admitted": 2
+     },
+     "facts": {
+      "kappa-0": true
+     }
+    },
+    "after_20": {
+     "witness": {
+      "exists": false,
+      "is_symlink": false,
+      "temps": []
+     },
+     "reopen": {
+      "ok": true,
+      "admitted": 22
+     },
+     "acks": 20
+    }
+   },
+   "kill_at_dir_fsync": {
+    "rc": 0,
+    "after_kill": {
+     "witness": {
+      "exists": false,
+      "is_symlink": false,
+      "temps": []
+     },
+     "reopen": {
+      "ok": true,
+      "admitted": 2
+     },
+     "facts": {
+      "kappa-0": true
+     }
+    },
+    "after_20": {
+     "witness": {
+      "exists": false,
+      "is_symlink": false,
+      "temps": []
+     },
+     "reopen": {
+      "ok": true,
+      "admitted": 22
+     },
+     "acks": 20
+    }
+   }
+  },
+  "E": {
+   "symlink": {
+    "child": "ACK sym-0",
+    "target_unchanged": true,
+    "target_now": "SENTINEL-DO-NOT-TOUCH\n",
+    "witness": {
+     "exists": false,
+     "is_symlink": false,
+     "temps": [
+      ".generation-witness.json.tmp"
+     ]
+    },
+    "reopen": {
+     "ok": true,
+     "admitted": 2
+    }
+   },
+   "fifo": {
+    "child_rc": 0,
+    "child": "ACK fifo-0",
+    "witness": {
+     "exists": false,
+     "is_symlink": false,
+     "temps": [
+      ".generation-witness.json.tmp"
+     ]
+    },
+    "reopen": {
+     "ok": true,
+     "admitted": 2
+    }
+   }
+  },
+  "G": {
+   "empty": {
+    "note": "no witness on this tree"
+   },
+   "truncated": {
+    "note": "no witness on this tree"
+   }
+  }
+ }
+}

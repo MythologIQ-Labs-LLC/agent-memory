@@ -1,0 +1,12 @@
+test_an_opener_killed_beside_another_never_publishes_an_empty_configuration (tests._rc_probe_test.ConcurrentFirstOpens.test_an_opener_killed_beside_another_never_publishes_an_empty_configuration) ... ok
+test_a_fifo_at_the_old_fixed_name_does_not_block_the_first_open (tests._rc_probe_test.PlantedTemporaryPaths.test_a_fifo_at_the_old_fixed_name_does_not_block_the_first_open) ... ok
+test_a_symlink_at_the_old_fixed_name_is_never_followed (tests._rc_probe_test.PlantedTemporaryPaths.test_a_symlink_at_the_old_fixed_name_is_never_followed) ... ok
+test_a_failed_write_removes_its_temporary_and_publishes_nothing (tests._rc_probe_test.TemporaryHygiene.test_a_failed_write_removes_its_temporary_and_publishes_nothing) ... ok
+test_a_temporary_that_cannot_be_wrapped_is_closed_and_removed (tests._rc_probe_test.TemporaryHygiene.test_a_temporary_that_cannot_be_wrapped_is_closed_and_removed) ... ok
+test_another_writer_temporary_is_never_opened_or_truncated (tests._rc_probe_test.TemporaryHygiene.test_another_writer_temporary_is_never_opened_or_truncated) ... ok
+test_the_configuration_keeps_the_mode_open_w_gave_it (tests._rc_probe_test.TemporaryHygiene.test_the_configuration_keeps_the_mode_open_w_gave_it) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.984s
+
+OK

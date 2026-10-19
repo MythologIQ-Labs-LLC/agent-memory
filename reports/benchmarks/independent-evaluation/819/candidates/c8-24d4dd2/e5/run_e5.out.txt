@@ -1,0 +1,23 @@
+generate.py: OK
+harness.py: OK
+cases.json: OK
+f756a5c650d96fcec691e1622a52a868c9a62fdf7fafd1c49e45efaee135f84d  run_rp.py
+c4-def steal_ticks=47/22226
+c4-def done {"queries": 208, "strict": 70, "mean_recall": 0.4066, "mean_precision": 0.4176, "extras": 142, "excluded_returned": 0, "excluded_text": 0, "order_violations": 18, "ms_p50": 6.4} op_failures 0 eval_failures 0
+c4-sem-rs steal_ticks=228/268181
+c4-sem-rs done {"queries": 208, "strict": 86, "mean_recall": 0.7882, "mean_precision": 0.5486, "extras": 200, "excluded_returned": 0, "excluded_text": 0, "order_violations": 16, "ms_p50": 87.56} op_failures 0 eval_failures 0
+c4-sem-rp steal_ticks=357/253765
+c4-sem-rp done {"queries": 208, "strict": 9, "mean_recall": 0.7209, "mean_precision": 0.2666, "extras": 653, "excluded_returned": 0, "excluded_text": 0, "order_violations": 16, "ms_p50": 82.68} op_failures 0 eval_failures 0
+c6-sem-rs steal_ticks=397/256619
+c6-sem-rs done {"queries": 208, "strict": 87, "mean_recall": 0.5612, "mean_precision": 0.5092, "extras": 154, "excluded_returned": 0, "excluded_text": 0, "order_violations": 14, "ms_p50": 85.73} op_failures 0 eval_failures 0
+c6-sem-rp steal_ticks=335/253399
+c6-sem-rp done {"queries": 208, "strict": 9, "mean_recall": 0.7209, "mean_precision": 0.2666, "extras": 653, "excluded_returned": 0, "excluded_text": 0, "order_violations": 16, "ms_p50": 85.7} op_failures 0 eval_failures 0
+c8-sem-rs steal_ticks=275/259255
+c8-sem-rs done {"queries": 208, "strict": 88, "mean_recall": 0.5612, "mean_precision": 0.5092, "extras": 154, "excluded_returned": 0, "excluded_text": 0, "order_violations": 12, "ms_p50": 89.28} op_failures 0 eval_failures 0
+c8-sem-rp steal_ticks=289/267088
+c8-sem-rp done {"queries": 208, "strict": 9, "mean_recall": 0.7972, "mean_precision": 0.2887, "extras": 635, "excluded_returned": 0, "excluded_text": 0, "order_violations": 14, "ms_p50": 89.14} op_failures 0 eval_failures 0
+c8-off steal_ticks=27/23556
+c8-off done {"queries": 208, "strict": 70, "mean_recall": 0.4066, "mean_precision": 0.4176, "extras": 142, "excluded_returned": 0, "excluded_text": 0, "order_violations": 18, "ms_p50": 7.12} op_failures 0 eval_failures 0
+c8-sem-rs-rep2 steal_ticks=330/252806
+c8-sem-rs-rep2 done {"queries": 208, "strict": 88, "mean_recall": 0.5612, "mean_precision": 0.5092, "extras": 154, "excluded_returned": 0, "excluded_text": 0, "order_violations": 12, "ms_p50": 86.32} op_failures 0 eval_failures 0
+e5-done

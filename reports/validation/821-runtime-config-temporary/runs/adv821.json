@@ -1,0 +1,515 @@
+{
+ "tree": "/home/user/eval/am-821-rc",
+ "head": "5ca4bc5be2fa561b1100c5f9346c02ef9e80d148",
+ "cases": {
+  "A1": {
+   "b_fault": "kill_after_temp_open",
+   "reps": [
+    {
+     "A_rc": 0,
+     "A_out": "ACK alpha-0",
+     "B_rc": -9,
+     "B_out": "",
+     "witness": {
+      "exists": true,
+      "is_symlink": false,
+      "bytes": 167,
+      "mode": "0o644",
+      "generation": 3,
+      "temps": [
+       ".generation-witness.json.846.e514a85a05a0db7d.tmp"
+      ]
+     },
+     "reopen": {
+      "ok": true,
+      "admitted": 3
+     },
+     "facts": {
+      "alpha-0": true,
+      "beta-0": true
+     }
+    },
+    {
+     "A_rc": 0,
+     "A_out": "ACK alpha-0",
+     "B_rc": -9,
+     "B_out": "",
+     "witness": {
+      "exists": true,
+      "is_symlink": false,
+      "bytes": 167,
+      "mode": "0o644",
+      "generation": 3,
+      "temps": [
+       ".generation-witness.json.851.ad20d607914d1ea0.tmp"
+      ]
+     },
+     "reopen": {
+      "ok": true,
+      "admitted": 3
+     },
+     "facts": {
+      "alpha-0": true,
+      "beta-0": true
+     }
+    },
+    {
+     "A_rc": 0,
+     "A_out": "ACK alpha-0",
+     "B_rc": -9,
+     "B_out": "",
+     "witness": {
+      "exists": true,
+      "is_symlink": false,
+      "bytes": 167,
+      "mode": "0o644",
+      "generation": 3,
+      "temps": [
+       ".generation-witness.json.856.89818eb0b2c887a6.tmp"
+      ]
+     },
+     "reopen": {
+      "ok": true,
+      "admitted": 3
+     },
+     "facts": {
+      "alpha-0": true,
+      "beta-0": true
+     }
+    }
+   ],
+   "reopen_ok": 3,
+   "n": 3
+  },
+  "A2": {
+   "b_fault": "kill_at_temp_fsync",
+   "reps": [
+    {
+     "A_rc": 0,
+     "A_out": "ACK alpha-0",
+     "B_rc": -9,
+     "B_out": "",
+     "witness": {
+      "exists": true,
+      "is_symlink": false,
+      "bytes": 167,
+      "mode": "0o644",
+      "generation": 3,
+      "temps": [
+       ".generation-witness.json.861.e2bdd5ea78ab4cbc.tmp"
+      ]
+     },
+     "reopen": {
+      "ok": true,
+      "admitted": 3
+     },
+     "facts": {
+      "alpha-0": true,
+      "beta-0": true
+     }
+    },
+    {
+     "A_rc": 0,
+     "A_out": "ACK alpha-0",
+     "B_rc": -9,
+     "B_out": "",
+     "witness": {
+      "exists": true,
+      "is_symlink": false,
+      "bytes": 167,
+      "mode": "0o644",
+      "generation": 3,
+      "temps": [
+       ".generation-witness.json.866.f0e4552b7c07759c.tmp"
+      ]
+     },
+     "reopen": {
+      "ok": true,
+      "admitted": 3
+     },
+     "facts": {
+      "alpha-0": true,
+      "beta-0": true
+     }
+    },
+    {
+     "A_rc": 0,
+     "A_out": "ACK alpha-0",
+     "B_rc": -9,
+     "B_out": "",
+     "witness": {
+      "exists": true,
+      "is_symlink": false,
+      "bytes": 167,
+      "mode": "0o644",
+      "generation": 3,
+      "temps": [
+       ".generation-witness.json.871.602e434f6f62db08.tmp"
+      ]
+     },
+     "reopen": {
+      "ok": true,
+      "admitted": 3
+     },
+     "facts": {
+      "alpha-0": true,
+      "beta-0": true
+     }
+    }
+   ],
+   "reopen_ok": 3,
+   "n": 3
+  },
+  "A3": {
+   "b_fault": "enospc_at_temp_fsync",
+   "reps": [
+    {
+     "A_rc": 0,
+     "A_out": "ACK alpha-0",
+     "B_rc": 0,
+     "B_out": "ACK beta-0",
+     "witness": {
+      "exists": true,
+      "is_symlink": false,
+      "bytes": 167,
+      "mode": "0o644",
+      "generation": 3,
+      "temps": []
+     },
+     "reopen": {
+      "ok": true,
+      "admitted": 3
+     },
+     "facts": {
+      "alpha-0": true,
+      "beta-0": true
+     }
+    },
+    {
+     "A_rc": 0,
+     "A_out": "ACK alpha-0",
+     "B_rc": 0,
+     "B_out": "ACK beta-0",
+     "witness": {
+      "exists": true,
+      "is_symlink": false,
+      "bytes": 167,
+      "mode": "0o644",
+      "generation": 3,
+      "temps": []
+     },
+     "reopen": {
+      "ok": true,
+      "admitted": 3
+     },
+     "facts": {
+      "alpha-0": true,
+      "beta-0": true
+     }
+    },
+    {
+     "A_rc": 0,
+     "A_out": "ACK alpha-0",
+     "B_rc": 0,
+     "B_out": "ACK beta-0",
+     "witness": {
+      "exists": true,
+      "is_symlink": false,
+      "bytes": 167,
+      "mode": "0o644",
+      "generation": 3,
+      "temps": []
+     },
+     "reopen": {
+      "ok": true,
+      "admitted": 3
+     },
+     "facts": {
+      "alpha-0": true,
+      "beta-0": true
+     }
+    }
+   ],
+   "reopen_ok": 3,
+   "n": 3
+  },
+  "B": {
+   "kill_after_temp_open": {
+    "rc": -9,
+    "after_kill": {
+     "witness": {
+      "exists": true,
+      "is_symlink": false,
+      "bytes": 167,
+      "mode": "0o644",
+      "generation": 2,
+      "temps": [
+       ".generation-witness.json.891.7daa4cea2bea2705.tmp"
+      ]
+     },
+     "reopen": {
+      "ok": true,
+      "admitted": 2
+     },
+     "facts": {
+      "kappa-0": true
+     }
+    },
+    "after_20": {
+     "witness": {
+      "exists": true,
+      "is_symlink": false,
+      "bytes": 168,
+      "mode": "0o644",
+      "generation": 25,
+      "temps": [
+       ".generation-witness.json.891.7daa4cea2bea2705.tmp"
+      ]
+     },
+     "reopen": {
+      "ok": true,
+      "admitted": 22
+     },
+     "acks": 20
+    }
+   },
+   "kill_at_temp_fsync": {
+    "rc": -9,
+    "after_kill": {
+     "witness": {
+      "exists": true,
+      "is_symlink": false,
+      "bytes": 167,
+      "mode": "0o644",
+      "generation": 2,
+      "temps": [
+       ".generation-witness.json.897.66a745ffa55fc5a7.tmp"
+      ]
+     },
+     "reopen": {
+      "ok": true,
+      "admitted": 2
+     },
+     "facts": {
+      "kappa-0": true
+     }
+    },
+    "after_20": {
+     "witness": {
+      "exists": true,
+      "is_symlink": false,
+      "bytes": 168,
+      "mode": "0o644",
+      "generation": 25,
+      "temps": [
+       ".generation-witness.json.897.66a745ffa55fc5a7.tmp"
+      ]
+     },
+     "reopen": {
+      "ok": true,
+      "admitted": 22
+     },
+     "acks": 20
+    }
+   },
+   "kill_before_witness_replace": {
+    "rc": -9,
+    "after_kill": {
+     "witness": {
+      "exists": true,
+      "is_symlink": false,
+      "bytes": 167,
+      "mode": "0o644",
+      "generation": 2,
+      "temps": [
+       ".generation-witness.json.903.f17ad11e400bdcd5.tmp"
+      ]
+     },
+     "reopen": {
+      "ok": true,
+      "admitted": 2
+     },
+     "facts": {
+      "kappa-0": true
+     }
+    },
+    "after_20": {
+     "witness": {
+      "exists": true,
+      "is_symlink": false,
+      "bytes": 168,
+      "mode": "0o644",
+      "generation": 25,
+      "temps": [
+       ".generation-witness.json.903.f17ad11e400bdcd5.tmp"
+      ]
+     },
+     "reopen": {
+      "ok": true,
+      "admitted": 22
+     },
+     "acks": 20
+    }
+   },
+   "kill_at_dir_fsync": {
+    "rc": -9,
+    "after_kill": {
+     "witness": {
+      "exists": true,
+      "is_symlink": false,
+      "bytes": 167,
+      "mode": "0o644",
+      "generation": 3,
+      "temps": []
+     },
+     "reopen": {
+      "ok": true,
+      "admitted": 2
+     },
+     "facts": {
+      "kappa-0": true
+     }
+    },
+    "after_20": {
+     "witness": {
+      "exists": true,
+      "is_symlink": false,
+      "bytes": 168,
+      "mode": "0o644",
+      "generation": 25,
+      "temps": []
+     },
+     "reopen": {
+      "ok": true,
+      "admitted": 22
+     },
+     "acks": 20
+    }
+   }
+  },
+  "C": {
+   "runs": [
+    {
+     "killed": 5,
+     "acks": 82,
+     "witness": {
+      "exists": true,
+      "is_symlink": false,
+      "bytes": 168,
+      "mode": "0o644",
+      "generation": 83,
+      "temps": []
+     },
+     "reopen_first_try": {
+      "ok": true,
+      "admitted": 82
+     },
+     "acked_missing": 0
+    },
+    {
+     "killed": 3,
+     "acks": 82,
+     "witness": {
+      "exists": true,
+      "is_symlink": false,
+      "bytes": 168,
+      "mode": "0o644",
+      "generation": 83,
+      "temps": []
+     },
+     "reopen_first_try": {
+      "ok": true,
+      "admitted": 82
+     },
+     "acked_missing": 0
+    },
+    {
+     "killed": 5,
+     "acks": 92,
+     "witness": {
+      "exists": true,
+      "is_symlink": false,
+      "bytes": 168,
+      "mode": "0o644",
+      "generation": 93,
+      "temps": []
+     },
+     "reopen_first_try": {
+      "ok": true,
+      "admitted": 92
+     },
+     "acked_missing": 0
+    }
+   ],
+   "reopen_ok": 3,
+   "n": 3
+  },
+  "D": {
+   "witness_writes": 77,
+   "regressions": 15,
+   "final_witness": {
+    "exists": true,
+    "is_symlink": false,
+    "bytes": 168,
+    "mode": "0o644",
+    "generation": 79,
+    "temps": []
+   },
+   "reopen": {
+    "ok": true,
+    "admitted": 78
+   }
+  },
+  "E": {
+   "symlink": {
+    "child": "ACK sym-0",
+    "target_unchanged": true,
+    "target_now": "SENTINEL-DO-NOT-TOUCH\n",
+    "witness": {
+     "exists": true,
+     "is_symlink": false,
+     "bytes": 167,
+     "mode": "0o644",
+     "generation": 3,
+     "temps": [
+      ".generation-witness.json.tmp"
+     ]
+    },
+    "reopen": {
+     "ok": true,
+     "admitted": 2
+    }
+   },
+   "fifo": {
+    "child_rc": 0,
+    "child": "ACK fifo-0",
+    "witness": {
+     "exists": true,
+     "is_symlink": false,
+     "bytes": 167,
+     "mode": "0o644",
+     "generation": 3,
+     "temps": [
+      ".generation-witness.json.tmp"
+     ]
+    },
+    "reopen": {
+     "ok": true,
+     "admitted": 2
+    }
+   }
+  },
+  "G": {
+   "empty_mode_before": "0o644",
+   "empty": {
+    "ok": false,
+    "error": "RuntimeRecoveryError: SQLite generation witness is unreadable: Expecting value: line 1 column 1 (char 0); explicit operator action is required (if its permissions or an older runtime are the cause, fix those; if it is damaged and the database"
+   },
+   "truncated_mode_before": "0o644",
+   "truncated": {
+    "ok": false,
+    "error": "RuntimeRecoveryError: SQLite generation witness is unreadable: Unterminated string starting at: line 1 column 56 (char 55); explicit operator action is required (if its permissions or an older runtime are the cause, fix those; if it is damage"
+   }
+  }
+ }
+}

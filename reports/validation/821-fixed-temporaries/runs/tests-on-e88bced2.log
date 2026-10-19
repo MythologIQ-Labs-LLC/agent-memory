@@ -1,0 +1,414 @@
+test_a_writer_killed_beside_another_never_publishes_a_truncated_file (tests.test_821_fixed_temporaries.ConcurrentWriters.test_a_writer_killed_beside_another_never_publishes_a_truncated_file) ... 
+  test_a_writer_killed_beside_another_never_publishes_a_truncated_file (tests.test_821_fixed_temporaries.ConcurrentWriters.test_a_writer_killed_beside_another_never_publishes_a_truncated_file) (writer='restart_runtime') ... FAIL
+  test_a_writer_killed_beside_another_never_publishes_a_truncated_file (tests.test_821_fixed_temporaries.ConcurrentWriters.test_a_writer_killed_beside_another_never_publishes_a_truncated_file) (writer='checkpoint_transactions') ... FAIL
+  test_a_writer_killed_beside_another_never_publishes_a_truncated_file (tests.test_821_fixed_temporaries.ConcurrentWriters.test_a_writer_killed_beside_another_never_publishes_a_truncated_file) (writer='configured_restart') ... FAIL
+  test_a_writer_killed_beside_another_never_publishes_a_truncated_file (tests.test_821_fixed_temporaries.ConcurrentWriters.test_a_writer_killed_beside_another_never_publishes_a_truncated_file) (writer='checkpoint_migration') ... FAIL
+  test_a_writer_killed_beside_another_never_publishes_a_truncated_file (tests.test_821_fixed_temporaries.ConcurrentWriters.test_a_writer_killed_beside_another_never_publishes_a_truncated_file) (writer='evaluation_contract') ... FAIL
+  test_a_writer_killed_beside_another_never_publishes_a_truncated_file (tests.test_821_fixed_temporaries.ConcurrentWriters.test_a_writer_killed_beside_another_never_publishes_a_truncated_file) (writer='gauntlet_orchestrator') ... FAIL
+test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer (tests.test_821_fixed_temporaries.PlantedTemporaryPaths.test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer) ... 
+  test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer (tests.test_821_fixed_temporaries.PlantedTemporaryPaths.test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer) (writer='restart_runtime') ... FAIL
+  test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer (tests.test_821_fixed_temporaries.PlantedTemporaryPaths.test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer) (writer='checkpoint_transactions') ... FAIL
+  test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer (tests.test_821_fixed_temporaries.PlantedTemporaryPaths.test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer) (writer='configured_restart') ... FAIL
+  test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer (tests.test_821_fixed_temporaries.PlantedTemporaryPaths.test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer) (writer='checkpoint_migration') ... FAIL
+  test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer (tests.test_821_fixed_temporaries.PlantedTemporaryPaths.test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer) (writer='evaluation_contract') ... FAIL
+  test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer (tests.test_821_fixed_temporaries.PlantedTemporaryPaths.test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer) (writer='gauntlet_orchestrator') ... FAIL
+test_a_symlink_at_the_old_fixed_name_is_never_followed (tests.test_821_fixed_temporaries.PlantedTemporaryPaths.test_a_symlink_at_the_old_fixed_name_is_never_followed) ... 
+  test_a_symlink_at_the_old_fixed_name_is_never_followed (tests.test_821_fixed_temporaries.PlantedTemporaryPaths.test_a_symlink_at_the_old_fixed_name_is_never_followed) (writer='restart_runtime') ... FAIL
+  test_a_symlink_at_the_old_fixed_name_is_never_followed (tests.test_821_fixed_temporaries.PlantedTemporaryPaths.test_a_symlink_at_the_old_fixed_name_is_never_followed) (writer='checkpoint_transactions') ... FAIL
+  test_a_symlink_at_the_old_fixed_name_is_never_followed (tests.test_821_fixed_temporaries.PlantedTemporaryPaths.test_a_symlink_at_the_old_fixed_name_is_never_followed) (writer='configured_restart') ... FAIL
+  test_a_symlink_at_the_old_fixed_name_is_never_followed (tests.test_821_fixed_temporaries.PlantedTemporaryPaths.test_a_symlink_at_the_old_fixed_name_is_never_followed) (writer='checkpoint_migration') ... FAIL
+  test_a_symlink_at_the_old_fixed_name_is_never_followed (tests.test_821_fixed_temporaries.PlantedTemporaryPaths.test_a_symlink_at_the_old_fixed_name_is_never_followed) (writer='evaluation_contract') ... FAIL
+  test_a_symlink_at_the_old_fixed_name_is_never_followed (tests.test_821_fixed_temporaries.PlantedTemporaryPaths.test_a_symlink_at_the_old_fixed_name_is_never_followed) (writer='gauntlet_orchestrator') ... FAIL
+test_a_failed_rename_leaves_the_previous_file_intact (tests.test_821_fixed_temporaries.TemporaryHygiene.test_a_failed_rename_leaves_the_previous_file_intact) ... ok
+test_a_failed_rename_removes_the_temporary_and_publishes_nothing (tests.test_821_fixed_temporaries.TemporaryHygiene.test_a_failed_rename_removes_the_temporary_and_publishes_nothing) ... 
+  test_a_failed_rename_removes_the_temporary_and_publishes_nothing (tests.test_821_fixed_temporaries.TemporaryHygiene.test_a_failed_rename_removes_the_temporary_and_publishes_nothing) (writer='restart_runtime') ... FAIL
+  test_a_failed_rename_removes_the_temporary_and_publishes_nothing (tests.test_821_fixed_temporaries.TemporaryHygiene.test_a_failed_rename_removes_the_temporary_and_publishes_nothing) (writer='checkpoint_transactions') ... FAIL
+  test_a_failed_rename_removes_the_temporary_and_publishes_nothing (tests.test_821_fixed_temporaries.TemporaryHygiene.test_a_failed_rename_removes_the_temporary_and_publishes_nothing) (writer='configured_restart') ... FAIL
+  test_a_failed_rename_removes_the_temporary_and_publishes_nothing (tests.test_821_fixed_temporaries.TemporaryHygiene.test_a_failed_rename_removes_the_temporary_and_publishes_nothing) (writer='checkpoint_migration') ... FAIL
+  test_a_failed_rename_removes_the_temporary_and_publishes_nothing (tests.test_821_fixed_temporaries.TemporaryHygiene.test_a_failed_rename_removes_the_temporary_and_publishes_nothing) (writer='evaluation_contract') ... FAIL
+  test_a_failed_rename_removes_the_temporary_and_publishes_nothing (tests.test_821_fixed_temporaries.TemporaryHygiene.test_a_failed_rename_removes_the_temporary_and_publishes_nothing) (writer='gauntlet_orchestrator') ... FAIL
+test_another_writer_temporary_is_never_opened_or_truncated (tests.test_821_fixed_temporaries.TemporaryHygiene.test_another_writer_temporary_is_never_opened_or_truncated) ... ok
+test_contents_are_byte_identical_to_the_fixed_name_writers (tests.test_821_fixed_temporaries.TemporaryHygiene.test_contents_are_byte_identical_to_the_fixed_name_writers) ... ok
+test_the_file_keeps_the_mode_open_wb_gave_it (tests.test_821_fixed_temporaries.TemporaryHygiene.test_the_file_keeps_the_mode_open_wb_gave_it) ... ok
+
+======================================================================
+FAIL: test_a_writer_killed_beside_another_never_publishes_a_truncated_file (tests.test_821_fixed_temporaries.ConcurrentWriters.test_a_writer_killed_beside_another_never_publishes_a_truncated_file) (writer='restart_runtime')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 173, in test_a_writer_killed_beside_another_never_publishes_a_truncated_file
+    self.assertEqual((root / NAME).read_bytes(), self.expected(writer))
+AssertionError: b'' != b'{"generation":7,"note":"durable value","r[94 chars]]}\n'
+
+======================================================================
+FAIL: test_a_writer_killed_beside_another_never_publishes_a_truncated_file (tests.test_821_fixed_temporaries.ConcurrentWriters.test_a_writer_killed_beside_another_never_publishes_a_truncated_file) (writer='checkpoint_transactions')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 173, in test_a_writer_killed_beside_another_never_publishes_a_truncated_file
+    self.assertEqual((root / NAME).read_bytes(), self.expected(writer))
+AssertionError: b'' != b'{"generation":1,"kind":"commit"}\n{"generation":2,"kind":"commit"}\n'
+
+======================================================================
+FAIL: test_a_writer_killed_beside_another_never_publishes_a_truncated_file (tests.test_821_fixed_temporaries.ConcurrentWriters.test_a_writer_killed_beside_another_never_publishes_a_truncated_file) (writer='configured_restart')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 173, in test_a_writer_killed_beside_another_never_publishes_a_truncated_file
+    self.assertEqual((root / NAME).read_bytes(), self.expected(writer))
+AssertionError: b'' != b'{"generation":7,"note":"durable value","r[94 chars]]}\n'
+
+======================================================================
+FAIL: test_a_writer_killed_beside_another_never_publishes_a_truncated_file (tests.test_821_fixed_temporaries.ConcurrentWriters.test_a_writer_killed_beside_another_never_publishes_a_truncated_file) (writer='checkpoint_migration')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 173, in test_a_writer_killed_beside_another_never_publishes_a_truncated_file
+    self.assertEqual((root / NAME).read_bytes(), self.expected(writer))
+AssertionError: b'' != b'{"generation":7,"note":"durable value","r[94 chars]]}\n'
+
+======================================================================
+FAIL: test_a_writer_killed_beside_another_never_publishes_a_truncated_file (tests.test_821_fixed_temporaries.ConcurrentWriters.test_a_writer_killed_beside_another_never_publishes_a_truncated_file) (writer='evaluation_contract')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 173, in test_a_writer_killed_beside_another_never_publishes_a_truncated_file
+    self.assertEqual((root / NAME).read_bytes(), self.expected(writer))
+AssertionError: b'' != b'{"artifacts":[],"authority_effect":"none"[1438 chars]}}\n'
+
+======================================================================
+FAIL: test_a_writer_killed_beside_another_never_publishes_a_truncated_file (tests.test_821_fixed_temporaries.ConcurrentWriters.test_a_writer_killed_beside_another_never_publishes_a_truncated_file) (writer='gauntlet_orchestrator')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 173, in test_a_writer_killed_beside_another_never_publishes_a_truncated_file
+    self.assertEqual((root / NAME).read_bytes(), self.expected(writer))
+AssertionError: b'' != b'{"generation":7,"note":"durable value","r[94 chars]]}\n'
+
+======================================================================
+FAIL: test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer (tests.test_821_fixed_temporaries.PlantedTemporaryPaths.test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer) (writer='restart_runtime')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 195, in test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer
+    done = self.child(_PLAIN_WRITE, writer, str(root / NAME), timeout=15)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 137, in child
+    return subprocess.run([sys.executable, "-c", script, str(REFERENCE), *args],
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 550, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 1209, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 2116, in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+  File "/usr/lib/python3.12/subprocess.py", line 1253, in _check_timeout
+    raise TimeoutExpired(
+subprocess.TimeoutExpired: Command '['/home/user/eval/venv-neutral/bin/python', '-c', '\nimport sys, pathlib\nsys.path.insert(0, sys.argv[1])\nfrom tests.test_821_fixed_temporaries import WRITERS\nWRITERS[sys.argv[2]][0](pathlib.Path(sys.argv[3]))\n', '/home/user/eval/am-821-r1/reference', 'restart_runtime', '/tmp/tmp5f5p2uv_/restart_runtime/state.json']' timed out after 15 seconds
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 197, in test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer
+    self.fail(f"{writer} blocked on a FIFO at its old temporary name")
+AssertionError: restart_runtime blocked on a FIFO at its old temporary name
+
+======================================================================
+FAIL: test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer (tests.test_821_fixed_temporaries.PlantedTemporaryPaths.test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer) (writer='checkpoint_transactions')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 195, in test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer
+    done = self.child(_PLAIN_WRITE, writer, str(root / NAME), timeout=15)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 137, in child
+    return subprocess.run([sys.executable, "-c", script, str(REFERENCE), *args],
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 550, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 1209, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 2116, in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+  File "/usr/lib/python3.12/subprocess.py", line 1253, in _check_timeout
+    raise TimeoutExpired(
+subprocess.TimeoutExpired: Command '['/home/user/eval/venv-neutral/bin/python', '-c', '\nimport sys, pathlib\nsys.path.insert(0, sys.argv[1])\nfrom tests.test_821_fixed_temporaries import WRITERS\nWRITERS[sys.argv[2]][0](pathlib.Path(sys.argv[3]))\n', '/home/user/eval/am-821-r1/reference', 'checkpoint_transactions', '/tmp/tmp5f5p2uv_/checkpoint_transactions/state.json']' timed out after 15 seconds
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 197, in test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer
+    self.fail(f"{writer} blocked on a FIFO at its old temporary name")
+AssertionError: checkpoint_transactions blocked on a FIFO at its old temporary name
+
+======================================================================
+FAIL: test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer (tests.test_821_fixed_temporaries.PlantedTemporaryPaths.test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer) (writer='configured_restart')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 195, in test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer
+    done = self.child(_PLAIN_WRITE, writer, str(root / NAME), timeout=15)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 137, in child
+    return subprocess.run([sys.executable, "-c", script, str(REFERENCE), *args],
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 550, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 1209, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 2116, in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+  File "/usr/lib/python3.12/subprocess.py", line 1253, in _check_timeout
+    raise TimeoutExpired(
+subprocess.TimeoutExpired: Command '['/home/user/eval/venv-neutral/bin/python', '-c', '\nimport sys, pathlib\nsys.path.insert(0, sys.argv[1])\nfrom tests.test_821_fixed_temporaries import WRITERS\nWRITERS[sys.argv[2]][0](pathlib.Path(sys.argv[3]))\n', '/home/user/eval/am-821-r1/reference', 'configured_restart', '/tmp/tmp5f5p2uv_/configured_restart/state.json']' timed out after 15 seconds
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 197, in test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer
+    self.fail(f"{writer} blocked on a FIFO at its old temporary name")
+AssertionError: configured_restart blocked on a FIFO at its old temporary name
+
+======================================================================
+FAIL: test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer (tests.test_821_fixed_temporaries.PlantedTemporaryPaths.test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer) (writer='checkpoint_migration')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 195, in test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer
+    done = self.child(_PLAIN_WRITE, writer, str(root / NAME), timeout=15)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 137, in child
+    return subprocess.run([sys.executable, "-c", script, str(REFERENCE), *args],
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 550, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 1209, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 2116, in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+  File "/usr/lib/python3.12/subprocess.py", line 1253, in _check_timeout
+    raise TimeoutExpired(
+subprocess.TimeoutExpired: Command '['/home/user/eval/venv-neutral/bin/python', '-c', '\nimport sys, pathlib\nsys.path.insert(0, sys.argv[1])\nfrom tests.test_821_fixed_temporaries import WRITERS\nWRITERS[sys.argv[2]][0](pathlib.Path(sys.argv[3]))\n', '/home/user/eval/am-821-r1/reference', 'checkpoint_migration', '/tmp/tmp5f5p2uv_/checkpoint_migration/state.json']' timed out after 15 seconds
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 197, in test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer
+    self.fail(f"{writer} blocked on a FIFO at its old temporary name")
+AssertionError: checkpoint_migration blocked on a FIFO at its old temporary name
+
+======================================================================
+FAIL: test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer (tests.test_821_fixed_temporaries.PlantedTemporaryPaths.test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer) (writer='evaluation_contract')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 195, in test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer
+    done = self.child(_PLAIN_WRITE, writer, str(root / NAME), timeout=15)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 137, in child
+    return subprocess.run([sys.executable, "-c", script, str(REFERENCE), *args],
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 550, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 1209, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 2116, in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+  File "/usr/lib/python3.12/subprocess.py", line 1253, in _check_timeout
+    raise TimeoutExpired(
+subprocess.TimeoutExpired: Command '['/home/user/eval/venv-neutral/bin/python', '-c', '\nimport sys, pathlib\nsys.path.insert(0, sys.argv[1])\nfrom tests.test_821_fixed_temporaries import WRITERS\nWRITERS[sys.argv[2]][0](pathlib.Path(sys.argv[3]))\n', '/home/user/eval/am-821-r1/reference', 'evaluation_contract', '/tmp/tmp5f5p2uv_/evaluation_contract/state.json']' timed out after 15 seconds
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 197, in test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer
+    self.fail(f"{writer} blocked on a FIFO at its old temporary name")
+AssertionError: evaluation_contract blocked on a FIFO at its old temporary name
+
+======================================================================
+FAIL: test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer (tests.test_821_fixed_temporaries.PlantedTemporaryPaths.test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer) (writer='gauntlet_orchestrator')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 195, in test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer
+    done = self.child(_PLAIN_WRITE, writer, str(root / NAME), timeout=15)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 137, in child
+    return subprocess.run([sys.executable, "-c", script, str(REFERENCE), *args],
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 550, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 1209, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 2116, in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+  File "/usr/lib/python3.12/subprocess.py", line 1253, in _check_timeout
+    raise TimeoutExpired(
+subprocess.TimeoutExpired: Command '['/home/user/eval/venv-neutral/bin/python', '-c', '\nimport sys, pathlib\nsys.path.insert(0, sys.argv[1])\nfrom tests.test_821_fixed_temporaries import WRITERS\nWRITERS[sys.argv[2]][0](pathlib.Path(sys.argv[3]))\n', '/home/user/eval/am-821-r1/reference', 'gauntlet_orchestrator', '/tmp/tmp5f5p2uv_/gauntlet_orchestrator/state.json']' timed out after 15 seconds
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 197, in test_a_fifo_at_the_old_fixed_name_does_not_block_the_writer
+    self.fail(f"{writer} blocked on a FIFO at its old temporary name")
+AssertionError: gauntlet_orchestrator blocked on a FIFO at its old temporary name
+
+======================================================================
+FAIL: test_a_symlink_at_the_old_fixed_name_is_never_followed (tests.test_821_fixed_temporaries.PlantedTemporaryPaths.test_a_symlink_at_the_old_fixed_name_is_never_followed) (writer='restart_runtime')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 185, in test_a_symlink_at_the_old_fixed_name_is_never_followed
+    self.assertEqual(target.read_text(), "must not change\n")
+AssertionError: '{"generation":7,"note":"durable value","r[94 chars]]}\n' != 'must not change\n'
+- {"generation":7,"note":"durable value","records":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]}
++ must not change
+
+
+======================================================================
+FAIL: test_a_symlink_at_the_old_fixed_name_is_never_followed (tests.test_821_fixed_temporaries.PlantedTemporaryPaths.test_a_symlink_at_the_old_fixed_name_is_never_followed) (writer='checkpoint_transactions')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 185, in test_a_symlink_at_the_old_fixed_name_is_never_followed
+    self.assertEqual(target.read_text(), "must not change\n")
+AssertionError: '{"generation":1,"kind":"commit"}\n{"generation":2,"kind":"commit"}\n' != 'must not change\n'
++ must not change
+- {"generation":1,"kind":"commit"}
+- {"generation":2,"kind":"commit"}
+
+
+======================================================================
+FAIL: test_a_symlink_at_the_old_fixed_name_is_never_followed (tests.test_821_fixed_temporaries.PlantedTemporaryPaths.test_a_symlink_at_the_old_fixed_name_is_never_followed) (writer='configured_restart')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 185, in test_a_symlink_at_the_old_fixed_name_is_never_followed
+    self.assertEqual(target.read_text(), "must not change\n")
+AssertionError: '{"generation":7,"note":"durable value","r[94 chars]]}\n' != 'must not change\n'
+- {"generation":7,"note":"durable value","records":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]}
++ must not change
+
+
+======================================================================
+FAIL: test_a_symlink_at_the_old_fixed_name_is_never_followed (tests.test_821_fixed_temporaries.PlantedTemporaryPaths.test_a_symlink_at_the_old_fixed_name_is_never_followed) (writer='checkpoint_migration')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 185, in test_a_symlink_at_the_old_fixed_name_is_never_followed
+    self.assertEqual(target.read_text(), "must not change\n")
+AssertionError: '{"generation":7,"note":"durable value","r[94 chars]]}\n' != 'must not change\n'
+- {"generation":7,"note":"durable value","records":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]}
++ must not change
+
+
+======================================================================
+FAIL: test_a_symlink_at_the_old_fixed_name_is_never_followed (tests.test_821_fixed_temporaries.PlantedTemporaryPaths.test_a_symlink_at_the_old_fixed_name_is_never_followed) (writer='evaluation_contract')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 185, in test_a_symlink_at_the_old_fixed_name_is_never_followed
+    self.assertEqual(target.read_text(), "must not change\n")
+AssertionError: '{"artifacts":[],"authority_effect":"none"[1438 chars]}}\n' != 'must not change\n'
+Diff is 1503 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_a_symlink_at_the_old_fixed_name_is_never_followed (tests.test_821_fixed_temporaries.PlantedTemporaryPaths.test_a_symlink_at_the_old_fixed_name_is_never_followed) (writer='gauntlet_orchestrator')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 185, in test_a_symlink_at_the_old_fixed_name_is_never_followed
+    self.assertEqual(target.read_text(), "must not change\n")
+AssertionError: '{"generation":7,"note":"durable value","r[94 chars]]}\n' != 'must not change\n'
+- {"generation":7,"note":"durable value","records":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]}
++ must not change
+
+
+======================================================================
+FAIL: test_a_failed_rename_removes_the_temporary_and_publishes_nothing (tests.test_821_fixed_temporaries.TemporaryHygiene.test_a_failed_rename_removes_the_temporary_and_publishes_nothing) (writer='restart_runtime')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 211, in test_a_failed_rename_removes_the_temporary_and_publishes_nothing
+    self.assertEqual(self.temporaries(root), [])
+AssertionError: Lists differ: ['.state.json.tmp'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'.state.json.tmp'
+
+- ['.state.json.tmp']
++ []
+
+======================================================================
+FAIL: test_a_failed_rename_removes_the_temporary_and_publishes_nothing (tests.test_821_fixed_temporaries.TemporaryHygiene.test_a_failed_rename_removes_the_temporary_and_publishes_nothing) (writer='checkpoint_transactions')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 211, in test_a_failed_rename_removes_the_temporary_and_publishes_nothing
+    self.assertEqual(self.temporaries(root), [])
+AssertionError: Lists differ: ['.state.json.tmp'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'.state.json.tmp'
+
+- ['.state.json.tmp']
++ []
+
+======================================================================
+FAIL: test_a_failed_rename_removes_the_temporary_and_publishes_nothing (tests.test_821_fixed_temporaries.TemporaryHygiene.test_a_failed_rename_removes_the_temporary_and_publishes_nothing) (writer='configured_restart')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 211, in test_a_failed_rename_removes_the_temporary_and_publishes_nothing
+    self.assertEqual(self.temporaries(root), [])
+AssertionError: Lists differ: ['.state.json.tmp'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'.state.json.tmp'
+
+- ['.state.json.tmp']
++ []
+
+======================================================================
+FAIL: test_a_failed_rename_removes_the_temporary_and_publishes_nothing (tests.test_821_fixed_temporaries.TemporaryHygiene.test_a_failed_rename_removes_the_temporary_and_publishes_nothing) (writer='checkpoint_migration')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 211, in test_a_failed_rename_removes_the_temporary_and_publishes_nothing
+    self.assertEqual(self.temporaries(root), [])
+AssertionError: Lists differ: ['.state.json.tmp'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'.state.json.tmp'
+
+- ['.state.json.tmp']
++ []
+
+======================================================================
+FAIL: test_a_failed_rename_removes_the_temporary_and_publishes_nothing (tests.test_821_fixed_temporaries.TemporaryHygiene.test_a_failed_rename_removes_the_temporary_and_publishes_nothing) (writer='evaluation_contract')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 211, in test_a_failed_rename_removes_the_temporary_and_publishes_nothing
+    self.assertEqual(self.temporaries(root), [])
+AssertionError: Lists differ: ['state.json.tmp'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'state.json.tmp'
+
+- ['state.json.tmp']
++ []
+
+======================================================================
+FAIL: test_a_failed_rename_removes_the_temporary_and_publishes_nothing (tests.test_821_fixed_temporaries.TemporaryHygiene.test_a_failed_rename_removes_the_temporary_and_publishes_nothing) (writer='gauntlet_orchestrator')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/am-821-r1/reference/tests/test_821_fixed_temporaries.py", line 211, in test_a_failed_rename_removes_the_temporary_and_publishes_nothing
+    self.assertEqual(self.temporaries(root), [])
+AssertionError: Lists differ: ['state.json.tmp'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'state.json.tmp'
+
+- ['state.json.tmp']
++ []
+
+----------------------------------------------------------------------
+Ran 8 tests in 92.617s
+
+FAILED (failures=24)

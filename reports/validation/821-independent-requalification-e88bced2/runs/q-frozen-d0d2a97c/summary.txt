@@ -1,0 +1,16 @@
+test_821_atomic_config_binding rc=0 OK
+test_816_runtime_owned_writes rc=0 OK
+replays v2 rc=0
+replays dsl2 rc=0
+replays dsl3 rc=0
+replay cross-scope-write-authority-denial-v2                      PASS  src=d0d2a97c obs=0507a3a89cdf vs816=IDENTICAL
+replay deleted-lineage-generations-and-restart-v2                 PASS  src=d0d2a97c obs=1b5332689ef6 vs816=IDENTICAL
+replay public-tombstone-redaction-and-observer-separation-v2      PASS  src=d0d2a97c obs=a90b8a841ad5 vs816=IDENTICAL
+replay cross-scope-write-authority-denial-v3                      PASS  src=d0d2a97c obs=617805b93f09 vs816=IDENTICAL
+replay deleted-lineage-generations-and-restart-v3                 PASS  src=d0d2a97c obs=510ff2a621a1 vs816=IDENTICAL
+replay public-tombstone-redaction-and-observer-separation-v3      PASS  src=d0d2a97c obs=1049e53713a4 vs816=IDENTICAL
+replay evidence-reference-authorization-v1                        PASS  src=d0d2a97c obs=70da7a3a6ff5 vs816=IDENTICAL
+crash_window rc=0 create  mid_bind_row   crashed=True  state_gen=None journal_gen=None file_gen=- row_gen=no_table witness=0 facts=0 -> failed_closed RuntimeRecoveryError: required SQLite runtime state is missing revision d0d2a97c63b50700001da06b9df7fe81b580fc09 runtime_tree_dirty=False 
+adv821 rc=0 {"head": "d0d2a97c63", "summary": {"A1": {"reopen_ok": 0, "n": 3}, "A2": {"reopen_ok": 3, "n": 3}, "A3": {"reopen_ok": 3, "n": 3}, "B": "see json", "C": {"reopen_ok": 3, "n": 3}, "D": "see json", "E": "see json", "G": "see json"}}
+full-nomodel rc=1 FAILED (failures=4, skipped=35, expected failures=1) Ran 3075 tests in 252.941s
+full-model rc=1 FAILED (failures=4, skipped=30, expected failures=1) Ran 3075 tests in 259.735s

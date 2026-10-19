@@ -1,0 +1,3771 @@
+{
+ "probe_set": "819-e-probes-1",
+ "author": "independent evaluator (session_011h1ADQyj3ZTu9UHgBAhocF)",
+ "budget": 5,
+ "scenarios": [
+  {
+   "id": "agg1",
+   "category": "aggregation",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "a",
+     "text": "I took up pottery in January.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "b",
+     "text": "Since spring I've been learning the cello.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "c",
+     "text": "Rock climbing at the indoor wall became a weekly thing for me this year.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "I prefer aisle seats on long flights.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "The cabin Wi-Fi password is written inside the cupboard door.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "Our recycling goes out on alternate Thursdays.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "The car's MOT is due in November.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "My running shoes are a size ten.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "The book club meets on the first Monday of the month.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "agg1",
+     "query": "What hobbies have I started recently?",
+     "must": [
+      "a",
+      "b",
+      "c"
+     ],
+     "may": [],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "agg2",
+   "category": "aggregation",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "a",
+     "text": "Peanuts make my throat swell.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "b",
+     "text": "Penicillin gave me a rash as a child.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "c",
+     "text": "Cat dander sets off my asthma.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "The cabin Wi-Fi password is written inside the cupboard door.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "Our recycling goes out on alternate Thursdays.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "The car's MOT is due in November.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "My running shoes are a size ten.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "The book club meets on the first Monday of the month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "agg2",
+     "query": "Remind me of everything I'm allergic to.",
+     "must": [
+      "a",
+      "b",
+      "c"
+     ],
+     "may": [],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "agg3",
+   "category": "aggregation",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "a",
+     "text": "We spent a week in Lisbon in 2021.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "b",
+     "text": "Kyoto was the highlight of our 2019 trip.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "c",
+     "text": "I flew to Reykjavik for a conference.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "Our recycling goes out on alternate Thursdays.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "The car's MOT is due in November.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "My running shoes are a size ten.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "The book club meets on the first Monday of the month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "agg3",
+     "query": "Name the cities I've travelled to.",
+     "must": [
+      "a",
+      "b",
+      "c"
+     ],
+     "may": [],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "agg4",
+   "category": "aggregation",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "a",
+     "text": "My sister Priya is a paediatric nurse.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "b",
+     "text": "My brother Tomasz drives a tram in Krakow.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "c",
+     "text": "The youngest of us, Lena, is still at university.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "The car's MOT is due in November.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "My running shoes are a size ten.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "The book club meets on the first Monday of the month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "agg4",
+     "query": "Tell me about my siblings.",
+     "must": [
+      "a",
+      "b",
+      "c"
+     ],
+     "may": [],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "agg5",
+   "category": "aggregation",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "a",
+     "text": "Monday evenings are for five-a-side football.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "b",
+     "text": "On Wednesdays I volunteer at the food bank.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "c",
+     "text": "Friday nights I play bass in a pub band.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "My running shoes are a size ten.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "The book club meets on the first Monday of the month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "The printer in the study needs a new cyan cartridge.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "agg5",
+     "query": "How is my week usually structured after work?",
+     "must": [
+      "a",
+      "b",
+      "c"
+     ],
+     "may": [],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "agg6",
+   "category": "aggregation",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "a",
+     "text": "I take metformin twice a day.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "b",
+     "text": "A low-dose statin is part of my evening routine.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "c",
+     "text": "The GP put me on vitamin D drops for the winter.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "The book club meets on the first Monday of the month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "The printer in the study needs a new cyan cartridge.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "We still owe the window cleaner for last month.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "agg6",
+     "query": "Which medicines am I on?",
+     "must": [
+      "a",
+      "b",
+      "c"
+     ],
+     "may": [],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "agg7",
+   "category": "aggregation",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "a",
+     "text": "Our first child, Ada, was born in 2016.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "b",
+     "text": "Ben arrived two years after his sister.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "The printer in the study needs a new cyan cartridge.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "We still owe the window cleaner for last month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "The boiler service is booked for the third week of March.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "agg7",
+     "query": "How many kids do we have?",
+     "must": [
+      "a",
+      "b"
+     ],
+     "may": [],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "agg8",
+   "category": "aggregation",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "a",
+     "text": "I've read Middlemarch twice this year.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "b",
+     "text": "The Overstory made me cry on the train.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "c",
+     "text": "I abandoned Ulysses halfway through.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "The printer in the study needs a new cyan cartridge.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "We still owe the window cleaner for last month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "The boiler service is booked for the third week of March.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "I prefer aisle seats on long flights.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "agg8",
+     "query": "What novels have I been reading?",
+     "must": [
+      "a",
+      "b",
+      "c"
+     ],
+     "may": [],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "para1",
+   "category": "paraphrase",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "a",
+     "text": "My car is a 2019 Subaru Outback.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "I prefer aisle seats on long flights.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "The cabin Wi-Fi password is written inside the cupboard door.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "Our recycling goes out on alternate Thursdays.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "The car's MOT is due in November.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "My running shoes are a size ten.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "The book club meets on the first Monday of the month.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "para1",
+     "query": "What do I drive?",
+     "must": [
+      "a"
+     ],
+     "may": [],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "para2",
+   "category": "paraphrase",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "a",
+     "text": "I work as a structural engineer for a bridge consultancy.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "The cabin Wi-Fi password is written inside the cupboard door.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "Our recycling goes out on alternate Thursdays.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "The car's MOT is due in November.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "My running shoes are a size ten.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "The book club meets on the first Monday of the month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "para2",
+     "query": "What's my job?",
+     "must": [
+      "a"
+     ],
+     "may": [],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "para3",
+   "category": "paraphrase",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "a",
+     "text": "Our dog, a grey whippet, is called Pistachio.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "Our recycling goes out on alternate Thursdays.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "The car's MOT is due in November.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "My running shoes are a size ten.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "The book club meets on the first Monday of the month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "para3",
+     "query": "What is the name of my pet?",
+     "must": [
+      "a"
+     ],
+     "may": [],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "para4",
+   "category": "paraphrase",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "a",
+     "text": "The landlord's number is 07700 900123.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "The car's MOT is due in November.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "My running shoes are a size ten.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "The book club meets on the first Monday of the month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "para4",
+     "query": "How do I contact the person I rent from?",
+     "must": [
+      "a"
+     ],
+     "may": [],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "para5",
+   "category": "paraphrase",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "a",
+     "text": "I can't eat gluten because of coeliac disease.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "My running shoes are a size ten.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "The book club meets on the first Monday of the month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "The printer in the study needs a new cyan cartridge.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "para5",
+     "query": "Do I have any dietary restrictions?",
+     "must": [
+      "a"
+     ],
+     "may": [],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "para6",
+   "category": "paraphrase",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "a",
+     "text": "Dentist appointment: Tuesday at 9:40 with Dr Okafor.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "The book club meets on the first Monday of the month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "The printer in the study needs a new cyan cartridge.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "We still owe the window cleaner for last month.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "para6",
+     "query": "When am I next seeing the person who looks after my teeth?",
+     "must": [
+      "a"
+     ],
+     "may": [],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "para7",
+   "category": "paraphrase",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "a",
+     "text": "Our wedding anniversary is the 14th of June.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "The printer in the study needs a new cyan cartridge.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "We still owe the window cleaner for last month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "The boiler service is booked for the third week of March.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "para7",
+     "query": "When did my spouse and I get married?",
+     "must": [
+      "a"
+     ],
+     "may": [],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "para8",
+   "category": "paraphrase",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "a",
+     "text": "I'm saving up for a deposit on a flat.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "The printer in the study needs a new cyan cartridge.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "We still owe the window cleaner for last month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "The boiler service is booked for the third week of March.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "I prefer aisle seats on long flights.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "para8",
+     "query": "What is my main financial goal at the moment?",
+     "must": [
+      "a"
+     ],
+     "may": [],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "noans1",
+   "category": "no_answer",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "near",
+     "text": "My brother adores the Star Wars films.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "The car's MOT is due in November.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "My running shoes are a size ten.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "The book club meets on the first Monday of the month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "noans1",
+     "query": "What's my sister's favourite movie?",
+     "must": [],
+     "may": [],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "noans2",
+   "category": "no_answer",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "near",
+     "text": "I parked on level 3 of the airport car park last time.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "My running shoes are a size ten.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "The book club meets on the first Monday of the month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "The printer in the study needs a new cyan cartridge.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "noans2",
+     "query": "Where did I park at the shopping centre today?",
+     "must": [],
+     "may": [],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "noans3",
+   "category": "no_answer",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "near",
+     "text": "My mother's birthday is in August.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "The book club meets on the first Monday of the month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "The printer in the study needs a new cyan cartridge.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "We still owe the window cleaner for last month.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "noans3",
+     "query": "When is my father's birthday?",
+     "must": [],
+     "may": [],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "noans4",
+   "category": "no_answer",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "The printer in the study needs a new cyan cartridge.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "We still owe the window cleaner for last month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "The boiler service is booked for the third week of March.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "noans4",
+     "query": "What is my blood type?",
+     "must": [],
+     "may": [],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "noans5",
+   "category": "no_answer",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "near",
+     "text": "The kitchen tap was fixed by a plumber called Dev.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "The printer in the study needs a new cyan cartridge.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "We still owe the window cleaner for last month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "The boiler service is booked for the third week of March.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "I prefer aisle seats on long flights.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "noans5",
+     "query": "Who repaired the bathroom shower?",
+     "must": [],
+     "may": [],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "noans6",
+   "category": "no_answer",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "near",
+     "text": "I studied chemistry at Durham.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "The printer in the study needs a new cyan cartridge.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "We still owe the window cleaner for last month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "The boiler service is booked for the third week of March.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "I prefer aisle seats on long flights.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "The cabin Wi-Fi password is written inside the cupboard door.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "noans6",
+     "query": "Where did my wife go to university?",
+     "must": [],
+     "may": [],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "noans7",
+   "category": "no_answer",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "near",
+     "text": "We adopted a rescue cat named Miso.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "The printer in the study needs a new cyan cartridge.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "We still owe the window cleaner for last month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "The boiler service is booked for the third week of March.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "I prefer aisle seats on long flights.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "The cabin Wi-Fi password is written inside the cupboard door.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "Our recycling goes out on alternate Thursdays.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "noans7",
+     "query": "What breed is our dog?",
+     "must": [],
+     "may": [],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "noans8",
+   "category": "no_answer",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "We still owe the window cleaner for last month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "The boiler service is booked for the third week of March.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "I prefer aisle seats on long flights.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "The cabin Wi-Fi password is written inside the cupboard door.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "Our recycling goes out on alternate Thursdays.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "The car's MOT is due in November.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "noans8",
+     "query": "What's my employee ID number?",
+     "must": [],
+     "may": [],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "qshape1",
+   "category": "question_shaped",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "qs",
+     "text": "I keep forgetting what my dentist is called.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "ans",
+     "text": "My dentist is Dr Aliyu.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "The book club meets on the first Monday of the month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "The printer in the study needs a new cyan cartridge.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "We still owe the window cleaner for last month.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "qshape1",
+     "query": "What is my dentist's name?",
+     "must": [
+      "ans"
+     ],
+     "may": [
+      "qs"
+     ],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "qshape2",
+   "category": "question_shaped",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "qs",
+     "text": "Note to self: find out which day the bins are collected.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "ans",
+     "text": "Bin collection is every Tuesday morning.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "The printer in the study needs a new cyan cartridge.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "We still owe the window cleaner for last month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "The boiler service is booked for the third week of March.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "qshape2",
+     "query": "Which day are the bins collected?",
+     "must": [
+      "ans"
+     ],
+     "may": [
+      "qs"
+     ],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "qshape3",
+   "category": "question_shaped",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "qs",
+     "text": "What should I get Mum for her birthday? Still undecided.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "ans",
+     "text": "Mum mentioned she'd love a new gardening apron.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "The printer in the study needs a new cyan cartridge.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "We still owe the window cleaner for last month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "The boiler service is booked for the third week of March.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "I prefer aisle seats on long flights.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "qshape3",
+     "query": "What should I get Mum for her birthday?",
+     "must": [
+      "ans"
+     ],
+     "may": [
+      "qs"
+     ],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "qshape4",
+   "category": "question_shaped",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "qs",
+     "text": "Who was the electrician that rewired the hallway? Can't recall.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "ans",
+     "text": "Karim from Brightspark rewired the hallway in May.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "The printer in the study needs a new cyan cartridge.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "We still owe the window cleaner for last month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "The boiler service is booked for the third week of March.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "I prefer aisle seats on long flights.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "The cabin Wi-Fi password is written inside the cupboard door.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "qshape4",
+     "query": "Who rewired the hallway?",
+     "must": [
+      "ans"
+     ],
+     "may": [
+      "qs"
+     ],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "qshape5",
+   "category": "question_shaped",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "qs",
+     "text": "Wondering where I left the spare charger.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "ans",
+     "text": "The spare charger is in the blue drawer in the study.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "The printer in the study needs a new cyan cartridge.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "We still owe the window cleaner for last month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "The boiler service is booked for the third week of March.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "I prefer aisle seats on long flights.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "The cabin Wi-Fi password is written inside the cupboard door.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "Our recycling goes out on alternate Thursdays.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "qshape5",
+     "query": "Where is the spare charger?",
+     "must": [
+      "ans"
+     ],
+     "may": [
+      "qs"
+     ],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "qshape6",
+   "category": "question_shaped",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "qs",
+     "text": "How much did the new boiler cost? I should check.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "ans",
+     "text": "The new boiler came to 2,450 pounds installed.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "We still owe the window cleaner for last month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "The boiler service is booked for the third week of March.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "I prefer aisle seats on long flights.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "The cabin Wi-Fi password is written inside the cupboard door.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "Our recycling goes out on alternate Thursdays.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "The car's MOT is due in November.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "qshape6",
+     "query": "How much was the new boiler?",
+     "must": [
+      "ans"
+     ],
+     "may": [
+      "qs"
+     ],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "qshape7",
+   "category": "question_shaped",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "qs",
+     "text": "Which plants need repotting this spring? Must check.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "a",
+     "text": "The monstera needs repotting.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "b",
+     "text": "The fiddle-leaf fig has outgrown its pot.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "The printer in the study needs a new cyan cartridge.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "We still owe the window cleaner for last month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "The boiler service is booked for the third week of March.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "I prefer aisle seats on long flights.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "The cabin Wi-Fi password is written inside the cupboard door.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "qshape7",
+     "query": "Which plants need repotting?",
+     "must": [
+      "a",
+      "b"
+     ],
+     "may": [
+      "qs"
+     ],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "list1",
+   "category": "list_shape",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "a",
+     "text": "We keep two hens in the back garden.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "b",
+     "text": "A tabby cat called Juniper sleeps on our bed.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "c",
+     "text": "There's a tank of neon tetras in the lounge.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "I prefer aisle seats on long flights.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "The cabin Wi-Fi password is written inside the cupboard door.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "Our recycling goes out on alternate Thursdays.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "The car's MOT is due in November.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "My running shoes are a size ten.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "The book club meets on the first Monday of the month.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "list1",
+     "query": "Which animals live with us?",
+     "must": [
+      "a",
+      "b",
+      "c"
+     ],
+     "may": [],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "list2",
+   "category": "list_shape",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "a",
+     "text": "I'm mentoring Hamid, a junior analyst.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "b",
+     "text": "Since March, Grace has been my mentee.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "c",
+     "text": "I meet Oskar fortnightly as his mentor.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "The cabin Wi-Fi password is written inside the cupboard door.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "Our recycling goes out on alternate Thursdays.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "The car's MOT is due in November.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "My running shoes are a size ten.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "The book club meets on the first Monday of the month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "list2",
+     "query": "Which people do I mentor at work?",
+     "must": [
+      "a",
+      "b",
+      "c"
+     ],
+     "may": [],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "list3",
+   "category": "list_shape",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "a",
+     "text": "I grew up in Swansea.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "b",
+     "text": "After uni I rented a flat in Bristol for five years.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "c",
+     "text": "We bought our first house in Norwich.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "Our recycling goes out on alternate Thursdays.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "The car's MOT is due in November.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "My running shoes are a size ten.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "The book club meets on the first Monday of the month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "list3",
+     "query": "Where have I lived?",
+     "must": [
+      "a",
+      "b",
+      "c"
+     ],
+     "may": [],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "list4",
+   "category": "list_shape",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "a",
+     "text": "I'm fluent in Portuguese.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "b",
+     "text": "My German is conversational.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "c",
+     "text": "I picked up some Swahili in Nairobi.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "The car's MOT is due in November.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "My running shoes are a size ten.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "The book club meets on the first Monday of the month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "list4",
+     "query": "What languages do I speak?",
+     "must": [
+      "a",
+      "b",
+      "c"
+     ],
+     "may": [],
+     "exclude": [],
+     "control": true,
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "list5",
+   "category": "list_shape",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "a",
+     "text": "I've played the trumpet since school.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "b",
+     "text": "Lately I've been teaching myself the ukulele.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "My running shoes are a size ten.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "The book club meets on the first Monday of the month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "The printer in the study needs a new cyan cartridge.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "list5",
+     "query": "Tell me the instruments I play.",
+     "must": [
+      "a",
+      "b"
+     ],
+     "may": [],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "list6",
+   "category": "list_shape",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "a",
+     "text": "Ruth stopped eating meat years ago.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "b",
+     "text": "Kwame has been vegetarian since 2015.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "c",
+     "text": "Sam never turns down a steak.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "The book club meets on the first Monday of the month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "The printer in the study needs a new cyan cartridge.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "We still owe the window cleaner for last month.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "list6",
+     "query": "Which of my friends are vegetarian?",
+     "must": [
+      "a",
+      "b"
+     ],
+     "may": [
+      "c"
+     ],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "list7",
+   "category": "list_shape",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "a",
+     "text": "I've got about 300 vintage postcards.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "b",
+     "text": "My shelf of Soviet-era cameras keeps growing.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "The printer in the study needs a new cyan cartridge.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "We still owe the window cleaner for last month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "The boiler service is booked for the third week of March.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "list7",
+     "query": "What do I collect?",
+     "must": [
+      "a",
+      "b"
+     ],
+     "may": [],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "list8",
+   "category": "list_shape",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "a",
+     "text": "My parents keep a cockatiel.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "b",
+     "text": "My niece has a rabbit called Clover.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "The printer in the study needs a new cyan cartridge.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "We still owe the window cleaner for last month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "The boiler service is booked for the third week of March.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "I prefer aisle seats on long flights.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "list8",
+     "query": "Any pets in the wider family?",
+     "must": [
+      "a",
+      "b"
+     ],
+     "may": [],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "list9",
+   "category": "list_shape",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "a",
+     "text": "I invited Noor to Saturday's barbecue.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "b",
+     "text": "Felix and his partner said they'd come on Saturday.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "The printer in the study needs a new cyan cartridge.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "We still owe the window cleaner for last month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "The boiler service is booked for the third week of March.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "I prefer aisle seats on long flights.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "The cabin Wi-Fi password is written inside the cupboard door.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "list9",
+     "query": "Who did I invite to the barbecue?",
+     "must": [
+      "a",
+      "b"
+     ],
+     "may": [],
+     "exclude": [],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "list10",
+   "category": "list_shape",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "a",
+     "text": "I wear varifocals with tortoiseshell frames.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "x1",
+     "text": "My sunglasses broke on holiday.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "x2",
+     "text": "Swimming goggles fog up in the cold pool.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "The printer in the study needs a new cyan cartridge.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "We still owe the window cleaner for last month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "The boiler service is booked for the third week of March.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "I prefer aisle seats on long flights.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "The cabin Wi-Fi password is written inside the cupboard door.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "Our recycling goes out on alternate Thursdays.",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "list10",
+     "query": "What glasses do I wear day to day?",
+     "must": [
+      "a"
+     ],
+     "may": [
+      "x1"
+     ],
+     "exclude": [],
+     "false_positive": true,
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "hist1",
+   "category": "historical",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "The cabin Wi-Fi password is written inside the cupboard door.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "Our recycling goes out on alternate Thursdays.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "The car's MOT is due in November.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "My running shoes are a size ten.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "The book club meets on the first Monday of the month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "job",
+     "text": "I work at Halden Robotics.",
+     "scope": "user:probe",
+     "observed_at": "2021-01-01T00:00:00Z"
+    },
+    {
+     "op": "correct",
+     "ref": "job",
+     "as": "job@new",
+     "text": "I joined Vireo Health as a data lead.",
+     "scope": "user:probe",
+     "replacement_kind": "state_change",
+     "valid_from": "2024-01-01T00:00:00Z"
+    }
+   ],
+   "queries": [
+    {
+     "id": "hist1-asof",
+     "query": "Where was I employed?",
+     "must": [
+      "job"
+     ],
+     "may": [],
+     "exclude": [
+      "job@new"
+     ],
+     "temporal_intent": {
+      "mode": "as_of",
+      "reference_time": "2022-06-01T00:00:00Z",
+      "target_start": "2022-06-01T00:00:00Z"
+     },
+     "scope": "user:probe"
+    },
+    {
+     "id": "hist1-now",
+     "query": "Where am I employed?",
+     "must": [
+      "job@new"
+     ],
+     "may": [],
+     "exclude": [
+      "job"
+     ],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "hist2",
+   "category": "historical",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "Our recycling goes out on alternate Thursdays.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "The car's MOT is due in November.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "My running shoes are a size ten.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "The book club meets on the first Monday of the month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "bg",
+     "text": "My blood group is A positive.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "correct",
+     "ref": "bg",
+     "as": "bg@new",
+     "text": "My blood group is O negative.",
+     "scope": "user:probe",
+     "replacement_kind": "error_correction"
+    }
+   ],
+   "queries": [
+    {
+     "id": "hist2",
+     "query": "What blood group was on record for me?",
+     "must": [],
+     "may": [
+      "bg@new"
+     ],
+     "exclude": [
+      "bg"
+     ],
+     "temporal_intent": {
+      "mode": "historical"
+     },
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "hist3",
+   "category": "historical",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "other",
+     "text": "I met my partner at a friend's wedding.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "The car's MOT is due in November.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "My running shoes are a size ten.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "The book club meets on the first Monday of the month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "ex",
+     "text": "I used to date someone called Marcus.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "forget",
+     "ref": "ex",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "hist3",
+     "query": "Who was I seeing in the past?",
+     "must": [],
+     "may": [
+      "other"
+     ],
+     "exclude": [
+      "ex"
+     ],
+     "temporal_intent": {
+      "mode": "historical"
+     },
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "hist4",
+   "category": "historical",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "My running shoes are a size ten.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "The book club meets on the first Monday of the month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "The printer in the study needs a new cyan cartridge.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "home",
+     "text": "Our home was a canal boat moored near Oxford.",
+     "scope": "user:probe",
+     "observed_at": "2020-01-01T00:00:00Z"
+    },
+    {
+     "op": "correct",
+     "ref": "home",
+     "as": "home@new",
+     "text": "We now live in a terraced house in Reading.",
+     "scope": "user:probe",
+     "replacement_kind": "state_change",
+     "valid_from": "2023-01-01T00:00:00Z"
+    }
+   ],
+   "queries": [
+    {
+     "id": "hist4",
+     "query": "Where did we reside back then?",
+     "must": [
+      "home"
+     ],
+     "may": [],
+     "exclude": [
+      "home@new"
+     ],
+     "temporal_intent": {
+      "mode": "as_of",
+      "reference_time": "2021-06-01T00:00:00Z",
+      "target_start": "2021-06-01T00:00:00Z"
+     },
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "hist5",
+   "category": "historical",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "The book club meets on the first Monday of the month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "The printer in the study needs a new cyan cartridge.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "We still owe the window cleaner for last month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "car",
+     "text": "The car was bought from Grantley Motors.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "dispute",
+     "ref": "car",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "hist5",
+     "query": "Which dealer sold us the car originally?",
+     "must": [],
+     "may": [],
+     "exclude": [
+      "car"
+     ],
+     "temporal_intent": {
+      "mode": "historical"
+     },
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "scope1",
+   "category": "cross_scope",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "The printer in the study needs a new cyan cartridge.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "We still owe the window cleaner for last month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "The boiler service is booked for the third week of March.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "hint",
+     "text": "The alpha launch password hint is 'blue heron'.",
+     "scope": "project:alpha"
+    },
+    {
+     "op": "remember",
+     "ref": "rel",
+     "text": "Beta's release is scheduled for the third quarter.",
+     "scope": "project:beta"
+    }
+   ],
+   "queries": [
+    {
+     "id": "scope1",
+     "query": "What is the launch password hint?",
+     "must": [],
+     "may": [
+      "rel"
+     ],
+     "exclude": [
+      "project:alpha#hint"
+     ],
+     "scope": "project:beta"
+    }
+   ]
+  },
+  {
+   "id": "scope2",
+   "category": "cross_scope",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "The printer in the study needs a new cyan cartridge.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "We still owe the window cleaner for last month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "The boiler service is booked for the third week of March.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "I prefer aisle seats on long flights.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "pay",
+     "text": "My salary is 85,000 pounds a year.",
+     "scope": "user:other"
+    }
+   ],
+   "queries": [
+    {
+     "id": "scope2",
+     "query": "How much do I earn?",
+     "must": [],
+     "may": [],
+     "exclude": [
+      "user:other#pay"
+     ],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "scope3",
+   "category": "cross_scope",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "The printer in the study needs a new cyan cartridge.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "We still owe the window cleaner for last month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "The boiler service is booked for the third week of March.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "I prefer aisle seats on long flights.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "The cabin Wi-Fi password is written inside the cupboard door.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "oncall",
+     "text": "Alpha's on-call engineer this week is Ines.",
+     "scope": "project:alpha"
+    },
+    {
+     "op": "remember",
+     "ref": "oncall",
+     "text": "Beta's on-call engineer this week is Rafael.",
+     "scope": "project:beta"
+    }
+   ],
+   "queries": [
+    {
+     "id": "scope3",
+     "query": "Who is on call this week?",
+     "must": [
+      "oncall"
+     ],
+     "may": [],
+     "exclude": [
+      "project:alpha#oncall"
+     ],
+     "scope": "project:beta"
+    }
+   ]
+  },
+  {
+   "id": "scope4",
+   "category": "cross_scope",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "The printer in the study needs a new cyan cartridge.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "We still owe the window cleaner for last month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "The boiler service is booked for the third week of March.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "I prefer aisle seats on long flights.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "The cabin Wi-Fi password is written inside the cupboard door.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "Our recycling goes out on alternate Thursdays.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "dx",
+     "text": "I was diagnosed with type 2 diabetes.",
+     "scope": "user:a"
+    }
+   ],
+   "queries": [
+    {
+     "id": "scope4",
+     "query": "Do I have any medical conditions?",
+     "must": [],
+     "may": [],
+     "exclude": [
+      "user:a#dx"
+     ],
+     "scope": "user:b"
+    }
+   ]
+  },
+  {
+   "id": "life1",
+   "category": "lifecycle",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "I prefer aisle seats on long flights.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "The cabin Wi-Fi password is written inside the cupboard door.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "Our recycling goes out on alternate Thursdays.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "The car's MOT is due in November.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "My running shoes are a size ten.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "The book club meets on the first Monday of the month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "pin",
+     "text": "My PIN hint is my grandmother's birthday.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "forget",
+     "ref": "pin",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "life1",
+     "query": "How do I remember my card PIN?",
+     "must": [],
+     "may": [],
+     "exclude": [
+      "pin"
+     ],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "life2",
+   "category": "lifecycle",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "The cabin Wi-Fi password is written inside the cupboard door.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "Our recycling goes out on alternate Thursdays.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "The car's MOT is due in November.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "My running shoes are a size ten.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "The book club meets on the first Monday of the month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fear",
+     "text": "I told my therapist about my fear of flying.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "forget",
+     "ref": "fear",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "life2",
+     "query": "What am I anxious about?",
+     "must": [],
+     "may": [],
+     "exclude": [
+      "fear"
+     ],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "life3",
+   "category": "lifecycle",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "Our recycling goes out on alternate Thursdays.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "The car's MOT is due in November.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "My running shoes are a size ten.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "The book club meets on the first Monday of the month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "sch",
+     "text": "My son's school is St Anne's.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "correct",
+     "ref": "sch",
+     "as": "sch@new",
+     "text": "My son's school is Holy Trinity.",
+     "scope": "user:probe",
+     "replacement_kind": "error_correction"
+    }
+   ],
+   "queries": [
+    {
+     "id": "life3",
+     "query": "Which school does my boy attend?",
+     "must": [
+      "sch@new"
+     ],
+     "may": [],
+     "exclude": [
+      "sch"
+     ],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "life4",
+   "category": "lifecycle",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "The car's MOT is due in November.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "My running shoes are a size ten.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "The book club meets on the first Monday of the month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "diet",
+     "text": "I'm strictly vegetarian.",
+     "scope": "user:probe",
+     "observed_at": "2020-01-01T00:00:00Z"
+    },
+    {
+     "op": "correct",
+     "ref": "diet",
+     "as": "diet@new",
+     "text": "I started eating fish again in 2024.",
+     "scope": "user:probe",
+     "replacement_kind": "state_change",
+     "valid_from": "2024-01-01T00:00:00Z"
+    }
+   ],
+   "queries": [
+    {
+     "id": "life4",
+     "query": "What's my diet like these days?",
+     "must": [
+      "diet@new"
+     ],
+     "may": [],
+     "exclude": [
+      "diet"
+     ],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "life5",
+   "category": "lifecycle",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "My running shoes are a size ten.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "The book club meets on the first Monday of the month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "The printer in the study needs a new cyan cartridge.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "navy",
+     "text": "Grandad served in the navy.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "dispute",
+     "ref": "navy",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "life5",
+     "query": "Was my grandfather in the military?",
+     "must": [],
+     "may": [],
+     "exclude": [
+      "navy"
+     ],
+     "scope": "user:probe"
+    }
+   ]
+  },
+  {
+   "id": "life6",
+   "category": "lifecycle",
+   "operations": [
+    {
+     "op": "remember",
+     "ref": "oz",
+     "text": "Aunt June moved to Perth, Australia in 2019.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill0",
+     "text": "The book club meets on the first Monday of the month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill1",
+     "text": "I switched electricity supplier to save money.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill2",
+     "text": "The spare house key is with the neighbour at number twelve.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill3",
+     "text": "I'm trying to drink less coffee after lunch.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill4",
+     "text": "The printer in the study needs a new cyan cartridge.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "fill5",
+     "text": "We still owe the window cleaner for last month.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "remember",
+     "ref": "sco",
+     "text": "Aunt June lives in Perth, Scotland.",
+     "scope": "user:probe"
+    },
+    {
+     "op": "dispute",
+     "ref": "sco",
+     "scope": "user:probe"
+    }
+   ],
+   "queries": [
+    {
+     "id": "life6",
+     "query": "Where does Aunt June live?",
+     "must": [
+      "oz"
+     ],
+     "may": [],
+     "exclude": [
+      "sco"
+     ],
+     "scope": "user:probe"
+    }
+   ]
+  }
+ ]
+}

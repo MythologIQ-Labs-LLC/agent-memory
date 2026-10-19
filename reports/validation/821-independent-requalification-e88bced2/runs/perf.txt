@@ -1,0 +1,9 @@
+{"tree": "am-816", "remember_p50_p95": [6.72, 8.04], "recall_p50_p95": [9.86, 13.93], "open_close_p50_p95": [22.97, 28.79]}
+{"tree": "am-821-frozen", "remember_p50_p95": [7.24, 9.15], "recall_p50_p95": [10.55, 15.8], "open_close_p50_p95": [22.45, 28.66]}
+{"tree": "am-821-r1", "remember_p50_p95": [6.76, 8.85], "recall_p50_p95": [10.12, 14.05], "open_close_p50_p95": [22.53, 32.83]}
+{"tree": "am-816", "remember_p50_p95": [6.37, 7.59], "recall_p50_p95": [9.5, 14.51], "open_close_p50_p95": [22.16, 28.34]}
+{"tree": "am-821-frozen", "remember_p50_p95": [6.91, 8.59], "recall_p50_p95": [10.17, 14.24], "open_close_p50_p95": [23.06, 28.39]}
+{"tree": "am-821-r1", "remember_p50_p95": [7.03, 9.5], "recall_p50_p95": [10.7, 14.74], "open_close_p50_p95": [23.26, 29.72]}
+{"tree": "am-816", "remember_p50_p95": [6.16, 7.84], "recall_p50_p95": [9.38, 14.36], "open_close_p50_p95": [21.46, 30.26]}
+{"tree": "am-821-frozen", "remember_p50_p95": [6.76, 8.76], "recall_p50_p95": [10.21, 15.7], "open_close_p50_p95": [22.52, 28.76]}
+{"tree": "am-821-r1", "remember_p50_p95": [6.89, 10.02], "recall_p50_p95": [10.49, 14.29], "open_close_p50_p95": [23.03, 32.9]}

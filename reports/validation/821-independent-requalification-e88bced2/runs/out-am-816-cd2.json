@@ -1,0 +1,67 @@
+{
+ "tree": "/home/user/eval/am-816",
+ "head": "e13d8c58c3d5521be50c8d32feacf2710c7fc6c5",
+ "cases": {
+  "C": {
+   "runs": [
+    {
+     "killed": 4,
+     "acks": 78,
+     "witness": {
+      "exists": false,
+      "is_symlink": false,
+      "temps": []
+     },
+     "reopen_first_try": {
+      "ok": true,
+      "admitted": 78
+     },
+     "acked_missing": 0
+    },
+    {
+     "killed": 4,
+     "acks": 88,
+     "witness": {
+      "exists": false,
+      "is_symlink": false,
+      "temps": []
+     },
+     "reopen_first_try": {
+      "ok": true,
+      "admitted": 88
+     },
+     "acked_missing": 0
+    },
+    {
+     "killed": 3,
+     "acks": 80,
+     "witness": {
+      "exists": false,
+      "is_symlink": false,
+      "temps": []
+     },
+     "reopen_first_try": {
+      "ok": true,
+      "admitted": 80
+     },
+     "acked_missing": 0
+    }
+   ],
+   "reopen_ok": 3,
+   "n": 3
+  },
+  "D": {
+   "witness_writes": 0,
+   "regressions": 0,
+   "final_witness": {
+    "exists": false,
+    "is_symlink": false,
+    "temps": []
+   },
+   "reopen": {
+    "ok": true,
+    "admitted": 61
+   }
+  }
+ }
+}

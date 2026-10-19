@@ -1,0 +1,91 @@
+{
+ "kind": "lme",
+ "plane": "turn",
+ "paired_n": 419,
+ "base_pass": 318,
+ "cand_pass": 332,
+ "classes": {
+  "improved": 16,
+  "regressed": 2,
+  "unchanged_fail": 85,
+  "unchanged_pass": 316
+ },
+ "mcnemar_exact_p": 0.001312,
+ "delta_pass_rate_ci95": [
+  0.0334,
+  0.0143,
+  0.0525
+ ],
+ "delta_precision_ci95": null,
+ "delta_recall_ci95": [
+  0.0334,
+  0.0143,
+  0.0525
+ ],
+ "by_group": {
+  "knowledge-update": {
+   "n": 72,
+   "base_pass": 66,
+   "cand_pass": 70,
+   "improved": 4,
+   "regressed": 0
+  },
+  "multi-session": {
+   "n": 121,
+   "base_pass": 72,
+   "cand_pass": 76,
+   "improved": 4,
+   "regressed": 0
+  },
+  "single-session-assistant": {
+   "n": 5,
+   "base_pass": 3,
+   "cand_pass": 5,
+   "improved": 2,
+   "regressed": 0
+  },
+  "single-session-preference": {
+   "n": 30,
+   "base_pass": 15,
+   "cand_pass": 17,
+   "improved": 3,
+   "regressed": 1
+  },
+  "single-session-user": {
+   "n": 64,
+   "base_pass": 60,
+   "cand_pass": 63,
+   "improved": 3,
+   "regressed": 0
+  },
+  "temporal-reasoning": {
+   "n": 127,
+   "base_pass": 102,
+   "cand_pass": 101,
+   "improved": 0,
+   "regressed": 1
+  }
+ },
+ "improved_ids": [
+  "07b6f563",
+  "25e5aa4f",
+  "42ec0761",
+  "505af2f5",
+  "561fabcd",
+  "59524333",
+  "73d42213",
+  "75499fd8",
+  "91b15a6e",
+  "afdc33df",
+  "ccb36322",
+  "dc439ea3",
+  "dfde3500",
+  "eace081b",
+  "gpt4_5501fe77",
+  "gpt4_e05b82a6"
+ ],
+ "regressed_ids": [
+  "0edc2aef",
+  "gpt4_e061b84g"
+ ]
+}

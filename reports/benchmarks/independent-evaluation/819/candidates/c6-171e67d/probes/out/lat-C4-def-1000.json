@@ -1,0 +1,1 @@
+{"N": 1000, "semantic": "off", "ingest_s": 5.98, "cold_first_ms": 123.1, "warm_p50_ms": 75.3, "warm_p95_ms": 107.8, "peak_rss_mib": 58.2, "store_bytes": 4723036}

@@ -1,0 +1,1 @@
+{"N": 200, "semantic": "required", "selection": "ranked_prefix", "admitted_median": 200.0, "warm_p50_ms": 38.8, "warm_p95_ms": 76.4, "peak_rss_mib": 316.0, "fusion_status_seen": []}

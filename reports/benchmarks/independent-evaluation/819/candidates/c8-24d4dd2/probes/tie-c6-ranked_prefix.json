@@ -1,0 +1,298 @@
+{
+ "semantic": "required",
+ "selection": "ranked_prefix",
+ "queries": 9,
+ "top5_differs": 0,
+ "returned_differs": 0,
+ "exact_fused_ties_in_top5": 0,
+ "details": [
+  {
+   "query": "What do I know about our cat?",
+   "forward_top5": [
+    5,
+    2,
+    0,
+    6,
+    4
+   ],
+   "reversed_top5": [
+    5,
+    2,
+    0,
+    6,
+    4
+   ],
+   "forward_returned": [
+    5,
+    2,
+    0,
+    6,
+    4
+   ],
+   "reversed_returned": [
+    5,
+    2,
+    0,
+    6,
+    4
+   ],
+   "adjacent_ties_forward": 0
+  },
+  {
+   "query": "Is the cat healthy?",
+   "forward_top5": [
+    6,
+    3,
+    4,
+    1,
+    0
+   ],
+   "reversed_top5": [
+    6,
+    3,
+    4,
+    1,
+    0
+   ],
+   "forward_returned": [
+    6,
+    3,
+    4,
+    1,
+    0
+   ],
+   "reversed_returned": [
+    6,
+    3,
+    4,
+    1,
+    0
+   ],
+   "adjacent_ties_forward": 0
+  },
+  {
+   "query": "Where does the cat sleep?",
+   "forward_top5": [
+    4,
+    0,
+    1,
+    7,
+    6
+   ],
+   "reversed_top5": [
+    4,
+    0,
+    1,
+    7,
+    6
+   ],
+   "forward_returned": [
+    4,
+    0,
+    1,
+    7,
+    6
+   ],
+   "reversed_returned": [
+    4,
+    0,
+    1,
+    7,
+    6
+   ],
+   "adjacent_ties_forward": 0
+  },
+  {
+   "query": "When is my train to Leeds?",
+   "forward_top5": [
+    3,
+    0,
+    6,
+    4,
+    1
+   ],
+   "reversed_top5": [
+    3,
+    0,
+    6,
+    4,
+    1
+   ],
+   "forward_returned": [
+    3,
+    0,
+    6,
+    4,
+    1
+   ],
+   "reversed_returned": [
+    3,
+    0,
+    6,
+    4,
+    1
+   ],
+   "adjacent_ties_forward": 0
+  },
+  {
+   "query": "What happens on the Leeds line?",
+   "forward_top5": [
+    7,
+    5,
+    3,
+    0,
+    6
+   ],
+   "reversed_top5": [
+    7,
+    5,
+    3,
+    0,
+    6
+   ],
+   "forward_returned": [
+    7,
+    5,
+    3,
+    0,
+    6
+   ],
+   "reversed_returned": [
+    7,
+    5,
+    3,
+    0,
+    6
+   ],
+   "adjacent_ties_forward": 0
+  },
+  {
+   "query": "How busy is my morning train?",
+   "forward_top5": [
+    3,
+    6,
+    1,
+    5,
+    2
+   ],
+   "reversed_top5": [
+    3,
+    6,
+    1,
+    5,
+    2
+   ],
+   "forward_returned": [
+    3,
+    6,
+    1,
+    5,
+    2
+   ],
+   "reversed_returned": [
+    3,
+    6,
+    1,
+    5,
+    2
+   ],
+   "adjacent_ties_forward": 0
+  },
+  {
+   "query": "What does grandma grow?",
+   "forward_top5": [
+    6,
+    3,
+    0,
+    1,
+    4
+   ],
+   "reversed_top5": [
+    6,
+    3,
+    0,
+    1,
+    4
+   ],
+   "forward_returned": [
+    6,
+    3,
+    0,
+    1,
+    4
+   ],
+   "reversed_returned": [
+    6,
+    3,
+    0,
+    1,
+    4
+   ],
+   "adjacent_ties_forward": 0
+  },
+  {
+   "query": "When do we pick apples?",
+   "forward_top5": [
+    5,
+    2,
+    6,
+    0,
+    7
+   ],
+   "reversed_top5": [
+    5,
+    2,
+    6,
+    0,
+    7
+   ],
+   "forward_returned": [
+    5,
+    2,
+    6,
+    0,
+    7
+   ],
+   "reversed_returned": [
+    5,
+    2,
+    6,
+    0,
+    7
+   ],
+   "adjacent_ties_forward": 0
+  },
+  {
+   "query": "What happened to the apple trees?",
+   "forward_top5": [
+    0,
+    3,
+    1,
+    7,
+    6
+   ],
+   "reversed_top5": [
+    0,
+    3,
+    1,
+    7,
+    6
+   ],
+   "forward_returned": [
+    0,
+    3,
+    1,
+    7,
+    6
+   ],
+   "reversed_returned": [
+    0,
+    3,
+    1,
+    7,
+    6
+   ],
+   "adjacent_ties_forward": 0
+  }
+ ]
+}
