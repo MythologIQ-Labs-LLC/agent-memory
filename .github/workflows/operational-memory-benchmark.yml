@@ -1,9 +1,7 @@
 name: Operational Memory Benchmark
 
 on:
-  push:
-    branches: [main]
-  pull_request:
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -55,6 +53,7 @@ jobs:
           name: operational-memory-local-benchmark
           path: operational-memory-benchmark.json
           if-no-files-found: error
+          retention-days: 30
 
       - name: Test native failure-memory benchmark contract
         run: >-
@@ -102,6 +101,7 @@ jobs:
           name: native-failure-memory-benchmark
           path: failure-memory-benchmark.json
           if-no-files-found: error
+          retention-days: 30
 
   vjepa2-1-frozen-representation:
     runs-on: ubuntu-latest
@@ -165,3 +165,4 @@ jobs:
           name: operational-memory-vjepa2-comparator
           path: vjepa2-operational-comparator.json
           if-no-files-found: error
+          retention-days: 30
