@@ -17,7 +17,7 @@
 | P4 no-answer queries returning nothing | 11/49 | **13/49** | ≥ 11 | pass |
 | P5 safety violations / superseded returned | 2 / 0 | 2 / 0 | no new | pass |
 | P5 full `reference/tests` | 4 failed | same 4 failures (see §4) | no new | pass |
-| P6 LongMemEval-S | see §3 | | | informative only after the stop |
+| P6 LongMemEval-S (subset of 100, 85 scored) | see §3 | 1 question lost each at session @3/@5/@10 and turn @10, p = 1 | no significant loss | pass (informative) |
 | P7 added p50, init, RSS | | +235–246 ms, 1.2 s, +580 MiB | ≤ 300 ms, ≤ 5 s, ≤ 700 MiB | pass |
 
 Further detail:
@@ -64,7 +64,20 @@ The oracle row uses gold and is **not** a candidate. It shows that, given a reli
 
 ## 3. LongMemEval-S (hash-ordered subset of 100, informative only)
 
-PENDING. Filled in from `evidence/lme/` when the runs complete.
+The runs use the runner's hash-ordered subset of 100 questions, 85 of them scored. Both arms run at `a2ab582d` with budget 50, on input sha256 `d6f21ea9…`. The base arm is C4+sem (gate off, byte-identical to C4); the other is the gate (`tools/lme_with_answerability.py`). Source: `evidence/lme/PAIRED.txt`.
+
+| Plane | recall_all@3 | @5 | @10 |
+|---|---|---|---|
+| session | 0.800 → 0.788 (+0/−1) | 0.906 → 0.894 (+0/−1) | 0.976 → 0.965 (+0/−1) |
+| turn | 0.576 → 0.576 (+0/−0) | 0.671 → 0.671 (+0/−0) | 0.800 → 0.788 (+0/−1) |
+
+No difference is significant (every McNemar p = 1). The gate neither helps nor hurts LongMemEval retrieval at this size: lexical evidence dominates there, and the semantic route is subordinate in ranking.
+
+Total recall time:
+- session: 296 → 883 s;
+- turn: 385 → 540 s.
+
+Session texts run to 512 tokens.
 
 ## 4. Cost, safety and reproducibility
 

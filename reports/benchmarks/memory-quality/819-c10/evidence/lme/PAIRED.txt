@@ -1,0 +1,14 @@
+base a2ab582d cand a2ab582d input d6f21ea9d60a n 100
+== session: scored 85
+  recall_all@3  0.8000 -> 0.7882   +0/-1  McNemar p=1
+  recall_all@5  0.9059 -> 0.8941   +0/-1  McNemar p=1
+  recall_all@10 0.9765 -> 0.9647   +0/-1  McNemar p=1
+  timing base {'ingest_seconds_total': 42.399, 'recall_seconds_max': 5.322579, 'recall_seconds_total': 295.714, 'wall_seconds': 378.934} 
+  timing cand {'ingest_seconds_total': 37.404, 'recall_seconds_max': 15.646819, 'recall_seconds_total': 883.352, 'wall_seconds': 956.585}
+base a2ab582d cand a2ab582d input d6f21ea9d60a n 100
+== turn: scored 85
+  recall_all@3  0.5765 -> 0.5765   +0/-0  McNemar p=1
+  recall_all@5  0.6706 -> 0.6706   +0/-0  McNemar p=1
+  recall_all@10 0.8000 -> 0.7882   +0/-1  McNemar p=1
+  timing base {'ingest_seconds_total': 152.151, 'recall_seconds_max': 6.772711, 'recall_seconds_total': 385.115, 'wall_seconds': 576.804} 
+  timing cand {'ingest_seconds_total': 149.984, 'recall_seconds_max': 13.679926, 'recall_seconds_total': 540.097, 'wall_seconds': 727.089}
