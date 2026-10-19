@@ -20,6 +20,8 @@ All six currently trigger on every PR **and** `main` push. Replace both automati
 
 **Amendment 2026-10-17 (independent qualification R2, approved in #662):** `semantic-representation.yml` keeps `workflow_dispatch` and gains a path-scoped `pull_request` trigger on the semantic runtime modules, `reference/requirements-semantic.txt`, its five test modules and the workflow file; it has no push trigger. Reason: it is the only CI job that runs the pinned provider with skips turned into failures, so dispatch-only would leave that runtime route with no automatic unskipped test. F1 below applies to the other five workflows; the unfiltered-PR and main-push reductions are unchanged.
 
+**Activation record 2026-10-19:** the owner approved the Actions budget for exactly one protected qualification event on #820. This change is that event: the first commit on the branch without `[skip ci]`, made on top of the locally qualified head `7c327069`. It is expected to start about 41 YAML pull-request workflows plus one CodeQL default-setup run. No further pushes are made unless a started check fails, and any failure is reproduced locally first.
+
 **Capacity impact per normal PR head:** six fewer workflow *runs* (the long-horizon and operational workflows each contain two jobs). **Per main push:** six fewer runs. This is a trigger count reduction, **not quantified billed minutes or dollar savings**. Exact total savings depend on which workflows used to start and how long they actually ran. Existing path-scoped hot-path safety and required security/release checks remain untouched.
 
 ## Before-code adversarial controls
