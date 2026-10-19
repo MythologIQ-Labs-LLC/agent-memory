@@ -72,7 +72,7 @@ These letter IDs are **virtual library shelves**, not additional filesystem dire
 
 **Content owner(s):** [Implementation ancestry map](05-repo-implementation-map.md), [ownership map](39-implementation-ownership-map.md), [source rights](SOURCE_RIGHTS_POLICY.md).
 
-**Numbered-document register (8):** [05-repo-implementation-map](05-repo-implementation-map.md) · [07 retired integration roadmap (historical)](07-integration-roadmap.md) · [08-source-material-index](08-source-material-index.md) · [23-research-bibliography](23-research-bibliography.md) · [34-adapter-contracts](34-adapter-contracts.md) · [35-interoperability-profiles](35-interoperability-profiles.md) · [37-memory-economics-and-budget-policy](37-memory-economics-and-budget-policy.md) · [40-aligned-projects-and-intellectual-lineage](40-aligned-projects-and-intellectual-lineage.md).
+**Numbered-document register (10):** [05-repo-implementation-map](05-repo-implementation-map.md) · [07 retired integration roadmap (historical)](07-integration-roadmap.md) · [08-source-material-index](08-source-material-index.md) · [23-research-bibliography](23-research-bibliography.md) · [34-adapter-contracts](34-adapter-contracts.md) · [35-interoperability-profiles](35-interoperability-profiles.md) · [37-memory-economics-and-budget-policy](37-memory-economics-and-budget-policy.md) · [40-aligned-projects-and-intellectual-lineage](40-aligned-projects-and-intellectual-lineage.md) · [74-github-actions-cost-and-qualification](74-github-actions-cost-and-qualification.md) · [75-finops-protected-artifacts-and-closeout-review](75-finops-protected-artifacts-and-closeout-review.md).
 
 ## 3. Other architectural collections and their boundaries
 
