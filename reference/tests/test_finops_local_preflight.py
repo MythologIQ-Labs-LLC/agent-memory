@@ -41,12 +41,14 @@ class LocalFinOpsPreflightTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "must not run"):
             preflight.run_preflight("quick")
 
+    @patch.dict(os.environ, {"GITHUB_ACTIONS": ""})  # local-mode tests must pass on hosted CI too
     @patch.object(preflight, "local_git")
     def test_dirty_revision_requires_explicit_exception(self, git):
         git.side_effect = ["a" * 40, "quiet-branch", " M file.py"]
         with self.assertRaisesRegex(ValueError, "dirty"):
             preflight.run_preflight("quick")
 
+    @patch.dict(os.environ, {"GITHUB_ACTIONS": ""})  # local-mode tests must pass on hosted CI too
     @patch.object(preflight, "local_git")
     @patch.object(preflight, "test_commands")
     @patch.object(preflight.subprocess, "run")
@@ -71,6 +73,7 @@ class LocalFinOpsPreflightTests(unittest.TestCase):
         self.assertEqual(report["authority_effect"], "none")
         self.assertEqual(run.call_count, 1)
 
+    @patch.dict(os.environ, {"GITHUB_ACTIONS": ""})  # local-mode tests must pass on hosted CI too
     @patch.object(preflight, "local_git")
     @patch.object(preflight, "test_commands")
     @patch.object(preflight.subprocess, "run")
