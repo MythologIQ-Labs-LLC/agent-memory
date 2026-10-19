@@ -1,0 +1,11 @@
+needed lost by K16 gate: 48 cos dist [0.31, 0.32, 0.33, 0.34, 0.35, 0.36, 0.37, 0.41, 0.44, 0.46, 0.47, 0.52] drank [1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 5] qnli [-7.5, -7.4, -7.3, -7.3, -6.9, -6.8, -6.6, -6.4, -5.6, -5.1, -4.4, -2.8]
+K8&q>0 | c4&drank1                                   {'strict': 92, 'needed': 239, 'extras': 313, 'abstain': '11/51'} strict +48/-12
+K8&q>0 | cos>0.5                                     {'strict': 102, 'needed': 230, 'extras': 290, 'abstain': '24/51'} strict +60/-14
+K8&q>0 | c4&rel>=0.9                                 {'strict': 87, 'needed': 246, 'extras': 345, 'abstain': '11/51'} strict +43/-12
+K8&q>-2                                              {'strict': 101, 'needed': 228, 'extras': 298, 'abstain': '26/51'} strict +62/-17
+K8&q>0 | c4&q>-3                                     {'strict': 102, 'needed': 231, 'extras': 285, 'abstain': '26/51'} strict +61/-15
+K16&q>0 | c4&drank1                                  {'strict': 87, 'needed': 245, 'extras': 375, 'abstain': '10/51'} strict +45/-14
+K16&q>0 | cos>0.5                                    {'strict': 97, 'needed': 236, 'extras': 352, 'abstain': '23/51'} strict +57/-16
+K16&q>0 | c4&rel>=0.9                                {'strict': 82, 'needed': 252, 'extras': 407, 'abstain': '10/51'} strict +40/-14
+K16&q>-2                                             {'strict': 98, 'needed': 236, 'extras': 372, 'abstain': '25/51'} strict +60/-18
+K16&q>0 | c4&q>-3                                    {'strict': 97, 'needed': 237, 'extras': 347, 'abstain': '25/51'} strict +58/-17

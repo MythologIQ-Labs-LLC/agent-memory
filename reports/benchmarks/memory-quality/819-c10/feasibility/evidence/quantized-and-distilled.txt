@@ -1,0 +1,16 @@
+qnli_u8: decision agreement with fp32 qnli 0.9606  AUC 0.766
+   dense<=8 & qnli_u8>0 {'strict': 103, 'needed': 170, 'extras': 224, 'abstain': '24/51'} strict +65/-18
+   dense<=16 & qnli_u8>0 {'strict': 96, 'needed': 173, 'extras': 251, 'abstain': '23/51'} strict +61/-21
+   dense<=32 & qnli_u8>0 {'strict': 95, 'needed': 174, 'extras': 276, 'abstain': '23/51'} strict +60/-21
+qnli_v8: decision agreement with fp32 qnli 0.9594  AUC 0.768
+   dense<=8 & qnli_v8>0 {'strict': 98, 'needed': 167, 'extras': 224, 'abstain': '22/51'} strict +59/-17
+   dense<=16 & qnli_v8>0 {'strict': 92, 'needed': 170, 'extras': 251, 'abstain': '21/51'} strict +56/-20
+   dense<=32 & qnli_v8>0 {'strict': 89, 'needed': 171, 'extras': 283, 'abstain': '21/51'} strict +54/-21
+qdr: decision agreement with fp32 qnli 0.9432  AUC 0.889
+   dense<=8 & qdr>0 {'strict': 81, 'needed': 216, 'extras': 344, 'abstain': '19/51'} strict +43/-18
+   dense<=16 & qdr>0 {'strict': 72, 'needed': 225, 'extras': 414, 'abstain': '17/51'} strict +38/-22
+   dense<=32 & qdr>0 {'strict': 68, 'needed': 229, 'extras': 482, 'abstain': '17/51'} strict +36/-24
+qdr_u8: decision agreement with fp32 qnli 0.9434  AUC 0.888
+   dense<=8 & qdr_u8>0 {'strict': 80, 'needed': 212, 'extras': 332, 'abstain': '21/51'} strict +41/-17
+   dense<=16 & qdr_u8>0 {'strict': 68, 'needed': 219, 'extras': 407, 'abstain': '19/51'} strict +34/-22
+   dense<=32 & qdr_u8>0 {'strict': 64, 'needed': 223, 'extras': 479, 'abstain': '19/51'} strict +32/-24

@@ -1,0 +1,29 @@
+dense<=4 & qnli>0                        {'strict': 108, 'needed': 200, 'extras': 230, 'abstain': '26/51'} strict +64/-12 needed +12/-53
+dense<=8 & qnli>0                        {'strict': 105, 'needed': 226, 'extras': 273, 'abstain': '26/51'} strict +64/-15 needed +26/-41
+dense<=12 & qnli>0                       {'strict': 101, 'needed': 230, 'extras': 302, 'abstain': '25/51'} strict +62/-17 needed +30/-41
+dense<=16 & qnli>0                       {'strict': 100, 'needed': 232, 'extras': 335, 'abstain': '25/51'} strict +61/-17 needed +32/-41
+dense<=24 & qnli>0                       {'strict': 97, 'needed': 235, 'extras': 373, 'abstain': '25/51'} strict +59/-18 needed +35/-41
+dense<=32 & qnli>0                       {'strict': 97, 'needed': 240, 'extras': 410, 'abstain': '25/51'} strict +59/-18 needed +40/-41
+dense<=8 & cos>0.2 & qnli>0              {'strict': 110, 'needed': 214, 'extras': 235, 'abstain': '26/51'} strict +63/-9 needed +14/-41
+dense<=16 & cos>0.2 & qnli>0             {'strict': 109, 'needed': 214, 'extras': 246, 'abstain': '26/51'} strict +62/-9 needed +14/-41
+dense<=32 & cos>0.2 & qnli>0             {'strict': 108, 'needed': 214, 'extras': 247, 'abstain': '26/51'} strict +61/-9 needed +14/-41
+C4sem & qnli>0 | dense<=16 & qnli>2      {'strict': 99, 'needed': 225, 'extras': 311, 'abstain': '25/51'} strict +59/-16 needed +27/-43
+8 pairs/query mean 7.9 max n 60
+16 pairs/query mean 14.8 max n 60
+32 pairs/query mean 27.1 max n 60
+c4sem pairs/query 2.5
+819-c6_dev_c5-dev-scenarios C4sem {'strict': 22, 'needed': 29, 'extras': 27, 'abstain': '5/8'} K16 {'strict': 24, 'needed': 31, 'extras': 26, 'abstain': '6/8'}
+819-c6_dev_diag-scenarios C4sem {'strict': 8, 'needed': 20, 'extras': 22, 'abstain': '2/6'} K16 {'strict': 15, 'needed': 22, 'extras': 16, 'abstain': '4/6'}
+819-c6_review_gen C4sem {'strict': 6, 'needed': 36, 'extras': 122, 'abstain': '1/13'} K16 {'strict': 15, 'needed': 37, 'extras': 67, 'abstain': '3/13'}
+819-c7_dev_c7-scenarios C4sem {'strict': 4, 'needed': 50, 'extras': 117, 'abstain': '0/6'} K16 {'strict': 14, 'needed': 44, 'extras': 66, 'abstain': '3/6'}
+819-c8_dev_c8-scenarios C4sem {'strict': 8, 'needed': 50, 'extras': 148, 'abstain': '2/6'} K16 {'strict': 11, 'needed': 51, 'extras': 105, 'abstain': '2/6'}
+c9d_longitudinal C4sem {'strict': 5, 'needed': 28, 'extras': 52, 'abstain': '1/6'} K16 {'strict': 13, 'needed': 24, 'extras': 19, 'abstain': '4/6'}
+c9d_merged C4sem {'strict': 3, 'needed': 28, 'extras': 70, 'abstain': '0/6'} K16 {'strict': 8, 'needed': 23, 'extras': 36, 'abstain': '3/6'}
+LOSO 819-c6_dev_c5-dev-scenarios t* -3.0 {'strict': 25, 'needed': 33, 'extras': 33, 'abstain': '6/8'}
+LOSO 819-c6_dev_diag-scenarios t* -3.0 {'strict': 14, 'needed': 24, 'extras': 22, 'abstain': '4/6'}
+LOSO 819-c6_review_gen t* -3.0 {'strict': 13, 'needed': 37, 'extras': 78, 'abstain': '3/13'}
+LOSO 819-c7_dev_c7-scenarios t* 0.0 {'strict': 14, 'needed': 44, 'extras': 66, 'abstain': '3/6'}
+LOSO 819-c8_dev_c8-scenarios t* -3.0 {'strict': 8, 'needed': 53, 'extras': 122, 'abstain': '2/6'}
+LOSO c9d_longitudinal t* -1.5 {'strict': 13, 'needed': 24, 'extras': 20, 'abstain': '4/6'}
+LOSO c9d_merged t* 0.0 {'strict': 8, 'needed': 23, 'extras': 36, 'abstain': '3/6'}
+LOSO total {'strict': 95, 'needed': 238, 'extras': 377}

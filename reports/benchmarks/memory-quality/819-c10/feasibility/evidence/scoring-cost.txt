@@ -1,0 +1,9 @@
+{"pairs": 422, "seconds": {"msm6": 2.4, "msm12": 4.0, "mxbx": 6.6, "qnli": 12.9, "bger": 14.2}, "ms_per_pair": {"msm6": 5.62, "msm12": 9.59, "mxbx": 15.57, "qnli": 30.61, "bger": 33.63}}
+{"pairs": 770, "seconds": {"msm6": 3.8, "msm12": 7.2, "mxbx": 12.0, "qnli": 24.8, "bger": 27.9}, "ms_per_pair": {"msm6": 4.88, "msm12": 9.39, "mxbx": 15.57, "qnli": 32.25, "bger": 36.24}}
+{"pairs": 1659, "seconds": {"msm6": 7.9, "msm12": 15.2, "mxbx": 26.9, "qnli": 52.9, "bger": 60.6}, "ms_per_pair": {"msm6": 4.77, "msm12": 9.15, "mxbx": 16.21, "qnli": 31.9, "bger": 36.51}}
+{"pairs": 1960, "seconds": {"msm6": 9.6, "msm12": 18.7, "mxbx": 33.1, "qnli": 63.0, "bger": 74.4}, "ms_per_pair": {"msm6": 4.92, "msm12": 9.56, "mxbx": 16.89, "qnli": 32.14, "bger": 37.98}}
+{"pairs": 1926, "seconds": {"msm6": 9.5, "msm12": 18.5, "mxbx": 32.0, "qnli": 63.4, "bger": 71.3}, "ms_per_pair": {"msm6": 4.92, "msm12": 9.62, "mxbx": 16.64, "qnli": 32.9, "bger": 36.99}}
+{"pairs": 1050, "seconds": {"msm6": 5.8, "msm12": 11.1, "mxbx": 19.6, "qnli": 37.1, "bger": 38.7}, "ms_per_pair": {"msm6": 5.51, "msm12": 10.62, "mxbx": 18.71, "qnli": 35.31, "bger": 36.88}}
+{"pairs": 1800, "seconds": {"msm6": 10.2, "msm12": 20.0, "mxbx": 36.9, "qnli": 65.9, "bger": 68.2}, "ms_per_pair": {"msm6": 5.66, "msm12": 11.12, "mxbx": 20.48, "qnli": 36.6, "bger": 37.88}}
+{"qnli_u8": 32.16, "qnli_v8": 10.09}
+{"qdr": 17.03, "qdr_u8": 16.79}

@@ -1,0 +1,35 @@
+queries 298 rows 9587 needed 384
+C4+sem {'strict': 56, 'needed': 241, 'extras': 558, 'abstain': '11/51'} misses 143
+
+## Separation (AUC need vs other/excluded, all in-scope pairs; and within the 143 misses' queries)
+cos    AUC all 0.906  AUC misses-vs-their-negatives 0.777  misses at model rank1 8  misses with logit>0 None
+bcos   AUC all 0.916  AUC misses-vs-their-negatives 0.807  misses at model rank1 20  misses with logit>0 None
+msm6   AUC all 0.919  AUC misses-vs-their-negatives 0.798  misses at model rank1 13  misses with logit>0 0
+msm12  AUC all 0.936  AUC misses-vs-their-negatives 0.818  misses at model rank1 15  misses with logit>0 0
+mxbx   AUC all 0.931  AUC misses-vs-their-negatives 0.828  misses at model rank1 31  misses with logit>0 5
+qnli   AUC all 0.906  AUC misses-vs-their-negatives 0.843  misses at model rank1 40  misses with logit>0 48
+bger   AUC all 0.836  AUC misses-vs-their-negatives 0.676  misses at model rank1 23  misses with logit>0 0
+
+## Rules at the model's intrinsic boundary (logit > 0), no fitted threshold
+C4sem & msm6>0 (gate only)         {'strict': 88, 'needed': 128, 'extras': 195, 'abstain': '28/51'}  strict +54/-22
+dense<=32 & msm6>0 (gate+reach)    {'strict': 88, 'needed': 128, 'extras': 195, 'abstain': '28/51'}  strict +54/-22
+any & msm6>0                       {'strict': 88, 'needed': 128, 'extras': 195, 'abstain': '28/51'}  strict +54/-22
+C4sem & msm12>0 (gate only)        {'strict': 88, 'needed': 128, 'extras': 198, 'abstain': '28/51'}  strict +54/-22
+dense<=32 & msm12>0 (gate+reach)   {'strict': 88, 'needed': 128, 'extras': 198, 'abstain': '28/51'}  strict +54/-22
+any & msm12>0                      {'strict': 88, 'needed': 128, 'extras': 198, 'abstain': '28/51'}  strict +54/-22
+C4sem & mxbx>0 (gate only)         {'strict': 94, 'needed': 140, 'extras': 194, 'abstain': '28/51'}  strict +60/-22
+dense<=32 & mxbx>0 (gate+reach)    {'strict': 95, 'needed': 145, 'extras': 195, 'abstain': '28/51'}  strict +61/-22
+any & mxbx>0                       {'strict': 95, 'needed': 145, 'extras': 195, 'abstain': '28/51'}  strict +61/-22
+C4sem & qnli>0 (gate only)         {'strict': 114, 'needed': 193, 'extras': 207, 'abstain': '26/51'}  strict +63/-5
+dense<=32 & qnli>0 (gate+reach)    {'strict': 97, 'needed': 240, 'extras': 410, 'abstain': '25/51'}  strict +59/-18
+any & qnli>0                       {'strict': 97, 'needed': 241, 'extras': 421, 'abstain': '25/51'}  strict +59/-18
+C4sem & bger>0 (gate only)         {'strict': 86, 'needed': 128, 'extras': 198, 'abstain': '27/51'}  strict +52/-22
+dense<=32 & bger>0 (gate+reach)    {'strict': 86, 'needed': 128, 'extras': 200, 'abstain': '27/51'}  strict +52/-22
+any & bger>0                       {'strict': 86, 'needed': 128, 'extras': 200, 'abstain': '27/51'}  strict +52/-22
+
+## Gate applied to lexical selection too: (lex_suff | dense<=32) & m>0
+msm6   {'strict': 110, 'needed': 65, 'extras': 9, 'abstain': '50/51'}
+msm12  {'strict': 116, 'needed': 74, 'extras': 15, 'abstain': '50/51'}
+mxbx   {'strict': 120, 'needed': 84, 'extras': 9, 'abstain': '50/51'}
+qnli   {'strict': 139, 'needed': 209, 'extras': 238, 'abstain': '45/51'}
+bger   {'strict': 70, 'needed': 21, 'extras': 14, 'abstain': '50/51'}

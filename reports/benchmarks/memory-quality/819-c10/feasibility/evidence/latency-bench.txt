@@ -1,0 +1,9 @@
+tools/bench_ce.py (qnli-electra-base fp32, 40 dev queries x 8 memories, c8 dev set, this container: 4 vCPU AVX-512)
+init 2.01s  basic/1t/512 batched  p50 230ms p95 283ms per 8 pairs
+basic/1t/512 single      p50 373ms p95 412ms  max|d| 0.00e+00 flips 0/320
+all/1t/512 batched       p50 215ms p95 269ms  max|d| 3.45e-05 flips 0/320
+all/1t/512 single        p50 338ms p95 380ms  max|d| 3.45e-05 flips 0/320
+basic/4t/512 batched     p50 85ms p95 105ms  max|d| 0.00e+00 flips 0/320
+all/4t/512 single        p50 116ms p95 150ms  max|d| 3.45e-05 flips 0/320
+basic/1t/128 batched     p50 237ms p95 280ms  max|d| 0.00e+00 flips 0/320
+maxrss MiB 2526 (process holding three sessions)

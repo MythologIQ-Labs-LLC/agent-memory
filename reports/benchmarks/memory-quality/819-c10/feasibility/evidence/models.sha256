@@ -1,0 +1,7 @@
+15b9a8c3da82eddf263df571281166e00e9308fe19d077084b642ebfcaf06d2b  BAAI_bge-reranker-base/onnx/model.onnx
+828e1496d7fabb79cfa4dcd84fa38625c0d3d21da474a00f08db0f559940cf35  BAAI_bge-small-en-v1.5/onnx/model.onnx
+2ac389ab6abe08dcbddf2c41a69b6a18853e0dca440adbc2abc1adfcee46483f  cross-encoder_ms-marco-MiniLM-L12-v2/onnx/model.onnx
+5d3e70fd0c9ff14b9b5169a51e957b7a9c74897afd0a35ce4bd318150c1d4d4a  cross-encoder_ms-marco-MiniLM-L6-v2/onnx/model.onnx
+b3a9df1010c6740086a24ef5a55c671a7b5a38db78ddf6012deae19b4c48f8ed  cross-encoder_qnli-distilroberta-base/onnx/model.onnx
+595b37541289472b7b784ed2af05bcad6000991a2657aeee4f92f68b42ae61d9  cross-encoder_qnli-electra-base/onnx/model.onnx
+536b7183f8964dd212c4e2f4029fcc595cfc03ac233aba03d293546aaa5a875b  mixedbread-ai_mxbai-rerank-xsmall-v1/onnx/model.onnx
