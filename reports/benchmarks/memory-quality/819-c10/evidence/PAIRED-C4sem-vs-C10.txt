@@ -1,0 +1,24 @@
+base base/c4-required @ bc2be631   cand cand/c10-gate @ a2ab582d   queries 298 needed 386
+  strict          56 ->    96  (+40)
+  needed         241 ->   228  (-13)
+  extras         552 ->   298  (-254)
+  unrequested    611 ->   350  (-261)
+  abst_ok         11 ->    13  (+2)
+  abst_n          49 ->    49  (+0)
+  viol             2 ->     2  (+0)
+  superseded       0 ->     0  (+0)
+  returned       852 ->   578  (-274)
+  strict paired +50/-10  McNemar p=1.6e-07
+  needed memories paired +27/-40
+  all-needed-returned queries paired +17/-8  McNemar p=0.11
+  single     n=174 strict 42 -> 78
+  multi      n= 75 strict 3 -> 4
+  abstention n= 49 strict 11 -> 14
+  per set (strict / needed / extras):
+    819-c6_dev_c5-dev-scenarios       22/ 29/ 27 ->  25/ 34/ 28
+    819-c6_dev_diag-scenarios          8/ 20/ 22 ->  12/ 23/ 19
+    819-c6_review_gen                  6/ 36/122 ->  12/ 38/ 71
+    819-c7_dev_c7-scenarios            4/ 50/117 ->  12/ 44/ 59
+    819-c8_dev_c8-scenarios            8/ 50/148 ->  12/ 50/ 85
+    c9d_longitudinal                   5/ 28/ 51 ->  14/ 20/ 13
+    c9d_merged                         3/ 28/ 65 ->   9/ 19/ 23

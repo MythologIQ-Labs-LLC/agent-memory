@@ -1,0 +1,15 @@
+{
+ "revision_root": "/tmp/claude-0/-home-user-agent-memory/ea37ba06-a503-5697-a281-2b8595e8ec8b/scratchpad/wt/c10",
+ "answerability": "qnli-electra-base",
+ "threads": 1,
+ "recalls": 90,
+ "p50_ms": 275.5,
+ "p95_ms": 333.9,
+ "mean_ms": 280.1,
+ "init_s": {
+  "answerability_s": 1.17,
+  "representation_s": 0.2
+ },
+ "maxrss_mib": 808,
+ "rss_before_models_mib": 27
+}

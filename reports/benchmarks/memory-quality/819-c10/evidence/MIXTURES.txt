@@ -1,0 +1,4 @@
+C4+sem everywhere            strict  56 needed 241 extras 552 abstain 11
+C10 gate everywhere          strict  96 needed 228 extras 298 abstain 13
+gate unless interpreter needs_several (realistic) strict  92 needed 230 extras 323 abstain 13
+gate unless gold multi-evidence (ORACLE ceiling) strict  95 needed 251 extras 366 abstain 13

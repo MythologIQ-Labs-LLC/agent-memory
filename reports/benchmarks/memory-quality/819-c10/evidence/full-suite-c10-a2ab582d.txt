@@ -1,0 +1,7 @@
+    with self.assertRaisesRegex(ValueError, "passed \+ fails"):
+FAILED reference/tests/test_benchmark_integration_contract.py::BenchmarkIntegrationContractTests::test_evaluation_only_change_keeps_runtime_baseline_equivalence
+FAILED reference/tests/test_gauntlet_durability.py::DurabilityRecoveryGauntletTests::test_real_agent_memory_public_facade_qualifies_first_durability_slice
+FAILED reference/tests/test_package_layout.py::LayoutMatchesMover::test_check_reports_layout_matches_table
+FAILED reference/tests/test_runtime_baseline_succession.py::RealRepository::test_register_pins_v1_bytes
+FAILED reference/tests/test_runtime_baseline_succession.py::RealRepository::test_register_pins_v2_after_its_b2
+5 failed, 2654 passed, 19 skipped, 4 warnings, 1574 subtests passed in 181.69s (0:03:01)

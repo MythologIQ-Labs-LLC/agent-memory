@@ -1,0 +1,81 @@
+[819-c6_dev_c5-dev-scenarios single] Q: 'Who in the family has health problems?'
+    M: "Dad is recovering from hip surgery and can't drive until June."  qnli=-6.9348 cos=0.3423 drank=2 stage=never_discovered
+[819-c6_dev_diag-scenarios multi] Q: 'What tablets am I currently taking?'
+    M: 'Vitamin D, 1000 IU, with dinner through the winter.'  qnli=-5.5507 cos=0.3911 drank=2 stage=never_discovered
+[819-c6_review_gen multi] Q: 'Which pets do we have?'
+    M: 'Biscuit, our beagle, is terrified of thunderstorms.'  qnli=-6.7698 cos=0.3498 drank=3 stage=never_discovered
+[819-c6_review_gen single] Q: 'What do the pets eat?'
+    M: 'Miso only eats the salmon pouches, Biscuit gets kibble.'  qnli=-5.0919 cos=0.4105 drank=2 stage=admitted_withheld
+[819-c6_review_gen multi] Q: 'Which pets do we have?'
+    M: 'Biscuit, our beagle, is terrified of thunderstorms.'  qnli=-6.7698 cos=0.3498 drank=2 stage=never_discovered
+[819-c6_review_gen multi] Q: 'What dietary restrictions should I plan for at the dinner party?'
+    M: 'My sister Ines is vegetarian.'  qnli=-4.5899 cos=0.3533 drank=2 stage=never_discovered
+[819-c6_review_gen multi] Q: 'What medications am I on?'
+    M: 'I take amlodipine 5 mg each morning for blood pressure.'  qnli=-5.2775 cos=0.4495 drank=1 stage=admitted_withheld
+[819-c7_dev_c7-scenarios multi] Q: 'Which trips did I take this year?'
+    M: 'Drove up to the Highlands for a long weekend in August.'  qnli=-7.2037 cos=0.4641 drank=2 stage=never_discovered
+[819-c7_dev_c7-scenarios multi] Q: 'What medications am I on?'
+    M: 'I take amlodipine every morning for blood pressure.'  qnli=-6.0539 cos=0.4458 drank=2 stage=admitted_withheld
+[819-c7_dev_c7-scenarios multi] Q: 'What medications am I on?'
+    M: 'A vitamin D tablet with breakfast during winter.'  qnli=-7.2909 cos=0.3228 drank=5 stage=never_discovered
+[819-c7_dev_c7-scenarios multi] Q: 'Who are the new people on my team?'
+    M: 'We also brought on Tomás, a backend developer, last month.'  qnli=-6.7893 cos=0.3638 drank=3 stage=admitted_withheld
+[819-c7_dev_c7-scenarios multi] Q: 'What are the regular deadlines and meetings I need to remember?'
+    M: 'Daily stand-up at 9:30 on video.'  qnli=-7.2198 cos=0.3143 drank=2 stage=never_discovered
+[819-c7_dev_c7-scenarios multi] Q: 'Whose birthdays are coming up?'
+    M: 'Dad turns seventy in October.'  qnli=-7.3399 cos=0.4154 drank=4 stage=never_discovered
+[819-c7_dev_c7-scenarios multi] Q: 'Whose birthdays are coming up?'
+    M: "Mum's birthday is on the 3rd of June."  qnli=-6.9956 cos=0.5245 drank=3 stage=admitted_withheld
+[819-c7_dev_c7-scenarios multi] Q: 'What do I do regularly with friends and family each week or month?'
+    M: 'Maya and I have dinner on the first Friday of each month.'  qnli=-4.1321 cos=0.4643 drank=3 stage=admitted_withheld
+[819-c7_dev_c7-scenarios multi] Q: 'What do I do regularly with friends and family each week or month?'
+    M: 'We visit Grandma every other Sunday.'  qnli=-7.4075 cos=0.4703 drank=2 stage=never_discovered
+[819-c7_dev_c7-scenarios multi] Q: 'Which sports do I do each week?'
+    M: "I've moved to the Sunday morning cycling group."  qnli=-7.4623 cos=0.3129 drank=3 stage=never_discovered
+[819-c7_dev_c7-scenarios multi] Q: 'What creative things do I do?'
+    M: 'Sketchbook goes everywhere with me.'  qnli=-7.5121 cos=0.3293 drank=4 stage=never_discovered
+[819-c8_dev_c8-scenarios multi] Q: 'Where does our water come from given the restrictions?'
+    M: 'There is a hosepipe ban until the end of August.'  qnli=-5.2426 cos=0.3343 drank=2 stage=admitted_withheld
+[819-c8_dev_c8-scenarios multi] Q: 'What regular subscriptions come out of my account?'
+    M: 'Paying for two streaming services, one with ads.'  qnli=-4.7422 cos=0.3747 drank=2 stage=never_discovered
+[819-c8_dev_c8-scenarios multi] Q: 'What debts am I still paying off?'
+    M: 'The mortgage overpayment is £150 each month.'  qnli=-7.3018 cos=0.3665 drank=2 stage=never_discovered
+[819-c8_dev_c8-scenarios multi] Q: 'What is the Wi-Fi setup and what speed is the line?'
+    M: 'Broadband is now full-fibre at 900Mb.'  qnli=-7.2615 cos=0.3288 drank=3 stage=admitted_withheld
+[819-c8_dev_c8-scenarios multi] Q: 'What have residents done to improve the street?'
+    M: 'Signed the petition for a zebra crossing on Mill Lane.'  qnli=-6.0198 cos=0.328 drank=5 stage=admitted_withheld
+[c9d_longitudinal multi] Q: 'What medication am I on these days?'
+    M: 'Loratadine every morning from April to August for hay fever.'  qnli=6.3529 cos=0.3242 drank=5 stage=never_discovered
+[c9d_longitudinal multi] Q: 'What medication am I on these days?'
+    M: 'I take one puff of the preventer inhaler each evening.'  qnli=-2.5216 cos=0.3456 drank=3 stage=admitted_withheld
+[c9d_longitudinal multi] Q: 'What medication am I on these days?'
+    M: 'Vitamin D is now a weekly 20,000 unit capsule on Mondays.'  qnli=-7.339 cos=0.3328 drank=4 stage=admitted_withheld
+[c9d_longitudinal multi] Q: 'What clubs and lessons do the children have each week?'
+    M: 'Leo has football training on Fridays at 4 on the school field.'  qnli=-6.7591 cos=0.3657 drank=5 stage=admitted_withheld
+[c9d_longitudinal multi] Q: 'What does my weekly exercise routine look like?'
+    M: 'I cycle the 9km to work three days a week.'  qnli=-7.4322 cos=0.4312 drank=2 stage=never_discovered
+[c9d_longitudinal multi] Q: 'What does my weekly exercise routine look like?'
+    M: 'Only Friday is a full rest day; Wednesday is yoga.'  qnli=-7.4299 cos=0.4653 drank=1 stage=never_discovered
+[c9d_longitudinal multi] Q: 'What does my weekly exercise routine look like?'
+    M: 'I run 18km slowly on Sunday mornings to build for the half marathon.'  qnli=-6.6327 cos=0.3214 drank=4 stage=never_discovered
+[c9d_longitudinal multi] Q: 'What does my weekly exercise routine look like?'
+    M: "I'm working up to 90kg squats for sets of five."  qnli=-6.5209 cos=0.3608 drank=3 stage=never_discovered
+[c9d_merged multi] Q: 'What medication am I on these days?'
+    M: 'Loratadine every morning from April to August for hay fever.'  qnli=6.3529 cos=0.3242 drank=5 stage=never_discovered
+[c9d_merged multi] Q: 'What medication am I on these days?'
+    M: 'I take one puff of the preventer inhaler each evening.'  qnli=-2.5216 cos=0.3456 drank=3 stage=admitted_withheld
+[c9d_merged multi] Q: 'What medication am I on these days?'
+    M: 'Vitamin D is now a weekly 20,000 unit capsule on Mondays.'  qnli=-7.339 cos=0.3328 drank=4 stage=admitted_withheld
+[c9d_merged multi] Q: 'What clubs and lessons do the children have each week?'
+    M: 'Leo has football training on Fridays at 4 on the school field.'  qnli=-6.7591 cos=0.3657 drank=5 stage=admitted_withheld
+[c9d_merged multi] Q: 'Where are we going away this year?'
+    M: 'We fly to Lisbon on the 14th of May and stay in Alfama.'  qnli=4.3535 cos=0.3016 drank=3 stage=admitted_withheld
+[c9d_merged multi] Q: 'What does my weekly exercise routine look like?'
+    M: 'I cycle the 9km to work three days a week.'  qnli=-7.4322 cos=0.4312 drank=2 stage=never_discovered
+[c9d_merged multi] Q: 'What does my weekly exercise routine look like?'
+    M: 'Only Friday is a full rest day; Wednesday is yoga.'  qnli=-7.4299 cos=0.4653 drank=1 stage=never_discovered
+[c9d_merged multi] Q: 'What does my weekly exercise routine look like?'
+    M: 'I run 18km slowly on Sunday mornings to build for the half marathon.'  qnli=-6.6327 cos=0.3214 drank=4 stage=never_discovered
+[c9d_merged multi] Q: 'What does my weekly exercise routine look like?'
+    M: "I'm working up to 90kg squats for sets of five."  qnli=-6.5209 cos=0.3608 drank=3 stage=never_discovered
+{('single', 'single_reading'): 2, ('multi', 'single_reading'): 33, ('multi', 'needs_several'): 5}

@@ -1,0 +1,14 @@
+{
+ "revision_root": "/tmp/claude-0/-home-user-agent-memory/ea37ba06-a503-5697-a281-2b8595e8ec8b/scratchpad/wt/c10",
+ "answerability": "off",
+ "threads": 1,
+ "recalls": 171,
+ "p50_ms": 13.6,
+ "p95_ms": 16.1,
+ "mean_ms": 13.8,
+ "init_s": {
+  "representation_s": 0.32
+ },
+ "maxrss_mib": 224,
+ "rss_before_models_mib": 27
+}

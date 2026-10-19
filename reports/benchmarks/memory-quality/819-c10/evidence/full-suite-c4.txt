@@ -1,0 +1,5 @@
+FAILED reference/tests/test_benchmark_integration_contract.py::BenchmarkIntegrationContractTests::test_evaluation_only_change_keeps_runtime_baseline_equivalence
+FAILED reference/tests/test_gauntlet_durability.py::DurabilityRecoveryGauntletTests::test_real_agent_memory_public_facade_qualifies_first_durability_slice
+FAILED reference/tests/test_runtime_baseline_succession.py::RealRepository::test_register_pins_v1_bytes
+FAILED reference/tests/test_runtime_baseline_succession.py::RealRepository::test_register_pins_v2_after_its_b2
+4 failed, 2642 passed, 19 skipped, 3 warnings, 1574 subtests passed in 180.11s (0:03:00)

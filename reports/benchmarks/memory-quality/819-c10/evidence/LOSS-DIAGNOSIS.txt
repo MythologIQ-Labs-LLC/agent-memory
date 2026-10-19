@@ -1,0 +1,9 @@
+LOST 14 other never_discovered qnli<=0 drank<=8
+LOST 9 other admitted_withheld qnli<=0 drank<=8
+LOST 8 longitudinal never_discovered qnli<=0 drank<=8
+LOST 6 longitudinal admitted_withheld qnli<=0 drank<=8
+LOST 2 longitudinal never_discovered qnli>0 drank<=8
+LOST 1 longitudinal admitted_withheld qnli>0 drank<=8
+ ex ('c9d_longitudinal', 'health-aggregate', 'memory:allergy', {'rank': None, 'refusal': None, 'routes': [], 'stage': 'never_discovered'}, 5, 6.3529, 0.3242)
+ ex ('c9d_merged', 'health-aggregate', 'memory:allergy-health', {'rank': None, 'refusal': None, 'routes': [], 'stage': 'never_discovered'}, 5, 6.3529, 0.3242)
+ ex ('c9d_merged', 'travel-aggregate', 'memory:lisbon-travel', {'rank': 6, 'refusal': None, 'routes': ['lexical'], 'stage': 'admitted_withheld'}, 3, 4.3535, 0.3016)
