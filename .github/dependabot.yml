@@ -1,13 +1,18 @@
 version: 2
 updates:
+  # Version update PRs are batched into a monthly maintenance window.
+  # Dependabot security updates are advisory-triggered, independently of schedule.
   - package-ecosystem: pip
     directory: /reference
     schedule:
-      interval: weekly
+      interval: monthly
+    # Prevent unattended version-update PR backlog from multiplying CI runs.
+    open-pull-requests-limit: 3
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: weekly
+      interval: monthly
+    open-pull-requests-limit: 1
     groups:
       actions:
         patterns: ["*"]

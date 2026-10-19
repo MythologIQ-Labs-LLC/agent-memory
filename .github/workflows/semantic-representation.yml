@@ -3,12 +3,24 @@ name: Semantic Representation
 # #669: exercise the pinned ONNX representation provider for real. Model-dependent
 # tests skip elsewhere; here AGENT_MEMORY_REQUIRE_REPRESENTATION=1 turns any skip
 # into a failure, so the provider, the derived store and the facade route are
-# always qualified on CI.
+# qualified on every PR that touches the semantic route (#662: path-scoped, no
+# push trigger), and on deliberate workflow_dispatch at an exact SHA.
 
 on:
-  push:
-    branches: [main]
   pull_request:
+    paths:
+      - 'reference/agentmem_ref/runtime/representation_onnx.py'
+      - 'reference/agentmem_ref/runtime/representation_cache.py'
+      - 'reference/agentmem_ref/runtime/vector_retrieval.py'
+      - 'reference/agentmem_ref/runtime/semantic_readmission_adapter.py'
+      - 'reference/requirements-semantic.txt'
+      - 'reference/tests/test_representation_onnx.py'
+      - 'reference/tests/test_representation_cache.py'
+      - 'reference/tests/test_semantic_route_policy_320.py'
+      - 'reference/tests/test_native_vector_retrieval.py'
+      - 'reference/tests/test_facade_recall_control.py'
+      - '.github/workflows/semantic-representation.yml'
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}

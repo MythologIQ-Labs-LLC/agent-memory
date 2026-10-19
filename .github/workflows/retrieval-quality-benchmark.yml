@@ -1,9 +1,7 @@
 name: Retrieval Quality Benchmark
 
 on:
-  push:
-    branches: [main]
-  pull_request:
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -171,3 +169,4 @@ jobs:
             retrieval-quality.json
             swe-contextbench-rc-evidence.json
           if-no-files-found: error
+          retention-days: 30

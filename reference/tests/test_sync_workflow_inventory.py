@@ -80,8 +80,15 @@ class ReaderTests(unittest.TestCase):
             root = Path(tmp)
             synthetic(root, "synthetic.yml")
             (root / "data").mkdir()
-            inventory = {"records": [{"path": ".github/workflows/synthetic.yml", "lifecycleClass": "required_hot_path", "triggers": [], "pathScope": "", "timeoutState": {}, "concurrencyState": {}}], "inventorySummary": {}}
+            inventory = {"records": [{"path": ".github/workflows/synthetic.yml", "lifecycleClass": "required_hot_path", "proposedDisposition": "KEEP", "consequenceClass": "protected", "triggers": [], "pathScope": "", "timeoutState": {}, "concurrencyState": {}}], "inventorySummary": {}}
             (root / estate.INVENTORY).write_text(json.dumps(inventory), encoding="utf-8")
+            registry = {"schema_version": "1.0.0", "governing_issue": "#662",
+                        "status": "source_reconciled_pending_evidence_owner_review",
+                        "rules": {"new_unbounded_discretionary_uploads_allowed": False,
+                                  "protected_exception_requires_explicit_review": True,
+                                  "retirement_requires_branch_protection_review": True},
+                        "exception_workflow_names": [], "upload_step_exceptions": []}
+            (root / estate.RETENTION_EXCEPTIONS).write_text(json.dumps(registry), encoding="utf-8")
             self.assertEqual(estate.main(["--root", str(root), "--check"]), 1)
             self.assertEqual(estate.main(["--root", str(root), "--write"]), 0)
             self.assertEqual(estate.main(["--root", str(root), "--check"]), 0)

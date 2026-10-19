@@ -1,9 +1,7 @@
 name: Precedent Candidate Retrieval
 
 on:
-  push:
-    branches: [main]
-  pull_request:
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -68,3 +66,4 @@ jobs:
           name: precedent-candidate-retrieval-evidence
           path: precedent-candidate-retrieval.json
           if-no-files-found: error
+          retention-days: 30
