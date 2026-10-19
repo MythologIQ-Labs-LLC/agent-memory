@@ -31,25 +31,28 @@ A canonical memory architecture and doctrine corpus, a reproducible evaluation l
 
 ## What Agent Memory is
 
-Agent Memory's defining intent is **governed, hierarchical, heterogeneous multi-system memory composition**: canonical structured/relational state, lexical and vector retrieval, typed graph and GraphRAG-style derived context, episodic, temporal and procedural memory, and inspectable Markdown/file projections, each chosen for demonstrable task and lifecycle value and all held under one governance boundary where no representation, route score, or projection acquires authority. That composition program is specified in issue [#636](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/636) and is an executable hypothesis, not a shipped capability. Today the **only qualified canonical persistence profile is single-host SQLite** (`sqlite_single_host_v1`); Postgres, Markdown, GraphRAG, and distributed persistence are design intent, experiments, or proposals, never production-qualified substrates.
+**Agent Memory includes working software, not just a memory-design proposal.** The installable `agent-memory-reference` Python package exposes an [`AgentMemory` facade](#runtime) with persistent single-host SQLite memory, governed writes and recall, scope-aware evidence admission, history and posture inspection. The [runtime example below](#runtime) is executable from a checkout. This is a usable reference/conformance implementation **in active release-candidate qualification**, not a drop-in production service or certified security boundary.
+
+| Present in the repository | Not shipped or not qualified |
+|---|---|
+| Python runtime, `SQLiteTemporalGraph` persistence, governed lifecycle and public facade | Distributed/multi-host persistence, production 1.0 security boundary, or qualified Postgres substrate |
+| Lexical and optional semantic candidate retrieval, with governed admission and a bounded returned context | Proven speed or quality gains on somebody else's existing agent or memory database |
+| System-neutral evaluation adapters, reproducible benchmark machinery, evidence and dashboard | A universal benchmark score or same-harness comparisons with every competitor |
+| Canonical doctrine, accepted/proposed ADRs and explicit architecture plans | Complete heterogeneous GraphRAG/Markdown/distributed composition as a qualified runtime |
+
+**Evaluating adoption?** Compare the [actual runtime](#runtime) with a competently *indexed* local-memory baseline using your own representative workload. Measure correct evidence, stale-memory behavior, exclusions/abstention, context cost, latency and integration burden. Our local benchmark measurements do **not** establish performance on your data. The [Jarvis-scale synthetic evaluation](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/825) has not yet run the Agent Memory arm.
+
+Long-term, [#636](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/636) proposes governed composition of structured, episodic, temporal, procedural, vector and graph-derived memory. That entire composition **is not shipped**. The [substrate inventory](docs/43-substrate-inventory-and-maturity.md) owns current maturity claims; only the single-host SQLite profile is qualified.
 
 ## Start here
 
-Agent Memory serves three audiences through three entry points. They are visitor routes into the project above, not a substitute product definition. Pick the one that matches what you came to do.
+| Goal | Start | Next |
+|---|---|---|
+| Use the memory engine | **[Runtime](#runtime)** | [API contract](docs/44-public-api-contract.md), [developer open path](docs/47-developer-facade-and-local-open-path.md) |
+| Evaluate performance or compare systems | **[Benchmarks](#benchmarks)** | [Current dashboard](reports/benchmarks/dashboard/current.md), [coverage](docs/BENCHMARK_COVERAGE_ATLAS.md), [external adapters](docs/CONTRIBUTOR_ARCHITECTURE.md) |
+| Study governance or propose architecture | **[Theory](#theory)** | **[Architecture Index](docs/ARCHITECTURE_INDEX.md)**, [ADRs](docs/adr/README.md), [PAMA](docs/pama/README.md) |
 
-| Entry point | For | What it is | Current maturity | Start | Then |
-|---|---|---|---|---|---|
-| **[Theory](#theory)** | Researchers studying memory architecture and governance | Doctrine, invariants, lifecycle/currentness semantics, PAMA mutation authority, Architecture Decision Records | Canonical and actively falsified: ADR-001 through ADR-043, each carrying its own `Accepted` / `Proposed` status; ADR-039 (query-conditioned applicability) remains Proposed | [`docs/ARCHITECTURE_INDEX.md`](docs/ARCHITECTURE_INDEX.md), the single architecture catalog and filing policy | [Canonical architecture](docs/AGENTIC_MEMORY_SYSTEMS_CANONICAL_ARCHITECTURE.md) for the explanation, [ADR index](docs/adr/README.md) for accepted decisions, [PAMA](docs/pama/README.md) |
-| **[Benchmarks](#benchmarks)** | Evaluators running controlled comparisons, inspecting evidence, or bringing a system or a benchmark | Benchmark-neutral evaluation machinery, the Agent Memory Gauntlet, frozen revision-bound evidence, the Coverage Atlas, the current dashboard | Accepted external and same-harness evidence exists; leaderboard and freshness projections are in progress; there is deliberately no universal score | [`BENCHMARKS.md`](BENCHMARKS.md) | [Current dashboard](reports/benchmarks/dashboard/current.md), [Coverage Atlas](docs/BENCHMARK_COVERAGE_ATLAS.md), [bring a system or a benchmark](docs/CONTRIBUTOR_ARCHITECTURE.md) |
-| **[Runtime](#runtime)** | Builders integrating governed memory into an agent | The installable `agent-memory-reference` package: `AgentMemory` facade, governed lifecycle, restart-safe persistence, multi-route recall | Usable reference/conformance runtime; one RC-qualified substrate (`sqlite_single_host_v1`); public contract 1.6.0; not production 1.0; not distributed | [Install and open](#runtime) | [`docs/47-developer-facade-and-local-open-path.md`](docs/47-developer-facade-and-local-open-path.md), [substrate maturity](docs/43-substrate-inventory-and-maturity.md), [distributed-runtime roadmap](docs/future/distributed-runtime-roadmap.md) |
-
-The three reinforce one another: benchmarks keep the theory honest, the runtime keeps the benchmarks relevant, and the theory gives the runtime its boundaries. None of them inherits authority from another.
-
-### Three roles, five layers
-
-Those three entry points correspond to the repository's three **operational roles** (product/runtime, architecture/governance laboratory, evaluation/benchmark laboratory) defined in [`docs/REPOSITORY_OPERATING_MODEL.md`](docs/REPOSITORY_OPERATING_MODEL.md). The broader project is additionally partitioned into a **five-layer project model** (architecture/doctrine/research commons, Memory Evaluation, the Agent Memory Gauntlet, the reference/conformance implementation, and a future distinct production runtime) in [`docs/AGENT_MEMORY_PROJECT_MODEL.md`](docs/AGENT_MEMORY_PROJECT_MODEL.md).
-
-The two are not competing descriptions. Per the ruling in issue [#565](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/565): the three roles describe what the repository *does* operationally today; the five layers describe how the project is *partitioned* for community, evaluation, qualification, reference implementation, and future product/licensing boundaries. The five-layer model refines the product/runtime role into "reference/conformance implementation" plus "future distinct production runtime" ([#556](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/556)), and refines the evaluation role into lower-level Memory Evaluation plus the public Gauntlet.
+These are three **operational roles**, not three separately production-ready products. The [operating model](docs/REPOSITORY_OPERATING_MODEL.md) explains them; the [five-layer project model](docs/AGENT_MEMORY_PROJECT_MODEL.md) separates architectural commons, Memory Evaluation, Gauntlet, reference runtime and future production runtime under [#565](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/565). The **Architecture Index routes** claims. Actual capabilities, qualifications, baselines and scores remain authoritative in their respective code, contracts and evidence.
 
 ## Theory
 

@@ -1,5 +1,7 @@
 # Architecture Plan
 
+**Status: HISTORICAL genesis blueprint (2026-09-01).** The single architecture catalog files this page as a historical blueprint; its tree, dependency and version claims describe the repository at genesis and are not current. For present-day state use [System State](SYSTEM_STATE.md), the runtime baseline register, [the substrate inventory](43-substrate-inventory-and-maturity.md) and [BACKLOG.md](BACKLOG.md); for where a claim is owned, start at [ARCHITECTURE_INDEX.md](ARCHITECTURE_INDEX.md). The original text below is preserved unchanged.
+
 Genesis blueprint for an existing, mature repository. This plan records the contract as it stands at genesis and the forward scope toward Agent Memory 1.0. It does not re-plan delivered work; feature-level work enters through `/qor-plan`.
 
 ## Risk Grade: L3

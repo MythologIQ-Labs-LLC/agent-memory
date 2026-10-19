@@ -16,7 +16,7 @@
 | What is this repository versus future products? | [Repository operating model](REPOSITORY_OPERATING_MODEL.md), [five-layer project model](AGENT_MEMORY_PROJECT_MODEL.md), [#565 ruling](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/565) | Preserve three operational roles versus five project layers |
 | What must a consumer/runtime implement? | [Public contract](44-public-api-contract.md), [schemas](../schemas/), exact [source code](../reference/agentmem_ref/), accepted ADRs | Never treat design intent as shipped behavior |
 | Which storage/representation is actually qualified? | [Substrate inventory](43-substrate-inventory-and-maturity.md) and exact accepted evidence | Never turn a prototype or module into a qualified substrate |
-| Where is the current release and implementation state? | [System State](SYSTEM_STATE.md) (pinned snapshot), [baseline register](../reports/runtime/baseline-register.json), live [#410](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/410) and [Backlog](BACKLOG.md) | No replicated version strings, readiness flags or active issue table |
+| Where is the current release and implementation state? | Live [#410](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/410) for release decisions, the [baseline register](../reports/runtime/baseline-register.json) for runtime identity, [Backlog](BACKLOG.md); [System State](SYSTEM_STATE.md) is a pinned snapshot pointing to them | No replicated version strings, readiness flags or active issue table |
 | What do benchmarks prove? | [Benchmarks](../BENCHMARKS.md), [generated dashboard](../reports/benchmarks/dashboard/current.md), exact run artifacts | No copied scores or cross-harness comparisons |
 | How did a decision or failure evolve? | [Meta Ledger](META_LEDGER.md), [Shadow Genome](SHADOW_GENOME.md), [Process Shadow Genome](PROCESS_SHADOW_GENOME.md), archived plans and pinned evidence | Discover lineage without granting old notes current authority |
 
@@ -60,7 +60,7 @@ These letter IDs are **virtual library shelves**, not additional filesystem dire
 
 **Content owner(s):** [Substrate maturity](43-substrate-inventory-and-maturity.md), [public API contract](44-public-api-contract.md), implementation + `schemas/`; [baseline register](../reports/runtime/baseline-register.json).
 
-**Numbered-document register (15):** [14 retired scope proposals (historical)](14-expanded-scope-recommendations.md) · [39-implementation-ownership-map](39-implementation-ownership-map.md) · [43-substrate-inventory-and-maturity](43-substrate-inventory-and-maturity.md) · [44-public-api-contract](44-public-api-contract.md) · [45-agent-memory-rc1-implementation-profile](45-agent-memory-rc1-implementation-profile.md) · [46-state-checkpoint-contract](46-state-checkpoint-contract.md) · [47-developer-facade-and-local-open-path](47-developer-facade-and-local-open-path.md) · [47-transactional-checkpoint-generations](47-transactional-checkpoint-generations.md) · [48-rc-cognitive-memory-lifecycle-evidence](48-rc-cognitive-memory-lifecycle-evidence.md) · [49-rc1-evidence-closeout](49-rc1-evidence-closeout.md) · [52-harvest-closeout-final](52-harvest-closeout-final.md) · [63-post-550-architecture-reconciliation](63-post-550-architecture-reconciliation.md) · [66-rust-runtime-qualification-current-state](66-rust-runtime-qualification-current-state.md) · [67-runtime-baseline-succession](67-runtime-baseline-succession.md) · [68-baseline-first-complete-architecture-execution](68-baseline-first-complete-architecture-execution.md).
+**Numbered-document register (15):** [14 retired scope proposals (historical)](14-expanded-scope-recommendations.md) · [39-implementation-ownership-map](39-implementation-ownership-map.md) · [43-substrate-inventory-and-maturity](43-substrate-inventory-and-maturity.md) · [44-public-api-contract](44-public-api-contract.md) · [45-agent-memory-rc1-implementation-profile](45-agent-memory-rc1-implementation-profile.md) · [46-state-checkpoint-contract](46-state-checkpoint-contract.md) · [47-developer-facade-and-local-open-path](47-developer-facade-and-local-open-path.md) · [47-transactional-checkpoint-generations](47-transactional-checkpoint-generations.md) · [48-rc-cognitive-memory-lifecycle-evidence](48-rc-cognitive-memory-lifecycle-evidence.md) · [49-rc1-evidence-closeout](49-rc1-evidence-closeout.md) · [52-harvest-closeout-final](52-harvest-closeout-final.md) · [63-post-550-architecture-reconciliation](63-post-550-architecture-reconciliation.md) · [66 Rust-shadow snapshot (revision-bound)](66-rust-runtime-qualification-current-state.md) · [67-runtime-baseline-succession](67-runtime-baseline-succession.md) · [68-baseline-first-complete-architecture-execution](68-baseline-first-complete-architecture-execution.md).
 
 ### E · Evaluation, qualifications and benchmark interpretation
 
@@ -105,7 +105,7 @@ These letter IDs are **virtual library shelves**, not additional filesystem dire
 | Runtime consumer guidance | [Configuration](CONFIGURATION.md), [Contributor Architecture](CONTRIBUTOR_ARCHITECTURE.md) | Operating instructions / contributor conventions |
 | Benchmark/evidence navigation | [Coverage Atlas](BENCHMARK_COVERAGE_ATLAS.md), [Evidence Console Catalog](benchmark-evidence-console-catalog.md) | Coverage or console design, not numeric score truth |
 | Gauntlet contracts and guidance | [System Adapter Contract](GAUNTLET_SYSTEM_ADAPTER_CONTRACT.md), [Orchestration](GAUNTLET_ORCHESTRATION.md), [Governance Specification](GOVERNANCE_GAUNTLET_SPECIFICATION.md), [Governance Alpha](GOVERNANCE_GAUNTLET_ALPHA.md), [External Contestant Quickstart](GAUNTLET_EXTERNAL_CONTESTANT_QUICKSTART.md) | Independent evaluator/adapter contracts; no memory runtime authority |
-| Execution and external qualification history | [Gauntlet Roadmap](GAUNTLET_EXECUTION_ROADMAP.md), [External Qualification](GAUNTLET_EXTERNAL_BENCHMARK_QUALIFICATION_2026-09-26.md) | Revision-bound plans/evidence, not automatic active work |
+| Execution and external qualification history | [Retired Gauntlet staging plan](GAUNTLET_EXECUTION_ROADMAP.md), [External Qualification](GAUNTLET_EXTERNAL_BENCHMARK_QUALIFICATION_2026-09-26.md) | Revision-bound plans/evidence, not automatic active work |
 | Supporting decision history | [Source Rights](SOURCE_RIGHTS_POLICY.md), [Runtime Identity Brief](RUNTIME_IDENTITY_NAMING_BRIEF.md), [Research Brief](RESEARCH_BRIEF.md) | Respective licensing, proposed identity and research context |
 | Persistent failure lessons | [Meta Ledger](META_LEDGER.md), [Shadow Genome](SHADOW_GENOME.md), [Process Shadow Genome](PROCESS_SHADOW_GENOME.md) | Never rewrite evidence merely to reorganize docs |
 
@@ -118,6 +118,25 @@ These letter IDs are **virtual library shelves**, not additional filesystem dire
 5. **On a move or supersession**, preserve old paths through an approved redirect/stub or auditable link map, update incoming references, and keep frozen evidence bytes unmodified. QOR Organize approval is required for moves.
 6. **On conflicting claims**, log the two source paths, the subject area and exact revisions; decide which owner controls that claim. Repair the subordinate/stale text with a pointer. Do **not** resolve disagreement by creating yet another reconciliation summary.
 7. **Verify before merge** with the repository's local Markdown/path validators and an independent five-question cold-start exercise. No hosted CI is required for this editorial test, and tests not run must be labeled NOT RUN.
+
+### Claim ownership declarations (curated, not a second status register)
+
+The IDs below identify **questions and their sole normative owner**, not the answers at today's revision. A derived page may cite the owner but must not become a second source of acceptance. The validator reads only rows between the markers. It checks unique IDs, known classes and tracked Markdown/JSON owners or collections (a trailing `/` names a collection whose members each own their entry). Only delivery claims may name an issue, they must, and the only accepted issue is #410. It pins the owner-ruled claims (release integration to #410, runtime identity to the baseline register, benchmark admission to the descriptors). It refuses the navigation, planning, projection and history surfaces filed in §3, and any owner whose title, leading Status/Purpose clause or `Authority effect: none` line demotes it. It does **not** guess semantic contradictions from arbitrary prose.
+
+<!-- BEGIN CLAIM OWNERS -->
+| Claim ID | Class | Primary owner |
+|---|---|---|
+| public-api-contract | contract | docs/44-public-api-contract.md |
+| canonical-substrate-maturity | qualification | docs/43-substrate-inventory-and-maturity.md |
+| runtime-baseline-identity | baseline | reports/runtime/baseline-register.json |
+| benchmark-admission | qualification | reference/agentmem_ref/evaluation/integrations/ |
+| benchmark-measured-outcomes | evidence | reports/benchmarks/dashboard/current.md |
+| architectural-decision-status | doctrine | docs/adr/ |
+| roadmap-work-queue | roadmap | docs/BACKLOG.md |
+| release-integration-status | delivery | #410 |
+<!-- END CLAIM OWNERS -->
+
+**Release-integration-status is owned by live [#410](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/410)**; [System State](SYSTEM_STATE.md) is only a revision-bound pointer to it, verified against exact code and baseline evidence. Each ADR file owns its own status; the [ADR index](adr/README.md) routes to them. Benchmark admission is owned by the committed integration descriptors and their validator, not by the dashboard or the [Atlas](BENCHMARK_COVERAGE_ATLAS.md). On disputed ownership, record both sources in the governing issue and leave the declaration unchanged until the owner rules; do not crown the newer document. Before any supersession, record the old owner/revision, new owner/revision, effective acceptance event, and subordinate backlinks.
 
 ## 5. Cold-start path for agents
 
