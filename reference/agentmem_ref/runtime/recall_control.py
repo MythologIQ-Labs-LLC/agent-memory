@@ -625,6 +625,7 @@ class ControlledRecallPlanner:
                         vector_dimension=vector_hit.vector_dimension,
                         similarity_metric=vector_hit.similarity_metric,
                         currentness_basis=vector_hit.currentness_basis,
+                        answerability_logit=vector_hit.answerability_logit,
                     )
                 )
             route_counts[SEMANTIC_VECTOR_ROUTE] = len(vector_results)

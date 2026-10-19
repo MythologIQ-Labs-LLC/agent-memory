@@ -258,6 +258,9 @@ SEMANTIC_RETRIEVAL_DEFAULT = "off"
 SEMANTIC_RETRIEVAL_MODES = ("off", "auto", "required")
 SEMANTIC_MINIMUM_SIMILARITY = 0.30
 SEMANTIC_CANDIDATE_LIMIT = 16
+#: #819 C10: opt-in answerability gate on the semantic route's proposals (experimental).
+SEMANTIC_ANSWERABILITY_DEFAULT = "off"
+SEMANTIC_ANSWERABILITY_MODES = ("off", "qnli-electra-base")
 #: Shadow recall control (contract 1.5.0, #644 T-controller): the controller plans beside the
 #: unchanged default planner; retrieval, admission and ranking are identical in both modes.
 RECALL_CONTROL_DEFAULT = "off"
@@ -265,11 +268,22 @@ RETURN_SELECTION_DEFAULT = RELEVANCE_SUFFICIENT
 RECALL_CONTROL_MODES = ("off", "shadow")
 
 
-def _semantic_route(root: Path, mode: str, representation_dir: str | Path | None) -> dict:
+def _semantic_route(
+    root: Path,
+    mode: str,
+    representation_dir: str | Path | None,
+    answerability: str = SEMANTIC_ANSWERABILITY_DEFAULT,
+    answerability_dir: str | Path | None = None,
+) -> dict:
     """Build the semantic vector retriever for ``mode``, or record why it is disabled."""
 
     if mode not in SEMANTIC_RETRIEVAL_MODES:
         raise ValueError(f"semantic_retrieval must be one of {SEMANTIC_RETRIEVAL_MODES}")
+    if answerability not in SEMANTIC_ANSWERABILITY_MODES:
+        raise ValueError(f"semantic_answerability must be one of {SEMANTIC_ANSWERABILITY_MODES}")
+    if answerability != "off" and mode != "required":
+        # A requested gate never degrades silently: it needs a route that cannot be disabled.
+        raise ValueError("semantic_answerability requires semantic_retrieval='required'")
     if mode == "off":
         return {"status": "disabled", "mode": mode, "reason": "off", "retriever": None}
     from ..runtime.representation_cache import DerivedVectorStore
@@ -282,9 +296,15 @@ def _semantic_route(root: Path, mode: str, representation_dir: str | Path | None
         if mode == "required":
             raise
         return {"status": "disabled", "mode": mode, "reason": f"unavailable: {exc}", "retriever": None}
+    scorer = None
+    if answerability != "off":
+        from ..runtime.answerability_onnx import OnnxAnswerabilityScorer
+
+        # Raises AnswerabilityUnavailable when the pinned model is missing or fails verification.
+        scorer = OnnxAnswerabilityScorer(answerability_dir)
     store = DerivedVectorStore(root, provider.spec.config_digest, provider.spec.dimensions)
     retriever = NativeVectorCandidateRetriever(
-        provider, minimum_similarity=SEMANTIC_MINIMUM_SIMILARITY, store=store
+        provider, minimum_similarity=SEMANTIC_MINIMUM_SIMILARITY, store=store, answerability=scorer
     )
     return {"status": "enabled", "mode": mode, "reason": "pinned provider verified", "retriever": retriever}
 
@@ -354,6 +374,8 @@ class AgentMemory:
         representation_dir: str | Path | None = None,
         recall_control: str = RECALL_CONTROL_DEFAULT,
         proposition_extractor: Any = None,
+        semantic_answerability: str = SEMANTIC_ANSWERABILITY_DEFAULT,
+        answerability_dir: str | Path | None = None,
     ) -> "AgentMemory":
         """Create or recover one qualified local SQLite composition.
 
@@ -364,6 +386,13 @@ class AgentMemory:
         ``required`` raises instead of degrading. The route only widens candidates:
         every candidate still crosses governed admission, and under ranking policy
         3.2.0 similarity orders only after every relevance and temporal stage.
+
+        ``semantic_answerability`` (#819 C10, experimental) is ``"off"`` (default) or
+        ``"qnli-electra-base"`` and requires ``semantic_retrieval="required"``. When on, the
+        semantic route reads the dense top 8 with no similarity floor and proposes the best
+        match above the floor plus every fact a pinned local cross-encoder judges to answer
+        the query (its own logit-0 boundary). A missing or unverified model raises. The score
+        is proposal evidence only; admission, ranking and selection are unchanged.
 
         ``recall_control`` (contract 1.5.0, #644) is ``"off"`` (default) or ``"shadow"``.
         In shadow the deterministic System-One controller plans beside the unchanged
@@ -408,7 +437,9 @@ class AgentMemory:
         bindings = doctor.load_qualification_bindings(resolved_qualification)
         plan = validate_runtime_behavior_contract(value, qualification_bindings=bindings)
 
-        semantic = _semantic_route(root, semantic_retrieval, representation_dir)
+        semantic = _semantic_route(
+            root, semantic_retrieval, representation_dir, semantic_answerability, answerability_dir
+        )
         database = root / _DATABASE_NAME
         binding = root / _BINDING_NAME
         if database.exists():
@@ -1092,6 +1123,8 @@ class AgentMemory:
                 "rebuild_posture": spec.rebuild_posture,
             },
             "minimum_similarity": None if retriever is None else retriever.minimum_similarity,
+            "answerability": None if getattr(retriever, "answerability", None) is None else dict(
+                retriever.answerability.spec.to_dict(), pool=retriever.answerability_pool),
             "candidate_limit": None if retriever is None else SEMANTIC_CANDIDATE_LIMIT,
             "ordering": "subordinate: after every relevance and temporal stage (ranking policy 3.2.0)",
             "store": None if store is None else store.posture(),

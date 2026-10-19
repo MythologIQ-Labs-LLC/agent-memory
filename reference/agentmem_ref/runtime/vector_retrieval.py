@@ -19,9 +19,9 @@ but Agent Memory does not import, call, or require either runtime here.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 import math
-from typing import Callable, Iterable, Protocol, runtime_checkable
+from typing import Callable, Iterable, Protocol, Sequence, runtime_checkable
 
 from ..state.substrate import Fact
 
@@ -29,6 +29,8 @@ from ..state.substrate import Fact
 SEMANTIC_VECTOR_ROUTE = "semantic_vector"
 COSINE_SIMILARITY = "cosine"
 DETERMINISTIC_REBUILD_POSTURE = "deterministic_rebuild_from_canonical"
+#: #819 C10: dense pool the answerability gate reads (top-k by cosine, no similarity floor).
+ANSWERABILITY_POOL = 8
 
 
 @dataclass(frozen=True)
@@ -75,6 +77,15 @@ class VectorRepresentationProvider(Protocol):
     def embed(self, text: str) -> tuple[float, ...]: ...
 
 
+class AnswerabilityScorer(Protocol):
+    """Pair scorer for (question, memory text); a logit above ``spec.logit_floor`` means "answers"."""
+
+    @property
+    def spec(self) -> object: ...
+
+    def score(self, question: str, texts: "Sequence[str]") -> tuple[float, ...]: ...
+
+
 class DerivedVectorStoreProtocol(Protocol):
     """Derived, rebuildable vector cache; never canonical, never authority."""
 
@@ -105,10 +116,14 @@ class VectorCandidateHit:
     rebuild_posture: str = DETERMINISTIC_REBUILD_POSTURE
     currentness_basis: str = "governed_recall_admission"
     authority_effect: str = "none"
+    # #819 C10: the answerability logit that proposed this hit, when the gate is on.
+    answerability_logit: float | None = None
 
     def __post_init__(self) -> None:
         if not math.isfinite(self.similarity):
             raise ValueError("vector similarity must be finite")
+        if self.answerability_logit is not None and not math.isfinite(self.answerability_logit):
+            raise ValueError("answerability logit must be finite")
         if self.authority_effect != "none":
             raise ValueError("vector candidate hits cannot have authority effect")
 
@@ -129,9 +144,15 @@ class NativeVectorCandidateRetriever:
         *,
         minimum_similarity: float = 0.0,
         store: DerivedVectorStoreProtocol | None = None,
+        answerability: AnswerabilityScorer | None = None,
+        answerability_pool: int = ANSWERABILITY_POOL,
     ) -> None:
         self.representation = representation
         self.store = store
+        if answerability_pool < 1:
+            raise ValueError("answerability_pool must be positive")
+        self.answerability = answerability
+        self.answerability_pool = answerability_pool
         self.spec = representation.spec
         if not math.isfinite(minimum_similarity):
             raise ValueError("minimum_similarity must be finite")
@@ -171,6 +192,14 @@ class NativeVectorCandidateRetriever:
         explicit historical intent still sees invalidated facts. ``store`` supplies
         derived vectors keyed by fact identity and content, so a query embeds only the
         query text and facts not yet cached; without it every fact is embedded.
+
+        With an ``answerability`` scorer (#819 C10) the route reads the dense top
+        ``answerability_pool`` facts with no similarity floor and proposes the best match
+        when it clears ``minimum_similarity`` (the ungated rule for rank 1) and any pool
+        fact whose answerability logit clears the scorer's own floor. Cosine and
+        topical overlap cannot separate a fact that answers the query from a similar
+        one (C9-S); the gate replaces "every hit above the floor" for ranks 2+ and reaches
+        below the floor only on that evidence.
         """
         if candidate_limit < 0:
             raise ValueError("candidate_limit must be non-negative")
@@ -183,7 +212,9 @@ class NativeVectorCandidateRetriever:
         if self._norm(query_vector) == 0.0:
             return []
 
+        gated = self.answerability is not None
         hits: list[VectorCandidateHit] = []
+        texts: dict[str, str] = {}
         for fact in substrate.all_facts():
             if fact.group_id != group_id:
                 continue
@@ -199,7 +230,9 @@ class NativeVectorCandidateRetriever:
                     self.representation.embed(fact.fact_text)
                 )
             similarity = self._cosine(query_vector, candidate_vector)
-            if similarity <= self.minimum_similarity:
+            if gated:
+                texts[fact.uuid] = fact.fact_text
+            elif similarity <= self.minimum_similarity:
                 continue
             hits.append(
                 VectorCandidateHit(
@@ -214,7 +247,24 @@ class NativeVectorCandidateRetriever:
             )
 
         hits.sort(key=lambda item: (-item.similarity, item.candidate_ref))
+        if gated:
+            return self._answerability_gate(query, hits[:min(candidate_limit, self.answerability_pool)], texts)
         return hits[:candidate_limit]
+
+    def _answerability_gate(
+        self, query: str, pool: list[VectorCandidateHit], texts: dict[str, str]
+    ) -> list[VectorCandidateHit]:
+        """Pool hits in dense order that the rank-1 rule or the answerability floor proposes."""
+
+        logits = self.answerability.score(query, [texts[hit.candidate_ref] for hit in pool]) if pool else ()
+        if len(logits) != len(pool) or any(not math.isfinite(value) for value in logits):
+            raise ValueError("answerability scorer returned a malformed score vector")
+        floor = float(self.answerability.spec.logit_floor)
+        proposed = []
+        for rank, (hit, logit) in enumerate(zip(pool, logits), start=1):
+            if logit > floor or (rank == 1 and hit.similarity > self.minimum_similarity):
+                proposed.append(replace(hit, answerability_logit=float(logit)))
+        return proposed
 
     def _validated_vector(self, value: tuple[float, ...]) -> tuple[float, ...]:
         try:

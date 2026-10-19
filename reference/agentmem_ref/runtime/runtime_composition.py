@@ -74,9 +74,11 @@ class RetrievalRouteHit:
     similarity_metric: str = ""
     currentness_basis: str = ""
     authority_effect: str = "none"
+    # #819 C10: present only when the semantic route's answerability gate proposed the hit.
+    answerability_logit: float | None = None
 
     def to_dict(self) -> dict[str, object]:
-        return {
+        record = {
             "route_id": self.route_id,
             "candidate_ref": self.candidate_ref,
             "raw_score": self.raw_score,
@@ -91,6 +93,9 @@ class RetrievalRouteHit:
             "currentness_basis": self.currentness_basis,
             "authority_effect": self.authority_effect,
         }
+        if self.answerability_logit is not None:
+            record["answerability_logit"] = self.answerability_logit
+        return record
 
 
 @dataclass
@@ -240,6 +245,7 @@ class DeterministicMultiRouteRecallPlanner:
                         vector_dimension=vector_hit.vector_dimension,
                         similarity_metric=vector_hit.similarity_metric,
                         currentness_basis=vector_hit.currentness_basis,
+                        answerability_logit=vector_hit.answerability_logit,
                     )
                 )
 
