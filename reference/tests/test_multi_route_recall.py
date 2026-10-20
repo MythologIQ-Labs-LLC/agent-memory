@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import tempfile
 import unittest
+from dataclasses import replace
 from pathlib import Path
 
 from agentmem_ref import policy
@@ -245,6 +246,62 @@ class MultiRouteRecallTests(unittest.TestCase):
         self.assertIn(deploy.fact_uuid, result.ranked_admitted)
         self.assertNotIn(backup.fact_uuid, result.ranked_admitted)
         self.assertEqual(result.refusals[backup.fact_uuid], "required_isolation_domain_missing")
+
+    def test_foreign_identity_seed_cannot_expand_into_visible_shared_evidence(self) -> None:
+        # A caller may guess a cross-project logical memory ID. It must not
+        # become an evidence-neighbor traversal seed just because the output
+        # neighbor belongs to this caller's project.
+        foreign_proposal = replace(
+            _proposal("proposal:foreign-seed", "memory:foreign-seed", project_ref="project-beta"),
+            evidence_refs=("evidence:shared-opaque",),
+        )
+        visible_proposal = replace(
+            _proposal("proposal:visible", "memory:visible", project_ref=PROJECT),
+            evidence_refs=("evidence:shared-opaque",),
+        )
+        foreign = self.runtime.retain(foreign_proposal, "restricted beta operational memo")
+        visible = self.runtime.retain(visible_proposal, "allowed alpha status note")
+        self.assertTrue(foreign.committed)
+        self.assertTrue(visible.committed)
+
+        result = self.runtime.multi_route_recall(
+            "allowed", _context(), logical_memory_refs=("memory:foreign-seed",),
+        )
+        self.assertIn(visible.fact_uuid, result.admitted)  # lexical still works
+        self.assertNotIn(foreign.fact_uuid, result.candidates)
+        self.assertNotIn(foreign.fact_uuid, result.route_hits)
+        self.assertEqual(
+            {hit.route_id for hit in result.provenance_for(visible.fact_uuid)},
+            {LEXICAL_ROUTE},
+        )
+        self.assertNotIn(
+            "evidence:shared-opaque",
+            str(result.selection_trace()),
+        )
+
+    def test_authorized_seed_still_produces_direct_evidence_neighbors(self) -> None:
+        first_proposal = replace(
+            _proposal("proposal:authorized-seed", "memory:authorized-seed"),
+            evidence_refs=("evidence:shared-opaque",),
+        )
+        second_proposal = replace(
+            _proposal("proposal:authorized-neighbor", "memory:authorized-neighbor"),
+            evidence_refs=("evidence:shared-opaque",),
+        )
+        first = self.runtime.retain(first_proposal, "retained private planning memo")
+        second = self.runtime.retain(second_proposal, "retained separate planning detail")
+        self.assertTrue(first.committed)
+        self.assertTrue(second.committed)
+
+        result = self.runtime.multi_route_recall(
+            "nonsenseword", _context(), logical_memory_refs=("memory:authorized-seed",),
+        )
+        self.assertIn(first.fact_uuid, result.admitted)
+        self.assertIn(second.fact_uuid, result.admitted)
+        self.assertIn(
+            SHARED_EVIDENCE_ROUTE,
+            {hit.route_id for hit in result.provenance_for(second.fact_uuid)},
+        )
 
     def test_compatibility_recall_preserves_existing_lexical_behavior(self) -> None:
         deploy = self._retain(MEMORY_DEPLOY, "deploy window is Thursday")
