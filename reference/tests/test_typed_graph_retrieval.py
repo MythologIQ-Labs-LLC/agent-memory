@@ -484,6 +484,30 @@ class TypedGraphGovernedRecallTests(unittest.TestCase):
             "none",
         )
 
+    def test_graph_seed_budget_skips_foreign_refs_to_find_authorized_seed(self) -> None:
+        foreign_refs = []
+        for i in range(8):
+            logical = f"memory:foreign-{i}"
+            self._retain(logical, f"restricted beta record {i}", project_ref="project-beta")
+            foreign_refs.append(logical)
+        seed = self._retain("memory:authorized-seed", "authorized starting node")
+        neighbor = self._retain("memory:authorized-neighbor", "authorized linked node")
+        substrate = self.runtime.adapter.checkpoint_substrate()
+        substrate.write_relation(
+            _relation("relation:authorized", seed.fact_uuid, neighbor.fact_uuid),
+        )
+        result = ControlledRecallPlanner(
+            self.runtime.adapter,
+            controller=self._graph_only_controller(exact_limit=0),
+            graph_retriever=NativeTypedGraphCandidateRetriever(),
+        ).recall(
+            "", _context(),
+            logical_memory_refs=(*foreign_refs, "memory:authorized-seed"),
+        )
+        self.assertIn(neighbor.fact_uuid, result.admitted)
+        self.assertEqual(result.route_candidate_counts[TYPED_GRAPH_ROUTE], 1)
+        self.assertNotIn(seed.fact_uuid, result.candidates)
+
     def test_governed_typed_graph_cannot_bridge_through_other_project(self) -> None:
         seed = self._retain("memory:seed", "authorized starting fact")
         foreign = self._retain(
