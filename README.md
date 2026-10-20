@@ -33,20 +33,15 @@ Agent Memory's goal is to combine structured facts, temporal history, graph rela
 
 **This is the product direction, not a list of shipped capabilities.** Memory can be represented differently because its uses are different: exact facts need durable identity, events need historical validity, relationships benefit from graph traversal, semantic questions may benefit from vectors, and some artifacts are best kept inspectable as documents. These representations should cooperate through shared identity, provenance, scope, lifecycle, and governed recall, not become unrelated copies or independent truth authorities.
 
-```text
-              One governed memory identity and lifecycle
-                                |
-              task-appropriate representations and routes
-       +-----------+------------+-------------+-----------+
-       |           |            |             |           |
-   structured   lexical /    relations /   episodes /  documents /
-     state       vector         graph         time       portable files
-       +-----------+------------+-------------+-----------+
-                                |
-                 governed admission + context assembly
-                                |
-                        task-relevant evidence
-```
+| Representation in the intended architecture | Purpose to qualify |
+|---|---|
+| Structured records | Exact identity and canonical state |
+| Lexical and vector views | Complementary candidate discovery |
+| Relations and graph views | Traceable relationship traversal |
+| Episodes and temporal views | Historical applicability and currentness |
+| Documents and portable files | Inspectable, portable knowledge |
+
+All forms share governed identity, provenance and lifecycle boundaries; candidate discovery still precedes canonical admission and context assembly.
 
 The system should use a representation **only when it demonstrates value** for a task, with correction, deletion, isolation and stale-projection controls across every materialized view. One canonical substrate may back multiple useful retrieval forms; conversely, additional specialized backends may be justified later. **SQLite is today's qualified single-host canonical implementation, not a doctrine requiring all future memory to have one physical shape.** The [original product objective](docs/CONCEPT.md), [composition qualification program #636](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/636), and [substrate inventory](docs/43-substrate-inventory-and-maturity.md) respectively own intent, experiments, and maturity. Comparative superiority is a hypothesis to measure, not an existing claim.
 
