@@ -1,0 +1,11 @@
+{
+  "dir": "/tmp/636-pinned-model",
+  "files": {
+    "onnx/model.onnx": "fetched",
+    "tokenizer.json": "fetched",
+    "config.json": "fetched",
+    "modules.json": "fetched",
+    "1_Pooling/config.json": "fetched",
+    "sentence_bert_config.json": "fetched"
+  }
+}

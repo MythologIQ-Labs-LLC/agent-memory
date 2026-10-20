@@ -1,0 +1,67 @@
+test_nonadmitting_receipt_is_rejected_before_attribution (tests.test_636_route_attribution.RouteAttributionTests.test_nonadmitting_receipt_is_rejected_before_attribution) ... 
+  test_nonadmitting_receipt_is_rejected_before_attribution (tests.test_636_route_attribution.RouteAttributionTests.test_nonadmitting_receipt_is_rejected_before_attribution) (outcome='block') ... FAIL
+  test_nonadmitting_receipt_is_rejected_before_attribution (tests.test_636_route_attribution.RouteAttributionTests.test_nonadmitting_receipt_is_rejected_before_attribution) (outcome=None) ... FAIL
+  test_nonadmitting_receipt_is_rejected_before_attribution (tests.test_636_route_attribution.RouteAttributionTests.test_nonadmitting_receipt_is_rejected_before_attribution) (outcome=True) ... FAIL
+test_nonadmitting_receipt_cannot_be_scored_as_public_evidence (tests.test_636_paired_recall.PairedPublicRecallTests.test_nonadmitting_receipt_cannot_be_scored_as_public_evidence) ... 
+  test_nonadmitting_receipt_cannot_be_scored_as_public_evidence (tests.test_636_paired_recall.PairedPublicRecallTests.test_nonadmitting_receipt_cannot_be_scored_as_public_evidence) (outcome='block') ... FAIL
+  test_nonadmitting_receipt_cannot_be_scored_as_public_evidence (tests.test_636_paired_recall.PairedPublicRecallTests.test_nonadmitting_receipt_cannot_be_scored_as_public_evidence) (outcome=None) ... FAIL
+  test_nonadmitting_receipt_cannot_be_scored_as_public_evidence (tests.test_636_paired_recall.PairedPublicRecallTests.test_nonadmitting_receipt_cannot_be_scored_as_public_evidence) (outcome=True) ... FAIL
+
+======================================================================
+FAIL: test_nonadmitting_receipt_is_rejected_before_attribution (tests.test_636_route_attribution.RouteAttributionTests.test_nonadmitting_receipt_is_rejected_before_attribution) (outcome='block')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/fa6d5f50ddfd/agent-memory-636/reference/tests/test_636_route_attribution.py", line 38, in test_nonadmitting_receipt_is_rejected_before_attribution
+    with self.subTest(outcome=outcome), self.assertRaisesRegex(ValueError, "admit"):
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_nonadmitting_receipt_is_rejected_before_attribution (tests.test_636_route_attribution.RouteAttributionTests.test_nonadmitting_receipt_is_rejected_before_attribution) (outcome=None)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/fa6d5f50ddfd/agent-memory-636/reference/tests/test_636_route_attribution.py", line 38, in test_nonadmitting_receipt_is_rejected_before_attribution
+    with self.subTest(outcome=outcome), self.assertRaisesRegex(ValueError, "admit"):
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_nonadmitting_receipt_is_rejected_before_attribution (tests.test_636_route_attribution.RouteAttributionTests.test_nonadmitting_receipt_is_rejected_before_attribution) (outcome=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/fa6d5f50ddfd/agent-memory-636/reference/tests/test_636_route_attribution.py", line 38, in test_nonadmitting_receipt_is_rejected_before_attribution
+    with self.subTest(outcome=outcome), self.assertRaisesRegex(ValueError, "admit"):
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_nonadmitting_receipt_cannot_be_scored_as_public_evidence (tests.test_636_paired_recall.PairedPublicRecallTests.test_nonadmitting_receipt_cannot_be_scored_as_public_evidence) (outcome='block')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/fa6d5f50ddfd/agent-memory-636/reference/tests/test_636_paired_recall.py", line 36, in test_nonadmitting_receipt_cannot_be_scored_as_public_evidence
+    with self.subTest(outcome=outcome), self.assertRaisesRegex(ValueError, "admit"):
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_nonadmitting_receipt_cannot_be_scored_as_public_evidence (tests.test_636_paired_recall.PairedPublicRecallTests.test_nonadmitting_receipt_cannot_be_scored_as_public_evidence) (outcome=None)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/fa6d5f50ddfd/agent-memory-636/reference/tests/test_636_paired_recall.py", line 36, in test_nonadmitting_receipt_cannot_be_scored_as_public_evidence
+    with self.subTest(outcome=outcome), self.assertRaisesRegex(ValueError, "admit"):
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_nonadmitting_receipt_cannot_be_scored_as_public_evidence (tests.test_636_paired_recall.PairedPublicRecallTests.test_nonadmitting_receipt_cannot_be_scored_as_public_evidence) (outcome=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/fa6d5f50ddfd/agent-memory-636/reference/tests/test_636_paired_recall.py", line 36, in test_nonadmitting_receipt_cannot_be_scored_as_public_evidence
+    with self.subTest(outcome=outcome), self.assertRaisesRegex(ValueError, "admit"):
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.002s
+
+FAILED (failures=6)

@@ -1,0 +1,9 @@
+{
+  "source_sha": "e12a819060a2570e6c44d6da77235d4ba4e13234",
+  "dirty": false,
+  "fixture_sha256": "7c20825699e08c822c501fc6cab2ee75fd63ca2d3b5d001a093828e4228ca0c7",
+  "driver_sha256": "1b5ed2a73dc02833efaf6d5c8335118ee58c4b7abeb466894998f9d25505f267",
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+  "python": "3.12.14",
+  "evidence_class": "author_visible_development_diagnostic_not_independent_qualification"
+}

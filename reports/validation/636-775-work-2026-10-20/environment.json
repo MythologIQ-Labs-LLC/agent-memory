@@ -1,0 +1,24 @@
+{
+  "python": "3.12.14",
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+  "dependency_versions": {
+    "jsonschema": "4.26.0",
+    "cryptography": "50.0.2",
+    "agent-manifest": "0.12.0",
+    "agentrust-trace": "0.10.0",
+    "rfc8785": "0.1.4",
+    "pyyaml": "6.0.3",
+    "onnxruntime": "1.30.0",
+    "tokenizers": "0.23.2",
+    "numpy": "2.4.6",
+    "protobuf": "7.36.2",
+    "flatbuffers": "25.12.19",
+    "packaging": "26.3"
+  },
+  "runtime_revision": "ae2fcac0427da8df159bc82972b1e9b20eb61845",
+  "notes": [
+    "two full-suite processes overlapped the profile run; timing is descriptive only",
+    "pytest absent; used repository-supported unittest discovery",
+    "optional semantic tests required pinned local model; no network on open/recall"
+  ]
+}

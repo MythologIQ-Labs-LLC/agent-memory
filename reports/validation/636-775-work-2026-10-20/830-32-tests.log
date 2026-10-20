@@ -1,0 +1,40 @@
+test_check_reports_layout_matches_table (tests.test_package_layout.LayoutMatchesMover.test_check_reports_layout_matches_table) ... ok
+test_crg_states_its_doctrine (tests.test_package_layout.LayoutMatchesMover.test_crg_states_its_doctrine) ... ok
+test_every_alias_is_the_identical_object (tests.test_package_layout.LayoutMatchesMover.test_every_alias_is_the_identical_object) ... ok
+test_init_does_not_route_through_aliases (tests.test_package_layout.LayoutMatchesMover.test_init_does_not_route_through_aliases) ... ok
+test_monkeypatch_through_alias_reaches_the_evaluator (tests.test_package_layout.LayoutMatchesMover.test_monkeypatch_through_alias_reaches_the_evaluator) ... ok
+test_no_depth_coupled_path_resolution_remains (tests.test_package_layout.LayoutMatchesMover.test_no_depth_coupled_path_resolution_remains) ... ok
+test_no_layer_imports_a_later_layer (tests.test_package_layout.LayoutMatchesMover.test_no_layer_imports_a_later_layer) ... ok
+test_top_level_residents (tests.test_package_layout.LayoutMatchesMover.test_top_level_residents) ... ok
+test_neither_source_nor_package_raises_the_module_error (tests.test_packaged_schema_resolution.SchemaResolution.test_neither_source_nor_package_raises_the_module_error) ... ok
+test_packaged_copy_resolves_when_source_is_absent (tests.test_packaged_schema_resolution.SchemaResolution.test_packaged_copy_resolves_when_source_is_absent) ... ok
+test_source_tree_resolves_both_schemas (tests.test_packaged_schema_resolution.SchemaResolution.test_source_tree_resolves_both_schemas) ... ok
+test_every_documented_cell_resolves_as_documented (tests.test_decision_table_doctrine.DecisionTableDoctrineTest.test_every_documented_cell_resolves_as_documented) ... ok
+test_link_deletion_critical_requires_external_verification (tests.test_decision_table_doctrine.DecisionTableDoctrineTest.test_link_deletion_critical_requires_external_verification)
+The second previously-weaker cell. ... ok
+test_score_adjustment_critical_blocks (tests.test_decision_table_doctrine.DecisionTableDoctrineTest.test_score_adjustment_critical_blocks)
+Previously resolved require_review via the fallback -- weaker than ... ok
+test_unknown_operations_keep_the_conservative_fallback (tests.test_decision_table_doctrine.DecisionTableDoctrineTest.test_unknown_operations_keep_the_conservative_fallback)
+LD4: removing the fallback would turn an unknown operation into a ... ok
+test_matching_human_precedent_is_context_not_permission (tests.test_governance_projection.GovernanceProjectionTests.test_matching_human_precedent_is_context_not_permission) ... ok
+test_material_mismatch_does_not_inherit_superficial_positive_precedent (tests.test_governance_projection.GovernanceProjectionTests.test_material_mismatch_does_not_inherit_superficial_positive_precedent) ... ok
+test_policy_generated_allow_cannot_claim_independent_human_adjudication (tests.test_governance_projection.GovernanceProjectionTests.test_policy_generated_allow_cannot_claim_independent_human_adjudication) ... ok
+test_same_inputs_rebuild_the_same_projection (tests.test_governance_projection.GovernanceProjectionTests.test_same_inputs_rebuild_the_same_projection) ... ok
+test_unknown_condition_remains_unknown_instead_of_becoming_match (tests.test_governance_projection.GovernanceProjectionTests.test_unknown_condition_remains_unknown_instead_of_becoming_match) ... ok
+test_action_envelope_validates (tests.test_api_contract.EnvelopeValidation.test_action_envelope_validates) ... ok
+test_apply_return_budget (tests.test_api_contract.EnvelopeValidation.test_apply_return_budget) ... ok
+test_compatibility_states (tests.test_api_contract.EnvelopeValidation.test_compatibility_states) ... ok
+test_decision_projection_carries_constraints (tests.test_api_contract.EnvelopeValidation.test_decision_projection_carries_constraints) ... ok
+test_decision_projection_fields (tests.test_api_contract.EnvelopeValidation.test_decision_projection_fields) ... ok
+test_envelope_to_proposal_round_trip (tests.test_api_contract.EnvelopeValidation.test_envelope_to_proposal_round_trip) ... ok
+test_envelope_validates_and_forbidden_fields_are_rejected (tests.test_api_contract.EnvelopeValidation.test_envelope_validates_and_forbidden_fields_are_rejected) ... ok
+test_observation_envelope_validates (tests.test_api_contract.EnvelopeValidation.test_observation_envelope_validates) ... ok
+test_recall_context_accepts_budget_and_refuses_zero (tests.test_api_contract.EnvelopeValidation.test_recall_context_accepts_budget_and_refuses_zero) ... ok
+test_result_envelope_carries_return_policy (tests.test_api_contract.EnvelopeValidation.test_result_envelope_carries_return_policy) ... ok
+test_result_envelope_validates_against_its_schema (tests.test_api_contract.EnvelopeValidation.test_result_envelope_validates_against_its_schema) ... ok
+test_target_envelope_validates (tests.test_api_contract.EnvelopeValidation.test_target_envelope_validates) ... ok
+
+----------------------------------------------------------------------
+Ran 32 tests in 1.182s
+
+OK

@@ -1,0 +1,62 @@
+test_nonadmitting_receipt_never_reads_content (tests.test_775_public_recall_probe.PublicRecallRelevanceTests.test_nonadmitting_receipt_never_reads_content) ... 
+  test_nonadmitting_receipt_never_reads_content (tests.test_775_public_recall_probe.PublicRecallRelevanceTests.test_nonadmitting_receipt_never_reads_content) (outcome='block') ... FAIL
+  test_nonadmitting_receipt_never_reads_content (tests.test_775_public_recall_probe.PublicRecallRelevanceTests.test_nonadmitting_receipt_never_reads_content) (outcome=None) ... FAIL
+  test_nonadmitting_receipt_never_reads_content (tests.test_775_public_recall_probe.PublicRecallRelevanceTests.test_nonadmitting_receipt_never_reads_content) (outcome=True) ... FAIL
+test_all_receipts_validated_before_any_content_read (tests.test_775_public_recall_probe.PublicRecallRelevanceTests.test_all_receipts_validated_before_any_content_read) ... FAIL
+
+======================================================================
+FAIL: test_nonadmitting_receipt_never_reads_content (tests.test_775_public_recall_probe.PublicRecallRelevanceTests.test_nonadmitting_receipt_never_reads_content) (outcome='block')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/fa6d5f50ddfd/agent-memory-775/reference/tests/test_775_public_recall_probe.py", line 43, in test_nonadmitting_receipt_never_reads_content
+    inspect_returned(d, NoReads(), NoReads())
+  File "/workspace/scratch/fa6d5f50ddfd/agent-memory-775/reference/agentmem_ref/evaluation/public_recall_relevance_probe.py", line 55, in inspect_returned
+    memory_text = authorized_content.get(ref)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/fa6d5f50ddfd/agent-memory-775/reference/tests/test_775_public_recall_probe.py", line 38, in get
+    raise AssertionError("content read before validating admission")
+AssertionError: content read before validating admission
+
+======================================================================
+FAIL: test_nonadmitting_receipt_never_reads_content (tests.test_775_public_recall_probe.PublicRecallRelevanceTests.test_nonadmitting_receipt_never_reads_content) (outcome=None)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/fa6d5f50ddfd/agent-memory-775/reference/tests/test_775_public_recall_probe.py", line 43, in test_nonadmitting_receipt_never_reads_content
+    inspect_returned(d, NoReads(), NoReads())
+  File "/workspace/scratch/fa6d5f50ddfd/agent-memory-775/reference/agentmem_ref/evaluation/public_recall_relevance_probe.py", line 55, in inspect_returned
+    memory_text = authorized_content.get(ref)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/fa6d5f50ddfd/agent-memory-775/reference/tests/test_775_public_recall_probe.py", line 38, in get
+    raise AssertionError("content read before validating admission")
+AssertionError: content read before validating admission
+
+======================================================================
+FAIL: test_nonadmitting_receipt_never_reads_content (tests.test_775_public_recall_probe.PublicRecallRelevanceTests.test_nonadmitting_receipt_never_reads_content) (outcome=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/fa6d5f50ddfd/agent-memory-775/reference/tests/test_775_public_recall_probe.py", line 43, in test_nonadmitting_receipt_never_reads_content
+    inspect_returned(d, NoReads(), NoReads())
+  File "/workspace/scratch/fa6d5f50ddfd/agent-memory-775/reference/agentmem_ref/evaluation/public_recall_relevance_probe.py", line 55, in inspect_returned
+    memory_text = authorized_content.get(ref)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/fa6d5f50ddfd/agent-memory-775/reference/tests/test_775_public_recall_probe.py", line 38, in get
+    raise AssertionError("content read before validating admission")
+AssertionError: content read before validating admission
+
+======================================================================
+FAIL: test_all_receipts_validated_before_any_content_read (tests.test_775_public_recall_probe.PublicRecallRelevanceTests.test_all_receipts_validated_before_any_content_read)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/fa6d5f50ddfd/agent-memory-775/reference/tests/test_775_public_recall_probe.py", line 54, in test_all_receipts_validated_before_any_content_read
+    inspect_returned(d, NoReads(), NoReads())
+  File "/workspace/scratch/fa6d5f50ddfd/agent-memory-775/reference/agentmem_ref/evaluation/public_recall_relevance_probe.py", line 55, in inspect_returned
+    memory_text = authorized_content.get(ref)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/fa6d5f50ddfd/agent-memory-775/reference/tests/test_775_public_recall_probe.py", line 48, in get
+    raise AssertionError("earlier content read before later invalid receipt")
+AssertionError: earlier content read before later invalid receipt
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.001s
+
+FAILED (failures=4)

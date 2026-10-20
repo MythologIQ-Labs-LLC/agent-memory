@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/fa6d5f50ddfd/agent-memory-636/reference/run_636_supported_profiles.py", line 125, in <module>
+    main()
+  File "/workspace/scratch/fa6d5f50ddfd/agent-memory-636/reference/run_636_supported_profiles.py", line 105, in main
+    arms[mode] = execute(Path(tmp)/mode, fixture, mode, args.model_dir)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/fa6d5f50ddfd/agent-memory-636/reference/run_636_supported_profiles.py", line 53, in execute
+    assert all(raw == x for x in observations), 'nondeterministic public results'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: nondeterministic public results

@@ -1,0 +1,27 @@
+test_cannot_infer_backend_disabled_counterfactual (tests.test_636_route_attribution.RouteAttributionTests.test_cannot_infer_backend_disabled_counterfactual) ... ok
+test_deduplicates_route_hits_not_facts (tests.test_636_route_attribution.RouteAttributionTests.test_deduplicates_route_hits_not_facts) ... ok
+test_empty_return_is_not_success_claim (tests.test_636_route_attribution.RouteAttributionTests.test_empty_return_is_not_success_claim) ... ok
+test_gold_only_changes_evaluator_not_recall (tests.test_636_route_attribution.RouteAttributionTests.test_gold_only_changes_evaluator_not_recall) ... ok
+test_invalid_inputs_rejected (tests.test_636_route_attribution.RouteAttributionTests.test_invalid_inputs_rejected) ... ok
+test_refused_and_budget_private_are_never_read (tests.test_636_route_attribution.RouteAttributionTests.test_refused_and_budget_private_are_never_read) ... ok
+test_reports_missing_route_provenance_honestly (tests.test_636_route_attribution.RouteAttributionTests.test_reports_missing_route_provenance_honestly) ... ok
+test_required_vs_forbidden_with_distinct_routes (tests.test_636_route_attribution.RouteAttributionTests.test_required_vs_forbidden_with_distinct_routes) ... ok
+test_unlabelled_not_conflated_with_forbidden (tests.test_636_route_attribution.RouteAttributionTests.test_unlabelled_not_conflated_with_forbidden) ... ok
+test_deterministic_and_immutable (tests.test_636_paired_recall.PairedPublicRecallTests.test_deterministic_and_immutable) ... ok
+test_incomparable_corpus_labels_scope_and_budget_rejected (tests.test_636_paired_recall.PairedPublicRecallTests.test_incomparable_corpus_labels_scope_and_budget_rejected) ... ok
+test_loss_of_required_evidence_vetoes_precise_candidate (tests.test_636_paired_recall.PairedPublicRecallTests.test_loss_of_required_evidence_vetoes_precise_candidate) ... ok
+test_missing_receipt_duplicate_and_bad_labels_rejected (tests.test_636_paired_recall.PairedPublicRecallTests.test_missing_receipt_duplicate_and_bad_labels_rejected) ... ok
+test_new_forbidden_return_is_regression (tests.test_636_paired_recall.PairedPublicRecallTests.test_new_forbidden_return_is_regression) ... ok
+test_no_answer_is_not_implied_to_be_downstream_abstention (tests.test_636_paired_recall.PairedPublicRecallTests.test_no_answer_is_not_implied_to_be_downstream_abstention) ... ok
+test_private_candidates_not_observed (tests.test_636_paired_recall.PairedPublicRecallTests.test_private_candidates_not_observed) ... ok
+test_public_admission_and_budget_checked (tests.test_636_paired_recall.PairedPublicRecallTests.test_public_admission_and_budget_checked) ... ok
+test_selective_gain_preserves_evidence (tests.test_636_paired_recall.PairedPublicRecallTests.test_selective_gain_preserves_evidence) ... ok
+test_unlabelled_is_not_inferred_forbidden (tests.test_636_paired_recall.PairedPublicRecallTests.test_unlabelled_is_not_inferred_forbidden) ... ok
+test_unlabelled_only_is_not_a_false_strict_success (tests.test_636_paired_recall.PairedPublicRecallTests.test_unlabelled_only_is_not_a_false_strict_success) ... ok
+test_public_sqlite_facade_retains_nonlexical_identity_contribution (tests.test_636_route_attribution_integration.ObservedRouteAttributionIntegrationTests.test_public_sqlite_facade_retains_nonlexical_identity_contribution) ... ok
+test_return_budget_does_not_count_unreturned_admitted_memories (tests.test_636_route_attribution_integration.ObservedRouteAttributionIntegrationTests.test_return_budget_does_not_count_unreturned_admitted_memories) ... ok
+
+----------------------------------------------------------------------
+Ran 22 tests in 0.239s
+
+OK

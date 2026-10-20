@@ -1,0 +1,25 @@
+test_declared_count_drift_is_detected (test_architecture_index_validator.ArchitectureCatalogValidationTests.test_declared_count_drift_is_detected) ... ok
+test_duplicate_registration_is_detected (test_architecture_index_validator.ArchitectureCatalogValidationTests.test_duplicate_registration_is_detected) ... ok
+test_fragment_or_title_on_register_link_still_registers (test_architecture_index_validator.ArchitectureCatalogValidationTests.test_fragment_or_title_on_register_link_still_registers) ... ok
+test_missing_shelf_registration_is_detected (test_architecture_index_validator.ArchitectureCatalogValidationTests.test_missing_shelf_registration_is_detected) ... ok
+test_one_shelf_per_tracked_document (test_architecture_index_validator.ArchitectureCatalogValidationTests.test_one_shelf_per_tracked_document) ... ok
+test_unregistered_document_is_detected (test_architecture_index_validator.ArchitectureCatalogValidationTests.test_unregistered_document_is_detected) ... ok
+test_untracked_index_entry_is_detected (test_architecture_index_validator.ArchitectureCatalogValidationTests.test_untracked_index_entry_is_detected) ... ok
+test_collection_owner_requires_tracked_members (test_architecture_index_validator.ClaimOwnershipTests.test_collection_owner_requires_tracked_members) ... ok
+test_delivery_and_issue_owner_pairing (test_architecture_index_validator.ClaimOwnershipTests.test_delivery_and_issue_owner_pairing) ... ok
+test_duplicate_claim_fails_closed (test_architecture_index_validator.ClaimOwnershipTests.test_duplicate_claim_fails_closed) ... ok
+test_malformed_missing_and_disguised_rows_fail_closed (test_architecture_index_validator.ClaimOwnershipTests.test_malformed_missing_and_disguised_rows_fail_closed) ... ok
+test_navigation_history_and_projection_surfaces_are_never_owners (test_architecture_index_validator.ClaimOwnershipTests.test_navigation_history_and_projection_surfaces_are_never_owners) ... ok
+test_repository_catalog_validates_against_all_tracked_files (test_architecture_index_validator.ClaimOwnershipTests.test_repository_catalog_validates_against_all_tracked_files) ... ok
+test_required_claims_are_pinned_to_ruled_owners (test_architecture_index_validator.ClaimOwnershipTests.test_required_claims_are_pinned_to_ruled_owners) ... ok
+test_reversed_markers_and_path_escape_fail_closed (test_architecture_index_validator.ClaimOwnershipTests.test_reversed_markers_and_path_escape_fail_closed) ... ok
+test_self_demoted_owner_is_not_promoted (test_architecture_index_validator.ClaimOwnershipTests.test_self_demoted_owner_is_not_promoted) ... ok
+test_unknown_authority_class_fails_closed (test_architecture_index_validator.ClaimOwnershipTests.test_unknown_authority_class_fails_closed) ... ok
+test_unreadable_owner_is_reported_not_crashed (test_architecture_index_validator.ClaimOwnershipTests.test_unreadable_owner_is_reported_not_crashed) ... ok
+test_untracked_owner_fails_closed (test_architecture_index_validator.ClaimOwnershipTests.test_untracked_owner_fails_closed) ... ok
+test_valid_claims (test_architecture_index_validator.ClaimOwnershipTests.test_valid_claims) ... ok
+
+----------------------------------------------------------------------
+Ran 20 tests in 0.035s
+
+OK
