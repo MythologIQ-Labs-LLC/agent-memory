@@ -4,6 +4,7 @@ import json
 import tempfile
 import unittest
 from dataclasses import replace
+from unittest import mock
 from pathlib import Path
 
 from agentmem_ref import policy
@@ -302,6 +303,40 @@ class MultiRouteRecallTests(unittest.TestCase):
             SHARED_EVIDENCE_ROUTE,
             {hit.route_id for hit in result.provenance_for(second.fact_uuid)},
         )
+
+    def test_shared_evidence_route_never_builds_foreign_neighbor_hit(self) -> None:
+        # Even a trusted substrate may return same-tenant neighbors in other
+        # projects. Do not construct an out-of-scope route hit and rely on
+        # later admission to erase the provenance it carried.
+        seed_proposal = replace(
+            _proposal("proposal:allowed-seed", "memory:allowed-seed"),
+            evidence_refs=("evidence:shared-opaque",),
+        )
+        foreign_proposal = replace(
+            _proposal("proposal:foreign-neighbor", "memory:foreign-neighbor",
+                      project_ref="project-beta"),
+            evidence_refs=("evidence:shared-opaque",),
+        )
+        seed = self.runtime.retain(seed_proposal, "allowed local setup")
+        foreign = self.runtime.retain(foreign_proposal, "restricted project data")
+        self.assertTrue(seed.committed)
+        self.assertTrue(foreign.committed)
+
+        from agentmem_ref.runtime import runtime_composition as composition
+
+        with mock.patch.object(
+            composition, "RetrievalRouteHit", wraps=composition.RetrievalRouteHit
+        ) as constructed:
+            result = self.runtime.multi_route_recall(
+                "unrelatedword", _context(), logical_memory_refs=("memory:allowed-seed",),
+            )
+        self.assertIn(seed.fact_uuid, result.admitted)
+        self.assertNotIn(foreign.fact_uuid, result.candidates)
+        self.assertFalse(any(
+            call.kwargs.get("route_id") == SHARED_EVIDENCE_ROUTE
+            and call.kwargs.get("candidate_ref") == foreign.fact_uuid
+            for call in constructed.call_args_list
+        ))
 
     def test_compatibility_recall_preserves_existing_lexical_behavior(self) -> None:
         deploy = self._retain(MEMORY_DEPLOY, "deploy window is Thursday")
