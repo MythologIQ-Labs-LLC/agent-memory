@@ -57,7 +57,9 @@ The system should use a representation **only when it demonstrates value** for a
 | Present in the repository | Not shipped or not qualified |
 |---|---|
 | Python runtime, `SQLiteTemporalGraph` persistence, governed lifecycle and public facade | Distributed/multi-host persistence, production 1.0 security boundary, or qualified Postgres substrate |
-| Lexical and optional semantic candidate retrieval, with governed admission and a bounded returned context | Proven speed or quality gains on somebody else's existing agent or memory database |
+| Lexical and optional semantic candidate retrieval, temporal fact/event semantics, bounded shared-evidence-neighbor recall, with one governed admission and a return budget | Qualified cross-store context composition, task-selective representation routing, or proven quality gains on someone else's workload |
+| Typed relation persistence/traversal modules and an experimental Graphiti adapter | Complete graph reasoning/GraphRAG integrated into the qualified default public runtime |
+| Canonical-state reconstruction and derived-projection controls | Qualified PostgreSQL or Markdown-backed memory profiles and distributed lifecycle closure |
 | System-neutral evaluation adapters, reproducible benchmark machinery, evidence and dashboard | A universal benchmark score or same-harness comparisons with every competitor |
 | Canonical doctrine, accepted/proposed ADRs and explicit architecture plans | Complete heterogeneous GraphRAG/Markdown/distributed composition as a qualified runtime |
 
