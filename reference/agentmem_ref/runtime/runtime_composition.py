@@ -129,6 +129,10 @@ class MultiRouteRecallResult:
             {
                 "candidate_ref": ref,
                 "route_ids": sorted({hit.route_id for hit in self.provenance_for(ref)}),
+                "route_scores": [
+                    {"route_id": hit.route_id, "raw_score": hit.raw_score}
+                    for hit in self.provenance_for(ref)
+                ],
                 "admitted": ref in admitted,
                 "refusal": self.refusals.get(ref),
                 "rank_position": ranked.get(ref),
