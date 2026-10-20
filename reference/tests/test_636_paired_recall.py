@@ -67,6 +67,12 @@ class PairedPublicRecallTests(unittest.TestCase):
         q = self.compare(recall(), recall("unknown"), labels=gold)
         self.assertTrue(q.regression)
 
+    def test_unlabelled_only_is_not_a_false_strict_success(self):
+        p = self.compare(recall("mystery"), recall(), labels=CaseLabels(frozenset(), frozenset()))
+        self.assertFalse(p.original.evidence_success)
+        self.assertFalse(p.candidate.evidence_success)
+        self.assertFalse(p.regression)
+
     def test_incomparable_corpus_labels_scope_and_budget_rejected(self):
         for field, value in (
             ("corpus_digest", "different"), ("questions_digest", "different"),
