@@ -72,6 +72,7 @@ def inspect_relation_claims(
     public_returned_refs: frozenset[str],
     requested_operations: frozenset[Operation] = frozenset({"direct"}),
     max_returned_edges: int = 64,
+    max_rule_claims: int = 32,
 ) -> ChallengeResult:
     """Bounded diagnostics; NEVER use absence as an admission/selection veto.
 
@@ -85,6 +86,8 @@ def inspect_relation_claims(
         raise ValueError("nonempty relation question required")
     if type(max_returned_edges) is not int or max_returned_edges < 1:
         raise ValueError("positive finite edge budget required")
+    if type(max_rule_claims) is not int or max_rule_claims < 0 or len(rule_claims) > max_rule_claims:
+        raise ValueError("rule claim budget exceeded or invalid")
     if not isinstance(public_returned_refs, frozenset) or any(
         type(x) is not str or not x for x in public_returned_refs
     ):
@@ -95,6 +98,11 @@ def inspect_relation_claims(
            {"inverse", "implies", "subclass", "disjoint"} for r in rule_claims):
         raise ValueError("invalid relation rule")
 
+    if any(not all((r.rule_ref, r.from_relation, r.to_relation, r.domain_ref,
+                    r.provenance_ref)) for r in rule_claims):
+        raise ValueError("rule claims require identity and provenance")
+    if len({r.rule_ref for r in rule_claims}) != len(rule_claims):
+        raise ValueError("duplicate rule identity in evaluation snapshot")
     # Traverse only public returned IDs. The caller's input is untrusted; this
     # evaluator never obtains missing content or reads a private substrate.
     visible = [edge for edge in observations if edge.returned_memory_ref in public_returned_refs
