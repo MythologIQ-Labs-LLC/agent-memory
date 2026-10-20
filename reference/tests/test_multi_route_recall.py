@@ -248,6 +248,24 @@ class MultiRouteRecallTests(unittest.TestCase):
         self.assertNotIn(backup.fact_uuid, result.ranked_admitted)
         self.assertEqual(result.refusals[backup.fact_uuid], "required_isolation_domain_missing")
 
+    def test_foreign_exact_ref_is_filtered_before_route_hit_materialization(self) -> None:
+        foreign = self._retain(
+            "memory:foreign-exact", "restricted beta fact", project_ref="project-beta",
+        )
+        from agentmem_ref.runtime import runtime_composition as composition
+
+        with mock.patch.object(
+            composition, "RetrievalRouteHit", wraps=composition.RetrievalRouteHit
+        ) as constructed:
+            result = self.runtime.multi_route_recall(
+                "unrelatedword", _context(), logical_memory_refs=("memory:foreign-exact",),
+            )
+        self.assertNotIn(foreign.fact_uuid, result.candidates)
+        self.assertFalse(any(
+            call.kwargs.get("candidate_ref") == foreign.fact_uuid
+            for call in constructed.call_args_list
+        ))
+
     def test_foreign_identity_seed_cannot_expand_into_visible_shared_evidence(self) -> None:
         # A caller may guess a cross-project logical memory ID. It must not
         # become an evidence-neighbor traversal seed just because the output
