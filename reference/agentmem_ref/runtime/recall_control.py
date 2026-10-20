@@ -151,9 +151,10 @@ class GraphCandidateHit:
 class NativeTypedGraphCandidateRetriever:
     """Bounded deterministic traversal over Agent Memory canonical relations.
 
-    Relation group filtering is applied during expansion as containment and work
-    control. Fact-level scope, isolation, currentness, dispute, and tombstone
-    checks remain at governed recall admission.
+    Relation group filtering bounds an unqualified raw traversal. A governed
+    caller must additionally supply both identity and fact eligibility checks,
+    including every intermediate hop; final admission still controls
+    currentness, dispute, tombstone, and all consequential use.
     """
 
     def __init__(self, spec: GraphTraversalSpec | None = None) -> None:
@@ -667,7 +668,9 @@ class ControlledRecallPlanner:
                 group_id=tenant,
                 candidate_limit=graph_budget.candidate_limit,
                 eligible=lambda fact: self.adapter.domain_eligible(fact, context),
-                eligible_identity=lambda uuid, group_id: self.adapter.domain_eligible_identity(uuid, group_id, context),
+                eligible_identity=lambda uuid, group_id: self.adapter.domain_eligible_identity(
+                    uuid, group_id, context,
+                ),
             )
             for graph_hit in graph_results:
                 graph_candidate_hits[graph_hit.candidate_ref] = graph_hit
