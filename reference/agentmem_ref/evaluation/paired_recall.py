@@ -103,7 +103,7 @@ def _measure(returned: frozenset[str], labels: CaseLabels) -> CaseMetrics:
         forbidden_returned=forbidden,
         unlabelled_returned=len(returned - labels.required_refs - labels.forbidden_refs),
         returned=len(returned),
-        evidence_success=(missed == 0 and forbidden == 0 and not labels.no_safe_answer),
+        evidence_success=(bool(labels.required_refs) and missed == 0 and forbidden == 0 and not labels.no_safe_answer),
         no_answer_context_empty=(not bool(returned)) if labels.no_safe_answer else None,
     )
 
