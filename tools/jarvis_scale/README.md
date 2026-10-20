@@ -19,11 +19,11 @@ Arms:
 
 - `scan`: Python token-overlap and full scan, diagnostic only.
 - `indexed`: SQLite FTS5 with BM25, scoped query, parameterized SQL; the **primary optimized local baseline**. Index construction time is recorded separately.
-- `agent-memory`: **optional**, uses `agentmem_ref.AgentMemory.open/remember/recall` on a fresh synthetic SQLite runtime state; no fake implementation. Run only from a checkout or environment where the real package is installed. This arm has **not yet been executed or qualified**. Any import/ingest failure is an error, never a zero score. A 19k-record ingest may be expensive.
+- `agent-memory`: **optional**, uses `agentmem_ref.AgentMemory.open/remember/recall` on a fresh synthetic SQLite runtime state; no fake implementation. Run only from a checkout or environment where the real package is installed. This arm has now been **executed as a synthetic development diagnostic**, but remains **unqualified**; see the [2026-10-20 execution report](../../reports/benchmarks/precision-selectivity/2026-10-20-work/README.md). Any import/ingest failure is an error, never a zero score. A 19k-record ingest may be expensive.
 
 `scan` and `indexed` use distinct ranking policies; speed comparisons are informative but they are not an ablation of indexing alone. No fair adoption winner can be declared until the actual Agent Memory arm has been executed with compatible budgets and capabilities, on the same hardware, and a stronger test cohort has been independently authored and frozen.
 
-## Local smoke (not qualified)
+## Historical scan/indexed smoke (not qualified)
 
 Run environment: Linux x86_64 (6.18.55), Python 3.13.5, SQLite 3.46.1 with FTS5, 5 vCPUs shown by the container on AMD EPYC 9V74, 19,014 records, 14 task cases, budget 5, three repetitions per case. Corpus SHA-256: `44e6ab69482359dcd79d27741f9094a8bccd3d92ff9b9bbe3af53b8b5dd66879`.
 
@@ -37,7 +37,7 @@ These figures are single-machine smoke measurements, not multiple-host confidenc
 
 ## Next executable gates
 
-1. Run the optional **real Agent Memory arm** on the same workload and machine, with exact package revision and source hashes, after confirming local budget and time constraints.
+1. **Executed, not qualified:** the real Agent Memory arm ran on the same 19k workload and host as FTS5. The [2026-10-20 report](../../reports/benchmarks/precision-selectivity/2026-10-20-work/README.md) records raw paired results and the CHANGES REQUIRED disposition; no superiority was demonstrated. Complete independent capability-equivalent qualification before an adoption decision.
 2. Use #771's served-context scorer, if available, rather than accepting these preliminary summary metrics as a second canonical scoring system.
 3. Independently author and freeze a larger, harder cohort before adjusting any runtime parameters. Test correction, provenance and multi-hop with explicit capability-aware metadata.
 4. Measure ingestion incrementality, model cold-start, memory/disk use, repeatability and crash/restart on each arm.
