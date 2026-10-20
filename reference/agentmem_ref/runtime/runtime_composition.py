@@ -270,6 +270,10 @@ class DeterministicMultiRouteRecallPlanner:
                     seed_ref,
                     group_ids=[tenant],
                 ):
+                    # Apply the same discovery prefilter as lexical/vector
+                    # routes. Full admission still independently rechecks it.
+                    if not self.adapter.domain_eligible(fact, context):
+                        continue
                     hits.append(
                         RetrievalRouteHit(
                             route_id=SHARED_EVIDENCE_ROUTE,
