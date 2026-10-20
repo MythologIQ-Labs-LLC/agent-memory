@@ -115,6 +115,27 @@ class MultiRouteRecallResult:
     def provenance_for(self, candidate_ref: str) -> tuple[RetrievalRouteHit, ...]:
         return tuple(self.route_hits.get(candidate_ref, ()))
 
+    def selection_trace(self) -> list[dict[str, object]]:
+        """Read-only per-candidate trace for recall-selectivity diagnosis (#819).
+
+        Uses the actual candidate/admission/ranking results; does not infer gold
+        relevance, change decisions, or grant retrieval scores any authority.
+        Caller-visible candidates only. This is an internal diagnostic, not a
+        public API or a new benchmark scoring contract.
+        """
+        admitted = set(self.admitted)
+        ranked = {ref: index + 1 for index, ref in enumerate(self.ranked_admitted)}
+        return [
+            {
+                "candidate_ref": ref,
+                "route_ids": sorted({hit.route_id for hit in self.provenance_for(ref)}),
+                "admitted": ref in admitted,
+                "refusal": self.refusals.get(ref),
+                "rank_position": ranked.get(ref),
+            }
+            for ref in self.candidates
+        ]
+
 
 MULTI_ROUTE_RANKING_POLICY = ExplicitCurrentCrossFactRankingPolicy(
     policy_id="multi-route-default",
