@@ -1,0 +1,15 @@
+{
+  "kind": "paired_case_bootstrap_diagnostic_not_holdout",
+  "seed": 691819,
+  "resamples": 3000,
+  "strict_delta_95ci": [
+    0.03896103896103896,
+    0.15584415584415584
+  ],
+  "macro_precision_delta_95ci": [
+    0.09452859901954924,
+    0.2027876836967746
+  ],
+  "recall_delta": 0,
+  "source_sha": "bc98e9657366e5e3a16f89708a7f22935442a2c4"
+}

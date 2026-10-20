@@ -1,0 +1,103 @@
+FFFFF                                                                    [100%]
+=================================== FAILURES ===================================
+____ ImportedRuntimeIdentity.test_own_checkout_at_frozen_revision_is_served ____
+
+self = <tests.test_644_v7_gauntlet_identity.ImportedRuntimeIdentity testMethod=test_own_checkout_at_frozen_revision_is_served>
+
+    def test_own_checkout_at_frozen_revision_is_served(self):
+        reply = ask(str(ROOT / "reference"))
+>       self.assertEqual(reply["status"], "ok", reply)
+E       AssertionError: 'system_error' != 'ok'
+E       - system_error
+E       + ok
+E        : {'adapter_evidence': {'adapter_kind': 'agent_memory_public_stdio', 'frozen_runtime_revision': '16a248b1e28f455fbf19217114175f0c20df2a01', 'public_contract': '1.6.0', 'runtime_identity': {'frozen_runtime_revision': '16a248b1e28f455fbf19217114175f0c20df2a01', 'frozen_runtime_tree': 'f9ccd0472e32cb68a5caf988a017078a73425cc5', 'imported_package': '/workspace/scratch/fa6d5f50ddfd/agent-memory-context-base/reference/agentmem_ref', 'matches_frozen_revision': False, 'same_checkout': True, 'verified': False}, 'surface': 'AgentMemory public facade', 'translation_only': True}, 'authority_effect': 'none', 'contract_family': 'agent-memory-gauntlet-operation', 'contract_version': '0.1.0', 'direction': 'response', 'error': {'code': 'runtime_identity_unverified', 'message': "imported agentmem_ref is not this checkout's runtime at FROZEN_RUNTIME_REVISION", 'source': 'system_adapter'}, 'operation': 'describe', 'request_id': 'r1', 'result': None, 'status': 'system_error', 'timing': {'elapsed_ms': 0.003345999971315905}}
+
+reference/tests/test_644_v7_gauntlet_identity.py:71: AssertionError
+_ ReplayEvidenceFreshness.test_a_runtime_edit_still_makes_replay_evidence_stale _
+
+self = <tests.test_770_v7_lane_freeze_independent.ReplayEvidenceFreshness testMethod=test_a_runtime_edit_still_makes_replay_evidence_stale>
+
+    def test_a_runtime_edit_still_makes_replay_evidence_stale(self):
+        verifier = runpy.run_path(str(REPO_ROOT / "scripts/verify_644_v7_replays.py"))
+        target = REPO_ROOT / "reference/agentmem_ref/runtime/adapter.py"
+        original = target.read_bytes()
+        try:
+            target.write_bytes(original + b"\n# runtime edit probe\n")
+            stale = verifier["runtime_changed_since"]("16a248b1e28f455fbf19217114175f0c20df2a01")
+        finally:
+            target.write_bytes(original)
+        self.assertTrue(stale)
+>       self.assertFalse(verifier["runtime_changed_since"]("16a248b1e28f455fbf19217114175f0c20df2a01"))
+E       AssertionError: True is not false
+
+reference/tests/test_770_v7_lane_freeze_independent.py:266: AssertionError
+_ ReplayEvidenceFreshness.test_lane_records_do_not_make_replay_evidence_stale __
+
+self = <tests.test_770_v7_lane_freeze_independent.ReplayEvidenceFreshness testMethod=test_lane_records_do_not_make_replay_evidence_stale>
+
+    def test_lane_records_do_not_make_replay_evidence_stale(self):
+        verifier = runpy.run_path(str(REPO_ROOT / "scripts/verify_644_v7_replays.py"))
+        result = verifier["verify"]()
+>       self.assertEqual({row["replay"]: row["status"] for row in result["replays"]},
+                         {row["replay"]: "VERIFIED" for row in result["replays"]}, result)
+E       AssertionError: {'typ[54 chars]1': 'STALE', 'governed-persisted-typed-slot-su[216 chars]ALE'} != {'typ[54 chars]1': 'VERIFIED', 'governed-persisted-typed-slot[231 chars]IED'}
+E       Diff is 1379 characters long. Set self.maxDiff to None to see it. : {'replays': [{'replay': 'typed-sufficiency-noninterference-and-negative-controls-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}, {'replay': 'governed-persisted-typed-slot-sufficiency-admission-recheck-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}, {'replay': 'governed-admitted-typed-value-coherence-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}, {'replay': 'committed-governed-transition-witness-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}, {'replay': 'same-slot-safety-counterevidence-and-immutable-stop-gate-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}], 'evidence_verified': False, 'acceptance': "NOT GRANTED: requires an independent reviewer's decision recorded in META_LEDGER"}
+
+reference/tests/test_770_v7_lane_freeze_independent.py:252: AssertionError
+_ BenchmarkIntegrationContractTests.test_evaluation_only_change_keeps_runtime_baseline_equivalence _
+
+self = <tests.test_benchmark_integration_contract.BenchmarkIntegrationContractTests testMethod=test_evaluation_only_change_keeps_runtime_baseline_equivalence>
+
+    def test_evaluation_only_change_keeps_runtime_baseline_equivalence(self):
+        register = json.loads((REPO_ROOT / "reports" / "runtime" / "baseline-register.json").read_text(encoding="utf-8"))
+        boundary = json.loads((REPO_ROOT / register["baselines"][-1]["source_boundary"]).read_text(encoding="utf-8"))
+        excluded = [item["path"] for item in boundary["excluded_non_runtime_paths"]]
+        self.assertEqual(excluded, ["reference/agentmem_ref/evaluation"])
+        self.assertIs(boundary["baseline_mutation"], False)
+        available = subprocess.run(
+            ["git", "cat-file", "-e", f"{boundary['frozen_revision']}^{{commit}}"],
+            cwd=REPO_ROOT, capture_output=True, text=True, check=False,
+        )
+        if available.returncode != 0:
+            self.skipTest("frozen Runtime Baseline v1 revision is not available in this checkout")
+        result = subprocess.run(
+            [sys.executable, "scripts/check_runtime_baseline_equivalence.py", "--candidate", "HEAD"],
+            cwd=REPO_ROOT, capture_output=True, text=True, check=False,
+        )
+>       self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+E       AssertionError: 1 != 0 : undeclared protected change: reference/agentmem_ref/api/context_package.py
+E       undeclared protected change: reference/agentmem_ref/api/contract.py
+E       undeclared protected change: reference/agentmem_ref/api/surface.py
+E       undeclared protected change: reference/agentmem_ref/context_package.py
+E       undeclared protected change: reference/agentmem_ref/memory/checkpoint_migration.py
+E       undeclared protected change: reference/agentmem_ref/memory/procedural_memory.py
+E       undeclared protected change: reference/agentmem_ref/runtime/representation_cache.py
+E       undeclared protected change: reference/agentmem_ref/runtime/restart_runtime.py
+E       undeclared protected change: reference/agentmem_ref/runtime/runtime_composition.py
+E       undeclared protected change: reference/agentmem_ref/state/sqlite_substrate.py
+E       undeclared protected change: reference/agentmem_ref/state/substrate.py
+E       declared blob mismatch for reference/agentmem_ref/runtime/adapter.py: declared 36be4dece830ff01a872d333c4c639e81e50fe00, candidate 7c8626f8777850f5d2492f49b7ec6c377c390b23
+E       declared blob mismatch for reference/agentmem_ref/runtime/recall_control.py: declared 5136922f5a23b70399b1b422159a0d14f0fa1312, candidate dfb024efd644998145e7016af5592e546301bf89
+E       undeclared identity identity.public_contract_version changed: frozen='1.6.0', candidate='1.8.0'
+
+reference/tests/test_benchmark_integration_contract.py:379: AssertionError
+_ DerivedVectorStoreTests.test_reconcile_and_open_refuse_a_derived_directory_owned_by_another_user _
+
+self = <tests.test_representation_cache.DerivedVectorStoreTests testMethod=test_reconcile_and_open_refuse_a_derived_directory_owned_by_another_user>
+
+    @unittest.skipUnless(hasattr(os, "geteuid") and os.geteuid() == 0, "needs root to chown")
+    def test_reconcile_and_open_refuse_a_derived_directory_owned_by_another_user(self):
+        self.store.vector_for("mine", "own text", self.embed)
+        self.store.close()
+        derived = Path(self.root) / "derived"
+>       os.chown(derived, 65534, 65534)
+E       OSError: [Errno 22] Invalid argument: '/tmp/tmpckm53_p7/derived'
+
+reference/tests/test_representation_cache.py:400: OSError
+=========================== short test summary info ============================
+FAILED reference/tests/test_644_v7_gauntlet_identity.py::ImportedRuntimeIdentity::test_own_checkout_at_frozen_revision_is_served
+FAILED reference/tests/test_770_v7_lane_freeze_independent.py::ReplayEvidenceFreshness::test_a_runtime_edit_still_makes_replay_evidence_stale
+FAILED reference/tests/test_770_v7_lane_freeze_independent.py::ReplayEvidenceFreshness::test_lane_records_do_not_make_replay_evidence_stale
+FAILED reference/tests/test_benchmark_integration_contract.py::BenchmarkIntegrationContractTests::test_evaluation_only_change_keeps_runtime_baseline_equivalence
+FAILED reference/tests/test_representation_cache.py::DerivedVectorStoreTests::test_reconcile_and_open_refuse_a_derived_directory_owned_by_another_user
+5 failed in 1.11s

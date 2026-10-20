@@ -1,3 +1,5 @@
+> The default-package validation below is a historical record pinned to `6edc28a3`. The latest **unmerged, opt-in lexical profile candidate** is `bc98e9657366e5e3a16f89708a7f22935442a2c4`; its [paired execution and blocker report](lexical-profile-bc98e965/README.md) does not qualify the default runtime or release.
+
 # #691 context package: first vertical slice (verification record)
 
 | Item | Value |
