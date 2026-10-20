@@ -8,7 +8,7 @@ from agentmem_ref.evaluation.paired_recall import (
 
 
 def run(profile="baseline", **changes):
-    initial = RunIdentity(profile, "abc123", "corpus:sha", "queries:sha", "labels:sha", "harness:sha", "scope:sha", "query:1", "input:sha", 3)
+    initial = RunIdentity(profile, "abc123", "config:sha", "corpus:sha", "queries:sha", "labels:sha", "harness:sha", "scope:sha", "query:1", "input:sha", 3)
     return replace(initial, **changes)
 
 
