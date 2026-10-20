@@ -131,6 +131,12 @@ class MultiRouteRecallTests(unittest.TestCase):
         )
         self.assertIsNone(by_ref[backup.fact_uuid]["rank_position"])
         self.assertIn(EXACT_IDENTITY_ROUTE, by_ref[backup.fact_uuid]["route_ids"])
+        self.assertTrue(all(isinstance(hit["raw_score"], (int, float))
+                            for item in trace for hit in item["route_scores"]))
+        self.assertIn(LEXICAL_ROUTE,
+                      {hit["route_id"] for hit in by_ref[deploy.fact_uuid]["route_scores"]})
+        self.assertIn(EXACT_IDENTITY_ROUTE,
+                      {hit["route_id"] for hit in by_ref[backup.fact_uuid]["route_scores"]})
         self.assertEqual(trace, result.selection_trace())  # pure inspection
         self.assertNotIn(backup.fact_uuid, result.ranked_admitted)
 
