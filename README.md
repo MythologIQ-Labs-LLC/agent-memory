@@ -42,6 +42,8 @@ A canonical memory architecture and doctrine corpus, a reproducible evaluation l
 
 **Evaluating adoption?** Compare the [actual runtime](#runtime) with a competently *indexed* local-memory baseline using your own representative workload. Measure correct evidence, stale-memory behavior, exclusions/abstention, context cost, latency and integration burden. Our local benchmark measurements do **not** establish performance on your data. The [Jarvis-scale synthetic evaluation](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/825) has not yet run the Agent Memory arm.
 
+**Known measured quality limitation:** [#819](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/819) tracks excessive irrelevant recall on an external retrieval-only evaluation. High recall alone does not establish useful, selective task context. Consult the [current evidence dashboard](reports/benchmarks/dashboard/current.md) and the exact issue evidence before adopting or claiming comparative performance; this README does not own benchmark scores or qualification decisions.
+
 Long-term, [#636](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/636) proposes governed composition of structured, episodic, temporal, procedural, vector and graph-derived memory. That entire composition **is not shipped**. The [substrate inventory](docs/43-substrate-inventory-and-maturity.md) owns current maturity claims; only the single-host SQLite profile is qualified.
 
 ## Start here
