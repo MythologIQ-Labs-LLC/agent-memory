@@ -8,9 +8,9 @@
 
 <p><sub><strong>Q Agent Memory</strong></sub></p>
 
-### Governed persistent cognition for autonomous and agentic systems
+### One governed memory system. Multiple purpose-fit representations.
 
-A canonical memory architecture and doctrine corpus, a reproducible evaluation laboratory, and a usable governed memory runtime that the other two keep honest.
+Agent Memory's goal is to combine structured facts, temporal history, graph relationships, lexical/vector retrieval, episodic experience, and portable documents into **one coherent memory**, selecting the representation that helps each task instead of assuming a single database or RAG technique is universally best. The repository pairs that architectural thesis with executable runtime software and independent evaluation.
 
 [![Validate Doctrine Evidence](https://github.com/MythologIQ-Labs-LLC/agent-memory/actions/workflows/validate-doctrine-evidence.yml/badge.svg)](https://github.com/MythologIQ-Labs-LLC/agent-memory/actions/workflows/validate-doctrine-evidence.yml)
 ![Architecture](https://img.shields.io/badge/Architecture-Governed%20Cognitive%20Framework-334155)
@@ -29,7 +29,28 @@ A canonical memory architecture and doctrine corpus, a reproducible evaluation l
 >
 > The qualified runtime posture is deliberately bounded to the single-host SQLite profile. Distributed or multi-host persistence is not established, and no substrate other than `SQLiteTemporalGraph` is production-qualified. RC composition remains governed by issue [#410](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/410); the current work queue is [`docs/BACKLOG.md`](docs/BACKLOG.md); the canonical benchmark view is [`reports/benchmarks/dashboard/current.md`](reports/benchmarks/dashboard/current.md).
 
-## What Agent Memory is
+## Architecture objective: one memory, many forms
+
+**This is the product direction, not a list of shipped capabilities.** Memory can be represented differently because its uses are different: exact facts need durable identity, events need historical validity, relationships benefit from graph traversal, semantic questions may benefit from vectors, and some artifacts are best kept inspectable as documents. These representations should cooperate through shared identity, provenance, scope, lifecycle, and governed recall, not become unrelated copies or independent truth authorities.
+
+```text
+              One governed memory identity and lifecycle
+                                |
+              task-appropriate representations and routes
+       +-----------+------------+-------------+-----------+
+       |           |            |             |           |
+   structured   lexical /    relations /   episodes /  documents /
+     state       vector         graph         time       portable files
+       +-----------+------------+-------------+-----------+
+                                |
+                 governed admission + context assembly
+                                |
+                        task-relevant evidence
+```
+
+The system should use a representation **only when it demonstrates value** for a task, with correction, deletion, isolation and stale-projection controls across every materialized view. One canonical substrate may back multiple useful retrieval forms; conversely, additional specialized backends may be justified later. **SQLite is today's qualified single-host canonical implementation, not a doctrine requiring all future memory to have one physical shape.** The [original product objective](docs/CONCEPT.md), [composition qualification program #636](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/636), and [substrate inventory](docs/43-substrate-inventory-and-maturity.md) respectively own intent, experiments, and maturity. Comparative superiority is a hypothesis to measure, not an existing claim.
+
+## What Agent Memory is today
 
 **Agent Memory includes working software, not just a memory-design proposal.** The installable `agent-memory-reference` Python package exposes an [`AgentMemory` facade](#runtime) with persistent single-host SQLite memory, governed writes and recall, scope-aware evidence admission, history and posture inspection. The [runtime example below](#runtime) is executable from a checkout. This is a usable reference/conformance implementation **in active release-candidate qualification**, not a drop-in production service or certified security boundary.
 
