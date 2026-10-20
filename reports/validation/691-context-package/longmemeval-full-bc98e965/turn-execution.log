@@ -1,0 +1,50 @@
+{"completed": 25, "plane": "turn", "elapsed_s": 36.57}
+{"completed": 50, "plane": "turn", "elapsed_s": 70.49}
+{"completed": 75, "plane": "turn", "elapsed_s": 109.15}
+{"completed": 100, "plane": "turn", "elapsed_s": 138.84}
+{"completed": 125, "plane": "turn", "elapsed_s": 168.42}
+{"completed": 150, "plane": "turn", "elapsed_s": 198.2}
+{"completed": 175, "plane": "turn", "elapsed_s": 227.69}
+{"completed": 200, "plane": "turn", "elapsed_s": 259.11}
+{"completed": 225, "plane": "turn", "elapsed_s": 295.07}
+{"completed": 250, "plane": "turn", "elapsed_s": 339.87}
+{"completed": 275, "plane": "turn", "elapsed_s": 374.35}
+{"completed": 300, "plane": "turn", "elapsed_s": 406.52}
+{"completed": 325, "plane": "turn", "elapsed_s": 436.69}
+{"completed": 350, "plane": "turn", "elapsed_s": 467.18}
+{"completed": 375, "plane": "turn", "elapsed_s": 499.92}
+{"completed": 400, "plane": "turn", "elapsed_s": 534.0}
+{"completed": 425, "plane": "turn", "elapsed_s": 568.74}
+{"completed": 450, "plane": "turn", "elapsed_s": 605.84}
+{"completed": 475, "plane": "turn", "elapsed_s": 644.82}
+{"completed": 500, "plane": "turn", "elapsed_s": 682.96}
+{
+  "completed": 500,
+  "wall_s": 682.9810118130001,
+  "headline": {
+    "raw": {
+      "recall_all@5": 0.601432,
+      "ndcg_any@5": 0.648611,
+      "recall_all@10": 0.72315,
+      "ndcg_any@10": 0.68156,
+      "recall_all@50": 0.859189,
+      "ndcg_any@50": 0.711426
+    },
+    "all_returned": {
+      "recall_all@5": 0.601432,
+      "ndcg_any@5": 0.648611,
+      "recall_all@10": 0.72315,
+      "ndcg_any@10": 0.68156,
+      "recall_all@50": 0.859189,
+      "ndcg_any@50": 0.711426
+    },
+    "lexical_content": {
+      "recall_all@5": 0.606205,
+      "ndcg_any@5": 0.652404,
+      "recall_all@10": 0.732697,
+      "ndcg_any@10": 0.687106,
+      "recall_all@50": 0.854415,
+      "ndcg_any@50": 0.71486
+    }
+  }
+}

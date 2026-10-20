@@ -1,0 +1,44 @@
+{"completed": 25, "plane": "session", "elapsed_s": 12.16}
+{"completed": 50, "plane": "session", "elapsed_s": 21.54}
+{"completed": 75, "plane": "session", "elapsed_s": 30.96}
+{"completed": 100, "plane": "session", "elapsed_s": 40.07}
+{"completed": 125, "plane": "session", "elapsed_s": 49.39}
+{"completed": 150, "plane": "session", "elapsed_s": 60.95}
+{"completed": 175, "plane": "session", "elapsed_s": 70.56}
+{"completed": 200, "plane": "session", "elapsed_s": 80.14}
+{"completed": 225, "plane": "session", "elapsed_s": 89.39}
+{"completed": 250, "plane": "session", "elapsed_s": 100.87}
+{"completed": 275, "plane": "session", "elapsed_s": 110.5}
+{"completed": 300, "plane": "session", "elapsed_s": 120.46}
+{"completed": 325, "plane": "session", "elapsed_s": 130.26}
+{"completed": 350, "plane": "session", "elapsed_s": 141.23}
+{"completed": 375, "plane": "session", "elapsed_s": 151.17}
+{"completed": 400, "plane": "session", "elapsed_s": 161.41}
+{"completed": 425, "plane": "session", "elapsed_s": 171.54}
+{"completed": 450, "plane": "session", "elapsed_s": 181.59}
+{"completed": 475, "plane": "session", "elapsed_s": 192.36}
+{"completed": 500, "plane": "session", "elapsed_s": 203.01}
+{
+  "completed": 500,
+  "wall_s": 203.02074570599984,
+  "headline": {
+    "raw": {
+      "recall_all@5": 0.823389,
+      "ndcg_any@5": 0.863142,
+      "recall_all@10": 0.892601,
+      "ndcg_any@10": 0.878274
+    },
+    "all_returned": {
+      "recall_all@5": 0.823389,
+      "ndcg_any@5": 0.863142,
+      "recall_all@10": 0.892601,
+      "ndcg_any@10": 0.878274
+    },
+    "lexical_content": {
+      "recall_all@5": 0.823389,
+      "ndcg_any@5": 0.863142,
+      "recall_all@10": 0.897375,
+      "ndcg_any@10": 0.878804
+    }
+  }
+}

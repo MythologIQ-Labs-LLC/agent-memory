@@ -1,0 +1,32 @@
+{
+  "source_sha": "bc98e9657366e5e3a16f89708a7f22935442a2c4",
+  "runtime_tree": "d7adbfe0eeddc06870ceab83261c3e85d47ec895",
+  "driver_sha256": "c32c20a3657667f7fd6451cf4756028233a138938af49675eadd5e257ebb9bd7",
+  "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "plane": "turn",
+  "source_questions": 500,
+  "selection_questions": 500,
+  "selection_id_sha256": "7d738ae585fd4014c9d231088ff824864fded501adc07b0e08c2b97a28210c03",
+  "protocol": "raw uses frozen adapter semantics; public context profiles are separate adapted protocols; shared ingest and no generation/judging",
+  "budgets": {
+    "k": 50,
+    "max_chars_per_item": 10000000,
+    "max_total_chars": 500000000,
+    "max_tokens": 200000000
+  },
+  "configuration": {
+    "temporal_metadata": "none",
+    "ranking_variant": "default",
+    "budget": "50",
+    "semantic_retrieval": "off",
+    "recall_control": "off"
+  },
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+  "full_external_lane_qualification": false,
+  "reason": "paired instrumentation; inherited candidate runtime, optional return protocol and locked environment require separate qualification",
+  "hardware": {
+    "cpu_count": 9
+  },
+  "started_epoch": 1792502174.0775442
+}

@@ -1,0 +1,36 @@
+[
+  {
+    "arm": "all_returned",
+    "tp": 746,
+    "gold": 832,
+    "returned_scored": 20944,
+    "complete": 360,
+    "micro_precision": 0.03561879297173415,
+    "micro_recall": 0.8966346153846154,
+    "chars_all500": 8569641,
+    "tokens_all500": 2157558,
+    "abstention": {
+      "upstream_metric": false,
+      "question_count": 30,
+      "returned_any_rate": 1.0,
+      "mean_returned_count": 50.0
+    }
+  },
+  {
+    "arm": "lexical_content",
+    "tp": 744,
+    "gold": 832,
+    "returned_scored": 18417,
+    "complete": 358,
+    "micro_precision": 0.04039745886952272,
+    "micro_recall": 0.8942307692307693,
+    "chars_all500": 8012072,
+    "tokens_all500": 2016943,
+    "abstention": {
+      "upstream_metric": false,
+      "question_count": 30,
+      "returned_any_rate": 1.0,
+      "mean_returned_count": 42.9
+    }
+  }
+]
