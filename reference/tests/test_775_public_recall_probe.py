@@ -13,11 +13,11 @@ def document():
         "admitted": ["allowed", "budget_withheld"],
         "candidates": ["allowed", "budget_withheld", "scope_refused"],
         "admissions": {
-            "allowed": {"rank_position": 1, "route_provenance": [
+            "allowed": {"outcome": "admit", "rank_position": 1, "route_provenance": [
                 {"route_id": "lexical", "raw_score": 1.0},
                 {"route_id": "shared_evidence_neighbor", "raw_score": 0.9},
             ]},
-            "budget_withheld": {"rank_position": 2, "route_provenance": [
+            "budget_withheld": {"outcome": "admit", "rank_position": 2, "route_provenance": [
                 {"route_id": "lexical", "raw_score": 0.5}]},
             "scope_refused": {"refusal": "out_of_scope", "route_provenance": []},
         },
@@ -32,6 +32,27 @@ class RefusingPrivateMap(dict):
 
 
 class PublicRecallRelevanceTests(unittest.TestCase):
+    def test_nonadmitting_receipt_never_reads_content(self):
+        class NoReads(dict):
+            def get(self, *args):
+                raise AssertionError("content read before validating admission")
+        for outcome in ("block", None, True):
+            d = document()
+            d["admissions"]["allowed"]["outcome"] = outcome
+            with self.subTest(outcome=outcome), self.assertRaisesRegex(ValueError, "admit"):
+                inspect_returned(d, NoReads(), NoReads())
+
+    def test_all_receipts_validated_before_any_content_read(self):
+        class NoReads(dict):
+            def get(self, *args):
+                raise AssertionError("earlier content read before later invalid receipt")
+        d = document()
+        d["returned"].append("budget_withheld")
+        d["admissions"]["allowed"]["outcome"] = "admit"
+        d["admissions"]["budget_withheld"]["outcome"] = "block"
+        with self.assertRaisesRegex(ValueError, "admit"):
+            inspect_returned(d, NoReads(), NoReads())
+
     def test_only_returned_admitted_uses_content(self):
         d = document()
         contents = RefusingPrivateMap({

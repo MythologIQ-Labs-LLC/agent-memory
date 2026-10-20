@@ -26,6 +26,8 @@ def inspect_returned(
     annotations: Mapping[str, ChallengeInput],
 ) -> tuple[PublicRelevanceObservation, ...]:
     """Only inspect returned PUBLIC references; inputs are not trust roots."""
+    if not isinstance(recall, Mapping):
+        raise ValueError("public recall must be a mapping")
     returned = recall.get("returned")
     admitted = recall.get("admitted")
     admissions = recall.get("admissions")
@@ -39,6 +41,14 @@ def inspect_returned(
         raise ValueError("public returned references must be unique")
     if any(ref not in admitted for ref in returned):
         raise ValueError("public returned reference is not admitted")
+    # Validate the whole returned set before dereferencing any supplied content.
+    # This checks receipt consistency, not authenticity of caller-owned mappings.
+    for ref in returned:
+        receipt = admissions.get(ref)
+        if not isinstance(receipt, Mapping):
+            raise ValueError("public returned reference lacks admission receipt")
+        if receipt.get("outcome") != "admit":
+            raise ValueError("public returned reference lacks an admit decision")
     # Only access content/annotations for returned refs, never candidate IDs.
     records: list[PublicRelevanceObservation] = []
     for ref in returned:
