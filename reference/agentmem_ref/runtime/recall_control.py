@@ -244,17 +244,13 @@ class NativeTypedGraphCandidateRetriever:
                 group_id=group_id,
                 relation_types=relation_filter,
             )
-            eligible_fanout = 0
-            for next_ref, relation in neighbors:
-                # Ineligible nodes must not consume the bounded fanout or
-                # hide reachable eligible evidence behind foreign neighbors.
-                if eligible_identity is not None and not eligible_identity(next_ref, group_id):
-                    continue
-                next_fact = substrate.get_fact(next_ref)
-                if next_fact is None or (eligible is not None and not eligible(next_fact)):
-                    continue
-                eligible_fanout += 1
-                if eligible_fanout > self.spec.max_fanout:
+            accepted_fanout = 0
+            # The fanout counts usable NEW paths, not ineligible or stale
+            # edges. Independently cap edges inspected so high-degree graphs
+            # cannot force an unbounded identity/fact-check loop.
+            scan_limit = self.spec.max_fanout * 16
+            for examined, (next_ref, relation) in enumerate(neighbors):
+                if examined >= scan_limit or accepted_fanout >= self.spec.max_fanout:
                     break
                 if next_ref in path_refs:
                     continue
@@ -266,6 +262,12 @@ class NativeTypedGraphCandidateRetriever:
                 prior_score = best_score_by_node.get(next_ref)
                 if prior_score is not None and next_score <= prior_score:
                     continue
+                if eligible_identity is not None and not eligible_identity(next_ref, group_id):
+                    continue
+                next_fact = substrate.get_fact(next_ref)
+                if next_fact is None or (eligible is not None and not eligible(next_fact)):
+                    continue
+                accepted_fanout += 1
                 best_score_by_node[next_ref] = next_score
 
                 next_path = path_refs + (next_ref,)
