@@ -146,7 +146,7 @@ class DeterministicQueryDrivenRecallPlanner:
         explicit_seeds: list[tuple[str, str]] = []
         for logical_ref in dict.fromkeys(logical_memory_refs):
             current = self.adapter.current_fact_uuid(logical_ref)
-            if current is None:
+            if current is None or not self.adapter.domain_eligible_identity(current, tenant, context):
                 continue
             hits.append(
                 RetrievalRouteHit(
@@ -171,6 +171,7 @@ class DeterministicQueryDrivenRecallPlanner:
                     seed_ref=seed_ref,
                     logical_memory_ref=logical_ref,
                     expanded_seeds=expanded_seeds,
+                    context=context,
                 )
 
             ranked_anchors: list[tuple[int, float, object]] = []
@@ -193,6 +194,7 @@ class DeterministicQueryDrivenRecallPlanner:
                     seed_ref=fact.uuid,
                     logical_memory_ref="",
                     expanded_seeds=expanded_seeds,
+                    context=context,
                 )
 
         by_candidate: dict[str, list[RetrievalRouteHit]] = {}
@@ -250,17 +252,21 @@ class DeterministicQueryDrivenRecallPlanner:
         seed_ref: str,
         logical_memory_ref: str,
         expanded_seeds: set[str],
+        context: RecallContext,
     ) -> None:
-        if seed_ref in expanded_seeds:
+        if seed_ref in expanded_seeds or not self.adapter.domain_eligible_identity(seed_ref, tenant, context):
             return
         seed_fact = substrate.get_fact(seed_ref)
-        if seed_fact is None or seed_fact.is_event_invalid or seed_fact.is_transaction_expired:
+        if (seed_fact is None or seed_fact.is_event_invalid or seed_fact.is_transaction_expired
+                or not self.adapter.domain_eligible(seed_fact, context)):
             return
         expanded_seeds.add(seed_ref)
         for fact, shared_refs, score in substrate.evidence_neighbors(
             seed_ref,
             group_ids=[tenant],
         ):
+            if not self.adapter.domain_eligible(fact, context):
+                continue
             hits.append(
                 RetrievalRouteHit(
                     route_id=SHARED_EVIDENCE_ROUTE,
