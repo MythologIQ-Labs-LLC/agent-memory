@@ -256,7 +256,15 @@ class DeterministicMultiRouteRecallPlanner:
             routes_executed.append(SHARED_EVIDENCE_ROUTE)
             for logical_ref, seed_ref in seed_pairs:
                 seed_fact = substrate.get_fact(seed_ref)
-                if seed_fact is None or seed_fact.is_event_invalid:
+                # #433/#548: an identity lookup is discovery, not permission to
+                # traverse a seed's evidence. Scope-check the seed before using
+                # its provenance to discover a neighbor in another domain.
+                # The discovered neighbor still crosses full canonical admission.
+                if (
+                    seed_fact is None
+                    or seed_fact.is_event_invalid
+                    or not self.adapter.domain_eligible(seed_fact, context)
+                ):
                     continue
                 for fact, shared_refs, score in substrate.evidence_neighbors(
                     seed_ref,
