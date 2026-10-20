@@ -12,7 +12,7 @@ from dataclasses import dataclass
 import re
 from typing import Literal
 
-_WORDS = re.compile(r"[^\\W_]+", re.UNICODE)
+_WORDS = re.compile(r"[^\W_]+", re.UNICODE)
 _FUNCTION_WORDS = frozenset("a an and are as at be but by for from have how i in is it my of on or our the their to was were what when where which who why with you your".split())
 Signal = Literal[
     "unverified_claims", "unknown", "direct_subject_claim", "related_subject_claim",
