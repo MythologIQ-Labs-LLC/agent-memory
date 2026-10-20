@@ -1,0 +1,1936 @@
+[
+  {
+    "case_id": "happy-stack-repository-layer",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.0,
+    "after_precision": 0.0,
+    "before_recall": null,
+    "after_recall": null,
+    "before_returned": [
+      "b-comm-recommendation",
+      "b-prose-style-user-edited",
+      "b-chapter-structure-q",
+      "b-zero-reinforcement-fresh"
+    ],
+    "after_returned": [
+      "b-prose-style-user-edited",
+      "b-chapter-structure-q",
+      "b-zero-reinforcement-fresh"
+    ]
+  },
+  {
+    "case_id": "happy-alias-match-kubernetes",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.5,
+    "after_precision": 0.5,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-kubernetes-entity",
+      "b-ci-gha-entity"
+    ],
+    "after_returned": [
+      "b-kubernetes-entity",
+      "b-ci-gha-entity"
+    ]
+  },
+  {
+    "case_id": "alias-kube-resolves",
+    "before_correct": false,
+    "after_correct": true,
+    "before_precision": 0.5,
+    "after_precision": 1.0,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-ci-gha-entity",
+      "b-comm-recommendation",
+      "b-protagonist-entity",
+      "b-kubernetes-entity"
+    ],
+    "after_returned": [
+      "b-ci-gha-entity",
+      "b-kubernetes-entity"
+    ]
+  },
+  {
+    "case_id": "alias-gha-resolves",
+    "before_correct": true,
+    "after_correct": true,
+    "before_precision": 1.0,
+    "after_precision": 1.0,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-ci-gha-entity"
+    ],
+    "after_returned": [
+      "b-ci-gha-entity"
+    ]
+  },
+  {
+    "case_id": "long-query-rambling-kubernetes",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.05555555555555555,
+    "after_precision": 0.05555555555555555,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-kubernetes-entity",
+      "b-auth-open-q",
+      "b-comm-pushback",
+      "b-redis-code",
+      "b-pov-shift-entity",
+      "b-protagonist-entity",
+      "b-auth-depends-redis",
+      "b-redis-writing",
+      "b-hosting-resolved",
+      "b-chapter-structure-q",
+      "b-comm-recommendation",
+      "b-prose-style-user-edited",
+      "b-comm-response-length",
+      "b-narrator-voice",
+      "b-ci-gha-entity",
+      "b-pinned-resolved-interaction",
+      "b-react-entity",
+      "b-linting-current",
+      "b-vitest-pref",
+      "b-linting-v0"
+    ],
+    "after_returned": [
+      "b-kubernetes-entity",
+      "b-auth-open-q",
+      "b-comm-pushback",
+      "b-pov-shift-entity",
+      "b-redis-code",
+      "b-auth-depends-redis",
+      "b-hosting-resolved",
+      "b-protagonist-entity",
+      "b-redis-writing",
+      "b-chapter-structure-q",
+      "b-prose-style-user-edited",
+      "b-comm-recommendation",
+      "b-comm-response-length",
+      "b-narrator-voice",
+      "b-linting-current",
+      "b-pinned-resolved-interaction",
+      "b-linting-v0",
+      "b-react-expertise",
+      "b-db-decision",
+      "b-sqlalchemy-superseded"
+    ]
+  },
+  {
+    "case_id": "out-of-scope-coin-collecting",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.0,
+    "after_precision": 0.0,
+    "before_recall": null,
+    "after_recall": null,
+    "before_returned": [
+      "b-comm-response-length",
+      "b-auth-depends-redis",
+      "b-dead-letter-queue",
+      "b-ci-gha-entity",
+      "b-kubernetes-entity",
+      "b-comm-recommendation",
+      "b-redis-writing",
+      "b-pov-shift-entity",
+      "b-comm-pushback",
+      "b-redis-code",
+      "b-narrator-superseded",
+      "b-react-entity",
+      "b-zero-reinforcement-fresh",
+      "b-linting-v1",
+      "b-authorship-mode",
+      "b-react-expertise",
+      "b-functional-pipeline",
+      "b-hosting-resolved"
+    ],
+    "after_returned": [
+      "b-comm-response-length",
+      "b-auth-depends-redis"
+    ]
+  },
+  {
+    "case_id": "happy-writing-scope",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.0,
+    "after_precision": 0.0,
+    "before_recall": null,
+    "after_recall": null,
+    "before_returned": [
+      "b-comm-recommendation",
+      "b-pov-shift-entity",
+      "b-protagonist-entity",
+      "b-chapter-structure-q",
+      "b-redis-writing",
+      "b-prose-style-user-edited",
+      "b-auth-depends-redis",
+      "b-linting-v1",
+      "b-mongo-raw-driver",
+      "b-ts-pref",
+      "b-react-entity",
+      "b-sqlalchemy-superseded",
+      "b-functional-pipeline",
+      "b-dead-letter-queue",
+      "b-redis-code",
+      "b-auth-open-q",
+      "b-hosting-resolved",
+      "b-narrator-superseded",
+      "b-comm-response-length",
+      "b-pinned-resolved-interaction"
+    ],
+    "after_returned": [
+      "b-protagonist-entity",
+      "b-pov-shift-entity",
+      "b-chapter-structure-q",
+      "b-redis-writing",
+      "b-prose-style-user-edited",
+      "b-auth-depends-redis"
+    ]
+  },
+  {
+    "case_id": "conflict-scope-disambiguation-redis-writing",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.09090909090909091,
+    "after_precision": 0.2,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-redis-writing",
+      "b-redis-code",
+      "b-pov-shift-entity",
+      "b-auth-depends-redis",
+      "b-chapter-structure-q",
+      "b-linting-v0",
+      "b-narrator-superseded",
+      "b-zero-reinforcement-fresh",
+      "b-pinned-resolved-interaction",
+      "b-sqlalchemy-superseded",
+      "b-protagonist-entity",
+      "b-hosting-resolved"
+    ],
+    "after_returned": [
+      "b-redis-writing",
+      "b-redis-code",
+      "b-pov-shift-entity",
+      "b-chapter-structure-q",
+      "b-auth-depends-redis"
+    ]
+  },
+  {
+    "case_id": "conflict-scope-disambiguation-redis-code",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.07692307692307693,
+    "after_precision": 0.3333333333333333,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-auth-depends-redis",
+      "b-redis-code",
+      "b-redis-writing",
+      "b-comm-recommendation",
+      "b-narrator-voice",
+      "b-linting-v0",
+      "b-vitest-pref",
+      "b-fastify-pref",
+      "b-linting-current",
+      "b-pinned-resolved-interaction",
+      "b-authorship-mode",
+      "b-chapter-structure-q",
+      "b-auth-open-q",
+      "b-hosting-resolved"
+    ],
+    "after_returned": [
+      "b-auth-depends-redis",
+      "b-redis-code",
+      "b-redis-writing"
+    ]
+  },
+  {
+    "case_id": "multi-scope-redis-both-surfaces",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.6666666666666666,
+    "after_precision": 0.6666666666666666,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-auth-depends-redis",
+      "b-redis-code",
+      "b-redis-writing"
+    ],
+    "after_returned": [
+      "b-auth-depends-redis",
+      "b-redis-code",
+      "b-redis-writing"
+    ]
+  },
+  {
+    "case_id": "conflict-mongodb-supersedes-sqlalchemy",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.0,
+    "after_precision": 0.0,
+    "before_recall": null,
+    "after_recall": null,
+    "before_returned": [
+      "b-sqlalchemy-superseded"
+    ],
+    "after_returned": [
+      "b-sqlalchemy-superseded"
+    ]
+  },
+  {
+    "case_id": "edge-empty-query",
+    "before_correct": true,
+    "after_correct": true,
+    "before_precision": null,
+    "after_precision": null,
+    "before_recall": null,
+    "after_recall": null,
+    "before_returned": [],
+    "after_returned": []
+  },
+  {
+    "case_id": "edge-short-query-raw-passthrough",
+    "before_correct": true,
+    "after_correct": true,
+    "before_precision": 1.0,
+    "after_precision": 1.0,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-fastify-pref"
+    ],
+    "after_returned": [
+      "b-fastify-pref"
+    ]
+  },
+  {
+    "case_id": "isolation-user-scoping",
+    "before_correct": true,
+    "after_correct": true,
+    "before_precision": 0.0,
+    "after_precision": null,
+    "before_recall": null,
+    "after_recall": null,
+    "before_returned": [
+      "b-redis-writing",
+      "b-redis-code",
+      "b-linting-v0",
+      "b-narrator-superseded",
+      "b-zero-reinforcement-fresh",
+      "b-pinned-resolved-interaction",
+      "b-sqlalchemy-superseded",
+      "b-protagonist-entity",
+      "b-hosting-resolved"
+    ],
+    "after_returned": []
+  },
+  {
+    "case_id": "questions-pinned-active-only",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.0,
+    "after_precision": 0.0,
+    "before_recall": null,
+    "after_recall": null,
+    "before_returned": [
+      "b-auth-depends-redis",
+      "b-ts-pref",
+      "b-protagonist-entity"
+    ],
+    "after_returned": [
+      "b-auth-depends-redis",
+      "b-ts-pref",
+      "b-protagonist-entity"
+    ]
+  },
+  {
+    "case_id": "alias-ts-resolves",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.16666666666666666,
+    "after_precision": 0.16666666666666666,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-ts-pref",
+      "b-chapter-structure-q",
+      "b-comm-response-length",
+      "b-mongo-raw-driver",
+      "b-hosting-resolved",
+      "b-error-handling"
+    ],
+    "after_returned": [
+      "b-ts-pref",
+      "b-chapter-structure-q",
+      "b-comm-response-length",
+      "b-mongo-raw-driver",
+      "b-hosting-resolved",
+      "b-error-handling"
+    ]
+  },
+  {
+    "case_id": "alias-mongo-resolves",
+    "before_correct": false,
+    "after_correct": true,
+    "before_precision": 0.05555555555555555,
+    "after_precision": 1.0,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-mongo-raw-driver",
+      "b-chapter-structure-q",
+      "b-auth-open-q",
+      "b-hosting-resolved",
+      "b-pinned-resolved-interaction",
+      "b-authorship-mode",
+      "b-narrator-voice",
+      "b-linting-v0",
+      "b-vitest-pref",
+      "b-fastify-pref",
+      "b-linting-current",
+      "b-redis-code",
+      "b-redis-writing",
+      "b-auth-depends-redis",
+      "b-pov-shift-entity",
+      "b-protagonist-entity",
+      "b-narrator-superseded",
+      "b-comm-response-length",
+      "b-linting-v1",
+      "b-kubernetes-entity"
+    ],
+    "after_returned": [
+      "b-mongo-raw-driver"
+    ]
+  },
+  {
+    "case_id": "alias-reactjs-resolves",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.2,
+    "after_precision": 0.25,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-comm-recommendation",
+      "b-react-entity",
+      "b-chapter-structure-q",
+      "b-prose-style-user-edited",
+      "b-zero-reinforcement-fresh"
+    ],
+    "after_returned": [
+      "b-react-entity",
+      "b-prose-style-user-edited",
+      "b-chapter-structure-q",
+      "b-zero-reinforcement-fresh"
+    ]
+  },
+  {
+    "case_id": "alias-protagonist-resolves",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.058823529411764705,
+    "after_precision": 0.5,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-protagonist-entity",
+      "b-authorship-mode",
+      "b-pov-shift-entity",
+      "b-redis-code",
+      "b-redis-writing",
+      "b-narrator-superseded",
+      "b-hosting-resolved",
+      "b-pinned-resolved-interaction",
+      "b-zero-reinforcement-fresh",
+      "b-sqlalchemy-superseded",
+      "b-chapter-structure-q",
+      "b-auth-open-q",
+      "b-linting-v0",
+      "b-comm-response-length",
+      "b-mongo-raw-driver",
+      "b-kubernetes-entity",
+      "b-linting-v1",
+      "b-linting-current",
+      "b-prose-style-user-edited",
+      "b-ts-pref"
+    ],
+    "after_returned": [
+      "b-protagonist-entity",
+      "b-pov-shift-entity",
+      "b-authorship-mode"
+    ]
+  },
+  {
+    "case_id": "canonical-name-match-mara",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.0,
+    "after_precision": 0.0,
+    "before_recall": null,
+    "after_recall": null,
+    "before_returned": [
+      "b-protagonist-entity",
+      "b-chapter-structure-q",
+      "b-ts-pref",
+      "b-react-entity",
+      "b-sqlalchemy-superseded",
+      "b-linting-v1",
+      "b-mongo-raw-driver",
+      "b-functional-pipeline",
+      "b-dead-letter-queue"
+    ],
+    "after_returned": [
+      "b-protagonist-entity",
+      "b-chapter-structure-q"
+    ]
+  },
+  {
+    "case_id": "alias-pov-shift-resolves",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.09090909090909091,
+    "after_precision": 0.5,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-pov-shift-entity",
+      "b-chapter-structure-q",
+      "b-narrator-voice",
+      "b-linting-v0",
+      "b-vitest-pref",
+      "b-fastify-pref",
+      "b-linting-current",
+      "b-pinned-resolved-interaction",
+      "b-authorship-mode",
+      "b-auth-open-q",
+      "b-hosting-resolved",
+      "b-auth-depends-redis"
+    ],
+    "after_returned": [
+      "b-pov-shift-entity",
+      "b-chapter-structure-q"
+    ]
+  },
+  {
+    "case_id": "alias-base-class-retrieves-composition",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.05555555555555555,
+    "after_precision": 0.3333333333333333,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-composition-inheritance",
+      "b-hosting-resolved",
+      "b-prose-style-user-edited",
+      "b-comm-recommendation",
+      "b-redis-writing",
+      "b-dead-letter-queue",
+      "b-comm-pushback",
+      "b-redis-code",
+      "b-kubernetes-entity",
+      "b-ci-gha-entity",
+      "b-pov-shift-entity",
+      "b-narrator-voice",
+      "b-linting-v0",
+      "b-vitest-pref",
+      "b-fastify-pref",
+      "b-linting-current",
+      "b-pinned-resolved-interaction",
+      "b-authorship-mode",
+      "b-chapter-structure-q",
+      "b-auth-open-q"
+    ],
+    "after_returned": [
+      "b-composition-inheritance",
+      "b-hosting-resolved",
+      "b-prose-style-user-edited"
+    ]
+  },
+  {
+    "case_id": "alias-exceptions-retrieves-error-handling",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.3333333333333333,
+    "after_precision": 0.5,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-error-handling",
+      "b-comm-pushback",
+      "b-prose-style-user-edited"
+    ],
+    "after_returned": [
+      "b-error-handling",
+      "b-prose-style-user-edited"
+    ]
+  },
+  {
+    "case_id": "filter-resolved-at-excluded",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.0,
+    "after_precision": 0.0,
+    "before_recall": null,
+    "after_recall": null,
+    "before_returned": [
+      "b-hosting-resolved",
+      "b-prose-style-user-edited",
+      "b-error-handling",
+      "b-mongo-raw-driver",
+      "b-react-entity",
+      "b-protagonist-entity",
+      "b-functional-pipeline",
+      "b-linting-v1",
+      "b-ts-pref",
+      "b-sqlalchemy-superseded",
+      "b-kubernetes-entity",
+      "b-dead-letter-queue",
+      "b-redis-code",
+      "b-redis-writing",
+      "b-vitest-pref",
+      "b-linting-current",
+      "b-react-expertise",
+      "b-pov-shift-entity",
+      "b-chapter-structure-q",
+      "b-auth-open-q"
+    ],
+    "after_returned": [
+      "b-hosting-resolved",
+      "b-prose-style-user-edited"
+    ]
+  },
+  {
+    "case_id": "scope-bleed-questions-code-excludes-writing",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.0,
+    "after_precision": 0.0,
+    "before_recall": null,
+    "after_recall": null,
+    "before_returned": [
+      "b-protagonist-entity",
+      "b-ts-pref",
+      "b-narrator-voice",
+      "b-pov-shift-entity",
+      "b-kubernetes-entity",
+      "b-auth-depends-redis",
+      "b-comm-pushback",
+      "b-db-decision",
+      "b-react-expertise",
+      "b-hosting-resolved",
+      "b-ci-gha-entity"
+    ],
+    "after_returned": [
+      "b-protagonist-entity",
+      "b-ts-pref",
+      "b-narrator-voice",
+      "b-pov-shift-entity"
+    ]
+  },
+  {
+    "case_id": "persona-prelude-content-present",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.0,
+    "after_precision": 0.0,
+    "before_recall": null,
+    "after_recall": null,
+    "before_returned": [
+      "b-sqlalchemy-superseded"
+    ],
+    "after_returned": [
+      "b-sqlalchemy-superseded"
+    ]
+  },
+  {
+    "case_id": "edge-short-query-score-clears",
+    "before_correct": true,
+    "after_correct": true,
+    "before_precision": 1.0,
+    "after_precision": 1.0,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-kubernetes-entity"
+    ],
+    "after_returned": [
+      "b-kubernetes-entity"
+    ]
+  },
+  {
+    "case_id": "edge-whitespace-query",
+    "before_correct": true,
+    "after_correct": true,
+    "before_precision": null,
+    "after_precision": null,
+    "before_recall": null,
+    "after_recall": null,
+    "before_returned": [],
+    "after_returned": []
+  },
+  {
+    "case_id": "score-boundary-weak-match-filtered",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.0,
+    "after_precision": 0.0,
+    "before_recall": null,
+    "after_recall": null,
+    "before_returned": [
+      "b-chapter-structure-q",
+      "b-zero-reinforcement-fresh",
+      "b-linting-current",
+      "b-prose-style-user-edited",
+      "b-ts-pref",
+      "b-comm-response-length",
+      "b-vitest-pref",
+      "b-fastify-pref",
+      "b-react-entity",
+      "b-db-decision",
+      "b-sqlalchemy-superseded",
+      "b-react-expertise",
+      "b-mongo-raw-driver",
+      "b-auth-open-q",
+      "b-redis-code",
+      "b-kubernetes-entity",
+      "b-functional-pipeline",
+      "b-dead-letter-queue",
+      "b-ci-gha-entity",
+      "b-error-handling"
+    ],
+    "after_returned": [
+      "b-chapter-structure-q"
+    ]
+  },
+  {
+    "case_id": "user-edited-cross-scope-surfaces",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.0,
+    "after_precision": 0.0,
+    "before_recall": null,
+    "after_recall": null,
+    "before_returned": [
+      "b-chapter-structure-q"
+    ],
+    "after_returned": [
+      "b-chapter-structure-q"
+    ]
+  },
+  {
+    "case_id": "user-edited-absent-without-flag",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.0,
+    "after_precision": 0.0,
+    "before_recall": null,
+    "after_recall": null,
+    "before_returned": [
+      "b-comm-recommendation",
+      "b-prose-style-user-edited",
+      "b-redis-writing",
+      "b-auth-depends-redis"
+    ],
+    "after_returned": [
+      "b-prose-style-user-edited",
+      "b-redis-writing"
+    ]
+  },
+  {
+    "case_id": "ranking-canonical-name-over-content",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.05555555555555555,
+    "after_precision": 0.05555555555555555,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-composition-inheritance",
+      "b-functional-pipeline",
+      "b-comm-recommendation",
+      "b-comm-pushback",
+      "b-linting-current",
+      "b-auth-open-q",
+      "b-authorship-mode",
+      "b-pinned-resolved-interaction",
+      "b-narrator-superseded",
+      "b-hosting-resolved",
+      "b-redis-code",
+      "b-redis-writing",
+      "b-react-expertise",
+      "b-auth-depends-redis",
+      "b-sqlalchemy-superseded",
+      "b-linting-v0",
+      "b-protagonist-entity",
+      "b-db-decision",
+      "b-chapter-structure-q",
+      "b-pov-shift-entity"
+    ],
+    "after_returned": [
+      "b-composition-inheritance",
+      "b-functional-pipeline",
+      "b-comm-recommendation",
+      "b-comm-pushback",
+      "b-linting-current",
+      "b-auth-open-q",
+      "b-authorship-mode",
+      "b-pinned-resolved-interaction",
+      "b-narrator-superseded",
+      "b-hosting-resolved",
+      "b-redis-code",
+      "b-redis-writing",
+      "b-react-expertise",
+      "b-auth-depends-redis",
+      "b-sqlalchemy-superseded",
+      "b-linting-v0",
+      "b-protagonist-entity",
+      "b-db-decision",
+      "b-chapter-structure-q",
+      "b-pov-shift-entity"
+    ]
+  },
+  {
+    "case_id": "messy-typo-blind-spot",
+    "before_correct": false,
+    "after_correct": true,
+    "before_precision": 0.5,
+    "after_precision": 1.0,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-ts-pref",
+      "b-comm-recommendation"
+    ],
+    "after_returned": [
+      "b-ts-pref"
+    ]
+  },
+  {
+    "case_id": "messy-all-caps-case-insensitive",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.25,
+    "after_precision": 0.25,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-react-entity",
+      "b-react-expertise",
+      "b-functional-pipeline",
+      "b-error-handling"
+    ],
+    "after_returned": [
+      "b-react-entity",
+      "b-react-expertise",
+      "b-functional-pipeline",
+      "b-error-handling"
+    ]
+  },
+  {
+    "case_id": "messy-filler-heavy-extraction",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.05555555555555555,
+    "after_precision": 0.1,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-redis-code",
+      "b-redis-writing",
+      "b-error-handling",
+      "b-pov-shift-entity",
+      "b-pinned-resolved-interaction",
+      "b-chapter-structure-q",
+      "b-protagonist-entity",
+      "b-comm-recommendation",
+      "b-hosting-resolved",
+      "b-authorship-mode",
+      "b-auth-open-q",
+      "b-dead-letter-queue",
+      "b-prose-style-user-edited",
+      "b-ci-gha-entity",
+      "b-linting-v0",
+      "b-kubernetes-entity",
+      "b-auth-depends-redis",
+      "b-narrator-superseded",
+      "b-zero-reinforcement-fresh",
+      "b-react-entity"
+    ],
+    "after_returned": [
+      "b-redis-code",
+      "b-redis-writing",
+      "b-error-handling",
+      "b-chapter-structure-q",
+      "b-pov-shift-entity",
+      "b-protagonist-entity",
+      "b-authorship-mode",
+      "b-auth-open-q",
+      "b-dead-letter-queue",
+      "b-prose-style-user-edited"
+    ]
+  },
+  {
+    "case_id": "messy-negation-surfaces-topic",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.07142857142857142,
+    "after_precision": 0.16666666666666666,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-composition-inheritance",
+      "b-hosting-resolved",
+      "b-prose-style-user-edited",
+      "b-functional-pipeline",
+      "b-narrator-voice",
+      "b-pov-shift-entity",
+      "b-redis-writing",
+      "b-redis-code",
+      "b-linting-v0",
+      "b-narrator-superseded",
+      "b-zero-reinforcement-fresh",
+      "b-pinned-resolved-interaction",
+      "b-sqlalchemy-superseded",
+      "b-protagonist-entity"
+    ],
+    "after_returned": [
+      "b-composition-inheritance",
+      "b-hosting-resolved",
+      "b-prose-style-user-edited",
+      "b-functional-pipeline",
+      "b-narrator-voice",
+      "b-pov-shift-entity"
+    ]
+  },
+  {
+    "case_id": "messy-compound-surfaces-two-beliefs",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.2222222222222222,
+    "after_precision": 0.5,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-error-handling",
+      "b-prose-style-user-edited",
+      "b-comm-recommendation",
+      "b-react-entity",
+      "b-mongo-raw-driver",
+      "b-linting-v1",
+      "b-composition-inheritance",
+      "b-functional-pipeline",
+      "b-dead-letter-queue"
+    ],
+    "after_returned": [
+      "b-error-handling",
+      "b-prose-style-user-edited",
+      "b-react-entity",
+      "b-mongo-raw-driver"
+    ]
+  },
+  {
+    "case_id": "cap-stress-compound-six-entities",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.3333333333333333,
+    "after_precision": 0.42857142857142855,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-error-handling",
+      "b-ci-gha-entity",
+      "b-react-entity",
+      "b-kubernetes-entity",
+      "b-react-expertise",
+      "b-dead-letter-queue",
+      "b-linting-v1",
+      "b-authorship-mode",
+      "b-mongo-raw-driver",
+      "b-ts-pref",
+      "b-pov-shift-entity",
+      "b-comm-recommendation",
+      "b-comm-pushback",
+      "b-prose-style-user-edited",
+      "b-fastify-pref",
+      "b-db-decision",
+      "b-linting-v0",
+      "b-sqlalchemy-superseded",
+      "b-hosting-resolved",
+      "b-narrator-superseded"
+    ],
+    "after_returned": [
+      "b-error-handling",
+      "b-ci-gha-entity",
+      "b-kubernetes-entity",
+      "b-react-entity",
+      "b-react-expertise",
+      "b-authorship-mode",
+      "b-pov-shift-entity",
+      "b-dead-letter-queue",
+      "b-mongo-raw-driver",
+      "b-ts-pref",
+      "b-prose-style-user-edited",
+      "b-linting-v0",
+      "b-fastify-pref",
+      "b-db-decision",
+      "b-sqlalchemy-superseded"
+    ]
+  },
+  {
+    "case_id": "cap-stress-kitchen-sink-exceeds-twelve",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.3888888888888889,
+    "after_precision": 0.3888888888888889,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-ci-gha-entity",
+      "b-functional-pipeline",
+      "b-error-handling",
+      "b-mongo-raw-driver",
+      "b-react-entity",
+      "b-kubernetes-entity",
+      "b-linting-v1",
+      "b-dead-letter-queue",
+      "b-ts-pref",
+      "b-pinned-resolved-interaction",
+      "b-react-expertise",
+      "b-protagonist-entity",
+      "b-hosting-resolved",
+      "b-authorship-mode",
+      "b-sqlalchemy-superseded",
+      "b-pov-shift-entity",
+      "b-composition-inheritance",
+      "b-db-decision",
+      "b-linting-v0",
+      "b-comm-pushback"
+    ],
+    "after_returned": [
+      "b-ci-gha-entity",
+      "b-functional-pipeline",
+      "b-error-handling",
+      "b-mongo-raw-driver",
+      "b-kubernetes-entity",
+      "b-react-entity",
+      "b-pinned-resolved-interaction",
+      "b-ts-pref",
+      "b-protagonist-entity",
+      "b-dead-letter-queue",
+      "b-react-expertise",
+      "b-hosting-resolved",
+      "b-authorship-mode",
+      "b-pov-shift-entity",
+      "b-sqlalchemy-superseded",
+      "b-composition-inheritance",
+      "b-linting-v0",
+      "b-db-decision",
+      "b-comm-pushback"
+    ]
+  },
+  {
+    "case_id": "cap-stress-late-position-entity-at-risk",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.3333333333333333,
+    "after_precision": 0.46153846153846156,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-ci-gha-entity",
+      "b-react-entity",
+      "b-db-decision",
+      "b-kubernetes-entity",
+      "b-functional-pipeline",
+      "b-redis-code",
+      "b-react-expertise",
+      "b-error-handling",
+      "b-mongo-raw-driver",
+      "b-ts-pref",
+      "b-linting-v1",
+      "b-linting-v0",
+      "b-sqlalchemy-superseded",
+      "b-prose-style-user-edited",
+      "b-comm-recommendation",
+      "b-redis-writing",
+      "b-auth-depends-redis",
+      "b-protagonist-entity",
+      "b-narrator-superseded",
+      "b-dead-letter-queue"
+    ],
+    "after_returned": [
+      "b-ci-gha-entity",
+      "b-kubernetes-entity",
+      "b-db-decision",
+      "b-react-entity",
+      "b-redis-code",
+      "b-functional-pipeline",
+      "b-mongo-raw-driver",
+      "b-linting-v0",
+      "b-error-handling",
+      "b-ts-pref",
+      "b-react-expertise",
+      "b-sqlalchemy-superseded",
+      "b-prose-style-user-edited",
+      "b-auth-depends-redis"
+    ]
+  },
+  {
+    "case_id": "fuzzy-single-edit-fires-non-pinned",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.3333333333333333,
+    "after_precision": 0.3333333333333333,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-error-handling",
+      "b-authorship-mode",
+      "b-functional-pipeline"
+    ],
+    "after_returned": [
+      "b-error-handling",
+      "b-authorship-mode",
+      "b-functional-pipeline"
+    ]
+  },
+  {
+    "case_id": "fuzzy-scope-filter-discriminates-after-fuzzy-fires",
+    "before_correct": true,
+    "after_correct": true,
+    "before_precision": 1.0,
+    "after_precision": 1.0,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-redis-code"
+    ],
+    "after_returned": [
+      "b-redis-code"
+    ]
+  },
+  {
+    "case_id": "fuzzy-prefix-blocks-transitive-match",
+    "before_correct": true,
+    "after_correct": true,
+    "before_precision": null,
+    "after_precision": null,
+    "before_recall": null,
+    "after_recall": null,
+    "before_returned": [],
+    "after_returned": []
+  },
+  {
+    "case_id": "fuzzy-abbreviation-prefix-blind-spot",
+    "before_correct": true,
+    "after_correct": true,
+    "before_precision": null,
+    "after_precision": null,
+    "before_recall": null,
+    "after_recall": null,
+    "before_returned": [],
+    "after_returned": []
+  },
+  {
+    "case_id": "fuzzy-two-edit-transposition-blocked",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.0,
+    "after_precision": 0.0,
+    "before_recall": 0.0,
+    "after_recall": 0.0,
+    "before_returned": [],
+    "after_returned": []
+  },
+  {
+    "case_id": "fuzzy-single-term-only-signal",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.0,
+    "after_precision": 0.0,
+    "before_recall": 0.0,
+    "after_recall": 0.0,
+    "before_returned": [],
+    "after_returned": []
+  },
+  {
+    "case_id": "universal-scope-belief-content-in-persona-prelude",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.0,
+    "after_precision": 0.0,
+    "before_recall": null,
+    "after_recall": null,
+    "before_returned": [
+      "b-comm-response-length",
+      "b-auth-depends-redis",
+      "b-dead-letter-queue",
+      "b-ci-gha-entity",
+      "b-kubernetes-entity",
+      "b-comm-recommendation",
+      "b-redis-writing",
+      "b-pov-shift-entity",
+      "b-comm-pushback",
+      "b-redis-code",
+      "b-narrator-superseded",
+      "b-react-entity",
+      "b-zero-reinforcement-fresh",
+      "b-linting-v1",
+      "b-authorship-mode",
+      "b-react-expertise",
+      "b-functional-pipeline",
+      "b-hosting-resolved"
+    ],
+    "after_returned": [
+      "b-comm-response-length",
+      "b-auth-depends-redis"
+    ]
+  },
+  {
+    "case_id": "type-isolation-open-question-not-in-relevant",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.0,
+    "after_precision": 0.0,
+    "before_recall": null,
+    "after_recall": null,
+    "before_returned": [
+      "b-auth-open-q"
+    ],
+    "after_returned": [
+      "b-auth-open-q"
+    ]
+  },
+  {
+    "case_id": "multi-hop-supersession-chain-all-excluded",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.0,
+    "after_precision": 0.0,
+    "before_recall": null,
+    "after_recall": null,
+    "before_returned": [
+      "b-linting-v0",
+      "b-linting-v1",
+      "b-linting-current",
+      "b-zero-reinforcement-fresh",
+      "b-prose-style-user-edited",
+      "b-ts-pref",
+      "b-comm-response-length",
+      "b-vitest-pref",
+      "b-fastify-pref",
+      "b-react-entity",
+      "b-db-decision",
+      "b-sqlalchemy-superseded",
+      "b-react-expertise",
+      "b-chapter-structure-q",
+      "b-mongo-raw-driver",
+      "b-auth-open-q",
+      "b-redis-code",
+      "b-kubernetes-entity",
+      "b-functional-pipeline",
+      "b-dead-letter-queue"
+    ],
+    "after_returned": [
+      "b-linting-current",
+      "b-linting-v0",
+      "b-linting-v1"
+    ]
+  },
+  {
+    "case_id": "cross-scope-one-empty-domain-does-not-degrade",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.07692307692307693,
+    "after_precision": 0.3333333333333333,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-auth-depends-redis",
+      "b-redis-code",
+      "b-redis-writing",
+      "b-comm-recommendation",
+      "b-narrator-voice",
+      "b-linting-v0",
+      "b-vitest-pref",
+      "b-fastify-pref",
+      "b-linting-current",
+      "b-pinned-resolved-interaction",
+      "b-authorship-mode",
+      "b-chapter-structure-q",
+      "b-auth-open-q",
+      "b-hosting-resolved"
+    ],
+    "after_returned": [
+      "b-auth-depends-redis",
+      "b-redis-code",
+      "b-redis-writing"
+    ]
+  },
+  {
+    "case_id": "ranking-orderedbefore-alias-beats-content",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.13333333333333333,
+    "after_precision": 0.3333333333333333,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-error-handling",
+      "b-functional-pipeline",
+      "b-comm-pushback",
+      "b-mongo-raw-driver",
+      "b-dead-letter-queue",
+      "b-pov-shift-entity",
+      "b-redis-writing",
+      "b-redis-code",
+      "b-linting-v0",
+      "b-narrator-superseded",
+      "b-zero-reinforcement-fresh",
+      "b-pinned-resolved-interaction",
+      "b-sqlalchemy-superseded",
+      "b-protagonist-entity",
+      "b-hosting-resolved"
+    ],
+    "after_returned": [
+      "b-error-handling",
+      "b-functional-pipeline",
+      "b-comm-pushback",
+      "b-mongo-raw-driver",
+      "b-dead-letter-queue",
+      "b-pov-shift-entity"
+    ]
+  },
+  {
+    "case_id": "cold-start-user-no-beliefs",
+    "before_correct": true,
+    "after_correct": true,
+    "before_precision": null,
+    "after_precision": null,
+    "before_recall": null,
+    "after_recall": null,
+    "before_returned": [],
+    "after_returned": []
+  },
+  {
+    "case_id": "narrator-voice-pinned-in-own-scope",
+    "before_correct": true,
+    "after_correct": true,
+    "before_precision": null,
+    "after_precision": null,
+    "before_recall": null,
+    "after_recall": null,
+    "before_returned": [],
+    "after_returned": []
+  },
+  {
+    "case_id": "multi-scope-prelude-uses-primary-scope-only",
+    "before_correct": false,
+    "after_correct": true,
+    "before_precision": 0.0,
+    "after_precision": null,
+    "before_recall": null,
+    "after_recall": null,
+    "before_returned": [
+      "b-db-decision",
+      "b-comm-recommendation",
+      "b-pov-shift-entity",
+      "b-fastify-pref",
+      "b-hosting-resolved",
+      "b-kubernetes-entity",
+      "b-auth-depends-redis",
+      "b-comm-pushback",
+      "b-react-expertise",
+      "b-ci-gha-entity",
+      "b-pinned-resolved-interaction",
+      "b-protagonist-entity",
+      "b-redis-code",
+      "b-redis-writing",
+      "b-functional-pipeline"
+    ],
+    "after_returned": []
+  },
+  {
+    "case_id": "why-it-matters-not-indexed-blind-spot",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.0,
+    "after_precision": 0.0,
+    "before_recall": null,
+    "after_recall": null,
+    "before_returned": [
+      "b-react-expertise",
+      "b-react-entity"
+    ],
+    "after_returned": [
+      "b-react-expertise",
+      "b-react-entity"
+    ]
+  },
+  {
+    "case_id": "budget-ceiling-evicts-relevant-beliefs",
+    "before_correct": true,
+    "after_correct": true,
+    "before_precision": null,
+    "after_precision": null,
+    "before_recall": null,
+    "after_recall": null,
+    "before_returned": [
+      "b-comm-recommendation",
+      "b-prose-style-user-edited"
+    ],
+    "after_returned": [
+      "b-prose-style-user-edited"
+    ]
+  },
+  {
+    "case_id": "negative-guidance-mongoose",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.05555555555555555,
+    "after_precision": 0.5,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-authorship-mode",
+      "b-mongo-raw-driver",
+      "b-comm-recommendation",
+      "b-redis-writing",
+      "b-dead-letter-queue",
+      "b-comm-pushback",
+      "b-redis-code",
+      "b-kubernetes-entity",
+      "b-ci-gha-entity",
+      "b-pov-shift-entity",
+      "b-narrator-voice",
+      "b-linting-v0",
+      "b-vitest-pref",
+      "b-fastify-pref",
+      "b-linting-current",
+      "b-pinned-resolved-interaction",
+      "b-chapter-structure-q",
+      "b-auth-open-q",
+      "b-hosting-resolved",
+      "b-auth-depends-redis"
+    ],
+    "after_returned": [
+      "b-authorship-mode",
+      "b-mongo-raw-driver"
+    ]
+  },
+  {
+    "case_id": "recency-tiebreak-reinforcement",
+    "before_correct": true,
+    "after_correct": true,
+    "before_precision": null,
+    "after_precision": null,
+    "before_recall": null,
+    "after_recall": null,
+    "before_returned": [],
+    "after_returned": []
+  },
+  {
+    "case_id": "preference-flood-relevant-entity-survives",
+    "before_correct": false,
+    "after_correct": true,
+    "before_precision": 0.3333333333333333,
+    "after_precision": 1.0,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-ci-gha-entity",
+      "b-comm-recommendation",
+      "b-protagonist-entity"
+    ],
+    "after_returned": [
+      "b-ci-gha-entity"
+    ]
+  },
+  {
+    "case_id": "cross-scope-non-user-edited-blocked",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.0,
+    "after_precision": 0.0,
+    "before_recall": null,
+    "after_recall": null,
+    "before_returned": [
+      "b-chapter-structure-q",
+      "b-protagonist-entity",
+      "b-redis-writing"
+    ],
+    "after_returned": [
+      "b-chapter-structure-q",
+      "b-protagonist-entity",
+      "b-redis-writing"
+    ]
+  },
+  {
+    "case_id": "alias-two-word-shingle-dead-letter",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.08333333333333333,
+    "after_precision": 0.5,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-dead-letter-queue",
+      "b-pov-shift-entity",
+      "b-ci-gha-entity",
+      "b-kubernetes-entity",
+      "b-narrator-superseded",
+      "b-react-entity",
+      "b-zero-reinforcement-fresh",
+      "b-linting-v1",
+      "b-authorship-mode",
+      "b-react-expertise",
+      "b-functional-pipeline",
+      "b-hosting-resolved"
+    ],
+    "after_returned": [
+      "b-dead-letter-queue",
+      "b-pov-shift-entity"
+    ]
+  },
+  {
+    "case_id": "alias-dlq-abbreviation-resolves",
+    "before_correct": false,
+    "after_correct": true,
+    "before_precision": 0.05555555555555555,
+    "after_precision": 1.0,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-dead-letter-queue",
+      "b-comm-recommendation",
+      "b-linting-v1",
+      "b-prose-style-user-edited",
+      "b-composition-inheritance",
+      "b-functional-pipeline",
+      "b-error-handling",
+      "b-redis-code",
+      "b-redis-writing",
+      "b-pov-shift-entity",
+      "b-chapter-structure-q",
+      "b-protagonist-entity",
+      "b-auth-open-q",
+      "b-hosting-resolved",
+      "b-narrator-superseded",
+      "b-comm-response-length",
+      "b-pinned-resolved-interaction",
+      "b-authorship-mode",
+      "b-mongo-raw-driver",
+      "b-kubernetes-entity"
+    ],
+    "after_returned": [
+      "b-dead-letter-queue"
+    ]
+  },
+  {
+    "case_id": "counter-signal-jest-surfaces-vitest",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.07692307692307693,
+    "after_precision": 0.25,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-narrator-voice",
+      "b-vitest-pref",
+      "b-prose-style-user-edited",
+      "b-pov-shift-entity",
+      "b-linting-v0",
+      "b-fastify-pref",
+      "b-linting-current",
+      "b-pinned-resolved-interaction",
+      "b-authorship-mode",
+      "b-chapter-structure-q",
+      "b-auth-open-q",
+      "b-hosting-resolved",
+      "b-auth-depends-redis"
+    ],
+    "after_returned": [
+      "b-narrator-voice",
+      "b-vitest-pref",
+      "b-prose-style-user-edited",
+      "b-pov-shift-entity"
+    ]
+  },
+  {
+    "case_id": "relation-type-expands-participants",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.1111111111111111,
+    "after_precision": 0.5,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-auth-depends-redis",
+      "b-auth-open-q",
+      "b-hosting-resolved",
+      "b-comm-recommendation",
+      "b-redis-code",
+      "b-chapter-structure-q",
+      "b-pov-shift-entity",
+      "b-comm-response-length",
+      "b-redis-writing",
+      "b-mongo-raw-driver",
+      "b-kubernetes-entity",
+      "b-protagonist-entity",
+      "b-narrator-superseded",
+      "b-linting-v1",
+      "b-pinned-resolved-interaction",
+      "b-authorship-mode",
+      "b-zero-reinforcement-fresh",
+      "b-linting-current",
+      "b-prose-style-user-edited",
+      "b-ts-pref"
+    ],
+    "after_returned": [
+      "b-auth-depends-redis",
+      "b-auth-open-q",
+      "b-hosting-resolved"
+    ]
+  },
+  {
+    "case_id": "relation-participant-open-question-routes-correctly",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.6666666666666666,
+    "after_precision": 0.6666666666666666,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-auth-depends-redis",
+      "b-auth-open-q",
+      "b-redis-code"
+    ],
+    "after_returned": [
+      "b-auth-depends-redis",
+      "b-auth-open-q",
+      "b-redis-code"
+    ]
+  },
+  {
+    "case_id": "relation-expansion-respects-scope-filter",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.4,
+    "after_precision": 0.4,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-auth-depends-redis",
+      "b-auth-open-q",
+      "b-redis-code",
+      "b-redis-writing",
+      "b-hosting-resolved"
+    ],
+    "after_returned": [
+      "b-auth-depends-redis",
+      "b-auth-open-q",
+      "b-redis-code",
+      "b-redis-writing",
+      "b-hosting-resolved"
+    ]
+  },
+  {
+    "case_id": "subtype-expertise-retrieval",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.05555555555555555,
+    "after_precision": 0.05555555555555555,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-react-expertise",
+      "b-react-entity",
+      "b-prose-style-user-edited",
+      "b-ci-gha-entity",
+      "b-kubernetes-entity",
+      "b-dead-letter-queue",
+      "b-narrator-superseded",
+      "b-zero-reinforcement-fresh",
+      "b-linting-v1",
+      "b-authorship-mode",
+      "b-functional-pipeline",
+      "b-hosting-resolved",
+      "b-pov-shift-entity",
+      "b-linting-current",
+      "b-auth-open-q",
+      "b-comm-recommendation",
+      "b-pinned-resolved-interaction",
+      "b-redis-code",
+      "b-redis-writing",
+      "b-auth-depends-redis"
+    ],
+    "after_returned": [
+      "b-react-expertise",
+      "b-react-entity",
+      "b-prose-style-user-edited",
+      "b-narrator-superseded",
+      "b-linting-v1",
+      "b-authorship-mode",
+      "b-hosting-resolved",
+      "b-pov-shift-entity",
+      "b-linting-current",
+      "b-auth-open-q",
+      "b-comm-recommendation",
+      "b-pinned-resolved-interaction",
+      "b-redis-code",
+      "b-redis-writing",
+      "b-auth-depends-redis",
+      "b-sqlalchemy-superseded",
+      "b-linting-v0",
+      "b-protagonist-entity",
+      "b-db-decision",
+      "b-chapter-structure-q"
+    ]
+  },
+  {
+    "case_id": "pinned-plus-resolved-excluded-from-questions",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.0,
+    "after_precision": 0.0,
+    "before_recall": null,
+    "after_recall": null,
+    "before_returned": [
+      "b-pinned-resolved-interaction",
+      "b-auth-open-q",
+      "b-narrator-voice",
+      "b-linting-v0",
+      "b-vitest-pref",
+      "b-fastify-pref",
+      "b-linting-current",
+      "b-authorship-mode",
+      "b-chapter-structure-q",
+      "b-hosting-resolved",
+      "b-auth-depends-redis"
+    ],
+    "after_returned": [
+      "b-pinned-resolved-interaction"
+    ]
+  },
+  {
+    "case_id": "zero-reinforcement-fresh-belief-surfaces",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.1,
+    "after_precision": 0.5,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-zero-reinforcement-fresh",
+      "b-comm-recommendation",
+      "b-kubernetes-entity",
+      "b-pov-shift-entity",
+      "b-react-entity",
+      "b-db-decision",
+      "b-protagonist-entity",
+      "b-redis-code",
+      "b-redis-writing",
+      "b-ci-gha-entity",
+      "b-auth-depends-redis"
+    ],
+    "after_returned": [
+      "b-zero-reinforcement-fresh",
+      "b-kubernetes-entity"
+    ]
+  },
+  {
+    "case_id": "budget-zero-graceful-empty",
+    "before_correct": true,
+    "after_correct": true,
+    "before_precision": null,
+    "after_precision": null,
+    "before_recall": null,
+    "after_recall": null,
+    "before_returned": [],
+    "after_returned": []
+  },
+  {
+    "case_id": "budget-one-pinned-wins-over-relevant",
+    "before_correct": true,
+    "after_correct": true,
+    "before_precision": null,
+    "after_precision": null,
+    "before_recall": null,
+    "after_recall": null,
+    "before_returned": [
+      "b-mongo-raw-driver"
+    ],
+    "after_returned": [
+      "b-mongo-raw-driver"
+    ]
+  },
+  {
+    "case_id": "multi-scope-code-writing-dedup-no-double-surface",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.0,
+    "after_precision": 0.0,
+    "before_recall": null,
+    "after_recall": null,
+    "before_returned": [
+      "b-hosting-resolved"
+    ],
+    "after_returned": [
+      "b-hosting-resolved"
+    ]
+  },
+  {
+    "case_id": "empty-alias-belief-content-path-only",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.0,
+    "after_precision": 0.0,
+    "before_recall": null,
+    "after_recall": null,
+    "before_returned": [
+      "b-comm-recommendation",
+      "b-dead-letter-queue",
+      "b-prose-style-user-edited",
+      "b-redis-writing",
+      "b-redis-code",
+      "b-pov-shift-entity",
+      "b-kubernetes-entity",
+      "b-functional-pipeline",
+      "b-hosting-resolved",
+      "b-ci-gha-entity",
+      "b-comm-pushback",
+      "b-pinned-resolved-interaction",
+      "b-protagonist-entity",
+      "b-error-handling",
+      "b-vitest-pref",
+      "b-react-entity",
+      "b-linting-current",
+      "b-react-expertise",
+      "b-mongo-raw-driver"
+    ],
+    "after_returned": [
+      "b-comm-recommendation",
+      "b-prose-style-user-edited",
+      "b-dead-letter-queue"
+    ]
+  },
+  {
+    "case_id": "universal-scope-explicit-query-no-relevant",
+    "before_correct": false,
+    "after_correct": true,
+    "before_precision": 0.0,
+    "after_precision": null,
+    "before_recall": null,
+    "after_recall": null,
+    "before_returned": [
+      "b-comm-recommendation",
+      "b-ci-gha-entity",
+      "b-kubernetes-entity",
+      "b-dead-letter-queue",
+      "b-narrator-superseded",
+      "b-react-entity",
+      "b-zero-reinforcement-fresh",
+      "b-linting-v1",
+      "b-authorship-mode",
+      "b-react-expertise",
+      "b-functional-pipeline",
+      "b-hosting-resolved",
+      "b-pov-shift-entity"
+    ],
+    "after_returned": []
+  },
+  {
+    "case_id": "negation-query-still-surfaces-rejected-tool",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.05555555555555555,
+    "after_precision": 0.125,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-fastify-pref",
+      "b-functional-pipeline",
+      "b-hosting-resolved",
+      "b-prose-style-user-edited",
+      "b-redis-code",
+      "b-protagonist-entity",
+      "b-auth-open-q",
+      "b-redis-writing",
+      "b-ci-gha-entity",
+      "b-kubernetes-entity",
+      "b-dead-letter-queue",
+      "b-narrator-superseded",
+      "b-react-entity",
+      "b-zero-reinforcement-fresh",
+      "b-linting-v1",
+      "b-authorship-mode",
+      "b-react-expertise",
+      "b-pov-shift-entity"
+    ],
+    "after_returned": [
+      "b-fastify-pref",
+      "b-functional-pipeline",
+      "b-hosting-resolved",
+      "b-prose-style-user-edited",
+      "b-redis-code",
+      "b-protagonist-entity",
+      "b-auth-open-q",
+      "b-redis-writing"
+    ]
+  },
+  {
+    "case_id": "superseded-chain-query-terminal-only",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.0,
+    "after_precision": 0.0,
+    "before_recall": null,
+    "after_recall": null,
+    "before_returned": [
+      "b-pinned-resolved-interaction",
+      "b-linting-v0",
+      "b-linting-v1",
+      "b-linting-current"
+    ],
+    "after_returned": [
+      "b-pinned-resolved-interaction",
+      "b-linting-v0",
+      "b-linting-v1",
+      "b-linting-current"
+    ]
+  },
+  {
+    "case_id": "relation-does-not-appear-as-entity",
+    "before_correct": false,
+    "after_correct": false,
+    "before_precision": 0.5,
+    "after_precision": 0.5,
+    "before_recall": 1.0,
+    "after_recall": 1.0,
+    "before_returned": [
+      "b-auth-depends-redis",
+      "b-redis-code",
+      "b-auth-open-q",
+      "b-redis-writing"
+    ],
+    "after_returned": [
+      "b-auth-depends-redis",
+      "b-redis-code",
+      "b-auth-open-q",
+      "b-redis-writing"
+    ]
+  }
+]

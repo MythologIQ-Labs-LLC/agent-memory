@@ -1,0 +1,87 @@
+From 7554d2a010fe483f7e992cc6fe4ed896af8dd9ca Mon Sep 17 00:00:00 2001
+From: "Kevin R. Knapp" <205245245+Knapp-Kevin@users.noreply.github.com>
+Date: Mon, 19 Oct 2026 23:59:23 -0400
+Subject: [PATCH] experiment: lexical grammatical-term negative selection [skip
+ ci]
+
+---
+ reference/agentmem_ref/core/lexical_terms.py  | 20 +++++++++++++++++++
+ .../agentmem_ref/state/sqlite_substrate.py    |  3 ++-
+ reference/agentmem_ref/state/substrate.py     |  3 ++-
+ .../tests/test_lexical_query_conditioning.py  | 12 +++++++++++
+ 4 files changed, 36 insertions(+), 2 deletions(-)
+ create mode 100644 reference/agentmem_ref/core/lexical_terms.py
+ create mode 100644 reference/tests/test_lexical_query_conditioning.py
+
+diff --git a/reference/agentmem_ref/core/lexical_terms.py b/reference/agentmem_ref/core/lexical_terms.py
+new file mode 100644
+index 00000000..66f916ad
+--- /dev/null
++++ b/reference/agentmem_ref/core/lexical_terms.py
+@@ -0,0 +1,20 @@
++"""Experimental lexical content terms; never admission or truth authority.
++
++This unqualified candidate removes closed-class English grammatical terms only.
++Negation remains evidence. It does not infer names, scope, or currentness.
++"""
++
++POLICY_ID = "lexical-content-terms-experiment"
++POLICY_VERSION = "0.1.0"
++GRAMMATICAL_TERMS = frozenset(
++    "a an the and or but if in on at of to for from with by as is are was were "
++    "be been being do does did have has had how what when where which who whom whose".split()
++)
++
++
++def content_terms(text: str) -> set[str]:
++    return {
++        token.strip(".,;:!?").lower()
++        for token in text.split()
++        if token.strip(".,;:!?")
++    } - GRAMMATICAL_TERMS
+diff --git a/reference/agentmem_ref/state/sqlite_substrate.py b/reference/agentmem_ref/state/sqlite_substrate.py
+index 34be6e86..bd40df83 100644
+--- a/reference/agentmem_ref/state/sqlite_substrate.py
++++ b/reference/agentmem_ref/state/sqlite_substrate.py
+@@ -84,7 +84,8 @@ _EMPTY_BUCKET = _bucket_digest([])
+ 
+ 
+ def _tokens(text: str) -> set[str]:
+-    return {token.strip(".,;:!?").lower() for token in text.split() if token.strip(".,;:!?")}
++    from ..core.lexical_terms import content_terms
++    return content_terms(text)
+ 
+ 
+ class SqliteDeterministicIds(DeterministicIds):
+diff --git a/reference/agentmem_ref/state/substrate.py b/reference/agentmem_ref/state/substrate.py
+index f146ec3f..97c739c9 100644
+--- a/reference/agentmem_ref/state/substrate.py
++++ b/reference/agentmem_ref/state/substrate.py
+@@ -562,4 +562,5 @@ class InMemoryTemporalGraph:
+ 
+ 
+ def _tokens(text: str) -> set[str]:
+-    return {token.strip(".,;:!?").lower() for token in text.split() if token.strip(".,;:!?")}
++    from ..core.lexical_terms import content_terms
++    return content_terms(text)
+diff --git a/reference/tests/test_lexical_query_conditioning.py b/reference/tests/test_lexical_query_conditioning.py
+new file mode 100644
+index 00000000..18800e9f
+--- /dev/null
++++ b/reference/tests/test_lexical_query_conditioning.py
+@@ -0,0 +1,12 @@
++import unittest, tempfile
++from agentmem_ref import AgentMemory
++class CandidateTests(unittest.TestCase):
++ def test_grammatical_overlap_alone_is_not_task_context(self):
++  with tempfile.TemporaryDirectory() as root:
++   with AgentMemory.open(root,tenant='t',actor_id='a',scope='s',purpose='retrieval quality') as m:
++    wanted=m.remember('m:camera','The streaming camera uses a wide angle lens.')['fact_uuid']
++    unrelated=m.remember('m:printer','The printer uses recycled paper.')['fact_uuid']
++    result=m.recall('What is the streaming camera?')
++    self.assertIn(wanted,result['returned'])
++    self.assertNotIn(unrelated,result['returned'])
++if __name__=='__main__':unittest.main()
+-- 
+2.51.1
+

@@ -1,0 +1,578 @@
+{
+  "budget": 5,
+  "cases": 14,
+  "corpus_sha256": "44e6ab69482359dcd79d27741f9094a8bccd3d92ff9b9bbe3af53b8b5dd66879",
+  "evidence_class": "synthetic_development_only",
+  "external_jarvis_data": false,
+  "record_count": 19014,
+  "repeats": 3,
+  "results": [
+    {
+      "abstention_correct": 0,
+      "abstention_total": 2,
+      "arm": "sqlite_fts5_bm25",
+      "by_family": {
+        "fact_lookup": {
+          "cases": 10,
+          "extras": 31,
+          "required_found": 10,
+          "required_total": 10,
+          "strict": 1
+        },
+        "no_answer": {
+          "cases": 1,
+          "extras": 5,
+          "required_found": 0,
+          "required_total": 0,
+          "strict": 0
+        },
+        "poisoning_abstention": {
+          "cases": 1,
+          "extras": 2,
+          "required_found": 0,
+          "required_total": 0,
+          "strict": 0
+        },
+        "scope_isolation": {
+          "cases": 1,
+          "extras": 4,
+          "required_found": 1,
+          "required_total": 1,
+          "strict": 0
+        },
+        "temporal_diagnostic": {
+          "cases": 1,
+          "extras": 4,
+          "required_found": 1,
+          "required_total": 1,
+          "strict": 0
+        }
+      },
+      "cases": [
+        {
+          "case_id": "lookup:editor",
+          "family": "fact_lookup",
+          "forbidden_returned": 0,
+          "required_found": 1,
+          "required_total": 1,
+          "returned": [
+            "fact:editor",
+            "fact:exercise",
+            "fact:allergy",
+            "fact:city-old",
+            "fact:city-new"
+          ],
+          "returned_total": 5,
+          "strict": false
+        },
+        {
+          "case_id": "lookup:trip",
+          "family": "fact_lookup",
+          "forbidden_returned": 0,
+          "required_found": 1,
+          "required_total": 1,
+          "returned": [
+            "fact:trip",
+            "fact:exercise",
+            "fact:allergy",
+            "fact:city-old",
+            "fact:city-new"
+          ],
+          "returned_total": 5,
+          "strict": false
+        },
+        {
+          "case_id": "lookup:printer",
+          "family": "fact_lookup",
+          "forbidden_returned": 0,
+          "required_found": 1,
+          "required_total": 1,
+          "returned": [
+            "fact:printer",
+            "fact:city-old",
+            "fact:city-new"
+          ],
+          "returned_total": 3,
+          "strict": false
+        },
+        {
+          "case_id": "lookup:vehicle",
+          "family": "fact_lookup",
+          "forbidden_returned": 0,
+          "required_found": 1,
+          "required_total": 1,
+          "returned": [
+            "fact:vehicle",
+            "episode:injected"
+          ],
+          "returned_total": 2,
+          "strict": false
+        },
+        {
+          "case_id": "lookup:meeting",
+          "family": "fact_lookup",
+          "forbidden_returned": 0,
+          "required_found": 1,
+          "required_total": 1,
+          "returned": [
+            "fact:meeting",
+            "episode:000002",
+            "episode:000007",
+            "episode:000038",
+            "episode:000040"
+          ],
+          "returned_total": 5,
+          "strict": false
+        },
+        {
+          "case_id": "lookup:camera",
+          "family": "fact_lookup",
+          "forbidden_returned": 0,
+          "required_found": 1,
+          "required_total": 1,
+          "returned": [
+            "fact:camera"
+          ],
+          "returned_total": 1,
+          "strict": true
+        },
+        {
+          "case_id": "lookup:allergy",
+          "family": "fact_lookup",
+          "forbidden_returned": 0,
+          "required_found": 1,
+          "required_total": 1,
+          "returned": [
+            "fact:allergy",
+            "fact:exercise",
+            "fact:city-old",
+            "fact:city-new",
+            "fact:trip"
+          ],
+          "returned_total": 5,
+          "strict": false
+        },
+        {
+          "case_id": "lookup:exercise",
+          "family": "fact_lookup",
+          "forbidden_returned": 0,
+          "required_found": 1,
+          "required_total": 1,
+          "returned": [
+            "fact:exercise",
+            "fact:allergy",
+            "fact:city-old",
+            "fact:city-new",
+            "fact:trip"
+          ],
+          "returned_total": 5,
+          "strict": false
+        },
+        {
+          "case_id": "lookup:database",
+          "family": "fact_lookup",
+          "forbidden_returned": 0,
+          "required_found": 1,
+          "required_total": 1,
+          "returned": [
+            "fact:database",
+            "episode:000011",
+            "episode:000018",
+            "episode:000020",
+            "episode:000029"
+          ],
+          "returned_total": 5,
+          "strict": false
+        },
+        {
+          "case_id": "lookup:delivery",
+          "family": "fact_lookup",
+          "forbidden_returned": 0,
+          "required_found": 1,
+          "required_total": 1,
+          "returned": [
+            "fact:delivery",
+            "episode:000000",
+            "episode:000005",
+            "episode:000006",
+            "episode:000017"
+          ],
+          "returned_total": 5,
+          "strict": false
+        },
+        {
+          "case_id": "isolation:editor",
+          "family": "scope_isolation",
+          "forbidden_returned": 0,
+          "required_found": 1,
+          "required_total": 1,
+          "returned": [
+            "fact:editor",
+            "fact:exercise",
+            "fact:allergy",
+            "fact:city-old",
+            "fact:city-new"
+          ],
+          "returned_total": 5,
+          "strict": false
+        },
+        {
+          "case_id": "temporal:city",
+          "family": "temporal_diagnostic",
+          "forbidden_returned": 1,
+          "required_found": 1,
+          "required_total": 1,
+          "returned": [
+            "fact:city-old",
+            "fact:city-new",
+            "fact:exercise",
+            "fact:printer",
+            "fact:allergy"
+          ],
+          "returned_total": 5,
+          "strict": false
+        },
+        {
+          "case_id": "poison:pin",
+          "family": "poisoning_abstention",
+          "forbidden_returned": 1,
+          "required_found": 0,
+          "required_total": 0,
+          "returned": [
+            "episode:injected",
+            "fact:vehicle"
+          ],
+          "returned_total": 2,
+          "strict": false
+        },
+        {
+          "case_id": "abstain:iguana",
+          "family": "no_answer",
+          "forbidden_returned": 0,
+          "required_found": 0,
+          "required_total": 0,
+          "returned": [
+            "fact:city-old",
+            "fact:city-new",
+            "fact:exercise",
+            "fact:allergy",
+            "fact:trip"
+          ],
+          "returned_total": 5,
+          "strict": false
+        }
+      ],
+      "cases_total": 14,
+      "forbidden_returned": 2,
+      "ingest_ms": 75.253,
+      "latency_ms": {
+        "p50": 0.11,
+        "p95": 4.325,
+        "p99": 30.05
+      },
+      "needed_returned": 11,
+      "needed_total": 11,
+      "primary_cases": 13,
+      "primary_extras": 42,
+      "primary_strict": 1
+    },
+    {
+      "abstention_correct": 0,
+      "abstention_total": 2,
+      "arm": "agent_memory_public_facade_default",
+      "by_family": {
+        "fact_lookup": {
+          "cases": 10,
+          "extras": 38,
+          "required_found": 10,
+          "required_total": 10,
+          "strict": 0
+        },
+        "no_answer": {
+          "cases": 1,
+          "extras": 5,
+          "required_found": 0,
+          "required_total": 0,
+          "strict": 0
+        },
+        "poisoning_abstention": {
+          "cases": 1,
+          "extras": 5,
+          "required_found": 0,
+          "required_total": 0,
+          "strict": 0
+        },
+        "scope_isolation": {
+          "cases": 1,
+          "extras": 4,
+          "required_found": 1,
+          "required_total": 1,
+          "strict": 0
+        },
+        "temporal_diagnostic": {
+          "cases": 1,
+          "extras": 4,
+          "required_found": 1,
+          "required_total": 1,
+          "strict": 0
+        }
+      },
+      "cases": [
+        {
+          "case_id": "lookup:editor",
+          "family": "fact_lookup",
+          "forbidden_returned": 0,
+          "required_found": 1,
+          "required_total": 1,
+          "returned": [
+            "fact:editor",
+            "fact:exercise",
+            "fact:database",
+            "fact:allergy",
+            "fact:trip"
+          ],
+          "returned_total": 5,
+          "strict": false
+        },
+        {
+          "case_id": "lookup:trip",
+          "family": "fact_lookup",
+          "forbidden_returned": 0,
+          "required_found": 1,
+          "required_total": 1,
+          "returned": [
+            "fact:trip",
+            "fact:editor",
+            "fact:exercise",
+            "fact:allergy",
+            "fact:delivery"
+          ],
+          "returned_total": 5,
+          "strict": false
+        },
+        {
+          "case_id": "lookup:printer",
+          "family": "fact_lookup",
+          "forbidden_returned": 0,
+          "required_found": 1,
+          "required_total": 1,
+          "returned": [
+            "fact:printer",
+            "fact:city-old",
+            "fact:allergy",
+            "fact:camera",
+            "fact:vehicle"
+          ],
+          "returned_total": 5,
+          "strict": false
+        },
+        {
+          "case_id": "lookup:vehicle",
+          "family": "fact_lookup",
+          "forbidden_returned": 0,
+          "required_found": 1,
+          "required_total": 1,
+          "returned": [
+            "fact:vehicle",
+            "episode:injected",
+            "fact:delivery",
+            "fact:database",
+            "fact:camera"
+          ],
+          "returned_total": 5,
+          "strict": false
+        },
+        {
+          "case_id": "lookup:meeting",
+          "family": "fact_lookup",
+          "forbidden_returned": 0,
+          "required_found": 1,
+          "required_total": 1,
+          "returned": [
+            "fact:camera",
+            "fact:vehicle",
+            "episode:injected",
+            "fact:meeting",
+            "fact:city-old"
+          ],
+          "returned_total": 5,
+          "strict": false
+        },
+        {
+          "case_id": "lookup:camera",
+          "family": "fact_lookup",
+          "forbidden_returned": 0,
+          "required_found": 1,
+          "required_total": 1,
+          "returned": [
+            "fact:camera",
+            "fact:exercise",
+            "fact:database",
+            "fact:editor",
+            "fact:city-old"
+          ],
+          "returned_total": 5,
+          "strict": false
+        },
+        {
+          "case_id": "lookup:allergy",
+          "family": "fact_lookup",
+          "forbidden_returned": 0,
+          "required_found": 1,
+          "required_total": 1,
+          "returned": [
+            "fact:allergy",
+            "fact:exercise",
+            "fact:trip",
+            "fact:editor"
+          ],
+          "returned_total": 4,
+          "strict": false
+        },
+        {
+          "case_id": "lookup:exercise",
+          "family": "fact_lookup",
+          "forbidden_returned": 0,
+          "required_found": 1,
+          "required_total": 1,
+          "returned": [
+            "fact:exercise",
+            "fact:allergy",
+            "fact:trip",
+            "fact:editor"
+          ],
+          "returned_total": 4,
+          "strict": false
+        },
+        {
+          "case_id": "lookup:database",
+          "family": "fact_lookup",
+          "forbidden_returned": 0,
+          "required_found": 1,
+          "required_total": 1,
+          "returned": [
+            "fact:database",
+            "fact:delivery",
+            "fact:camera",
+            "fact:trip",
+            "fact:vehicle"
+          ],
+          "returned_total": 5,
+          "strict": false
+        },
+        {
+          "case_id": "lookup:delivery",
+          "family": "fact_lookup",
+          "forbidden_returned": 0,
+          "required_found": 1,
+          "required_total": 1,
+          "returned": [
+            "fact:delivery",
+            "fact:database",
+            "fact:camera",
+            "fact:trip",
+            "fact:vehicle"
+          ],
+          "returned_total": 5,
+          "strict": false
+        },
+        {
+          "case_id": "isolation:editor",
+          "family": "scope_isolation",
+          "forbidden_returned": 0,
+          "required_found": 1,
+          "required_total": 1,
+          "returned": [
+            "fact:editor",
+            "fact:exercise",
+            "fact:database",
+            "fact:allergy",
+            "fact:trip"
+          ],
+          "returned_total": 5,
+          "strict": false
+        },
+        {
+          "case_id": "temporal:city",
+          "family": "temporal_diagnostic",
+          "forbidden_returned": 1,
+          "required_found": 1,
+          "required_total": 1,
+          "returned": [
+            "fact:city-old",
+            "fact:city-new",
+            "fact:printer",
+            "fact:vehicle",
+            "fact:camera"
+          ],
+          "returned_total": 5,
+          "strict": false
+        },
+        {
+          "case_id": "poison:pin",
+          "family": "poisoning_abstention",
+          "forbidden_returned": 1,
+          "required_found": 0,
+          "required_total": 0,
+          "returned": [
+            "episode:injected",
+            "fact:vehicle",
+            "fact:camera",
+            "fact:city-old",
+            "fact:delivery"
+          ],
+          "returned_total": 5,
+          "strict": false
+        },
+        {
+          "case_id": "abstain:iguana",
+          "family": "no_answer",
+          "forbidden_returned": 0,
+          "required_found": 0,
+          "required_total": 0,
+          "returned": [
+            "fact:city-old",
+            "fact:city-new",
+            "fact:camera",
+            "fact:vehicle",
+            "episode:injected"
+          ],
+          "returned_total": 5,
+          "strict": false
+        }
+      ],
+      "cases_total": 14,
+      "forbidden_returned": 2,
+      "ingest_ms": 123886.646,
+      "latency_ms": {
+        "p50": 173.279,
+        "p95": 3960.213,
+        "p99": 9693.467
+      },
+      "needed_returned": 11,
+      "needed_total": 11,
+      "primary_cases": 13,
+      "primary_extras": 52,
+      "primary_strict": 0
+    }
+  ],
+  "seed": 825,
+  "synthetic_episodes": 19000,
+  "execution": {
+    "harness_sha": "1d0de74c",
+    "runtime_source_sha_at_start": "e06e9096b5cbb1bcd1bc7412eb4038d60532de6b",
+    "runtime_source_equal_to_test_repair": "38003674765a16c418b6644ea68a198946cc40b2",
+    "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+    "sqlite": "3.53.1",
+    "command": "PYTHONPATH=/workspace/scratch/fa6d5f50ddfd/agent-memory/reference timeout 180s python tools/jarvis_scale/experiment.py --size 19000 --seed 825 --budget 5 --repeats 3 --arms indexed,agent-memory --out /tmp/agent-memory-825-run.json",
+    "exit_code": 0,
+    "limitations": [
+      "Synthetic development cohort, not independent qualification",
+      "No peak RSS/CPU/disk accounting or cold/warm separation",
+      "Source/trust metadata not equivalently wired; poisoning assertions do not establish unauthorized truth mutation",
+      "Ingest compares durable SQLite governance with in-memory FTS5; distinct durability costs",
+      "No real Jarvis access or data"
+    ]
+  }
+}

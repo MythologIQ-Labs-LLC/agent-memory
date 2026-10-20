@@ -1,0 +1,51 @@
+{
+  "evidence_class": "unqualified_diagnostic_and_synthetic",
+  "review_status": "CHANGES REQUIRED for precision candidate and adoption; GO merged diagnostics/docs",
+  "next_action": "versioned context selection preserving protected temporal floors; independent disjoint qualification",
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 9088,
+      "sha256": "3dffbf7d159412359b139ff105a46a2f3f5b9e4a5669a7d43148003cecd9d1bb",
+      "git_blob": "1e69394638e90d51cb0b4f770c16cc5087ce0e5d"
+    },
+    {
+      "path": "baseline-full.json.gz",
+      "bytes": 128513,
+      "sha256": "0f7a648f54c73cf5dc66097c8938a2a841f2e8364ddc4afe03ab0f41a566f6f3",
+      "git_blob": "8542f6127b20ac9d9f987b336feab2061295b881"
+    },
+    {
+      "path": "candidate-full.json.gz",
+      "bytes": 53565,
+      "sha256": "cd3afe932d20cb8f2fc5493726de95edd864d9efc7dae82a480d305e87fa7277",
+      "git_blob": "574615a3679b88738c6813fd5326e197f061bf70"
+    },
+    {
+      "path": "paired.json",
+      "bytes": 49382,
+      "sha256": "b7b42e72fe76c6ca1db8625bc2982eb931fd039963eabc72c34a0d50b928ffc6",
+      "git_blob": "a244a13590261c226c86316af751e62c7dda5afb"
+    },
+    {
+      "path": "candidate.patch",
+      "bytes": 3696,
+      "sha256": "f9d75fe9e9e5b5a4de9d81b8e6312eb18e9867deb3cf1252e061054022bde94b",
+      "git_blob": "dd146d7dcb408067bb1d37dc24b2da98df0c5437"
+    },
+    {
+      "path": "replay.py",
+      "bytes": 2775,
+      "sha256": "5b577e1c66a174c24cd3062edf30b43362cfd1896f8058edd0fb99ba45d68b52",
+      "git_blob": "1889a5f36897679cfa5a0d095ca02dd0afe3646e"
+    },
+    {
+      "path": "jarvis-19000.json",
+      "bytes": 15621,
+      "sha256": "f17f7b56dfc7f2c4a9fd3ff2686e5d5cd2a7c139d0efe84cdf9f15af5be0efd4",
+      "git_blob": "64b02903c4665d6f2e25f27bd9a3344a395c1fe8"
+    }
+  ]
+}
