@@ -45,6 +45,8 @@ GRAPH_OUTGOING = "outgoing"
 GRAPH_INCOMING = "incoming"
 GRAPH_BOTH = "both"
 MAX_GRAPH_SEED_REFS = 16
+# Bounded overscan prevents ineligible logical refs spending an eligible-route quota.
+MAX_IDENTITY_FILTER_SCAN_FACTOR = 16
 
 # Pre-existing route precedence of the controlled planner, now declared rather than implicit.
 CONTROLLED_RECALL_RANKING_POLICY = ExplicitCurrentCrossFactRankingPolicy(
@@ -606,7 +608,10 @@ class ControlledRecallPlanner:
         exact_budget = plan.budget_for(EXACT_IDENTITY_ROUTE)
         explicit_seeds: list[tuple[str, str]] = []
         if exact_budget.candidate_limit:
-            for logical_ref in unique_logical_refs[: exact_budget.candidate_limit]:
+            max_checks = exact_budget.candidate_limit * MAX_IDENTITY_FILTER_SCAN_FACTOR
+            for logical_ref in unique_logical_refs[:max_checks]:
+                if len(explicit_seeds) >= exact_budget.candidate_limit:
+                    break
                 current = self.adapter.current_fact_uuid(logical_ref)
                 if current is None or not self.adapter.domain_eligible_identity(current, tenant, context):
                     continue
@@ -660,7 +665,10 @@ class ControlledRecallPlanner:
         ):
             graph_seed_refs: list[str] = []
             graph_seed_limit = min(MAX_GRAPH_SEED_REFS, graph_budget.candidate_limit)
-            for logical_ref in unique_logical_refs[:graph_seed_limit]:
+            max_checks = graph_seed_limit * MAX_IDENTITY_FILTER_SCAN_FACTOR
+            for logical_ref in unique_logical_refs[:max_checks]:
+                if len(graph_seed_refs) >= graph_seed_limit:
+                    break
                 current = self.adapter.current_fact_uuid(logical_ref)
                 if current is not None and self.adapter.domain_eligible_identity(current, tenant, context):
                     graph_seed_refs.append(current)
