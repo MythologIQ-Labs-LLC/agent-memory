@@ -429,6 +429,29 @@ class TypedGraphGovernedRecallTests(unittest.TestCase):
             "none",
         )
 
+    def test_governed_typed_graph_cannot_bridge_through_other_project(self) -> None:
+        seed = self._retain("memory:seed", "authorized starting fact")
+        foreign = self._retain(
+            "memory:foreign-bridge", "restricted intermediate",
+            project_ref="project-beta",
+        )
+        visible = self._retain("memory:visible-target", "authorized indirect result")
+        substrate = self.runtime.adapter.checkpoint_substrate()
+        substrate.write_relation(_relation("relation:seed-foreign", seed.fact_uuid, foreign.fact_uuid))
+        substrate.write_relation(_relation("relation:foreign-target", foreign.fact_uuid, visible.fact_uuid))
+        result = ControlledRecallPlanner(
+            self.runtime.adapter,
+            controller=self._graph_only_controller(),
+            graph_retriever=NativeTypedGraphCandidateRetriever(
+                GraphTraversalSpec(max_depth=2),
+            ),
+        ).recall("", _context(), logical_memory_refs=("memory:seed",))
+        self.assertIn(seed.fact_uuid, result.admitted)
+        self.assertNotIn(foreign.fact_uuid, result.candidates)
+        self.assertNotIn(visible.fact_uuid, result.candidates)
+        self.assertEqual(result.route_candidate_counts[TYPED_GRAPH_ROUTE], 0)
+        self.assertEqual(result.graph_candidate_hits, {})
+
     def test_graph_reachable_superseded_fact_is_candidate_but_not_active_influence(self) -> None:
         seed = self._retain("memory:seed", "seed memory")
         stale = self._retain("memory:stale", "stale related memory")
