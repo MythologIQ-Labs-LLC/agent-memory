@@ -109,6 +109,55 @@ class MultiRouteRecallTests(unittest.TestCase):
             {EXACT_IDENTITY_ROUTE},
         )
 
+    def test_selection_trace_preserves_admission_refusal_and_route_attribution(self) -> None:
+        deploy = self._retain(MEMORY_DEPLOY, "deploy window is Thursday")
+        backup = self._retain(MEMORY_BACKUP, "database backups run nightly")
+        foreign = self._retain(
+            "memory:foreign", "deploy window is Friday", project_ref="project-beta"
+        )
+        self.runtime.adapter.checkpoint_substrate().invalidate_fact(
+            backup.fact_uuid,
+            invalid_at="2026-09-23T11:00:00Z",
+            expired_at="2026-09-23T11:00:01Z",
+        )
+        result = self.runtime.multi_route_recall(
+            "deploy window",
+            _context(),
+            logical_memory_refs=(MEMORY_BACKUP, "memory:foreign"),
+        )
+        trace = result.selection_trace()
+        by_ref = {entry["candidate_ref"]: entry for entry in trace}
+        self.assertEqual(len(by_ref), len(result.candidates))
+        self.assertNotIn(foreign.fact_uuid, by_ref)
+        self.assertNotIn(foreign.fact_uuid, result.route_hits)
+        self.assertTrue(by_ref[deploy.fact_uuid]["admitted"])
+        self.assertIn(LEXICAL_ROUTE, by_ref[deploy.fact_uuid]["route_ids"])
+        self.assertIsInstance(by_ref[deploy.fact_uuid]["rank_position"], int)
+        self.assertFalse(by_ref[backup.fact_uuid]["admitted"])
+        self.assertEqual(
+            by_ref[backup.fact_uuid]["refusal"], "superseded_not_current"
+        )
+        self.assertIsNone(by_ref[backup.fact_uuid]["rank_position"])
+        self.assertIn(EXACT_IDENTITY_ROUTE, by_ref[backup.fact_uuid]["route_ids"])
+        self.assertTrue(all(isinstance(hit["raw_score"], (int, float))
+                            for item in trace for hit in item["route_scores"]))
+        self.assertIn(LEXICAL_ROUTE,
+                      {hit["route_id"] for hit in by_ref[deploy.fact_uuid]["route_scores"]})
+        self.assertIn(EXACT_IDENTITY_ROUTE,
+                      {hit["route_id"] for hit in by_ref[backup.fact_uuid]["route_scores"]})
+        admitted_before = tuple(result.admitted)
+        ranked_before = tuple(result.ranked_admitted)
+        decisions_before = {ref: dict(decision) for ref, decision in result.decisions.items()}
+        self.assertEqual(trace, result.selection_trace())  # pure inspection
+        self.assertEqual(tuple(result.admitted), admitted_before)
+        self.assertEqual(tuple(result.ranked_admitted), ranked_before)
+        self.assertEqual(result.decisions, decisions_before)
+        self.assertNotIn(backup.fact_uuid, result.ranked_admitted)
+        trace[0]["route_ids"].append("caller-mutation")
+        trace[0]["route_scores"][0]["raw_score"] = -999
+        self.assertNotIn("caller-mutation", result.selection_trace()[0]["route_ids"])
+        self.assertNotEqual(result.selection_trace()[0]["route_scores"][0]["raw_score"], -999)
+
     def test_exact_identity_recalls_current_fact_when_lexical_query_misses(self) -> None:
         backup = self._retain(MEMORY_BACKUP, "database backups run nightly")
 
