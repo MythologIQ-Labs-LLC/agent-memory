@@ -15,7 +15,7 @@ from collections import deque
 from dataclasses import dataclass, field
 import math
 import re
-from typing import Protocol
+from typing import Callable, Protocol
 
 from .adapter import RecallContext, eligible_search
 from .contextual_recall_adapter import admission_mode_for_intent, admit_preselected_candidates
@@ -32,6 +32,7 @@ from .runtime_composition import (
 from .vector_retrieval import NativeVectorCandidateRetriever, SEMANTIC_VECTOR_ROUTE
 from ..state.substrate import (
     EvidenceNeighborTemporalGraphPort,
+    Fact,
     TypedRelation,
     TypedRelationTemporalGraphPort,
 )
@@ -168,6 +169,7 @@ class NativeTypedGraphCandidateRetriever:
         *,
         group_id: str,
         candidate_limit: int,
+        eligible: Callable[[Fact], bool] | None = None,
     ) -> list[GraphCandidateHit]:
         if candidate_limit < 0:
             raise ValueError("graph candidate_limit must be non-negative")
@@ -178,9 +180,12 @@ class NativeTypedGraphCandidateRetriever:
 
         best_by_candidate: dict[str, GraphCandidateHit] = {}
         for seed_ref in tuple(dict.fromkeys(seed_refs)):
-            if substrate.get_fact(seed_ref) is None:
+            seed_fact = substrate.get_fact(seed_ref)
+            if seed_fact is None or (eligible is not None and not eligible(seed_fact)):
                 continue
-            for hit in self._traverse_seed(substrate, seed_ref, group_id=group_id):
+            for hit in self._traverse_seed(
+                substrate, seed_ref, group_id=group_id, eligible=eligible,
+            ):
                 existing = best_by_candidate.get(hit.candidate_ref)
                 if existing is None or self._hit_key(hit) < self._hit_key(existing):
                     best_by_candidate[hit.candidate_ref] = hit
@@ -194,6 +199,7 @@ class NativeTypedGraphCandidateRetriever:
         seed_ref: str,
         *,
         group_id: str,
+        eligible: Callable[[Fact], bool] | None = None,
     ) -> list[GraphCandidateHit]:
         queue = deque(
             [
@@ -240,7 +246,8 @@ class NativeTypedGraphCandidateRetriever:
                 next_score = path_score * relation.retrieval_weight
                 if next_score < self.spec.min_path_score:
                     continue
-                if substrate.get_fact(next_ref) is None:
+                next_fact = substrate.get_fact(next_ref)
+                if next_fact is None or (eligible is not None and not eligible(next_fact)):
                     continue
                 prior_score = best_score_by_node.get(next_ref)
                 if prior_score is not None and next_score <= prior_score:
@@ -585,7 +592,7 @@ class ControlledRecallPlanner:
         if exact_budget.candidate_limit:
             for logical_ref in unique_logical_refs[: exact_budget.candidate_limit]:
                 current = self.adapter.current_fact_uuid(logical_ref)
-                if current is None:
+                if current is None or not self.adapter.domain_eligible_identity(current, tenant, context):
                     continue
                 hits.append(
                     RetrievalRouteHit(
@@ -639,13 +646,14 @@ class ControlledRecallPlanner:
             graph_seed_limit = min(MAX_GRAPH_SEED_REFS, graph_budget.candidate_limit)
             for logical_ref in unique_logical_refs[:graph_seed_limit]:
                 current = self.adapter.current_fact_uuid(logical_ref)
-                if current is not None:
+                if current is not None and self.adapter.domain_eligible_identity(current, tenant, context):
                     graph_seed_refs.append(current)
             graph_results = self.graph_retriever.search(
                 substrate,
                 tuple(graph_seed_refs),
                 group_id=tenant,
                 candidate_limit=graph_budget.candidate_limit,
+                eligible=lambda fact: self.adapter.domain_eligible(fact, context),
             )
             for graph_hit in graph_results:
                 graph_candidate_hits[graph_hit.candidate_ref] = graph_hit
@@ -680,6 +688,7 @@ class ControlledRecallPlanner:
                     logical_memory_ref=logical_ref,
                     expanded_seeds=expanded_seeds,
                     candidate_limit=remaining,
+                    context=context,
                 )
                 remaining -= added
 
@@ -706,6 +715,7 @@ class ControlledRecallPlanner:
                     logical_memory_ref="",
                     expanded_seeds=expanded_seeds,
                     candidate_limit=remaining,
+                    context=context,
                 )
                 remaining -= added
             route_counts[SHARED_EVIDENCE_ROUTE] = shared_budget.candidate_limit - remaining
@@ -787,8 +797,8 @@ class ControlledRecallPlanner:
                 + ", ".join(sorted(unsupported))
             )
 
-    @staticmethod
     def _expand_seed(
+        self,
         substrate: EvidenceNeighborTemporalGraphPort,
         tenant: str,
         hits: list[RetrievalRouteHit],
@@ -797,11 +807,14 @@ class ControlledRecallPlanner:
         logical_memory_ref: str,
         expanded_seeds: set[str],
         candidate_limit: int,
+        context: RecallContext,
     ) -> int:
-        if seed_ref in expanded_seeds or candidate_limit <= 0:
+        if (seed_ref in expanded_seeds or candidate_limit <= 0
+                or not self.adapter.domain_eligible_identity(seed_ref, tenant, context)):
             return 0
         seed_fact = substrate.get_fact(seed_ref)
-        if seed_fact is None or seed_fact.is_event_invalid or seed_fact.is_transaction_expired:
+        if (seed_fact is None or seed_fact.is_event_invalid or seed_fact.is_transaction_expired
+                or not self.adapter.domain_eligible(seed_fact, context)):
             return 0
         expanded_seeds.add(seed_ref)
         added = 0
@@ -809,6 +822,8 @@ class ControlledRecallPlanner:
             seed_ref,
             group_ids=[tenant],
         ):
+            if not self.adapter.domain_eligible(fact, context):
+                continue
             if added >= candidate_limit:
                 break
             hits.append(
