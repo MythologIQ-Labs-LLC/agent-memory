@@ -109,6 +109,31 @@ class MultiRouteRecallTests(unittest.TestCase):
             {EXACT_IDENTITY_ROUTE},
         )
 
+    def test_selection_trace_preserves_admission_refusal_and_route_attribution(self) -> None:
+        deploy = self._retain(MEMORY_DEPLOY, "deploy window is Thursday")
+        backup = self._retain(
+            MEMORY_BACKUP, "database backups run nightly", project_ref="project-beta"
+        )
+        result = self.runtime.multi_route_recall(
+            "deploy window",
+            _context(),
+            logical_memory_refs=(MEMORY_BACKUP,),
+        )
+        trace = result.selection_trace()
+        by_ref = {entry["candidate_ref"]: entry for entry in trace}
+        self.assertEqual(len(by_ref), len(result.candidates))
+        self.assertTrue(by_ref[deploy.fact_uuid]["admitted"])
+        self.assertIn(LEXICAL_ROUTE, by_ref[deploy.fact_uuid]["route_ids"])
+        self.assertIsInstance(by_ref[deploy.fact_uuid]["rank_position"], int)
+        self.assertFalse(by_ref[backup.fact_uuid]["admitted"])
+        self.assertEqual(
+            by_ref[backup.fact_uuid]["refusal"], "required_isolation_domain_missing"
+        )
+        self.assertIsNone(by_ref[backup.fact_uuid]["rank_position"])
+        self.assertIn(EXACT_IDENTITY_ROUTE, by_ref[backup.fact_uuid]["route_ids"])
+        self.assertEqual(trace, result.selection_trace())  # pure inspection
+        self.assertNotIn(backup.fact_uuid, result.ranked_admitted)
+
     def test_exact_identity_recalls_current_fact_when_lexical_query_misses(self) -> None:
         backup = self._retain(MEMORY_BACKUP, "database backups run nightly")
 
