@@ -91,6 +91,8 @@ def _visible(recall: Mapping[str, Any], budget: int) -> frozenset[str]:
         raise ValueError("return budget or governed admission violation")
     if any(not isinstance(admissions.get(ref), Mapping) for ref in returned):
         raise ValueError("returned item missing public admission receipt")
+    if any(admissions[ref].get("outcome") != "admit" for ref in returned):
+        raise ValueError("returned item lacks an admit decision")
     return frozenset(returned)
 
 

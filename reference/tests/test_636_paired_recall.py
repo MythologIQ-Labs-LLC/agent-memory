@@ -16,7 +16,7 @@ def recall(*refs):
     return {
         "returned": list(refs),
         "admitted": list(refs),
-        "admissions": {ref: {"route_provenance": [{"route_id": "lexical"}]} for ref in refs},
+        "admissions": {ref: {"outcome": "admit", "route_provenance": [{"route_id": "lexical"}]} for ref in refs},
         "candidates": list(refs) + ["refused_private"],
     }
 
@@ -29,6 +29,13 @@ class Trap(dict):
 
 
 class PairedPublicRecallTests(unittest.TestCase):
+    def test_nonadmitting_receipt_cannot_be_scored_as_public_evidence(self):
+        for outcome in ("block", None, True):
+            doc = recall("needed")
+            doc["admissions"]["needed"]["outcome"] = outcome
+            with self.subTest(outcome=outcome), self.assertRaisesRegex(ValueError, "admit"):
+                self.compare(doc, recall())
+
     def compare(self, a, b, needed=("needed",), forbidden=("noise",), **kwargs):
         return compare_public_profiles(a, b,
             original_run=kwargs.get("left", run()),

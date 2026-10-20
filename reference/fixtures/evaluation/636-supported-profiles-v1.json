@@ -1,0 +1,30 @@
+{
+  "id": "636-supported-semantic-toggle-development-v1",
+  "evidence_class": "author_visible_development_diagnostic_not_independent_qualification",
+  "hypothesis": "Adding the existing optional semantic route may recover paraphrased evidence, or add burden without changing useful returned evidence; either outcome is retained.",
+  "budget_k": 3,
+  "repeats": 3,
+  "order_seed": 636,
+  "context": {"tenant": "tenant:636-eval", "actor_id": "agent:636-eval", "scope": "project:636-eval", "purpose": "composition diagnostic"},
+  "facts": [
+    {"ref": "memory:01", "text": "The automobile is parked inside the garage."},
+    {"ref": "memory:02", "text": "The deployment window is Thursday."},
+    {"ref": "memory:03", "text": "Database backups run nightly."},
+    {"ref": "memory:04", "text": "Mara maintains the repository."},
+    {"ref": "memory:05", "text": "The residence is warmed by a geothermal heat pump."},
+    {"ref": "memory:06", "text": "The telescope has an aperture of eighty millimeters."},
+    {"ref": "memory:07", "text": "The emergency contact is Lena."}
+  ],
+  "cases": [
+    {"ref": "case:01", "query": "deployment window", "required": ["memory:02"], "forbidden": []},
+    {"ref": "case:02", "query": "Where did we leave the car?", "required": ["memory:01"], "forbidden": []},
+    {"ref": "case:03", "query": "Who looks after the source code?", "required": ["memory:04"], "forbidden": []},
+    {"ref": "case:04", "query": "How is the house heated?", "required": ["memory:05"], "forbidden": []},
+    {"ref": "case:05", "query": "database backups", "required": ["memory:03"], "forbidden": []},
+    {"ref": "case:06", "query": "optical instrument opening diameter", "logical_memory_refs": ["memory:06"], "required": ["memory:06"], "forbidden": []},
+    {"ref": "case:07", "query": "What is the passport number?", "required": [], "forbidden": [], "no_safe_answer": true},
+    {"ref": "case:08", "query": "deployment window", "required": ["memory:02"], "forbidden": ["memory:03"], "logical_memory_refs": ["memory:03"]}
+  ],
+  "regression_gate": "Any previously returned required evidence lost, new explicitly forbidden evidence, or any scope/deletion/restart failure vetoes improvement. Unlabelled IDs are not false positives; empty context is not downstream abstention.",
+  "unsupported": ["lexical-only or graph-only public route switches", "independent downstream strict task/QA scorer", "verified natural entity relationship inference", "historical as-of scoring in this small diagnostic"]
+}

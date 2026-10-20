@@ -71,6 +71,8 @@ def attribute_returned_routes(
         receipt = receipts.get(ref)
         if not isinstance(receipt, Mapping):
             raise ValueError("returned fact lacks admission receipt")
+        if receipt.get("outcome") != "admit":
+            raise ValueError("returned fact lacks an admit decision")
         hits = receipt.get("route_provenance")
         if not isinstance(hits, (tuple, list)):
             raise ValueError("returned fact lacks route provenance list")

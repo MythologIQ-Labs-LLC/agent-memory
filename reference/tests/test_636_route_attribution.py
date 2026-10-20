@@ -20,17 +20,24 @@ def document():
         "admitted": ["identity", "graph", "overlap", "distractor", "budget_private"],
         "candidates": ["identity", "graph", "overlap", "distractor", "budget_private", "refused_private"],
         "admissions": Trap({
-            "identity": {"route_provenance": [{"route_id": "exact_identity"}]},
-            "graph": {"route_provenance": [{"route_id": "typed_graph"}]},
-            "overlap": {"route_provenance": [{"route_id": "lexical"}, {"route_id": "vector"}]},
-            "distractor": {"route_provenance": [{"route_id": "lexical"}]},
-            "budget_private": {"route_provenance": [{"route_id": "typed_graph"}]},
+            "identity": {"outcome": "admit", "route_provenance": [{"route_id": "exact_identity"}]},
+            "graph": {"outcome": "admit", "route_provenance": [{"route_id": "typed_graph"}]},
+            "overlap": {"outcome": "admit", "route_provenance": [{"route_id": "lexical"}, {"route_id": "vector"}]},
+            "distractor": {"outcome": "admit", "route_provenance": [{"route_id": "lexical"}]},
+            "budget_private": {"outcome": "admit", "route_provenance": [{"route_id": "typed_graph"}]},
             "refused_private": {"refusal": "out_of_scope", "route_provenance": []},
         }),
     }
 
 
 class RouteAttributionTests(unittest.TestCase):
+    def test_nonadmitting_receipt_is_rejected_before_attribution(self):
+        for outcome in ("block", None, True):
+            doc = document()
+            doc["admissions"]["identity"]["outcome"] = outcome
+            with self.subTest(outcome=outcome), self.assertRaisesRegex(ValueError, "admit"):
+                self.score(doc)
+
     def score(self, doc=None, *, required=None, forbidden=None):
         return attribute_returned_routes(
             doc if doc is not None else document(),
