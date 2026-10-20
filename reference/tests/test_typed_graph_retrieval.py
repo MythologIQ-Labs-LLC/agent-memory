@@ -215,6 +215,25 @@ class TypedGraphSubstrateTests(unittest.TestCase):
         )
         self.assertEqual(hits_after_delete, [])
 
+    def test_optional_eligibility_blocks_disallowed_intermediate_hop(self) -> None:
+        graph = InMemoryTemporalGraph()
+        for ref in ("seed", "foreign", "allowed"):
+            graph.write_fact(_fact(ref))
+        graph.write_relation(_relation("r1", "seed", "foreign"))
+        graph.write_relation(_relation("r2", "foreign", "allowed"))
+        retriever = NativeTypedGraphCandidateRetriever(GraphTraversalSpec(max_depth=2))
+        unfiltered = retriever.search(
+            graph, ("seed",), group_id=TENANT, candidate_limit=8,
+        )
+        self.assertIn("allowed", {hit.candidate_ref for hit in unfiltered})
+        filtered = retriever.search(
+            graph, ("seed",), group_id=TENANT, candidate_limit=8,
+            eligible=lambda fact: fact.uuid != "foreign",
+        )
+        self.assertNotIn("foreign", {hit.candidate_ref for hit in filtered})
+        self.assertNotIn("allowed", {hit.candidate_ref for hit in filtered})
+        self.assertEqual(filtered, [])
+
     def test_sqlite_reopen_matches_in_memory_traversal_and_preserves_relation_residue(self) -> None:
         memory = InMemoryTemporalGraph()
         for ref in ("a", "b", "c"):
