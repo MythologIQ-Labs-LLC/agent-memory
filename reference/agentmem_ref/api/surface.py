@@ -1039,6 +1039,7 @@ class AgentMemory:
         max_chars_per_item: int = context_package.DEFAULT_MAX_CHARS_PER_ITEM,
         max_total_chars: int = context_package.DEFAULT_MAX_TOTAL_CHARS,
         max_tokens: int | None = None,
+        consumer_profile: str = "all_returned",
         **recall_kwargs,
     ) -> dict:
         """Recall, then resolve the content of exactly the returned facts (#691, candidate
@@ -1050,6 +1051,10 @@ class AgentMemory:
         failures resolve to ``unresolved`` without content. ``max_items`` is the recall's return
         budget; the character and token limits bound the content (see
         ``api.context_package``). Memory text is untrusted evidence and grants nothing.
+
+        ``consumer_profile="lexical_content"`` opts into candidate package 0.2.0,
+        which omits lexical-only matches lacking content-word overlap. The default
+        ``all_returned`` keeps package 0.1.0. Full recall and admission are unchanged.
 
         Content is delivered only under the handle's own authority: the scope and identity
         overrides ``recall`` accepts from a privileged host (``target_domain_refs``,
@@ -1065,6 +1070,7 @@ class AgentMemory:
         if not isinstance(max_items, int) or isinstance(max_items, bool) or max_items < 1:
             raise ValueError("max_items must be a positive integer")
         context_package.validate_budgets(max_chars_per_item, max_total_chars, max_tokens)
+        context_package.validate_consumer_profile(consumer_profile)
         document, context = self._recall_document_and_context(query, public=True, budget=max_items, **recall_kwargs)
         adapter = self.runtime.adapter
         substrate = adapter.checkpoint_substrate()
@@ -1102,7 +1108,8 @@ class AgentMemory:
 
         package = context_package.build_package(
             document, resolve, max_chars_per_item=max_chars_per_item,
-            max_total_chars=max_total_chars, max_tokens=max_tokens)
+            max_total_chars=max_total_chars, max_tokens=max_tokens,
+            query=query, consumer_profile=consumer_profile)
         receipts.validate(context_package.PACKAGE_SCHEMA, package)
         return package
 

@@ -223,6 +223,36 @@ Because new refusal tokens reach callers (`target_unavailable` on `remember`; `f
   - whether `memory_ref` and the default `source_ref` (`actor:<id>`) should be shown to other actors in the same project;
   - a separate audit event for content reads (today only `memory.recall` is recorded).
 
+### Opt-in lexical consumer selection (#819/#691 candidate package `0.2.0`)
+
+`recall_context(..., consumer_profile="lexical_content")` explicitly opts into a separately
+versioned **experimental** content package. The default `all_returned` still produces package
+`0.1.0` with the same fields and behavior. The `1.8.0` candidate recall contract, full governed
+candidate/admission/ranking results, original `returned` prefix and original `return_policy`
+are unchanged. No profile is persisted or inferred from a query.
+
+The lexical profile works only on the public recall's already returned facts, under the same
+serialization lock and re-admission/withholding checks. A resolved fact is omitted from delivered
+content when its full text has no word in common with the query after excluding the policy's
+closed-class English grammatical words. Negation and content verbs remain evidence. A fact
+with a nonlexical retrieval route (including caller-requested exact identity) is preserved;
+lexical selection does not overrule that route's relevance evidence. No similarity cutoff,
+model, task fixture, hidden label, authority inference or lifecycle change is involved.
+
+The package records `selection` with the consumer profile, policy identity/version, basis and
+`omitted_refs`/`omitted_count`. Those identifiers were already public in `recall.returned`;
+foreign/withheld identifiers never enter selection accounting. Omitted text and provenance
+are absent and consume no content budget. `empty` means no deliverable items, **not** proof
+that no relevant fact exists. A failed read remains `partial_unresolved`, not safe abstention.
+The item budget applies before this profile, so it does not refill from lower-ranked facts.
+
+This English lexical profile can lose paraphrases, implicit relevance and grammatical-word
+proper names when no other route found them. It cannot identify unrelated content that shares
+a topical word, classify untrusted instructions as false, infer supersession, or supply missing
+structured scope metadata. It is an optional narrow capability, not a qualified default
+precision fix or a replacement for the #819 independent-holdout/LongMemEval gates. Package
+`0.2.0` and its selection policy remain candidates requiring #691/#819 acceptance.
+
 ## Action authority and execution evidence (contract `1.2.0`, ADR-038)
 
 An action is authorized by an ordinary PAMA decision on a proposal whose operation is `action_execution` (`docs/33` gives it four cells: low `allow_with_ledger`, medium and high `require_review`, critical `require_external_verification`). `memory/action_authority.py` hosts the path with the runtime adapter as an injected collaborator; the adapter learns nothing about actions.

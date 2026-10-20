@@ -17,7 +17,10 @@
   ],
   "properties": {
     "package_version": {
-      "const": "agent-memory-context/0.1.0"
+      "enum": [
+        "agent-memory-context/0.1.0",
+        "agent-memory-context/0.2.0"
+      ]
     },
     "status": {
       "enum": [
@@ -291,6 +294,48 @@
     },
     "authority_effect": {
       "const": "none"
+    },
+    "selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "consumer_profile",
+        "policy_id",
+        "policy_version",
+        "basis",
+        "omitted_refs",
+        "omitted_count",
+        "authority_effect"
+      ],
+      "properties": {
+        "consumer_profile": {
+          "const": "lexical_content"
+        },
+        "policy_id": {
+          "const": "lexical-content-context-selection"
+        },
+        "policy_version": {
+          "const": "0.1.0"
+        },
+        "basis": {
+          "const": "post_admission_content_overlap_or_nonlexical_route"
+        },
+        "omitted_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "omitted_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "authority_effect": {
+          "const": "none"
+        }
+      }
     }
   },
   "allOf": [
@@ -329,6 +374,27 @@
               }
             }
           }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "package_version": {
+            "const": "agent-memory-context/0.2.0"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "selection"
+        ]
+      },
+      "else": {
+        "not": {
+          "required": [
+            "selection"
+          ]
         }
       }
     }
