@@ -8,9 +8,9 @@
 
 <p><sub><strong>Q Agent Memory</strong></sub></p>
 
-### Governed persistent cognition for autonomous and agentic systems
+### One governed memory system. Multiple purpose-fit representations.
 
-A canonical memory architecture and doctrine corpus, a reproducible evaluation laboratory, and a usable governed memory runtime that the other two keep honest.
+Agent Memory's goal is to combine structured facts, temporal history, graph relationships, lexical/vector retrieval, episodic experience, and portable documents into **one coherent memory**, selecting the representation that helps each task instead of assuming a single database or RAG technique is universally best. The repository pairs that architectural thesis with executable runtime software and independent evaluation.
 
 [![Validate Doctrine Evidence](https://github.com/MythologIQ-Labs-LLC/agent-memory/actions/workflows/validate-doctrine-evidence.yml/badge.svg)](https://github.com/MythologIQ-Labs-LLC/agent-memory/actions/workflows/validate-doctrine-evidence.yml)
 ![Architecture](https://img.shields.io/badge/Architecture-Governed%20Cognitive%20Framework-334155)
@@ -29,20 +29,38 @@ A canonical memory architecture and doctrine corpus, a reproducible evaluation l
 >
 > The qualified runtime posture is deliberately bounded to the single-host SQLite profile. Distributed or multi-host persistence is not established, and no substrate other than `SQLiteTemporalGraph` is production-qualified. RC composition remains governed by issue [#410](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/410); the current work queue is [`docs/BACKLOG.md`](docs/BACKLOG.md); the canonical benchmark view is [`reports/benchmarks/dashboard/current.md`](reports/benchmarks/dashboard/current.md).
 
-## What Agent Memory is
+## Architecture objective: one memory, many forms
+
+**This is the product direction, not a list of shipped capabilities.** Memory can be represented differently because its uses are different: exact facts need durable identity, events need historical validity, relationships benefit from graph traversal, semantic questions may benefit from vectors, and some artifacts are best kept inspectable as documents. These representations should cooperate through shared identity, provenance, scope, lifecycle, and governed recall, not become unrelated copies or independent truth authorities.
+
+| Representation in the intended architecture | Purpose to qualify |
+|---|---|
+| Structured records | Exact identity and canonical state |
+| Lexical and vector views | Complementary candidate discovery |
+| Relations and graph views | Traceable relationship traversal |
+| Episodes and temporal views | Historical applicability and currentness |
+| Documents and portable files | Inspectable, portable knowledge |
+
+All forms share governed identity, provenance and lifecycle boundaries; candidate discovery still precedes canonical admission and context assembly.
+
+The system should use a representation **only when it demonstrates value** for a task, with correction, deletion, isolation and stale-projection controls across every materialized view. One canonical substrate may back multiple useful retrieval forms; conversely, additional specialized backends may be justified later. **SQLite is today's qualified single-host canonical implementation, not a doctrine requiring all future memory to have one physical shape.** The [original product objective](docs/CONCEPT.md), [composition qualification program #636](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/636), and [substrate inventory](docs/43-substrate-inventory-and-maturity.md) respectively own intent, experiments, and maturity. Comparative superiority is a hypothesis to measure, not an existing claim.
+
+## What Agent Memory is today
 
 **Agent Memory includes working software, not just a memory-design proposal.** The installable `agent-memory-reference` Python package exposes an [`AgentMemory` facade](#runtime) with persistent single-host SQLite memory, governed writes and recall, scope-aware evidence admission, history and posture inspection. The [runtime example below](#runtime) is executable from a checkout. This is a usable reference/conformance implementation **in active release-candidate qualification**, not a drop-in production service or certified security boundary.
 
 | Present in the repository | Not shipped or not qualified |
 |---|---|
 | Python runtime, `SQLiteTemporalGraph` persistence, governed lifecycle and public facade | Distributed/multi-host persistence, production 1.0 security boundary, or qualified Postgres substrate |
-| Lexical and optional semantic candidate retrieval, with governed admission and a bounded returned context | Proven speed or quality gains on somebody else's existing agent or memory database |
+| Lexical and optional semantic candidate retrieval, temporal fact/event semantics, bounded shared-evidence-neighbor recall, with one governed admission and a return budget | Qualified cross-store context composition, task-selective representation routing, or proven quality gains on someone else's workload |
+| Typed relation persistence/traversal modules and an experimental Graphiti adapter | Complete graph reasoning/GraphRAG integrated into the qualified default public runtime |
+| Canonical-state reconstruction and derived-projection controls | Qualified PostgreSQL or Markdown-backed memory profiles and distributed lifecycle closure |
 | System-neutral evaluation adapters, reproducible benchmark machinery, evidence and dashboard | A universal benchmark score or same-harness comparisons with every competitor |
 | Canonical doctrine, accepted/proposed ADRs and explicit architecture plans | Complete heterogeneous GraphRAG/Markdown/distributed composition as a qualified runtime |
 
-**Evaluating adoption?** Compare the [actual runtime](#runtime) with a competently *indexed* local-memory baseline using your own representative workload. Measure correct evidence, stale-memory behavior, exclusions/abstention, context cost, latency and integration burden. Our local benchmark measurements do **not** establish performance on your data. The [Jarvis-scale synthetic evaluation](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/825) has not yet run the Agent Memory arm.
+**Evaluating adoption?** Compare the [actual runtime](#runtime) with a competently *indexed* local-memory baseline using your own representative workload. Measure correct evidence, stale-memory behavior, exclusions/abstention, context cost, latency and integration burden. Our local benchmark measurements do **not** establish performance on your data. The [Jarvis-scale synthetic evaluation](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/825) **has run a real Agent Memory arm** against an indexed FTS5 control on fabricated records. Both remain weak on task correctness and abstention. This is a small development cohort with unequal persistence/governance costs, **not** accepted evidence of competitive adoption readiness.
 
-**Known measured quality limitation:** [#819](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/819) tracks excessive irrelevant recall on an external retrieval-only evaluation. High recall alone does not establish useful, selective task context. Consult the [current evidence dashboard](reports/benchmarks/dashboard/current.md) and the exact issue evidence before adopting or claiming comparative performance; this README does not own benchmark scores or qualification decisions.
+**Known measured quality limitation:** [#819](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/819) tracks excessive irrelevant recall on an external retrieval-only evaluation. High recall alone does not establish useful, selective task context. An opt-in [#691 selective-context experiment](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/691) improved known development cases but **lost required evidence in full LongMemEval and was rejected for integration**. [#775](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/775) currently explores lexical versus claimed subject/relationship evidence **in evaluation-only code**, not the shipped runtime. Consult the [current evidence dashboard](reports/benchmarks/dashboard/current.md) and the exact issue evidence before adopting or claiming comparative performance; this README does not own benchmark scores or qualification decisions.
 
 Long-term, [#636](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/636) proposes governed composition of structured, episodic, temporal, procedural, vector and graph-derived memory. That entire composition **is not shipped**. The [substrate inventory](docs/43-substrate-inventory-and-maturity.md) owns current maturity claims; only the single-host SQLite profile is qualified.
 

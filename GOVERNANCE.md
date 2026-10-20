@@ -154,6 +154,8 @@ Native authorship establishes provenance and repository ownership of a decision.
 
 A validator passing is evidence about the validator's declared contract. It is not automatic proof of production behavior.
 
+**Independent-discovery and external-research rule:** Prior art and popular open-source methods are hypotheses to test, not privileged implementation defaults. For material retrieval changes, preserve independently developed alternatives and falsifiers for both conventional and novel approaches. A credible evaluation challenges false lexical matches, overlooked paraphrases or relationships, misleading structured claims, and incomplete metadata. Predeclare success and regression criteria; keep development examples, public regression corpora, and independently sealed unseen evaluations separate. An isolated counterexample test or known-benchmark improvement cannot by itself qualify a runtime selector. [#819](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/819) owns measured precision acceptance; [#775](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/775) owns the evaluation-only relevance challenge.
+
 ## Benchmark and evaluation governance
 
 Evaluation is governed by the same evidence discipline as the rest of the repository.
@@ -169,7 +171,7 @@ benchmark improvement != production readiness
 implementation evidence != doctrine acceptance
 ```
 
-An ADR proposal may be merged as **Proposed** so that it can be reviewed, tested, and challenged in-tree. Merging a proposal does not accept it. Acceptance (`Proposed -> Accepted`) is a separate maintainer ruling on the recorded evidence, and it is never implied by an implementation landing or a benchmark improving. For example, ADR-039 is Proposed while its reference profile is implemented behind policy 3.0.0.
+An ADR proposal may be merged as **Proposed** so that it can be reviewed, tested, and challenged in-tree. Merging a proposal does not accept it. Acceptance (`Proposed -> Accepted`) is a separate maintainer ruling on the recorded evidence, and it is never implied by an implementation landing or a benchmark improving. Read the [live ADR status index](docs/adr/README.md) and code-declared policy identity for the current statuses and versions; this governance policy does not keep another version snapshot.
 
 Benchmark adapters and reports must preserve exact revision/input/configuration identity where comparability depends on them.
 

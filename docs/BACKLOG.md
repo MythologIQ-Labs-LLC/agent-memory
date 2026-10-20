@@ -62,6 +62,8 @@ North Star comparison coverage:
 
 ## Phase B - complete runtime architecture (follows #694)
 
+**Current precision priority (2026-10-20):** [#819](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/819) governs measured task-context selectivity and false-positive recall. [#691](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/691) owns the consumer context package; its initial lexical-content selector is **CHANGES REQUIRED** after a full LongMemEval replay lost required evidence, despite known-case development gains. [#775](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/775) owns evaluation-only adversarial subject/relationship challenges and has not changed runtime recall. [#825](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/825) has executed a real indexed-vs-Agent-Memory synthetic development comparison, but acceptance/adoption qualification remains outstanding. No score, ontology, approved ADR, security, durability, or Runtime Baseline gate is weakened by this prioritization.
+
 The #694 formal baseline is frozen as the pre-major-runtime baseline (`docs/69`, Entry #86). Evidence-informed order, with reasons:
 
 Execution sequence (owner direction 2026-10-07, roadmap events seq 55-60):
