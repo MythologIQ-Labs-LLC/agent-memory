@@ -15,6 +15,7 @@ from typing import Any, Mapping
 class RunIdentity:
     profile_id: str
     revision: str
+    configuration_digest: str
     corpus_digest: str
     questions_digest: str
     labels_digest: str
@@ -26,7 +27,7 @@ class RunIdentity:
 
     def __post_init__(self) -> None:
         if any(not isinstance(x, str) or not x.strip() for x in (
-            self.profile_id, self.revision, self.corpus_digest,
+            self.profile_id, self.revision, self.configuration_digest, self.corpus_digest,
             self.questions_digest, self.labels_digest, self.harness_digest,
             self.scope_digest, self.case_ref, self.case_input_digest,
         )) or type(self.budget_k) is not int or self.budget_k < 1:
