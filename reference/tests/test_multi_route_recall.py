@@ -137,7 +137,13 @@ class MultiRouteRecallTests(unittest.TestCase):
                       {hit["route_id"] for hit in by_ref[deploy.fact_uuid]["route_scores"]})
         self.assertIn(EXACT_IDENTITY_ROUTE,
                       {hit["route_id"] for hit in by_ref[backup.fact_uuid]["route_scores"]})
+        admitted_before = tuple(result.admitted)
+        ranked_before = tuple(result.ranked_admitted)
+        decisions_before = {ref: dict(decision) for ref, decision in result.decisions.items()}
         self.assertEqual(trace, result.selection_trace())  # pure inspection
+        self.assertEqual(tuple(result.admitted), admitted_before)
+        self.assertEqual(tuple(result.ranked_admitted), ranked_before)
+        self.assertEqual(result.decisions, decisions_before)
         self.assertNotIn(backup.fact_uuid, result.ranked_admitted)
 
     def test_exact_identity_recalls_current_fact_when_lexical_query_misses(self) -> None:
