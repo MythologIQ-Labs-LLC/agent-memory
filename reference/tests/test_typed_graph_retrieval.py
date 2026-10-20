@@ -234,6 +234,23 @@ class TypedGraphSubstrateTests(unittest.TestCase):
         self.assertNotIn("allowed", {hit.candidate_ref for hit in filtered})
         self.assertEqual(filtered, [])
 
+    def test_ineligible_high_weight_neighbor_does_not_exhaust_fanout(self) -> None:
+        graph = InMemoryTemporalGraph()
+        for ref in ("seed", "foreign", "allowed"):
+            graph.write_fact(_fact(ref))
+        graph.write_relation(_relation("r-hidden", "seed", "foreign", weight=1.0))
+        graph.write_relation(_relation("r-visible", "seed", "allowed", weight=0.8))
+        retriever = NativeTypedGraphCandidateRetriever(
+            GraphTraversalSpec(max_depth=1, max_fanout=1),
+        )
+        hits = retriever.search(
+            graph, ("seed",), group_id=TENANT, candidate_limit=2,
+            eligible=lambda fact: fact.uuid != "foreign",
+            eligible_identity=lambda ref, group: group == TENANT and ref != "foreign",
+        )
+        self.assertEqual([hit.candidate_ref for hit in hits], ["allowed"])
+        self.assertEqual(hits[0].path_refs, ("seed", "allowed"))
+
     def test_sqlite_reopen_matches_in_memory_traversal_and_preserves_relation_residue(self) -> None:
         memory = InMemoryTemporalGraph()
         for ref in ("a", "b", "c"):
