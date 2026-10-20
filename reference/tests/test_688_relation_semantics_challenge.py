@@ -53,7 +53,7 @@ class RelationSemanticChallengeTests(unittest.TestCase):
 
     def test_inactive_and_wrong_domain_rules_do_not_expand(self):
         inactive = RelationRuleClaim("r", "inverse", "manages", "managed_by", "project:a", "src", active=False)
-        wrong = RelationRuleClaim("r", "inverse", "manages", "managed_by", "project:b", "src")
+        wrong = RelationRuleClaim("r:other", "inverse", "manages", "managed_by", "project:b", "src")
         self.assertEqual(self.run_case(rules=(inactive, wrong), ops=frozenset({"inverse"})).hints, ())
 
     def test_disjoint_and_subclass_rules_are_explicitly_unsupported(self):
@@ -77,6 +77,18 @@ class RelationSemanticChallengeTests(unittest.TestCase):
         self.assertEqual(x, self.run_case(ops=frozenset({"inverse"})))
         with self.assertRaises(FrozenInstanceError):
             x.authority_effect = "grant"
+
+    def test_unbounded_and_duplicate_rule_claims_are_rejected(self):
+        with self.assertRaisesRegex(ValueError, "budget"):
+            inspect_relation_claims(self.q, (self.edge,), (self.inverse, self.inverse),
+                public_returned_refs=frozenset({"fact:1"}), max_rule_claims=1)
+        with self.assertRaisesRegex(ValueError, "duplicate rule"):
+            self.run_case(rules=(self.inverse, self.inverse), ops=frozenset({"inverse"}))
+
+    def test_empty_provenance_rule_is_rejected(self):
+        bad = RelationRuleClaim("rule:1", "inverse", "manages", "managed_by", "project:a", "")
+        with self.assertRaisesRegex(ValueError, "provenance"):
+            self.run_case(rules=(bad,), ops=frozenset({"inverse"}))
 
     def test_invalid_operation_and_bad_budget_refused(self):
         with self.assertRaises(ValueError):
