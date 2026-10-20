@@ -843,7 +843,7 @@ class GovernedMemoryAdapter:
         own, cited = self._id_sequence(fact.uuid), self._id_sequence(ref)
         if own is None or cited is None:
             return "order_undecidable"
-        if cited > own:
+        if cited >= own:  # minted after F, or F itself: never a prior dependency (#809 amendment 1)
             return "forward_reference"
         memory_domains, target_domains = set(scope_r["domain_refs"]), set(scope_f["domain_refs"])
         matching = memory_domains & target_domains
