@@ -305,6 +305,36 @@ class RecallControlTests(unittest.TestCase):
         self.assertEqual(result.candidates, [known.fact_uuid])
         self.assertEqual(result.recall.routes_executed, (EXACT_IDENTITY_ROUTE,))
 
+    def test_exact_budget_skips_foreign_ref_and_keeps_later_authorized_ref(self) -> None:
+        foreign = self._retain(
+            "memory:foreign-first", "foreign record",
+            evidence_refs=("session:foreign",), project_ref="project-beta",
+        )
+        allowed = self._retain(
+            "memory:authorized-second", "allowed record",
+            evidence_refs=("session:allowed",),
+        )
+        fixed = _FixedController(
+            RecallControlPlan(
+                controller_ref="test:eligible-budget",
+                controller_version="1",
+                route_budgets=(
+                    RecallRouteBudget(LEXICAL_ROUTE, 0),
+                    RecallRouteBudget(EXACT_IDENTITY_ROUTE, 1),
+                    RecallRouteBudget(SHARED_EVIDENCE_ROUTE, 0),
+                ),
+            )
+        )
+        result = ControlledRecallPlanner(
+            self.runtime.adapter, controller=fixed,
+        ).recall(
+            "no lexical path", _context(),
+            logical_memory_refs=("memory:foreign-first", "memory:authorized-second"),
+        )
+        self.assertEqual(result.candidates, [allowed.fact_uuid])
+        self.assertEqual(result.route_candidate_counts[EXACT_IDENTITY_ROUTE], 1)
+        self.assertNotIn(foreign.fact_uuid, result.route_hits)
+
     def test_unavailable_route_plan_fails_closed(self) -> None:
         fixed = _FixedController(
             RecallControlPlan(
