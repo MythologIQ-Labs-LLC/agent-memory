@@ -213,7 +213,7 @@ class DeterministicMultiRouteRecallPlanner:
         seed_pairs: list[tuple[str, str]] = []
         for logical_ref in dict.fromkeys(logical_memory_refs):
             current = self.adapter.current_fact_uuid(logical_ref)
-            if current is None:
+            if current is None or not self.adapter.domain_eligible_identity(current, tenant, context):
                 continue
             hits.append(
                 RetrievalRouteHit(
