@@ -167,3 +167,37 @@ store. The subclass now names its own store.
   - `NoFabrication` finds an `eligible` edge with `seq(r) == seq(F)`;
 - all seven controls pass;
 - the frozen-store modules (`test_809_legacy_upgrade*`, 12 tests) pass.
+
+## 9. Addendum after the independent pre-execution review of `89c51f12` (verdict YES)
+
+The review is recorded verbatim in `self-reference/pre-execution-review-89c51f12.md`. It
+reproduced the fixture byte for byte from v7 `16a248b1`, recomputed every expected edge, and
+reproduced the fail-first. It found nothing blocking. This addendum is committed and re-run as
+fail-first **before** the first execution on the changed runtime. No earlier expectation changes.
+
+- **F1 (should-fix): the residue audit.**
+  - `undeclared_residue(uuid)` lists every fact whose derivation refs name `uuid`, so a self-citing
+    legacy row is reported as its own undeclared residue.
+  - **Expected after the repair, on an upgraded store:** after `forget` of `self` and `mixed`, the
+    residue of each is `[]`, and still `[]` after a reopen. RED on `e88bced2`, which reports
+    `[self]` and `[mixed]`. Test: `ResidueAudit.test_after_the_upgrade_…`.
+  - **On a store that has not been upgraded,** the legacy fallback (`episode_uuids`) still reports
+    each self-citer as its own residue, on both runtimes. This is an **accepted residual** of the
+    fallback; the upgrade is the remedy. It is pinned as a control.
+- **F2 (should-fix): derived deletion before the upgrade.**
+  - Expected: forgetting `self` and `mixed` on a `legacy_pending` store commits, the self-edge
+    cycle terminates, the admitted set is `{fwd, next}`, and a reopen recovers to `legacy_pending`.
+  - GREEN on both runtimes; it is a control.
+- **F3 (note): wording.** Rule 2 comes after rule 1 and the `order_undecidable` branch. A
+  self-citer with no scope record, or with ids that do not parse, therefore stays
+  `scope_undecidable` or `order_undecidable` (kept bound and quarantined, the conservative side).
+  This cannot occur on SQLite v7 stores. Section 2's sentence "the other gates never see a
+  self-reference" refers to the scope and membership gates only.
+- **F4 (note): wording.** Section 5 described the new-write control as `bound: []`. The test is
+  stronger: the write cites `(a1, its own predicted id)` and must bind exactly `[a1]`.
+- **F5 (note).** The idempotence test now also asserts the admitted set after the reopen.
+- **F6 to F8 (notes), recorded without change:**
+  - F6: the recovery-digest check is implicit (a reopen fails on a mismatch);
+  - F7: self-edges are counted inside `forward_reference`, with no separate count, per the owner's
+    choice;
+  - F8: a pre-existing ResourceWarning.

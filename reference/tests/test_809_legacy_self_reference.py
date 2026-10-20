@@ -12,7 +12,8 @@ runtime (``16a248b1``) and is byte-frozen with its own manifest. The frozen
 Expected RED on the unmodified head ``e88bced2``:
 - ``Upgrade.test_self_references_are_forward_and_unbound_the_prior_dependency_stays``;
 - ``IdempotentAndDurable.test_a_second_run_rewrites_nothing_and_restart_reads_the_same``;
-- ``NoFabricationSelfReference``.
+- ``NoFabricationSelfReference``;
+- ``ResidueAudit.test_after_the_upgrade_a_self_citer_is_not_its_own_residue`` (addendum, section 9).
 
 Every other test is a control that is GREEN before and after the repair. A failure after the
 repair is a finding to investigate, never permission to weaken a line.
@@ -124,6 +125,40 @@ class DerivedDeletion(_SelfStore):
         self.assertEqual(self.interest(reopened), {self.ids["fwd"], self.ids["next"]})
 
 
+class DerivedDeletionBeforeUpgrade(_SelfStore):
+    def test_forgetting_self_citers_on_a_pending_store_terminates_and_recovers(self):  # control (addendum, review F2)
+        a = self.open("project:a")
+        self.assertTrue(a.forget("memory:self")["committed"])
+        self.assertTrue(a.forget("memory:mixed")["committed"])
+        self.assertEqual(self.interest(a), {self.ids["fwd"], self.ids["next"]})
+        a.close()
+        reopened = self.open("project:a")
+        self.assertEqual(reopened.legacy_upgrade_status()["status"], "legacy_pending")
+        self.assertEqual(self.interest(reopened), {self.ids["fwd"], self.ids["next"]})
+
+
+class ResidueAudit(_SelfStore):
+    """Addendum (review F1): the deletion residue audit lists every fact whose derivation refs name
+    the deleted fact. A self-citing legacy row names itself."""
+
+    def residue(self, handle: AgentMemory) -> dict:
+        adapter = handle.runtime.adapter
+        return {name: adapter.undeclared_residue(self.ids[name]) for name in ("self", "mixed")}
+
+    def test_on_a_pending_store_a_self_citer_is_its_own_residue(self):  # control: accepted legacy-fallback residual
+        a = self.open("project:a")
+        a.forget("memory:self"); a.forget("memory:mixed")
+        self.assertEqual(self.residue(a), {"self": [self.ids["self"]], "mixed": [self.ids["mixed"]]})
+
+    def test_after_the_upgrade_a_self_citer_is_not_its_own_residue(self):  # FAIL-FIRST (addendum)
+        a = self.open("project:a")
+        a.upgrade_canonical_derivation()
+        a.forget("memory:self"); a.forget("memory:mixed")
+        self.assertEqual(self.residue(a), {"self": [], "mixed": []})
+        a.close()
+        self.assertEqual(self.residue(self.open("project:a")), {"self": [], "mixed": []})
+
+
 class IdempotentAndDurable(_SelfStore):
     def test_a_second_run_rewrites_nothing_and_restart_reads_the_same(self):  # FAIL-FIRST
         a = self.open("project:a")
@@ -137,6 +172,7 @@ class IdempotentAndDurable(_SelfStore):
         reopened = self.open("project:a")
         self.assertEqual(reopened.legacy_upgrade_status()["status"], "legacy_qualified")
         self.assertEqual(self.record(reopened, self.ids["mixed"])["bound"], [self.ids["a1"]])
+        self.assertEqual(self.interest(reopened), self.expect_admitted_a())  # addendum (review F5)
         reopened.close()
         restarted = self.restart_status("project:a")
         self.assertEqual(restarted["status"]["status"], "legacy_qualified")
