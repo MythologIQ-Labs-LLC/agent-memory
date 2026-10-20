@@ -26,7 +26,8 @@ investigate, never permission to weaken a line.
 
 Classification vocabulary (one class per cited reference of a legacy fact):
 ``unknown_reference`` (names no fact this store governed), ``forward_reference`` (names a fact
-minted after the citing fact: never binds, the owner's non-retroactive ruling),
+minted after the citing fact, or the citing fact itself (amendment 1,
+``AMENDMENT-1-self-reference.PREREGISTERED.md``): never binds, the owner's non-retroactive ruling),
 ``ineligible_scope`` (the citing writer's reconstructed context fails an isolation, required-
 domain, project or task gate against the cited fact's scope record: provably unreadable),
 ``eligible`` (passes every gate and the shared-membership gate does not apply),
@@ -121,13 +122,14 @@ class _Store(unittest.TestCase):
     """A fresh copy of one frozen v7-origin store per test; handles opened on demand."""
 
     store = "cross-scope"
+    fixtures = FIXTURES  # amendment 1: the self-reference store has its own fixture directory
 
     def setUp(self):
         tmp = tempfile.TemporaryDirectory()
         self.addCleanup(tmp.cleanup)
         self.root = str(Path(tmp.name) / "store")
-        shutil.copytree(FIXTURES / self.store, self.root)
-        self.ids = json.loads((FIXTURES / self.store / "ids.json").read_text(encoding="utf-8"))
+        shutil.copytree(self.fixtures / self.store, self.root)
+        self.ids = json.loads((self.fixtures / self.store / "ids.json").read_text(encoding="utf-8"))
         self.handles: list[AgentMemory] = []
         self.addCleanup(lambda: [h.close() for h in self.handles if not h.closed])
 
@@ -411,8 +413,8 @@ class NoFabrication(_Store):
                     self.assertTrue(ref not in scopes or scope_f is None, (fact.uuid, ref))
                     continue
                 self.assertIsNotNone(scope_f); self.assertIn(ref, scopes)
-                if cls == "forward_reference":
-                    self.assertTrue(_seq(ref) is not None and _seq(fact.uuid) is not None and _seq(ref) > _seq(fact.uuid), (fact.uuid, ref))
+                if cls == "forward_reference":  # amendment 1: minted after the citing fact, or the citing fact itself
+                    self.assertTrue(_seq(ref) is not None and _seq(fact.uuid) is not None and _seq(ref) >= _seq(fact.uuid), (fact.uuid, ref))
                     continue
                 if cls == "order_undecidable":
                     self.assertTrue(_seq(ref) is None or _seq(fact.uuid) is None, (fact.uuid, ref))
