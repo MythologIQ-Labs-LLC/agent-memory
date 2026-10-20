@@ -170,6 +170,7 @@ class NativeTypedGraphCandidateRetriever:
         group_id: str,
         candidate_limit: int,
         eligible: Callable[[Fact], bool] | None = None,
+        eligible_identity: Callable[[str, str], bool] | None = None,
     ) -> list[GraphCandidateHit]:
         if candidate_limit < 0:
             raise ValueError("graph candidate_limit must be non-negative")
@@ -180,11 +181,14 @@ class NativeTypedGraphCandidateRetriever:
 
         best_by_candidate: dict[str, GraphCandidateHit] = {}
         for seed_ref in tuple(dict.fromkeys(seed_refs)):
+            if eligible_identity is not None and not eligible_identity(seed_ref, group_id):
+                continue
             seed_fact = substrate.get_fact(seed_ref)
             if seed_fact is None or (eligible is not None and not eligible(seed_fact)):
                 continue
             for hit in self._traverse_seed(
-                substrate, seed_ref, group_id=group_id, eligible=eligible,
+                substrate, seed_ref, group_id=group_id,
+                eligible=eligible, eligible_identity=eligible_identity,
             ):
                 existing = best_by_candidate.get(hit.candidate_ref)
                 if existing is None or self._hit_key(hit) < self._hit_key(existing):
@@ -200,6 +204,7 @@ class NativeTypedGraphCandidateRetriever:
         *,
         group_id: str,
         eligible: Callable[[Fact], bool] | None = None,
+        eligible_identity: Callable[[str, str], bool] | None = None,
     ) -> list[GraphCandidateHit]:
         queue = deque(
             [
@@ -238,16 +243,24 @@ class NativeTypedGraphCandidateRetriever:
                 group_id=group_id,
                 relation_types=relation_filter,
             )
-            for next_ref, relation in neighbors[: self.spec.max_fanout]:
+            eligible_fanout = 0
+            for next_ref, relation in neighbors:
+                # Ineligible nodes must not consume the bounded fanout or
+                # hide reachable eligible evidence behind foreign neighbors.
+                if eligible_identity is not None and not eligible_identity(next_ref, group_id):
+                    continue
+                next_fact = substrate.get_fact(next_ref)
+                if next_fact is None or (eligible is not None and not eligible(next_fact)):
+                    continue
+                eligible_fanout += 1
+                if eligible_fanout > self.spec.max_fanout:
+                    break
                 if next_ref in path_refs:
                     continue
                 if relation.is_event_invalid or relation.is_transaction_expired:
                     continue
                 next_score = path_score * relation.retrieval_weight
                 if next_score < self.spec.min_path_score:
-                    continue
-                next_fact = substrate.get_fact(next_ref)
-                if next_fact is None or (eligible is not None and not eligible(next_fact)):
                     continue
                 prior_score = best_score_by_node.get(next_ref)
                 if prior_score is not None and next_score <= prior_score:
@@ -654,6 +667,7 @@ class ControlledRecallPlanner:
                 group_id=tenant,
                 candidate_limit=graph_budget.candidate_limit,
                 eligible=lambda fact: self.adapter.domain_eligible(fact, context),
+                eligible_identity=lambda uuid, group_id: self.adapter.domain_eligible_identity(uuid, group_id, context),
             )
             for graph_hit in graph_results:
                 graph_candidate_hits[graph_hit.candidate_ref] = graph_hit
