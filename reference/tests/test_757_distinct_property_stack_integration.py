@@ -140,6 +140,44 @@ class DistinctPropertyStackIntegration(unittest.TestCase):
         self.assertIn("explicit_distinct_property_refusal", result.reason_codes)
         self.no_authority(result)
 
+    def test_invalid_signature_cannot_assert_distinct_signed_schema(self):
+        # An attacker-controlled or corrupted manifest is not authoritative
+        # negative evidence about the relation between two properties.
+        proposed = self.issuer_variant("field:priority")
+        broken = replace(self.issuer.signed, signature_b64="AA==")
+        registry = self.registry_check(proposed, signed=broken)
+        policy = self.issuer.check(proposal=proposed, signed=broken)
+        composite = self.stack.qualify(
+            proposal=self.composite_variant("field:priority"),
+            registry=replace(self.stack.signed_registry, signature_b64="AA=="),
+        )
+        self.assertEqual(registry.status, "refused")
+        self.assertEqual(policy.status, "refused")
+        self.assertEqual(composite.status, "refused")
+        self.assertFalse(registry.signature_valid)
+        self.assertIn("signature_invalid_or_registry_malformed", registry.reason_codes)
+        self.assertNotIn("schema_declares_different_properties", registry.reason_codes)
+        self.assertNotIn("schema_declares_different_properties", policy.reason_codes)
+        self.assertNotIn("explicit_distinct_property_refusal", composite.reason_codes)
+        for result in (registry, policy, composite):
+            self.no_authority(result)
+
+    def test_stale_independent_trust_head_cannot_be_bypassed_by_negative_schema(self):
+        proposed = self.composite_variant("field:priority")
+        original = self.stack.ledger.view().checkpoint
+        self.stack.ledger.revoke_key(
+            tenant_ref=proposed.older.tenant_ref,
+            key_digest=public_key_digest(self.stack.signers[0].public_key()),
+            expected_head=original.current_head,
+        )
+        stale = self.stack.qualify(
+            proposal=proposed, head=original.current_head, sequence=original.sequence,
+        )
+        self.assertEqual(stale.status, "refused")
+        self.assertIn("expected_current_trust_checkpoint_mismatch", stale.reason_codes)
+        self.assertIn("explicit_distinct_property_refusal", stale.reason_codes)
+        self.no_authority(stale)
+
     def test_same_scope_structural_refusal_is_not_downgraded(self):
         proposed = replace(
             self.issuer_variant("field:priority"),
