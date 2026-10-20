@@ -255,6 +255,10 @@ class DeterministicMultiRouteRecallPlanner:
         if seed_pairs and isinstance(substrate, EvidenceNeighborTemporalGraphPort):
             routes_executed.append(SHARED_EVIDENCE_ROUTE)
             for logical_ref, seed_ref in seed_pairs:
+                # #591: use the canonical identity/scope gate before even
+                # materializing a seed from a cross-project memory.
+                if not self.adapter.domain_eligible_identity(seed_ref, tenant, context):
+                    continue
                 seed_fact = substrate.get_fact(seed_ref)
                 # #433/#548: an identity lookup is discovery, not permission to
                 # traverse a seed's evidence. Scope-check the seed before using
