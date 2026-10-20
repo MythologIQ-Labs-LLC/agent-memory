@@ -251,6 +251,44 @@ class TypedGraphSubstrateTests(unittest.TestCase):
         self.assertEqual([hit.candidate_ref for hit in hits], ["allowed"])
         self.assertEqual(hits[0].path_refs, ("seed", "allowed"))
 
+    def test_duplicate_lower_score_path_cannot_spend_eligible_fanout(self) -> None:
+        graph = InMemoryTemporalGraph()
+        for ref in ("seed", "first", "second"):
+            graph.write_fact(_fact(ref))
+        graph.write_relation(_relation("r-first-high", "seed", "first", weight=1.0))
+        graph.write_relation(_relation("r-first-low", "seed", "first", weight=0.9))
+        graph.write_relation(_relation("r-second", "seed", "second", weight=0.8))
+        retriever = NativeTypedGraphCandidateRetriever(
+            GraphTraversalSpec(max_depth=1, max_fanout=2),
+        )
+        hits = retriever.search(graph, ("seed",), group_id=TENANT, candidate_limit=8)
+        self.assertEqual([hit.candidate_ref for hit in hits], ["first", "second"])
+        self.assertEqual(hits[0].relation_ids, ("r-first-high",))
+
+    def test_graph_neighbor_scan_has_independent_work_ceiling(self) -> None:
+        graph = InMemoryTemporalGraph()
+        graph.write_fact(_fact("seed"))
+        for i in range(48):
+            ref = f"foreign-{i:03d}"
+            graph.write_fact(_fact(ref))
+            graph.write_relation(_relation(
+                f"r-{i:03d}", "seed", ref, weight=1.0,
+            ))
+        graph.write_fact(_fact("visible"))
+        graph.write_relation(_relation("r-visible", "seed", "visible", weight=0.5))
+        checked = []
+        retriever = NativeTypedGraphCandidateRetriever(
+            GraphTraversalSpec(max_depth=1, max_fanout=1),
+        )
+        result = retriever.search(
+            graph, ("seed",), group_id=TENANT, candidate_limit=4,
+            eligible_identity=lambda ref, group: checked.append(ref) is None
+            and ref in {"seed", "visible"},
+        )
+        # One seed check plus at most 16 sorted neighboring identities.
+        self.assertLessEqual(len(checked), 17)
+        self.assertNotIn("visible", [x.candidate_ref for x in result])
+
     def test_sqlite_reopen_matches_in_memory_traversal_and_preserves_relation_residue(self) -> None:
         memory = InMemoryTemporalGraph()
         for ref in ("a", "b", "c"):
