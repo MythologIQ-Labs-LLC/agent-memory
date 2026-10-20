@@ -117,7 +117,7 @@ This index does not restate the active policy version, RC sequence, or follow-on
 3. [`61-write-time-proposition-semantics.md`](61-write-time-proposition-semantics.md) and [`63-post-550-architecture-reconciliation.md`](63-post-550-architecture-reconciliation.md) for the semantic contract;
 4. [`64-current-governance-and-benchmark-dashboard.md`](64-current-governance-and-benchmark-dashboard.md) only for the historical #591/#594 reconciliation and its invariant list as of that boundary.
 
-ADR-039 stays Proposed, and PR #587 / #583 stays DRAFT/HOLD, until the ADR index or the owning issue says otherwise.
+**Status lookup rule:** do not use this navigation page to determine whether an ADR or PR is currently proposed, accepted, draft, held, or merged. Read the live ADR status in [`adr/README.md`](adr/README.md) and the relevant GitHub PR/issue, then verify the exact implementation and accepted evidence before claiming runtime qualification.
 
 ## Architecture library
 
