@@ -228,7 +228,8 @@ python3 scripts/verify_imports.py . <runs>
 | LongMemEval | agent_memory, turn | `2ad4cf23` | **500/500/500**; complete recall@50 360/419; required evidence 746/832 | nDCG_any@10 0.68156, recall_all@50 0.859189 | wall 1050 s, ingest 993 s, recall 27.3 s total / 123 ms max |
 | LongMemEval | lexical_overlap, session | `2ad4cf23` | **500/500/500**; 418/419; 793/794 | nDCG_any@10 0.792944 | wall 3.9 s |
 | LongMemEval | lexical_overlap, turn | `9d0ba703` | **500/500/500**; 319/419; 680/832 | nDCG_any@10 0.559738 | wall 5.1 s |
-| LongMemEval | mem0_explicit, session / turn | pending | running in `venv312-mem0` (exact `MEM0_PINS`) at the time of this commit; recorded in a follow-up commit when complete | | |
+| LongMemEval | mem0_explicit, turn | `5ed105d7` | ranked_top **453/500**, metrics 500/500, cross-fact 500/500; complete recall@50 375/419 (= v6); required evidence 776/832 (= v6); 47 questions reorder, see below | nDCG/recall metrics all = v6 | wall 3223 s, ingest 2507 s, recall 713 s total / 3.5 s max |
+| LongMemEval | mem0_explicit, session | pending clean re-run | two runs on the repaired tree were each 500/500 equal to v6 (ranked_top, metrics, cross-fact; complete recall@50 378/419, required 746/794) but the importer refused both stamps: the first because an evidence commit landed mid-run, the second because tracked files were edited mid-run (`report was produced from a dirty or unknown worktree`); re-run with nothing touched, recorded in the next commit | | |
 
 Aggregates, by-question-type, currentness and governance blocks equal to v6 in every executed row; lost
 complete recall: none; lost required evidence: none; runtime errors: none. The LongMemEval rows ran with
@@ -243,6 +244,21 @@ with 4 eligible slots filled (`main`) vs 3.6 / 2.5 ms with **8** filled. The fac
 no typed-graph route, so the repair (which touches only the typed-graph retriever) cannot act on the
 facade recall figure; the spread between `07cd8692` and the repaired tree on that figure is container
 variance between sessions, reported as measured and not gated.
+
+**The Mem0 turn-plane reorders (comparator row, no Agent Memory code on its path).** 47 of 500
+questions return the same 50 items in a different order: 124 items move, the largest move is 5 positions,
+32 questions are adjacent swaps only, **no gold item moves**, every per-question metric and every
+aggregate is equal to v6 (`repaired-head/compare-lme-mem0_explicit-turn-b.json`). By type: multi-session
+17, knowledge-update 10, single-session-user 8, temporal-reasoning 6, single-session-assistant 5,
+single-session-preference 1. This is the same pattern the official hosted execution recorded on #770
+(45 questions, 119 moves, max 4, no gold moved) and the environment-finding class the lane already allows
+for this row: near-tied vector scores ordering differently under different floating-point execution
+(here: numpy 2.4.3 / tokenizers 0.22.2 / openai 2.26.0 under the AMB lock vs numpy 2.5.3 / tokenizers
+0.23.2 / openai 3.26.0 on the hosted runner; mem0ai, qdrant-client, sentence-transformers, torch and the
+embedder revision identical). Not tuned, not root-caused here; a counterexample for nothing in the
+candidate. The first session-plane run of this row (500/500 equal to v6) was refused by the importer
+because an evidence commit landed while it ran and the runner's own revision stamp no longer matched its
+identity; the re-run was refused for a dirty worktree stamp (files edited mid-run); a third run with nothing touched follows in the next commit.
 
 ### 10.3 Checks on the repaired-tree rows
 
