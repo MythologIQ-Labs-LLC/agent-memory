@@ -36,6 +36,13 @@ integrity check, not attestation.
 
 **2026-10-21 pending qualification:** This candidate-only re-pin changes the adapter/manifest identity so the fail-closed runtime guard may qualify the repaired tree. Its source and configuration digest have not been independently executed in a complete checkout; the two manifest and identity test modules, `test_644_v7_gauntlet_contestant.py` and `test_644_v7_gauntlet_identity.py`, plus the CLI adapter validation and external-process 3-query probe must run locally. A public Gauntlet result is NOT supplied by this edit. The runtime source guard must not be weakened or bypassed, and no accepted v6 evidence/register bytes change.
 
+**2026-10-21 executed (candidate only, not acceptance):** at branch head `97368d67` the two test modules (6/6), the CLI
+adapter validation and the external-process three-query probe were executed in an isolated full-history checkout with
+no installed `agentmem_ref`: `status complete`, `sample_count 3`, `exact_top1 1.0`, adapter `runtime_identity`
+`verified: true` against `2ad4cf23` / tree `f9b5ff9e`; a seven-arm tamper and foreign-import matrix refused every
+non-identical runtime (`runtime_identity_unverified`, probe `blocked`). Evidence: `reports/validation/644-v7-gauntlet-2ad4cf23/`.
+This is the probe gate's shape for the contestant, not Runtime Baseline v7 acceptance, security sign-off or contract `1.8.0` acceptance.
+
 ## Candidate-only validation commands
 
 From repository root, with an environment pinned to the tested runtime and the
