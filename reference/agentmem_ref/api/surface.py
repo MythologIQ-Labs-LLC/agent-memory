@@ -1086,11 +1086,17 @@ class AgentMemory:
             attributes = dict(getattr(fact, "attributes", None) or {})
             written = dict(attributes.get(cross_fact.WRITE_PROVENANCE_KEY) or {})
             declared = dict(attributes.get(DECLARED_TEMPORAL_KEY) or {})
-            memory_ref = adapter.memory_ref_of(ref)
-            source_ref = written.get("source_ref")
+            # #691: content admission does not itself grant another actor visibility
+            # into the original writer's logical identifier or declared source.
+            # The host MUST authenticate the handle's actor_id; this is only a
+            # disclosure-minimising projection, never a new authorization check.
+            writer_is_reader = bool(written.get("actor_id") and written["actor_id"] == self.actor_id)
+            memory_ref = adapter.memory_ref_of(ref) if writer_is_reader else None
+            source_ref = written.get("source_ref") if writer_is_reader else None
             receipt = {
                 "memory_ref": memory_ref if memory_ref and not withheld(memory_ref) else None,
-                # writer-declared, never authority; withheld like any identifier of a deleted lineage
+                # Writer-declared provenance is private to its writer by default;
+                # deleted-lineage withholding applies even for that writer.
                 "source_ref": source_ref if isinstance(source_ref, str) and not withheld(source_ref) else None,
                 "write_channel": written.get("channel"),
                 "recorded_at": getattr(fact, "created_at", None),
