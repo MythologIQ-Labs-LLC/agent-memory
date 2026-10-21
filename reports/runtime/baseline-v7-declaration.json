@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "baseline_id": "agent-memory-runtime-baseline-v7",
+  "predecessor_baseline_id": "agent-memory-runtime-baseline-v6",
+  "issue": 835,
+  "declared_changes": [
+    {
+      "path": "reference/agentmem_ref/runtime/query_driven_recall.py",
+      "blob": "867d7f634ee218c95023984c1b23f5b1fc3307ff"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/recall_control.py",
+      "blob": "28ac8bda7981ad550ce1ded8e4e35d946e3b6ceb"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/runtime_composition.py",
+      "blob": "ee1dd27d331e0f476ccf89681bbdfed343716d57"
+    }
+  ],
+  "identity_deltas": [],
+  "pyproject_change": null,
+  "acceptance_evidence_required": [
+    {
+      "kind": "public_gauntlet",
+      "ref": "gauntlet-orchestration-retrieval-probe-v1"
+    },
+    {
+      "kind": "lane",
+      "ref": "amb-precisionmembench-retrieval-v7"
+    },
+    {
+      "kind": "lane",
+      "ref": "longmemeval-s-retrieval-parity-v7"
+    },
+    {
+      "kind": "replay",
+      "ref": "scope-safe-graph-discovery-v7"
+    }
+  ]
+}
