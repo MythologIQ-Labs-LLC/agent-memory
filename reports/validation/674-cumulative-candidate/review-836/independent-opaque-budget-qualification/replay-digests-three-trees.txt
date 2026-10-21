@@ -1,0 +1,57 @@
+# 13 replay families, clean trees, --all, scratch output dirs; observations_sha256 sorted
+## 07cd8692 runtime (worktree at ef8fff6)
+"observations_sha256": "0507a3a89cdf57b32723baade74aa639b814fb0d67172e715f65ba2ef38cd105"
+"observations_sha256": "0cce1987d38d790a1f07404288efbb9ba7f2497a204a0acb3209d80b4046c2e8"
+"observations_sha256": "1049e53713a4b8603995584de76955e429b0dd009285a19fb9ca0fcaff2c92ff"
+"observations_sha256": "1b5332689ef6af2993ee945a94b97e4f66fc9c87d4e6f0a8633ad7f5a5c2aab8"
+"observations_sha256": "510ff2a621a1e201f3f15504e13aa47cdfd0fbf8306e1bbf951900afdea459af"
+"observations_sha256": "5b8edee241e8283ce5b9fc305d1de15dcdd9048d78df181c508618f6c3d0a35c"
+"observations_sha256": "617805b93f09312a95d277b5a82b8403719da0d705e1e651d826415ca283a32d"
+"observations_sha256": "70da7a3a6ff594a992960c5e606d19d8d33c887cc3dd1b88b3c70ad0ab0cf7f6"
+"observations_sha256": "8a020753d2e8578645ced240c7c5aa31ea5aa9bca510d4da5e53be9f04d3b787"
+"observations_sha256": "8ab1b53fb863d8bbc39f902736ac0f09b0dcc25bc157cb32d4767ce9eb169070"
+"observations_sha256": "907ab4730737deb0c116e73a30538adbf8a2b54953ddd66e37e2035d27a29de7"
+"observations_sha256": "a90b8a841ad507bb03239bf232d6bc2ec3928865cbfecd08ece4dd149374e94e"
+"observations_sha256": "d6648bc2498e6d1cf10366e93569c7dabd0febe30b8a150ab686a2209b8a310e"
+## independent repair a055e0e
+"observations_sha256": "0507a3a89cdf57b32723baade74aa639b814fb0d67172e715f65ba2ef38cd105"
+"observations_sha256": "0cce1987d38d790a1f07404288efbb9ba7f2497a204a0acb3209d80b4046c2e8"
+"observations_sha256": "1049e53713a4b8603995584de76955e429b0dd009285a19fb9ca0fcaff2c92ff"
+"observations_sha256": "1b5332689ef6af2993ee945a94b97e4f66fc9c87d4e6f0a8633ad7f5a5c2aab8"
+"observations_sha256": "510ff2a621a1e201f3f15504e13aa47cdfd0fbf8306e1bbf951900afdea459af"
+"observations_sha256": "5b8edee241e8283ce5b9fc305d1de15dcdd9048d78df181c508618f6c3d0a35c"
+"observations_sha256": "617805b93f09312a95d277b5a82b8403719da0d705e1e651d826415ca283a32d"
+"observations_sha256": "70da7a3a6ff594a992960c5e606d19d8d33c887cc3dd1b88b3c70ad0ab0cf7f6"
+"observations_sha256": "8a020753d2e8578645ced240c7c5aa31ea5aa9bca510d4da5e53be9f04d3b787"
+"observations_sha256": "8ab1b53fb863d8bbc39f902736ac0f09b0dcc25bc157cb32d4767ce9eb169070"
+"observations_sha256": "907ab4730737deb0c116e73a30538adbf8a2b54953ddd66e37e2035d27a29de7"
+"observations_sha256": "a90b8a841ad507bb03239bf232d6bc2ec3928865cbfecd08ece4dd149374e94e"
+"observations_sha256": "d6648bc2498e6d1cf10366e93569c7dabd0febe30b8a150ab686a2209b8a310e"
+## owner repair 2ad4cf23
+"observations_sha256": "0507a3a89cdf57b32723baade74aa639b814fb0d67172e715f65ba2ef38cd105"
+"observations_sha256": "0cce1987d38d790a1f07404288efbb9ba7f2497a204a0acb3209d80b4046c2e8"
+"observations_sha256": "1049e53713a4b8603995584de76955e429b0dd009285a19fb9ca0fcaff2c92ff"
+"observations_sha256": "1b5332689ef6af2993ee945a94b97e4f66fc9c87d4e6f0a8633ad7f5a5c2aab8"
+"observations_sha256": "510ff2a621a1e201f3f15504e13aa47cdfd0fbf8306e1bbf951900afdea459af"
+"observations_sha256": "5b8edee241e8283ce5b9fc305d1de15dcdd9048d78df181c508618f6c3d0a35c"
+"observations_sha256": "617805b93f09312a95d277b5a82b8403719da0d705e1e651d826415ca283a32d"
+"observations_sha256": "70da7a3a6ff594a992960c5e606d19d8d33c887cc3dd1b88b3c70ad0ab0cf7f6"
+"observations_sha256": "8a020753d2e8578645ced240c7c5aa31ea5aa9bca510d4da5e53be9f04d3b787"
+"observations_sha256": "8ab1b53fb863d8bbc39f902736ac0f09b0dcc25bc157cb32d4767ce9eb169070"
+"observations_sha256": "907ab4730737deb0c116e73a30538adbf8a2b54953ddd66e37e2035d27a29de7"
+"observations_sha256": "a90b8a841ad507bb03239bf232d6bc2ec3928865cbfecd08ece4dd149374e94e"
+"observations_sha256": "d6648bc2498e6d1cf10366e93569c7dabd0febe30b8a150ab686a2209b8a310e"
+## diff 07cd8692 vs a055e0e
+IDENTICAL
+## diff 07cd8692 vs 2ad4cf23
+IDENTICAL
+
+## Verdicts (every tree, every family): PASS on a clean source tree
+cross-scope-write-authority-denial-v2 12/12 | deleted-lineage-generations-and-restart-v2 8/8 |
+public-tombstone-redaction-and-observer-separation-v2 8/8 | cross-scope-write-authority-denial-v3 13/13 |
+deleted-lineage-generations-and-restart-v3 10/10 | public-tombstone-redaction-and-observer-separation-v3 8/8 |
+evidence-reference-authorization-v1 13/13 | scope-safe-graph-discovery-v2 11/11 |
+typed-sufficiency-noninterference-and-negative-controls-v1 19/19 |
+governed-persisted-typed-slot-sufficiency-admission-recheck-v1 18/18 | governed-admitted-typed-value-coherence-v1 16/16 |
+committed-governed-transition-witness-v1 12/12 | same-slot-safety-counterevidence-and-immutable-stop-gate-v1 39/39
+(report sha256 values differ between trees because each manifest binds its source_commit; the observation digests above do not.)

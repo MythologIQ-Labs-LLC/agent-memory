@@ -1,0 +1,15 @@
+python: Python 3.13.16
+platform: Linux 6.18.44-fc-v139 x86_64
+agent-manifest            0.12.0
+agentrust-trace           0.10.0
+cryptography              50.0.2
+jsonschema                4.26.0
+numpy                     2.5.3
+pydantic                  2.13.5
+PyYAML                    6.0.3
+rfc8785                   0.1.4
+repository clone: shallow=true commits_visible=617
+test command: cd reference && python3 -m unittest -v tests.<module>  (same convention as the repository workflows)
+replay commands: cd reference && python3 run_786_security_replays{,_dsl2,_dsl3,_dsl4}.py --all --output-dir <scratch>; python3 run_644_v7_replays.py --all --output-dir <scratch>
+note: validate_runtime_baseline_source.py reports v1 published_commit not on first-parent history in this shallow clone (environment, both trees); check_runtime_baseline_equivalence.py --candidate HEAD reads TRANSITION / 21 blobs at 07cd8692, 2ad4cf23 and the re-pinned scratch tree, and the declared-blob mismatch for recall_control.py on the un-re-pinned independent repair
+revisions: cumulative runtime 07cd8692bcf26fd677c71f805f04f73a6332ed91 (recall_control.py c16452ef); test branch ef8fff690eee4a24ecb423691b815abda26f9fd2; independent repair a055e0e (local, blob db5dd0c8; declaration regenerated in a scratch worktree -> 6f862106); owner repair 2ad4cf23d366fc784a486b0245550230e64bfa25 (blob 9fa861c3; declaration 7de94f11)

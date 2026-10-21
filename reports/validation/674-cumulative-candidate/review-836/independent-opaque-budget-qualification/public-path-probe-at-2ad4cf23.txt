@@ -1,0 +1,4 @@
+default planner type: DeterministicMultiRouteRecallPlanner
+default multi_route routes_executed: ('lexical', 'exact_logical_identity', 'shared_evidence_neighbor')
+route ids in provenance: ['exact_logical_identity', 'lexical']
+visible shelf admitted via default planner (lexical/exact only): False | deleted old in candidates: False

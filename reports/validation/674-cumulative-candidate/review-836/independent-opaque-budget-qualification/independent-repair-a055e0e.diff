@@ -1,0 +1,61 @@
+diff --git a/reference/agentmem_ref/runtime/recall_control.py b/reference/agentmem_ref/runtime/recall_control.py
+index c16452e..db5dd0c 100644
+--- a/reference/agentmem_ref/runtime/recall_control.py
++++ b/reference/agentmem_ref/runtime/recall_control.py
+@@ -202,7 +202,10 @@ class NativeTypedGraphCandidateRetriever:
+         (a deleted generation confers no reachability); it covers the seeds too (#836 A).
+         ``opaque`` (#836 B): nodes that may be reported as a candidate (admission then
+         refuses them and records why) but confer no reachability: a seed that is opaque
+-        is not expanded and an opaque hop is never continued through.
++        is not expanded and an opaque hop is never continued through. (#836 C) An opaque
++        node spends neither eligible fan-out nor a candidate slot a visible node needs, so
++        its presence never changes which visible neighbours the bounded traversal finds;
++        it does spend an eligibility probe, so the work ceiling still holds.
+         """
+         if candidate_limit < 0:
+             raise ValueError("graph candidate_limit must be non-negative")
+@@ -229,7 +232,20 @@ class NativeTypedGraphCandidateRetriever:
+                     best_by_candidate[hit.candidate_ref] = hit
+
+         ordered = sorted(best_by_candidate.values(), key=self._hit_key)
+-        return ordered[:candidate_limit]
++        if opaque is None:
++            return ordered[:candidate_limit]
++        # #836 C: the candidate limit is spent on visible candidates first. An opaque
++        # candidate (admission refuses it and the audit keeps the refusal, the #777 pin)
++        # takes only a slot no visible candidate needs, so its presence never displaces
++        # a visible neighbour from the bounded result.
++        opacity = {hit.candidate_ref: bool(opaque(hit.candidate_ref)) for hit in ordered}
++        selected = [hit for hit in ordered if not opacity[hit.candidate_ref]][:candidate_limit]
++        if len(selected) < candidate_limit:
++            selected.extend(
++                [hit for hit in ordered if opacity[hit.candidate_ref]][: candidate_limit - len(selected)]
++            )
++            selected.sort(key=self._hit_key)
++        return selected
+
+     def _traverse_seed(
+         self,
+@@ -310,7 +326,12 @@ class NativeTypedGraphCandidateRetriever:
+                     continue
+                 if exclude is not None and exclude(next_ref):
+                     continue  # #777: a deleted generation confers no reachability and is never reported
+-                accepted_fanout += 1
++                is_opaque = opaque is not None and opaque(next_ref)
++                if not is_opaque:
++                    # #836 C: an opaque neighbour is not a usable path (never continued, refused at
++                    # admission), so it spends no eligible fan-out; it still spends an eligibility
++                    # probe, so traversal work stays bounded by the probe ceiling.
++                    accepted_fanout += 1
+                 best_score_by_node[next_ref] = next_score
+
+                 next_path = path_refs + (next_ref,)
+@@ -332,7 +353,7 @@ class NativeTypedGraphCandidateRetriever:
+                     hop_count=len(next_relation_ids),
+                 )
+                 hits.append(hit)
+-                if opaque is not None and opaque(next_ref):
++                if is_opaque:
+                     continue  # #836 B: reported as a candidate, never continued through
+                 queue.append(
+                     (
