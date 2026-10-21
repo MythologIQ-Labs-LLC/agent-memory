@@ -45,8 +45,8 @@ GRAPH_OUTGOING = "outgoing"
 GRAPH_INCOMING = "incoming"
 GRAPH_BOTH = "both"
 MAX_GRAPH_SEED_REFS = 16
-# Bounded overscan prevents ineligible logical refs spending an eligible-route quota.
-MAX_IDENTITY_FILTER_SCAN_FACTOR = 16
+# Per expanded node, at most max_fanout * this many eligibility/fact probes.
+MAX_GRAPH_ELIGIBILITY_PROBE_FACTOR = 16
 
 # Pre-existing route precedence of the controlled planner, now declared rather than implicit.
 CONTROLLED_RECALL_RANKING_POLICY = ExplicitCurrentCrossFactRankingPolicy(
@@ -247,12 +247,17 @@ class NativeTypedGraphCandidateRetriever:
                 relation_types=relation_filter,
             )
             accepted_fanout = 0
+            eligibility_probes = 0
             # The fanout counts usable NEW paths, not ineligible or stale
-            # edges. Independently cap edges inspected so high-degree graphs
-            # cannot force an unbounded identity/fact-check loop.
-            scan_limit = self.spec.max_fanout * 16
-            for examined, (next_ref, relation) in enumerate(neighbors):
-                if examined >= scan_limit or accepted_fanout >= self.spec.max_fanout:
+            # edges. Cyclic, stale, weak, and non-improving edges are rejected
+            # from the already-materialized adjacency without spending the
+            # probe ceiling, so relation history cannot hide a current path.
+            # Only identity/fact checks are capped: a hub with many
+            # ineligible neighbors cannot force an unbounded check loop, at
+            # the cost of not reaching an eligible neighbor ranked behind them.
+            probe_limit = self.spec.max_fanout * MAX_GRAPH_ELIGIBILITY_PROBE_FACTOR
+            for next_ref, relation in neighbors:
+                if accepted_fanout >= self.spec.max_fanout or eligibility_probes >= probe_limit:
                     break
                 if next_ref in path_refs:
                     continue
@@ -264,6 +269,7 @@ class NativeTypedGraphCandidateRetriever:
                 prior_score = best_score_by_node.get(next_ref)
                 if prior_score is not None and next_score <= prior_score:
                     continue
+                eligibility_probes += 1
                 if eligible_identity is not None and not eligible_identity(next_ref, group_id):
                     continue
                 next_fact = substrate.get_fact(next_ref)
@@ -608,8 +614,10 @@ class ControlledRecallPlanner:
         exact_budget = plan.budget_for(EXACT_IDENTITY_ROUTE)
         explicit_seeds: list[tuple[str, str]] = []
         if exact_budget.candidate_limit:
-            max_checks = exact_budget.candidate_limit * MAX_IDENTITY_FILTER_SCAN_FACTOR
-            for logical_ref in unique_logical_refs[:max_checks]:
+            # Only eligible refs spend the quota. The scan stays linear in
+            # the refs already deduplicated above, so a fixed overscan cap
+            # would save no work while letting leading foreign refs starve it.
+            for logical_ref in unique_logical_refs:
                 if len(explicit_seeds) >= exact_budget.candidate_limit:
                     break
                 current = self.adapter.current_fact_uuid(logical_ref)
@@ -665,8 +673,7 @@ class ControlledRecallPlanner:
         ):
             graph_seed_refs: list[str] = []
             graph_seed_limit = min(MAX_GRAPH_SEED_REFS, graph_budget.candidate_limit)
-            max_checks = graph_seed_limit * MAX_IDENTITY_FILTER_SCAN_FACTOR
-            for logical_ref in unique_logical_refs[:max_checks]:
+            for logical_ref in unique_logical_refs:
                 if len(graph_seed_refs) >= graph_seed_limit:
                     break
                 current = self.adapter.current_fact_uuid(logical_ref)

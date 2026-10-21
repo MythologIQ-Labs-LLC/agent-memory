@@ -333,7 +333,42 @@ class RecallControlTests(unittest.TestCase):
         )
         self.assertEqual(result.candidates, [allowed.fact_uuid])
         self.assertEqual(result.route_candidate_counts[EXACT_IDENTITY_ROUTE], 1)
-        self.assertNotIn(foreign.fact_uuid, result.route_hits)
+        self.assertNotIn(foreign.fact_uuid, result.recall.route_hits)
+
+    def test_exact_budget_is_not_starved_by_many_leading_foreign_refs(self) -> None:
+        # More leading foreign refs than any fixed overscan multiple of the
+        # budget: the authorized ref must still fill the one exact slot.
+        foreign_refs = []
+        for i in range(20):
+            logical = f"memory:foreign-{i:02d}"
+            self._retain(
+                logical, f"foreign record {i}",
+                evidence_refs=(f"session:foreign-{i}",), project_ref="project-beta",
+            )
+            foreign_refs.append(logical)
+        allowed = self._retain(
+            "memory:authorized-last", "allowed record",
+            evidence_refs=("session:allowed",),
+        )
+        fixed = _FixedController(
+            RecallControlPlan(
+                controller_ref="test:eligible-budget",
+                controller_version="1",
+                route_budgets=(
+                    RecallRouteBudget(LEXICAL_ROUTE, 0),
+                    RecallRouteBudget(EXACT_IDENTITY_ROUTE, 1),
+                    RecallRouteBudget(SHARED_EVIDENCE_ROUTE, 0),
+                ),
+            )
+        )
+        result = ControlledRecallPlanner(
+            self.runtime.adapter, controller=fixed,
+        ).recall(
+            "no lexical path", _context(),
+            logical_memory_refs=(*foreign_refs, "memory:authorized-last"),
+        )
+        self.assertEqual(result.candidates, [allowed.fact_uuid])
+        self.assertEqual(result.route_candidate_counts[EXACT_IDENTITY_ROUTE], 1)
 
     def test_unavailable_route_plan_fails_closed(self) -> None:
         fixed = _FixedController(

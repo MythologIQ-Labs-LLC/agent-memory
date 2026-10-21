@@ -289,6 +289,51 @@ class TypedGraphSubstrateTests(unittest.TestCase):
         self.assertLessEqual(len(checked), 17)
         self.assertNotIn("visible", [x.candidate_ref for x in result])
 
+    def test_stale_relation_history_cannot_exhaust_eligibility_probe_ceiling(self) -> None:
+        # Invalidated relations stay in adjacency as temporal residue. A long
+        # correction history must not hide the one current path behind it.
+        graph = InMemoryTemporalGraph()
+        for ref in ("seed", "old", "current"):
+            graph.write_fact(_fact(ref))
+        for i in range(64):
+            graph.write_relation(_relation(f"r-old-{i:03d}", "seed", "old", weight=1.0))
+            graph.invalidate_relation(
+                f"r-old-{i:03d}", "2026-09-25T00:00:00Z", "2026-09-25T00:00:00Z",
+            )
+        graph.write_relation(_relation("r-current", "seed", "current", weight=0.5))
+        checked = []
+        retriever = NativeTypedGraphCandidateRetriever(
+            GraphTraversalSpec(max_depth=1, max_fanout=1),
+        )
+        hits = retriever.search(
+            graph, ("seed",), group_id=TENANT, candidate_limit=4,
+            eligible_identity=lambda ref, group: checked.append(ref) is None,
+        )
+        self.assertEqual([hit.candidate_ref for hit in hits], ["current"])
+        # Stale edges are rejected before any eligibility probe is spent.
+        self.assertEqual(checked, ["seed", "current"])
+
+    def test_duplicate_and_back_edges_cannot_exhaust_eligibility_probe_ceiling(self) -> None:
+        graph = InMemoryTemporalGraph()
+        for ref in ("seed", "hub", "target"):
+            graph.write_fact(_fact(ref))
+        graph.write_relation(_relation("r-hub", "seed", "hub", weight=1.0))
+        for i in range(32):
+            # Parallel weaker paths to an already-reached node.
+            graph.write_relation(_relation(f"r-dup-{i:03d}", "seed", "hub", weight=0.9))
+            # Back-edges into the current path (cyclic in "both" direction).
+            graph.write_relation(_relation(f"r-back-{i:03d}", "hub", "seed", weight=0.95))
+        graph.write_relation(_relation("r-target", "hub", "target", weight=0.5))
+        retriever = NativeTypedGraphCandidateRetriever(
+            GraphTraversalSpec(max_depth=2, max_fanout=1, direction="both"),
+        )
+        hits = retriever.search(
+            graph, ("seed",), group_id=TENANT, candidate_limit=4,
+            eligible_identity=lambda ref, group: True,
+        )
+        self.assertEqual([hit.candidate_ref for hit in hits], ["hub", "target"])
+        self.assertEqual(hits[1].path_refs, ("seed", "hub", "target"))
+
     def test_sqlite_reopen_matches_in_memory_traversal_and_preserves_relation_residue(self) -> None:
         memory = InMemoryTemporalGraph()
         for ref in ("a", "b", "c"):
@@ -507,6 +552,41 @@ class TypedGraphGovernedRecallTests(unittest.TestCase):
         self.assertIn(neighbor.fact_uuid, result.admitted)
         self.assertEqual(result.route_candidate_counts[TYPED_GRAPH_ROUTE], 1)
         self.assertNotIn(seed.fact_uuid, result.candidates)
+
+    def test_graph_seed_budget_is_not_starved_by_many_leading_foreign_refs(self) -> None:
+        foreign_refs = []
+        for i in range(20):
+            logical = f"memory:foreign-{i:02d}"
+            self._retain(logical, f"restricted beta record {i}", project_ref="project-beta")
+            foreign_refs.append(logical)
+        seed = self._retain("memory:authorized-seed", "authorized starting node")
+        neighbor = self._retain("memory:authorized-neighbor", "authorized linked node")
+        substrate = self.runtime.adapter.checkpoint_substrate()
+        substrate.write_relation(
+            _relation("relation:authorized", seed.fact_uuid, neighbor.fact_uuid),
+        )
+        controller = _FixedController(
+            RecallControlPlan(
+                controller_ref="test:typed-graph",
+                controller_version="1",
+                route_budgets=(
+                    RecallRouteBudget(LEXICAL_ROUTE, 0),
+                    RecallRouteBudget(EXACT_IDENTITY_ROUTE, 0),
+                    RecallRouteBudget(TYPED_GRAPH_ROUTE, 1),
+                    RecallRouteBudget(SHARED_EVIDENCE_ROUTE, 0),
+                ),
+            )
+        )
+        result = ControlledRecallPlanner(
+            self.runtime.adapter,
+            controller=controller,
+            graph_retriever=NativeTypedGraphCandidateRetriever(),
+        ).recall(
+            "", _context(),
+            logical_memory_refs=(*foreign_refs, "memory:authorized-seed"),
+        )
+        self.assertIn(neighbor.fact_uuid, result.admitted)
+        self.assertEqual(result.route_candidate_counts[TYPED_GRAPH_ROUTE], 1)
 
     def test_governed_typed_graph_cannot_bridge_through_other_project(self) -> None:
         seed = self._retain("memory:seed", "authorized starting fact")
