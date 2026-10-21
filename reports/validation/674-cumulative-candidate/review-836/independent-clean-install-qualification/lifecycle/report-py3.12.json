@@ -15,7 +15,7 @@
     "returned": 1,
     "history_version": 1,
     "posture_stage": "posture",
-    "binding": null
+    "binding": "sqlite_transaction"
    }
   },
   {
@@ -53,7 +53,7 @@
     "m2_admitted_after_reopen": true,
     "m1_tombstoned_after_reopen": true,
     "m1_admitted_after_reopen": [],
-    "binding": null
+    "binding": "sqlite_transaction"
    }
   },
   {
@@ -66,7 +66,7 @@
     "m1": [],
     "m1_tombstoned": true,
     "posture": "posture",
-    "binding": null
+    "binding": "sqlite_transaction"
    }
   },
   {
@@ -120,6 +120,7 @@
      "posture": "posture",
      "binding": null
     },
+    "config_regenerated_identical": true,
     "truncated_db": "refused: DatabaseError: database disk image is malformed",
     "witness_tampered": {
      "opened": true,

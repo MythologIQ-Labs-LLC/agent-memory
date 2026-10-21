@@ -65,6 +65,24 @@ Eleven steps, all OK, with byte-identical step results across wheel, sdist, 3.11
 7. Re-creating the deleted logical id as a fresh generation commits (v1); the old generation's identifiers appear in
    neither `admitted` nor `candidates`.
 
+**Harness hardening after review 5605348250 (PR #837).** The first committed `consumer_lifecycle.py` recorded each
+step's outcome and marked a step `ok` when it returned; the reviewer's read-back of all four receipts confirmed every
+negative outcome was in fact the required refusal, but a future run could have reported a false pass. The script now
+asserts every required outcome in place (negatives assert the refusal, the regenerated configuration must be
+byte-identical, the restart child must report the transactional binding), reads the binding from the nested
+`posture.durable_state`, and exits 1 when any step fails. It was re-run on all four installs: every step OK, all
+substantive results identical to the first receipts (the `lifecycle/` reports and logs are the re-run), and the binding
+now reads `sqlite_transaction` in-band in three steps. Fail-fast control: a copy mutated so the cross-tenant open uses the
+owning tenant (so the open succeeds) fails that step with the assertion and exits 1.
+
+**Reviewer's staged checks executed locally** (branch `review/837-strict-install-receipt-guards-no-ci` @ `fae5ca36`,
+based on `8977b15d`, two files, nothing protected): its read-only `verify_recorded_receipts.py` accepts the original
+`8977b15d` receipts and the regenerated ones (exit 0, `acceptance_effect none`) and rejects a copy whose cross-tenant step
+is flipped to `opened` (`AssertionError: report-wheel.json: cross-tenant open unexpectedly succeeded`, exit 1); its
+`test_770_v7_lane_freeze_independent` patch (freshness guards bound to the `2ad4cf23` replay evidence instead of the
+superseded `16a248b1` evidence) runs 20/20 OK in a worktree at `fae5ca36` with a clean tree afterwards, where the
+unpatched module on this branch fails the same two guards. Those two files are not merged here; they are the reviewer's.
+
 ## 5. Negative tests (`lifecycle/report-*.json`, step `interrupted_recovery_and_integrity_negatives` and the two scope steps)
 
 | Case | Outcome |
