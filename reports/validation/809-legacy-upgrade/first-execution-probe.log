@@ -1,0 +1,23 @@
+# Probe behind first-execution finding (i): the fragments by which the bd and bu recall shapes differ after the upgrade (copy of the cross-scope fixture; implemented runtime; not the preregistered module)
+upgrade: legacy_qualified rewritten 7
+bd == bl at full fidelity: True
+differing fragments bd vs bu: 16
+-"lexical_relevance_score": 1.938315
++"lexical_relevance_score": 1.591554
+-"lexical_relevance_score": 0.980533
++"lexical_relevance_score": 0.521574
+-"ordered_before_next_by": "lexical_relevance_desc:bm25_admitted_set:lexical"
++"ordered_before_next_by": "candidate_ref_neutral_digest"
+-"route_scores": {"lexical": 0.8333333333333334}
++"route_scores": {"lexical": 0.8}
+-"raw_score": 0.833333
++"raw_score": 0.800000
+-"lexical_relevance_score": 0.561132
++"lexical_relevance_score": 0.521574
+-"route_scores": {"lexical": 0.6666666666666666}
++"route_scores": {"lexical": 0.8}
+-"raw_score": 0.666667
++"raw_score": 0.800000
+bd 'Quillon ferry berth digest foreign deleted' tokens: 6
+bl 'Quillon ferry berth digest foreign live' tokens: 6
+bu 'Quillon ferry berth digest unknown' tokens: 5

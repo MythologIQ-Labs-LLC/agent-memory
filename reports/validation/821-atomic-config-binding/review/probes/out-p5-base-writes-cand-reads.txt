@@ -1,0 +1,11 @@
+writer=base reader=cand
+writer create+write: OK gen=1 scheme=- -> wrote gen=2
+reader opens writer store: OK gen=2 scheme=legacy_file
+reader attempts write: OK gen=2 scheme=legacy_file -> wrote gen=3
+  db unchanged by reader: False {'db': True, 'file_gen': 2, 'state_gen': 3, 'journal_gen': 3, 'row_gen': 3, 'row_payload_gen': 3, 'table': True}
+writer reopens: REFUSED RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation
+fixture 821/coherent not present at writer revision
+fixture 821/stranded not present at writer revision
+[809/cross-scope] open: OK gen=11 scheme=- | open wrote nothing: True | recall: OK gen=11 scheme=- -> recall gen=12 | {'db': True, 'file_gen': 12, 'state_gen': 12, 'journal_gen': 12, 'row_gen': None, 'row_payload_gen': None, 'table': False} | legacy file unchanged: False | reader: OK gen=12 scheme=legacy_file | writer reopen: OK gen=12 scheme=-
+[809/forward-reference] open: OK gen=6 scheme=- | open wrote nothing: True | recall: OK gen=6 scheme=- -> recall gen=7 | {'db': True, 'file_gen': 7, 'state_gen': 7, 'journal_gen': 7, 'row_gen': None, 'row_payload_gen': None, 'table': False} | legacy file unchanged: False | reader: OK gen=7 scheme=legacy_file | writer reopen: OK gen=7 scheme=-
+[809/shared-membership] open: OK gen=9 scheme=- | open wrote nothing: True | recall: OK gen=9 scheme=- -> recall gen=10 | {'db': True, 'file_gen': 10, 'state_gen': 10, 'journal_gen': 10, 'row_gen': None, 'row_payload_gen': None, 'table': False} | legacy file unchanged: False | reader: OK gen=10 scheme=legacy_file | writer reopen: OK gen=10 scheme=-

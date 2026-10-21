@@ -1,0 +1,36 @@
+{
+ "frozen_on": "2026-10-20",
+ "note": "A real recoverable store written by the v7 runtime, byte-frozen, separate from 809-legacy-stores (whose manifest and stores stay byte-identical). Every consumer copies the store before opening it (opening publishes a new generation). Fact ids are deterministic (ref-NNNN, one monotonic sequence per store); three producer runs gave byte-identical files.",
+ "owning_issue": 809,
+ "produced_by": {
+  "how": "python3 -I produce/write_v7_store_self_reference.py <v7 checkout>/reference <store dir>; the v7 checkout is a detached worktree at the revision below; the script prints the ids.json of its store",
+  "python": "3.13.16",
+  "revision": "16a248b1e28f455fbf19217114175f0c20df2a01",
+  "runtime": "published Runtime Baseline v7 reference runtime, the FROZEN_RUNTIME_REVISION of examples/gauntlet/agent_memory_runtime_baseline_v7_stdio.py",
+  "sqlite": "3.45.1"
+ },
+ "requested_by": "independent source-level challenge, issue #809 comment 6298692981 and PR #815 comment 6298713281 (legacy self-reference at migration)",
+ "scripts": {
+  "write_v7_store_self_reference.py": "2384652f1af0a696f406dafd64f2e717b98eccbad7c1c1e2fba00187866e8c5d"
+ },
+ "status": "frozen",
+ "stores": {
+  "self-reference": {
+   "files": {
+    "agent-memory.sqlite3": "16545dc57cdd1e111a7361179511a66ed9964fd069c1f6aa12afbea93e5fd9fb",
+    "configuration-binding.json": "98f23cb8d69c6949e11c81270b83bd4300f2fabb80bb1873b1fab0e40a48abaa",
+    "ids.json": "19847664b0b0e061338a93856f0f56c6f4d11dc233d03380b520c4b63010a563",
+    "runtime-config.json": "a58850f0a62c2080ca17a333aff3db06e7382c650b62482e7c2bcbb928e87423"
+   },
+   "ids": {
+    "a1": "ref-0004",
+    "fwd": "ref-0032",
+    "mixed": "ref-0025",
+    "next": "ref-0039",
+    "other": "ref-0049",
+    "prior": "ref-0011",
+    "self": "ref-0018"
+   }
+  }
+ }
+}

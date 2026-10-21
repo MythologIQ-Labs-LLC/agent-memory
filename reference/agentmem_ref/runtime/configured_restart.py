@@ -255,8 +255,117 @@ def _assert_visibility_matches_plan(
             )
 
 
+def binding_record(*, plan: RuntimeConfigurationPlan, base_evidence) -> dict[str, object]:
+    """The configuration binding of one base generation (the file record; #821 adds row fields)."""
+
+    return {
+        "schema_version": CONFIG_BINDING_SCHEMA_VERSION,
+        "durability_profile": CONFIG_BOUND_DURABILITY_PROFILE,
+        "configuration_digest": plan.configuration_digest,
+        "plan_digest": plan_digest(plan),
+        "plan": plan.to_dict(),
+        "base": {
+            "generation": base_evidence.generation,
+            "substrate_digest": base_evidence.substrate_digest,
+            "governance_digest": base_evidence.governance_digest,
+            "interpretation_digest": base_evidence.interpretation_digest,
+        },
+        "required_projection_ids": list(plan.required_projection_ids),
+    }
+
+
+def checkpoint_evidence(*, plan: RuntimeConfigurationPlan, base_evidence) -> ConfigBoundRecoveryEvidence:
+    """The evidence of a binding this runtime just published; computes, writes nothing."""
+
+    return ConfigBoundRecoveryEvidence(
+        durability_profile=CONFIG_BOUND_DURABILITY_PROFILE,
+        configuration_digest=plan.configuration_digest,
+        plan_digest=plan_digest(plan),
+        base_generation=base_evidence.generation,
+        base_substrate_digest=base_evidence.substrate_digest,
+        base_governance_digest=base_evidence.governance_digest,
+        base_interpretation_digest=base_evidence.interpretation_digest,
+        required_projection_ids=plan.required_projection_ids,
+        route_activations=_activate_routes(plan, ()),
+        recovery_posture="checkpoint_bound_to_validated_configuration",
+    )
+
+
+def verify_binding_record(
+    record: Mapping[str, object],
+    *,
+    plan: RuntimeConfigurationPlan,
+    base_evidence,
+    provider_failures: Iterable[ProviderFailure],
+) -> ConfigBoundRecoveryEvidence:
+    """Recovery-time verification of a persisted binding against the plan and recovered base."""
+
+    if record.get("schema_version") != CONFIG_BINDING_SCHEMA_VERSION:
+        raise RuntimeRecoveryError("unsupported configuration-binding schema")
+    if record.get("durability_profile") != CONFIG_BOUND_DURABILITY_PROFILE:
+        raise RuntimeRecoveryError("configuration-bound durability profile changed")
+    if record.get("configuration_digest") != plan.configuration_digest:
+        raise RuntimeRecoveryError(
+            "runtime configuration changed after durable state was written; explicit migration is required"
+        )
+    expected_plan_digest = plan_digest(plan)
+    if record.get("plan_digest") != expected_plan_digest:
+        raise RuntimeRecoveryError(
+            "resolved runtime plan or qualification interpretation changed; explicit migration is required"
+        )
+    persisted_plan = record.get("plan")
+    if not isinstance(persisted_plan, Mapping) or _digest(persisted_plan) != expected_plan_digest:
+        raise RuntimeRecoveryError("persisted runtime plan binding is corrupt or inconsistent")
+
+    base = record.get("base")
+    if not isinstance(base, Mapping):
+        raise RuntimeRecoveryError("configuration binding has no base checkpoint identity")
+    comparisons = {
+        "generation": base_evidence.generation,
+        "substrate_digest": base_evidence.substrate_digest,
+        "governance_digest": base_evidence.governance_digest,
+        "interpretation_digest": base_evidence.interpretation_digest,
+    }
+    for key, expected in comparisons.items():
+        if base.get(key) != expected:
+            raise RuntimeRecoveryError(
+                f"configuration binding does not match recovered base checkpoint: {key}"
+            )
+
+    persisted_projections = tuple(record.get("required_projection_ids", ()))
+    if persisted_projections != plan.required_projection_ids:
+        raise RuntimeRecoveryError("required projection interpretation changed after restart")
+
+    activations = _activate_routes(plan, provider_failures)
+    degraded = any(item.status == "unavailable" for item in activations)
+    fallback = any(item.status == "fallback_active" for item in activations)
+    if degraded:
+        posture = "recovered_config_current_but_provider_unavailable"
+    elif fallback:
+        posture = "recovered_config_current_with_evidence_bound_fallback"
+    else:
+        posture = "recovered_exact_configuration"
+    return ConfigBoundRecoveryEvidence(
+        durability_profile=CONFIG_BOUND_DURABILITY_PROFILE,
+        configuration_digest=plan.configuration_digest,
+        plan_digest=expected_plan_digest,
+        base_generation=base_evidence.generation,
+        base_substrate_digest=base_evidence.substrate_digest,
+        base_governance_digest=base_evidence.governance_digest,
+        base_interpretation_digest=base_evidence.interpretation_digest,
+        required_projection_ids=plan.required_projection_ids,
+        route_activations=activations,
+        recovery_posture=posture,
+    )
+
+
 class ConfigBindingStore:
-    """Outer binding between a validated config plan and one v1 checkpoint generation."""
+    """Outer binding between a validated config plan and one v1 checkpoint generation.
+
+    A file written after the base generation is published. The SQLite profile binds inside
+    its generation's transaction instead (#821) and reads this file only for stores written
+    before that change.
+    """
 
     def __init__(self, root: str | Path) -> None:
         self.path = Path(root) / "configuration-binding.json"
@@ -267,36 +376,8 @@ class ConfigBindingStore:
         plan: RuntimeConfigurationPlan,
         base_evidence: RecoveryEvidence,
     ) -> ConfigBoundRecoveryEvidence:
-        normalized_plan = plan.to_dict()
-        digest = plan_digest(plan)
-        record = {
-            "schema_version": CONFIG_BINDING_SCHEMA_VERSION,
-            "durability_profile": CONFIG_BOUND_DURABILITY_PROFILE,
-            "configuration_digest": plan.configuration_digest,
-            "plan_digest": digest,
-            "plan": normalized_plan,
-            "base": {
-                "generation": base_evidence.generation,
-                "substrate_digest": base_evidence.substrate_digest,
-                "governance_digest": base_evidence.governance_digest,
-                "interpretation_digest": base_evidence.interpretation_digest,
-            },
-            "required_projection_ids": list(plan.required_projection_ids),
-        }
-        _atomic_json_write(self.path, record)
-        activations = _activate_routes(plan, ())
-        return ConfigBoundRecoveryEvidence(
-            durability_profile=CONFIG_BOUND_DURABILITY_PROFILE,
-            configuration_digest=plan.configuration_digest,
-            plan_digest=digest,
-            base_generation=base_evidence.generation,
-            base_substrate_digest=base_evidence.substrate_digest,
-            base_governance_digest=base_evidence.governance_digest,
-            base_interpretation_digest=base_evidence.interpretation_digest,
-            required_projection_ids=plan.required_projection_ids,
-            route_activations=activations,
-            recovery_posture="checkpoint_bound_to_validated_configuration",
-        )
+        _atomic_json_write(self.path, binding_record(plan=plan, base_evidence=base_evidence))
+        return checkpoint_evidence(plan=plan, base_evidence=base_evidence)
 
     def recover(
         self,
@@ -305,63 +386,11 @@ class ConfigBindingStore:
         base_evidence: RecoveryEvidence,
         provider_failures: Iterable[ProviderFailure],
     ) -> ConfigBoundRecoveryEvidence:
-        record = _read_json(self.path)
-        if record.get("schema_version") != CONFIG_BINDING_SCHEMA_VERSION:
-            raise RuntimeRecoveryError("unsupported configuration-binding schema")
-        if record.get("durability_profile") != CONFIG_BOUND_DURABILITY_PROFILE:
-            raise RuntimeRecoveryError("configuration-bound durability profile changed")
-        if record.get("configuration_digest") != plan.configuration_digest:
-            raise RuntimeRecoveryError(
-                "runtime configuration changed after durable state was written; explicit migration is required"
-            )
-        expected_plan_digest = plan_digest(plan)
-        if record.get("plan_digest") != expected_plan_digest:
-            raise RuntimeRecoveryError(
-                "resolved runtime plan or qualification interpretation changed; explicit migration is required"
-            )
-        persisted_plan = record.get("plan")
-        if not isinstance(persisted_plan, Mapping) or _digest(persisted_plan) != expected_plan_digest:
-            raise RuntimeRecoveryError("persisted runtime plan binding is corrupt or inconsistent")
-
-        base = record.get("base")
-        if not isinstance(base, Mapping):
-            raise RuntimeRecoveryError("configuration binding has no base checkpoint identity")
-        comparisons = {
-            "generation": base_evidence.generation,
-            "substrate_digest": base_evidence.substrate_digest,
-            "governance_digest": base_evidence.governance_digest,
-            "interpretation_digest": base_evidence.interpretation_digest,
-        }
-        for key, expected in comparisons.items():
-            if base.get(key) != expected:
-                raise RuntimeRecoveryError(
-                    f"configuration binding does not match recovered base checkpoint: {key}"
-                )
-
-        persisted_projections = tuple(record.get("required_projection_ids", ()))
-        if persisted_projections != plan.required_projection_ids:
-            raise RuntimeRecoveryError("required projection interpretation changed after restart")
-
-        activations = _activate_routes(plan, provider_failures)
-        degraded = any(item.status == "unavailable" for item in activations)
-        fallback = any(item.status == "fallback_active" for item in activations)
-        if degraded:
-            posture = "recovered_config_current_but_provider_unavailable"
-        elif fallback:
-            posture = "recovered_config_current_with_evidence_bound_fallback"
-        else:
-            posture = "recovered_exact_configuration"
-        return ConfigBoundRecoveryEvidence(
-            durability_profile=CONFIG_BOUND_DURABILITY_PROFILE,
-            configuration_digest=plan.configuration_digest,
-            plan_digest=expected_plan_digest,
-            base_generation=base_evidence.generation,
-            base_substrate_digest=base_evidence.substrate_digest,
-            base_governance_digest=base_evidence.governance_digest,
-            base_interpretation_digest=base_evidence.interpretation_digest,
-            required_projection_ids=plan.required_projection_ids,
-            route_activations=activations,
-            recovery_posture=posture,
+        return verify_binding_record(
+            _read_json(self.path),
+            plan=plan,
+            base_evidence=base_evidence,
+            provider_failures=provider_failures,
         )
 
 

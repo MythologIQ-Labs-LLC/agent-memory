@@ -1,0 +1,3887 @@
+{
+ "base_commit": "b932bd2ffb555087889d308dd8594d6926cc73f2",
+ "cases": [
+  {
+   "clauses": [
+    {
+     "clause": "A write citing a reference outside the writer's scope therefore commits, reads back and stays admitted exactly as a write citing an id nobody wrote: the same receipt, `history`, recall payload and `write_semantics`, live, after a reopen and after a restart, and whether or not the cited fact is later pruned or permanently deleted.",
+     "observables": [
+      "op_same_bd",
+      "history_same_bd",
+      "recall_same_bd",
+      "semantics_same_bd",
+      "op_same_bl",
+      "history_same_bl",
+      "recall_same_bl",
+      "semantics_same_bl",
+      "admitted_bd",
+      "history_bd",
+      "semantics_bd",
+      "admitted_bl",
+      "history_bl",
+      "semantics_bl",
+      "admitted_bu",
+      "history_bu",
+      "semantics_bu",
+      "admitted_bn",
+      "history_bn",
+      "semantics_bn",
+      "committed_bd",
+      "refusal_bd",
+      "before_bd",
+      "after_bd",
+      "committed_bl",
+      "refusal_bl",
+      "before_bl",
+      "after_bl",
+      "committed_bu",
+      "refusal_bu",
+      "before_bu",
+      "after_bu",
+      "committed_bn",
+      "refusal_bn",
+      "before_bn",
+      "after_bn"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "Every other reference (an external evidence identifier, an id nobody wrote, a fact outside the writer's scope, an id that exists only later) is an unknown reference: it is retained verbatim as caller-supplied evidence (`episode_uuids`, receipts, audit events) and never withholds anything.",
+     "observables": [
+      "admitted_bd",
+      "admitted_bl",
+      "admitted_bu",
+      "admitted_bn"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "A citation of a foreign deleted, foreign live or unknown id commits, reads and stays admitted identically; a canary citing a live foreign fact no longer vanishes; a dispute citing a foreign deleted id stays in the citer's history.",
+     "observables": [
+      "committed_bd",
+      "refusal_bd",
+      "before_bd",
+      "after_bd",
+      "admitted_bd",
+      "history_bd",
+      "semantics_bd",
+      "committed_bl",
+      "refusal_bl",
+      "before_bl",
+      "after_bl",
+      "admitted_bl",
+      "history_bl",
+      "semantics_bl",
+      "op_same_bd",
+      "history_same_bd",
+      "recall_same_bd",
+      "semantics_same_bd",
+      "op_same_bl",
+      "history_same_bl",
+      "recall_same_bl",
+      "semantics_same_bl"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "Versions are generation-relative: `state_version`, `state_snapshot`, `before_state` and `after_state` count within the live generation of a logical id. After a governed deletion of the head the id reports `0` to any writer, a re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one",
+     "observables": [
+      "committed_bd",
+      "refusal_bd",
+      "before_bd",
+      "after_bd",
+      "committed_bl",
+      "refusal_bl",
+      "before_bl",
+      "after_bl",
+      "committed_bu",
+      "refusal_bu",
+      "before_bu",
+      "after_bu",
+      "committed_bn",
+      "refusal_bn",
+      "before_bn",
+      "after_bn"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "An id with no live head (never written or governed-deleted) is open to any writer in the tenant: creation and the #776 re-creation of a deleted id as a fresh generation are unchanged.",
+     "observables": [
+      "committed_bd",
+      "refusal_bd",
+      "before_bd",
+      "after_bd",
+      "committed_bl",
+      "refusal_bl",
+      "before_bl",
+      "after_bl",
+      "committed_bu",
+      "refusal_bu",
+      "before_bu",
+      "after_bu",
+      "committed_bn",
+      "refusal_bn",
+      "before_bn",
+      "after_bn"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    }
+   ],
+   "expect": {
+    "admitted_bd": {
+     "eq": true
+    },
+    "admitted_bl": {
+     "eq": true
+    },
+    "admitted_bn": {
+     "eq": true
+    },
+    "admitted_bu": {
+     "eq": true
+    },
+    "after_bd": {
+     "eq": "v1"
+    },
+    "after_bl": {
+     "eq": "v1"
+    },
+    "after_bn": {
+     "eq": "v1"
+    },
+    "after_bu": {
+     "eq": "v1"
+    },
+    "before_bd": {
+     "eq": "v0"
+    },
+    "before_bl": {
+     "eq": "v0"
+    },
+    "before_bn": {
+     "eq": "v0"
+    },
+    "before_bu": {
+     "eq": "v0"
+    },
+    "committed_bd": {
+     "eq": true
+    },
+    "committed_bl": {
+     "eq": true
+    },
+    "committed_bn": {
+     "eq": true
+    },
+    "committed_bu": {
+     "eq": true
+    },
+    "history_bd": {
+     "eq": {
+      "current": "bd",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    "history_bl": {
+     "eq": {
+      "current": "bl",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    "history_bn": {
+     "eq": {
+      "current": "bn",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    "history_bu": {
+     "eq": {
+      "current": "bu",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    "history_same_bd": {
+     "eq": true
+    },
+    "history_same_bl": {
+     "eq": true
+    },
+    "op_same_bd": {
+     "eq": true
+    },
+    "op_same_bl": {
+     "eq": true
+    },
+    "recall_same_bd": {
+     "eq": true
+    },
+    "recall_same_bl": {
+     "eq": true
+    },
+    "refusal_bd": {
+     "eq": null
+    },
+    "refusal_bl": {
+     "eq": null
+    },
+    "refusal_bn": {
+     "eq": null
+    },
+    "refusal_bu": {
+     "eq": null
+    },
+    "semantics_bd": {
+     "eq": true
+    },
+    "semantics_bl": {
+     "eq": true
+    },
+    "semantics_bn": {
+     "eq": true
+    },
+    "semantics_bu": {
+     "eq": true
+    },
+    "semantics_same_bd": {
+     "eq": true
+    },
+    "semantics_same_bl": {
+     "eq": true
+    }
+   },
+   "id": "E1-four-references-after-pruning",
+   "invariants": [
+    "E1"
+   ],
+   "probes": {
+    "admitted_bd": {
+     "as": "project:b",
+     "fact": "bd",
+     "logical_refs": [
+      "memory:bd"
+     ],
+     "probe": "recall_admits",
+     "query": "Quillon ferry berth digest alpha"
+    },
+    "admitted_bl": {
+     "as": "project:b",
+     "fact": "bl",
+     "logical_refs": [
+      "memory:bl"
+     ],
+     "probe": "recall_admits",
+     "query": "Quillon ferry berth digest beta"
+    },
+    "admitted_bn": {
+     "as": "project:b",
+     "fact": "bn",
+     "logical_refs": [
+      "memory:bn"
+     ],
+     "probe": "recall_admits",
+     "query": "Quillon ferry berth digest delta"
+    },
+    "admitted_bu": {
+     "as": "project:b",
+     "fact": "bu",
+     "logical_refs": [
+      "memory:bu"
+     ],
+     "probe": "recall_admits",
+     "query": "Quillon ferry berth digest gamma"
+    },
+    "after_bd": {
+     "field": "after_state",
+     "name": "bd",
+     "probe": "op_result"
+    },
+    "after_bl": {
+     "field": "after_state",
+     "name": "bl",
+     "probe": "op_result"
+    },
+    "after_bn": {
+     "field": "after_state",
+     "name": "bn",
+     "probe": "op_result"
+    },
+    "after_bu": {
+     "field": "after_state",
+     "name": "bu",
+     "probe": "op_result"
+    },
+    "before_bd": {
+     "field": "before_state",
+     "name": "bd",
+     "probe": "op_result"
+    },
+    "before_bl": {
+     "field": "before_state",
+     "name": "bl",
+     "probe": "op_result"
+    },
+    "before_bn": {
+     "field": "before_state",
+     "name": "bn",
+     "probe": "op_result"
+    },
+    "before_bu": {
+     "field": "before_state",
+     "name": "bu",
+     "probe": "op_result"
+    },
+    "committed_bd": {
+     "field": "committed",
+     "name": "bd",
+     "probe": "op_result"
+    },
+    "committed_bl": {
+     "field": "committed",
+     "name": "bl",
+     "probe": "op_result"
+    },
+    "committed_bn": {
+     "field": "committed",
+     "name": "bn",
+     "probe": "op_result"
+    },
+    "committed_bu": {
+     "field": "committed",
+     "name": "bu",
+     "probe": "op_result"
+    },
+    "history_bd": {
+     "as": "project:b",
+     "probe": "history",
+     "ref": "memory:bd"
+    },
+    "history_bl": {
+     "as": "project:b",
+     "probe": "history",
+     "ref": "memory:bl"
+    },
+    "history_bn": {
+     "as": "project:b",
+     "probe": "history",
+     "ref": "memory:bn"
+    },
+    "history_bu": {
+     "as": "project:b",
+     "probe": "history",
+     "ref": "memory:bu"
+    },
+    "history_same_bd": {
+     "as": "project:b",
+     "other": "memory:bu",
+     "probe": "history_same_as",
+     "ref": "memory:bd",
+     "substitute": [
+      [
+       "q1",
+       "<ref>"
+      ],
+      [
+       "q2",
+       "<ref>"
+      ],
+      [
+       "@literal:fact-guess-999999999999",
+       "<ref>"
+      ],
+      [
+       "@literal:digest alpha",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest beta",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest gamma",
+       "digest <case>"
+      ],
+      [
+       "bd",
+       "<self>"
+      ],
+      [
+       "bl",
+       "<self>"
+      ],
+      [
+       "bu",
+       "<self>"
+      ]
+     ]
+    },
+    "history_same_bl": {
+     "as": "project:b",
+     "other": "memory:bu",
+     "probe": "history_same_as",
+     "ref": "memory:bl",
+     "substitute": [
+      [
+       "q1",
+       "<ref>"
+      ],
+      [
+       "q2",
+       "<ref>"
+      ],
+      [
+       "@literal:fact-guess-999999999999",
+       "<ref>"
+      ],
+      [
+       "@literal:digest alpha",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest beta",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest gamma",
+       "digest <case>"
+      ],
+      [
+       "bd",
+       "<self>"
+      ],
+      [
+       "bl",
+       "<self>"
+      ],
+      [
+       "bu",
+       "<self>"
+      ]
+     ]
+    },
+    "op_same_bd": {
+     "name": "bd",
+     "other": "bu",
+     "other_ref": "memory:bu",
+     "probe": "op_same_as",
+     "ref": "memory:bd",
+     "substitute": [
+      [
+       "q1",
+       "<ref>"
+      ],
+      [
+       "q2",
+       "<ref>"
+      ],
+      [
+       "@literal:fact-guess-999999999999",
+       "<ref>"
+      ],
+      [
+       "@literal:digest alpha",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest beta",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest gamma",
+       "digest <case>"
+      ],
+      [
+       "bd",
+       "<self>"
+      ],
+      [
+       "bl",
+       "<self>"
+      ],
+      [
+       "bu",
+       "<self>"
+      ]
+     ]
+    },
+    "op_same_bl": {
+     "name": "bl",
+     "other": "bu",
+     "other_ref": "memory:bu",
+     "probe": "op_same_as",
+     "ref": "memory:bl",
+     "substitute": [
+      [
+       "q1",
+       "<ref>"
+      ],
+      [
+       "q2",
+       "<ref>"
+      ],
+      [
+       "@literal:fact-guess-999999999999",
+       "<ref>"
+      ],
+      [
+       "@literal:digest alpha",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest beta",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest gamma",
+       "digest <case>"
+      ],
+      [
+       "bd",
+       "<self>"
+      ],
+      [
+       "bl",
+       "<self>"
+      ],
+      [
+       "bu",
+       "<self>"
+      ]
+     ]
+    },
+    "recall_same_bd": {
+     "as": "project:b",
+     "other": "memory:bu",
+     "other_query": "Quillon ferry berth digest gamma",
+     "probe": "recall_same_as",
+     "query": "Quillon ferry berth digest alpha",
+     "ref": "memory:bd",
+     "substitute": [
+      [
+       "q1",
+       "<ref>"
+      ],
+      [
+       "q2",
+       "<ref>"
+      ],
+      [
+       "@literal:fact-guess-999999999999",
+       "<ref>"
+      ],
+      [
+       "@literal:digest alpha",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest beta",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest gamma",
+       "digest <case>"
+      ],
+      [
+       "bd",
+       "<self>"
+      ],
+      [
+       "bl",
+       "<self>"
+      ],
+      [
+       "bu",
+       "<self>"
+      ]
+     ]
+    },
+    "recall_same_bl": {
+     "as": "project:b",
+     "other": "memory:bu",
+     "other_query": "Quillon ferry berth digest gamma",
+     "probe": "recall_same_as",
+     "query": "Quillon ferry berth digest beta",
+     "ref": "memory:bl",
+     "substitute": [
+      [
+       "q1",
+       "<ref>"
+      ],
+      [
+       "q2",
+       "<ref>"
+      ],
+      [
+       "@literal:fact-guess-999999999999",
+       "<ref>"
+      ],
+      [
+       "@literal:digest alpha",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest beta",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest gamma",
+       "digest <case>"
+      ],
+      [
+       "bd",
+       "<self>"
+      ],
+      [
+       "bl",
+       "<self>"
+      ],
+      [
+       "bu",
+       "<self>"
+      ]
+     ]
+    },
+    "refusal_bd": {
+     "field": "refusal",
+     "name": "bd",
+     "probe": "op_result"
+    },
+    "refusal_bl": {
+     "field": "refusal",
+     "name": "bl",
+     "probe": "op_result"
+    },
+    "refusal_bn": {
+     "field": "refusal",
+     "name": "bn",
+     "probe": "op_result"
+    },
+    "refusal_bu": {
+     "field": "refusal",
+     "name": "bu",
+     "probe": "op_result"
+    },
+    "semantics_bd": {
+     "as": "project:b",
+     "fact": "bd",
+     "probe": "write_semantics_present"
+    },
+    "semantics_bl": {
+     "as": "project:b",
+     "fact": "bl",
+     "probe": "write_semantics_present"
+    },
+    "semantics_bn": {
+     "as": "project:b",
+     "fact": "bn",
+     "probe": "write_semantics_present"
+    },
+    "semantics_bu": {
+     "as": "project:b",
+     "fact": "bu",
+     "probe": "write_semantics_present"
+    },
+    "semantics_same_bd": {
+     "as": "project:b",
+     "fact": "bd",
+     "other": "bu",
+     "probe": "write_semantics_same_as",
+     "substitute": [
+      [
+       "q1",
+       "<ref>"
+      ],
+      [
+       "q2",
+       "<ref>"
+      ],
+      [
+       "@literal:fact-guess-999999999999",
+       "<ref>"
+      ],
+      [
+       "@literal:digest alpha",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest beta",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest gamma",
+       "digest <case>"
+      ],
+      [
+       "bd",
+       "<self>"
+      ],
+      [
+       "bl",
+       "<self>"
+      ],
+      [
+       "bu",
+       "<self>"
+      ]
+     ]
+    },
+    "semantics_same_bl": {
+     "as": "project:b",
+     "fact": "bl",
+     "other": "bu",
+     "probe": "write_semantics_same_as",
+     "substitute": [
+      [
+       "q1",
+       "<ref>"
+      ],
+      [
+       "q2",
+       "<ref>"
+      ],
+      [
+       "@literal:fact-guess-999999999999",
+       "<ref>"
+      ],
+      [
+       "@literal:digest alpha",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest beta",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest gamma",
+       "digest <case>"
+      ],
+      [
+       "bd",
+       "<self>"
+      ],
+      [
+       "bl",
+       "<self>"
+      ],
+      [
+       "bu",
+       "<self>"
+      ]
+     ]
+    }
+   },
+   "steps": [
+    {
+     "label": "q1",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "north"
+     },
+     "ref": "memory:q",
+     "require_committed": true,
+     "text": "Quillon ferry berth is north"
+    },
+    {
+     "label": "q2",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "south"
+     },
+     "ref": "memory:q2",
+     "require_committed": true,
+     "text": "Quillon ferry berth is south"
+    },
+    {
+     "op": "forget",
+     "ref": "memory:q",
+     "require_committed": true
+    },
+    {
+     "as": "project:b",
+     "evidence_refs": [
+      "q1"
+     ],
+     "label": "bd",
+     "name": "bd",
+     "op": "remember",
+     "ref": "memory:bd",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest alpha"
+    },
+    {
+     "as": "project:b",
+     "evidence_refs": [
+      "q2"
+     ],
+     "label": "bl",
+     "name": "bl",
+     "op": "remember",
+     "ref": "memory:bl",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest beta"
+    },
+    {
+     "as": "project:b",
+     "evidence_refs": [
+      "@literal:fact-guess-999999999999"
+     ],
+     "label": "bu",
+     "name": "bu",
+     "op": "remember",
+     "ref": "memory:bu",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest gamma"
+    },
+    {
+     "as": "project:b",
+     "label": "bn",
+     "name": "bn",
+     "op": "remember",
+     "ref": "memory:bn",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest delta"
+    }
+   ]
+  },
+  {
+   "clauses": [
+    {
+     "clause": "A write citing a reference outside the writer's scope therefore commits, reads back and stays admitted exactly as a write citing an id nobody wrote: the same receipt, `history`, recall payload and `write_semantics`, live, after a reopen and after a restart, and whether or not the cited fact is later pruned or permanently deleted.",
+     "observables": [
+      "op_same_bd",
+      "history_same_bd",
+      "recall_same_bd",
+      "semantics_same_bd",
+      "op_same_bl",
+      "history_same_bl",
+      "recall_same_bl",
+      "semantics_same_bl",
+      "admitted_bd",
+      "history_bd",
+      "semantics_bd",
+      "admitted_bl",
+      "history_bl",
+      "semantics_bl",
+      "admitted_bu",
+      "history_bu",
+      "semantics_bu",
+      "admitted_bn",
+      "history_bn",
+      "semantics_bn",
+      "committed_bd",
+      "refusal_bd",
+      "before_bd",
+      "after_bd",
+      "committed_bl",
+      "refusal_bl",
+      "before_bl",
+      "after_bl",
+      "committed_bu",
+      "refusal_bu",
+      "before_bu",
+      "after_bu",
+      "committed_bn",
+      "refusal_bn",
+      "before_bn",
+      "after_bn"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "Every other reference (an external evidence identifier, an id nobody wrote, a fact outside the writer's scope, an id that exists only later) is an unknown reference: it is retained verbatim as caller-supplied evidence (`episode_uuids`, receipts, audit events) and never withholds anything.",
+     "observables": [
+      "admitted_bd",
+      "admitted_bl",
+      "admitted_bu",
+      "admitted_bn"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "A citation of a foreign deleted, foreign live or unknown id commits, reads and stays admitted identically; a canary citing a live foreign fact no longer vanishes; a dispute citing a foreign deleted id stays in the citer's history.",
+     "observables": [
+      "committed_bd",
+      "refusal_bd",
+      "before_bd",
+      "after_bd",
+      "admitted_bd",
+      "history_bd",
+      "semantics_bd",
+      "committed_bl",
+      "refusal_bl",
+      "before_bl",
+      "after_bl",
+      "admitted_bl",
+      "history_bl",
+      "semantics_bl",
+      "op_same_bd",
+      "history_same_bd",
+      "recall_same_bd",
+      "semantics_same_bd",
+      "op_same_bl",
+      "history_same_bl",
+      "recall_same_bl",
+      "semantics_same_bl"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "Versions are generation-relative: `state_version`, `state_snapshot`, `before_state` and `after_state` count within the live generation of a logical id. After a governed deletion of the head the id reports `0` to any writer, a re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one",
+     "observables": [
+      "committed_bd",
+      "refusal_bd",
+      "before_bd",
+      "after_bd",
+      "committed_bl",
+      "refusal_bl",
+      "before_bl",
+      "after_bl",
+      "committed_bu",
+      "refusal_bu",
+      "before_bu",
+      "after_bu",
+      "committed_bn",
+      "refusal_bn",
+      "before_bn",
+      "after_bn"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "An id with no live head (never written or governed-deleted) is open to any writer in the tenant: creation and the #776 re-creation of a deleted id as a fresh generation are unchanged.",
+     "observables": [
+      "committed_bd",
+      "refusal_bd",
+      "before_bd",
+      "after_bd",
+      "committed_bl",
+      "refusal_bl",
+      "before_bl",
+      "after_bl",
+      "committed_bu",
+      "refusal_bu",
+      "before_bu",
+      "after_bu",
+      "committed_bn",
+      "refusal_bn",
+      "before_bn",
+      "after_bn"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "| purge | no | intended no recoverable copies | no | required full deletion outcome |",
+     "observables": [
+      "q1_exists"
+     ],
+     "source": "docs/28-retention-deletion-and-tombstones.md"
+    }
+   ],
+   "expect": {
+    "admitted_bd": {
+     "eq": true
+    },
+    "admitted_bl": {
+     "eq": true
+    },
+    "admitted_bn": {
+     "eq": true
+    },
+    "admitted_bu": {
+     "eq": true
+    },
+    "after_bd": {
+     "eq": "v1"
+    },
+    "after_bl": {
+     "eq": "v1"
+    },
+    "after_bn": {
+     "eq": "v1"
+    },
+    "after_bu": {
+     "eq": "v1"
+    },
+    "before_bd": {
+     "eq": "v0"
+    },
+    "before_bl": {
+     "eq": "v0"
+    },
+    "before_bn": {
+     "eq": "v0"
+    },
+    "before_bu": {
+     "eq": "v0"
+    },
+    "committed_bd": {
+     "eq": true
+    },
+    "committed_bl": {
+     "eq": true
+    },
+    "committed_bn": {
+     "eq": true
+    },
+    "committed_bu": {
+     "eq": true
+    },
+    "history_bd": {
+     "eq": {
+      "current": "bd",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    "history_bl": {
+     "eq": {
+      "current": "bl",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    "history_bn": {
+     "eq": {
+      "current": "bn",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    "history_bu": {
+     "eq": {
+      "current": "bu",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    "history_same_bd": {
+     "eq": true
+    },
+    "history_same_bl": {
+     "eq": true
+    },
+    "op_same_bd": {
+     "eq": true
+    },
+    "op_same_bl": {
+     "eq": true
+    },
+    "q1_exists": {
+     "eq": false
+    },
+    "recall_same_bd": {
+     "eq": true
+    },
+    "recall_same_bl": {
+     "eq": true
+    },
+    "refusal_bd": {
+     "eq": null
+    },
+    "refusal_bl": {
+     "eq": null
+    },
+    "refusal_bn": {
+     "eq": null
+    },
+    "refusal_bu": {
+     "eq": null
+    },
+    "semantics_bd": {
+     "eq": true
+    },
+    "semantics_bl": {
+     "eq": true
+    },
+    "semantics_bn": {
+     "eq": true
+    },
+    "semantics_bu": {
+     "eq": true
+    },
+    "semantics_same_bd": {
+     "eq": true
+    },
+    "semantics_same_bl": {
+     "eq": true
+    }
+   },
+   "id": "E1b-four-references-after-permanent-deletion",
+   "invariants": [
+    "E1"
+   ],
+   "probes": {
+    "admitted_bd": {
+     "as": "project:b",
+     "fact": "bd",
+     "logical_refs": [
+      "memory:bd"
+     ],
+     "probe": "recall_admits",
+     "query": "Quillon ferry berth digest alpha"
+    },
+    "admitted_bl": {
+     "as": "project:b",
+     "fact": "bl",
+     "logical_refs": [
+      "memory:bl"
+     ],
+     "probe": "recall_admits",
+     "query": "Quillon ferry berth digest beta"
+    },
+    "admitted_bn": {
+     "as": "project:b",
+     "fact": "bn",
+     "logical_refs": [
+      "memory:bn"
+     ],
+     "probe": "recall_admits",
+     "query": "Quillon ferry berth digest delta"
+    },
+    "admitted_bu": {
+     "as": "project:b",
+     "fact": "bu",
+     "logical_refs": [
+      "memory:bu"
+     ],
+     "probe": "recall_admits",
+     "query": "Quillon ferry berth digest gamma"
+    },
+    "after_bd": {
+     "field": "after_state",
+     "name": "bd",
+     "probe": "op_result"
+    },
+    "after_bl": {
+     "field": "after_state",
+     "name": "bl",
+     "probe": "op_result"
+    },
+    "after_bn": {
+     "field": "after_state",
+     "name": "bn",
+     "probe": "op_result"
+    },
+    "after_bu": {
+     "field": "after_state",
+     "name": "bu",
+     "probe": "op_result"
+    },
+    "before_bd": {
+     "field": "before_state",
+     "name": "bd",
+     "probe": "op_result"
+    },
+    "before_bl": {
+     "field": "before_state",
+     "name": "bl",
+     "probe": "op_result"
+    },
+    "before_bn": {
+     "field": "before_state",
+     "name": "bn",
+     "probe": "op_result"
+    },
+    "before_bu": {
+     "field": "before_state",
+     "name": "bu",
+     "probe": "op_result"
+    },
+    "committed_bd": {
+     "field": "committed",
+     "name": "bd",
+     "probe": "op_result"
+    },
+    "committed_bl": {
+     "field": "committed",
+     "name": "bl",
+     "probe": "op_result"
+    },
+    "committed_bn": {
+     "field": "committed",
+     "name": "bn",
+     "probe": "op_result"
+    },
+    "committed_bu": {
+     "field": "committed",
+     "name": "bu",
+     "probe": "op_result"
+    },
+    "history_bd": {
+     "as": "project:b",
+     "probe": "history",
+     "ref": "memory:bd"
+    },
+    "history_bl": {
+     "as": "project:b",
+     "probe": "history",
+     "ref": "memory:bl"
+    },
+    "history_bn": {
+     "as": "project:b",
+     "probe": "history",
+     "ref": "memory:bn"
+    },
+    "history_bu": {
+     "as": "project:b",
+     "probe": "history",
+     "ref": "memory:bu"
+    },
+    "history_same_bd": {
+     "as": "project:b",
+     "other": "memory:bu",
+     "probe": "history_same_as",
+     "ref": "memory:bd",
+     "substitute": [
+      [
+       "q1",
+       "<ref>"
+      ],
+      [
+       "q2",
+       "<ref>"
+      ],
+      [
+       "@literal:fact-guess-999999999999",
+       "<ref>"
+      ],
+      [
+       "@literal:digest alpha",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest beta",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest gamma",
+       "digest <case>"
+      ],
+      [
+       "bd",
+       "<self>"
+      ],
+      [
+       "bl",
+       "<self>"
+      ],
+      [
+       "bu",
+       "<self>"
+      ]
+     ]
+    },
+    "history_same_bl": {
+     "as": "project:b",
+     "other": "memory:bu",
+     "probe": "history_same_as",
+     "ref": "memory:bl",
+     "substitute": [
+      [
+       "q1",
+       "<ref>"
+      ],
+      [
+       "q2",
+       "<ref>"
+      ],
+      [
+       "@literal:fact-guess-999999999999",
+       "<ref>"
+      ],
+      [
+       "@literal:digest alpha",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest beta",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest gamma",
+       "digest <case>"
+      ],
+      [
+       "bd",
+       "<self>"
+      ],
+      [
+       "bl",
+       "<self>"
+      ],
+      [
+       "bu",
+       "<self>"
+      ]
+     ]
+    },
+    "op_same_bd": {
+     "name": "bd",
+     "other": "bu",
+     "other_ref": "memory:bu",
+     "probe": "op_same_as",
+     "ref": "memory:bd",
+     "substitute": [
+      [
+       "q1",
+       "<ref>"
+      ],
+      [
+       "q2",
+       "<ref>"
+      ],
+      [
+       "@literal:fact-guess-999999999999",
+       "<ref>"
+      ],
+      [
+       "@literal:digest alpha",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest beta",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest gamma",
+       "digest <case>"
+      ],
+      [
+       "bd",
+       "<self>"
+      ],
+      [
+       "bl",
+       "<self>"
+      ],
+      [
+       "bu",
+       "<self>"
+      ]
+     ]
+    },
+    "op_same_bl": {
+     "name": "bl",
+     "other": "bu",
+     "other_ref": "memory:bu",
+     "probe": "op_same_as",
+     "ref": "memory:bl",
+     "substitute": [
+      [
+       "q1",
+       "<ref>"
+      ],
+      [
+       "q2",
+       "<ref>"
+      ],
+      [
+       "@literal:fact-guess-999999999999",
+       "<ref>"
+      ],
+      [
+       "@literal:digest alpha",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest beta",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest gamma",
+       "digest <case>"
+      ],
+      [
+       "bd",
+       "<self>"
+      ],
+      [
+       "bl",
+       "<self>"
+      ],
+      [
+       "bu",
+       "<self>"
+      ]
+     ]
+    },
+    "q1_exists": {
+     "fact": "q1",
+     "probe": "fact_exists"
+    },
+    "recall_same_bd": {
+     "as": "project:b",
+     "other": "memory:bu",
+     "other_query": "Quillon ferry berth digest gamma",
+     "probe": "recall_same_as",
+     "query": "Quillon ferry berth digest alpha",
+     "ref": "memory:bd",
+     "substitute": [
+      [
+       "q1",
+       "<ref>"
+      ],
+      [
+       "q2",
+       "<ref>"
+      ],
+      [
+       "@literal:fact-guess-999999999999",
+       "<ref>"
+      ],
+      [
+       "@literal:digest alpha",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest beta",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest gamma",
+       "digest <case>"
+      ],
+      [
+       "bd",
+       "<self>"
+      ],
+      [
+       "bl",
+       "<self>"
+      ],
+      [
+       "bu",
+       "<self>"
+      ]
+     ]
+    },
+    "recall_same_bl": {
+     "as": "project:b",
+     "other": "memory:bu",
+     "other_query": "Quillon ferry berth digest gamma",
+     "probe": "recall_same_as",
+     "query": "Quillon ferry berth digest beta",
+     "ref": "memory:bl",
+     "substitute": [
+      [
+       "q1",
+       "<ref>"
+      ],
+      [
+       "q2",
+       "<ref>"
+      ],
+      [
+       "@literal:fact-guess-999999999999",
+       "<ref>"
+      ],
+      [
+       "@literal:digest alpha",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest beta",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest gamma",
+       "digest <case>"
+      ],
+      [
+       "bd",
+       "<self>"
+      ],
+      [
+       "bl",
+       "<self>"
+      ],
+      [
+       "bu",
+       "<self>"
+      ]
+     ]
+    },
+    "refusal_bd": {
+     "field": "refusal",
+     "name": "bd",
+     "probe": "op_result"
+    },
+    "refusal_bl": {
+     "field": "refusal",
+     "name": "bl",
+     "probe": "op_result"
+    },
+    "refusal_bn": {
+     "field": "refusal",
+     "name": "bn",
+     "probe": "op_result"
+    },
+    "refusal_bu": {
+     "field": "refusal",
+     "name": "bu",
+     "probe": "op_result"
+    },
+    "semantics_bd": {
+     "as": "project:b",
+     "fact": "bd",
+     "probe": "write_semantics_present"
+    },
+    "semantics_bl": {
+     "as": "project:b",
+     "fact": "bl",
+     "probe": "write_semantics_present"
+    },
+    "semantics_bn": {
+     "as": "project:b",
+     "fact": "bn",
+     "probe": "write_semantics_present"
+    },
+    "semantics_bu": {
+     "as": "project:b",
+     "fact": "bu",
+     "probe": "write_semantics_present"
+    },
+    "semantics_same_bd": {
+     "as": "project:b",
+     "fact": "bd",
+     "other": "bu",
+     "probe": "write_semantics_same_as",
+     "substitute": [
+      [
+       "q1",
+       "<ref>"
+      ],
+      [
+       "q2",
+       "<ref>"
+      ],
+      [
+       "@literal:fact-guess-999999999999",
+       "<ref>"
+      ],
+      [
+       "@literal:digest alpha",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest beta",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest gamma",
+       "digest <case>"
+      ],
+      [
+       "bd",
+       "<self>"
+      ],
+      [
+       "bl",
+       "<self>"
+      ],
+      [
+       "bu",
+       "<self>"
+      ]
+     ]
+    },
+    "semantics_same_bl": {
+     "as": "project:b",
+     "fact": "bl",
+     "other": "bu",
+     "probe": "write_semantics_same_as",
+     "substitute": [
+      [
+       "q1",
+       "<ref>"
+      ],
+      [
+       "q2",
+       "<ref>"
+      ],
+      [
+       "@literal:fact-guess-999999999999",
+       "<ref>"
+      ],
+      [
+       "@literal:digest alpha",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest beta",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest gamma",
+       "digest <case>"
+      ],
+      [
+       "bd",
+       "<self>"
+      ],
+      [
+       "bl",
+       "<self>"
+      ],
+      [
+       "bu",
+       "<self>"
+      ]
+     ]
+    }
+   },
+   "steps": [
+    {
+     "label": "q1",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "north"
+     },
+     "ref": "memory:q",
+     "require_committed": true,
+     "text": "Quillon ferry berth is north"
+    },
+    {
+     "label": "q2",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "south"
+     },
+     "ref": "memory:q2",
+     "require_committed": true,
+     "text": "Quillon ferry berth is south"
+    },
+    {
+     "op": "forget",
+     "permanent": true,
+     "ref": "memory:q",
+     "require_committed": true
+    },
+    {
+     "as": "project:b",
+     "evidence_refs": [
+      "q1"
+     ],
+     "label": "bd",
+     "name": "bd",
+     "op": "remember",
+     "ref": "memory:bd",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest alpha"
+    },
+    {
+     "as": "project:b",
+     "evidence_refs": [
+      "q2"
+     ],
+     "label": "bl",
+     "name": "bl",
+     "op": "remember",
+     "ref": "memory:bl",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest beta"
+    },
+    {
+     "as": "project:b",
+     "evidence_refs": [
+      "@literal:fact-guess-999999999999"
+     ],
+     "label": "bu",
+     "name": "bu",
+     "op": "remember",
+     "ref": "memory:bu",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest gamma"
+    },
+    {
+     "as": "project:b",
+     "label": "bn",
+     "name": "bn",
+     "op": "remember",
+     "ref": "memory:bn",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest delta"
+    }
+   ]
+  },
+  {
+   "clauses": [
+    {
+     "clause": "A write citing a reference outside the writer's scope therefore commits, reads back and stays admitted exactly as a write citing an id nobody wrote: the same receipt, `history`, recall payload and `write_semantics`, live, after a reopen and after a restart, and whether or not the cited fact is later pruned or permanently deleted.",
+     "observables": [
+      "history_same_bd",
+      "recall_same_bd",
+      "semantics_same_bd",
+      "history_same_bl",
+      "recall_same_bl",
+      "semantics_same_bl",
+      "admitted_bd",
+      "history_bd",
+      "semantics_bd",
+      "admitted_bl",
+      "history_bl",
+      "semantics_bl",
+      "admitted_bu",
+      "history_bu",
+      "semantics_bu",
+      "admitted_bn",
+      "history_bn",
+      "semantics_bn"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "Every other reference (an external evidence identifier, an id nobody wrote, a fact outside the writer's scope, an id that exists only later) is an unknown reference: it is retained verbatim as caller-supplied evidence (`episode_uuids`, receipts, audit events) and never withholds anything.",
+     "observables": [
+      "admitted_bd",
+      "admitted_bl",
+      "admitted_bu",
+      "admitted_bn"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "A citation of a foreign deleted, foreign live or unknown id commits, reads and stays admitted identically; a canary citing a live foreign fact no longer vanishes; a dispute citing a foreign deleted id stays in the citer's history.",
+     "observables": [
+      "admitted_bd",
+      "history_bd",
+      "semantics_bd",
+      "admitted_bl",
+      "history_bl",
+      "semantics_bl",
+      "history_same_bd",
+      "recall_same_bd",
+      "semantics_same_bd",
+      "history_same_bl",
+      "recall_same_bl",
+      "semantics_same_bl"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    }
+   ],
+   "expect": {
+    "admitted_bd": {
+     "eq": true
+    },
+    "admitted_bl": {
+     "eq": true
+    },
+    "admitted_bn": {
+     "eq": true
+    },
+    "admitted_bu": {
+     "eq": true
+    },
+    "history_bd": {
+     "eq": {
+      "current": "bd",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    "history_bl": {
+     "eq": {
+      "current": "bl",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    "history_bn": {
+     "eq": {
+      "current": "bn",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    "history_bu": {
+     "eq": {
+      "current": "bu",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    "history_same_bd": {
+     "eq": true
+    },
+    "history_same_bl": {
+     "eq": true
+    },
+    "recall_same_bd": {
+     "eq": true
+    },
+    "recall_same_bl": {
+     "eq": true
+    },
+    "semantics_bd": {
+     "eq": true
+    },
+    "semantics_bl": {
+     "eq": true
+    },
+    "semantics_bn": {
+     "eq": true
+    },
+    "semantics_bu": {
+     "eq": true
+    },
+    "semantics_same_bd": {
+     "eq": true
+    },
+    "semantics_same_bl": {
+     "eq": true
+    }
+   },
+   "id": "E2-four-references-after-reopen",
+   "invariants": [
+    "E2",
+    "E1"
+   ],
+   "probes": {
+    "admitted_bd": {
+     "as": "project:b",
+     "fact": "bd",
+     "logical_refs": [
+      "memory:bd"
+     ],
+     "probe": "recall_admits",
+     "query": "Quillon ferry berth digest alpha"
+    },
+    "admitted_bl": {
+     "as": "project:b",
+     "fact": "bl",
+     "logical_refs": [
+      "memory:bl"
+     ],
+     "probe": "recall_admits",
+     "query": "Quillon ferry berth digest beta"
+    },
+    "admitted_bn": {
+     "as": "project:b",
+     "fact": "bn",
+     "logical_refs": [
+      "memory:bn"
+     ],
+     "probe": "recall_admits",
+     "query": "Quillon ferry berth digest delta"
+    },
+    "admitted_bu": {
+     "as": "project:b",
+     "fact": "bu",
+     "logical_refs": [
+      "memory:bu"
+     ],
+     "probe": "recall_admits",
+     "query": "Quillon ferry berth digest gamma"
+    },
+    "history_bd": {
+     "as": "project:b",
+     "probe": "history",
+     "ref": "memory:bd"
+    },
+    "history_bl": {
+     "as": "project:b",
+     "probe": "history",
+     "ref": "memory:bl"
+    },
+    "history_bn": {
+     "as": "project:b",
+     "probe": "history",
+     "ref": "memory:bn"
+    },
+    "history_bu": {
+     "as": "project:b",
+     "probe": "history",
+     "ref": "memory:bu"
+    },
+    "history_same_bd": {
+     "as": "project:b",
+     "other": "memory:bu",
+     "probe": "history_same_as",
+     "ref": "memory:bd",
+     "substitute": [
+      [
+       "q1",
+       "<ref>"
+      ],
+      [
+       "q2",
+       "<ref>"
+      ],
+      [
+       "@literal:fact-guess-999999999999",
+       "<ref>"
+      ],
+      [
+       "@literal:digest alpha",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest beta",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest gamma",
+       "digest <case>"
+      ],
+      [
+       "bd",
+       "<self>"
+      ],
+      [
+       "bl",
+       "<self>"
+      ],
+      [
+       "bu",
+       "<self>"
+      ]
+     ]
+    },
+    "history_same_bl": {
+     "as": "project:b",
+     "other": "memory:bu",
+     "probe": "history_same_as",
+     "ref": "memory:bl",
+     "substitute": [
+      [
+       "q1",
+       "<ref>"
+      ],
+      [
+       "q2",
+       "<ref>"
+      ],
+      [
+       "@literal:fact-guess-999999999999",
+       "<ref>"
+      ],
+      [
+       "@literal:digest alpha",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest beta",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest gamma",
+       "digest <case>"
+      ],
+      [
+       "bd",
+       "<self>"
+      ],
+      [
+       "bl",
+       "<self>"
+      ],
+      [
+       "bu",
+       "<self>"
+      ]
+     ]
+    },
+    "recall_same_bd": {
+     "as": "project:b",
+     "other": "memory:bu",
+     "other_query": "Quillon ferry berth digest gamma",
+     "probe": "recall_same_as",
+     "query": "Quillon ferry berth digest alpha",
+     "ref": "memory:bd",
+     "substitute": [
+      [
+       "q1",
+       "<ref>"
+      ],
+      [
+       "q2",
+       "<ref>"
+      ],
+      [
+       "@literal:fact-guess-999999999999",
+       "<ref>"
+      ],
+      [
+       "@literal:digest alpha",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest beta",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest gamma",
+       "digest <case>"
+      ],
+      [
+       "bd",
+       "<self>"
+      ],
+      [
+       "bl",
+       "<self>"
+      ],
+      [
+       "bu",
+       "<self>"
+      ]
+     ]
+    },
+    "recall_same_bl": {
+     "as": "project:b",
+     "other": "memory:bu",
+     "other_query": "Quillon ferry berth digest gamma",
+     "probe": "recall_same_as",
+     "query": "Quillon ferry berth digest beta",
+     "ref": "memory:bl",
+     "substitute": [
+      [
+       "q1",
+       "<ref>"
+      ],
+      [
+       "q2",
+       "<ref>"
+      ],
+      [
+       "@literal:fact-guess-999999999999",
+       "<ref>"
+      ],
+      [
+       "@literal:digest alpha",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest beta",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest gamma",
+       "digest <case>"
+      ],
+      [
+       "bd",
+       "<self>"
+      ],
+      [
+       "bl",
+       "<self>"
+      ],
+      [
+       "bu",
+       "<self>"
+      ]
+     ]
+    },
+    "semantics_bd": {
+     "as": "project:b",
+     "fact": "bd",
+     "probe": "write_semantics_present"
+    },
+    "semantics_bl": {
+     "as": "project:b",
+     "fact": "bl",
+     "probe": "write_semantics_present"
+    },
+    "semantics_bn": {
+     "as": "project:b",
+     "fact": "bn",
+     "probe": "write_semantics_present"
+    },
+    "semantics_bu": {
+     "as": "project:b",
+     "fact": "bu",
+     "probe": "write_semantics_present"
+    },
+    "semantics_same_bd": {
+     "as": "project:b",
+     "fact": "bd",
+     "other": "bu",
+     "probe": "write_semantics_same_as",
+     "substitute": [
+      [
+       "q1",
+       "<ref>"
+      ],
+      [
+       "q2",
+       "<ref>"
+      ],
+      [
+       "@literal:fact-guess-999999999999",
+       "<ref>"
+      ],
+      [
+       "@literal:digest alpha",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest beta",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest gamma",
+       "digest <case>"
+      ],
+      [
+       "bd",
+       "<self>"
+      ],
+      [
+       "bl",
+       "<self>"
+      ],
+      [
+       "bu",
+       "<self>"
+      ]
+     ]
+    },
+    "semantics_same_bl": {
+     "as": "project:b",
+     "fact": "bl",
+     "other": "bu",
+     "probe": "write_semantics_same_as",
+     "substitute": [
+      [
+       "q1",
+       "<ref>"
+      ],
+      [
+       "q2",
+       "<ref>"
+      ],
+      [
+       "@literal:fact-guess-999999999999",
+       "<ref>"
+      ],
+      [
+       "@literal:digest alpha",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest beta",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest gamma",
+       "digest <case>"
+      ],
+      [
+       "bd",
+       "<self>"
+      ],
+      [
+       "bl",
+       "<self>"
+      ],
+      [
+       "bu",
+       "<self>"
+      ]
+     ]
+    }
+   },
+   "steps": [
+    {
+     "label": "q1",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "north"
+     },
+     "ref": "memory:q",
+     "require_committed": true,
+     "text": "Quillon ferry berth is north"
+    },
+    {
+     "label": "q2",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "south"
+     },
+     "ref": "memory:q2",
+     "require_committed": true,
+     "text": "Quillon ferry berth is south"
+    },
+    {
+     "op": "forget",
+     "ref": "memory:q",
+     "require_committed": true
+    },
+    {
+     "as": "project:b",
+     "evidence_refs": [
+      "q1"
+     ],
+     "label": "bd",
+     "name": "bd",
+     "op": "remember",
+     "ref": "memory:bd",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest alpha"
+    },
+    {
+     "as": "project:b",
+     "evidence_refs": [
+      "q2"
+     ],
+     "label": "bl",
+     "name": "bl",
+     "op": "remember",
+     "ref": "memory:bl",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest beta"
+    },
+    {
+     "as": "project:b",
+     "evidence_refs": [
+      "@literal:fact-guess-999999999999"
+     ],
+     "label": "bu",
+     "name": "bu",
+     "op": "remember",
+     "ref": "memory:bu",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest gamma"
+    },
+    {
+     "as": "project:b",
+     "label": "bn",
+     "name": "bn",
+     "op": "remember",
+     "ref": "memory:bn",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest delta"
+    },
+    {
+     "op": "reopen"
+    }
+   ]
+  },
+  {
+   "clauses": [
+    {
+     "clause": "A citation of a foreign deleted, foreign live or unknown id commits, reads and stays admitted identically; a canary citing a live foreign fact no longer vanishes; a dispute citing a foreign deleted id stays in the citer's history.",
+     "observables": [
+      "disp_d_committed",
+      "disp_u_committed",
+      "history_same",
+      "op_same",
+      "dispute_present_d",
+      "dispute_present_u"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "A public projection withholds a deleted-generation identifier only from a reader whose own context could have read that generation. To any other reader such a string is an opaque identifier it cannot act on, whether the reader supplied it itself or meets it in a co-holder's audit evidence of a shared memory: citing it binds nothing, disputing it or looking up its write semantics reads exactly as an id nobody wrote, and recall cannot address it.",
+     "observables": [
+      "history_same"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    }
+   ],
+   "expect": {
+    "disp_d_committed": {
+     "eq": true
+    },
+    "disp_u_committed": {
+     "eq": true
+    },
+    "dispute_present_d": {
+     "eq": true
+    },
+    "dispute_present_u": {
+     "eq": true
+    },
+    "history_same": {
+     "eq": true
+    },
+    "op_same": {
+     "eq": true
+    }
+   },
+   "id": "E3-dispute-citing-the-deleted-foreign-id",
+   "implementation_evidence": [
+    "events_d",
+    "events_u"
+   ],
+   "invariants": [
+    "E3"
+   ],
+   "probes": {
+    "disp_d_committed": {
+     "field": "committed",
+     "name": "disp_d",
+     "probe": "op_result"
+    },
+    "disp_u_committed": {
+     "field": "committed",
+     "name": "disp_u",
+     "probe": "op_result"
+    },
+    "dispute_present_d": {
+     "as": "project:b",
+     "event_type": "memory.dispute",
+     "probe": "history_has_event",
+     "ref": "memory:dd"
+    },
+    "dispute_present_u": {
+     "as": "project:b",
+     "event_type": "memory.dispute",
+     "probe": "history_has_event",
+     "ref": "memory:du"
+    },
+    "events_d": {
+     "as": "project:b",
+     "probe": "history_events",
+     "ref": "memory:dd"
+    },
+    "events_u": {
+     "as": "project:b",
+     "probe": "history_events",
+     "ref": "memory:du"
+    },
+    "history_same": {
+     "as": "project:b",
+     "other": "memory:du",
+     "probe": "history_same_as",
+     "ref": "memory:dd",
+     "substitute": [
+      [
+       "q1",
+       "<ref>"
+      ],
+      [
+       "@literal:fact-guess-888888888888",
+       "<ref>"
+      ],
+      [
+       "@literal:digest epsilon",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest zeta",
+       "digest <case>"
+      ],
+      [
+       "dd",
+       "<self>"
+      ],
+      [
+       "du",
+       "<self>"
+      ]
+     ]
+    },
+    "op_same": {
+     "name": "disp_d",
+     "other": "disp_u",
+     "other_ref": "memory:du",
+     "probe": "op_same_as",
+     "ref": "memory:dd",
+     "substitute": [
+      [
+       "q1",
+       "<ref>"
+      ],
+      [
+       "@literal:fact-guess-888888888888",
+       "<ref>"
+      ],
+      [
+       "@literal:digest epsilon",
+       "digest <case>"
+      ],
+      [
+       "@literal:digest zeta",
+       "digest <case>"
+      ],
+      [
+       "dd",
+       "<self>"
+      ],
+      [
+       "du",
+       "<self>"
+      ]
+     ]
+    }
+   },
+   "record": [
+    "events_d",
+    "events_u"
+   ],
+   "steps": [
+    {
+     "label": "q1",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "north"
+     },
+     "ref": "memory:q",
+     "require_committed": true,
+     "text": "Quillon ferry berth is north"
+    },
+    {
+     "label": "q2",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "south"
+     },
+     "ref": "memory:q2",
+     "require_committed": true,
+     "text": "Quillon ferry berth is south"
+    },
+    {
+     "op": "forget",
+     "ref": "memory:q",
+     "require_committed": true
+    },
+    {
+     "as": "project:b",
+     "label": "dd",
+     "op": "remember",
+     "ref": "memory:dd",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest epsilon"
+    },
+    {
+     "as": "project:b",
+     "label": "du",
+     "op": "remember",
+     "ref": "memory:du",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest zeta"
+    },
+    {
+     "as": "project:b",
+     "evidence_refs": [
+      "q1"
+     ],
+     "name": "disp_d",
+     "op": "dispute",
+     "ref": "memory:dd"
+    },
+    {
+     "as": "project:b",
+     "evidence_refs": [
+      "@literal:fact-guess-888888888888"
+     ],
+     "name": "disp_u",
+     "op": "dispute",
+     "ref": "memory:du"
+    }
+   ]
+  },
+  {
+   "clauses": [
+    {
+     "clause": "A citation of a foreign deleted, foreign live or unknown id commits, reads and stays admitted identically; a canary citing a live foreign fact no longer vanishes; a dispute citing a foreign deleted id stays in the citer's history.",
+     "observables": [
+      "admitted",
+      "history"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "A write citing a reference outside the writer's scope therefore commits, reads back and stays admitted exactly as a write citing an id nobody wrote: the same receipt, `history`, recall payload and `write_semantics`, live, after a reopen and after a restart, and whether or not the cited fact is later pruned or permanently deleted.",
+     "observables": [
+      "admitted",
+      "history"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    }
+   ],
+   "expect": {
+    "admitted": {
+     "eq": true
+    },
+    "history": {
+     "eq": {
+      "current": "bc",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    }
+   },
+   "id": "E4-canary-survives-pruning-of-its-source",
+   "invariants": [
+    "E4"
+   ],
+   "probes": {
+    "admitted": {
+     "as": "project:b",
+     "fact": "bc",
+     "logical_refs": [
+      "memory:bc"
+     ],
+     "probe": "recall_admits",
+     "query": "Quillon ferry berth digest eta"
+    },
+    "history": {
+     "as": "project:b",
+     "probe": "history",
+     "ref": "memory:bc"
+    }
+   },
+   "steps": [
+    {
+     "label": "q1",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "north"
+     },
+     "ref": "memory:q",
+     "require_committed": true,
+     "text": "Quillon ferry berth is north"
+    },
+    {
+     "label": "q2",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "south"
+     },
+     "ref": "memory:q2",
+     "require_committed": true,
+     "text": "Quillon ferry berth is south"
+    },
+    {
+     "as": "project:b",
+     "evidence_refs": [
+      "q2"
+     ],
+     "label": "bc",
+     "op": "remember",
+     "ref": "memory:bc",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest eta"
+    },
+    {
+     "op": "forget",
+     "ref": "memory:q2",
+     "require_committed": true
+    }
+   ]
+  },
+  {
+   "clauses": [
+    {
+     "clause": "A citation of a foreign deleted, foreign live or unknown id commits, reads and stays admitted identically; a canary citing a live foreign fact no longer vanishes; a dispute citing a foreign deleted id stays in the citer's history.",
+     "observables": [
+      "admitted",
+      "history"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "A write citing a reference outside the writer's scope therefore commits, reads back and stays admitted exactly as a write citing an id nobody wrote: the same receipt, `history`, recall payload and `write_semantics`, live, after a reopen and after a restart, and whether or not the cited fact is later pruned or permanently deleted.",
+     "observables": [
+      "admitted",
+      "history"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "| purge | no | intended no recoverable copies | no | required full deletion outcome |",
+     "observables": [
+      "q2_exists"
+     ],
+     "source": "docs/28-retention-deletion-and-tombstones.md"
+    }
+   ],
+   "expect": {
+    "admitted": {
+     "eq": true
+    },
+    "history": {
+     "eq": {
+      "current": "bc",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    "q2_exists": {
+     "eq": false
+    }
+   },
+   "id": "E4b-canary-survives-permanent-deletion-of-its-source",
+   "invariants": [
+    "E4"
+   ],
+   "probes": {
+    "admitted": {
+     "as": "project:b",
+     "fact": "bc",
+     "logical_refs": [
+      "memory:bc"
+     ],
+     "probe": "recall_admits",
+     "query": "Quillon ferry berth digest eta"
+    },
+    "history": {
+     "as": "project:b",
+     "probe": "history",
+     "ref": "memory:bc"
+    },
+    "q2_exists": {
+     "fact": "q2",
+     "probe": "fact_exists"
+    }
+   },
+   "steps": [
+    {
+     "label": "q1",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "north"
+     },
+     "ref": "memory:q",
+     "require_committed": true,
+     "text": "Quillon ferry berth is north"
+    },
+    {
+     "label": "q2",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "south"
+     },
+     "ref": "memory:q2",
+     "require_committed": true,
+     "text": "Quillon ferry berth is south"
+    },
+    {
+     "as": "project:b",
+     "evidence_refs": [
+      "q2"
+     ],
+     "label": "bc",
+     "op": "remember",
+     "ref": "memory:bc",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest eta"
+    },
+    {
+     "op": "forget",
+     "permanent": true,
+     "ref": "memory:q2",
+     "require_committed": true
+    },
+    {
+     "op": "reopen"
+    }
+   ]
+  },
+  {
+   "clauses": [
+    {
+     "clause": "Within the writer's own scope the #776/#777 rule is unchanged: direct and transitive derivations of a deleted source are withheld tenant-wide, including after the source's payload is physically erased, and a dependency bound while the writer was a member of a shared domain survives the writer's later revocation.",
+     "observables": [
+      "withheld",
+      "withheld_after_reopen"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "Within the writer's scope, including shared domains the writer was a member of at commit and sources later physically erased, derivations of deleted content are withheld as before.",
+     "observables": [
+      "withheld"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "Every other reference (an external evidence identifier, an id nobody wrote, a fact outside the writer's scope, an id that exists only later) is an unknown reference: it is retained verbatim as caller-supplied evidence (`episode_uuids`, receipts, audit events) and never withholds anything.",
+     "observables": [
+      "kept",
+      "kept_after_reopen"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    }
+   ],
+   "controls": [],
+   "expect": {
+    "kept": {
+     "eq": true
+    },
+    "kept_after_reopen": {
+     "eq": true
+    },
+    "withheld": {
+     "eq": []
+    },
+    "withheld_after_reopen": {
+     "eq": []
+    }
+   },
+   "id": "E5-own-scope-derivations-withheld-after-pruning",
+   "invariants": [
+    "E5"
+   ],
+   "probes": {
+    "kept": {
+     "fact": "ctl",
+     "logical_refs": [
+      "memory:ctl"
+     ],
+     "probe": "recall_admits",
+     "query": "Quillon ferry berth digest kappa"
+    },
+    "kept_after_reopen": {
+     "fact": "ctl",
+     "logical_refs": [
+      "memory:ctl"
+     ],
+     "probe": "recall_admits",
+     "query": "Quillon ferry berth digest kappa"
+    },
+    "withheld": {
+     "historical": true,
+     "probe": "recall_mentions",
+     "query": "Quillon ferry berth digest",
+     "tokens": [
+      "d1",
+      "d2"
+     ]
+    },
+    "withheld_after_reopen": {
+     "historical": true,
+     "probe": "recall_mentions",
+     "query": "Quillon ferry berth digest",
+     "tokens": [
+      "d1",
+      "d2"
+     ]
+    }
+   },
+   "steps": [
+    {
+     "label": "q1",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "north"
+     },
+     "ref": "memory:q",
+     "require_committed": true,
+     "text": "Quillon ferry berth is north"
+    },
+    {
+     "label": "q2",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "south"
+     },
+     "ref": "memory:q2",
+     "require_committed": true,
+     "text": "Quillon ferry berth is south"
+    },
+    {
+     "evidence_refs": [
+      "q1",
+      "@literal:evidence:ticket-7"
+     ],
+     "label": "d1",
+     "op": "remember",
+     "ref": "memory:d1",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest theta"
+    },
+    {
+     "evidence_refs": [
+      "d1"
+     ],
+     "label": "d2",
+     "op": "remember",
+     "ref": "memory:d2",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest iota"
+    },
+    {
+     "evidence_refs": [
+      "@literal:evidence:ticket-7"
+     ],
+     "label": "ctl",
+     "op": "remember",
+     "ref": "memory:ctl",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest kappa"
+    },
+    {
+     "op": "forget",
+     "ref": "memory:q",
+     "require_committed": true
+    }
+   ]
+  },
+  {
+   "clauses": [
+    {
+     "clause": "Within the writer's own scope the #776/#777 rule is unchanged: direct and transitive derivations of a deleted source are withheld tenant-wide, including after the source's payload is physically erased, and a dependency bound while the writer was a member of a shared domain survives the writer's later revocation.",
+     "observables": [
+      "withheld",
+      "withheld_after_reopen"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "Within the writer's scope, including shared domains the writer was a member of at commit and sources later physically erased, derivations of deleted content are withheld as before.",
+     "observables": [
+      "withheld"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "Every other reference (an external evidence identifier, an id nobody wrote, a fact outside the writer's scope, an id that exists only later) is an unknown reference: it is retained verbatim as caller-supplied evidence (`episode_uuids`, receipts, audit events) and never withholds anything.",
+     "observables": [
+      "kept"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "| purge | no | intended no recoverable copies | no | required full deletion outcome |",
+     "observables": [
+      "q1_exists"
+     ],
+     "source": "docs/28-retention-deletion-and-tombstones.md"
+    }
+   ],
+   "expect": {
+    "kept": {
+     "eq": true
+    },
+    "q1_exists": {
+     "eq": false
+    },
+    "withheld": {
+     "eq": []
+    },
+    "withheld_after_reopen": {
+     "eq": []
+    }
+   },
+   "id": "E5b-own-scope-derivations-withheld-after-permanent-deletion",
+   "invariants": [
+    "E5"
+   ],
+   "probes": {
+    "kept": {
+     "fact": "ctl",
+     "logical_refs": [
+      "memory:ctl"
+     ],
+     "probe": "recall_admits",
+     "query": "Quillon ferry berth digest kappa"
+    },
+    "q1_exists": {
+     "fact": "q1",
+     "probe": "fact_exists"
+    },
+    "withheld": {
+     "historical": true,
+     "probe": "recall_mentions",
+     "query": "Quillon ferry berth digest",
+     "tokens": [
+      "d1",
+      "d2"
+     ]
+    },
+    "withheld_after_reopen": {
+     "historical": true,
+     "probe": "recall_mentions",
+     "query": "Quillon ferry berth digest",
+     "tokens": [
+      "d1",
+      "d2"
+     ]
+    }
+   },
+   "steps": [
+    {
+     "label": "q1",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "north"
+     },
+     "ref": "memory:q",
+     "require_committed": true,
+     "text": "Quillon ferry berth is north"
+    },
+    {
+     "label": "q2",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "south"
+     },
+     "ref": "memory:q2",
+     "require_committed": true,
+     "text": "Quillon ferry berth is south"
+    },
+    {
+     "evidence_refs": [
+      "q1",
+      "@literal:evidence:ticket-7"
+     ],
+     "label": "d1",
+     "op": "remember",
+     "ref": "memory:d1",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest theta"
+    },
+    {
+     "evidence_refs": [
+      "d1"
+     ],
+     "label": "d2",
+     "op": "remember",
+     "ref": "memory:d2",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest iota"
+    },
+    {
+     "evidence_refs": [
+      "@literal:evidence:ticket-7"
+     ],
+     "label": "ctl",
+     "op": "remember",
+     "ref": "memory:ctl",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest kappa"
+    },
+    {
+     "op": "forget",
+     "permanent": true,
+     "ref": "memory:q",
+     "require_committed": true
+    },
+    {
+     "op": "reopen"
+    }
+   ]
+  },
+  {
+   "clauses": [
+    {
+     "clause": "Within the writer's own scope the #776/#777 rule is unchanged: direct and transitive derivations of a deleted source are withheld tenant-wide, including after the source's payload is physically erased, and a dependency bound while the writer was a member of a shared domain survives the writer's later revocation.",
+     "observables": [
+      "late_withheld"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "Within the writer's scope, including shared domains the writer was a member of at commit and sources later physically erased, derivations of deleted content are withheld as before.",
+     "observables": [
+      "late_withheld"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "Every other reference (an external evidence identifier, an id nobody wrote, a fact outside the writer's scope, an id that exists only later) is an unknown reference: it is retained verbatim as caller-supplied evidence (`episode_uuids`, receipts, audit events) and never withholds anything.",
+     "observables": [
+      "bp_admitted"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "A write citing a reference outside the writer's scope therefore commits, reads back and stays admitted exactly as a write citing an id nobody wrote: the same receipt, `history`, recall payload and `write_semantics`, live, after a reopen and after a restart, and whether or not the cited fact is later pruned or permanently deleted.",
+     "observables": [
+      "bp_admitted",
+      "bp_history"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "| purge | no | intended no recoverable copies | no | required full deletion outcome |",
+     "observables": [
+      "q1_exists"
+     ],
+     "source": "docs/28-retention-deletion-and-tombstones.md"
+    }
+   ],
+   "expect": {
+    "bp_admitted": {
+     "eq": true
+    },
+    "bp_history": {
+     "eq": {
+      "current": "bp",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    "late_withheld": {
+     "eq": []
+    },
+    "q1_exists": {
+     "eq": false
+    }
+   },
+   "id": "E5c-purged-source-cited-afterwards",
+   "invariants": [
+    "E5"
+   ],
+   "probes": {
+    "bp_admitted": {
+     "as": "project:b",
+     "fact": "bp",
+     "logical_refs": [
+      "memory:bp"
+     ],
+     "probe": "recall_admits",
+     "query": "Quillon ferry berth digest mu"
+    },
+    "bp_history": {
+     "as": "project:b",
+     "probe": "history",
+     "ref": "memory:bp"
+    },
+    "late_withheld": {
+     "historical": true,
+     "probe": "recall_mentions",
+     "query": "Quillon ferry berth digest lambda",
+     "tokens": [
+      "late"
+     ]
+    },
+    "q1_exists": {
+     "fact": "q1",
+     "probe": "fact_exists"
+    }
+   },
+   "steps": [
+    {
+     "label": "q1",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "north"
+     },
+     "ref": "memory:q",
+     "require_committed": true,
+     "text": "Quillon ferry berth is north"
+    },
+    {
+     "label": "q2",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "south"
+     },
+     "ref": "memory:q2",
+     "require_committed": true,
+     "text": "Quillon ferry berth is south"
+    },
+    {
+     "op": "forget",
+     "permanent": true,
+     "ref": "memory:q",
+     "require_committed": true
+    },
+    {
+     "evidence_refs": [
+      "q1"
+     ],
+     "label": "late",
+     "op": "remember",
+     "ref": "memory:late",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest lambda"
+    },
+    {
+     "as": "project:b",
+     "evidence_refs": [
+      "q1"
+     ],
+     "label": "bp",
+     "op": "remember",
+     "ref": "memory:bp",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest mu"
+    }
+   ]
+  },
+  {
+   "clauses": [
+    {
+     "clause": "An id with no live head (never written or governed-deleted) is open to any writer in the tenant: creation and the #776 re-creation of a deleted id as a fresh generation are unchanged.",
+     "observables": [
+      "recreated"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "Versions are generation-relative: `state_version`, `state_snapshot`, `before_state` and `after_state` count within the live generation of a logical id. After a governed deletion of the head the id reports `0` to any writer, a re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one",
+     "observables": [
+      "recreated"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "A write citing a reference outside the writer's scope therefore commits, reads back and stays admitted exactly as a write citing an id nobody wrote: the same receipt, `history`, recall payload and `write_semantics`, live, after a reopen and after a restart, and whether or not the cited fact is later pruned or permanently deleted.",
+     "observables": [
+      "bf_before"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "A reference in `evidence_refs` becomes a canonical derivation link of the committed fact, and so carries deletion taint (`derived_from_tombstoned_source`, `derived_from_deleted_logical_memory`), only when it names a fact of the tenant the writer is eligible to read under the gates above; the decision is made once at commit and recorded with the fact.",
+     "observables": [
+      "bo_before"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    }
+   ],
+   "expect": {
+    "bf_before": {
+     "eq": true
+    },
+    "bo_before": {
+     "eq": true
+    },
+    "recreated": {
+     "eq": "v1"
+    }
+   },
+   "id": "E6-re-creation-by-the-citing-scope",
+   "invariants": [
+    "E6"
+   ],
+   "probes": {
+    "bf_before": {
+     "as": "project:b",
+     "fact": "bf",
+     "logical_refs": [
+      "memory:bf"
+     ],
+     "probe": "recall_admits",
+     "query": "Quillon ferry berth digest nu"
+    },
+    "bo_before": {
+     "as": "project:b",
+     "fact": "bo",
+     "logical_refs": [
+      "memory:bo"
+     ],
+     "probe": "recall_admits",
+     "query": "Quillon ferry berth digest xi"
+    },
+    "recreated": {
+     "field": "after_state",
+     "name": "recreate",
+     "probe": "op_result"
+    }
+   },
+   "steps": [
+    {
+     "label": "q1",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "north"
+     },
+     "ref": "memory:q",
+     "require_committed": true,
+     "text": "Quillon ferry berth is north"
+    },
+    {
+     "label": "q2",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "south"
+     },
+     "ref": "memory:q2",
+     "require_committed": true,
+     "text": "Quillon ferry berth is south"
+    },
+    {
+     "op": "forget",
+     "ref": "memory:q",
+     "require_committed": true
+    },
+    {
+     "as": "project:b",
+     "evidence_refs": [
+      "q1"
+     ],
+     "label": "bf",
+     "op": "remember",
+     "ref": "memory:bf",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest nu"
+    },
+    {
+     "as": "project:b",
+     "label": "q-b",
+     "name": "recreate",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "east"
+     },
+     "ref": "memory:q",
+     "require_committed": true,
+     "text": "Quillon ferry berth is east"
+    },
+    {
+     "as": "project:b",
+     "evidence_refs": [
+      "q-b"
+     ],
+     "label": "bo",
+     "name": "bo",
+     "op": "remember",
+     "ref": "memory:bo",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest xi"
+    }
+   ]
+  },
+  {
+   "clauses": [
+    {
+     "clause": "A write citing a reference outside the writer's scope therefore commits, reads back and stays admitted exactly as a write citing an id nobody wrote: the same receipt, `history`, recall payload and `write_semantics`, live, after a reopen and after a restart, and whether or not the cited fact is later pruned or permanently deleted.",
+     "observables": [
+      "bf_after"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "Within the writer's own scope the #776/#777 rule is unchanged: direct and transitive derivations of a deleted source are withheld tenant-wide, including after the source's payload is physically erased, and a dependency bound while the writer was a member of a shared domain survives the writer's later revocation.",
+     "observables": [
+      "bo_after"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "A reference in `evidence_refs` becomes a canonical derivation link of the committed fact, and so carries deletion taint (`derived_from_tombstoned_source`, `derived_from_deleted_logical_memory`), only when it names a fact of the tenant the writer is eligible to read under the gates above; the decision is made once at commit and recorded with the fact.",
+     "observables": [
+      "bo_after"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    }
+   ],
+   "expect": {
+    "bf_after": {
+     "eq": true
+    },
+    "bo_after": {
+     "eq": false
+    }
+   },
+   "id": "E6a-after-the-citing-scopes-own-deletion",
+   "invariants": [
+    "E6"
+   ],
+   "probes": {
+    "bf_after": {
+     "as": "project:b",
+     "fact": "bf",
+     "logical_refs": [
+      "memory:bf"
+     ],
+     "probe": "recall_admits",
+     "query": "Quillon ferry berth digest nu"
+    },
+    "bo_after": {
+     "as": "project:b",
+     "fact": "bo",
+     "logical_refs": [
+      "memory:bo"
+     ],
+     "probe": "recall_admits",
+     "query": "Quillon ferry berth digest xi"
+    }
+   },
+   "steps": [
+    {
+     "label": "q1",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "north"
+     },
+     "ref": "memory:q",
+     "require_committed": true,
+     "text": "Quillon ferry berth is north"
+    },
+    {
+     "label": "q2",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "south"
+     },
+     "ref": "memory:q2",
+     "require_committed": true,
+     "text": "Quillon ferry berth is south"
+    },
+    {
+     "op": "forget",
+     "ref": "memory:q",
+     "require_committed": true
+    },
+    {
+     "as": "project:b",
+     "evidence_refs": [
+      "q1"
+     ],
+     "label": "bf",
+     "op": "remember",
+     "ref": "memory:bf",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest nu"
+    },
+    {
+     "as": "project:b",
+     "label": "q-b",
+     "name": "recreate",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "east"
+     },
+     "ref": "memory:q",
+     "require_committed": true,
+     "text": "Quillon ferry berth is east"
+    },
+    {
+     "as": "project:b",
+     "evidence_refs": [
+      "q-b"
+     ],
+     "label": "bo",
+     "name": "bo",
+     "op": "remember",
+     "ref": "memory:bo",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest xi"
+    },
+    {
+     "as": "project:b",
+     "op": "forget",
+     "ref": "memory:q",
+     "require_committed": true
+    }
+   ]
+  },
+  {
+   "clauses": [
+    {
+     "clause": "A write citing a reference outside the writer's scope therefore commits, reads back and stays admitted exactly as a write citing an id nobody wrote: the same receipt, `history`, recall payload and `write_semantics`, live, after a reopen and after a restart, and whether or not the cited fact is later pruned or permanently deleted.",
+     "observables": [
+      "bf_after_reopen"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "Within the writer's own scope the #776/#777 rule is unchanged: direct and transitive derivations of a deleted source are withheld tenant-wide, including after the source's payload is physically erased, and a dependency bound while the writer was a member of a shared domain survives the writer's later revocation.",
+     "observables": [
+      "bo_after_reopen"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "A reference in `evidence_refs` becomes a canonical derivation link of the committed fact, and so carries deletion taint (`derived_from_tombstoned_source`, `derived_from_deleted_logical_memory`), only when it names a fact of the tenant the writer is eligible to read under the gates above; the decision is made once at commit and recorded with the fact.",
+     "observables": [
+      "bo_after_reopen"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    }
+   ],
+   "expect": {
+    "bf_after_reopen": {
+     "eq": true
+    },
+    "bo_after_reopen": {
+     "eq": false
+    }
+   },
+   "id": "E6r-after-the-citing-scopes-own-deletion-and-reopen",
+   "invariants": [
+    "E6"
+   ],
+   "probes": {
+    "bf_after_reopen": {
+     "as": "project:b",
+     "fact": "bf",
+     "logical_refs": [
+      "memory:bf"
+     ],
+     "probe": "recall_admits",
+     "query": "Quillon ferry berth digest nu"
+    },
+    "bo_after_reopen": {
+     "as": "project:b",
+     "fact": "bo",
+     "logical_refs": [
+      "memory:bo"
+     ],
+     "probe": "recall_admits",
+     "query": "Quillon ferry berth digest xi"
+    }
+   },
+   "steps": [
+    {
+     "label": "q1",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "north"
+     },
+     "ref": "memory:q",
+     "require_committed": true,
+     "text": "Quillon ferry berth is north"
+    },
+    {
+     "label": "q2",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "south"
+     },
+     "ref": "memory:q2",
+     "require_committed": true,
+     "text": "Quillon ferry berth is south"
+    },
+    {
+     "op": "forget",
+     "ref": "memory:q",
+     "require_committed": true
+    },
+    {
+     "as": "project:b",
+     "evidence_refs": [
+      "q1"
+     ],
+     "label": "bf",
+     "op": "remember",
+     "ref": "memory:bf",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest nu"
+    },
+    {
+     "as": "project:b",
+     "label": "q-b",
+     "name": "recreate",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "east"
+     },
+     "ref": "memory:q",
+     "require_committed": true,
+     "text": "Quillon ferry berth is east"
+    },
+    {
+     "as": "project:b",
+     "evidence_refs": [
+      "q-b"
+     ],
+     "label": "bo",
+     "name": "bo",
+     "op": "remember",
+     "ref": "memory:bo",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest xi"
+    },
+    {
+     "as": "project:b",
+     "op": "forget",
+     "ref": "memory:q",
+     "require_committed": true
+    },
+    {
+     "op": "reopen"
+    }
+   ]
+  },
+  {
+   "clauses": [
+    {
+     "clause": "Every other reference (an external evidence identifier, an id nobody wrote, a fact outside the writer's scope, an id that exists only later) is an unknown reference: it is retained verbatim as caller-supplied evidence (`episode_uuids`, receipts, audit events) and never withholds anything.",
+     "observables": [
+      "first",
+      "second",
+      "third"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "A write citing a reference outside the writer's scope therefore commits, reads back and stays admitted exactly as a write citing an id nobody wrote: the same receipt, `history`, recall payload and `write_semantics`, live, after a reopen and after a restart, and whether or not the cited fact is later pruned or permanently deleted.",
+     "observables": [
+      "first",
+      "second",
+      "third"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    }
+   ],
+   "expect": {
+    "first": {
+     "eq": true
+    },
+    "second": {
+     "eq": true
+    },
+    "third": {
+     "eq": true
+    }
+   },
+   "id": "E6b-chain-rooted-in-the-foreign-deleted-fact",
+   "invariants": [
+    "E6"
+   ],
+   "probes": {
+    "first": {
+     "as": "project:b",
+     "fact": "c1",
+     "logical_refs": [
+      "memory:c1"
+     ],
+     "probe": "recall_admits",
+     "query": "Quillon ferry berth digest omicron"
+    },
+    "second": {
+     "as": "project:b",
+     "fact": "c2",
+     "logical_refs": [
+      "memory:c2"
+     ],
+     "probe": "recall_admits",
+     "query": "Quillon ferry berth digest pi"
+    },
+    "third": {
+     "as": "project:b",
+     "fact": "c3",
+     "logical_refs": [
+      "memory:c3"
+     ],
+     "probe": "recall_admits",
+     "query": "Quillon ferry berth digest rho"
+    }
+   },
+   "steps": [
+    {
+     "label": "q1",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "north"
+     },
+     "ref": "memory:q",
+     "require_committed": true,
+     "text": "Quillon ferry berth is north"
+    },
+    {
+     "label": "q2",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "south"
+     },
+     "ref": "memory:q2",
+     "require_committed": true,
+     "text": "Quillon ferry berth is south"
+    },
+    {
+     "op": "forget",
+     "permanent": true,
+     "ref": "memory:q",
+     "require_committed": true
+    },
+    {
+     "as": "project:b",
+     "evidence_refs": [
+      "q1"
+     ],
+     "label": "c1",
+     "op": "remember",
+     "ref": "memory:c1",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest omicron"
+    },
+    {
+     "as": "project:b",
+     "evidence_refs": [
+      "c1"
+     ],
+     "label": "c2",
+     "op": "remember",
+     "ref": "memory:c2",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest pi"
+    },
+    {
+     "as": "project:b",
+     "evidence_refs": [
+      "c2"
+     ],
+     "label": "c3",
+     "op": "remember",
+     "ref": "memory:c3",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest rho"
+    }
+   ]
+  }
+ ],
+ "contract_sources": [
+  {
+   "path": "docs/44-public-api-contract.md",
+   "sha256_at_base": "2652ad77d8c0d4cfe17807266c605c9f268eb3e915776f3cdb232fe8ae6aba6d"
+  },
+  {
+   "path": "docs/786-cross-scope-write-authority.md",
+   "sha256_at_base": "ffbdba734b1d1583038a8d01fb358ee97dda67c3a81495e1d8e8d000b0b29619"
+  },
+  {
+   "path": "docs/28-retention-deletion-and-tombstones.md",
+   "sha256_at_base": "9f1c91f73ef511b68e13988790984e5164670a9d9bafe92a7cf043729b03beda"
+  }
+ ],
+ "development_history": "Authored from the docs/44 clause 'Canonical derivation is bound under the writer's own authority' and the docs/786 F-R3-2 row at base_commit (the repair commit b932bd2f), after the unit-level expectations of reference/tests/test_809_evidence_reference_authorization.py were preregistered (10a0d70e, superseded after independent review at 53268532 and 8272b38e; three fail-first baselines on the unmodified runtime, the last 36 failed / 14 passed / 82 subtests) and executed once on the repaired runtime (27 passed, 1 xfailed, 106 subtests; reports/validation/809-at-head). The first fixture revision (871d2bbe) was executed once by its own family test inside a full-suite run before its independent review; that run is disclosed in reports/validation/809-at-head/pre-review-execution-871d2bbe.md and is not evidence. Its failures were two harness defects: the recall_same_* observables (unfolded clocks and scores; found independently by the review as RF-1) and the admitted_* observables, whose DSL/1 recall_admitted probe lists every admitted fact of the query rather than answering whether the logical reference's fact is admitted (not found by the review; disclosed by the coordinator from that run's log and replaced by the boolean recall_admits probe). The second revision (ee427d80) answered RF-1..RF-9; this revision replaces the probe. No expectation was weakened: every admitted_* expectation still requires the cited fact to be admitted (or, for B's own derivation of its own deleted generation, withheld).",
+ "dsl_version": "786-security-replay-dsl/3",
+ "fixture_version": 1,
+ "frozen_on": "2026-10-15",
+ "independence": "Expected outcomes were written from the contract documents listed in contract_sources at base_commit, clause by clause (`clauses` on every case), and compared to those clauses by a separate reviewer before the runner's first execution. A failing expectation is a finding, never a reason to edit this fixture; a corrected expectation requires a superseding -v2 of this generation with a recorded reason. This fixture declares no `controls`; observables under `implementation_evidence` are recorded, never expected. No frozen holdout phrase, #644 or -v3 fixture vocabulary is used.",
+ "invariants": [
+  {
+   "falsified_by": "any citation refused, withheld, or differing in any of the four payloads from the unknown citation",
+   "id": "E1",
+   "statement": "After A's pruning or attested permanent deletion of memory:q, B's writes citing the deleted foreign fact, a live foreign fact, an id nobody wrote and nothing at all each commit v0 -> v1 with no refusal, are admitted by logical reference, show one live generation of four events, have write semantics, and the deleted-foreign and live-foreign citations read byte-identically (ids, timestamps, cited strings and case tokens folded) to the unknown citation in the remember result, the history, the recall payload and the write semantics."
+  },
+  {
+   "falsified_by": "a citation withheld or a payload differing after reopen",
+   "id": "E2",
+   "statement": "E1 holds after an in-process reopen of the citing handle."
+  },
+  {
+   "falsified_by": "a withheld dispute event or a differing history",
+   "id": "E3",
+   "statement": "A dispute by B of its own memory citing the deleted foreign id commits and leaves B's history byte-identical (folded) to the same dispute citing an id nobody wrote; the dispute event is present in both."
+  },
+  {
+   "falsified_by": "the canary withheld or its history changed by the foreign deletion",
+   "id": "E4",
+   "statement": "B's memory citing a live foreign fact (a canary) stays admitted with an unchanged history after A prunes or permanently deletes that fact."
+  },
+  {
+   "falsified_by": "a derivation admitted, the control withheld, or the purged id withholding B's write",
+   "id": "E5",
+   "statement": "Within A's own scope, direct and transitive derivations of memory:q are withheld after its pruning and after its permanent deletion (the source payload erased), live and after a reopen, while a memory citing only an external identifier stays admitted; a derivation written after the source was purged is withheld too, and the same purged identifier cited from B binds nothing."
+  },
+  {
+   "falsified_by": "the foreign citation withheld at any point, or B's own derivation surviving B's deletion",
+   "id": "E6",
+   "statement": "B may re-create A's deleted id; B's derivation of its own new generation follows B's own deletion while B's citation of A's deleted fact stays admitted throughout, live and after reopen; a chain of B's memories rooted in A's deleted fact is admitted end to end."
+  }
+ ],
+ "not_claimed": "Process-level restart (every `reopen` is a handle close and open in one process); shared-domain membership, its revocation and project/task restrictions (no facade operation); late binding of a reference that names no fact at commit; direct probes of a foreign deleted id (dispute by uuid, write semantics lookup); the owner's provenance audit (undeclared residue); facts persisted before #809 (legacy rows); the owner's view after another scope re-creates the deleted id; co-holder audit evidence in the history of a shared memory; timing side channels (not measured); erasure beyond the canonical substrate and public reads (docs/28, docs/44). Each of these is pinned by the unit module named above.",
+ "owning_issue": 809,
+ "relation_to_v3": "Additive generation beside the three -v3 fixtures (not a supersession): the -v3 fixtures, their first-execution evidence at 842e5734 and the DSL/1 and DSL/2 runners are byte-frozen. This fixture pins the authorization boundary the #809 repair introduces; it is executed by the DSL/3 runner (reference/run_786_security_replays_dsl3.py), which inherits DSL/2 unchanged.",
+ "replay_id": "evidence-reference-authorization-v1",
+ "status": "additive",
+ "stop_lines": [
+  "no fixture edit after first execution; supersede and record why",
+  "no expectation weakened to obtain PASS",
+  "no runtime change motivated by a replay outcome without a preregistered reproducer",
+  "a replay verdict is evidence, not successor acceptance; acceptance requires independent review",
+  "a passing replay on this revision certifies no other protected tree"
+ ],
+ "title": "A reference the writer cannot read is an unknown reference: it binds no canonical derivation, withholds nothing and reads identically to an id nobody wrote"
+}

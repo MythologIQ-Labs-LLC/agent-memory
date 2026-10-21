@@ -1,0 +1,34 @@
+# Fail-first baseline 2 of the #809 legacy-upgrade expectations after the pre-execution review (F-1..F-11), on head 6bdff75b (no upgrade operation exists; protected tree carries only the code-review fixes)
+# command (repository root): python3 -m pytest reference/tests/test_809_legacy_upgrade.py -q -p no:cacheprovider --tb=line
+# module sha256: 0b018dea063f80211289b110574f8043dc08c1a16c5f14feb21f78a14fe2f4fd
+...FFFFFF.                                                [100%]
+=================================== FAILURES ===================================
+E   AttributeError: 'AgentMemory' object has no attribute 'legacy_upgrade_status'
+/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-809/reference/tests/test_809_legacy_upgrade.py:190: AttributeError: 'AgentMemory' object has no attribute 'legacy_upgrade_status'
+E   AttributeError: 'AgentMemory' object has no attribute 'upgrade_canonical_derivation'
+/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-809/reference/tests/test_809_legacy_upgrade.py:222: AttributeError: 'AgentMemory' object has no attribute 'upgrade_canonical_derivation'
+E   AttributeError: 'AgentMemory' object has no attribute 'upgrade_canonical_derivation'
+/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-809/reference/tests/test_809_legacy_upgrade.py:251: AttributeError: 'AgentMemory' object has no attribute 'upgrade_canonical_derivation'
+E   AttributeError: 'AgentMemory' object has no attribute 'upgrade_canonical_derivation'
+/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-809/reference/tests/test_809_legacy_upgrade.py:279: AttributeError: 'AgentMemory' object has no attribute 'upgrade_canonical_derivation'
+E   AttributeError: 'AgentMemory' object has no attribute 'upgrade_canonical_derivation'
+/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-809/reference/tests/test_809_legacy_upgrade.py:307: AttributeError: 'AgentMemory' object has no attribute 'upgrade_canonical_derivation'
+E   AttributeError: 'AgentMemory' object has no attribute 'legacy_upgrade_status'
+/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-809/reference/tests/test_809_legacy_upgrade.py:325: AttributeError: 'AgentMemory' object has no attribute 'legacy_upgrade_status'
+E   AttributeError: 'AgentMemory' object has no attribute 'upgrade_canonical_derivation'
+/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-809/reference/tests/test_809_legacy_upgrade.py:346: AttributeError: 'AgentMemory' object has no attribute 'upgrade_canonical_derivation'
+E   AttributeError: 'AgentMemory' object has no attribute 'upgrade_canonical_derivation'
+/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-809/reference/tests/test_809_legacy_upgrade.py:346: AttributeError: 'AgentMemory' object has no attribute 'upgrade_canonical_derivation'
+E   AttributeError: 'AgentMemory' object has no attribute 'upgrade_canonical_derivation'
+/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-809/reference/tests/test_809_legacy_upgrade.py:346: AttributeError: 'AgentMemory' object has no attribute 'upgrade_canonical_derivation'
+=========================== short test summary info ============================
+FAILED reference/tests/test_809_legacy_upgrade.py::StatusBeforeUpgrade::test_a_legacy_store_reads_legacy_pending_with_its_legacy_fact_count
+FAILED reference/tests/test_809_legacy_upgrade.py::CrossScopeStore::test_upgrade_classifies_rewrites_and_closes_the_oracle_without_releasing_own_dependencies
+FAILED reference/tests/test_809_legacy_upgrade.py::CrossScopeStore::test_upgrade_is_idempotent_and_durable_across_reopen_and_a_genuine_restart
+FAILED reference/tests/test_809_legacy_upgrade.py::SharedMembershipStore::test_membership_dependent_edges_are_quarantined_and_the_store_is_unqualified
+FAILED reference/tests/test_809_legacy_upgrade.py::ForwardReferenceStore::test_forward_reference_is_unbound_and_the_late_derivation_stays_withheld
+FAILED reference/tests/test_809_legacy_upgrade.py::FreshStore::test_a_store_written_by_this_runtime_is_fresh_and_the_upgrade_is_a_no_op
+SUBFAILED(store='cross-scope') reference/tests/test_809_legacy_upgrade.py::NoFabrication::test_no_edge_is_fabricated_or_dropped_without_a_durable_reason
+SUBFAILED(store='shared-membership') reference/tests/test_809_legacy_upgrade.py::NoFabrication::test_no_edge_is_fabricated_or_dropped_without_a_durable_reason
+SUBFAILED(store='forward-reference') reference/tests/test_809_legacy_upgrade.py::NoFabrication::test_no_edge_is_fabricated_or_dropped_without_a_durable_reason
+9 failed, 4 passed, 12 subtests passed in 0.57s

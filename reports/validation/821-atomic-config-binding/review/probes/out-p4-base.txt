@@ -1,0 +1,6 @@
+(base revision: row-specific checks skipped)
+HELD  stale in-process handle refused: SQLite generation conflict: observed 2, current 3
+FAIL  row==state after two-handle race: {'db': True, 'file_gen': 3, 'state_gen': 3, 'journal_gen': 3, 'row_gen': None, 'row_payload_gen': None, 'table': False}
+HELD  reopen: OK gen=3 scheme=-
+FAIL  4 threads x 8 writes on one handle: errors=[] {'db': True, 'file_gen': 65, 'state_gen': 65, 'journal_gen': 65, 'row_gen': None, 'row_payload_gen': None, 'table': False}
+FAIL  3 concurrent writer processes x 6 rounds with random os._exit: final={'db': True, 'file_gen': 43, 'state_gen': 43, 'journal_gen': 43, 'row_gen': None, 'row_payload_gen': None, 'table': False} reopen=OK gen=43 scheme=- failures=[('SPLIT', {'db': True, 'file_gen': 12, 'state_gen': 12, 'journal_gen': 12, 'row_gen': None, 'row_payload_gen': None, 'table': False}), (3, 'OPENFAIL RuntimeRecoveryError SQLite governance state digest mismatch: governance commitment mismatch', ''), (1, '', 'ase/reference/agentmem_ref/runtime/sqlite_runtime.py", line 555, in _restore_governance_after_rollback\n    raise RuntimeRecoveryError("cannot restore governance after SQLite rollback") from exc\nagentmem_ref.runtime.restart_runtime.RuntimeRecoveryError: cannot restore governance after SQLite rollback')]

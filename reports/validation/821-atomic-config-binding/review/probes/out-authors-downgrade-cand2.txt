@@ -1,0 +1,17 @@
+{
+ "a10_holds": true,
+ "results": {
+  "migrated": {
+   "error": "RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation",
+   "outcome": "failed_closed"
+  },
+  "new": {
+   "error": "RuntimeRecoveryError: required configuration-bound state missing: configuration-binding.json",
+   "outcome": "failed_closed"
+  },
+  "unmigrated": {
+   "generation": 3,
+   "outcome": "recovered"
+  }
+ }
+}

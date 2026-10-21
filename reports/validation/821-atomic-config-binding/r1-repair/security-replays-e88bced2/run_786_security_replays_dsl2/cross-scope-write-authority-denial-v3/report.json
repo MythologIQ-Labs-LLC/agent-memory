@@ -1,0 +1,2151 @@
+{
+ "authority_boundary": "A replay verdict is evidence for independent review. It is not successor acceptance, not publication, and not stop authority. sha256 values are integrity bindings, not signatures.",
+ "cases": [
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "b1_committed",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "target_unavailable"
+     },
+     "observable": "b1_refusal",
+     "observed": "target_unavailable"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "b1_before",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "b1_after",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "b1_snapshot",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "b1_mentions",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "memory:k"
+     },
+     "observable": "head",
+     "observed": "memory:k"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": "memory:k",
+       "events": [
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt"
+       ],
+       "state_version": 1,
+       "tombstoned": false
+      }
+     },
+     "observable": "owner_history",
+     "observed": {
+      "current": "memory:k",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       "memory:k"
+      ]
+     },
+     "observable": "owner_recall",
+     "observed": [
+      "memory:k"
+     ]
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "other_recall",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "other_history_unknown",
+     "observed": true
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "`remember` onto a live head outside the writer's scope: `committed: false`, `refusal: \"target_unavailable\"`, receipt `before_state`/`after_state` `v0`, `state_snapshot` `v0`. Nothing is written, no episode is retained, no version moves.",
+     "observables": [
+      "b1_committed",
+      "b1_refusal",
+      "b1_before",
+      "b1_after",
+      "b1_snapshot",
+      "b1_mentions",
+      "head",
+      "owner_history",
+      "owner_recall"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "a reader outside that scope reads byte-identically to a memory that never existed",
+     "observables": [
+      "other_history_unknown"
+     ],
+     "source": "docs/plan-776-777-772-exact-head-qualification.md"
+    },
+    {
+     "clause": "| same text in unrelated memories of two projects | independent | independent (positive control) |",
+     "observables": [
+      "other_recall"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    }
+   ],
+   "error": null,
+   "id": "W1-remember-over-live-head",
+   "implementation_evidence": [],
+   "invariants": [
+    "W1"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "b1_after": "v0",
+    "b1_before": "v0",
+    "b1_committed": false,
+    "b1_mentions": [],
+    "b1_refusal": "target_unavailable",
+    "b1_snapshot": "v0",
+    "head": "memory:k",
+    "other_history_unknown": true,
+    "other_recall": [],
+    "owner_history": {
+     "current": "memory:k",
+     "events": [
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt"
+     ],
+     "state_version": 1,
+     "tombstoned": false
+    },
+    "owner_recall": [
+     "memory:k"
+    ]
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "correct_unknown",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "forget_unknown",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "permanent_unknown",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "dispute_unknown",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "tombstones",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "disputed",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "memory:k"
+     },
+     "observable": "head",
+     "observed": "memory:k"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "valid",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       "memory:k"
+      ]
+     },
+     "observable": "owner_recall",
+     "observed": [
+      "memory:k"
+     ]
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "`correct`, `forget`, `dispute` on such a memory: the bare `fact_not_found` result, byte-identical to the result for an id nobody wrote.",
+     "observables": [
+      "correct_unknown",
+      "forget_unknown",
+      "permanent_unknown",
+      "dispute_unknown",
+      "tombstones",
+      "disputed",
+      "head",
+      "valid",
+      "owner_recall"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    }
+   ],
+   "error": null,
+   "id": "W2-correct-forget-dispute-by-other",
+   "implementation_evidence": [],
+   "invariants": [
+    "W2"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "correct_unknown": true,
+    "dispute_unknown": true,
+    "disputed": [],
+    "forget_unknown": true,
+    "head": "memory:k",
+    "owner_recall": [
+     "memory:k"
+    ],
+    "permanent_unknown": true,
+    "tombstones": [],
+    "valid": true
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "b1",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "target_unavailable"
+     },
+     "observable": "b1_refusal",
+     "observed": "target_unavailable"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "b1_after",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "b1_mentions",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "b2",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "fact_not_found"
+     },
+     "observable": "b2_refusal",
+     "observed": "fact_not_found"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "b3",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "fact_not_found"
+     },
+     "observable": "b3_refusal",
+     "observed": "fact_not_found"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "b4",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "fact_not_found"
+     },
+     "observable": "b4_refusal",
+     "observed": "fact_not_found"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "memory:k@2"
+     },
+     "observable": "head",
+     "observed": "memory:k@2"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": "memory:k@2",
+       "events": [
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt",
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt"
+       ],
+       "state_version": 2,
+       "tombstoned": false
+      }
+     },
+     "observable": "owner_history",
+     "observed": {
+      "current": "memory:k@2",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt",
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 2,
+      "tombstoned": false
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       "memory:k@2"
+      ]
+     },
+     "observable": "owner_recall",
+     "observed": [
+      "memory:k@2"
+     ]
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "| wrong-scope correction after restart (x2) | commits | refused; `_fact_scope` survives every restart |",
+     "observables": [
+      "b1",
+      "b2",
+      "b3",
+      "b4"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "`remember` onto a live head outside the writer's scope: `committed: false`, `refusal: \"target_unavailable\"`, receipt `before_state`/`after_state` `v0`, `state_snapshot` `v0`. Nothing is written, no episode is retained, no version moves.",
+     "observables": [
+      "b1_refusal",
+      "b1_after",
+      "b1_mentions",
+      "head",
+      "owner_history",
+      "owner_recall"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "`correct`, `forget`, `dispute` on such a memory: the bare `fact_not_found` result, byte-identical to the result for an id nobody wrote.",
+     "observables": [
+      "b2_refusal",
+      "b3_refusal",
+      "b4_refusal"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    }
+   ],
+   "error": null,
+   "id": "W3-refusal-survives-restart",
+   "implementation_evidence": [],
+   "invariants": [
+    "W3",
+    "W1"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "b1": false,
+    "b1_after": "v0",
+    "b1_mentions": [],
+    "b1_refusal": "target_unavailable",
+    "b2": false,
+    "b2_refusal": "fact_not_found",
+    "b3": false,
+    "b3_refusal": "fact_not_found",
+    "b4": false,
+    "b4_refusal": "fact_not_found",
+    "head": "memory:k@2",
+    "owner_history": {
+     "current": "memory:k@2",
+     "events": [
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt",
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt"
+     ],
+     "state_version": 2,
+     "tombstoned": false
+    },
+    "owner_recall": [
+     "memory:k@2"
+    ]
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "ValueError"
+     },
+     "observable": "bad_target",
+     "observed": "ValueError"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "ValueError"
+     },
+     "observable": "bad_unknown",
+     "observed": "ValueError"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "required isolation domains must also be bound isolation domains"
+     },
+     "observable": "bad_target_message",
+     "observed": "required isolation domains must also be bound isolation domains"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "required isolation domains must also be bound isolation domains"
+     },
+     "observable": "bad_unknown_message",
+     "observed": "required isolation domains must also be bound isolation domains"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "sup_rem_committed",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "target_unavailable"
+     },
+     "observable": "sup_rem_refusal",
+     "observed": "target_unavailable"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "sup_rem_before",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "sup_cor_committed",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "memory:k"
+     },
+     "observable": "head",
+     "observed": "memory:k"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "valid",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       "memory:k"
+      ]
+     },
+     "observable": "owner_recall",
+     "observed": [
+      "memory:k"
+     ]
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "tombstones",
+     "observed": []
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "`overrides` re-declares the proposal's scope and is judged under that scope, exactly as a handle opened with it would be; it does not widen a partial claim (... an override that leaves `required_isolation_domain_refs` outside `isolation_domain_refs` is a malformed proposal and raises `ValueError` before any target is resolved).",
+     "observables": [
+      "bad_target",
+      "bad_unknown",
+      "bad_target_message",
+      "bad_unknown_message"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "override with a superset of domains + the owner's project | ... `remember`/`correct` refused by scope continuity (review F2); `forget`/`dispute` admitted as an eligible reader's",
+     "observables": [
+      "sup_rem_committed",
+      "sup_cor_committed"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "`write_target_refusal` now also requires **scope continuity** -- the head's own scope, read as a context, must be eligible for the scope the new fact would be stored under. A write cannot move a live memory out of its holders' reach",
+     "observables": [
+      "sup_rem_committed",
+      "sup_cor_committed"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "A write that replaces a live head must also keep the memory within reach of the scope that holds it (scope continuity) ... A project handle therefore cannot capture a tenant-wide or shared memory into its own scope",
+     "observables": [
+      "sup_rem_committed",
+      "sup_cor_committed"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "`promotion` reports `target_unavailable` (`WRITE_TARGET_REFUSAL`); every operation that presupposes an existing fact reports `fact_not_found`, the same token an id nobody wrote reports.",
+     "observables": [
+      "sup_rem_refusal"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "a refused target selects as a blocked action, commits nothing, reports `before_state = after_state = \"v0\"`",
+     "observables": [
+      "sup_rem_before"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "`remember` onto a live head outside the writer's scope: `committed: false`, `refusal: \"target_unavailable\"`, receipt `before_state`/`after_state` `v0`, `state_snapshot` `v0`. Nothing is written, no episode is retained, no version moves.",
+     "observables": [
+      "head",
+      "valid",
+      "owner_recall",
+      "tombstones"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    }
+   ],
+   "error": null,
+   "id": "W4-overrides",
+   "implementation_evidence": [
+    "sup_cor_refusal"
+   ],
+   "invariants": [
+    "W4"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "bad_target": "ValueError",
+    "bad_target_message": "required isolation domains must also be bound isolation domains",
+    "bad_unknown": "ValueError",
+    "bad_unknown_message": "required isolation domains must also be bound isolation domains",
+    "head": "memory:k",
+    "owner_recall": [
+     "memory:k"
+    ],
+    "sup_cor_committed": false,
+    "sup_cor_refusal": "fact_not_found",
+    "sup_rem_before": "v0",
+    "sup_rem_committed": false,
+    "sup_rem_refusal": "target_unavailable",
+    "tombstones": [],
+    "valid": true
+   },
+   "outcome": "pass",
+   "recorded": {
+    "sup_cor_refusal": "fact_not_found"
+   }
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "sup_disp",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "sup_forget",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       "memory:k"
+      ]
+     },
+     "observable": "tombstones",
+     "observed": [
+      "memory:k"
+     ]
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "complete",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "complete"
+     },
+     "observable": "k2_head",
+     "observed": "complete"
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "override with a superset of domains + the owner's project | ... `remember`/`correct` refused by scope continuity (review F2); `forget`/`dispute` admitted as an eligible reader's",
+     "observables": [
+      "sup_disp",
+      "sup_forget",
+      "tombstones"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "forged **complete** scope via `overrides` | ... commits (documented: `overrides` is the host re-declaring scope exactly as `AgentMemory.open(scope=...)` would; ... the facade is not an authentication boundary)",
+     "observables": [
+      "complete",
+      "k2_head"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "Scope is privileged host input. ... the facade does not authenticate who submits them. ... a complete-scope override (replay case W4) is admitted exactly because the host is trusted to declare it. An exposed multi-user service must bind authenticated authority to the scope it submits before the facade sees it",
+     "observables": [
+      "complete",
+      "k2_head"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "Replay case W4 (a complete-scope override is admitted) holds only in that privileged-host model and must not be read as end-user isolation: a user who controls the handle controls the declared scope.",
+     "observables": [
+      "complete"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    }
+   ],
+   "error": null,
+   "id": "W4b-documented-dispositions-of-complete-and-superset-declarations",
+   "implementation_evidence": [
+    "k2_owner_recall"
+   ],
+   "invariants": [
+    "W4"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "complete": true,
+    "k2_head": "complete",
+    "k2_owner_recall": [
+     "memory:k2",
+     "complete"
+    ],
+    "sup_disp": true,
+    "sup_forget": true,
+    "tombstones": [
+     "memory:k"
+    ]
+   },
+   "outcome": "pass",
+   "recorded": {
+    "k2_owner_recall": [
+     "memory:k2",
+     "complete"
+    ]
+   }
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "a1",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "a2",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "a3",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "b1",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "owner_recall",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       "memory:k",
+       "memory:k@2"
+      ]
+     },
+     "observable": "owner_candidates",
+     "observed": [
+      "memory:k",
+      "memory:k@2"
+     ]
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       "memory:k@2"
+      ]
+     },
+     "observable": "disputed",
+     "observed": [
+      "memory:k@2"
+     ]
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "memory:k@2"
+     },
+     "observable": "head",
+     "observed": "memory:k@2"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       "other"
+      ]
+     },
+     "observable": "other_recall",
+     "observed": [
+      "other"
+     ]
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "other_view_of_k",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "owner_view_of_other",
+     "observed": true
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "| same text in unrelated memories of two projects | independent | independent (positive control) |",
+     "observables": [
+      "a1",
+      "a2",
+      "a3",
+      "b1",
+      "other_recall",
+      "other_view_of_k",
+      "owner_view_of_other"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "Lifecycle refusals within the caller's own domain (`superseded_not_current`, `tombstoned`, `disputed`, ...) remain visible candidates with decisions",
+     "observables": [
+      "owner_recall",
+      "owner_candidates",
+      "disputed",
+      "head"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    }
+   ],
+   "error": null,
+   "id": "W5-positive-controls-and-unrelated-same-text",
+   "implementation_evidence": [],
+   "invariants": [
+    "W5"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "a1": true,
+    "a2": true,
+    "a3": true,
+    "b1": true,
+    "disputed": [
+     "memory:k@2"
+    ],
+    "head": "memory:k@2",
+    "other_recall": [
+     "other"
+    ],
+    "other_view_of_k": true,
+    "owner_candidates": [
+     "memory:k",
+     "memory:k@2"
+    ],
+    "owner_recall": [],
+    "owner_view_of_other": true
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "denied_committed",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "target_unavailable"
+     },
+     "observable": "denied_refusal",
+     "observed": "target_unavailable"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "denied_before",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "kept_committed",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "episode_denied",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "episode_parked",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "episode_kept",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "memory:k"
+     },
+     "observable": "head",
+     "observed": "memory:k"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": null
+     },
+     "observable": "parked_head",
+     "observed": null
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "the `episode` is now added only inside the commit branch, so no refused or parked proposal leaves episodic content",
+     "observables": [
+      "denied_committed",
+      "kept_committed",
+      "episode_denied",
+      "episode_parked",
+      "episode_kept",
+      "head",
+      "parked_head"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "`remember` onto a live head outside the writer's scope: `committed: false`, `refusal: \"target_unavailable\"`, receipt `before_state`/`after_state` `v0`, `state_snapshot` `v0`. Nothing is written, no episode is retained, no version moves.",
+     "observables": [
+      "denied_refusal",
+      "denied_before"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    }
+   ],
+   "error": null,
+   "id": "W6-denied-proposals-persist-no-episode",
+   "implementation_evidence": [
+    "parked_committed"
+   ],
+   "invariants": [
+    "W6"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "denied_before": "v0",
+    "denied_committed": false,
+    "denied_refusal": "target_unavailable",
+    "episode_denied": false,
+    "episode_kept": true,
+    "episode_parked": false,
+    "head": "memory:k",
+    "kept_committed": true,
+    "parked_committed": false,
+    "parked_head": null
+   },
+   "outcome": "pass",
+   "recorded": {
+    "parked_committed": false
+   }
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "b1",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "other_history_unknown",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": 2
+     },
+     "observable": "canonical_version",
+     "observed": 2
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "owner_history_mentions",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": "memory:k@2",
+       "events": [
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt",
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt"
+       ],
+       "state_version": 2,
+       "tombstoned": false
+      }
+     },
+     "observable": "owner_history",
+     "observed": {
+      "current": "memory:k@2",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt",
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 2,
+      "tombstoned": false
+     }
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "the authorize event of a write-target-refused proposal carries `authority_refs: [\"write-target:refused\"]` (schema-valid) and the public history projection withholds that correlation",
+     "observables": [
+      "b1",
+      "owner_history",
+      "owner_history_mentions",
+      "canonical_version"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "a reader outside that scope reads byte-identically to a memory that never existed",
+     "observables": [
+      "other_history_unknown"
+     ],
+     "source": "docs/plan-776-777-772-exact-head-qualification.md"
+    }
+   ],
+   "error": null,
+   "id": "W7-refused-attempt-leaves-no-public-trace",
+   "implementation_evidence": [],
+   "invariants": [
+    "W7"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "b1": false,
+    "canonical_version": 2,
+    "other_history_unknown": true,
+    "owner_history": {
+     "current": "memory:k@2",
+     "events": [
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt",
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt"
+     ],
+     "state_version": 2,
+     "tombstoned": false
+    },
+    "owner_history_mentions": []
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "bd",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "bf",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "bdf",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "other_history_unknown",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "owner_history_mentions",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": "memory:k",
+       "events": [
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt"
+       ],
+       "state_version": 1,
+       "tombstoned": false
+      }
+     },
+     "observable": "owner_history",
+     "observed": {
+      "current": "memory:k",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "the authorize event of a write-target-refused proposal carries `authority_refs: [\"write-target:refused\"]` (schema-valid) and the public history projection withholds that correlation",
+     "observables": [
+      "bd",
+      "bf",
+      "bdf",
+      "owner_history",
+      "owner_history_mentions"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "a reader outside that scope reads byte-identically to a memory that never existed",
+     "observables": [
+      "other_history_unknown"
+     ],
+     "source": "docs/plan-776-777-772-exact-head-qualification.md"
+    }
+   ],
+   "error": null,
+   "id": "W7b-refused-dispute-and-forget-attempts-leave-no-public-trace",
+   "implementation_evidence": [],
+   "invariants": [
+    "W7"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "bd": false,
+    "bdf": false,
+    "bf": false,
+    "other_history_unknown": true,
+    "owner_history": {
+     "current": "memory:k",
+     "events": [
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt"
+     ],
+     "state_version": 1,
+     "tombstoned": false
+    },
+    "owner_history_mentions": []
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "a_rem",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "target_unavailable"
+     },
+     "observable": "a_rem_refusal",
+     "observed": "target_unavailable"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "a_disp",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "already_deleted"
+     },
+     "observable": "a_disp_refusal",
+     "observed": "already_deleted"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "a_disp_mentions",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "a_del",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "already_deleted"
+     },
+     "observable": "a_del_refusal",
+     "observed": "already_deleted"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "a_forget",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "fact_not_found"
+     },
+     "observable": "a_forget_refusal",
+     "observed": "fact_not_found"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "other_history_mentions",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": "gen-b",
+       "events": [
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt"
+       ],
+       "state_version": 1,
+       "tombstoned": false
+      }
+     },
+     "observable": "other_history",
+     "observed": {
+      "current": "gen-b",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       "gen-b"
+      ]
+     },
+     "observable": "other_recall",
+     "observed": [
+      "gen-b"
+     ]
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "A governed-deleted generation is closed. At the fact level (`dispute` of a tombstoned fact by its uuid, a governed pruning of one of its versions, the adapter's delete of a member of a deleted lineage) the answer is `already_deleted`; at the facade's logical-reference level (`forget`, permanent `forget`, `correct`, `dispute` by `target_reference`) the former owner reads the bare `fact_not_found` result, because the reference has no visible head. Either answer is the same whether or not another scope has since re-created the id, and neither moves or reads the live generation [...] The one further governed act is the escalation of a reversible pruning to a permanent deletion by a writer eligible for that generation: it keeps the tombstone's `deleted_at`, recorded version and lineage, erases the content, and neither reads nor moves a live generation another scope holds.",
+     "observables": [
+      "a_disp",
+      "a_disp_refusal",
+      "a_del",
+      "a_del_refusal",
+      "a_forget",
+      "a_forget_refusal"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "`remember` onto a live head outside the writer's scope: `committed: false`, `refusal: \"target_unavailable\"`, receipt `before_state`/`after_state` `v0`, `state_snapshot` `v0`. Nothing is written, no episode is retained, no version moves.",
+     "observables": [
+      "a_rem",
+      "a_rem_refusal"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "| B re-creates A's **deleted** id | allowed (fresh generation) | unchanged, with isolation proven (A cannot write it back while B's generation is live) |",
+     "observables": [
+      "a_rem",
+      "other_recall"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "Staleness and the `before_state` of a committed deletion or dispute are judged against the version the writer may see: a memory whose live head lies outside the writer's scope reads `0` to that writer, the same `v0` its proposal's `state_snapshot` resolves.",
+     "observables": [
+      "a_disp_mentions"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "the authorize event of a write-target-refused proposal carries `authority_refs: [\"write-target:refused\"]` (schema-valid) and the public history projection withholds that correlation",
+     "observables": [
+      "other_history",
+      "other_history_mentions"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "a re-created memory shows only its live generation",
+     "observables": [
+      "other_history_mentions"
+     ],
+     "source": "docs/plan-776-777-772-exact-head-qualification.md"
+    }
+   ],
+   "error": null,
+   "id": "W7c-former-owner-attempts-leave-no-trace-in-the-new-generation",
+   "implementation_evidence": [],
+   "invariants": [
+    "W7",
+    "W8"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "a_del": false,
+    "a_del_refusal": "already_deleted",
+    "a_disp": false,
+    "a_disp_mentions": [],
+    "a_disp_refusal": "already_deleted",
+    "a_forget": false,
+    "a_forget_refusal": "fact_not_found",
+    "a_rem": false,
+    "a_rem_refusal": "target_unavailable",
+    "other_history": {
+     "current": "gen-b",
+     "events": [
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt"
+     ],
+     "state_version": 1,
+     "tombstoned": false
+    },
+    "other_history_mentions": [],
+    "other_recall": [
+     "gen-b"
+    ]
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "a_disp",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "already_deleted"
+     },
+     "observable": "a_disp_refusal",
+     "observed": "already_deleted"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "a_disp_mentions",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "a_del",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "already_deleted"
+     },
+     "observable": "a_del_refusal",
+     "observed": "already_deleted"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "a_forget",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "fact_not_found"
+     },
+     "observable": "a_forget_refusal",
+     "observed": "fact_not_found"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": null,
+       "events": [],
+       "state_version": 2,
+       "tombstoned": true
+      }
+     },
+     "observable": "owner_history",
+     "observed": {
+      "current": null,
+      "events": [],
+      "state_version": 2,
+      "tombstoned": true
+     }
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "A governed-deleted generation is closed. At the fact level (`dispute` of a tombstoned fact by its uuid, a governed pruning of one of its versions, the adapter's delete of a member of a deleted lineage) the answer is `already_deleted`; at the facade's logical-reference level (`forget`, permanent `forget`, `correct`, `dispute` by `target_reference`) the former owner reads the bare `fact_not_found` result, because the reference has no visible head. Either answer is the same whether or not another scope has since re-created the id, and neither moves or reads the live generation [...] The one further governed act is the escalation of a reversible pruning to a permanent deletion by a writer eligible for that generation: it keeps the tombstone's `deleted_at`, recorded version and lineage, erases the content, and neither reads nor moves a live generation another scope holds.",
+     "observables": [
+      "a_disp",
+      "a_disp_refusal",
+      "a_del",
+      "a_del_refusal",
+      "a_forget",
+      "a_forget_refusal",
+      "a_disp_mentions"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "Versions are generation-relative ... After a governed deletion of the head the id reports `0` to any writer, a re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one; the owner of the deleted generation still reads the version its deletion recorded (`tombstoned`, DUR-DEL-001).",
+     "observables": [
+      "owner_history"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    }
+   ],
+   "error": null,
+   "id": "W7c-control-former-owner-attempts-without-a-re-creation",
+   "implementation_evidence": [],
+   "invariants": [
+    "W7",
+    "W8"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "a_del": false,
+    "a_del_refusal": "already_deleted",
+    "a_disp": false,
+    "a_disp_mentions": [],
+    "a_disp_refusal": "already_deleted",
+    "a_forget": false,
+    "a_forget_refusal": "fact_not_found",
+    "owner_history": {
+     "current": null,
+     "events": [],
+     "state_version": 2,
+     "tombstoned": true
+    }
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "parked_b_states",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "parked_b_after",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "parked_a_after",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "parked_a_snapshot",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "parked_b2_after",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": null,
+       "events": [],
+       "state_version": 0,
+       "tombstoned": false
+      }
+     },
+     "observable": "other_history",
+     "observed": {
+      "current": null,
+      "events": [],
+      "state_version": 0,
+      "tombstoned": false
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "other_history_unknown",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": null,
+       "events": [],
+       "state_version": 3,
+       "tombstoned": true
+      }
+     },
+     "observable": "owner_history",
+     "observed": {
+      "current": null,
+      "events": [],
+      "state_version": 3,
+      "tombstoned": true
+     }
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "Versions are generation-relative ... After a governed deletion of the head the id reports `0` to any writer, a re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one; the owner of the deleted generation still reads the version its deletion recorded (`tombstoned`, DUR-DEL-001).",
+     "observables": [
+      "parked_b_states",
+      "parked_b_after",
+      "parked_a_after",
+      "parked_a_snapshot",
+      "parked_b2_after",
+      "owner_history"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "a reader outside that scope reads byte-identically to a memory that never existed",
+     "observables": [
+      "other_history",
+      "other_history_unknown"
+     ],
+     "source": "docs/plan-776-777-772-exact-head-qualification.md"
+    }
+   ],
+   "error": null,
+   "id": "W8b-refused-and-parked-proposals-on-a-tombstoned-id-report-v0",
+   "implementation_evidence": [
+    "parked_b"
+   ],
+   "invariants": [
+    "W8"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "other_history": {
+     "current": null,
+     "events": [],
+     "state_version": 0,
+     "tombstoned": false
+    },
+    "other_history_unknown": true,
+    "owner_history": {
+     "current": null,
+     "events": [],
+     "state_version": 3,
+     "tombstoned": true
+    },
+    "parked_a_after": "v0",
+    "parked_a_snapshot": "v0",
+    "parked_b": false,
+    "parked_b2_after": "v0",
+    "parked_b_after": "v0",
+    "parked_b_states": []
+   },
+   "outcome": "pass",
+   "recorded": {
+    "parked_b": false
+   }
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "b1_snapshot",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "b1_before",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v1"
+     },
+     "observable": "b1_after",
+     "observed": "v1"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "b1_mentions",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v1"
+     },
+     "observable": "b2_before",
+     "observed": "v1"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v2"
+     },
+     "observable": "b2_after",
+     "observed": "v2"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "a_back",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "target_unavailable"
+     },
+     "observable": "a_back_refusal",
+     "observed": "target_unavailable"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": null,
+       "events": [],
+       "state_version": 3,
+       "tombstoned": true
+      }
+     },
+     "observable": "owner_history",
+     "observed": {
+      "current": null,
+      "events": [],
+      "state_version": 3,
+      "tombstoned": true
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "other_history_mentions",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": "gen-b@2",
+       "events": [
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt",
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt"
+       ],
+       "state_version": 2,
+       "tombstoned": false
+      }
+     },
+     "observable": "other_history",
+     "observed": {
+      "current": "gen-b@2",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt",
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 2,
+      "tombstoned": false
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "gen-b@2"
+     },
+     "observable": "head",
+     "observed": "gen-b@2"
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "Versions are generation-relative ... After a governed deletion of the head the id reports `0` to any writer, a re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one; the owner of the deleted generation still reads the version its deletion recorded (`tombstoned`, DUR-DEL-001).",
+     "observables": [
+      "b1_snapshot",
+      "b1_before",
+      "b1_after",
+      "b1_mentions",
+      "b2_before",
+      "b2_after",
+      "owner_history",
+      "other_history",
+      "head"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "`remember` onto a live head outside the writer's scope: `committed: false`, `refusal: \"target_unavailable\"`, receipt `before_state`/`after_state` `v0`, `state_snapshot` `v0`. Nothing is written, no episode is retained, no version moves.",
+     "observables": [
+      "a_back",
+      "a_back_refusal"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "| B re-creates A's **deleted** id | allowed (fresh generation) | unchanged, with isolation proven (A cannot write it back while B's generation is live) |",
+     "observables": [
+      "a_back"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "a re-created memory shows only its live generation",
+     "observables": [
+      "other_history_mentions"
+     ],
+     "source": "docs/plan-776-777-772-exact-head-qualification.md"
+    }
+   ],
+   "error": null,
+   "id": "W8-recreated-generation-starts-its-own-counter",
+   "implementation_evidence": [],
+   "invariants": [
+    "W8"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "a_back": false,
+    "a_back_refusal": "target_unavailable",
+    "b1_after": "v1",
+    "b1_before": "v0",
+    "b1_mentions": [],
+    "b1_snapshot": "v0",
+    "b2_after": "v2",
+    "b2_before": "v1",
+    "head": "gen-b@2",
+    "other_history": {
+     "current": "gen-b@2",
+     "events": [
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt",
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt"
+     ],
+     "state_version": 2,
+     "tombstoned": false
+    },
+    "other_history_mentions": [],
+    "owner_history": {
+     "current": null,
+     "events": [],
+     "state_version": 3,
+     "tombstoned": true
+    }
+   },
+   "outcome": "pass",
+   "recorded": {}
+  }
+ ],
+ "dsl_version": "786-security-replay-dsl/2",
+ "invariants": {
+  "W1": {
+   "cases": [
+    "W1-remember-over-live-head",
+    "W3-refusal-survives-restart"
+   ],
+   "holds": true,
+   "statement": "A promotion from another project onto a live head is refused with target_unavailable, reports v0/v0 and a v0 snapshot, and leaves head, version, recall and history of the owner byte-identical."
+  },
+  "W2": {
+   "cases": [
+    "W2-correct-forget-dispute-by-other"
+   ],
+   "holds": true,
+   "statement": "correct, forget, permanent forget and dispute from another project read byte-identically (ids and timestamps folded) to the same call on an id nobody wrote, and change nothing."
+  },
+  "W3": {
+   "cases": [
+    "W3-refusal-survives-restart"
+   ],
+   "holds": true,
+   "statement": "The refusal holds after every restart; the scope binding is durable."
+  },
+  "W4": {
+   "cases": [
+    "W4-overrides",
+    "W4b-documented-dispositions-of-complete-and-superset-declarations"
+   ],
+   "holds": true,
+   "statement": "An override leaving required isolation domains outside the bound domains is a malformed proposal (ValueError with one fixed message) for any target; an override declaring a superset of domains plus the owner's project cannot replace or correct the head while (documented) it may delete or dispute it as an eligible reader; and a complete re-declaration of the owner's scope commits as the owner would ONLY because `overrides` is privileged host input that the facade does not authenticate (docs/44 'Scope is privileged host input'): this is host re-declaration, never end-user isolation."
+  },
+  "W5": {
+   "cases": [
+    "W5-positive-controls-and-unrelated-same-text"
+   ],
+   "holds": true,
+   "statement": "The owner's own remember, correct and dispute stay admitted (a disputed head is recorded as disputed and, as documented, withheld from the owner's own admission while staying a visible candidate), and the same text in an unrelated memory of another project is independent."
+  },
+  "W6": {
+   "cases": [
+    "W6-denied-proposals-persist-no-episode"
+   ],
+   "holds": true,
+   "statement": "A proposal refused for its target, and one parked by policy review, persist no episode, live and after restart; a committed proposal keeps its episode."
+  },
+  "W7": {
+   "cases": [
+    "W7-refused-attempt-leaves-no-public-trace",
+    "W7b-refused-dispute-and-forget-attempts-leave-no-public-trace",
+    "W7c-former-owner-attempts-leave-no-trace-in-the-new-generation",
+    "W7c-control-former-owner-attempts-without-a-re-creation"
+   ],
+   "holds": true,
+   "statement": "A refused remember, correct, forget or dispute attempt by another project, and a former owner's attempts on a re-created id, leave no event and no identifier or text in the live generation's public history payload; the refused project's history of the memory stays blank; the former owner's answers are the same with and without a re-creation."
+  },
+  "W8": {
+   "cases": [
+    "W7c-former-owner-attempts-leave-no-trace-in-the-new-generation",
+    "W7c-control-former-owner-attempts-without-a-re-creation",
+    "W8b-refused-and-parked-proposals-on-a-tombstoned-id-report-v0",
+    "W8-recreated-generation-starts-its-own-counter"
+   ],
+   "holds": true,
+   "statement": "A governed-deleted id reports 0 to any writer: a re-created generation starts its own counter (snapshot v0, before v0, after v1, history 1), a refused or policy-parked proposal on the tombstoned id reports v0/v0, and the former owner's view keeps the version its deletion recorded and cannot write, dispute or re-delete the id while the new generation is live."
+  }
+ },
+ "observations_sha256": "617805b93f09312a95d277b5a82b8403719da0d705e1e651d826415ca283a32d",
+ "provenance": {
+  "dirty_exclusion": "reports/validation/786-security-replays-v3/",
+  "dirty_paths": [],
+  "fixture": {
+   "path": "reference/fixtures/786-security-replays/cross-scope-write-authority-denial-v3.json",
+   "sha256": "99580f996e602946885f5edde128e7d58fc543cdbaa195f6b01ddbfdd565303b"
+  },
+  "platform": "Linux-6.18.44-fc-v139-x86_64-with-glibc2.39",
+  "python": "3.13.16",
+  "runner": {
+   "path": "reference/run_786_security_replays_dsl2.py",
+   "sha256": "73f0cd175b5a97f8e61d168bfc93cd796152aab02c76209bf2374153f35dba86",
+   "version": "786-security-replay-runner/2"
+  },
+  "runner_base": {
+   "path": "reference/run_786_security_replays.py",
+   "sha256": "21db05148c369815fa154bfa83db0b3b35f6c4712596ec0f137002a6611d8269",
+   "version": "786-security-replay-runner/1"
+  },
+  "runtime_tree": "4bfe33f27d229412f160e79a80fe0a44b3ed0c2a",
+  "source_commit": "e88bced24157d668179882f63e921ea569df1d51",
+  "sqlite": "3.45.1"
+ },
+ "replay_id": "cross-scope-write-authority-denial-v3",
+ "schema": "786-security-replay-report/2",
+ "summary": {
+  "cases": 13,
+  "errors": 0,
+  "failed": 0,
+  "passed": 13
+ },
+ "verdict": "PASS",
+ "verdict_reasons": [
+  "every expectation held on a clean source tree"
+ ]
+}

@@ -1,0 +1,24 @@
+# First execution of the preregistered #809 expectations (module as committed at 8272b38e, reviewer YES in section H of independent-preregistration-review.md) on the REPAIRED runtime
+# runtime blobs as executed (uncommitted at run time; committed unchanged as the next commit): adapter.py 4a44aa69246114fea5b8cbe46d9cdb9603a94cc0, surface.py 565a999f311cba6ca0da357c5836aadc15467a29
+# module sha256: 3080e465339baa0772e438c2b245763be840abc874f1875913f9d363bd894ee3 (same as baseline 3)
+# working tree at run time:
+#    M docs/15-memory-threat-model.md
+#    M docs/44-public-api-contract.md
+#    M docs/786-cross-scope-write-authority.md
+#    M reference/agentmem_ref/api/surface.py
+#    M reference/agentmem_ref/runtime/adapter.py
+#    M reference/tests/test_786_security_replay_evidence_kind.py
+#    M reference/tests/test_786_security_replays_v3.py
+#    M reports/runtime/proposals/786-cumulative-v6-to-v8.PROPOSED.json
+#    M reports/validation/809-at-head/independent-preregistration-review.md
+#    M scripts/verify_786_security_replays.py
+#   ?? reference/fixtures/786-security-replays/author_fixture_809.py
+#   ?? reference/run_786_security_replays_dsl3.py
+#   ?? reference/tests/test_809_security_replay_v1.py
+#   ?? reports/validation/809-at-head/first-execution.log
+# command (cwd reference/): python3 -m pytest tests/test_809_evidence_reference_authorization.py 'tests/test_786_cross_scope_write_authority.py::EvidenceReferenceOracle' 'tests/test_776_transitive_traversal_review.py::TransitiveTraversal::test_decision_does_not_depend_on_query_order' tests/test_776_deletion_decision_properties.py -q -p no:cacheprovider --tb=short -rxX
+.......... [ 35%]
+...............x..           [100%]
+=========================== short test summary info ============================
+XFAIL tests/test_786_cross_scope_write_authority.py::EvidenceReferenceOracle::test_fr3_2_citing_a_deleted_foreign_uuid_is_observable_to_the_citer
+27 passed, 1 xfailed, 106 subtests passed in 19.36s

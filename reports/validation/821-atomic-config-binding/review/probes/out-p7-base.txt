@@ -1,0 +1,20 @@
+acts: {"correct": {"committed": false, "refusal": null, "stage": "commit"}, "dispute": {"committed": false, "refusal": null, "stage": "commit"}, "forget": {"committed": true, "refusal": null, "stage": "forget"}}
+table agent_memory_meta                  rows=   3 sha=76304f059d871b9a
+table digest_buckets                     rows= 256 sha=27fc31cc4c0ff47e
+table digest_rows                        rows=   2 sha=7d7463e1c83e4e17
+table episodes                           rows=   0 sha=4f53cda18c2baa0c
+table facts                              rows=   2 sha=b7eee897e5224b85
+table governance_buckets                 rows=1280 sha=5b3e0929fad01c04
+table governance_entries                 rows=   8 sha=c498197ef4f2d7aa
+table governance_log                     rows=  17 sha=a914b912ea3b653b
+table governance_residual                rows=   1 sha=84357f37fa7517ff
+table runtime_journal                    rows=  10 sha=56ca008b3e456cbc
+table runtime_state                      rows=   1 sha=721ad1ff676a2cc4
+table sqlite_sequence                    rows=   1 sha=9cfdb4301b6cf584
+table substrate_write_log                rows=   2 sha=fbdb9ab2f510c06d
+table typed_relations                    rows=   0 sha=4f53cda18c2baa0c
+state substrate_digest: bmerkle-v1:5adad79c6db4bda90edc3d666eafc47c62a752b132c762fe836b73ea139886f9
+state governance_digest: gsect-v1:1184f2272c974e472bccb4eb569cf20db0488fdd0cecc36853584251f373efa8
+state journal_record_digest: sha256:c7f063eabdc9b2f941d5dcb751fb4944263b7b755c222f90457ee468aa8770a9
+state keys: ['durability_profile', 'generation', 'governance_digest', 'governance_scheme', 'interpretation_digest', 'journal_record_digest', 'profile', 'schema_version', 'substrate_digest', 'substrate_identity', 'transaction_protocol']
+journal tail keys: ['generation', 'governance_digest', 'interpretation_digest', 'previous_record_digest', 'record_digest', 'schema_version', 'substrate_digest', 'transaction_protocol'] schema 1.0.0

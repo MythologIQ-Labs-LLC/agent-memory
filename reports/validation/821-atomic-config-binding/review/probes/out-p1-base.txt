@@ -1,0 +1,63 @@
+row protocol present: False
+create       after_state     killed=True  before_gen=None after: state=None journal=None row=None file=None [no-state] reopen: REFUSED RuntimeRecoveryError: required SQLite runtime state is missing
+create       after_journal   killed=True  before_gen=None after: state=None journal=None row=None file=None [no-state] reopen: REFUSED RuntimeRecoveryError: required SQLite runtime state is missing
+create       before_commit   killed=True  before_gen=None after: state=None journal=None row=None file=None [no-state] reopen: REFUSED RuntimeRecoveryError: required SQLite runtime state is missing
+create       post_commit     killed=True  before_gen=None after: state=1 journal=1 row=None file=None [SPLIT file=None state=1] reopen: REFUSED RuntimeRecoveryError: required configuration-bound state missing: configuration-binding.json  <-- VIOLATION
+create       in_published    killed=True  before_gen=None after: state=1 journal=1 row=None file=None [SPLIT file=None state=1] reopen: REFUSED RuntimeRecoveryError: required configuration-bound state missing: configuration-binding.json  <-- VIOLATION
+create       owner_callback  killed=True  before_gen=None after: state=1 journal=1 row=None file=None [SPLIT file=None state=1] reopen: REFUSED RuntimeRecoveryError: required configuration-bound state missing: configuration-binding.json  <-- VIOLATION
+create       mid_file        killed=True  before_gen=None after: state=1 journal=1 row=None file=None [SPLIT file=None state=1] reopen: REFUSED RuntimeRecoveryError: required configuration-bound state missing: configuration-binding.json  <-- VIOLATION
+create       post_op         killed=True  before_gen=None after: state=1 journal=1 row=None file=1 [file==state] reopen: OK gen=1 scheme=-
+remember     after_state     killed=True  before_gen=2 after: state=2 journal=2 row=None file=2 [file==state] reopen: OK gen=2 scheme=-
+remember     after_journal   killed=True  before_gen=2 after: state=2 journal=2 row=None file=2 [file==state] reopen: OK gen=2 scheme=-
+remember     before_commit   killed=True  before_gen=2 after: state=2 journal=2 row=None file=2 [file==state] reopen: OK gen=2 scheme=-
+remember     post_commit     killed=True  before_gen=2 after: state=3 journal=3 row=None file=2 [SPLIT file=2 state=3] reopen: REFUSED RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation  <-- VIOLATION
+remember     in_published    killed=True  before_gen=2 after: state=3 journal=3 row=None file=2 [SPLIT file=2 state=3] reopen: REFUSED RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation  <-- VIOLATION
+remember     owner_callback  killed=True  before_gen=2 after: state=3 journal=3 row=None file=2 [SPLIT file=2 state=3] reopen: REFUSED RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation  <-- VIOLATION
+remember     mid_file        killed=True  before_gen=2 after: state=3 journal=3 row=None file=2 [SPLIT file=2 state=3] reopen: REFUSED RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation  <-- VIOLATION
+remember     post_op         killed=True  before_gen=2 after: state=3 journal=3 row=None file=3 [file==state] reopen: OK gen=3 scheme=-
+recall       after_state     killed=True  before_gen=2 after: state=2 journal=2 row=None file=2 [file==state] reopen: OK gen=2 scheme=-
+recall       after_journal   killed=True  before_gen=2 after: state=2 journal=2 row=None file=2 [file==state] reopen: OK gen=2 scheme=-
+recall       before_commit   killed=True  before_gen=2 after: state=2 journal=2 row=None file=2 [file==state] reopen: OK gen=2 scheme=-
+recall       post_commit     killed=True  before_gen=2 after: state=3 journal=3 row=None file=2 [SPLIT file=2 state=3] reopen: REFUSED RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation  <-- VIOLATION
+recall       in_published    killed=True  before_gen=2 after: state=3 journal=3 row=None file=2 [SPLIT file=2 state=3] reopen: REFUSED RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation  <-- VIOLATION
+recall       owner_callback  killed=True  before_gen=2 after: state=3 journal=3 row=None file=2 [SPLIT file=2 state=3] reopen: REFUSED RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation  <-- VIOLATION
+recall       mid_file        killed=True  before_gen=2 after: state=3 journal=3 row=None file=2 [SPLIT file=2 state=3] reopen: REFUSED RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation  <-- VIOLATION
+recall       post_op         killed=True  before_gen=2 after: state=3 journal=3 row=None file=3 [file==state] reopen: OK gen=3 scheme=-
+snapshot     after_state     killed=True  before_gen=2 after: state=2 journal=2 row=None file=2 [file==state] reopen: OK gen=2 scheme=-
+snapshot     after_journal   killed=True  before_gen=2 after: state=2 journal=2 row=None file=2 [file==state] reopen: OK gen=2 scheme=-
+snapshot     before_commit   killed=True  before_gen=2 after: state=2 journal=2 row=None file=2 [file==state] reopen: OK gen=2 scheme=-
+snapshot     post_commit     killed=True  before_gen=2 after: state=3 journal=3 row=None file=2 [SPLIT file=2 state=3] reopen: REFUSED RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation  <-- VIOLATION
+snapshot     in_published    killed=True  before_gen=2 after: state=3 journal=3 row=None file=2 [SPLIT file=2 state=3] reopen: REFUSED RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation  <-- VIOLATION
+snapshot     owner_callback  killed=True  before_gen=2 after: state=3 journal=3 row=None file=2 [SPLIT file=2 state=3] reopen: REFUSED RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation  <-- VIOLATION
+snapshot     mid_file        killed=True  before_gen=2 after: state=3 journal=3 row=None file=2 [SPLIT file=2 state=3] reopen: REFUSED RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation  <-- VIOLATION
+snapshot     post_op         killed=True  before_gen=2 after: state=3 journal=3 row=None file=3 [file==state] reopen: OK gen=3 scheme=-
+forget       after_state     killed=True  before_gen=2 after: state=2 journal=2 row=None file=2 [file==state] reopen: OK gen=2 scheme=-
+forget       after_journal   killed=True  before_gen=2 after: state=2 journal=2 row=None file=2 [file==state] reopen: OK gen=2 scheme=-
+forget       before_commit   killed=True  before_gen=2 after: state=2 journal=2 row=None file=2 [file==state] reopen: OK gen=2 scheme=-
+forget       post_commit     killed=True  before_gen=2 after: state=3 journal=3 row=None file=2 [SPLIT file=2 state=3] reopen: REFUSED RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation  <-- VIOLATION
+forget       in_published    killed=True  before_gen=2 after: state=3 journal=3 row=None file=2 [SPLIT file=2 state=3] reopen: REFUSED RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation  <-- VIOLATION
+forget       owner_callback  killed=True  before_gen=2 after: state=3 journal=3 row=None file=2 [SPLIT file=2 state=3] reopen: REFUSED RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation  <-- VIOLATION
+forget       mid_file        killed=True  before_gen=2 after: state=3 journal=3 row=None file=2 [SPLIT file=2 state=3] reopen: REFUSED RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation  <-- VIOLATION
+forget       post_op         killed=True  before_gen=2 after: state=3 journal=3 row=None file=3 [file==state] reopen: OK gen=3 scheme=-
+direct_base  after_state     killed=True  before_gen=2 after: state=2 journal=2 row=None file=2 [file==state] reopen: OK gen=2 scheme=-
+direct_base  after_journal   killed=True  before_gen=2 after: state=2 journal=2 row=None file=2 [file==state] reopen: OK gen=2 scheme=-
+direct_base  before_commit   killed=True  before_gen=2 after: state=2 journal=2 row=None file=2 [file==state] reopen: OK gen=2 scheme=-
+direct_base  post_commit     killed=True  before_gen=2 after: state=3 journal=3 row=None file=2 [SPLIT file=2 state=3] reopen: REFUSED RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation  <-- VIOLATION
+direct_base  in_published    killed=True  before_gen=2 after: state=3 journal=3 row=None file=2 [SPLIT file=2 state=3] reopen: REFUSED RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation  <-- VIOLATION
+direct_base  owner_callback  killed=True  before_gen=2 after: state=3 journal=3 row=None file=2 [SPLIT file=2 state=3] reopen: REFUSED RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation  <-- VIOLATION
+direct_base  mid_file        killed=True  before_gen=2 after: state=3 journal=3 row=None file=2 [SPLIT file=2 state=3] reopen: REFUSED RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation  <-- VIOLATION
+direct_base  post_op         killed=True  before_gen=2 after: state=3 journal=3 row=None file=3 [file==state] reopen: OK gen=3 scheme=-
+Traceback (most recent call last):
+  File "review-821/probes/p1_crash_matrix.py", line 140, in <module>
+    main()
+    ~~~~^^
+  File "review-821/probes/p1_crash_matrix.py", line 111, in main
+    tenant, scope = seed(root, phase)
+                    ~~~~^^^^^^^^^^^^^
+  File "review-821/probes/p1_crash_matrix.py", line 95, in seed
+    shutil.copytree(LEGACY, root)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/shutil.py", line 591, in copytree
+    with os.scandir(src) as itr:
+         ~~~~~~~~~~^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'review-821/base/reference/fixtures/821-legacy-stores/coherent'

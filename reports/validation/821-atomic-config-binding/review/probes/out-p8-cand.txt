@@ -1,0 +1,10 @@
+posture() durable_state: {"status": "recovered", "configuration_binding_present": true, "configuration_binding_scheme": "sqlite_transaction"}
+doctor ok: {'status': 'recovered', 'configuration_binding_present': True, 'configuration_binding_scheme': 'sqlite_transaction', 'recovery': 'recovered', 'reason': None}
+doctor/posture wrote nothing (tables + non-WAL files): True
+doctor on tampered row: {'status': 'sqlite_checkpoint_present', 'configuration_binding_present': False, 'configuration_binding_scheme': None, 'recovery': 'failed_closed', 'reason': None} | full recovery block: {"status": "failed_closed", "detail": "SQLite configuration binding is corrupt: not JSON"}
+backup_to (db only) + config, open: OK gen=2 scheme=sqlite_transaction
+file profile files: ['.runtime-checkpoint.lock', 'configuration-binding.json', 'governance.json', 'runtime-generation-journal.jsonl', 'runtime-manifest.json', 'substrate.json']
+file profile binding keys: ['base', 'configuration_digest', 'durability_profile', 'plan', 'plan_digest', 'required_projection_ids', 'schema_version'] base keys: ['generation', 'governance_digest', 'interpretation_digest', 'substrate_digest'] gen: 2
+file profile recover: recovered_exact_configuration 2
+file profile tampered: RuntimeRecoveryError configuration binding does not match recovered base checkpoint: generation
+binding sha (structure): 48aa0cdd74a2

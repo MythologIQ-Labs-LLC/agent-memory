@@ -1,0 +1,30 @@
+{
+ "deleted": {
+  "n": 300,
+  "median_us": 13031.3,
+  "p90_us": 18831.7,
+  "min_us": 11347.4,
+  "median_ratio_to_unknown": 1.003
+ },
+ "live": {
+  "n": 300,
+  "median_us": 13041.2,
+  "p90_us": 19893.3,
+  "min_us": 11261.0,
+  "median_ratio_to_unknown": 1.003
+ },
+ "unknown": {
+  "n": 300,
+  "median_us": 12998.6,
+  "p90_us": 18939.3,
+  "min_us": 11308.0,
+  "median_ratio_to_unknown": 1.0
+ },
+ "none": {
+  "n": 300,
+  "median_us": 13011.3,
+  "p90_us": 17902.1,
+  "min_us": 11188.4,
+  "median_ratio_to_unknown": 1.001
+ }
+}

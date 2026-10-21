@@ -1,0 +1,13 @@
+alone            after_excl_open        B_rc=77  A_rc=-   witness=2 db=3 reopen_rc=0 recalled=1 orphans=1 OK
+alone            mid_write              B_rc=77  A_rc=-   witness=2 db=3 reopen_rc=0 recalled=1 orphans=1 OK
+alone            after_write_unflushed  B_rc=77  A_rc=-   witness=2 db=3 reopen_rc=0 recalled=1 orphans=1 OK
+alone            after_file_fsync       B_rc=77  A_rc=-   witness=2 db=3 reopen_rc=0 recalled=1 orphans=1 OK
+alone            after_rename           B_rc=77  A_rc=-   witness=3 db=3 reopen_rc=0 recalled=1 orphans=0 OK
+alone            after_dir_fsync        B_rc=77  A_rc=-   witness=3 db=3 reopen_rc=0 recalled=1 orphans=0 OK
+B-beside-held-A  after_excl_open        B_rc=77  A_rc=0   witness=3 db=4 reopen_rc=0 recalled=2 orphans=1 OK
+B-beside-held-A  mid_write              B_rc=77  A_rc=0   witness=3 db=4 reopen_rc=0 recalled=2 orphans=1 OK
+B-beside-held-A  after_write_unflushed  B_rc=77  A_rc=0   witness=3 db=4 reopen_rc=0 recalled=2 orphans=1 OK
+B-beside-held-A  after_file_fsync       B_rc=77  A_rc=0   witness=3 db=4 reopen_rc=0 recalled=2 orphans=1 OK
+B-beside-held-A  after_rename           B_rc=77  A_rc=0   witness=3 db=4 reopen_rc=0 recalled=2 orphans=0 OK
+B-beside-held-A  after_dir_fsync        B_rc=77  A_rc=0   witness=3 db=4 reopen_rc=0 recalled=2 orphans=0 OK
+PROBLEMS: 0

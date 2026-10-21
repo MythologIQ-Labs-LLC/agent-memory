@@ -1,0 +1,7 @@
+rev 77c472e6f91fd292ac90eedd105c272f5cb21aea status: 0 changes
+FAIL: test_own_checkout_at_frozen_revision_is_served
+FAIL: test_a_runtime_edit_still_makes_replay_evidence_stale
+FAIL: test_lane_records_do_not_make_replay_evidence_stale
+FAIL: test_evaluation_only_change_keeps_runtime_baseline_equivalence
+Ran 3008 tests in 370.602s
+FAILED
