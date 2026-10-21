@@ -58,7 +58,7 @@
     },
     {
       "path": "reference/agentmem_ref/runtime/recall_control.py",
-      "blob": "e55d3ca3d87d203740f77dd90f0064888631c088"
+      "blob": "c16452efa05bdb3f4db892e3a0918cba25dc5ec2"
     },
     {
       "path": "reference/agentmem_ref/runtime/recall_observation_receipt.py",
@@ -145,6 +145,10 @@
     {
       "kind": "security_replay",
       "ref": "evidence-reference-authorization-v1"
+    },
+    {
+      "kind": "security_replay",
+      "ref": "scope-safe-graph-discovery-v2"
     }
   ]
 }

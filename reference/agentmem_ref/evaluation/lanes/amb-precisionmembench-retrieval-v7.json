@@ -189,7 +189,7 @@
           "predecessor": "agent-memory-runtime-baseline-v6",
           "declared_successor": "agent-memory-runtime-baseline-v7",
           "declaration": "reports/runtime/baseline-v7-declaration.json",
-          "declaration_blob": "e6620e681eefbc561776b29294720bb8b871cf7e",
+          "declaration_blob": "a78797cbfca0e017e99c7e3e00823ded3ef1653b",
           "checker_state_required": [
             "PASS",
             "TRANSITION"
@@ -243,7 +243,7 @@
           "predecessor": "agent-memory-runtime-baseline-v6",
           "declared_successor": "agent-memory-runtime-baseline-v7",
           "declaration": "reports/runtime/baseline-v7-declaration.json",
-          "declaration_blob": "e6620e681eefbc561776b29294720bb8b871cf7e",
+          "declaration_blob": "a78797cbfca0e017e99c7e3e00823ded3ef1653b",
           "checker_state_required": [
             "PASS",
             "TRANSITION"
