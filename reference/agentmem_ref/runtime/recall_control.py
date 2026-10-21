@@ -229,7 +229,17 @@ class NativeTypedGraphCandidateRetriever:
                     best_by_candidate[hit.candidate_ref] = hit
 
         ordered = sorted(best_by_candidate.values(), key=self._hit_key)
-        return ordered[:candidate_limit]
+        if opaque is None:
+            return ordered[:candidate_limit]
+        # #836 B follow-up: withheld hits never displace accessible discovery at the budget
+        # boundary. Accessible hits fill the route budget first; withheld hits are reported
+        # for the refusal audit only in the budget that remains (a route never returns more
+        # than its budget: RouteObservation).
+        accessible = [hit for hit in ordered if not opaque(hit.candidate_ref)]
+        audited = [hit for hit in ordered if opaque(hit.candidate_ref)]
+        kept = accessible[:candidate_limit]
+        kept += audited[: candidate_limit - len(kept)]
+        return sorted(kept, key=self._hit_key)
 
     def _traverse_seed(
         self,
@@ -310,7 +320,12 @@ class NativeTypedGraphCandidateRetriever:
                     continue
                 if exclude is not None and exclude(next_ref):
                     continue  # #777: a deleted generation confers no reachability and is never reported
-                accepted_fanout += 1
+                # #836 B follow-up: a withheld neighbour is reported for the refusal audit but
+                # spends none of the discovery budget an accessible sibling needs (it already
+                # counted against the probe ceiling above, so the work stays bounded).
+                is_opaque = opaque is not None and opaque(next_ref)
+                if not is_opaque:
+                    accepted_fanout += 1
                 best_score_by_node[next_ref] = next_score
 
                 next_path = path_refs + (next_ref,)
@@ -332,7 +347,7 @@ class NativeTypedGraphCandidateRetriever:
                     hop_count=len(next_relation_ids),
                 )
                 hits.append(hit)
-                if opaque is not None and opaque(next_ref):
+                if is_opaque:
                     continue  # #836 B: reported as a candidate, never continued through
                 queue.append(
                     (

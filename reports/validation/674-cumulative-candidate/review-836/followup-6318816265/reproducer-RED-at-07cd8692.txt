@@ -1,0 +1,109 @@
+...FFF.F.FFF                                                             [100%]
+=================================== FAILURES ===================================
+_ RetrieverLevel.test_opaque_hit_must_not_displace_an_accessible_hit_at_the_candidate_limit _
+
+self = <tests.test_836_opaque_fanout_noninterference.RetrieverLevel testMethod=test_opaque_hit_must_not_displace_an_accessible_hit_at_the_candidate_limit>
+
+    def test_opaque_hit_must_not_displace_an_accessible_hit_at_the_candidate_limit(self):
+        hits = _retriever(max_fanout=8).search(self._graph(), ("seed",), group_id=GRAPH_TENANT, candidate_limit=1,
+                                               opaque=lambda ref: ref == HIDDEN)
+>       self.assertIn(VISIBLE, self._refs(hits),
+                      "a withheld canonical hit must not occupy the only candidate_limit slot (candidate_limit=1)")
+E       AssertionError: 'visible' not found in ['hidden'] : a withheld canonical hit must not occupy the only candidate_limit slot (candidate_limit=1)
+
+reference/tests/test_836_opaque_fanout_noninterference.py:108: AssertionError
+_________________ RetrieverLevel.test_opaque_hits_stay_bounded _________________
+
+self = <tests.test_836_opaque_fanout_noninterference.RetrieverLevel testMethod=test_opaque_hits_stay_bounded>
+
+    def test_opaque_hits_stay_bounded(self):
+        # the audit reporting of withheld neighbours never exceeds the route's own budget
+        graph = InMemoryTemporalGraph()
+        graph.write_fact(_fact("seed"))
+        for i in range(20):
+            graph.write_fact(_fact(f"hidden-{i:02d}"))
+            graph.write_relation(_relation(f"r-{i:02d}", "seed", f"hidden-{i:02d}", weight=1.0))
+        graph.write_fact(_fact(VISIBLE))
+        graph.write_relation(_relation("r-visible", "seed", VISIBLE, weight=0.5))
+        hits = _retriever(max_fanout=4).search(graph, ("seed",), group_id=GRAPH_TENANT, candidate_limit=3,
+                                               opaque=lambda ref: ref.startswith("hidden-"))
+>       self.assertIn(VISIBLE, self._refs(hits))
+E       AssertionError: 'visible' not found in ['hidden-00', 'hidden-01', 'hidden-02']
+
+reference/tests/test_836_opaque_fanout_noninterference.py:122: AssertionError
+_ RetrieverLevel.test_opaque_neighbour_must_not_spend_the_fanout_an_accessible_sibling_needs _
+
+self = <tests.test_836_opaque_fanout_noninterference.RetrieverLevel testMethod=test_opaque_neighbour_must_not_spend_the_fanout_an_accessible_sibling_needs>
+
+    def test_opaque_neighbour_must_not_spend_the_fanout_an_accessible_sibling_needs(self):
+        hits = _retriever(max_fanout=1).search(self._graph(), ("seed",), group_id=GRAPH_TENANT, candidate_limit=8,
+                                               opaque=lambda ref: ref == HIDDEN)
+>       self.assertIn(VISIBLE, self._refs(hits),
+                      "a withheld neighbour confers no reachability and must not starve the visible sibling (max_fanout=1)")
+E       AssertionError: 'visible' not found in ['hidden'] : a withheld neighbour confers no reachability and must not starve the visible sibling (max_fanout=1)
+
+reference/tests/test_836_opaque_fanout_noninterference.py:101: AssertionError
+_ GovernedLevel.test_control_before_the_prune_the_live_neighbour_legitimately_takes_the_slot _
+
+self = <tests.test_836_opaque_fanout_noninterference.GovernedLevel testMethod=test_control_before_the_prune_the_live_neighbour_legitimately_takes_the_slot>
+
+    def test_control_before_the_prune_the_live_neighbour_legitimately_takes_the_slot(self):
+        h, old, seed, tail = self._store()
+        self.assertFalse(h.adapter.public_identifier_withheld(old, _context()))
+        for kw in ({"max_fanout": 1}, {"graph_limit": 1}):
+            result = self._recall(h, **kw)
+>           self.assertIn(old, result.admitted, kw)
+E           AssertionError: 'ref-0004' not found in ['ref-0018'] : {'max_fanout': 1}
+
+reference/tests/test_836_opaque_fanout_noninterference.py:148: AssertionError
+________ GovernedLevel.test_public_facade_sees_the_same_noninterference ________
+
+self = <tests.test_836_opaque_fanout_noninterference.GovernedLevel testMethod=test_public_facade_sees_the_same_noninterference>
+
+    def test_public_facade_sees_the_same_noninterference(self):
+        # the public facade with the governed planner installed, same reader, same budget
+        h, old, seed, tail = self._store()
+        h.prune("kiln")
+        for kw in ({"max_fanout": 1}, {"graph_limit": 1}):
+            h.runtime.recall_planner = _planner(h, **kw)
+            result = h.recall("", mode="current", logical_memory_refs=("memory:776r:studio",))
+>           self.assertIn(tail, result.admitted, kw)
+E           AssertionError: 'ref-0025' not found in ['ref-0018'] : {'max_fanout': 1}
+
+reference/tests/test_836_opaque_fanout_noninterference.py:203: AssertionError
+_ GovernedLevel.test_withheld_canonical_hit_must_not_displace_the_live_neighbour_under_truncation_pressure _
+
+self = <tests.test_836_opaque_fanout_noninterference.GovernedLevel testMethod=test_withheld_canonical_hit_must_not_displace_the_live_neighbour_under_truncation_pressure>
+
+    def test_withheld_canonical_hit_must_not_displace_the_live_neighbour_under_truncation_pressure(self):
+        h, old, seed, tail = self._store()
+        h.prune("kiln")
+        result = self._recall(h, graph_limit=1)
+>       self.assertIn(tail, result.admitted,
+                      "public result must not lose the accessible neighbour to a withheld canonical hit (candidate_limit=1)")
+E       AssertionError: 'ref-0025' not found in ['ref-0018'] : public result must not lose the accessible neighbour to a withheld canonical hit (candidate_limit=1)
+
+reference/tests/test_836_opaque_fanout_noninterference.py:192: AssertionError
+_ GovernedLevel.test_withheld_neighbour_must_not_starve_the_live_neighbour_under_fanout_pressure _
+
+self = <tests.test_836_opaque_fanout_noninterference.GovernedLevel testMethod=test_withheld_neighbour_must_not_starve_the_live_neighbour_under_fanout_pressure>
+
+    def test_withheld_neighbour_must_not_starve_the_live_neighbour_under_fanout_pressure(self):
+        h, old, seed, tail = self._store()
+        h.prune("kiln")
+        self.assertTrue(h.adapter.public_identifier_withheld(old, _context()), "precondition: the neighbour is withheld")
+        result = self._recall(h, max_fanout=1)
+>       self.assertIn(tail, result.admitted,
+                      "public result must not lose the accessible neighbour because a withheld one outranks it (max_fanout=1)")
+E       AssertionError: 'ref-0025' not found in ['ref-0018'] : public result must not lose the accessible neighbour because a withheld one outranks it (max_fanout=1)
+
+reference/tests/test_836_opaque_fanout_noninterference.py:182: AssertionError
+=========================== short test summary info ============================
+FAILED reference/tests/test_836_opaque_fanout_noninterference.py::RetrieverLevel::test_opaque_hit_must_not_displace_an_accessible_hit_at_the_candidate_limit
+FAILED reference/tests/test_836_opaque_fanout_noninterference.py::RetrieverLevel::test_opaque_hits_stay_bounded
+FAILED reference/tests/test_836_opaque_fanout_noninterference.py::RetrieverLevel::test_opaque_neighbour_must_not_spend_the_fanout_an_accessible_sibling_needs
+FAILED reference/tests/test_836_opaque_fanout_noninterference.py::GovernedLevel::test_control_before_the_prune_the_live_neighbour_legitimately_takes_the_slot
+FAILED reference/tests/test_836_opaque_fanout_noninterference.py::GovernedLevel::test_public_facade_sees_the_same_noninterference
+FAILED reference/tests/test_836_opaque_fanout_noninterference.py::GovernedLevel::test_withheld_canonical_hit_must_not_displace_the_live_neighbour_under_truncation_pressure
+FAILED reference/tests/test_836_opaque_fanout_noninterference.py::GovernedLevel::test_withheld_neighbour_must_not_starve_the_live_neighbour_under_fanout_pressure
+7 failed, 5 passed in 0.87s

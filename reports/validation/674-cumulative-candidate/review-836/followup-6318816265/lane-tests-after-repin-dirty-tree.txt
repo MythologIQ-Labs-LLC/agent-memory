@@ -1,0 +1,38 @@
+....................FF..................... [ 29%]
+........................................................................................................                   [100%]
+=================================== FAILURES ===================================
+_ ReplayEvidenceFreshness.test_a_runtime_edit_still_makes_replay_evidence_stale _
+
+self = <tests.test_770_v7_lane_freeze_independent.ReplayEvidenceFreshness testMethod=test_a_runtime_edit_still_makes_replay_evidence_stale>
+
+    def test_a_runtime_edit_still_makes_replay_evidence_stale(self):
+        verifier = runpy.run_path(str(REPO_ROOT / "scripts/verify_644_v7_replays.py"))
+        target = REPO_ROOT / "reference/agentmem_ref/runtime/adapter.py"
+        original = target.read_bytes()
+        try:
+            target.write_bytes(original + b"\n# runtime edit probe\n")
+            stale = verifier["runtime_changed_since"]("16a248b1e28f455fbf19217114175f0c20df2a01")
+        finally:
+            target.write_bytes(original)
+        self.assertTrue(stale)
+>       self.assertFalse(verifier["runtime_changed_since"]("16a248b1e28f455fbf19217114175f0c20df2a01"))
+E       AssertionError: True is not false
+
+reference/tests/test_770_v7_lane_freeze_independent.py:266: AssertionError
+_ ReplayEvidenceFreshness.test_lane_records_do_not_make_replay_evidence_stale __
+
+self = <tests.test_770_v7_lane_freeze_independent.ReplayEvidenceFreshness testMethod=test_lane_records_do_not_make_replay_evidence_stale>
+
+    def test_lane_records_do_not_make_replay_evidence_stale(self):
+        verifier = runpy.run_path(str(REPO_ROOT / "scripts/verify_644_v7_replays.py"))
+        result = verifier["verify"]()
+>       self.assertEqual({row["replay"]: row["status"] for row in result["replays"]},
+                         {row["replay"]: "VERIFIED" for row in result["replays"]}, result)
+E       AssertionError: {'typ[54 chars]1': 'STALE', 'governed-persisted-typed-slot-su[216 chars]ALE'} != {'typ[54 chars]1': 'VERIFIED', 'governed-persisted-typed-slot[231 chars]IED'}
+E       Diff is 1379 characters long. Set self.maxDiff to None to see it. : {'replays': [{'replay': 'typed-sufficiency-noninterference-and-negative-controls-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}, {'replay': 'governed-persisted-typed-slot-sufficiency-admission-recheck-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}, {'replay': 'governed-admitted-typed-value-coherence-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}, {'replay': 'committed-governed-transition-witness-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}, {'replay': 'same-slot-safety-counterevidence-and-immutable-stop-gate-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}], 'evidence_verified': False, 'acceptance': "NOT GRANTED: requires an independent reviewer's decision recorded in META_LEDGER"}
+
+reference/tests/test_770_v7_lane_freeze_independent.py:252: AssertionError
+=========================== short test summary info ============================
+FAILED reference/tests/test_770_v7_lane_freeze_independent.py::ReplayEvidenceFreshness::test_a_runtime_edit_still_makes_replay_evidence_stale
+FAILED reference/tests/test_770_v7_lane_freeze_independent.py::ReplayEvidenceFreshness::test_lane_records_do_not_make_replay_evidence_stale
+2 failed, 145 passed, 3025 deselected, 51 subtests passed in 16.48s

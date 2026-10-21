@@ -1,0 +1,66 @@
+diff --git a/reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v7.json b/reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v7.json
+index 1f7d15dd..c4c938c8 100644
+--- a/reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v7.json
++++ b/reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v7.json
+@@ -189,7 +189,7 @@
+           "predecessor": "agent-memory-runtime-baseline-v6",
+           "declared_successor": "agent-memory-runtime-baseline-v7",
+           "declaration": "reports/runtime/baseline-v7-declaration.json",
+-          "declaration_blob": "a78797cbfca0e017e99c7e3e00823ded3ef1653b",
++          "declaration_blob": "7de94f11d7d521f07d2fe22317662ac6f92f89fa",
+           "checker_state_required": [
+             "PASS",
+             "TRANSITION"
+@@ -243,7 +243,7 @@
+           "predecessor": "agent-memory-runtime-baseline-v6",
+           "declared_successor": "agent-memory-runtime-baseline-v7",
+           "declaration": "reports/runtime/baseline-v7-declaration.json",
+-          "declaration_blob": "a78797cbfca0e017e99c7e3e00823ded3ef1653b",
++          "declaration_blob": "7de94f11d7d521f07d2fe22317662ac6f92f89fa",
+           "checker_state_required": [
+             "PASS",
+             "TRANSITION"
+diff --git a/reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v7.json b/reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v7.json
+index cd9b54ac..f6bcdf36 100644
+--- a/reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v7.json
++++ b/reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v7.json
+@@ -205,7 +205,7 @@
+           "predecessor": "agent-memory-runtime-baseline-v6",
+           "declared_successor": "agent-memory-runtime-baseline-v7",
+           "declaration": "reports/runtime/baseline-v7-declaration.json",
+-          "declaration_blob": "a78797cbfca0e017e99c7e3e00823ded3ef1653b",
++          "declaration_blob": "7de94f11d7d521f07d2fe22317662ac6f92f89fa",
+           "checker_state_required": [
+             "PASS",
+             "TRANSITION"
+@@ -263,7 +263,7 @@
+           "predecessor": "agent-memory-runtime-baseline-v6",
+           "declared_successor": "agent-memory-runtime-baseline-v7",
+           "declaration": "reports/runtime/baseline-v7-declaration.json",
+-          "declaration_blob": "a78797cbfca0e017e99c7e3e00823ded3ef1653b",
++          "declaration_blob": "7de94f11d7d521f07d2fe22317662ac6f92f89fa",
+           "checker_state_required": [
+             "PASS",
+             "TRANSITION"
+@@ -439,7 +439,7 @@
+           "predecessor": "agent-memory-runtime-baseline-v6",
+           "declared_successor": "agent-memory-runtime-baseline-v7",
+           "declaration": "reports/runtime/baseline-v7-declaration.json",
+-          "declaration_blob": "a78797cbfca0e017e99c7e3e00823ded3ef1653b",
++          "declaration_blob": "7de94f11d7d521f07d2fe22317662ac6f92f89fa",
+           "checker_state_required": [
+             "PASS",
+             "TRANSITION"
+diff --git a/reports/runtime/baseline-v7-declaration.json b/reports/runtime/baseline-v7-declaration.json
+index a78797cb..7de94f11 100644
+--- a/reports/runtime/baseline-v7-declaration.json
++++ b/reports/runtime/baseline-v7-declaration.json
+@@ -58,7 +58,7 @@
+     },
+     {
+       "path": "reference/agentmem_ref/runtime/recall_control.py",
+-      "blob": "c16452efa05bdb3f4db892e3a0918cba25dc5ec2"
++      "blob": "9fa861c36d9edde2df746c8e089a658576ea3bf4"
+     },
+     {
+       "path": "reference/agentmem_ref/runtime/recall_observation_receipt.py",
