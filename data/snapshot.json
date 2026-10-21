@@ -1290,14 +1290,14 @@
     },
     {
       "id": "supermemory",
-      "name": "Supermemory",
+      "name": "Supermemory OSS (self-hosted)",
       "state": "not_run",
       "url": "https://github.com/supermemoryai/supermemory",
       "observed_ids": []
     },
     {
       "id": "graphiti",
-      "name": "Graphiti / Zep",
+      "name": "Graphiti OSS (not managed Zep)",
       "state": "not_run",
       "url": "https://github.com/getzep/graphiti",
       "observed_ids": []
