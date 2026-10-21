@@ -28,7 +28,7 @@ from agentmem_ref.runtime_composition import EXACT_IDENTITY_ROUTE, LEXICAL_ROUTE
 from agentmem_ref.substrate import InMemoryTemporalGraph
 from tests.test_776_adversarial_review import KILN, _Store
 from tests.test_runtime_composition import TENANT, _context
-from tests.test_typed_graph_retrieval import _FixedController, _fact, _relation
+from tests.test_typed_graph_retrieval import TENANT as GRAPH_TENANT, _FixedController, _fact, _relation
 
 
 def _graph_plan(graph_limit: int = 8, exact: int = 1) -> RecallControlPlan:
@@ -50,9 +50,9 @@ class FindingA_ExcludedSeed(unittest.TestCase):
         graph.write_relation(_relation("r-seed-tail", "seed", "tail"))
         retriever = NativeTypedGraphCandidateRetriever()
         # control: without the exclusion the live target is reported
-        self.assertEqual([h.candidate_ref for h in retriever.search(graph, ("seed",), group_id=TENANT, candidate_limit=8)],
+        self.assertEqual([h.candidate_ref for h in retriever.search(graph, ("seed",), group_id=GRAPH_TENANT, candidate_limit=8)],
                          ["tail"])
-        hits = retriever.search(graph, ("seed",), group_id=TENANT, candidate_limit=8,
+        hits = retriever.search(graph, ("seed",), group_id=GRAPH_TENANT, candidate_limit=8,
                                 exclude=lambda ref: ref == "seed")
         self.assertEqual(hits, [], "an excluded seed must neither be traversed nor reported")
 
