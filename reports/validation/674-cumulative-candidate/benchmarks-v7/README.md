@@ -9,6 +9,15 @@ This is execution evidence, not acceptance. Nothing was merged, published, or pr
 v6 records, the dashboard (`BENCHMARKS.md`, `reports/benchmarks/cross-system-posture.json`) and the
 frozen lanes were not modified. No GitHub Actions run was dispatched. No paid model inference was used.
 
+> **Two protected trees, kept apart.** Sections 1–9 describe the execution on evidence head `79172267`
+> (protected runtime `07cd8692`). That tree was superseded the same day by the #836 review-follow-up
+> repair (`2ad4cf23`, see `../README.md` §8), and both lanes were executed again on the repaired tree:
+> section 10. The lane roots `reports/benchmarks/amb/amb-precisionmembench-retrieval-v7/` and
+> `reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v7/` hold **only the repaired-tree
+> rows** (the attribution checker and the lane tooling require exactly one record per row); the
+> `79172267` rows were moved, with history, to `superseded-tree-79172267/` and are evidence for that
+> tree alone. No result of one tree is attributed to the other.
+
 ## 1. Which tree was measured
 
 The 2026-10-21 handoff on #770 named runtime head `2d83db0e` and evidence head `3d28a5ec` with the
@@ -196,3 +205,60 @@ python3 scripts/verify_imports.py . <runs>
 - `manifests/` — `pip freeze` of the three environments, OS/kernel/CPU facts, the constraint provenance
   sidecars and the row removal lists.
 - `raw-identities/` — the raw `execution-identity.json` of every row, as written before import.
+
+## 10. Execution on the repaired tree (`2ad4cf23` / `9d0ba703`)
+
+### 10.1 Identity
+
+| Item | Value |
+|---|---|
+| Protected runtime tree | `git rev-parse <rev>:reference/agentmem_ref` = `f9b5ff9e79a54ef053ce89eb975256b63e211714` for every executing revision below; `runtime/recall_control.py` blob `9fa861c3…` (the #836 follow-up repair, `../README.md` §8); all other protected blobs as at `07cd8692` |
+| Executing revisions | `2ad4cf23d366fc784a486b0245550230e64bfa25` (LongMemEval agent_memory session and turn, lexical_overlap session) and `9d0ba703c98cabb94933545a553c8c6ae1ab578b` (AMB agent-memory, bm25, mem0-explicit; LongMemEval lexical_overlap turn, re-run because an evidence commit landed while its first run was in flight and the runner's own revision stamp no longer matched the identity, which the importer refused). The commits between them add files under `reports/` only |
+| Declaration blob (lane pins) | `7de94f11d7d521f07d2fe22317662ac6f92f89fa`; checker `TRANSITION`; lane digests AMB `53456345c1be2c0fa9679182f0c5dbf7bcd1ff25ccb8a1ddff61892cd175c1ad`, LongMemEval `9a1dab91f13a7652a181f01c35ac85c941e8be2b2538f783bc3d41c2c4ad4f6d` |
+| Harness, fixtures, dataset, bridges, environments | unchanged from §1–2 (same checkouts, digests, blobs and virtual environments; `tiktoken` note of §2 applies) |
+
+### 10.2 Results (every row paired case by case / question by question with accepted v6)
+
+| Lane | Row | Executing revision | Parity with v6 | Headline (= v6) | Latency, this container |
+|---|---|---|---|---|---|
+| AMB | agent-memory | `9d0ba703` | **77/77 L1-equal**; cross-fact sidecar byte-identical (73 records, 0 limited); no flips, no lost required memories | 15/77, active 4/43, precision 0.1806, recall 0.9535, 542.2 context tokens | mean retrieve 35.7 ms (p50 35.7, p95 50.9; v6 28.1) |
+| AMB | bm25 | `9d0ba703` | **77/77** | 8/77, precision 0.0536, recall 0.9651 | 4.3 ms (v6 4.1) |
+| AMB | mem0-explicit | `9d0ba703` | **77/77** | 10/77, precision 0.1049, recall 1.0 | 20.2 ms (v6 12.0) |
+| LongMemEval | agent_memory, session | `2ad4cf23` | **500/500/500** (ranked_top / metrics / cross-fact); complete recall@50 419/419; required evidence 794/794 | nDCG_any@10 0.878274 | wall 281 s, ingest 241 s, recall 11.0 s total / 53 ms max |
+| LongMemEval | agent_memory, turn | `2ad4cf23` | **500/500/500**; complete recall@50 360/419; required evidence 746/832 | nDCG_any@10 0.68156, recall_all@50 0.859189 | wall 1050 s, ingest 993 s, recall 27.3 s total / 123 ms max |
+| LongMemEval | lexical_overlap, session | `2ad4cf23` | **500/500/500**; 418/419; 793/794 | nDCG_any@10 0.792944 | wall 3.9 s |
+| LongMemEval | lexical_overlap, turn | `9d0ba703` | **500/500/500**; 319/419; 680/832 | nDCG_any@10 0.559738 | wall 5.1 s |
+| LongMemEval | mem0_explicit, session / turn | pending | running in `venv312-mem0` (exact `MEM0_PINS`) at the time of this commit; recorded in a follow-up commit when complete | | |
+
+Aggregates, by-question-type, currentness and governance blocks equal to v6 in every executed row; lost
+complete recall: none; lost required evidence: none; runtime errors: none. The LongMemEval rows ran with
+nothing else executing on the container (the AMB rows too), unlike the `79172267` rows of §3.3; the
+turn-plane ingest is simply slow here.
+
+Phase E scenario G, alternating runs on the idle container against a fresh `origin/main` worktree
+(`../phase-e/main-7d4c9be6-G-r{1,2}.json`, `../phase-e/candidate-f75ecf7b-G-r{1,2}.json`, protected tree
+`f9b5ff9e`): facade recall p50 61.9 / 63.4 ms (`main`) vs 84.9 / 80.5 ms (repaired tree; 73.4 / 74.1 at
+`07cd8692`); `remember` p50 6.1 / 7.0 vs 7.4 / 7.1 ms; 400-neighbour hub graph recall p50 1.6 / 1.5 ms
+with 4 eligible slots filled (`main`) vs 3.6 / 2.5 ms with **8** filled. The facade's default planner has
+no typed-graph route, so the repair (which touches only the typed-graph retriever) cannot act on the
+facade recall figure; the spread between `07cd8692` and the repaired tree on that figure is container
+variance between sessions, reported as measured and not gated.
+
+### 10.3 Checks on the repaired-tree rows
+
+| Check | Result | Record |
+|---|---|---|
+| Importers, fetch enabled | 7 rows admitted (fixtures and dataset re-fetched and re-hashed); checker TRANSITION; declaration blob `7de94f11` equals the lane pin | lane roots |
+| Cross-fact attribution (E1), lane roots as committed | AMB `EQUAL: 77`; LongMemEval `EQUAL: 1000`; 0 unattributed | `repaired-head/cross-fact-*-repaired.json` |
+| Import re-verification (`scripts/verify_imports.py`, now keyed by executing revision) | 7/7 VERIFIED (and the 7 superseded rows re-verify under their own revision) | `checks/import-verification.txt` |
+| Lane guard / importer tests after the move | 145 passed; the same two pre-existing `ReplayEvidenceFreshness` guards fail | `logs/lane-guard-tests-venv312-lme.txt` (same outcome as §4) |
+| Per-row comparison records, driver logs, raw identities | | `repaired-head/` |
+
+### 10.4 Per-lane verdict for the repaired tree
+
+| Lane | Verdict |
+|---|---|
+| `amb-precisionmembench-retrieval-v7` | **QUALIFIED** (exact parity with accepted v6 in all three frozen rows at `9d0ba703`) |
+| `longmemeval-s-retrieval-parity-v7` | **QUALIFIED for the control and baseline rows** on both planes; the `mem0_explicit` comparator rows are pending (§10.2) |
+
+As in §7: execution evidence, not acceptance; `TRANSITION` is not `PASS`; v6 remains the published baseline.
