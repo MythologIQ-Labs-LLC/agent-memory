@@ -7,8 +7,9 @@ on a distinct namespace; it does not copy a v6 baseline or claim that v7 is publ
 
 - Manifest: `examples/gauntlet/agent-memory-runtime-baseline-v7.json`
 - Stdio adapter: `examples/gauntlet/agent_memory_runtime_baseline_v7_stdio.py`
-- Tested v7 runtime implementation: `16a248b1e28f455fbf19217114175f0c20df2a01`
-- Adapter Git blob is pinned independently in the manifest.
+- Current candidate pin (not yet Gauntlet-qualified): `2ad4cf23d366fc784a486b0245550230e64bfa25`, protected runtime tree `f9b5ff9e79a54ef053ce89eb975256b63e211714`, declaration blob `7de94f11d7d521f07d2fe22317662ac6f92f89fa`
+- Adapter Git blob is pinned independently in the manifest. The candidate adapter declares the provisional public contract `1.8.0`; this is not a contract-acceptance decision.
+- Previous unqualified candidate pin `16a248b1e28f455fbf19217114175f0c20df2a01` is superseded for this transition probe, not retroactively qualified.
 - The manifest's `system.revision` names the tested runtime implementation, **not**
   the manifest/adapter preparation commits and not a published baseline.
 
@@ -31,6 +32,9 @@ operation with `runtime_identity_unverified`, rather than producing evidence lab
 with a revision it did not run. Each response carries the computed `runtime_identity`
 under `adapter_evidence`. The process under test computes this itself, so it is an
 integrity check, not attestation.
+
+
+**2026-10-21 pending qualification:** This candidate-only re-pin changes the adapter/manifest identity so the fail-closed runtime guard may qualify the repaired tree. Its source and configuration digest have not been independently executed in a complete checkout; the two manifest and identity test modules, `test_644_v7_gauntlet_contestant.py` and `test_644_v7_gauntlet_identity.py`, plus the CLI adapter validation and external-process 3-query probe must run locally. A public Gauntlet result is NOT supplied by this edit. The runtime source guard must not be weakened or bypassed, and no accepted v6 evidence/register bytes change.
 
 ## Candidate-only validation commands
 
