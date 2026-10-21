@@ -1,0 +1,39 @@
+................FF...............Runtime Baseline equivalence: PASS; baseline=agent-memory-runtime-baseline-v1; frozen=3e95cc37e11f4dd45d0f773c3367af8e64781c61; candidate=HEAD; explicit non-runtime exclusions=reference/agentmem_ref/evaluation
+...............................................................F..
+======================================================================
+FAIL: test_a_runtime_edit_still_makes_replay_evidence_stale (tests.test_770_v7_lane_freeze_independent.ReplayEvidenceFreshness.test_a_runtime_edit_still_makes_replay_evidence_stale)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/wt-sec/reference/tests/test_770_v7_lane_freeze_independent.py", line 266, in test_a_runtime_edit_still_makes_replay_evidence_stale
+    self.assertFalse(verifier["runtime_changed_since"]("16a248b1e28f455fbf19217114175f0c20df2a01"))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_lane_records_do_not_make_replay_evidence_stale (tests.test_770_v7_lane_freeze_independent.ReplayEvidenceFreshness.test_lane_records_do_not_make_replay_evidence_stale)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/wt-sec/reference/tests/test_770_v7_lane_freeze_independent.py", line 252, in test_lane_records_do_not_make_replay_evidence_stale
+    self.assertEqual({row["replay"]: row["status"] for row in result["replays"]},
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     {row["replay"]: "VERIFIED" for row in result["replays"]}, result)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'typ[54 chars]1': 'STALE', 'governed-persisted-typed-slot-su[216 chars]ALE'} != {'typ[54 chars]1': 'VERIFIED', 'governed-persisted-typed-slot[231 chars]IED'}
+Diff is 1379 characters long. Set self.maxDiff to None to see it. : {'replays': [{'replay': 'typed-sufficiency-noninterference-and-negative-controls-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}, {'replay': 'governed-persisted-typed-slot-sufficiency-admission-recheck-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}, {'replay': 'governed-admitted-typed-value-coherence-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}, {'replay': 'committed-governed-transition-witness-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}, {'replay': 'same-slot-safety-counterevidence-and-immutable-stop-gate-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}], 'evidence_verified': False, 'acceptance': "NOT GRANTED: requires an independent reviewer's decision recorded in META_LEDGER"}
+
+======================================================================
+FAIL: test_own_checkout_at_frozen_revision_is_served (tests.test_644_v7_gauntlet_identity.ImportedRuntimeIdentity.test_own_checkout_at_frozen_revision_is_served)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/wt-sec/reference/tests/test_644_v7_gauntlet_identity.py", line 71, in test_own_checkout_at_frozen_revision_is_served
+    self.assertEqual(reply["status"], "ok", reply)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'system_error' != 'ok'
+- system_error
++ ok
+ : {'adapter_evidence': {'adapter_kind': 'agent_memory_public_stdio', 'frozen_runtime_revision': '16a248b1e28f455fbf19217114175f0c20df2a01', 'public_contract': '1.6.0', 'runtime_identity': {'frozen_runtime_revision': '16a248b1e28f455fbf19217114175f0c20df2a01', 'frozen_runtime_tree': 'f9ccd0472e32cb68a5caf988a017078a73425cc5', 'imported_package': '/home/user/wt-sec/reference/agentmem_ref', 'matches_frozen_revision': False, 'same_checkout': True, 'verified': False}, 'surface': 'AgentMemory public facade', 'translation_only': True}, 'authority_effect': 'none', 'contract_family': 'agent-memory-gauntlet-operation', 'contract_version': '0.1.0', 'direction': 'response', 'error': {'code': 'runtime_identity_unverified', 'message': "imported agentmem_ref is not this checkout's runtime at FROZEN_RUNTIME_REVISION", 'source': 'system_adapter'}, 'operation': 'describe', 'request_id': 'r1', 'result': None, 'status': 'system_error', 'timing': {'elapsed_ms': 0.007346999950641475}}
+
+----------------------------------------------------------------------
+Ran 99 tests in 7.380s
+
+FAILED (failures=3)

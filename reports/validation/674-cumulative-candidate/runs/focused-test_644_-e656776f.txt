@@ -1,0 +1,118 @@
+...............................F...............EFEE.......E.
+======================================================================
+ERROR: test_contract_sources_hash_the_documents_at_the_base_commit (tests.test_644_v7_replays.FixtureIntegrity.test_contract_sources_hash_the_documents_at_the_base_commit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_644_v7_replays.py", line 89, in test_contract_sources_hash_the_documents_at_the_base_commit
+    fx = fixture(replay_id)
+  File "/home/user/agent-memory/reference/tests/test_644_v7_replays.py", line 34, in fixture
+    return json.loads((runner.FIXTURE_DIR / f"{replay_id}.json").read_text(encoding="utf-8"))
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/user/agent-memory/reference/fixtures/644-v7-replays/scope-safe-graph-discovery-v7.json'
+
+======================================================================
+ERROR: test_every_invariant_is_exercised_and_cases_are_unique (tests.test_644_v7_replays.FixtureIntegrity.test_every_invariant_is_exercised_and_cases_are_unique)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_644_v7_replays.py", line 75, in test_every_invariant_is_exercised_and_cases_are_unique
+    fx = fixture(replay_id)
+  File "/home/user/agent-memory/reference/tests/test_644_v7_replays.py", line 34, in fixture
+    return json.loads((runner.FIXTURE_DIR / f"{replay_id}.json").read_text(encoding="utf-8"))
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/user/agent-memory/reference/fixtures/644-v7-replays/scope-safe-graph-discovery-v7.json'
+
+======================================================================
+ERROR: test_fixtures_do_not_reuse_the_original_holdout_vocabulary (tests.test_644_v7_replays.FixtureIntegrity.test_fixtures_do_not_reuse_the_original_holdout_vocabulary)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_644_v7_replays.py", line 101, in test_fixtures_do_not_reuse_the_original_holdout_vocabulary
+    text = (runner.FIXTURE_DIR / f"{replay_id}.json").read_text(encoding="utf-8")
+  File "/usr/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/user/agent-memory/reference/fixtures/644-v7-replays/scope-safe-graph-discovery-v7.json'
+
+======================================================================
+ERROR: test_all_replay_cases_hold (tests.test_644_v7_replays.ReplayRegression.test_all_replay_cases_hold)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_644_v7_replays.py", line 111, in test_all_replay_cases_hold
+    report = runner.run_replay(replay_id, allow_dirty=True)
+  File "/home/user/agent-memory/reference/run_644_v7_replays.py", line 726, in run_replay
+    fixture = json.loads(fixture_path.read_text(encoding="utf-8"))
+                         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/user/agent-memory/reference/fixtures/644-v7-replays/scope-safe-graph-discovery-v7.json'
+
+======================================================================
+FAIL: test_own_checkout_at_frozen_revision_is_served (tests.test_644_v7_gauntlet_identity.ImportedRuntimeIdentity.test_own_checkout_at_frozen_revision_is_served)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_644_v7_gauntlet_identity.py", line 71, in test_own_checkout_at_frozen_revision_is_served
+    self.assertEqual(reply["status"], "ok", reply)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'system_error' != 'ok'
+- system_error
++ ok
+ : {'adapter_evidence': {'adapter_kind': 'agent_memory_public_stdio', 'frozen_runtime_revision': '16a248b1e28f455fbf19217114175f0c20df2a01', 'public_contract': '1.6.0', 'runtime_identity': {'frozen_runtime_revision': '16a248b1e28f455fbf19217114175f0c20df2a01', 'frozen_runtime_tree': 'f9ccd0472e32cb68a5caf988a017078a73425cc5', 'imported_package': '/home/user/agent-memory/reference/agentmem_ref', 'matches_frozen_revision': False, 'same_checkout': True, 'verified': False}, 'surface': 'AgentMemory public facade', 'translation_only': True}, 'authority_effect': 'none', 'contract_family': 'agent-memory-gauntlet-operation', 'contract_version': '0.1.0', 'direction': 'response', 'error': {'code': 'runtime_identity_unverified', 'message': "imported agentmem_ref is not this checkout's runtime at FROZEN_RUNTIME_REVISION", 'source': 'system_adapter'}, 'operation': 'describe', 'request_id': 'r1', 'result': None, 'status': 'system_error', 'timing': {'elapsed_ms': 0.006436000035137113}}
+
+======================================================================
+FAIL: test_every_declared_replay_has_a_frozen_fixture (tests.test_644_v7_replays.FixtureIntegrity.test_every_declared_replay_has_a_frozen_fixture)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_644_v7_replays.py", line 66, in test_every_declared_replay_has_a_frozen_fixture
+    self.assertEqual(sorted(declared()), sorted(runner.REPLAYS))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['com[211 chars]1', 'scope-safe-graph-discovery-v7', 'typed-su[47 chars]-v1'] != ['com[211 chars]1', 'typed-sufficiency-noninterference-and-neg[14 chars]-v1']
+
+First differing element 4:
+'scope-safe-graph-discovery-v7'
+'typed-sufficiency-noninterference-and-negative-controls-v1'
+
+First list contains 1 additional elements.
+First extra element 5:
+'typed-sufficiency-noninterference-and-negative-controls-v1'
+
+  ['committed-governed-transition-witness-v1',
+   'governed-admitted-typed-value-coherence-v1',
+   'governed-persisted-typed-slot-sufficiency-admission-recheck-v1',
+   'same-slot-safety-counterevidence-and-immutable-stop-gate-v1',
+-  'scope-safe-graph-discovery-v7',
+   'typed-sufficiency-noninterference-and-negative-controls-v1']
+
+----------------------------------------------------------------------
+Ran 60 tests in 35.905s
+
+FAILED (failures=2, errors=4)

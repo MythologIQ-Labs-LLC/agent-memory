@@ -1,0 +1,27 @@
+{
+  "label": "candidate-2d83db0e",
+  "reference": "/home/user/agent-memory/reference",
+  "scenarios": {
+    "G": {
+      "facade_remember_ms": {
+        "p50": 6.11,
+        "p95": 9.26
+      },
+      "facade_recall_ms": {
+        "p50": 79.42,
+        "p95": 113.04,
+        "mean_admitted": 393,
+        "queries": 200,
+        "corpus": 1500
+      },
+      "high_degree_graph_recall_ms": {
+        "p50": 2.3,
+        "p95": 2.58,
+        "hub_degree": 400,
+        "graph_route_count": 8,
+        "foreign_in_candidates": 0,
+        "alpha_admitted": 8
+      }
+    }
+  }
+}

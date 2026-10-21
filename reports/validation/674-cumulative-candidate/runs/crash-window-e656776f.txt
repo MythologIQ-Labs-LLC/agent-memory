@@ -1,0 +1,10 @@
+steady  pre_commit     crashed=True  state_gen=2 journal_gen=2 file_gen=- row_gen=2 witness=2 facts=1 -> recovered (2, 1, 0)
+steady  post_commit    crashed=True  state_gen=3 journal_gen=3 file_gen=- row_gen=3 witness=2 facts=2 -> recovered (3, 1, 1)
+steady  mid_bind_file  crashed=False state_gen=3 journal_gen=3 file_gen=- row_gen=3 witness=3 facts=2 -> recovered (hook never reached) (3, 1, 1)
+steady  mid_bind_row   crashed=True  state_gen=2 journal_gen=2 file_gen=- row_gen=2 witness=2 facts=1 -> recovered (2, 1, 0)
+steady  post_bind      crashed=True  state_gen=3 journal_gen=3 file_gen=- row_gen=3 witness=3 facts=2 -> recovered (3, 1, 1)
+create  pre_commit     crashed=True  state_gen=None journal_gen=None file_gen=- row_gen=no_table witness=None facts=0 -> failed_closed RuntimeRecoveryError: required SQLite runtime state is missing
+create  post_commit    crashed=True  state_gen=1 journal_gen=1 file_gen=- row_gen=1 witness=0 facts=0 -> recovered (1, 0, 0)
+create  mid_bind_file  crashed=False state_gen=1 journal_gen=1 file_gen=- row_gen=1 witness=1 facts=0 -> recovered (hook never reached) (1, 0, 0)
+create  mid_bind_row   crashed=True  state_gen=None journal_gen=None file_gen=- row_gen=no_table witness=0 facts=0 -> failed_closed RuntimeRecoveryError: required SQLite runtime state is missing
+revision e656776ff287e191955e0f862bc531355a6fb600 runtime_tree_dirty=False
