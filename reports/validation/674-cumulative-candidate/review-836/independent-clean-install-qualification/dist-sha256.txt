@@ -1,0 +1,2 @@
+d5a23a68c4660965cbd3afa79337366fc4c22e035fc799be236443ac905db03d  agent_memory_reference-0.2.0-py3-none-any.whl
+68a4c13ca9f4919669e09d1265ed435f76c8d8bc661a7854ac117b83ce5a75bc  agent_memory_reference-0.2.0.tar.gz

@@ -11,9 +11,10 @@ never drop legacy edges without evidence, never fabricate historical read author
 upgrade cannot be proven sound, label the store ``legacy_unqualified`` and block activation.
 
 The decision these expectations pin is ``reports/validation/809-legacy-upgrade/decision.PREREGISTERED.md``.
-The stores under ``reference/fixtures/809-legacy-stores`` were written by the published v7
-runtime (revision ``16a248b1``, the v7 Gauntlet adapter's FROZEN_RUNTIME_REVISION) and are
-byte-frozen; every test copies a store before opening it.
+The stores under ``reference/fixtures/809-legacy-stores`` were written by the v7-origin
+runtime at revision ``16a248b1`` (the v7 Gauntlet adapter's FROZEN_RUNTIME_REVISION when they
+were produced; the adapter has since been re-pinned along that lineage) and are byte-frozen;
+every test copies a store before opening it.
 
 The operation under test does not exist on the current head: ``AgentMemory.upgrade_canonical_derivation()``
 and ``AgentMemory.legacy_upgrade_status()``. Expected RED on the head these expectations are
@@ -182,9 +183,17 @@ class Fixtures(unittest.TestCase):
         for name, digest in manifest["scripts"].items():
             self.assertEqual(hashlib.sha256((FIXTURES / "produce" / name).read_bytes()).hexdigest(), digest)
 
-    def test_the_v7_gauntlet_adapter_pins_the_same_revision(self):
+    def test_the_v7_gauntlet_adapter_pins_a_descendant_of_the_producing_revision(self):
+        # The adapter followed the v7 candidate forward (re-pinned to the repaired runtime, PR #836);
+        # the frozen stores stay bound to the revision that produced them, which must lie in that lineage.
+        import re
+        import subprocess
         text = (ROOT / "examples/gauntlet/agent_memory_runtime_baseline_v7_stdio.py").read_text(encoding="utf-8")
-        self.assertIn('FROZEN_RUNTIME_REVISION = "16a248b1e28f455fbf19217114175f0c20df2a01"', text)
+        pinned = re.search(r'^FROZEN_RUNTIME_REVISION = "([0-9a-f]{40})"', text, re.M).group(1)
+        producer = _manifest()["produced_by"]["revision"]
+        self.assertEqual(producer, "16a248b1e28f455fbf19217114175f0c20df2a01")
+        ancestry = subprocess.run(["git", "merge-base", "--is-ancestor", producer, pinned], cwd=ROOT)
+        self.assertEqual(ancestry.returncode, 0, f"{producer} must be an ancestor of the adapter pin {pinned}")
 
 
 class LegacyOracleDemonstrated(_Store):
