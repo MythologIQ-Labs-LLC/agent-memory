@@ -1,0 +1,172 @@
+{
+ "by_category_v6": {
+  "Alias resolution": {
+   "cases": 23,
+   "correct": 0
+  },
+  "Budget eviction and capacity": {
+   "cases": 5,
+   "correct": 3
+  },
+  "Cold start behavior": {
+   "cases": 1,
+   "correct": 1
+  },
+  "Counter-signal retrieval": {
+   "cases": 2,
+   "correct": 0
+  },
+  "Cross-user isolation": {
+   "cases": 1,
+   "correct": 1
+  },
+  "Design boundary cases": {
+   "cases": 6,
+   "correct": 2
+  },
+  "Fuzzy matching and prefix guards": {
+   "cases": 7,
+   "correct": 0
+  },
+  "Persona prelude content": {
+   "cases": 4,
+   "correct": 1
+  },
+  "Ranking stability": {
+   "cases": 3,
+   "correct": 1
+  },
+  "Relation expansion": {
+   "cases": 4,
+   "correct": 0
+  },
+  "Scope disambiguation": {
+   "cases": 12,
+   "correct": 0
+  },
+  "Supersession chain exclusion": {
+   "cases": 3,
+   "correct": 0
+  },
+  "Type routing and open questions": {
+   "cases": 6,
+   "correct": 1
+  }
+ },
+ "by_category_v7": {
+  "Alias resolution": {
+   "cases": 23,
+   "correct": 0
+  },
+  "Budget eviction and capacity": {
+   "cases": 5,
+   "correct": 3
+  },
+  "Cold start behavior": {
+   "cases": 1,
+   "correct": 1
+  },
+  "Counter-signal retrieval": {
+   "cases": 2,
+   "correct": 0
+  },
+  "Cross-user isolation": {
+   "cases": 1,
+   "correct": 1
+  },
+  "Design boundary cases": {
+   "cases": 6,
+   "correct": 2
+  },
+  "Fuzzy matching and prefix guards": {
+   "cases": 7,
+   "correct": 0
+  },
+  "Persona prelude content": {
+   "cases": 4,
+   "correct": 1
+  },
+  "Ranking stability": {
+   "cases": 3,
+   "correct": 1
+  },
+  "Relation expansion": {
+   "cases": 4,
+   "correct": 0
+  },
+  "Scope disambiguation": {
+   "cases": 12,
+   "correct": 0
+  },
+  "Supersession chain exclusion": {
+   "cases": 3,
+   "correct": 0
+  },
+  "Type routing and open questions": {
+   "cases": 6,
+   "correct": 1
+  }
+ },
+ "cases": 77,
+ "correct_v6": 10,
+ "correct_v7": 10,
+ "differing": [],
+ "equal_all_L1": 77,
+ "equal_context": 77,
+ "equal_correct": 77,
+ "equal_meta": 77,
+ "flips": [],
+ "meta_keys": [
+  "active_pass",
+  "budget",
+  "category",
+  "description",
+  "expect",
+  "failures",
+  "pass_type",
+  "pinned_beliefs",
+  "pinned_coverage",
+  "relevant_beliefs",
+  "resolution",
+  "retrieval_limit",
+  "retrieval_precision",
+  "retrieval_recall",
+  "retrieved_count",
+  "retrieved_questions",
+  "scope"
+ ],
+ "retrieve_time_ms": {
+  "v6_mean": 11.96,
+  "v6_p50": 12.0,
+  "v6_p95": 16.7,
+  "v7_mean": 20.19,
+  "v7_p50": 20.1,
+  "v7_p95": 28.8
+ },
+ "summary_v6": {
+  "accuracy": 0.12987012987012986,
+  "active_passes": 0,
+  "active_total": 43,
+  "avg_context_tokens": 483.7,
+  "avg_retrieve_time_ms": 12.0,
+  "correct": 10,
+  "ingested_docs": 35,
+  "ingestion_time_ms": 652.0,
+  "mean_precision": 0.1049,
+  "mean_recall": 1.0,
+  "total_queries": 77
+ },
+ "summary_v7": {
+  "accuracy": 0.12987012987012986,
+  "active_passes": 0,
+  "active_total": 43,
+  "avg_context_tokens": 483.7,
+  "avg_retrieve_time_ms": 20.2,
+  "correct": 10,
+  "ingested_docs": 35,
+  "ingestion_time_ms": 834.3,
+  "mean_precision": 0.1049,
+  "mean_recall": 1.0,
+  "total_queries": 77
+ }
+}

@@ -3,6 +3,9 @@
 
 usage: verify_imports.py <repo-root> <local-runs-root>   (runs-root holds amb/<run_id>/... and lme/<run_id>/...)
 
+Every imported record must bind one of the executing revisions listed in EXPECT (its directory suffix is
+that revision) with the declaration blob the lane pinned at that revision, and TRANSITION.
+
 For every imported record: every file named in evidence.json["files"] re-hashes to the recorded sha256;
 the committed execution identity is byte-identical to the raw run's; the committed AMB single-turn.json
 (and cross-fact.jsonl) is byte-identical to the raw harness output; the committed LongMemEval
@@ -13,7 +16,13 @@ import gzip, hashlib, json, sys
 from pathlib import Path
 
 repo, runs = Path(sys.argv[1]), Path(sys.argv[2])
-expect = {"revision": "7917226712c4bb83e70bf95a9093ea96667fddc8", "state": "TRANSITION", "blob": "a78797cbfca0e017e99c7e3e00823ded3ef1653b"}
+EXPECT = {  # executing revision -> declaration blob the lane pinned at that revision
+    "7917226712c4bb83e70bf95a9093ea96667fddc8": "a78797cbfca0e017e99c7e3e00823ded3ef1653b",
+    "2ad4cf23d366fc784a486b0245550230e64bfa25": "7de94f11d7d521f07d2fe22317662ac6f92f89fa",
+    "9d0ba703c98cabb94933545a553c8c6ae1ab578b": "7de94f11d7d521f07d2fe22317662ac6f92f89fa",
+    "5ed105d7030d5860f877b03a28a9201281d8d55b": "7de94f11d7d521f07d2fe22317662ac6f92f89fa",
+    "77c06a290ea646f3ff2b527491de2af9bf6f62f6": "7de94f11d7d521f07d2fe22317662ac6f92f89fa",
+}
 roots = {"amb": repo / "reports/benchmarks/amb/amb-precisionmembench-retrieval-v7",
          "lme": repo / "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v7"}
 failures = 0
@@ -45,9 +54,11 @@ for kind, root in roots.items():
                     rep["planes"][pl]["backends"][be]["rows"] = rr
             checks["report_recomposes_to_raw"] = rep == rawobj
         ident = json.loads((d / "execution-identity.json").read_text(encoding="utf-8"))
-        checks["revision"] = ident["agent_memory_revision"] == expect["revision"]
-        checks["state"] = ident["runtime_baseline_state"] == expect["state"]
-        checks["declaration_blob"] = ident["declaration_blob"] == expect["blob"]
+        rev = ident["agent_memory_revision"]
+        blob = next((b for r, b in EXPECT.items() if rev.startswith(r)), None)
+        checks["revision"] = blob is not None and d.name.endswith(rev[:12])
+        checks["state"] = ident["runtime_baseline_state"] == "TRANSITION"
+        checks["declaration_blob"] = ident["declaration_blob"] == blob
         checks["lane_id"] = ev["lane_id"]
         checks["runner"] = ident.get("runner")
         ok = all(v is True or (isinstance(v, str) and (v.startswith("ok") or v in (ev["lane_id"],) or v == ident.get("runner"))) for v in checks.values())

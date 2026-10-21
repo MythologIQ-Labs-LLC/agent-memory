@@ -1,0 +1,6 @@
+test_own_checkout_at_frozen_revision_is_served (tests.test_644_v7_gauntlet_identity.ImportedRuntimeIdentity.test_own_checkout_at_frozen_revision_is_served) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 1.466s
+
+OK

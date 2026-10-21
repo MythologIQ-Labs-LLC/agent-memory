@@ -10,7 +10,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = ROOT / "examples/gauntlet/agent-memory-runtime-baseline-v7.json"
 ADAPTER = ROOT / "examples/gauntlet/agent_memory_runtime_baseline_v7_stdio.py"
-EXPECTED_RUNTIME = "16a248b1e28f455fbf19217114175f0c20df2a01"
+EXPECTED_RUNTIME = "2ad4cf23d366fc784a486b0245550230e64bfa25"
 
 
 class V7GauntletCandidateTests(unittest.TestCase):
@@ -25,6 +25,7 @@ class V7GauntletCandidateTests(unittest.TestCase):
         self.assertEqual(record["adapter"]["revision"], "git-blob:" + blob)
         source = ADAPTER.read_text(encoding="utf-8")
         self.assertIn("FROZEN_RUNTIME_REVISION = \"" + EXPECTED_RUNTIME + "\"", source)
+        self.assertIn('PUBLIC_CONTRACT_VERSION = "1.8.0"', source)
         self.assertNotIn("tenant:gauntlet-runtime-baseline-v6", source)
 
     def test_configuration_digest_is_reproducible_and_non_authoritative(self):

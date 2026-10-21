@@ -1,0 +1,25 @@
+
+======================================================================
+FAIL: test_opaque_node_must_not_fill_only_canonical_candidate_slot (tests.test_836_opaque_budget_noninterference.OpaqueGraphBudgetNoninterference.test_opaque_node_must_not_fill_only_canonical_candidate_slot)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/wt-07cd8692/reference/tests/test_836_opaque_budget_noninterference.py", line 96, in test_opaque_node_must_not_fill_only_canonical_candidate_slot
+    self._check_visible(fanout=2, graph_limit=1)
+  File "/tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/wt-07cd8692/reference/tests/test_836_opaque_budget_noninterference.py", line 81, in _check_visible
+    self.assertIn(
+AssertionError: 'ref-0025' not found in ['ref-0018'] : withheld-neighbor presence must not starve the admitted live sibling
+
+======================================================================
+FAIL: test_opaque_node_must_not_spend_eligible_fanout_one (tests.test_836_opaque_budget_noninterference.OpaqueGraphBudgetNoninterference.test_opaque_node_must_not_spend_eligible_fanout_one)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/wt-07cd8692/reference/tests/test_836_opaque_budget_noninterference.py", line 93, in test_opaque_node_must_not_spend_eligible_fanout_one
+    self._check_visible(fanout=1, graph_limit=2)
+  File "/tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/wt-07cd8692/reference/tests/test_836_opaque_budget_noninterference.py", line 81, in _check_visible
+    self.assertIn(
+AssertionError: 'ref-0025' not found in ['ref-0018'] : withheld-neighbor presence must not starve the admitted live sibling
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.216s
+
+FAILED (failures=2)

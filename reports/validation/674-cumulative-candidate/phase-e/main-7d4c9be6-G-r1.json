@@ -1,0 +1,27 @@
+{
+  "label": "main-7d4c9be6-G-r1",
+  "reference": "/tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/main-wt/reference",
+  "scenarios": {
+    "G": {
+      "facade_remember_ms": {
+        "p50": 6.1,
+        "p95": 8.98
+      },
+      "facade_recall_ms": {
+        "p50": 61.87,
+        "p95": 96.81,
+        "mean_admitted": 393,
+        "queries": 200,
+        "corpus": 1500
+      },
+      "high_degree_graph_recall_ms": {
+        "p50": 1.63,
+        "p95": 2.76,
+        "hub_degree": 400,
+        "graph_route_count": 8,
+        "foreign_in_candidates": 0,
+        "alpha_admitted": 4
+      }
+    }
+  }
+}
