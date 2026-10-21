@@ -84,6 +84,8 @@ Prefer freely inspectable research when practical:
 
 Accessibility is a preference, not a substitute for quality.
 
+For material recall and context-selection changes, test both conventional retrieval signals and independent alternatives against falsifying examples. Include required paraphrases and indirect relations with little lexical overlap, wrong-subject lexical collisions, missing and misleading typed claims, and answerable/no-answer questions. Document whether identity or relationship claims are verified or merely provided by a caller. Neither unverified structure nor similarity scores grant admission, omission, or canonical authority. Keep author-visible development examples distinct from genuinely independent hidden qualification; see [#819](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/819) and [#775](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/775).
+
 ## Source and reuse rights
 
 Evidence quality and reuse permission are separate questions.
