@@ -78,7 +78,7 @@ LAYERS: dict[str, tuple[str, ...]] = {
         "temporal_commitment", "temporal_transparency", "temporal_trust",
         "trace_action_evidence", "uor_content_reference", "action_authority",
     ),
-    "api": ("contract", "surface"),
+    "api": ("contract", "surface", "context_package"),
     "crg": (
         "code_graph_qualification", "codegenome_profile", "codegenome_cognitive_mesh",
         "codegenome_scope_residue",

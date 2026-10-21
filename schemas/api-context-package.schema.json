@@ -1,0 +1,336 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mythologiq.ai/agent-memory/schemas/api-context-package.schema.json",
+  "title": "Agent Memory context package (#691 candidate agent-memory-context/0.1.0)",
+  "description": "The authorized content of exactly the facts one public recall returned, resolved under the same serialization boundary as that recall, with provenance receipts, budgets and explicit item and package states. Separately versioned from the 1.x result envelope; not part of an accepted contract. Memory content is untrusted evidence and never authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "package_version",
+    "status",
+    "items",
+    "budget",
+    "recall",
+    "consistency",
+    "instruction_policy",
+    "authority_effect"
+  ],
+  "properties": {
+    "package_version": {
+      "const": "agent-memory-context/0.1.0"
+    },
+    "status": {
+      "enum": [
+        "empty",
+        "complete",
+        "truncated",
+        "budget_exhausted",
+        "partial_unresolved"
+      ]
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "fact_ref",
+          "state",
+          "trust",
+          "authority_effect"
+        ],
+        "properties": {
+          "fact_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "rank_position": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "state": {
+            "enum": [
+              "resolved",
+              "truncated",
+              "omitted_budget",
+              "unresolved",
+              "unsupported"
+            ]
+          },
+          "reason": {
+            "enum": [
+              "withheld",
+              "not_found",
+              "no_longer_admissible",
+              "content_read_failed",
+              "no_text_content"
+            ]
+          },
+          "content": {
+            "type": "string"
+          },
+          "trust": {
+            "const": "untrusted_memory_text"
+          },
+          "authority_effect": {
+            "const": "none"
+          },
+          "provenance": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "content_sha256",
+              "content_chars"
+            ],
+            "properties": {
+              "memory_ref": {
+                "type": "string"
+              },
+              "source_ref": {
+                "type": "string"
+              },
+              "recorded_at": {
+                "type": "string"
+              },
+              "observed_at": {
+                "type": "string"
+              },
+              "valid_from": {
+                "type": "string"
+              },
+              "valid_until": {
+                "type": "string"
+              },
+              "content_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "content_chars": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "admission_decision_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "admission_mode": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "write_channel": {
+                "type": "string"
+              },
+              "currentness": {
+                "type": "string"
+              },
+              "replacement_kind": {
+                "type": "string"
+              },
+              "replaced_at": {
+                "type": "string"
+              },
+              "historical_valid_from": {
+                "type": "string"
+              },
+              "historical_valid_until": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "enum": [
+                    "resolved",
+                    "truncated"
+                  ]
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "content",
+                "provenance"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "enum": [
+                    "omitted_budget",
+                    "unresolved",
+                    "unsupported"
+                  ]
+                }
+              }
+            },
+            "then": {
+              "not": {
+                "anyOf": [
+                  {
+                    "required": [
+                      "content"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "provenance"
+                    ]
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "enum": [
+                    "unresolved",
+                    "unsupported"
+                  ]
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "reason"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_items",
+        "max_chars_per_item",
+        "max_total_chars",
+        "max_tokens",
+        "used_chars",
+        "used_tokens_estimate",
+        "token_estimate"
+      ],
+      "properties": {
+        "max_items": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_chars_per_item": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_total_chars": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_tokens": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "used_chars": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "used_tokens_estimate": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "token_estimate": {
+          "type": "string"
+        }
+      }
+    },
+    "recall": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract_version",
+        "returned",
+        "return_policy",
+        "public_projection"
+      ],
+      "properties": {
+        "contract_version": {
+          "type": "string"
+        },
+        "returned": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "return_policy": {
+          "type": "object"
+        },
+        "public_projection": {
+          "type": "object"
+        }
+      }
+    },
+    "consistency": {
+      "const": "single_serialized_recall_and_resolution"
+    },
+    "instruction_policy": {
+      "type": "string",
+      "minLength": 1
+    },
+    "authority_effect": {
+      "const": "none"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "empty"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "items": {
+            "maxItems": 0
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "complete"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "items": {
+            "items": {
+              "properties": {
+                "state": {
+                  "const": "resolved"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}
