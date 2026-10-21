@@ -244,26 +244,37 @@ class V7ImporterRefusals(unittest.TestCase):
             AMB_IMPORT.lane_at_revision(REPO_ROOT, lane_file, "16a248b1e28f455fbf19217114175f0c20df2a01", at_head=False)
 
 
-# L6
+# L6: review the active cumulative v7 replay source, not the superseded
+# 16a248b1 pre-repair replay. Both fixtures and source digests remain frozen.
 class ReplayEvidenceFreshness(unittest.TestCase):
+    EVIDENCE_ROOT = (
+        REPO_ROOT / "reports/validation/674-cumulative-candidate"
+        / "644-v7-replays-2ad4cf23d366fc784a486b0245550230e64bfa25"
+    )
+    REPLAY_ID = "typed-sufficiency-noninterference-and-negative-controls-v1"
+
     def test_lane_records_do_not_make_replay_evidence_stale(self):
         verifier = runpy.run_path(str(REPO_ROOT / "scripts/verify_644_v7_replays.py"))
-        result = verifier["verify"]()
+        result = verifier["verify"](evidence_root=self.EVIDENCE_ROOT)
         self.assertEqual({row["replay"]: row["status"] for row in result["replays"]},
                          {row["replay"]: "VERIFIED" for row in result["replays"]}, result)
         self.assertEqual(len(result["replays"]), 5)
 
     def test_a_runtime_edit_still_makes_replay_evidence_stale(self):
         verifier = runpy.run_path(str(REPO_ROOT / "scripts/verify_644_v7_replays.py"))
+        manifest = json.loads((self.EVIDENCE_ROOT / self.REPLAY_ID / "manifest.json").read_text(encoding="utf-8"))
+        # The manifest pins the protected runtime that generated this replay,
+        # rather than assuming a forever-fixed pre-v7 ancestor.
+        baseline = manifest["source_commit"]
+        self.assertFalse(verifier["runtime_changed_since"](baseline))
         target = REPO_ROOT / "reference/agentmem_ref/runtime/adapter.py"
         original = target.read_bytes()
         try:
             target.write_bytes(original + b"\n# runtime edit probe\n")
-            stale = verifier["runtime_changed_since"]("16a248b1e28f455fbf19217114175f0c20df2a01")
+            self.assertTrue(verifier["runtime_changed_since"](baseline))
         finally:
             target.write_bytes(original)
-        self.assertTrue(stale)
-        self.assertFalse(verifier["runtime_changed_since"]("16a248b1e28f455fbf19217114175f0c20df2a01"))
+        self.assertFalse(verifier["runtime_changed_since"](baseline))
 
 
 if __name__ == "__main__":
