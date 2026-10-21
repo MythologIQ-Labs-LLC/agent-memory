@@ -331,7 +331,7 @@ class DeterministicMultiRouteRecallPlanner:
         seed_pairs: list[tuple[str, str]] = []
         for logical_ref in dict.fromkeys(logical_memory_refs):
             current = self.adapter.current_fact_uuid(logical_ref)
-            if current is None:
+            if current is None or not self.adapter.domain_eligible_identity(current, tenant, context):
                 continue
             hits.append(
                 RetrievalRouteHit(
@@ -378,13 +378,29 @@ class DeterministicMultiRouteRecallPlanner:
         if seed_pairs and isinstance(substrate, EvidenceNeighborTemporalGraphPort):
             routes_executed.append(SHARED_EVIDENCE_ROUTE)
             for logical_ref, seed_ref in seed_pairs:
+                # #591: use the canonical identity/scope gate before even
+                # materializing a seed from a cross-project memory.
+                if not self.adapter.domain_eligible_identity(seed_ref, tenant, context):
+                    continue
                 seed_fact = substrate.get_fact(seed_ref)
-                if seed_fact is None or seed_fact.is_event_invalid:
+                # #433/#548: an identity lookup is discovery, not permission to
+                # traverse a seed's evidence. Scope-check the seed before using
+                # its provenance to discover a neighbor in another domain.
+                # The discovered neighbor still crosses full canonical admission.
+                if (
+                    seed_fact is None
+                    or seed_fact.is_event_invalid
+                    or not self.adapter.domain_eligible(seed_fact, context)
+                ):
                     continue
                 for fact, shared_refs, score in substrate.evidence_neighbors(
                     seed_ref,
                     group_ids=[tenant],
                 ):
+                    # Apply the same discovery prefilter as lexical/vector
+                    # routes. Full admission still independently rechecks it.
+                    if not self.adapter.domain_eligible(fact, context):
+                        continue
                     hits.append(
                         RetrievalRouteHit(
                             route_id=SHARED_EVIDENCE_ROUTE,

@@ -15,7 +15,7 @@ from collections import deque
 from dataclasses import dataclass, field, replace
 import math
 import re
-from typing import Protocol
+from typing import Callable, Protocol
 
 from . import typed_proposition as typed
 from .evidence_sufficiency import (
@@ -48,6 +48,7 @@ from .runtime_composition import (
 from .vector_retrieval import NativeVectorCandidateRetriever, SEMANTIC_VECTOR_ROUTE
 from ..state.substrate import (
     EvidenceNeighborTemporalGraphPort,
+    Fact,
     TypedRelation,
     TypedRelationTemporalGraphPort,
 )
@@ -60,6 +61,8 @@ GRAPH_OUTGOING = "outgoing"
 GRAPH_INCOMING = "incoming"
 GRAPH_BOTH = "both"
 MAX_GRAPH_SEED_REFS = 16
+# Per expanded node, at most max_fanout * this many eligibility/fact probes.
+MAX_GRAPH_ELIGIBILITY_PROBE_FACTOR = 16
 
 # Pre-existing route precedence of the controlled planner, now declared rather than implicit.
 CONTROLLED_RECALL_RANKING_POLICY = ExplicitCurrentCrossFactRankingPolicy(
@@ -166,9 +169,10 @@ class GraphCandidateHit:
 class NativeTypedGraphCandidateRetriever:
     """Bounded deterministic traversal over Agent Memory canonical relations.
 
-    Relation group filtering is applied during expansion as containment and work
-    control. Fact-level scope, isolation, currentness, dispute, and tombstone
-    checks remain at governed recall admission.
+    Relation group filtering bounds an unqualified raw traversal. A governed
+    caller must additionally supply both identity and fact eligibility checks,
+    including every intermediate hop; final admission still controls
+    currentness, dispute, tombstone, and all consequential use.
     """
 
     def __init__(self, spec: GraphTraversalSpec | None = None) -> None:
@@ -184,9 +188,18 @@ class NativeTypedGraphCandidateRetriever:
         *,
         group_id: str,
         candidate_limit: int,
+        eligible: Callable[[Fact], bool] | None = None,
+        eligible_identity: Callable[[str, str], bool] | None = None,
         exclude=None,
     ) -> list[GraphCandidateHit]:
-        """``exclude`` (#777): nodes that may neither be reported nor traversed through."""
+        """Bounded traversal from eligible seeds through eligible nodes only.
+
+        ``eligible`` / ``eligible_identity`` (#835): the governed caller's fact and
+        identity eligibility predicates, applied to every seed and every hop, so an
+        ineligible node is neither reported nor traversed through.
+        ``exclude`` (#777): nodes that may neither be reported nor traversed through
+        (a deleted generation confers no reachability).
+        """
         if candidate_limit < 0:
             raise ValueError("graph candidate_limit must be non-negative")
         if candidate_limit == 0 or not seed_refs:
@@ -196,9 +209,15 @@ class NativeTypedGraphCandidateRetriever:
 
         best_by_candidate: dict[str, GraphCandidateHit] = {}
         for seed_ref in tuple(dict.fromkeys(seed_refs)):
-            if substrate.get_fact(seed_ref) is None:
+            if eligible_identity is not None and not eligible_identity(seed_ref, group_id):
                 continue
-            for hit in self._traverse_seed(substrate, seed_ref, group_id=group_id, exclude=exclude):
+            seed_fact = substrate.get_fact(seed_ref)
+            if seed_fact is None or (eligible is not None and not eligible(seed_fact)):
+                continue
+            for hit in self._traverse_seed(
+                substrate, seed_ref, group_id=group_id,
+                eligible=eligible, eligible_identity=eligible_identity, exclude=exclude,
+            ):
                 existing = best_by_candidate.get(hit.candidate_ref)
                 if existing is None or self._hit_key(hit) < self._hit_key(existing):
                     best_by_candidate[hit.candidate_ref] = hit
@@ -212,6 +231,8 @@ class NativeTypedGraphCandidateRetriever:
         seed_ref: str,
         *,
         group_id: str,
+        eligible: Callable[[Fact], bool] | None = None,
+        eligible_identity: Callable[[str, str], bool] | None = None,
         exclude=None,
     ) -> list[GraphCandidateHit]:
         queue = deque(
@@ -251,7 +272,19 @@ class NativeTypedGraphCandidateRetriever:
                 group_id=group_id,
                 relation_types=relation_filter,
             )
-            for next_ref, relation in neighbors[: self.spec.max_fanout]:
+            accepted_fanout = 0
+            eligibility_probes = 0
+            # The fanout counts usable NEW paths, not ineligible or stale
+            # edges. Cyclic, stale, weak, and non-improving edges are rejected
+            # from the already-materialized adjacency without spending the
+            # probe ceiling, so relation history cannot hide a current path.
+            # Only identity/fact checks are capped: a hub with many
+            # ineligible neighbors cannot force an unbounded check loop, at
+            # the cost of not reaching an eligible neighbor ranked behind them.
+            probe_limit = self.spec.max_fanout * MAX_GRAPH_ELIGIBILITY_PROBE_FACTOR
+            for next_ref, relation in neighbors:
+                if accepted_fanout >= self.spec.max_fanout or eligibility_probes >= probe_limit:
+                    break
                 if next_ref in path_refs:
                     continue
                 if relation.is_event_invalid or relation.is_transaction_expired:
@@ -259,13 +292,18 @@ class NativeTypedGraphCandidateRetriever:
                 next_score = path_score * relation.retrieval_weight
                 if next_score < self.spec.min_path_score:
                     continue
-                if substrate.get_fact(next_ref) is None:
-                    continue
-                if exclude is not None and exclude(next_ref):
-                    continue  # a deleted generation confers no reachability and is never reported
                 prior_score = best_score_by_node.get(next_ref)
                 if prior_score is not None and next_score <= prior_score:
                     continue
+                eligibility_probes += 1
+                if eligible_identity is not None and not eligible_identity(next_ref, group_id):
+                    continue
+                next_fact = substrate.get_fact(next_ref)
+                if next_fact is None or (eligible is not None and not eligible(next_fact)):
+                    continue
+                if exclude is not None and exclude(next_ref):
+                    continue  # #777: a deleted generation confers no reachability and is never reported
+                accepted_fanout += 1
                 best_score_by_node[next_ref] = next_score
 
                 next_path = path_refs + (next_ref,)
@@ -665,9 +703,14 @@ class ControlledRecallPlanner:
         exact_budget = plan.budget_for(EXACT_IDENTITY_ROUTE)
         explicit_seeds: list[tuple[str, str]] = []
         if exact_budget.candidate_limit:
-            for logical_ref in unique_logical_refs[: exact_budget.candidate_limit]:
+            # Only eligible refs spend the quota. The scan stays linear in
+            # the refs already deduplicated above, so a fixed overscan cap
+            # would save no work while letting leading foreign refs starve it.
+            for logical_ref in unique_logical_refs:
+                if len(explicit_seeds) >= exact_budget.candidate_limit:
+                    break
                 current = self.adapter.current_fact_uuid(logical_ref)
-                if current is None:
+                if current is None or not self.adapter.domain_eligible_identity(current, tenant, context):
                     continue
                 hits.append(
                     RetrievalRouteHit(
@@ -719,15 +762,21 @@ class ControlledRecallPlanner:
         ):
             graph_seed_refs: list[str] = []
             graph_seed_limit = min(MAX_GRAPH_SEED_REFS, graph_budget.candidate_limit)
-            for logical_ref in unique_logical_refs[:graph_seed_limit]:
+            for logical_ref in unique_logical_refs:
+                if len(graph_seed_refs) >= graph_seed_limit:
+                    break
                 current = self.adapter.current_fact_uuid(logical_ref)
-                if current is not None:
+                if current is not None and self.adapter.domain_eligible_identity(current, tenant, context):
                     graph_seed_refs.append(current)
             graph_results = self.graph_retriever.search(
                 substrate,
                 tuple(graph_seed_refs),
                 group_id=tenant,
                 candidate_limit=graph_budget.candidate_limit,
+                eligible=lambda fact: self.adapter.domain_eligible(fact, context),
+                eligible_identity=lambda uuid, group_id: self.adapter.domain_eligible_identity(
+                    uuid, group_id, context,
+                ),
             )
             # #777: canonical candidates (above) are unchanged; the REPORTED paths come from
             # a traversal that neither reports nor passes through deleted generations.
@@ -735,6 +784,11 @@ class ControlledRecallPlanner:
             reported = graph_results if withheld is None else self.graph_retriever.search(
                 substrate, tuple(graph_seed_refs), group_id=tenant,
                 candidate_limit=graph_budget.candidate_limit,
+                # #835: the reported traversal is bounded by the same eligibility as the canonical one
+                eligible=lambda fact: self.adapter.domain_eligible(fact, context),
+                eligible_identity=lambda uuid, group_id: self.adapter.domain_eligible_identity(
+                    uuid, group_id, context,
+                ),
                 exclude=lambda ref: withheld(ref, context))  # #809: the reader's context
             for graph_hit in reported:
                 graph_candidate_hits[graph_hit.candidate_ref] = graph_hit
@@ -770,6 +824,7 @@ class ControlledRecallPlanner:
                     logical_memory_ref=logical_ref,
                     expanded_seeds=expanded_seeds,
                     candidate_limit=remaining,
+                    context=context,
                 )
                 remaining -= added
 
@@ -796,6 +851,7 @@ class ControlledRecallPlanner:
                     logical_memory_ref="",
                     expanded_seeds=expanded_seeds,
                     candidate_limit=remaining,
+                    context=context,
                 )
                 remaining -= added
             route_counts[SHARED_EVIDENCE_ROUTE] = shared_budget.candidate_limit - remaining
@@ -1041,8 +1097,8 @@ class ControlledRecallPlanner:
                 + ", ".join(sorted(unsupported))
             )
 
-    @staticmethod
     def _expand_seed(
+        self,
         substrate: EvidenceNeighborTemporalGraphPort,
         tenant: str,
         hits: list[RetrievalRouteHit],
@@ -1051,11 +1107,14 @@ class ControlledRecallPlanner:
         logical_memory_ref: str,
         expanded_seeds: set[str],
         candidate_limit: int,
+        context: RecallContext,
     ) -> int:
-        if seed_ref in expanded_seeds or candidate_limit <= 0:
+        if (seed_ref in expanded_seeds or candidate_limit <= 0
+                or not self.adapter.domain_eligible_identity(seed_ref, tenant, context)):
             return 0
         seed_fact = substrate.get_fact(seed_ref)
-        if seed_fact is None or seed_fact.is_event_invalid or seed_fact.is_transaction_expired:
+        if (seed_fact is None or seed_fact.is_event_invalid or seed_fact.is_transaction_expired
+                or not self.adapter.domain_eligible(seed_fact, context)):
             return 0
         expanded_seeds.add(seed_ref)
         added = 0
@@ -1063,6 +1122,8 @@ class ControlledRecallPlanner:
             seed_ref,
             group_ids=[tenant],
         ):
+            if not self.adapter.domain_eligible(fact, context):
+                continue
             if added >= candidate_limit:
                 break
             hits.append(
