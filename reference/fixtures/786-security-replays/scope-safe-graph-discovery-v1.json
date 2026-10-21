@@ -1,0 +1,1225 @@
+{
+ "replay_id": "scope-safe-graph-discovery-v1",
+ "fixture_version": 1,
+ "dsl_version": "786-security-replay-dsl/4",
+ "owning_issue": 835,
+ "frozen_on": "2026-10-21",
+ "status": "frozen_before_execution",
+ "base_commit": "6f8d98ee6238b88105e1ffd651c699d8d192e64e",
+ "independence": "Expected outcomes were written from the contract clauses listed in contract_sources at base_commit (docs/41 graph/provenance seed boundary; docs/44 domain-ineligible candidate invisibility and the #777 closed-generation clauses), clause by clause (`clauses` on every case), before the DSL/4 runner existed or executed. They are not derived from running the implementation under test. A failing expectation is a finding, never a reason to edit this fixture; a corrected expectation requires a superseding -v2 with a recorded reason. `late_admitted` (G10) is recorded under implementation_evidence, never expected: PR #835 declares the eligibility-probe ceiling as a bounded-work limitation, not a contract. No frozen holdout phrase, #644 or -v3 fixture vocabulary is used.",
+ "stop_lines": [
+  "no fixture edit after first execution; supersede with -v2 and record why",
+  "no expectation weakened to obtain PASS",
+  "no runtime change motivated by a replay outcome without a preregistered reproducer",
+  "a replay verdict is evidence, not successor acceptance; acceptance requires independent review"
+ ],
+ "title": "Scope-safe typed-graph discovery: eligible seeds, eligible hops, eligible fan-out; a deleted generation confers no reachability",
+ "contract_sources": [
+  {
+   "path": "docs/41-memory-isolation-domains-and-governed-crossing.md",
+   "sha256_at_base": "2c4542e5c105f235b0fbfc52f0703345c8664dec29463e3462d54c4903a8b3bd"
+  },
+  {
+   "path": "docs/44-public-api-contract.md",
+   "sha256_at_base": "3589926c0ee1f66fbda432368441373e70c93ccb5c490bf79951868f2990068a"
+  }
+ ],
+ "invariants": [
+  {
+   "id": "I1",
+   "statement": "A seed the reader is not eligible to inspect, or whose identifier the reader's view withholds, expands nothing: no route hit, no reported path, no candidate.",
+   "falsified_by": "any candidate or reported path discovered from such a seed"
+  },
+  {
+   "id": "I2",
+   "statement": "A neighbour outside the reader's eligibility is never a caller-visible candidate, never reported, and never counted.",
+   "falsified_by": "an other-project neighbour in candidates, reported hits or the graph route count"
+  },
+  {
+   "id": "I3",
+   "statement": "A multi-hop route never reaches an eligible fact by traversing an ineligible node.",
+   "falsified_by": "a candidate reachable only through an other-project intermediate"
+  },
+  {
+   "id": "I4",
+   "statement": "Route budgets (graph fan-out, exact-identity quota) are spent on eligible paths and references only, so leading ineligible ones cannot starve eligible ones.",
+   "falsified_by": "an eligible neighbour or reference lost while ineligible ones occupied the budget"
+  },
+  {
+   "id": "I5",
+   "statement": "A neighbour the reader legitimately holds through a shared isolation domain stays discoverable and admitted.",
+   "falsified_by": "the shared-domain neighbour missing from admitted"
+  },
+  {
+   "id": "I6",
+   "statement": "A deleted generation confers no reachability: it is never reported, never traversed through, and never expanded as a seed.",
+   "falsified_by": "a candidate reachable only through, or from, a deleted or withheld node, or a deleted node in a reported path"
+  },
+  {
+   "id": "I7",
+   "statement": "With no relations the graph route discovers nothing and the seed is served by its own route.",
+   "falsified_by": "a graph candidate without a relation, or the seed missing"
+  },
+  {
+   "id": "I8",
+   "statement": "Canonical admission and its internal audit are unchanged: a deleted node that is a direct neighbour may still be a canonical candidate that admission refuses with its recorded reason.",
+   "falsified_by": "the direct deleted neighbour missing from canonical candidates or its refusal reason changed"
+  }
+ ],
+ "cases": [
+  {
+   "id": "G1-inaccessible-seed-expands-nothing",
+   "invariants": [
+    "I1"
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:seed",
+     "text": "glaze seed held by the other project",
+     "project": "b"
+    },
+    {
+     "op": "remember",
+     "ref": "memory:tail",
+     "text": "live tile shelf note",
+     "project": "a"
+    },
+    {
+     "op": "relate",
+     "id": "r1",
+     "from": "memory:seed",
+     "to": "memory:tail",
+     "weight": 1.0,
+     "type": "supports"
+    }
+   ],
+   "probes": {
+    "r": {
+     "probe": "graph_recall",
+     "name": "r",
+     "seeds": [
+      "memory:seed"
+     ],
+     "graph_limit": 8,
+     "exact_limit": 1,
+     "max_depth": 2,
+     "reader": "a"
+    },
+    "seed_candidate": {
+     "probe": "candidate",
+     "of": "r",
+     "fact": "memory:seed"
+    },
+    "tail_candidate": {
+     "probe": "candidate",
+     "of": "r",
+     "fact": "memory:tail"
+    },
+    "tail_reported": {
+     "probe": "reported",
+     "of": "r",
+     "fact": "memory:tail"
+    },
+    "graph_count": {
+     "probe": "graph_count",
+     "of": "r"
+    }
+   },
+   "expect": {
+    "seed_candidate": {
+     "eq": false
+    },
+    "tail_candidate": {
+     "eq": false
+    },
+    "tail_reported": {
+     "eq": false
+    },
+    "graph_count": {
+     "eq": 0
+    }
+   },
+   "clauses": [
+    {
+     "clause": "A retrieval route that *uses a seed memory's content, source references, or relations to discover other memories* must establish that the requester is eligible to inspect the **seed** before expanding it. Final admission of the discovered neighbor does not retroactively authorize the seed or its provenance.",
+     "source": "docs/41-memory-isolation-domains-and-governed-crossing.md",
+     "observables": [
+      "tail_candidate",
+      "tail_reported",
+      "graph_count"
+     ]
+    },
+    {
+     "clause": "Domain-ineligible matches are never caller-visible. They do not appear in `candidates`, `admissions`, ranking evidence, route provenance, or the ordinary `memory.recall` audit event, and no count of them is reported.",
+     "source": "docs/44-public-api-contract.md",
+     "observables": [
+      "seed_candidate"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "G2-inaccessible-neighbour-never-reported",
+   "invariants": [
+    "I2"
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:seed",
+     "text": "studio seed note",
+     "project": "a"
+    },
+    {
+     "op": "remember",
+     "ref": "memory:foreign",
+     "text": "other project note",
+     "project": "b"
+    },
+    {
+     "op": "relate",
+     "id": "r1",
+     "from": "memory:seed",
+     "to": "memory:foreign",
+     "weight": 1.0,
+     "type": "supports"
+    }
+   ],
+   "probes": {
+    "r": {
+     "probe": "graph_recall",
+     "name": "r",
+     "seeds": [
+      "memory:seed"
+     ],
+     "graph_limit": 8,
+     "exact_limit": 1,
+     "max_depth": 2,
+     "reader": "a"
+    },
+    "seed_admitted": {
+     "probe": "admitted",
+     "of": "r",
+     "fact": "memory:seed"
+    },
+    "foreign_candidate": {
+     "probe": "candidate",
+     "of": "r",
+     "fact": "memory:foreign"
+    },
+    "foreign_reported": {
+     "probe": "reported",
+     "of": "r",
+     "fact": "memory:foreign"
+    },
+    "graph_count": {
+     "probe": "graph_count",
+     "of": "r"
+    }
+   },
+   "expect": {
+    "seed_admitted": {
+     "eq": true
+    },
+    "foreign_candidate": {
+     "eq": false
+    },
+    "foreign_reported": {
+     "eq": false
+    },
+    "graph_count": {
+     "eq": 0
+    }
+   },
+   "clauses": [
+    {
+     "clause": "Domain-ineligible matches are never caller-visible. They do not appear in `candidates`, `admissions`, ranking evidence, route provenance, or the ordinary `memory.recall` audit event, and no count of them is reported.",
+     "source": "docs/44-public-api-contract.md",
+     "observables": [
+      "foreign_candidate",
+      "foreign_reported",
+      "graph_count"
+     ]
+    },
+    {
+     "clause": "This is a candidate-generation precondition under the existing isolation contract, **not** a new PAMA permission or relaxation of the neighbor's normal admission checks.",
+     "source": "docs/41-memory-isolation-domains-and-governed-crossing.md",
+     "observables": [
+      "seed_admitted"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "G3-no-hop-through-inaccessible-intermediate",
+   "invariants": [
+    "I3"
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:seed",
+     "text": "studio seed note",
+     "project": "a"
+    },
+    {
+     "op": "remember",
+     "ref": "memory:bridge",
+     "text": "other project bridge",
+     "project": "b"
+    },
+    {
+     "op": "remember",
+     "ref": "memory:tail",
+     "text": "live tile shelf note",
+     "project": "a"
+    },
+    {
+     "op": "relate",
+     "id": "r1",
+     "from": "memory:seed",
+     "to": "memory:bridge",
+     "weight": 1.0,
+     "type": "supports"
+    },
+    {
+     "op": "relate",
+     "id": "r2",
+     "from": "memory:bridge",
+     "to": "memory:tail",
+     "weight": 1.0,
+     "type": "supports"
+    }
+   ],
+   "probes": {
+    "r": {
+     "probe": "graph_recall",
+     "name": "r",
+     "seeds": [
+      "memory:seed"
+     ],
+     "graph_limit": 8,
+     "exact_limit": 1,
+     "max_depth": 2,
+     "reader": "a"
+    },
+    "tail_candidate": {
+     "probe": "candidate",
+     "of": "r",
+     "fact": "memory:tail"
+    },
+    "bridge_candidate": {
+     "probe": "candidate",
+     "of": "r",
+     "fact": "memory:bridge"
+    },
+    "graph_count": {
+     "probe": "graph_count",
+     "of": "r"
+    }
+   },
+   "expect": {
+    "tail_candidate": {
+     "eq": false
+    },
+    "bridge_candidate": {
+     "eq": false
+    },
+    "graph_count": {
+     "eq": 0
+    }
+   },
+   "clauses": [
+    {
+     "clause": "The same boundary applies at **every intermediate graph hop**: a multi-hop route must not reach an eligible fact by traversing an ineligible node, even if its final candidate could pass admission.",
+     "source": "docs/41-memory-isolation-domains-and-governed-crossing.md",
+     "observables": [
+      "tail_candidate",
+      "graph_count"
+     ]
+    },
+    {
+     "clause": "Domain-ineligible matches are never caller-visible. They do not appear in `candidates`, `admissions`, ranking evidence, route provenance, or the ordinary `memory.recall` audit event, and no count of them is reported.",
+     "source": "docs/44-public-api-contract.md",
+     "observables": [
+      "bridge_candidate"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "G4-fanout-not-spent-on-ineligible-neighbours",
+   "invariants": [
+    "I2",
+    "I4"
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:seed",
+     "text": "studio seed note",
+     "project": "a"
+    },
+    {
+     "op": "remember_many",
+     "prefix": "memory:f",
+     "count": 12,
+     "project": "b",
+     "text": "other project note {i}"
+    },
+    {
+     "op": "relate_many",
+     "id_prefix": "rf",
+     "from": "memory:seed",
+     "to_prefix": "memory:f",
+     "count": 12,
+     "weight": 1.0
+    },
+    {
+     "op": "remember",
+     "ref": "memory:required-0",
+     "text": "required detail zero",
+     "project": "a"
+    },
+    {
+     "op": "remember",
+     "ref": "memory:required-1",
+     "text": "required detail one",
+     "project": "a"
+    },
+    {
+     "op": "remember",
+     "ref": "memory:required-2",
+     "text": "required detail two",
+     "project": "a"
+    },
+    {
+     "op": "relate",
+     "id": "q0",
+     "from": "memory:seed",
+     "to": "memory:required-0",
+     "weight": 0.5,
+     "type": "supports"
+    },
+    {
+     "op": "relate",
+     "id": "q1",
+     "from": "memory:seed",
+     "to": "memory:required-1",
+     "weight": 0.5,
+     "type": "supports"
+    },
+    {
+     "op": "relate",
+     "id": "q2",
+     "from": "memory:seed",
+     "to": "memory:required-2",
+     "weight": 0.5,
+     "type": "supports"
+    }
+   ],
+   "probes": {
+    "r": {
+     "probe": "graph_recall",
+     "name": "r",
+     "seeds": [
+      "memory:seed"
+     ],
+     "graph_limit": 16,
+     "exact_limit": 1,
+     "max_depth": 2,
+     "reader": "a"
+    },
+    "required_0": {
+     "probe": "admitted",
+     "of": "r",
+     "fact": "memory:required-0"
+    },
+    "required_1": {
+     "probe": "admitted",
+     "of": "r",
+     "fact": "memory:required-1"
+    },
+    "required_2": {
+     "probe": "admitted",
+     "of": "r",
+     "fact": "memory:required-2"
+    },
+    "foreign_visible": {
+     "probe": "visible_with_prefix",
+     "of": "r",
+     "prefix": "memory:f"
+    },
+    "graph_count": {
+     "probe": "graph_count",
+     "of": "r"
+    }
+   },
+   "expect": {
+    "required_0": {
+     "eq": true
+    },
+    "required_1": {
+     "eq": true
+    },
+    "required_2": {
+     "eq": true
+    },
+    "foreign_visible": {
+     "eq": 0
+    },
+    "graph_count": {
+     "eq": 3
+    }
+   },
+   "clauses": [
+    {
+     "clause": "A wrong-project seed must not contribute a route hit, shared-source identifier, or rank boost to an otherwise visible neighbor.",
+     "source": "docs/41-memory-isolation-domains-and-governed-crossing.md",
+     "observables": [
+      "required_0",
+      "required_1",
+      "required_2",
+      "graph_count"
+     ]
+    },
+    {
+     "clause": "Domain-ineligible matches are never caller-visible. They do not appear in `candidates`, `admissions`, ranking evidence, route provenance, or the ordinary `memory.recall` audit event, and no count of them is reported.",
+     "source": "docs/44-public-api-contract.md",
+     "observables": [
+      "foreign_visible"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "G5-shared-domain-neighbour-preserved",
+   "invariants": [
+    "I5"
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:seed",
+     "text": "studio seed note",
+     "project": "a"
+    },
+    {
+     "op": "remember",
+     "ref": "memory:shared",
+     "text": "team shared tile schedule",
+     "project": "a",
+     "domains": "shared"
+    },
+    {
+     "op": "remember",
+     "ref": "memory:private",
+     "text": "other project private note",
+     "project": "b"
+    },
+    {
+     "op": "relate",
+     "id": "r1",
+     "from": "memory:seed",
+     "to": "memory:shared",
+     "weight": 0.9,
+     "type": "supports"
+    },
+    {
+     "op": "relate",
+     "id": "r2",
+     "from": "memory:seed",
+     "to": "memory:private",
+     "weight": 1.0,
+     "type": "supports"
+    }
+   ],
+   "probes": {
+    "r": {
+     "probe": "graph_recall",
+     "name": "r",
+     "seeds": [
+      "memory:seed"
+     ],
+     "graph_limit": 8,
+     "exact_limit": 1,
+     "max_depth": 2,
+     "reader": "a",
+     "reader_domains": "shared"
+    },
+    "shared_admitted": {
+     "probe": "admitted",
+     "of": "r",
+     "fact": "memory:shared"
+    },
+    "private_candidate": {
+     "probe": "candidate",
+     "of": "r",
+     "fact": "memory:private"
+    },
+    "graph_count": {
+     "probe": "graph_count",
+     "of": "r"
+    }
+   },
+   "expect": {
+    "shared_admitted": {
+     "eq": true
+    },
+    "private_candidate": {
+     "eq": false
+    },
+    "graph_count": {
+     "eq": 1
+    }
+   },
+   "clauses": [
+    {
+     "clause": "The prefilter uses only necessary conditions that full admission independently re-applies, through one shared predicate: tenant, scope metadata, isolation domains and required compartments, shared-space membership, project, and task. It is a minimisation boundary, never permission.",
+     "source": "docs/44-public-api-contract.md",
+     "observables": [
+      "shared_admitted"
+     ]
+    },
+    {
+     "clause": "Domain-ineligible matches are never caller-visible. They do not appear in `candidates`, `admissions`, ranking evidence, route provenance, or the ordinary `memory.recall` audit event, and no count of them is reported.",
+     "source": "docs/44-public-api-contract.md",
+     "observables": [
+      "private_candidate",
+      "graph_count"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "G6-exact-quota-not-starved-by-leading-foreign-refs",
+   "invariants": [
+    "I1",
+    "I4"
+   ],
+   "steps": [
+    {
+     "op": "remember_many",
+     "prefix": "memory:f",
+     "count": 20,
+     "project": "b",
+     "text": "other project record {i}"
+    },
+    {
+     "op": "remember",
+     "ref": "memory:authorized",
+     "text": "authorized record",
+     "project": "a"
+    }
+   ],
+   "probes": {
+    "r": {
+     "probe": "graph_recall",
+     "name": "r",
+     "seeds": [
+      "memory:f-00",
+      "memory:f-01",
+      "memory:f-02",
+      "memory:f-03",
+      "memory:f-04",
+      "memory:f-05",
+      "memory:f-06",
+      "memory:f-07",
+      "memory:f-08",
+      "memory:f-09",
+      "memory:f-10",
+      "memory:f-11",
+      "memory:f-12",
+      "memory:f-13",
+      "memory:f-14",
+      "memory:f-15",
+      "memory:f-16",
+      "memory:f-17",
+      "memory:f-18",
+      "memory:f-19",
+      "memory:authorized"
+     ],
+     "graph_limit": 0,
+     "exact_limit": 1,
+     "max_depth": 2,
+     "reader": "a"
+    },
+    "authorized_candidate": {
+     "probe": "candidate",
+     "of": "r",
+     "fact": "memory:authorized"
+    },
+    "foreign_visible": {
+     "probe": "visible_with_prefix",
+     "of": "r",
+     "prefix": "memory:f"
+    },
+    "candidate_count": {
+     "probe": "candidate_count",
+     "of": "r"
+    }
+   },
+   "expect": {
+    "authorized_candidate": {
+     "eq": true
+    },
+    "foreign_visible": {
+     "eq": 0
+    },
+    "candidate_count": {
+     "eq": 1
+    }
+   },
+   "clauses": [
+    {
+     "clause": "Domain-ineligible matches are never caller-visible. They do not appear in `candidates`, `admissions`, ranking evidence, route provenance, or the ordinary `memory.recall` audit event, and no count of them is reported.",
+     "source": "docs/44-public-api-contract.md",
+     "observables": [
+      "foreign_visible",
+      "candidate_count"
+     ]
+    },
+    {
+     "clause": "A wrong-project seed must not contribute a route hit, shared-source identifier, or rank boost to an otherwise visible neighbor.",
+     "source": "docs/41-memory-isolation-domains-and-governed-crossing.md",
+     "observables": [
+      "authorized_candidate"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "G7-deleted-bridge-confers-no-reachability",
+   "invariants": [
+    "I6",
+    "I8"
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:seed",
+     "text": "studio seed note",
+     "project": "a"
+    },
+    {
+     "op": "remember",
+     "ref": "memory:old",
+     "text": "kiln schedule to be pruned",
+     "project": "a"
+    },
+    {
+     "op": "remember",
+     "ref": "memory:tail",
+     "text": "live tile shelf note",
+     "project": "a"
+    },
+    {
+     "op": "relate",
+     "id": "r1",
+     "from": "memory:seed",
+     "to": "memory:old",
+     "weight": 1.0,
+     "type": "supports"
+    },
+    {
+     "op": "relate",
+     "id": "r2",
+     "from": "memory:old",
+     "to": "memory:tail",
+     "weight": 1.0,
+     "type": "supports"
+    },
+    {
+     "op": "graph_recall",
+     "name": "before",
+     "seeds": [
+      "memory:seed"
+     ],
+     "graph_limit": 8,
+     "exact_limit": 1,
+     "max_depth": 2,
+     "reader": "a"
+    },
+    {
+     "op": "prune",
+     "ref": "memory:old"
+    }
+   ],
+   "probes": {
+    "r": {
+     "probe": "graph_recall",
+     "name": "r",
+     "seeds": [
+      "memory:seed"
+     ],
+     "graph_limit": 8,
+     "exact_limit": 1,
+     "max_depth": 2,
+     "reader": "a"
+    },
+    "tail_before": {
+     "probe": "candidate",
+     "of": "before",
+     "fact": "memory:tail"
+    },
+    "tail_candidate": {
+     "probe": "candidate",
+     "of": "r",
+     "fact": "memory:tail"
+    },
+    "tail_reported": {
+     "probe": "reported",
+     "of": "r",
+     "fact": "memory:tail"
+    },
+    "old_candidate": {
+     "probe": "candidate",
+     "of": "r",
+     "fact": "memory:old"
+    },
+    "old_refusal": {
+     "probe": "refusal",
+     "of": "r",
+     "fact": "memory:old"
+    },
+    "old_reported": {
+     "probe": "reported",
+     "of": "r",
+     "fact": "memory:old"
+    },
+    "graph_count": {
+     "probe": "graph_count",
+     "of": "r"
+    }
+   },
+   "expect": {
+    "tail_before": {
+     "eq": true
+    },
+    "tail_candidate": {
+     "eq": false
+    },
+    "tail_reported": {
+     "eq": false
+    },
+    "old_candidate": {
+     "eq": true
+    },
+    "old_refusal": {
+     "eq": "logical_memory_deleted"
+    },
+    "old_reported": {
+     "eq": false
+    },
+    "graph_count": {
+     "eq": 1
+    }
+   },
+   "clauses": [
+    {
+     "clause": "A governed-deleted generation is closed.",
+     "source": "docs/44-public-api-contract.md",
+     "observables": [
+      "tail_candidate",
+      "tail_reported",
+      "old_reported"
+     ]
+    },
+    {
+     "clause": "The same boundary applies at **every intermediate graph hop**: a multi-hop route must not reach an eligible fact by traversing an ineligible node, even if its final candidate could pass admission.",
+     "source": "docs/41-memory-isolation-domains-and-governed-crossing.md",
+     "observables": [
+      "tail_candidate"
+     ]
+    },
+    {
+     "clause": "This is a candidate-generation precondition under the existing isolation contract, **not** a new PAMA permission or relaxation of the neighbor's normal admission checks.",
+     "source": "docs/41-memory-isolation-domains-and-governed-crossing.md",
+     "observables": [
+      "old_candidate",
+      "old_refusal",
+      "graph_count"
+     ]
+    }
+   ],
+   "controls": [
+    "tail_before"
+   ]
+  },
+  {
+   "id": "G8-withheld-seed-not-expanded",
+   "invariants": [
+    "I1",
+    "I6"
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:old",
+     "text": "kiln schedule to be pruned",
+     "project": "a"
+    },
+    {
+     "op": "remember",
+     "ref": "memory:digest",
+     "text": "digest of the kiln schedule",
+     "project": "a",
+     "cite": [
+      "memory:old"
+     ]
+    },
+    {
+     "op": "remember",
+     "ref": "memory:tail",
+     "text": "live tile shelf note",
+     "project": "a"
+    },
+    {
+     "op": "relate",
+     "id": "r1",
+     "from": "memory:digest",
+     "to": "memory:tail",
+     "weight": 1.0,
+     "type": "supports"
+    },
+    {
+     "op": "prune",
+     "ref": "memory:old"
+    }
+   ],
+   "probes": {
+    "r": {
+     "probe": "graph_recall",
+     "name": "r",
+     "seeds": [
+      "memory:digest"
+     ],
+     "graph_limit": 8,
+     "exact_limit": 1,
+     "max_depth": 2,
+     "reader": "a"
+    },
+    "digest_admitted": {
+     "probe": "admitted",
+     "of": "r",
+     "fact": "memory:digest"
+    },
+    "tail_candidate": {
+     "probe": "candidate",
+     "of": "r",
+     "fact": "memory:tail"
+    },
+    "graph_count": {
+     "probe": "graph_count",
+     "of": "r"
+    }
+   },
+   "expect": {
+    "digest_admitted": {
+     "eq": false
+    },
+    "tail_candidate": {
+     "eq": false
+    },
+    "graph_count": {
+     "eq": 0
+    }
+   },
+   "clauses": [
+    {
+     "clause": "A retrieval route that *uses a seed memory's content, source references, or relations to discover other memories* must establish that the requester is eligible to inspect the **seed** before expanding it. Final admission of the discovered neighbor does not retroactively authorize the seed or its provenance.",
+     "source": "docs/41-memory-isolation-domains-and-governed-crossing.md",
+     "observables": [
+      "tail_candidate",
+      "graph_count"
+     ]
+    },
+    {
+     "clause": "A governed-deleted generation is closed.",
+     "source": "docs/44-public-api-contract.md",
+     "observables": [
+      "digest_admitted"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "G9-direct-live-path-survives-deleted-alternate",
+   "invariants": [
+    "I6",
+    "I8"
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:seed",
+     "text": "studio seed note",
+     "project": "a"
+    },
+    {
+     "op": "remember",
+     "ref": "memory:old",
+     "text": "kiln schedule to be pruned",
+     "project": "a"
+    },
+    {
+     "op": "remember",
+     "ref": "memory:tail",
+     "text": "live tile shelf note",
+     "project": "a"
+    },
+    {
+     "op": "relate",
+     "id": "r1",
+     "from": "memory:seed",
+     "to": "memory:old",
+     "weight": 1.0,
+     "type": "supports"
+    },
+    {
+     "op": "relate",
+     "id": "r2",
+     "from": "memory:old",
+     "to": "memory:tail",
+     "weight": 1.0,
+     "type": "supports"
+    },
+    {
+     "op": "relate",
+     "id": "r3",
+     "from": "memory:seed",
+     "to": "memory:tail",
+     "weight": 0.5,
+     "type": "supports"
+    },
+    {
+     "op": "prune",
+     "ref": "memory:old"
+    }
+   ],
+   "probes": {
+    "r": {
+     "probe": "graph_recall",
+     "name": "r",
+     "seeds": [
+      "memory:seed"
+     ],
+     "graph_limit": 8,
+     "exact_limit": 1,
+     "max_depth": 2,
+     "reader": "a"
+    },
+    "tail_admitted": {
+     "probe": "admitted",
+     "of": "r",
+     "fact": "memory:tail"
+    },
+    "tail_path": {
+     "probe": "path",
+     "of": "r",
+     "fact": "memory:tail"
+    },
+    "old_reported": {
+     "probe": "reported",
+     "of": "r",
+     "fact": "memory:old"
+    },
+    "old_refusal": {
+     "probe": "refusal",
+     "of": "r",
+     "fact": "memory:old"
+    }
+   },
+   "expect": {
+    "tail_admitted": {
+     "eq": true
+    },
+    "tail_path": {
+     "eq": [
+      "memory:seed",
+      "memory:tail"
+     ]
+    },
+    "old_reported": {
+     "eq": false
+    },
+    "old_refusal": {
+     "eq": "logical_memory_deleted"
+    }
+   },
+   "clauses": [
+    {
+     "clause": "A public projection withholds a deleted-generation identifier only from a reader whose own context could have read that generation.",
+     "source": "docs/44-public-api-contract.md",
+     "observables": [
+      "old_reported",
+      "tail_path"
+     ]
+    },
+    {
+     "clause": "This is a candidate-generation precondition under the existing isolation contract, **not** a new PAMA permission or relaxation of the neighbor's normal admission checks.",
+     "source": "docs/41-memory-isolation-domains-and-governed-crossing.md",
+     "observables": [
+      "tail_admitted",
+      "old_refusal"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "G10-eligibility-probe-ceiling-recorded",
+   "invariants": [
+    "I2"
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:seed",
+     "text": "studio seed note",
+     "project": "a"
+    },
+    {
+     "op": "remember_many",
+     "prefix": "memory:f",
+     "count": 129,
+     "project": "b",
+     "text": "other project note {i}"
+    },
+    {
+     "op": "relate_many",
+     "id_prefix": "rf",
+     "from": "memory:seed",
+     "to_prefix": "memory:f",
+     "count": 129,
+     "weight": 1.0
+    },
+    {
+     "op": "remember",
+     "ref": "memory:late",
+     "text": "late eligible detail",
+     "project": "a"
+    },
+    {
+     "op": "relate",
+     "id": "q",
+     "from": "memory:seed",
+     "to": "memory:late",
+     "weight": 0.5,
+     "type": "supports"
+    }
+   ],
+   "probes": {
+    "r": {
+     "probe": "graph_recall",
+     "name": "r",
+     "seeds": [
+      "memory:seed"
+     ],
+     "graph_limit": 8,
+     "exact_limit": 1,
+     "max_depth": 2,
+     "reader": "a"
+    },
+    "foreign_visible": {
+     "probe": "visible_with_prefix",
+     "of": "r",
+     "prefix": "memory:f"
+    },
+    "late_admitted": {
+     "probe": "admitted",
+     "of": "r",
+     "fact": "memory:late"
+    }
+   },
+   "expect": {
+    "foreign_visible": {
+     "eq": 0
+    }
+   },
+   "record": [
+    "late_admitted"
+   ],
+   "implementation_evidence": [
+    "late_admitted"
+   ],
+   "clauses": [
+    {
+     "clause": "Domain-ineligible matches are never caller-visible. They do not appear in `candidates`, `admissions`, ranking evidence, route provenance, or the ordinary `memory.recall` audit event, and no count of them is reported.",
+     "source": "docs/44-public-api-contract.md",
+     "observables": [
+      "foreign_visible"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "G11-no-relations-discover-nothing",
+   "invariants": [
+    "I7"
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:seed",
+     "text": "studio seed note",
+     "project": "a"
+    },
+    {
+     "op": "remember",
+     "ref": "memory:other",
+     "text": "unrelated note",
+     "project": "a"
+    }
+   ],
+   "probes": {
+    "r": {
+     "probe": "graph_recall",
+     "name": "r",
+     "seeds": [
+      "memory:seed"
+     ],
+     "graph_limit": 8,
+     "exact_limit": 1,
+     "max_depth": 2,
+     "reader": "a"
+    },
+    "seed_admitted": {
+     "probe": "admitted",
+     "of": "r",
+     "fact": "memory:seed"
+    },
+    "candidate_count": {
+     "probe": "candidate_count",
+     "of": "r"
+    },
+    "graph_count": {
+     "probe": "graph_count",
+     "of": "r"
+    }
+   },
+   "expect": {
+    "seed_admitted": {
+     "eq": true
+    },
+    "candidate_count": {
+     "eq": 1
+    },
+    "graph_count": {
+     "eq": 0
+    }
+   },
+   "clauses": [
+    {
+     "clause": "This is a candidate-generation precondition under the existing isolation contract, **not** a new PAMA permission or relaxation of the neighbor's normal admission checks.",
+     "source": "docs/41-memory-isolation-domains-and-governed-crossing.md",
+     "observables": [
+      "seed_admitted",
+      "candidate_count",
+      "graph_count"
+     ]
+    }
+   ]
+  }
+ ]
+}
