@@ -191,6 +191,7 @@ class NativeTypedGraphCandidateRetriever:
         eligible: Callable[[Fact], bool] | None = None,
         eligible_identity: Callable[[str, str], bool] | None = None,
         exclude=None,
+        opaque=None,
     ) -> list[GraphCandidateHit]:
         """Bounded traversal from eligible seeds through eligible nodes only.
 
@@ -198,7 +199,10 @@ class NativeTypedGraphCandidateRetriever:
         identity eligibility predicates, applied to every seed and every hop, so an
         ineligible node is neither reported nor traversed through.
         ``exclude`` (#777): nodes that may neither be reported nor traversed through
-        (a deleted generation confers no reachability).
+        (a deleted generation confers no reachability); it covers the seeds too (#836 A).
+        ``opaque`` (#836 B): nodes that may be reported as a candidate (admission then
+        refuses them and records why) but confer no reachability: a seed that is opaque
+        is not expanded and an opaque hop is never continued through.
         """
         if candidate_limit < 0:
             raise ValueError("graph candidate_limit must be non-negative")
@@ -214,9 +218,11 @@ class NativeTypedGraphCandidateRetriever:
             seed_fact = substrate.get_fact(seed_ref)
             if seed_fact is None or (eligible is not None and not eligible(seed_fact)):
                 continue
+            if (exclude is not None and exclude(seed_ref)) or (opaque is not None and opaque(seed_ref)):
+                continue  # #836 A: a withheld seed confers no reachability either
             for hit in self._traverse_seed(
                 substrate, seed_ref, group_id=group_id,
-                eligible=eligible, eligible_identity=eligible_identity, exclude=exclude,
+                eligible=eligible, eligible_identity=eligible_identity, exclude=exclude, opaque=opaque,
             ):
                 existing = best_by_candidate.get(hit.candidate_ref)
                 if existing is None or self._hit_key(hit) < self._hit_key(existing):
@@ -234,6 +240,7 @@ class NativeTypedGraphCandidateRetriever:
         eligible: Callable[[Fact], bool] | None = None,
         eligible_identity: Callable[[str, str], bool] | None = None,
         exclude=None,
+        opaque=None,
     ) -> list[GraphCandidateHit]:
         queue = deque(
             [
@@ -325,6 +332,8 @@ class NativeTypedGraphCandidateRetriever:
                     hop_count=len(next_relation_ids),
                 )
                 hits.append(hit)
+                if opaque is not None and opaque(next_ref):
+                    continue  # #836 B: reported as a candidate, never continued through
                 queue.append(
                     (
                         next_ref,
@@ -768,6 +777,12 @@ class ControlledRecallPlanner:
                 current = self.adapter.current_fact_uuid(logical_ref)
                 if current is not None and self.adapter.domain_eligible_identity(current, tenant, context):
                     graph_seed_refs.append(current)
+            # #777/#836 B: a deleted generation confers no reachability. The canonical traversal
+            # may still surface a withheld node as a candidate (admission refuses it and the
+            # audit keeps the refusal, the #777 pin) but never continues through it, and never
+            # starts from one (#836 A); the REPORTED paths come from a traversal that neither
+            # reports nor passes through withheld nodes.
+            withheld = getattr(self.adapter, "public_identifier_withheld", None)
             graph_results = self.graph_retriever.search(
                 substrate,
                 tuple(graph_seed_refs),
@@ -777,10 +792,8 @@ class ControlledRecallPlanner:
                 eligible_identity=lambda uuid, group_id: self.adapter.domain_eligible_identity(
                     uuid, group_id, context,
                 ),
+                opaque=None if withheld is None else (lambda ref: withheld(ref, context)),
             )
-            # #777: canonical candidates (above) are unchanged; the REPORTED paths come from
-            # a traversal that neither reports nor passes through deleted generations.
-            withheld = getattr(self.adapter, "public_identifier_withheld", None)
             reported = graph_results if withheld is None else self.graph_retriever.search(
                 substrate, tuple(graph_seed_refs), group_id=tenant,
                 candidate_limit=graph_budget.candidate_limit,
