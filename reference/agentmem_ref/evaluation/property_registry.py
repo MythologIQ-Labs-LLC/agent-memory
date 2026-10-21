@@ -254,7 +254,11 @@ def qualify_property_link(
     elif left[0] != right[0]:
         problems.add("schema_declares_different_properties")
     if problems:
-        return PropertyLinkQualification("abstain", tuple(sorted(problems)), None,
+        # An explicit signed schema disagreement is negative evidence for this
+        # proposed identity, unlike genuinely missing/unmapped labels.
+        status = ("refused" if "schema_declares_different_properties" in problems
+                  else "abstain")
+        return PropertyLinkQualification(status, tuple(sorted(problems)), None,
                                          sig_ok, pin_ok, ctx_ok)
     # Schema mapping is an independently authored declaration relative to
     # extractor text, but its real-world truth, publisher authority and
