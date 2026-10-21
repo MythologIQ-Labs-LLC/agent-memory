@@ -313,3 +313,15 @@ acceptance, lane / Gauntlet qualification, the `1.8.0` decision: unchanged block
 Sequencing note: this repair landed (15:06Z) before the owner's 15:09Z instruction not to change
 protected code until the pending benchmark execution was revision-bound; the pre-repair execution had
 already been bound at `30c57237`, and the repaired tree is re-executed rather than inherited.
+
+## 9. Candidate-only Gauntlet re-pin folded in (PR #836 comment 6321344001)
+
+After the lane evidence on the repaired tree had settled (`a0f0680c`), the owner's four commits on
+`review/836-v7-gauntlet-repin-no-ci` (`97368d67`: adapter contract `1.8.0` and source revision `2ad4cf23`,
+manifest adapter blob `0f2f18b0` and configuration digest `e4548a48`, contestant test pin, docs/82 posture)
+were taken unchanged by merge commit `4fb11a59`. Protected runtime tree unchanged (`f9b5ff9e`). Local
+qualification on the folded head (`gauntlet-4fb11a59/README.md`): tests 6/6, adapter valid, probe
+complete 3/3 with `exact_top1` 1.0 bound to `git-commit:2ad4cf23` / `git-blob:0f2f18b0`, negative
+source-mismatch control blocked by `runtime_identity_unverified`, checker TRANSITION. The same checks had
+been run before the fold-in from a detached worktree (`gauntlet-repin-precheck-97368d67/`). Still an
+unqualified transition probe: no B1/B2 publication, no security acceptance.
