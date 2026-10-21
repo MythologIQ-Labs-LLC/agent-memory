@@ -124,26 +124,31 @@ Rejected / bounded by controls (both trees):
 * Replays: no fixture or expectation change needed; all 13 families' observation digests are byte
   identical across `07cd8692`, `a055e0e` and `2ad4cf23`. `scope-safe-graph-discovery-v2` passes
   unchanged; its budgets do not reach the fan-out or slot boundary this defect needs.
-* **Benchmark qualification dependency (open).** The v7 lane evidence imported at `30c57237`
-  (AMB 3 rows, LongMemEval 4 rows, executed at `79172267` / runtime `07cd8692`) records
-  `execution-identity.declaration_blob = a78797cb`. At `2ad4cf23` both lanes pin `7de94f11`.
+* **Benchmark qualification dependency: found at the 15:40Z snapshot, closed by `5ed105d7`.** At the
+  review snapshot (branch head `2ad4cf23`) the v7 lane evidence imported at `30c57237` (AMB 3 rows,
+  LongMemEval 4 rows, executed at `79172267` / runtime `07cd8692`) recorded
+  `execution-identity.declaration_blob = a78797cb` while both lanes pinned `7de94f11`;
   `scripts/import_amb_lane_evidence.py` refuses an import whose executed declaration blob differs from
-  the lane pin, and `checks/import-verification.txt` recorded `declaration_blob: true` only against the
-  superseded pin. The imported lane evidence is therefore no longer revision-bound to the amended
-  runtime: **AMB PrecisionMemBench and LongMemEval_S v7 must be re-executed and re-imported at
-  `2ad4cf23`** (expected observationally identical: the lanes are single-scope with no deleted
-  generations, and the repaired path is reached only when an opaque neighbour exists), or the
-  acceptance record must state why the `07cd8692` execution is accepted for a different protected blob.
-  The public Gauntlet probe at the amended head has the same dependency.
+  the lane pin, so that evidence was no longer revision-bound to the amended runtime, and this review
+  reported the lanes as needing re-execution. **Update (check-in 16:33Z, verified against the branch):**
+  commits `9d0ba703` and `5ed105d7` on the #836 branch re-executed both lanes on the repaired tree and
+  moved the `79172267` rows aside; at `5ed105d7` the protected tree and declaration are unchanged from
+  `2ad4cf23` (`recall_control.py` `9fa861c3`, declaration `7de94f11`), all 7 lane evidence rows record
+  `declaration_blob = 7de94f11` (AMB rows at `9d0ba703`, LongMemEval rows at `2ad4cf23`/`9d0ba703`),
+  `checks/import-verification.txt` is VERIFIED 7/7 with `failures: 0`, and the lane freeze-guard and
+  importer tests (15) pass. The owner reports the two LongMemEval `mem0_explicit` comparator rows and
+  the public Gauntlet probe as still pending; this review did not execute any lane itself.
 * Unaffected: PAMA and baseline authority; frozen `3edbb9ad` / `1c0e5531` trees; v1-v6 records;
   accepted gold, fixtures and -v1 replay evidence; the #777 audit pin (`GraphProjection` unchanged).
 
 ## 7. Recommendation
 
-**CHANGES REQUIRED, already satisfied in code by `2ad4cf23`; one qualification item outstanding.**
-The reviewer's hypothesis is confirmed and correctly repaired on the #836 branch; this review's
-independent repair converged on the same mechanism and the owner's repair passes every independent
-receipt here. What remains before v7 sign-off is procedural, not code: re-execute and re-import both
-v7 lanes (and the Gauntlet probe) at `2ad4cf23`, since the imported lane evidence binds the superseded
-declaration blob. The probe-ceiling completeness trade-off is the one accepted bounded-work trade-off
-and is now pinned by a test rather than implied. No v7 acceptance is claimed or implied by this review.
+**CHANGES REQUIRED, satisfied in code by `2ad4cf23`; the lane re-binding this review flagged at
+15:40Z was closed by `5ed105d7` (verified at the 16:33Z check-in).** The reviewer's hypothesis is
+confirmed and correctly repaired on the #836 branch; this review's independent repair converged on the
+same mechanism and the owner's repair passes every independent receipt here. For the opaque-budget
+question nothing further is required of the runtime. Still outstanding for v7 per the owner's own
+record, outside this review's scope: the two LongMemEval `mem0_explicit` comparator rows, the public
+Gauntlet probe, the `1.8.0` contract decision and the owner's security sign-off. The probe-ceiling
+completeness trade-off is the one accepted bounded-work trade-off and is now pinned by a test rather
+than implied. No v7 acceptance is claimed or implied by this review.
