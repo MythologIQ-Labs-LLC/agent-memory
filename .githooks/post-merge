@@ -1,0 +1,11 @@
+#!/bin/sh
+# `git merge` invokes post-merge, never post-commit. Re-run the same local
+# refresh with the pre-merge HEAD as the diff base so that fast-forward and
+# true merge commits both count their merged evidence changes.
+set -eu
+if [ "${1:-0}" = "1" ]; then
+  # Squash merge: nothing is committed yet; the later `git commit` runs post-commit.
+  exit 0
+fi
+cd "$(git rev-parse --show-toplevel)"
+BENCHMARK_REFRESH_BASE=ORIG_HEAD exec .githooks/post-commit
