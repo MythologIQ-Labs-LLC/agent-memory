@@ -1997,6 +1997,12 @@ class GovernedMemoryAdapter:
         """#691: the logical memory reference a fact was written for, if known. Read-only."""
         return self._fact_memory.get(fact_uuid)
 
+    def allocate_event_id(self) -> str:
+        """#691: the next governance identifier, for an audit record the facade appends to
+        ``events`` inside the runtime's transactional seam (identifier state is governance
+        state and must advance with the generation that publishes the record)."""
+        return self._ids.next()
+
     def has_governed_deletions(self) -> bool:
         """Whether any governed deletion exists, so a public projection may need to withhold."""
         return bool(self._tombstones)

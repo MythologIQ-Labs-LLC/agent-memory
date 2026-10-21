@@ -192,5 +192,97 @@ def build_package(
     }
 
 
-__all__ = ["CHARS_PER_TOKEN", "DEFAULT_MAX_ITEMS", "DEFAULT_MAX_CHARS_PER_ITEM", "DEFAULT_MAX_TOTAL_CHARS", "INSTRUCTION_POLICY",
-           "PACKAGE_SCHEMA", "PACKAGE_VERSION", "build_package", "token_estimate", "validate_budgets"]
+DELIVERY_EVENT_TYPE = "memory.context_delivery"
+DELIVERY_EVENT_VERSION = "1.0.0"
+
+
+def package_digest(package: Mapping[str, Any]) -> str:
+    """sha256 of the package's canonical JSON, excluding the ``audit`` block (which carries the
+    receipt's own identifiers). A digest, never the text."""
+
+    import json
+
+    body = {key: value for key, value in package.items() if key != "audit"}
+    return hashlib.sha256(json.dumps(body, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")).hexdigest()
+
+
+def delivery_event(
+    recall_document: Mapping[str, Any],
+    package: Mapping[str, Any],
+    context: Any,
+    *,
+    event_id: str,
+    timestamp: str,
+    recall_event: Mapping[str, Any] | None,
+) -> dict:
+    """The content-delivery audit record for one ``recall_context`` call (memory-audit-event
+    schema, event type ``memory.context_delivery``).
+
+    It binds to the recall that selected the identifiers (``correlation_id`` and
+    ``causation_id`` are the recall event's correlation and id) and to the admission decisions
+    of the returned facts (``recall_decision_ids``), and records per returned identifier whether
+    content was delivered (``resolved``/``truncated``, with the content digest and delivered
+    length) or not (``omitted_budget``/``unresolved``/``unsupported``, with the reason token the
+    caller saw). It never carries memory text, and it names only identifiers the recall already
+    returned to this caller. ``principal`` is the handle's host-declared actor id; the payload
+    says so (``actor_binding``), because the facade does not authenticate principals.
+    """
+
+    admissions = recall_document.get("admissions") or {}
+    returned = list(recall_document.get("returned") or ())
+    outcomes: dict[str, dict] = {}
+    counts: dict[str, int] = {}
+    for item in package.get("items") or ():
+        state = item["state"]
+        counts[state] = counts.get(state, 0) + 1
+        outcome: dict[str, Any] = {"state": state}
+        if state in ("resolved", "truncated"):
+            provenance = item.get("provenance") or {}
+            outcome["content_sha256"] = provenance.get("content_sha256")
+            outcome["delivered_chars"] = len(item.get("content") or "")
+        elif item.get("reason") is not None:
+            outcome["reason"] = item["reason"]
+        outcomes[item["fact_ref"]] = outcome
+    delivered = sum(counts.get(state, 0) for state in ("resolved", "truncated"))
+    budget = dict(package.get("budget") or {})
+    event = {
+        "schema_version": "1.0.0",
+        "event_id": event_id,
+        "event_type": DELIVERY_EVENT_TYPE,
+        "event_version": DELIVERY_EVENT_VERSION,
+        "timestamp": timestamp,
+        "component": "public-facade",
+        "correlation_id": (recall_event or {}).get("correlation_id") or event_id,
+        "principal": getattr(context, "principal_ref", None),
+        "signal": {
+            "signal_type": "context_delivery",
+            "signal_semantics": f"{delivered} of {len(returned)} returned facts delivered as content",
+        },
+        "payload": {
+            "package_version": package.get("package_version"),
+            "package_status": package.get("status"),
+            "consistency": package.get("consistency"),
+            "actor_binding": "host_declared",
+            "target_domain_refs": list(getattr(context, "target_domain_refs", ()) or ()),
+            "project_ref": getattr(context, "project_ref", None),
+            "task_ref": getattr(context, "task_ref", None),
+            "purpose": getattr(context, "purpose", None),
+            "recall_bound": recall_event is not None,
+            "recall_decision_ids": {ref: (admissions.get(ref) or {}).get("decision_id") for ref in returned},
+            "returned_count": len(returned),
+            "delivered_count": delivered,
+            "outcomes": outcomes,
+            "counts": counts,
+            "budget": {key: budget.get(key) for key in ("max_items", "max_chars_per_item", "max_total_chars", "max_tokens",
+                                                        "used_chars", "used_tokens_estimate")},
+            "package_sha256": package_digest(package),
+        },
+    }
+    if recall_event is not None and recall_event.get("event_id"):
+        event["causation_id"] = recall_event["event_id"]
+    return event
+
+
+__all__ = ["CHARS_PER_TOKEN", "DEFAULT_MAX_ITEMS", "DEFAULT_MAX_CHARS_PER_ITEM", "DEFAULT_MAX_TOTAL_CHARS", "DELIVERY_EVENT_TYPE",
+           "DELIVERY_EVENT_VERSION", "INSTRUCTION_POLICY", "PACKAGE_SCHEMA", "PACKAGE_VERSION", "build_package", "delivery_event",
+           "package_digest", "token_estimate", "validate_budgets"]

@@ -96,6 +96,18 @@ def _withheld_predicate(adapter, context=None) -> Callable[[str], bool]:
     return withheld
 
 
+def _first_recall_event_since(events, index: int, context) -> dict | None:
+    """The ``memory.recall`` audit event of the governed recall that ``recall_context`` ran:
+    the first one appended for this principal after ``index`` (the event count before the
+    recall), under the same hold of the serialization lock. A shadow recall-control pass may
+    append a later recall event of its own; it is not the delivery's basis. ``None`` only if
+    the adapter recorded no recall event at all."""
+    for event in events[index:]:
+        if event.get("event_type") == "memory.recall" and event.get("principal") == context.principal_ref:
+            return event
+    return None
+
+
 def _mentions(value: Any, withheld: Callable[[str], bool]) -> bool:
     if isinstance(value, str):
         return withheld(value)
@@ -1071,8 +1083,9 @@ class AgentMemory:
         if not isinstance(max_items, int) or isinstance(max_items, bool) or max_items < 1:
             raise ValueError("max_items must be a positive integer")
         context_package.validate_budgets(max_chars_per_item, max_total_chars, max_tokens)
-        document, context = self._recall_document_and_context(query, public=True, budget=max_items, **recall_kwargs)
         adapter = self.runtime.adapter
+        events_before = len(adapter.events)
+        document, context = self._recall_document_and_context(query, public=True, budget=max_items, **recall_kwargs)
         substrate = adapter.checkpoint_substrate()
         withheld = _withheld_predicate(adapter, context)
         admissions = document.get("admissions") or {}
@@ -1115,8 +1128,32 @@ class AgentMemory:
         package = context_package.build_package(
             document, resolve, max_chars_per_item=max_chars_per_item,
             max_total_chars=max_total_chars, max_tokens=max_tokens)
+        # #691 content-delivery audit: the recall event proves identifiers were recalled; this
+        # receipt proves which of them were delivered as content, bound to that recall and to
+        # the admission decisions, without the text. It is published through the runtime's
+        # transactional seam as its own durable generation; if it cannot be recorded, no
+        # content is delivered.
+        package["audit"] = self._record_context_delivery(document, package, context, events_before)
         receipts.validate(context_package.PACKAGE_SCHEMA, package)
         return package
+
+    def _record_context_delivery(self, document: dict, package: dict, context, events_before: int) -> dict:
+        adapter = self.runtime.adapter
+        durable = getattr(self.runtime, "durable_runtime", None)
+        seam = getattr(durable, "run_governed_read", None)
+
+        def record() -> dict:
+            event = context_package.delivery_event(
+                document, package, context,
+                event_id=adapter.allocate_event_id(), timestamp=adapter.now(),
+                recall_event=_first_recall_event_since(adapter.events, events_before, context),
+            )
+            receipts.validate("memory-audit-event.schema.json", event)
+            adapter.events.append(event)
+            return {"delivery_event_id": event["event_id"], "recall_event_id": event.get("causation_id"),
+                    "correlation_id": event["correlation_id"]}
+
+        return seam(record) if callable(seam) else record()
 
     @_serialized
     def _canonical_recall(self, query: str, **kwargs) -> dict:

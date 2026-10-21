@@ -291,6 +291,29 @@
     },
     "authority_effect": {
       "const": "none"
+    },
+    "audit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "delivery_event_id",
+        "correlation_id"
+      ],
+      "description": "The content-delivery audit receipt this package was delivered under (memory-audit-event memory.context_delivery): the receipt's event id, the recall event it is caused by, and the shared correlation id. Identifiers only.",
+      "properties": {
+        "delivery_event_id": {
+          "type": "string"
+        },
+        "recall_event_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "correlation_id": {
+          "type": "string"
+        }
+      }
     }
   },
   "allOf": [
