@@ -1,0 +1,38 @@
+run_786_security_replays.py exit=0
+cross-scope-write-authority-denial-v2: PASS (12/12 cases) report sha256 21030785669c1a6ebe
+deleted-lineage-generations-and-restart-v2: PASS (8/8 cases) report sha256 6a42db59929b610
+public-tombstone-redaction-and-observer-separation-v2: PASS (8/8 cases) report sha256 34b3
+run_786_security_replays_dsl2.py exit=0
+cross-scope-write-authority-denial-v3: PASS (13/13 cases) report sha256 9d442fd7e2e3d96abe
+deleted-lineage-generations-and-restart-v3: PASS (10/10 cases) report sha256 66641e3e07ea3
+public-tombstone-redaction-and-observer-separation-v3: PASS (8/8 cases) report sha256 7f84
+run_786_security_replays_dsl3.py exit=0
+evidence-reference-authorization-v1: PASS (13/13 cases) report sha256 074e1ca25c81eb0e4c21
+run_786_security_replays_dsl4.py exit=0
+scope-safe-graph-discovery-v2: PASS (11/11 cases) report sha256 baa16118a33ea9979eefacfcd8
+644 exit=0
+typed-sufficiency-noninterference-and-negative-controls-v1: PASS (19/19 cases) report sha2
+governed-persisted-typed-slot-sufficiency-admission-recheck-v1: PASS (18/18 cases) report 
+governed-admitted-typed-value-coherence-v1: PASS (16/16 cases) report sha256 b3332a87b6b13
+committed-governed-transition-witness-v1: PASS (12/12 cases) report sha256 a0b8c673dc4da1d
+same-slot-safety-counterevidence-and-immutable-stop-gate-v1: PASS (39/39 cases) report sha
+SAME cross-scope-write-authority-denial-v2
+SAME cross-scope-write-authority-denial-v3
+SAME deleted-lineage-generations-and-restart-v2
+SAME deleted-lineage-generations-and-restart-v3
+SAME evidence-reference-authorization-v1
+SAME public-tombstone-redaction-and-observer-separation-v2
+SAME public-tombstone-redaction-and-observer-separation-v3
+SAME scope-safe-graph-discovery-v2
+SAME committed-governed-transition-witness-v1
+SAME governed-admitted-typed-value-coherence-v1
+SAME governed-persisted-typed-slot-sufficiency-admission-recheck-v1
+SAME same-slot-safety-counterevidence-and-immutable-stop-gate-v1
+SAME typed-sufficiency-noninterference-and-negative-controls-v1
+same 13 diff 0
+verify786 exit=0
+[('cross-scope-write-auth', 'VERIFIED', True), ('deleted-lineage-genera', 'VERIFIED', True), ('public-tombstone-redac', 'VERIFIED', True), ('evidence-reference-aut', 'VERIFIED', True)] True
+verify644 exit=0
+[('typed-sufficiency-noni', 'VERIFIED', True), ('governed-persisted-typ', 'VERIFIED', True), ('governed-admitted-type', 'VERIFIED', True), ('committed-governed-tra', 'VERIFIED', True), ('same-slot-saf
+
+[exited with code 0]

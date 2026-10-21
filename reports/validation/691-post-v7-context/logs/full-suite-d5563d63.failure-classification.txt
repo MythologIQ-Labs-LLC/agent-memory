@@ -1,0 +1,30 @@
+Full reference suite at d5563d63 (CPython 3.12.3, reference/requirements.txt):
+5 failed, 3197 passed, 27 skipped, 1 xfailed, 2186 subtests passed in 321.55s
+
+Each failure re-run in isolation afterwards:
+
+1. test_786_cross_scope_write_authority.py::CompetingWriters::test_threads_racing_as_both_projects_never_move_the_owners_head
+   3/3 PASS when run alone (2 passed in 0.85s, 0.96s, 0.72s). The full-suite run shared the container
+   with the wheel/sdist build and the replay re-execution; the test is a thread race with timing
+   assumptions. Not reproducible; not attributed to this tranche.
+
+2. test_770_v7_lane_freeze_independent.py::ReplayEvidenceFreshness::test_lane_records_do_not_make_replay_evidence_stale
+3. test_770_v7_lane_freeze_independent.py::ReplayEvidenceFreshness::test_a_runtime_edit_still_makes_replay_evidence_stale
+   The committed #644 replay evidence (reports/validation/644-v7-replays/) pins the v7 protected runtime;
+   this branch changes that runtime, so the verifier reports every record STALE
+   ("runtime files differ from the evidence source commit") and runtime_changed_since(baseline) is True.
+   This is the guard working as designed on a successor tranche; it clears only when the successor
+   declaration lands and the committed replay evidence is regenerated at that revision. The same
+   families re-executed on this head PASS with observation digests identical to the v7 record
+   (replays/).
+
+4. test_644_v7_gauntlet_identity.py::ImportedRuntimeIdentity::test_own_checkout_at_frozen_revision_is_served
+   The v7 Gauntlet adapter pins FROZEN_RUNTIME_REVISION 2ad4cf23 / tree f9b5ff9e; this checkout's
+   runtime tree differs, so the fail-closed guard answers runtime_identity_unverified. By design;
+   a successor adapter/manifest re-pin is part of the successor publication.
+
+5. test_benchmark_integration_contract.py::BenchmarkIntegrationContractTests::test_evaluation_only_change_keeps_runtime_baseline_equivalence
+   check_runtime_baseline_equivalence --candidate HEAD exits 1: two undeclared protected files
+   (api/context_package.py, context_package.py) and two declared blobs moved (api/surface.py,
+   runtime/adapter.py). Expected: this tranche edits protected source after the v7 declaration and
+   deliberately does not amend the frozen v7 declaration.
