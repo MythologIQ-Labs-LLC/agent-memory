@@ -4,6 +4,8 @@
 
 <div align="center">
 
+<img src="assets/brand/agent-memory.webp" alt="Agent Memory official product logo" width="112" height="112">
+
 # 01010001 Agent Memory
 
 <p><sub><strong>Q Agent Memory</strong></sub></p>
