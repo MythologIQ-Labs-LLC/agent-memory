@@ -21,6 +21,7 @@ EXPECT = {  # executing revision -> declaration blob the lane pinned at that rev
     "2ad4cf23d366fc784a486b0245550230e64bfa25": "7de94f11d7d521f07d2fe22317662ac6f92f89fa",
     "9d0ba703c98cabb94933545a553c8c6ae1ab578b": "7de94f11d7d521f07d2fe22317662ac6f92f89fa",
     "5ed105d7030d5860f877b03a28a9201281d8d55b": "7de94f11d7d521f07d2fe22317662ac6f92f89fa",
+    "77c06a290ea646f3ff2b527491de2af9bf6f62f6": "7de94f11d7d521f07d2fe22317662ac6f92f89fa",
 }
 roots = {"amb": repo / "reports/benchmarks/amb/amb-precisionmembench-retrieval-v7",
          "lme": repo / "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v7"}

@@ -229,7 +229,7 @@ python3 scripts/verify_imports.py . <runs>
 | LongMemEval | lexical_overlap, session | `2ad4cf23` | **500/500/500**; 418/419; 793/794 | nDCG_any@10 0.792944 | wall 3.9 s |
 | LongMemEval | lexical_overlap, turn | `9d0ba703` | **500/500/500**; 319/419; 680/832 | nDCG_any@10 0.559738 | wall 5.1 s |
 | LongMemEval | mem0_explicit, turn | `5ed105d7` | ranked_top **453/500**, metrics 500/500, cross-fact 500/500; complete recall@50 375/419 (= v6); required evidence 776/832 (= v6); 47 questions reorder, see below | nDCG/recall metrics all = v6 | wall 3223 s, ingest 2507 s, recall 713 s total / 3.5 s max |
-| LongMemEval | mem0_explicit, session | pending clean re-run | two runs on the repaired tree were each 500/500 equal to v6 (ranked_top, metrics, cross-fact; complete recall@50 378/419, required 746/794) but the importer refused both stamps: the first because an evidence commit landed mid-run, the second because tracked files were edited mid-run (`report was produced from a dirty or unknown worktree`); re-run with nothing touched, recorded in the next commit | | |
+| LongMemEval | mem0_explicit, session | `77c06a29` | **500/500/500**; complete recall@50 378/419 (= v6); required evidence 746/794 (= v6) | all = v6 | wall 1155 s, ingest 1031 s, recall 122 s total / 0.7 s max |
 
 Aggregates, by-question-type, currentness and governance blocks equal to v6 in every executed row; lost
 complete recall: none; lost required evidence: none; runtime errors: none. The LongMemEval rows ran with
@@ -258,15 +258,15 @@ for this row: near-tied vector scores ordering differently under different float
 embedder revision identical). Not tuned, not root-caused here; a counterexample for nothing in the
 candidate. The first session-plane run of this row (500/500 equal to v6) was refused by the importer
 because an evidence commit landed while it ran and the runner's own revision stamp no longer matched its
-identity; the re-run was refused for a dirty worktree stamp (files edited mid-run); a third run with nothing touched follows in the next commit.
+identity; the re-run was refused for a dirty worktree stamp (files edited mid-run); the third run, with nothing touched, is the imported `77c06a29` row above (500/500 equal to v6, as were the two refused runs).
 
 ### 10.3 Checks on the repaired-tree rows
 
 | Check | Result | Record |
 |---|---|---|
-| Importers, fetch enabled | 7 rows admitted (fixtures and dataset re-fetched and re-hashed); checker TRANSITION; declaration blob `7de94f11` equals the lane pin | lane roots |
+| Importers, fetch enabled | 9 rows admitted (fixtures and dataset re-fetched and re-hashed); checker TRANSITION; declaration blob `7de94f11` equals the lane pin | lane roots |
 | Cross-fact attribution (E1), lane roots as committed | AMB `EQUAL: 77`; LongMemEval `EQUAL: 1000`; 0 unattributed | `repaired-head/cross-fact-*-repaired.json` |
-| Import re-verification (`scripts/verify_imports.py`, now keyed by executing revision) | 7/7 VERIFIED (and the 7 superseded rows re-verify under their own revision) | `checks/import-verification.txt` |
+| Import re-verification (`scripts/verify_imports.py`, now keyed by executing revision) | 9/9 VERIFIED (and the 7 superseded rows re-verify under their own revision) | `checks/import-verification.txt` |
 | Lane guard / importer tests after the move | 145 passed; the same two pre-existing `ReplayEvidenceFreshness` guards fail | `logs/lane-guard-tests-venv312-lme.txt` (same outcome as §4) |
 | Per-row comparison records, driver logs, raw identities | | `repaired-head/` |
 
@@ -275,6 +275,6 @@ identity; the re-run was refused for a dirty worktree stamp (files edited mid-ru
 | Lane | Verdict |
 |---|---|
 | `amb-precisionmembench-retrieval-v7` | **QUALIFIED** (exact parity with accepted v6 in all three frozen rows at `9d0ba703`) |
-| `longmemeval-s-retrieval-parity-v7` | **QUALIFIED for the control and baseline rows** on both planes; the `mem0_explicit` comparator rows are pending (§10.2) |
+| `longmemeval-s-retrieval-parity-v7` | **QUALIFIED** for the control and baseline rows on both planes (500/500 equal to v6); all six frozen rows executed. Comparator finding, not a candidate finding: the `mem0_explicit` turn row reorders 47/500 questions with no gold movement and every metric equal (§10.2), the environment class the lane allows for that row and the pattern the hosted execution already recorded |
 
 As in §7: execution evidence, not acceptance; `TRANSITION` is not `PASS`; v6 remains the published baseline.
