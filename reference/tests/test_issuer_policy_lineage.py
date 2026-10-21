@@ -307,6 +307,41 @@ class PolicyLineageTests(unittest.TestCase):
             report.head_digest = start.head_digest
         self.assert_denied_authority(report)
 
+    def test_d6_input_and_receipt_mutation_do_not_rewrite_history(self):
+        original = self.timeline.report()
+        supplied = self.revised("policy-rev:2")
+        event = self.timeline.append(supplied, expected_head=original.head_digest)
+        frozen_report = self.timeline.report()
+        # Deliberately bypass frozen dataclasses to simulate hostile callers.
+        object.__setattr__(supplied, "revision_ref", "policy-rev:attacker")
+        object.__setattr__(event.snapshot, "revision_ref", "policy-rev:forged")
+        object.__setattr__(frozen_report.events[0].snapshot,
+                           "revision_ref", "policy-rev:forged-again")
+        object.__setattr__(frozen_report.genesis_snapshot,
+                           "policy_ref", "policy:forged")
+        after = self.timeline.report()
+        self.assertEqual(after.head_digest, frozen_report.head_digest)
+        self.assertEqual(after.events[0].snapshot.revision_ref, "policy-rev:2")
+        self.assertEqual(after.genesis_snapshot.policy_ref, "policy:opaque")
+        self.assertEqual(replay_policy_lineage(
+            after.genesis_snapshot, after.events
+        ), after)
+        self.assert_denied_authority(after)
+
+    def test_d7_nonadjacent_policy_revision_identifier_cannot_recur(self):
+        start = self.timeline.report()
+        self.timeline.append(self.revised("policy-rev:2"),
+                             expected_head=start.head_digest)
+        one = self.timeline.report()
+        self.timeline.append(self.revised("policy-rev:3"),
+                             expected_head=one.head_digest)
+        before = self.timeline.report()
+        with self.assertRaisesRegex(PolicyLineageError, "cannot be reused"):
+            self.timeline.append(self.revised("policy-rev:2"),
+                                 expected_head=before.head_digest)
+        self.assertEqual(self.timeline.report(), before)
+
+
 
 if __name__ == "__main__":
     unittest.main()
