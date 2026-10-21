@@ -1,0 +1,8 @@
+....................................../home/user/agent-memory/reference/agentmem_ref/state/sqlite_substrate.py:379: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f07a594f100>
+  per_bucket = {section: [[] for _ in range(GOVERNANCE_BUCKETS)] for section in GOVERNANCE_MAP_SECTIONS}
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+....................
+----------------------------------------------------------------------
+Ran 58 tests in 18.119s
+
+OK
