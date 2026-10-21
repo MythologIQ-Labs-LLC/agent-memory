@@ -5,7 +5,7 @@ const url=value=>{try{const u=new URL(String(value));return u.protocol==='https:
 const pct=n=>typeof n==='number'?(100*n).toFixed(2)+'%':'Not measured';
 const pp=n=>typeof n==='number'?(100*n).toFixed(2)+' pp':'—';
 const friendly=s=>String(s).replaceAll('_',' ').replaceAll('-',' ').replace(/\b\w/g,c=>c.toUpperCase());
-const stateLabel=s=>({not_run:'Not run',measured:'Measured',published_reference:'Published only'})[s]||s;
+const stateLabel=s=>({not_run:'No accepted run',measured:'Accepted measured',published_reference:'Published context'})[s]||s;
 let catalog=null;
 function setOptions(select,items){select.replaceChildren();for(const it of items){const opt=document.createElement('option');opt.value=it.value;opt.textContent=it.label;select.append(opt)}}
 function renderMetric(){
