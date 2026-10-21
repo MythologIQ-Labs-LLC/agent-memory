@@ -101,13 +101,24 @@ class PropertyRegistryTests(unittest.TestCase):
         self.assertEqual(result.status, "schema_candidate")
         self.assert_no_authority(result)
 
-    def test_labels_in_distinct_properties_abstain(self):
+    def test_k01_declared_distinct_active_properties_refuse(self):
         p = replace(self.oldnew, newer=replace(self.oldnew.newer,
                                                property_ref="field:priority"))
         v = self.qualify(proposal=p)
-        self.assertEqual(v.status, "abstain")
+        self.assertEqual(v.status, "refused")
         self.assertIn("schema_declares_different_properties", v.reason_codes)
         self.assertIsNone(v.declared_property_ref)
+        self.assertTrue(v.signature_valid)
+        self.assertTrue(v.key_pin_matches)
+        self.assert_no_authority(v)
+
+    def test_k02_unknown_label_remains_underdetermined(self):
+        p = replace(self.oldnew, newer=replace(self.oldnew.newer,
+                                               property_ref="field:unknown"))
+        v = self.qualify(proposal=p)
+        self.assertEqual(v.status, "abstain")
+        self.assertIn("schema_label_unmapped", v.reason_codes)
+        self.assertNotIn("schema_declares_different_properties", v.reason_codes)
         self.assert_no_authority(v)
 
     def test_unknown_property_label_never_uses_fuzzy_match(self):
