@@ -1,6 +1,6 @@
 # Cumulative runtime candidate: security/durability lineage + PR #835 graph discovery, one v7 successor declaration
 
-**Status: READY FOR INDEPENDENT REVIEW.** Not merged, not published, not security-accepted. No
+**Status: READY FOR INDEPENDENT REVIEW (amended head `07cd8692`, section 7).** Not merged, not published, not security-accepted. No
 hosted Actions were run; every commit is `[skip ci]`; every result below was produced locally on
 the exact head named. This folder is evidence for the integration decision recorded on
 [#674](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/674#issuecomment-6309464680).
@@ -16,7 +16,10 @@ the exact head named. This folder is evidence for the integration decision recor
 | `2c447c4` | merge of the lineage onto `main` (merge commit; conflict in `docs/ARCHITECTURE_INDEX.md` only) |
 | `6f1f39b` | merge of PR #835 (merge commit; conflicts in `runtime/recall_control.py`, `tests/test_recall_control.py`) |
 | `e656776f` | cumulative v7 declaration, register pointer, v7 candidate lanes re-pinned |
-| **`2d83db0e6eafc4ab12bfe91ad0314b85103dfe6f`** | **the candidate head** (declaration names only replays with frozen fixtures; lanes re-pinned). Protected tree unchanged since `6f1f39b`. |
+| `2d83db0e6eafc4ab12bfe91ad0314b85103dfe6f` | the first candidate head (declaration names only replays with frozen fixtures; lanes re-pinned). Protected tree unchanged since `6f1f39b`. Sections 2-6 describe this head. |
+| `86902ffa`, `b5d2dbd2` | #836 review A/B: preregistered tests, fail-first on `2d83db0e` (3 REDs; harness correction disclosed) |
+| `6f8d98ee` | #836 review A/B runtime repair: `runtime/recall_control.py` only (blob `e55d3ca3` → `c16452ef`) |
+| `cba2c9c1`, **`07cd8692bcf26fd677c71f805f04f73a6332ed91`** | the scope-safe graph discovery replay generation (DSL/4; -v1 frozen first, -v2 supersedes it with a recorded reason), verifier dispatch, tests; **the amended candidate head**: declaration re-pinned (21 blobs, now also naming `scope-safe-graph-discovery-v2` under `security_replay`), lanes re-pinned. Protected tree unchanged since `6f8d98ee`. Section 7. |
 
 Neither frozen branch, nor PR #805/#815, nor any historical fixture or evidence folder was modified.
 Published v6 record, boundary and qualification are byte-unchanged.
@@ -154,3 +157,94 @@ benchmark denominator or historical score was touched.
 
 Disposition: **READY FOR INDEPENDENT REVIEW**; **BLOCKED for acceptance** on the lane, Gauntlet and
 graph-replay evidence and the security sign-off.
+
+## 7. Amendment after the independent review of `3d28a5ec` (PR #836 comment 6317441131)
+
+The review raised two source-supported hypotheses on the one hand-reconciled traversal and required a
+genuine replay for #835's graph discovery in the declaration. All three are closed on the amended head
+**`07cd8692bcf26fd677c71f805f04f73a6332ed91`**; everything below ran on that exact head or, where the
+runtime tree is identical, on `6f8d98ee`.
+
+### 7.1 Findings A and B: preregistered, reproduced, repaired
+
+`reference/tests/test_836_graph_exclusion_boundaries.py` (committed before any runtime change, `86902ffa`):
+
+| Test | Contract | `2d83db0e` (unmodified) | after `6f8d98ee` |
+|---|---|---|---|
+| A1 retriever: `exclude` covers the seed | an excluded seed is neither traversed nor reported | **RED**: the live target was reported | GREEN |
+| A2 governed route: a withheld seed (live head whose derivation binds a deleted source, #776/#809) is not expanded | docs/44 #777 closed generation; docs/41 seed boundary | **RED**: the neighbour was discovered | GREEN |
+| B sole deleted bridge `seed → deleted → live tail` | a deleted generation confers no reachability; the deleted direct neighbour keeps its canonical refusal (#777 audit pin) | **RED**: the tail was reached through the bridge | GREEN |
+| B control: live tail reachable before the deletion | — | GREEN | GREEN |
+| B control: an other-project deleted bridge | #835 eligibility | GREEN | GREEN |
+
+Disclosed harness defect: A1's first version searched under the composition tests' tenant while its
+in-memory facts carried the typed-graph tests' tenant, so its first RED was for the wrong reason
+(`review-836/fail-first-2d83db0e.txt`); corrected at `b5d2dbd2` with no expectation changed and the
+fail-first re-run (`review-836/fail-first-2d83db0e-harness-corrected.txt`): the same three REDs, each
+for the predicted reason.
+
+**Repair (`6f8d98ee`, `runtime/recall_control.py` only).** `NativeTypedGraphCandidateRetriever.search()`
+applies `exclude` to the seeds (A). A new `opaque` predicate names a node that may be reported as a
+candidate (admission then refuses it and the audit keeps the refusal) but confers no reachability: an
+opaque seed is not expanded and an opaque hop is never continued through. `ControlledRecallPlanner`
+passes the reader-context `public_identifier_withheld` predicate as `opaque` to the **canonical**
+traversal (B); the reported traversal keeps `exclude` and the #835 eligibility predicates unchanged.
+Doctrinal basis, as the review asked: docs/44 (#777) "a governed-deleted generation is closed" and "a
+deleted generation confers no reachability"; docs/41 (#835) "a multi-hop route must not reach an
+eligible fact by traversing an ineligible node". Canonical candidacy of the deleted node itself is kept
+because #777's accepted design keeps canonical admission and internal audit unchanged
+(`test_777_public_projection_review.GraphProjection` passes unmodified); only reachability through it
+is removed. The declaration's `recall_control.py` blob moves `e55d3ca3` → `c16452ef`; the 20 other
+declared blobs are unchanged.
+
+### 7.2 The scope-safe graph discovery replay (DSL/4)
+
+- `reference/fixtures/786-security-replays/scope-safe-graph-discovery-v1.json` (`cba2c9c1`): 11 cases,
+  40 expectations written clause by clause from docs/41 and docs/44 at base commit `6f8d98ee`,
+  committed before the DSL/4 runner existed. Cases: inaccessible seed expands nothing; inaccessible
+  neighbour never reported; no hop through an inaccessible intermediate; fan-out and exact-identity
+  quotas spent on eligible paths only; shared-domain neighbour preserved; deleted bridge confers no
+  reachability while the direct deleted neighbour keeps its canonical refusal; withheld seed not
+  expanded; direct live alternate survives; no relations discover nothing; the eligibility-probe
+  ceiling (G10) **recorded under `implementation_evidence`, never expected**.
+- First execution of -v1 (`review-836/graph-replay-v1-first-execution/report.json`, a development run
+  after one disclosed harness error): 9/11 PASS; G7 and G9 failed on one observable each, `old_refusal`
+  read `tombstoned` where -v1 expected `logical_memory_deleted`, a token copied from the #777 pin where
+  the traversed node is a superseded version, not a single-version head. Both are the recorded canonical
+  refusal of a deleted node. Per the fixture's stop lines -v1 is not edited: **-v2 supersedes it**
+  (`supersedes.reason` in the fixture), accepting either token on exactly those two observables and
+  nothing else (pinned by `test_835_security_replay_graph_discovery.FixtureIntegrity`). No runtime
+  behaviour changed to obtain it.
+- Runner `reference/run_786_security_replays_dsl4.py` (governed composition runtime, scope-declaring
+  proposals, canonical typed relations, host-adjudicated pruning, planner on the adapter as its own
+  tests do); `scripts/verify_786_security_replays.py` dispatches DSL/4 fixtures to it (additive).
+- Tests `reference/tests/test_835_security_replay_graph_discovery.py`: 10 OK, including three negative
+  controls (dropping hop eligibility, the opaque predicate, or the exclusion turns the matching cases red).
+- Declaration: `{security_replay, scope-safe-graph-discovery-v2}` added (13 evidence entries); the
+  fixture-less `scope-safe-graph-discovery-v7` placeholder is not restored. Lanes re-pinned to blob
+  `a78797cb`.
+
+### 7.3 Re-qualification at `07cd8692`
+
+| Gate | Result |
+|---|---|
+| `check_runtime_baseline_equivalence.py --candidate HEAD` / `validate_runtime_baseline_source.py` | TRANSITION (frozen `e98e6e7b` + 21 blobs; `1.6.0 -> 1.8.0`) / declared successor v7 is open |
+| six targeted retrieval suites + `test_836_*` + `test_835_*` + `test_777_public_projection_review` | **114 OK** (`runs/targeted-retrieval-07cd8692….txt`) |
+| `test_809_*` 58, `test_776*` 46, `test_777*` 27, `test_786*` 68 (1 xfail), deletion 17, historical 10, `test_821*` 48, `test_816*` 25, `test_802*` 16 (1 skip), `test_774*` 58 | all OK at the repaired runtime tree (`runs/focused-*-6f8d98ee.txt`); `test_644*` 59/60 (the pre-existing identity guard) |
+| 7 earlier security replay families | all PASS; `observations_sha256` **identical** to the frozen `3edbb9ad` record (`security-replays-07cd8692…/`) |
+| `scope-safe-graph-discovery-v2` | PASS 11/11; `verify_786_security_replays.py --reexecute --declaration reports/runtime/baseline-v7-declaration.json`: **5/5 VERIFIED, re-executed, `evidence_verified: true`** |
+| 5 #644 replays | PASS, observations identical; 5/5 VERIFIED re-executed |
+| #821 crash-window matrix | outcome-identical to `3edbb9ad` (`runs/crash-window-07cd8692.json`) |
+| validators | architecture index (84), schemas, fixtures, doctrine, wiki links OK; `git diff --check` clean on every authored file |
+| **full reference suite** | **3149 tests, 6 failures + 1 error, 22 skipped, 1 expected failure: exactly the seven pre-existing failures of section 4; integration-introduced: none** (`runs/full-suite-candidate-07cd8692….txt`) |
+| Phase E correctness scenarios (`phase-e/candidate-07cd8692-correctness.json`) | unchanged: required neighbours 3/3, no bridge through an ineligible node, shared-domain evidence preserved on every route, deleted ids hidden, no-answer/budget/wrong-subject identical |
+| latency, two alternating runs on an idle machine (`phase-e/*-r2.json`) | facade recall p50 60-62 ms (`main`) vs 73-74 ms; `remember` 5.4-5.7 vs 6.3-6.5 ms; 400-neighbour hub graph recall p50 1.7-2.2 vs 2.6-3.0 ms with 4 vs **8** eligible slots filled. The `opaque` check adds one predicate call per accepted hop; the hub overhead stays within the range measured before the repair (2.3-2.6 ms) plus noise. |
+
+### 7.4 Statuses after the amendment
+
+Implementation: integrated and repaired at `07cd8692`. Declaration: TRANSITION, one v7 slot, now naming a
+genuine replay for the graph-discovery behaviour. Exact-head regression: no integration-introduced
+failure; the seven earlier replay digests identical; crash matrix identical. Security acceptance: still
+the owner's; the independent read of the merged traversal now has three preregistered reproducers and
+one replay generation to read against. Lane / Gauntlet qualification and the `1.8.0` decision: unchanged
+blockers. Disposition: **READY FOR INDEPENDENT REVIEW; BLOCKED for acceptance** on the same gates.
