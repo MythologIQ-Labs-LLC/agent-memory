@@ -205,7 +205,7 @@
           "predecessor": "agent-memory-runtime-baseline-v6",
           "declared_successor": "agent-memory-runtime-baseline-v7",
           "declaration": "reports/runtime/baseline-v7-declaration.json",
-          "declaration_blob": "1f86397f35911193c905a47c4175e6f018020de5",
+          "declaration_blob": "e6620e681eefbc561776b29294720bb8b871cf7e",
           "checker_state_required": [
             "PASS",
             "TRANSITION"
@@ -263,7 +263,7 @@
           "predecessor": "agent-memory-runtime-baseline-v6",
           "declared_successor": "agent-memory-runtime-baseline-v7",
           "declaration": "reports/runtime/baseline-v7-declaration.json",
-          "declaration_blob": "1f86397f35911193c905a47c4175e6f018020de5",
+          "declaration_blob": "e6620e681eefbc561776b29294720bb8b871cf7e",
           "checker_state_required": [
             "PASS",
             "TRANSITION"
@@ -439,7 +439,7 @@
           "predecessor": "agent-memory-runtime-baseline-v6",
           "declared_successor": "agent-memory-runtime-baseline-v7",
           "declaration": "reports/runtime/baseline-v7-declaration.json",
-          "declaration_blob": "1f86397f35911193c905a47c4175e6f018020de5",
+          "declaration_blob": "e6620e681eefbc561776b29294720bb8b871cf7e",
           "checker_state_required": [
             "PASS",
             "TRANSITION"

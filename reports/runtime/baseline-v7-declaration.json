@@ -131,10 +131,6 @@
       "ref": "same-slot-safety-counterevidence-and-immutable-stop-gate-v1"
     },
     {
-      "kind": "replay",
-      "ref": "scope-safe-graph-discovery-v7"
-    },
-    {
       "kind": "security_replay",
       "ref": "cross-scope-write-authority-denial-v3"
     },
