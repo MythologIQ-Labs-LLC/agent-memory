@@ -1,0 +1,27 @@
+{
+  "schema": "agent-memory-aml-load-probe/1",
+  "parameters": {
+    "users": 8,
+    "messages": 1000,
+    "searches": 20,
+    "concurrency": 8
+  },
+  "add_ms_per_20_message_chunk": {
+    "n": 400,
+    "p50": 2883.6,
+    "p95": 3026.7,
+    "max": 3743.5,
+    "mean": 2888.3
+  },
+  "add_wall_s": 144.6,
+  "messages_written": 8000,
+  "search_ms_top_k_100": {
+    "n": 160,
+    "p50": 7889.1,
+    "p95": 8119.6,
+    "max": 8325.6,
+    "mean": 7868.0
+  },
+  "search_wall_s": 157.6,
+  "failures": []
+}

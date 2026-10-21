@@ -1,0 +1,27 @@
+{
+  "schema": "agent-memory-aml-load-probe/1",
+  "parameters": {
+    "users": 1,
+    "messages": 1000,
+    "searches": 20,
+    "concurrency": 1
+  },
+  "add_ms_per_20_message_chunk": {
+    "n": 50,
+    "p50": 123.0,
+    "p95": 147.8,
+    "max": 184.5,
+    "mean": 125.3
+  },
+  "add_wall_s": 6.3,
+  "messages_written": 1000,
+  "search_ms_top_k_100": {
+    "n": 20,
+    "p50": 102.6,
+    "p95": 108.2,
+    "max": 129.7,
+    "mean": 102.0
+  },
+  "search_wall_s": 2.0,
+  "failures": []
+}
