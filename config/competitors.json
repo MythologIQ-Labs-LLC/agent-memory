@@ -58,9 +58,9 @@
     },
     {
       "id": "letta",
-      "name": "Letta",
+      "name": "Letta Code",
       "state": "not_run",
-      "url": "https://github.com/letta-ai/letta",
+      "url": "https://github.com/letta-ai/letta-code",
       "observed_ids": []
     },
     {
@@ -108,6 +108,34 @@
           "locomo_overall_author_report": 0.917
         }
       }
+    },
+    {
+      "id": "memos",
+      "name": "MemOS OSS",
+      "state": "not_run",
+      "url": "https://github.com/MemTensor/MemOS",
+      "observed_ids": []
+    },
+    {
+      "id": "everos",
+      "name": "EverOS",
+      "state": "not_run",
+      "url": "https://github.com/EverMind-AI/EverOS",
+      "observed_ids": []
+    },
+    {
+      "id": "mirix",
+      "name": "MIRIX",
+      "state": "not_run",
+      "url": "https://github.com/Mirix-AI/MIRIX",
+      "observed_ids": []
+    },
+    {
+      "id": "acontext",
+      "name": "Acontext",
+      "state": "not_run",
+      "url": "https://github.com/memodb-io/Acontext",
+      "observed_ids": []
     }
   ]
 }
