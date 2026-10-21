@@ -251,5 +251,48 @@ class IssuerPolicyTests(unittest.TestCase):
         self.no_authority(self.check())
 
 
+    def test_d1_revoked_key_denies_even_when_schema_layer_abstains(self):
+        unmapped = replace(self.proposal, newer=replace(
+            self.proposal.newer, property_ref="field:unmapped-q757"
+        ))
+        denied = replace(
+            self.snapshot,
+            revoked_key_digests=(self.grant.public_key_digest,),
+        )
+        result = self.check(snapshot=denied, proposal=unmapped)
+        self.assertEqual(result.registry_status, "abstain")
+        self.assertEqual(result.status, "refused")
+        self.assertIn("issuer_key_revoked", result.reason_codes)
+        self.no_authority(result)
+
+    def test_d1_invalidated_schema_denies_even_when_registry_abstains(self):
+        unmapped = replace(self.proposal, newer=replace(
+            self.proposal.newer, property_ref="field:unmapped-q757"
+        ))
+        denied = replace(self.snapshot, invalidated_registry_revisions=(
+            ("schema:owner-vocabulary", "revision:schema-17"),
+        ))
+        result = self.check(snapshot=denied, proposal=unmapped)
+        self.assertEqual(result.registry_status, "abstain")
+        self.assertEqual(result.status, "refused")
+        self.assertIn("registry_revision_invalidated", result.reason_codes)
+        self.no_authority(result)
+
+    def test_d8_policy_size_bound_enforced_at_construction(self):
+        # Individually valid, sorted, distinct scopes still exceed 16 KiB.
+        grants = tuple(replace(
+            self.grant,
+            schema_ref="schema:" + "s" * 190,
+            registry_revision_ref="revision:" + "r" * 180,
+            tenant_ref="tenant:" + "t" * 190,
+            scope_ref=f"scope:{i:03d}:" + "c" * 180,
+            purpose_ref="purpose:" + "p" * 190,
+            issuer_key_ref="issuer:" + "i" * 190,
+        ) for i in range(32))
+        with self.assertRaisesRegex(IssuerPolicyError, "size bound"):
+            replace(self.snapshot, grants=grants)
+
+
+
 if __name__ == "__main__":
     unittest.main()
