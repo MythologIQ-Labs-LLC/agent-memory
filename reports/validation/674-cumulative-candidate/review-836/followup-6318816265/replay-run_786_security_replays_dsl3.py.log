@@ -1,0 +1,2 @@
+evidence-reference-authorization-v1: PASS (13/13 cases) report sha256 7a5c942716a2ae5244c367786b19b0b7d1db054b05abbc6237f1d221de368782
+  - every expectation held on a clean source tree
