@@ -99,6 +99,8 @@ class IssuerPolicySnapshot:
         if (tuple(sorted(set(self.invalidated_registry_revisions)))
                 != self.invalidated_registry_revisions):
             raise IssuerPolicyError("invalidated revision pairs must be unique and sorted")
+        if len(_canonical_policy_payload(self)) > MAX_BYTES:
+            raise IssuerPolicyError("policy exceeds canonical size bound")
 
 
 @dataclass(frozen=True)
@@ -118,6 +120,23 @@ class IssuerPolicyQualification:
     integration_state: Literal["evaluation_only"] = "evaluation_only"
 
 
+def _canonical_policy_payload(snapshot: IssuerPolicySnapshot) -> bytes:
+    """Exact bounded policy transcript. Shared by construction and hashing."""
+    return canonical_json({
+        "profile": POLICY_PROFILE,
+        "version": POLICY_VERSION,
+        "policy": {
+            "policy_ref": snapshot.policy_ref,
+            "revision_ref": snapshot.revision_ref,
+            "grants": [asdict(item) for item in snapshot.grants],
+            "revoked_key_digests": list(snapshot.revoked_key_digests),
+            "invalidated_registry_revisions": [
+                list(pair) for pair in snapshot.invalidated_registry_revisions
+            ],
+        },
+    })
+
+
 def policy_digest(snapshot: IssuerPolicySnapshot) -> str:
     """Canonical digest for comparison to an OUT-OF-BAND pin (not authentication)."""
     if type(snapshot) is not IssuerPolicySnapshot:
@@ -130,21 +149,7 @@ def policy_digest(snapshot: IssuerPolicySnapshot) -> str:
         revoked_key_digests=snapshot.revoked_key_digests,
         invalidated_registry_revisions=snapshot.invalidated_registry_revisions,
     )
-    payload = canonical_json({
-        "profile": POLICY_PROFILE,
-        "version": POLICY_VERSION,
-        "policy": {
-            "policy_ref": rebuilt.policy_ref,
-            "revision_ref": rebuilt.revision_ref,
-            "grants": [asdict(item) for item in rebuilt.grants],
-            "revoked_key_digests": list(rebuilt.revoked_key_digests),
-            "invalidated_registry_revisions": [
-                list(pair) for pair in rebuilt.invalidated_registry_revisions
-            ],
-        },
-    })
-    if len(payload) > MAX_BYTES:
-        raise IssuerPolicyError("policy exceeds canonical size bound")
+    payload = _canonical_policy_payload(rebuilt)
     return "sha256:" + sha256(POLICY_DOMAIN + payload).hexdigest()
 
 
@@ -214,20 +219,21 @@ def qualify_issuer_policy(
             grant_matched=matched,
         )
 
-    if not pin_ok or not ctx_ok or registry.status == "refused":
-        return result("refused")
-    if registry.status == "abstain":
-        reasons.add("schema_candidate_not_established")
-        return result("abstain")
-
+    # D1: negative authority evidence must be evaluated BEFORE any
+    # lower-layer abstention, so explicit denial can never be downgraded.
     actual_key_digest = public_key_digest(public_key)
     revision_pair = (expected_schema_ref, expected_revision_ref)
     if actual_key_digest in snapshot.revoked_key_digests:
         reasons.add("issuer_key_revoked")
     if revision_pair in snapshot.invalidated_registry_revisions:
         reasons.add("registry_revision_invalidated")
-    if reasons.intersection({"issuer_key_revoked", "registry_revision_invalidated"}):
+    if (not pin_ok or not ctx_ok or registry.status == "refused"
+            or "issuer_key_revoked" in reasons
+            or "registry_revision_invalidated" in reasons):
         return result("refused")
+    if registry.status == "abstain":
+        reasons.add("schema_candidate_not_established")
+        return result("abstain")
 
     key = (
         expected_schema_ref, expected_revision_ref, expected_tenant_ref,
