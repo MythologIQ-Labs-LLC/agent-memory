@@ -1,0 +1,135 @@
+{
+ "aggregate_equal": true,
+ "backend": "agent_memory",
+ "by_question_type_equal": true,
+ "complete50_v6": 419,
+ "complete50_v7": 419,
+ "cross_fact_equal": 500,
+ "cross_fact_summary_equal": true,
+ "currentness_equal": true,
+ "differing_count": 0,
+ "differing_questions": [],
+ "gained_complete": [],
+ "gained_required_evidence": [],
+ "governance_equal": true,
+ "headline_v6": {
+  "abstention_diagnostic": {
+   "mean_returned_count": 45.3,
+   "question_count": 30,
+   "returned_any_rate": 1.0,
+   "upstream_metric": false
+  },
+  "evaluated_question_count": 419,
+  "excluded_abstention_count": 30,
+  "excluded_no_user_target_count": 51,
+  "headline": {
+   "ndcg_any@10": 0.878274,
+   "ndcg_any@5": 0.863142,
+   "recall_all@10": 0.892601,
+   "recall_all@5": 0.823389
+  },
+  "metrics": {
+   "session": {
+    "ndcg_any@1": 0.809069,
+    "ndcg_any@10": 0.878274,
+    "ndcg_any@3": 0.847782,
+    "ndcg_any@30": 0.893041,
+    "ndcg_any@5": 0.863142,
+    "ndcg_any@50": 0.895285,
+    "recall_all@1": 0.217184,
+    "recall_all@10": 0.892601,
+    "recall_all@3": 0.770883,
+    "recall_all@30": 0.97852,
+    "recall_all@5": 0.823389,
+    "recall_all@50": 1.0,
+    "recall_any@1": 0.809069,
+    "recall_any@10": 0.966587,
+    "recall_any@3": 0.923628,
+    "recall_any@30": 0.995227,
+    "recall_any@5": 0.947494,
+    "recall_any@50": 1.0
+   }
+  }
+ },
+ "headline_v7": {
+  "abstention_diagnostic": {
+   "mean_returned_count": 45.3,
+   "question_count": 30,
+   "returned_any_rate": 1.0,
+   "upstream_metric": false
+  },
+  "evaluated_question_count": 419,
+  "excluded_abstention_count": 30,
+  "excluded_no_user_target_count": 51,
+  "headline": {
+   "ndcg_any@10": 0.878274,
+   "ndcg_any@5": 0.863142,
+   "recall_all@10": 0.892601,
+   "recall_all@5": 0.823389
+  },
+  "metrics": {
+   "session": {
+    "ndcg_any@1": 0.809069,
+    "ndcg_any@10": 0.878274,
+    "ndcg_any@3": 0.847782,
+    "ndcg_any@30": 0.893041,
+    "ndcg_any@5": 0.863142,
+    "ndcg_any@50": 0.895285,
+    "recall_all@1": 0.217184,
+    "recall_all@10": 0.892601,
+    "recall_all@3": 0.770883,
+    "recall_all@30": 0.97852,
+    "recall_all@5": 0.823389,
+    "recall_all@50": 1.0,
+    "recall_any@1": 0.809069,
+    "recall_any@10": 0.966587,
+    "recall_any@3": 0.923628,
+    "recall_any@30": 0.995227,
+    "recall_any@5": 0.947494,
+    "recall_any@50": 1.0
+   }
+  }
+ },
+ "lost_complete": [],
+ "lost_required_evidence": [],
+ "metrics_equal": 500,
+ "plane": "session",
+ "questions": 500,
+ "ranked_top_equal": 500,
+ "required_v6": [
+  794,
+  794
+ ],
+ "required_v7": [
+  794,
+  794
+ ],
+ "runtime_errors_v6": 0,
+ "runtime_errors_v7": 0,
+ "scored_v6": 419,
+ "scored_v7": 419,
+ "statuses_v6": {
+  "excluded_abstention": 30,
+  "excluded_no_user_target": 51,
+  "scored": 419
+ },
+ "statuses_v7": {
+  "excluded_abstention": 30,
+  "excluded_no_user_target": 51,
+  "scored": 419
+ },
+ "timing_v6": {
+  "ingest_seconds_total": 171.147,
+  "recall_seconds_max": 0.028654,
+  "recall_seconds_total": 7.785,
+  "wall_seconds": 197.05
+ },
+ "timing_v7": {
+  "ingest_seconds_total": 225.076,
+  "recall_seconds_max": 0.180416,
+  "recall_seconds_total": 10.462,
+  "wall_seconds": 261.707
+ },
+ "v6_dir": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/agent_memory-session-24048d55e26d",
+ "v7_raw": "/tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/bench/runs/lme/local-lme-v7-session-am/longmemeval-lane-longmemeval-s-retrieval-parity-v7-agent_memory-session-7917226712c4bb83e70bf95a9093ea96667fddc8/session-agent_memory.json"
+}

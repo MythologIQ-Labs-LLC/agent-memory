@@ -1,0 +1,160 @@
+{
+  "authority_effect": "none",
+  "benchmark_integration": "agent-memory-longmemeval-retrieval-currentness-v1",
+  "contract_family": "agent-memory-same-harness-lane-evidence",
+  "contract_version": "1.0.0",
+  "evidence_class": "same_harness_external_candidate",
+  "execution": {
+    "agent_memory_revision": "7917226712c4bb83e70bf95a9093ea96667fddc8",
+    "authority_effect": "none",
+    "backend": "lexical_overlap",
+    "declaration_blob": "a78797cbfca0e017e99c7e3e00823ded3ef1653b",
+    "evidence_class": "same_harness_external_candidate",
+    "full_selection": true,
+    "granularity": "turn",
+    "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+    "lane_digest_sha256": "66990765dffe59fe3e7b663c0c484634484caff650fb856777c2233687418b93",
+    "lane_file": "reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v7.json",
+    "lane_id": "longmemeval-s-retrieval-parity-v7",
+    "mem0_optional_components": {
+      "fastembed_installed": false,
+      "spacy_installed": false
+    },
+    "resolved_packages": {
+      "agent-memory-reference": "0.2.0",
+      "mem0ai": null,
+      "numpy": null,
+      "onnxruntime": null,
+      "openai": null,
+      "posthog": null,
+      "qdrant-client": null,
+      "sentence-transformers": null,
+      "tokenizers": null,
+      "torch": null
+    },
+    "runner": "local cloud container, Linux-6.18.44-fc-v139-x86_64-with-glibc2.39, Python 3.12.3 (not a GitHub-hosted runner)",
+    "runner_backend": "lexical_overlap",
+    "runtime_baseline_line": "Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v6; declared_successor=agent-memory-runtime-baseline-v7 (issue #674); protected surface = frozen e98e6e7b776aa2dd680e84f3ed4773ad2afa4ae1 + 21 declared blobs; deltas=identity.public_contract_version 1.6.0->1.8.0; candidate=HEAD",
+    "runtime_baseline_state": "TRANSITION",
+    "source_blobs": {
+      "reference/amb_mem0_explicit_bridge.py": "ce41b1f5766b99cb968b798be3ad6d37c3283228",
+      "reference/longmemeval_mem0_explicit_bridge.py": "08366b72ac0d76fdc0754a8182e3b6fd61cb1912",
+      "reference/run_longmemeval.py": "6b9c237380f1d527e564161c2dac7fe32ada0ef9"
+    },
+    "subset_size": "0",
+    "upstream_revision": "9e0b455f4ef0e2ab8f2e582289761153549043fc",
+    "workflow_run_id": "local-lme-v7-turn-lex"
+  },
+  "files": {
+    "execution-identity.json": "8976236a3d1b368ad5b12b122d8abbb8246ebb7d52b1faba8ca6f0ffc7ef99d6",
+    "files.txt": "47f61bc7dd433d16185918312a0a7564a9396d80719f409519fc683802ec8f5d",
+    "lane-validation.json": "3de043dc39f1e641bab1d1565682034c7d6bef4204206752d2d62d1adb704813",
+    "report.json": "e076e1fc4f521ee94229e849eac499afef2d6f2f77af129c572ef2dde3482db5",
+    "report.rows.json.gz": "7f280ea3b0b99f9f8757d16d3151c71cf71f5171c41c37876966fab0e198424e",
+    "sha256.txt": "f2a0098c061a25e8af98beb3353b9637c09398429183b936d4228491c0d05e00"
+  },
+  "input": {
+    "corpus_class": "external_frozen",
+    "dataset_revision": "xiaowu0162/longmemeval-cleaned@98d7416c24c778c2fee6e6f3006e7a073259d48f",
+    "fixtures": {
+      "longmemeval_s_cleaned.json": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+    },
+    "query_count": 500,
+    "question_ids_sha256": "7d738ae585fd4014c9d231088ff824864fded501adc07b0e08c2b97a28210c03",
+    "selection_id": "all-500:7d738ae585fd4014",
+    "sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+    "verified_by": "lane record only (import ran with --no-fetch)"
+  },
+  "lane_digest_at_execution": "66990765dffe59fe3e7b663c0c484634484caff650fb856777c2233687418b93",
+  "lane_file": "reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v7.json",
+  "lane_id": "longmemeval-s-retrieval-parity-v7",
+  "native_summary": {
+    "backend": "lexical_overlap",
+    "evaluated_question_count": 419,
+    "failures": {
+      "ingestion_failure_count": 0,
+      "out_of_corpus_returned_count": 0,
+      "runtime_failure_count": 0
+    },
+    "headline": {
+      "ndcg_any@10": 0.559738,
+      "ndcg_any@5": 0.527168,
+      "ndcg_any@50": 0.598419,
+      "recall_all@10": 0.587112,
+      "recall_all@5": 0.486874,
+      "recall_all@50": 0.761337
+    },
+    "knowledge_update_headline": {
+      "ndcg_any@10": 0.703945,
+      "ndcg_any@5": 0.672922,
+      "ndcg_any@50": 0.725493,
+      "recall_all@10": 0.805556,
+      "recall_all@5": 0.680556,
+      "recall_all@50": 0.916667
+    },
+    "latest_gold_ranked_first": {
+      "applicable_question_count": 70,
+      "definition": "among scored knowledge-update questions with gold items on >=2 distinct dates, fraction where the most recently dated gold item is returned ahead of every older gold item",
+      "rate": 0.614286,
+      "upstream_metric": false
+    },
+    "plane": "turn",
+    "shape_note": "copied from the runner's own aggregate for this plane and backend; the full native report is report.json",
+    "timing": {
+      "wall_seconds": 4.905
+    }
+  },
+  "raw_report": {
+    "name": "turn-lexical_overlap.json",
+    "sha256": "c660e0432603c1fd7815323c33acaf847a4d07997a6b54e745c2ec2d15f6a2a2",
+    "split_rule": "rows moved to report.rows.json.gz ({plane: {backend: rows}}); report.json is the remainder; recomposition verified byte for byte at import"
+  },
+  "row": {
+    "backend": "lexical_overlap",
+    "display_name": "Lexical-overlap baseline (profile built-in)",
+    "inference_posture": "harness_builtin",
+    "plane": "turn",
+    "provider_key": "lexical_overlap",
+    "role": "baseline",
+    "row_id": "lexical-overlap-profile-baseline",
+    "system_id": "lexical_overlap"
+  },
+  "system": {
+    "cross_fact_summary": null,
+    "external_backend_identity": null,
+    "id": "lexical_overlap",
+    "mem0_optional_components": {
+      "fastembed_installed": false,
+      "spacy_installed": false
+    },
+    "recall_control_summary": null,
+    "resolved_packages": {
+      "agent-memory-reference": "0.2.0",
+      "mem0ai": null,
+      "numpy": null,
+      "onnxruntime": null,
+      "openai": null,
+      "posthog": null,
+      "qdrant-client": null,
+      "sentence-transformers": null,
+      "tokenizers": null,
+      "torch": null
+    },
+    "revision": "7917226712c4bb83e70bf95a9093ea96667fddc8",
+    "revision_rule": "git blob of reference/run_longmemeval.py at execution",
+    "runtime_baseline": {
+      "declaration_blob": "a78797cbfca0e017e99c7e3e00823ded3ef1653b",
+      "declared_successor": "agent-memory-runtime-baseline-v7",
+      "line": "Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v6; declared_successor=agent-memory-runtime-baseline-v7 (issue #674); protected surface = frozen e98e6e7b776aa2dd680e84f3ed4773ad2afa4ae1 + 21 declared blobs; deltas=identity.public_contract_version 1.6.0->1.8.0; candidate=HEAD",
+      "predecessor": "agent-memory-runtime-baseline-v6",
+      "state": "TRANSITION"
+    },
+    "semantic_route_posture": null,
+    "source_kind": "harness_builtin"
+  },
+  "workflow_run": {
+    "artifact_directory": "longmemeval-lane-longmemeval-s-retrieval-parity-v7-lexical_overlap-turn-7917226712c4bb83e70bf95a9093ea96667fddc8",
+    "id": "local-lme-v7-turn-lex",
+    "url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/actions/runs/local-lme-v7-turn-lex"
+  }
+}
