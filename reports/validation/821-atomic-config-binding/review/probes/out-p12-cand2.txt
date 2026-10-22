@@ -1,0 +1,6 @@
+writer generations: 1900 
+1 doctor failed_closed SQLite canonical substrate digest mismatch
+109 doctor failed_closed SQLite governance state digest mismatch: governance commitment mismatc
+6 open RuntimeRecoveryError: SQLite canonical substrate digest mismatch
+104 open RuntimeRecoveryError: SQLite governance state digest mismatch: governance commitment mismatc 
+final reopen: OK gen=1904 scheme=sqlite_transaction

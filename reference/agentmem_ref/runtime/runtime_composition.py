@@ -141,6 +141,124 @@ class MultiRouteRecallResult:
         ]
 
 
+# Post-v7 experimental opt-in historical predecessor contract (#774).
+# NOT part of the frozen #770 v7 declaration or default recall.
+PREDECESSOR_RELATION = "immediate_state_change_predecessor"
+
+
+TARGET_RESOLVED = "resolved"
+TARGET_UNRESOLVED = "unresolved"
+STRICT_SELECTION_POLICY_VERSION = "0.2.0"
+
+
+@dataclass(frozen=True)
+class HistoricalPredecessorContext:
+    """Bounded historical context with one lineage-identified predecessor first.
+
+    ``predecessor_ref`` comes only from governed replacement lineage and
+    canonical historical admission. It states WHICH value held before, never
+    WHY it changed. Never a completeness, stop or authority claim.
+    """
+
+    served_refs: tuple[str, ...]
+    predecessor_ref: str | None
+    successor_ref: str | None
+    relation: str = PREDECESSOR_RELATION
+    complete_evidence_attested: bool = False
+    authority_effect: str = "none"
+    #: 0.2.0 (strict, caller-targeted): ``unresolved`` means the caller identified no
+    #: successor that resolves for this reader -- it is NOT a claim that no predecessor
+    #: existed. ``resolved`` with no predecessor means the identified successor has no
+    #: governed state-change predecessor in its lineage.
+    target_resolution: str = TARGET_UNRESOLVED
+    selection_policy_version: str = STRICT_SELECTION_POLICY_VERSION
+
+    def __post_init__(self):
+        refs = self.served_refs
+        if (not isinstance(refs, tuple) or any(type(r) is not str for r in refs)
+                or len(set(refs)) != len(refs)
+                or self.relation != PREDECESSOR_RELATION
+                or self.target_resolution not in (TARGET_RESOLVED, TARGET_UNRESOLVED)
+                or (self.target_resolution == TARGET_UNRESOLVED
+                    and (self.predecessor_ref is not None or self.successor_ref is not None))
+                or (self.target_resolution == TARGET_RESOLVED and self.successor_ref is None)
+                or (self.predecessor_ref is not None
+                    and (self.predecessor_ref == self.successor_ref or refs[:1] != (self.predecessor_ref,)))
+                or self.complete_evidence_attested is not False
+                or self.authority_effect != "none"
+                or self.selection_policy_version != STRICT_SELECTION_POLICY_VERSION):
+            raise ValueError("invalid or authoritative historical predecessor selection")
+
+
+@dataclass(frozen=True)
+class AsOfTarget:
+    """A governed as-of successor target: the version of ``memory_ref`` in effect at ``instant``."""
+
+    memory_ref: str
+    instant: str
+
+    def __post_init__(self):
+        from .temporal_intent import parse_time
+        if not isinstance(self.memory_ref, str) or not self.memory_ref.strip():
+            raise ValueError("as-of target requires a logical memory reference")
+        if not isinstance(self.instant, str) or parse_time(self.instant) is None:
+            raise ValueError("as-of target requires an ISO-8601 instant")
+
+
+# #774 automatic routing. Built ONLY on the frozen temporal-cue interpreter's own
+# evidence (no new lexicon): a predecessor-relation cue routes unless an origin
+# cue ("the first value") or a prospective cue is also present. Declined spans
+# (quoted or metalinguistic mentions) carry no evidence and never route.
+PREDECESSOR_ROUTING_POLICY_VERSION = "0.3.0"
+PREDECESSOR_RELATION_CUES = frozenset({
+    "historical:low:before", "historical:high:previously", "historical:high:used to",
+    "historical:high:formerly", "historical:high:prior to", "historical:low:earlier",
+})
+ORIGIN_CUES = frozenset({
+    "historical:high:originally", "historical:high:initially", "historical:high:at first",
+    "historical:low:first time",
+})
+
+
+@dataclass(frozen=True)
+class PredecessorRoutingDecision:
+    routed: bool
+    evidence: tuple[str, ...]
+    policy_version: str = PREDECESSOR_ROUTING_POLICY_VERSION
+    authority_effect: str = "none"
+
+
+def predecessor_routing(query: str) -> PredecessorRoutingDecision:
+    """Does this query ask for the value that held before a later one? Query-only, deterministic."""
+    if not isinstance(query, str):
+        raise TypeError("predecessor routing requires a query string")
+    evidence = tuple(resolve_intent(query, None).to_dict().get("evidence") or ())
+    cues = set(evidence)
+    routed = bool(cues & PREDECESSOR_RELATION_CUES) and not cues & ORIGIN_CUES and not any(
+        cue.startswith("prospective:") for cue in cues)
+    return PredecessorRoutingDecision(routed=routed, evidence=evidence)
+
+
+@dataclass(frozen=True)
+class RoutedHistoricalContext:
+    """Served refs from automatic routing; ``routed`` says which path produced them."""
+
+    served_refs: tuple[str, ...]
+    routed: bool
+    routing_evidence: tuple[str, ...]
+    predecessor_ref: str | None = None
+    successor_ref: str | None = None
+    routing_policy_version: str = PREDECESSOR_ROUTING_POLICY_VERSION
+    complete_evidence_attested: bool = False
+    authority_effect: str = "none"
+
+    def __post_init__(self):
+        if (not isinstance(self.served_refs, tuple) or len(set(self.served_refs)) != len(self.served_refs)
+                or (self.predecessor_ref is not None and (not self.routed or self.served_refs[:1] != (self.predecessor_ref,)))
+                or self.complete_evidence_attested is not False or self.authority_effect != "none"):
+            raise ValueError("invalid or authoritative routed historical context")
+
+
 MULTI_ROUTE_RANKING_POLICY = ExplicitCurrentCrossFactRankingPolicy(
     policy_id="multi-route-default",
     route_score_order=(SHARED_EVIDENCE_ROUTE, LEXICAL_ROUTE),
@@ -213,7 +331,7 @@ class DeterministicMultiRouteRecallPlanner:
         seed_pairs: list[tuple[str, str]] = []
         for logical_ref in dict.fromkeys(logical_memory_refs):
             current = self.adapter.current_fact_uuid(logical_ref)
-            if current is None:
+            if current is None or not self.adapter.domain_eligible_identity(current, tenant, context):
                 continue
             hits.append(
                 RetrievalRouteHit(
@@ -223,6 +341,11 @@ class DeterministicMultiRouteRecallPlanner:
                     logical_memory_ref=logical_ref,
                 )
             )
+            # #786 (third review F-R3-6): a head outside the caller's scope seeds nothing, so the
+            # route provenance (``routes_executed``) reads the same for a never-written id and a
+            # live id the caller may not see; admission already withheld the hit itself
+            if not self.adapter.domain_eligible_identity(current, tenant, context):
+                continue
             seed_pairs.append((logical_ref, current))
 
         if (
@@ -255,13 +378,29 @@ class DeterministicMultiRouteRecallPlanner:
         if seed_pairs and isinstance(substrate, EvidenceNeighborTemporalGraphPort):
             routes_executed.append(SHARED_EVIDENCE_ROUTE)
             for logical_ref, seed_ref in seed_pairs:
+                # #591: use the canonical identity/scope gate before even
+                # materializing a seed from a cross-project memory.
+                if not self.adapter.domain_eligible_identity(seed_ref, tenant, context):
+                    continue
                 seed_fact = substrate.get_fact(seed_ref)
-                if seed_fact is None or seed_fact.is_event_invalid:
+                # #433/#548: an identity lookup is discovery, not permission to
+                # traverse a seed's evidence. Scope-check the seed before using
+                # its provenance to discover a neighbor in another domain.
+                # The discovered neighbor still crosses full canonical admission.
+                if (
+                    seed_fact is None
+                    or seed_fact.is_event_invalid
+                    or not self.adapter.domain_eligible(seed_fact, context)
+                ):
                     continue
                 for fact, shared_refs, score in substrate.evidence_neighbors(
                     seed_ref,
                     group_ids=[tenant],
                 ):
+                    # Apply the same discovery prefilter as lexical/vector
+                    # routes. Full admission still independently rechecks it.
+                    if not self.adapter.domain_eligible(fact, context):
+                        continue
                     hits.append(
                         RetrievalRouteHit(
                             route_id=SHARED_EVIDENCE_ROUTE,
@@ -523,6 +662,90 @@ class ConfiguredCompositionRuntime:
             temporal_intent=temporal_intent,
         )
 
+    def historical_predecessor_context(
+        self,
+        query: str,
+        context: RecallContext,
+        *,
+        budget: int,
+        successor_ref: str | None = None,
+        as_of_target: AsOfTarget | None = None,
+    ) -> HistoricalPredecessorContext:
+        """Opt-in (#774), strict policy 0.2.0: the CALLER identifies the successor.
+
+        The successor is either ``successor_ref`` (an authorized, visible fact reference;
+        otherwise ``ValueError``, identical for unknown and hidden refs) or ``as_of_target``
+        (the version of a named logical memory in effect at an instant, resolved under
+        canonical admission). Nothing is inferred from query wording or ranking: with no
+        resolvable target the result is ``unresolved`` -- no asserted predecessor, and the
+        unchanged historical ranking is served. Exactly one item, the governed immediate
+        state-change predecessor of the resolved successor, moves to rank 1. Versions of a
+        deleted memory are never served by this method.
+        """
+        if type(budget) is not int or not 1 <= budget <= 100:
+            raise ValueError("historical predecessor budget must be integer 1..100")
+        if successor_ref is not None and as_of_target is not None:
+            raise ValueError("declare either successor_ref or as_of_target, not both")
+        if as_of_target is not None and not isinstance(as_of_target, AsOfTarget):
+            raise ValueError("as_of_target must be an AsOfTarget")
+        if successor_ref is not None and (type(successor_ref) is not str
+                                          or not self.adapter.lineage_visible(successor_ref, context)):
+            raise ValueError("declared successor is not visible to this reader")
+        result = self.multi_route_recall(query, context, temporal_intent={"mode": "historical"})
+        if result.authority_effect != "none":
+            raise RuntimeRecoveryError("governed recall asserted unexpected authority")
+        ranked = list(result.ranked_admitted)
+        if len(ranked) != len(set(ranked)) or not set(ranked).issubset(result.admitted):
+            raise RuntimeRecoveryError("ranking violates canonical admission")
+        ranked = [ref for ref in ranked if not self.adapter.memory_deleted(ref)]
+        successor = successor_ref
+        if as_of_target is not None:
+            successor = self.adapter.version_in_effect(as_of_target.memory_ref, as_of_target.instant, context)
+        if successor is None:
+            return HistoricalPredecessorContext(served_refs=tuple(ranked[:budget]), predecessor_ref=None,
+                                                successor_ref=None, target_resolution=TARGET_UNRESOLVED)
+        predecessor = self.adapter.governed_state_change_predecessor(successor, context)
+        if predecessor is None:
+            served = ranked[:budget]
+        else:
+            served = ([predecessor] + [ref for ref in ranked if ref != predecessor])[:budget]
+        return HistoricalPredecessorContext(
+            served_refs=tuple(served), predecessor_ref=predecessor, successor_ref=successor,
+            target_resolution=TARGET_RESOLVED)
+
+    def routed_historical_context(
+        self,
+        query: str,
+        context: RecallContext,
+        *,
+        budget: int,
+        temporal_intent=None,
+        successor_ref: str | None = None,
+        as_of_target: AsOfTarget | None = None,
+    ) -> RoutedHistoricalContext:
+        """Opt-in (#774), routing policy 0.3.0: promotion requires a caller-identified target.
+
+        A lexical predecessor cue alone never promotes (it does not say WHICH successor).
+        Only a caller-historical question with a declared ``successor_ref`` or
+        ``as_of_target`` that RESOLVES is routed to the governed selector; everything else
+        is served exactly as ``multi_route_recall`` with the caller's intent would serve it.
+        """
+        decision = predecessor_routing(query)
+        caller_mode = (temporal_intent or {}).get("mode") if isinstance(temporal_intent, dict) else getattr(
+            temporal_intent, "mode", None)
+        if type(budget) is not int or not 1 <= budget <= 100:
+            raise ValueError("historical predecessor budget must be integer 1..100")
+        if caller_mode == "historical" and (successor_ref is not None or as_of_target is not None):
+            selected = self.historical_predecessor_context(
+                query, context, budget=budget, successor_ref=successor_ref, as_of_target=as_of_target)
+            if selected.target_resolution == TARGET_RESOLVED:
+                return RoutedHistoricalContext(
+                    served_refs=selected.served_refs, routed=True, routing_evidence=decision.evidence,
+                    predecessor_ref=selected.predecessor_ref, successor_ref=selected.successor_ref)
+        result = self.multi_route_recall(query, context, temporal_intent=temporal_intent)
+        return RoutedHistoricalContext(served_refs=tuple(result.ranked_admitted[:budget]), routed=False,
+                                       routing_evidence=decision.evidence)
+
     def projection_admission(self) -> ProjectionAdmission:
         projection = self.projections.store.get(self._projection_id)
         if not self._projection_component_enabled:
@@ -614,9 +837,10 @@ class ConfiguredCompositionRuntime:
 
     def delete_current(self, proposal, *, evidence=None, external_verification=None):
         """ADR-037 step 4b-2, DoD 20: forwards the deletion channels."""
-        current = self.adapter.current_fact_uuid(proposal.target_reference)
-        if current is None:
-            raise RuntimeRecoveryError("cannot delete memory with no current canonical fact")
+        # #786 (third review F-R3-3): an id with no current fact is refused by the adapter as
+        # ``fact_not_found`` with ``v0`` states -- the same answer a head the writer may not
+        # act on gets -- instead of raising, so the two cases are indistinguishable here too
+        current = self.adapter.current_fact_uuid(proposal.target_reference) or ""
         return self.durable_runtime.governed_delete(
             proposal,
             current,

@@ -1,0 +1,23 @@
+{
+ "attestation": "none: hashes bind contents for review; they are not signatures and confer no acceptance",
+ "command": "python reference/run_644_v7_replays.py --all",
+ "fixture": {
+  "path": "reference/fixtures/644-v7-replays/committed-governed-transition-witness-v1.json",
+  "sha256": "aa47fc50215ede864317c492cd72bb139c19bdb91947cf42cadab84bcaacd178"
+ },
+ "observations_sha256": "8ab1b53fb863d8bbc39f902736ac0f09b0dcc25bc157cb32d4767ce9eb169070",
+ "replay_id": "committed-governed-transition-witness-v1",
+ "report": {
+  "path": "report.json",
+  "sha256": "9fee14db4d94a1353d1fd7a67922918884d925d1e5b014dc77781b5bac44908c"
+ },
+ "runner": {
+  "path": "reference/run_644_v7_replays.py",
+  "sha256": "941a0dc6860e932531d77eb65c1f305f84feeab3366cacd39953dae160cf0def",
+  "version": "644-v7-replay-runner/1"
+ },
+ "runtime_tree": "8e01228027bfc4b779f3aa6230915e3c9b78ecaf",
+ "schema": "644-v7-replay-manifest/1",
+ "source_commit": "07cd8692bcf26fd677c71f805f04f73a6332ed91",
+ "verdict": "PASS"
+}

@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "<scratch>/r1-adv-review/p2_kill_stress.py", line 142, in <module>
+    main()
+    ~~~~^^
+  File "<scratch>/r1-adv-review/p2_kill_stress.py", line 118, in main
+    wg, dg, ok = witness_vs_db(root)
+                 ~~~~~~~~~~~~~^^^^^^
+  File "<scratch>/r1-adv-review/p2_kill_stress.py", line 78, in witness_vs_db
+    w = json.loads((root / "generation-witness.json").read_bytes())
+  File "/usr/lib/python3.13/json/__init__.py", line 352, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/usr/lib/python3.13/json/decoder.py", line 345, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/json/decoder.py", line 363, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)

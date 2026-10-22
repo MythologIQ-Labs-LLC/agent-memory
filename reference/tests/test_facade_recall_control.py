@@ -92,7 +92,7 @@ class FacadeShadowRecallControlTests(unittest.TestCase):
             memory.remember("memory:a", "The user's dog is called Biscuit.")
             result = memory.recall("What is the dog called?")
         self.assertNotIn("recall_control", result)
-        self.assertEqual(result["contract_version"], "1.6.0")
+        self.assertEqual(result["contract_version"], "1.8.0")
         with self.assertRaises(ValueError):
             AgentMemory.open(tempfile.mkdtemp(), recall_control="deterministic")
 
@@ -239,7 +239,8 @@ class HarnessVectorPrefilterTests(unittest.TestCase):
             envelope = {"contract_version": contract.CONTRACT_VERSION, "target_domain_refs": list(memory._domain_refs()),
                         "principal_ref": memory.actor_id, "project_ref": memory.scope, "purpose": memory.purpose}
             context = contract.recall_context_from_envelope(contract.validate_recall_context(envelope))
-            planner.recall("budget", context)
+            # a module-level governed act runs inside the runtime's generation seam (#816)
+            memory.runtime.durable_runtime.run_governed_read(lambda: planner.recall("budget", context))
         self.assertIn("eligible", seen)
         self.assertTrue(callable(seen["eligible"]))
 

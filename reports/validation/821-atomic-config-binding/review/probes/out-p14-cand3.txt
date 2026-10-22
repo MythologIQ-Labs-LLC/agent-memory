@@ -1,0 +1,8 @@
+gen-0 witness write OSError: create raised OSError; db=True state=None witness=False | retry open: REFUSED RuntimeRecoveryError: required SQLite runtime state is missing
+gen-0 witness write KeyboardInterrupt: create raised KeyboardInterrupt; db=True state=None witness=False | retry open: REFUSED RuntimeRecoveryError: required SQLite runtime state is missing
+legacy migration, witness write OSError: recall returned; state=4 row=4 witness=True | reopen: OK gen=4 scheme=sqlite_transaction | after next gen: OK gen=5 scheme=sqlite_transaction
+legacy migration, witness write KeyboardInterrupt: raised KeyboardInterrupt; state=4 row=4 witness=True | reopen: OK gen=4 scheme=sqlite_transaction | after next gen: OK gen=5 scheme=sqlite_transaction
+migrated legacy store reopen: OK gen=4 scheme=sqlite_transaction
+  drop table (file lags) with witness: REFUSED RuntimeRecoveryError: SQLite configuration binding is missing although this store's generation witness shows its generations were bound in the
+drop table + forged legacy file, witness present: REFUSED RuntimeRecoveryError: SQLite configuration binding is missing although this store's generation witness shows its generations were bound in the
+  ... witness also deleted (residual): OK gen=2 scheme=legacy_file

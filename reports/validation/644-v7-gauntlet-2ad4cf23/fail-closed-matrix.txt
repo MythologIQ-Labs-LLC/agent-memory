@@ -1,0 +1,24 @@
+### A. control: clean worktree at 97368d67, PYTHONPATH=reference
+status= ok | error= None | verified= True same_checkout= True matches_frozen= True | imported= /home/user/wt-gauntlet/reference/agentmem_ref
+### B. changed protected runtime (comment appended to reference/agentmem_ref/runtime/adapter.py)
+ M reference/agentmem_ref/runtime/adapter.py
+status= system_error | error= runtime_identity_unverified | verified= False same_checkout= True matches_frozen= False | imported= /home/user/wt-gauntlet/reference/agentmem_ref
+probe[B-changed-runtime] exit=1 status= blocked
+   native exact_top1= None sample_count= 0
+restored dirty=0
+### C. untracked file inside the runtime boundary (reference/agentmem_ref/zz_untracked.py)
+status= system_error | error= runtime_identity_unverified | verified= False same_checkout= True matches_frozen= False | imported= /home/user/wt-gauntlet/reference/agentmem_ref
+restored dirty=0
+### D. control: untracked file in evaluation/ (outside the source boundary)
+status= ok | error= None | verified= True same_checkout= True matches_frozen= True | imported= /home/user/wt-gauntlet/reference/agentmem_ref
+restored dirty=0
+### E. foreign installed package, byte-identical copy in a fake site-packages
+status= system_error | error= runtime_identity_unverified | verified= False same_checkout= False matches_frozen= True | imported= /tmp/claude-0/-home-user-agent-memory/52bb9ff5-5273-5d50-a739-f16662c77034/scratchpad/g7-failclosed/fake-site-packages/agentmem_ref
+probe[E-foreign-package] exit=2 status= invalid
+### F. foreign package shadowing with checkout second on PYTHONPATH
+status= system_error | error= runtime_identity_unverified | verified= False same_checkout= False matches_frozen= True | imported= /tmp/claude-0/-home-user-agent-memory/52bb9ff5-5273-5d50-a739-f16662c77034/scratchpad/g7-failclosed/fake-site-packages/agentmem_ref
+### G. different checkout at the pre-repair runtime 07cd8692 with this adapter copied in
+status= system_error | error= runtime_identity_unverified | verified= False same_checkout= True matches_frozen= False frozen_tree= f9b5ff9e79a54ef053ce89eb975256b63e211714
+### final worktree state: dirty=0 HEAD=97368d67
+### E2 appended
+E2. full probe, orchestrator from checkout, adapter child importing byte-identical foreign copy (scratch manifest startup wrapped in env PYTHONPATH): status= blocked failure= {"code": "runtime_identity_unverified", "message": "imported agentmem_ref is not this checkout's runtime at FROZEN_RUNTIME_REVISION", "source": "system_adapter"}

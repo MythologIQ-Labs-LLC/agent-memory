@@ -1,0 +1,6 @@
+# Second execution of the preregistered #809 legacy-upgrade expectations (module as committed at 4b18493f, reviewer YES in section 8 of independent-review-preexecution.md) on the IMPLEMENTED runtime
+# runtime blobs as executed (uncommitted at run time; committed unchanged as the next commit): adapter.py 9912f175f3e3370b4f91e55a65f481fa31812254 surface.py ff685664da430c15c7421e1ede2c470fe765c0fb substrate.py 767993510016820c84e414a9e060f9b86320733e sqlite_substrate.py 878a4232ab7d73a13c4fece2628c392d431185fb
+# module sha256: a50cc8d0332362683b699cddc884f5cccd2df93030f9555859f98fce5933bab8 (same as baseline 3)
+# command (repository root): python3 -m pytest reference/tests/test_809_legacy_upgrade.py -q -p no:cacheprovider --tb=short
+..........                                     [100%]
+10 passed, 26 subtests passed in 2.03s

@@ -1,0 +1,159 @@
+...............................F............................................FF................................................................................................................................................................x....................................................................s............................................................................................................................................................................................................................................................................................................................................................F.....................................................................................................................................................................................................................................................................................................................................................................................................................{"family_over": {}, "family_short": {"N1": 8, "N10": 8, "N11": 8, "N12": 8, "N13": 8, "N2": 8, "N3": 8, "N4": 8, "N5": 8, "N6": 8, "N7": 8, "N8": 8, "N9": 8, "P1": 12, "P10": 12, "P11": 12, "P12": 12, "P13": 12, "P2": 12, "P3": 12, "P4": 12, "P5": 12, "P6": 12, "P7": 11, "P8": 12, "P9": 12, "R1": 8, "R2": 8, "R3": 8, "R4": 8, "R5": 8, "R6": 8, "R7": 8}}
+rejections: 0
+{"family_over": {}, "family_short": {"N1": 8, "N10": 8, "N11": 8, "N12": 8, "N13": 8, "N2": 8, "N3": 8, "N4": 8, "N5": 8, "N6": 8, "N7": 8, "N8": 8, "N9": 8, "P1": 12, "P10": 12, "P11": 12, "P12": 12, "P13": 12, "P2": 12, "P3": 12, "P4": 12, "P5": 12, "P6": 12, "P7": 11, "P8": 12, "P9": 12, "R1": 8, "R2": 8, "R3": 8, "R4": 8, "R5": 8, "R6": 8, "R7": 8}}
+rejections: 14
+INVALID ATTEMPT: variants.json is missing but part file(s) exist: ['variants_part2.json']
+........................................................................................................................................................................................................................................................................................................................................s........................................................................................................................................................................................................................sssssss..........................................................................................[
+  {
+    "run_id": "124",
+    "destination": "<tmp>/out/amb-precisionmembench-retrieval-v1/agent-memory-cccccccccccc",
+    "row_id": "agent-memory-public-facade",
+    "native_summary": {
+      "accuracy": 0.025974025974025976,
+      "active_passes": 2,
+      "active_total": 43,
+      "answer_llm": null,
+      "correct": 2,
+      "id_resolution": {
+        "source_id": 231
+      },
+      "ingested_docs": 35,
+      "ingestion_time_ms": 12.5,
+      "judge_llm": null,
+      "mean_precision": 0.5,
+      "mean_recall": 1.0,
+      "mean_retrieve_ms": 10.0,
+      "shape_note": "recomputed from results[].meta exactly as the frozen harness's summarize_run does; active_passes/active_total is the upstream-comparable number",
+      "structural_passes": 0,
+      "structural_total": 25,
+      "total_passes": 2,
+      "total_queries": 77,
+      "trivially_empty_passes": 0,
+      "trivially_empty_total": 9
+    }
+  }
+]
+.[
+  {
+    "run_id": "123",
+    "destination": "<tmp>/out/amb-precisionmembench-retrieval-v1/mem0-explicit-bbbbbbbbbbbb",
+    "row_id": "mem0-oss-2.2.1-explicit-memory",
+    "native_summary": {
+      "accuracy": 0.05194805194805195,
+      "active_passes": 4,
+      "active_total": 43,
+      "answer_llm": null,
+      "correct": 4,
+      "id_resolution": {
+        "source_id": 231
+      },
+      "ingested_docs": 35,
+      "ingestion_time_ms": 12.5,
+      "judge_llm": null,
+      "mean_precision": 0.5,
+      "mean_recall": 1.0,
+      "mean_retrieve_ms": 10.0,
+      "shape_note": "recomputed from results[].meta exactly as the frozen harness's summarize_run does; active_passes/active_total is the upstream-comparable number",
+      "structural_passes": 0,
+      "structural_total": 25,
+      "total_passes": 4,
+      "total_queries": 77,
+      "trivially_empty_passes": 0,
+      "trivially_empty_total": 9
+    }
+  }
+]
+..[
+  {
+    "run_id": "301",
+    "destination": "<tmp>/out/amb-precisionmembench-retrieval-v2/agent-memory-eeeeeeeeeeee",
+    "row_id": "agent-memory-public-facade",
+    "native_summary": {
+      "accuracy": 0.03896103896103896,
+      "active_passes": 3,
+      "active_total": 43,
+      "answer_llm": null,
+      "correct": 3,
+      "id_resolution": {
+        "source_id": 231
+      },
+      "ingested_docs": 35,
+      "ingestion_time_ms": 12.5,
+      "judge_llm": null,
+      "mean_precision": 0.5,
+      "mean_recall": 1.0,
+      "mean_retrieve_ms": 10.0,
+      "shape_note": "recomputed from results[].meta exactly as the frozen harness's summarize_run does; active_passes/active_total is the upstream-comparable number",
+      "structural_passes": 0,
+      "structural_total": 25,
+      "total_passes": 3,
+      "total_queries": 77,
+      "trivially_empty_passes": 0,
+      "trivially_empty_total": 9
+    }
+  }
+]
+...........................................................................................................................................................................................................................................................................................................................................................................................................................................s..........................................................................................................................................................................................................................................ssss..............................................Runtime Baseline equivalence: PASS; baseline=agent-memory-runtime-baseline-v1; frozen=13901e266e1643fb0e2f1b8b768e31433a43a446; candidate=HEAD; explicit non-runtime exclusions=reference/agentmem_ref/evaluation
+........s....................................................................................................................................................................................................sssssssss.................................................................................................................................................inventory mechanical fields differ from the workflow YAML; run --write
+.........................................................................................................................................................................................................................................................................................................
+======================================================================
+FAIL: test_own_checkout_at_frozen_revision_is_served (tests.test_644_v7_gauntlet_identity.ImportedRuntimeIdentity.test_own_checkout_at_frozen_revision_is_served)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "review-821/cand3/reference/tests/test_644_v7_gauntlet_identity.py", line 71, in test_own_checkout_at_frozen_revision_is_served
+    self.assertEqual(reply["status"], "ok", reply)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'system_error' != 'ok'
+- system_error
++ ok
+ : {'adapter_evidence': {'adapter_kind': 'agent_memory_public_stdio', 'frozen_runtime_revision': '16a248b1e28f455fbf19217114175f0c20df2a01', 'public_contract': '1.6.0', 'runtime_identity': {'frozen_runtime_revision': '16a248b1e28f455fbf19217114175f0c20df2a01', 'frozen_runtime_tree': 'f9ccd0472e32cb68a5caf988a017078a73425cc5', 'imported_package': 'review-821/cand3/reference/agentmem_ref', 'matches_frozen_revision': False, 'same_checkout': True, 'verified': False}, 'surface': 'AgentMemory public facade', 'translation_only': True}, 'authority_effect': 'none', 'contract_family': 'agent-memory-gauntlet-operation', 'contract_version': '0.1.0', 'direction': 'response', 'error': {'code': 'runtime_identity_unverified', 'message': "imported agentmem_ref is not this checkout's runtime at FROZEN_RUNTIME_REVISION", 'source': 'system_adapter'}, 'operation': 'describe', 'request_id': 'r1', 'result': None, 'status': 'system_error', 'timing': {'elapsed_ms': 0.003591000222513685}}
+
+======================================================================
+FAIL: test_a_runtime_edit_still_makes_replay_evidence_stale (tests.test_770_v7_lane_freeze_independent.ReplayEvidenceFreshness.test_a_runtime_edit_still_makes_replay_evidence_stale)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "review-821/cand3/reference/tests/test_770_v7_lane_freeze_independent.py", line 266, in test_a_runtime_edit_still_makes_replay_evidence_stale
+    self.assertFalse(verifier["runtime_changed_since"]("16a248b1e28f455fbf19217114175f0c20df2a01"))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_lane_records_do_not_make_replay_evidence_stale (tests.test_770_v7_lane_freeze_independent.ReplayEvidenceFreshness.test_lane_records_do_not_make_replay_evidence_stale)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "review-821/cand3/reference/tests/test_770_v7_lane_freeze_independent.py", line 252, in test_lane_records_do_not_make_replay_evidence_stale
+    self.assertEqual({row["replay"]: row["status"] for row in result["replays"]},
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     {row["replay"]: "VERIFIED" for row in result["replays"]}, result)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'typ[54 chars]1': 'STALE', 'governed-persisted-typed-slot-su[216 chars]ALE'} != {'typ[54 chars]1': 'VERIFIED', 'governed-persisted-typed-slot[231 chars]IED'}
+Diff is 1379 characters long. Set self.maxDiff to None to see it. : {'replays': [{'replay': 'typed-sufficiency-noninterference-and-negative-controls-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}, {'replay': 'governed-persisted-typed-slot-sufficiency-admission-recheck-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}, {'replay': 'governed-admitted-typed-value-coherence-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}, {'replay': 'committed-governed-transition-witness-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}, {'replay': 'same-slot-safety-counterevidence-and-immutable-stop-gate-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}], 'evidence_verified': False, 'acceptance': "NOT GRANTED: requires an independent reviewer's decision recorded in META_LEDGER"}
+
+======================================================================
+FAIL: test_evaluation_only_change_keeps_runtime_baseline_equivalence (tests.test_benchmark_integration_contract.BenchmarkIntegrationContractTests.test_evaluation_only_change_keeps_runtime_baseline_equivalence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "review-821/cand3/reference/tests/test_benchmark_integration_contract.py", line 379, in test_evaluation_only_change_keeps_runtime_baseline_equivalence
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : undeclared protected change: reference/agentmem_ref/api/contract.py
+undeclared protected change: reference/agentmem_ref/api/surface.py
+undeclared protected change: reference/agentmem_ref/memory/checkpoint_migration.py
+undeclared protected change: reference/agentmem_ref/memory/procedural_memory.py
+undeclared protected change: reference/agentmem_ref/runtime/configured_restart.py
+undeclared protected change: reference/agentmem_ref/runtime/doctor.py
+undeclared protected change: reference/agentmem_ref/runtime/representation_cache.py
+undeclared protected change: reference/agentmem_ref/runtime/restart_runtime.py
+undeclared protected change: reference/agentmem_ref/runtime/runtime_composition.py
+undeclared protected change: reference/agentmem_ref/runtime/sqlite_runtime.py
+undeclared protected change: reference/agentmem_ref/state/sqlite_substrate.py
+undeclared protected change: reference/agentmem_ref/state/substrate.py
+declared blob mismatch for reference/agentmem_ref/runtime/adapter.py: declared 36be4dece830ff01a872d333c4c639e81e50fe00, candidate e370dfd3ae3128cc5db24dcdf2f59df2299b682a
+declared blob mismatch for reference/agentmem_ref/runtime/recall_control.py: declared 5136922f5a23b70399b1b422159a0d14f0fa1312, candidate dfb024efd644998145e7016af5592e546301bf89
+undeclared identity identity.public_contract_version changed: frozen='1.6.0', candidate='1.8.0'
+
+
+----------------------------------------------------------------------
+Ran 3075 tests in 281.247s
+
+FAILED (failures=4, skipped=24, expected failures=1)

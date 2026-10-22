@@ -1,0 +1,79 @@
+{
+  "label": "candidate-repaired",
+  "reference": "/home/user/agent-memory/reference",
+  "scenarios": {
+    "A": {
+      "A1_required_before_inaccessible": {
+        "required_recalled": 3,
+        "required_total": 3,
+        "foreign_in_caller_visible_candidates": 0,
+        "foreign_in_admitted": 0,
+        "graph_route_count": 3,
+        "max_fanout": 8
+      },
+      "A2_bridge_through_foreign_intermediate": {
+        "target_reached_via_foreign_bridge": false,
+        "bridge_in_caller_visible_candidates": false
+      },
+      "A3_eligibility_probe_ceiling": {
+        "foreign_ahead": 129,
+        "late_eligible_recalled": false,
+        "foreign_in_caller_visible_candidates": 0,
+        "elapsed_ms": 1.9,
+        "note": "candidate: bounded probe ceiling (max_fanout*16) can exclude an eligible neighbour ranked behind >128 ineligible ones; main: fan-out spent on the first 8 ineligible neighbours"
+      }
+    },
+    "B": {
+      "shared_domain_neighbour_via_typed_graph": true,
+      "shared_domain_neighbour_via_shared_evidence_route": true,
+      "shared_domain_neighbour_via_default_multi_route": true,
+      "beta_private_exposed_graph": false,
+      "beta_private_exposed_shared_evidence": false,
+      "beta_private_exposed_multi_route": false
+    },
+    "facade": {
+      "C_wrong_subject": {
+        "top_ranked_is_bob": true,
+        "admitted_count": 2
+      },
+      "D_no_answer": {
+        "candidates": 0,
+        "admitted": 0,
+        "returned": 0
+      },
+      "F_context_budget": {
+        "admitted": 2,
+        "returned": 1,
+        "return_policy_applied": true
+      },
+      "E_deletion": {
+        "before_admitted": 2,
+        "forget_committed": true,
+        "source_recalled_after_forget": false,
+        "derived_recalled_after_forget": false,
+        "deleted_id_in_public_candidates": false
+      }
+    },
+    "G": {
+      "facade_remember_ms": {
+        "p50": 8.16,
+        "p95": 12.05
+      },
+      "facade_recall_ms": {
+        "p50": 80.75,
+        "p95": 137.36,
+        "mean_admitted": 393,
+        "queries": 200,
+        "corpus": 1500
+      },
+      "high_degree_graph_recall_ms": {
+        "p50": 2.67,
+        "p95": 4.19,
+        "hub_degree": 400,
+        "graph_route_count": 8,
+        "foreign_in_candidates": 0,
+        "alpha_admitted": 8
+      }
+    }
+  }
+}

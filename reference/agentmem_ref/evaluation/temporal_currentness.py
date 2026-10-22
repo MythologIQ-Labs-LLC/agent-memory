@@ -266,7 +266,7 @@ def _run_setup(memory, root: str, case: Mapping[str, Any]):
             memory = _open(root)
         elif kind == "recall_repeat":
             for _ in range(int(op["times"])):
-                memory.recall(op["query"], reference_time=case.get("reference_time_default"))
+                getattr(memory, "_canonical_recall", memory.recall)(op["query"], reference_time=case.get("reference_time_default"))
     return memory, keys, declared, targets
 
 
@@ -292,7 +292,7 @@ def _metabolism(case: Mapping[str, Any], keys: Mapping[str, str]) -> dict[str, A
 def _observe(memory, probe: Mapping[str, Any], keys: Mapping[str, str], targets: Mapping[str, str]) -> dict[str, Any]:
     by_uuid = {uuid: key for key, uuid in keys.items()}
     name = lambda uuid: by_uuid.get(uuid, f"unkeyed:{uuid}")
-    recalled = memory.recall(probe["query"], temporal_intent=probe.get("temporal_intent"), reference_time=probe.get("reference_time"))
+    recalled = getattr(memory, "_canonical_recall", memory.recall)(probe["query"], temporal_intent=probe.get("temporal_intent"), reference_time=probe.get("reference_time"))
     per_key: dict[str, dict[str, Any]] = {}
     intent = None
     for uuid in recalled["candidates"]:
@@ -321,7 +321,7 @@ def _observe(memory, probe: Mapping[str, Any], keys: Mapping[str, str], targets:
             "authority_effects": sorted({str(evidence.get("authority_effect", "none")), str(basis.get("authority_effect", "none")),
                                          str((evidence.get("query_temporal_intent") or {}).get("authority_effect", "none"))}),
         }
-    history = {target: name(memory.history(f"memory:{target}")["history"].get("current_fact_uuid")) for target in sorted(targets)}
+    history = {target: name(getattr(memory, "_canonical_history", memory.history)(f"memory:{target}")["history"].get("current_fact_uuid")) for target in sorted(targets)}
     observation = {
         "admitted": [name(uuid) for uuid in recalled["admitted"]],
         "candidates": sorted(name(uuid) for uuid in recalled["candidates"]),

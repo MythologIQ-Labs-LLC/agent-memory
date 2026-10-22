@@ -1,0 +1,8 @@
+{
+  "authority_effect": "none",
+  "command": "gauntlet_run",
+  "error": "Gauntlet schema unavailable: gauntlet-system-adapter.schema.json",
+  "schema_version": "0.1.0",
+  "status": "invalid",
+  "valid": false
+}

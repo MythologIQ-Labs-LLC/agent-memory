@@ -1,0 +1,6 @@
+Failed to load spaCy lemma model: spaCy is not installed. Install it with: pip install mem0ai[nlp]
+fastembed not installed - BM25 keyword search disabled. Install it with: pip install "mem0ai[extras]"
+Failed to load spaCy full model: spaCy is not installed. Install it with: pip install mem0ai[nlp]
+/tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/bench/venv312-mem0/lib/python3.12/site-packages/mem0/vector_stores/qdrant.py:246: UserWarning: Local mode is not recommended for collections with more than 20,000 points. Current collection contains 20001 points. Consider using Qdrant in Docker or Qdrant Cloud for better performance with large datasets.
+  self.client.upsert(collection_name=self.collection_name, points=points)
+elapsed_s 1169

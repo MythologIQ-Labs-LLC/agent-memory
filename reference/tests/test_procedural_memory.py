@@ -273,6 +273,8 @@ class ProceduralMemoryTests(unittest.TestCase):
             artifact.skill_id,
             actor_id="agent:release",
             evidence_refs=("evidence:revoked-by-owner",),
+            scope=artifact.scope, isolation_domain_refs=artifact.isolation_domain_refs,
+            required_isolation_domain_refs=artifact.required_isolation_domain_refs, purpose=artifact.purpose,
         )
         self.assertTrue(revocation.commit.committed)
         self.assertTrue(revocation.active_influence_removed)

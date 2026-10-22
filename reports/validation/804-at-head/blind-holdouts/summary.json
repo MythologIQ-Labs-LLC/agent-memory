@@ -1,0 +1,186 @@
+{
+  "theatre/784-060e7cd/composed": {
+    "P0_safety": {
+      "cases_with_prohibited_exposure": 0,
+      "cases_with_stale_exposure": 0
+    },
+    "P1_served_correctness": {
+      "all_critical_groups_covered_rate": 0.52381,
+      "answerable_case_count": 21,
+      "empty_delivery_on_answerable_count": 0,
+      "top1_critical_rate": 0.428571,
+      "top1_relevant_rate": 0.809524
+    },
+    "evaluator": {
+      "clean": true,
+      "commit": "9961067d020c4f1a1817f222f5a29af76884b4b2"
+    },
+    "gold_sha256": "776979a9b3dc1ba51607be5d61fe5fe0b9d5c4af25aac3dedb5a3a32665e8fa3",
+    "input_sha256": "f12dc7ae9ab813ea82961db5a382b1d512f3e1609bb845d462234177aebc3c5a",
+    "runtime": {
+      "clean": true,
+      "commit": "060e7cd740d23236b0809f5e7afe02d7e6291a28"
+    }
+  },
+  "theatre/784-060e7cd/strict-target": {
+    "P0_safety": {
+      "cases_with_prohibited_exposure": 0,
+      "cases_with_stale_exposure": 0
+    },
+    "P1_served_correctness": {
+      "all_critical_groups_covered_rate": 0.809524,
+      "answerable_case_count": 21,
+      "empty_delivery_on_answerable_count": 0,
+      "top1_critical_rate": 0.761905,
+      "top1_relevant_rate": 0.857143
+    },
+    "evaluator": {
+      "clean": true,
+      "commit": "9961067d020c4f1a1817f222f5a29af76884b4b2"
+    },
+    "gold_sha256": "776979a9b3dc1ba51607be5d61fe5fe0b9d5c4af25aac3dedb5a3a32665e8fa3",
+    "input_sha256": "f12dc7ae9ab813ea82961db5a382b1d512f3e1609bb845d462234177aebc3c5a",
+    "runtime": {
+      "clean": true,
+      "commit": "060e7cd740d23236b0809f5e7afe02d7e6291a28"
+    }
+  },
+  "theatre/804-1d0d4c75/composed": {
+    "P0_safety": {
+      "cases_with_prohibited_exposure": 0,
+      "cases_with_stale_exposure": 0
+    },
+    "P1_served_correctness": {
+      "all_critical_groups_covered_rate": 0.52381,
+      "answerable_case_count": 21,
+      "empty_delivery_on_answerable_count": 0,
+      "top1_critical_rate": 0.428571,
+      "top1_relevant_rate": 0.809524
+    },
+    "evaluator": {
+      "clean": true,
+      "commit": "9961067d020c4f1a1817f222f5a29af76884b4b2"
+    },
+    "gold_sha256": "776979a9b3dc1ba51607be5d61fe5fe0b9d5c4af25aac3dedb5a3a32665e8fa3",
+    "input_sha256": "f12dc7ae9ab813ea82961db5a382b1d512f3e1609bb845d462234177aebc3c5a",
+    "runtime": {
+      "clean": true,
+      "commit": "1d0d4c7590176474006e6c037fac38ebcfe10d09"
+    }
+  },
+  "theatre/804-1d0d4c75/strict-target": {
+    "P0_safety": {
+      "cases_with_prohibited_exposure": 0,
+      "cases_with_stale_exposure": 0
+    },
+    "P1_served_correctness": {
+      "all_critical_groups_covered_rate": 0.809524,
+      "answerable_case_count": 21,
+      "empty_delivery_on_answerable_count": 0,
+      "top1_critical_rate": 0.761905,
+      "top1_relevant_rate": 0.857143
+    },
+    "evaluator": {
+      "clean": true,
+      "commit": "9961067d020c4f1a1817f222f5a29af76884b4b2"
+    },
+    "gold_sha256": "776979a9b3dc1ba51607be5d61fe5fe0b9d5c4af25aac3dedb5a3a32665e8fa3",
+    "input_sha256": "f12dc7ae9ab813ea82961db5a382b1d512f3e1609bb845d462234177aebc3c5a",
+    "runtime": {
+      "clean": true,
+      "commit": "1d0d4c7590176474006e6c037fac38ebcfe10d09"
+    }
+  },
+  "vineyard/784-060e7cd/composed": {
+    "P0_safety": {
+      "cases_with_prohibited_exposure": 0,
+      "cases_with_stale_exposure": 0
+    },
+    "P1_served_correctness": {
+      "all_critical_groups_covered_rate": 0.65,
+      "answerable_case_count": 20,
+      "empty_delivery_on_answerable_count": 0,
+      "top1_critical_rate": 0.45,
+      "top1_relevant_rate": 0.8
+    },
+    "evaluator": {
+      "clean": true,
+      "commit": "9961067d020c4f1a1817f222f5a29af76884b4b2"
+    },
+    "gold_sha256": "805b1eb508cb17b7a48a50a68533ec0bd3dc6c5349216bbd3e6c56d459f068bf",
+    "input_sha256": "e0bf0303043e4c566100cd0cd2e522b28098169263d136963a21e5c6696e0908",
+    "runtime": {
+      "clean": true,
+      "commit": "060e7cd740d23236b0809f5e7afe02d7e6291a28"
+    }
+  },
+  "vineyard/784-060e7cd/strict-target": {
+    "P0_safety": {
+      "cases_with_prohibited_exposure": 0,
+      "cases_with_stale_exposure": 0
+    },
+    "P1_served_correctness": {
+      "all_critical_groups_covered_rate": 0.95,
+      "answerable_case_count": 20,
+      "empty_delivery_on_answerable_count": 0,
+      "top1_critical_rate": 0.9,
+      "top1_relevant_rate": 0.9
+    },
+    "evaluator": {
+      "clean": true,
+      "commit": "9961067d020c4f1a1817f222f5a29af76884b4b2"
+    },
+    "gold_sha256": "805b1eb508cb17b7a48a50a68533ec0bd3dc6c5349216bbd3e6c56d459f068bf",
+    "input_sha256": "e0bf0303043e4c566100cd0cd2e522b28098169263d136963a21e5c6696e0908",
+    "runtime": {
+      "clean": true,
+      "commit": "060e7cd740d23236b0809f5e7afe02d7e6291a28"
+    }
+  },
+  "vineyard/804-1d0d4c75/composed": {
+    "P0_safety": {
+      "cases_with_prohibited_exposure": 0,
+      "cases_with_stale_exposure": 0
+    },
+    "P1_served_correctness": {
+      "all_critical_groups_covered_rate": 0.65,
+      "answerable_case_count": 20,
+      "empty_delivery_on_answerable_count": 0,
+      "top1_critical_rate": 0.45,
+      "top1_relevant_rate": 0.8
+    },
+    "evaluator": {
+      "clean": true,
+      "commit": "9961067d020c4f1a1817f222f5a29af76884b4b2"
+    },
+    "gold_sha256": "805b1eb508cb17b7a48a50a68533ec0bd3dc6c5349216bbd3e6c56d459f068bf",
+    "input_sha256": "e0bf0303043e4c566100cd0cd2e522b28098169263d136963a21e5c6696e0908",
+    "runtime": {
+      "clean": true,
+      "commit": "1d0d4c7590176474006e6c037fac38ebcfe10d09"
+    }
+  },
+  "vineyard/804-1d0d4c75/strict-target": {
+    "P0_safety": {
+      "cases_with_prohibited_exposure": 0,
+      "cases_with_stale_exposure": 0
+    },
+    "P1_served_correctness": {
+      "all_critical_groups_covered_rate": 0.95,
+      "answerable_case_count": 20,
+      "empty_delivery_on_answerable_count": 0,
+      "top1_critical_rate": 0.9,
+      "top1_relevant_rate": 0.9
+    },
+    "evaluator": {
+      "clean": true,
+      "commit": "9961067d020c4f1a1817f222f5a29af76884b4b2"
+    },
+    "gold_sha256": "805b1eb508cb17b7a48a50a68533ec0bd3dc6c5349216bbd3e6c56d459f068bf",
+    "input_sha256": "e0bf0303043e4c566100cd0cd2e522b28098169263d136963a21e5c6696e0908",
+    "runtime": {
+      "clean": true,
+      "commit": "1d0d4c7590176474006e6c037fac38ebcfe10d09"
+    }
+  }
+}

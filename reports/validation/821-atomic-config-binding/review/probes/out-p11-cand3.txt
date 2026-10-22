@@ -1,0 +1,26 @@
+W1 older copy of own DB                                                REFUSED  REFUSED RuntimeRecoveryError: SQLite database is behind this store's generation witness (2 < 4): it was rolled back or replaced; explicit operator action is req
+  ... same, witness deleted (documented residual)                      ACCEPTED OK gen=2 scheme=sqlite_transaction
+backup_to copy restored over the live dir                              REFUSED  REFUSED RuntimeRecoveryError: SQLite database is behind this store's generation witness (2 < 3): it was rolled back or replaced; explicit operator action is req
+W2 same-prefix fork, same generation                                   REFUSED  REFUSED RuntimeRecoveryError: SQLite database does not continue the history this store witnessed at generation 3: it was replaced; explicit operator action is r
+W2 same-prefix fork, fork ahead by one                                 REFUSED  REFUSED RuntimeRecoveryError: SQLite database does not continue the history this store witnessed at generation 3: it was replaced; explicit operator action is r
+fork with byte-identical history (indistinguishable)                   ACCEPTED OK gen=3 scheme=sqlite_transaction
+W2 another store's DB at a higher generation                           REFUSED  REFUSED RuntimeRecoveryError: SQLite database does not continue the history this store witnessed at generation 2: it was replaced; explicit operator action is r
+W1 another store's DB at a lower generation                            REFUSED  REFUSED RuntimeRecoveryError: SQLite database is behind this store's generation witness (2 < 4): it was rolled back or replaced; explicit operator action is req
+witness gen 0 + any foreign DB (no protection at gen 0)                ACCEPTED OK gen=3 scheme=sqlite_transaction
+W3 witness generation true                                             REFUSED  REFUSED RuntimeRecoveryError: SQLite generation witness is unreadable: malformed fields
+W3 witness generation 2.0                                              REFUSED  REFUSED RuntimeRecoveryError: SQLite generation witness is unreadable: malformed fields
+W3 witness generation -1                                               REFUSED  REFUSED RuntimeRecoveryError: SQLite generation witness is unreadable: malformed fields
+W3 witness generation '2'                                              REFUSED  REFUSED RuntimeRecoveryError: SQLite generation witness is unreadable: malformed fields
+W3 witness not JSON                                                    REFUSED  REFUSED RuntimeRecoveryError: SQLite generation witness is unreadable: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+witness path is a directory                                            REFUSED  REFUSED RuntimeRecoveryError: SQLite generation witness is unreadable: [Errno 21] Is a directory: '<tmp>-mfxpnajs/s/generation-witness.json'
+   doctor with witness-as-directory: failed_closed SQLite generation witness is unreadable: [Errno 21] Is a directory: '<tmp>-mfxpnajs/s/generati
+forged witness far ahead (refuse-only)                                 REFUSED  REFUSED RuntimeRecoveryError: SQLite database is behind this store's generation witness (3 < 99): it was rolled back or replaced; explicit operator action is re
+matching witness + corrupt row (witness never accepts)                 REFUSED  REFUSED RuntimeRecoveryError: SQLite configuration binding is corrupt: not JSON
+W4 DB deleted, witness kept: open                                      REFUSED  REFUSED RuntimeRecoveryError: incomplete durable state: generation witness exists without SQLite runtime database
+   files after refused open: ['generation-witness.json', 'runtime-config.json']
+   doctor: incomplete failed_closed
+  ... and witness deleted too (residual: reinitialized)                ACCEPTED OK gen=1 scheme=sqlite_transaction
+recovery+posture+close+doctor leave the witness untouched              True
+legacy store open+close writes no witness                              True
+witness write OSError after COMMIT                                     returned committed=True; state=3 witness=2 current_flag=False; next gen rewrote witness=4; reopen=OK gen=4 scheme=sqlite_transaction
+witness write KeyboardInterrupt after COMMIT                           raised KeyboardInterrupt; state=3 witness=2 current_flag=False; next gen rewrote witness=4; reopen=OK gen=4 scheme=sqlite_transaction

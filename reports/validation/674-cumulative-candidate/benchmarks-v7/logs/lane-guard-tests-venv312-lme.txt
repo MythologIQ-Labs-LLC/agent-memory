@@ -1,0 +1,10 @@
+  /home/user/agent-memory/reference/tests/test_security_finding.py:79: SyntaxWarning: invalid escape sequence '\+'
+    with self.assertRaisesRegex(ValueError, "passed \+ fails"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED reference/tests/test_770_v7_lane_freeze_independent.py::ReplayEvidenceFreshness::test_a_runtime_edit_still_makes_replay_evidence_stale
+FAILED reference/tests/test_770_v7_lane_freeze_independent.py::ReplayEvidenceFreshness::test_lane_records_do_not_make_replay_evidence_stale
+2 failed, 34 passed, 3124 deselected, 1 warning, 29 subtests passed in 6.38s
+
+[exited with code 0]

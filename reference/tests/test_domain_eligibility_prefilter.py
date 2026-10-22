@@ -114,7 +114,9 @@ class PrefilterPrivacyTests(unittest.TestCase):
                 }
             )
             refs = list(self.foreign.values()) + list(self.own.values()) + ["ref-does-not-exist"]
-            result = admit_preselected_candidates(adapter, refs, context, query_label="injected")
+            # a module-level governed act runs inside the runtime's generation seam (#816)
+            result = memory.runtime.durable_runtime.run_governed_read(
+                lambda: admit_preselected_candidates(adapter, refs, context, query_label="injected"))
         self.assertFalse(set(self.foreign.values()) & set(result.candidates))
         self.assertEqual(set(result.admitted), set(self.own.values()))
         self.assertEqual(result.refusals, {"ref-does-not-exist": "candidate_not_found"})

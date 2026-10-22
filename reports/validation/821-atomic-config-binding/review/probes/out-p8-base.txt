@@ -1,0 +1,9 @@
+posture() durable_state: {"status": "recovered", "configuration_binding_present": true, "configuration_binding_scheme": null}
+doctor ok: {'status': 'recovered', 'configuration_binding_present': True, 'configuration_binding_scheme': None, 'recovery': 'recovered', 'reason': None}
+doctor/posture wrote nothing (tables + non-WAL files): True
+backup_to (db only) + config, open: REFUSED RuntimeRecoveryError: required configuration-bound state missing: configuration-binding.json
+file profile files: ['.runtime-checkpoint.lock', 'configuration-binding.json', 'governance.json', 'runtime-generation-journal.jsonl', 'runtime-manifest.json', 'substrate.json']
+file profile binding keys: ['base', 'configuration_digest', 'durability_profile', 'plan', 'plan_digest', 'required_projection_ids', 'schema_version'] base keys: ['generation', 'governance_digest', 'interpretation_digest', 'substrate_digest'] gen: 2
+file profile recover: recovered_exact_configuration 2
+file profile tampered: RuntimeRecoveryError configuration binding does not match recovered base checkpoint: generation
+binding sha (structure): 48aa0cdd74a2

@@ -1,0 +1,8 @@
+HELD  stale in-process handle refused: SQLite generation conflict: observed 2, current 3
+HELD  row==state after two-handle race: {'db': True, 'file_gen': None, 'state_gen': 3, 'journal_gen': 3, 'row_gen': 3, 'row_payload_gen': 3, 'table': True}
+HELD  reopen: OK gen=3 scheme=sqlite_transaction
+HELD  4 threads x 8 writes on one handle: errors=[] {'db': True, 'file_gen': None, 'state_gen': 65, 'journal_gen': 65, 'row_gen': 65, 'row_payload_gen': 65, 'table': True}
+HELD  other thread during an open generation cannot write the row: {'r': 'UngovernedDurableWrite'} {'db': True, 'file_gen': None, 'state_gen': 3, 'journal_gen': 3, 'row_gen': 3, 'row_payload_gen': 3, 'table': True}
+HELD  second SQLiteTemporalGraph instance (no capability) refused: UngovernedDurableWrite
+HELD  self-issued capability on a 2nd instance writes a forged row -> recovery refuses: write=WROTE; reopen=REFUSED RuntimeRecoveryError: SQLite configuration binding protocol is unsupported
+FAIL  3 concurrent writer processes x 6 rounds with random os._exit: final={'db': True, 'file_gen': None, 'state_gen': 45, 'journal_gen': 45, 'row_gen': 45, 'row_payload_gen': 45, 'table': True} reopen=OK gen=45 scheme=sqlite_transaction failures=[(3, 'OPENFAIL RuntimeRecoveryError SQLite canonical substrate digest mismatch', ''), (3, 'OPENFAIL RuntimeRecoveryError SQLite governance state digest mismatch: governance commitment mismatch', ''), (3, 'OPENFAIL RuntimeRecoveryError SQLite governance state digest mismatch: governance commitment mismatch', '')]

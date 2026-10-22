@@ -1,0 +1,50 @@
+# fail-first: ConcurrentWitnessWriters at the original frozen runtime
+runtime HEAD: d0d2a97c63b50700001da06b9df7fe81b580fc09 (tree 1d9645e8fd65ff0e670bbf04fcb21bf36c8ff207)
+only change: reference/tests/test_821_atomic_config_binding.py copied from the repair branch (sha256 f5b5dd60dd61fa92319456b82d0962b4c2e1a577305b34fcda63919a8bc896ef)
+python: Python 3.13.16  date: 2026-10-16T19:12:21Z
+command: python -m unittest discover -s reference/tests -t reference -p test_821_atomic_config_binding.py -k ConcurrentWitnessWriters -v  (x3)
+--- run 1
+test_r1_a_late_rename_lets_the_witness_lag_but_never_lead (tests.test_821_atomic_config_binding.ConcurrentWitnessWriters.test_r1_a_late_rename_lets_the_witness_lag_but_never_lead)
+The documented residual: without a cross-process lock, A can rename its record after B ... ok
+FAIL
+
+======================================================================
+FAIL: test_r1_a_writer_killed_beside_another_never_publishes_an_empty_witness (tests.test_821_atomic_config_binding.ConcurrentWitnessWriters.test_r1_a_writer_killed_beside_another_never_publishes_an_empty_witness)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+AssertionError: b'' == b'' : an empty witness was published
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.263s
+
+FAILED (failures=1)
+--- run 2
+test_r1_a_late_rename_lets_the_witness_lag_but_never_lead (tests.test_821_atomic_config_binding.ConcurrentWitnessWriters.test_r1_a_late_rename_lets_the_witness_lag_but_never_lead)
+The documented residual: without a cross-process lock, A can rename its record after B ... ok
+FAIL
+
+======================================================================
+FAIL: test_r1_a_writer_killed_beside_another_never_publishes_an_empty_witness (tests.test_821_atomic_config_binding.ConcurrentWitnessWriters.test_r1_a_writer_killed_beside_another_never_publishes_an_empty_witness)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+AssertionError: b'' == b'' : an empty witness was published
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.396s
+
+FAILED (failures=1)
+--- run 3
+test_r1_a_late_rename_lets_the_witness_lag_but_never_lead (tests.test_821_atomic_config_binding.ConcurrentWitnessWriters.test_r1_a_late_rename_lets_the_witness_lag_but_never_lead)
+The documented residual: without a cross-process lock, A can rename its record after B ... ok
+FAIL
+
+======================================================================
+FAIL: test_r1_a_writer_killed_beside_another_never_publishes_an_empty_witness (tests.test_821_atomic_config_binding.ConcurrentWitnessWriters.test_r1_a_writer_killed_beside_another_never_publishes_an_empty_witness)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+AssertionError: b'' == b'' : an empty witness was published
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.309s
+
+FAILED (failures=1)

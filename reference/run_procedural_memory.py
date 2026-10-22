@@ -120,6 +120,8 @@ def run() -> dict:
         "release-workflow",
         actor_id="agent:release",
         evidence_refs=("evidence:owner-revocation",),
+        scope=TENANT, isolation_domain_refs=(TENANT, PROJECT),
+        required_isolation_domain_refs=(TENANT, PROJECT), purpose=PURPOSE,
     )
     after_revocation = runtime.recall_and_activate("release workflow branch", context=context, purpose=PURPOSE)
 

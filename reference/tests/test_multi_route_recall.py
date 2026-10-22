@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 import tempfile
 import unittest
+from dataclasses import replace
+from unittest import mock
 from pathlib import Path
 
 from agentmem_ref import policy
@@ -245,6 +247,114 @@ class MultiRouteRecallTests(unittest.TestCase):
         self.assertIn(deploy.fact_uuid, result.ranked_admitted)
         self.assertNotIn(backup.fact_uuid, result.ranked_admitted)
         self.assertEqual(result.refusals[backup.fact_uuid], "required_isolation_domain_missing")
+
+    def test_foreign_exact_ref_is_filtered_before_route_hit_materialization(self) -> None:
+        foreign = self._retain(
+            "memory:foreign-exact", "restricted beta fact", project_ref="project-beta",
+        )
+        from agentmem_ref.runtime import runtime_composition as composition
+
+        with mock.patch.object(
+            composition, "RetrievalRouteHit", wraps=composition.RetrievalRouteHit
+        ) as constructed:
+            result = self.runtime.multi_route_recall(
+                "unrelatedword", _context(), logical_memory_refs=("memory:foreign-exact",),
+            )
+        self.assertNotIn(foreign.fact_uuid, result.candidates)
+        self.assertFalse(any(
+            call.kwargs.get("candidate_ref") == foreign.fact_uuid
+            for call in constructed.call_args_list
+        ))
+
+    def test_foreign_identity_seed_cannot_expand_into_visible_shared_evidence(self) -> None:
+        # A caller may guess a cross-project logical memory ID. It must not
+        # become an evidence-neighbor traversal seed just because the output
+        # neighbor belongs to this caller's project.
+        foreign_proposal = replace(
+            _proposal("proposal:foreign-seed", "memory:foreign-seed", project_ref="project-beta"),
+            evidence_refs=("evidence:shared-opaque",),
+        )
+        visible_proposal = replace(
+            _proposal("proposal:visible", "memory:visible", project_ref=PROJECT),
+            evidence_refs=("evidence:shared-opaque",),
+        )
+        foreign = self.runtime.retain(foreign_proposal, "restricted beta operational memo")
+        visible = self.runtime.retain(visible_proposal, "allowed alpha status note")
+        self.assertTrue(foreign.committed)
+        self.assertTrue(visible.committed)
+
+        result = self.runtime.multi_route_recall(
+            "allowed", _context(), logical_memory_refs=("memory:foreign-seed",),
+        )
+        self.assertIn(visible.fact_uuid, result.admitted)  # lexical still works
+        self.assertNotIn(foreign.fact_uuid, result.candidates)
+        self.assertNotIn(foreign.fact_uuid, result.route_hits)
+        self.assertEqual(
+            {hit.route_id for hit in result.provenance_for(visible.fact_uuid)},
+            {LEXICAL_ROUTE},
+        )
+        self.assertNotIn(
+            "evidence:shared-opaque",
+            str(result.selection_trace()),
+        )
+
+    def test_authorized_seed_still_produces_direct_evidence_neighbors(self) -> None:
+        first_proposal = replace(
+            _proposal("proposal:authorized-seed", "memory:authorized-seed"),
+            evidence_refs=("evidence:shared-opaque",),
+        )
+        second_proposal = replace(
+            _proposal("proposal:authorized-neighbor", "memory:authorized-neighbor"),
+            evidence_refs=("evidence:shared-opaque",),
+        )
+        first = self.runtime.retain(first_proposal, "retained private planning memo")
+        second = self.runtime.retain(second_proposal, "retained separate planning detail")
+        self.assertTrue(first.committed)
+        self.assertTrue(second.committed)
+
+        result = self.runtime.multi_route_recall(
+            "nonsenseword", _context(), logical_memory_refs=("memory:authorized-seed",),
+        )
+        self.assertIn(first.fact_uuid, result.admitted)
+        self.assertIn(second.fact_uuid, result.admitted)
+        self.assertIn(
+            SHARED_EVIDENCE_ROUTE,
+            {hit.route_id for hit in result.provenance_for(second.fact_uuid)},
+        )
+
+    def test_shared_evidence_route_never_builds_foreign_neighbor_hit(self) -> None:
+        # Even a trusted substrate may return same-tenant neighbors in other
+        # projects. Do not construct an out-of-scope route hit and rely on
+        # later admission to erase the provenance it carried.
+        seed_proposal = replace(
+            _proposal("proposal:allowed-seed", "memory:allowed-seed"),
+            evidence_refs=("evidence:shared-opaque",),
+        )
+        foreign_proposal = replace(
+            _proposal("proposal:foreign-neighbor", "memory:foreign-neighbor",
+                      project_ref="project-beta"),
+            evidence_refs=("evidence:shared-opaque",),
+        )
+        seed = self.runtime.retain(seed_proposal, "allowed local setup")
+        foreign = self.runtime.retain(foreign_proposal, "restricted project data")
+        self.assertTrue(seed.committed)
+        self.assertTrue(foreign.committed)
+
+        from agentmem_ref.runtime import runtime_composition as composition
+
+        with mock.patch.object(
+            composition, "RetrievalRouteHit", wraps=composition.RetrievalRouteHit
+        ) as constructed:
+            result = self.runtime.multi_route_recall(
+                "unrelatedword", _context(), logical_memory_refs=("memory:allowed-seed",),
+            )
+        self.assertIn(seed.fact_uuid, result.admitted)
+        self.assertNotIn(foreign.fact_uuid, result.candidates)
+        self.assertFalse(any(
+            call.kwargs.get("route_id") == SHARED_EVIDENCE_ROUTE
+            and call.kwargs.get("candidate_ref") == foreign.fact_uuid
+            for call in constructed.call_args_list
+        ))
 
     def test_compatibility_recall_preserves_existing_lexical_behavior(self) -> None:
         deploy = self._retain(MEMORY_DEPLOY, "deploy window is Thursday")

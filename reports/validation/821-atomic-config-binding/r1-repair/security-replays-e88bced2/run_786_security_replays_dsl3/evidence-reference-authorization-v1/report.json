@@ -1,0 +1,2481 @@
+{
+ "authority_boundary": "A replay verdict is evidence for independent review. It is not successor acceptance, not publication, and not stop authority. sha256 values are integrity bindings, not signatures.",
+ "cases": [
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "admitted_bd",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "admitted_bl",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "admitted_bn",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "admitted_bu",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v1"
+     },
+     "observable": "after_bd",
+     "observed": "v1"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v1"
+     },
+     "observable": "after_bl",
+     "observed": "v1"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v1"
+     },
+     "observable": "after_bn",
+     "observed": "v1"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v1"
+     },
+     "observable": "after_bu",
+     "observed": "v1"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "before_bd",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "before_bl",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "before_bn",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "before_bu",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "committed_bd",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "committed_bl",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "committed_bn",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "committed_bu",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": "bd",
+       "events": [
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt"
+       ],
+       "state_version": 1,
+       "tombstoned": false
+      }
+     },
+     "observable": "history_bd",
+     "observed": {
+      "current": "bd",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": "bl",
+       "events": [
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt"
+       ],
+       "state_version": 1,
+       "tombstoned": false
+      }
+     },
+     "observable": "history_bl",
+     "observed": {
+      "current": "bl",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": "bn",
+       "events": [
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt"
+       ],
+       "state_version": 1,
+       "tombstoned": false
+      }
+     },
+     "observable": "history_bn",
+     "observed": {
+      "current": "bn",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": "bu",
+       "events": [
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt"
+       ],
+       "state_version": 1,
+       "tombstoned": false
+      }
+     },
+     "observable": "history_bu",
+     "observed": {
+      "current": "bu",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "history_same_bd",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "history_same_bl",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "op_same_bd",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "op_same_bl",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "recall_same_bd",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "recall_same_bl",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": null
+     },
+     "observable": "refusal_bd",
+     "observed": null
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": null
+     },
+     "observable": "refusal_bl",
+     "observed": null
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": null
+     },
+     "observable": "refusal_bn",
+     "observed": null
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": null
+     },
+     "observable": "refusal_bu",
+     "observed": null
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "semantics_bd",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "semantics_bl",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "semantics_bn",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "semantics_bu",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "semantics_same_bd",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "semantics_same_bl",
+     "observed": true
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "A write citing a reference outside the writer's scope therefore commits, reads back and stays admitted exactly as a write citing an id nobody wrote: the same receipt, `history`, recall payload and `write_semantics`, live, after a reopen and after a restart, and whether or not the cited fact is later pruned or permanently deleted.",
+     "observables": [
+      "op_same_bd",
+      "history_same_bd",
+      "recall_same_bd",
+      "semantics_same_bd",
+      "op_same_bl",
+      "history_same_bl",
+      "recall_same_bl",
+      "semantics_same_bl",
+      "admitted_bd",
+      "history_bd",
+      "semantics_bd",
+      "admitted_bl",
+      "history_bl",
+      "semantics_bl",
+      "admitted_bu",
+      "history_bu",
+      "semantics_bu",
+      "admitted_bn",
+      "history_bn",
+      "semantics_bn",
+      "committed_bd",
+      "refusal_bd",
+      "before_bd",
+      "after_bd",
+      "committed_bl",
+      "refusal_bl",
+      "before_bl",
+      "after_bl",
+      "committed_bu",
+      "refusal_bu",
+      "before_bu",
+      "after_bu",
+      "committed_bn",
+      "refusal_bn",
+      "before_bn",
+      "after_bn"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "Every other reference (an external evidence identifier, an id nobody wrote, a fact outside the writer's scope, an id that exists only later) is an unknown reference: it is retained verbatim as caller-supplied evidence (`episode_uuids`, receipts, audit events) and never withholds anything.",
+     "observables": [
+      "admitted_bd",
+      "admitted_bl",
+      "admitted_bu",
+      "admitted_bn"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "A citation of a foreign deleted, foreign live or unknown id commits, reads and stays admitted identically; a canary citing a live foreign fact no longer vanishes; a dispute citing a foreign deleted id stays in the citer's history.",
+     "observables": [
+      "committed_bd",
+      "refusal_bd",
+      "before_bd",
+      "after_bd",
+      "admitted_bd",
+      "history_bd",
+      "semantics_bd",
+      "committed_bl",
+      "refusal_bl",
+      "before_bl",
+      "after_bl",
+      "admitted_bl",
+      "history_bl",
+      "semantics_bl",
+      "op_same_bd",
+      "history_same_bd",
+      "recall_same_bd",
+      "semantics_same_bd",
+      "op_same_bl",
+      "history_same_bl",
+      "recall_same_bl",
+      "semantics_same_bl"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "Versions are generation-relative: `state_version`, `state_snapshot`, `before_state` and `after_state` count within the live generation of a logical id. After a governed deletion of the head the id reports `0` to any writer, a re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one",
+     "observables": [
+      "committed_bd",
+      "refusal_bd",
+      "before_bd",
+      "after_bd",
+      "committed_bl",
+      "refusal_bl",
+      "before_bl",
+      "after_bl",
+      "committed_bu",
+      "refusal_bu",
+      "before_bu",
+      "after_bu",
+      "committed_bn",
+      "refusal_bn",
+      "before_bn",
+      "after_bn"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "An id with no live head (never written or governed-deleted) is open to any writer in the tenant: creation and the #776 re-creation of a deleted id as a fresh generation are unchanged.",
+     "observables": [
+      "committed_bd",
+      "refusal_bd",
+      "before_bd",
+      "after_bd",
+      "committed_bl",
+      "refusal_bl",
+      "before_bl",
+      "after_bl",
+      "committed_bu",
+      "refusal_bu",
+      "before_bu",
+      "after_bu",
+      "committed_bn",
+      "refusal_bn",
+      "before_bn",
+      "after_bn"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    }
+   ],
+   "controls": [],
+   "error": null,
+   "id": "E1-four-references-after-pruning",
+   "implementation_evidence": [],
+   "invariants": [
+    "E1"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "admitted_bd": true,
+    "admitted_bl": true,
+    "admitted_bn": true,
+    "admitted_bu": true,
+    "after_bd": "v1",
+    "after_bl": "v1",
+    "after_bn": "v1",
+    "after_bu": "v1",
+    "before_bd": "v0",
+    "before_bl": "v0",
+    "before_bn": "v0",
+    "before_bu": "v0",
+    "committed_bd": true,
+    "committed_bl": true,
+    "committed_bn": true,
+    "committed_bu": true,
+    "history_bd": {
+     "current": "bd",
+     "events": [
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt"
+     ],
+     "state_version": 1,
+     "tombstoned": false
+    },
+    "history_bl": {
+     "current": "bl",
+     "events": [
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt"
+     ],
+     "state_version": 1,
+     "tombstoned": false
+    },
+    "history_bn": {
+     "current": "bn",
+     "events": [
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt"
+     ],
+     "state_version": 1,
+     "tombstoned": false
+    },
+    "history_bu": {
+     "current": "bu",
+     "events": [
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt"
+     ],
+     "state_version": 1,
+     "tombstoned": false
+    },
+    "history_same_bd": true,
+    "history_same_bl": true,
+    "op_same_bd": true,
+    "op_same_bl": true,
+    "recall_same_bd": true,
+    "recall_same_bl": true,
+    "refusal_bd": null,
+    "refusal_bl": null,
+    "refusal_bn": null,
+    "refusal_bu": null,
+    "semantics_bd": true,
+    "semantics_bl": true,
+    "semantics_bn": true,
+    "semantics_bu": true,
+    "semantics_same_bd": true,
+    "semantics_same_bl": true
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "admitted_bd",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "admitted_bl",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "admitted_bn",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "admitted_bu",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v1"
+     },
+     "observable": "after_bd",
+     "observed": "v1"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v1"
+     },
+     "observable": "after_bl",
+     "observed": "v1"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v1"
+     },
+     "observable": "after_bn",
+     "observed": "v1"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v1"
+     },
+     "observable": "after_bu",
+     "observed": "v1"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "before_bd",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "before_bl",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "before_bn",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "before_bu",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "committed_bd",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "committed_bl",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "committed_bn",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "committed_bu",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": "bd",
+       "events": [
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt"
+       ],
+       "state_version": 1,
+       "tombstoned": false
+      }
+     },
+     "observable": "history_bd",
+     "observed": {
+      "current": "bd",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": "bl",
+       "events": [
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt"
+       ],
+       "state_version": 1,
+       "tombstoned": false
+      }
+     },
+     "observable": "history_bl",
+     "observed": {
+      "current": "bl",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": "bn",
+       "events": [
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt"
+       ],
+       "state_version": 1,
+       "tombstoned": false
+      }
+     },
+     "observable": "history_bn",
+     "observed": {
+      "current": "bn",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": "bu",
+       "events": [
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt"
+       ],
+       "state_version": 1,
+       "tombstoned": false
+      }
+     },
+     "observable": "history_bu",
+     "observed": {
+      "current": "bu",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "history_same_bd",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "history_same_bl",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "op_same_bd",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "op_same_bl",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "q1_exists",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "recall_same_bd",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "recall_same_bl",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": null
+     },
+     "observable": "refusal_bd",
+     "observed": null
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": null
+     },
+     "observable": "refusal_bl",
+     "observed": null
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": null
+     },
+     "observable": "refusal_bn",
+     "observed": null
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": null
+     },
+     "observable": "refusal_bu",
+     "observed": null
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "semantics_bd",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "semantics_bl",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "semantics_bn",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "semantics_bu",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "semantics_same_bd",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "semantics_same_bl",
+     "observed": true
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "A write citing a reference outside the writer's scope therefore commits, reads back and stays admitted exactly as a write citing an id nobody wrote: the same receipt, `history`, recall payload and `write_semantics`, live, after a reopen and after a restart, and whether or not the cited fact is later pruned or permanently deleted.",
+     "observables": [
+      "op_same_bd",
+      "history_same_bd",
+      "recall_same_bd",
+      "semantics_same_bd",
+      "op_same_bl",
+      "history_same_bl",
+      "recall_same_bl",
+      "semantics_same_bl",
+      "admitted_bd",
+      "history_bd",
+      "semantics_bd",
+      "admitted_bl",
+      "history_bl",
+      "semantics_bl",
+      "admitted_bu",
+      "history_bu",
+      "semantics_bu",
+      "admitted_bn",
+      "history_bn",
+      "semantics_bn",
+      "committed_bd",
+      "refusal_bd",
+      "before_bd",
+      "after_bd",
+      "committed_bl",
+      "refusal_bl",
+      "before_bl",
+      "after_bl",
+      "committed_bu",
+      "refusal_bu",
+      "before_bu",
+      "after_bu",
+      "committed_bn",
+      "refusal_bn",
+      "before_bn",
+      "after_bn"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "Every other reference (an external evidence identifier, an id nobody wrote, a fact outside the writer's scope, an id that exists only later) is an unknown reference: it is retained verbatim as caller-supplied evidence (`episode_uuids`, receipts, audit events) and never withholds anything.",
+     "observables": [
+      "admitted_bd",
+      "admitted_bl",
+      "admitted_bu",
+      "admitted_bn"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "A citation of a foreign deleted, foreign live or unknown id commits, reads and stays admitted identically; a canary citing a live foreign fact no longer vanishes; a dispute citing a foreign deleted id stays in the citer's history.",
+     "observables": [
+      "committed_bd",
+      "refusal_bd",
+      "before_bd",
+      "after_bd",
+      "admitted_bd",
+      "history_bd",
+      "semantics_bd",
+      "committed_bl",
+      "refusal_bl",
+      "before_bl",
+      "after_bl",
+      "admitted_bl",
+      "history_bl",
+      "semantics_bl",
+      "op_same_bd",
+      "history_same_bd",
+      "recall_same_bd",
+      "semantics_same_bd",
+      "op_same_bl",
+      "history_same_bl",
+      "recall_same_bl",
+      "semantics_same_bl"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "Versions are generation-relative: `state_version`, `state_snapshot`, `before_state` and `after_state` count within the live generation of a logical id. After a governed deletion of the head the id reports `0` to any writer, a re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one",
+     "observables": [
+      "committed_bd",
+      "refusal_bd",
+      "before_bd",
+      "after_bd",
+      "committed_bl",
+      "refusal_bl",
+      "before_bl",
+      "after_bl",
+      "committed_bu",
+      "refusal_bu",
+      "before_bu",
+      "after_bu",
+      "committed_bn",
+      "refusal_bn",
+      "before_bn",
+      "after_bn"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "An id with no live head (never written or governed-deleted) is open to any writer in the tenant: creation and the #776 re-creation of a deleted id as a fresh generation are unchanged.",
+     "observables": [
+      "committed_bd",
+      "refusal_bd",
+      "before_bd",
+      "after_bd",
+      "committed_bl",
+      "refusal_bl",
+      "before_bl",
+      "after_bl",
+      "committed_bu",
+      "refusal_bu",
+      "before_bu",
+      "after_bu",
+      "committed_bn",
+      "refusal_bn",
+      "before_bn",
+      "after_bn"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "| purge | no | intended no recoverable copies | no | required full deletion outcome |",
+     "observables": [
+      "q1_exists"
+     ],
+     "source": "docs/28-retention-deletion-and-tombstones.md"
+    }
+   ],
+   "controls": [],
+   "error": null,
+   "id": "E1b-four-references-after-permanent-deletion",
+   "implementation_evidence": [],
+   "invariants": [
+    "E1"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "admitted_bd": true,
+    "admitted_bl": true,
+    "admitted_bn": true,
+    "admitted_bu": true,
+    "after_bd": "v1",
+    "after_bl": "v1",
+    "after_bn": "v1",
+    "after_bu": "v1",
+    "before_bd": "v0",
+    "before_bl": "v0",
+    "before_bn": "v0",
+    "before_bu": "v0",
+    "committed_bd": true,
+    "committed_bl": true,
+    "committed_bn": true,
+    "committed_bu": true,
+    "history_bd": {
+     "current": "bd",
+     "events": [
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt"
+     ],
+     "state_version": 1,
+     "tombstoned": false
+    },
+    "history_bl": {
+     "current": "bl",
+     "events": [
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt"
+     ],
+     "state_version": 1,
+     "tombstoned": false
+    },
+    "history_bn": {
+     "current": "bn",
+     "events": [
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt"
+     ],
+     "state_version": 1,
+     "tombstoned": false
+    },
+    "history_bu": {
+     "current": "bu",
+     "events": [
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt"
+     ],
+     "state_version": 1,
+     "tombstoned": false
+    },
+    "history_same_bd": true,
+    "history_same_bl": true,
+    "op_same_bd": true,
+    "op_same_bl": true,
+    "q1_exists": false,
+    "recall_same_bd": true,
+    "recall_same_bl": true,
+    "refusal_bd": null,
+    "refusal_bl": null,
+    "refusal_bn": null,
+    "refusal_bu": null,
+    "semantics_bd": true,
+    "semantics_bl": true,
+    "semantics_bn": true,
+    "semantics_bu": true,
+    "semantics_same_bd": true,
+    "semantics_same_bl": true
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "admitted_bd",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "admitted_bl",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "admitted_bn",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "admitted_bu",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": "bd",
+       "events": [
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt"
+       ],
+       "state_version": 1,
+       "tombstoned": false
+      }
+     },
+     "observable": "history_bd",
+     "observed": {
+      "current": "bd",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": "bl",
+       "events": [
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt"
+       ],
+       "state_version": 1,
+       "tombstoned": false
+      }
+     },
+     "observable": "history_bl",
+     "observed": {
+      "current": "bl",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": "bn",
+       "events": [
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt"
+       ],
+       "state_version": 1,
+       "tombstoned": false
+      }
+     },
+     "observable": "history_bn",
+     "observed": {
+      "current": "bn",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": "bu",
+       "events": [
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt"
+       ],
+       "state_version": 1,
+       "tombstoned": false
+      }
+     },
+     "observable": "history_bu",
+     "observed": {
+      "current": "bu",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "history_same_bd",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "history_same_bl",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "recall_same_bd",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "recall_same_bl",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "semantics_bd",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "semantics_bl",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "semantics_bn",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "semantics_bu",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "semantics_same_bd",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "semantics_same_bl",
+     "observed": true
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "A write citing a reference outside the writer's scope therefore commits, reads back and stays admitted exactly as a write citing an id nobody wrote: the same receipt, `history`, recall payload and `write_semantics`, live, after a reopen and after a restart, and whether or not the cited fact is later pruned or permanently deleted.",
+     "observables": [
+      "history_same_bd",
+      "recall_same_bd",
+      "semantics_same_bd",
+      "history_same_bl",
+      "recall_same_bl",
+      "semantics_same_bl",
+      "admitted_bd",
+      "history_bd",
+      "semantics_bd",
+      "admitted_bl",
+      "history_bl",
+      "semantics_bl",
+      "admitted_bu",
+      "history_bu",
+      "semantics_bu",
+      "admitted_bn",
+      "history_bn",
+      "semantics_bn"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "Every other reference (an external evidence identifier, an id nobody wrote, a fact outside the writer's scope, an id that exists only later) is an unknown reference: it is retained verbatim as caller-supplied evidence (`episode_uuids`, receipts, audit events) and never withholds anything.",
+     "observables": [
+      "admitted_bd",
+      "admitted_bl",
+      "admitted_bu",
+      "admitted_bn"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "A citation of a foreign deleted, foreign live or unknown id commits, reads and stays admitted identically; a canary citing a live foreign fact no longer vanishes; a dispute citing a foreign deleted id stays in the citer's history.",
+     "observables": [
+      "admitted_bd",
+      "history_bd",
+      "semantics_bd",
+      "admitted_bl",
+      "history_bl",
+      "semantics_bl",
+      "history_same_bd",
+      "recall_same_bd",
+      "semantics_same_bd",
+      "history_same_bl",
+      "recall_same_bl",
+      "semantics_same_bl"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    }
+   ],
+   "controls": [],
+   "error": null,
+   "id": "E2-four-references-after-reopen",
+   "implementation_evidence": [],
+   "invariants": [
+    "E2",
+    "E1"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "admitted_bd": true,
+    "admitted_bl": true,
+    "admitted_bn": true,
+    "admitted_bu": true,
+    "history_bd": {
+     "current": "bd",
+     "events": [
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt"
+     ],
+     "state_version": 1,
+     "tombstoned": false
+    },
+    "history_bl": {
+     "current": "bl",
+     "events": [
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt"
+     ],
+     "state_version": 1,
+     "tombstoned": false
+    },
+    "history_bn": {
+     "current": "bn",
+     "events": [
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt"
+     ],
+     "state_version": 1,
+     "tombstoned": false
+    },
+    "history_bu": {
+     "current": "bu",
+     "events": [
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt"
+     ],
+     "state_version": 1,
+     "tombstoned": false
+    },
+    "history_same_bd": true,
+    "history_same_bl": true,
+    "recall_same_bd": true,
+    "recall_same_bl": true,
+    "semantics_bd": true,
+    "semantics_bl": true,
+    "semantics_bn": true,
+    "semantics_bu": true,
+    "semantics_same_bd": true,
+    "semantics_same_bl": true
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "disp_d_committed",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "disp_u_committed",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "dispute_present_d",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "dispute_present_u",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "history_same",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "op_same",
+     "observed": true
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "A citation of a foreign deleted, foreign live or unknown id commits, reads and stays admitted identically; a canary citing a live foreign fact no longer vanishes; a dispute citing a foreign deleted id stays in the citer's history.",
+     "observables": [
+      "disp_d_committed",
+      "disp_u_committed",
+      "history_same",
+      "op_same",
+      "dispute_present_d",
+      "dispute_present_u"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "A public projection withholds a deleted-generation identifier only from a reader whose own context could have read that generation. To any other reader such a string is an opaque identifier it cannot act on, whether the reader supplied it itself or meets it in a co-holder's audit evidence of a shared memory: citing it binds nothing, disputing it or looking up its write semantics reads exactly as an id nobody wrote, and recall cannot address it.",
+     "observables": [
+      "history_same"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    }
+   ],
+   "controls": [],
+   "error": null,
+   "id": "E3-dispute-citing-the-deleted-foreign-id",
+   "implementation_evidence": [
+    "events_d",
+    "events_u"
+   ],
+   "invariants": [
+    "E3"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "disp_d_committed": true,
+    "disp_u_committed": true,
+    "dispute_present_d": true,
+    "dispute_present_u": true,
+    "events_d": [
+     "memory.propose",
+     "memory.authorize",
+     "memory.commit",
+     "memory.receipt",
+     "memory.propose",
+     "memory.authorize",
+     "memory.dispute"
+    ],
+    "events_u": [
+     "memory.propose",
+     "memory.authorize",
+     "memory.commit",
+     "memory.receipt",
+     "memory.propose",
+     "memory.authorize",
+     "memory.dispute"
+    ],
+    "history_same": true,
+    "op_same": true
+   },
+   "outcome": "pass",
+   "recorded": {
+    "events_d": [
+     "memory.propose",
+     "memory.authorize",
+     "memory.commit",
+     "memory.receipt",
+     "memory.propose",
+     "memory.authorize",
+     "memory.dispute"
+    ],
+    "events_u": [
+     "memory.propose",
+     "memory.authorize",
+     "memory.commit",
+     "memory.receipt",
+     "memory.propose",
+     "memory.authorize",
+     "memory.dispute"
+    ]
+   }
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "admitted",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": "bc",
+       "events": [
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt"
+       ],
+       "state_version": 1,
+       "tombstoned": false
+      }
+     },
+     "observable": "history",
+     "observed": {
+      "current": "bc",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "A citation of a foreign deleted, foreign live or unknown id commits, reads and stays admitted identically; a canary citing a live foreign fact no longer vanishes; a dispute citing a foreign deleted id stays in the citer's history.",
+     "observables": [
+      "admitted",
+      "history"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "A write citing a reference outside the writer's scope therefore commits, reads back and stays admitted exactly as a write citing an id nobody wrote: the same receipt, `history`, recall payload and `write_semantics`, live, after a reopen and after a restart, and whether or not the cited fact is later pruned or permanently deleted.",
+     "observables": [
+      "admitted",
+      "history"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    }
+   ],
+   "controls": [],
+   "error": null,
+   "id": "E4-canary-survives-pruning-of-its-source",
+   "implementation_evidence": [],
+   "invariants": [
+    "E4"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "admitted": true,
+    "history": {
+     "current": "bc",
+     "events": [
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt"
+     ],
+     "state_version": 1,
+     "tombstoned": false
+    }
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "admitted",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": "bc",
+       "events": [
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt"
+       ],
+       "state_version": 1,
+       "tombstoned": false
+      }
+     },
+     "observable": "history",
+     "observed": {
+      "current": "bc",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "q2_exists",
+     "observed": false
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "A citation of a foreign deleted, foreign live or unknown id commits, reads and stays admitted identically; a canary citing a live foreign fact no longer vanishes; a dispute citing a foreign deleted id stays in the citer's history.",
+     "observables": [
+      "admitted",
+      "history"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "A write citing a reference outside the writer's scope therefore commits, reads back and stays admitted exactly as a write citing an id nobody wrote: the same receipt, `history`, recall payload and `write_semantics`, live, after a reopen and after a restart, and whether or not the cited fact is later pruned or permanently deleted.",
+     "observables": [
+      "admitted",
+      "history"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "| purge | no | intended no recoverable copies | no | required full deletion outcome |",
+     "observables": [
+      "q2_exists"
+     ],
+     "source": "docs/28-retention-deletion-and-tombstones.md"
+    }
+   ],
+   "controls": [],
+   "error": null,
+   "id": "E4b-canary-survives-permanent-deletion-of-its-source",
+   "implementation_evidence": [],
+   "invariants": [
+    "E4"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "admitted": true,
+    "history": {
+     "current": "bc",
+     "events": [
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt"
+     ],
+     "state_version": 1,
+     "tombstoned": false
+    },
+    "q2_exists": false
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "kept",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "kept_after_reopen",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "withheld",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "withheld_after_reopen",
+     "observed": []
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "Within the writer's own scope the #776/#777 rule is unchanged: direct and transitive derivations of a deleted source are withheld tenant-wide, including after the source's payload is physically erased, and a dependency bound while the writer was a member of a shared domain survives the writer's later revocation.",
+     "observables": [
+      "withheld",
+      "withheld_after_reopen"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "Within the writer's scope, including shared domains the writer was a member of at commit and sources later physically erased, derivations of deleted content are withheld as before.",
+     "observables": [
+      "withheld"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "Every other reference (an external evidence identifier, an id nobody wrote, a fact outside the writer's scope, an id that exists only later) is an unknown reference: it is retained verbatim as caller-supplied evidence (`episode_uuids`, receipts, audit events) and never withholds anything.",
+     "observables": [
+      "kept",
+      "kept_after_reopen"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    }
+   ],
+   "controls": [],
+   "error": null,
+   "id": "E5-own-scope-derivations-withheld-after-pruning",
+   "implementation_evidence": [],
+   "invariants": [
+    "E5"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "kept": true,
+    "kept_after_reopen": true,
+    "withheld": [],
+    "withheld_after_reopen": []
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "kept",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "q1_exists",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "withheld",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "withheld_after_reopen",
+     "observed": []
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "Within the writer's own scope the #776/#777 rule is unchanged: direct and transitive derivations of a deleted source are withheld tenant-wide, including after the source's payload is physically erased, and a dependency bound while the writer was a member of a shared domain survives the writer's later revocation.",
+     "observables": [
+      "withheld",
+      "withheld_after_reopen"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "Within the writer's scope, including shared domains the writer was a member of at commit and sources later physically erased, derivations of deleted content are withheld as before.",
+     "observables": [
+      "withheld"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "Every other reference (an external evidence identifier, an id nobody wrote, a fact outside the writer's scope, an id that exists only later) is an unknown reference: it is retained verbatim as caller-supplied evidence (`episode_uuids`, receipts, audit events) and never withholds anything.",
+     "observables": [
+      "kept"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "| purge | no | intended no recoverable copies | no | required full deletion outcome |",
+     "observables": [
+      "q1_exists"
+     ],
+     "source": "docs/28-retention-deletion-and-tombstones.md"
+    }
+   ],
+   "controls": [],
+   "error": null,
+   "id": "E5b-own-scope-derivations-withheld-after-permanent-deletion",
+   "implementation_evidence": [],
+   "invariants": [
+    "E5"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "kept": true,
+    "q1_exists": false,
+    "withheld": [],
+    "withheld_after_reopen": []
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "bp_admitted",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": "bp",
+       "events": [
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt"
+       ],
+       "state_version": 1,
+       "tombstoned": false
+      }
+     },
+     "observable": "bp_history",
+     "observed": {
+      "current": "bp",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "late_withheld",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "q1_exists",
+     "observed": false
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "Within the writer's own scope the #776/#777 rule is unchanged: direct and transitive derivations of a deleted source are withheld tenant-wide, including after the source's payload is physically erased, and a dependency bound while the writer was a member of a shared domain survives the writer's later revocation.",
+     "observables": [
+      "late_withheld"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "Within the writer's scope, including shared domains the writer was a member of at commit and sources later physically erased, derivations of deleted content are withheld as before.",
+     "observables": [
+      "late_withheld"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "Every other reference (an external evidence identifier, an id nobody wrote, a fact outside the writer's scope, an id that exists only later) is an unknown reference: it is retained verbatim as caller-supplied evidence (`episode_uuids`, receipts, audit events) and never withholds anything.",
+     "observables": [
+      "bp_admitted"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "A write citing a reference outside the writer's scope therefore commits, reads back and stays admitted exactly as a write citing an id nobody wrote: the same receipt, `history`, recall payload and `write_semantics`, live, after a reopen and after a restart, and whether or not the cited fact is later pruned or permanently deleted.",
+     "observables": [
+      "bp_admitted",
+      "bp_history"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "| purge | no | intended no recoverable copies | no | required full deletion outcome |",
+     "observables": [
+      "q1_exists"
+     ],
+     "source": "docs/28-retention-deletion-and-tombstones.md"
+    }
+   ],
+   "controls": [],
+   "error": null,
+   "id": "E5c-purged-source-cited-afterwards",
+   "implementation_evidence": [],
+   "invariants": [
+    "E5"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "bp_admitted": true,
+    "bp_history": {
+     "current": "bp",
+     "events": [
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt"
+     ],
+     "state_version": 1,
+     "tombstoned": false
+    },
+    "late_withheld": [],
+    "q1_exists": false
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "bf_before",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "bo_before",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v1"
+     },
+     "observable": "recreated",
+     "observed": "v1"
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "An id with no live head (never written or governed-deleted) is open to any writer in the tenant: creation and the #776 re-creation of a deleted id as a fresh generation are unchanged.",
+     "observables": [
+      "recreated"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "Versions are generation-relative: `state_version`, `state_snapshot`, `before_state` and `after_state` count within the live generation of a logical id. After a governed deletion of the head the id reports `0` to any writer, a re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one",
+     "observables": [
+      "recreated"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "A write citing a reference outside the writer's scope therefore commits, reads back and stays admitted exactly as a write citing an id nobody wrote: the same receipt, `history`, recall payload and `write_semantics`, live, after a reopen and after a restart, and whether or not the cited fact is later pruned or permanently deleted.",
+     "observables": [
+      "bf_before"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "A reference in `evidence_refs` becomes a canonical derivation link of the committed fact, and so carries deletion taint (`derived_from_tombstoned_source`, `derived_from_deleted_logical_memory`), only when it names a fact of the tenant the writer is eligible to read under the gates above; the decision is made once at commit and recorded with the fact.",
+     "observables": [
+      "bo_before"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    }
+   ],
+   "controls": [],
+   "error": null,
+   "id": "E6-re-creation-by-the-citing-scope",
+   "implementation_evidence": [],
+   "invariants": [
+    "E6"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "bf_before": true,
+    "bo_before": true,
+    "recreated": "v1"
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "bf_after",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "bo_after",
+     "observed": false
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "A write citing a reference outside the writer's scope therefore commits, reads back and stays admitted exactly as a write citing an id nobody wrote: the same receipt, `history`, recall payload and `write_semantics`, live, after a reopen and after a restart, and whether or not the cited fact is later pruned or permanently deleted.",
+     "observables": [
+      "bf_after"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "Within the writer's own scope the #776/#777 rule is unchanged: direct and transitive derivations of a deleted source are withheld tenant-wide, including after the source's payload is physically erased, and a dependency bound while the writer was a member of a shared domain survives the writer's later revocation.",
+     "observables": [
+      "bo_after"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "A reference in `evidence_refs` becomes a canonical derivation link of the committed fact, and so carries deletion taint (`derived_from_tombstoned_source`, `derived_from_deleted_logical_memory`), only when it names a fact of the tenant the writer is eligible to read under the gates above; the decision is made once at commit and recorded with the fact.",
+     "observables": [
+      "bo_after"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    }
+   ],
+   "controls": [],
+   "error": null,
+   "id": "E6a-after-the-citing-scopes-own-deletion",
+   "implementation_evidence": [],
+   "invariants": [
+    "E6"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "bf_after": true,
+    "bo_after": false
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "bf_after_reopen",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "bo_after_reopen",
+     "observed": false
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "A write citing a reference outside the writer's scope therefore commits, reads back and stays admitted exactly as a write citing an id nobody wrote: the same receipt, `history`, recall payload and `write_semantics`, live, after a reopen and after a restart, and whether or not the cited fact is later pruned or permanently deleted.",
+     "observables": [
+      "bf_after_reopen"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "Within the writer's own scope the #776/#777 rule is unchanged: direct and transitive derivations of a deleted source are withheld tenant-wide, including after the source's payload is physically erased, and a dependency bound while the writer was a member of a shared domain survives the writer's later revocation.",
+     "observables": [
+      "bo_after_reopen"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "A reference in `evidence_refs` becomes a canonical derivation link of the committed fact, and so carries deletion taint (`derived_from_tombstoned_source`, `derived_from_deleted_logical_memory`), only when it names a fact of the tenant the writer is eligible to read under the gates above; the decision is made once at commit and recorded with the fact.",
+     "observables": [
+      "bo_after_reopen"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    }
+   ],
+   "controls": [],
+   "error": null,
+   "id": "E6r-after-the-citing-scopes-own-deletion-and-reopen",
+   "implementation_evidence": [],
+   "invariants": [
+    "E6"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "bf_after_reopen": true,
+    "bo_after_reopen": false
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "first",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "second",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "third",
+     "observed": true
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "Every other reference (an external evidence identifier, an id nobody wrote, a fact outside the writer's scope, an id that exists only later) is an unknown reference: it is retained verbatim as caller-supplied evidence (`episode_uuids`, receipts, audit events) and never withholds anything.",
+     "observables": [
+      "first",
+      "second",
+      "third"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "A write citing a reference outside the writer's scope therefore commits, reads back and stays admitted exactly as a write citing an id nobody wrote: the same receipt, `history`, recall payload and `write_semantics`, live, after a reopen and after a restart, and whether or not the cited fact is later pruned or permanently deleted.",
+     "observables": [
+      "first",
+      "second",
+      "third"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    }
+   ],
+   "controls": [],
+   "error": null,
+   "id": "E6b-chain-rooted-in-the-foreign-deleted-fact",
+   "implementation_evidence": [],
+   "invariants": [
+    "E6"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "first": true,
+    "second": true,
+    "third": true
+   },
+   "outcome": "pass",
+   "recorded": {}
+  }
+ ],
+ "dsl_version": "786-security-replay-dsl/3",
+ "invariants": {
+  "E1": {
+   "cases": [
+    "E1-four-references-after-pruning",
+    "E1b-four-references-after-permanent-deletion",
+    "E2-four-references-after-reopen"
+   ],
+   "holds": true,
+   "statement": "After A's pruning or attested permanent deletion of memory:q, B's writes citing the deleted foreign fact, a live foreign fact, an id nobody wrote and nothing at all each commit v0 -> v1 with no refusal, are admitted by logical reference, show one live generation of four events, have write semantics, and the deleted-foreign and live-foreign citations read byte-identically (ids, timestamps, cited strings and case tokens folded) to the unknown citation in the remember result, the history, the recall payload and the write semantics."
+  },
+  "E2": {
+   "cases": [
+    "E2-four-references-after-reopen"
+   ],
+   "holds": true,
+   "statement": "E1 holds after an in-process reopen of the citing handle."
+  },
+  "E3": {
+   "cases": [
+    "E3-dispute-citing-the-deleted-foreign-id"
+   ],
+   "holds": true,
+   "statement": "A dispute by B of its own memory citing the deleted foreign id commits and leaves B's history byte-identical (folded) to the same dispute citing an id nobody wrote; the dispute event is present in both."
+  },
+  "E4": {
+   "cases": [
+    "E4-canary-survives-pruning-of-its-source",
+    "E4b-canary-survives-permanent-deletion-of-its-source"
+   ],
+   "holds": true,
+   "statement": "B's memory citing a live foreign fact (a canary) stays admitted with an unchanged history after A prunes or permanently deletes that fact."
+  },
+  "E5": {
+   "cases": [
+    "E5-own-scope-derivations-withheld-after-pruning",
+    "E5b-own-scope-derivations-withheld-after-permanent-deletion",
+    "E5c-purged-source-cited-afterwards"
+   ],
+   "holds": true,
+   "statement": "Within A's own scope, direct and transitive derivations of memory:q are withheld after its pruning and after its permanent deletion (the source payload erased), live and after a reopen, while a memory citing only an external identifier stays admitted; a derivation written after the source was purged is withheld too, and the same purged identifier cited from B binds nothing."
+  },
+  "E6": {
+   "cases": [
+    "E6-re-creation-by-the-citing-scope",
+    "E6a-after-the-citing-scopes-own-deletion",
+    "E6r-after-the-citing-scopes-own-deletion-and-reopen",
+    "E6b-chain-rooted-in-the-foreign-deleted-fact"
+   ],
+   "holds": true,
+   "statement": "B may re-create A's deleted id; B's derivation of its own new generation follows B's own deletion while B's citation of A's deleted fact stays admitted throughout, live and after reopen; a chain of B's memories rooted in A's deleted fact is admitted end to end."
+  }
+ },
+ "observations_sha256": "70da7a3a6ff594a992960c5e606d19d8d33c887cc3dd1b88b3c70ad0ab0cf7f6",
+ "provenance": {
+  "dirty_exclusion": "reports/validation/809-security-replays/",
+  "dirty_paths": [],
+  "fixture": {
+   "path": "reference/fixtures/786-security-replays/evidence-reference-authorization-v1.json",
+   "sha256": "fed458c85afa1f812c864d8a208578986b5803be5f9dce1a3d8ae888d4e33ae5"
+  },
+  "platform": "Linux-6.18.44-fc-v139-x86_64-with-glibc2.39",
+  "python": "3.13.16",
+  "runner": {
+   "path": "reference/run_786_security_replays_dsl3.py",
+   "sha256": "e48cc6f8536a7586f9ef5893fed0517e3147b8078a0ee62f2c06854a5b282202",
+   "version": "786-security-replay-runner/3"
+  },
+  "runner_base": {
+   "path": "reference/run_786_security_replays_dsl2.py",
+   "sha256": "73f0cd175b5a97f8e61d168bfc93cd796152aab02c76209bf2374153f35dba86",
+   "version": "786-security-replay-runner/2"
+  },
+  "runner_root": {
+   "path": "reference/run_786_security_replays.py",
+   "sha256": "21db05148c369815fa154bfa83db0b3b35f6c4712596ec0f137002a6611d8269",
+   "version": "786-security-replay-runner/1"
+  },
+  "runtime_tree": "4bfe33f27d229412f160e79a80fe0a44b3ed0c2a",
+  "source_commit": "e88bced24157d668179882f63e921ea569df1d51",
+  "sqlite": "3.45.1"
+ },
+ "replay_id": "evidence-reference-authorization-v1",
+ "schema": "786-security-replay-report/3",
+ "summary": {
+  "cases": 13,
+  "errors": 0,
+  "failed": 0,
+  "passed": 13
+ },
+ "verdict": "PASS",
+ "verdict_reasons": [
+  "every expectation held on a clean source tree"
+ ]
+}

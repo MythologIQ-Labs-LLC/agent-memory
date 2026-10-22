@@ -1,0 +1,634 @@
+{
+ "authority_boundary": "A replay verdict is evidence for independent review. It is not successor acceptance, not publication, and not stop authority. sha256 values are integrity bindings, not signatures.",
+ "cases": [
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": null,
+       "events": [],
+       "state_version": 3,
+       "tombstoned": true
+      }
+     },
+     "observable": "owner_history",
+     "observed": {
+      "current": null,
+      "events": [],
+      "state_version": 3,
+      "tombstoned": true
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": null,
+       "events": [],
+       "rejected_values": 0,
+       "state_version": 3,
+       "tombstoned": true
+      }
+     },
+     "observable": "owner_probe",
+     "observed": {
+      "current": null,
+      "events": [],
+      "rejected_values": 0,
+      "state_version": 3,
+      "tombstoned": true
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "mentions",
+     "observed": []
+    }
+   ],
+   "error": null,
+   "id": "R1-owner-tombstone-live",
+   "invariants": [
+    "R1"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "mentions": [],
+    "owner_history": {
+     "current": null,
+     "events": [],
+     "state_version": 3,
+     "tombstoned": true
+    },
+    "owner_probe": {
+     "current": null,
+     "events": [],
+     "rejected_values": 0,
+     "state_version": 3,
+     "tombstoned": true
+    }
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": null,
+       "events": [],
+       "state_version": 3,
+       "tombstoned": true
+      }
+     },
+     "observable": "owner_history",
+     "observed": {
+      "current": null,
+      "events": [],
+      "state_version": 3,
+      "tombstoned": true
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "mentions",
+     "observed": []
+    }
+   ],
+   "error": null,
+   "id": "R1-owner-tombstone-after-restart",
+   "invariants": [
+    "R1"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "mentions": [],
+    "owner_history": {
+     "current": null,
+     "events": [],
+     "state_version": 3,
+     "tombstoned": true
+    }
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "history",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "value_probe",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "by_ref",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "historical",
+     "observed": []
+    }
+   ],
+   "error": null,
+   "id": "R2-other-reads-unknown-live",
+   "invariants": [
+    "R2"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "by_ref": true,
+    "historical": [],
+    "history": true,
+    "value_probe": true
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "history",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "value_probe",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "by_ref",
+     "observed": true
+    }
+   ],
+   "error": null,
+   "id": "R2-other-reads-unknown-after-restart",
+   "invariants": [
+    "R2"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "by_ref": true,
+    "history": true,
+    "value_probe": true
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": null,
+       "events": [],
+       "state_version": 3,
+       "tombstoned": true
+      }
+     },
+     "observable": "owner_history",
+     "observed": {
+      "current": null,
+      "events": [],
+      "state_version": 3,
+      "tombstoned": true
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "owner_mentions",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": null,
+       "events": [],
+       "state_version": 3,
+       "tombstoned": true
+      }
+     },
+     "observable": "other_history",
+     "observed": {
+      "current": null,
+      "events": [],
+      "state_version": 3,
+      "tombstoned": true
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "b1_before",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v1"
+     },
+     "observable": "b1_after",
+     "observed": "v1"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v2"
+     },
+     "observable": "b2_after",
+     "observed": "v2"
+    }
+   ],
+   "error": null,
+   "id": "R3-owner-view-stable-under-other-scope",
+   "invariants": [
+    "R3",
+    "R6"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "b1_after": "v1",
+    "b1_before": "v0",
+    "b2_after": "v2",
+    "other_history": {
+     "current": null,
+     "events": [],
+     "state_version": 3,
+     "tombstoned": true
+    },
+    "owner_history": {
+     "current": null,
+     "events": [],
+     "state_version": 3,
+     "tombstoned": true
+    },
+    "owner_mentions": []
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "withheld",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       "live",
+       "live-digest"
+      ]
+     },
+     "observable": "kept",
+     "observed": [
+      "live",
+      "live-digest"
+     ]
+    }
+   ],
+   "error": null,
+   "id": "R4-derived-from-deleted-withheld-live-derivation-kept",
+   "invariants": [
+    "R4"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "kept": [
+     "live",
+     "live-digest"
+    ],
+    "withheld": []
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "parked_after",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "parked_mentions",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "a_back_mentions",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "a_disp",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "a_disp_mentions",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": "gen-b",
+       "events": [
+        "memory.propose",
+        "memory.authorize",
+        "memory.receipt",
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt"
+       ],
+       "state_version": 1,
+       "tombstoned": false
+      }
+     },
+     "observable": "other_history",
+     "observed": {
+      "current": "gen-b",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.receipt",
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    }
+   ],
+   "error": null,
+   "id": "R6b-refused-proposals-on-the-tombstoned-id-carry-no-former-count",
+   "invariants": [
+    "R6"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "a_back_mentions": [],
+    "a_disp": false,
+    "a_disp_mentions": [],
+    "other_history": {
+     "current": "gen-b",
+     "events": [
+      "memory.propose",
+      "memory.authorize",
+      "memory.receipt",
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt"
+     ],
+     "state_version": 1,
+     "tombstoned": false
+    },
+    "parked_after": "v0",
+    "parked_mentions": []
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": "gen-b",
+       "events": [
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt"
+       ],
+       "state_version": 1,
+       "tombstoned": false
+      }
+     },
+     "observable": "other_history",
+     "observed": {
+      "current": "gen-b",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "a_back",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "b1_snapshot",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "b1_before",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v1"
+     },
+     "observable": "b1_after",
+     "observed": "v1"
+    }
+   ],
+   "error": null,
+   "id": "R5-recreated-history-only-own-events",
+   "invariants": [
+    "R5",
+    "R6"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "a_back": false,
+    "b1_after": "v1",
+    "b1_before": "v0",
+    "b1_snapshot": "v0",
+    "other_history": {
+     "current": "gen-b",
+     "events": [
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt"
+     ],
+     "state_version": 1,
+     "tombstoned": false
+    }
+   },
+   "outcome": "pass",
+   "recorded": {}
+  }
+ ],
+ "dsl_version": "786-security-replay-dsl/1",
+ "invariants": {
+  "R1": {
+   "cases": [
+    "R1-owner-tombstone-live",
+    "R1-owner-tombstone-after-restart"
+   ],
+   "holds": true,
+   "statement": "The owner of a governed-deleted memory reads tombstoned, no current fact, no events, no rejected values, the version its deletion recorded, and no identifier or text of the deleted generation, live and after restart."
+  },
+  "R2": {
+   "cases": [
+    "R2-other-reads-unknown-live",
+    "R2-other-reads-unknown-after-restart"
+   ],
+   "holds": true,
+   "statement": "Another project reads the deleted memory byte-identically (ids and timestamps folded) to an id nobody wrote: history, a value probe, recall by logical reference, and historical recall, live and after restart."
+  },
+  "R3": {
+   "cases": [
+    "R3-owner-view-stable-under-other-scope"
+   ],
+   "holds": true,
+   "statement": "The owner's deleted view does not change when another project re-creates, corrects and deletes the same id."
+  },
+  "R4": {
+   "cases": [
+    "R4-derived-from-deleted-withheld-live-derivation-kept"
+   ],
+   "holds": true,
+   "statement": "A memory derived from a deleted fact is withheld from public recall while a live derivation keeps its provenance."
+  },
+  "R5": {
+   "cases": [
+    "R5-recreated-history-only-own-events"
+   ],
+   "holds": true,
+   "statement": "A re-created generation's public history carries only its own events; another scope's refused attempt leaves no trace in it."
+  },
+  "R6": {
+   "cases": [
+    "R3-owner-view-stable-under-other-scope",
+    "R6b-refused-proposals-on-the-tombstoned-id-carry-no-former-count",
+    "R5-recreated-history-only-own-events"
+   ],
+   "holds": true,
+   "statement": "No receipt on a governed-deleted id -- committed, refused or policy-parked, from any writer -- and no history of a new generation carries the former generation's version count."
+  }
+ },
+ "observations_sha256": "a90b8a841ad507bb03239bf232d6bc2ec3928865cbfecd08ece4dd149374e94e",
+ "provenance": {
+  "dirty_exclusion": "reports/validation/786-security-replays/",
+  "dirty_paths": [],
+  "fixture": {
+   "path": "reference/fixtures/786-security-replays/public-tombstone-redaction-and-observer-separation-v2.json",
+   "sha256": "5817a0ff7d39be2f29b97c7a918c05da8dba6ab13bca0acb955123eb65a1267e"
+  },
+  "platform": "Linux-6.18.44-fc-v114-x86_64-with-glibc2.39",
+  "python": "3.13.16",
+  "runner": {
+   "path": "reference/run_786_security_replays.py",
+   "sha256": "21db05148c369815fa154bfa83db0b3b35f6c4712596ec0f137002a6611d8269",
+   "version": "786-security-replay-runner/1"
+  },
+  "runtime_tree": "b5970c58971f35bb3cc97f645c764f68acba6501",
+  "source_commit": "9c4e91788f945ddc14f2811fef0eb8e1130212ce",
+  "sqlite": "3.45.1"
+ },
+ "replay_id": "public-tombstone-redaction-and-observer-separation-v2",
+ "schema": "786-security-replay-report/1",
+ "summary": {
+  "cases": 8,
+  "errors": 0,
+  "failed": 0,
+  "passed": 8
+ },
+ "verdict": "PASS",
+ "verdict_reasons": [
+  "every expectation held on a clean source tree"
+ ]
+}

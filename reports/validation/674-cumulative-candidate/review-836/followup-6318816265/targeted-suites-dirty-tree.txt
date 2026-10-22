@@ -1,0 +1,101 @@
+...............................F...............F...F......F.......... [ 12%]
+...................................................................... [ 24%]
+............................................x....... [ 33%]
+.................. [ 37%]
+...F...........s.............................................. [ 48%]
+................................................................ [ 59%]
+................................................................................................s................sss [ 80%]
+................................................................................................................ [100%]
+=================================== FAILURES ===================================
+____ ImportedRuntimeIdentity.test_own_checkout_at_frozen_revision_is_served ____
+
+self = <tests.test_644_v7_gauntlet_identity.ImportedRuntimeIdentity testMethod=test_own_checkout_at_frozen_revision_is_served>
+
+    def test_own_checkout_at_frozen_revision_is_served(self):
+        reply = ask(str(ROOT / "reference"))
+>       self.assertEqual(reply["status"], "ok", reply)
+E       AssertionError: 'system_error' != 'ok'
+E       - system_error
+E       + ok
+E        : {'adapter_evidence': {'adapter_kind': 'agent_memory_public_stdio', 'frozen_runtime_revision': '16a248b1e28f455fbf19217114175f0c20df2a01', 'public_contract': '1.6.0', 'runtime_identity': {'frozen_runtime_revision': '16a248b1e28f455fbf19217114175f0c20df2a01', 'frozen_runtime_tree': 'f9ccd0472e32cb68a5caf988a017078a73425cc5', 'imported_package': '/home/user/agent-memory/reference/agentmem_ref', 'matches_frozen_revision': False, 'same_checkout': True, 'verified': False}, 'surface': 'AgentMemory public facade', 'translation_only': True}, 'authority_effect': 'none', 'contract_family': 'agent-memory-gauntlet-operation', 'contract_version': '0.1.0', 'direction': 'response', 'error': {'code': 'runtime_identity_unverified', 'message': "imported agentmem_ref is not this checkout's runtime at FROZEN_RUNTIME_REVISION", 'source': 'system_adapter'}, 'operation': 'describe', 'request_id': 'r1', 'result': None, 'status': 'system_error', 'timing': {'elapsed_ms': 0.040097000237437896}}
+
+reference/tests/test_644_v7_gauntlet_identity.py:71: AssertionError
+_ EvidenceVerification.test_consistently_forged_observations_fail_reexecution __
+
+self = <tests.test_644_v7_replays.EvidenceVerification testMethod=test_consistently_forged_observations_fail_reexecution>
+
+    def test_consistently_forged_observations_fail_reexecution(self):
+        def forge(r):
+            case = next(c for c in r["cases"] if c["id"] == "T9-restart")
+            case["observations"]["state_unchanged_extra"] = True
+            r["observations_sha256"] = verifier["observations_digest"](r)
+        report = json.loads(self.report_path.read_text())
+        forge(report)
+        self.rewrite(lambda r: r.update(report), lambda m: m.update(observations_sha256=report["observations_sha256"]))
+>       self.assertEqual(self.status(reexecute=False)[0], "VERIFIED")
+E       AssertionError: 'STALE' != 'VERIFIED'
+E       - STALE
+E       + VERIFIED
+
+reference/tests/test_644_v7_replays.py:291: AssertionError
+_ EvidenceVerification.test_inventory_stays_blocked_even_with_verified_evidence _
+
+self = <tests.test_644_v7_replays.EvidenceVerification testMethod=test_inventory_stays_blocked_even_with_verified_evidence>
+
+    def test_inventory_stays_blocked_even_with_verified_evidence(self):
+        result = inventory(self.declaration, self.evidence)
+        self.assertEqual(result["qualification"], "BLOCKED")
+        self.assertEqual([r["status"] for r in result["replays"]], ["UNVERIFIED"])
+        verified = verifier["verify"](self.evidence, self.declaration, self.fixtures, False)
+>       self.assertTrue(verified["evidence_verified"])
+E       AssertionError: False is not true
+
+reference/tests/test_644_v7_replays.py:336: AssertionError
+____ EvidenceVerification.test_untampered_evidence_verifies_and_reexecutes _____
+
+self = <tests.test_644_v7_replays.EvidenceVerification testMethod=test_untampered_evidence_verifies_and_reexecutes>
+
+    def test_untampered_evidence_verifies_and_reexecutes(self):
+        status, problems = self.status(reexecute=True)
+>       self.assertEqual((status, problems), ("VERIFIED", []))
+E       AssertionError: Tuples differ: ('STALE', ['runtime files differ from the evidence source commit']) != ('VERIFIED', [])
+E       
+E       First differing element 0:
+E       'STALE'
+E       'VERIFIED'
+E       
+E       - ('STALE', ['runtime files differ from the evidence source commit'])
+E       + ('VERIFIED', [])
+
+reference/tests/test_644_v7_replays.py:258: AssertionError
+_ SecurityReplayV3Execution.test_untampered_evidence_verifies_and_a_mutated_report_is_tampered _
+
+self = <tests.test_786_security_replays_v3.SecurityReplayV3Execution testMethod=test_untampered_evidence_verifies_and_a_mutated_report_is_tampered>
+
+    def test_untampered_evidence_verifies_and_a_mutated_report_is_tampered(self):
+        verifier = runpy.run_path(str(ROOT / "scripts/verify_786_security_replays.py"))
+        with tempfile.TemporaryDirectory() as tmp:
+            evidence = Path(tmp) / "evidence"
+            for replay_id in runner.REPLAYS:
+                runner.write_outputs(runner.run_replay(replay_id, allow_dirty=True), evidence, "test")
+            # the declaration also names the #809 generation (DSL/3); this family verifies its own
+            # three ids through a scratch declaration, exactly as the frozen -v2 family does
+            record = json.loads(DECLARATION.read_text(encoding="utf-8"))
+            record["acceptance_evidence_required"] = [
+                e for e in record["acceptance_evidence_required"] if e["kind"] != "security_replay"
+            ] + [{"kind": "security_replay", "ref": r} for r in runner.REPLAYS]
+            scratch = Path(tmp) / "declaration-v3.json"
+            scratch.write_text(json.dumps(record), encoding="utf-8")
+            result = verifier["verify"](evidence, scratch)
+            self.assertEqual({r["replay"] for r in result["replays"]}, set(runner.REPLAYS))
+>           self.assertTrue(all(r["status"] == "VERIFIED" for r in result["replays"]), result)
+E           AssertionError: False is not true : {'replays': [{'replay': 'cross-scope-write-authority-denial-v3', 'status': 'STALE', 'verdict': 'BLOCKED', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}, {'replay': 'deleted-lineage-generations-and-restart-v3', 'status': 'STALE', 'verdict': 'BLOCKED', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}, {'replay': 'public-tombstone-redaction-and-observer-separation-v3', 'status': 'STALE', 'verdict': 'BLOCKED', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}], 'evidence_verified': False, 'acceptance': "NOT GRANTED: requires an independent reviewer's decision recorded in META_LEDGER"}
+
+reference/tests/test_786_security_replays_v3.py:139: AssertionError
+=========================== short test summary info ============================
+FAILED reference/tests/test_644_v7_gauntlet_identity.py::ImportedRuntimeIdentity::test_own_checkout_at_frozen_revision_is_served
+FAILED reference/tests/test_644_v7_replays.py::EvidenceVerification::test_consistently_forged_observations_fail_reexecution
+FAILED reference/tests/test_644_v7_replays.py::EvidenceVerification::test_inventory_stays_blocked_even_with_verified_evidence
+FAILED reference/tests/test_644_v7_replays.py::EvidenceVerification::test_untampered_evidence_verifies_and_reexecutes
+FAILED reference/tests/test_786_security_replays_v3.py::SecurityReplayV3Execution::test_untampered_evidence_verifies_and_a_mutated_report_is_tampered
+5 failed, 552 passed, 5 skipped, 2609 deselected, 1 xfailed, 517 subtests passed in 163.59s (0:02:43)

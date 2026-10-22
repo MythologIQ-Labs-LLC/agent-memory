@@ -1,0 +1,50 @@
+# Missing-path classes in the installed-wheel run (paths the tests or evaluation tooling resolve relative to the package or the checkout)
+     33 reference/agentmem_ref/<source file hashed or executed by the test>
+      4 site-packages-relative checkout resource: explorations/memory-architectures
+      3 site-packages-relative checkout resource: gauntlet/minimal-stdio-adapter.json
+      3 site-packages-relative checkout resource: gauntlet/lexical-adapter.json
+      2 site-packages-relative checkout resource: sleeper-memory-poisoning.json/
+      2 site-packages-relative checkout resource: scope-reduction-propagates-to-derived-state.json/
+      2 site-packages-relative checkout resource: gauntlet/no-memory-adapter.json
+      2 site-packages-relative checkout resource: concurrent-conflicting-mutation.json/
+      2 site-packages-relative checkout resource: authority-laundering.json/
+      1 site-packages-relative checkout resource: unsafe-multi-memory-composition.json/
+      1 site-packages-relative checkout resource: runtime/baseline-register.json
+      1 site-packages-relative checkout resource: policies/cedar_agent_memory_v01.cedar
+      1 site-packages-relative checkout resource: opaque-latent-source-revocation.json/
+      1 site-packages-relative checkout resource: gauntlet/governance-strict-adapter.json
+      1 site-packages-relative checkout resource: gauntlet/governance-leaky-adapter.json
+      1 site-packages-relative checkout resource: gauntlet/governance-count-leak-adapter.json
+      1 site-packages-relative checkout resource: gauntlet/durability-lossy-recovery-adapter.json
+      1 site-packages-relative checkout resource: gauntlet/agent-memory-public-governance-adapter.json
+      1 site-packages-relative checkout resource: gauntlet/agent-memory-public-durability-adapter.json
+      1 site-packages-relative checkout resource: forbidden-hit-lifecycle-matrix.json/
+      1 site-packages-relative checkout resource: fixtures/benchmarks
+      1 site-packages-relative checkout resource: benchmarks/longmemeval
+      1 site-packages-relative checkout resource: agentmem_ref/evaluation
+      1 reference/fixtures
+
+# Assertion / import messages (first 260 chars)
+tests.test_github_actions_workflow_policy: ImportError: Failed to import test module: test_github_actions_workflow_policy
+tests.test_github_actions_workflow_policy: ModuleNotFoundError: No module named 'yaml'
+tests.test_sync_workflow_inventory: ImportError: Failed to import test module: test_sync_workflow_inventory
+tests.test_sync_workflow_inventory: ModuleNotFoundError: No module named 'yaml'
+tests.test_644_v7_gauntlet_identity: AssertionError: 'system_error' != 'ok'
+tests.test_809_legacy_upgrade: AssertionError: 'FROZEN_RUNTIME_REVISION = "16a248b1e28f455fbf19217114175f0c20df2a01"' not found in '#!/usr/bin/env python3\n"""Public-process Gauntlet contestant for Agent Memory Runtime Baseline v7.\n\nThis adapter deliberately imports only the public ``Agen
+tests.test_benchmark_integration_contract: AssertionError: False is not true
+tests.test_benchmark_integration_contract: AssertionError: False is not true : {'variant': 'memdialogue_v2_upstream_defaults', 'report': 'reports/benchmarks/agentmembench/memdialogue-v2-agent_memory-03197cd.json', 'bound': False, 'error': 'report missing'}
+tests.test_benchmark_integration_contract: AssertionError: [] is not true
+tests.test_benchmark_ui_catalog: AssertionError: 1 != 0 : stale: reports/benchmarks/ui/catalog.json
+tests.test_fixture_corpus: AssertionError: 0 != 64
+tests.test_fixture_corpus: AssertionError: 0 not greater than or equal to 25
+tests.test_memory_evaluation_scorecards: AssertionError: 1 != 0 : Traceback (most recent call last):
+tests.test_package_layout: AssertionError: False is not true : __init__
+tests.test_package_layout: AssertionError: Lists differ: ['missing layer package: core', 'missing l[15939 chars].py'] != []
+tests.test_package_layout: AssertionError: Posix[95 chars]tall/venv-wheel/lib/python3.13/site-packages/a[17 chars]mas') != Posix[95 chars]tall/copy-wheel/schemas')
+tests.test_package_layout: ModuleNotFoundError: No module named 'numpy'
+tests.test_packaged_schema_resolution: AssertionError: Posix[95 chars]tall/venv-wheel/lib/python3.13/site-packages/a[51 chars]son') != Posix[95 chars]tall/copy-wheel/schemas/runtime-configuration.schema.json')
+tests.test_receipts_schema_location: AssertionError: Posix[95 chars]tall/venv-wheel/lib/python3.13/site-packages/a[17 chars]mas') != Posix[95 chars]tall/copy-wheel/schemas')
+tests.test_runtime_baseline_succession: ImportError: Failed to import test module: test_runtime_baseline_succession
+tests.test_runtime_baseline_succession: ModuleNotFoundError: No module named 'check_runtime_baseline_equivalence'
+
+# benchmark lanes / list / gauntlet inspect outside a checkout: exit 0, 14 lanes and 6 integrations listed from packaged evaluation JSON

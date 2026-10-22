@@ -1,0 +1,24 @@
+  test_canonical_visible_candidates_agree_with_reported_graph_hits (tests.test_836_opaque_budget_repair_controls.PlannerBudget.test_canonical_visible_candidates_agree_with_reported_graph_hits) (fanout=1, limit=2) ... FAIL
+  test_canonical_visible_candidates_agree_with_reported_graph_hits (tests.test_836_opaque_budget_repair_controls.PlannerBudget.test_canonical_visible_candidates_agree_with_reported_graph_hits) (fanout=2, limit=1) ... FAIL
+  test_canonical_visible_candidates_agree_with_reported_graph_hits (tests.test_836_opaque_budget_repair_controls.PlannerBudget.test_canonical_visible_candidates_agree_with_reported_graph_hits) (fanout=1, limit=1) ... FAIL
+test_cross_project_neighbour_is_a_control (tests.test_836_opaque_budget_repair_controls.PlannerBudget.test_cross_project_neighbour_is_a_control) ... ok
+test_refusal_audit_is_retained_whenever_a_slot_is_free (tests.test_836_opaque_budget_repair_controls.PlannerBudget.test_refusal_audit_is_retained_whenever_a_slot_is_free) ... FAIL
+test_refusal_audit_yields_only_to_a_visible_candidate_under_a_one_slot_budget (tests.test_836_opaque_budget_repair_controls.PlannerBudget.test_refusal_audit_yields_only_to_a_visible_candidate_under_a_one_slot_budget) ... FAIL
+test_opaque_hop_is_still_never_continued_through (tests.test_836_opaque_budget_repair_controls.RetrieverBudget.test_opaque_hop_is_still_never_continued_through) ... ok
+test_opaque_neighbour_spends_no_fanout_and_is_still_reported_when_a_slot_is_free (tests.test_836_opaque_budget_repair_controls.RetrieverBudget.test_opaque_neighbour_spends_no_fanout_and_is_still_reported_when_a_slot_is_free) ... FAIL
+test_opaque_neighbours_below_the_probe_ceiling_do_not_hide_the_visible_one (tests.test_836_opaque_budget_repair_controls.RetrieverBudget.test_opaque_neighbours_below_the_probe_ceiling_do_not_hide_the_visible_one) ... FAIL
+test_probe_ceiling_still_bounds_the_work_and_records_the_trade_off (tests.test_836_opaque_budget_repair_controls.RetrieverBudget.test_probe_ceiling_still_bounds_the_work_and_records_the_trade_off) ... FAIL
+test_raw_traversal_without_an_opaque_predicate_is_unchanged (tests.test_836_opaque_budget_repair_controls.RetrieverBudget.test_raw_traversal_without_an_opaque_predicate_is_unchanged) ... ok
+test_result_is_deterministic (tests.test_836_opaque_budget_repair_controls.RetrieverBudget.test_result_is_deterministic) ... ok
+test_visible_candidates_fill_the_limit_before_opaque_ones (tests.test_836_opaque_budget_repair_controls.RetrieverBudget.test_visible_candidates_fill_the_limit_before_opaque_ones) ... FAIL
+AssertionError: Items in the second set but not the first:
+AssertionError: Items in the second set but not the first:
+AssertionError: Items in the second set but not the first:
+AssertionError: 'ref-0011' not found in ['ref-0004']
+AssertionError: Lists differ: ['ref-0018'] != ['ref-0011']
+AssertionError: Lists differ: ['hidden-000'] != ['hidden-000', 'visible']
+AssertionError: 'visible' not found in ['hidden-000']
+AssertionError: 1 != 16 : exactly the probe ceiling is spent
+AssertionError: Lists differ: ['hidden-000'] != ['visible']
+Ran 11 tests in 0.288s
+FAILED (failures=9)

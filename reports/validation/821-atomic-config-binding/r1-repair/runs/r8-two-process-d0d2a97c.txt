@@ -1,0 +1,12 @@
+{"A_rc": 0, "B_rc": -9, "witness_bytes": 0}
+{"opens": false, "error": "RuntimeRecoveryError: SQLite generation witness is unreadable: Expecting value: line 1 column 1 (char 0)"}
+{"after_operator_removes_witness": {"opens": true, "hits": {"seed": 1, "A fact": 3, "B fact": 3}}}
+
+{"A_rc": 0, "B_rc": -9, "witness_bytes": 0}
+{"opens": false, "error": "RuntimeRecoveryError: SQLite generation witness is unreadable: Expecting value: line 1 column 1 (char 0)"}
+{"after_operator_removes_witness": {"opens": true, "hits": {"seed": 1, "A fact": 3, "B fact": 3}}}
+
+{"A_rc": 0, "B_rc": -9, "witness_bytes": 0}
+{"opens": false, "error": "RuntimeRecoveryError: SQLite generation witness is unreadable: Expecting value: line 1 column 1 (char 0)"}
+{"after_operator_removes_witness": {"opens": true, "hits": {"seed": 1, "A fact": 3, "B fact": 3}}}
+

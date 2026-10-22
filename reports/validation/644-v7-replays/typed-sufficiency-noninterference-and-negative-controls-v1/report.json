@@ -1,0 +1,906 @@
+{
+ "authority_boundary": "A replay verdict is evidence for independent review. It is not v7 acceptance, not publication, and not stop authority. sha256 values are integrity bindings, not signatures.",
+ "cases": [
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "twin_identical",
+     "observed": true
+    }
+   ],
+   "error": null,
+   "id": "N1-twin-lifecycle",
+   "invariants": [
+    "N1"
+   ],
+   "kind": "twin",
+   "observations": {
+    "raises": null,
+    "raises_any": false,
+    "twin_identical": true
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "state_unchanged",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "result_unchanged",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "continue_if_permitted"
+     },
+     "observable": "continuation_proposal",
+     "observed": "continue_if_permitted"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "stop_attested",
+     "observed": false
+    }
+   ],
+   "error": null,
+   "id": "N2-read-only-single-observation",
+   "invariants": [
+    "N2"
+   ],
+   "kind": "coverage",
+   "observations": {
+    "answer_quality_verified": false,
+    "authority_effect": "none",
+    "budget_bound_routes": [],
+    "can_admit": false,
+    "can_mutate": false,
+    "coherence_groups": [
+     [
+      "memory:v1"
+     ],
+     [
+      "memory:v2"
+     ]
+    ],
+    "coherence_status": "competing_values_unresolved",
+    "continuation_proposal": "continue_if_permitted",
+    "count_target_met": true,
+    "diagnosis": "value_coherence_unresolved",
+    "mechanical_coverage_met": true,
+    "need_missing": false,
+    "obstacles.declared_temporal_boundary": 0,
+    "obstacles.eligible_unretrieved": 0,
+    "obstacles.qualified_counter_evidence": 0,
+    "raises": null,
+    "raises_any": false,
+    "receipt_unchanged": true,
+    "result_unchanged": true,
+    "state_unchanged": true,
+    "stop_attested": false,
+    "support_count": 2,
+    "support_refs": [
+     "memory:v1",
+     "memory:v2"
+    ],
+    "unexecuted_routes": [],
+    "verification_raised": false
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "count_target_met",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "mechanical_coverage_met",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "need_missing",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "support_refs",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "continue_if_permitted"
+     },
+     "observable": "continuation_proposal",
+     "observed": "continue_if_permitted"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "stop_attested",
+     "observed": false
+    }
+   ],
+   "error": null,
+   "id": "N3-count-target-is-not-typed-sufficiency",
+   "invariants": [
+    "N3"
+   ],
+   "kind": "coverage",
+   "observations": {
+    "answer_quality_verified": false,
+    "authority_effect": "none",
+    "budget_bound_routes": [],
+    "can_admit": false,
+    "can_mutate": false,
+    "coherence_groups": [],
+    "coherence_status": "no_eligible_value",
+    "continuation_proposal": "continue_if_permitted",
+    "count_target_met": true,
+    "diagnosis": "missing_declared_evidence",
+    "mechanical_coverage_met": false,
+    "need_missing": true,
+    "obstacles.declared_temporal_boundary": 0,
+    "obstacles.eligible_unretrieved": 0,
+    "obstacles.qualified_counter_evidence": 0,
+    "raises": null,
+    "raises_any": false,
+    "receipt_unchanged": true,
+    "stop_attested": false,
+    "support_count": 0,
+    "support_refs": [],
+    "unexecuted_routes": [],
+    "verification_raised": false
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "mechanical_coverage_met",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "need_missing",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "continue_if_permitted"
+     },
+     "observable": "continuation_proposal",
+     "observed": "continue_if_permitted"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "stop_attested",
+     "observed": false
+    }
+   ],
+   "error": null,
+   "id": "N4-controller-estimate-cannot-cover",
+   "invariants": [
+    "N4"
+   ],
+   "kind": "manual_coverage",
+   "observations": {
+    "answer_quality_verified": false,
+    "authority_effect": "none",
+    "budget_bound_routes": [],
+    "can_admit": false,
+    "can_mutate": false,
+    "coherence_groups": [],
+    "coherence_status": "no_eligible_value",
+    "continuation_proposal": "continue_if_permitted",
+    "count_target_met": true,
+    "diagnosis": "missing_declared_evidence",
+    "mechanical_coverage_met": false,
+    "need_missing": true,
+    "obstacles.declared_temporal_boundary": null,
+    "obstacles.eligible_unretrieved": null,
+    "obstacles.qualified_counter_evidence": null,
+    "raises": null,
+    "raises_any": false,
+    "stop_attested": false,
+    "support_count": 0,
+    "support_refs": [],
+    "unexecuted_routes": []
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "mechanical_coverage_met",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "continue_if_permitted"
+     },
+     "observable": "continuation_proposal",
+     "observed": "continue_if_permitted"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "stop_attested",
+     "observed": false
+    }
+   ],
+   "error": null,
+   "id": "N5-forged-typed-label-never-stops",
+   "invariants": [
+    "N5"
+   ],
+   "kind": "manual_coverage",
+   "observations": {
+    "answer_quality_verified": false,
+    "authority_effect": "none",
+    "budget_bound_routes": [],
+    "can_admit": false,
+    "can_mutate": false,
+    "coherence_groups": [],
+    "coherence_status": "no_eligible_value",
+    "continuation_proposal": "continue_if_permitted",
+    "count_target_met": true,
+    "diagnosis": "mechanical_coverage_observed",
+    "mechanical_coverage_met": true,
+    "need_missing": false,
+    "obstacles.declared_temporal_boundary": null,
+    "obstacles.eligible_unretrieved": null,
+    "obstacles.qualified_counter_evidence": null,
+    "raises": null,
+    "raises_any": false,
+    "stop_attested": false,
+    "support_count": 1,
+    "support_refs": [
+     "memory:v1"
+    ],
+    "unexecuted_routes": []
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "answer_quality_verified",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "can_admit",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "can_mutate",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "none"
+     },
+     "observable": "authority_effect",
+     "observed": "none"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "stop_attested",
+     "observed": false
+    }
+   ],
+   "error": null,
+   "id": "N6-authority-fields-fixed",
+   "invariants": [
+    "N6"
+   ],
+   "kind": "coverage",
+   "observations": {
+    "answer_quality_verified": false,
+    "authority_effect": "none",
+    "budget_bound_routes": [],
+    "can_admit": false,
+    "can_mutate": false,
+    "coherence_groups": [
+     [
+      "memory:v1"
+     ]
+    ],
+    "coherence_status": "same_value_observed",
+    "continuation_proposal": "continue_if_permitted",
+    "count_target_met": true,
+    "diagnosis": "coverage_observed_unattested",
+    "mechanical_coverage_met": true,
+    "need_missing": false,
+    "obstacles.declared_temporal_boundary": 0,
+    "obstacles.eligible_unretrieved": 0,
+    "obstacles.qualified_counter_evidence": 0,
+    "raises": null,
+    "raises_any": false,
+    "receipt_unchanged": true,
+    "stop_attested": false,
+    "support_count": 1,
+    "support_refs": [
+     "memory:v1"
+    ],
+    "unexecuted_routes": [],
+    "verification_raised": false
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "ValueError"
+     },
+     "observable": "raises",
+     "observed": "ValueError"
+    }
+   ],
+   "error": null,
+   "id": "N6-forged-report-answer_quality_verified",
+   "invariants": [
+    "N6"
+   ],
+   "kind": "forge_report",
+   "observations": {
+    "raised_message": "sufficiency report cannot grant authority or certify quality",
+    "raises": "ValueError",
+    "raises_any": true
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "ValueError"
+     },
+     "observable": "raises",
+     "observed": "ValueError"
+    }
+   ],
+   "error": null,
+   "id": "N6-forged-report-can_admit",
+   "invariants": [
+    "N6"
+   ],
+   "kind": "forge_report",
+   "observations": {
+    "raised_message": "sufficiency report cannot grant authority or certify quality",
+    "raises": "ValueError",
+    "raises_any": true
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "ValueError"
+     },
+     "observable": "raises",
+     "observed": "ValueError"
+    }
+   ],
+   "error": null,
+   "id": "N6-forged-report-can_mutate",
+   "invariants": [
+    "N6"
+   ],
+   "kind": "forge_report",
+   "observations": {
+    "raised_message": "sufficiency report cannot grant authority or certify quality",
+    "raises": "ValueError",
+    "raises_any": true
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "ValueError"
+     },
+     "observable": "raises",
+     "observed": "ValueError"
+    }
+   ],
+   "error": null,
+   "id": "N6-forged-report-authority_effect",
+   "invariants": [
+    "N6"
+   ],
+   "kind": "forge_report",
+   "observations": {
+    "raised_message": "sufficiency report cannot grant authority or certify quality",
+    "raises": "ValueError",
+    "raises_any": true
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "ValueError"
+     },
+     "observable": "raises",
+     "observed": "ValueError"
+    }
+   ],
+   "error": null,
+   "id": "N6-forged-report-stop_attested",
+   "invariants": [
+    "N6"
+   ],
+   "kind": "forge_report",
+   "observations": {
+    "raised_message": "sufficiency report cannot grant authority or certify quality",
+    "raises": "ValueError",
+    "raises_any": true
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "ValueError"
+     },
+     "observable": "raises",
+     "observed": "ValueError"
+    }
+   ],
+   "error": null,
+   "id": "N7-malformed-needs-empty",
+   "invariants": [
+    "N7"
+   ],
+   "kind": "coverage",
+   "observations": {
+    "raised_message": "persisted coverage requires typed, non-empty needs",
+    "raises": "ValueError",
+    "raises_any": true
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "ValueError"
+     },
+     "observable": "raises",
+     "observed": "ValueError"
+    }
+   ],
+   "error": null,
+   "id": "N7-malformed-needs-duplicate",
+   "invariants": [
+    "N7"
+   ],
+   "kind": "coverage",
+   "observations": {
+    "raised_message": "persisted coverage needs unique slots",
+    "raises": "ValueError",
+    "raises_any": true
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "ValueError"
+     },
+     "observable": "raises",
+     "observed": "ValueError"
+    }
+   ],
+   "error": null,
+   "id": "N7-malformed-needs-non-canonical-spelling",
+   "invariants": [
+    "N7"
+   ],
+   "kind": "coverage",
+   "observations": {
+    "raised_message": "persisted coverage needs canonical typed slots",
+    "raises": "ValueError",
+    "raises_any": true
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "ValueError"
+     },
+     "observable": "raises",
+     "observed": "ValueError"
+    }
+   ],
+   "error": null,
+   "id": "N7-malformed-needs-untyped-key",
+   "invariants": [
+    "N7"
+   ],
+   "kind": "coverage",
+   "observations": {
+    "raised_message": "persisted coverage needs canonical typed slots",
+    "raises": "ValueError",
+    "raises_any": true
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "permutation_invariant",
+     "observed": true
+    }
+   ],
+   "error": null,
+   "id": "N8-need-order-invariance",
+   "invariants": [
+    "N8"
+   ],
+   "kind": "coverage",
+   "observations": {
+    "answer_quality_verified": false,
+    "authority_effect": "none",
+    "budget_bound_routes": [],
+    "can_admit": false,
+    "can_mutate": false,
+    "coherence_groups": [
+     [
+      "memory:v1"
+     ]
+    ],
+    "coherence_status": "same_value_observed",
+    "continuation_proposal": "continue_if_permitted",
+    "count_target_met": false,
+    "diagnosis": "coverage_observed_unattested",
+    "mechanical_coverage_met": true,
+    "need_missing": false,
+    "obstacles.declared_temporal_boundary": 0,
+    "obstacles.eligible_unretrieved": 0,
+    "obstacles.qualified_counter_evidence": 0,
+    "permutation_invariant": true,
+    "raises": null,
+    "raises_any": false,
+    "receipt_unchanged": true,
+    "stop_attested": false,
+    "support_count": 1,
+    "support_refs": [
+     "memory:v1"
+    ],
+    "unexecuted_routes": [],
+    "verification_raised": false
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       "lexical"
+      ]
+     },
+     "observable": "budget_bound_routes",
+     "observed": [
+      "lexical"
+     ]
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "continue_if_permitted"
+     },
+     "observable": "continuation_proposal",
+     "observed": "continue_if_permitted"
+    }
+   ],
+   "error": null,
+   "id": "N9-capped-route-is-budget-bound",
+   "invariants": [
+    "N9"
+   ],
+   "kind": "pure_assess",
+   "observations": {
+    "budget_bound_routes": [
+     "lexical"
+    ],
+    "continuation_proposal": "continue_if_permitted",
+    "diagnosis": "coverage_observed_resource_bound",
+    "raises": null,
+    "raises_any": false,
+    "unexecuted_routes": []
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       "semantic_vector"
+      ]
+     },
+     "observable": "unexecuted_routes",
+     "observed": [
+      "semantic_vector"
+     ]
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "continue_if_permitted"
+     },
+     "observable": "continuation_proposal",
+     "observed": "continue_if_permitted"
+    }
+   ],
+   "error": null,
+   "id": "N9-unexecuted-route-reported",
+   "invariants": [
+    "N9"
+   ],
+   "kind": "pure_assess",
+   "observations": {
+    "budget_bound_routes": [],
+    "continuation_proposal": "continue_if_permitted",
+    "diagnosis": "planned_routes_not_executed",
+    "raises": null,
+    "raises_any": false,
+    "unexecuted_routes": [
+     "semantic_vector"
+    ]
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "ValueError"
+     },
+     "observable": "raises",
+     "observed": "ValueError"
+    }
+   ],
+   "error": null,
+   "id": "N10-coverage-outside-admitted-refused",
+   "invariants": [
+    "N10"
+   ],
+   "kind": "manual_coverage",
+   "observations": {
+    "raised_message": "coverage may refer only to governed admitted evidence",
+    "raises": "ValueError",
+    "raises_any": true
+   },
+   "outcome": "pass",
+   "recorded": {}
+  }
+ ],
+ "dsl_version": "644-v7-replay-dsl/1",
+ "invariants": {
+  "N1": {
+   "cases": [
+    "N1-twin-lifecycle"
+   ],
+   "holds": true,
+   "statement": "Running every #644 observer (persisted coverage, manual coverage, transition witness, receipt verification) between operations leaves all facade-visible outputs, the persisted canonical facts and the audit event sequence identical to an identical twin run without observers."
+  },
+  "N10": {
+   "cases": [
+    "N10-coverage-outside-admitted-refused"
+   ],
+   "holds": true,
+   "statement": "Manual coverage may refer only to admitted references."
+  },
+  "N2": {
+   "cases": [
+    "N2-read-only-single-observation"
+   ],
+   "holds": true,
+   "statement": "A single observation changes neither the substrate state digest, the audit event count, nor the recall result's candidates, admitted, ranked or refusals."
+  },
+  "N3": {
+   "cases": [
+    "N3-count-target-is-not-typed-sufficiency"
+   ],
+   "holds": true,
+   "statement": "Meeting the admitted-count target is not typed sufficiency: untyped admitted facts leave a typed need missing and never produce a stop proposal."
+  },
+  "N4": {
+   "cases": [
+    "N4-controller-estimate-cannot-cover"
+   ],
+   "holds": true,
+   "statement": "Controller-estimate coverage cannot satisfy a typed need."
+  },
+  "N5": {
+   "cases": [
+    "N5-forged-typed-label-never-stops"
+   ],
+   "holds": true,
+   "statement": "Caller-labelled (manual) coverage never proposes a stop, even when labelled runtime_typed_observation and covering every need."
+  },
+  "N6": {
+   "cases": [
+    "N6-authority-fields-fixed",
+    "N6-forged-report-answer_quality_verified",
+    "N6-forged-report-can_admit",
+    "N6-forged-report-can_mutate",
+    "N6-forged-report-authority_effect",
+    "N6-forged-report-stop_attested"
+   ],
+   "holds": true,
+   "statement": "Report authority fields are fixed (answer_quality_verified, can_admit, can_mutate false; authority none; stop_attested false) and a report constructed with any forged authority value is refused."
+  },
+  "N7": {
+   "cases": [
+    "N7-malformed-needs-empty",
+    "N7-malformed-needs-duplicate",
+    "N7-malformed-needs-non-canonical-spelling",
+    "N7-malformed-needs-untyped-key"
+   ],
+   "holds": true,
+   "statement": "Malformed needs fail closed with ValueError: empty, duplicate, non-canonical slot spelling and non-typed keys."
+  },
+  "N8": {
+   "cases": [
+    "N8-need-order-invariance"
+   ],
+   "holds": true,
+   "statement": "The report is independent of the order in which needs are declared."
+  },
+  "N9": {
+   "cases": [
+    "N9-capped-route-is-budget-bound",
+    "N9-unexecuted-route-reported"
+   ],
+   "holds": true,
+   "statement": "Route budget diagnostics are conservative: a route that returned exactly its limit is budget-bound, a planned route not executed is reported unexecuted, and neither yields a stop proposal."
+  }
+ },
+ "observations_sha256": "907ab4730737deb0c116e73a30538adbf8a2b54953ddd66e37e2035d27a29de7",
+ "provenance": {
+  "dirty_exclusion": "reports/validation/644-v7-replays/",
+  "dirty_paths": [],
+  "fixture": {
+   "path": "reference/fixtures/644-v7-replays/typed-sufficiency-noninterference-and-negative-controls-v1.json",
+   "sha256": "6b1ea7fcb7dd526c3c9e91e11f9eff834013e78f32b7e29f4dd03ca8e207547e"
+  },
+  "platform": "Linux-6.18.44-fc-v114-x86_64-with-glibc2.39",
+  "python": "3.13.16",
+  "runner": {
+   "path": "reference/run_644_v7_replays.py",
+   "sha256": "941a0dc6860e932531d77eb65c1f305f84feeab3366cacd39953dae160cf0def",
+   "version": "644-v7-replay-runner/1"
+  },
+  "runtime_tree": "f9ccd0472e32cb68a5caf988a017078a73425cc5",
+  "source_commit": "76632295163a4b80cf7c153d9297a788c59d1b95",
+  "sqlite": "3.45.1"
+ },
+ "replay_id": "typed-sufficiency-noninterference-and-negative-controls-v1",
+ "schema": "644-v7-replay-report/1",
+ "summary": {
+  "cases": 19,
+  "errors": 0,
+  "failed": 0,
+  "passed": 19
+ },
+ "verdict": "PASS",
+ "verdict_reasons": [
+  "every expectation held on a clean source tree"
+ ]
+}

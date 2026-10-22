@@ -1,0 +1,10 @@
+typed-sufficiency-noninterference-and-negative-controls-v1: PASS (19/19 cases) report sha256 3d922137e7ae53551d09ad9488176e7fc6ee2d18086e829806ab16878dccc215
+  - every expectation held on a clean source tree
+governed-persisted-typed-slot-sufficiency-admission-recheck-v1: PASS (18/18 cases) report sha256 914186c214ca426d06afaf9ad9ba091b0ad70f77148ab8f9862e7d172fda7bfd
+  - every expectation held on a clean source tree
+governed-admitted-typed-value-coherence-v1: PASS (16/16 cases) report sha256 8cfef2bde2621e36a7c54b55ceaa207a4d4b515dac1193dddd7736f61c21118e
+  - every expectation held on a clean source tree
+committed-governed-transition-witness-v1: PASS (12/12 cases) report sha256 adcce97d290c4c808fd90d65b6020500f0cee5f2412c16e528f1f841eaeb95e6
+  - every expectation held on a clean source tree
+same-slot-safety-counterevidence-and-immutable-stop-gate-v1: PASS (39/39 cases) report sha256 d189bd0de598aa4865967b63412c41171181678a6c2dc93c908b3cbf7e034ad1
+  - every expectation held on a clean source tree

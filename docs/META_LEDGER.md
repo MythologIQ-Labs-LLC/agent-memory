@@ -5305,3 +5305,122 @@ SHA256(content_hash + previous_hash) = f4e71a5f9ae3393832ca336c4dec76ebe3ec2168a
 - **Advisories A1–A5** are recorded in the audit report. Their wording refinements are carried into #757 design inputs. They do not alter any result.
 
 **Scope**: `diagnostic_not_score`. This is not R6 acceptance. The `measurement-v1` FAIL (0/212) stands, and #732 stays open. The owner chose option (b): cross-write proposition identity is designed first (#757). No v7 implementation and no evaluator tuning are authorized.
+
+---
+
+### Entry #124: CANDIDATE DECLARATION — Runtime Baseline v7 safety reconciliation (#644)
+
+**Timestamp**: 2026-10-09T16:50:00-04:00 (candidate record; actual commit time differs)
+
+**Phase**: ENCODE (candidate only)
+
+**Author**: Implementation Agent
+
+**Risk Grade**: L2 (protected runtime candidate and formal successor declaration; no accepted release)
+
+**Target**: `implementation/644-indexed-safety-fix-no-ci`, `reports/runtime/baseline-v7-declaration.json`, `reports/runtime/baseline-register.json`, and independent qualification comment on #644
+
+**Content Hash** (SHA256 of the following exact UTF-8 decision sentence):
+
+`Candidate v7 successor declared for Agent Memory #644; six protected runtime blobs pinned, indexed typed-slot audit and canonical aliases corrected; v6 remains published; independent verdict CHANGES REQUIRED; no PR, no merge, no Actions.`
+
+`2a02395c8043b68662012332fbdcdec73e88f0367b79a29e3e12ae12ee40263b`
+
+**Previous Hash**: `f4e71a5f9ae3393832ca336c4dec76ebe3ec2168a3f85d0f4ace6525be2a9c2d`
+
+**Chain Hash**: `092b151b315cb94a37bbcfbed300eba6e3374a0a1ed151fb4ed97a687538bbe6`
+
+**Decision**: Record an **unaccepted** v7 transition candidate with six explicitly pinned protected files, preserving published v6. Independent qualification of the prior candidate reported CHANGES REQUIRED. This implementation tranche repairs canonical package aliases, register test expectations, future-validity classification, and the all-facts SQLite audit using the existing write-maintained typed-slot index. Every candidate fact is still rechecked under the current reader's admission context. Untyped competitors and immutable closure remain unresolved. All runtime stop recommendations remain disabled. This entry is **not a PASS, publication, qualification, merge approval, or benchmark claim**.
+
+**Evidence still required**: exact-head local full suite, comparison with Claude's independent indexed patch, package layout 8/8, succession 40/40, baseline checker TRANSITION, SQLite scale and restart, unchanged 126-case holdout, public gauntlet, AMB, LongMemEval, and independent peer review. No hosted Actions should run for iterative debugging.
+
+
+---
+
+### Entry #125: CANDIDATE VALIDATION — independent integration check of the combined receipt and indexed audit (#644)
+
+**Timestamp**: 2026-10-09 (candidate record on a local validation branch; actual commit time differs)
+
+**Phase**: VALIDATE (candidate only)
+
+**Author**: Independent validation agent
+
+**Risk Grade**: L2 (protected runtime candidate; formal successor declaration refreshed; no accepted release)
+
+**Target**: `validation/644-combined-safety-receipt-independent`, an isolated validation of `implementation/644-combined-safety-receipt-unqualified` at `de3dbe813683e417f73546bfbdd66976997bea76`; `reports/runtime/baseline-v7-declaration.json`
+
+**Content Hash** (SHA256 of the following exact UTF-8 decision sentence):
+
+`Independent validation of Agent Memory #644 candidate de3dbe8; v7 successor re-declared by the sanctioned tool with eight protected blobs; receipt verification fails closed and unverified recalls never read as clean coverage; v6 remains published; not a PASS, publication or merge approval; no PR, no merge, no Actions.`
+
+`481a7c4a2c153cfa11a45d02882e83f3fbd9d1d0eb609a0c787e3c451904dcc4`
+
+**Previous Hash**: `092b151b315cb94a37bbcfbed300eba6e3374a0a1ed151fb4ed97a687538bbe6`
+
+**Chain Hash**: `a44d073f22ec6ba719449def4fddb72ba7c104a25129b20984ecdcc982501f2c`
+
+**Decision**: Record an **unaccepted** validation remediation of the v7 transition candidate. The candidate's declaration pinned six blobs and omitted the immutable recall receipt module and its alias, so the sanctioned checker failed. `declare_runtime_baseline_changes.py` regenerated it with eight protected blobs. Two narrow repairs are pinned. First, `ControlledRecallResult.observation_unchanged` and `RecallObservationReceipt.matches_mutable_result` return `False` instead of raising on malformed results or hostile mappings. Second, `observe_persisted_typed_coverage` reports `recall_observation_unverified` instead of `coverage_observed_unattested` when the planner receipt is missing or no longer matches. Obstacle diagnoses keep precedence, and no stop is ever proposed. Entries #124 and earlier, including the CHANGES REQUIRED history, are unchanged. The content hash is change detection, not a signed attestation, a trusted state revision, a complete-slot proof or stopping authority. This entry is **not a PASS, publication, qualification, merge approval, or benchmark claim**.
+
+**Evidence still required**: public gauntlet for a v7 contestant, AMB and LongMemEval v7 lanes, the five declared #644 replays (no executable definitions exist in the repository), an untyped-competitor (F6) policy, public typed correction (F7), the SQLite restart wrapper (F12), and independent peer review. No hosted Actions should run for iterative debugging.
+
+---
+
+### Entry #126: PREREGISTRATION — minimal protected repair for doc 77's no_eligible_value disposition (#644)
+
+**Timestamp**: 2026-10-10 (candidate record on a local validation branch; actual commit time differs)
+
+**Phase**: PREREGISTER (candidate only)
+
+**Author**: Independent validation agent
+
+**Risk Grade**: L2 (one protected runtime line; v7 transition candidate only)
+
+**Target**: `validation/644-v7-replay-closeout`, which builds on `implementation/644-v7-evidence-closeout-no-ci` @ `c4827f9`; `reference/agentmem_ref/runtime/evidence_sufficiency.py`
+
+**Content Hash** (SHA256 of the following exact UTF-8 decision sentence):
+
+`Preregistered minimal protected repair for Agent Memory #644: the sufficiency report must emit the documented no_eligible_value disposition for every declared need; reproducer test_644_no_eligible_value_disposition and replay case V1 fail before the repair; no diagnosis, proposal or authority change; v6 remains published.`
+
+`3a3865154405217c456d3b7c781aa356c69e402dd24ff7363d8842bfec772639`
+
+**Previous Hash**: `a44d073f22ec6ba719449def4fddb72ba7c104a25129b20984ecdcc982501f2c`
+
+**Chain Hash**: `eaef0e9944ba44a8786d60581a0366cda131afec030a41ac27f0e1d25258cc0b`
+
+**Reason**: Replay `governed-admitted-typed-value-coherence-v1` was frozen in commit `7530378` before any runner existed. Its case V1 encodes doc 77's disposition table: a requested slot with no eligible typed value has disposition `no_eligible_value`. On first execution the report omitted value coherence entirely whenever no typed claim existed for any requested need, so "no eligible value" and "never assessed" could not be told apart.
+
+**Reproducer**: `reference/tests/test_644_no_eligible_value_disposition.py` fails 2 of its 4 tests before the repair, and replay case V1 fails.
+
+**Intended invariant**: every declared need receives exactly one value-coherence assessment. A need without any eligible typed claim is `no_eligible_value`. Diagnosis, continuation proposal, stop gate and authority fields do not change. `no_eligible_value` is not an ambiguous disposition and cannot enable a stop. No needs means no assessments.
+
+**Minimal repair**: `assess_sufficiency` passes the computed assessments through unconditionally, instead of only when typed claims exist. The v7 declaration is regenerated only with `declare_runtime_baseline_changes.py`.
+
+**Not**: a PASS, publication, qualification, merge approval or benchmark claim. The fixture is not edited.
+
+---
+
+### Entry #127: CANDIDATE EVIDENCE — five declared v7 replays executed and independently verified (#644)
+
+**Timestamp**: 2026-10-10 (candidate record on a local validation branch; actual commit time differs)
+
+**Phase**: VALIDATE (candidate only)
+
+**Author**: Independent validation agent
+
+**Risk Grade**: L2 (acceptance evidence for a protected runtime transition candidate; no acceptance)
+
+**Target**: `validation/644-v7-replay-closeout`; `reports/validation/644-v7-replays/`; runtime `76632295163a4b80cf7c153d9297a788c59d1b95` (tree `f9ccd047`)
+
+**Content Hash** (SHA256 of the following exact UTF-8 decision sentence):
+
+`Five Agent Memory #644 v7 replays executed at runtime 7663229: 104 of 104 cases and 58 of 58 invariants PASS, independently verified with re-execution; inventory remains BLOCKED; acceptance not granted; v6 remains published; no merge, no publication, no Actions.`
+
+`2c8ab5ae34ea234071b5de779ff2855e04122673ca6d6c39b7deabc451d38b7a`
+
+**Previous Hash**: `eaef0e9944ba44a8786d60581a0366cda131afec030a41ac27f0e1d25258cc0b`
+
+**Chain Hash**: `a15ad4f55519ad3ba187b646ea2d635715b1c3d4bdf51f2d197d08d6fcd6ccf7`
+
+**Decision**: Record the five replay packages that the v7 declaration requires. The fixtures were frozen in `7530378`, before any runner existed. The runner, the independent verifier and the tests were added in `afff1b5`. Every replay PASSes on a clean tree, and the evidence is reproducible byte for byte. `scripts/verify_644_v7_replays.py --reexecute` verifies all five. The tamper challenge detects every mutation except a fully consistent static forgery, which re-execution catches. That limitation is recorded: the sha256 bindings are not signatures. One preregistered protected repair (Entry #126) was required. `scripts/check_644_v7_replay_inventory.py` remains BLOCKED by design. F6, F7 and F12 remain open. This entry is **not acceptance, a PASS of v7, publication, merge approval, or a benchmark claim**.
+
+**Evidence still required**: an independent reviewer's re-execution and acceptance decision recorded in this ledger, a v7 public-gauntlet contestant, and workflow-imported lane evidence at the v7 candidate.

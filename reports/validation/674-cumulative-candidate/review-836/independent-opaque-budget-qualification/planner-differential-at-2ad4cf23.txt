@@ -1,0 +1,80 @@
+
+== DELETED higher-ranked neighbor  fanout=1 limit=2
+  [control] candidates=['seed', 'visible'] admitted=['seed', 'visible']
+     refusals={} route_counts={'lexical': 0, 'exact_logical_identity': 1, 'typed_graph': 1, 'shared_evidence_neighbor': 0}
+     graph_candidate_hits=['visible'] paths=[('seed', 'visible')]
+  [probe] candidates=['seed', 'deleted_old', 'visible'] admitted=['seed', 'visible']
+     refusals={deleted_old:logical_memory_deleted} route_counts={'lexical': 0, 'exact_logical_identity': 1, 'typed_graph': 2, 'shared_evidence_neighbor': 0}
+     graph_candidate_hits=['visible'] paths=[('seed', 'visible')]
+
+== DELETED higher-ranked neighbor  fanout=2 limit=1
+  [control] candidates=['seed', 'visible'] admitted=['seed', 'visible']
+     refusals={} route_counts={'lexical': 0, 'exact_logical_identity': 1, 'typed_graph': 1, 'shared_evidence_neighbor': 0}
+     graph_candidate_hits=['visible'] paths=[('seed', 'visible')]
+  [probe] candidates=['seed', 'visible'] admitted=['seed', 'visible']
+     refusals={} route_counts={'lexical': 0, 'exact_logical_identity': 1, 'typed_graph': 1, 'shared_evidence_neighbor': 0}
+     graph_candidate_hits=['visible'] paths=[('seed', 'visible')]
+
+== DELETED higher-ranked neighbor  fanout=8 limit=8
+  [control] candidates=['seed', 'visible'] admitted=['seed', 'visible']
+     refusals={} route_counts={'lexical': 0, 'exact_logical_identity': 1, 'typed_graph': 1, 'shared_evidence_neighbor': 0}
+     graph_candidate_hits=['visible'] paths=[('seed', 'visible')]
+  [probe] candidates=['seed', 'deleted_old', 'visible'] admitted=['seed', 'visible']
+     refusals={deleted_old:logical_memory_deleted} route_counts={'lexical': 0, 'exact_logical_identity': 1, 'typed_graph': 2, 'shared_evidence_neighbor': 0}
+     graph_candidate_hits=['visible'] paths=[('seed', 'visible')]
+
+== CONTROL accessible higher-ranked sibling (legit displacement)  fanout=1 limit=2
+  [control] candidates=['seed', 'visible'] admitted=['seed', 'visible']
+     refusals={} route_counts={'lexical': 0, 'exact_logical_identity': 1, 'typed_graph': 1, 'shared_evidence_neighbor': 0}
+     graph_candidate_hits=['visible'] paths=[('seed', 'visible')]
+  [probe] candidates=['seed', 'sibling'] admitted=['seed', 'sibling']
+     refusals={} route_counts={'lexical': 0, 'exact_logical_identity': 1, 'typed_graph': 1, 'shared_evidence_neighbor': 0}
+     graph_candidate_hits=['sibling'] paths=[('seed', 'sibling')]
+
+== CONTROL cross-project higher-ranked neighbor  fanout=1 limit=2
+  [control] candidates=['seed', 'visible'] admitted=['seed', 'visible']
+     refusals={} route_counts={'lexical': 0, 'exact_logical_identity': 1, 'typed_graph': 1, 'shared_evidence_neighbor': 0}
+     graph_candidate_hits=['visible'] paths=[('seed', 'visible')]
+  [probe] candidates=['seed', 'visible'] admitted=['seed', 'visible']
+     refusals={} route_counts={'lexical': 0, 'exact_logical_identity': 1, 'typed_graph': 1, 'shared_evidence_neighbor': 0}
+     graph_candidate_hits=['visible'] paths=[('seed', 'visible')]
+
+== CONTROL superseded (stale, not deleted) higher-ranked neighbor  fanout=1 limit=2
+  [control] candidates=['seed', 'visible'] admitted=['seed', 'visible']
+     refusals={} route_counts={'lexical': 0, 'exact_logical_identity': 1, 'typed_graph': 1, 'shared_evidence_neighbor': 0}
+     graph_candidate_hits=['visible'] paths=[('seed', 'visible')]
+  [probe] candidates=['seed', 'stale_old'] admitted=['seed']
+     refusals={stale_old:superseded_not_current} route_counts={'lexical': 0, 'exact_logical_identity': 1, 'typed_graph': 1, 'shared_evidence_neighbor': 0}
+     graph_candidate_hits=['stale_old'] paths=[('seed', 'stale_old')]
+
+== CONTROL accessible higher-ranked sibling (legit displacement)  fanout=2 limit=1
+  [control] candidates=['seed', 'visible'] admitted=['seed', 'visible']
+     refusals={} route_counts={'lexical': 0, 'exact_logical_identity': 1, 'typed_graph': 1, 'shared_evidence_neighbor': 0}
+     graph_candidate_hits=['visible'] paths=[('seed', 'visible')]
+  [probe] candidates=['seed', 'sibling'] admitted=['seed', 'sibling']
+     refusals={} route_counts={'lexical': 0, 'exact_logical_identity': 1, 'typed_graph': 1, 'shared_evidence_neighbor': 0}
+     graph_candidate_hits=['sibling'] paths=[('seed', 'sibling')]
+
+== CONTROL cross-project higher-ranked neighbor  fanout=2 limit=1
+  [control] candidates=['seed', 'visible'] admitted=['seed', 'visible']
+     refusals={} route_counts={'lexical': 0, 'exact_logical_identity': 1, 'typed_graph': 1, 'shared_evidence_neighbor': 0}
+     graph_candidate_hits=['visible'] paths=[('seed', 'visible')]
+  [probe] candidates=['seed', 'visible'] admitted=['seed', 'visible']
+     refusals={} route_counts={'lexical': 0, 'exact_logical_identity': 1, 'typed_graph': 1, 'shared_evidence_neighbor': 0}
+     graph_candidate_hits=['visible'] paths=[('seed', 'visible')]
+
+== CONTROL superseded (stale, not deleted) higher-ranked neighbor  fanout=2 limit=1
+  [control] candidates=['seed', 'visible'] admitted=['seed', 'visible']
+     refusals={} route_counts={'lexical': 0, 'exact_logical_identity': 1, 'typed_graph': 1, 'shared_evidence_neighbor': 0}
+     graph_candidate_hits=['visible'] paths=[('seed', 'visible')]
+  [probe] candidates=['seed', 'stale_old'] admitted=['seed']
+     refusals={stale_old:superseded_not_current} route_counts={'lexical': 0, 'exact_logical_identity': 1, 'typed_graph': 1, 'shared_evidence_neighbor': 0}
+     graph_candidate_hits=['stale_old'] paths=[('seed', 'stale_old')]
+
+== DELETED neighbor + alt two-hop to visible, depth1  fanout=1 limit=8
+  [control] candidates=['seed', 'visible'] admitted=['seed', 'visible']
+     refusals={} route_counts={'lexical': 0, 'exact_logical_identity': 1, 'typed_graph': 1, 'shared_evidence_neighbor': 0}
+     graph_candidate_hits=['visible'] paths=[('seed', 'visible')]
+  [probe] candidates=['seed', 'deleted_old', 'visible'] admitted=['seed', 'visible']
+     refusals={deleted_old:logical_memory_deleted} route_counts={'lexical': 0, 'exact_logical_identity': 1, 'typed_graph': 2, 'shared_evidence_neighbor': 0}
+     graph_candidate_hits=['visible'] paths=[('seed', 'visible')]

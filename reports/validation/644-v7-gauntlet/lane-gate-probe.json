@@ -1,0 +1,21 @@
+{
+ "checker_line": "Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v6; declared_successor=agent-memory-runtime-baseline-v7 (issue #644); protected surface = frozen e98e6e7b776aa2dd680e84f3ed4773ad2afa4ae1 + 8 declared blobs; deltas=none; candidate=HEAD",
+ "v7_declaration_blob": "6e13cbaefa3805bc635219f2996fea809af4b224",
+ "lanes": [
+  {
+   "lane": "amb-precisionmembench-retrieval-v6",
+   "lane_status": "accepted",
+   "control_row_status": "accepted",
+   "workflow_precondition": "REFUSED: lane or row status accepted (workflow asserts 'frozen')",
+   "importer_posture": "REFUSED: executed declaration blob 6e13cbaefa3805bc635219f2996fea809af4b224 != lane-pinned 1ac4d7d87b6b86250b7f4497478e36b2ea17f48a"
+  },
+  {
+   "lane": "longmemeval-s-retrieval-parity-v6",
+   "lane_status": "accepted",
+   "control_row_status": "accepted",
+   "workflow_precondition": "REFUSED: lane or row status accepted (workflow asserts 'frozen')",
+   "importer_posture": "REFUSED: executed declaration blob 6e13cbaefa3805bc635219f2996fea809af4b224 != lane-pinned 1ac4d7d87b6b86250b7f4497478e36b2ea17f48a"
+  }
+ ],
+ "producible_as_declared": false
+}

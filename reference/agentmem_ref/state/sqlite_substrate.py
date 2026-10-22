@@ -27,7 +27,8 @@ import hashlib
 import json
 from pathlib import Path
 import sqlite3
-from typing import Iterable
+import threading
+from typing import Iterable, Mapping
 
 from .substrate import (
     DeterministicIds,
@@ -87,6 +88,20 @@ def _tokens(text: str) -> set[str]:
     return {token.strip(".,;:!?").lower() for token in text.split() if token.strip(".,;:!?")}
 
 
+class UngovernedDurableWrite(RuntimeError):
+    """A durable write attempted outside a runtime generation on a runtime-owned store (#816).
+
+    Raised before anything changes: the store, its identifier sequence and the adapter's
+    governance state are exactly as the last published generation left them."""
+
+
+UNGOVERNED_WRITE_MESSAGE = (
+    "durable write outside a runtime generation refused: this SQLite store is owned by a "
+    "transactional runtime, so governed acts must run through AgentMemory or the runtime's "
+    "governed operations, which publish them as one generation (#816)"
+)
+
+
 class SqliteDeterministicIds(DeterministicIds):
     """Durable substrate-scoped id sequence stored in SQLite metadata."""
 
@@ -94,8 +109,20 @@ class SqliteDeterministicIds(DeterministicIds):
         super().__init__(prefix)
         self._connection = connection
         self._sqlite_prefix = prefix
+        self._generation_owned = False
+        # The thread running the owning runtime's open generation, if any (#816 review F4): an
+        # open SQLite transaction alone is not a generation (another thread, or a bare
+        # ``transaction()`` the runtime never publishes, also opens one).
+        self._generation_thread: int | None = None
+
+    def ensure_allocatable(self) -> None:
+        if self._generation_owned and (
+            self._generation_thread != threading.get_ident() or not self._connection.in_transaction
+        ):
+            raise UngovernedDurableWrite(UNGOVERNED_WRITE_MESSAGE)
 
     def next(self) -> str:
+        self.ensure_allocatable()
         self._connection.execute(
             "UPDATE agent_memory_meta SET value = CAST(value AS INTEGER) + 1 WHERE key = 'id_counter'"
         )
@@ -562,6 +589,45 @@ class SQLiteTemporalGraph:
     def close(self) -> None:
         self._connection.close()
 
+    def require_runtime_generations(self) -> None:
+        """Bind this store's identifier sequence to a transactional runtime (#816).
+
+        From here on a governed act may allocate an identifier (or, through the adapter's guarded
+        clock, read the clock), the first durable effects of every governed act, only on the
+        thread that runs the owning runtime's open generation (``generation_opened``); anywhere
+        else ``UngovernedDurableWrite`` is raised before anything moves. Storage-level writes
+        through this class stay a privileged, ungoverned layer: they are published only by an
+        explicit runtime checkpoint, and recovery refuses them otherwise."""
+
+        self._ids._generation_owned = True
+        # The capability that marks a generation (review N1): only the runtime that bound the store
+        # holds it, so a holder of the substrate cannot declare its own transaction a generation.
+        capability = object()
+        self._generation_capability = capability
+        return capability
+
+    def require_generation(self) -> None:
+        """Raise ``UngovernedDurableWrite`` unless this thread runs the owning runtime's open generation."""
+
+        self._ids.ensure_allocatable()
+
+    @contextmanager
+    def generation_opened(self, capability: object):
+        """Mark the calling thread as running the owning runtime's generation; call inside
+        ``transaction()`` with the capability ``require_runtime_generations`` returned."""
+
+        if capability is None or capability is not getattr(self, "_generation_capability", None):
+            raise UngovernedDurableWrite(UNGOVERNED_WRITE_MESSAGE)
+        if not self._connection.in_transaction:
+            raise RuntimeError("a runtime generation opens inside a SQLite transaction")
+        if self._ids._generation_thread is not None:
+            raise RuntimeError("a runtime generation is already open")
+        self._ids._generation_thread = threading.get_ident()
+        try:
+            yield
+        finally:
+            self._ids._generation_thread = None
+
     @property
     def sqlite_version(self) -> str:
         return sqlite3.sqlite_version
@@ -598,7 +664,7 @@ class SQLiteTemporalGraph:
         governance_before = self.governance.cache_snapshot()
         try:
             yield
-        except Exception:
+        except BaseException:  # an interrupt must not leave the transaction (and its locks) open
             self._connection.execute("ROLLBACK")
             # Rows and digest tables roll back together; forget changes that no longer exist.
             self._digest_dirty = dirty_before
@@ -645,6 +711,48 @@ class SQLiteTemporalGraph:
             "INSERT INTO runtime_journal(generation, payload_json) VALUES(?, ?)",
             (int(generation), _canonical_bytes(payload).decode("utf-8")),
         )
+
+    # -- the owning runtime's configuration binding (#821) --
+
+    def write_runtime_configuration_binding(self, generation: int, payload: dict) -> None:
+        """Write the owning runtime's configuration binding inside its open generation (#821).
+
+        The row commits or rolls back with the generation it binds. Anywhere else (no generation
+        open on this thread, a bare ``transaction()``, a store no runtime owns)
+        ``UngovernedDurableWrite`` is raised before anything is written. The table is created in
+        that same transaction, so opening a pre-#821 store never changes it."""
+
+        if not self._ids._generation_owned or self._ids._generation_thread != threading.get_ident():
+            raise UngovernedDurableWrite(UNGOVERNED_WRITE_MESSAGE)
+        self._ids.ensure_allocatable()
+        self._connection.execute(
+            "CREATE TABLE IF NOT EXISTS runtime_configuration_binding ("
+            "singleton INTEGER PRIMARY KEY CHECK (singleton = 1), "
+            "generation INTEGER NOT NULL, payload_json TEXT NOT NULL)"
+        )
+        self._connection.execute(
+            "INSERT INTO runtime_configuration_binding(singleton, generation, payload_json) VALUES(1, ?, ?) "
+            "ON CONFLICT(singleton) DO UPDATE SET generation = excluded.generation, payload_json = excluded.payload_json",
+            (int(generation), _canonical_bytes(payload).decode("utf-8")),
+        )
+
+    def read_runtime_configuration_binding(self) -> tuple[int, str] | None:
+        """``(generation, payload_json)`` of the binding row; None only when the table does not exist.
+
+        A table that exists without exactly one binding is malformed (``ValueError``): a generation
+        creates the table and its row together, so an empty table is never a pre-#821 store."""
+
+        exists = self._connection.execute(
+            "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'runtime_configuration_binding'"
+        ).fetchone()
+        if exists is None:
+            return None
+        rows = self._connection.execute(
+            "SELECT generation, payload_json FROM runtime_configuration_binding WHERE singleton = 1"
+        ).fetchall()
+        if len(rows) != 1:
+            raise ValueError(f"SQLite configuration binding table holds {len(rows)} bindings")
+        return rows[0][0], rows[0][1]
 
     def backup_to(self, destination: str | Path) -> None:
         target_path = Path(destination)
@@ -705,6 +813,18 @@ class SQLiteTemporalGraph:
                 ),
             )
         self._log("write_fact", fact.uuid)
+
+    def rewrite_fact_attributes(self, uuid: str, attributes: Mapping[str, object]) -> None:
+        """Replace one fact's attributes (#809 legacy upgrade): a canonical write, logged and
+        digested like ``write_fact`` so the next recovery verifies it. Identity, content,
+        provenance references and currentness columns are untouched."""
+        cursor = self._connection.execute(
+            "UPDATE facts SET attributes_json = ? WHERE uuid = ?",
+            (_canonical_bytes(dict(attributes)).decode("utf-8"), uuid),
+        )
+        if cursor.rowcount != 1:
+            raise KeyError(uuid)
+        self._log("write_fact", uuid)
 
     def invalidate_fact(self, uuid: str, invalid_at: str, expired_at: str) -> None:
         cursor = self._connection.execute(
@@ -1197,6 +1317,17 @@ class SQLiteTemporalGraph:
         if row is None:
             return None
         return int(row[0] or 0), row[1]
+
+    def read_runtime_journal_record(self, generation: int) -> dict | None:
+        row = self._connection.execute(
+            "SELECT payload_json FROM runtime_journal WHERE generation = ?", (int(generation),)
+        ).fetchone()
+        if row is None:
+            return None
+        value = json.loads(row[0])
+        if not isinstance(value, dict):
+            raise ValueError("SQLite runtime journal row is malformed")
+        return value
 
     def read_runtime_journal_tail(self) -> dict | None:
         row = self._connection.execute(

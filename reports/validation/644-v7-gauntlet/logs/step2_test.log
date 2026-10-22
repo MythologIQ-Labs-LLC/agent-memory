@@ -1,0 +1,7 @@
+test_adapter_manifest_pins_exact_candidate_not_v6 (tests.test_644_v7_gauntlet_contestant.V7GauntletCandidateTests.test_adapter_manifest_pins_exact_candidate_not_v6) ... ok
+test_configuration_digest_is_reproducible_and_non_authoritative (tests.test_644_v7_gauntlet_contestant.V7GauntletCandidateTests.test_configuration_digest_is_reproducible_and_non_authoritative) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.004s
+
+OK
