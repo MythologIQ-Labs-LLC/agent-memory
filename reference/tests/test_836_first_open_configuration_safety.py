@@ -129,6 +129,74 @@ surface._atomic_write_text(root / "runtime-config.json", name * 8192)
                         child.kill()
                         child.communicate()
 
+
+    def test_simultaneous_fresh_runtime_initializers_leave_recoverable_root(self):
+        """Two legitimate processes may race at the complete first-open boundary.
+
+        Each can succeed or fail closed, but neither may publish partial config,
+        and the resulting root must be recoverable with one canonical SQLite
+        interpretation. This tests more than the helper-only writer barrier.
+        """
+        worker = """
+import os, sys, time
+from pathlib import Path
+from agentmem_ref import AgentMemory
+root = Path(sys.argv[1])
+name = sys.argv[2]
+(root / ("start-ready-" + name)).write_text("ready", encoding="utf-8")
+deadline = time.monotonic() + 15
+while not (root / "start-go").exists():
+    if time.monotonic() > deadline:
+        raise TimeoutError("missing start barrier")
+    time.sleep(0.01)
+try:
+    runtime = AgentMemory.open(root)
+except Exception as exc:
+    print("REFUSED:" + type(exc).__name__)
+else:
+    try:
+        print("OPENED")
+    finally:
+        runtime.close()
+"""
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / "runtime"
+            root.mkdir()
+            environment = os.environ.copy()
+            reference_dir = str(Path(__file__).resolve().parents[1])
+            environment["PYTHONPATH"] = reference_dir + os.pathsep + environment.get("PYTHONPATH", "")
+            processes = [
+                subprocess.Popen(
+                    [sys.executable, "-c", worker, str(root), name],
+                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+                    env=environment,
+                )
+                for name in ("A", "B")
+            ]
+            try:
+                deadline = time.monotonic() + 20
+                while not all((root / ("start-ready-" + name)).exists() for name in ("A", "B")):
+                    if any(p.poll() is not None for p in processes):
+                        self.fail("first-open worker exited before synchronized start")
+                    if time.monotonic() > deadline:
+                        self.fail("first-open workers did not reach start barrier")
+                    time.sleep(0.02)
+                (root / "start-go").write_text("go", encoding="utf-8")
+                outcomes = [p.communicate(timeout=30) for p in processes]
+                for p, (stdout, stderr) in zip(processes, outcomes):
+                    self.assertEqual(p.returncode, 0, (stdout, stderr))
+                    self.assertTrue(stdout.strip() == "OPENED" or stdout.startswith("REFUSED:"), (stdout, stderr))
+                self.assertTrue((root / "runtime-config.json").is_file())
+                self.assertEqual(list(root.glob(".runtime-config.json.*.tmp")), [])
+                with AgentMemory.open(root) as recovered:
+                    self.assertTrue(recovered.remember("memory:recovery", "after concurrent startup")["committed"])
+                    self.assertEqual(recovered.legacy_upgrade_status()["status"], "fresh")
+            finally:
+                for p in processes:
+                    if p.poll() is None:
+                        p.kill()
+                        p.communicate()
+
     def test_replace_failure_removes_only_own_temp_and_preserves_target(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
