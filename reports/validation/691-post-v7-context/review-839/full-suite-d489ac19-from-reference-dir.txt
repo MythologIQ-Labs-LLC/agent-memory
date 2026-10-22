@@ -1,0 +1,256 @@
+...............................F........................................ [  2%]
+.........................................FF...... [  3%]
+......................................................................................... [  6%]
+......................................................................... [  8%]
+................x........................................s........................ [ 11%]
+.................................................................................................................. [ 14%]
+.............................................................................................................ss............... [ 18%]
+......................................................................F.............................................................F..................F........... [ 23%]
+........................................................... [ 25%]
+................................................................. [ 27%]
+........................................................ [ 29%]
+........................................................................ [ 31%]
+..................................................................... [ 33%]
+................................................................. [ 35%]
+............................. [ 36%]
+................................................................... [ 38%]
+...................................................................... [ 40%]
+..................................................................................................................... [ 44%]
+..................................................... [ 45%]
+....................s..................................... [ 47%]
+........................................................ [ 49%]
+..............F......F.................................................................................................... [ 53%]
+......................sssssss.................. [ 54%]
+........................................................................ [ 56%]
+..................................................F......... [ 58%]
+.............................................................................................................................................. [ 63%]
+........................................................................................................ [ 66%]
+........................................................................................................ [ 69%]
+........................................................................ [ 71%]
+......................................................................................................................... [ 75%]
+........................................................................ssss............................................. [ 79%]
+............................................................... [ 81%]
+........................................................................ [ 83%]
+.................................................. [ 85%]
+.............................sssssssss.......................... [ 86%]
+................................................................ [ 88%]
+........................................................................ [ 91%]
+.................................................. [ 92%]
+.......................................................................... [ 95%]
+............................................................ [ 96%]
+......................................................................... [ 99%]
+.............................                                            [100%]
+=================================== FAILURES ===================================
+____ ImportedRuntimeIdentity.test_own_checkout_at_frozen_revision_is_served ____
+
+self = <tests.test_644_v7_gauntlet_identity.ImportedRuntimeIdentity testMethod=test_own_checkout_at_frozen_revision_is_served>
+
+    def test_own_checkout_at_frozen_revision_is_served(self):
+        reply = ask(str(ROOT / "reference"))
+>       self.assertEqual(reply["status"], "ok", reply)
+E       AssertionError: 'system_error' != 'ok'
+E       - system_error
+E       + ok
+E        : {'adapter_evidence': {'adapter_kind': 'agent_memory_public_stdio', 'frozen_runtime_revision': '2ad4cf23d366fc784a486b0245550230e64bfa25', 'public_contract': '1.8.0', 'runtime_identity': {'frozen_runtime_revision': '2ad4cf23d366fc784a486b0245550230e64bfa25', 'frozen_runtime_tree': 'f9b5ff9e79a54ef053ce89eb975256b63e211714', 'imported_package': '/home/user/agent-memory/reference/agentmem_ref', 'matches_frozen_revision': False, 'same_checkout': True, 'verified': False}, 'surface': 'AgentMemory public facade', 'translation_only': True}, 'authority_effect': 'none', 'contract_family': 'agent-memory-gauntlet-operation', 'contract_version': '0.1.0', 'direction': 'response', 'error': {'code': 'runtime_identity_unverified', 'message': "imported agentmem_ref is not this checkout's runtime at FROZEN_RUNTIME_REVISION", 'source': 'system_adapter'}, 'operation': 'describe', 'request_id': 'r1', 'result': None, 'status': 'system_error', 'timing': {'elapsed_ms': 0.005092000037620892}}
+
+tests/test_644_v7_gauntlet_identity.py:71: AssertionError
+_ ReplayEvidenceFreshness.test_a_runtime_edit_still_makes_replay_evidence_stale _
+
+self = <tests.test_770_v7_lane_freeze_independent.ReplayEvidenceFreshness testMethod=test_a_runtime_edit_still_makes_replay_evidence_stale>
+
+    def test_a_runtime_edit_still_makes_replay_evidence_stale(self):
+        verifier = runpy.run_path(str(REPO_ROOT / "scripts/verify_644_v7_replays.py"))
+        manifest = json.loads((self.EVIDENCE_ROOT / self.REPLAY_ID / "manifest.json").read_text(encoding="utf-8"))
+        # The manifest pins the protected runtime that generated this replay,
+        # rather than assuming a forever-fixed pre-v7 ancestor.
+        baseline = manifest["source_commit"]
+>       self.assertFalse(verifier["runtime_changed_since"](baseline))
+E       AssertionError: True is not false
+
+tests/test_770_v7_lane_freeze_independent.py:269: AssertionError
+_ ReplayEvidenceFreshness.test_lane_records_do_not_make_replay_evidence_stale __
+
+self = <tests.test_770_v7_lane_freeze_independent.ReplayEvidenceFreshness testMethod=test_lane_records_do_not_make_replay_evidence_stale>
+
+    def test_lane_records_do_not_make_replay_evidence_stale(self):
+        verifier = runpy.run_path(str(REPO_ROOT / "scripts/verify_644_v7_replays.py"))
+        result = verifier["verify"](evidence_root=self.EVIDENCE_ROOT)
+>       self.assertEqual({row["replay"]: row["status"] for row in result["replays"]},
+                         {row["replay"]: "VERIFIED" for row in result["replays"]}, result)
+E       AssertionError: {'typ[54 chars]1': 'STALE', 'governed-persisted-typed-slot-su[216 chars]ALE'} != {'typ[54 chars]1': 'VERIFIED', 'governed-persisted-typed-slot[231 chars]IED'}
+E       Diff is 1379 characters long. Set self.maxDiff to None to see it. : {'replays': [{'replay': 'typed-sufficiency-noninterference-and-negative-controls-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}, {'replay': 'governed-persisted-typed-slot-sufficiency-admission-recheck-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}, {'replay': 'governed-admitted-typed-value-coherence-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}, {'replay': 'committed-governed-transition-witness-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}, {'replay': 'same-slot-safety-counterevidence-and-immutable-stop-gate-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}], 'evidence_verified': False, 'acceptance': "NOT GRANTED: requires an independent reviewer's decision recorded in META_LEDGER"}
+
+tests/test_770_v7_lane_freeze_independent.py:259: AssertionError
+______ PublicSurfaceForwardsOrParks.test_every_public_entry_is_classified ______
+
+self = <tests.test_api_dod20.PublicSurfaceForwardsOrParks testMethod=test_every_public_entry_is_classified>
+
+    def test_every_public_entry_is_classified(self):
+>       self.assertEqual(
+            set(surface.__all__),
+            set(WRITERS) | set(READERS) | set(AUTHORITY) | set(FACADES),
+        )
+E       AssertionError: Items in the first set but not the second:
+E       'ContextDeliveryUnboundError'
+
+tests/test_api_dod20.py:72: AssertionError
+_ BenchmarkAuthorGoldenPathTests.test_gauntlet_bound_profile_runs_baselines_and_external_contestant _
+
+self = <tests.test_benchmark_author_golden_path.BenchmarkAuthorGoldenPathTests testMethod=test_gauntlet_bound_profile_runs_baselines_and_external_contestant>
+
+    def test_gauntlet_bound_profile_runs_baselines_and_external_contestant(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            lexical = run_gauntlet(LEXICAL, GOLDEN_KEYED_RETRIEVAL_PROFILE_ID, output_dir=root / "lexical")
+            no_memory = run_gauntlet(NO_MEMORY, GOLDEN_KEYED_RETRIEVAL_PROFILE_ID, output_dir=root / "none")
+            external = run_gauntlet(
+                EXTERNAL_STDIO, GOLDEN_KEYED_RETRIEVAL_PROFILE_ID, output_dir=root / "external",
+                allow_external_process=True, allow_destructive_reset=True,
+            )
+            for qualification in (lexical, no_memory, external):
+>               self.assertEqual(qualification["status"], "complete", qualification.get("failure"))
+E               AssertionError: 'blocked' != 'complete'
+E               - blocked
+E               + complete
+E                : {'source': 'system_adapter', 'code': 'adapter_exited', 'message': 'adapter process exited with code 2'}
+
+tests/test_benchmark_author_golden_path.py:87: AssertionError
+_ BenchmarkIntegrationContractTests.test_evaluation_only_change_keeps_runtime_baseline_equivalence _
+
+self = <tests.test_benchmark_integration_contract.BenchmarkIntegrationContractTests testMethod=test_evaluation_only_change_keeps_runtime_baseline_equivalence>
+
+    def test_evaluation_only_change_keeps_runtime_baseline_equivalence(self):
+        register = json.loads((REPO_ROOT / "reports" / "runtime" / "baseline-register.json").read_text(encoding="utf-8"))
+        boundary = json.loads((REPO_ROOT / register["baselines"][-1]["source_boundary"]).read_text(encoding="utf-8"))
+        excluded = [item["path"] for item in boundary["excluded_non_runtime_paths"]]
+        self.assertEqual(excluded, ["reference/agentmem_ref/evaluation"])
+        self.assertIs(boundary["baseline_mutation"], False)
+        available = subprocess.run(
+            ["git", "cat-file", "-e", f"{boundary['frozen_revision']}^{{commit}}"],
+            cwd=REPO_ROOT, capture_output=True, text=True, check=False,
+        )
+        if available.returncode != 0:
+            self.skipTest("frozen Runtime Baseline v1 revision is not available in this checkout")
+        result = subprocess.run(
+            [sys.executable, "scripts/check_runtime_baseline_equivalence.py", "--candidate", "HEAD"],
+            cwd=REPO_ROOT, capture_output=True, text=True, check=False,
+        )
+>       self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+E       AssertionError: 1 != 0 : undeclared protected change: reference/agentmem_ref/api/context_package.py
+E       undeclared protected change: reference/agentmem_ref/context_package.py
+E       declared blob mismatch for reference/agentmem_ref/api/surface.py: declared ba8924d450139f6ef7ea322bb2b3b021139c7e8d, candidate 66b1ee456738c81f9d1a83d75bd6e1207f84b3f3
+E       declared blob mismatch for reference/agentmem_ref/runtime/adapter.py: declared 2c0d3b6d2fbca899afe0d021b563064e91659f77, candidate 85da3030b4cc5ffc132f5572ca44e40933ca2f43
+
+tests/test_benchmark_integration_contract.py:379: AssertionError
+_ DurabilityRecoveryGauntletTests.test_real_agent_memory_public_facade_qualifies_first_durability_slice _
+
+self = <tests.test_gauntlet_durability.DurabilityRecoveryGauntletTests testMethod=test_real_agent_memory_public_facade_qualifies_first_durability_slice>
+
+    def test_real_agent_memory_public_facade_qualifies_first_durability_slice(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            result = run_gauntlet(
+                REAL_MANIFEST,
+                DURABILITY_RECOVERY_PROFILE_ID,
+                output_dir=Path(temporary) / "runs",
+                allow_external_process=True,
+                allow_destructive_operations=True,
+            )
+>           self.assertEqual(result["status"], "complete", result)
+E           AssertionError: 'blocked' != 'complete'
+E           - blocked
+E           + complete
+E            : {'schema_version': '0.1.0', 'run_id': 'gauntlet-durability-recovery-alpha-v1-agent-memory-runtime-baseline-v1-d848685f4797', 'profile': {'profile_id': 'durability-recovery-alpha-v1', 'kind': 'gauntlet_native_gap', 'description': 'Claim-driven durability/recovery alpha for public reopen recovery, durable correction/deletion, deterministic recovered observation, scope isolation, and truthful checkpoint capability posture. Behavioral outcome and evidence sufficiency are reported separately.'}, 'benchmark_integration': None, 'system': {'id': 'agent-memory-runtime-baseline-v1', 'kind': 'agent_memory', 'revision': 'git-commit:f2aef57293b516e065cad5d0afea26ac7e3c28a9'}, 'adapter': {'id': 'agent-memory-public-durability-adapter', 'version': '0.1.0', 'revision': 'git-blob:76b58bafa04ea7e10d9cf3f7ec915393cd586a40', 'transport': 'stdio'}, 'manifest_digest_sha256': '096d2a163576c52ae339644f44850585ef1cfa4c343f123fc75ed1c4f222e020', 'negotiation': {'contract_family': 'agent-memory-gauntlet-capability-negotiation', 'contract_version': '0.1.0', 'profile_id': 'durability-recovery-alpha-v1', 'system_id': 'agent-memory-runtime-baseline-v1', 'adapter_id': 'agent-memory-public-durability-adapter', 'manifest_digest': '096d2a163576c52ae339644f44850585ef1cfa4c343f123fc75ed1c4f222e020', 'outcome': 'eligible_with_limitations', 'reason': 'required capabilities satisfied; one or more optional dimensions unavailable', 'required': [{'capability': 'describe', 'declared_support': 'mapped', 'accepted_support': ['native', 'mapped', 'derived'], 'state': 'satisfied'}, {'capability': 'recall', 'declared_support': 'native', 'accepted_support': ['native', 'mapped', 'derived'], 'state': 'satisfied'}, {'capability': 'recover', 'declared_support': 'mapped', 'accepted_support': ['native', 'mapped'], 'state': 'satisfied'}, {'capability': 'remember', 'declared_support': 'native', 'accepted_support': ['native', 'mapped', 'derived'], 'state': 'satisfied'}, {'capability': 'reset', 'declared_support': 'mapped', 'accepted_support': ['native', 'mapped', 'derived'], 'state': 'satisfied'}], 'optional': [{'capability': 'checkpoint', 'declared_support': 'unsupported', 'accepted_support': ['native', 'mapped', 'derived'], 'state': 'unsupported_optional'}, {'capability': 'correct', 'declared_support': 'unsupported', 'accepted_support': ['native', 'mapped', 'derived'], 'state': 'unsupported_optional'}, {'capability': 'deterministic_recovery', 'declared_support': 'native', 'accepted_support': ['native', 'mapped', 'derived'], 'state': 'satisfied'}, {'capability': 'durable_correction', 'declared_support': 'unsupported', 'accepted_support': ['native', 'mapped', 'derived'], 'state': 'unsupported_optional'}, {'capability': 'durable_deletion', 'declared_support': 'native', 'accepted_support': ['native', 'mapped', 'derived'], 'state': 'satisfied'}, {'capability': 'forget', 'declared_support': 'native', 'accepted_support': ['native', 'mapped', 'derived'], 'state': 'satisfied'}, {'capability': 'history', 'declared_support': 'native', 'accepted_support': ['native', 'mapped', 'derived'], 'state': 'satisfied'}, {'capability': 'restart_recovery', 'declared_support': 'native', 'accepted_support': ['native', 'mapped', 'derived'], 'state': 'satisfied'}, {'capability': 'scope_isolation', 'declared_support': 'native', 'accepted_support': ['native', 'mapped', 'derived'], 'state': 'satisfied'}], 'authority_effect': 'none'}, 'authority_effect': 'none', 'artifacts': {'adapter_manifest': {'path': '/tmp/tmpdb337dr1/runs/gauntlet-durability-recovery-alpha-v1-agent-memory-runtime-baseline-v1-d848685f4797/adapter-manifest.json', 'sha256': '096d2a163576c52ae339644f44850585ef1cfa4c343f123fc75ed1c4f222e020'}, 'native_results': {'path': '/tmp/tmpdb337dr1/runs/gauntlet-durability-recovery-alpha-v1-agent-memory-runtime-baseline-v1-d848685f4797/native-results.json', 'sha256': 'c3a4a62803051a01005c5b0eb718d56e4e0374f9e95a2c7915407b6a39390cdd'}, 'normalized_run': {'path': '/tmp/tmpdb337dr1/runs/gauntlet-durability-recovery-alpha-v1-agent-memory-runtime-baseline-v1-d848685f4797/normalized-run.json', 'sha256': '68ec545bad7b2283a2bfb92e6bff9cd1a1445fe9ef1f457a1c22734642a694cc'}, 'qualification': {'path': '/tmp/tmpdb337dr1/runs/gauntlet-durability-recovery-alpha-v1-agent-memory-runtime-baseline-v1-d848685f4797/qualification.json', 'sha256': '80cdd084a0f4a5f25e2ffe633a06caf3e5bbf9c1bccb74bb0f05c61e5fb0aeae'}}, 'status': 'blocked', 'coverage': {'retrieval': 'blocked', 'currentness': 'blocked', 'reasoning': 'blocked', 'governance': 'blocked', 'efficiency': 'blocked', 'evaluator_integrity': 'blocked', 'reproducibility': 'measured'}, 'failure': {'source': 'system_adapter', 'code': 'adapter_eof', 'message': 'adapter process closed stdout before producing a response'}}
+
+tests/test_gauntlet_durability.py:69: AssertionError
+_ ExternalGauntletExampleTests.test_external_example_requires_opt_in_and_completes_probe _
+
+self = <tests.test_gauntlet_external_example.ExternalGauntletExampleTests testMethod=test_external_example_requires_opt_in_and_completes_probe>
+
+    def test_external_example_requires_opt_in_and_completes_probe(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+    
+            blocked_process = run_gauntlet(
+                MANIFEST,
+                ORCHESTRATION_PROBE_PROFILE_ID,
+                output_dir=root / "blocked-process",
+            )
+            self.assertEqual(blocked_process["status"], "blocked")
+            self.assertEqual(
+                blocked_process["failure"]["code"],
+                "external_process_opt_in_required",
+            )
+    
+            blocked_reset = run_gauntlet(
+                MANIFEST,
+                ORCHESTRATION_PROBE_PROFILE_ID,
+                output_dir=root / "blocked-reset",
+                allow_external_process=True,
+            )
+            self.assertEqual(blocked_reset["status"], "blocked")
+            self.assertEqual(
+                blocked_reset["failure"]["code"],
+                "destructive_operation_opt_in_required",
+            )
+    
+            completed = run_gauntlet(
+                MANIFEST,
+                ORCHESTRATION_PROBE_PROFILE_ID,
+                output_dir=root / "completed",
+                allow_external_process=True,
+                allow_destructive_reset=True,
+            )
+>           self.assertEqual(completed["status"], "complete")
+E           AssertionError: 'blocked' != 'complete'
+E           - blocked
+E           + complete
+
+tests/test_gauntlet_external_example.py:63: AssertionError
+_ KeyedRebindingBenchmarkTests.test_wave2_harvest_matrix_records_uor_r4_disposition _
+
+self = <tests.test_keyed_rebinding_benchmark.KeyedRebindingBenchmarkTests testMethod=test_wave2_harvest_matrix_records_uor_r4_disposition>
+
+    def test_wave2_harvest_matrix_records_uor_r4_disposition(self) -> None:
+        matrix = json.loads(
+>           Path("reference/fixtures/harvest-closeout-wave2.json").read_text(encoding="utf-8")
+        )
+
+tests/test_keyed_rebinding_benchmark.py:53: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/pathlib.py:1029: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('reference/fixtures/harvest-closeout-wave2.json'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'reference/fixtures/harvest-closeout-wave2.json'
+
+/usr/lib/python3.12/pathlib.py:1015: FileNotFoundError
+=============================== warnings summary ===============================
+reference/tests/test_test_import_convention.py::TestImportConvention::test_no_test_module_uses_a_relative_import
+  <unknown>:79: SyntaxWarning: invalid escape sequence '\+'
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_644_v7_gauntlet_identity.py::ImportedRuntimeIdentity::test_own_checkout_at_frozen_revision_is_served
+FAILED tests/test_770_v7_lane_freeze_independent.py::ReplayEvidenceFreshness::test_a_runtime_edit_still_makes_replay_evidence_stale
+FAILED tests/test_770_v7_lane_freeze_independent.py::ReplayEvidenceFreshness::test_lane_records_do_not_make_replay_evidence_stale
+FAILED tests/test_api_dod20.py::PublicSurfaceForwardsOrParks::test_every_public_entry_is_classified
+FAILED tests/test_benchmark_author_golden_path.py::BenchmarkAuthorGoldenPathTests::test_gauntlet_bound_profile_runs_baselines_and_external_contestant
+FAILED tests/test_benchmark_integration_contract.py::BenchmarkIntegrationContractTests::test_evaluation_only_change_keeps_runtime_baseline_equivalence
+FAILED tests/test_gauntlet_durability.py::DurabilityRecoveryGauntletTests::test_real_agent_memory_public_facade_qualifies_first_durability_slice
+FAILED tests/test_gauntlet_external_example.py::ExternalGauntletExampleTests::test_external_example_requires_opt_in_and_completes_probe
+FAILED tests/test_keyed_rebinding_benchmark.py::KeyedRebindingBenchmarkTests::test_wave2_harvest_matrix_records_uor_r4_disposition
+9 failed, 3206 passed, 27 skipped, 1 xfailed, 1 warning, 2186 subtests passed in 310.03s (0:05:10)

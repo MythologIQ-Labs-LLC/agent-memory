@@ -1,0 +1,63 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.7.0 -- /tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/bench/venv312-lme/bin/python
+cachedir: .pytest_cache
+rootdir: /home/user/agent-memory
+configfile: pyproject.toml
+collecting ... collected 3 items
+
+tests/test_839_context_audit_failclosed_review.py::AuditCommitOrdering::test_missing_recall_event_must_not_be_synthesized_as_bound_delivery FAILED [ 33%]
+tests/test_839_context_audit_failclosed_review.py::AuditCommitOrdering::test_normal_delivery_still_binds_recall_and_survives_reopen PASSED [ 66%]
+tests/test_839_context_audit_failclosed_review.py::AuditCommitOrdering::test_rejected_final_package_cannot_leave_a_durable_delivery_receipt FAILED [100%]
+
+=================================== FAILURES ===================================
+_ AuditCommitOrdering.test_missing_recall_event_must_not_be_synthesized_as_bound_delivery _
+
+self = <tests.test_839_context_audit_failclosed_review.AuditCommitOrdering testMethod=test_missing_recall_event_must_not_be_synthesized_as_bound_delivery>
+
+    def test_missing_recall_event_must_not_be_synthesized_as_bound_delivery(self) -> None:
+        """A content receipt claiming recall linkage must cite an actual recall event.
+    
+        The current delivery_event() accepts recall_event=None and substitutes
+        its own event id as correlation_id, leaving recall_bound=false.
+        Merely returning an audit id is not binding to a source recall.
+        """
+        with mock.patch.object(surface, "_first_recall_event_since", return_value=None):
+>           with self.assertRaises(Exception):
+E           AssertionError: Exception not raised
+
+tests/test_839_context_audit_failclosed_review.py:79: AssertionError
+_ AuditCommitOrdering.test_rejected_final_package_cannot_leave_a_durable_delivery_receipt _
+
+self = <tests.test_839_context_audit_failclosed_review.AuditCommitOrdering testMethod=test_rejected_final_package_cannot_leave_a_durable_delivery_receipt>
+
+    def test_rejected_final_package_cannot_leave_a_durable_delivery_receipt(self) -> None:
+        """Fault in the *post-audit* schema validation should not claim delivery.
+    
+        The current code writes and durably commits the audit, *then* runs
+        receipts.validate(PACKAGE_SCHEMA, package). Patch just that schema name
+        so the final validation fails. No package reaches the caller.
+        """
+        self.assertEqual(delivery_events(self.memory), [])
+        with mock.patch.object(
+            context_package, "PACKAGE_SCHEMA", "missing-839-intentional-schema.json"
+        ):
+            with self.assertRaises(Exception):
+                self.memory.recall_context("laboratory gate coral")
+    
+        # The receipt must not claim delivery for a failed call, in memory
+        # or across a process restart. A recall-only audit can remain.
+>       self.assertEqual(delivery_events(self.memory), [],
+                         "delivery audit committed before the package passed validation")
+E       AssertionError: Lists differ: [{'schema_version': '1.0.0', 'event_id': '[1247 chars]10'}] != []
+E       
+E       First list contains 1 additional elements.
+E       First extra element 0:
+E       {'schema_version': '1.0.0', 'event_id': 'ref-0011', 'event_type': 'memory.context_delivery', 'event_version': '1.0.0', 'timestamp': '2026-01-01T00:00:09Z', 'component': 'public-facade', 'correlation_id': 'ref-0008', 'principal': 'agent:owner', 'signal': {'signal_type': 'context_delivery', 'signal_semantics': '1 of 1 returned facts delivered as content'}, 'payload': {'package_version': 'agent-memory-context/0.1.0', 'package_status': 'complete', 'consistency': 'single_serialized_recall_and_resolution', 'actor_binding': 'host_declared', 'target_domain_refs': ['tenant:839-audit-integrity', 'project:839-audit-integrity'], 'project_ref': 'project:839-audit-integrity', 'task_ref': '', 'purpose': 'post-v7 audit integrity probe', 'recall_bound': True, 'recall_decision_ids': {'ref-0004': 'ref-0009'}, 'returned_count': 1, 'delivered_count': 1, 'outcomes': {'ref-0004': {'state': 'resolved', 'content_sha256': 'f00ca06656b6790f8e9c3ff815dc247781909880537376495f538271b4681184', 'delivered_chars': 37}}, 'counts': {'resolved': 1}, 'budget': {'max_items': 20, 'max_chars_per_item': 2000, 'max_total_chars': 8000, 'max_tokens': 2000, 'used_chars': 37, 'used_tokens_estimate': 10}, 'package_sha256': '1082a7374aa79336bcc5e22871651b90885686b153e6b4b52aa86247e3b1ffde'}, 'causation_id': 'ref-0010'}
+E       
+E       Diff is 1855 characters long. Set self.maxDiff to None to see it. : delivery audit committed before the package passed validation
+
+tests/test_839_context_audit_failclosed_review.py:62: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_839_context_audit_failclosed_review.py::AuditCommitOrdering::test_missing_recall_event_must_not_be_synthesized_as_bound_delivery
+FAILED tests/test_839_context_audit_failclosed_review.py::AuditCommitOrdering::test_rejected_final_package_cannot_leave_a_durable_delivery_receipt
+========================= 2 failed, 1 passed in 1.85s ==========================

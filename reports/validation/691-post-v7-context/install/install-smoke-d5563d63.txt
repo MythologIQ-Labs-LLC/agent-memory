@@ -1,0 +1,32 @@
+
+!!
+Successfully built agent_memory_reference-0.2.0.tar.gz and agent_memory_reference-0.2.0-py3-none-any.whl
+total 1984
+drwxr-xr-x 2 root root    4096 Oct 21 21:23 .
+drwxr-xr-x 5 root root    4096 Oct 21 21:23 ..
+-rw-r--r-- 1 root root 1138027 Oct 21 21:23 agent_memory_reference-0.2.0-py3-none-any.whl
+-rw-r--r-- 1 root root  882995 Oct 21 21:23 agent_memory_reference-0.2.0.tar.gz
+== venv-wheel
+agentmem_ref from /tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/p691/install-d5563d63/venv-wheel/lib/python3.12/site-packages/agentmem_ref/__init__.py
+package version agent-memory-context/0.1.0 alias ok True
+packaged context schema: True f2dd13c36d77
+status complete content ['Installed smoke: the kettle is in the left cupboard.'] audit keys ['correlation_id', 'delivery_event_id', 'recall_event_id']
+delivery events ['memory.context_delivery']
+== venv-sdist
+agentmem_ref from /tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/p691/install-d5563d63/venv-sdist/lib/python3.12/site-packages/agentmem_ref/__init__.py
+package version agent-memory-context/0.1.0 alias ok True
+packaged context schema: True f2dd13c36d77
+status complete content ['Installed smoke: the kettle is in the left cupboard.'] audit keys ['correlation_id', 'delivery_event_id', 'recall_event_id']
+delivery events ['memory.context_delivery']
+== demo against the installed wheel
+== other project reads: status=empty items=0 chars=0 tokens~0
+   check: OK  another project cannot read this project's content
+
+ALL CHECKS PASSED
+== demo from source checkout
+
+ALL CHECKS PASSED
+4ba7fa7b7dfcc83f794003051667d53b81e0c523e325e4649684452b455c7550  /tmp/claude-0/
+61e9fe2fa48c23b9dcc24935c6f9d2f3c7dd3f9e8693d6dd7bca2a7516e4bfdc  /tmp/claude-0/
+
+[exited with code 0]

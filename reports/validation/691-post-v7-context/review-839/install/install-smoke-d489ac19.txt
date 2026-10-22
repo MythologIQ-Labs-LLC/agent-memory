@@ -1,0 +1,14 @@
+== venv-wheel
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/r839/out-d489ac19/install/smoke.py", line 1, in <module>
+    import agentmem_ref, hashlib, tempfile
+ModuleNotFoundError: No module named 'agentmem_ref'
+== venv-sdist
+agentmem_ref from /tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/r839/out-d489ac19/install/venv-sdist/lib/python3.12/site-packages/agentmem_ref/__init__.py
+package version agent-memory-context/0.1.0
+status complete content ['Installed smoke: the kettle is in the left cupboard.'] audit keys ['correlation_id', 'delivery_event_id', 'recall_event_id'] receipts 1 bound True True
+A raised FileNotFoundError
+A receipts after fault 1
+B raised ContextDeliveryUnboundError
+B receipts after fault 1
+receipts after reopen 1

@@ -1,0 +1,4 @@
+head-under-load tree=d489ac19 iterations=40 pass=40 fail=0 load=1.59 1.06 0.53
+base-under-load tree=72d6a903 iterations=40 pass=40 fail=0 load=2.11 1.27 0.62
+head-under-load tree=024d9af3 iterations=25 pass=25 fail=0 load=1.63 0.94 0.42
+base-under-load tree=72d6a903 iterations=25 pass=25 fail=0 load=1.50 0.96 0.44

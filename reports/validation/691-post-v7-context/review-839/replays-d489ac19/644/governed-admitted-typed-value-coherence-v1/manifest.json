@@ -1,0 +1,23 @@
+{
+ "attestation": "none: hashes bind contents for review; they are not signatures and confer no acceptance",
+ "command": "python reference/run_644_v7_replays.py --all",
+ "fixture": {
+  "path": "reference/fixtures/644-v7-replays/governed-admitted-typed-value-coherence-v1.json",
+  "sha256": "f83c9cb3281568e649691b2e2e21ea0ec1d6e569aa4e50df774fbff4039e019b"
+ },
+ "observations_sha256": "5b8edee241e8283ce5b9fc305d1de15dcdd9048d78df181c508618f6c3d0a35c",
+ "replay_id": "governed-admitted-typed-value-coherence-v1",
+ "report": {
+  "path": "report.json",
+  "sha256": "47b5455ba14fa12a0c3364458044048db31db5502f96b073305d6bebcd20efb1"
+ },
+ "runner": {
+  "path": "reference/run_644_v7_replays.py",
+  "sha256": "941a0dc6860e932531d77eb65c1f305f84feeab3366cacd39953dae160cf0def",
+  "version": "644-v7-replay-runner/1"
+ },
+ "runtime_tree": "83f0ff9992021f1d41b935c18883d0aa24d287c2",
+ "schema": "644-v7-replay-manifest/1",
+ "source_commit": "d489ac193140e56aa8a8c664fc75f7d3396277b2",
+ "verdict": "PASS"
+}

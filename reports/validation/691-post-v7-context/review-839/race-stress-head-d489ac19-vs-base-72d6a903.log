@@ -1,0 +1,29 @@
+== head tree=d489ac19 05:26:44
+-- test-shaped (3 threads x 5 writes) x 100 rounds, single process
+TOTAL {"admitted_not_first": 0, "checkpoint_conflict": 970, "head_moved": 0, "open_recovery_error": 6, "refused": 500}
+-- 3x5 x 40 rounds, 4 concurrent processes (CPU oversubscribed)
+round 25: {'refused': 8, 'checkpoint_conflict': 6, 'remember_recovery_error': 1, 'head_moved': 0, 'admitted_not_first': 0} | ['cannot restore governance after SQLite rollback']
+TOTAL {"admitted_not_first": 0, "checkpoint_conflict": 341, "head_moved": 0, "open_recovery_error": 5, "refused": 233, "remember_recovery_error": 1}
+round 16: {'refused': 10, 'checkpoint_conflict': 4, 'remember_recovery_error': 1, 'head_moved': 0, 'admitted_not_first': 0} | ['cannot restore governance after SQLite rollback']
+TOTAL {"admitted_not_first": 0, "checkpoint_conflict": 352, "head_moved": 0, "open_recovery_error": 2, "refused": 237, "remember_recovery_error": 1}
+round 3: {'checkpoint_conflict': 9, 'refused': 5, 'remember_recovery_error': 1, 'head_moved': 0, 'admitted_not_first': 0} | ['cannot restore governance after SQLite rollback']
+round 36: {'refused': 5, 'checkpoint_conflict': 9, 'remember_recovery_error': 1, 'head_moved': 0, 'admitted_not_first': 0} | ['cannot restore governance after SQLite rollback']
+TOTAL {"admitted_not_first": 0, "checkpoint_conflict": 356, "head_moved": 0, "open_recovery_error": 6, "refused": 212, "remember_recovery_error": 2}
+round 18: {'refused': 5, 'checkpoint_conflict': 9, 'remember_recovery_error': 1, 'head_moved': 0, 'admitted_not_first': 0} | ['cannot restore governance after SQLite rollback']
+TOTAL {"admitted_not_first": 0, "checkpoint_conflict": 362, "head_moved": 0, "open_recovery_error": 3, "refused": 222, "remember_recovery_error": 1}
+-- 8 threads x 10 writes x 30 rounds, single process
+TOTAL {"admitted_not_first": 0, "checkpoint_conflict": 2050, "head_moved": 0, "open_recovery_error": 5, "refused": 300}
+== head done 05:31:14 load=2.70 2.15 1.27
+== base tree=72d6a903 05:31:14
+-- test-shaped (3 threads x 5 writes) x 100 rounds, single process
+TOTAL {"admitted_not_first": 0, "checkpoint_conflict": 930, "head_moved": 0, "open_recovery_error": 14, "refused": 500}
+-- 3x5 x 40 rounds, 4 concurrent processes (CPU oversubscribed)
+TOTAL {"admitted_not_first": 0, "checkpoint_conflict": 320, "head_moved": 0, "open_recovery_error": 11, "refused": 225}
+round 21: {'checkpoint_conflict': 9, 'refused': 5, 'remember_recovery_error': 1, 'head_moved': 0, 'admitted_not_first': 0} | ['cannot restore governance after SQLite rollback']
+round 22: {'refused': 5, 'remember_recovery_error': 1, 'checkpoint_conflict': 9, 'head_moved': 0, 'admitted_not_first': 0} | ['cannot restore governance after SQLite rollback']
+TOTAL {"admitted_not_first": 0, "checkpoint_conflict": 358, "head_moved": 0, "open_recovery_error": 7, "refused": 205, "remember_recovery_error": 2}
+TOTAL {"admitted_not_first": 0, "checkpoint_conflict": 365, "head_moved": 0, "open_recovery_error": 5, "refused": 210}
+TOTAL {"admitted_not_first": 0, "checkpoint_conflict": 335, "head_moved": 0, "open_recovery_error": 9, "refused": 220}
+-- 8 threads x 10 writes x 30 rounds, single process
+TOTAL {"admitted_not_first": 0, "checkpoint_conflict": 2100, "head_moved": 0, "refused": 300}
+== base done 05:36:03 load=2.49 2.30 1.57
