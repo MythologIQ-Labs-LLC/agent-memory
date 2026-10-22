@@ -1,0 +1,14 @@
+SAME committed-governed-transition-witness-v1 verdict=PASS
+SAME cross-scope-write-authority-denial-v2 verdict=PASS
+SAME cross-scope-write-authority-denial-v3 verdict=PASS
+SAME deleted-lineage-generations-and-restart-v2 verdict=PASS
+SAME deleted-lineage-generations-and-restart-v3 verdict=PASS
+SAME evidence-reference-authorization-v1 verdict=PASS
+SAME governed-admitted-typed-value-coherence-v1 verdict=PASS
+SAME governed-persisted-typed-slot-sufficiency-admission-recheck-v1 verdict=PASS
+SAME public-tombstone-redaction-and-observer-separation-v2 verdict=PASS
+SAME public-tombstone-redaction-and-observer-separation-v3 verdict=PASS
+SAME same-slot-safety-counterevidence-and-immutable-stop-gate-v1 verdict=PASS
+SAME scope-safe-graph-discovery-v2 verdict=PASS
+SAME typed-sufficiency-noninterference-and-negative-controls-v1 verdict=PASS
+families 13 same 13

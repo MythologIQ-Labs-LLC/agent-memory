@@ -1,0 +1,63 @@
+{
+  "k": 10,
+  "kind": "locomo_category5_adversarial_unanswerable_unseen_no_answer_controls",
+  "note": "A cited session is the dialogue the adversarial question was written from; it holds no answer, so delivering it is neither right nor wrong by itself. The honest signal is burden and the assessment the consumer receives.",
+  "platform": "Linux-6.18.44-fc-v140-x86_64-with-glibc2.39",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "questions": 446,
+  "raw_sha256": "79fa87e90f04081343b8c8debecb80a9a6842b76a7aa537dc9fdf651ea698ff4",
+  "runtime_sha": "4c06506c56bc374dc73a8059c855b9f78fb90f10",
+  "selector_blob": "67ca2839e6b103b60c9ca9f8d706c11ceaae8771",
+  "summary": {
+    "default": {
+      "cited_session_delivered": 430,
+      "cited_session_total": 446,
+      "delivered_total": 4460,
+      "empty": 0,
+      "questions": 446
+    },
+    "eq": {
+      "assessments": {
+        "evidence_delivered": 446
+      },
+      "cited_session_delivered": 430,
+      "cited_session_total": 446,
+      "delivered_total": 4457,
+      "empty": 0,
+      "evidence_kinds": {
+        "attribute_undetermined": 132,
+        "query_term_evidence": 3641,
+        "subject_and_attribute_evidence": 660,
+        "subject_mismatch": 3,
+        "undetermined_multi_statement": 9,
+        "ungrounded_subject": 15
+      },
+      "omitted_reasons": {
+        "subject_mismatch": 3
+      },
+      "questions": 446,
+      "uncertain_total": 156
+    },
+    "fts5": {
+      "cited_session_delivered": 431,
+      "cited_session_total": 446,
+      "delivered_total": 4453,
+      "empty": 0,
+      "questions": 446
+    },
+    "lexical": {
+      "cited_session_delivered": 430,
+      "cited_session_total": 446,
+      "delivered_total": 4453,
+      "empty": 0,
+      "questions": 446
+    },
+    "raw": {
+      "cited_session_delivered": 430,
+      "cited_session_total": 446,
+      "delivered_total": 4460,
+      "empty": 0,
+      "questions": 446
+    }
+  }
+}

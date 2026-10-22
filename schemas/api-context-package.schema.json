@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://mythologiq.ai/agent-memory/schemas/api-context-package.schema.json",
-  "title": "Agent Memory context package (#691 candidate agent-memory-context/0.1.0)",
-  "description": "The authorized content of exactly the facts one public recall returned, resolved under the same serialization boundary as that recall, with provenance receipts, budgets and explicit item and package states. Separately versioned from the 1.x result envelope; not part of an accepted contract. Memory content is untrusted evidence and never authority.",
+  "title": "Agent Memory context package (#691 candidate agent-memory-context/0.1.0; #819 experimental evidence-qualified 0.2.0)",
+  "description": "The authorized content of exactly the facts one public recall returned, resolved under the same serialization boundary as that recall, with provenance receipts, budgets and explicit item and package states. Separately versioned from the 1.x result envelope; not part of an accepted contract. Memory content is untrusted evidence and never authority. Package 0.2.0 is produced only by the opt-in consumer_profile=\"evidence_qualified\": it adds the omitted_selection item state and the selection block; the default profile still produces 0.1.0 byte-compatibly.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -17,7 +17,10 @@
   ],
   "properties": {
     "package_version": {
-      "const": "agent-memory-context/0.1.0"
+      "enum": [
+        "agent-memory-context/0.1.0",
+        "agent-memory-context/0.2.0"
+      ]
     },
     "status": {
       "enum": [
@@ -57,7 +60,8 @@
               "truncated",
               "omitted_budget",
               "unresolved",
-              "unsupported"
+              "unsupported",
+              "omitted_selection"
             ]
           },
           "reason": {
@@ -66,7 +70,9 @@
               "not_found",
               "no_longer_admissible",
               "content_read_failed",
-              "no_text_content"
+              "no_text_content",
+              "no_query_term_evidence",
+              "subject_mismatch"
             ]
           },
           "content": {
@@ -171,7 +177,8 @@
                   "enum": [
                     "omitted_budget",
                     "unresolved",
-                    "unsupported"
+                    "unsupported",
+                    "omitted_selection"
                   ]
                 }
               }
@@ -208,6 +215,28 @@
               "required": [
                 "reason"
               ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "const": "omitted_selection"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "reason"
+              ],
+              "properties": {
+                "reason": {
+                  "enum": [
+                    "no_query_term_evidence",
+                    "subject_mismatch"
+                  ]
+                }
+              }
             }
           }
         ]
@@ -314,6 +343,173 @@
           "type": "string"
         }
       }
+    },
+    "selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "consumer_profile",
+        "policy_id",
+        "policy_version",
+        "basis",
+        "query_terms",
+        "query_subjects",
+        "decisions",
+        "delivered_refs",
+        "omitted_refs",
+        "delivered_count",
+        "omitted_count",
+        "uncertain_count",
+        "omitted_reasons",
+        "assessment",
+        "authority_effect"
+      ],
+      "properties": {
+        "consumer_profile": {
+          "const": "evidence_qualified"
+        },
+        "policy_id": {
+          "const": "evidence-qualified-context-selection"
+        },
+        "policy_version": {
+          "const": "0.4.1"
+        },
+        "basis": {
+          "const": "post_admission_query_evidence_qualification"
+        },
+        "query_terms": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "query_subjects": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "decisions": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "outcome"
+            ],
+            "properties": {
+              "outcome": {
+                "enum": [
+                  "delivered",
+                  "omitted",
+                  "unavailable"
+                ]
+              },
+              "evidence": {
+                "enum": [
+                  "preserved_exact_identity",
+                  "preserved_corroborated_route",
+                  "preserved_historical_admission",
+                  "subject_and_attribute_evidence",
+                  "query_term_evidence",
+                  "subject_only_evidence",
+                  "ungrounded_subject",
+                  "undetermined_query",
+                  "undetermined_multi_statement",
+                  "attribute_undetermined"
+                ]
+              },
+              "reason": {
+                "enum": [
+                  "no_query_term_evidence",
+                  "subject_mismatch"
+                ]
+              },
+              "certainty": {
+                "enum": [
+                  "grounded",
+                  "uncertain"
+                ]
+              },
+              "state": {
+                "type": "string"
+              },
+              "currentness": {
+                "type": "string"
+              },
+              "routes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "matched_terms": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "query_subjects": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "fact_subjects": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "single_statement": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "delivered_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "omitted_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "delivered_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "omitted_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "uncertain_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "omitted_reasons": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "assessment": {
+          "enum": [
+            "evidence_delivered",
+            "undetermined",
+            "no_relevant_evidence",
+            "no_returned_candidates"
+          ]
+        },
+        "authority_effect": {
+          "const": "none"
+        }
+      }
     }
   },
   "allOf": [
@@ -328,7 +524,13 @@
       "then": {
         "properties": {
           "items": {
-            "maxItems": 0
+            "items": {
+              "properties": {
+                "state": {
+                  "const": "omitted_selection"
+                }
+              }
+            }
           }
         }
       }
@@ -347,11 +549,35 @@
             "items": {
               "properties": {
                 "state": {
-                  "const": "resolved"
+                  "enum": [
+                    "resolved",
+                    "omitted_selection"
+                  ]
                 }
               }
             }
           }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "package_version": {
+            "const": "agent-memory-context/0.2.0"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "selection"
+        ]
+      },
+      "else": {
+        "not": {
+          "required": [
+            "selection"
+          ]
         }
       }
     }

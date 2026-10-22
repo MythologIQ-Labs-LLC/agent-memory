@@ -1,0 +1,9 @@
+undeclared protected change: reference/agentmem_ref/api/context_package.py
+undeclared protected change: reference/agentmem_ref/api/context_selection.py
+undeclared protected change: reference/agentmem_ref/api/host_activation.py
+undeclared protected change: reference/agentmem_ref/context_package.py
+undeclared protected change: reference/agentmem_ref/context_selection.py
+undeclared protected change: reference/agentmem_ref/host_activation.py
+declared blob mismatch for reference/agentmem_ref/api/surface.py: declared ba8924d450139f6ef7ea322bb2b3b021139c7e8d, candidate 1de5e7ad751b4226c65d992954a219eb0742a85d
+declared blob mismatch for reference/agentmem_ref/runtime/adapter.py: declared 2c0d3b6d2fbca899afe0d021b563064e91659f77, candidate 85da3030b4cc5ffc132f5572ca44e40933ca2f43
+exit 1

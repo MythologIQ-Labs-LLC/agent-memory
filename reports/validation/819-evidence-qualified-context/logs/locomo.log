@@ -1,0 +1,80 @@
+conv-26 152 19s
+conv-30 233 27s
+conv-41 385 47s
+conv-42 584 71s
+conv-43 762 95s
+conv-44 885 113s
+conv-47 1035 132s
+conv-48 1226 157s
+conv-49 1382 176s
+conv-50 1540 197s
+{
+ "raw": {
+  "scored_questions": 1531,
+  "complete": 1278,
+  "required_hits": 1734,
+  "required_total": 2102,
+  "delivered_total": 15310,
+  "micro_precision": 0.11325930764206402,
+  "macro_precision": 0.11325930764206402,
+  "empty_on_answerable": 0,
+  "no_answer_questions": 9,
+  "no_answer_abstained": 0,
+  "no_answer_delivered_total": 90
+ },
+ "default": {
+  "scored_questions": 1531,
+  "complete": 1278,
+  "required_hits": 1734,
+  "required_total": 2102,
+  "delivered_total": 15310,
+  "micro_precision": 0.11325930764206402,
+  "macro_precision": 0.11325930764206402,
+  "empty_on_answerable": 0,
+  "no_answer_questions": 9,
+  "no_answer_abstained": 0,
+  "no_answer_delivered_total": 90
+ },
+ "lexical": {
+  "scored_questions": 1531,
+  "complete": 1277,
+  "required_hits": 1733,
+  "required_total": 2102,
+  "delivered_total": 15264,
+  "micro_precision": 0.11353511530398323,
+  "macro_precision": 0.1148230226120494,
+  "empty_on_answerable": 0,
+  "no_answer_questions": 9,
+  "no_answer_abstained": 0,
+  "no_answer_delivered_total": 90
+ },
+ "eq": {
+  "scored_questions": 1531,
+  "complete": 1278,
+  "required_hits": 1734,
+  "required_total": 2102,
+  "delivered_total": 15310,
+  "micro_precision": 0.11325930764206402,
+  "macro_precision": 0.11325930764206402,
+  "empty_on_answerable": 0,
+  "no_answer_questions": 9,
+  "no_answer_abstained": 0,
+  "no_answer_delivered_total": 90
+ },
+ "fts5": {
+  "scored_questions": 1531,
+  "complete": 1273,
+  "required_hits": 1732,
+  "required_total": 2102,
+  "delivered_total": 15269,
+  "micro_precision": 0.11343244482284368,
+  "macro_precision": 0.11469238903922117,
+  "empty_on_answerable": 0,
+  "no_answer_questions": 9,
+  "no_answer_abstained": 0,
+  "no_answer_delivered_total": 90
+ }
+}
+lexical lost vs default: 1
+eq lost vs default: 0
+fts5 lost vs default: 56

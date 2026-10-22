@@ -1,0 +1,59 @@
+conv-26 47 5s
+conv-30 71 8s
+conv-41 112 13s
+conv-42 173 21s
+conv-43 237 30s
+conv-44 272 36s
+conv-47 312 42s
+conv-48 360 49s
+conv-49 400 55s
+conv-50 446 62s
+{
+ "raw": {
+  "questions": 446,
+  "delivered_total": 4460,
+  "empty": 0,
+  "cited_session_delivered": 430,
+  "cited_session_total": 446
+ },
+ "default": {
+  "questions": 446,
+  "delivered_total": 4460,
+  "empty": 0,
+  "cited_session_delivered": 430,
+  "cited_session_total": 446
+ },
+ "lexical": {
+  "questions": 446,
+  "delivered_total": 4453,
+  "empty": 0,
+  "cited_session_delivered": 430,
+  "cited_session_total": 446
+ },
+ "eq": {
+  "questions": 446,
+  "delivered_total": 4460,
+  "empty": 0,
+  "cited_session_delivered": 430,
+  "cited_session_total": 446,
+  "assessments": {
+   "evidence_delivered": 446
+  },
+  "uncertain_total": 159,
+  "omitted_reasons": {},
+  "evidence_kinds": {
+   "query_term_evidence": 3641,
+   "subject_and_attribute_evidence": 660,
+   "attribute_undetermined": 132,
+   "undetermined_multi_statement": 9,
+   "ungrounded_subject": 18
+  }
+ },
+ "fts5": {
+  "questions": 446,
+  "delivered_total": 4453,
+  "empty": 0,
+  "cited_session_delivered": 431,
+  "cited_session_total": 446
+ }
+}

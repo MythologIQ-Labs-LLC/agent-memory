@@ -34,7 +34,7 @@ from ..runtime.adapter import REPLACEMENT_KINDS, WRITE_TARGET_REFUSED_REF, Gover
 from ..core import receipts
 from ..runtime import cross_fact_currentness as cross_fact
 from ..runtime.temporal_intent import DECLARED_TEMPORAL_KEY, declared_temporal, resolve_intent
-from . import context_package, contract
+from . import context_package, context_selection, contract
 
 __all__ = [
     "AgentMemory",
@@ -1103,10 +1103,18 @@ class AgentMemory:
         max_chars_per_item: int = context_package.DEFAULT_MAX_CHARS_PER_ITEM,
         max_total_chars: int = context_package.DEFAULT_MAX_TOTAL_CHARS,
         max_tokens: int | None = None,
+        consumer_profile: str = context_package.DEFAULT_CONSUMER_PROFILE,
         **recall_kwargs,
     ) -> dict:
         """Recall, then resolve the content of exactly the returned facts (#691, candidate
         package ``agent-memory-context/0.1.0``; ``recall()`` is unchanged).
+
+        ``consumer_profile`` (#819, experimental) selects the delivery policy over the returned
+        facts: ``"all_returned"`` (default) delivers every returned fact;
+        ``"evidence_qualified"`` runs the versioned post-admission selector of
+        ``api.context_selection`` and produces package ``0.2.0``, in which a returned fact whose
+        content carries no evidence for the query is ``omitted_selection`` with an inspectable
+        reason. Neither profile changes what ``recall()`` returns.
 
         The recall and the resolution run under one hold of the runtime-owned serialization
         lock, so no correction, deletion or dispute interleaves. Each returned fact is re-checked
@@ -1129,6 +1137,7 @@ class AgentMemory:
         if not isinstance(max_items, int) or isinstance(max_items, bool) or max_items < 1:
             raise ValueError("max_items must be a positive integer")
         context_package.validate_budgets(max_chars_per_item, max_total_chars, max_tokens)
+        context_package.validate_consumer_profile(consumer_profile)
         adapter = self.runtime.adapter
         events_before = len(adapter.events)
         document, context = self._recall_document_and_context(query, public=True, budget=max_items, **recall_kwargs)
@@ -1171,9 +1180,20 @@ class AgentMemory:
             }
             return "resolved", text, {key: value for key, value in receipt.items() if value is not None}
 
+        def qualify(ref: str, decision, text: str):
+            # #819: subject grounding reads only the fact's own persisted write-time
+            # interpretation; it is evidence about the text, never authority or authentication.
+            from ..runtime.proposition_semantics import WRITE_SEMANTICS_KEY
+
+            fact = substrate.get_fact(ref)
+            semantics = dict(getattr(fact, "attributes", None) or {}).get(WRITE_SEMANTICS_KEY) or {}
+            proposition = semantics.get("proposition") if isinstance(semantics, dict) else None
+            return context_selection.qualify(query, ref, decision, text, proposition)
+
         package = context_package.build_package(
             document, resolve, max_chars_per_item=max_chars_per_item,
-            max_total_chars=max_total_chars, max_tokens=max_tokens)
+            max_total_chars=max_total_chars, max_tokens=max_tokens,
+            consumer_profile=consumer_profile, qualify=qualify, query=query)
         # #691 content-delivery audit: the recall event proves identifiers were recalled; this
         # receipt proves which of them were delivered as content, bound to that recall and to
         # the admission decisions, without the text. It is published through the runtime's
