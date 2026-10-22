@@ -86,6 +86,30 @@ class ActualMcpConsumerLoop(unittest.IsolatedAsyncioTestCase):
                         "Neovim" in item["content"] for item in recovered["evidence"]
                     ), recovered)
 
+    async def test_separately_configured_project_cannot_read_other_project(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "my-memory"
+            env = {
+                "AGENT_MEMORY_MCP_ROOT": str(root),
+                "AGENT_MEMORY_MCP_TENANT": "tenant:two-scopes",
+                "AGENT_MEMORY_MCP_ACTOR": "agent:owner",
+                "AGENT_MEMORY_MCP_SCOPE": "project:private",
+            }
+            with patch.dict(os.environ, env):
+                async with Client(module.mcp, raise_exceptions=True) as client:
+                    saved = _result(await client.call_tool("memory_remember", {
+                        "key": "memory:private:editor",
+                        "text": "The private editor choice is Neovim.",
+                    }), "committed")
+                    self.assertTrue(saved["committed"])
+            with patch.dict(os.environ, {**env, "AGENT_MEMORY_MCP_SCOPE": "project:other"}):
+                async with Client(module.mcp, raise_exceptions=True) as client:
+                    result = _result(await client.call_tool("memory_get", {
+                        "key": "memory:private:editor",
+                    }), "evidence")
+                    self.assertEqual(result["evidence"], [])
+                    self.assertNotIn("Neovim", repr(result))
+
     async def test_malformed_tool_input_cannot_set_authority(self):
         with tempfile.TemporaryDirectory() as temp:
             env = {
