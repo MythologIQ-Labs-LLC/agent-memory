@@ -150,7 +150,12 @@ def provision_new_root(
     except FileExistsError as exc:
         raise HostAdmissionRefused("host enrollment already exists") from exc
     try:
-        with os.fdopen(descriptor, "wb") as handle:
+        try:
+            handle = os.fdopen(descriptor, "wb")
+        except BaseException:
+            os.close(descriptor)
+            raise
+        with handle:
             handle.write((json.dumps(receipt, sort_keys=True) + "\n").encode("utf-8"))
             handle.flush()
             os.fsync(handle.fileno())
