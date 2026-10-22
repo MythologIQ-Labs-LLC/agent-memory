@@ -220,7 +220,81 @@ else:
                 with self.assertRaisesRegex(OSError, "disk failure"):
                     surface._atomic_write_text(target, "NEW")
             self.assertEqual(target.read_text(encoding="utf-8"), "ORIGINAL")
-            self.assertEqual(list(root.glob(".runtime-config.json.*.tmp")), [])
+            # no staged file of any name survives, including the predictable legacy name
+            self.assertEqual(sorted(p.name for p in root.iterdir()), ["runtime-config.json"])
+
+    def test_forced_two_creator_race_admits_exactly_one_initializer(self):
+        """Deterministic form of the fresh-root race: both processes pass the database-exists
+        check and both call the fresh-store creator. Exactly one may initialise the root; the
+        other must fail closed; the survivor's write is durable and the root reopens cleanly."""
+        worker = """
+import sys, time
+from pathlib import Path
+from agentmem_ref import AgentMemory
+from agentmem_ref.runtime import sqlite_composition as composition
+root = Path(sys.argv[1])
+name = sys.argv[2]
+real_create = composition.SQLiteConfiguredCompositionRuntime.create.__func__
+def gated_create(cls, *args, **kwargs):
+    (root / ("create-ready-" + name)).write_text("ready", encoding="utf-8")
+    deadline = time.monotonic() + 20
+    while not (root / "create-go").exists():
+        if time.monotonic() > deadline:
+            raise TimeoutError("other initializer never reached the creator")
+        time.sleep(0.005)
+    return real_create(cls, *args, **kwargs)
+composition.SQLiteConfiguredCompositionRuntime.create = classmethod(gated_create)
+try:
+    runtime = AgentMemory.open(root)
+except Exception as exc:
+    print("REFUSED:" + type(exc).__name__)
+else:
+    try:
+        print("OPENED:" + str(runtime.remember("memory:" + name, "written by " + name)["committed"]))
+    finally:
+        runtime.close()
+"""
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / "runtime"
+            root.mkdir()
+            environment = os.environ.copy()
+            reference_dir = str(Path(__file__).resolve().parents[1])
+            environment["PYTHONPATH"] = reference_dir + os.pathsep + environment.get("PYTHONPATH", "")
+            processes = [
+                subprocess.Popen(
+                    [sys.executable, "-c", worker, str(root), name],
+                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+                    env=environment,
+                )
+                for name in ("A", "B")
+            ]
+            try:
+                deadline = time.monotonic() + 20
+                while not all((root / ("create-ready-" + name)).exists() for name in ("A", "B")):
+                    if any(p.poll() is not None for p in processes):
+                        self.fail("an initializer exited before both reached the creator")
+                    if time.monotonic() > deadline:
+                        self.fail("initializers did not both reach the creator")
+                    time.sleep(0.02)
+                (root / "create-go").write_text("go", encoding="utf-8")
+                outcomes = [p.communicate(timeout=30) for p in processes]
+                results = []
+                for p, (stdout, stderr) in zip(processes, outcomes):
+                    self.assertEqual(p.returncode, 0, (stdout, stderr))
+                    results.append(stdout.strip())
+                self.assertEqual(sorted(r.split(":")[0] for r in results), ["OPENED", "REFUSED"], results)
+                self.assertIn("OPENED:True", results)
+                self.assertIn("REFUSED:RuntimeRecoveryError", results)
+                self.assertEqual(list(root.glob(".runtime-config.json.*.tmp")), [])
+                with AgentMemory.open(root) as recovered:
+                    survivor = [n for n in ("A", "B") if recovered.history(f"memory:{n}")["history"]["current_fact_uuid"]]
+                    self.assertEqual(len(survivor), 1, survivor)
+                    self.assertEqual(recovered.legacy_upgrade_status()["status"], "fresh")
+            finally:
+                for p in processes:
+                    if p.poll() is None:
+                        p.kill()
+                        p.communicate()
 
 
 if __name__ == "__main__":
