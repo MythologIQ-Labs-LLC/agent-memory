@@ -19,7 +19,9 @@ class UnqualifiedLegacyStoreError(RuntimeError):
 
 
 @contextmanager
-def open_qualified_memory(path: str | Path, **host_bound_identity) -> Iterator[AgentMemory]:
+def open_qualified_memory(
+    path: str | Path, *, tenant: str, actor_id: str, scope: str, **host_options,
+) -> Iterator[AgentMemory]:
     """Yield a facade only after validating its canonical derivation readiness.
 
     The runtime's legacy_upgrade_status is reporting, not an activation gate.
@@ -27,7 +29,11 @@ def open_qualified_memory(path: str | Path, **host_bound_identity) -> Iterator[A
     becomes available. Older stores must be upgraded through a separate, trusted
     maintenance path that does not serve application recall or write requests.
     """
-    memory = AgentMemory.open(path, **host_bound_identity)
+    if not all(isinstance(value, str) and value.strip() for value in (tenant, actor_id, scope)):
+        raise ValueError("host must provide non-empty tenant, actor_id and scope")
+    memory = AgentMemory.open(
+        path, tenant=tenant, actor_id=actor_id, scope=scope, **host_options
+    )
     try:
         posture = memory.legacy_upgrade_status()
         if posture.get("status") not in ("fresh", "legacy_qualified"):
