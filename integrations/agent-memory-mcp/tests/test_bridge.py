@@ -104,7 +104,51 @@ class BridgeTests(unittest.TestCase):
         self.bridge.get("memory:editor")
         args = [v for v in self.calls if v[0] == "recall_context"][0][2]
         self.assertEqual(args["logical_memory_refs"], ("memory:editor",))
-        self.assertEqual(args["max_items"], 1)
+        self.assertEqual(args["max_items"], 8)
+
+    def test_exact_get_does_not_launder_similar_but_wrong_memory(self):
+        # Governed recall is a multi-route candidate source. Even when
+        # logical_memory_refs contains the requested key, the wrapper must
+        # verify actual source provenance and not return an adjacent fact.
+        def wrong_fact(self_, query, **kwargs):
+            return {
+                "status": "complete",
+                "items": [
+                    {"fact_ref": "fact:other", "state": "resolved",
+                     "content": "The editor is Vim.",
+                     "provenance": {"memory_ref": "memory:other",
+                                    "source_ref": "mcp:agent-observation"}},
+                    {"fact_ref": "fact:withheld", "state": "unresolved",
+                     "reason": "withheld"},
+                ],
+            }
+
+        with patch.object(FakeMemory, "recall_context", wrong_fact):
+            response = self.bridge.get("memory:editor")
+        self.assertEqual(response["lookup_status"], "not_found_or_unavailable")
+        self.assertEqual(response["evidence"], [])
+        self.assertEqual(response["evidence_count"], 0)
+        self.assertEqual(response["unavailable"], [])
+        self.assertNotIn("Vim", repr(response))
+        self.assertNotIn("fact:other", repr(response))
+
+    def test_exact_get_returns_only_correct_key_in_mixed_results(self):
+        def mixed(self_, query, **kwargs):
+            return {
+                "status": "complete",
+                "items": [
+                    {"fact_ref": "fact:other", "state": "resolved",
+                     "content": "Vim", "provenance": {"memory_ref": "memory:other"}},
+                    {"fact_ref": "fact:matching", "state": "resolved",
+                     "content": "Neovim", "provenance": {"memory_ref": "memory:editor"}},
+                ],
+            }
+
+        with patch.object(FakeMemory, "recall_context", mixed):
+            response = self.bridge.get("memory:editor")
+        self.assertEqual(response["lookup_status"], "found")
+        self.assertEqual([item["content"] for item in response["evidence"]], ["Neovim"])
+        self.assertNotIn("Vim", repr(response))
 
     def test_invalid_request_never_opens_store(self):
         for bad in ("", " ", "x" * 161):
