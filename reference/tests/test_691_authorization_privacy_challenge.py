@@ -248,9 +248,13 @@ class CallerCannotExpandAuthority(_Root):
         events_before = len(writer.runtime.adapter.events)
         for kwargs in ({"project_ref": OTHER_SCOPE}, {"target_domain_refs": [TENANT, OTHER_SCOPE]},
                        {"principal_ref": "agent:root"}, {"purpose": "audit"}, {"task_ref": "task:x"},
-                       {"budget": 50}, {"consumer_profile": "lexical_content"}, {"public": False}):
+                       {"budget": 50}, {"public": False}):
             with self.assertRaises(TypeError, msg=kwargs):
                 writer.recall_context("Lisbon", **kwargs)
+        # #819: consumer_profile is an accepted keyword; the rejected lexical_content profile
+        # name (and any other unknown value) is refused as a value, still before any recall.
+        with self.assertRaises(ValueError):
+            writer.recall_context("Lisbon", consumer_profile="lexical_content")
         self.assertEqual(len(writer.runtime.adapter.events), events_before, "a refused call records no recall")
 
     def test_budget_arguments_cannot_widen_the_recall(self):
