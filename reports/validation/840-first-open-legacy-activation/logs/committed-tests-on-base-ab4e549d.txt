@@ -1,0 +1,70 @@
+test_fsync_failure_never_publishes_incomplete_target (tests.test_836_first_open_configuration_safety.FirstOpenConfigurationSafety.test_fsync_failure_never_publishes_incomplete_target) ... ok
+test_preplanted_legacy_temp_symlink_does_not_clobber_its_target (tests.test_836_first_open_configuration_safety.FirstOpenConfigurationSafety.test_preplanted_legacy_temp_symlink_does_not_clobber_its_target) ... FAIL
+test_replace_failure_removes_only_own_temp_and_preserves_target (tests.test_836_first_open_configuration_safety.FirstOpenConfigurationSafety.test_replace_failure_removes_only_own_temp_and_preserves_target) ... FAIL
+test_simultaneous_fresh_runtime_initializers_leave_recoverable_root (tests.test_836_first_open_configuration_safety.FirstOpenConfigurationSafety.test_simultaneous_fresh_runtime_initializers_leave_recoverable_root)
+Two legitimate processes may race at the complete first-open boundary. ... ok
+test_two_separate_processes_never_share_staging_inode (tests.test_836_first_open_configuration_safety.FirstOpenConfigurationSafety.test_two_separate_processes_never_share_staging_inode) ... FAIL
+test_two_simultaneous_writers_use_distinct_private_temporaries (tests.test_836_first_open_configuration_safety.FirstOpenConfigurationSafety.test_two_simultaneous_writers_use_distinct_private_temporaries) ... FAIL
+test_836_qualified_host_activation (unittest.loader._FailedTest.test_836_qualified_host_activation) ... ERROR
+
+======================================================================
+ERROR: test_836_qualified_host_activation (unittest.loader._FailedTest.test_836_qualified_host_activation)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_836_qualified_host_activation
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 137, in loadTestsFromName
+    module = __import__(module_name)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/wt/base840/reference/tests/test_836_qualified_host_activation.py", line 18, in <module>
+    from agentmem_ref.host_activation import (  # noqa: E402
+ModuleNotFoundError: No module named 'agentmem_ref.host_activation'
+
+
+======================================================================
+FAIL: test_preplanted_legacy_temp_symlink_does_not_clobber_its_target (tests.test_836_first_open_configuration_safety.FirstOpenConfigurationSafety.test_preplanted_legacy_temp_symlink_does_not_clobber_its_target)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/wt/base840/reference/tests/test_836_first_open_configuration_safety.py", line 36, in test_preplanted_legacy_temp_symlink_does_not_clobber_its_target
+    self.assertEqual(victim.read_text(encoding="utf-8"), "KEEP ME")
+AssertionError: '{\n  "schema_version": "1.0.0",\n  "runti[8307 chars]n}\n' != 'KEEP ME'
+Diff is 8567 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_replace_failure_removes_only_own_temp_and_preserves_target (tests.test_836_first_open_configuration_safety.FirstOpenConfigurationSafety.test_replace_failure_removes_only_own_temp_and_preserves_target)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/wt/base840/reference/tests/test_836_first_open_configuration_safety.py", line 211, in test_replace_failure_removes_only_own_temp_and_preserves_target
+    self.assertEqual(bystander.read_text(encoding="utf-8"), "UNRELATED")
+AssertionError: 'NEW\n' != 'UNRELATED'
++ UNRELATED
+- NEW
+- 
+
+
+======================================================================
+FAIL: test_two_separate_processes_never_share_staging_inode (tests.test_836_first_open_configuration_safety.FirstOpenConfigurationSafety.test_two_separate_processes_never_share_staging_inode)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/wt/base840/reference/tests/test_836_first_open_configuration_safety.py", line 120, in test_two_separate_processes_never_share_staging_inode
+    self.assertEqual(child.returncode, 0, (out, err))
+AssertionError: 1 != 0 : ('', 'Traceback (most recent call last):\n  File "<string>", line 17, in <module>\n  File "/tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/wt/base840/reference/agentmem_ref/api/surface.py", line 333, in _atomic_write_text\n    os.replace(temporary, path)\n  File "<string>", line 15, in synchronized_replace\nFileNotFoundError: [Errno 2] No such file or directory: \'/tmp/tmp_wb557e7/.runtime-config.json.tmp\' -> \'/tmp/tmp_wb557e7/runtime-config.json\'\n')
+
+======================================================================
+FAIL: test_two_simultaneous_writers_use_distinct_private_temporaries (tests.test_836_first_open_configuration_safety.FirstOpenConfigurationSafety.test_two_simultaneous_writers_use_distinct_private_temporaries)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/wt/base840/reference/tests/test_836_first_open_configuration_safety.py", line 70, in test_two_simultaneous_writers_use_distinct_private_temporaries
+    self.assertEqual(errors, [])
+AssertionError: Lists differ: [FileNotFoundError(2, 'No such file or directory')] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+FileNotFoundError(2, 'No such file or directory')
+
+- [FileNotFoundError(2, 'No such file or directory')]
++ []
+
+----------------------------------------------------------------------
+Ran 7 tests in 1.071s
+
+FAILED (failures=4, errors=1)

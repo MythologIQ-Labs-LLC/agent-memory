@@ -1,0 +1,5 @@
+== PR head e3176275
+helper uses NamedTemporaryFile: True
+B1 planted-symlink first open: victim intact: True | symlink still present: True
+B2 two writers at the replace boundary: errors [] | distinct staging names 2 | published intact True
+A legacy_pending fixture through plain AgentMemory.open: status legacy_pending legacy_facts 7 | recall admitted 2 | remember committed True

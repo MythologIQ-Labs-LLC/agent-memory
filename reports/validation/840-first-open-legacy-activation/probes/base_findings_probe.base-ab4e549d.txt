@@ -1,0 +1,5 @@
+== base ab4e549d
+helper uses NamedTemporaryFile: False
+B1 planted-symlink first open: victim intact: False | symlink still present: False
+B2 two writers at the replace boundary: errors ['FileNotFoundError'] | distinct staging names 1 | published intact True
+A legacy_pending fixture through plain AgentMemory.open: status legacy_pending legacy_facts 7 | recall admitted 2 | remember committed True

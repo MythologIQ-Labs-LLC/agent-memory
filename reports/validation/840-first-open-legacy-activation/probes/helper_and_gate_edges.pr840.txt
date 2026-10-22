@@ -1,0 +1,9 @@
+C1 another writer's orphan temp untouched: True
+C2 planted final-path symlink to a non-config file: refused DiagnosticInputError | victim intact: True
+C3 dangling final-path symlink replaced by a regular file: True | dangling target created: False
+C4 mid-write failure: target exists False | temps left []
+C5 published mode under umask 022: 0o600
+C6 gate refuses the pending fixture
+C6 plain open still admits it: recall admitted 2 | any handle may self-migrate -> legacy_qualified
+C7 foreign tenant on the qualified store refused by the runtime: RuntimeRecoveryError
+C8 handle closed after BaseException inside the gate: True
