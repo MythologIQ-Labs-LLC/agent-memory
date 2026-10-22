@@ -89,14 +89,21 @@ class ProfileContract(_Store):
         receipts.validate(context_package.PACKAGE_SCHEMA, package)
         self.assertEqual(package["package_version"], "agent-memory-context/0.2.0")
         self.assertEqual(package["status"], "complete")
-        self.assertEqual(_delivered(package), [teal])
-        self.assertEqual(_omitted(package), {orange: "subject_mismatch", bike: "attribute_unevidenced"})
+        # the wrong subject is declined on grounded evidence; the same-subject fact about another
+        # attribute is delivered but labelled uncertain (policy 0.4.0: a paraphrased predicate
+        # cannot be told from a different attribute, PR #841 review comment 6350329872)
+        self.assertEqual(_delivered(package), [teal, bike])
+        self.assertEqual(_omitted(package), {orange: "subject_mismatch"})
         selection = package["selection"]
         self.assertEqual(selection["policy_id"], context_selection.POLICY_ID)
         self.assertEqual(selection["policy_version"], context_selection.POLICY_VERSION)
         self.assertEqual(selection["assessment"], "evidence_delivered")
         self.assertEqual(set(selection["decisions"]), set(package["recall"]["returned"]))
         self.assertEqual(selection["decisions"][teal]["matched_terms"], ["cano", "liora"])
+        self.assertEqual(selection["decisions"][teal]["certainty"], "grounded")
+        self.assertEqual((selection["decisions"][bike]["evidence"], selection["decisions"][bike]["certainty"]),
+                         ("attribute_undetermined", "uncertain"))
+        self.assertEqual(selection["uncertain_count"], 1)
         self.assertEqual(selection["decisions"][orange]["fact_subjects"], ["bastien"])
         self.assertEqual(selection["query_subjects"], ["liora"])
         self.assertEqual(selection["authority_effect"], "none")
@@ -205,15 +212,20 @@ class ProfileContract(_Store):
         package = self.context("Where was Mary's Ash Wednesday service?")
         self.assertEqual(_omitted(package).get(theirs), "subject_mismatch")
 
-    def test_attribute_absence_is_grounded_only_for_a_single_statement(self):
+    def test_attribute_absence_is_uncertainty_for_any_fact_size(self):
         bike = self.put("memory:a", "Liora's bicycle is black.")
         diary = self.put("memory:b", "Liora's week was busy. She repainted the boat shed on Monday. "
                                      "The paddles were ordered on Tuesday.")
+        cello = self.put("memory:c", "Liora's eldest performs on the cello.")
         package = self.context("What color is Liora's canoe?")
         decisions = package["selection"]["decisions"]
-        self.assertEqual((decisions[bike]["outcome"], decisions[bike]["reason"]), ("omitted", "attribute_unevidenced"))
-        self.assertEqual((decisions[diary]["outcome"], decisions[diary]["evidence"], decisions[diary]["certainty"]),
-                         ("delivered", "attribute_undetermined", "uncertain"))
+        for ref in (bike, diary, cello):
+            self.assertEqual((decisions[ref]["outcome"], decisions[ref]["evidence"], decisions[ref]["certainty"]),
+                             ("delivered", "attribute_undetermined", "uncertain"), ref)
+        # a paraphrased predicate is the owner's counterexample: it must never be declined
+        package = self.context("Which instrument does Liora's child play?")
+        self.assertIn(cello, _delivered(package))
+        self.assertEqual(package["selection"]["decisions"][cello]["certainty"], "uncertain")
 
     def test_subject_only_query_keeps_subject_evidence(self):
         canoe = self.put("memory:a", "Liora's canoe is teal.")
@@ -346,7 +358,10 @@ class SelectorUnit(unittest.TestCase):
         self.assertEqual(a([{"outcome": "omitted"}]), "no_relevant_evidence")
         self.assertEqual(a([{"outcome": "delivered", "certainty": "uncertain"}, {"outcome": "omitted"}]), "undetermined")
         self.assertEqual(a([{"outcome": "delivered", "certainty": "grounded"}]), "evidence_delivered")
-        self.assertEqual(a([{"outcome": "unavailable"}]), "no_relevant_evidence")
+        # a fact that could not be inspected leaves the question open (PR #841 review)
+        self.assertEqual(a([{"outcome": "unavailable", "state": "unresolved"}]), "undetermined")
+        self.assertEqual(a([{"outcome": "unavailable", "state": "omitted_budget"}, {"outcome": "omitted"}]), "undetermined")
+        self.assertEqual(a([{"outcome": "unavailable"}, {"outcome": "delivered", "certainty": "grounded"}]), "evidence_delivered")
 
 
 if __name__ == "__main__":

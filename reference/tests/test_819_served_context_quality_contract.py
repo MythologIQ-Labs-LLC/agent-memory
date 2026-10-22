@@ -65,8 +65,23 @@ class QualityControls(unittest.TestCase):
         self.remember("memory:other-canoe", "Bastien's canoe is orange.")
         self.remember("memory:other-object", "Liora's bicycle is black.")
         context = self.selected("What color is Liora's canoe?")
-        self.assertEqual(delivered_refs(context), [correct], context)
-        self.assertEqual(delivered(context), ["Liora's canoe is teal."])
+        # Corrected after the owner's PR #841 review (comment 6350329872): a same-subject fact
+        # whose predicate shares no term with the question cannot be told from a paraphrase
+        # ("Mara's eldest performs on the cello" for "which instrument does Mara's child play"),
+        # so a selector without a verified relation parser must deliver it labelled uncertain
+        # rather than decline it. The wrong subject is still declined on grounded evidence, the
+        # correct fact is still delivered as grounded evidence, and the wrong-object fact is
+        # delivered only as uncertain. Original assertion preserved at blob e8c2e9aa.
+        decisions = context["selection"]["decisions"]
+        self.assertIn(correct, delivered_refs(context), context)
+        self.assertEqual(decisions[correct]["certainty"], "grounded", context)
+        self.assertEqual(decisions[correct]["evidence"], "subject_and_attribute_evidence", context)
+        self.assertNotIn("Bastien's canoe is orange.", delivered(context))
+        self.assertEqual(delivered(context)[0], "Liora's canoe is teal.")
+        for ref in delivered_refs(context):
+            if ref != correct:
+                self.assertEqual(decisions[ref]["certainty"], "uncertain", decisions[ref])
+                self.assertEqual(decisions[ref]["evidence"], "attribute_undetermined", decisions[ref])
 
     def test_paraphrased_relationship_and_plural_query_preserve_evidence(self):
         needed = self.remember(

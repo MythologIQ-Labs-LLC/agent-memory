@@ -13,7 +13,7 @@ a consumer-side delivery policy, never authority:
   delivers the content and says so (``certainty: uncertain``), it never converts a lack of word
   overlap into an asserted negative when the fact carries non-lexical evidence.
 
-Decision order for one returned fact (policy ``evidence-qualified-context-selection/0.3.1``):
+Decision order for one returned fact (policy ``evidence-qualified-context-selection/0.4.0``):
 
 1. ``preserved_exact_identity``: a caller-authorised ``logical_memory_refs`` hit (route
    ``exact_logical_identity``). Delivered whatever its wording.
@@ -42,8 +42,12 @@ Decision order for one returned fact (policy ``evidence-qualified-context-select
      and the fact names a third party by proper-noun possessive while carrying no first-person
      marker and no ``speaker`` proposition → ``subject_mismatch`` (declined);
    * the query's subject occurs in the fact but none of the query's other content terms does
-     → ``attribute_unevidenced`` (declined) **only for a single-statement fact**; a longer text
-     is delivered as ``attribute_undetermined``;
+     → delivered as ``attribute_undetermined`` (uncertain), never declined (policy 0.4.0): a
+     paraphrased predicate (``performs on the cello`` for ``plays an instrument``) is
+     indistinguishable from a different attribute without a verified relation parser, and the
+     selector must not turn what it cannot verify into a negative. The owner's product
+     control that expected the wrong-object fact to be declined was corrected for this reason
+     (PR #841 review, comment 6350329872);
    * otherwise delivered, with the matched terms listed. A fact that matches only by its subject
      while the query has no other content terms, a fact whose subject cannot be grounded, or a
      query with no content terms at all is delivered as ``uncertain``.
@@ -65,12 +69,12 @@ import re
 from typing import Any, Mapping, Sequence
 
 POLICY_ID = "evidence-qualified-context-selection"
-POLICY_VERSION = "0.3.1"
+POLICY_VERSION = "0.4.0"
 BASIS = "post_admission_query_evidence_qualification"
 EXACT_IDENTITY_ROUTE = "exact_logical_identity"
 LEXICAL_ROUTE = "lexical"
 
-OMITTED_REASONS = ("no_query_term_evidence", "subject_mismatch", "attribute_unevidenced")
+OMITTED_REASONS = ("no_query_term_evidence", "subject_mismatch")
 DELIVERED_EVIDENCE = (
     "preserved_exact_identity",
     "preserved_corroborated_route",
@@ -257,21 +261,24 @@ def qualify(
     if not others:
         return {**record, "outcome": "delivered", "evidence": "subject_only_evidence", "certainty": "uncertain"}
     if not (others & fact_terms):
-        if single:
-            return {**record, "outcome": "omitted", "reason": "attribute_unevidenced", "certainty": "grounded"}
         return {**record, "outcome": "delivered", "evidence": "attribute_undetermined", "certainty": "uncertain"}
     return {**record, "outcome": "delivered", "evidence": "subject_and_attribute_evidence", "certainty": "grounded"}
 
 
 def assessment(decisions: Sequence[Mapping[str, Any]]) -> str:
+    """``no_relevant_evidence`` only when every returned fact was inspected and declined on a
+    grounded basis. A fact that could not be inspected (``unavailable``: unresolved, withheld,
+    unsupported or past the delivery budget) leaves the question open, so its presence makes the
+    assessment ``undetermined`` unless grounded evidence was delivered."""
+
     if not decisions:
         return "no_returned_candidates"
     delivered = [d for d in decisions if d["outcome"] == "delivered"]
-    if not delivered:
-        return "no_relevant_evidence"
-    if all(d.get("certainty") == "uncertain" for d in delivered):
+    if any(d.get("certainty") == "grounded" for d in delivered):
+        return "evidence_delivered"
+    if delivered or any(d["outcome"] == "unavailable" for d in decisions):
         return "undetermined"
-    return "evidence_delivered"
+    return "no_relevant_evidence"
 
 
 def selection_block(query: str, decisions: Sequence[Mapping[str, Any]]) -> dict[str, Any]:

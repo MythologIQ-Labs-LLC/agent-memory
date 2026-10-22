@@ -1,0 +1,75 @@
+FFFF                                                                     [100%]
+=================================== FAILURES ===================================
+_ MeaningPreservation.test_only_budget_omitted_content_must_not_claim_no_relevant_evidence _
+
+self = <tests.test_841_independent_product_quality_challenges.MeaningPreservation testMethod=test_only_budget_omitted_content_must_not_claim_no_relevant_evidence>
+
+    def test_only_budget_omitted_content_must_not_claim_no_relevant_evidence(self):
+        # An authorized returned fact might contain the needed answer but be
+        # unavailable for selection solely because its delivery budget ran out.
+        record = {"fact_ref": "ref-unseen", "outcome": "unavailable", "state": "omitted_budget"}
+        assessment = context_selection.assessment([record])
+>       self.assertNotEqual(assessment, "no_relevant_evidence", assessment)
+E       AssertionError: 'no_relevant_evidence' == 'no_relevant_evidence' : no_relevant_evidence
+
+reference/tests/test_841_independent_product_quality_challenges.py:62: AssertionError
+_ MeaningPreservation.test_only_unresolved_content_must_not_claim_no_relevant_evidence _
+
+self = <tests.test_841_independent_product_quality_challenges.MeaningPreservation testMethod=test_only_unresolved_content_must_not_claim_no_relevant_evidence>
+
+    def test_only_unresolved_content_must_not_claim_no_relevant_evidence(self):
+        # The admission layer can return a fact whose content resolution then
+        # fails. That is insufficient data, not an evidence-qualified negative.
+        record = {"fact_ref": "ref-unreadable", "outcome": "unavailable", "state": "unresolved"}
+        assessment = context_selection.assessment([record])
+>       self.assertNotEqual(assessment, "no_relevant_evidence", assessment)
+E       AssertionError: 'no_relevant_evidence' == 'no_relevant_evidence' : no_relevant_evidence
+
+reference/tests/test_841_independent_product_quality_challenges.py:54: AssertionError
+_ MeaningPreservation.test_paraphrased_single_statement_family_relationship_is_not_proven_irrelevant _
+
+self = <tests.test_841_independent_product_quality_challenges.MeaningPreservation testMethod=test_paraphrased_single_statement_family_relationship_is_not_proven_irrelevant>
+
+    def test_paraphrased_single_statement_family_relationship_is_not_proven_irrelevant(self):
+        # A natural paraphrase of BOTH the subject relation and the predicate.
+        # The fact is the required answer. Lack of a literal attribute token
+        # cannot prove irrelevance when there is no verified relationship parser.
+        verdict = context_selection.qualify(
+            "Which instrument does Mara's child play?",
+            "ref-family-instrument",
+            LEXICAL_ONLY,
+            "Mara's eldest performs on the cello.",
+            None,
+        )
+>       self.assertEqual(verdict["outcome"], "delivered", verdict)
+E       AssertionError: 'omitted' != 'delivered'
+E       - omitted
+E       + delivered
+E        : {'fact_ref': 'ref-family-instrument', 'routes': ['lexical'], 'matched_terms': ['mara'], 'single_statement': True, 'query_subjects': ['mara'], 'fact_subjects': ['mara'], 'outcome': 'omitted', 'reason': 'attribute_unevidenced', 'certainty': 'grounded'}
+
+reference/tests/test_841_independent_product_quality_challenges.py:35: AssertionError
+_ MeaningPreservation.test_paraphrased_single_statement_residence_is_not_proven_irrelevant _
+
+self = <tests.test_841_independent_product_quality_challenges.MeaningPreservation testMethod=test_paraphrased_single_statement_residence_is_not_proven_irrelevant>
+
+    def test_paraphrased_single_statement_residence_is_not_proven_irrelevant(self):
+        verdict = context_selection.qualify(
+            "Where does Liora's brother live?",
+            "ref-residence",
+            LEXICAL_ONLY,
+            "Liora's sibling resides in Oslo.",
+            None,
+        )
+>       self.assertEqual(verdict["outcome"], "delivered", verdict)
+E       AssertionError: 'omitted' != 'delivered'
+E       - omitted
+E       + delivered
+E        : {'fact_ref': 'ref-residence', 'routes': ['lexical'], 'matched_terms': ['liora'], 'single_statement': True, 'query_subjects': ['liora'], 'fact_subjects': ['liora'], 'outcome': 'omitted', 'reason': 'attribute_unevidenced', 'certainty': 'grounded'}
+
+reference/tests/test_841_independent_product_quality_challenges.py:46: AssertionError
+=========================== short test summary info ============================
+FAILED reference/tests/test_841_independent_product_quality_challenges.py::MeaningPreservation::test_only_budget_omitted_content_must_not_claim_no_relevant_evidence
+FAILED reference/tests/test_841_independent_product_quality_challenges.py::MeaningPreservation::test_only_unresolved_content_must_not_claim_no_relevant_evidence
+FAILED reference/tests/test_841_independent_product_quality_challenges.py::MeaningPreservation::test_paraphrased_single_statement_family_relationship_is_not_proven_irrelevant
+FAILED reference/tests/test_841_independent_product_quality_challenges.py::MeaningPreservation::test_paraphrased_single_statement_residence_is_not_proven_irrelevant
+4 failed in 0.34s

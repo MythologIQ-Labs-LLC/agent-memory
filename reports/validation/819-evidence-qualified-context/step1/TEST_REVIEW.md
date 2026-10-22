@@ -66,3 +66,25 @@ It was written when the facade refused the keyword as unknown. With the keyword 
 the rejected profile name (and any unknown value) is refused as a value (`ValueError`), still
 before any recall and with no audit event recorded. The test now asserts exactly that; the
 scope and identity overrides keep their `TypeError` expectation.
+
+## Correction after the owner's PR #841 review (comment 6350329872, policy 0.4.0)
+
+The owner's independent controls (`reference/tests/test_841_independent_product_quality_challenges.py`,
+blob `2cd42a06`, carried byte-identical from `review/841-paraphrase-and-uncertainty-challenges-no-ci`
+@ `89fc3e72`; RED 4/4 at `5e428c73`, see `../review-841/`) establish two requirements that the
+original control 1 contradicts in part:
+
+- a same-subject single-statement fact whose predicate shares no term with the question
+  (`Mara's eldest performs on the cello` for `Which instrument does Mara's child play?`) must be
+  **delivered and labelled uncertain**, because a lexical selector cannot tell a paraphrased
+  predicate from a different attribute;
+- a returned fact that could not be inspected must never produce `no_relevant_evidence`.
+
+Control 1 asserted that `Liora's bicycle is black.` is *declined* for `What color is Liora's
+canoe?`. That is the same structure as the cello counterexample (subject matches, predicate
+terms do not), so the two cannot both hold for a selector without a verified relation parser.
+The owner's review states the rule: what cannot be verified is uncertainty, not a negative.
+Control 1 was therefore corrected to: the correct fact is delivered as grounded
+`subject_and_attribute_evidence` and ranked first; the wrong-subject fact is still declined;
+any other delivered fact is labelled `attribute_undetermined` / `uncertain`. The original
+assertion stays preserved at blob `e8c2e9aa`. The seven controls otherwise stand.
