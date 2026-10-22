@@ -1,0 +1,4 @@
+revision c82a82026ec7b731da69317745275397b560ade0 vs 07cd8692bcf26fd677c71f805f04f73a6332ed91
+python 3.12.3 vs 3.13.16
+probes 9 crashed 7
+outcome identical after stripping volatile keys: True
