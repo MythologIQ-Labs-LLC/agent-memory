@@ -30,6 +30,13 @@ class QualifiedHostActivation(unittest.TestCase):
         shutil.copytree(LEGACY / store, target)
         return target
 
+    def test_packaged_alias_is_exact_api_layer_module(self):
+        import importlib
+        alias = importlib.import_module("agentmem_ref.host_activation")
+        canonical = importlib.import_module("agentmem_ref.api.host_activation")
+        self.assertIs(alias, canonical)
+        self.assertIs(open_qualified_memory, canonical.open_qualified_memory)
+
     def test_fresh_store_is_operational(self):
         with tempfile.TemporaryDirectory() as directory:
             with open_qualified_memory(Path(directory) / "new", **IDENTITY) as memory:
