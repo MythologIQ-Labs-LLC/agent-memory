@@ -31,11 +31,14 @@ from ..core import policy
 from ..memory import action_authority
 from ..runtime import doctor
 from ..runtime.adapter import REPLACEMENT_KINDS, WRITE_TARGET_REFUSED_REF, GovernedMemoryAdapter
-from ..runtime.temporal_intent import declared_temporal, resolve_intent
-from . import contract
+from ..core import receipts
+from ..runtime import cross_fact_currentness as cross_fact
+from ..runtime.temporal_intent import DECLARED_TEMPORAL_KEY, declared_temporal, resolve_intent
+from . import context_package, contract
 
 __all__ = [
     "AgentMemory",
+    "ContextDeliveryUnboundError",
     "propose",
     "approve",
     "commit",
@@ -46,6 +49,17 @@ __all__ = [
     "authorize",
     "witness",
 ]
+
+
+class ContextDeliveryUnboundError(RuntimeError):
+    """#691/#839: ``recall_context`` refused to deliver content because its delivery receipt could
+    not be bound to the recall event that selected the identifiers. No content and no receipt
+    leave the call; the recall event, if any, is the only audit record of the attempt."""
+
+
+#: #691: the recall keyword arguments ``recall_context`` accepts. Scope and identity overrides
+#: are refused so content is delivered only under the handle's own authority.
+_CONTEXT_RECALL_KWARGS = frozenset({"logical_memory_refs", "temporal_intent", "reference_time"})
 
 
 # -- #777 public read projection ------------------------------------------------------
@@ -88,6 +102,41 @@ def _withheld_predicate(adapter, context=None) -> Callable[[str], bool]:
         return cache[value]
 
     return withheld
+
+
+def _first_recall_event_since(events, index: int, context) -> dict | None:
+    """The ``memory.recall`` audit event of the governed recall that ``recall_context`` ran:
+    the first one appended for this principal after ``index`` (the event count before the
+    recall), under the same hold of the serialization lock. A shadow recall-control pass may
+    append a later recall event of its own; it is not the delivery's basis. ``None`` only if
+    the adapter recorded no recall event at all; the caller then refuses to deliver (#839)."""
+    for event in events[index:]:
+        if event.get("event_type") == "memory.recall" and event.get("principal") == context.principal_ref:
+            return event
+    return None
+
+
+def _recall_binding_defect(recall_event: dict | None, document: dict, context) -> str | None:
+    """Why ``recall_event`` cannot serve as the recall that a delivery receipt for ``document`` is
+    bound to, or ``None`` when it can: it must exist, carry an event and correlation id, name this
+    principal and scope, and its admission outcomes must account for every identifier the recall
+    returned as ``admit`` (#839 review B: nothing about the binding is synthesised)."""
+    if not isinstance(recall_event, dict):
+        return "the governed recall recorded no memory.recall audit event for this principal"
+    if recall_event.get("event_type") != "memory.recall":
+        return "the recorded event is not a memory.recall event"
+    if not recall_event.get("event_id") or not recall_event.get("correlation_id"):
+        return "the recall event carries no event or correlation identifier"
+    if recall_event.get("principal") != context.principal_ref:
+        return "the recall event names another principal"
+    payload = recall_event.get("payload") or {}
+    if payload.get("project_ref") != context.project_ref or \
+            list(payload.get("target_domain_refs") or ()) != list(context.target_domain_refs):
+        return "the recall event names another scope"
+    outcomes = payload.get("outcomes") or {}
+    if any(outcomes.get(ref) != "admit" for ref in document.get("returned") or ()):
+        return "the recall event's admission outcomes do not account for every returned identifier"
+    return None
 
 
 def _mentions(value: Any, withheld: Callable[[str], bool]) -> bool:
@@ -1046,6 +1095,129 @@ class AgentMemory:
         return self._recall_document(query, public=True, **kwargs)
 
     @_serialized
+    def recall_context(
+        self,
+        query: str,
+        *,
+        max_items: int = context_package.DEFAULT_MAX_ITEMS,
+        max_chars_per_item: int = context_package.DEFAULT_MAX_CHARS_PER_ITEM,
+        max_total_chars: int = context_package.DEFAULT_MAX_TOTAL_CHARS,
+        max_tokens: int | None = None,
+        **recall_kwargs,
+    ) -> dict:
+        """Recall, then resolve the content of exactly the returned facts (#691, candidate
+        package ``agent-memory-context/0.1.0``; ``recall()`` is unchanged).
+
+        The recall and the resolution run under one hold of the runtime-owned serialization
+        lock, so no correction, deletion or dispute interleaves. Each returned fact is re-checked
+        against admission and the #777 public withholding predicate before its text is read;
+        failures resolve to ``unresolved`` without content. ``max_items`` is the recall's return
+        budget; the character and token limits bound the content (see
+        ``api.context_package``). Memory text is untrusted evidence and grants nothing.
+
+        Content is delivered only under the handle's own authority: the scope and identity
+        overrides ``recall`` accepts from a privileged host (``target_domain_refs``,
+        ``project_ref``, ``task_ref``, ``principal_ref``, ``purpose``) are refused here; a host
+        that needs another scope opens a handle for it. ``logical_memory_refs``,
+        ``temporal_intent`` and ``reference_time`` are accepted as for ``recall``.
+        """
+        self._require_open()
+        refused = sorted(set(recall_kwargs) - _CONTEXT_RECALL_KWARGS)
+        if refused:
+            raise TypeError(f"recall_context does not accept {refused}: content is delivered only under the "
+                            "handle's own scope and identity; budget is max_items")
+        if not isinstance(max_items, int) or isinstance(max_items, bool) or max_items < 1:
+            raise ValueError("max_items must be a positive integer")
+        context_package.validate_budgets(max_chars_per_item, max_total_chars, max_tokens)
+        adapter = self.runtime.adapter
+        events_before = len(adapter.events)
+        document, context = self._recall_document_and_context(query, public=True, budget=max_items, **recall_kwargs)
+        substrate = adapter.checkpoint_substrate()
+        withheld = _withheld_predicate(adapter, context)
+        admissions = document.get("admissions") or {}
+
+        def resolve(ref: str):
+            if withheld(ref):
+                return "unresolved", "withheld", None
+            fact = substrate.get_fact(ref)
+            if fact is None:
+                return "unresolved", "not_found", None
+            mode = ((admissions.get(ref) or {}).get("admission_basis") or {}).get("admission_mode")
+            if adapter.read_admission_refusal(fact, context, mode) is not None:
+                return "unresolved", "no_longer_admissible", None
+            text = getattr(fact, "fact_text", None)
+            if not isinstance(text, str) or not text:
+                return "unsupported", "no_text_content", None
+            attributes = dict(getattr(fact, "attributes", None) or {})
+            written = dict(attributes.get(cross_fact.WRITE_PROVENANCE_KEY) or {})
+            declared = dict(attributes.get(DECLARED_TEMPORAL_KEY) or {})
+            # #691: content admission does not itself grant another actor visibility
+            # into the original writer's logical identifier or declared source.
+            # The host MUST authenticate the handle's actor_id; this is only a
+            # disclosure-minimising projection, never a new authorization check.
+            writer_is_reader = bool(written.get("actor_id") and written["actor_id"] == self.actor_id)
+            memory_ref = adapter.memory_ref_of(ref) if writer_is_reader else None
+            source_ref = written.get("source_ref") if writer_is_reader else None
+            receipt = {
+                "memory_ref": memory_ref if memory_ref and not withheld(memory_ref) else None,
+                # Writer-declared provenance is private to its writer by default;
+                # deleted-lineage withholding applies even for that writer.
+                "source_ref": source_ref if isinstance(source_ref, str) and not withheld(source_ref) else None,
+                "write_channel": written.get("channel"),
+                "recorded_at": getattr(fact, "created_at", None),
+                "observed_at": declared.get("observed_at"),
+                "valid_from": declared.get("valid_from"),
+                "valid_until": declared.get("valid_until"),
+            }
+            return "resolved", text, {key: value for key, value in receipt.items() if value is not None}
+
+        package = context_package.build_package(
+            document, resolve, max_chars_per_item=max_chars_per_item,
+            max_total_chars=max_total_chars, max_tokens=max_tokens)
+        # #691 content-delivery audit: the recall event proves identifiers were recalled; this
+        # receipt proves which of them were delivered as content, bound to that recall and to
+        # the admission decisions, without the text. It is published through the runtime's
+        # transactional seam as its own durable generation. The receipt is appended only after
+        # the final package, audit block included, has validated (#839 review A), and only when
+        # the recall event it cites exists (#839 review B); otherwise the call raises and no
+        # content is delivered.
+        self._record_context_delivery(document, package, context, events_before)
+        return package
+
+    def _record_context_delivery(self, document: dict, package: dict, context, events_before: int) -> None:
+        """Append the ``memory.context_delivery`` receipt for ``package`` and attach its ``audit``
+        block, or raise and leave no receipt behind. Nothing irreversible happens before the final
+        package has passed schema validation; a receipt is never written without the recall event
+        that it cites."""
+        adapter = self.runtime.adapter
+        durable = getattr(self.runtime, "durable_runtime", None)
+        seam = getattr(durable, "run_governed_read", None)
+        recall_event = _first_recall_event_since(adapter.events, events_before, context)
+        unbound = _recall_binding_defect(recall_event, document, context)
+        if unbound is not None:
+            raise ContextDeliveryUnboundError(
+                f"recall_context cannot deliver content: {unbound}; a delivery receipt is never written "
+                "without the recall event that authorised the identifiers it names")
+
+        def record() -> None:
+            event = context_package.delivery_event(
+                document, package, context,
+                event_id=adapter.allocate_event_id(), timestamp=adapter.now(), recall_event=recall_event,
+            )
+            receipts.validate("memory-audit-event.schema.json", event)
+            package["audit"] = {"delivery_event_id": event["event_id"], "recall_event_id": event["causation_id"],
+                                "correlation_id": event["correlation_id"]}
+            # the complete output, audit block included, must validate before the receipt exists
+            receipts.validate(context_package.PACKAGE_SCHEMA, package)
+            adapter.events.append(event)
+
+        try:
+            seam(record) if callable(seam) else record()
+        except BaseException:
+            package.pop("audit", None)
+            raise
+
+    @_serialized
     def _canonical_recall(self, query: str, **kwargs) -> dict:
         """IN-PROCESS EVALUATION ONLY, not part of the public contract (#777): the canonical
         recall document including deleted-lineage refusals, for governance evaluators that
@@ -1053,7 +1225,10 @@ class AgentMemory:
         self._require_open()
         return self._recall_document(query, public=False, **kwargs)
 
-    def _recall_document(
+    def _recall_document(self, query: str, **kwargs) -> dict:
+        return self._recall_document_and_context(query, **kwargs)[0]
+
+    def _recall_document_and_context(
         self,
         query: str,
         *,
@@ -1067,7 +1242,7 @@ class AgentMemory:
         temporal_intent: Mapping[str, Any] | None = None,
         reference_time: str | None = None,
         budget: int | None = None,
-    ) -> dict:
+    ) -> tuple[dict, Any]:
         """Run composed candidate generation followed by one governed admission pass.
 
         ``budget`` (contract 1.4.0, #670) is an optional return budget ``k``: ``returned``
@@ -1143,7 +1318,7 @@ class AgentMemory:
             returned=returned,
             return_policy=return_policy,
             recall_control=recall_control,
-        )
+        ), context
 
     def _shadow_recall_control(self, query: str, logical_memory_refs: tuple[str, ...], result, envelope,
                                public_candidates=None) -> dict:
