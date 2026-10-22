@@ -139,6 +139,23 @@ class ProfileContract(_Store):
             self.assertEqual(decision["evidence"], "undetermined_query")
         self.assertEqual(only_function_words["selection"]["assessment"], "undetermined")
 
+    def test_first_person_query_declines_a_third_party_possessive_fact(self):
+        ours = self.put("memory:a", "Our family car is a blue Kia Niro.")
+        theirs = self.put("memory:b", "Priya's car is a silver Honda Civic.")
+        unowned = self.put("memory:c", "The car wash on Elm Street closes at six.")
+        package = self.context("Which car does our family drive?")
+        self.assertIn(ours, _delivered(package))
+        self.assertIn(unowned, _delivered(package))  # no grounded subject: delivered, not guessed away
+        self.assertEqual(_omitted(package), {theirs: "subject_mismatch"})
+        decisions = package["selection"]["decisions"]
+        self.assertEqual(decisions[ours]["evidence"], "subject_and_attribute_evidence")
+        self.assertEqual(decisions[theirs]["query_subjects"], ["speaker"])
+        self.assertEqual(decisions[theirs]["fact_subjects"], ["priya"])
+        # a third party mentioned in a first-person fact stays: the fact is still about the caller
+        mine_too = self.put("memory:d", "My brother borrowed Priya's car for our trip.")
+        package = self.context("Which car does our family drive?")
+        self.assertIn(mine_too, _delivered(package))
+
     def test_subject_only_query_keeps_subject_evidence(self):
         canoe = self.put("memory:a", "Liora's canoe is teal.")
         bike = self.put("memory:b", "Liora's bicycle is black.")

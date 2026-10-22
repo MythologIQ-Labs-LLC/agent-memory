@@ -13,7 +13,7 @@ a consumer-side delivery policy, never authority:
   delivers the content and says so (``certainty: uncertain``), it never converts a lack of word
   overlap into an asserted negative when the fact carries non-lexical evidence.
 
-Decision order for one returned fact (policy ``evidence-qualified-context-selection/0.1.0``):
+Decision order for one returned fact (policy ``evidence-qualified-context-selection/0.2.0``):
 
 1. ``preserved_exact_identity``: a caller-authorised ``logical_memory_refs`` hit (route
    ``exact_logical_identity``). Delivered whatever its wording.
@@ -32,6 +32,9 @@ Decision order for one returned fact (policy ``evidence-qualified-context-select
    * the query names a subject by possessive (``Liora's canoe``) and the fact names a different
      subject the same way or through its persisted write-time proposition entity, and the
      query's subject does not occur in the fact at all → ``subject_mismatch`` (declined);
+   * the query is in the first person (``my``, ``our``, ``I``, ``we``: the subject is the caller)
+     and the fact names a third party by possessive while carrying no first-person marker and no
+     ``speaker`` proposition → ``subject_mismatch`` (declined; policy 0.2.0);
    * the query's subject occurs in the fact but none of the query's other content terms does
      → ``attribute_unevidenced`` (declined: right subject, no evidence for what was asked);
    * otherwise delivered, with the matched terms listed. A fact that matches only by its subject
@@ -55,7 +58,7 @@ import re
 from typing import Any, Mapping, Sequence
 
 POLICY_ID = "evidence-qualified-context-selection"
-POLICY_VERSION = "0.1.0"
+POLICY_VERSION = "0.2.0"
 BASIS = "post_admission_query_evidence_qualification"
 EXACT_IDENTITY_ROUTE = "exact_logical_identity"
 LEXICAL_ROUTE = "lexical"
@@ -74,6 +77,8 @@ DELIVERED_EVIDENCE = (
 ASSESSMENTS = ("evidence_delivered", "undetermined", "no_relevant_evidence", "no_returned_candidates")
 
 _WORD = re.compile(r"[^\W_]+(?:'[^\W_]+)?", re.UNICODE)
+# First-person markers: a query in the first person is about the caller (``speaker``).
+FIRST_PERSON = frozenset({"i", "me", "my", "mine", "myself", "we", "us", "our", "ours", "ourselves"})
 _POSSESSIVE = re.compile(r"^(.+?)'s$|^(.+?s)'$")
 # Bounded English function words (articles, pronouns, auxiliaries, prepositions, conjunctions,
 # question words). Grammatical glue only: no nouns, no domain or benchmark vocabulary.
@@ -147,6 +152,15 @@ def possessive_subjects(text: str) -> frozenset[str]:
     return frozenset(subjects)
 
 
+def first_person(text: str, proposition: Mapping[str, Any] | None = None) -> bool:
+    """Whether ``text`` speaks in the first person (or its persisted proposition names the
+    ``speaker``). The marker is grammatical; nothing here authenticates who wrote it."""
+
+    if isinstance(proposition, Mapping) and proposition.get("status") == "known" and proposition.get("entity") == "speaker":
+        return True
+    return any(_possessive_base(token) in FIRST_PERSON for token in _tokens(text))
+
+
 def grounded_subject(text: str, proposition: Mapping[str, Any] | None) -> frozenset[str]:
     """The subject terms the fact itself grounds: its possessive subjects plus the entity of its
     persisted write-time proposition when the interpreter recorded one. ``speaker`` (first
@@ -197,6 +211,16 @@ def qualify(
     anchors = possessive_subjects(query)
     record["query_subjects"] = sorted(anchors)
     if not anchors:
+        if first_person(query):
+            # The caller asks about themselves: a fact grounded on a third party by possessive,
+            # with no first-person marker of its own, is about someone else.
+            record["query_subjects"] = ["speaker"]
+            third_party = possessive_subjects(text)
+            record["fact_subjects"] = sorted(third_party)
+            if third_party and not first_person(text, proposition):
+                return {**record, "outcome": "omitted", "reason": "subject_mismatch", "certainty": "grounded"}
+            if first_person(text, proposition):
+                return {**record, "outcome": "delivered", "evidence": "subject_and_attribute_evidence", "certainty": "grounded"}
         return {**record, "outcome": "delivered", "evidence": "query_term_evidence", "certainty": "grounded"}
     subject = grounded_subject(text, proposition)
     record["fact_subjects"] = sorted(subject)
@@ -250,6 +274,6 @@ def selection_block(query: str, decisions: Sequence[Mapping[str, Any]]) -> dict[
     }
 
 
-__all__ = ["ASSESSMENTS", "BASIS", "DELIVERED_EVIDENCE", "FUNCTION_WORDS", "OMITTED_REASONS", "POLICY_ID",
-           "POLICY_VERSION", "assessment", "content_terms", "grounded_subject", "possessive_subjects", "qualify",
-           "selection_block"]
+__all__ = ["ASSESSMENTS", "BASIS", "DELIVERED_EVIDENCE", "FIRST_PERSON", "FUNCTION_WORDS", "OMITTED_REASONS",
+           "POLICY_ID", "POLICY_VERSION", "assessment", "content_terms", "first_person", "grounded_subject",
+           "possessive_subjects", "qualify", "selection_block"]
