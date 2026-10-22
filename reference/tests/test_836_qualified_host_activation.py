@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 from agentmem_ref import AgentMemory  # noqa: E402
-from examples.qualified_memory_host import (  # noqa: E402
+from agentmem_ref.host_activation import (  # noqa: E402
     UnqualifiedLegacyStoreError, open_qualified_memory,
 )
 
