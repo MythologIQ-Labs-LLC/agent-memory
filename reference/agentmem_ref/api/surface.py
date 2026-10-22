@@ -23,6 +23,7 @@ import hashlib
 import importlib.resources
 import json
 import os
+import tempfile
 from pathlib import Path
 from typing import Any, Callable, Mapping, Sequence
 
@@ -322,15 +323,30 @@ def _packaged_profile_text() -> str:
 
 
 def _atomic_write_text(path: Path, text: str) -> None:
+    """Atomically stage one whole-file write in an exclusive, per-writer temporary.
+
+    A predictable .<name>.tmp opened with truncation can follow a planted symlink
+    or share an inode with a concurrent initializer. NamedTemporaryFile creates
+    the temporary with exclusive O_EXCL semantics and private permissions.
+    The target is replaced only after the complete payload has been flushed.
+    """
     path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_name(f".{path.name}.tmp")
-    with temporary.open("w", encoding="utf-8", newline="\n") as handle:
-        handle.write(text)
-        if not text.endswith("\n"):
-            handle.write("\n")
-        handle.flush()
-        os.fsync(handle.fileno())
-    os.replace(temporary, path)
+    temporary: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="w", encoding="utf-8", newline="\n",
+            prefix=f".{path.name}.", suffix=".tmp", dir=path.parent, delete=False,
+        ) as handle:
+            temporary = Path(handle.name)
+            handle.write(text)
+            if not text.endswith("\n"):
+                handle.write("\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, path)
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
 
 
 def _checked_extractor(extractor: Any) -> Any:
