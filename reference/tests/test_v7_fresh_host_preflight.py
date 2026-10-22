@@ -156,6 +156,24 @@ class FreshV7HostBoundary(unittest.TestCase):
         with self.assertRaises(HostAdmissionRefused):
             self.enroll()
 
+    def test_corrupt_or_symlinked_receipt_refused_before_runtime_access(self):
+        receipt = self.enroll()
+        receipt.write_text("{not JSON", encoding="utf-8")
+        with patch.object(AgentMemory, "open", side_effect=AssertionError("opened")) as raw:
+            with self.assertRaises(HostAdmissionRefused):
+                with self.open():
+                    self.fail("malformed receipt admitted")
+            raw.assert_not_called()
+        receipt.unlink()
+        remote = self.base / "forged-ticket.json"
+        remote.write_text("{}", encoding="utf-8")
+        receipt.symlink_to(remote)
+        with patch.object(AgentMemory, "open", side_effect=AssertionError("opened")) as raw:
+            with self.assertRaises(HostAdmissionRefused):
+                with self.open():
+                    self.fail("linked receipt admitted")
+            raw.assert_not_called()
+
     def test_blank_host_claims_rejected(self):
         with self.assertRaises(HostAdmissionRefused):
             HostIdentity(tenant=" ", actor_id="agent:good", scope="project:good")
