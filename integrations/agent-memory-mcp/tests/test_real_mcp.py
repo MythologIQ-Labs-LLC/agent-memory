@@ -76,6 +76,14 @@ class ActualMcpConsumerLoop(unittest.IsolatedAsyncioTestCase):
                     ), found)
                     self.assertFalse(found["answer_generated"])
                     self.assertEqual(found["profile"], "all_returned")
+                    # A similar or nonexistent key must never return a
+                    # nearby memory as an exact-key lookup success.
+                    absent = _result(await client.call_tool("memory_get", {
+                        "key": "memory:preferred_editors",
+                    }), "evidence")
+                    self.assertEqual(absent["lookup_status"], "not_found_or_unavailable")
+                    self.assertEqual(absent["evidence"], [])
+                    self.assertNotIn("Neovim", repr(absent))
                 # Reconnecting the harness must recover the same durable store.
                 async with Client(module.mcp, raise_exceptions=True) as client:
                     recovered = _result(
@@ -151,6 +159,18 @@ class ActualMcpConsumerLoop(unittest.IsolatedAsyncioTestCase):
                 self.assertTrue(any(
                     "Neovim" in item["content"] for item in recovered["evidence"]
                 ), recovered)
+
+    async def test_missing_host_configuration_is_tool_error_not_success(self):
+        with patch.dict(os.environ, {}, clear=True):
+            async with Client(module.mcp, raise_exceptions=True) as client:
+                result = await client.call_tool("memory_find", {
+                    "question": "Which editor do I use?"
+                })
+                self.assertTrue(result.is_error, result)
+                self.assertIsNone(result.structured_content)
+                message = repr(result.content)
+                self.assertIn("host configuration", message.lower())
+                self.assertNotIn("Traceback", message)
 
     async def test_malformed_tool_input_cannot_set_authority(self):
         with tempfile.TemporaryDirectory() as temp:
