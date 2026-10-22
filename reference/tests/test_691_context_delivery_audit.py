@@ -257,5 +257,142 @@ class Receipt(_Store):
         self.assertEqual(event["causation_id"], _recall_events(self.memory)[-1]["event_id"])
 
 
+class FailClosed(_Store):
+    """#839 Phase 3: every way the receipt could be wrong, in memory and after reopening the store.
+    A refusal never leaves a receipt; a receipt is only ever bound to the recall that authorised
+    the identifiers it names; ordinary delivery keeps working afterwards."""
+
+    def _refused(self, exc_type, query="orchard gate code"):
+        before = len(self.memory.runtime.adapter.events)
+        with self.assertRaises(exc_type):
+            self.memory.recall_context(query)
+        self.assertEqual(_delivery_events(self.memory), [])
+        return before
+
+    def _still_delivers(self):
+        package = self.memory.recall_context("orchard gate code")
+        self.assertEqual([i["content"] for i in package["items"]], [TEXT])
+        events = _delivery_events(self.memory)
+        self.assertEqual(len(events), 1)
+        self.assertEqual(events[0]["causation_id"], package["audit"]["recall_event_id"])
+        self.reopen()
+        self.assertEqual([e["event_id"] for e in _delivery_events(self.memory)], [events[0]["event_id"]])
+
+    def _real_recall_event(self):
+        n = len(self.memory.runtime.adapter.events)
+        self.memory.recall("orchard gate code")
+        return next(e for e in self.memory.runtime.adapter.events[n:] if e["event_type"] == "memory.recall")
+
+    def test_malformed_recall_event_is_refused(self):
+        self.memory.remember("memory:gate", TEXT)
+        real = self._real_recall_event()
+        for defect in ({"event_type": "memory.commit"}, {"event_id": ""}, {"correlation_id": None},
+                       {"principal": "agent:someone-else"}, {"payload": {**real["payload"], "project_ref": "project:other"}},
+                       {"payload": {**real["payload"], "outcomes": {}}},
+                       {"payload": {**real["payload"], "outcomes": {k: "refused" for k in real["payload"]["outcomes"]}}}):
+            with unittest.mock.patch.object(surface, "_first_recall_event_since", return_value={**real, **defect}):
+                self._refused(ContextDeliveryUnboundError)
+        self.reopen()
+        self.assertEqual(_delivery_events(self.memory), [])
+        self._still_delivers()
+
+    def test_another_actors_recall_event_is_refused(self):
+        self.memory.remember("memory:gate", TEXT)
+        self.reopen(actor="agent:colleague")
+        foreign = self._real_recall_event()
+        self.reopen(actor="agent:writer")
+        with unittest.mock.patch.object(surface, "_first_recall_event_since", return_value=foreign):
+            self._refused(ContextDeliveryUnboundError)
+        self._still_delivers()
+
+    def test_event_append_failure_leaves_no_receipt(self):
+        self.memory.remember("memory:gate", TEXT)
+        adapter = self.memory.runtime.adapter
+
+        class Refusing(list):
+            def append(self, item):
+                raise RuntimeError("journal append failed")
+
+        broken = Refusing(adapter.events)
+        with unittest.mock.patch.object(adapter, "events", broken):
+            self._refused(RuntimeError)
+        self.reopen()
+        self.assertEqual(_delivery_events(self.memory), [])
+        self._still_delivers()
+
+    def test_persistence_failure_rolls_the_receipt_back_and_restarts_clean(self):
+        self.memory.remember("memory:gate", TEXT)
+        durable = self.memory.runtime.durable_runtime
+        sqlite_runtime = getattr(durable, "base", durable)  # the SQLite generation publisher
+
+        def failing():
+            raise OSError("disk full while publishing the generation")
+
+        with unittest.mock.patch.object(sqlite_runtime, "_persist_unlocked", failing):
+            self._refused(OSError)
+        # governance restored from the last published generation: no receipt, store consistent
+        self.assertEqual(_delivery_events(self.memory), [])
+        self.reopen()
+        self.assertEqual(_delivery_events(self.memory), [])
+        self.assertTrue(self.memory.remember("memory:after", "The greenhouse thermostat reads 18 degrees.")["committed"])
+        self._still_delivers()
+
+    def test_invalid_completed_package_with_audit_identifiers_is_refused(self):
+        self.memory.remember("memory:gate", TEXT)
+        original = receipts.validate
+
+        def reject_with_audit(schema_name, document):
+            if schema_name == context_package_schema() and "audit" in document:
+                raise ValueError("completed package rejected")
+            return original(schema_name, document)
+
+        with unittest.mock.patch.object(receipts, "validate", reject_with_audit):
+            self._refused(ValueError)
+        self.reopen()
+        self.assertEqual(_delivery_events(self.memory), [])
+        self._still_delivers()
+
+    def test_repeated_deliveries_have_unique_ids_and_distinct_recalls(self):
+        self.memory.remember("memory:gate", TEXT)
+        packages = [self.memory.recall_context("orchard gate code") for _ in range(5)]
+        events = _delivery_events(self.memory)
+        self.assertEqual(len(events), 5)
+        self.assertEqual(len({e["event_id"] for e in events}), 5)
+        self.assertEqual(len({e["causation_id"] for e in events}), 5)
+        self.assertEqual([e["event_id"] for e in events], [p["audit"]["delivery_event_id"] for p in packages])
+        recall_ids = {e["event_id"] for e in _recall_events(self.memory)}
+        self.assertTrue(all(e["causation_id"] in recall_ids for e in events))
+        self.reopen()
+        self.assertEqual([e["event_id"] for e in _delivery_events(self.memory)], [p["audit"]["delivery_event_id"] for p in packages])
+
+    def test_shadow_recall_control_binds_to_the_executed_recall(self):
+        self.memory.remember("memory:gate", TEXT)
+        self.memory.close()
+        self.memory = AgentMemory.open(self.root, tenant=TENANT, actor_id="agent:writer", scope=SCOPE,
+                                       purpose="audit test", recall_control="shadow")
+        n = len(self.memory.runtime.adapter.events)
+        package = self.memory.recall_context("orchard gate code")
+        new = self.memory.runtime.adapter.events[n:]
+        self.assertEqual([e["event_type"] for e in new], ["memory.recall", DELIVERY_EVENT_TYPE])
+        self.assertEqual(new[1]["causation_id"], new[0]["event_id"])
+        self.assertEqual(package["audit"]["recall_event_id"], new[0]["event_id"])
+
+    def test_other_project_receipt_names_nothing_of_this_project(self):
+        self.memory.remember("memory:gate", TEXT, source_ref=PRIVATE_SOURCE)
+        self.reopen(scope="project:691-other")
+        package = self.memory.recall_context("orchard gate code")
+        self.assertEqual(package["status"], "empty")
+        (event,) = _delivery_events(self.memory)
+        self.assertEqual((event["payload"]["returned_count"], event["payload"]["outcomes"]), (0, {}))
+        self.assertEqual(event["payload"]["project_ref"], "project:691-other")
+        for needle in (TEXT, "4471", PRIVATE_SOURCE, "memory:gate", SCOPE):
+            self.assertNotIn(needle, json.dumps(event))
+
+
+def context_package_schema():
+    from agentmem_ref.api import context_package
+    return context_package.PACKAGE_SCHEMA
+
+
 if __name__ == "__main__":
     unittest.main()

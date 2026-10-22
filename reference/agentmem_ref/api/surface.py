@@ -115,6 +115,29 @@ def _first_recall_event_since(events, index: int, context) -> dict | None:
     return None
 
 
+def _recall_binding_defect(recall_event: dict | None, document: dict, context) -> str | None:
+    """Why ``recall_event`` cannot serve as the recall that a delivery receipt for ``document`` is
+    bound to, or ``None`` when it can: it must exist, carry an event and correlation id, name this
+    principal and scope, and its admission outcomes must account for every identifier the recall
+    returned as ``admit`` (#839 review B: nothing about the binding is synthesised)."""
+    if not isinstance(recall_event, dict):
+        return "the governed recall recorded no memory.recall audit event for this principal"
+    if recall_event.get("event_type") != "memory.recall":
+        return "the recorded event is not a memory.recall event"
+    if not recall_event.get("event_id") or not recall_event.get("correlation_id"):
+        return "the recall event carries no event or correlation identifier"
+    if recall_event.get("principal") != context.principal_ref:
+        return "the recall event names another principal"
+    payload = recall_event.get("payload") or {}
+    if payload.get("project_ref") != context.project_ref or \
+            list(payload.get("target_domain_refs") or ()) != list(context.target_domain_refs):
+        return "the recall event names another scope"
+    outcomes = payload.get("outcomes") or {}
+    if any(outcomes.get(ref) != "admit" for ref in document.get("returned") or ()):
+        return "the recall event's admission outcomes do not account for every returned identifier"
+    return None
+
+
 def _mentions(value: Any, withheld: Callable[[str], bool]) -> bool:
     if isinstance(value, str):
         return withheld(value)
@@ -1154,10 +1177,11 @@ class AgentMemory:
         durable = getattr(self.runtime, "durable_runtime", None)
         seam = getattr(durable, "run_governed_read", None)
         recall_event = _first_recall_event_since(adapter.events, events_before, context)
-        if recall_event is None or not recall_event.get("event_id") or not recall_event.get("correlation_id"):
+        unbound = _recall_binding_defect(recall_event, document, context)
+        if unbound is not None:
             raise ContextDeliveryUnboundError(
-                "recall_context cannot deliver content: the governed recall recorded no memory.recall "
-                "audit event for this principal, so a delivery receipt could not be bound to it")
+                f"recall_context cannot deliver content: {unbound}; a delivery receipt is never written "
+                "without the recall event that authorised the identifiers it names")
 
         def record() -> None:
             event = context_package.delivery_event(
