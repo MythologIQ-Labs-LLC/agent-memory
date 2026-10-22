@@ -1,0 +1,26 @@
+== strengthened module: PR head
+test_forced_two_creator_race_admits_exactly_one_initializer (tests.test_836_first_open_configuration_safety.FirstOpenConfigurationSafety.test_forced_two_creator_race_admits_exactly_one_initializer)
+Deterministic form of the fresh-root race: both processes pass the database-exists ... ok
+test_fsync_failure_never_publishes_incomplete_target (tests.test_836_first_open_configuration_safety.FirstOpenConfigurationSafety.test_fsync_failure_never_publishes_incomplete_target) ... ok
+test_preplanted_legacy_temp_symlink_does_not_clobber_its_target (tests.test_836_first_open_configuration_safety.FirstOpenConfigurationSafety.test_preplanted_legacy_temp_symlink_does_not_clobber_its_target) ... ok
+test_replace_failure_removes_only_own_temp_and_preserves_target (tests.test_836_first_open_configuration_safety.FirstOpenConfigurationSafety.test_replace_failure_removes_only_own_temp_and_preserves_target) ... ok
+test_simultaneous_fresh_runtime_initializers_leave_recoverable_root (tests.test_836_first_open_configuration_safety.FirstOpenConfigurationSafety.test_simultaneous_fresh_runtime_initializers_leave_recoverable_root)
+Two legitimate processes may race at the complete first-open boundary. ... ok
+test_two_separate_processes_never_share_staging_inode (tests.test_836_first_open_configuration_safety.FirstOpenConfigurationSafety.test_two_separate_processes_never_share_staging_inode) ... ok
+test_two_simultaneous_writers_use_distinct_private_temporaries (tests.test_836_first_open_configuration_safety.FirstOpenConfigurationSafety.test_two_simultaneous_writers_use_distinct_private_temporaries) ... ok
+test_blank_host_identity_never_opens_runtime (tests.test_836_qualified_host_activation.QualifiedHostActivation.test_blank_host_identity_never_opens_runtime) ... ok
+test_explicitly_qualified_migration_can_activate (tests.test_836_qualified_host_activation.QualifiedHostActivation.test_explicitly_qualified_migration_can_activate) ... ok
+test_fresh_store_is_operational (tests.test_836_qualified_host_activation.QualifiedHostActivation.test_fresh_store_is_operational) ... ok
+test_legacy_pending_store_never_reaches_consumer (tests.test_836_qualified_host_activation.QualifiedHostActivation.test_legacy_pending_store_never_reaches_consumer) ... ok
+test_missing_and_malformed_legacy_counts_fail_closed (tests.test_836_qualified_host_activation.QualifiedHostActivation.test_missing_and_malformed_legacy_counts_fail_closed) ... ok
+test_missing_host_identity_never_opens_runtime (tests.test_836_qualified_host_activation.QualifiedHostActivation.test_missing_host_identity_never_opens_runtime) ... ok
+test_packaged_alias_is_exact_api_layer_module (tests.test_836_qualified_host_activation.QualifiedHostActivation.test_packaged_alias_is_exact_api_layer_module) ... ok
+test_qualified_label_with_new_legacy_facts_is_refused (tests.test_836_qualified_host_activation.QualifiedHostActivation.test_qualified_label_with_new_legacy_facts_is_refused) ... ok
+test_quarantined_upgrade_remains_blocked (tests.test_836_qualified_host_activation.QualifiedHostActivation.test_quarantined_upgrade_remains_blocked) ... ok
+test_status_inspection_failure_does_not_leak_handle (tests.test_836_qualified_host_activation.QualifiedHostActivation.test_status_inspection_failure_does_not_leak_handle) ... ok
+test_unknown_status_fails_closed_and_closes_handle (tests.test_836_qualified_host_activation.QualifiedHostActivation.test_unknown_status_fails_closed_and_closes_handle) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 1.271s
+
+OK

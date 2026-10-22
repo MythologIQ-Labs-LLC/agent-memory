@@ -1,0 +1,24 @@
+head e3176275b833c1baf8a5267c40a99b4391229abe clean=0
+run_786_security_replays.py exit=0
+cross-scope-write-authority-denial-v2: PASS (12/12 cases) report sha256 0214581c52bba565248023edf403
+deleted-lineage-generations-and-restart-v2: PASS (8/8 cases) report sha256 25ee84a1dafdd6785a776e986
+public-tombstone-redaction-and-observer-separation-v2: PASS (8/8 cases) report sha256 352bb15d219c7b
+run_786_security_replays_dsl2.py exit=0
+cross-scope-write-authority-denial-v3: PASS (13/13 cases) report sha256 c0e475bb7e8e4735543a9eacc15c
+deleted-lineage-generations-and-restart-v3: PASS (10/10 cases) report sha256 9703b6ec88a60b5aa787d1e
+public-tombstone-redaction-and-observer-separation-v3: PASS (8/8 cases) report sha256 8dcedcca3f3935
+run_786_security_replays_dsl3.py exit=0
+evidence-reference-authorization-v1: PASS (13/13 cases) report sha256 fe5aae2b4dde3c6bff084568392809
+run_786_security_replays_dsl4.py exit=0
+scope-safe-graph-discovery-v2: PASS (11/11 cases) report sha256 aa64a54fb0ca973d5e1ef1de14dc1b9fc6f6
+644 exit=0
+typed-sufficiency-noninterference-and-negative-controls-v1: PASS (19/19 cases) report sha256 971bb34
+governed-persisted-typed-slot-sufficiency-admission-recheck-v1: PASS (18/18 cases) report sha256 f41
+governed-admitted-typed-value-coherence-v1: PASS (16/16 cases) report sha256 447ef03f65773e28c9c4e1c
+committed-governed-transition-witness-v1: PASS (12/12 cases) report sha256 d1ee44c3f642c7621497ea3a2
+same-slot-safety-counterevidence-and-immutable-stop-gate-v1: PASS (39/39 cases) report sha256 6caefd
+verify786 exit=0
+verify644 exit=0
+== crash matrix
+crash exit=0
+== done

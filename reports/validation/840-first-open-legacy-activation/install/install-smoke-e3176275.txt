@@ -1,0 +1,24 @@
+== venv-wheel
+agentmem_ref from /tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/r840/install/venv-wheel/lib/python3.12/site-packages/agentmem_ref/__init__.py
+alias is canonical: True | open_qualified_memory is canonical: True
+installed _atomic_write_text uses NamedTemporaryFile: True
+pending fixture refused: UnqualifiedLegacyStoreError
+maintenance upgrade -> legacy_qualified
+qualified fixture activated: legacy_qualified recall ok: True
+shared-membership upgrade -> legacy_unqualified
+unqualified fixture refused
+fresh store activated: fresh remember: True
+symlink probe: victim intact: True | config created: True | mode: 0o600
+blank tenant refused
+== venv-sdist
+agentmem_ref from /tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/r840/install/venv-sdist/lib/python3.12/site-packages/agentmem_ref/__init__.py
+alias is canonical: True | open_qualified_memory is canonical: True
+installed _atomic_write_text uses NamedTemporaryFile: True
+pending fixture refused: UnqualifiedLegacyStoreError
+maintenance upgrade -> legacy_qualified
+qualified fixture activated: legacy_qualified recall ok: True
+shared-membership upgrade -> legacy_unqualified
+unqualified fixture refused
+fresh store activated: fresh remember: True
+symlink probe: victim intact: True | config created: True | mode: 0o600
+blank tenant refused

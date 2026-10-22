@@ -1,0 +1,16 @@
+test_check_reports_layout_matches_table (tests.test_package_layout.LayoutMatchesMover.test_check_reports_layout_matches_table) ... ok
+test_crg_states_its_doctrine (tests.test_package_layout.LayoutMatchesMover.test_crg_states_its_doctrine) ... ok
+test_every_alias_is_the_identical_object (tests.test_package_layout.LayoutMatchesMover.test_every_alias_is_the_identical_object) ... 
+  test_every_alias_is_the_identical_object (tests.test_package_layout.LayoutMatchesMover.test_every_alias_is_the_identical_object) (module='long_horizon_benchmark') ... skipped 'optional dependency not installed: numpy'
+  test_every_alias_is_the_identical_object (tests.test_package_layout.LayoutMatchesMover.test_every_alias_is_the_identical_object) (module='long_horizon_dataset') ... skipped 'optional dependency not installed: numpy'
+  test_every_alias_is_the_identical_object (tests.test_package_layout.LayoutMatchesMover.test_every_alias_is_the_identical_object) (module='operational_memory_benchmark') ... skipped 'optional dependency not installed: numpy'
+test_init_does_not_route_through_aliases (tests.test_package_layout.LayoutMatchesMover.test_init_does_not_route_through_aliases) ... ok
+test_monkeypatch_through_alias_reaches_the_evaluator (tests.test_package_layout.LayoutMatchesMover.test_monkeypatch_through_alias_reaches_the_evaluator) ... ok
+test_no_depth_coupled_path_resolution_remains (tests.test_package_layout.LayoutMatchesMover.test_no_depth_coupled_path_resolution_remains) ... ok
+test_no_layer_imports_a_later_layer (tests.test_package_layout.LayoutMatchesMover.test_no_layer_imports_a_later_layer) ... ok
+test_top_level_residents (tests.test_package_layout.LayoutMatchesMover.test_top_level_residents) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 2.156s
+
+OK (skipped=3)

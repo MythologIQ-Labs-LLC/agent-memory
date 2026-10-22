@@ -1,0 +1,5 @@
+outcomes:
+  12 ('OPENED committed=True', 'REFUSED:RuntimeRecoveryError:SQLite runtime state already exists; use recover()')
+post-conditions:
+  6 ('reopen OK', 'fresh', 'survivors=B')
+  6 ('reopen OK', 'fresh', 'survivors=A')
