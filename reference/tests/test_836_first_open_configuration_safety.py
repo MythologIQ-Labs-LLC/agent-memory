@@ -120,7 +120,7 @@ surface._atomic_write_text(root / "runtime-config.json", name * 8192)
                     self.assertEqual(child.returncode, 0, (out, err))
                 self.assertIn(
                     (root / "runtime-config.json").read_text(encoding="utf-8"),
-                    ("A" * 8192 + "\\n", "B" * 8192 + "\\n"),
+                    ("A" * 8192 + "\n", "B" * 8192 + "\n"),
                 )
                 self.assertEqual(list(root.glob(".runtime-config.json.*.tmp")), [])
             finally:
