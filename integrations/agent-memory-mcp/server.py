@@ -18,6 +18,7 @@ from pathlib import Path
 import sys
 
 from mcp.server import MCPServer
+from mcp.server.mcpserver.exceptions import ToolError
 
 # The MCP CLI imports servers by file path. That import does not always add the
 # server file's directory to sys.path, unlike `python server.py` over stdio.
@@ -37,7 +38,27 @@ mcp = MCPServer(
 
 
 def _bridge() -> LocalMemoryBridge:
-    return LocalMemoryBridge(HostConfig.from_environment())
+    try:
+        return LocalMemoryBridge(HostConfig.from_environment())
+    except ValueError as exc:
+        # Host-owned environment configuration is not a model-supplied input.
+        # Do not echo local paths or untrusted configuration into tool results.
+        raise ToolError("Agent Memory host configuration is missing or unsafe") from exc
+
+
+def _tool_call(action):
+    try:
+        return action()
+    except ValueError as exc:
+        # Known user-correctable argument failures should be recognizable by
+        # a model client (is_error=True), not opaque SDK crash messages.
+        raise ToolError("Invalid memory tool input or delivery limit") from exc
+    except Exception as exc:
+        from agentmem_ref.host_activation import UnqualifiedLegacyStoreError
+        if isinstance(exc, UnqualifiedLegacyStoreError):
+            raise ToolError("Memory store is unqualified; ask the host operator to provision a safe store") from exc
+        # All unknown failures remain genuine errors, with SDK redaction.
+        raise
 
 
 @mcp.tool()
@@ -48,7 +69,7 @@ def memory_remember(key: str, text: str) -> dict:
     credentials, hidden instructions or unreviewed conversation transcripts.
     Tool results indicate whether the governed write actually committed.
     """
-    return _bridge().remember(key, text)
+    return _tool_call(lambda: _bridge().remember(key, text))
 
 
 @mcp.tool()
@@ -57,7 +78,7 @@ def memory_get(key: str) -> dict:
 
     Does not generate an answer. Returns authorized memory evidence and states.
     """
-    return _bridge().get(key)
+    return _tool_call(lambda: _bridge().get(key))
 
 
 @mcp.tool()
@@ -68,8 +89,10 @@ def memory_find(question: str, max_items: int = 5,
     Accuracy and answerability are not guaranteed. The experimental selector
     must be explicitly enabled and must not be mistaken for a qualified fix.
     """
-    return _bridge().find(question, max_items=max_items,
-                          experimental_selectivity=experimental_selectivity)
+    return _tool_call(lambda: _bridge().find(
+        question, max_items=max_items,
+        experimental_selectivity=experimental_selectivity
+    ))
 
 
 if __name__ == "__main__":
