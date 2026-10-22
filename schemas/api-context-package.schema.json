@@ -297,18 +297,18 @@
       "additionalProperties": false,
       "required": [
         "delivery_event_id",
+        "recall_event_id",
         "correlation_id"
       ],
-      "description": "The content-delivery audit receipt this package was delivered under (memory-audit-event memory.context_delivery): the receipt's event id, the recall event it is caused by, and the shared correlation id. Identifiers only.",
+      "description": "The content-delivery audit receipt this package was delivered under (memory-audit-event memory.context_delivery): the receipt's event id, the memory.recall event it is caused by, and the correlation id both share. Identifiers only; a package is never delivered under a receipt that is not bound to its recall event.",
       "properties": {
         "delivery_event_id": {
-          "type": "string"
+          "type": "string",
+          "minLength": 1
         },
         "recall_event_id": {
-          "type": [
-            "string",
-            "null"
-          ]
+          "type": "string",
+          "minLength": 1
         },
         "correlation_id": {
           "type": "string"
