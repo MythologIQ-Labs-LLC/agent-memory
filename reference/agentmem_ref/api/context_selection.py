@@ -13,7 +13,7 @@ a consumer-side delivery policy, never authority:
   delivers the content and says so (``certainty: uncertain``), it never converts a lack of word
   overlap into an asserted negative when the fact carries non-lexical evidence.
 
-Decision order for one returned fact (policy ``evidence-qualified-context-selection/0.4.0``):
+Decision order for one returned fact (policy ``evidence-qualified-context-selection/0.4.1``):
 
 1. ``preserved_exact_identity``: a caller-authorised ``logical_memory_refs`` hit (route
    ``exact_logical_identity``). Delivered whatever its wording.
@@ -69,7 +69,7 @@ import re
 from typing import Any, Mapping, Sequence
 
 POLICY_ID = "evidence-qualified-context-selection"
-POLICY_VERSION = "0.4.0"
+POLICY_VERSION = "0.4.1"
 BASIS = "post_admission_query_evidence_qualification"
 EXACT_IDENTITY_ROUTE = "exact_logical_identity"
 LEXICAL_ROUTE = "lexical"
@@ -145,12 +145,21 @@ def _tokens(text: str) -> list[str]:
 def content_terms(text: str) -> frozenset[str]:
     """The folded content terms of ``text``: every token that is not a function word."""
 
-    return frozenset(_fold(token) for token in _tokens(text) if _possessive_base(token) not in FUNCTION_WORDS)
+    return frozenset(_fold(token) for token in _tokens(text)
+                     if _possessive_base(token) not in FUNCTION_WORDS and _contraction_base(token) not in FUNCTION_WORDS)
 
 
 def _possessive_base(token: str) -> str:
     match = _POSSESSIVE.match(token)
     return (match.group(1) or match.group(2)) if match else token
+
+
+def _contraction_base(token: str) -> str:
+    """``i'm`` → ``i``, ``we've`` → ``we``, ``don't`` → ``don``: the word a contraction starts
+    with, for function-word and first-person tests (0.4.1; a contracted first-person marker was
+    previously missed, so a first-person fact could be declined as a third party's)."""
+
+    return token.split("'", 1)[0]
 
 
 def single_statement(text: str) -> bool:
@@ -181,7 +190,8 @@ def first_person(text: str, proposition: Mapping[str, Any] | None = None) -> boo
 
     if isinstance(proposition, Mapping) and proposition.get("status") == "known" and proposition.get("entity") == "speaker":
         return True
-    return any(_possessive_base(token) in FIRST_PERSON for token in _tokens(text))
+    return any(_possessive_base(token) in FIRST_PERSON or _contraction_base(token) in FIRST_PERSON
+               for token in _tokens(text))
 
 
 def grounded_subject(text: str, proposition: Mapping[str, Any] | None) -> frozenset[str]:

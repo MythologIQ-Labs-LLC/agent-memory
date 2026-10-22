@@ -200,6 +200,12 @@ class ProfileContract(_Store):
         decision = package["selection"]["decisions"][mine]
         self.assertNotEqual(decision["outcome"], "omitted")
 
+    def test_contracted_first_person_fact_is_not_a_third_party(self):
+        mine = self.put("memory:a", "I'm looking for car wax; I've been using SpeedShine's detailing kit and just got back from Rack Fest.")
+        package = self.context("How many days before the Rack Fest did I participate in the Turbocharged Tuesdays event?")
+        self.assertIn(mine, _delivered(package))
+        self.assertNotEqual(package["selection"]["decisions"][mine]["outcome"], "omitted")
+
     def test_first_person_fact_is_about_its_speaker_whatever_names_it_mentions(self):
         # a third-person question anchored on a proper noun must not decline a first-person
         # memory that mentions another proper noun by possessive: the speaker is its subject
@@ -327,6 +333,16 @@ class SelectorUnit(unittest.TestCase):
         self.assertEqual(fold("what is it"), frozenset())
         self.assertEqual(fold("Liora's"), frozenset({"liora"}))
         self.assertEqual(context_selection.possessive_subjects("Where do Mara's parents work?"), frozenset({"mara"}))
+
+    def test_contracted_first_person_markers_are_recognised(self):
+        fp = context_selection.first_person
+        for text in ("I'm looking for car wax; SpeedShine's kit works.", "I've been using Netflix.", "We'll go tomorrow.",
+                     "I'd rather not.", "I participated in the event."):
+            self.assertTrue(fp(text), text)
+        self.assertFalse(fp("Priya's car is a silver Honda Civic."))
+        # a contraction of a function word is not a content term
+        self.assertNotIn("i'm", context_selection.content_terms("I'm looking for recommendations"))
+        self.assertEqual(context_selection.content_terms("I'm here"), frozenset())
 
     def test_grounded_subject_uses_only_persisted_proposition_and_possessive(self):
         subject = context_selection.grounded_subject
