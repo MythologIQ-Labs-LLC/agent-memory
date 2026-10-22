@@ -74,7 +74,8 @@ class FreshV7HostBoundary(unittest.TestCase):
             self.assertTrue(memory.remember("memory:host", "Known fresh memory")["committed"])
         with self.open() as memory:
             self.assertEqual(memory.legacy_upgrade_status()["status"], "fresh")
-            self.assertTrue(memory.recall("Known fresh memory")["returned"])
+            self.assertTrue(memory.recall("Known fresh memory",
+                                          logical_memory_refs=("memory:host",))["returned"])
 
     def test_existing_empty_root_is_not_enrollable_or_operational(self):
         self.root.mkdir(mode=0o700)
