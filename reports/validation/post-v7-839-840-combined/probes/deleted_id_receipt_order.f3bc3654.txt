@@ -1,0 +1,2 @@
+receipts before deletion naming the fact (legitimate, historical): 1 of 1
+receipts after deletion naming the deleted id: 0 of 2 | text '4471' in any post-deletion receipt: False

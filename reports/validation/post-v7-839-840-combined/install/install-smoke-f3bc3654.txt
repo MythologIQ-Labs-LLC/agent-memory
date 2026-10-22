@@ -1,0 +1,32 @@
+== venv-wheel
+agentmem_ref from /tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/rc/install/venv-wheel/lib/python3.12/site-packages/agentmem_ref/__init__.py
+aliases canonical: True True
+installed writer exclusive: True | packaged context schema: True
+guarded recall_context: complete ['Installed smoke: the kettle is in the left cupboard.'] audit keys ['correlation_id', 'delivery_event_id', 'recall_event_id'] receipts 1 bound True
+A faulted final validation raised FileNotFoundError
+B unbound recall raised ContextDeliveryUnboundError
+receipts after faults 1
+colleague: text delivered True | memory_ref/source_ref hidden: True | receipts after reopen 2
+pending fixture refused by the gate
+plain open of the pending fixture still delivers context: complete
+maintenance upgrade -> legacy_qualified
+qualified fixture: recall_context complete
+shared-membership upgrade -> legacy_unqualified
+unqualified fixture refused by the gate
+symlink probe victim intact: True | mode 0o600
+== venv-sdist
+agentmem_ref from /tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/rc/install/venv-sdist/lib/python3.12/site-packages/agentmem_ref/__init__.py
+aliases canonical: True True
+installed writer exclusive: True | packaged context schema: True
+guarded recall_context: complete ['Installed smoke: the kettle is in the left cupboard.'] audit keys ['correlation_id', 'delivery_event_id', 'recall_event_id'] receipts 1 bound True
+A faulted final validation raised FileNotFoundError
+B unbound recall raised ContextDeliveryUnboundError
+receipts after faults 1
+colleague: text delivered True | memory_ref/source_ref hidden: True | receipts after reopen 2
+pending fixture refused by the gate
+plain open of the pending fixture still delivers context: complete
+maintenance upgrade -> legacy_qualified
+qualified fixture: recall_context complete
+shared-membership upgrade -> legacy_unqualified
+unqualified fixture refused by the gate
+symlink probe victim intact: True | mode 0o600

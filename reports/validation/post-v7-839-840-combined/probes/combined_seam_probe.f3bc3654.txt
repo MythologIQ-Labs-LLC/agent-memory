@@ -1,0 +1,14 @@
+P1 writer sees memory_ref/source_ref: True True
+P1 colleague: text True | private refs hidden True | receipt mentions private ref/text: False
+P1 other project: empty items 0 | receipt names fact id: False
+P1 other tenant refused by runtime: RuntimeRecoveryError
+P1 spoofed host-declared actor_id gets writer provenance (documented host-binding limit): True
+P2 forget committed: True
+P2 after forget (same handle): deleted text absent True | deleted id in package/receipts: False True
+P2 after restart: deleted text absent True | receipts durable: 6 | deleted id anywhere in events: True
+P3 receipts unchanged after persist failure: True | store usable: True
+P3 after reopen receipts: 6 unique ids: True
+P4 pending store refused by gate before any recall_context
+P4 plain open delivers context from the pending store (opt-in limit): complete receipt written: 1
+P5 gate first open: victim intact True status fresh
+P6 recall() AST identical to v7 base: True | open() changed: False | methods changed: ['_recall_document']
