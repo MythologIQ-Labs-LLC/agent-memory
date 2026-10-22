@@ -65,7 +65,11 @@ framing, and tool schemas provided by the official SDK.
 
 - memory_remember(key, text): explicit persisted write with
   source_ref=mcp:agent-observation; no automatic conversation ingestion.
-- memory_get(key): governed exact-key recall. No direct database access.
+- memory_get(key): governed recall plus **strict provenance-key verification**.
+  The model receives only facts whose resolved memory_ref exactly matches
+  the requested key. A missing/withheld/out-of-budget key returns
+  lookup_status=not_found_or_unavailable, **not** a guessed nearby memory and
+  not proof that the key never existed. No direct database access.
 - memory_find(question, max_items=5, experimental_selectivity=False):
   governed recall_context within bounded delivery budgets, defaulting to
   all_returned. The experimental #819 selector must be opted into deliberately.
