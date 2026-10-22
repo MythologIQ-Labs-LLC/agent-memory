@@ -6,6 +6,7 @@ import json
 import os
 from dataclasses import asdict, dataclass, replace
 from pathlib import Path
+import secrets
 import shlex
 import subprocess
 from typing import Any, Mapping, Sequence
@@ -108,11 +109,46 @@ def save_config(hermes_home: str | Path, config: IntegrationConfig) -> Path:
     config.validate()
     path = config_path(hermes_home)
     path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_suffix(".tmp")
-    tmp.write_text(json.dumps(config.to_dict(), indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    os.chmod(tmp, 0o600)
-    os.replace(tmp, path)
+    payload = (json.dumps(config.to_dict(), indent=2, sort_keys=True) + "\n").encode("utf-8")
+    _replace_private(path, payload)
     return path
+
+
+def _replace_private(path: Path, payload: bytes) -> None:
+    """Stage into an exclusive, unpredictable 0600 temporary, then replace atomically.
+
+    A shared config.tmp could follow a symlink, hang on a FIFO or truncate another
+    writer's file. Clean up only the staging file allocated by this writer.
+    """
+    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_BINARY", 0)
+    for _ in range(8):
+        temporary = path.with_name(f".{path.name}.{os.getpid()}.{secrets.token_hex(8)}.tmp")
+        try:
+            descriptor = os.open(temporary, flags, 0o600)
+            break
+        except FileExistsError:
+            continue
+    else:
+        raise FileExistsError(f"no unused temporary name for {path.name}")
+    try:
+        try:
+            if hasattr(os, "fchmod"):
+                os.fchmod(descriptor, 0o600)
+            else:  # Windows does not expose POSIX permission bits in the same way
+                os.chmod(temporary, 0o600)
+            handle = os.fdopen(descriptor, "wb")
+        except BaseException:
+            os.close(descriptor)
+            raise
+        with handle:
+            handle.write(payload)
+        os.replace(temporary, path)
+    except BaseException:
+        try:
+            os.unlink(temporary)
+        except OSError:
+            pass
+        raise
 
 
 def detect_hermes_revision() -> str:
