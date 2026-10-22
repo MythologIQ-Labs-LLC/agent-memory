@@ -16,7 +16,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from mcp import Client
+from mcp import Client, StdioServerParameters
 
 HERE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(HERE))
@@ -109,6 +109,48 @@ class ActualMcpConsumerLoop(unittest.IsolatedAsyncioTestCase):
                     }), "evidence")
                     self.assertEqual(result["evidence"], [])
                     self.assertNotIn("Neovim", repr(result))
+
+    async def test_real_stdio_subprocess_reconnects_to_durable_memory(self):
+        # An in-process Client(mcp) verifies the protocol API, but does not
+        # prove that a harness can start a subprocess or communicate over
+        # JSON-RPC stdio. This control covers the actual user-visible path.
+        with tempfile.TemporaryDirectory() as temp:
+            env = {
+                "AGENT_MEMORY_MCP_ROOT": str(Path(temp) / "store"),
+                "AGENT_MEMORY_MCP_TENANT": "tenant:stdio",
+                "AGENT_MEMORY_MCP_ACTOR": "agent:stdio",
+                "AGENT_MEMORY_MCP_SCOPE": "project:stdio",
+            }
+            params = StdioServerParameters(
+                command=sys.executable, args=[str(HERE / "server.py")], env=env,
+            )
+            async with Client(params) as client:
+                tools = await client.list_tools()
+                self.assertEqual(
+                    {tool.name for tool in tools.tools},
+                    {"memory_remember", "memory_get", "memory_find"},
+                )
+                created = _result(await client.call_tool("memory_remember", {
+                    "key": "memory:agent:editor",
+                    "text": "Our agent writes Python using Neovim.",
+                }), "committed")
+                self.assertTrue(created["committed"], created)
+                queried = _result(await client.call_tool("memory_find", {
+                    "question": "Which editor does our agent use for Python?",
+                    "max_items": 5,
+                }), "evidence")
+                self.assertTrue(any(
+                    "Neovim" in item["content"] for item in queried["evidence"]
+                ), queried)
+            # Spawn an entirely new process: tests OS-level persistence, not
+            # just reopening an in-memory MCP object on the same interpreter.
+            async with Client(params) as reconnected:
+                recovered = _result(await reconnected.call_tool("memory_get", {
+                    "key": "memory:agent:editor",
+                }), "evidence")
+                self.assertTrue(any(
+                    "Neovim" in item["content"] for item in recovered["evidence"]
+                ), recovered)
 
     async def test_malformed_tool_input_cannot_set_authority(self):
         with tempfile.TemporaryDirectory() as temp:
