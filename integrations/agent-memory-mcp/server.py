@@ -14,8 +14,15 @@ or a production-qualified release profile.
 """
 from __future__ import annotations
 
+from pathlib import Path
+import sys
+
 from mcp.server import MCPServer
 
+# The MCP CLI imports servers by file path. That import does not always add the
+# server file's directory to sys.path, unlike `python server.py` over stdio.
+# Resolve this repo-local integration module explicitly for both launch modes.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 from bridge import HostConfig, LocalMemoryBridge
 
 mcp = MCPServer(
