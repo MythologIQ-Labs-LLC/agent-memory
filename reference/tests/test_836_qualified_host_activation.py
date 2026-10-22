@@ -30,6 +30,42 @@ class QualifiedHostActivation(unittest.TestCase):
         shutil.copytree(LEGACY / store, target)
         return target
 
+    def test_qualified_label_with_new_legacy_facts_is_refused(self):
+        class StaleQualified:
+            closed = False
+
+            def legacy_upgrade_status(self):
+                return {"status": "legacy_qualified", "legacy_facts": 1}
+
+            def close(self):
+                self.closed = True
+
+        handle = StaleQualified()
+        with patch.object(AgentMemory, "open", return_value=handle):
+            with self.assertRaises(UnqualifiedLegacyStoreError):
+                with open_qualified_memory("ignored", **IDENTITY):
+                    self.fail("stale qualification label reached consumer")
+        self.assertTrue(handle.closed)
+
+    def test_missing_and_malformed_legacy_counts_fail_closed(self):
+        for count in (None, False, "0"):
+            with self.subTest(count=count):
+                class InvalidCounter:
+                    closed = False
+
+                    def legacy_upgrade_status(self):
+                        return {"status": "fresh", "legacy_facts": count}
+
+                    def close(self):
+                        self.closed = True
+
+                handle = InvalidCounter()
+                with patch.object(AgentMemory, "open", return_value=handle):
+                    with self.assertRaises(UnqualifiedLegacyStoreError):
+                        with open_qualified_memory("ignored", **IDENTITY):
+                            self.fail("inconsistent legacy counter reached consumer")
+                self.assertTrue(handle.closed)
+
     def test_packaged_alias_is_exact_api_layer_module(self):
         import importlib
         alias = importlib.import_module("agentmem_ref.host_activation")
