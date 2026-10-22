@@ -54,6 +54,40 @@ class QualifiedHostActivation(unittest.TestCase):
                 self.assertEqual(memory.legacy_upgrade_status()["status"], "legacy_qualified")
                 self.assertIsInstance(memory.recall("Quillon ferry berth"), dict)
 
+    def test_unknown_status_fails_closed_and_closes_handle(self):
+        class UnknownStatus:
+            closed = False
+
+            def legacy_upgrade_status(self):
+                return {"status": "future_or_corrupt"}
+
+            def close(self):
+                self.closed = True
+
+        handle = UnknownStatus()
+        with patch.object(AgentMemory, "open", return_value=handle):
+            with self.assertRaises(UnqualifiedLegacyStoreError):
+                with open_qualified_memory("ignored"):
+                    self.fail("unknown status reached consumer")
+        self.assertTrue(handle.closed)
+
+    def test_status_inspection_failure_does_not_leak_handle(self):
+        class FailingStatus:
+            closed = False
+
+            def legacy_upgrade_status(self):
+                raise RuntimeError("status read refused")
+
+            def close(self):
+                self.closed = True
+
+        handle = FailingStatus()
+        with patch.object(AgentMemory, "open", return_value=handle):
+            with self.assertRaisesRegex(RuntimeError, "status read refused"):
+                with open_qualified_memory("ignored"):
+                    self.fail("unverified status reached consumer")
+        self.assertTrue(handle.closed)
+
     def test_quarantined_upgrade_remains_blocked(self):
         with tempfile.TemporaryDirectory() as directory:
             target = self._copy(directory, "shared-membership")
