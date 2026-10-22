@@ -38,18 +38,24 @@ class SaveConfigTemporary(unittest.TestCase):
     def assert_saved(self) -> None:
         self.assertFalse(self.path.is_symlink())
         self.assertEqual(json.loads(self.path.read_text(encoding="utf-8")), CONFIG.to_dict())
-        self.assertEqual(self.path.stat().st_mode & 0o777, 0o600)
+        if os.name != "nt":  # POSIX permission bits; Windows ACL/mode semantics differ
+            self.assertEqual(self.path.stat().st_mode & 0o777, 0o600)
 
     def test_a_symlink_at_the_old_fixed_name_is_never_followed(self):  # FAIL-FIRST
         target = self.base / "outside.txt"
         target.write_text("must not change\n")
         target.chmod(0o644)
-        os.symlink(target, self.path.with_suffix(".tmp"))
+        try:
+            os.symlink(target, self.path.with_suffix(".tmp"))
+        except (OSError, NotImplementedError) as exc:
+            self.skipTest(f"symlink not available on this host: {exc}")
         save_config(self.home, CONFIG)
         self.assertEqual(target.read_text(), "must not change\n")
-        self.assertEqual(target.stat().st_mode & 0o777, 0o644)
+        if os.name != "nt":
+            self.assertEqual(target.stat().st_mode & 0o777, 0o644)
         self.assert_saved()
 
+    @unittest.skipUnless(hasattr(os, "mkfifo"), "POSIX FIFO support required")
     def test_a_fifo_at_the_old_fixed_name_does_not_block(self):  # FAIL-FIRST
         os.mkfifo(self.path.with_suffix(".tmp"))
         script = (
@@ -83,6 +89,7 @@ class SaveConfigTemporary(unittest.TestCase):
         self.assertEqual(self.temporaries(), [taken.name])
         self.assert_saved()
 
+    @unittest.skipIf(os.name == "nt", "POSIX mode guarantee; Windows ACL semantics differ")
     def test_the_config_is_0600_whatever_the_umask(self):
         previous = os.umask(0)
         try:
