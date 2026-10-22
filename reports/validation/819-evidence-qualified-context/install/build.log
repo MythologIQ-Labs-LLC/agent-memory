@@ -1534,7 +1534,7 @@ running install_egg_info
 Copying reference/agent_memory_reference.egg-info to build/bdist.linux-x86_64/wheel/./agent_memory_reference-0.2.0-py3.12.egg-info
 running install_scripts
 creating build/bdist.linux-x86_64/wheel/agent_memory_reference-0.2.0.dist-info/WHEEL
-creating '/tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/819/build/dist/.tmp-244n57fo/agent_memory_reference-0.2.0-py3-none-any.whl' and adding 'build/bdist.linux-x86_64/wheel' to it
+creating '/tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/819/build/dist/.tmp-henwoyqx/agent_memory_reference-0.2.0-py3-none-any.whl' and adding 'build/bdist.linux-x86_64/wheel' to it
 adding 'agent_memory_reference-0.2.0.dist-info/licenses/LICENSE'
 adding 'agent_memory_reference-0.2.0.dist-info/licenses/NOTICE'
 adding 'agentmem_ref/__init__.py'
