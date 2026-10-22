@@ -15,6 +15,7 @@ import unittest
 from pathlib import Path
 
 from agentmem_ref import AgentMemory
+from agentmem_ref.memory import procedural_memory as pm
 
 PROFILE = "evidence_qualified"
 TENANT = "tenant:quality-dev"
@@ -112,18 +113,39 @@ class QualityControls(unittest.TestCase):
         self.assertNotIn("VIOLET-17", repr(context))
         self.assertEqual(delivered(context), [])
 
-    def test_correction_and_restart_never_reveal_superseded_text(self):
+    def test_correction_forget_and_restart_obey_lifecycle(self):
         self.remember("memory:reading", "The reading lamp is magenta.")
-        context = self.selected("color of reading lamp")
-        self.assertIn("The reading lamp is magenta.", delivered(context))
-        # This is a product workflow check; explicit adjudication evidence is
-        # exercised by the existing #691 full-lifecycle test suite.
-        self.memory.close()
-        self.memory = self.open()
         self.assertIn("The reading lamp is magenta.", delivered(
             self.selected("color of reading lamp")
         ))
-
+        skill = pm.SkillArtifact(
+            skill_id="skill:quality-lifecycle", version=1,
+            purpose="explicit correction and forgetting", scope=SCOPE,
+            isolation_domain_refs=(TENANT, SCOPE),
+            required_isolation_domain_refs=(TENANT, SCOPE),
+            procedure_markdown="# Verify\nConfirm the source's updated state.",
+            provenance_refs=("evidence:quality-dev",),
+        )
+        evidence = pm.evidence_for(skill)
+        changed = self.memory.correct(
+            "memory:reading", "The reading lamp is now jade green.", evidence=evidence
+        )
+        self.assertTrue(changed["committed"], changed)
+        context = self.selected("color of reading lamp")
+        self.assertIn("The reading lamp is now jade green.", delivered(context))
+        self.assertNotIn("magenta", repr(context))
+        self.memory.close()
+        self.memory = self.open()
+        self.assertIn("The reading lamp is now jade green.", delivered(
+            self.selected("color of reading lamp")
+        ))
+        removed = self.memory.forget("memory:reading", evidence=evidence)
+        self.assertTrue(removed["committed"], removed)
+        self.memory.close()
+        self.memory = self.open()
+        after = self.selected("color of reading lamp")
+        self.assertNotIn("jade green", repr(after))
+        self.assertNotIn("magenta", repr(after))
 
 if __name__ == "__main__":
     unittest.main()
