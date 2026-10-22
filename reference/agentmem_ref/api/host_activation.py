@@ -36,7 +36,15 @@ def open_qualified_memory(
     )
     try:
         posture = memory.legacy_upgrade_status()
-        if posture.get("status") not in ("fresh", "legacy_qualified"):
+        # A persisted qualification label is not enough if new unqualified
+        # legacy rows have appeared since the recorded migration.
+        status = posture.get("status")
+        remaining = posture.get("legacy_facts")
+        if (
+            status not in ("fresh", "legacy_qualified")
+            or type(remaining) is not int
+            or remaining != 0
+        ):
             raise UnqualifiedLegacyStoreError(
                 "Agent Memory activation refused: legacy derivation state is not qualified"
             )
