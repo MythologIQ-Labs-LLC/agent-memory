@@ -1,0 +1,2 @@
+e399c86655ba709c965981363c51fe36dc354a87743b4e6622016ccd6e80b9c0  /tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/r839/out-d489ac19/install/dist/agent_memory_reference-0.2.0-py3-none-any.whl
+fa4abd1e505d606d67fd38f146dcbfed628e4456ec5619e875600a8665040627  /tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/r839/out-d489ac19/install/dist/agent_memory_reference-0.2.0.tar.gz

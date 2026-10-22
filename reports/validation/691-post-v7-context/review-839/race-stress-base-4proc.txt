@@ -1,0 +1,6 @@
+TOTAL {"admitted_not_first": 0, "checkpoint_conflict": 320, "head_moved": 0, "open_recovery_error": 11, "refused": 225}
+round 21: {'checkpoint_conflict': 9, 'refused': 5, 'remember_recovery_error': 1, 'head_moved': 0, 'admitted_not_first': 0} | ['cannot restore governance after SQLite rollback']
+round 22: {'refused': 5, 'remember_recovery_error': 1, 'checkpoint_conflict': 9, 'head_moved': 0, 'admitted_not_first': 0} | ['cannot restore governance after SQLite rollback']
+TOTAL {"admitted_not_first": 0, "checkpoint_conflict": 358, "head_moved": 0, "open_recovery_error": 7, "refused": 205, "remember_recovery_error": 2}
+TOTAL {"admitted_not_first": 0, "checkpoint_conflict": 365, "head_moved": 0, "open_recovery_error": 5, "refused": 210}
+TOTAL {"admitted_not_first": 0, "checkpoint_conflict": 335, "head_moved": 0, "open_recovery_error": 9, "refused": 220}

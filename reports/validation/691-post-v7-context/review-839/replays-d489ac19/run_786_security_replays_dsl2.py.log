@@ -1,0 +1,6 @@
+cross-scope-write-authority-denial-v3: PASS (13/13 cases) report sha256 6ab2da46db6681dddf7fb657fb71636e2d458ade0cb81df0ed149946d0ddfb1c
+  - every expectation held on a clean source tree
+deleted-lineage-generations-and-restart-v3: PASS (10/10 cases) report sha256 d6fd3219372f52a43a0be8aada2f9d356bcc929d5cfbb87006532fd98c817a46
+  - every expectation held on a clean source tree
+public-tombstone-redaction-and-observer-separation-v3: PASS (8/8 cases) report sha256 2cea6f861d93885333307f3d540d5e25607d34bb7ecfcf602790d37c85252af2
+  - every expectation held on a clean source tree

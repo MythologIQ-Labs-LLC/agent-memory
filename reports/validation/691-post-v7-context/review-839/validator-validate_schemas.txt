@@ -1,0 +1,1 @@
+Validated 75 schema(s), 64 fixture memory unit(s), 5 audit event(s), 2 governance projection(s), and 19 source-rights record(s).

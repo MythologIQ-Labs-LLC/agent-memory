@@ -1,0 +1,44 @@
+{
+  "agent_memory_revision": "8964d6fd8603f9a6ecab4e094c6c3ea490784f5e",
+  "authority_effect": "none",
+  "backend": "agent_memory",
+  "declaration_blob": "7de94f11d7d521f07d2fe22317662ac6f92f89fa",
+  "evidence_class": "same_harness_external_candidate",
+  "full_selection": true,
+  "granularity": "turn",
+  "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "lane_digest_sha256": "9a1dab91f13a7652a181f01c35ac85c941e8be2b2538f783bc3d41c2c4ad4f6d",
+  "lane_file": "reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v7.json",
+  "lane_id": "longmemeval-s-retrieval-parity-v7",
+  "local_execution_notes": {
+    "venv": "venv312-lme"
+  },
+  "mem0_optional_components": {
+    "fastembed_installed": false,
+    "spacy_installed": false
+  },
+  "resolved_packages": {
+    "agent-memory-reference": "0.2.0",
+    "mem0ai": null,
+    "numpy": null,
+    "onnxruntime": null,
+    "openai": null,
+    "posthog": null,
+    "qdrant-client": null,
+    "sentence-transformers": null,
+    "tokenizers": null,
+    "torch": null
+  },
+  "runner": "local cloud container, Linux-6.18.44-fc-v140-x86_64-with-glibc2.39, Python 3.12.3 (not a GitHub-hosted runner)",
+  "runner_backend": "agent_memory",
+  "runtime_baseline_line": "undeclared protected change: reference/agentmem_ref/api/context_package.py\nundeclared protected change: reference/agentmem_ref/context_package.py\ndeclared blob mismatch for reference/agentmem_ref/api/surface.py: declared ba8924d450139f6ef7ea322bb2b3b021139c7e8d, candidate 66b1ee456738c81f9d1a83d75bd6e1207f84b3f3\ndeclared blob mismatch for reference/agentmem_ref/runtime/adapter.py: declared 2c0d3b6d2fbca899afe0d021b563064e91659f77, candidate 85da3030b4cc5ffc132f5572ca44e40933ca2f43",
+  "runtime_baseline_state": "FAIL",
+  "source_blobs": {
+    "reference/amb_mem0_explicit_bridge.py": "ce41b1f5766b99cb968b798be3ad6d37c3283228",
+    "reference/longmemeval_mem0_explicit_bridge.py": "08366b72ac0d76fdc0754a8182e3b6fd61cb1912",
+    "reference/run_longmemeval.py": "6b9c237380f1d527e564161c2dac7fe32ada0ef9"
+  },
+  "subset_size": "0",
+  "upstream_revision": "9e0b455f4ef0e2ab8f2e582289761153549043fc",
+  "workflow_run_id": "parity-839-turn"
+}

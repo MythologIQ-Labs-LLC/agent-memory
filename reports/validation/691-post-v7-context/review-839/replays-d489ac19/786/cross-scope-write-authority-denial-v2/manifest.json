@@ -1,0 +1,23 @@
+{
+ "attestation": "none: hashes bind contents for review; they are not signatures and confer no acceptance",
+ "command": "python reference/run_786_security_replays.py --all",
+ "fixture": {
+  "path": "reference/fixtures/786-security-replays/cross-scope-write-authority-denial-v2.json",
+  "sha256": "9088c6f7704d221384431ce7ce8cf419691275b66ad05754822398f9528a7fed"
+ },
+ "observations_sha256": "0507a3a89cdf57b32723baade74aa639b814fb0d67172e715f65ba2ef38cd105",
+ "replay_id": "cross-scope-write-authority-denial-v2",
+ "report": {
+  "path": "report.json",
+  "sha256": "d7a01221a9ecad03c4b32a1760b1ed643020e328ed4de21a525909a68e35b9c3"
+ },
+ "runner": {
+  "path": "reference/run_786_security_replays.py",
+  "sha256": "21db05148c369815fa154bfa83db0b3b35f6c4712596ec0f137002a6611d8269",
+  "version": "786-security-replay-runner/1"
+ },
+ "runtime_tree": "83f0ff9992021f1d41b935c18883d0aa24d287c2",
+ "schema": "786-security-replay-manifest/1",
+ "source_commit": "d489ac193140e56aa8a8c664fc75f7d3396277b2",
+ "verdict": "PASS"
+}

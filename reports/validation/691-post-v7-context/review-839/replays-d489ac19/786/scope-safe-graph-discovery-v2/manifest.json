@@ -1,0 +1,28 @@
+{
+ "attestation": "none: hashes bind contents for review; they are not signatures and confer no acceptance",
+ "command": "python reference/run_786_security_replays_dsl4.py --all",
+ "fixture": {
+  "path": "reference/fixtures/786-security-replays/scope-safe-graph-discovery-v2.json",
+  "sha256": "494d6c278dc3b695184b06790cc28e0502205036cc83b97ebcdffd1141dea4af"
+ },
+ "observations_sha256": "d6648bc2498e6d1cf10366e93569c7dabd0febe30b8a150ab686a2209b8a310e",
+ "replay_id": "scope-safe-graph-discovery-v2",
+ "report": {
+  "path": "report.json",
+  "sha256": "db04b31a0678fce029edc6864734343fb37b3417e5fc5174fb8e90b99a12eb72"
+ },
+ "runner": {
+  "path": "reference/run_786_security_replays_dsl4.py",
+  "sha256": "860607736b5c455097c055b32b723b7ca25598eb5766ef719dcd3edfa63a5529",
+  "version": "786-security-replay-runner/4"
+ },
+ "runner_root": {
+  "path": "reference/run_786_security_replays.py",
+  "sha256": "21db05148c369815fa154bfa83db0b3b35f6c4712596ec0f137002a6611d8269",
+  "version": "786-security-replay-runner/1"
+ },
+ "runtime_tree": "83f0ff9992021f1d41b935c18883d0aa24d287c2",
+ "schema": "786-security-replay-manifest/4",
+ "source_commit": "d489ac193140e56aa8a8c664fc75f7d3396277b2",
+ "verdict": "PASS"
+}
