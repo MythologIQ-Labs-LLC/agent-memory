@@ -1,9 +1,6 @@
 # #786 cross-scope write authority: a live logical memory is writable only by its scope
 
-**Status:** IMPLEMENTED and TESTED on `claude/eager-dirac-bftkfg-786-write-authority`
-(stacked on PR #784 @ `060e7cd`); INDEPENDENTLY REVIEWED at `36a6ef4d` with every confirmed finding remediated (section below); NOT DECLARED
-(protected change outside the published v6 and frozen v7 declarations), NOT QUALIFIED as a
-baseline successor, NOT MERGED.
+**Current status (2026-10-22):** **IMPLEMENTED, DECLARED AND LOCALLY QUALIFIED AS PART OF THE DRAFT v7 TRANSITION; NOT YET ACCEPTED OR PUBLISHED.** The #786 write-target fix and subsequent #809 writer-authorized derivation repair are integrated into [cumulative draft PR #836](https://github.com/MythologIQ-Labs-LLC/agent-memory/pull/836) (head `72d6a903`, protected runtime `2ad4cf23`, declaration blob `7de94f11`). Its frozen v7 security replay families are committed and reverified, and the full candidate source suite recorded 3,159 passes and zero failures. The equivalence checker is `TRANSITION`, not `PASS`; the accepted/public baseline remains v6. Independent security owner and public contract `1.8.0` acceptance are outstanding (controller [#410](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/410)). The older review findings, branch SHAs and not-yet-declared state below describe their **historical, revision-bound checkpoints**; they must not be read as the current delivery status.
 
 ## The invariant
 
