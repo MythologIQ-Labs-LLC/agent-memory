@@ -1,0 +1,16 @@
+
+==================================== ERRORS ====================================
+__ ERROR collecting reference/tests/test_819_evidence_qualified_selection.py ___
+ImportError while importing test module '/tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/wt/base819/reference/tests/test_819_evidence_qualified_selection.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+reference/tests/test_819_evidence_qualified_selection.py:18: in <module>
+    from agentmem_ref.api import context_package, context_selection
+E   ImportError: cannot import name 'context_selection' from 'agentmem_ref.api' (/tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/wt/base819/reference/agentmem_ref/api/__init__.py)
+=========================== short test summary info ============================
+ERROR reference/tests/test_819_evidence_qualified_selection.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.44s

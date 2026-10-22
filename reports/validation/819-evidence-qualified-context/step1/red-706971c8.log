@@ -1,0 +1,432 @@
+FFFFFFF                                                                  [100%]
+=================================== FAILURES ===================================
+______ QualityControls.test_correction_forget_and_restart_obey_lifecycle _______
+
+self = <tests.test_819_served_context_quality_contract.QualityControls testMethod=test_correction_forget_and_restart_obey_lifecycle>
+
+    def test_correction_forget_and_restart_obey_lifecycle(self):
+        self.remember("memory:reading", "The reading lamp is magenta.")
+        self.assertIn("The reading lamp is magenta.", delivered(
+>           self.selected("color of reading lamp")
+        ))
+
+reference/tests/test_819_served_context_quality_contract.py:119: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+reference/tests/test_819_served_context_quality_contract.py:58: in selected
+    return self.memory.recall_context(
+reference/agentmem_ref/api/surface.py:416: in wrapper
+    return method(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <agentmem_ref.api.surface.AgentMemory object at 0x7f371e861dc0>
+query = 'color of reading lamp', max_items = 10, max_chars_per_item = 2000
+max_total_chars = 8000, max_tokens = None
+recall_kwargs = {'consumer_profile': 'evidence_qualified'}
+
+    @_serialized
+    def recall_context(
+        self,
+        query: str,
+        *,
+        max_items: int = context_package.DEFAULT_MAX_ITEMS,
+        max_chars_per_item: int = context_package.DEFAULT_MAX_CHARS_PER_ITEM,
+        max_total_chars: int = context_package.DEFAULT_MAX_TOTAL_CHARS,
+        max_tokens: int | None = None,
+        **recall_kwargs,
+    ) -> dict:
+        """Recall, then resolve the content of exactly the returned facts (#691, candidate
+        package ``agent-memory-context/0.1.0``; ``recall()`` is unchanged).
+    
+        The recall and the resolution run under one hold of the runtime-owned serialization
+        lock, so no correction, deletion or dispute interleaves. Each returned fact is re-checked
+        against admission and the #777 public withholding predicate before its text is read;
+        failures resolve to ``unresolved`` without content. ``max_items`` is the recall's return
+        budget; the character and token limits bound the content (see
+        ``api.context_package``). Memory text is untrusted evidence and grants nothing.
+    
+        Content is delivered only under the handle's own authority: the scope and identity
+        overrides ``recall`` accepts from a privileged host (``target_domain_refs``,
+        ``project_ref``, ``task_ref``, ``principal_ref``, ``purpose``) are refused here; a host
+        that needs another scope opens a handle for it. ``logical_memory_refs``,
+        ``temporal_intent`` and ``reference_time`` are accepted as for ``recall``.
+        """
+        self._require_open()
+        refused = sorted(set(recall_kwargs) - _CONTEXT_RECALL_KWARGS)
+        if refused:
+>           raise TypeError(f"recall_context does not accept {refused}: content is delivered only under the "
+                            "handle's own scope and identity; budget is max_items")
+E           TypeError: recall_context does not accept ['consumer_profile']: content is delivered only under the handle's own scope and identity; budget is max_items
+
+reference/agentmem_ref/api/surface.py:1127: TypeError
+_ QualityControls.test_exact_logical_identity_is_not_discarded_by_word_overlap_heuristics _
+
+self = <tests.test_819_served_context_quality_contract.QualityControls testMethod=test_exact_logical_identity_is_not_discarded_by_word_overlap_heuristics>
+
+    def test_exact_logical_identity_is_not_discarded_by_word_overlap_heuristics(self):
+        needed = self.remember(
+            "memory:precise-id", "The maintenance waiver permits a temporary expansion."
+        )
+>       context = self.selected("the signed exception", logical_memory_refs=("memory:precise-id",))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+reference/tests/test_819_served_context_quality_contract.py:95: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+reference/tests/test_819_served_context_quality_contract.py:58: in selected
+    return self.memory.recall_context(
+reference/agentmem_ref/api/surface.py:416: in wrapper
+    return method(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <agentmem_ref.api.surface.AgentMemory object at 0x7f371e6ffdd0>
+query = 'the signed exception', max_items = 10, max_chars_per_item = 2000
+max_total_chars = 8000, max_tokens = None
+recall_kwargs = {'consumer_profile': 'evidence_qualified', 'logical_memory_refs': ('memory:precise-id',)}
+
+    @_serialized
+    def recall_context(
+        self,
+        query: str,
+        *,
+        max_items: int = context_package.DEFAULT_MAX_ITEMS,
+        max_chars_per_item: int = context_package.DEFAULT_MAX_CHARS_PER_ITEM,
+        max_total_chars: int = context_package.DEFAULT_MAX_TOTAL_CHARS,
+        max_tokens: int | None = None,
+        **recall_kwargs,
+    ) -> dict:
+        """Recall, then resolve the content of exactly the returned facts (#691, candidate
+        package ``agent-memory-context/0.1.0``; ``recall()`` is unchanged).
+    
+        The recall and the resolution run under one hold of the runtime-owned serialization
+        lock, so no correction, deletion or dispute interleaves. Each returned fact is re-checked
+        against admission and the #777 public withholding predicate before its text is read;
+        failures resolve to ``unresolved`` without content. ``max_items`` is the recall's return
+        budget; the character and token limits bound the content (see
+        ``api.context_package``). Memory text is untrusted evidence and grants nothing.
+    
+        Content is delivered only under the handle's own authority: the scope and identity
+        overrides ``recall`` accepts from a privileged host (``target_domain_refs``,
+        ``project_ref``, ``task_ref``, ``principal_ref``, ``purpose``) are refused here; a host
+        that needs another scope opens a handle for it. ``logical_memory_refs``,
+        ``temporal_intent`` and ``reference_time`` are accepted as for ``recall``.
+        """
+        self._require_open()
+        refused = sorted(set(recall_kwargs) - _CONTEXT_RECALL_KWARGS)
+        if refused:
+>           raise TypeError(f"recall_context does not accept {refused}: content is delivered only under the "
+                            "handle's own scope and identity; budget is max_items")
+E           TypeError: recall_context does not accept ['consumer_profile']: content is delivered only under the handle's own scope and identity; budget is max_items
+
+reference/agentmem_ref/api/surface.py:1127: TypeError
+_ QualityControls.test_no_safe_answer_does_not_serve_distractors_as_an_answer __
+
+self = <tests.test_819_served_context_quality_contract.QualityControls testMethod=test_no_safe_answer_does_not_serve_distractors_as_an_answer>
+
+    def test_no_safe_answer_does_not_serve_distractors_as_an_answer(self):
+        self.remember("memory:other-event", "The autumn science festival begins Friday.")
+        self.remember("memory:venue", "The moon exhibit has a new display case.")
+>       context = self.selected("What time does the lunar eclipse committee meet?")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+reference/tests/test_819_served_context_quality_contract.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+reference/tests/test_819_served_context_quality_contract.py:58: in selected
+    return self.memory.recall_context(
+reference/agentmem_ref/api/surface.py:416: in wrapper
+    return method(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <agentmem_ref.api.surface.AgentMemory object at 0x7f371e2a4c80>
+query = 'What time does the lunar eclipse committee meet?', max_items = 10
+max_chars_per_item = 2000, max_total_chars = 8000, max_tokens = None
+recall_kwargs = {'consumer_profile': 'evidence_qualified'}
+
+    @_serialized
+    def recall_context(
+        self,
+        query: str,
+        *,
+        max_items: int = context_package.DEFAULT_MAX_ITEMS,
+        max_chars_per_item: int = context_package.DEFAULT_MAX_CHARS_PER_ITEM,
+        max_total_chars: int = context_package.DEFAULT_MAX_TOTAL_CHARS,
+        max_tokens: int | None = None,
+        **recall_kwargs,
+    ) -> dict:
+        """Recall, then resolve the content of exactly the returned facts (#691, candidate
+        package ``agent-memory-context/0.1.0``; ``recall()`` is unchanged).
+    
+        The recall and the resolution run under one hold of the runtime-owned serialization
+        lock, so no correction, deletion or dispute interleaves. Each returned fact is re-checked
+        against admission and the #777 public withholding predicate before its text is read;
+        failures resolve to ``unresolved`` without content. ``max_items`` is the recall's return
+        budget; the character and token limits bound the content (see
+        ``api.context_package``). Memory text is untrusted evidence and grants nothing.
+    
+        Content is delivered only under the handle's own authority: the scope and identity
+        overrides ``recall`` accepts from a privileged host (``target_domain_refs``,
+        ``project_ref``, ``task_ref``, ``principal_ref``, ``purpose``) are refused here; a host
+        that needs another scope opens a handle for it. ``logical_memory_refs``,
+        ``temporal_intent`` and ``reference_time`` are accepted as for ``recall``.
+        """
+        self._require_open()
+        refused = sorted(set(recall_kwargs) - _CONTEXT_RECALL_KWARGS)
+        if refused:
+>           raise TypeError(f"recall_context does not accept {refused}: content is delivered only under the "
+                            "handle's own scope and identity; budget is max_items")
+E           TypeError: recall_context does not accept ['consumer_profile']: content is delivered only under the handle's own scope and identity; budget is max_items
+
+reference/agentmem_ref/api/surface.py:1127: TypeError
+_ QualityControls.test_original_governed_recall_ids_and_admission_remain_unchanged _
+
+self = <tests.test_819_served_context_quality_contract.QualityControls testMethod=test_original_governed_recall_ids_and_admission_remain_unchanged>
+
+    def test_original_governed_recall_ids_and_admission_remain_unchanged(self):
+        self.remember("memory:a", "Mara's telescope uses an azimuth mount.")
+        self.remember("memory:b", "Bastien's telescope uses an equatorial mount.")
+        query = "Mara telescope mount"
+        baseline = self.memory.recall(query, budget=10)
+>       self.selected(query)
+
+reference/tests/test_819_served_context_quality_contract.py:103: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+reference/tests/test_819_served_context_quality_contract.py:58: in selected
+    return self.memory.recall_context(
+reference/agentmem_ref/api/surface.py:416: in wrapper
+    return method(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <agentmem_ref.api.surface.AgentMemory object at 0x7f371f382cc0>
+query = 'Mara telescope mount', max_items = 10, max_chars_per_item = 2000
+max_total_chars = 8000, max_tokens = None
+recall_kwargs = {'consumer_profile': 'evidence_qualified'}
+
+    @_serialized
+    def recall_context(
+        self,
+        query: str,
+        *,
+        max_items: int = context_package.DEFAULT_MAX_ITEMS,
+        max_chars_per_item: int = context_package.DEFAULT_MAX_CHARS_PER_ITEM,
+        max_total_chars: int = context_package.DEFAULT_MAX_TOTAL_CHARS,
+        max_tokens: int | None = None,
+        **recall_kwargs,
+    ) -> dict:
+        """Recall, then resolve the content of exactly the returned facts (#691, candidate
+        package ``agent-memory-context/0.1.0``; ``recall()`` is unchanged).
+    
+        The recall and the resolution run under one hold of the runtime-owned serialization
+        lock, so no correction, deletion or dispute interleaves. Each returned fact is re-checked
+        against admission and the #777 public withholding predicate before its text is read;
+        failures resolve to ``unresolved`` without content. ``max_items`` is the recall's return
+        budget; the character and token limits bound the content (see
+        ``api.context_package``). Memory text is untrusted evidence and grants nothing.
+    
+        Content is delivered only under the handle's own authority: the scope and identity
+        overrides ``recall`` accepts from a privileged host (``target_domain_refs``,
+        ``project_ref``, ``task_ref``, ``principal_ref``, ``purpose``) are refused here; a host
+        that needs another scope opens a handle for it. ``logical_memory_refs``,
+        ``temporal_intent`` and ``reference_time`` are accepted as for ``recall``.
+        """
+        self._require_open()
+        refused = sorted(set(recall_kwargs) - _CONTEXT_RECALL_KWARGS)
+        if refused:
+>           raise TypeError(f"recall_context does not accept {refused}: content is delivered only under the "
+                            "handle's own scope and identity; budget is max_items")
+E           TypeError: recall_context does not accept ['consumer_profile']: content is delivered only under the handle's own scope and identity; budget is max_items
+
+reference/agentmem_ref/api/surface.py:1127: TypeError
+__ QualityControls.test_other_project_cannot_deliver_private_project_content ___
+
+self = <tests.test_819_served_context_quality_contract.QualityControls testMethod=test_other_project_cannot_deliver_private_project_content>
+
+    def test_other_project_cannot_deliver_private_project_content(self):
+        self.remember("memory:private", "The design sketch key is VIOLET-17.")
+        self.memory.close()
+        self.memory = self.open(scope="project:unrelated")
+>       context = self.selected("design sketch key")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+reference/tests/test_819_served_context_quality_contract.py:112: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+reference/tests/test_819_served_context_quality_contract.py:58: in selected
+    return self.memory.recall_context(
+reference/agentmem_ref/api/surface.py:416: in wrapper
+    return method(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <agentmem_ref.api.surface.AgentMemory object at 0x7f371e4f1a30>
+query = 'design sketch key', max_items = 10, max_chars_per_item = 2000
+max_total_chars = 8000, max_tokens = None
+recall_kwargs = {'consumer_profile': 'evidence_qualified'}
+
+    @_serialized
+    def recall_context(
+        self,
+        query: str,
+        *,
+        max_items: int = context_package.DEFAULT_MAX_ITEMS,
+        max_chars_per_item: int = context_package.DEFAULT_MAX_CHARS_PER_ITEM,
+        max_total_chars: int = context_package.DEFAULT_MAX_TOTAL_CHARS,
+        max_tokens: int | None = None,
+        **recall_kwargs,
+    ) -> dict:
+        """Recall, then resolve the content of exactly the returned facts (#691, candidate
+        package ``agent-memory-context/0.1.0``; ``recall()`` is unchanged).
+    
+        The recall and the resolution run under one hold of the runtime-owned serialization
+        lock, so no correction, deletion or dispute interleaves. Each returned fact is re-checked
+        against admission and the #777 public withholding predicate before its text is read;
+        failures resolve to ``unresolved`` without content. ``max_items`` is the recall's return
+        budget; the character and token limits bound the content (see
+        ``api.context_package``). Memory text is untrusted evidence and grants nothing.
+    
+        Content is delivered only under the handle's own authority: the scope and identity
+        overrides ``recall`` accepts from a privileged host (``target_domain_refs``,
+        ``project_ref``, ``task_ref``, ``principal_ref``, ``purpose``) are refused here; a host
+        that needs another scope opens a handle for it. ``logical_memory_refs``,
+        ``temporal_intent`` and ``reference_time`` are accepted as for ``recall``.
+        """
+        self._require_open()
+        refused = sorted(set(recall_kwargs) - _CONTEXT_RECALL_KWARGS)
+        if refused:
+>           raise TypeError(f"recall_context does not accept {refused}: content is delivered only under the "
+                            "handle's own scope and identity; budget is max_items")
+E           TypeError: recall_context does not accept ['consumer_profile']: content is delivered only under the handle's own scope and identity; budget is max_items
+
+reference/agentmem_ref/api/surface.py:1127: TypeError
+_ QualityControls.test_paraphrased_relationship_and_plural_query_preserve_evidence _
+
+self = <tests.test_819_served_context_quality_contract.QualityControls testMethod=test_paraphrased_relationship_and_plural_query_preserve_evidence>
+
+    def test_paraphrased_relationship_and_plural_query_preserve_evidence(self):
+        needed = self.remember(
+            "memory:family", "The botanist Mara's father works at Bellweather Observatory."
+        )
+        self.remember(
+            "memory:unrelated", "The Observatory Club orders instrument mounts for its volunteers."
+        )
+>       context = self.selected("Where do Mara's parents work?")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+reference/tests/test_819_served_context_quality_contract.py:78: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+reference/tests/test_819_served_context_quality_contract.py:58: in selected
+    return self.memory.recall_context(
+reference/agentmem_ref/api/surface.py:416: in wrapper
+    return method(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <agentmem_ref.api.surface.AgentMemory object at 0x7f371e8256d0>
+query = "Where do Mara's parents work?", max_items = 10
+max_chars_per_item = 2000, max_total_chars = 8000, max_tokens = None
+recall_kwargs = {'consumer_profile': 'evidence_qualified'}
+
+    @_serialized
+    def recall_context(
+        self,
+        query: str,
+        *,
+        max_items: int = context_package.DEFAULT_MAX_ITEMS,
+        max_chars_per_item: int = context_package.DEFAULT_MAX_CHARS_PER_ITEM,
+        max_total_chars: int = context_package.DEFAULT_MAX_TOTAL_CHARS,
+        max_tokens: int | None = None,
+        **recall_kwargs,
+    ) -> dict:
+        """Recall, then resolve the content of exactly the returned facts (#691, candidate
+        package ``agent-memory-context/0.1.0``; ``recall()`` is unchanged).
+    
+        The recall and the resolution run under one hold of the runtime-owned serialization
+        lock, so no correction, deletion or dispute interleaves. Each returned fact is re-checked
+        against admission and the #777 public withholding predicate before its text is read;
+        failures resolve to ``unresolved`` without content. ``max_items`` is the recall's return
+        budget; the character and token limits bound the content (see
+        ``api.context_package``). Memory text is untrusted evidence and grants nothing.
+    
+        Content is delivered only under the handle's own authority: the scope and identity
+        overrides ``recall`` accepts from a privileged host (``target_domain_refs``,
+        ``project_ref``, ``task_ref``, ``principal_ref``, ``purpose``) are refused here; a host
+        that needs another scope opens a handle for it. ``logical_memory_refs``,
+        ``temporal_intent`` and ``reference_time`` are accepted as for ``recall``.
+        """
+        self._require_open()
+        refused = sorted(set(recall_kwargs) - _CONTEXT_RECALL_KWARGS)
+        if refused:
+>           raise TypeError(f"recall_context does not accept {refused}: content is delivered only under the "
+                            "handle's own scope and identity; budget is max_items")
+E           TypeError: recall_context does not accept ['consumer_profile']: content is delivered only under the handle's own scope and identity; budget is max_items
+
+reference/agentmem_ref/api/surface.py:1127: TypeError
+_ QualityControls.test_positive_task_context_excludes_wrong_subject_and_wrong_object _
+
+self = <tests.test_819_served_context_quality_contract.QualityControls testMethod=test_positive_task_context_excludes_wrong_subject_and_wrong_object>
+
+    def test_positive_task_context_excludes_wrong_subject_and_wrong_object(self):
+        correct = self.remember("memory:canoe", "Liora's canoe is teal.")
+        self.remember("memory:other-canoe", "Bastien's canoe is orange.")
+        self.remember("memory:other-object", "Liora's bicycle is black.")
+>       context = self.selected("What color is Liora's canoe?")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+reference/tests/test_819_served_context_quality_contract.py:67: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+reference/tests/test_819_served_context_quality_contract.py:58: in selected
+    return self.memory.recall_context(
+reference/agentmem_ref/api/surface.py:416: in wrapper
+    return method(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <agentmem_ref.api.surface.AgentMemory object at 0x7f371f308d10>
+query = "What color is Liora's canoe?", max_items = 10
+max_chars_per_item = 2000, max_total_chars = 8000, max_tokens = None
+recall_kwargs = {'consumer_profile': 'evidence_qualified'}
+
+    @_serialized
+    def recall_context(
+        self,
+        query: str,
+        *,
+        max_items: int = context_package.DEFAULT_MAX_ITEMS,
+        max_chars_per_item: int = context_package.DEFAULT_MAX_CHARS_PER_ITEM,
+        max_total_chars: int = context_package.DEFAULT_MAX_TOTAL_CHARS,
+        max_tokens: int | None = None,
+        **recall_kwargs,
+    ) -> dict:
+        """Recall, then resolve the content of exactly the returned facts (#691, candidate
+        package ``agent-memory-context/0.1.0``; ``recall()`` is unchanged).
+    
+        The recall and the resolution run under one hold of the runtime-owned serialization
+        lock, so no correction, deletion or dispute interleaves. Each returned fact is re-checked
+        against admission and the #777 public withholding predicate before its text is read;
+        failures resolve to ``unresolved`` without content. ``max_items`` is the recall's return
+        budget; the character and token limits bound the content (see
+        ``api.context_package``). Memory text is untrusted evidence and grants nothing.
+    
+        Content is delivered only under the handle's own authority: the scope and identity
+        overrides ``recall`` accepts from a privileged host (``target_domain_refs``,
+        ``project_ref``, ``task_ref``, ``principal_ref``, ``purpose``) are refused here; a host
+        that needs another scope opens a handle for it. ``logical_memory_refs``,
+        ``temporal_intent`` and ``reference_time`` are accepted as for ``recall``.
+        """
+        self._require_open()
+        refused = sorted(set(recall_kwargs) - _CONTEXT_RECALL_KWARGS)
+        if refused:
+>           raise TypeError(f"recall_context does not accept {refused}: content is delivered only under the "
+                            "handle's own scope and identity; budget is max_items")
+E           TypeError: recall_context does not accept ['consumer_profile']: content is delivered only under the handle's own scope and identity; budget is max_items
+
+reference/agentmem_ref/api/surface.py:1127: TypeError
+=========================== short test summary info ============================
+FAILED reference/tests/test_819_served_context_quality_contract.py::QualityControls::test_correction_forget_and_restart_obey_lifecycle
+FAILED reference/tests/test_819_served_context_quality_contract.py::QualityControls::test_exact_logical_identity_is_not_discarded_by_word_overlap_heuristics
+FAILED reference/tests/test_819_served_context_quality_contract.py::QualityControls::test_no_safe_answer_does_not_serve_distractors_as_an_answer
+FAILED reference/tests/test_819_served_context_quality_contract.py::QualityControls::test_original_governed_recall_ids_and_admission_remain_unchanged
+FAILED reference/tests/test_819_served_context_quality_contract.py::QualityControls::test_other_project_cannot_deliver_private_project_content
+FAILED reference/tests/test_819_served_context_quality_contract.py::QualityControls::test_paraphrased_relationship_and_plural_query_preserve_evidence
+FAILED reference/tests/test_819_served_context_quality_contract.py::QualityControls::test_positive_task_context_excludes_wrong_subject_and_wrong_object
+7 failed in 1.05s
