@@ -32,7 +32,7 @@ class QualifiedHostActivation(unittest.TestCase):
 
     def test_fresh_store_is_operational(self):
         with tempfile.TemporaryDirectory() as directory:
-            with open_qualified_memory(Path(directory) / "new") as memory:
+            with open_qualified_memory(Path(directory) / "new", **IDENTITY) as memory:
                 self.assertEqual(memory.legacy_upgrade_status()["status"], "fresh")
                 self.assertTrue(memory.remember("memory:first", "ready")["committed"])
 
@@ -67,7 +67,7 @@ class QualifiedHostActivation(unittest.TestCase):
         handle = UnknownStatus()
         with patch.object(AgentMemory, "open", return_value=handle):
             with self.assertRaises(UnqualifiedLegacyStoreError):
-                with open_qualified_memory("ignored"):
+                with open_qualified_memory("ignored", **IDENTITY):
                     self.fail("unknown status reached consumer")
         self.assertTrue(handle.closed)
 
@@ -84,9 +84,26 @@ class QualifiedHostActivation(unittest.TestCase):
         handle = FailingStatus()
         with patch.object(AgentMemory, "open", return_value=handle):
             with self.assertRaisesRegex(RuntimeError, "status read refused"):
-                with open_qualified_memory("ignored"):
+                with open_qualified_memory("ignored", **IDENTITY):
                     self.fail("unverified status reached consumer")
         self.assertTrue(handle.closed)
+
+    def test_missing_host_identity_never_opens_runtime(self):
+        # The package helper must not silently inherit the facade's local
+        # tenant/actor/scope defaults for an operational consumer.
+        with patch.object(AgentMemory, "open", side_effect=AssertionError("opened")) as raw_open:
+            with self.assertRaises(TypeError):
+                with open_qualified_memory("ignored"):
+                    self.fail("missing identity accepted")
+            raw_open.assert_not_called()
+
+    def test_blank_host_identity_never_opens_runtime(self):
+        with patch.object(AgentMemory, "open", side_effect=AssertionError("opened")) as raw_open:
+            with self.assertRaises(ValueError):
+                with open_qualified_memory("ignored", tenant="  ", actor_id="agent:x",
+                                           scope="project:x"):
+                    self.fail("blank identity accepted")
+            raw_open.assert_not_called()
 
     def test_quarantined_upgrade_remains_blocked(self):
         with tempfile.TemporaryDirectory() as directory:
