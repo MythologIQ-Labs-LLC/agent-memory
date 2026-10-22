@@ -374,7 +374,7 @@
           "const": "evidence-qualified-context-selection"
         },
         "policy_version": {
-          "const": "0.2.0"
+          "const": "0.3.0"
         },
         "basis": {
           "const": "post_admission_query_evidence_qualification"
@@ -416,7 +416,9 @@
                   "query_term_evidence",
                   "subject_only_evidence",
                   "ungrounded_subject",
-                  "undetermined_query"
+                  "undetermined_query",
+                  "undetermined_multi_statement",
+                  "attribute_undetermined"
                 ]
               },
               "reason": {
@@ -461,6 +463,9 @@
                 "items": {
                   "type": "string"
                 }
+              },
+              "single_statement": {
+                "type": "boolean"
               }
             }
           }

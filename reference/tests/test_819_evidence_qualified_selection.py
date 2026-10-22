@@ -156,6 +156,53 @@ class ProfileContract(_Store):
         package = self.context("Which car does our family drive?")
         self.assertIn(mine_too, _delivered(package))
 
+    def test_term_absence_is_grounded_only_for_a_single_statement(self):
+        short = self.put("memory:a", "The autumn science festival begins Friday.")
+        long = self.put("memory:b", "The autumn science festival begins Friday. The committee that plans "
+                                    "the eclipse viewing meets afterwards in the same hall.")
+        package = self.context("What time does the lunar eclipse committee meet?")
+        decisions = package["selection"]["decisions"]
+        # the short fact shares no content term with the question: declined
+        if short in decisions:
+            self.assertEqual(decisions[short]["outcome"], "omitted")
+            self.assertEqual(decisions[short]["reason"], "no_query_term_evidence")
+        # the longer one matches ("committee", "eclipse", "meet"); now make one that does not
+        unrelated_long = self.put("memory:c", "The moon exhibit has a new display case. Tickets are sold at the "
+                                              "door. Visitors may bring cameras.")
+        package = self.context("What time does the lunar eclipse committee meet?")
+        decisions = package["selection"]["decisions"]
+        self.assertEqual(decisions[unrelated_long]["outcome"], "delivered")
+        self.assertEqual(decisions[unrelated_long]["evidence"], "undetermined_multi_statement")
+        self.assertEqual(decisions[unrelated_long]["certainty"], "uncertain")
+        self.assertFalse(decisions[unrelated_long]["single_statement"])
+        self.assertIn(long, _delivered(package))
+
+    def test_lowercase_possessive_is_not_a_subject_anchor(self):
+        self.assertEqual(context_selection.possessive_subjects("Which composer's tunes does Tim play?"), frozenset())
+        self.assertEqual(context_selection.possessive_subjects("Which of Tim's tunes does the composer play?"),
+                         frozenset({"tim"}))
+        tim = self.put("memory:a", "Tim loves playing film scores on the piano after work.")
+        package = self.context("Which composer's tunes does Tim enjoy playing on the piano?")
+        self.assertIn(tim, _delivered(package))
+        self.assertEqual(package["selection"]["decisions"][tim]["evidence"], "query_term_evidence")
+
+    def test_first_person_fact_never_mismatches_a_first_person_query(self):
+        mine = self.put("memory:a", "I bought a gift for my brother's graduation at Sarah's shop.")
+        package = self.context("How many days passed between my brother's graduation and the Sunday mass at St. Mary's Church?")
+        self.assertIn(mine, _delivered(package))
+        decision = package["selection"]["decisions"][mine]
+        self.assertNotEqual(decision["outcome"], "omitted")
+
+    def test_attribute_absence_is_grounded_only_for_a_single_statement(self):
+        bike = self.put("memory:a", "Liora's bicycle is black.")
+        diary = self.put("memory:b", "Liora's week was busy. She repainted the boat shed on Monday. "
+                                     "The paddles were ordered on Tuesday.")
+        package = self.context("What color is Liora's canoe?")
+        decisions = package["selection"]["decisions"]
+        self.assertEqual((decisions[bike]["outcome"], decisions[bike]["reason"]), ("omitted", "attribute_unevidenced"))
+        self.assertEqual((decisions[diary]["outcome"], decisions[diary]["evidence"], decisions[diary]["certainty"]),
+                         ("delivered", "attribute_undetermined", "uncertain"))
+
     def test_subject_only_query_keeps_subject_evidence(self):
         canoe = self.put("memory:a", "Liora's canoe is teal.")
         bike = self.put("memory:b", "Liora's bicycle is black.")
@@ -264,6 +311,13 @@ class SelectorUnit(unittest.TestCase):
         self.assertEqual(subject("I moved to Denver.", {"status": "known", "entity": "speaker"}), frozenset())
         self.assertEqual(subject("The canoe was repainted.", {"status": "unknown"}), frozenset())
         self.assertEqual(subject("Bastien's canoe is orange.", None), frozenset({"bastien"}))
+
+    def test_single_statement_is_bounded_sentence_counting(self):
+        single = context_selection.single_statement
+        self.assertTrue(single("Liora's canoe is teal."))
+        self.assertTrue(single("The design sketch key is VIOLET-17"))
+        self.assertFalse(single("One. Two."))
+        self.assertFalse(single("Really? Yes! Fine."))
 
     def test_corroborated_route_is_preserved_without_any_word_overlap(self):
         decision = {"route_provenance": [{"route_id": "lexical"}, {"route_id": "shared_evidence"}],
