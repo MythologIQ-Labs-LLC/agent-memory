@@ -1,2 +1,2 @@
-651c7b3752d9e50b941409089b08e68cbd3c839d30545cd728f25b0c3f7d999c  /tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/819/build/dist/agent_memory_reference-0.2.0-py3-none-any.whl
-8fb574ce5fe894210ab265351433e5de44f622a8768cf57cf887642184222b4e  /tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/819/build/dist/agent_memory_reference-0.2.0.tar.gz
+8c1cf07ab98869f958e76b19e05a5c96936b8189fdef2a406681874832bc4da3  /tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/819/build/dist/agent_memory_reference-0.2.0-py3-none-any.whl
+a3a118e21a9c1d34239eb57a5cbbe56b238387b06fbd6527f18c9428a6448672  /tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/819/build/dist/agent_memory_reference-0.2.0.tar.gz
