@@ -68,6 +68,21 @@ class BridgeTests(unittest.TestCase):
         self.assertEqual(opened[2]["tenant"], "tenant:a")
         self.assertEqual(opened[2]["scope"], "project:local")
 
+    def test_refused_write_is_not_reported_as_remembered(self):
+        refusal = {
+            "committed": False,
+            "fact_uuid": None,
+            "stage": "commit",
+            "outcome": "refuse",
+            "refusal": "governed_write_refused",
+        }
+        with patch.object(FakeMemory, "remember", return_value=refusal):
+            outcome = self.bridge.remember("memory:refused", "Unverified assertion.")
+        self.assertFalse(outcome["committed"])
+        self.assertIsNone(outcome["fact_ref"])
+        self.assertEqual(outcome["refusal"], "governed_write_refused")
+        self.assertEqual(self.closes, ["closed"])
+
     def test_find_returns_bounded_untrusted_evidence_not_a_generated_answer(self):
         result = self.bridge.find("preferred editor", max_items=3)
         self.assertEqual(result["evidence_count"], 1)
