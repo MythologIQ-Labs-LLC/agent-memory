@@ -13,7 +13,7 @@ a consumer-side delivery policy, never authority:
   delivers the content and says so (``certainty: uncertain``), it never converts a lack of word
   overlap into an asserted negative when the fact carries non-lexical evidence.
 
-Decision order for one returned fact (policy ``evidence-qualified-context-selection/0.3.0``):
+Decision order for one returned fact (policy ``evidence-qualified-context-selection/0.3.1``):
 
 1. ``preserved_exact_identity``: a caller-authorised ``logical_memory_refs`` hit (route
    ``exact_logical_identity``). Delivered whatever its wording.
@@ -35,7 +35,9 @@ Decision order for one returned fact (policy ``evidence-qualified-context-select
      possessive such as ``composer's`` names no subject) and the fact grounds a different
      subject the same way or through its persisted write-time proposition entity, and the
      query's subject does not occur in the fact at all → ``subject_mismatch`` (declined). A
-     first-person fact never mismatches a first-person query: the speaker is the subject of both;
+     first-person fact is about its speaker, so a proper-noun possessive inside it (``God's``,
+     ``my friend Rachel's``) is a mention, not its subject: a first-person fact is never declined
+     as a subject mismatch (policy 0.3.1);
    * the query is in the first person (``my``, ``our``, ``I``, ``we``: the subject is the caller)
      and the fact names a third party by proper-noun possessive while carrying no first-person
      marker and no ``speaker`` proposition → ``subject_mismatch`` (declined);
@@ -63,7 +65,7 @@ import re
 from typing import Any, Mapping, Sequence
 
 POLICY_ID = "evidence-qualified-context-selection"
-POLICY_VERSION = "0.3.0"
+POLICY_VERSION = "0.3.1"
 BASIS = "post_admission_query_evidence_qualification"
 EXACT_IDENTITY_ROUTE = "exact_logical_identity"
 LEXICAL_ROUTE = "lexical"
@@ -248,7 +250,7 @@ def qualify(
     subject = grounded_subject(text, proposition)
     record["fact_subjects"] = sorted(subject)
     if not (anchors & fact_terms):
-        if subject and not (anchors & subject) and not (speaker_query and speaker_fact):
+        if subject and not (anchors & subject) and not speaker_fact:
             return {**record, "outcome": "omitted", "reason": "subject_mismatch", "certainty": "grounded"}
         return {**record, "outcome": "delivered", "evidence": "ungrounded_subject", "certainty": "uncertain"}
     others = query_terms - anchors

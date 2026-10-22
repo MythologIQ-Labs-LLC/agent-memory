@@ -193,6 +193,18 @@ class ProfileContract(_Store):
         decision = package["selection"]["decisions"][mine]
         self.assertNotEqual(decision["outcome"], "omitted")
 
+    def test_first_person_fact_is_about_its_speaker_whatever_names_it_mentions(self):
+        # a third-person question anchored on a proper noun must not decline a first-person
+        # memory that mentions another proper noun by possessive: the speaker is its subject
+        mine = self.put("memory:a", "I just came from the Ash Wednesday service at the cathedral; God's grace was the theme.")
+        package = self.context("How many days passed between the Sunday mass at St. Mary's Church and the Ash Wednesday service?")
+        self.assertIn(mine, _delivered(package))
+        self.assertNotEqual(package["selection"]["decisions"][mine]["outcome"], "omitted")
+        # whereas a third-person fact grounded on another subject is still declined
+        theirs = self.put("memory:b", "Bastien's Ash Wednesday service was at the chapel.")
+        package = self.context("Where was Mary's Ash Wednesday service?")
+        self.assertEqual(_omitted(package).get(theirs), "subject_mismatch")
+
     def test_attribute_absence_is_grounded_only_for_a_single_statement(self):
         bike = self.put("memory:a", "Liora's bicycle is black.")
         diary = self.put("memory:b", "Liora's week was busy. She repainted the boat shed on Monday. "
