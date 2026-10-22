@@ -88,6 +88,11 @@ class LocalMemoryBridge:
             "key": key,
             "fact_ref": outcome.get("fact_uuid") if outcome.get("committed") is True else None,
             "stage": outcome.get("stage"),
+            "outcome": outcome.get("outcome"),
+            # An agent must distinguish a refused write from a successful
+            # memory creation. The runtime's refusal is already public on
+            # the committed result envelope; do not invent a success path.
+            "refusal": outcome.get("refusal"),
             "authoritative_answer": False,
         }
 
