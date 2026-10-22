@@ -37,6 +37,7 @@ from . import context_package, contract
 
 __all__ = [
     "AgentMemory",
+    "ContextDeliveryUnboundError",
     "propose",
     "approve",
     "commit",
@@ -47,6 +48,12 @@ __all__ = [
     "authorize",
     "witness",
 ]
+
+
+class ContextDeliveryUnboundError(RuntimeError):
+    """#691/#839: ``recall_context`` refused to deliver content because its delivery receipt could
+    not be bound to the recall event that selected the identifiers. No content and no receipt
+    leave the call; the recall event, if any, is the only audit record of the attempt."""
 
 
 #: #691: the recall keyword arguments ``recall_context`` accepts. Scope and identity overrides
@@ -101,7 +108,7 @@ def _first_recall_event_since(events, index: int, context) -> dict | None:
     the first one appended for this principal after ``index`` (the event count before the
     recall), under the same hold of the serialization lock. A shadow recall-control pass may
     append a later recall event of its own; it is not the delivery's basis. ``None`` only if
-    the adapter recorded no recall event at all."""
+    the adapter recorded no recall event at all; the caller then refuses to deliver (#839)."""
     for event in events[index:]:
         if event.get("event_type") == "memory.recall" and event.get("principal") == context.principal_ref:
             return event
@@ -1131,29 +1138,44 @@ class AgentMemory:
         # #691 content-delivery audit: the recall event proves identifiers were recalled; this
         # receipt proves which of them were delivered as content, bound to that recall and to
         # the admission decisions, without the text. It is published through the runtime's
-        # transactional seam as its own durable generation; if it cannot be recorded, no
+        # transactional seam as its own durable generation. The receipt is appended only after
+        # the final package, audit block included, has validated (#839 review A), and only when
+        # the recall event it cites exists (#839 review B); otherwise the call raises and no
         # content is delivered.
-        package["audit"] = self._record_context_delivery(document, package, context, events_before)
-        receipts.validate(context_package.PACKAGE_SCHEMA, package)
+        self._record_context_delivery(document, package, context, events_before)
         return package
 
-    def _record_context_delivery(self, document: dict, package: dict, context, events_before: int) -> dict:
+    def _record_context_delivery(self, document: dict, package: dict, context, events_before: int) -> None:
+        """Append the ``memory.context_delivery`` receipt for ``package`` and attach its ``audit``
+        block, or raise and leave no receipt behind. Nothing irreversible happens before the final
+        package has passed schema validation; a receipt is never written without the recall event
+        that it cites."""
         adapter = self.runtime.adapter
         durable = getattr(self.runtime, "durable_runtime", None)
         seam = getattr(durable, "run_governed_read", None)
+        recall_event = _first_recall_event_since(adapter.events, events_before, context)
+        if recall_event is None or not recall_event.get("event_id") or not recall_event.get("correlation_id"):
+            raise ContextDeliveryUnboundError(
+                "recall_context cannot deliver content: the governed recall recorded no memory.recall "
+                "audit event for this principal, so a delivery receipt could not be bound to it")
 
-        def record() -> dict:
+        def record() -> None:
             event = context_package.delivery_event(
                 document, package, context,
-                event_id=adapter.allocate_event_id(), timestamp=adapter.now(),
-                recall_event=_first_recall_event_since(adapter.events, events_before, context),
+                event_id=adapter.allocate_event_id(), timestamp=adapter.now(), recall_event=recall_event,
             )
             receipts.validate("memory-audit-event.schema.json", event)
+            package["audit"] = {"delivery_event_id": event["event_id"], "recall_event_id": event["causation_id"],
+                                "correlation_id": event["correlation_id"]}
+            # the complete output, audit block included, must validate before the receipt exists
+            receipts.validate(context_package.PACKAGE_SCHEMA, package)
             adapter.events.append(event)
-            return {"delivery_event_id": event["event_id"], "recall_event_id": event.get("causation_id"),
-                    "correlation_id": event["correlation_id"]}
 
-        return seam(record) if callable(seam) else record()
+        try:
+            seam(record) if callable(seam) else record()
+        except BaseException:
+            package.pop("audit", None)
+            raise
 
     @_serialized
     def _canonical_recall(self, query: str, **kwargs) -> dict:

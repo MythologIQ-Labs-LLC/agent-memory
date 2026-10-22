@@ -13,10 +13,13 @@ import hashlib
 import json
 import tempfile
 import unittest
+import unittest.mock
 from pathlib import Path
 
 from agentmem_ref import AgentMemory
-from agentmem_ref.api.context_package import DELIVERY_EVENT_TYPE, package_digest
+from agentmem_ref.api import surface
+from agentmem_ref.api.context_package import DELIVERY_EVENT_TYPE, delivery_event, package_digest
+from agentmem_ref.api.surface import ContextDeliveryUnboundError
 from agentmem_ref.core import receipts
 from agentmem_ref.memory import procedural_memory as pm
 
@@ -103,7 +106,8 @@ class Receipt(_Store):
         for needle in (TEXT, "4471", PRIVATE_SOURCE, "memory:gate", "agent:writer"):
             self.assertNotIn(needle, dumped)
         self.assertEqual(event["principal"], "agent:colleague")
-        self.assertIn(hashlib.sha256(TEXT.encode()).hexdigest(), dumped)  # the content digest binds what was delivered
+        # the digest of the delivered fact's source text, as the package's provenance carries it
+        self.assertIn(hashlib.sha256(TEXT.encode()).hexdigest(), dumped)
 
     def test_plain_recall_and_refused_calls_record_no_delivery(self):
         self.memory.remember("memory:gate", TEXT)
@@ -214,6 +218,43 @@ class Receipt(_Store):
         package = self.memory.recall_context("orchard gate code")
         self.assertEqual(len(_delivery_events(self.memory)), 1)
         self.assertEqual(package["audit"]["delivery_event_id"], _delivery_events(self.memory)[0]["event_id"])
+
+    # #839 review A/B: the receipt is the last thing to happen, and only ever bound to a real recall.
+
+    def test_receipt_is_appended_only_after_the_final_package_validates(self):
+        self.memory.remember("memory:gate", TEXT)
+        adapter = self.memory.runtime.adapter
+        original = receipts.validate
+        seen: list[str] = []
+
+        def spy(schema_name, document):
+            seen.append(schema_name)
+            if schema_name == "api-context-package.schema.json":
+                self.assertIn("audit", document)  # the complete output, audit block included
+                self.assertEqual([e for e in adapter.events if e.get("event_type") == DELIVERY_EVENT_TYPE], [])
+            return original(schema_name, document)
+
+        with unittest.mock.patch.object(receipts, "validate", spy):
+            package = self.memory.recall_context("orchard gate code")
+        self.assertIn("api-context-package.schema.json", seen)
+        self.assertEqual(len(_delivery_events(self.memory)), 1)
+        self.assertEqual(package["audit"]["delivery_event_id"], _delivery_events(self.memory)[0]["event_id"])
+
+    def test_missing_recall_event_refuses_delivery_without_a_receipt(self):
+        self.memory.remember("memory:gate", TEXT)
+        with unittest.mock.patch.object(surface, "_first_recall_event_since", return_value=None):
+            with self.assertRaises(ContextDeliveryUnboundError):
+                self.memory.recall_context("orchard gate code")
+        self.assertEqual(_delivery_events(self.memory), [])
+        with self.assertRaises(ValueError):
+            delivery_event({}, {"items": []}, None, event_id="ref-x", timestamp="2026-01-01T00:00:00Z", recall_event=None)
+        with self.assertRaises(ValueError):
+            delivery_event({}, {"items": []}, None, event_id="ref-x", timestamp="2026-01-01T00:00:00Z",
+                           recall_event={"event_id": "ref-y"})  # no correlation to inherit: nothing is synthesised
+        package = self.memory.recall_context("orchard gate code")  # the store is usable and delivery resumes
+        self.assertEqual([i["content"] for i in package["items"]], [TEXT])
+        (event,) = _delivery_events(self.memory)
+        self.assertEqual(event["causation_id"], _recall_events(self.memory)[-1]["event_id"])
 
 
 if __name__ == "__main__":

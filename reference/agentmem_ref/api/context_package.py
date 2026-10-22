@@ -213,7 +213,7 @@ def delivery_event(
     *,
     event_id: str,
     timestamp: str,
-    recall_event: Mapping[str, Any] | None,
+    recall_event: Mapping[str, Any],
 ) -> dict:
     """The content-delivery audit record for one ``recall_context`` call (memory-audit-event
     schema, event type ``memory.context_delivery``).
@@ -226,8 +226,16 @@ def delivery_event(
     caller saw). It never carries memory text, and it names only identifiers the recall already
     returned to this caller. ``principal`` is the handle's host-declared actor id; the payload
     says so (``actor_binding``), because the facade does not authenticate principals.
+
+    ``recall_event`` must be the actual ``memory.recall`` audit event; a receipt is never
+    synthesised without one (``ValueError``), so ``correlation_id`` is always the recall's and
+    ``recall_bound`` is always true in an emitted receipt (#839 review B). ``content_sha256`` is
+    the digest of the fact's full source text as the package's provenance carries it; for a
+    ``truncated`` item ``delivered_chars`` says how much of that text was delivered.
     """
 
+    if not isinstance(recall_event, Mapping) or not recall_event.get("event_id") or not recall_event.get("correlation_id"):
+        raise ValueError("a context-delivery receipt requires the memory.recall event it is bound to")
     admissions = recall_document.get("admissions") or {}
     returned = list(recall_document.get("returned") or ())
     outcomes: dict[str, dict] = {}
@@ -252,7 +260,7 @@ def delivery_event(
         "event_version": DELIVERY_EVENT_VERSION,
         "timestamp": timestamp,
         "component": "public-facade",
-        "correlation_id": (recall_event or {}).get("correlation_id") or event_id,
+        "correlation_id": recall_event["correlation_id"],
         "principal": getattr(context, "principal_ref", None),
         "signal": {
             "signal_type": "context_delivery",
@@ -267,7 +275,7 @@ def delivery_event(
             "project_ref": getattr(context, "project_ref", None),
             "task_ref": getattr(context, "task_ref", None),
             "purpose": getattr(context, "purpose", None),
-            "recall_bound": recall_event is not None,
+            "recall_bound": True,
             "recall_decision_ids": {ref: (admissions.get(ref) or {}).get("decision_id") for ref in returned},
             "returned_count": len(returned),
             "delivered_count": delivered,
@@ -278,8 +286,7 @@ def delivery_event(
             "package_sha256": package_digest(package),
         },
     }
-    if recall_event is not None and recall_event.get("event_id"):
-        event["causation_id"] = recall_event["event_id"]
+    event["causation_id"] = recall_event["event_id"]
     return event
 
 
