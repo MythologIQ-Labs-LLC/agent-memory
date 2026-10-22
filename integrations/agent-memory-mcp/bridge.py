@@ -152,13 +152,24 @@ class LocalMemoryBridge:
         """Exact logical memory lookup through governed recall, not raw SQLite."""
         key = _string("key", key, MAX_KEY_CHARS)
         with self._open() as memory:
+            # logical_memory_refs is a retrieval hint, not an authorization
+            # for the wrapper to call every returned candidate an exact hit.
+            # Inspect a small governed prefix, then require the *resolved*
+            # provenance memory_ref to equal the caller's requested key.
             package = memory.recall_context(
-                key, logical_memory_refs=(key,), max_items=1,
+                key, logical_memory_refs=(key,), max_items=MAX_ITEMS,
                 max_chars_per_item=MAX_CHARS_PER_ITEM,
                 max_total_chars=MAX_TOTAL_CHARS, max_tokens=MAX_TOKENS,
             )
         result = self._project(package, asked=key)
+        exact = [item for item in result["evidence"] if item["memory_ref"] == key]
+        result["evidence"] = exact
+        result["evidence_count"] = len(exact)
+        # Unrelated returned fact identifiers and their states are not part
+        # of an exact-key result; don't launder them into a wrong answer.
+        result["unavailable"] = []
         result["lookup"] = "governed_exact_logical_memory_ref"
+        result["lookup_status"] = "found" if exact else "not_found_or_unavailable"
         return result
 
 
