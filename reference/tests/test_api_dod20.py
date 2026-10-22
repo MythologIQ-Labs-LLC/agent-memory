@@ -33,6 +33,9 @@ READERS = {"propose": surface.propose, "approve": surface.approve, "recall": sur
 # reader (both retain state) and neither reaches a mutation seam.
 AUTHORITY = {"authorize": surface.authorize, "witness": surface.witness}
 FACADES = {"AgentMemory": surface.AgentMemory}
+# #691/#839: the one public exception type. Raised by the facade's ``recall_context`` when a content
+# delivery cannot be bound to its recall event; it reaches no seam and carries no evidence.
+ERRORS = {"ContextDeliveryUnboundError": surface.ContextDeliveryUnboundError}
 ACTION = json.loads((REPO / "reference/fixtures/api/action-envelope.example.json").read_text(encoding="utf-8"))
 OBSERVATION = json.loads((REPO / "reference/fixtures/api/execution-observation.example.json").read_text(encoding="utf-8"))
 
@@ -71,9 +74,11 @@ class PublicSurfaceForwardsOrParks(unittest.TestCase):
     def test_every_public_entry_is_classified(self):
         self.assertEqual(
             set(surface.__all__),
-            set(WRITERS) | set(READERS) | set(AUTHORITY) | set(FACADES),
+            set(WRITERS) | set(READERS) | set(AUTHORITY) | set(FACADES) | set(ERRORS),
         )
         self.assertTrue(inspect.isclass(surface.AgentMemory))
+        for error in ERRORS.values():
+            self.assertTrue(inspect.isclass(error) and issubclass(error, Exception))
 
     def test_writers_forward_evidence_and_attestation_unchanged(self):
         corpus = corpus_for(rule(rule_id="rule:api-dod20", target=self.target, criterion="value-correction",
