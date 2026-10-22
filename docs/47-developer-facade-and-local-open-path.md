@@ -49,6 +49,41 @@ with AgentMemory.open("./agent-memory-state", tenant="tenant:local") as memory:
 
 The first open writes an inspectable `runtime-config.json` from the packaged `rc1-local.json` profile and initializes the qualified SQLite state. Later opens validate the same configuration and recover the existing SQLite state. Existing or partial durable state is never silently replaced with an empty runtime.
 
+## Pending v7: consumer-host fresh-store admission
+
+The direct `AgentMemory.open()` example above describes the basic facade, **not an
+approved v7 consumer deployment boundary**. The owner-accepted v7 API contract
+`1.8.0` does not itself certify legacy-store safety.
+
+The restricted v7 release profile being considered under #410 permits only
+**host-provisioned, post-#809 fresh stores** on a trusted, private, single-user
+SQLite root, with serialized initialization. The runtime's
+`legacy_upgrade_status() == "fresh"` and `legacy_facts == 0` establish live
+lineage posture, **not the historical date of store creation**: a pre-#809
+store with no remaining legacy facts can report `fresh`. A host must therefore
+keep a separate trusted first-provisioning enrollment record. Any pre-#809
+store, including one successfully migrated by an administrator, is outside
+this v7 consumer profile. An enrollment cannot be retroactively minted by
+checking a preexisting directory.
+
+`examples/v7_fresh_host.py` provides an **illustrative POSIX-only host-side
+preflight** with these separate requirements. It creates an enrollment receipt
+only for a root created from absence by that trusted host; binds it to the
+private directory's device/inode, tenant and scope; refuses missing, stale or
+mismatched records before opening the facade; and checks fresh/zero-legacy/
+no-migration-record again before yielding the handle. The host must
+authenticate the actor, authorize tenant and scope, own its separate private
+enrollment registry, and serialize first provisioning. Windows and
+multi-host deployment are not qualified by this example.
+
+**A reference example is not a consumer-host adoption receipt.** Existing
+consumers using plain `AgentMemory.open()` remain able to read or write
+pre-#809 stores, and v7 remains NO-GO for their deployment until the named
+host demonstrates an enforced boundary and security acceptance is recorded.
+The future #840 packaged optional guard and the composed #839/#840 successor
+preview are separate, unmerged development. Do not substitute their behavior
+or tests for v7 publication evidence.
+
 ## Explicit defaults
 
 The local facade makes these ordinary-use defaults visible in its constructor rather than hiding them in policy:
