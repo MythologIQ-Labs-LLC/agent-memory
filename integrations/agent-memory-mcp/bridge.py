@@ -138,7 +138,7 @@ class LocalMemoryBridge:
         A second explicit ``memory_remember`` under an existing key commits a new generation and
         moves the key's head, but the earlier fact stays a current-state fact that question
         retrieval can still return. The public ``history`` read tells which fact is the head, so
-        an agent is never shown two contradictory values for one key without a marker. Where the
+        an agent is never shown an earlier generation for one key without a marker. Where the
         runtime offers no history (or the key is not visible to this reader), the fields are
         ``None``: unknown, not asserted.
         """
@@ -162,7 +162,10 @@ class LocalMemoryBridge:
             head, versions = heads[key]
             item["latest_for_key"] = (item["fact_ref"] == head) if head is not None else None
             item["key_versions"] = versions
-        result["conflicting_keys"] = sorted({
+        # A version-divergence signal, not a verified contradiction: a key appears here when at
+        # least one returned item is not that key's head. Identical re-writes qualify too; the
+        # bridge does not compare values and does not claim the versions conflict.
+        result["non_head_keys"] = sorted({
             item["memory_ref"] for item in result["evidence"] if item.get("latest_for_key") is False
         })
 
@@ -199,7 +202,7 @@ class LocalMemoryBridge:
             )
             result = self._project(package, asked=key)
             self._annotate_key_heads(memory, result)
-        result.pop("conflicting_keys", None)
+        result.pop("non_head_keys", None)
         exact = [item for item in result["evidence"] if item["memory_ref"] == key]
         # The public recall route can expose several generations or
         # separately committed facts for the same logical key. Neither this

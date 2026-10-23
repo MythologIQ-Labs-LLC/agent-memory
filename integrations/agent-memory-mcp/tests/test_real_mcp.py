@@ -194,9 +194,9 @@ class ActualMcpConsumerLoop(unittest.IsolatedAsyncioTestCase):
                     older = by_text.get("The owner writes Python in Neovim.")
                     if older is not None:  # the earlier generation may still be retrieved
                         self.assertFalse(older["latest_for_key"], older)
-                        self.assertIn("memory:editor", found["conflicting_keys"], found)
+                        self.assertIn("memory:editor", found["non_head_keys"], found)
                     else:
-                        self.assertEqual(found["conflicting_keys"], [])
+                        self.assertEqual(found["non_head_keys"], [])
 
     async def test_missing_host_configuration_is_tool_error_not_success(self):
         with patch.dict(os.environ, {}, clear=True):

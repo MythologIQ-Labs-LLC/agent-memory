@@ -77,7 +77,10 @@ framing, and tool schemas provided by the official SDK.
   current-state fact. memory_get serves the head and reports key_versions and
   earlier_versions_remain_recallable=true; memory_find may still return the earlier
   text and marks every item latest_for_key=true/false (None when unknown) and lists
-  conflicting_keys. Nothing is silently merged or hidden.
+  non_head_keys: a **version-divergence signal** (at least one returned item is not its
+  key's head), not a verified contradiction; identical re-writes qualify. The bridge does
+  not compare values, does not correct or retire the earlier generation, and does not
+  hide it. Nothing is silently merged.
 - memory_find(question, max_items=5, experimental_selectivity=False):
   governed recall_context within bounded delivery budgets, defaulting to
   all_returned. The experimental #819 selector must be opted into deliberately.

@@ -15,6 +15,8 @@ repo, out = Path(sys.argv[1]).resolve(), Path(sys.argv[2]).resolve()
 out.mkdir(parents=True, exist_ok=True)
 SERVER = repo / "integrations/agent-memory-mcp/server.py"
 transcript: list[dict] = []
+CLEAN_BEFORE = subprocess.run(["git", "-C", str(repo), "status", "--porcelain", "--untracked-files=no"], capture_output=True, text=True).stdout.strip() == ""
+print("repo head", subprocess.check_output(["git", "-C", str(repo), "rev-parse", "HEAD"], text=True).strip(), "tracked tree clean:", CLEAN_BEFORE)
 checks: list[tuple[str, bool, str]] = []
 
 
@@ -137,8 +139,8 @@ async def main():
                 check("8 conflicting key: get serves exactly the head (latest write) and reports key_versions=2 with earlier versions recallable",
                       not r2.is_error and len(g["evidence"]) == 1 and g["evidence"][0]["content"] == conflict_text and g["evidence"][0]["latest_for_key"] is True and g.get("key_versions") == 2 and g.get("earlier_versions_remain_recallable") is True, repr(g)[:300])
                 fe = {e["content"]: e for e in (body(rf) or {}).get("evidence", [])}
-                check("8 conflicting key: find marks the head latest_for_key=true, the earlier value latest_for_key=false, and lists the key as conflicting",
-                      fe.get(conflict_text, {}).get("latest_for_key") is True and (text not in fe or fe[text].get("latest_for_key") is False) and (text not in fe or key in (body(rf) or {}).get("conflicting_keys", [])), repr(fe)[:300])
+                check("8 conflicting key: find marks the head latest_for_key=true, the earlier value latest_for_key=false, and lists the key under non_head_keys",
+                      fe.get(conflict_text, {}).get("latest_for_key") is True and (text not in fe or fe[text].get("latest_for_key") is False) and (text not in fe or key in (body(rf) or {}).get("non_head_keys", [])), repr(fe)[:300])
             elif second.get("committed") is True:
                 check("8 conflicting key: two current facts under one key -> ambiguous_multiple_versions, no content",
                       not r2.is_error and g.get("lookup_status") == "ambiguous_multiple_versions" and g.get("evidence") == [], repr(g)[:300])
@@ -193,7 +195,11 @@ async def main():
         "passed": sum(1 for _, ok, _ in checks if ok), "total": len(checks),
         "transcript": transcript,
     }
-    (out / "gate1-workflow.json").write_text(json.dumps(report, indent=2, sort_keys=False, default=str) + "\n")
+    report["tracked_tree_clean_before"] = CLEAN_BEFORE
+    report["tracked_tree_clean_after"] = subprocess.run(["git", "-C", str(repo), "status", "--porcelain", "--untracked-files=no"], capture_output=True, text=True).stdout.strip() == ""
+    target = out / f"gate1-workflow-{report['repo_head'][:8]}.json"
+    target.write_text(json.dumps(report, indent=2, sort_keys=False, default=str) + "\n")
+    print("transcript", target.name, "sha256", __import__("hashlib").sha256(target.read_bytes()).hexdigest())
     print(f"\n{report['passed']}/{report['total']} checks passed")
     return 0 if report["passed"] == report["total"] else 1
 
