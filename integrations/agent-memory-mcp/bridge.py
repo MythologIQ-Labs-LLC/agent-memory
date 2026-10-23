@@ -13,6 +13,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import os
 from pathlib import Path
+import stat
 from typing import Any, Callable, ContextManager
 
 MAX_TEXT_CHARS = 4000
@@ -49,7 +50,15 @@ class HostConfig:
             raise ValueError("AGENT_MEMORY_MCP_ROOT must not contain parent traversal")
         for component in (root, *root.parents):
             junction = getattr(component, "is_junction", None)
-            if component.is_symlink() or (callable(junction) and junction()):
+            # Windows junctions and other directory reparse points must also
+            # be refused on Python 3.11, which lacks Path.is_junction().
+            # lstat() sees the link itself, not its target.
+            try:
+                attributes = getattr(component.lstat(), "st_file_attributes", 0)
+            except FileNotFoundError:
+                attributes = 0
+            is_reparse_point = bool(attributes & getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400))
+            if component.is_symlink() or (callable(junction) and junction()) or is_reparse_point:
                 raise ValueError("AGENT_MEMORY_MCP_ROOT must not traverse a symlink or junction")
         claims = {
             "tenant": os.environ.get("AGENT_MEMORY_MCP_TENANT", ""),
