@@ -182,8 +182,11 @@ class ActualMcpConsumerLoop(unittest.IsolatedAsyncioTestCase):
                     got = _result(await client.call_tool("memory_get", {"key": "memory:editor"}), "evidence")
                     self.assertEqual(got["lookup_status"], "found", got)
                     self.assertEqual([e["content"] for e in got["evidence"]], ["The owner writes Python in VS Code."])
-                    self.assertEqual(got["key_versions"], 2, got)
-                    self.assertTrue(got["earlier_versions_remain_recallable"], got)
+                    # the counter is the runtime's state counter, not a version count: only its
+                    # presence and type are contracted, never its meaning
+                    self.assertIsInstance(got["key_state_version"], int, got)
+                    self.assertIs(got["earlier_generations_enumerated"], False, got)
+                    self.assertIn("not a count of written versions", got["caveat"])
                     self.assertTrue(got["evidence"][0]["latest_for_key"], got)
                     found = _result(await client.call_tool("memory_find", {
                         "question": "Which editor does the owner use for Python?", "max_items": 5,
@@ -197,6 +200,16 @@ class ActualMcpConsumerLoop(unittest.IsolatedAsyncioTestCase):
                         self.assertIn("memory:editor", found["non_head_keys"], found)
                     else:
                         self.assertEqual(found["non_head_keys"], [])
+                # the markers must survive a restart of the server (fresh in-process client)
+                async with Client(module.mcp, raise_exceptions=True) as client:
+                    again = _result(await client.call_tool("memory_get", {"key": "memory:editor"}), "evidence")
+                    self.assertEqual([e["content"] for e in again["evidence"]], ["The owner writes Python in VS Code."])
+                    self.assertTrue(again["evidence"][0]["latest_for_key"], again)
+                    found = _result(await client.call_tool("memory_find", {
+                        "question": "Which editor does the owner use for Python?", "max_items": 5,
+                    }), "evidence")
+                    for item in found["evidence"]:
+                        self.assertEqual(item["latest_for_key"], item["content"] == "The owner writes Python in VS Code.", item)
 
     async def test_missing_host_configuration_is_tool_error_not_success(self):
         with patch.dict(os.environ, {}, clear=True):

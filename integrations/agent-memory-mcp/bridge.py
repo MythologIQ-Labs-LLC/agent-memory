@@ -141,6 +141,11 @@ class LocalMemoryBridge:
         an agent is never shown an earlier generation for one key without a marker. Where the
         runtime offers no history (or the key is not visible to this reader), the fields are
         ``None``: unknown, not asserted.
+
+        ``key_state_version`` is the runtime's governance state counter for the key's current
+        generation as ``history`` reports it. It is not a count of written versions (it resets
+        after a governed deletion, and other transitions move it); it is exposed only so a
+        harness can notice that a key has moved, never as canonical history.
         """
         read_history = getattr(memory, "history", None)
         heads: dict[str, tuple[Any, Any]] = {}
@@ -148,7 +153,7 @@ class LocalMemoryBridge:
             key = item.get("memory_ref")
             if not isinstance(key, str):
                 item["latest_for_key"] = None
-                item["key_versions"] = None
+                item["key_state_version"] = None
                 continue
             if key not in heads:
                 head, versions = None, None
@@ -161,7 +166,7 @@ class LocalMemoryBridge:
                 heads[key] = (head, versions)
             head, versions = heads[key]
             item["latest_for_key"] = (item["fact_ref"] == head) if head is not None else None
-            item["key_versions"] = versions
+            item["key_state_version"] = versions
         # A version-divergence signal, not a verified contradiction: a key appears here when at
         # least one returned item is not that key's head. Identical re-writes qualify too; the
         # bridge does not compare values and does not claim the versions conflict.
@@ -218,11 +223,18 @@ class LocalMemoryBridge:
             result["evidence"] = exact
             result["evidence_count"] = len(exact)
             result["lookup_status"] = "found" if exact else "not_found_or_unavailable"
-        # The exact route serves the key's head. Earlier generations written under the same
-        # key are not deleted and can still surface through memory_find; say so.
-        versions = exact[0].get("key_versions") if len(exact) == 1 else None
-        result["key_versions"] = versions
-        result["earlier_versions_remain_recallable"] = (versions > 1) if isinstance(versions, int) else None
+        # The exact route serves the key's head only. This lookup cannot enumerate earlier
+        # generations written under the same key (the public history read describes the live
+        # generation), and the runtime does not retire them: they may still surface through
+        # memory_find as current-state facts. State that as a caveat, not as a count.
+        result["key_state_version"] = exact[0].get("key_state_version") if len(exact) == 1 else None
+        result["earlier_generations_enumerated"] = False
+        result["caveat"] = (
+            "key_state_version is the runtime's governance state counter for the key's current "
+            "generation, not a count of written versions. Earlier generations written under this "
+            "key are not enumerated here and may still be returned by memory_find as current-state "
+            "facts; check latest_for_key on each item."
+        )
         # Unrelated returned fact identifiers and their states are not part
         # of an exact-key result; don't launder them into a wrong answer.
         result["unavailable"] = []

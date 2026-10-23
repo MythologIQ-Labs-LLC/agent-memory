@@ -74,13 +74,15 @@ framing, and tool schemas provided by the official SDK.
   without guessing which one supersedes the others. No direct database access.
   A second memory_remember under an existing key is **not a correction**: the runtime
   commits a new generation and moves the key's head, but the earlier fact stays a
-  current-state fact. memory_get serves the head and reports key_versions and
-  earlier_versions_remain_recallable=true; memory_find may still return the earlier
-  text and marks every item latest_for_key=true/false (None when unknown) and lists
-  non_head_keys: a **version-divergence signal** (at least one returned item is not its
-  key's head), not a verified contradiction; identical re-writes qualify. The bridge does
-  not compare values, does not correct or retire the earlier generation, and does not
-  hide it. Nothing is silently merged.
+  current-state fact. memory_get serves the head only and reports key_state_version
+  (the runtime's governance state counter for the current generation, **not** a count of
+  written versions: it resets after a governed deletion), earlier_generations_enumerated=false
+  and a caveat; memory_find may still return the earlier text and marks every item
+  latest_for_key=true/false (None when unknown) and lists non_head_keys: a
+  **version-divergence signal** (at least one returned item is not its key's head), not a
+  verified contradiction; identical re-writes qualify. The bridge does not compare values,
+  does not correct or retire the earlier generation, and does not hide it. None of these
+  fields is canonical history. Nothing is silently merged.
 - memory_find(question, max_items=5, experimental_selectivity=False):
   governed recall_context within bounded delivery budgets, defaulting to
   all_returned. The experimental #819 selector must be opted into deliberately.

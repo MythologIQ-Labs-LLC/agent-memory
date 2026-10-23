@@ -136,8 +136,8 @@ async def main():
             if second.get("committed") is True and g.get("lookup_status") == "found":
                 # real runtime semantics: the second write moves the key's head; the earlier fact
                 # stays current and findable, so the bridge must mark which value is the head
-                check("8 conflicting key: get serves exactly the head (latest write) and reports key_versions=2 with earlier versions recallable",
-                      not r2.is_error and len(g["evidence"]) == 1 and g["evidence"][0]["content"] == conflict_text and g["evidence"][0]["latest_for_key"] is True and g.get("key_versions") == 2 and g.get("earlier_versions_remain_recallable") is True, repr(g)[:300])
+                check("8 conflicting key: get serves exactly the head (latest write), latest_for_key=true, key_state_version is an int, earlier generations not enumerated, caveat present",
+                      not r2.is_error and len(g["evidence"]) == 1 and g["evidence"][0]["content"] == conflict_text and g["evidence"][0]["latest_for_key"] is True and isinstance(g.get("key_state_version"), int) and g.get("earlier_generations_enumerated") is False and "not a count of written versions" in g.get("caveat", ""), repr(g)[:300])
                 fe = {e["content"]: e for e in (body(rf) or {}).get("evidence", [])}
                 check("8 conflicting key: find marks the head latest_for_key=true, the earlier value latest_for_key=false, and lists the key under non_head_keys",
                       fe.get(conflict_text, {}).get("latest_for_key") is True and (text not in fe or fe[text].get("latest_for_key") is False) and (text not in fe or key in (body(rf) or {}).get("non_head_keys", [])), repr(fe)[:300])
@@ -161,6 +161,18 @@ async def main():
             except Exception as exc:
                 transcript.append({"step": "9 unknown tool", "request": {"tool": "memory_delete_everything"}, "response": {"exception": type(exc).__name__, "message": str(exc)[:200]}})
                 check("9 unknown tool name -> MCP error", True, type(exc).__name__)
+
+        # ---- session 2b: fresh process after the same-key rewrite: markers must survive restart
+        time.sleep(0.3)
+        async with Client(params(root, "project:gate1")) as client:
+            r = await client.call_tool("memory_get", {"key": key}); record("8 get after rewrite and restart", "memory_get", {"key": key}, r)
+            g2 = body(r) or {}
+            check("8 after restart: get still serves exactly the head with latest_for_key=true",
+                  not r.is_error and len(g2.get("evidence", [])) == 1 and g2["evidence"][0]["content"] == conflict_text and g2["evidence"][0]["latest_for_key"] is True, repr(g2)[:300])
+            rf2 = await client.call_tool("memory_find", {"question": "Which editor does the owner use for Python?", "max_items": 5}); record("8 find after rewrite and restart", "memory_find", {"question": "Which editor does the owner use for Python?", "max_items": 5}, rf2)
+            fe2 = {e["content"]: e for e in (body(rf2) or {}).get("evidence", [])}
+            check("8 after restart: find marks head true and earlier value false",
+                  fe2.get(conflict_text, {}).get("latest_for_key") is True and (text not in fe2 or fe2[text].get("latest_for_key") is False), repr(fe2)[:300])
 
         # ---- session 3: another trusted scope on the same store and tenant
         async with Client(params(root, "project:other-team")) as client:
