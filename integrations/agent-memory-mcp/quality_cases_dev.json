@@ -1,0 +1,220 @@
+{
+  "schema": "mcp-gate2-development-cases/0.1.0",
+  "disclaimer": "Author-visible development cohort, not independent holdout or agent answer correctness.",
+  "tenant": "tenant:quality-probe",
+  "scope": "project:quality-probe",
+  "records": [
+    {
+      "key": "memory:liora-canoe",
+      "text": "Liora's canoe is teal. The hull was inspected on Tuesday."
+    },
+    {
+      "key": "memory:liora-bicycle",
+      "text": "Liora's bicycle is black. The rear tire needs replacement."
+    },
+    {
+      "key": "memory:bastien-canoe",
+      "text": "Bastien's canoe is orange. He bought it from his uncle."
+    },
+    {
+      "key": "memory:mara-parent",
+      "text": "Mara's father restores exhibits at Bellweather Observatory. He volunteers there on Fridays."
+    },
+    {
+      "key": "memory:mara-child",
+      "text": "Mara's eldest performs on the cello. Their next recital is in November."
+    },
+    {
+      "key": "memory:liora-sibling",
+      "text": "Liora's sibling resides in Oslo. They moved there last winter."
+    },
+    {
+      "key": "memory:office-printer",
+      "text": "The office printer is a Brother HL-L2400D. Its toner is TN830."
+    },
+    {
+      "key": "memory:kitchen-printer",
+      "text": "The community kitchen printed 120 recipe cards in September."
+    },
+    {
+      "key": "memory:maya-editor",
+      "text": "Maya uses Neovim to write Python. Her language server is pyright."
+    },
+    {
+      "key": "memory:omar-editor",
+      "text": "Omar uses VS Code to edit Markdown documents."
+    },
+    {
+      "key": "memory:quail-meeting",
+      "text": "Project Quail has its next review in the Harbour Library on November 18."
+    },
+    {
+      "key": "memory:quail-owner",
+      "text": "Project Quail is maintained by Imani and Theo. They use a weekly checklist."
+    },
+    {
+      "key": "memory:meridian-meeting",
+      "text": "Project Meridian's design review is at the Old Mill Studio on December 2."
+    },
+    {
+      "key": "memory:meridian-owner",
+      "text": "Project Meridian is coordinated by Daria. She prefers asynchronous notes."
+    },
+    {
+      "key": "memory:festival",
+      "text": "The autumn science festival begins Friday. Registration closes on Wednesday."
+    },
+    {
+      "key": "memory:moon-exhibit",
+      "text": "The moon exhibit has a new display case. The museum catalog is updated."
+    },
+    {
+      "key": "memory:code-editor",
+      "text": "The repository uses VS Code tasks for the local test runner."
+    },
+    {
+      "key": "memory:telescope",
+      "text": "Bastien's telescope has an equatorial mount. The optics were cleaned in June."
+    }
+  ],
+  "tasks": [
+    {
+      "id": "A1",
+      "question": "What color is Liora's canoe?",
+      "required": [
+        "memory:liora-canoe"
+      ],
+      "forbidden": [
+        "memory:bastien-canoe",
+        "memory:liora-bicycle"
+      ]
+    },
+    {
+      "id": "A2",
+      "question": "Where does Mara's parent work?",
+      "required": [
+        "memory:mara-parent"
+      ],
+      "forbidden": [
+        "memory:mara-child"
+      ]
+    },
+    {
+      "id": "A3",
+      "question": "Which instrument does Mara's child play?",
+      "required": [
+        "memory:mara-child"
+      ],
+      "forbidden": [
+        "memory:mara-parent"
+      ]
+    },
+    {
+      "id": "A4",
+      "question": "Where does Liora's brother live?",
+      "required": [
+        "memory:liora-sibling"
+      ],
+      "forbidden": [
+        "memory:liora-canoe"
+      ]
+    },
+    {
+      "id": "A5",
+      "question": "What model is the office printer?",
+      "required": [
+        "memory:office-printer"
+      ],
+      "forbidden": [
+        "memory:kitchen-printer"
+      ]
+    },
+    {
+      "id": "A6",
+      "question": "Which toner cartridge does the office printer use?",
+      "required": [
+        "memory:office-printer"
+      ],
+      "forbidden": [
+        "memory:kitchen-printer"
+      ]
+    },
+    {
+      "id": "A7",
+      "question": "Which editor and language server does Maya use for Python?",
+      "required": [
+        "memory:maya-editor"
+      ],
+      "forbidden": [
+        "memory:omar-editor",
+        "memory:code-editor"
+      ]
+    },
+    {
+      "id": "A8",
+      "question": "Where will Project Quail hold its next review?",
+      "required": [
+        "memory:quail-meeting"
+      ],
+      "forbidden": [
+        "memory:meridian-meeting"
+      ]
+    },
+    {
+      "id": "A9",
+      "question": "Who maintains Project Quail?",
+      "required": [
+        "memory:quail-owner"
+      ],
+      "forbidden": [
+        "memory:meridian-owner"
+      ]
+    },
+    {
+      "id": "A10",
+      "question": "When is Project Meridian's design review?",
+      "required": [
+        "memory:meridian-meeting"
+      ],
+      "forbidden": [
+        "memory:quail-meeting"
+      ]
+    },
+    {
+      "id": "A11",
+      "question": "What mount does Bastien's telescope use?",
+      "required": [
+        "memory:telescope"
+      ],
+      "forbidden": [
+        "memory:bastien-canoe"
+      ]
+    },
+    {
+      "id": "N1",
+      "question": "What is the garage door access code?",
+      "required": [],
+      "forbidden": [
+        "memory:code-editor",
+        "memory:maya-editor"
+      ]
+    },
+    {
+      "id": "N2",
+      "question": "When does the lunar eclipse committee meet?",
+      "required": [],
+      "forbidden": [
+        "memory:festival",
+        "memory:moon-exhibit"
+      ]
+    },
+    {
+      "id": "N3",
+      "question": "What is the WiFi password for Harbour Library?",
+      "required": [],
+      "forbidden": [
+        "memory:quail-meeting"
+      ]
+    }
+  ]
+}
