@@ -122,12 +122,21 @@ From the repository root in the venv from above:
     python -m unittest discover -s integrations/agent-memory-mcp/tests -p "test_quality_probe.py" -v
     python integrations/agent-memory-mcp/quality_probe.py --out /tmp/am-gate2-dev.json
 
-The output contains per-question returned keys and scored source-key evidence,
+The output contains per-question returned keys and scored evidence,
 not retrieved plaintext or made-up answers. It reports:
 
-- Complete required-source coverage, missing gold evidence and irrelevant items.
-- Explicit forbidden-key incidence and empty context on no-answer questions.
+- Complete required-source coverage only when MCP delivers the **full**
+  seeded text with verified source key. Raw key hits are separate: a
+  truncated or missing-provenance item is not credited as full evidence.
+- Unattributed, incomplete or unavailable context items and irrelevant
+  source-key burden, including explicit forbidden-key incidences.
+- Empty context on no-answer questions, separately from answer accuracy.
 - Query p50/p95 for the actual MCP roundtrip versus indexed FTS5 search.
+
+The 18 fictional texts are ASCII and short enough for the full text of
+the largest five to fit the MCP character and token caps. The probe
+refuses to score an expanded corpus if that assumption stops holding,
+rather than letting the FTS5 arm silently gain a context-budget advantage.
 
 **Interpretation:** The source labels are development annotations, not proof
 that the text entails the answer. Empty context on an unanswerable question
