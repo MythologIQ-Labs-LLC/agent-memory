@@ -1,7 +1,7 @@
 # Gate 1: Minimum Functional Product, Agent Memory as an MCP memory provider
 
 **Verdict: Gate 1 PASSES, executed from a clean committed checkout of
-`b04206621059e4c31afa116a032f2c823ffef313` (section 7), after two corrections made on this
+`a68f67a009724f313d2c5946809ffcad66531bc2` (section 7), after the corrections made on this
 branch.** This is the minimum-functioning-product gate only: a real
 agent harness can save, exactly retrieve, find by question, survive a server restart, and is
 refused across scopes, through the official MCP client over stdio. It says nothing about
@@ -140,3 +140,27 @@ generation and does not retire the earlier current-state fact; `memory_find` kee
 `latest_for_key` is a warning and `non_head_keys` a divergence signal, neither a correction. Gate 2
 (task correctness, no-answer behaviour, supported correct/forget or an honest read-only limitation,
 against an indexed baseline) is the next work and is not claimed here.
+
+## 8. Second exact-revision re-execution (comment 6356404922): honest field contract
+
+`history.state_version` is the runtime's governance state counter for the key's current
+generation (`adapter.public_state_version`: it reports `0` after a governed-deleted head, and
+other transitions move it), not a count of written versions. The bridge now exposes it as
+`key_state_version` with that meaning, replaces `earlier_versions_remain_recallable` with
+`earlier_generations_enumerated: false` plus an explicit caveat (this lookup cannot enumerate
+earlier generations; `memory_find` may still return them as current-state facts), and the README
+states that none of `latest_for_key`, `key_state_version`, `non_head_keys` is canonical history.
+The real-SDK test contracts only the counter's presence and type and re-checks the same-key
+markers after a restart; the driver does the same with a fresh server process (two new checks).
+
+| item | value |
+|---|---|
+| executing head | `a68f67a009724f313d2c5946809ffcad66531bc2` |
+| `server.py` / `bridge.py` blobs at that head | `d10f99b1` / `7ef199e3` (equal to the transcript's) |
+| tracked tree clean before and after | yes / yes |
+| `test_bridge.py` / `test_real_mcp.py` | 12 OK / 6 OK (`logs/*-a68f67a0….log`) |
+| `gate1_workflow.py` | **26/26** (`logs/gate1-workflow-a68f67a0….log`) |
+| transcript | `gate1-workflow-a68f67a0.json`, sha256 `93db5a8b88471028293b51620e27b3dcec1e63ab575fac41b2057dd65503a2e5` |
+
+Earlier transcripts (`gate1-workflow.json` from the pre-commit working tree,
+`gate1-workflow-b0420662.json` from the first clean re-run) are preserved unmodified.
