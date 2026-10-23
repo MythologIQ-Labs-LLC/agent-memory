@@ -45,6 +45,30 @@ class QualityProbeScorer(unittest.TestCase):
         self.assertEqual(x["unexpected_evidence_items"], 1)
         self.assertAlmostEqual(x["evidence_precision"], 0.5)
 
+    def test_required_key_with_truncated_text_does_not_count_as_complete_evidence(self):
+        # Some ranking reports score this as success merely because the
+        # fact ID appears. This is a false-positive if the answer was cut.
+        item = quality.score(
+            ["memory:needed"], ["memory:needed"], [],
+            fully_delivered_keys=[],
+        )
+        self.assertEqual(item["required_key_hits"], 1)
+        self.assertEqual(item["required_hits"], 0)
+        self.assertFalse(item["required_complete"])
+        self.assertEqual(item["evidence_precision"], 0.0)
+
+    def test_unattributed_context_is_counted_as_unexpected_not_discarded(self):
+        item = quality.score(["<unattributed>"], ["memory:needed"], [],
+                             fully_delivered_keys=[])
+        self.assertEqual(item["unexpected_evidence_items"], 1)
+        self.assertEqual(item["required_key_hits"], 0)
+        self.assertFalse(item["required_complete"])
+
+    def test_full_text_claim_must_be_among_served_keys(self):
+        with self.assertRaises(ValueError):
+            quality.score([], ["memory:needed"], [],
+                          fully_delivered_keys=["memory:needed"])
+
     def test_comparator_fts5_is_indexed_and_uses_same_texts(self):
         records = [
             {"key": "memory:one", "text": "The home office printer uses TN830 toner."},
