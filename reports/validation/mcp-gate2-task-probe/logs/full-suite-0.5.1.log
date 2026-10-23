@@ -1,0 +1,131 @@
+head 993ba1c4ab5b8e253eb6cad1e2fdce46709ba238 14:01:34
+...............................F........................................ [  2%]
+.........................................FF...... [  3%]
+......................................................................................... [  6%]
+......................................................................... [  8%]
+................x........................................s........................ [ 11%]
+........................................................................................................................ [ 14%]
+............................................................. [ 16%]
+........................................................ [ 18%]
+..............................................ss........................ [ 20%]
+..............................................................................................................................................F.................... [ 25%]
+........................................................... [ 27%]
+......................................................................................................................... [ 30%]
+........................................................................ [ 32%]
+................................................................. [ 34%]
+..................................................................... [ 37%]
+............................. [ 37%]
+......................................................................... [ 40%]
+............................................................. [ 41%]
+......................................................... [ 43%]
+............................................................... [ 45%]
+................................................................s.............................................. [ 48%]
+........................................................ [ 50%]
+.................................................. [ 52%]
+........................................................................ [ 54%]
+.............sssssss........................... [ 55%]
+.................................................................................................................................... [ 59%]
+....................................... [ 60%]
+................................. [ 61%]
+...................................................................... [ 64%]
+....................................................................................................................................................... [ 68%]
+....................................................... [ 70%]
+........................................................................ [ 72%]
+.................................................................. [ 74%]
+........................................................................................................ [ 77%]
+...................ssss................................................. [ 79%]
+............................................................... [ 81%]
+........................................................................ [ 83%]
+.................................................. [ 85%]
+.........................sssssssss.............................. [ 87%]
+................................................................ [ 89%]
+........................................................................ [ 91%]
+.................................................. [ 92%]
+.......................................................................... [ 95%]
+............................................................ [ 97%]
+......................................................................... [ 99%]
+.........................                                                [100%]
+=================================== FAILURES ===================================
+____ ImportedRuntimeIdentity.test_own_checkout_at_frozen_revision_is_served ____
+
+self = <tests.test_644_v7_gauntlet_identity.ImportedRuntimeIdentity testMethod=test_own_checkout_at_frozen_revision_is_served>
+
+    def test_own_checkout_at_frozen_revision_is_served(self):
+        reply = ask(str(ROOT / "reference"))
+>       self.assertEqual(reply["status"], "ok", reply)
+E       AssertionError: 'system_error' != 'ok'
+E       - system_error
+E       + ok
+E        : {'adapter_evidence': {'adapter_kind': 'agent_memory_public_stdio', 'frozen_runtime_revision': '2ad4cf23d366fc784a486b0245550230e64bfa25', 'public_contract': '1.8.0', 'runtime_identity': {'frozen_runtime_revision': '2ad4cf23d366fc784a486b0245550230e64bfa25', 'frozen_runtime_tree': 'f9b5ff9e79a54ef053ce89eb975256b63e211714', 'imported_package': '/home/user/agent-memory/reference/agentmem_ref', 'matches_frozen_revision': False, 'same_checkout': True, 'verified': False}, 'surface': 'AgentMemory public facade', 'translation_only': True}, 'authority_effect': 'none', 'contract_family': 'agent-memory-gauntlet-operation', 'contract_version': '0.1.0', 'direction': 'response', 'error': {'code': 'runtime_identity_unverified', 'message': "imported agentmem_ref is not this checkout's runtime at FROZEN_RUNTIME_REVISION", 'source': 'system_adapter'}, 'operation': 'describe', 'request_id': 'r1', 'result': None, 'status': 'system_error', 'timing': {'elapsed_ms': 0.00924300002225209}}
+
+reference/tests/test_644_v7_gauntlet_identity.py:71: AssertionError
+_ ReplayEvidenceFreshness.test_a_runtime_edit_still_makes_replay_evidence_stale _
+
+self = <tests.test_770_v7_lane_freeze_independent.ReplayEvidenceFreshness testMethod=test_a_runtime_edit_still_makes_replay_evidence_stale>
+
+    def test_a_runtime_edit_still_makes_replay_evidence_stale(self):
+        verifier = runpy.run_path(str(REPO_ROOT / "scripts/verify_644_v7_replays.py"))
+        manifest = json.loads((self.EVIDENCE_ROOT / self.REPLAY_ID / "manifest.json").read_text(encoding="utf-8"))
+        # The manifest pins the protected runtime that generated this replay,
+        # rather than assuming a forever-fixed pre-v7 ancestor.
+        baseline = manifest["source_commit"]
+>       self.assertFalse(verifier["runtime_changed_since"](baseline))
+E       AssertionError: True is not false
+
+reference/tests/test_770_v7_lane_freeze_independent.py:269: AssertionError
+_ ReplayEvidenceFreshness.test_lane_records_do_not_make_replay_evidence_stale __
+
+self = <tests.test_770_v7_lane_freeze_independent.ReplayEvidenceFreshness testMethod=test_lane_records_do_not_make_replay_evidence_stale>
+
+    def test_lane_records_do_not_make_replay_evidence_stale(self):
+        verifier = runpy.run_path(str(REPO_ROOT / "scripts/verify_644_v7_replays.py"))
+        result = verifier["verify"](evidence_root=self.EVIDENCE_ROOT)
+>       self.assertEqual({row["replay"]: row["status"] for row in result["replays"]},
+                         {row["replay"]: "VERIFIED" for row in result["replays"]}, result)
+E       AssertionError: {'typ[54 chars]1': 'STALE', 'governed-persisted-typed-slot-su[216 chars]ALE'} != {'typ[54 chars]1': 'VERIFIED', 'governed-persisted-typed-slot[231 chars]IED'}
+E       Diff is 1379 characters long. Set self.maxDiff to None to see it. : {'replays': [{'replay': 'typed-sufficiency-noninterference-and-negative-controls-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}, {'replay': 'governed-persisted-typed-slot-sufficiency-admission-recheck-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}, {'replay': 'governed-admitted-typed-value-coherence-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}, {'replay': 'committed-governed-transition-witness-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}, {'replay': 'same-slot-safety-counterevidence-and-immutable-stop-gate-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}], 'evidence_verified': False, 'acceptance': "NOT GRANTED: requires an independent reviewer's decision recorded in META_LEDGER"}
+
+reference/tests/test_770_v7_lane_freeze_independent.py:259: AssertionError
+_ BenchmarkIntegrationContractTests.test_evaluation_only_change_keeps_runtime_baseline_equivalence _
+
+self = <tests.test_benchmark_integration_contract.BenchmarkIntegrationContractTests testMethod=test_evaluation_only_change_keeps_runtime_baseline_equivalence>
+
+    def test_evaluation_only_change_keeps_runtime_baseline_equivalence(self):
+        register = json.loads((REPO_ROOT / "reports" / "runtime" / "baseline-register.json").read_text(encoding="utf-8"))
+        boundary = json.loads((REPO_ROOT / register["baselines"][-1]["source_boundary"]).read_text(encoding="utf-8"))
+        excluded = [item["path"] for item in boundary["excluded_non_runtime_paths"]]
+        self.assertEqual(excluded, ["reference/agentmem_ref/evaluation"])
+        self.assertIs(boundary["baseline_mutation"], False)
+        available = subprocess.run(
+            ["git", "cat-file", "-e", f"{boundary['frozen_revision']}^{{commit}}"],
+            cwd=REPO_ROOT, capture_output=True, text=True, check=False,
+        )
+        if available.returncode != 0:
+            self.skipTest("frozen Runtime Baseline v1 revision is not available in this checkout")
+        result = subprocess.run(
+            [sys.executable, "scripts/check_runtime_baseline_equivalence.py", "--candidate", "HEAD"],
+            cwd=REPO_ROOT, capture_output=True, text=True, check=False,
+        )
+>       self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+E       AssertionError: 1 != 0 : undeclared protected change: reference/agentmem_ref/api/context_package.py
+E       undeclared protected change: reference/agentmem_ref/api/context_selection.py
+E       undeclared protected change: reference/agentmem_ref/api/host_activation.py
+E       undeclared protected change: reference/agentmem_ref/context_package.py
+E       undeclared protected change: reference/agentmem_ref/context_selection.py
+E       undeclared protected change: reference/agentmem_ref/host_activation.py
+E       declared blob mismatch for reference/agentmem_ref/api/surface.py: declared ba8924d450139f6ef7ea322bb2b3b021139c7e8d, candidate 1de5e7ad751b4226c65d992954a219eb0742a85d
+E       declared blob mismatch for reference/agentmem_ref/runtime/adapter.py: declared 2c0d3b6d2fbca899afe0d021b563064e91659f77, candidate 85da3030b4cc5ffc132f5572ca44e40933ca2f43
+
+reference/tests/test_benchmark_integration_contract.py:379: AssertionError
+=============================== warnings summary ===============================
+reference/tests/test_test_import_convention.py::TestImportConvention::test_no_test_module_uses_a_relative_import
+  <unknown>:79: SyntaxWarning: invalid escape sequence '\+'
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED reference/tests/test_644_v7_gauntlet_identity.py::ImportedRuntimeIdentity::test_own_checkout_at_frozen_revision_is_served
+FAILED reference/tests/test_770_v7_lane_freeze_independent.py::ReplayEvidenceFreshness::test_a_runtime_edit_still_makes_replay_evidence_stale
+FAILED reference/tests/test_770_v7_lane_freeze_independent.py::ReplayEvidenceFreshness::test_lane_records_do_not_make_replay_evidence_stale
+FAILED reference/tests/test_benchmark_integration_contract.py::BenchmarkIntegrationContractTests::test_evaluation_only_change_keeps_runtime_baseline_equivalence
+4 failed, 3274 passed, 27 skipped, 1 xfailed, 1 warning, 2191 subtests passed in 418.92s (0:06:58)
+exit=1

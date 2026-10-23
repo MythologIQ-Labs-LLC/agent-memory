@@ -378,5 +378,4 @@ subject conflicts without a shared term; on the first-person sets it is identica
 
 Suites at this revision: owner's 7 tests GREEN; selector/owner-control/challenge/package/audit suites
 **93 passed** (`logs/selector-0.5.1-GREEN.log`); MCP integration suites **42 OK** (bridge 12, real SDK 7,
-quality probe 10, task eval 6, owner's adversarial 7; `logs/mcp-suites-0.5.1.log`); full reference suite
-TBD-SUITE-051.
+quality probe 10, task eval 6, owner's adversarial 7; `logs/mcp-suites-0.5.1.log`); full reference suite at `993ba1c4` (`pytest reference/tests`): **3274 passed, 27 skipped, 1 xfailed, 4 failed**, the same four by-design v7 identity guards as in section 5.3 (`logs/full-suite-0.5.1.log`).
