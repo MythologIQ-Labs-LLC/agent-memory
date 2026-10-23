@@ -372,7 +372,7 @@
           "const": "evidence-qualified-context-selection"
         },
         "policy_version": {
-          "const": "0.5.0"
+          "const": "0.5.1"
         },
         "basis": {
           "const": "post_admission_query_evidence_qualification"
@@ -466,9 +466,7 @@
               },
               "absence_grounding": {
                 "enum": [
-                  "single_statement",
-                  "fact_subject_absent",
-                  "query_subject_absent"
+                  "single_statement"
                 ]
               }
             }

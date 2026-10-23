@@ -17,9 +17,15 @@ class TaskEvalJudge(unittest.TestCase):
         v = task_eval.judge(None, ["propane"])
         self.assertEqual((v["answerable"], v["abstained"], v["correct"], v["false_answer"]), (True, True, False, False))
 
-    def test_any_gold_substring_counts_case_insensitively(self):
+    def test_gold_phrase_match_is_whole_token_case_insensitive_and_negation_guarded(self):
         self.assertTrue(task_eval.judge("It is heated by a Propane burner.", ["propane"])["correct"])
+        self.assertTrue(task_eval.judge("Frostline FL-80", ["fl-80"])["correct"])
         self.assertFalse(task_eval.judge("It is heated by paraffin.", ["propane"])["correct"])
+        # a word inside another word and a negated mention are not credited (review 5628673295)
+        self.assertFalse(task_eval.judge("The answer is blueberry.", ["blue"])["correct"])
+        negated = task_eval.judge("The aircraft did not land in Oslo.", ["Oslo"])
+        self.assertEqual((negated["correct"], negated["gold_phrase_present"], negated["negated"]), (False, True, True))
+        self.assertFalse(task_eval.judge("It isn't propane.", ["propane"])["correct"])
 
     def test_no_answer_question_rewards_abstention_and_flags_a_false_answer(self):
         self.assertTrue(task_eval.judge(None, None)["correct"])
@@ -54,7 +60,7 @@ class TaskEvalJudge(unittest.TestCase):
                      "evidence": task_eval.quality.score(["memory:a"], [], [])}},
         ]
         s = task_eval.aggregate(rows, "mcp")
-        self.assertEqual((s["answerable_total"], s["answerable_correct"]), (1, 1))
+        self.assertEqual((s["answerable_total"], s["answerable_gold_phrase_match"]), (1, 1))
         self.assertEqual((s["unanswerable_total"], s["unanswerable_abstained"], s["unanswerable_false_answer"]), (2, 1, 1))
         self.assertEqual(s["unexpected_evidence_items"], 1)
 

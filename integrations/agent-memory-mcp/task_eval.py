@@ -6,6 +6,9 @@ This is NOT a benchmark score, NOT blinded, and the readers are NOT agents:
 
 * ``extractive`` is a deterministic plumbing reader (the evidence sentence sharing most content
   terms with the question; abstains when none shares any). It proves the harness, nothing else.
+* the "correct" column is a **gold-phrase-match proxy** (whole-token match, negation guarded;
+  see ``judge``), not verified answer correctness: a paraphrased right answer is not credited and
+  a wrong sentence that happens to contain the gold phrase is only partly guarded against.
 * ``onnx-squad`` is a small open extractive question-answering model (DistilBERT fine-tuned on
   SQuAD 1.1, pinned ONNX export, CPU, no paid inference). It answers with a span of the delivered
   evidence and abstains when no evidence is delivered or its span confidence is below a fixed
@@ -125,16 +128,42 @@ def _softmax(values):
     return weights / weights.sum()
 
 
+_NEGATION = frozenset("not no never none neither nor nothing nobody nowhere without cannot".split())
+_TOKEN = re.compile(r"[^\W_]+", re.UNICODE)
+
+
+def _phrase_tokens(text: str) -> list[str]:
+    return _TOKEN.findall(text.casefold())
+
+
+def _contains_phrase(answer_tokens: Sequence[str], gold_tokens: Sequence[str]) -> bool:
+    """Whole-token phrase containment: ``blue`` is not inside ``blueberry``, ``fl 80`` is inside
+    ``frostline fl 80``."""
+    n = len(gold_tokens)
+    return n > 0 and any(list(answer_tokens[i:i + n]) == list(gold_tokens) for i in range(len(answer_tokens) - n + 1))
+
+
 def judge(answer: str | None, gold: Sequence[str] | None) -> dict:
-    """Join gold after answering. ``gold`` None means the question has no answer in the corpus."""
+    """Join gold after answering. ``gold`` None means the question has no answer in the corpus.
+
+    ``correct`` is a **gold-phrase-match proxy**, not verified answer correctness: it holds when a
+    gold phrase occurs in the answer as a whole-token sequence (casefolded, punctuation ignored)
+    and the answer carries no negation marker (``not``, ``n't``, ``never``, ``no``, ...). A negated
+    mention (``did not land in Oslo``) and a word inside another word (``blueberry`` for ``blue``)
+    are therefore not credited; a paraphrased correct answer is not credited either. The field
+    ``gold_phrase_present`` records the raw match and ``negated`` the guard, so a reader of the
+    report can see what the proxy did. An independent answer judgement is not implemented here.
+    """
     if gold is None:
         return {"answerable": False, "abstained": answer is None, "correct": answer is None,
                 "false_answer": answer is not None}
     if answer is None:
         return {"answerable": True, "abstained": True, "correct": False, "false_answer": False}
-    folded = answer.casefold()
-    return {"answerable": True, "abstained": False, "correct": any(g.casefold() in folded for g in gold),
-            "false_answer": False}
+    tokens = _phrase_tokens(answer.replace("n't", " not "))
+    present = any(_contains_phrase(tokens, _phrase_tokens(g)) for g in gold)
+    negated = any(token in _NEGATION for token in tokens)
+    return {"answerable": True, "abstained": False, "correct": present and not negated,
+            "false_answer": False, "gold_phrase_present": present, "negated": negated}
 
 
 def aggregate(rows: list[dict], arm: str) -> dict:
@@ -144,9 +173,10 @@ def aggregate(rows: list[dict], arm: str) -> dict:
     latencies = [r[arm]["elapsed_ms"] for r in rows]
     return {
         "answerable_total": len(answerable),
-        "answerable_correct": sum(v["correct"] for v in answerable),
+        "answerable_gold_phrase_match": sum(v["correct"] for v in answerable),
         "answerable_abstained": sum(v["abstained"] for v in answerable),
-        "answerable_wrong": sum((not v["correct"]) and (not v["abstained"]) for v in answerable),
+        "answerable_no_match": sum((not v["correct"]) and (not v["abstained"]) for v in answerable),
+        "correctness_measure": "gold_phrase_match_proxy_not_verified_answer_correctness",
         "unanswerable_total": len(unanswerable),
         "unanswerable_abstained": sum(v["abstained"] for v in unanswerable),
         "unanswerable_false_answer": sum(v["false_answer"] for v in unanswerable),
@@ -204,6 +234,13 @@ async def run(cases: dict, answerer: Answerer, *, k: int, selectivity: bool, ans
                 evidence = content.get("evidence") or []
                 mcp_keys = [e.get("memory_ref") if isinstance(e.get("memory_ref"), str) else "<unattributed>"
                             for e in evidence]
+                # Same full-delivery contract as quality_probe: a required source counts as
+                # delivered only when its whole seeded text arrived, resolved, under its key.
+                mcp_full_keys = [
+                    e["memory_ref"] for e in evidence
+                    if (isinstance(e.get("memory_ref"), str) and e.get("state") == "resolved" and
+                        e.get("content") == by_key.get(e["memory_ref"]))
+                ]
                 mcp_texts = [e["content"] for e in evidence if isinstance(e.get("content"), str)]
                 mcp_answer, mcp_conf = answerer(question, mcp_texts)
                 start = time.perf_counter()
@@ -217,7 +254,8 @@ async def run(cases: dict, answerer: Answerer, *, k: int, selectivity: bool, ans
                         "keys": mcp_keys, "answer": mcp_answer, "confidence": mcp_conf,
                         "verdict": judge(mcp_answer, gold), "elapsed_ms": mcp_ms,
                         "delivered_chars": sum(len(t) for t in mcp_texts),
-                        "evidence": quality.score(mcp_keys, task["required"], task["forbidden"]),
+                        "evidence": quality.score(mcp_keys, task["required"], task["forbidden"],
+                                                  fully_delivered_keys=mcp_full_keys),
                         "selection_assessment": content.get("selection_assessment"),
                         "profile": content.get("profile"),
                     },
