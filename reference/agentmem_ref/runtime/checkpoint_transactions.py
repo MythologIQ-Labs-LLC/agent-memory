@@ -13,6 +13,7 @@ from __future__ import annotations
 
 from contextlib import contextmanager
 from dataclasses import dataclass
+from pathlib import Path
 import tempfile
 from typing import Iterator, Mapping
 
@@ -288,13 +289,13 @@ class CheckpointTransactionSupport:
         payload = b"".join(
             _rr._canonical_bytes(dict(record)) + b"\n" for record in records
         )
-        temporary = None
+        temporary: Path | None = None
         try:
             with tempfile.NamedTemporaryFile(
                 mode="wb", prefix=f".{path.name}.", suffix=".tmp",
                 dir=path.parent, delete=False,
             ) as handle:
-                temporary = type(path)(handle.name)
+                temporary = Path(handle.name)
                 handle.write(payload)
                 handle.flush()
                 _rr.os.fsync(handle.fileno())
