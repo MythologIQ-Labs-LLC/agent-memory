@@ -65,13 +65,27 @@ def fts_find(db: sqlite3.Connection, query: str, max_items: int) -> list[str]:
     )]
 
 
+def fully_delivered_keys(evidence: list[dict], seeded: dict[str, str]) -> list[str]:
+    """The one full-delivery contract for every harness: a returned source counts as delivered
+    evidence only when it arrived ``resolved``, attributed to its key, with its whole seeded text.
+    A truncated, abridged, unresolved or unattributed item is returned burden, never evidence."""
+    return [
+        e["memory_ref"] for e in evidence
+        if (isinstance(e.get("memory_ref"), str) and e.get("state") == "resolved" and
+            e.get("content") == seeded.get(e["memory_ref"]))
+    ]
+
+
 def score(keys: list[str], required: list[str], forbidden: list[str], *,
-          fully_delivered_keys: list[str] | None = None) -> dict:
+          fully_delivered_keys: list[str]) -> dict:
     # A source-key hit is NOT full evidence coverage if the MCP package only
-    # delivered part of the source, or lost its provenance. For the indexed
-    # FTS5 control the entire text of every returned source is retrievable.
+    # delivered part of the source, or lost its provenance. There is no default:
+    # a caller must say which returned keys carried their whole text (review
+    # 5628673295: a forgotten argument used to credit every returned key). For
+    # the indexed FTS5 control the entire text of every returned source is
+    # retrievable, so its caller passes the returned keys explicitly.
     observed, wanted = set(keys), set(required)
-    eligible = set(keys if fully_delivered_keys is None else fully_delivered_keys)
+    eligible = set(fully_delivered_keys)
     if not eligible.issubset(observed):
         raise ValueError("fully delivered evidence must be a subset of returned keys")
     hits = len(eligible & wanted)
@@ -188,12 +202,7 @@ async def run(cases: dict, k: int = 5, *, selectivity: bool = False) -> dict:
                 # never silently erase a missing provenance item from scoring.
                 mcp_keys = [e.get("memory_ref") if isinstance(e.get("memory_ref"), str)
                             else "<unattributed>" for e in evidence]
-                mcp_full_keys = [
-                    e["memory_ref"] for e in evidence
-                    if (isinstance(e.get("memory_ref"), str) and
-                        e.get("state") == "resolved" and
-                        e.get("content") == by_key.get(e["memory_ref"]))
-                ]
+                mcp_full_keys = fully_delivered_keys(evidence, by_key)
                 fts_start = time.perf_counter()
                 fts_keys = fts_find(fts, question, k)
                 fts_ms = (time.perf_counter() - fts_start) * 1000
@@ -206,7 +215,8 @@ async def run(cases: dict, k: int = 5, *, selectivity: bool = False) -> dict:
                     "fts5_keys": fts_keys,
                     "mcp": score(mcp_keys, task["required"], task["forbidden"],
                                  fully_delivered_keys=mcp_full_keys),
-                    "fts5": score(fts_keys, task["required"], task["forbidden"]),
+                    "fts5": score(fts_keys, task["required"], task["forbidden"],
+                                  fully_delivered_keys=fts_keys),
                     "mcp_unattributed_items": mcp_keys.count("<unattributed>"),
                     "mcp_incomplete_text_items": len(mcp_keys) - len(mcp_full_keys),
                     "mcp_unavailable_items": len(content.get("unavailable") or []),

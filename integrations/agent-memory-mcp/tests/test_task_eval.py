@@ -51,13 +51,13 @@ class TaskEvalJudge(unittest.TestCase):
             task_eval.validate_task_cases({**base, "tasks": [{**base["tasks"][0], "required": [], "gold": ["blue"]}]})
 
     def test_aggregate_separates_answerable_from_unanswerable(self):
-        ev = task_eval.quality.score(["memory:a"], ["memory:a"], [])
+        ev = task_eval.quality.score(["memory:a"], ["memory:a"], [], fully_delivered_keys=["memory:a"])
         rows = [
             {"mcp": {"verdict": task_eval.judge("blue", ["blue"]), "elapsed_ms": 1.0, "delivered_chars": 10, "evidence": ev}},
             {"mcp": {"verdict": task_eval.judge(None, None), "elapsed_ms": 2.0, "delivered_chars": 0,
-                     "evidence": task_eval.quality.score([], [], [])}},
+                     "evidence": task_eval.quality.score([], [], [], fully_delivered_keys=[])}},
             {"mcp": {"verdict": task_eval.judge("red", None), "elapsed_ms": 3.0, "delivered_chars": 5,
-                     "evidence": task_eval.quality.score(["memory:a"], [], [])}},
+                     "evidence": task_eval.quality.score(["memory:a"], [], [], fully_delivered_keys=["memory:a"])}},
         ]
         s = task_eval.aggregate(rows, "mcp")
         self.assertEqual((s["answerable_total"], s["answerable_gold_phrase_match"]), (1, 1))
