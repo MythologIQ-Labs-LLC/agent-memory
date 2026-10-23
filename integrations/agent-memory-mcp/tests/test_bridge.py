@@ -219,6 +219,42 @@ class BridgeTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, "symlink"):
                     HostConfig.from_environment()
 
+    def test_symlinked_parent_rejected_when_final_store_root_does_not_exist(self):
+        # A nested path under a link is NOT itself a symlink. The previous
+        # check of root.is_symlink() was therefore insufficient.
+        with tempfile.TemporaryDirectory() as temporary:
+            real = Path(temporary) / "real"
+            real.mkdir()
+            link = Path(temporary) / "link"
+            try:
+                link.symlink_to(real, target_is_directory=True)
+            except (OSError, NotImplementedError) as error:
+                self.skipTest(f"symlink privilege unavailable: {error}")
+            nested = link / "new-store"
+            self.assertFalse(nested.is_symlink())
+            self.assertFalse(nested.exists())
+            with patch.dict(os.environ, {
+                "AGENT_MEMORY_MCP_ROOT": str(nested),
+                "AGENT_MEMORY_MCP_TENANT": "tenant:a",
+                "AGENT_MEMORY_MCP_ACTOR": "agent:local",
+                "AGENT_MEMORY_MCP_SCOPE": "project:local",
+            }, clear=True):
+                with self.assertRaisesRegex(ValueError, "symlink"):
+                    HostConfig.from_environment()
+            self.assertFalse((real / "new-store").exists())
+
+    def test_parent_traversal_rejected_even_in_absolute_store_path(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            raw_root = str(Path(temporary) / "temp" / ".." / "new-store")
+            with patch.dict(os.environ, {
+                "AGENT_MEMORY_MCP_ROOT": raw_root,
+                "AGENT_MEMORY_MCP_TENANT": "tenant:a",
+                "AGENT_MEMORY_MCP_ACTOR": "agent:local",
+                "AGENT_MEMORY_MCP_SCOPE": "project:local",
+            }, clear=True):
+                with self.assertRaisesRegex(ValueError, "parent traversal"):
+                    HostConfig.from_environment()
+
 
 if __name__ == "__main__":
     unittest.main()
