@@ -23,6 +23,10 @@ class FakeMemory:
         self.calls.append(("remember", key, text, kwargs))
         return {"committed": True, "fact_uuid": "fact:qualified-1", "stage": "commit"}
 
+    def forget(self, key, **kwargs):
+        self.calls.append(("forget", key, kwargs))
+        return {"committed": True, "outcome": "allow_with_ledger", "stage": "forget"}
+
     def recall_context(self, question, **kwargs):
         self.calls.append(("recall_context", question, kwargs))
         return {
@@ -181,6 +185,52 @@ class BridgeTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.bridge.remember("memory:ok", "x" * 4001)
         self.assertFalse(self.calls)
+
+    def test_forget_is_disabled_without_exact_host_grant_and_never_opens_store(self):
+        for env in ({}, {
+            "AGENT_MEMORY_MCP_PRUNE_APPROVED_KEY": "memory:editor",
+        }, {
+            "AGENT_MEMORY_MCP_PRUNE_APPROVED_KEY": "memory:other",
+            "AGENT_MEMORY_MCP_PRUNE_EVIDENCE_REF": "host-record:approved",
+        }):
+            with self.subTest(env=env), patch.dict(os.environ, env, clear=True):
+                result = self.bridge.forget("memory:editor")
+                self.assertFalse(result["committed"])
+                self.assertEqual(result["status"], "host_authorization_required")
+                self.assertEqual(result["refusal"], "host_authorization_required")
+        self.assertEqual(self.calls, [])
+        self.assertEqual(self.closes, [])
+
+    def test_forget_uses_only_public_facade_with_host_owned_evidence_ref(self):
+        with patch.dict(os.environ, {
+            "AGENT_MEMORY_MCP_PRUNE_APPROVED_KEY": "memory:editor",
+            "AGENT_MEMORY_MCP_PRUNE_EVIDENCE_REF": "host-record:approved",
+        }, clear=True):
+            result = self.bridge.forget("memory:editor")
+        self.assertTrue(result["committed"])
+        self.assertEqual(result["status"], "forgotten")
+        self.assertIs(result["permanent"], False)
+        self.assertIn(("forget", "memory:editor",
+                       {"permanent": False, "evidence_refs": ("host-record:approved",)}), self.calls)
+        self.assertEqual(self.closes, ["closed"])
+
+    def test_forget_preserves_runtime_refusal_without_claiming_success(self):
+        with patch.dict(os.environ, {
+            "AGENT_MEMORY_MCP_PRUNE_APPROVED_KEY": "memory:editor",
+            "AGENT_MEMORY_MCP_PRUNE_EVIDENCE_REF": "host-record:approved",
+        }, clear=True), patch.object(FakeMemory, "forget", return_value={
+            "committed": False, "outcome": "require_review", "refusal": "insufficient_evidence",
+        }):
+            result = self.bridge.forget("memory:editor")
+        self.assertFalse(result["committed"])
+        self.assertEqual(result["status"], "not_committed")
+        self.assertEqual(result["outcome"], "require_review")
+        self.assertEqual(result["refusal"], "insufficient_evidence")
+
+    def test_forget_rejects_invalid_target_before_reading_host_grant(self):
+        with self.assertRaises(ValueError):
+            self.bridge.forget(" ")
+        self.assertEqual(self.calls, [])
 
     def test_missing_host_claims_fail_closed(self):
         with patch.dict(os.environ, {
