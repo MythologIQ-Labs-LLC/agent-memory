@@ -163,13 +163,24 @@ class LocalMemoryBridge:
             )
         result = self._project(package, asked=key)
         exact = [item for item in result["evidence"] if item["memory_ref"] == key]
-        result["evidence"] = exact
-        result["evidence_count"] = len(exact)
+        # The public recall route can expose several generations or
+        # separately committed facts for the same logical key. Neither this
+        # MCP wrapper nor a rank alone can establish which is canonical.
+        # Never present conflicting values as one trustworthy "get" result.
+        # Identical values are not independently authoritative either: do
+        # not silently choose an arbitrary generation.
+        if len(exact) > 1:
+            result["evidence"] = []
+            result["evidence_count"] = 0
+            result["lookup_status"] = "ambiguous_multiple_versions"
+        else:
+            result["evidence"] = exact
+            result["evidence_count"] = len(exact)
+            result["lookup_status"] = "found" if exact else "not_found_or_unavailable"
         # Unrelated returned fact identifiers and their states are not part
         # of an exact-key result; don't launder them into a wrong answer.
         result["unavailable"] = []
         result["lookup"] = "governed_exact_logical_memory_ref"
-        result["lookup_status"] = "found" if exact else "not_found_or_unavailable"
         return result
 
 
