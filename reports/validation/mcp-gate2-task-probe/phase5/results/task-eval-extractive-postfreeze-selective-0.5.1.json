@@ -1,0 +1,1606 @@
+{
+  "abstain_below": null,
+  "answerer": "extractive",
+  "budget": {
+    "max_items": 5
+  },
+  "comparator": "indexed SQLite FTS5 unicode61 bm25 OR terms over the same texts; same reader",
+  "dataset": {
+    "cases_sha256": "dae52ceb9c98c5291e11be580eacaf804f08ce0c843a930602f9018c249544d5",
+    "records": 22,
+    "tasks": 22
+  },
+  "provider": "real stdio MCP memory_find experimental_selectivity=True",
+  "qualification": "author-visible task-level diagnostic; NOT blinded, NOT a benchmark, reader is NOT an agent",
+  "reader_files_sha256": null,
+  "rows": [
+    {
+      "fts5": {
+        "answer": "Tamsin's greenhouse used to be heated by paraffin.",
+        "confidence": 1.0,
+        "delivered_chars": 384,
+        "elapsed_ms": 0.3820940000309747,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.2,
+          "forbidden_keys_present": [
+            "memory:rohan-greenhouse",
+            "memory:tamsin-dog"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 4
+        },
+        "keys": [
+          "memory:tamsin-greenhouse-old",
+          "memory:tamsin-greenhouse",
+          "memory:rohan-greenhouse",
+          "memory:tamsin-cousin",
+          "memory:tamsin-dog"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": false,
+          "false_answer": false,
+          "gold_phrase_present": false,
+          "negated": false
+        }
+      },
+      "gold": [
+        "propane"
+      ],
+      "id": "T1",
+      "mcp": {
+        "answer": "Tamsin's greenhouse is heated by a propane burner.",
+        "confidence": 1.0,
+        "delivered_chars": 322,
+        "elapsed_ms": 208.20314299999154,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.25,
+          "forbidden_keys_present": [
+            "memory:tamsin-dog"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 3
+        },
+        "keys": [
+          "memory:tamsin-greenhouse",
+          "memory:tamsin-greenhouse-old",
+          "memory:tamsin-dog",
+          "memory:tamsin-cousin"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false
+        }
+      },
+      "question": "How is Tamsin's greenhouse heated?",
+      "required": [
+        "memory:tamsin-greenhouse"
+      ]
+    },
+    {
+      "fts5": {
+        "answer": "Tamsin's dog is a whippet named Juniper.",
+        "confidence": 0.6666666666666666,
+        "delivered_chars": 322,
+        "elapsed_ms": 0.12825099997826328,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.25,
+          "forbidden_keys_present": [
+            "memory:tamsin-greenhouse"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 3
+        },
+        "keys": [
+          "memory:tamsin-dog",
+          "memory:tamsin-cousin",
+          "memory:tamsin-greenhouse-old",
+          "memory:tamsin-greenhouse"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false
+        }
+      },
+      "gold": [
+        "whippet"
+      ],
+      "id": "T2",
+      "mcp": {
+        "answer": "Tamsin's dog is a whippet named Juniper.",
+        "confidence": 0.6666666666666666,
+        "delivered_chars": 322,
+        "elapsed_ms": 59.8132370000144,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.25,
+          "forbidden_keys_present": [
+            "memory:tamsin-greenhouse"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 3
+        },
+        "keys": [
+          "memory:tamsin-dog",
+          "memory:tamsin-greenhouse",
+          "memory:tamsin-cousin",
+          "memory:tamsin-greenhouse-old"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false
+        }
+      },
+      "question": "What breed is Tamsin's dog?",
+      "required": [
+        "memory:tamsin-dog"
+      ]
+    },
+    {
+      "fts5": {
+        "answer": "Rohan's greenhouse grows chillies.",
+        "confidence": 0.5,
+        "delivered_chars": 328,
+        "elapsed_ms": 0.13176100003420288,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.2,
+          "forbidden_keys_present": [],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 4
+        },
+        "keys": [
+          "memory:rohan-greenhouse",
+          "memory:felix-tools",
+          "memory:ines-nephew",
+          "memory:rohan-kayak",
+          "memory:tamsin-greenhouse-old"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false
+        }
+      },
+      "gold": [
+        "chillies",
+        "chilli"
+      ],
+      "id": "T3",
+      "mcp": {
+        "answer": "Rohan's greenhouse grows chillies.",
+        "confidence": 0.5,
+        "delivered_chars": 281,
+        "elapsed_ms": 50.95138299998325,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.25,
+          "forbidden_keys_present": [],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 3
+        },
+        "keys": [
+          "memory:rohan-greenhouse",
+          "memory:ines-nephew",
+          "memory:rohan-kayak",
+          "memory:tamsin-greenhouse-old"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false
+        }
+      },
+      "question": "What does Rohan grow in his greenhouse?",
+      "required": [
+        "memory:rohan-greenhouse"
+      ]
+    },
+    {
+      "fts5": {
+        "answer": "Ines drives a grey hatchback.",
+        "confidence": 0.3333333333333333,
+        "delivered_chars": 220,
+        "elapsed_ms": 0.12433299997383074,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.3333333333333333,
+          "forbidden_keys_present": [
+            "memory:ines-nephew"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 2
+        },
+        "keys": [
+          "memory:ines-car",
+          "memory:ines-nephew",
+          "memory:ines-mentor"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": false,
+          "false_answer": false,
+          "gold_phrase_present": false,
+          "negated": false
+        }
+      },
+      "gold": [
+        "larkhill"
+      ],
+      "id": "T4",
+      "mcp": {
+        "answer": "Ines's nephew is learning the trumpet.",
+        "confidence": 0.3333333333333333,
+        "delivered_chars": 157,
+        "elapsed_ms": 60.73037199996634,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.5,
+          "forbidden_keys_present": [
+            "memory:ines-nephew"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 1
+        },
+        "keys": [
+          "memory:ines-nephew",
+          "memory:ines-mentor"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "undetermined",
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": false,
+          "false_answer": false,
+          "gold_phrase_present": false,
+          "negated": false
+        }
+      },
+      "question": "Where does Ines's teacher work?",
+      "required": [
+        "memory:ines-mentor"
+      ]
+    },
+    {
+      "fts5": {
+        "answer": "Ines's nephew is learning the trumpet.",
+        "confidence": 0.75,
+        "delivered_chars": 220,
+        "elapsed_ms": 0.13359399997625587,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.3333333333333333,
+          "forbidden_keys_present": [
+            "memory:ines-mentor"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 2
+        },
+        "keys": [
+          "memory:ines-nephew",
+          "memory:ines-car",
+          "memory:ines-mentor"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false
+        }
+      },
+      "gold": [
+        "trumpet"
+      ],
+      "id": "T5",
+      "mcp": {
+        "answer": "Ines's nephew is learning the trumpet.",
+        "confidence": 0.75,
+        "delivered_chars": 157,
+        "elapsed_ms": 53.375269000014214,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.5,
+          "forbidden_keys_present": [
+            "memory:ines-mentor"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 1
+        },
+        "keys": [
+          "memory:ines-nephew",
+          "memory:ines-mentor"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false
+        }
+      },
+      "question": "Which instrument is Ines's nephew learning?",
+      "required": [
+        "memory:ines-nephew"
+      ]
+    },
+    {
+      "fts5": {
+        "answer": "Tamsin's cousin works at a bakery in Dundee.",
+        "confidence": 0.5,
+        "delivered_chars": 322,
+        "elapsed_ms": 0.1351490000160993,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.25,
+          "forbidden_keys_present": [
+            "memory:tamsin-dog"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 3
+        },
+        "keys": [
+          "memory:tamsin-cousin",
+          "memory:tamsin-dog",
+          "memory:tamsin-greenhouse-old",
+          "memory:tamsin-greenhouse"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false
+        }
+      },
+      "gold": [
+        "dundee"
+      ],
+      "id": "T6",
+      "mcp": {
+        "answer": "Tamsin's cousin works at a bakery in Dundee.",
+        "confidence": 0.5,
+        "delivered_chars": 322,
+        "elapsed_ms": 65.10088800001768,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.25,
+          "forbidden_keys_present": [
+            "memory:tamsin-dog"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 3
+        },
+        "keys": [
+          "memory:tamsin-cousin",
+          "memory:tamsin-greenhouse-old",
+          "memory:tamsin-dog",
+          "memory:tamsin-greenhouse"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false
+        }
+      },
+      "question": "In which city does Tamsin's cousin work?",
+      "required": [
+        "memory:tamsin-cousin"
+      ]
+    },
+    {
+      "fts5": {
+        "answer": "The lab freezer is a Frostline FL-80.",
+        "confidence": 0.6666666666666666,
+        "delivered_chars": 75,
+        "elapsed_ms": 0.13078399996402368,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 1.0,
+          "forbidden_keys_present": [],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 0
+        },
+        "keys": [
+          "memory:lab-freezer"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false
+        }
+      },
+      "gold": [
+        "fl-80",
+        "frostline"
+      ],
+      "id": "T7",
+      "mcp": {
+        "answer": "The lab freezer is a Frostline FL-80.",
+        "confidence": 0.6666666666666666,
+        "delivered_chars": 317,
+        "elapsed_ms": 63.372647999983656,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.25,
+          "forbidden_keys_present": [],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 3
+        },
+        "keys": [
+          "memory:lab-freezer",
+          "memory:ines-nephew",
+          "memory:tamsin-greenhouse",
+          "memory:tamsin-dog"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false
+        }
+      },
+      "question": "What model is the lab freezer?",
+      "required": [
+        "memory:lab-freezer"
+      ]
+    },
+    {
+      "fts5": {
+        "answer": "The lab freezer is a Frostline FL-80.",
+        "confidence": 0.5,
+        "delivered_chars": 75,
+        "elapsed_ms": 0.1870959999905608,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 1.0,
+          "forbidden_keys_present": [],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 0
+        },
+        "keys": [
+          "memory:lab-freezer"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": false,
+          "false_answer": false,
+          "gold_phrase_present": false,
+          "negated": false
+        }
+      },
+      "gold": [
+        "minus seventy",
+        "-70"
+      ],
+      "id": "T8",
+      "mcp": {
+        "answer": "The lab freezer is a Frostline FL-80.",
+        "confidence": 0.5,
+        "delivered_chars": 488,
+        "elapsed_ms": 54.327432999969005,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.25,
+          "forbidden_keys_present": [],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 3
+        },
+        "keys": [
+          "memory:lab-freezer",
+          "memory:tide-clock",
+          "memory:office-plants",
+          "memory:trip-log"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": false,
+          "false_answer": false,
+          "gold_phrase_present": false,
+          "negated": false
+        }
+      },
+      "question": "What alarm threshold does the lab freezer use?",
+      "required": [
+        "memory:lab-freezer"
+      ]
+    },
+    {
+      "fts5": {
+        "answer": "Priyanka edits her notes in Obsidian.",
+        "confidence": 0.75,
+        "delivered_chars": 75,
+        "elapsed_ms": 0.2092539999694054,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 1.0,
+          "forbidden_keys_present": [],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 0
+        },
+        "keys": [
+          "memory:priyanka-tools"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false
+        }
+      },
+      "gold": [
+        "obsidian"
+      ],
+      "id": "T9",
+      "mcp": {
+        "answer": "Priyanka edits her notes in Obsidian.",
+        "confidence": 0.75,
+        "delivered_chars": 75,
+        "elapsed_ms": 62.51423000003342,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 1.0,
+          "forbidden_keys_present": [],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 0
+        },
+        "keys": [
+          "memory:priyanka-tools"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false
+        }
+      },
+      "question": "Which app does Priyanka use for her notes?",
+      "required": [
+        "memory:priyanka-tools"
+      ]
+    },
+    {
+      "fts5": {
+        "answer": "Project Heron holds its retrospective at the Granary Hall on February 9.",
+        "confidence": 0.6,
+        "delivered_chars": 286,
+        "elapsed_ms": 0.2538990000289232,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.25,
+          "forbidden_keys_present": [
+            "memory:kestrel-meeting"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 3
+        },
+        "keys": [
+          "memory:heron-meeting",
+          "memory:heron-lead",
+          "memory:kestrel-lead",
+          "memory:kestrel-meeting"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false
+        }
+      },
+      "gold": [
+        "granary hall",
+        "granary"
+      ],
+      "id": "T10",
+      "mcp": {
+        "answer": "Project Heron holds its retrospective at the Granary Hall on February 9.",
+        "confidence": 0.6,
+        "delivered_chars": 361,
+        "elapsed_ms": 51.614615000005415,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.2,
+          "forbidden_keys_present": [
+            "memory:kestrel-meeting"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 4
+        },
+        "keys": [
+          "memory:heron-meeting",
+          "memory:heron-lead",
+          "memory:lab-freezer",
+          "memory:kestrel-lead",
+          "memory:kestrel-meeting"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false
+        }
+      },
+      "question": "Where will Project Heron hold its retrospective?",
+      "required": [
+        "memory:heron-meeting"
+      ]
+    },
+    {
+      "fts5": {
+        "answer": "Project Heron holds its retrospective at the Granary Hall on February 9.",
+        "confidence": 0.6666666666666666,
+        "delivered_chars": 286,
+        "elapsed_ms": 0.12273800001594282,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.25,
+          "forbidden_keys_present": [
+            "memory:kestrel-lead"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 3
+        },
+        "keys": [
+          "memory:heron-meeting",
+          "memory:heron-lead",
+          "memory:kestrel-lead",
+          "memory:kestrel-meeting"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": false,
+          "false_answer": false,
+          "gold_phrase_present": false,
+          "negated": false
+        }
+      },
+      "gold": [
+        "soraya",
+        "matteo"
+      ],
+      "id": "T11",
+      "mcp": {
+        "answer": "Project Heron holds its retrospective at the Granary Hall on February 9.",
+        "confidence": 0.6666666666666666,
+        "delivered_chars": 286,
+        "elapsed_ms": 69.26111299998183,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.25,
+          "forbidden_keys_present": [
+            "memory:kestrel-lead"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 3
+        },
+        "keys": [
+          "memory:heron-meeting",
+          "memory:heron-lead",
+          "memory:kestrel-lead",
+          "memory:kestrel-meeting"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": false,
+          "false_answer": false,
+          "gold_phrase_present": false,
+          "negated": false
+        }
+      },
+      "question": "Who leads Project Heron?",
+      "required": [
+        "memory:heron-lead"
+      ]
+    },
+    {
+      "fts5": {
+        "answer": "Project Kestrel's kickoff is at the Tannery Loft on January 22.",
+        "confidence": 1.0,
+        "delivered_chars": 286,
+        "elapsed_ms": 0.11476500003482215,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.25,
+          "forbidden_keys_present": [
+            "memory:heron-meeting"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 3
+        },
+        "keys": [
+          "memory:kestrel-meeting",
+          "memory:kestrel-lead",
+          "memory:heron-meeting",
+          "memory:heron-lead"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false
+        }
+      },
+      "gold": [
+        "january 22",
+        "22 january"
+      ],
+      "id": "T12",
+      "mcp": {
+        "answer": "Project Kestrel's kickoff is at the Tannery Loft on January 22.",
+        "confidence": 1.0,
+        "delivered_chars": 214,
+        "elapsed_ms": 59.371906999956536,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.3333333333333333,
+          "forbidden_keys_present": [],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 2
+        },
+        "keys": [
+          "memory:kestrel-meeting",
+          "memory:kestrel-lead",
+          "memory:heron-lead"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false
+        }
+      },
+      "question": "When is Project Kestrel's kickoff?",
+      "required": [
+        "memory:kestrel-meeting"
+      ]
+    },
+    {
+      "fts5": {
+        "answer": "Rohan's kayak has a carbon paddle.",
+        "confidence": 0.75,
+        "delivered_chars": 132,
+        "elapsed_ms": 0.12520799998583243,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.5,
+          "forbidden_keys_present": [
+            "memory:rohan-greenhouse"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 1
+        },
+        "keys": [
+          "memory:rohan-kayak",
+          "memory:rohan-greenhouse"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false
+        }
+      },
+      "gold": [
+        "carbon"
+      ],
+      "id": "T13",
+      "mcp": {
+        "answer": "Rohan's kayak has a carbon paddle.",
+        "confidence": 0.75,
+        "delivered_chars": 132,
+        "elapsed_ms": 46.22797700000092,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.5,
+          "forbidden_keys_present": [
+            "memory:rohan-greenhouse"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 1
+        },
+        "keys": [
+          "memory:rohan-kayak",
+          "memory:rohan-greenhouse"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false
+        }
+      },
+      "question": "What kind of paddle does Rohan's kayak have?",
+      "required": [
+        "memory:rohan-kayak"
+      ]
+    },
+    {
+      "fts5": {
+        "answer": "The spring field trip visited the Ardmore quarry, the Linton bog and the Carse estuary.",
+        "confidence": 0.5,
+        "delivered_chars": 263,
+        "elapsed_ms": 0.14388099998541293,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 1.0,
+          "forbidden_keys_present": [],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 0
+        },
+        "keys": [
+          "memory:trip-log"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": false,
+          "false_answer": false,
+          "gold_phrase_present": false,
+          "negated": false
+        }
+      },
+      "gold": [
+        "dougal"
+      ],
+      "id": "T14",
+      "mcp": {
+        "answer": "The spring field trip visited the Ardmore quarry, the Linton bog and the Carse estuary.",
+        "confidence": 0.5,
+        "delivered_chars": 479,
+        "elapsed_ms": 52.631614000006266,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.25,
+          "forbidden_keys_present": [],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 3
+        },
+        "keys": [
+          "memory:trip-log",
+          "memory:tide-clock",
+          "memory:harvest-fair",
+          "memory:office-plants"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": false,
+          "false_answer": false,
+          "gold_phrase_present": false,
+          "negated": false
+        }
+      },
+      "question": "What was the name of the coach driver on the spring field trip?",
+      "required": [
+        "memory:trip-log"
+      ]
+    },
+    {
+      "fts5": {
+        "answer": "The spring field trip visited the Ardmore quarry, the Linton bog and the Carse estuary.",
+        "confidence": 0.25,
+        "delivered_chars": 263,
+        "elapsed_ms": 0.15792599998576407,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 1.0,
+          "forbidden_keys_present": [],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 0
+        },
+        "keys": [
+          "memory:trip-log"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": false,
+          "false_answer": false,
+          "gold_phrase_present": false,
+          "negated": false
+        }
+      },
+      "gold": [
+        "blue"
+      ],
+      "id": "T15",
+      "mcp": {
+        "answer": "The spring field trip visited the Ardmore quarry, the Linton bog and the Carse estuary.",
+        "confidence": 0.25,
+        "delivered_chars": 413,
+        "elapsed_ms": 47.76981499998101,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.3333333333333333,
+          "forbidden_keys_present": [],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 2
+        },
+        "keys": [
+          "memory:trip-log",
+          "memory:tide-clock",
+          "memory:office-plants"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": false,
+          "false_answer": false,
+          "gold_phrase_present": false,
+          "negated": false
+        }
+      },
+      "question": "What colour were the estuary sample labels?",
+      "required": [
+        "memory:trip-log"
+      ]
+    },
+    {
+      "fts5": {
+        "answer": "Tamsin's greenhouse used to be heated by paraffin.",
+        "confidence": 0.25,
+        "delivered_chars": 384,
+        "elapsed_ms": 0.29894499999727486,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.2,
+          "forbidden_keys_present": [],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 4
+        },
+        "keys": [
+          "memory:tamsin-greenhouse-old",
+          "memory:tamsin-greenhouse",
+          "memory:rohan-greenhouse",
+          "memory:tamsin-cousin",
+          "memory:tamsin-dog"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": false,
+          "false_answer": false,
+          "gold_phrase_present": false,
+          "negated": false
+        }
+      },
+      "gold": [
+        "propane"
+      ],
+      "id": "T16",
+      "mcp": {
+        "answer": "Tamsin's greenhouse is heated by a propane burner.",
+        "confidence": 0.25,
+        "delivered_chars": 322,
+        "elapsed_ms": 58.17121699999461,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.25,
+          "forbidden_keys_present": [],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 3
+        },
+        "keys": [
+          "memory:tamsin-greenhouse",
+          "memory:tamsin-greenhouse-old",
+          "memory:tamsin-dog",
+          "memory:tamsin-cousin"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false
+        }
+      },
+      "question": "What is the current heating fuel of Tamsin's greenhouse, not the former one?",
+      "required": [
+        "memory:tamsin-greenhouse"
+      ]
+    },
+    {
+      "fts5": {
+        "answer": "The lab freezer is a Frostline FL-80.",
+        "confidence": 0.25,
+        "delivered_chars": 75,
+        "elapsed_ms": 0.11343599999236176,
+        "evidence": {
+          "empty_context_on_no_answer": false,
+          "evidence_precision": 0.0,
+          "forbidden_keys_present": [
+            "memory:lab-freezer"
+          ],
+          "required_complete": null,
+          "required_hits": 0,
+          "required_key_hits": 0,
+          "required_total": 0,
+          "unexpected_evidence_items": 1
+        },
+        "keys": [
+          "memory:lab-freezer"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": false,
+          "correct": false,
+          "false_answer": true
+        }
+      },
+      "gold": null,
+      "id": "U1",
+      "mcp": {
+        "answer": "The lab freezer is a Frostline FL-80.",
+        "confidence": 0.25,
+        "delivered_chars": 317,
+        "elapsed_ms": 54.63527599999907,
+        "evidence": {
+          "empty_context_on_no_answer": false,
+          "evidence_precision": 0.0,
+          "forbidden_keys_present": [
+            "memory:lab-freezer"
+          ],
+          "required_complete": null,
+          "required_hits": 0,
+          "required_key_hits": 0,
+          "required_total": 0,
+          "unexpected_evidence_items": 4
+        },
+        "keys": [
+          "memory:lab-freezer",
+          "memory:ines-nephew",
+          "memory:tamsin-greenhouse",
+          "memory:tamsin-dog"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": false,
+          "correct": false,
+          "false_answer": true
+        }
+      },
+      "question": "What is the alarm code for the lab door?",
+      "required": []
+    },
+    {
+      "fts5": {
+        "answer": "The tide clock in the lobby was recalibrated.",
+        "confidence": 0.25,
+        "delivered_chars": 162,
+        "elapsed_ms": 0.2517599999691811,
+        "evidence": {
+          "empty_context_on_no_answer": false,
+          "evidence_precision": 0.0,
+          "forbidden_keys_present": [
+            "memory:tide-clock"
+          ],
+          "required_complete": null,
+          "required_hits": 0,
+          "required_key_hits": 0,
+          "required_total": 0,
+          "unexpected_evidence_items": 2
+        },
+        "keys": [
+          "memory:tide-clock",
+          "memory:ines-mentor"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": false,
+          "correct": false,
+          "false_answer": true
+        }
+      },
+      "gold": null,
+      "id": "U2",
+      "mcp": {
+        "answer": "The tide clock in the lobby was recalibrated.",
+        "confidence": 0.25,
+        "delivered_chars": 501,
+        "elapsed_ms": 79.30969199998117,
+        "evidence": {
+          "empty_context_on_no_answer": false,
+          "evidence_precision": 0.0,
+          "forbidden_keys_present": [
+            "memory:tide-clock"
+          ],
+          "required_complete": null,
+          "required_hits": 0,
+          "required_key_hits": 0,
+          "required_total": 0,
+          "unexpected_evidence_items": 4
+        },
+        "keys": [
+          "memory:tide-clock",
+          "memory:ines-mentor",
+          "memory:office-plants",
+          "memory:trip-log"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": false,
+          "correct": false,
+          "false_answer": true
+        }
+      },
+      "question": "When does the tide pool committee meet?",
+      "required": []
+    },
+    {
+      "fts5": {
+        "answer": "Project Heron holds its retrospective at the Granary Hall on February 9.",
+        "confidence": 0.5,
+        "delivered_chars": 72,
+        "elapsed_ms": 0.1231170000437487,
+        "evidence": {
+          "empty_context_on_no_answer": false,
+          "evidence_precision": 0.0,
+          "forbidden_keys_present": [
+            "memory:heron-meeting"
+          ],
+          "required_complete": null,
+          "required_hits": 0,
+          "required_key_hits": 0,
+          "required_total": 0,
+          "unexpected_evidence_items": 1
+        },
+        "keys": [
+          "memory:heron-meeting"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": false,
+          "correct": false,
+          "false_answer": true
+        }
+      },
+      "gold": null,
+      "id": "U3",
+      "mcp": {
+        "answer": "Project Heron holds its retrospective at the Granary Hall on February 9.",
+        "confidence": 0.5,
+        "delivered_chars": 285,
+        "elapsed_ms": 80.25319900002614,
+        "evidence": {
+          "empty_context_on_no_answer": false,
+          "evidence_precision": 0.0,
+          "forbidden_keys_present": [
+            "memory:heron-meeting"
+          ],
+          "required_complete": null,
+          "required_hits": 0,
+          "required_key_hits": 0,
+          "required_total": 0,
+          "unexpected_evidence_items": 4
+        },
+        "keys": [
+          "memory:heron-meeting",
+          "memory:tamsin-cousin",
+          "memory:ines-nephew",
+          "memory:lab-freezer"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": false,
+          "correct": false,
+          "false_answer": true
+        }
+      },
+      "question": "What is the WiFi password at the Granary Hall?",
+      "required": []
+    },
+    {
+      "fts5": {
+        "answer": "Tamsin's dog is a whippet named Juniper.",
+        "confidence": 0.3333333333333333,
+        "delivered_chars": 214,
+        "elapsed_ms": 0.1308189999917886,
+        "evidence": {
+          "empty_context_on_no_answer": false,
+          "evidence_precision": 0.0,
+          "forbidden_keys_present": [
+            "memory:rohan-greenhouse",
+            "memory:tamsin-dog"
+          ],
+          "required_complete": null,
+          "required_hits": 0,
+          "required_key_hits": 0,
+          "required_total": 0,
+          "unexpected_evidence_items": 3
+        },
+        "keys": [
+          "memory:tamsin-dog",
+          "memory:rohan-greenhouse",
+          "memory:rohan-kayak"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": false,
+          "correct": false,
+          "false_answer": true
+        }
+      },
+      "gold": null,
+      "id": "U4",
+      "mcp": {
+        "answer": "Rohan's greenhouse grows chillies.",
+        "confidence": 0.3333333333333333,
+        "delivered_chars": 132,
+        "elapsed_ms": 76.27318699996977,
+        "evidence": {
+          "empty_context_on_no_answer": false,
+          "evidence_precision": 0.0,
+          "forbidden_keys_present": [
+            "memory:rohan-greenhouse"
+          ],
+          "required_complete": null,
+          "required_hits": 0,
+          "required_key_hits": 0,
+          "required_total": 0,
+          "unexpected_evidence_items": 2
+        },
+        "keys": [
+          "memory:rohan-greenhouse",
+          "memory:rohan-kayak"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "undetermined",
+        "verdict": {
+          "abstained": false,
+          "answerable": false,
+          "correct": false,
+          "false_answer": true
+        }
+      },
+      "question": "What breed is Rohan's dog?",
+      "required": []
+    },
+    {
+      "fts5": {
+        "answer": "Ines's nephew is learning the trumpet.",
+        "confidence": 0.25,
+        "delivered_chars": 391,
+        "elapsed_ms": 0.1431980000461408,
+        "evidence": {
+          "empty_context_on_no_answer": false,
+          "evidence_precision": 0.0,
+          "forbidden_keys_present": [
+            "memory:ines-nephew"
+          ],
+          "required_complete": null,
+          "required_hits": 0,
+          "required_key_hits": 0,
+          "required_total": 0,
+          "unexpected_evidence_items": 5
+        },
+        "keys": [
+          "memory:ines-nephew",
+          "memory:tamsin-cousin",
+          "memory:tamsin-dog",
+          "memory:tamsin-greenhouse-old",
+          "memory:tamsin-greenhouse"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": false,
+          "correct": false,
+          "false_answer": true
+        }
+      },
+      "gold": null,
+      "id": "U5",
+      "mcp": {
+        "answer": "Tamsin's cousin works at a bakery in Dundee.",
+        "confidence": 0.25,
+        "delivered_chars": 322,
+        "elapsed_ms": 80.73622099999511,
+        "evidence": {
+          "empty_context_on_no_answer": false,
+          "evidence_precision": 0.0,
+          "forbidden_keys_present": [],
+          "required_complete": null,
+          "required_hits": 0,
+          "required_key_hits": 0,
+          "required_total": 0,
+          "unexpected_evidence_items": 4
+        },
+        "keys": [
+          "memory:tamsin-cousin",
+          "memory:tamsin-dog",
+          "memory:tamsin-greenhouse-old",
+          "memory:tamsin-greenhouse"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "undetermined",
+        "verdict": {
+          "abstained": false,
+          "answerable": false,
+          "correct": false,
+          "false_answer": true
+        }
+      },
+      "question": "Which instrument does Tamsin's nephew play?",
+      "required": []
+    },
+    {
+      "fts5": {
+        "answer": "The spring field trip visited the Ardmore quarry, the Linton bog and the Carse estuary.",
+        "confidence": 0.6,
+        "delivered_chars": 263,
+        "elapsed_ms": 0.1481649999846013,
+        "evidence": {
+          "empty_context_on_no_answer": false,
+          "evidence_precision": 0.0,
+          "forbidden_keys_present": [],
+          "required_complete": null,
+          "required_hits": 0,
+          "required_key_hits": 0,
+          "required_total": 0,
+          "unexpected_evidence_items": 1
+        },
+        "keys": [
+          "memory:trip-log"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": false,
+          "correct": false,
+          "false_answer": true
+        }
+      },
+      "gold": null,
+      "id": "U6",
+      "mcp": {
+        "answer": "The spring field trip visited the Ardmore quarry, the Linton bog and the Carse estuary.",
+        "confidence": 0.6,
+        "delivered_chars": 405,
+        "elapsed_ms": 76.85578799998893,
+        "evidence": {
+          "empty_context_on_no_answer": false,
+          "evidence_precision": 0.0,
+          "forbidden_keys_present": [],
+          "required_complete": null,
+          "required_hits": 0,
+          "required_key_hits": 0,
+          "required_total": 0,
+          "unexpected_evidence_items": 3
+        },
+        "keys": [
+          "memory:trip-log",
+          "memory:harvest-fair",
+          "memory:office-plants"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": false,
+          "correct": false,
+          "false_answer": true
+        }
+      },
+      "question": "How many people were on the spring field trip?",
+      "required": []
+    }
+  ],
+  "schema": "mcp-gate2-task-eval/0.1.0",
+  "selectivity": true,
+  "summary": {
+    "fts5": {
+      "answerable_abstained": 0,
+      "answerable_gold_phrase_match": 9,
+      "answerable_no_match": 7,
+      "answerable_total": 16,
+      "correctness_measure": "gold_phrase_match_proxy_not_verified_answer_correctness",
+      "delivered_chars_total": 5098,
+      "required_evidence_complete": 16,
+      "retrieval_p50_ms": 0.1343714999961776,
+      "unanswerable_abstained": 0,
+      "unanswerable_false_answer": 6,
+      "unanswerable_total": 6,
+      "unexpected_evidence_items": 45
+    },
+    "mcp": {
+      "answerable_abstained": 0,
+      "answerable_gold_phrase_match": 11,
+      "answerable_no_match": 5,
+      "answerable_total": 16,
+      "correctness_measure": "gold_phrase_match_proxy_not_verified_answer_correctness",
+      "delivered_chars_total": 6610,
+      "required_evidence_complete": 16,
+      "retrieval_p50_ms": 60.27180449999037,
+      "unanswerable_abstained": 0,
+      "unanswerable_false_answer": 6,
+      "unanswerable_total": 6,
+      "unexpected_evidence_items": 59
+    }
+  }
+}

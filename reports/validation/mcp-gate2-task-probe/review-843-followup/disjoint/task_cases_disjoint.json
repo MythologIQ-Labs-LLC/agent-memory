@@ -1,0 +1,389 @@
+{
+ "schema": "mcp-gate2-task-cases/0.1.0",
+ "disclaimer": "Author-written on 2026-10-23 for the content-term lexical admission experiment, committed before any experiment arm ran on it; disjoint from quality_cases_dev.json and task_cases_postfreeze.json in entities, memories and questions. NOT a sealed holdout: the author of the admission rule also wrote these cases, by category (direct, morphological variant, paraphrase sharing only a function word, paraphrase sharing no token, first person, no answer with function-word or content-word distractors). Gold answers are acceptable substrings of a correct answer; null gold means the question has no answer in the corpus.",
+ "tenant": "tenant:admission-eval",
+ "scope": "project:admission-eval",
+ "records": [
+  {
+   "key": "memory:wren-bakery",
+   "text": "Wren's bakery opens at six every weekday. On Saturdays it opens at eight."
+  },
+  {
+   "key": "memory:wren-van",
+   "text": "Wren's delivery van is a blue Transit with a cracked mirror."
+  },
+  {
+   "key": "memory:okafor-allergy",
+   "text": "Dr. Okafor is allergic to shellfish. She carries an adrenaline pen."
+  },
+  {
+   "key": "memory:okafor-car",
+   "text": "Dr. Okafor drives a silver Volvo estate."
+  },
+  {
+   "key": "memory:sana-cat",
+   "text": "Sana's cat is called Pickle. He sleeps on the boiler cupboard."
+  },
+  {
+   "key": "memory:sana-commute",
+   "text": "Sana cycles to the studio along the canal path."
+  },
+  {
+   "key": "memory:me-languages",
+   "text": "I'm learning Portuguese on weekday evenings."
+  },
+  {
+   "key": "memory:me-shoes",
+   "text": "My running shoes are size forty-three."
+  },
+  {
+   "key": "memory:me-landlord",
+   "text": "I pay rent to Mr. Halvorsen on the first of the month."
+  },
+  {
+   "key": "memory:tern-deadline",
+   "text": "Project Tern ships its beta on March 14. The release notes are owned by Yusuf."
+  },
+  {
+   "key": "memory:tern-budget",
+   "text": "Project Tern's budget was raised to forty thousand euros."
+  },
+  {
+   "key": "memory:gannet-standup",
+   "text": "Project Gannet holds its standup in the Loft room at nine."
+  },
+  {
+   "key": "memory:server-backups",
+   "text": "The build server backs up nightly to the Ravensbourne bucket."
+  },
+  {
+   "key": "memory:server-os",
+   "text": "The build server runs Debian twelve."
+  },
+  {
+   "key": "memory:garden-shed",
+   "text": "The garden shed key hangs behind the pantry door."
+  },
+  {
+   "key": "memory:boiler-service",
+   "text": "The boiler was serviced in October by Kettering Heating."
+  },
+  {
+   "key": "memory:alba-school",
+   "text": "Alba's school finishes at quarter past three on Fridays."
+  },
+  {
+   "key": "memory:alba-instrument",
+   "text": "Alba practises the clarinet after dinner."
+  },
+  {
+   "key": "memory:late-chemist",
+   "text": "The nearest late-night chemist is on Dunmore Street."
+  },
+  {
+   "key": "memory:me-flight",
+   "text": "My flight to Lisbon departs from gate twelve."
+  },
+  {
+   "key": "memory:chutney",
+   "text": "Grandma's chutney recipe uses three tart apples and a cinnamon stick."
+  },
+  {
+   "key": "memory:tandem-repair",
+   "text": "Mechanic Ivo trued the rear wheel of the tandem."
+  },
+  {
+   "key": "memory:guest-wifi",
+   "text": "The guest network password is printed under the router."
+  },
+  {
+   "key": "memory:review-venue",
+   "text": "The quarterly review takes place at the Corn Exchange."
+  }
+ ],
+ "tasks": [
+  {
+   "id": "D1",
+   "question": "What time does Wren's bakery open on weekdays?",
+   "required": [
+    "memory:wren-bakery"
+   ],
+   "forbidden": [
+    "memory:wren-van"
+   ],
+   "gold": [
+    "six"
+   ]
+  },
+  {
+   "id": "D2",
+   "question": "What colour is Wren's van?",
+   "required": [
+    "memory:wren-van"
+   ],
+   "forbidden": [
+    "memory:wren-bakery"
+   ],
+   "gold": [
+    "blue"
+   ]
+  },
+  {
+   "id": "D3",
+   "question": "What is Dr. Okafor allergic to?",
+   "required": [
+    "memory:okafor-allergy"
+   ],
+   "forbidden": [
+    "memory:okafor-car"
+   ],
+   "gold": [
+    "shellfish"
+   ]
+  },
+  {
+   "id": "D4",
+   "question": "What car does Dr. Okafor drive?",
+   "required": [
+    "memory:okafor-car"
+   ],
+   "forbidden": [
+    "memory:okafor-allergy"
+   ],
+   "gold": [
+    "silver volvo",
+    "volvo"
+   ]
+  },
+  {
+   "id": "D5",
+   "question": "What is the name of Sana's cat?",
+   "required": [
+    "memory:sana-cat"
+   ],
+   "forbidden": [
+    "memory:sana-commute"
+   ],
+   "gold": [
+    "pickle"
+   ]
+  },
+  {
+   "id": "D6",
+   "question": "How does Sana get to the studio?",
+   "required": [
+    "memory:sana-commute"
+   ],
+   "forbidden": [
+    "memory:sana-cat"
+   ],
+   "gold": [
+    "cycles",
+    "cycling"
+   ]
+  },
+  {
+   "id": "D7",
+   "question": "Which language am I studying?",
+   "required": [
+    "memory:me-languages"
+   ],
+   "forbidden": [],
+   "gold": [
+    "portuguese"
+   ]
+  },
+  {
+   "id": "D8",
+   "question": "What size are my running shoes?",
+   "required": [
+    "memory:me-shoes"
+   ],
+   "forbidden": [],
+   "gold": [
+    "forty-three",
+    "43"
+   ]
+  },
+  {
+   "id": "D9",
+   "question": "Who do I pay rent to?",
+   "required": [
+    "memory:me-landlord"
+   ],
+   "forbidden": [],
+   "gold": [
+    "halvorsen"
+   ]
+  },
+  {
+   "id": "D10",
+   "question": "When does Project Tern ship its beta?",
+   "required": [
+    "memory:tern-deadline"
+   ],
+   "forbidden": [
+    "memory:tern-budget"
+   ],
+   "gold": [
+    "march 14",
+    "14 march"
+   ]
+  },
+  {
+   "id": "D11",
+   "question": "How large is Project Tern's budget?",
+   "required": [
+    "memory:tern-budget"
+   ],
+   "forbidden": [
+    "memory:tern-deadline"
+   ],
+   "gold": [
+    "forty thousand euros",
+    "forty thousand"
+   ]
+  },
+  {
+   "id": "D12",
+   "question": "Where does Project Gannet hold its standup?",
+   "required": [
+    "memory:gannet-standup"
+   ],
+   "forbidden": [],
+   "gold": [
+    "loft"
+   ]
+  },
+  {
+   "id": "D13",
+   "question": "Where are the build server's backups stored?",
+   "required": [
+    "memory:server-backups"
+   ],
+   "forbidden": [
+    "memory:server-os"
+   ],
+   "gold": [
+    "ravensbourne"
+   ]
+  },
+  {
+   "id": "D14",
+   "question": "Who fixed the bicycle?",
+   "required": [
+    "memory:tandem-repair"
+   ],
+   "forbidden": [],
+   "gold": [
+    "ivo"
+   ]
+  },
+  {
+   "id": "D15",
+   "question": "Which pharmacy is open after midnight?",
+   "required": [
+    "memory:late-chemist"
+   ],
+   "forbidden": [],
+   "gold": [
+    "dunmore street",
+    "dunmore"
+   ]
+  },
+  {
+   "id": "D16",
+   "question": "What fruit goes into Grandma's chutney?",
+   "required": [
+    "memory:chutney"
+   ],
+   "forbidden": [],
+   "gold": [
+    "apples",
+    "apple"
+   ]
+  },
+  {
+   "id": "D17",
+   "question": "When does Alba's school finish on Fridays?",
+   "required": [
+    "memory:alba-school"
+   ],
+   "forbidden": [
+    "memory:alba-instrument"
+   ],
+   "gold": [
+    "quarter past three",
+    "3:15"
+   ]
+  },
+  {
+   "id": "D18",
+   "question": "Where is the shed key kept?",
+   "required": [
+    "memory:garden-shed"
+   ],
+   "forbidden": [],
+   "gold": [
+    "behind the pantry door",
+    "pantry"
+   ]
+  },
+  {
+   "id": "V1",
+   "question": "What is the password for the office printer?",
+   "required": [],
+   "forbidden": [],
+   "gold": null
+  },
+  {
+   "id": "V2",
+   "question": "When does the quarterly budget committee meet?",
+   "required": [],
+   "forbidden": [],
+   "gold": null
+  },
+  {
+   "id": "V3",
+   "question": "What is Wren's phone number?",
+   "required": [],
+   "forbidden": [],
+   "gold": null
+  },
+  {
+   "id": "V4",
+   "question": "Which gate does the train to Porto leave from?",
+   "required": [],
+   "forbidden": [],
+   "gold": null
+  },
+  {
+   "id": "V5",
+   "question": "What is the name of Dr. Okafor's dog?",
+   "required": [],
+   "forbidden": [],
+   "gold": null
+  },
+  {
+   "id": "V6",
+   "question": "How old is the boiler?",
+   "required": [],
+   "forbidden": [],
+   "gold": null
+  },
+  {
+   "id": "V7",
+   "question": "Who is the landlord of the bakery?",
+   "required": [],
+   "forbidden": [],
+   "gold": null
+  },
+  {
+   "id": "V8",
+   "question": "What did the committee decide about parking?",
+   "required": [],
+   "forbidden": [],
+   "gold": null
+  }
+ ]
+}

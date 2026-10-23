@@ -1,0 +1,14 @@
+        mara = self.put("memory:c", "Mara's eldest performs on the cello. Their next recital is in November.")
+        package = self.context("What model is the office printer?")
+        omitted = _omitted(package)
+>       self.assertEqual(omitted.get(liora), "no_query_term_evidence")
+E       AssertionError: None != 'no_query_term_evidence'
+
+reference/tests/test_819_evidence_qualified_selection.py:338: AssertionError
+=========================== short test summary info ============================
+FAILED reference/tests/test_819_evidence_qualified_selection.py::GroundedAbsenceForThirdPersonStatements::test_first_person_statement_without_shared_terms_stays_uncertain
+FAILED reference/tests/test_819_evidence_qualified_selection.py::GroundedAbsenceForThirdPersonStatements::test_persisted_proposition_entity_grounds_the_fact_subject
+FAILED reference/tests/test_819_evidence_qualified_selection.py::GroundedAbsenceForThirdPersonStatements::test_query_about_a_named_subject_declines_a_third_person_fact_naming_nobody
+FAILED reference/tests/test_819_evidence_qualified_selection.py::GroundedAbsenceForThirdPersonStatements::test_single_statement_absence_records_its_grounding
+FAILED reference/tests/test_819_evidence_qualified_selection.py::GroundedAbsenceForThirdPersonStatements::test_third_person_fact_about_another_named_subject_is_declined_without_shared_terms
+5 failed, 1 passed, 25 deselected in 1.38s

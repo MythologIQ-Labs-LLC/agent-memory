@@ -1,0 +1,12 @@
+test_truncated_returned_key_does_not_count_as_complete_evidence (integrations.agent-memory-mcp.tests._review_controls.AnswerLevelEvidenceCompleteness.test_truncated_returned_key_does_not_count_as_complete_evidence) ... ok
+test_explicit_negation_cannot_be_scored_correct (integrations.agent-memory-mcp.tests._review_controls.AnswerScoreValidity.test_explicit_negation_cannot_be_scored_correct) ... ok
+test_gold_word_inside_another_word_cannot_be_scored_correct (integrations.agent-memory-mcp.tests._review_controls.AnswerScoreValidity.test_gold_word_inside_another_word_cannot_be_scored_correct) ... ok
+test_missing_answer_is_not_correct_on_answerable_task (integrations.agent-memory-mcp.tests._review_controls.AnswerScoreValidity.test_missing_answer_is_not_correct_on_answerable_task) ... ok
+test_named_third_person_fact_has_implicit_heating_answer (integrations.agent-memory-mcp.tests._review_controls.SelectorParaphraseNonExclusion.test_named_third_person_fact_has_implicit_heating_answer) ... ok
+test_named_third_person_fact_has_implicit_landing_answer (integrations.agent-memory-mcp.tests._review_controls.SelectorParaphraseNonExclusion.test_named_third_person_fact_has_implicit_landing_answer) ... ok
+test_unavailable_is_not_a_negative_evidence_verdict (integrations.agent-memory-mcp.tests._review_controls.SelectorParaphraseNonExclusion.test_unavailable_is_not_a_negative_evidence_verdict) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.006s
+
+OK

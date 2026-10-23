@@ -91,8 +91,11 @@ def memory_find(question: str, max_items: int = 5,
                 experimental_selectivity: bool = False) -> dict[str, Any]:
     """Retrieve bounded, potentially relevant evidence for a question.
 
-    Accuracy and answerability are not guaranteed. The experimental selector
-    must be explicitly enabled and must not be mistaken for a qualified fix.
+    Accuracy and answerability are not guaranteed. With experimental_selectivity
+    the opt-in evidence-qualified selector declines returned memories that carry
+    no evidence for the question on a grounded basis; each declined memory is
+    listed under ``unavailable`` (state ``omitted_selection``) with its versioned
+    reason, so nothing is hidden. It is not a qualified fix and never an answer.
     """
     return _tool_call(lambda: _bridge().find(
         question, max_items=max_items,

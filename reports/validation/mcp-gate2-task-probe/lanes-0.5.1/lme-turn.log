@@ -1,0 +1,90 @@
+[turn] 0 e47becba eq=35/50 gold=1 elapsed=3s
+[turn] 25 95bcc1c8 eq=43/50 gold=1 elapsed=75s
+[turn] 50 76d63226 eq=37/50 gold=1 elapsed=145s
+[turn] 75 3a704032 eq=42/50 gold=2 elapsed=216s
+[turn] 100 00ca467f eq=39/50 gold=2 elapsed=282s
+[turn] 125 81507db6 eq=49/50 gold=3 elapsed=351s
+[turn] 150 505af2f5 eq=50/50 gold=1 elapsed=420s
+[turn] 175 6456829e eq=41/50 gold=2 elapsed=487s
+[turn] 200 0ea62687 eq=49/50 gold=2 elapsed=552s
+[turn] 225 efc3f7c2 eq=46/50 gold=2 elapsed=621s
+[turn] 250 gpt4_18c2b244 eq=48/50 gold=3 elapsed=691s
+[turn] 275 gpt4_98f46fc6 eq=45/50 gold=2 elapsed=755s
+[turn] 300 4dfccbf8 eq=47/50 gold=1 elapsed=821s
+[turn] 325 982b5123 eq=48/50 gold=2 elapsed=887s
+[turn] 350 6613b389 eq=49/50 gold=2 elapsed=954s
+[turn] 375 9ea5eabc eq=47/50 gold=2 elapsed=1021s
+[turn] 400 e61a7584 eq=47/50 gold=2 elapsed=1089s
+[turn] 425 06db6396 eq=47/50 gold=2 elapsed=1155s
+[turn] 450 7e00a6cb eq=50/50 gold=0 elapsed=1224s
+[turn] 475 e3fc4d6e eq=49/50 gold=0 elapsed=1292s
+{
+ "raw": {
+  "scored_questions": 428,
+  "complete": 369,
+  "required_hits": 756,
+  "required_total": 842,
+  "delivered_total": 21400,
+  "micro_precision": 0.03532710280373832,
+  "macro_precision": 0.03532710280373832,
+  "empty_on_answerable": 0,
+  "no_answer_questions": 72,
+  "no_answer_abstained": 0,
+  "no_answer_delivered_total": 3600
+ },
+ "default": {
+  "scored_questions": 428,
+  "complete": 369,
+  "required_hits": 756,
+  "required_total": 842,
+  "delivered_total": 21400,
+  "micro_precision": 0.03532710280373832,
+  "macro_precision": 0.03532710280373832,
+  "empty_on_answerable": 0,
+  "no_answer_questions": 72,
+  "no_answer_abstained": 0,
+  "no_answer_delivered_total": 3600
+ },
+ "lexical": {
+  "scored_questions": 428,
+  "complete": 367,
+  "required_hits": 754,
+  "required_total": 842,
+  "delivered_total": 18784,
+  "micro_precision": 0.04014054514480409,
+  "macro_precision": 0.04240934003014278,
+  "empty_on_answerable": 0,
+  "no_answer_questions": 72,
+  "no_answer_abstained": 0,
+  "no_answer_delivered_total": 3454
+ },
+ "eq": {
+  "scored_questions": 428,
+  "complete": 369,
+  "required_hits": 756,
+  "required_total": 842,
+  "delivered_total": 19316,
+  "micro_precision": 0.03913853799958584,
+  "macro_precision": 0.03912266884868765,
+  "empty_on_answerable": 0,
+  "no_answer_questions": 72,
+  "no_answer_abstained": 0,
+  "no_answer_delivered_total": 3347
+ },
+ "fts5": {
+  "scored_questions": 428,
+  "complete": 362,
+  "required_hits": 737,
+  "required_total": 842,
+  "delivered_total": 13819,
+  "micro_precision": 0.053332368478182214,
+  "macro_precision": 0.08074875400417736,
+  "empty_on_answerable": 0,
+  "no_answer_questions": 72,
+  "no_answer_abstained": 0,
+  "no_answer_delivered_total": 3219
+ }
+}
+lexical lost vs default: ['2e6d26dc', '830ce83f']
+eq lost vs default: []
+fts5 lost vs default: ['25e5aa4f', '6d550036', '46a3abf7', '2e6d26dc', 'gpt4_7fce9456', 'gpt4_d12ceb0e', 'gpt4_194be4b3', 'gpt4_731e37d7', 'd3ab962e', '92a0aa75', 'c18a7dc8', 'gpt4_7f6b06db', 'gpt4_7abb270c', 'gpt4_d6585ce8', 'gpt4_f420262c', '71017277', 'gpt4_f420262d', 'gpt4_8279ba03', '830ce83f']

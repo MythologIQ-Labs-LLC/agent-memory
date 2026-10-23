@@ -113,16 +113,27 @@ class LocalMemoryBridge:
                     "trust": "untrusted_memory_text",
                 })
             else:
-                unavailable.append({
+                entry = {
                     "fact_ref": item.get("fact_ref"),
                     "state": state,
                     "reason": item.get("reason"),
-                })
+                }
+                if state == "omitted_selection":
+                    # A fact the recall returned but the opt-in selector declined: its content
+                    # was never read. The decision record carries the inspected terms and, for
+                    # a term-absence decline, what grounded the absence, so the agent can see
+                    # why and re-query without selectivity if it disagrees.
+                    decision = (package.get("selection") or {}).get("decisions", {}).get(item.get("fact_ref")) or {}
+                    entry["absence_grounding"] = decision.get("absence_grounding")
+                    entry["fact_subjects"] = decision.get("fact_subjects")
+                    entry["query_subjects"] = decision.get("query_subjects")
+                unavailable.append(entry)
         selector = package.get("selection") or {}
         return {
             "query": asked,
             "package_status": package.get("status"),
             "selection_assessment": selector.get("assessment", "not_assessed"),
+            "selection_policy_version": selector.get("policy_version"),
             "evidence": evidence,
             "unavailable": unavailable,
             "evidence_count": len(evidence),

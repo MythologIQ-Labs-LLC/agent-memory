@@ -13,7 +13,7 @@ a consumer-side delivery policy, never authority:
   delivers the content and says so (``certainty: uncertain``), it never converts a lack of word
   overlap into an asserted negative when the fact carries non-lexical evidence.
 
-Decision order for one returned fact (policy ``evidence-qualified-context-selection/0.4.1``):
+Decision order for one returned fact (policy ``evidence-qualified-context-selection/0.5.1``):
 
 1. ``preserved_exact_identity``: a caller-authorised ``logical_memory_refs`` hit (route
    ``exact_logical_identity``). Delivered whatever its wording.
@@ -28,9 +28,18 @@ Decision order for one returned fact (policy ``evidence-qualified-context-select
    model, no corpus or benchmark vocabulary.
 
    * no query content term occurs in the fact in any folded form → ``no_query_term_evidence``
-     (declined) **only when the fact is a single statement** (one sentence). A longer text can
-     carry the answer in other words (an implicit relation, a paraphrase), so for it the absence
-     of a shared term is uncertainty, not absence: delivered as ``undetermined_multi_statement``;
+     (declined) **only when the fact is a single statement** (``absence_grounding:
+     single_statement``: the absence is an observation about the whole statement). For a longer
+     fact the absence of a shared term is uncertainty, not absence: a paraphrase (``aircraft
+     touch down`` / ``plane landed``) shares no token and still carries the answer, so it is
+     delivered as ``undetermined_multi_statement``. Policy 0.5.0 also declined a multi-statement
+     third-person fact whose own named subject the query never mentioned; the owner's independent
+     review (PR #843, review 5628673295) showed that this is lexical mismatch dressed as evidence,
+     and policy 0.5.1 withdrew it. The one subject observation that survives without a shared
+     term is a *conflict of named subjects* (policy 0.5.1): the query names a subject by
+     proper-noun possessive, the fact grounds a different subject and never mentions the
+     query's, so it is declined as ``subject_mismatch`` exactly as it would be with a shared
+     term. A first-person fact is never a subject mismatch (0.3.1);
    * the query names a subject by a proper-noun possessive (``Liora's canoe``; a lowercase
      possessive such as ``composer's`` names no subject) and the fact grounds a different
      subject the same way or through its persisted write-time proposition entity, and the
@@ -69,7 +78,7 @@ import re
 from typing import Any, Mapping, Sequence
 
 POLICY_ID = "evidence-qualified-context-selection"
-POLICY_VERSION = "0.4.1"
+POLICY_VERSION = "0.5.1"
 BASIS = "post_admission_query_evidence_qualification"
 EXACT_IDENTITY_ROUTE = "exact_logical_identity"
 LEXICAL_ROUTE = "lexical"
@@ -241,14 +250,25 @@ def qualify(
     single = single_statement(text)
     record["matched_terms"] = matched
     record["single_statement"] = single
-    if not matched:
-        if single:
-            return {**record, "outcome": "omitted", "reason": "no_query_term_evidence", "certainty": "grounded"}
-        return {**record, "outcome": "delivered", "evidence": "undetermined_multi_statement", "certainty": "uncertain"}
     anchors = possessive_subjects(query)
-    record["query_subjects"] = sorted(anchors)
     speaker_query = first_person(query)
     speaker_fact = first_person(text, proposition)
+    if not matched:
+        if single:
+            return {**record, "outcome": "omitted", "reason": "no_query_term_evidence", "certainty": "grounded",
+                    "absence_grounding": "single_statement"}
+        if not speaker_fact and anchors:
+            # Policy 0.5.1: with no shared content term the only grounded observation left is a
+            # conflict of named subjects (the query is about one named party, the fact grounds a
+            # different one and never mentions the query's). Absence alone, on either side,
+            # is lexical mismatch, not evidence (review 5628673295): the fact stays uncertain.
+            subject = grounded_subject(text, proposition)
+            record["query_subjects"] = sorted(anchors)
+            record["fact_subjects"] = sorted(subject)
+            if subject and not (anchors & subject):
+                return {**record, "outcome": "omitted", "reason": "subject_mismatch", "certainty": "grounded"}
+        return {**record, "outcome": "delivered", "evidence": "undetermined_multi_statement", "certainty": "uncertain"}
+    record["query_subjects"] = sorted(anchors)
     if not anchors:
         if speaker_query:
             # The caller asks about themselves: a fact grounded on a third party by possessive,

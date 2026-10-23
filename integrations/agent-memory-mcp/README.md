@@ -86,6 +86,17 @@ framing, and tool schemas provided by the official SDK.
 - memory_find(question, max_items=5, experimental_selectivity=False):
   governed recall_context within bounded delivery budgets, defaulting to
   all_returned. The experimental #819 selector must be opted into deliberately.
+  With it, `profile` is `evidence_qualified`, `selection_policy_version` names the
+  selector policy (`0.5.1`: a returned memory that shares no content term with the question
+  is declined only when it is a single statement, or when the question names a subject by
+  proper-noun possessive and the memory grounds a different one it never mentions; a longer
+  memory without a shared term is otherwise delivered as uncertain, because a paraphrase
+  shares no token and can still carry the answer), and every declined memory appears under
+  `unavailable` with state `omitted_selection`, its reason (`no_query_term_evidence` /
+  `subject_mismatch`), `absence_grounding` and the inspected subjects. Declined content is never read. The recall itself is identical in both profiles;
+  `selection_assessment` is `evidence_delivered`, `undetermined`, `no_relevant_evidence`
+  (every returned fact declined on a grounded basis: not proof that no memory exists) or
+  `no_returned_candidates`.
 
 The bridge does not expose correction/forget without qualified lifecycle
 evidence, does not grant action authority, and makes no claim of accurate
@@ -105,3 +116,63 @@ at equal budgets, without breaking scope or losing required evidence.
 
 Until both gates pass, this is a developer preview, not production 1.0.
 No GitHub Actions, merges, tags, accepted benchmark modification or release.
+
+## Gate 2: real MCP evidence usefulness diagnostic (author-visible)
+
+This is a deliberately **small development cohort**, not a blinded holdout,
+qualified answer-generation benchmark or production-readiness score.
+
+The committed test corpus is `quality_cases_dev.json`: 18 fictional records
+with 14 queries (11 answerable by annotated source keys and 3 no-answer).
+The probe calls **real** `memory_remember` and `memory_find` over the same
+stdio MCP protocol proven in Gate 1, then runs an in-memory **SQLite FTS5**
+(`unicode61` / `bm25` / simple OR-term query) over the exact text.
+
+From the repository root in the venv from above:
+
+    python -m unittest discover -s integrations/agent-memory-mcp/tests -p "test_quality_probe.py" -v
+    python integrations/agent-memory-mcp/quality_probe.py --out /tmp/am-gate2-dev.json
+    python integrations/agent-memory-mcp/quality_probe.py --selectivity --out /tmp/am-gate2-dev-selective.json
+
+`--selectivity` calls `memory_find` with `experimental_selectivity=true` so both consumer
+profiles are measured through the same real MCP path; the report records which was used
+(`selectivity`) and, per question, the declined facts with their reasons (`mcp_omitted`).
+
+`task_eval.py` (Gate 2 Phase 5) hands only the evidence `memory_find` delivered to a reader
+(a deterministic extractive reader, or a pinned open ONNX SQuAD model) and joins gold afterwards;
+its "correct" figure is a whole-token gold-phrase-match **proxy** with a negation guard, not
+verified answer correctness, and required evidence is credited only for fully delivered text.
+
+The output contains per-question returned keys and scored evidence,
+not retrieved plaintext or made-up answers. It reports:
+
+- Complete required-source coverage only when MCP delivers the **full**
+  seeded text with verified source key. Raw key hits are separate: a
+  truncated or missing-provenance item is not credited as full evidence.
+- Unattributed, incomplete or unavailable context items and irrelevant
+  source-key burden, including explicit forbidden-key incidences.
+- Empty context on no-answer questions, separately from answer accuracy.
+- Query p50/p95 for the actual MCP roundtrip versus indexed FTS5 search.
+
+The 18 fictional texts are ASCII and short enough for the full text of
+the largest five to fit the MCP character and token caps. The probe
+refuses to score an expanded corpus if that assumption stops holding,
+rather than letting the FTS5 arm silently gain a context-budget advantage.
+
+**Interpretation:** The source labels are development annotations, not proof
+that the text entails the answer. Empty context on an unanswerable question
+is a context proxy, **not** proof an agent abstained; neither arm generates
+answers in this probe. FTS5 doesn't pay Agent Memory governance/ingestion
+costs, and its context text/token bounds are not identical, so timing and
+cost are descriptive, not apples-to-apples. These facts are stated in the
+JSON output rather than silently buried in a benchmark claim.
+
+After executing this transparent diagnostic, freeze candidate changes and
+run a **separate, previously unrevealed task set** with a real answer-generating
+agent harness, blinded gold answers and an equal-capacity indexed baseline.
+That later experiment must evaluate actual correct answers and justified
+abstention, not merely whether a source identifier appeared.
+
+Do not merge this development probe into the frozen baseline or interpret
+any gain as #819 resolved. Prefer fixing demonstrated correctness defects
+over adding more evaluation plumbing.

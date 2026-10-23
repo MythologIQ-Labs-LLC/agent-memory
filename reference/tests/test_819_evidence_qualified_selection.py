@@ -164,6 +164,9 @@ class ProfileContract(_Store):
         self.assertIn(mine_too, _delivered(package))
 
     def test_term_absence_is_grounded_only_for_a_single_statement(self):
+        # Policy 0.5.0 briefly grounded term absence for a longer third-person statement whose own
+        # subject the query never mentioned; the owner's review (PR #843, 5628673295) showed that a
+        # paraphrase shares no token and still answers, so 0.5.1 restored the 0.3.0 contract here.
         short = self.put("memory:a", "The autumn science festival begins Friday.")
         long = self.put("memory:b", "The autumn science festival begins Friday. The committee that plans "
                                     "the eclipse viewing meets afterwards in the same hall.")
@@ -173,6 +176,7 @@ class ProfileContract(_Store):
         if short in decisions:
             self.assertEqual(decisions[short]["outcome"], "omitted")
             self.assertEqual(decisions[short]["reason"], "no_query_term_evidence")
+            self.assertEqual(decisions[short]["absence_grounding"], "single_statement")
         # the longer one matches ("committee", "eclipse", "meet"); now make one that does not
         unrelated_long = self.put("memory:c", "The moon exhibit has a new display case. Tickets are sold at the "
                                               "door. Visitors may bring cameras.")
@@ -321,6 +325,79 @@ class ProfileContract(_Store):
         second = self.context("What color is Liora's canoe?")
         self.assertEqual(_delivered(first), _delivered(second), [teal])
         self.assertEqual(_omitted(first), _omitted(second), {orange: "subject_mismatch"})
+
+
+class SubjectConflictWithoutSharedTerms(_Store):
+    """Policy 0.5.1 (Gate 2 remediation after the owner's independent review, PR #843 review
+    5628673295). Policy 0.5.0 had declined any multi-statement third-person fact whose own named
+    subject the query never mentioned; the review showed that this is lexical mismatch, not evidence
+    (``Where did the aircraft touch down?`` / ``Captain Nia's plane landed at Orion Field.``), and
+    0.5.1 withdrew it. What survives without a shared term is a conflict of named subjects: the query
+    is about one named party, the fact grounds a different one and never mentions the query's."""
+
+    def test_zero_overlap_fact_about_a_different_named_subject_is_a_subject_mismatch(self):
+        canoe = self.put("memory:a", "Liora's canoe is teal. The hull was inspected on Tuesday.")
+        mara = self.put("memory:b", "Mara's eldest performs on the cello. Their next recital is in November.")
+        package = self.context("What color is Liora's canoe?")
+        self.assertIn(canoe, _delivered(package))
+        decision = package["selection"]["decisions"][mara]
+        self.assertEqual((decision["outcome"], decision["reason"], decision["certainty"]),
+                         ("omitted", "subject_mismatch", "grounded"))
+        self.assertEqual(decision["query_subjects"], ["liora"])
+        self.assertIn("mara", decision["fact_subjects"])  # plus the persisted proposition entity terms
+        self.assertEqual(decision["matched_terms"], [])
+
+    def test_query_without_a_named_subject_keeps_a_named_third_person_fact_as_uncertain(self):
+        # the fact's own subject being absent from the query grounds nothing: "Captain Nia's
+        # plane landed at Orion Field" answers "Where did the aircraft touch down?"
+        liora = self.put("memory:a", "Liora's canoe is teal. The hull was inspected on Tuesday.")
+        self.put("memory:b", "The office printer is a Brother HL-L2400D. Its toner is TN830.")
+        package = self.context("What model is the office printer?")
+        decision = package["selection"]["decisions"][liora]
+        self.assertEqual((decision["outcome"], decision["evidence"], decision["certainty"]),
+                         ("delivered", "undetermined_multi_statement", "uncertain"))
+        verdict = context_selection.qualify(
+            "Where did the aircraft touch down?", "ref-landing", {"route_provenance": [{"route_id": "lexical"}]},
+            "Captain Nia's plane landed at Orion Field. The passengers cheered.", None)
+        self.assertEqual((verdict["outcome"], verdict["certainty"]), ("delivered", "uncertain"))
+
+    def test_named_query_subject_keeps_a_fact_naming_nobody_as_uncertain(self):
+        canoe = self.put("memory:a", "Liora's canoe is teal. The hull was inspected on Tuesday.")
+        exhibit = self.put("memory:b", "The moon exhibit has a new display case. The museum catalog is updated.")
+        package = self.context("What color is Liora's canoe?")
+        self.assertIn(canoe, _delivered(package))
+        decision = package["selection"]["decisions"][exhibit]
+        self.assertEqual((decision["outcome"], decision["evidence"], decision["certainty"]),
+                         ("delivered", "undetermined_multi_statement", "uncertain"))
+
+    def test_first_person_statement_without_shared_terms_stays_uncertain(self):
+        mine = self.put("memory:a", "I've been practising a lot lately. The recital is in November, which is soon.")
+        package = self.context("Which instrument does Liora's child play?")
+        decision = package["selection"]["decisions"][mine]
+        self.assertEqual((decision["outcome"], decision["evidence"], decision["certainty"]),
+                         ("delivered", "undetermined_multi_statement", "uncertain"))
+        package = self.context("Which instrument is the one I play?")
+        self.assertIn(mine, _delivered(package))
+        self.assertNotEqual(package["selection"]["decisions"][mine]["outcome"], "omitted")
+
+    def test_persisted_proposition_entity_grounds_the_fact_subject_for_the_conflict_test(self):
+        proposition = {"status": "known", "entity": "autumn science festival", "property": "begin", "value": "friday"}
+        lexical = {"route_provenance": [{"route_id": "lexical"}]}
+        text = "The autumn science festival begins Friday. Registration closes on Wednesday."
+        # a named query subject against a different persisted entity, no shared term: conflict
+        verdict = context_selection.qualify("When is Mara's recital?", "ref-festival", lexical, text, proposition)
+        self.assertEqual((verdict["outcome"], verdict["reason"]), ("omitted", "subject_mismatch"))
+        self.assertEqual(verdict["fact_subjects"], ["autumn", "festival", "scienc"])
+        # no named query subject: uncertain, whatever the entity
+        verdict = context_selection.qualify("When does the lunar eclipse committee meet?", "ref-festival", lexical, text, proposition)
+        self.assertEqual((verdict["outcome"], verdict["evidence"]), ("delivered", "undetermined_multi_statement"))
+
+    def test_single_statement_absence_records_its_grounding(self):
+        verdict = context_selection.qualify(
+            "What model is the office printer?", "ref-short",
+            {"route_provenance": [{"route_id": "lexical"}]}, "Omar uses VS Code to edit Markdown documents.", None)
+        self.assertEqual((verdict["outcome"], verdict["reason"], verdict["absence_grounding"]),
+                         ("omitted", "no_query_term_evidence", "single_statement"))
 
 
 class SelectorUnit(unittest.TestCase):

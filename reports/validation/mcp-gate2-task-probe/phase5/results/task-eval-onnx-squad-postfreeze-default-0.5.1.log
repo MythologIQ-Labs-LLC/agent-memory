@@ -1,0 +1,30 @@
+{
+  "mcp": {
+    "answerable_total": 16,
+    "answerable_gold_phrase_match": 15,
+    "answerable_abstained": 0,
+    "answerable_no_match": 1,
+    "correctness_measure": "gold_phrase_match_proxy_not_verified_answer_correctness",
+    "unanswerable_total": 6,
+    "unanswerable_abstained": 0,
+    "unanswerable_false_answer": 6,
+    "required_evidence_complete": 16,
+    "unexpected_evidence_items": 83,
+    "delivered_chars_total": 8241,
+    "retrieval_p50_ms": 64.31590149998101
+  },
+  "fts5": {
+    "answerable_total": 16,
+    "answerable_gold_phrase_match": 14,
+    "answerable_abstained": 0,
+    "answerable_no_match": 2,
+    "correctness_measure": "gold_phrase_match_proxy_not_verified_answer_correctness",
+    "unanswerable_total": 6,
+    "unanswerable_abstained": 0,
+    "unanswerable_false_answer": 6,
+    "required_evidence_complete": 16,
+    "unexpected_evidence_items": 45,
+    "delivered_chars_total": 5098,
+    "retrieval_p50_ms": 0.2443050000238145
+  }
+}

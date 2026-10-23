@@ -1,0 +1,15 @@
+test_aggregate_does_not_mix_unanswered_and_answerable_denominators (test_quality_probe.QualityProbeScorer.test_aggregate_does_not_mix_unanswered_and_answerable_denominators) ... ok
+test_answerable_missing_is_not_success (test_quality_probe.QualityProbeScorer.test_answerable_missing_is_not_success) ... ok
+test_comparator_fts5_is_indexed_and_uses_same_texts (test_quality_probe.QualityProbeScorer.test_comparator_fts5_is_indexed_and_uses_same_texts) ... ok
+test_empty_context_on_no_answer_is_only_context_proxy (test_quality_probe.QualityProbeScorer.test_empty_context_on_no_answer_is_only_context_proxy) ... ok
+test_fixture_keys_must_be_unique_and_labels_valid (test_quality_probe.QualityProbeScorer.test_fixture_keys_must_be_unique_and_labels_valid) ... ok
+test_full_text_claim_must_be_among_served_keys (test_quality_probe.QualityProbeScorer.test_full_text_claim_must_be_among_served_keys) ... ok
+test_no_answer_with_distractors_is_not_abstention (test_quality_probe.QualityProbeScorer.test_no_answer_with_distractors_is_not_abstention) ... ok
+test_required_evidence_and_extra_item_are_counted_separately (test_quality_probe.QualityProbeScorer.test_required_evidence_and_extra_item_are_counted_separately) ... ok
+test_required_key_with_truncated_text_does_not_count_as_complete_evidence (test_quality_probe.QualityProbeScorer.test_required_key_with_truncated_text_does_not_count_as_complete_evidence) ... ok
+test_unattributed_context_is_counted_as_unexpected_not_discarded (test_quality_probe.QualityProbeScorer.test_unattributed_context_is_counted_as_unexpected_not_discarded) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.003s
+
+OK

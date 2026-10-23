@@ -1,0 +1,8 @@
+== db81778c924ea6449938d211c996002056c67380 system python first on PATH:
+1 failed, 3 passed in 0.39s
+   venv first on PATH:
+4 passed in 1.22s
+== 993ba1c4ab5b8e253eb6cad1e2fdce46709ba238 system python first on PATH:
+1 failed, 3 passed in 0.39s
+   venv first on PATH:
+4 passed in 1.30s

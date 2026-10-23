@@ -1,0 +1,88 @@
+repo head 9456708c7d5306acaa4493572a6191e99ac7dcf7 tracked tree clean: True
+PASS 1 handshake + three tools discovered
+PASS 1 server runs as a child process
+PASS 1 no tool exposes tenant/scope/actor/root parameters
+PASS 2 memory_remember committed=true
+PASS 3 memory_get returns the exact memory by key
+PASS 3 evidence is labelled untrusted and no answer generated
+PASS 4 memory_find surfaces the memory for a natural-language question
+PASS 5 server process terminated on client close
+PASS 5 SQLite store exists on disk after the process ended
+PASS 6 fresh server process launched (new pid)
+PASS 7 original memory retrieved by a fresh process
+PASS 8 wrong (near-miss) key refused: not_found_or_unavailable, no content
+PASS 8 never-written key refused: not_found_or_unavailable
+PASS 8 conflicting key: get serves exactly the head (latest write), latest_for_key=true, key_state_version is an int, earlier generations not enumerated, caveat present
+PASS 8 conflicting key: find marks the head latest_for_key=true, the earlier value latest_for_key=false, and lists the key under non_head_keys
+Tool 'memory_get' failed: 'Error executing tool memory_get: Invalid memory tool input or delivery limit'
+PASS 9 empty key -> MCP tool error (is_error=True, no structured success)
+Tool 'memory_find' failed: 'Error executing tool memory_find: Invalid memory tool input or delivery limit'
+PASS 9 max_items out of range -> MCP tool error (is_error=True, no structured success)
+Tool 'memory_remember' failed: 'Error executing tool memory_remember: Invalid memory tool input or delivery limit'
+PASS 9 oversize text -> MCP tool error (is_error=True, no structured success)
+Tool 'memory_delete_everything' failed: 'Unknown tool: memory_delete_everything'
+PASS 9 unknown tool name -> MCP error
+PASS 8 after restart: get still serves exactly the head with latest_for_key=true
+PASS 8 after restart: find marks head true and earlier value false
+PASS 8 other scope cannot read the key: not_found_or_unavailable, no content
+PASS 8 other scope cannot find the content: empty evidence
+Tool 'memory_get' raised an unexpected exception
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/gate2/venv/lib/python3.12/site-packages/mcp/server/mcpserver/tools/base.py", line 179, in run
+    result = await self.fn_metadata.call_fn(self.fn, self.is_async, validated, pass_directly)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/gate2/venv/lib/python3.12/site-packages/mcp/server/mcpserver/utilities/func_metadata.py", line 164, in call_fn
+    return await anyio.to_thread.run_sync(functools.partial(fn, **kwargs))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/gate2/venv/lib/python3.12/site-packages/anyio/to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/gate2/venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2706, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/gate2/venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 1100, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/agent-memory/integrations/agent-memory-mcp/server.py", line 86, in memory_get
+    return _tool_call(lambda: _bridge().get(key))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/agent-memory/integrations/agent-memory-mcp/server.py", line 56, in _tool_call
+    return action()
+           ^^^^^^^^
+  File "/home/user/agent-memory/integrations/agent-memory-mcp/server.py", line 86, in <lambda>
+    return _tool_call(lambda: _bridge().get(key))
+                              ^^^^^^^^^^^^^^^^^^
+  File "/home/user/agent-memory/integrations/agent-memory-mcp/bridge.py", line 209, in get
+    with self._open() as memory:
+  File "/usr/lib/python3.12/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/home/user/agent-memory/reference/agentmem_ref/api/host_activation.py", line 34, in open_qualified_memory
+    memory = AgentMemory.open(
+             ^^^^^^^^^^^^^^^^^
+  File "/home/user/agent-memory/reference/agentmem_ref/api/surface.py", line 617, in open
+    raise RuntimeRecoveryError(
+agentmem_ref.runtime.restart_runtime.RuntimeRecoveryError: requested tenant 'tenant:stranger' does not match recovered runtime tenant 'tenant:gate1'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/gate2/venv/lib/python3.12/site-packages/mcp/server/mcpserver/server.py", line 442, in _handle_call_tool
+    return await self.call_tool(params.name, params.arguments or {}, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/gate2/venv/lib/python3.12/site-packages/mcp/server/mcpserver/server.py", line 548, in call_tool
+    return await self._tool_manager.call_tool(name, arguments, context, convert_result=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/gate2/venv/lib/python3.12/site-packages/mcp/server/mcpserver/tools/tool_manager.py", line 87, in call_tool
+    return await tool.run(arguments, context, convert_result=convert_result)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/gate2/venv/lib/python3.12/site-packages/mcp/server/mcpserver/tools/base.py", line 213, in run
+    raise UnexpectedToolError(f"Error executing tool {self.name}") from exc
+mcp.server.mcpserver.exceptions.UnexpectedToolError: Error executing tool memory_get
+PASS 8 other tenant cannot read the key (error or empty, never the content)
+Tool 'memory_find' failed: 'Error executing tool memory_find: Agent Memory host configuration is missing or unsafe'
+PASS 9 missing host configuration -> MCP tool error naming host configuration, no traceback
+PASS final: no server process left running
+transcript gate1-workflow-9456708c.json sha256 318fcc0e0d7bf132117038ab6bf4c0a474a5111354cf36e106effb1750799c7d
+
+26/26 checks passed
