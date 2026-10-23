@@ -8,18 +8,22 @@ proves, from execution on Linux with the real stdio MCP server:
    route matching nothing but function words ("is", "the") and from BM25 ties among such items;
    no required evidence is lost, truncated or unattributed by the MCP path (Phase 2);
 3. the smallest grounded fix, selector policy **0.5.0** (opt-in `experimental_selectivity`),
-   removes 30% of the irrelevant items on the development cohort and 45% on a post-freeze
-   cohort with **zero loss of required evidence on every regression set** (dev probe, AMB 77,
-   LongMemEval_S session and turn, LoCoMo, LoCoMo adversarial, 1k/19k synthetic) (Phases 3-4);
+   removed 30% of the irrelevant items on the development cohort and 45% on a post-freeze
+   cohort with zero loss of required evidence on every regression set (Phases 3-4). The owner's
+   independent review (5628673295, section 9) then showed that its new grounding was lexical
+   mismatch dressed as evidence; **policy 0.5.1** withdrew it and keeps only a conflict of named
+   subjects, which removes 15% of the irrelevant items on the development cohort and 29% on the
+   post-freeze cohort, again with zero loss of required evidence on every regression set;
 4. the indexed SQLite FTS5 comparator still delivers fewer irrelevant items than the opt-in
    profile at equal `k` and equal full-text capacity, because the runtime's lexical route admits
    function-word-only candidates that FTS5's stop list never retrieves, and the owner's
    zero-loss gate forbids a consumer-side rule that would drop the remaining ones (section 6);
 5. a task-level harness with a small open extractive reader over the delivered evidence runs end
-   to end through the real MCP tool (Phase 5); on a 22-question post-freeze cohort the reader
-   answers 15/16 answerable questions from the default MCP evidence, 14/16 from the opt-in
-   profile and 14/16 from FTS5, and never abstains on the 6 unanswerable questions in any arm;
-   the cohort is author-written, so it is not a sealed holdout (section 7).
+   to end through the real MCP tool (Phase 5); on a 22-question post-freeze cohort the reader's
+   answer contains the gold phrase (a **proxy**, not verified correctness) for 15/16 answerable
+   questions from the default MCP evidence, 14/16 from the opt-in profile and 14/16 from FTS5, and
+   it never abstains on the 6 unanswerable questions in any arm; the cohort is author-written, so
+   it is not a sealed holdout (section 7).
 
 The **default** `memory_find` profile is unchanged (`all_returned`). Promotion of the qualified
 profile to the default is an owner decision; the evidence for and against it is in section 6.
@@ -305,3 +309,63 @@ signal; a bare reader does not.
 - `lanes/`: regression-set summaries and rows (gzipped) for the 0.5.0 selector.
 - `phase5/`: post-freeze cohort, reader digests, `results/` (four task-eval reports and logs).
 - `logs/`: every test and probe execution named above.
+
+## 9. Independent review 5628673295 at `c461ddaa` (owner) and the response: policy 0.5.1
+
+The owner's seven adversarial tests (`review/819-gate2-selection-and-answer-judge-adversarial-no-ci`
+@ `1945848e`, one file, copied unchanged into `integrations/agent-memory-mcp/tests/` and preserved
+in `review-843/`) were executed first against `c461ddaa`: **5 RED, 2 GREEN**
+(`review-843/RED-at-c461ddaa.log`). After the three fixes below: **7/7 GREEN**
+(`review-843/GREEN-after-0.5.1.log`).
+
+| finding | disposition |
+|---|---|
+| 1. The 0.5.0 third-person term-absence exclusion is lexical mismatch, not evidence (`Where did the aircraft touch down?` / `Captain Nia's plane landed at Orion Field. The passengers cheered.`) | **Accepted; withdrawn.** Policy **0.5.1** (selector blob `57bfb3fc`): a multi-statement third-person fact with no shared content term is delivered as `undetermined_multi_statement` again, whatever subject it names and whatever the query names. `absence_grounding` is only ever `single_statement`. The one observation kept without a shared term is a *conflict of named subjects*: the query names a subject by proper-noun possessive, the fact grounds a different subject (possessive or persisted proposition entity) and never mentions the query's → `subject_mismatch`, the same grounding the owner accepted at 0.3.x for facts that do share a term. Both review examples (no named query subject) are delivered uncertain. The 0.5.0 tests of mine that encoded the withdrawn grounding were rewritten (`SubjectConflictWithoutSharedTerms`); the 0.3.0 single-statement-only test is restored. No stop words were added. |
+| 2. `task_eval.judge()` is a substring proxy | **Accepted.** `judge` now matches a gold phrase only as a whole-token sequence (casefolded, punctuation ignored: `blue` is not in `blueberry`) and refuses credit when the answer carries a negation marker (`did not land in Oslo`); per-answer `gold_phrase_present` and `negated` are recorded. The aggregate is renamed `answerable_gold_phrase_match` with `correctness_measure: gold_phrase_match_proxy_not_verified_answer_correctness`; the harness docstring and this README call it a proxy. The 15/16, 14/16, 14/16 figures are unchanged under the stricter proxy (re-run, `phase5/results/*-0.5.1.json`) and are not claimed as verified answer accuracy. SQuAD 1.1 span confidence is not a no-answer probability; the 0/6 abstention stands as evidence of that. |
+| 3. `task_eval.run()` credited a required key with truncated content | **Accepted.** `run` now computes fully delivered keys exactly as `quality_probe` does (state `resolved`, content byte-equal to the seeded text) and passes them to `quality.score`; the owner's fake-client test confirms a truncated key yields `required_key_hits 1`, `required_complete False`. No post-freeze result changed (every fixture text fits the caps). |
+| PR targets `main` (1,377 files) | Not changed from this session: retargeting the base is the operator's call (it may retrigger CodeQL and it changes what reviewers see). The implementation base is `product/mcp-minimum-memory-loop-no-ci` @ `5584fd27`; `5584fd27...HEAD` is the scoped diff. Awaiting the owner's word to retarget. |
+| Product path (hold 0.5.x opt-in; investigate function-word-only lexical admission behind a runtime flag; no default toggle) | Agreed; nothing here toggles the default or touches the runtime. |
+
+### 9.1 Policy 0.5.1 measurements (same procedure as sections 5 and 7)
+
+Development cohort through the real MCP server, opt-in profile (`after/am-gate2-dev-selectivity-policy-0.5.1.json`):
+
+| arm | answerable complete | required items | unexpected items | forbidden incidences | mean precision | no-answer empty | p50 / p95 ms |
+|---|---|---|---|---|---|---|---|
+| MCP default `all_returned` | 11/11 | 11/11 | 47 | 15 | 0.288 | 0/3 | 47.6 / 85.0 |
+| MCP opt-in 0.4.1 | 11/11 | 11/11 | 42 | 13 | 0.297 | 0/3 | 40.6 / 93.9 |
+| MCP opt-in 0.5.0 (withdrawn) | 11/11 | 11/11 | 33 | 12 | 0.336 | 0/3 | 47.7 / 186.6 |
+| **MCP opt-in 0.5.1** | **11/11** | **11/11** | **40** | **13** | **0.309** | 0/3 | 51.7 / 142.3 |
+| SQLite FTS5 | 11/11 | 11/11 | 22 | 11 | 0.518 | 1/3 | 0.1 / 0.2 |
+
+Per question, 0.5.1 declines: A1 `mara-child` and `bastien-canoe` (subject mismatch), A10 `liora-bicycle`
+(subject mismatch), A6/N2/N3 single-statement term absence; everything 0.5.0 declined for a merely absent
+subject (A5 ×3, N1, N2 ×2, N3) is delivered again as uncertain.
+
+Post-freeze task cohort, gold-phrase-match proxy (`phase5/results/*-0.5.1.json`):
+
+| reader | arm | gold phrase match / abstained / no match (of 16) | unanswerable abstained / false answer (of 6) | required complete | unexpected items | delivered chars |
+|---|---|---|---|---|---|---|
+| onnx-squad | MCP default | 15 / 0 / 1 | 0 / 6 | 16/16 | 83 | 8,241 |
+| onnx-squad | **MCP opt-in 0.5.1** | 14 / 0 / 2 | 0 / 6 | 16/16 | 59 | 6,610 |
+| onnx-squad | FTS5 | 14 / 0 / 2 | 0 / 6 | 16/16 | 45 | 5,098 |
+| extractive | MCP default | 11 / 0 / 5 | 0 / 6 | 16/16 | 83 | 8,241 |
+| extractive | **MCP opt-in 0.5.1** | 11 / 0 / 5 | 0 / 6 | 16/16 | 59 | 6,610 |
+| extractive | FTS5 | 9 / 0 / 7 | 0 / 6 | 16/16 | 45 | 5,098 |
+
+T16 still reads "paraffin" from the leaner opt-in and FTS5 evidence and "propane" from the default
+evidence (both facts present in all arms). U4/U5 are `undetermined` under 0.5.1 (only subject-sharing
+facts delivered; the wrong-subject facts declined as subject mismatch); the reader still answers them.
+
+### 9.2 Regression sets at 0.5.1 (zero loss required)
+
+By construction every fact 0.5.1 declines was also declined by 0.5.0 (a conflict of named subjects
+without a shared term was `fact_subject_absent` there), so 0.5.0's zero loss implies 0.5.1's. Re-executed
+anyway (`lanes-0.5.1/`):
+
+TBD-LANES-051
+
+Suites at this revision: owner's 7 tests GREEN; selector/owner-control/challenge/package/audit suites
+**93 passed** (`logs/selector-0.5.1-GREEN.log`); MCP integration suites **42 OK** (bridge 12, real SDK 7,
+quality probe 10, task eval 6, owner's adversarial 7; `logs/mcp-suites-0.5.1.log`); full reference suite
+TBD-SUITE-051.

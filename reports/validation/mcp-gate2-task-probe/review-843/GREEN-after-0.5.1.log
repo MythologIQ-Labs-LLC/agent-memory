@@ -1,0 +1,12 @@
+test_truncated_returned_key_does_not_count_as_complete_evidence (test_gate2_independent_adversarial.AnswerLevelEvidenceCompleteness.test_truncated_returned_key_does_not_count_as_complete_evidence) ... ok
+test_explicit_negation_cannot_be_scored_correct (test_gate2_independent_adversarial.AnswerScoreValidity.test_explicit_negation_cannot_be_scored_correct) ... ok
+test_gold_word_inside_another_word_cannot_be_scored_correct (test_gate2_independent_adversarial.AnswerScoreValidity.test_gold_word_inside_another_word_cannot_be_scored_correct) ... ok
+test_missing_answer_is_not_correct_on_answerable_task (test_gate2_independent_adversarial.AnswerScoreValidity.test_missing_answer_is_not_correct_on_answerable_task) ... ok
+test_named_third_person_fact_has_implicit_heating_answer (test_gate2_independent_adversarial.SelectorParaphraseNonExclusion.test_named_third_person_fact_has_implicit_heating_answer) ... ok
+test_named_third_person_fact_has_implicit_landing_answer (test_gate2_independent_adversarial.SelectorParaphraseNonExclusion.test_named_third_person_fact_has_implicit_landing_answer) ... ok
+test_unavailable_is_not_a_negative_evidence_verdict (test_gate2_independent_adversarial.SelectorParaphraseNonExclusion.test_unavailable_is_not_a_negative_evidence_verdict) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.015s
+
+OK

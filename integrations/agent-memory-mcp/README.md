@@ -87,12 +87,13 @@ framing, and tool schemas provided by the official SDK.
   governed recall_context within bounded delivery budgets, defaulting to
   all_returned. The experimental #819 selector must be opted into deliberately.
   With it, `profile` is `evidence_qualified`, `selection_policy_version` names the
-  selector policy (`0.5.0`: term absence is grounded for a single statement, and for a
-  third-person statement when one side names a subject the other never mentions; a
-  first-person statement without a shared term stays delivered as uncertain), and every
-  declined memory appears under `unavailable` with state `omitted_selection`, its reason
-  (`no_query_term_evidence` / `subject_mismatch`), `absence_grounding` and the inspected
-  subjects. Declined content is never read. The recall itself is identical in both profiles;
+  selector policy (`0.5.1`: a returned memory that shares no content term with the question
+  is declined only when it is a single statement, or when the question names a subject by
+  proper-noun possessive and the memory grounds a different one it never mentions; a longer
+  memory without a shared term is otherwise delivered as uncertain, because a paraphrase
+  shares no token and can still carry the answer), and every declined memory appears under
+  `unavailable` with state `omitted_selection`, its reason (`no_query_term_evidence` /
+  `subject_mismatch`), `absence_grounding` and the inspected subjects. Declined content is never read. The recall itself is identical in both profiles;
   `selection_assessment` is `evidence_delivered`, `undetermined`, `no_relevant_evidence`
   (every returned fact declined on a grounded basis: not proof that no memory exists) or
   `no_returned_candidates`.
@@ -136,6 +137,11 @@ From the repository root in the venv from above:
 `--selectivity` calls `memory_find` with `experimental_selectivity=true` so both consumer
 profiles are measured through the same real MCP path; the report records which was used
 (`selectivity`) and, per question, the declined facts with their reasons (`mcp_omitted`).
+
+`task_eval.py` (Gate 2 Phase 5) hands only the evidence `memory_find` delivered to a reader
+(a deterministic extractive reader, or a pinned open ONNX SQuAD model) and joins gold afterwards;
+its "correct" figure is a whole-token gold-phrase-match **proxy** with a negation guard, not
+verified answer correctness, and required evidence is credited only for fully delivered text.
 
 The output contains per-question returned keys and scored evidence,
 not retrieved plaintext or made-up answers. It reports:
