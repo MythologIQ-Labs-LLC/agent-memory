@@ -84,8 +84,9 @@ class ContentTermAdmission(_Store):
         # cannot see it (as FTS5 cannot). A non-lexical route would be needed to find it.
         practice = self.put("memory:a", "I've been practising a lot lately. The recital is in November.")
         query = "Which instrument is the one I play?"
-        os.environ.pop(adapter.EXPERIMENTAL_LEXICAL_ADMISSION_ENV, None)
-        self.assertIn(practice, self.returned(query))
+        with mock.patch.dict(os.environ, {}):  # restores the caller's environment afterwards
+            os.environ.pop(adapter.EXPERIMENTAL_LEXICAL_ADMISSION_ENV, None)
+            self.assertIn(practice, self.returned(query))
         with mock.patch.dict(os.environ, FLAG):
             self.assertNotIn(practice, self.returned(query))
 
