@@ -1,0 +1,5 @@
+Tool 'memory_correct' failed: 'Unknown tool: memory_correct'
+ERROR: test_governed_correction_retires_the_old_value_and_persists_after_restart (test_real_mcp.ActualMcpConsumerLoop.test_governed_correction_retires_the_old_value_and_persists_after_restart)
+      | AssertionError: MCP tool failed: [TextContent(type='text', text='Unknown tool: memory_correct', annotations=None, meta=None)]
+Ran 10 tests in 2.509s
+FAILED (errors=1)

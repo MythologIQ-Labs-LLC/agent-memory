@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 from contextlib import contextmanager
+import hashlib
+import json
 import os
 import stat
 from types import SimpleNamespace
@@ -31,6 +33,14 @@ class FakeMemory:
         return {"committed": True, "outcome": "allow_with_ledger", "stage": "forget",
                 "receipt": {"receipt_id": "ref-0009", "requested_action": "pruning",
                             "selected_action": "pruning", "before_state": "v1", "after_state": "v2"}}
+
+    def correct(self, key, text, **kwargs):
+        self.calls.append(("correct", key, text, kwargs))
+        # Shaped like the real facade result (AgentMemory.correct, contract 1.8.0).
+        return {"committed": True, "outcome": "allow_with_ledger", "stage": "commit",
+                "fact_uuid": "fact:corrected-2",
+                "receipt": {"receipt_id": "ref-0011", "requested_action": "correction",
+                            "selected_action": "correction"}}
 
     def recall_context(self, question, **kwargs):
         self.calls.append(("recall_context", question, kwargs))
@@ -255,6 +265,95 @@ class BridgeTests(unittest.TestCase):
         self.assertFalse(result["committed"])
         self.assertEqual(result["status"], "not_committed")
         self.assertEqual(result["operation"], "defer")
+
+    # ---- memory_correct: authority is an operator-written correction record named by the host
+
+    def _record(self, directory, key="memory:editor", text="Our editor is Helix.", **extra):
+        path = Path(directory) / "correction.json"
+        path.write_text(json.dumps({"key": key, "text": text, **extra}))
+        return path
+
+    def test_correct_without_host_record_refuses_and_never_opens_store(self):
+        with patch.dict(os.environ, {}, clear=True):
+            result = self.bridge.correct("memory:editor", "Our editor is Helix.")
+        self.assertFalse(result["committed"])
+        self.assertEqual(result["status"], "host_authorization_required")
+        self.assertEqual(self.calls, [])
+
+    def test_correct_record_for_another_key_or_text_refuses_and_never_opens_store(self):
+        with tempfile.TemporaryDirectory() as temp:
+            record = self._record(temp)
+            with patch.dict(os.environ, {"AGENT_MEMORY_MCP_CORRECTION_RECORD": str(record)}, clear=True):
+                other_key = self.bridge.correct("memory:shell", "Our editor is Helix.")
+                other_text = self.bridge.correct("memory:editor", "Our editor is Emacs.")
+        for result in (other_key, other_text):
+            self.assertFalse(result["committed"])
+            self.assertEqual(result["status"], "host_authorization_required")
+        self.assertEqual(self.calls, [])
+
+    def test_correct_refuses_a_symlinked_relative_or_malformed_record(self):
+        with tempfile.TemporaryDirectory() as temp:
+            record = self._record(temp)
+            link = Path(temp) / "link.json"
+            link.symlink_to(record)
+            malformed = Path(temp) / "malformed.json"
+            malformed.write_text("not json")
+            for value in (str(link), "correction.json", str(malformed), str(Path(temp) / "missing.json")):
+                with self.subTest(record=value), patch.dict(os.environ, {"AGENT_MEMORY_MCP_CORRECTION_RECORD": value}, clear=True):
+                    result = self.bridge.correct("memory:editor", "Our editor is Helix.")
+                    self.assertFalse(result["committed"])
+                    self.assertEqual(result["status"], "host_authorization_required")
+        self.assertEqual(self.calls, [])
+
+    def test_correct_presents_artifact_bound_evidence_with_a_host_registered_verifier(self):
+        with tempfile.TemporaryDirectory() as temp:
+            record = self._record(temp)
+            digest = hashlib.sha256(record.read_bytes()).hexdigest()
+            with patch.dict(os.environ, {"AGENT_MEMORY_MCP_CORRECTION_RECORD": str(record)}, clear=True):
+                result = self.bridge.correct("memory:editor", "Our editor is Helix.")
+            self.assertTrue(result["committed"])
+            self.assertEqual(result["status"], "corrected")
+            self.assertEqual((result["operation"], result["receipt_id"], result["fact_ref"]),
+                             ("correction", "ref-0011", "fact:corrected-2"))
+            opened = [c for c in self.calls if c[0] == "open"][0][2]
+            registry = opened["verifier_registry"]
+            call = [c for c in self.calls if c[0] == "correct"][0]
+            self.assertEqual(call[1:3], ("memory:editor", "Our editor is Helix."))
+            # No caller-chosen risk, overrides, attestation or review flags reach the facade.
+            self.assertEqual(set(call[3]), {"evidence"})
+            (item,) = call[3]["evidence"]
+            self.assertEqual(item.digest, digest)
+            self.assertIn(item.verifier, registry)
+            verifier = registry.as_mapping()[item.verifier]
+            self.assertTrue(verifier(item))
+            # The registered verifier re-reads the record: an edited record no longer verifies.
+            record.write_text(json.dumps({"key": "memory:editor", "text": "Our editor is Emacs."}))
+            self.assertFalse(verifier(item))
+
+    def test_correct_preserves_a_parked_review_without_claiming_success(self):
+        with tempfile.TemporaryDirectory() as temp:
+            record = self._record(temp)
+            with patch.dict(os.environ, {"AGENT_MEMORY_MCP_CORRECTION_RECORD": str(record)}, clear=True), \
+                    patch.object(FakeMemory, "correct", return_value={
+                        "committed": False, "outcome": "require_review",
+                        "refusal": "review_requires_qualified_evidence"}):
+                result = self.bridge.correct("memory:editor", "Our editor is Helix.")
+        self.assertFalse(result["committed"])
+        self.assertEqual(result["status"], "not_committed")
+        self.assertEqual(result["outcome"], "require_review")
+        self.assertIsNone(result["fact_ref"])
+
+    def test_correct_commit_of_another_action_is_not_reported_as_corrected(self):
+        with tempfile.TemporaryDirectory() as temp:
+            record = self._record(temp)
+            with patch.dict(os.environ, {"AGENT_MEMORY_MCP_CORRECTION_RECORD": str(record)}, clear=True), \
+                    patch.object(FakeMemory, "correct", return_value={
+                        "committed": True, "outcome": "allow_with_ledger", "fact_uuid": "fact:x",
+                        "receipt": {"receipt_id": "ref-0012", "selected_action": "defer"}}):
+                result = self.bridge.correct("memory:editor", "Our editor is Helix.")
+        self.assertFalse(result["committed"])
+        self.assertEqual(result["status"], "not_committed")
+        self.assertIsNone(result["fact_ref"])
 
     def test_forget_rejects_invalid_target_before_reading_host_grant(self):
         with self.assertRaises(ValueError):

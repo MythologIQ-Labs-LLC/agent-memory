@@ -177,7 +177,7 @@ class ActualMcpConsumerLoop(unittest.IsolatedAsyncioTestCase):
                 tools = await client.list_tools()
                 self.assertEqual(
                     {tool.name for tool in tools.tools},
-                    {"memory_remember", "memory_get", "memory_find", "memory_forget"},
+                    {"memory_remember", "memory_get", "memory_find", "memory_forget", "memory_correct"},
                 )
                 created = _result(await client.call_tool("memory_remember", {
                     "key": "memory:agent:editor",
@@ -304,6 +304,52 @@ class ActualMcpConsumerLoop(unittest.IsolatedAsyncioTestCase):
                         "question": "What color is the test setting?",
                     }), "evidence")
                     self.assertNotIn("The test setting is amber.", repr(found))
+
+    async def test_governed_correction_retires_the_old_value_and_persists_after_restart(self):
+        """The alpha correction slice through the real server and the real facade: the authority
+        is an operator-written record named by the host, not a tool argument."""
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "store"
+            env = {
+                "AGENT_MEMORY_MCP_ROOT": str(root),
+                "AGENT_MEMORY_MCP_TENANT": "tenant:alpha",
+                "AGENT_MEMORY_MCP_ACTOR": "agent:alpha",
+                "AGENT_MEMORY_MCP_SCOPE": "project:alpha",
+            }
+            key, old, new = "memory:studio:kiln", "The kiln fires bisque at cone 06.", "The kiln fires bisque at cone 04."
+            question = "What cone does the kiln fire bisque at?"
+            with patch.dict(os.environ, env, clear=True):
+                async with Client(module.mcp, raise_exceptions=True) as client:
+                    saved = _result(await client.call_tool("memory_remember", {"key": key, "text": old}), "committed")
+                    self.assertTrue(saved["committed"], saved)
+                    refused = _result(await client.call_tool("memory_correct", {"key": key, "text": new}), "committed")
+                    self.assertFalse(refused["committed"], refused)
+                    self.assertEqual(refused["status"], "host_authorization_required")
+                    still = _result(await client.call_tool("memory_get", {"key": key}), "evidence")
+                    self.assertEqual([e["content"] for e in still["evidence"]], [old])
+            record = Path(temp) / "operator-correction.json"
+            record.write_text(json.dumps({"key": key, "text": new, "reason": "kiln log says cone 04"}))
+            with patch.dict(os.environ, {**env, "AGENT_MEMORY_MCP_CORRECTION_RECORD": str(record)}, clear=True):
+                async with Client(module.mcp, raise_exceptions=True) as client:
+                    mismatch = _result(await client.call_tool("memory_correct", {
+                        "key": key, "text": "The kiln fires bisque at cone 10."}), "committed")
+                    self.assertFalse(mismatch["committed"], mismatch)
+                    corrected = _result(await client.call_tool("memory_correct", {"key": key, "text": new}), "committed")
+                    self.assertTrue(corrected["committed"], corrected)
+                    self.assertEqual((corrected["status"], corrected["operation"]), ("corrected", "correction"))
+                    self.assertNotEqual(corrected["fact_ref"], saved["fact_ref"])
+                    got = _result(await client.call_tool("memory_get", {"key": key}), "evidence")
+                    self.assertEqual([e["content"] for e in got["evidence"]], [new])
+                    found = _result(await client.call_tool("memory_find", {"question": question}), "evidence")
+                    self.assertIn(new, [e["content"] for e in found["evidence"]])
+                    self.assertNotIn(old, repr(found))
+            with patch.dict(os.environ, env, clear=True):
+                async with Client(module.mcp, raise_exceptions=True) as restarted:
+                    got = _result(await restarted.call_tool("memory_get", {"key": key}), "evidence")
+                    self.assertEqual([e["content"] for e in got["evidence"]], [new])
+                    self.assertEqual(got["evidence"][0]["fact_ref"], corrected["fact_ref"])
+                    found = _result(await restarted.call_tool("memory_find", {"question": question, "max_items": 8}), "evidence")
+                    self.assertNotIn(old, repr(found))
 
     async def test_symlinked_host_root_ancestor_is_a_tool_error_without_writing(self):
         # Agent-supplied tool calls cannot choose a path. Even a misconfigured

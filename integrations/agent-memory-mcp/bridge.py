@@ -11,6 +11,8 @@ The MCP model never gets a raw AgentMemory handle or direct substrate access.
 from __future__ import annotations
 
 from dataclasses import dataclass
+import hashlib
+import json
 import os
 from pathlib import Path
 import stat
@@ -77,6 +79,35 @@ def _string(label: str, value: Any, limit: int) -> str:
     return value
 
 
+CORRECTION_RECORD_ENV = "AGENT_MEMORY_MCP_CORRECTION_RECORD"
+CORRECTION_RECORD_VERIFIER = "mcp-host-correction-record"
+MAX_CORRECTION_RECORD_BYTES = 16_384
+
+
+def _host_correction_record(key: str, text: str) -> tuple[Path, str] | None:
+    """The host-named correction record and its sha256, if it authorizes exactly (key, text)."""
+    raw = os.environ.get(CORRECTION_RECORD_ENV, "")
+    return _read_correction_record(Path(raw), key, text) if raw else None
+
+
+def _read_correction_record(path: Path, key: str, text: str) -> tuple[Path, str] | None:
+    """Absolute path, a regular file that is not a symlink, bounded size, a JSON object whose
+    "key" and "text" equal the requested correction exactly; otherwise None."""
+    if not path.is_absolute() or ".." in path.parts:
+        return None
+    try:
+        info = path.lstat()
+        if not stat.S_ISREG(info.st_mode) or info.st_size > MAX_CORRECTION_RECORD_BYTES:
+            return None
+        data = path.read_bytes()
+        record = json.loads(data.decode("utf-8"))
+    except (OSError, UnicodeDecodeError, ValueError):
+        return None
+    if not isinstance(record, dict) or record.get("key") != key or record.get("text") != text:
+        return None
+    return path, hashlib.sha256(data).hexdigest()
+
+
 class LocalMemoryBridge:
     """Each operation opens and closes an isolated host-bound real runtime."""
 
@@ -87,13 +118,14 @@ class LocalMemoryBridge:
             opener = open_qualified_memory
         self._opener = opener
 
-    def _open(self) -> ContextManager[Any]:
+    def _open(self, **host_options: Any) -> ContextManager[Any]:
         return self._opener(
             self.config.root,
             tenant=self.config.tenant,
             actor_id=self.config.actor,
             scope=self.config.scope,
             purpose="local MCP explicit memory consumer",
+            **host_options,
         )
 
     def remember(self, key: str, text: str) -> dict:
@@ -164,6 +196,62 @@ class LocalMemoryBridge:
             "outcome": outcome.get("outcome"),
             "refusal": outcome.get("refusal"),
             "permanent": False,
+        }
+
+    def correct(self, key: str, text: str) -> dict:
+        """Correct one key's current value, authorized by an operator-written correction record.
+
+        The authority is not a tool argument. The trusted host names, in
+        AGENT_MEMORY_MCP_CORRECTION_RECORD, an absolute path to a regular JSON
+        file that a person wrote outside the store: {"key": ..., "text": ...}. A
+        call that does not match it exactly is refused before the store is
+        opened. The record goes to the public facade as artifact-bound evidence
+        (its sha256), and this host registers a verifier that re-reads the record
+        and checks the digest and the binding again when the facade evaluates the
+        evidence. The facade's governed policy still decides: no SkillArtifact is
+        built, no review flag, risk class, override or attestation is supplied.
+        This is a trusted single-user host boundary, not authentication: whoever
+        can write the record file can authorize the correction.
+        """
+        key = _string("key", key, MAX_KEY_CHARS)
+        text = _string("text", text, MAX_TEXT_CHARS)
+        record = _host_correction_record(key, text)
+        if record is None:
+            return {"committed": False, "key": key, "status": "host_authorization_required",
+                    "operation": None, "receipt_id": None, "fact_ref": None, "outcome": None,
+                    "refusal": "host_authorization_required"}
+        path, digest = record
+        from agentmem_ref.core.evidence_qualification import EvidenceItem
+        from agentmem_ref.core.verification import VerifierRegistry
+
+        evidence = EvidenceItem(
+            ref=f"{CORRECTION_RECORD_VERIFIER}:sha256:{digest}",
+            artifact_ref=str(path),
+            digest=digest,
+            verifier=CORRECTION_RECORD_VERIFIER,
+            failure_domain="mcp-host-operator-correction-record",
+        )
+        registry = VerifierRegistry()
+        registry.register(
+            CORRECTION_RECORD_VERIFIER,
+            # Re-reads the exact file the host bound, independent of the environment.
+            lambda item: (item.artifact_ref == str(path)
+                          and _read_correction_record(path, key, text) == (path, item.digest)),
+        )
+        with self._open(verifier_registry=registry) as memory:
+            outcome = memory.correct(key, text, evidence=(evidence,))
+        receipt = outcome.get("receipt") or {}
+        operation = receipt.get("selected_action")
+        corrected = outcome.get("committed") is True and operation == "correction"
+        return {
+            "committed": corrected,
+            "key": key,
+            "status": "corrected" if corrected else "not_committed",
+            "operation": operation,
+            "receipt_id": receipt.get("receipt_id"),
+            "fact_ref": outcome.get("fact_uuid") if corrected else None,
+            "outcome": outcome.get("outcome"),
+            "refusal": outcome.get("refusal"),
         }
 
     def _project(self, package: dict, *, asked: str) -> dict:

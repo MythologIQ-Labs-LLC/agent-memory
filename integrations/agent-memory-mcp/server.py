@@ -116,5 +116,18 @@ def memory_forget(key: str) -> dict[str, Any]:
     return _tool_call(lambda: _bridge().forget(key))
 
 
+@mcp.tool()
+def memory_correct(key: str, text: str) -> dict[str, Any]:
+    """Replace one memory key's current value with a corrected text, when a person authorized it.
+
+    Disabled unless the trusted MCP host names, in AGENT_MEMORY_MCP_CORRECTION_RECORD, an
+    operator-written record {"key": ..., "text": ...} matching this call exactly. The agent
+    cannot supply that authority as a tool argument. A refusal or a parked review is NOT a
+    correction; only status "corrected" retires the old value as current evidence. Writing
+    the same key again with memory_remember is not a correction.
+    """
+    return _tool_call(lambda: _bridge().correct(key, text))
+
+
 if __name__ == "__main__":
     mcp.run(transport="stdio")

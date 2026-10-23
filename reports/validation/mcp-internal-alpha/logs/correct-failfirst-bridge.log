@@ -1,0 +1,12 @@
+      9 AttributeError: 'LocalMemoryBridge' object has no attribute 'correct'
+      1 ERROR: test_correct_commit_of_another_action_is_not_reported_as_corrected (test_bridge.BridgeTests.test_correct_commit_of_another_action_is_not_reported_as_corrected)
+      1 ERROR: test_correct_presents_artifact_bound_evidence_with_a_host_registered_verifier (test_bridge.BridgeTests.test_correct_presents_artifact_bound_evidence_with_a_host_registered_verifier)
+      1 ERROR: test_correct_preserves_a_parked_review_without_claiming_success (test_bridge.BridgeTests.test_correct_preserves_a_parked_review_without_claiming_success)
+      1 ERROR: test_correct_record_for_another_key_or_text_refuses_and_never_opens_store (test_bridge.BridgeTests.test_correct_record_for_another_key_or_text_refuses_and_never_opens_store)
+      1 ERROR: test_correct_refuses_a_symlinked_relative_or_malformed_record (test_bridge.BridgeTests.test_correct_refuses_a_symlinked_relative_or_malformed_record) (record='/tmp/tmpqb9xp9kz/link.json')
+      1 ERROR: test_correct_refuses_a_symlinked_relative_or_malformed_record (test_bridge.BridgeTests.test_correct_refuses_a_symlinked_relative_or_malformed_record) (record='/tmp/tmpqb9xp9kz/malformed.json')
+      1 ERROR: test_correct_refuses_a_symlinked_relative_or_malformed_record (test_bridge.BridgeTests.test_correct_refuses_a_symlinked_relative_or_malformed_record) (record='/tmp/tmpqb9xp9kz/missing.json')
+      1 ERROR: test_correct_refuses_a_symlinked_relative_or_malformed_record (test_bridge.BridgeTests.test_correct_refuses_a_symlinked_relative_or_malformed_record) (record='correction.json')
+      1 ERROR: test_correct_without_host_record_refuses_and_never_opens_store (test_bridge.BridgeTests.test_correct_without_host_record_refuses_and_never_opens_store)
+      1 FAILED (errors=9)
+      1 Ran 27 tests in 0.021s
