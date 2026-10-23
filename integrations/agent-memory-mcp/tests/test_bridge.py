@@ -150,6 +150,28 @@ class BridgeTests(unittest.TestCase):
         self.assertEqual([item["content"] for item in response["evidence"]], ["Neovim"])
         self.assertNotIn("Vim", repr(response))
 
+    def test_exact_get_refuses_conflicting_versions_instead_of_guessing(self):
+        def duplicate_versions(self_, query, **kwargs):
+            return {
+                "status": "complete",
+                "items": [
+                    {"fact_ref": "fact:old", "state": "resolved",
+                     "content": "The preferred editor is Vim.",
+                     "provenance": {"memory_ref": "memory:editor"}},
+                    {"fact_ref": "fact:new", "state": "resolved",
+                     "content": "The preferred editor is Neovim.",
+                     "provenance": {"memory_ref": "memory:editor"}},
+                ],
+            }
+
+        with patch.object(FakeMemory, "recall_context", duplicate_versions):
+            response = self.bridge.get("memory:editor")
+        self.assertEqual(response["lookup_status"], "ambiguous_multiple_versions")
+        self.assertEqual(response["evidence_count"], 0)
+        self.assertEqual(response["evidence"], [])
+        self.assertNotIn("Vim", repr(response))
+        self.assertNotIn("Neovim", repr(response))
+
     def test_invalid_request_never_opens_store(self):
         for bad in ("", " ", "x" * 161):
             with self.subTest(bad=bad[:3]), self.assertRaises(ValueError):
