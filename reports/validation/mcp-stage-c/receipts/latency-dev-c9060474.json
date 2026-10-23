@@ -1,0 +1,17 @@
+{
+  "head": "c9060474",
+  "cohort": "quality_cases_dev.json",
+  "note": "memory_find wall time through real stdio MCP, one CPU thread; first call includes model load",
+  "memory_find_ms": {
+    "off": {
+      "first_call_ms": 32.9,
+      "later_median_ms": 30.9,
+      "later_max_ms": 38.2
+    },
+    "on": {
+      "first_call_ms": 2010.3,
+      "later_median_ms": 284.3,
+      "later_max_ms": 405.8
+    }
+  }
+}

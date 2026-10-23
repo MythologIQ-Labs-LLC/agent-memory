@@ -1,0 +1,79 @@
+{
+  "tested_commit": "c90604742380b683b2e2957eb87f13cc10178314",
+  "starting_head": "16f5e4681197ed3c2e2af9633940264ddfd881ed",
+  "holdout_frozen_at": "6d432f35045e24f489d74a83ada00443cc9f7f0d",
+  "python": "3.13.16",
+  "platform": "Linux-6.18.44-fc-v153-x86_64-with-glibc2.39",
+  "install": [
+    "python -m venv venv",
+    "pip install -e \".[semantic]\" \"mcp==2.3.0\" -c reference/requirements-semantic.txt"
+  ],
+  "pip_freeze": [
+    "annotated-types==0.8.0",
+    "anyio==4.15.1",
+    "attrs==26.1.0",
+    "certifi==2026.10.23",
+    "cffi==2.1.1",
+    "click==8.5.0",
+    "cryptography==50.0.2",
+    "filelock==4.2.4",
+    "flatbuffers==25.12.19",
+    "fsspec==2026.9.0",
+    "h11==0.16.0",
+    "hf-xet==1.7.0",
+    "httpcore==1.0.9",
+    "httpcore2==2.16.0",
+    "httpx==0.28.1",
+    "httpx2==2.16.0",
+    "huggingface_hub==1.33.0",
+    "idna==3.20",
+    "jsonschema==4.26.0",
+    "jsonschema-specifications==2025.9.1",
+    "mcp==2.3.0",
+    "mcp-types==2.3.0",
+    "numpy==2.4.6",
+    "onnxruntime==1.30.0",
+    "opentelemetry-api==1.45.1",
+    "packaging==26.3",
+    "protobuf==7.36.2",
+    "pycparser==3.12",
+    "pydantic==2.14.1",
+    "pydantic_core==2.50.1",
+    "PyJWT==2.15.1",
+    "python-multipart==0.0.32",
+    "PyYAML==6.0.3",
+    "referencing==0.37.0",
+    "rfc8785==0.1.4",
+    "rpds-py==2026.9.1",
+    "sse-starlette==3.5.0",
+    "starlette==1.9.0",
+    "tokenizers==0.23.2",
+    "tqdm==4.70.1",
+    "truststore==0.10.5",
+    "typing-inspection==0.4.4",
+    "typing_extensions==4.16.0",
+    "uvicorn==0.54.0"
+  ],
+  "support_model": {
+    "id": "optimum/roberta-base-squad2",
+    "revision": "db07770d7fa024df076e60947b445b0b3290f8eb",
+    "files": {
+      "config.json": "963a7cc92d3d661821cfbeb87a6e1be54ec9081ef9f9780306275fbe57605a0e",
+      "model.onnx": "204a84036a76ec7dafad3a4613f9425316b0308d77ad88326795fef6eb64b718",
+      "tokenizer.json": "fb35154b5c214e4235de078bfd0890777e06bce973689112c1d06a9157ed0288"
+    },
+    "env": "AGENT_MEMORY_MCP_SUPPORT_MODEL_DIR (absolute; set by the host)"
+  },
+  "commands": {
+    "units_and_real_mcp": "python -m unittest discover -s integrations/agent-memory-mcp/tests -p 'test_*.py'  (with and without the model env)",
+    "facade": "python -m unittest discover -s reference/tests -t reference -p test_developer_facade.py",
+    "alpha_workflow": "python reports/validation/mcp-internal-alpha/alpha_workflow.py . reports/validation/mcp-stage-c/receipts",
+    "dev_gate": "python integrations/agent-memory-mcp/stage_c_gate.py --out ...  (with and without the model env)",
+    "holdout": "python integrations/agent-memory-mcp/stage_c_adversarial.py --support-model-dir DIR --out ...",
+    "dev_restart_and_arms": "python integrations/agent-memory-mcp/stage_c_adversarial.py --support-model-dir DIR --cases integrations/agent-memory-mcp/quality_cases_dev.json --out ...",
+    "fidelity": "python fidelity/pairs.py; python fidelity/hf.py (torch+transformers venv); python fidelity/ours.py MODEL_DIR"
+  },
+  "unset_for_all_runs": [
+    "AGENT_MEMORY_REPRESENTATION_DIR"
+  ]
+}

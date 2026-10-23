@@ -1,0 +1,7 @@
+$ env -u AGENT_MEMORY_REPRESENTATION_DIR -u AGENT_MEMORY_MCP_SUPPORT_MODEL_DIR python -m unittest discover -s integrations/agent-memory-mcp/tests -p test_bridge.py
+.....................................
+----------------------------------------------------------------------
+Ran 37 tests in 0.117s
+
+OK
+exit=0

@@ -1,0 +1,29 @@
+$ env -u AGENT_MEMORY_REPRESENTATION_DIR -u AGENT_MEMORY_MCP_SUPPORT_MODEL_DIR python -m unittest discover -s integrations/agent-memory-mcp/tests -p test_real_mcp.py -v
+test_governed_correction_retires_the_old_value_and_persists_after_restart (test_real_mcp.ActualMcpConsumerLoop.test_governed_correction_retires_the_old_value_and_persists_after_restart)
+The alpha correction slice through the real server and the real facade: the authority ... ok
+test_host_support_check_marks_unsupported_questions_over_a_populated_store (test_real_mcp.ActualMcpConsumerLoop.test_host_support_check_marks_unsupported_questions_over_a_populated_store) ... skipped 'host did not provide the pinned answer-support model'
+test_malformed_tool_input_cannot_set_authority (test_real_mcp.ActualMcpConsumerLoop.test_malformed_tool_input_cannot_set_authority) ... Tool 'memory_find' failed: 'Error executing tool memory_find: Invalid memory tool input or delivery limit'
+ok
+test_missing_host_configuration_is_tool_error_not_success (test_real_mcp.ActualMcpConsumerLoop.test_missing_host_configuration_is_tool_error_not_success) ... Tool 'memory_find' failed: 'Error executing tool memory_find: Agent Memory host configuration is missing or unsafe'
+ok
+test_real_stdio_subprocess_reconnects_to_durable_memory (test_real_mcp.ActualMcpConsumerLoop.test_real_stdio_subprocess_reconnects_to_durable_memory) ... execute program '/home/user/eval/stagec/venv/bin/python': <_UnixSubprocessTransport pid=1764 running stdin=<_UnixWritePipeTransport fd=7 idle bufsize=0> stdout=<_UnixReadPipeTransport fd=8 polling>>
+<_UnixReadPipeTransport fd=8 polling> was closed by peer
+<_UnixSubprocessTransport pid=1764 running stdin=<_UnixWritePipeTransport closed fd=7 closed> stdout=<_UnixReadPipeTransport closed fd=8 closed>> exited with return code 0
+execute program '/home/user/eval/stagec/venv/bin/python': <_UnixSubprocessTransport pid=1767 running stdin=<_UnixWritePipeTransport fd=7 idle bufsize=0> stdout=<_UnixReadPipeTransport fd=8 polling>>
+<_UnixReadPipeTransport fd=8 polling> was closed by peer
+<_UnixSubprocessTransport pid=1767 running stdin=<_UnixWritePipeTransport closed fd=7 closed> stdout=<_UnixReadPipeTransport closed fd=8 closed>> exited with return code 0
+ok
+test_real_store_exact_retrieve_find_and_reconnect (test_real_mcp.ActualMcpConsumerLoop.test_real_store_exact_retrieve_find_and_reconnect) ... ok
+test_reversible_forget_is_host_bound_and_persists_after_restart (test_real_mcp.ActualMcpConsumerLoop.test_reversible_forget_is_host_bound_and_persists_after_restart) ... ok
+test_same_key_rewrite_is_visible_not_silently_merged (test_real_mcp.ActualMcpConsumerLoop.test_same_key_rewrite_is_visible_not_silently_merged) ... ok
+test_selectivity_declines_are_visible_with_their_grounding (test_real_mcp.ActualMcpConsumerLoop.test_selectivity_declines_are_visible_with_their_grounding)
+Policy 0.5.1 through the real server: a returned third-person memory about a different ... ok
+test_separately_configured_project_cannot_read_other_project (test_real_mcp.ActualMcpConsumerLoop.test_separately_configured_project_cannot_read_other_project) ... ok
+test_symlinked_host_root_ancestor_is_a_tool_error_without_writing (test_real_mcp.ActualMcpConsumerLoop.test_symlinked_host_root_ancestor_is_a_tool_error_without_writing) ... Tool 'memory_remember' failed: 'Error executing tool memory_remember: Agent Memory host configuration is missing or unsafe'
+ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 2.700s
+
+OK (skipped=1)
+exit=0

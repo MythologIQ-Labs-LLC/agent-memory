@@ -1,0 +1,5145 @@
+{
+ "purpose": "fidelity of answer_support.py (ONNX, numpy) to the reference Hugging Face question-answering pipeline, handle_impossible_answer=True, defaults; not a quality measure",
+ "reference": {
+  "model": "deepset/roberta-base-squad2",
+  "revision": "adc3b06f79f797d1c575d5479d6f5efe54a9e3b4",
+  "transformers": "4.57.6",
+  "torch": "2.14.1"
+ },
+ "implementation": {
+  "model": "optimum/roberta-base-squad2",
+  "revision": "db07770d7fa024df076e60947b445b0b3290f8eb",
+  "tested_at": "c9060474"
+ },
+ "pairs": "every question x every current record of both cohorts (forgotten record excluded)",
+ "pair_count": 732,
+ "reference_spans": 27,
+ "onnx_spans": 27,
+ "disagreements": 0,
+ "rows": [
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A1",
+   "key": "memory:liora-canoe",
+   "reference_span": true,
+   "onnx_span": true
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A1",
+   "key": "memory:liora-bicycle",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A1",
+   "key": "memory:bastien-canoe",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A1",
+   "key": "memory:mara-parent",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A1",
+   "key": "memory:mara-child",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A1",
+   "key": "memory:liora-sibling",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A1",
+   "key": "memory:office-printer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A1",
+   "key": "memory:kitchen-printer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A1",
+   "key": "memory:maya-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A1",
+   "key": "memory:omar-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A1",
+   "key": "memory:quail-meeting",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A1",
+   "key": "memory:quail-owner",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A1",
+   "key": "memory:meridian-meeting",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A1",
+   "key": "memory:meridian-owner",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A1",
+   "key": "memory:festival",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A1",
+   "key": "memory:moon-exhibit",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A1",
+   "key": "memory:code-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A1",
+   "key": "memory:telescope",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A2",
+   "key": "memory:liora-canoe",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A2",
+   "key": "memory:liora-bicycle",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A2",
+   "key": "memory:bastien-canoe",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A2",
+   "key": "memory:mara-parent",
+   "reference_span": true,
+   "onnx_span": true
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A2",
+   "key": "memory:mara-child",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A2",
+   "key": "memory:liora-sibling",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A2",
+   "key": "memory:office-printer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A2",
+   "key": "memory:kitchen-printer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A2",
+   "key": "memory:maya-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A2",
+   "key": "memory:omar-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A2",
+   "key": "memory:quail-meeting",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A2",
+   "key": "memory:quail-owner",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A2",
+   "key": "memory:meridian-meeting",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A2",
+   "key": "memory:meridian-owner",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A2",
+   "key": "memory:festival",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A2",
+   "key": "memory:moon-exhibit",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A2",
+   "key": "memory:code-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A2",
+   "key": "memory:telescope",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A3",
+   "key": "memory:liora-canoe",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A3",
+   "key": "memory:liora-bicycle",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A3",
+   "key": "memory:bastien-canoe",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A3",
+   "key": "memory:mara-parent",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A3",
+   "key": "memory:mara-child",
+   "reference_span": true,
+   "onnx_span": true
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A3",
+   "key": "memory:liora-sibling",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A3",
+   "key": "memory:office-printer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A3",
+   "key": "memory:kitchen-printer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A3",
+   "key": "memory:maya-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A3",
+   "key": "memory:omar-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A3",
+   "key": "memory:quail-meeting",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A3",
+   "key": "memory:quail-owner",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A3",
+   "key": "memory:meridian-meeting",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A3",
+   "key": "memory:meridian-owner",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A3",
+   "key": "memory:festival",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A3",
+   "key": "memory:moon-exhibit",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A3",
+   "key": "memory:code-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A3",
+   "key": "memory:telescope",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A4",
+   "key": "memory:liora-canoe",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A4",
+   "key": "memory:liora-bicycle",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A4",
+   "key": "memory:bastien-canoe",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A4",
+   "key": "memory:mara-parent",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A4",
+   "key": "memory:mara-child",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A4",
+   "key": "memory:liora-sibling",
+   "reference_span": true,
+   "onnx_span": true
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A4",
+   "key": "memory:office-printer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A4",
+   "key": "memory:kitchen-printer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A4",
+   "key": "memory:maya-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A4",
+   "key": "memory:omar-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A4",
+   "key": "memory:quail-meeting",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A4",
+   "key": "memory:quail-owner",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A4",
+   "key": "memory:meridian-meeting",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A4",
+   "key": "memory:meridian-owner",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A4",
+   "key": "memory:festival",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A4",
+   "key": "memory:moon-exhibit",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A4",
+   "key": "memory:code-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A4",
+   "key": "memory:telescope",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A5",
+   "key": "memory:liora-canoe",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A5",
+   "key": "memory:liora-bicycle",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A5",
+   "key": "memory:bastien-canoe",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A5",
+   "key": "memory:mara-parent",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A5",
+   "key": "memory:mara-child",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A5",
+   "key": "memory:liora-sibling",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A5",
+   "key": "memory:office-printer",
+   "reference_span": true,
+   "onnx_span": true
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A5",
+   "key": "memory:kitchen-printer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A5",
+   "key": "memory:maya-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A5",
+   "key": "memory:omar-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A5",
+   "key": "memory:quail-meeting",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A5",
+   "key": "memory:quail-owner",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A5",
+   "key": "memory:meridian-meeting",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A5",
+   "key": "memory:meridian-owner",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A5",
+   "key": "memory:festival",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A5",
+   "key": "memory:moon-exhibit",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A5",
+   "key": "memory:code-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A5",
+   "key": "memory:telescope",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A6",
+   "key": "memory:liora-canoe",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A6",
+   "key": "memory:liora-bicycle",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A6",
+   "key": "memory:bastien-canoe",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A6",
+   "key": "memory:mara-parent",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A6",
+   "key": "memory:mara-child",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A6",
+   "key": "memory:liora-sibling",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A6",
+   "key": "memory:office-printer",
+   "reference_span": true,
+   "onnx_span": true
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A6",
+   "key": "memory:kitchen-printer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A6",
+   "key": "memory:maya-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A6",
+   "key": "memory:omar-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A6",
+   "key": "memory:quail-meeting",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A6",
+   "key": "memory:quail-owner",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A6",
+   "key": "memory:meridian-meeting",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A6",
+   "key": "memory:meridian-owner",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A6",
+   "key": "memory:festival",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A6",
+   "key": "memory:moon-exhibit",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A6",
+   "key": "memory:code-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A6",
+   "key": "memory:telescope",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A7",
+   "key": "memory:liora-canoe",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A7",
+   "key": "memory:liora-bicycle",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A7",
+   "key": "memory:bastien-canoe",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A7",
+   "key": "memory:mara-parent",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A7",
+   "key": "memory:mara-child",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A7",
+   "key": "memory:liora-sibling",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A7",
+   "key": "memory:office-printer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A7",
+   "key": "memory:kitchen-printer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A7",
+   "key": "memory:maya-editor",
+   "reference_span": true,
+   "onnx_span": true
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A7",
+   "key": "memory:omar-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A7",
+   "key": "memory:quail-meeting",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A7",
+   "key": "memory:quail-owner",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A7",
+   "key": "memory:meridian-meeting",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A7",
+   "key": "memory:meridian-owner",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A7",
+   "key": "memory:festival",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A7",
+   "key": "memory:moon-exhibit",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A7",
+   "key": "memory:code-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A7",
+   "key": "memory:telescope",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A8",
+   "key": "memory:liora-canoe",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A8",
+   "key": "memory:liora-bicycle",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A8",
+   "key": "memory:bastien-canoe",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A8",
+   "key": "memory:mara-parent",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A8",
+   "key": "memory:mara-child",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A8",
+   "key": "memory:liora-sibling",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A8",
+   "key": "memory:office-printer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A8",
+   "key": "memory:kitchen-printer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A8",
+   "key": "memory:maya-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A8",
+   "key": "memory:omar-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A8",
+   "key": "memory:quail-meeting",
+   "reference_span": true,
+   "onnx_span": true
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A8",
+   "key": "memory:quail-owner",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A8",
+   "key": "memory:meridian-meeting",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A8",
+   "key": "memory:meridian-owner",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A8",
+   "key": "memory:festival",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A8",
+   "key": "memory:moon-exhibit",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A8",
+   "key": "memory:code-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A8",
+   "key": "memory:telescope",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A9",
+   "key": "memory:liora-canoe",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A9",
+   "key": "memory:liora-bicycle",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A9",
+   "key": "memory:bastien-canoe",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A9",
+   "key": "memory:mara-parent",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A9",
+   "key": "memory:mara-child",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A9",
+   "key": "memory:liora-sibling",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A9",
+   "key": "memory:office-printer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A9",
+   "key": "memory:kitchen-printer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A9",
+   "key": "memory:maya-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A9",
+   "key": "memory:omar-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A9",
+   "key": "memory:quail-meeting",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A9",
+   "key": "memory:quail-owner",
+   "reference_span": true,
+   "onnx_span": true
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A9",
+   "key": "memory:meridian-meeting",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A9",
+   "key": "memory:meridian-owner",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A9",
+   "key": "memory:festival",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A9",
+   "key": "memory:moon-exhibit",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A9",
+   "key": "memory:code-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A9",
+   "key": "memory:telescope",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A10",
+   "key": "memory:liora-canoe",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A10",
+   "key": "memory:liora-bicycle",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A10",
+   "key": "memory:bastien-canoe",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A10",
+   "key": "memory:mara-parent",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A10",
+   "key": "memory:mara-child",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A10",
+   "key": "memory:liora-sibling",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A10",
+   "key": "memory:office-printer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A10",
+   "key": "memory:kitchen-printer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A10",
+   "key": "memory:maya-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A10",
+   "key": "memory:omar-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A10",
+   "key": "memory:quail-meeting",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A10",
+   "key": "memory:quail-owner",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A10",
+   "key": "memory:meridian-meeting",
+   "reference_span": true,
+   "onnx_span": true
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A10",
+   "key": "memory:meridian-owner",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A10",
+   "key": "memory:festival",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A10",
+   "key": "memory:moon-exhibit",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A10",
+   "key": "memory:code-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A10",
+   "key": "memory:telescope",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A11",
+   "key": "memory:liora-canoe",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A11",
+   "key": "memory:liora-bicycle",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A11",
+   "key": "memory:bastien-canoe",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A11",
+   "key": "memory:mara-parent",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A11",
+   "key": "memory:mara-child",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A11",
+   "key": "memory:liora-sibling",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A11",
+   "key": "memory:office-printer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A11",
+   "key": "memory:kitchen-printer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A11",
+   "key": "memory:maya-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A11",
+   "key": "memory:omar-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A11",
+   "key": "memory:quail-meeting",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A11",
+   "key": "memory:quail-owner",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A11",
+   "key": "memory:meridian-meeting",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A11",
+   "key": "memory:meridian-owner",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A11",
+   "key": "memory:festival",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A11",
+   "key": "memory:moon-exhibit",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A11",
+   "key": "memory:code-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "A11",
+   "key": "memory:telescope",
+   "reference_span": true,
+   "onnx_span": true
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N1",
+   "key": "memory:liora-canoe",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N1",
+   "key": "memory:liora-bicycle",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N1",
+   "key": "memory:bastien-canoe",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N1",
+   "key": "memory:mara-parent",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N1",
+   "key": "memory:mara-child",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N1",
+   "key": "memory:liora-sibling",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N1",
+   "key": "memory:office-printer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N1",
+   "key": "memory:kitchen-printer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N1",
+   "key": "memory:maya-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N1",
+   "key": "memory:omar-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N1",
+   "key": "memory:quail-meeting",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N1",
+   "key": "memory:quail-owner",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N1",
+   "key": "memory:meridian-meeting",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N1",
+   "key": "memory:meridian-owner",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N1",
+   "key": "memory:festival",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N1",
+   "key": "memory:moon-exhibit",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N1",
+   "key": "memory:code-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N1",
+   "key": "memory:telescope",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N2",
+   "key": "memory:liora-canoe",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N2",
+   "key": "memory:liora-bicycle",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N2",
+   "key": "memory:bastien-canoe",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N2",
+   "key": "memory:mara-parent",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N2",
+   "key": "memory:mara-child",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N2",
+   "key": "memory:liora-sibling",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N2",
+   "key": "memory:office-printer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N2",
+   "key": "memory:kitchen-printer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N2",
+   "key": "memory:maya-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N2",
+   "key": "memory:omar-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N2",
+   "key": "memory:quail-meeting",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N2",
+   "key": "memory:quail-owner",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N2",
+   "key": "memory:meridian-meeting",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N2",
+   "key": "memory:meridian-owner",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N2",
+   "key": "memory:festival",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N2",
+   "key": "memory:moon-exhibit",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N2",
+   "key": "memory:code-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N2",
+   "key": "memory:telescope",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N3",
+   "key": "memory:liora-canoe",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N3",
+   "key": "memory:liora-bicycle",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N3",
+   "key": "memory:bastien-canoe",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N3",
+   "key": "memory:mara-parent",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N3",
+   "key": "memory:mara-child",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N3",
+   "key": "memory:liora-sibling",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N3",
+   "key": "memory:office-printer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N3",
+   "key": "memory:kitchen-printer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N3",
+   "key": "memory:maya-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N3",
+   "key": "memory:omar-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N3",
+   "key": "memory:quail-meeting",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N3",
+   "key": "memory:quail-owner",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N3",
+   "key": "memory:meridian-meeting",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N3",
+   "key": "memory:meridian-owner",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N3",
+   "key": "memory:festival",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N3",
+   "key": "memory:moon-exhibit",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N3",
+   "key": "memory:code-editor",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_dev.json",
+   "id": "N3",
+   "key": "memory:telescope",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P1",
+   "key": "memory:adv:noor-kayak",
+   "reference_span": true,
+   "onnx_span": true
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P1",
+   "key": "memory:adv:tobias-kayak",
+   "reference_span": true,
+   "onnx_span": true
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P1",
+   "key": "memory:adv:noor-allergy",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P1",
+   "key": "memory:adv:tobias-employer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P1",
+   "key": "memory:adv:greenhouse",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P1",
+   "key": "memory:adv:greenhouse-lock",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P1",
+   "key": "memory:adv:vet",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P1",
+   "key": "memory:adv:pepper-food",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P1",
+   "key": "memory:adv:book-club",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P1",
+   "key": "memory:adv:lease",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P1",
+   "key": "memory:adv:car-service",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P1",
+   "key": "memory:adv:car-insurance",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P1",
+   "key": "memory:adv:flight",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P1",
+   "key": "memory:adv:hotel",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P1",
+   "key": "memory:adv:dentist",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P1",
+   "key": "memory:adv:router",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P1",
+   "key": "memory:adv:choir",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P1",
+   "key": "memory:adv:climbing",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P1",
+   "key": "memory:adv:plant-sitter",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P1",
+   "key": "memory:adv:coffee",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P2",
+   "key": "memory:adv:noor-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P2",
+   "key": "memory:adv:tobias-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P2",
+   "key": "memory:adv:noor-allergy",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P2",
+   "key": "memory:adv:tobias-employer",
+   "reference_span": true,
+   "onnx_span": true
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P2",
+   "key": "memory:adv:greenhouse",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P2",
+   "key": "memory:adv:greenhouse-lock",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P2",
+   "key": "memory:adv:vet",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P2",
+   "key": "memory:adv:pepper-food",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P2",
+   "key": "memory:adv:book-club",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P2",
+   "key": "memory:adv:lease",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P2",
+   "key": "memory:adv:car-service",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P2",
+   "key": "memory:adv:car-insurance",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P2",
+   "key": "memory:adv:flight",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P2",
+   "key": "memory:adv:hotel",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P2",
+   "key": "memory:adv:dentist",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P2",
+   "key": "memory:adv:router",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P2",
+   "key": "memory:adv:choir",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P2",
+   "key": "memory:adv:climbing",
+   "reference_span": true,
+   "onnx_span": true
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P2",
+   "key": "memory:adv:plant-sitter",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P2",
+   "key": "memory:adv:coffee",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P3",
+   "key": "memory:adv:noor-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P3",
+   "key": "memory:adv:tobias-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P3",
+   "key": "memory:adv:noor-allergy",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P3",
+   "key": "memory:adv:tobias-employer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P3",
+   "key": "memory:adv:greenhouse",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P3",
+   "key": "memory:adv:greenhouse-lock",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P3",
+   "key": "memory:adv:vet",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P3",
+   "key": "memory:adv:pepper-food",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P3",
+   "key": "memory:adv:book-club",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P3",
+   "key": "memory:adv:lease",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P3",
+   "key": "memory:adv:car-service",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P3",
+   "key": "memory:adv:car-insurance",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P3",
+   "key": "memory:adv:flight",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P3",
+   "key": "memory:adv:hotel",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P3",
+   "key": "memory:adv:dentist",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P3",
+   "key": "memory:adv:router",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P3",
+   "key": "memory:adv:choir",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P3",
+   "key": "memory:adv:climbing",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P3",
+   "key": "memory:adv:plant-sitter",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P3",
+   "key": "memory:adv:coffee",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P4",
+   "key": "memory:adv:noor-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P4",
+   "key": "memory:adv:tobias-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P4",
+   "key": "memory:adv:noor-allergy",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P4",
+   "key": "memory:adv:tobias-employer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P4",
+   "key": "memory:adv:greenhouse",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P4",
+   "key": "memory:adv:greenhouse-lock",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P4",
+   "key": "memory:adv:vet",
+   "reference_span": true,
+   "onnx_span": true
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P4",
+   "key": "memory:adv:pepper-food",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P4",
+   "key": "memory:adv:book-club",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P4",
+   "key": "memory:adv:lease",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P4",
+   "key": "memory:adv:car-service",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P4",
+   "key": "memory:adv:car-insurance",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P4",
+   "key": "memory:adv:flight",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P4",
+   "key": "memory:adv:hotel",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P4",
+   "key": "memory:adv:dentist",
+   "reference_span": true,
+   "onnx_span": true
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P4",
+   "key": "memory:adv:router",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P4",
+   "key": "memory:adv:choir",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P4",
+   "key": "memory:adv:climbing",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P4",
+   "key": "memory:adv:plant-sitter",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P4",
+   "key": "memory:adv:coffee",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P5",
+   "key": "memory:adv:noor-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P5",
+   "key": "memory:adv:tobias-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P5",
+   "key": "memory:adv:noor-allergy",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P5",
+   "key": "memory:adv:tobias-employer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P5",
+   "key": "memory:adv:greenhouse",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P5",
+   "key": "memory:adv:greenhouse-lock",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P5",
+   "key": "memory:adv:vet",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P5",
+   "key": "memory:adv:pepper-food",
+   "reference_span": true,
+   "onnx_span": true
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P5",
+   "key": "memory:adv:book-club",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P5",
+   "key": "memory:adv:lease",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P5",
+   "key": "memory:adv:car-service",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P5",
+   "key": "memory:adv:car-insurance",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P5",
+   "key": "memory:adv:flight",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P5",
+   "key": "memory:adv:hotel",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P5",
+   "key": "memory:adv:dentist",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P5",
+   "key": "memory:adv:router",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P5",
+   "key": "memory:adv:choir",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P5",
+   "key": "memory:adv:climbing",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P5",
+   "key": "memory:adv:plant-sitter",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P5",
+   "key": "memory:adv:coffee",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P6",
+   "key": "memory:adv:noor-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P6",
+   "key": "memory:adv:tobias-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P6",
+   "key": "memory:adv:noor-allergy",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P6",
+   "key": "memory:adv:tobias-employer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P6",
+   "key": "memory:adv:greenhouse",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P6",
+   "key": "memory:adv:greenhouse-lock",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P6",
+   "key": "memory:adv:vet",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P6",
+   "key": "memory:adv:pepper-food",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P6",
+   "key": "memory:adv:book-club",
+   "reference_span": true,
+   "onnx_span": true
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P6",
+   "key": "memory:adv:lease",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P6",
+   "key": "memory:adv:car-service",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P6",
+   "key": "memory:adv:car-insurance",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P6",
+   "key": "memory:adv:flight",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P6",
+   "key": "memory:adv:hotel",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P6",
+   "key": "memory:adv:dentist",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P6",
+   "key": "memory:adv:router",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P6",
+   "key": "memory:adv:choir",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P6",
+   "key": "memory:adv:climbing",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P6",
+   "key": "memory:adv:plant-sitter",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P6",
+   "key": "memory:adv:coffee",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P7",
+   "key": "memory:adv:noor-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P7",
+   "key": "memory:adv:tobias-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P7",
+   "key": "memory:adv:noor-allergy",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P7",
+   "key": "memory:adv:tobias-employer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P7",
+   "key": "memory:adv:greenhouse",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P7",
+   "key": "memory:adv:greenhouse-lock",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P7",
+   "key": "memory:adv:vet",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P7",
+   "key": "memory:adv:pepper-food",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P7",
+   "key": "memory:adv:book-club",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P7",
+   "key": "memory:adv:lease",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P7",
+   "key": "memory:adv:car-service",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P7",
+   "key": "memory:adv:car-insurance",
+   "reference_span": true,
+   "onnx_span": true
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P7",
+   "key": "memory:adv:flight",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P7",
+   "key": "memory:adv:hotel",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P7",
+   "key": "memory:adv:dentist",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P7",
+   "key": "memory:adv:router",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P7",
+   "key": "memory:adv:choir",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P7",
+   "key": "memory:adv:climbing",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P7",
+   "key": "memory:adv:plant-sitter",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P7",
+   "key": "memory:adv:coffee",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P8",
+   "key": "memory:adv:noor-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P8",
+   "key": "memory:adv:tobias-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P8",
+   "key": "memory:adv:noor-allergy",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P8",
+   "key": "memory:adv:tobias-employer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P8",
+   "key": "memory:adv:greenhouse",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P8",
+   "key": "memory:adv:greenhouse-lock",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P8",
+   "key": "memory:adv:vet",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P8",
+   "key": "memory:adv:pepper-food",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P8",
+   "key": "memory:adv:book-club",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P8",
+   "key": "memory:adv:lease",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P8",
+   "key": "memory:adv:car-service",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P8",
+   "key": "memory:adv:car-insurance",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P8",
+   "key": "memory:adv:flight",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P8",
+   "key": "memory:adv:hotel",
+   "reference_span": true,
+   "onnx_span": true
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P8",
+   "key": "memory:adv:dentist",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P8",
+   "key": "memory:adv:router",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P8",
+   "key": "memory:adv:choir",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P8",
+   "key": "memory:adv:climbing",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P8",
+   "key": "memory:adv:plant-sitter",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P8",
+   "key": "memory:adv:coffee",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P9",
+   "key": "memory:adv:noor-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P9",
+   "key": "memory:adv:tobias-kayak",
+   "reference_span": true,
+   "onnx_span": true
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P9",
+   "key": "memory:adv:noor-allergy",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P9",
+   "key": "memory:adv:tobias-employer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P9",
+   "key": "memory:adv:greenhouse",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P9",
+   "key": "memory:adv:greenhouse-lock",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P9",
+   "key": "memory:adv:vet",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P9",
+   "key": "memory:adv:pepper-food",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P9",
+   "key": "memory:adv:book-club",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P9",
+   "key": "memory:adv:lease",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P9",
+   "key": "memory:adv:car-service",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P9",
+   "key": "memory:adv:car-insurance",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P9",
+   "key": "memory:adv:flight",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P9",
+   "key": "memory:adv:hotel",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P9",
+   "key": "memory:adv:dentist",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P9",
+   "key": "memory:adv:router",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P9",
+   "key": "memory:adv:choir",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P9",
+   "key": "memory:adv:climbing",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P9",
+   "key": "memory:adv:plant-sitter",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P9",
+   "key": "memory:adv:coffee",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P10",
+   "key": "memory:adv:noor-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P10",
+   "key": "memory:adv:tobias-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P10",
+   "key": "memory:adv:noor-allergy",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P10",
+   "key": "memory:adv:tobias-employer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P10",
+   "key": "memory:adv:greenhouse",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P10",
+   "key": "memory:adv:greenhouse-lock",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P10",
+   "key": "memory:adv:vet",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P10",
+   "key": "memory:adv:pepper-food",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P10",
+   "key": "memory:adv:book-club",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P10",
+   "key": "memory:adv:lease",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P10",
+   "key": "memory:adv:car-service",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P10",
+   "key": "memory:adv:car-insurance",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P10",
+   "key": "memory:adv:flight",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P10",
+   "key": "memory:adv:hotel",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P10",
+   "key": "memory:adv:dentist",
+   "reference_span": true,
+   "onnx_span": true
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P10",
+   "key": "memory:adv:router",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P10",
+   "key": "memory:adv:choir",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P10",
+   "key": "memory:adv:climbing",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P10",
+   "key": "memory:adv:plant-sitter",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P10",
+   "key": "memory:adv:coffee",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P11",
+   "key": "memory:adv:noor-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P11",
+   "key": "memory:adv:tobias-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P11",
+   "key": "memory:adv:noor-allergy",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P11",
+   "key": "memory:adv:tobias-employer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P11",
+   "key": "memory:adv:greenhouse",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P11",
+   "key": "memory:adv:greenhouse-lock",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P11",
+   "key": "memory:adv:vet",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P11",
+   "key": "memory:adv:pepper-food",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P11",
+   "key": "memory:adv:book-club",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P11",
+   "key": "memory:adv:lease",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P11",
+   "key": "memory:adv:car-service",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P11",
+   "key": "memory:adv:car-insurance",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P11",
+   "key": "memory:adv:flight",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P11",
+   "key": "memory:adv:hotel",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P11",
+   "key": "memory:adv:dentist",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P11",
+   "key": "memory:adv:router",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P11",
+   "key": "memory:adv:choir",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P11",
+   "key": "memory:adv:climbing",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P11",
+   "key": "memory:adv:plant-sitter",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P11",
+   "key": "memory:adv:coffee",
+   "reference_span": true,
+   "onnx_span": true
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P12",
+   "key": "memory:adv:noor-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P12",
+   "key": "memory:adv:tobias-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P12",
+   "key": "memory:adv:noor-allergy",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P12",
+   "key": "memory:adv:tobias-employer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P12",
+   "key": "memory:adv:greenhouse",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P12",
+   "key": "memory:adv:greenhouse-lock",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P12",
+   "key": "memory:adv:vet",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P12",
+   "key": "memory:adv:pepper-food",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P12",
+   "key": "memory:adv:book-club",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P12",
+   "key": "memory:adv:lease",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P12",
+   "key": "memory:adv:car-service",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P12",
+   "key": "memory:adv:car-insurance",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P12",
+   "key": "memory:adv:flight",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P12",
+   "key": "memory:adv:hotel",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P12",
+   "key": "memory:adv:dentist",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P12",
+   "key": "memory:adv:router",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P12",
+   "key": "memory:adv:choir",
+   "reference_span": true,
+   "onnx_span": true
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P12",
+   "key": "memory:adv:climbing",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P12",
+   "key": "memory:adv:plant-sitter",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "P12",
+   "key": "memory:adv:coffee",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U1",
+   "key": "memory:adv:noor-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U1",
+   "key": "memory:adv:tobias-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U1",
+   "key": "memory:adv:noor-allergy",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U1",
+   "key": "memory:adv:tobias-employer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U1",
+   "key": "memory:adv:greenhouse",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U1",
+   "key": "memory:adv:greenhouse-lock",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U1",
+   "key": "memory:adv:vet",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U1",
+   "key": "memory:adv:pepper-food",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U1",
+   "key": "memory:adv:book-club",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U1",
+   "key": "memory:adv:lease",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U1",
+   "key": "memory:adv:car-service",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U1",
+   "key": "memory:adv:car-insurance",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U1",
+   "key": "memory:adv:flight",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U1",
+   "key": "memory:adv:hotel",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U1",
+   "key": "memory:adv:dentist",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U1",
+   "key": "memory:adv:router",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U1",
+   "key": "memory:adv:choir",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U1",
+   "key": "memory:adv:climbing",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U1",
+   "key": "memory:adv:plant-sitter",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U1",
+   "key": "memory:adv:coffee",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U2",
+   "key": "memory:adv:noor-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U2",
+   "key": "memory:adv:tobias-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U2",
+   "key": "memory:adv:noor-allergy",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U2",
+   "key": "memory:adv:tobias-employer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U2",
+   "key": "memory:adv:greenhouse",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U2",
+   "key": "memory:adv:greenhouse-lock",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U2",
+   "key": "memory:adv:vet",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U2",
+   "key": "memory:adv:pepper-food",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U2",
+   "key": "memory:adv:book-club",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U2",
+   "key": "memory:adv:lease",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U2",
+   "key": "memory:adv:car-service",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U2",
+   "key": "memory:adv:car-insurance",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U2",
+   "key": "memory:adv:flight",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U2",
+   "key": "memory:adv:hotel",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U2",
+   "key": "memory:adv:dentist",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U2",
+   "key": "memory:adv:router",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U2",
+   "key": "memory:adv:choir",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U2",
+   "key": "memory:adv:climbing",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U2",
+   "key": "memory:adv:plant-sitter",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U2",
+   "key": "memory:adv:coffee",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U3",
+   "key": "memory:adv:noor-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U3",
+   "key": "memory:adv:tobias-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U3",
+   "key": "memory:adv:noor-allergy",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U3",
+   "key": "memory:adv:tobias-employer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U3",
+   "key": "memory:adv:greenhouse",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U3",
+   "key": "memory:adv:greenhouse-lock",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U3",
+   "key": "memory:adv:vet",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U3",
+   "key": "memory:adv:pepper-food",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U3",
+   "key": "memory:adv:book-club",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U3",
+   "key": "memory:adv:lease",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U3",
+   "key": "memory:adv:car-service",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U3",
+   "key": "memory:adv:car-insurance",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U3",
+   "key": "memory:adv:flight",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U3",
+   "key": "memory:adv:hotel",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U3",
+   "key": "memory:adv:dentist",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U3",
+   "key": "memory:adv:router",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U3",
+   "key": "memory:adv:choir",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U3",
+   "key": "memory:adv:climbing",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U3",
+   "key": "memory:adv:plant-sitter",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U3",
+   "key": "memory:adv:coffee",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U4",
+   "key": "memory:adv:noor-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U4",
+   "key": "memory:adv:tobias-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U4",
+   "key": "memory:adv:noor-allergy",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U4",
+   "key": "memory:adv:tobias-employer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U4",
+   "key": "memory:adv:greenhouse",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U4",
+   "key": "memory:adv:greenhouse-lock",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U4",
+   "key": "memory:adv:vet",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U4",
+   "key": "memory:adv:pepper-food",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U4",
+   "key": "memory:adv:book-club",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U4",
+   "key": "memory:adv:lease",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U4",
+   "key": "memory:adv:car-service",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U4",
+   "key": "memory:adv:car-insurance",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U4",
+   "key": "memory:adv:flight",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U4",
+   "key": "memory:adv:hotel",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U4",
+   "key": "memory:adv:dentist",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U4",
+   "key": "memory:adv:router",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U4",
+   "key": "memory:adv:choir",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U4",
+   "key": "memory:adv:climbing",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U4",
+   "key": "memory:adv:plant-sitter",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U4",
+   "key": "memory:adv:coffee",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U5",
+   "key": "memory:adv:noor-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U5",
+   "key": "memory:adv:tobias-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U5",
+   "key": "memory:adv:noor-allergy",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U5",
+   "key": "memory:adv:tobias-employer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U5",
+   "key": "memory:adv:greenhouse",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U5",
+   "key": "memory:adv:greenhouse-lock",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U5",
+   "key": "memory:adv:vet",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U5",
+   "key": "memory:adv:pepper-food",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U5",
+   "key": "memory:adv:book-club",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U5",
+   "key": "memory:adv:lease",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U5",
+   "key": "memory:adv:car-service",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U5",
+   "key": "memory:adv:car-insurance",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U5",
+   "key": "memory:adv:flight",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U5",
+   "key": "memory:adv:hotel",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U5",
+   "key": "memory:adv:dentist",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U5",
+   "key": "memory:adv:router",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U5",
+   "key": "memory:adv:choir",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U5",
+   "key": "memory:adv:climbing",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U5",
+   "key": "memory:adv:plant-sitter",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U5",
+   "key": "memory:adv:coffee",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U6",
+   "key": "memory:adv:noor-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U6",
+   "key": "memory:adv:tobias-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U6",
+   "key": "memory:adv:noor-allergy",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U6",
+   "key": "memory:adv:tobias-employer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U6",
+   "key": "memory:adv:greenhouse",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U6",
+   "key": "memory:adv:greenhouse-lock",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U6",
+   "key": "memory:adv:vet",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U6",
+   "key": "memory:adv:pepper-food",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U6",
+   "key": "memory:adv:book-club",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U6",
+   "key": "memory:adv:lease",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U6",
+   "key": "memory:adv:car-service",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U6",
+   "key": "memory:adv:car-insurance",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U6",
+   "key": "memory:adv:flight",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U6",
+   "key": "memory:adv:hotel",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U6",
+   "key": "memory:adv:dentist",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U6",
+   "key": "memory:adv:router",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U6",
+   "key": "memory:adv:choir",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U6",
+   "key": "memory:adv:climbing",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U6",
+   "key": "memory:adv:plant-sitter",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U6",
+   "key": "memory:adv:coffee",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U7",
+   "key": "memory:adv:noor-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U7",
+   "key": "memory:adv:tobias-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U7",
+   "key": "memory:adv:noor-allergy",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U7",
+   "key": "memory:adv:tobias-employer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U7",
+   "key": "memory:adv:greenhouse",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U7",
+   "key": "memory:adv:greenhouse-lock",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U7",
+   "key": "memory:adv:vet",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U7",
+   "key": "memory:adv:pepper-food",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U7",
+   "key": "memory:adv:book-club",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U7",
+   "key": "memory:adv:lease",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U7",
+   "key": "memory:adv:car-service",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U7",
+   "key": "memory:adv:car-insurance",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U7",
+   "key": "memory:adv:flight",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U7",
+   "key": "memory:adv:hotel",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U7",
+   "key": "memory:adv:dentist",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U7",
+   "key": "memory:adv:router",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U7",
+   "key": "memory:adv:choir",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U7",
+   "key": "memory:adv:climbing",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U7",
+   "key": "memory:adv:plant-sitter",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U7",
+   "key": "memory:adv:coffee",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U8",
+   "key": "memory:adv:noor-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U8",
+   "key": "memory:adv:tobias-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U8",
+   "key": "memory:adv:noor-allergy",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U8",
+   "key": "memory:adv:tobias-employer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U8",
+   "key": "memory:adv:greenhouse",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U8",
+   "key": "memory:adv:greenhouse-lock",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U8",
+   "key": "memory:adv:vet",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U8",
+   "key": "memory:adv:pepper-food",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U8",
+   "key": "memory:adv:book-club",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U8",
+   "key": "memory:adv:lease",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U8",
+   "key": "memory:adv:car-service",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U8",
+   "key": "memory:adv:car-insurance",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U8",
+   "key": "memory:adv:flight",
+   "reference_span": true,
+   "onnx_span": true
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U8",
+   "key": "memory:adv:hotel",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U8",
+   "key": "memory:adv:dentist",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U8",
+   "key": "memory:adv:router",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U8",
+   "key": "memory:adv:choir",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U8",
+   "key": "memory:adv:climbing",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U8",
+   "key": "memory:adv:plant-sitter",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U8",
+   "key": "memory:adv:coffee",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U9",
+   "key": "memory:adv:noor-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U9",
+   "key": "memory:adv:tobias-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U9",
+   "key": "memory:adv:noor-allergy",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U9",
+   "key": "memory:adv:tobias-employer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U9",
+   "key": "memory:adv:greenhouse",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U9",
+   "key": "memory:adv:greenhouse-lock",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U9",
+   "key": "memory:adv:vet",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U9",
+   "key": "memory:adv:pepper-food",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U9",
+   "key": "memory:adv:book-club",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U9",
+   "key": "memory:adv:lease",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U9",
+   "key": "memory:adv:car-service",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U9",
+   "key": "memory:adv:car-insurance",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U9",
+   "key": "memory:adv:flight",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U9",
+   "key": "memory:adv:hotel",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U9",
+   "key": "memory:adv:dentist",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U9",
+   "key": "memory:adv:router",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U9",
+   "key": "memory:adv:choir",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U9",
+   "key": "memory:adv:climbing",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U9",
+   "key": "memory:adv:plant-sitter",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U9",
+   "key": "memory:adv:coffee",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U10",
+   "key": "memory:adv:noor-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U10",
+   "key": "memory:adv:tobias-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U10",
+   "key": "memory:adv:noor-allergy",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U10",
+   "key": "memory:adv:tobias-employer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U10",
+   "key": "memory:adv:greenhouse",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U10",
+   "key": "memory:adv:greenhouse-lock",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U10",
+   "key": "memory:adv:vet",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U10",
+   "key": "memory:adv:pepper-food",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U10",
+   "key": "memory:adv:book-club",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U10",
+   "key": "memory:adv:lease",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U10",
+   "key": "memory:adv:car-service",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U10",
+   "key": "memory:adv:car-insurance",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U10",
+   "key": "memory:adv:flight",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U10",
+   "key": "memory:adv:hotel",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U10",
+   "key": "memory:adv:dentist",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U10",
+   "key": "memory:adv:router",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U10",
+   "key": "memory:adv:choir",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U10",
+   "key": "memory:adv:climbing",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U10",
+   "key": "memory:adv:plant-sitter",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U10",
+   "key": "memory:adv:coffee",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U11",
+   "key": "memory:adv:noor-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U11",
+   "key": "memory:adv:tobias-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U11",
+   "key": "memory:adv:noor-allergy",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U11",
+   "key": "memory:adv:tobias-employer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U11",
+   "key": "memory:adv:greenhouse",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U11",
+   "key": "memory:adv:greenhouse-lock",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U11",
+   "key": "memory:adv:vet",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U11",
+   "key": "memory:adv:pepper-food",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U11",
+   "key": "memory:adv:book-club",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U11",
+   "key": "memory:adv:lease",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U11",
+   "key": "memory:adv:car-service",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U11",
+   "key": "memory:adv:car-insurance",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U11",
+   "key": "memory:adv:flight",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U11",
+   "key": "memory:adv:hotel",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U11",
+   "key": "memory:adv:dentist",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U11",
+   "key": "memory:adv:router",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U11",
+   "key": "memory:adv:choir",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U11",
+   "key": "memory:adv:climbing",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U11",
+   "key": "memory:adv:plant-sitter",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U11",
+   "key": "memory:adv:coffee",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U12",
+   "key": "memory:adv:noor-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U12",
+   "key": "memory:adv:tobias-kayak",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U12",
+   "key": "memory:adv:noor-allergy",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U12",
+   "key": "memory:adv:tobias-employer",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U12",
+   "key": "memory:adv:greenhouse",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U12",
+   "key": "memory:adv:greenhouse-lock",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U12",
+   "key": "memory:adv:vet",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U12",
+   "key": "memory:adv:pepper-food",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U12",
+   "key": "memory:adv:book-club",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U12",
+   "key": "memory:adv:lease",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U12",
+   "key": "memory:adv:car-service",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U12",
+   "key": "memory:adv:car-insurance",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U12",
+   "key": "memory:adv:flight",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U12",
+   "key": "memory:adv:hotel",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U12",
+   "key": "memory:adv:dentist",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U12",
+   "key": "memory:adv:router",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U12",
+   "key": "memory:adv:choir",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U12",
+   "key": "memory:adv:climbing",
+   "reference_span": true,
+   "onnx_span": true
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U12",
+   "key": "memory:adv:plant-sitter",
+   "reference_span": false,
+   "onnx_span": false
+  },
+  {
+   "cohort": "quality_cases_adversarial.json",
+   "id": "U12",
+   "key": "memory:adv:coffee",
+   "reference_span": false,
+   "onnx_span": false
+  }
+ ]
+}

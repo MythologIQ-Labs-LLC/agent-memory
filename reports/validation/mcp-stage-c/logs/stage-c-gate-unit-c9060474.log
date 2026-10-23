@@ -1,0 +1,20 @@
+$ env -u AGENT_MEMORY_REPRESENTATION_DIR -u AGENT_MEMORY_MCP_SUPPORT_MODEL_DIR python -m unittest discover -s integrations/agent-memory-mcp/tests -p test_stage_c_gate.py -v
+test_current_unverified_on_no_answer_fails_closed (test_stage_c_gate.StageCGateTests.test_current_unverified_on_no_answer_fails_closed) ... ok
+test_duplicate_and_substituted_tasks_rejected (test_stage_c_gate.StageCGateTests.test_duplicate_and_substituted_tasks_rejected) ... ok
+test_false_abstention_on_answerable_fails (test_stage_c_gate.StageCGateTests.test_false_abstention_on_answerable_fails) ... ok
+test_gold_tampering_rejected_even_if_score_claims_success (test_stage_c_gate.StageCGateTests.test_gold_tampering_rejected_even_if_score_claims_success) ... ok
+test_malformed_full_text_key_claim_refused (test_stage_c_gate.StageCGateTests.test_malformed_full_text_key_claim_refused) ... ok
+test_mcp_source_or_selectivity_cannot_be_substituted (test_stage_c_gate.StageCGateTests.test_mcp_source_or_selectivity_cannot_be_substituted) ... ok
+test_missing_assessment_and_retrieval_regression_fail (test_stage_c_gate.StageCGateTests.test_missing_assessment_and_retrieval_regression_fail) ... ok
+test_missing_runtime_field_fails_even_with_correct_labels (test_stage_c_gate.StageCGateTests.test_missing_runtime_field_fails_even_with_correct_labels) ... ok
+test_pass_requires_populated_store_both_controls_and_full_text (test_stage_c_gate.StageCGateTests.test_pass_requires_populated_store_both_controls_and_full_text) ... ok
+test_positive_control_cannot_pass_with_loss_of_required_evidence (test_stage_c_gate.StageCGateTests.test_positive_control_cannot_pass_with_loss_of_required_evidence) ... ok
+test_subset_only_successes_cannot_pass (test_stage_c_gate.StageCGateTests.test_subset_only_successes_cannot_pass) ... ok
+test_support_check_candidate_on_answerable_passes_but_never_as_verified (test_stage_c_gate.StageCGateTests.test_support_check_candidate_on_answerable_passes_but_never_as_verified) ... ok
+test_wrong_manifest_or_count_rejected (test_stage_c_gate.StageCGateTests.test_wrong_manifest_or_count_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.000s
+
+OK
+exit=0

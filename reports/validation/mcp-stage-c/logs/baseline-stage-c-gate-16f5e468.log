@@ -1,0 +1,14 @@
+{
+  "status": "BLOCKED",
+  "counts": {
+    "answerable": 11,
+    "no_answer": 3,
+    "unanswerable_abstained": 0,
+    "answerable_complete": 11
+  },
+  "failed": [
+    "N1",
+    "N2",
+    "N3"
+  ]
+}

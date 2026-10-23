@@ -1,0 +1,33 @@
+{
+  "status": "PASS",
+  "cases": "quality_cases_dev.json",
+  "delivered_evidence_identical_across_arms": true,
+  "support_check_disabled": {
+    "answerable": 11,
+    "unanswerable": 3,
+    "answerable_required_delivered": 11,
+    "false_abstentions": [],
+    "abstentions_on_undelivered_answerable": [],
+    "span_in_required": 0,
+    "unanswerable_abstained": 0,
+    "false_sufficiency": [
+      "N1",
+      "N2",
+      "N3"
+    ],
+    "invariants_hold": true,
+    "stable_across_restart": true
+  },
+  "support_check_enabled": {
+    "answerable": 11,
+    "unanswerable": 3,
+    "answerable_required_delivered": 11,
+    "false_abstentions": [],
+    "abstentions_on_undelivered_answerable": [],
+    "span_in_required": 11,
+    "unanswerable_abstained": 3,
+    "false_sufficiency": [],
+    "invariants_hold": true,
+    "stable_across_restart": true
+  }
+}

@@ -1,0 +1,14 @@
+# fail-first: new Stage C tests run against the unchanged 16f5e468 bridge/gate (answer_support.py absent)
+TypeError: LocalMemoryBridge.__init__() got an unexpected keyword argument 'support'
+
+----------------------------------------------------------------------
+Ran 37 tests in 0.005s
+
+FAILED (errors=37)
+FAIL: test_support_check_candidate_on_answerable_passes_but_never_as_verified (test_stage_c_gate.StageCGateTests.test_support_check_candidate_on_answerable_passes_but_never_as_verified)
+Ran 13 tests in 0.001s
+FAILED (failures=1)
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)

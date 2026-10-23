@@ -1,0 +1,47 @@
+{
+  "status": "BLOCKED",
+  "cases": "quality_cases_adversarial.json",
+  "delivered_evidence_identical_across_arms": true,
+  "support_check_disabled": {
+    "answerable": 12,
+    "unanswerable": 12,
+    "answerable_required_delivered": 12,
+    "false_abstentions": [],
+    "abstentions_on_undelivered_answerable": [],
+    "span_in_required": 0,
+    "unanswerable_abstained": 0,
+    "false_sufficiency": [
+      "U1",
+      "U10",
+      "U11",
+      "U12",
+      "U2",
+      "U3",
+      "U4",
+      "U5",
+      "U6",
+      "U7",
+      "U8",
+      "U9"
+    ],
+    "invariants_hold": true,
+    "stable_across_restart": true
+  },
+  "support_check_enabled": {
+    "answerable": 12,
+    "unanswerable": 12,
+    "answerable_required_delivered": 12,
+    "false_abstentions": [
+      "P3"
+    ],
+    "abstentions_on_undelivered_answerable": [],
+    "span_in_required": 11,
+    "unanswerable_abstained": 10,
+    "false_sufficiency": [
+      "U12",
+      "U8"
+    ],
+    "invariants_hold": true,
+    "stable_across_restart": true
+  }
+}

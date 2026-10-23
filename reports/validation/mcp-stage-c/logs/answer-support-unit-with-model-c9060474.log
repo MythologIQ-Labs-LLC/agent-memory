@@ -1,0 +1,11 @@
+$ env -u AGENT_MEMORY_REPRESENTATION_DIR -u AGENT_MEMORY_MCP_SUPPORT_MODEL_DIR AGENT_MEMORY_MCP_SUPPORT_MODEL_DIR=/home/user/eval/models/roberta-base-squad2-db07770 python -m unittest discover -s integrations/agent-memory-mcp/tests -p test_answer_support.py -v
+test_missing_symlinked_or_altered_files_are_refused (test_answer_support.AnswerSupportLoadingTests.test_missing_symlinked_or_altered_files_are_refused) ... ok
+test_not_enabled_without_the_host_variable (test_answer_support.AnswerSupportLoadingTests.test_not_enabled_without_the_host_variable) ... ok
+test_relative_directory_is_refused (test_answer_support.AnswerSupportLoadingTests.test_relative_directory_is_refused) ... ok
+test_span_found_only_where_the_text_answers (test_answer_support.RealPinnedModelTests.test_span_found_only_where_the_text_answers) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 3.780s
+
+OK
+exit=0

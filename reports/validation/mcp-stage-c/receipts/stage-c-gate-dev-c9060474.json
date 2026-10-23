@@ -1,0 +1,205 @@
+{
+  "checks": [
+    {
+      "assessment": "unverified",
+      "assessment_reason": "answer_span_candidate_not_verified",
+      "goal": "required full-text evidence preserved; answer not verified",
+      "passed": true,
+      "required_complete": true,
+      "returned_items": 5,
+      "span_in_required": true,
+      "span_keys": [
+        "memory:liora-canoe"
+      ],
+      "support_status": "checked",
+      "task_id": "A1"
+    },
+    {
+      "assessment": "unverified",
+      "assessment_reason": "answer_span_candidate_not_verified",
+      "goal": "required full-text evidence preserved; answer not verified",
+      "passed": true,
+      "required_complete": true,
+      "returned_items": 2,
+      "span_in_required": true,
+      "span_keys": [
+        "memory:mara-parent"
+      ],
+      "support_status": "checked",
+      "task_id": "A2"
+    },
+    {
+      "assessment": "unverified",
+      "assessment_reason": "answer_span_candidate_not_verified",
+      "goal": "required full-text evidence preserved; answer not verified",
+      "passed": true,
+      "required_complete": true,
+      "returned_items": 2,
+      "span_in_required": true,
+      "span_keys": [
+        "memory:mara-child"
+      ],
+      "support_status": "checked",
+      "task_id": "A3"
+    },
+    {
+      "assessment": "unverified",
+      "assessment_reason": "answer_span_candidate_not_verified",
+      "goal": "required full-text evidence preserved; answer not verified",
+      "passed": true,
+      "required_complete": true,
+      "returned_items": 4,
+      "span_in_required": true,
+      "span_keys": [
+        "memory:liora-sibling"
+      ],
+      "support_status": "checked",
+      "task_id": "A4"
+    },
+    {
+      "assessment": "unverified",
+      "assessment_reason": "answer_span_candidate_not_verified",
+      "goal": "required full-text evidence preserved; answer not verified",
+      "passed": true,
+      "required_complete": true,
+      "returned_items": 5,
+      "span_in_required": true,
+      "span_keys": [
+        "memory:office-printer"
+      ],
+      "support_status": "checked",
+      "task_id": "A5"
+    },
+    {
+      "assessment": "unverified",
+      "assessment_reason": "answer_span_candidate_not_verified",
+      "goal": "required full-text evidence preserved; answer not verified",
+      "passed": true,
+      "required_complete": true,
+      "returned_items": 5,
+      "span_in_required": true,
+      "span_keys": [
+        "memory:office-printer"
+      ],
+      "support_status": "checked",
+      "task_id": "A6"
+    },
+    {
+      "assessment": "unverified",
+      "assessment_reason": "answer_span_candidate_not_verified",
+      "goal": "required full-text evidence preserved; answer not verified",
+      "passed": true,
+      "required_complete": true,
+      "returned_items": 3,
+      "span_in_required": true,
+      "span_keys": [
+        "memory:maya-editor"
+      ],
+      "support_status": "checked",
+      "task_id": "A7"
+    },
+    {
+      "assessment": "unverified",
+      "assessment_reason": "answer_span_candidate_not_verified",
+      "goal": "required full-text evidence preserved; answer not verified",
+      "passed": true,
+      "required_complete": true,
+      "returned_items": 5,
+      "span_in_required": true,
+      "span_keys": [
+        "memory:quail-meeting"
+      ],
+      "support_status": "checked",
+      "task_id": "A8"
+    },
+    {
+      "assessment": "unverified",
+      "assessment_reason": "answer_span_candidate_not_verified",
+      "goal": "required full-text evidence preserved; answer not verified",
+      "passed": true,
+      "required_complete": true,
+      "returned_items": 4,
+      "span_in_required": true,
+      "span_keys": [
+        "memory:quail-owner"
+      ],
+      "support_status": "checked",
+      "task_id": "A9"
+    },
+    {
+      "assessment": "unverified",
+      "assessment_reason": "answer_span_candidate_not_verified",
+      "goal": "required full-text evidence preserved; answer not verified",
+      "passed": true,
+      "required_complete": true,
+      "returned_items": 5,
+      "span_in_required": true,
+      "span_keys": [
+        "memory:meridian-meeting"
+      ],
+      "support_status": "checked",
+      "task_id": "A10"
+    },
+    {
+      "assessment": "unverified",
+      "assessment_reason": "answer_span_candidate_not_verified",
+      "goal": "required full-text evidence preserved; answer not verified",
+      "passed": true,
+      "required_complete": true,
+      "returned_items": 3,
+      "span_in_required": true,
+      "span_keys": [
+        "memory:telescope"
+      ],
+      "support_status": "checked",
+      "task_id": "A11"
+    },
+    {
+      "assessment": "insufficient_evidence",
+      "assessment_reason": "no_answer_span_in_current_evidence",
+      "goal": "populated-store unanswerable question marked insufficient",
+      "passed": true,
+      "required_complete": null,
+      "returned_items": 5,
+      "span_in_required": null,
+      "span_keys": [],
+      "support_status": "checked",
+      "task_id": "N1"
+    },
+    {
+      "assessment": "insufficient_evidence",
+      "assessment_reason": "no_answer_span_in_current_evidence",
+      "goal": "populated-store unanswerable question marked insufficient",
+      "passed": true,
+      "required_complete": null,
+      "returned_items": 5,
+      "span_in_required": null,
+      "span_keys": [],
+      "support_status": "checked",
+      "task_id": "N2"
+    },
+    {
+      "assessment": "insufficient_evidence",
+      "assessment_reason": "no_answer_span_in_current_evidence",
+      "goal": "populated-store unanswerable question marked insufficient",
+      "passed": true,
+      "required_complete": null,
+      "returned_items": 5,
+      "span_in_required": null,
+      "span_keys": [],
+      "support_status": "checked",
+      "task_id": "N3"
+    }
+  ],
+  "counts": {
+    "answerable": 11,
+    "answerable_complete": 11,
+    "no_answer": 3,
+    "unanswerable_abstained": 3
+  },
+  "manifest_sha256": "691240cfe45b15c0f908f00de5ebc4d2cd0ea8cec7dd1772e05310aa988e0ea3",
+  "qualification": "author-visible populated-store development diagnostic; not calibrated",
+  "schema": "agent-memory-stage-c-populated-store/0.3.0",
+  "source_probe_schema": "mcp-gate2-retrieval-probe/0.1.0",
+  "status": "PASS"
+}
