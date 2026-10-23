@@ -111,6 +111,26 @@ evidence, does not grant arbitrary deletion authority, and makes no claim of acc
 no-answer calibration. The reversible forgetting tool is host-bound, never permanent. An external model used by the agent harness may
 receive retrieved memory text, so use test data and a trusted harness.
 
+### Stage C: conservative host-side evidence insufficiency (unqualified slice)
+
+`memory_find` now includes `evidence_assessment` and `evidence_assessment_reason` without
+changing retrieval or the default `all_returned` profile. When it delivers **no complete,
+attributed** item (resolved state, nonempty text, fact reference and logical memory reference),
+the result is `insufficient_evidence` with reason `no_complete_attributed_evidence`.
+Truncated or unattributed text remains visible but cannot pass this minimal guard.
+When such an item is delivered, the result is **`unverified`**, not `sufficient`;
+its reason is `answer_entailment_not_checked`. The existing
+`answerability_verified=false` remains unchanged. An agent or host must not treat
+`unverified` as permission to answer.
+
+This guard is intentionally narrow. Unrelated, yet complete and attributed, recalled
+memories can still produce `unverified` for a question with no answer. This slice
+has **not** solved semantic insufficiency, calibrated abstention, or the populated-store
+no-answer problem. The alpha acceptance workflow adds three real-MCP empty-scope
+negative controls and one answerable control, but **Stage C remains BLOCKED** pending
+populated-store negative tests and verified task-level abstention. Historical Gate 1 and
+Stage A/B evidence are untouched.
+
 ## Internal alpha lifecycle slice: reversible, host-bound forgetting
 
 `memory_forget(key)` is present in the alpha catalog but **disabled by

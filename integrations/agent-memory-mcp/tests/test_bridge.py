@@ -107,12 +107,45 @@ class BridgeTests(unittest.TestCase):
         self.assertEqual(result["evidence_count"], 1)
         self.assertFalse(result["answer_generated"])
         self.assertFalse(result["answerability_verified"])
+        self.assertEqual(result["evidence_assessment"], "unverified")
+        self.assertEqual(result["evidence_assessment_reason"], "answer_entailment_not_checked")
         self.assertEqual(result["evidence"][0]["trust"], "untrusted_memory_text")
         self.assertEqual(result["unavailable"][0]["reason"], "subject_mismatch")
         args = [v for v in self.calls if v[0] == "recall_context"][0][2]
         self.assertEqual(args["consumer_profile"], "all_returned")
         self.assertEqual(args["max_items"], 3)
         self.assertEqual(self.closes, ["closed"])
+
+    def test_find_reports_insufficient_evidence_without_discarding_results(self):
+        # Unavailable, partial and unattributed contents cannot justify answering.
+        # This is an evidence-availability guard, NOT a semantic answer checker.
+        cases = (
+            {"status": "empty", "items": []},
+            {"status": "partial", "items": [
+                {"fact_ref": "fact:partial", "state": "truncated",
+                 "content": "Some incomplete text",
+                 "provenance": {"memory_ref": "memory:partial"}},
+            ]},
+            {"status": "complete", "items": [
+                {"fact_ref": "fact:no-provenance", "state": "resolved",
+                 "content": "Unattributed text", "provenance": {}},
+            ]},
+        )
+        for package in cases:
+            with self.subTest(package=package["status"]), patch.object(
+                FakeMemory, "recall_context", return_value=package
+            ):
+                result = self.bridge.find("What is the unknown access code?")
+                self.assertEqual(result["evidence_assessment"], "insufficient_evidence")
+                self.assertEqual(result["evidence_assessment_reason"],
+                                 "no_complete_attributed_evidence")
+                self.assertFalse(result["answerability_verified"])
+                self.assertEqual(result["profile"], "all_returned")
+                self.assertEqual(result["evidence_count"], len(result["evidence"]))
+                self.assertEqual(
+                    [e["state"] for e in result["evidence"]],
+                    [i["state"] for i in package["items"] if i["state"] in ("resolved", "truncated")],
+                )
 
     def test_selectivity_is_explicit_opt_in(self):
         self.bridge.find("preferred editor", experimental_selectivity=True)

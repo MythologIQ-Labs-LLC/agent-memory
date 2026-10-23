@@ -235,6 +235,39 @@ async def main():
             r = await call(client, "B7 owner value unchanged", "memory_get", {"key": k_fire})
             check("B7 the owning project still has the corrected value", [e["content"] for e in body(r).get("evidence", [])] == [t_new], repr(body(r))[:200])
 
+        # ---- C: conservative insufficient-evidence signal (NOT calibrated abstention)
+        # Unseeded scope: fixed no-answer questions must yield an insufficient-evidence
+        # assessment through real stdio MCP, not just an empty array interpreted by
+        # the test. No source labels or gold answers are passed to memory_find.
+        no_answer_questions = (
+            "What is the garage door access code?",
+            "When does the lunar eclipse committee meet?",
+            "What is the WiFi password for Harbour Library?",
+        )
+        async with Client(params(root, "project:alpha:unseeded")) as client:
+            for index, question in enumerate(no_answer_questions, 1):
+                r = await call(client, f"C{index} no-answer unseeded scope", "memory_find",
+                               {"question": question, "max_items": 5},
+                               scope="project:alpha:unseeded")
+                b = body(r)
+                check(f"C{index} no-answer: insufficient evidence, default recall unchanged",
+                      not r.is_error and b.get("profile") == "all_returned"
+                      and b.get("evidence_assessment") == "insufficient_evidence"
+                      and b.get("evidence_assessment_reason") == "no_complete_attributed_evidence"
+                      and b.get("evidence") == [] and b.get("evidence_count") == 0
+                      and b.get("answerability_verified") is False,
+                      repr(b)[:300])
+        async with Client(params(root, "project:alpha")) as client:
+            r = await call(client, "C4 answerable control", "memory_find",
+                           {"question": q_glaze, "max_items": 5})
+            b = body(r)
+            check("C4 complete returned evidence remains delivered but never verified as an answer",
+                  not r.is_error and b.get("profile") == "all_returned"
+                  and b.get("evidence_assessment") == "unverified"
+                  and b.get("evidence_assessment_reason") == "answer_entailment_not_checked"
+                  and t_glaze in contents(r) and b.get("answerability_verified") is False,
+                  repr(b)[:300])
+
         time.sleep(0.5)
         check("final: no server process left running", live_server_pids() == [], str(live_server_pids()))
 

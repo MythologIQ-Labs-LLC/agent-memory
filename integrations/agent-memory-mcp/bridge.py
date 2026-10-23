@@ -359,6 +359,24 @@ class LocalMemoryBridge:
             result = self._project(package, asked=question)
             self._annotate_key_heads(memory, result)
         result["profile"] = profile
+        # Consumer-side conservative abstention signal. Delivery is NOT proof of
+        # entailment: even complete, attributed evidence remains unverified.
+        # Preserve all_returned and the full evidence list. Never silently
+        # filter unrelated facts or claim that an empty result proves absence.
+        complete_attributed = any(
+            item.get("state") == "resolved"
+            and isinstance(item.get("fact_ref"), str) and bool(item["fact_ref"])
+            and isinstance(item.get("memory_ref"), str) and bool(item["memory_ref"])
+            and bool(item.get("content", "").strip())
+            for item in result["evidence"]
+        )
+        result["evidence_assessment"] = (
+            "unverified" if complete_attributed else "insufficient_evidence"
+        )
+        result["evidence_assessment_reason"] = (
+            "answer_entailment_not_checked" if complete_attributed
+            else "no_complete_attributed_evidence"
+        )
         return result
 
     def get(self, key: str) -> dict:
