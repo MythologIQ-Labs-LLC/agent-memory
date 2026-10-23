@@ -1,0 +1,19 @@
+test_malformed_tool_input_cannot_set_authority (test_real_mcp.ActualMcpConsumerLoop.test_malformed_tool_input_cannot_set_authority) ... Tool 'memory_find' failed: 'Error executing tool memory_find: Invalid memory tool input or delivery limit'
+ok
+test_missing_host_configuration_is_tool_error_not_success (test_real_mcp.ActualMcpConsumerLoop.test_missing_host_configuration_is_tool_error_not_success) ... Tool 'memory_find' failed: 'Error executing tool memory_find: Agent Memory host configuration is missing or unsafe'
+ok
+test_real_stdio_subprocess_reconnects_to_durable_memory (test_real_mcp.ActualMcpConsumerLoop.test_real_stdio_subprocess_reconnects_to_durable_memory) ... execute program '/tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/gate1/venv/bin/python': <_UnixSubprocessTransport pid=736 running stdin=<_UnixWritePipeTransport fd=7 idle bufsize=0> stdout=<_UnixReadPipeTransport fd=8 polling>>
+<_UnixReadPipeTransport fd=8 polling> was closed by peer
+<_UnixSubprocessTransport pid=736 running stdin=<_UnixWritePipeTransport closed fd=7 closed> stdout=<_UnixReadPipeTransport closed fd=8 closed>> exited with return code 0
+execute program '/tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/gate1/venv/bin/python': <_UnixSubprocessTransport pid=739 running stdin=<_UnixWritePipeTransport fd=7 idle bufsize=0> stdout=<_UnixReadPipeTransport fd=8 polling>>
+<_UnixReadPipeTransport fd=8 polling> was closed by peer
+<_UnixSubprocessTransport pid=739 running stdin=<_UnixWritePipeTransport closed fd=7 closed> stdout=<_UnixReadPipeTransport closed fd=8 closed>> exited with return code 0
+ok
+test_real_store_exact_retrieve_find_and_reconnect (test_real_mcp.ActualMcpConsumerLoop.test_real_store_exact_retrieve_find_and_reconnect) ... ok
+test_same_key_rewrite_is_visible_not_silently_merged (test_real_mcp.ActualMcpConsumerLoop.test_same_key_rewrite_is_visible_not_silently_merged) ... ok
+test_separately_configured_project_cannot_read_other_project (test_real_mcp.ActualMcpConsumerLoop.test_separately_configured_project_cannot_read_other_project) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 2.907s
+
+OK

@@ -1,0 +1,17 @@
+test_exact_get_does_not_launder_similar_but_wrong_memory (test_bridge.BridgeTests.test_exact_get_does_not_launder_similar_but_wrong_memory) ... ok
+test_exact_get_refuses_conflicting_versions_instead_of_guessing (test_bridge.BridgeTests.test_exact_get_refuses_conflicting_versions_instead_of_guessing) ... ok
+test_exact_get_returns_only_correct_key_in_mixed_results (test_bridge.BridgeTests.test_exact_get_returns_only_correct_key_in_mixed_results) ... ok
+test_exact_key_uses_governed_logical_memory_ref (test_bridge.BridgeTests.test_exact_key_uses_governed_logical_memory_ref) ... ok
+test_find_returns_bounded_untrusted_evidence_not_a_generated_answer (test_bridge.BridgeTests.test_find_returns_bounded_untrusted_evidence_not_a_generated_answer) ... ok
+test_invalid_request_never_opens_store (test_bridge.BridgeTests.test_invalid_request_never_opens_store) ... ok
+test_missing_host_claims_fail_closed (test_bridge.BridgeTests.test_missing_host_claims_fail_closed) ... ok
+test_refused_write_is_not_reported_as_remembered (test_bridge.BridgeTests.test_refused_write_is_not_reported_as_remembered) ... ok
+test_relative_root_rejected (test_bridge.BridgeTests.test_relative_root_rejected) ... ok
+test_save_calls_real_facade_contract_and_closes (test_bridge.BridgeTests.test_save_calls_real_facade_contract_and_closes) ... ok
+test_selectivity_is_explicit_opt_in (test_bridge.BridgeTests.test_selectivity_is_explicit_opt_in) ... ok
+test_symlinked_root_rejected (test_bridge.BridgeTests.test_symlinked_root_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.006s
+
+OK
