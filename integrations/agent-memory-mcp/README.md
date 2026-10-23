@@ -16,6 +16,13 @@ Unlike the existing Hermes observation-only provider, this is an actual read/wri
 - Host provides actor/tenant/scope via its own environment, not model tool arguments.
   This MCP subprocess does not authenticate callers. The packaged optional legacy
   gate does not prove the date of first store creation.
+- The host store root must be an absolute path without parent traversal, and no
+  existing path component may be a symlink or Windows junction. This catches
+  accidental or adversarial ancestor redirection that checking the last
+  directory alone misses. It is **configuration preflight**, not protection
+  against filesystem races, reparse-point substitutions, writable ancestors
+  or a malicious local user. The host must provision private directory ACLs
+  and a trustworthy canonical path outside untrusted writable locations.
 
 ## Install and test from the repository root
 

@@ -13,6 +13,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import os
 from pathlib import Path
+import stat
 from typing import Any, Callable, ContextManager
 
 MAX_TEXT_CHARS = 4000
@@ -39,8 +40,26 @@ class HostConfig:
         if not raw_root or not Path(raw_root).is_absolute():
             raise ValueError("AGENT_MEMORY_MCP_ROOT must be an absolute, host-owned local path")
         root = Path(raw_root)
-        if root.is_symlink():
-            raise ValueError("AGENT_MEMORY_MCP_ROOT must not be a symlink")
+        # The host supplies a *local canonical path*, not a path that
+        # traverses a redirected parent. Checking only root.is_symlink()
+        # misses /trusted/link/subdir where "link" points elsewhere.
+        # Windows junctions are also redirections, even when is_symlink()
+        # returns False. This is a configuration preflight, not a substitute
+        # for filesystem ACLs or a race-free directory handle.
+        if ".." in root.parts:
+            raise ValueError("AGENT_MEMORY_MCP_ROOT must not contain parent traversal")
+        for component in (root, *root.parents):
+            junction = getattr(component, "is_junction", None)
+            # Windows junctions and other directory reparse points must also
+            # be refused on Python 3.11, which lacks Path.is_junction().
+            # lstat() sees the link itself, not its target.
+            try:
+                attributes = getattr(component.lstat(), "st_file_attributes", 0)
+            except FileNotFoundError:
+                attributes = 0
+            is_reparse_point = bool(attributes & getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400))
+            if component.is_symlink() or (callable(junction) and junction()) or is_reparse_point:
+                raise ValueError("AGENT_MEMORY_MCP_ROOT must not traverse a symlink or junction")
         claims = {
             "tenant": os.environ.get("AGENT_MEMORY_MCP_TENANT", ""),
             "actor": os.environ.get("AGENT_MEMORY_MCP_ACTOR", ""),

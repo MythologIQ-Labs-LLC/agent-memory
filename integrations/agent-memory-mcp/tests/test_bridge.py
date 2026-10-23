@@ -3,6 +3,8 @@ from __future__ import annotations
 
 from contextlib import contextmanager
 import os
+import stat
+from types import SimpleNamespace
 from pathlib import Path
 import sys
 import tempfile
@@ -267,6 +269,66 @@ class BridgeTests(unittest.TestCase):
                 "AGENT_MEMORY_MCP_SCOPE": "project:local",
             }, clear=True):
                 with self.assertRaisesRegex(ValueError, "symlink"):
+                    HostConfig.from_environment()
+
+    def test_symlinked_parent_rejected_when_final_store_root_does_not_exist(self):
+        # A nested path under a link is NOT itself a symlink. The previous
+        # check of root.is_symlink() was therefore insufficient.
+        with tempfile.TemporaryDirectory() as temporary:
+            real = Path(temporary) / "real"
+            real.mkdir()
+            link = Path(temporary) / "link"
+            try:
+                link.symlink_to(real, target_is_directory=True)
+            except (OSError, NotImplementedError) as error:
+                self.skipTest(f"symlink privilege unavailable: {error}")
+            nested = link / "new-store"
+            self.assertFalse(nested.is_symlink())
+            self.assertFalse(nested.exists())
+            with patch.dict(os.environ, {
+                "AGENT_MEMORY_MCP_ROOT": str(nested),
+                "AGENT_MEMORY_MCP_TENANT": "tenant:a",
+                "AGENT_MEMORY_MCP_ACTOR": "agent:local",
+                "AGENT_MEMORY_MCP_SCOPE": "project:local",
+            }, clear=True):
+                with self.assertRaisesRegex(ValueError, "symlink"):
+                    HostConfig.from_environment()
+            self.assertFalse((real / "new-store").exists())
+
+    def test_reparse_attribute_rejected_without_is_junction(self):
+        # Simulate the Windows FILE_ATTRIBUTE_REPARSE_POINT bit on a machine
+        # that may not be running Windows. Python 3.11 has no is_junction().
+        with tempfile.TemporaryDirectory() as temporary:
+            suspicious = Path(temporary) / "reparse" / "store"
+            original_lstat = Path.lstat
+
+            def lstat_with_reparse(component, *args, **kwargs):
+                if component == suspicious.parent:
+                    return SimpleNamespace(
+                        st_mode=stat.S_IFDIR,
+                        st_file_attributes=getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400),
+                    )
+                return original_lstat(component, *args, **kwargs)
+
+            with patch.object(Path, "lstat", lstat_with_reparse), patch.dict(os.environ, {
+                "AGENT_MEMORY_MCP_ROOT": str(suspicious),
+                "AGENT_MEMORY_MCP_TENANT": "tenant:a",
+                "AGENT_MEMORY_MCP_ACTOR": "agent:local",
+                "AGENT_MEMORY_MCP_SCOPE": "project:local",
+            }, clear=True):
+                with self.assertRaisesRegex(ValueError, "junction"):
+                    HostConfig.from_environment()
+
+    def test_parent_traversal_rejected_even_in_absolute_store_path(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            raw_root = str(Path(temporary) / "temp" / ".." / "new-store")
+            with patch.dict(os.environ, {
+                "AGENT_MEMORY_MCP_ROOT": raw_root,
+                "AGENT_MEMORY_MCP_TENANT": "tenant:a",
+                "AGENT_MEMORY_MCP_ACTOR": "agent:local",
+                "AGENT_MEMORY_MCP_SCOPE": "project:local",
+            }, clear=True):
+                with self.assertRaisesRegex(ValueError, "parent traversal"):
                     HostConfig.from_environment()
 
 

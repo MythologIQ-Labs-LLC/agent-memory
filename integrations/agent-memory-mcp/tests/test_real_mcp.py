@@ -305,6 +305,35 @@ class ActualMcpConsumerLoop(unittest.IsolatedAsyncioTestCase):
                     }), "evidence")
                     self.assertNotIn("The test setting is amber.", repr(found))
 
+    async def test_symlinked_host_root_ancestor_is_a_tool_error_without_writing(self):
+        # Agent-supplied tool calls cannot choose a path. Even a misconfigured
+        # trusted host must not silently follow a redirected parent to a
+        # different store when the final store directory doesn't exist yet.
+        with tempfile.TemporaryDirectory() as temp:
+            real = Path(temp) / "real"
+            real.mkdir()
+            link = Path(temp) / "redirect"
+            try:
+                link.symlink_to(real, target_is_directory=True)
+            except (OSError, NotImplementedError) as error:
+                self.skipTest(f"symlink privilege unavailable: {error}")
+            env = {
+                "AGENT_MEMORY_MCP_ROOT": str(link / "store"),
+                "AGENT_MEMORY_MCP_TENANT": "tenant:host",
+                "AGENT_MEMORY_MCP_ACTOR": "agent:host",
+                "AGENT_MEMORY_MCP_SCOPE": "project:host",
+            }
+            with patch.dict(os.environ, env):
+                async with Client(module.mcp, raise_exceptions=True) as client:
+                    result = await client.call_tool("memory_remember", {
+                        "key": "memory:redirected",
+                        "text": "Sensitive memory must not be written through a link.",
+                    })
+                    self.assertTrue(result.is_error, result)
+                    self.assertIsNone(result.structured_content)
+                    self.assertIn("host configuration", repr(result.content).lower())
+            self.assertFalse((real / "store").exists())
+
     async def test_missing_host_configuration_is_tool_error_not_success(self):
         with patch.dict(os.environ, {}, clear=True):
             async with Client(module.mcp, raise_exceptions=True) as client:
