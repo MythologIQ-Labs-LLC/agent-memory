@@ -177,7 +177,7 @@ class ActualMcpConsumerLoop(unittest.IsolatedAsyncioTestCase):
                 tools = await client.list_tools()
                 self.assertEqual(
                     {tool.name for tool in tools.tools},
-                    {"memory_remember", "memory_get", "memory_find"},
+                    {"memory_remember", "memory_get", "memory_find", "memory_forget"},
                 )
                 created = _result(await client.call_tool("memory_remember", {
                     "key": "memory:agent:editor",
@@ -251,6 +251,59 @@ class ActualMcpConsumerLoop(unittest.IsolatedAsyncioTestCase):
                     }), "evidence")
                     for item in found["evidence"]:
                         self.assertEqual(item["latest_for_key"], item["content"] == "The owner writes Python in VS Code.", item)
+
+    async def test_reversible_forget_is_host_bound_and_persists_after_restart(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "store"
+            env = {
+                "AGENT_MEMORY_MCP_ROOT": str(root),
+                "AGENT_MEMORY_MCP_TENANT": "tenant:alpha",
+                "AGENT_MEMORY_MCP_ACTOR": "agent:alpha",
+                "AGENT_MEMORY_MCP_SCOPE": "project:alpha",
+            }
+            key = "memory:owner:outdated_setting"
+            with patch.dict(os.environ, env, clear=True):
+                async with Client(module.mcp, raise_exceptions=True) as client:
+                    saved = _result(await client.call_tool("memory_remember", {
+                        "key": key, "text": "The test setting is amber.",
+                    }), "committed")
+                    self.assertTrue(saved["committed"], saved)
+                    denied = _result(await client.call_tool("memory_forget", {"key": key}),
+                                     "committed")
+                    self.assertFalse(denied["committed"], denied)
+                    self.assertEqual(denied["status"], "host_authorization_required")
+                    still = _result(await client.call_tool("memory_get", {"key": key}), "evidence")
+                    self.assertEqual(still["lookup_status"], "found")
+            # Deliberately scoped operator authorization on exactly one key.
+            # The test ref represents host-owned approval. The facade remains
+            # free to reject the operation; that would block alpha acceptance.
+            grant = {**env,
+                     "AGENT_MEMORY_MCP_PRUNE_APPROVED_KEY": key,
+                     "AGENT_MEMORY_MCP_PRUNE_EVIDENCE_REF": "host-record:alpha-operator-authorized"}
+            with patch.dict(os.environ, grant, clear=True):
+                async with Client(module.mcp, raise_exceptions=True) as client:
+                    other = _result(await client.call_tool("memory_forget", {
+                        "key": "memory:owner:other",
+                    }), "committed")
+                    self.assertFalse(other["committed"], other)
+                    self.assertEqual(other["status"], "host_authorization_required")
+                    forgotten = _result(await client.call_tool("memory_forget", {"key": key}),
+                                        "committed")
+                    self.assertTrue(forgotten["committed"], forgotten)
+                    self.assertEqual(forgotten["status"], "forgotten")
+                    self.assertFalse(forgotten["permanent"])
+            # A restarted MCP consumer with no grant must not resurrect the
+            # tombstoned current fact or see deleted text in normal recall.
+            with patch.dict(os.environ, env, clear=True):
+                async with Client(module.mcp, raise_exceptions=True) as restarted:
+                    missing = _result(await restarted.call_tool("memory_get", {"key": key}),
+                                      "evidence")
+                    self.assertEqual(missing["lookup_status"], "not_found_or_unavailable")
+                    self.assertEqual(missing["evidence"], [])
+                    found = _result(await restarted.call_tool("memory_find", {
+                        "question": "What color is the test setting?",
+                    }), "evidence")
+                    self.assertNotIn("The test setting is amber.", repr(found))
 
     async def test_missing_host_configuration_is_tool_error_not_success(self):
         with patch.dict(os.environ, {}, clear=True):
