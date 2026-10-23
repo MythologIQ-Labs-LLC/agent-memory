@@ -18,6 +18,7 @@ Stdlib only apart from the schema validation reached through `receipts`.
 from __future__ import annotations
 
 import json
+import os
 
 from typing import Callable, Mapping, Sequence
 
@@ -26,6 +27,7 @@ from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 
 from ..core import policy, receipts
+from ..core.content_terms import content_terms
 from ..core.evidence_qualification import EvidenceItem
 from ..core.verification import VerifierRegistry
 from ..core.readmission import RejectedValueRegistry
@@ -170,6 +172,27 @@ def candidate_policy_evidence() -> dict:
     }
 
 
+# Bounded runtime candidate (#819 Gate 2, experiment branch only; default OFF). The substrate's
+# lexical route admits a fact on any shared whitespace token, function words included, so "the"
+# or "is" alone admits it. With AGENT_MEMORY_EXPERIMENTAL_LEXICAL_ADMISSION=content_term a lexical
+# candidate is admitted only when it shares at least one *content term* with the query, as
+# ``core.content_terms`` defines it: the same bounded function-word list and morphology fold the
+# context selector uses, so ``degrees``/``degree`` and ``graduate``/``graduated`` still agree
+# (the substrate's exact-token overlap misses them and today admits such a fact only through a
+# shared function word). No new vocabulary. Scores, order and every other route are unchanged;
+# unset, ``eligible_search`` returns exactly what it returned before.
+EXPERIMENTAL_LEXICAL_ADMISSION_ENV = "AGENT_MEMORY_EXPERIMENTAL_LEXICAL_ADMISSION"
+
+
+def experimental_lexical_admission() -> str | None:
+    value = os.environ.get(EXPERIMENTAL_LEXICAL_ADMISSION_ENV)
+    if value in (None, "", "off"):
+        return None
+    if value != "content_term":
+        raise ValueError(f"{EXPERIMENTAL_LEXICAL_ADMISSION_ENV} must be 'content_term' or unset")
+    return value
+
+
 def eligible_search(substrate, query: str, tenant: str, eligible, eligible_identity=None) -> list:
     """Tenant-partitioned lexical discovery restricted to domain-eligible facts.
 
@@ -186,11 +209,17 @@ def eligible_search(substrate, query: str, tenant: str, eligible, eligible_ident
     """
 
     if eligible_identity is not None and getattr(substrate, "supports_identity_prefilter", False):
-        return list(substrate.search(query, group_ids=[tenant], eligible=eligible, eligible_identity=eligible_identity))
-    try:
-        return list(substrate.search(query, group_ids=[tenant], eligible=eligible))
-    except TypeError:
-        return [(fact, score) for fact, score in substrate.search(query, group_ids=[tenant]) if eligible(fact)]
+        results = list(substrate.search(query, group_ids=[tenant], eligible=eligible, eligible_identity=eligible_identity))
+    else:
+        try:
+            results = list(substrate.search(query, group_ids=[tenant], eligible=eligible))
+        except TypeError:
+            results = [(fact, score) for fact, score in substrate.search(query, group_ids=[tenant]) if eligible(fact)]
+    if experimental_lexical_admission() is None:
+        return results
+    # Experimental content-term admission: drop candidates that share only function words.
+    wanted = content_terms(query)
+    return [(fact, score) for fact, score in results if wanted & content_terms(fact.fact_text)]
 
 
 #: #786: one refusal for every governed write whose target has a live head outside the

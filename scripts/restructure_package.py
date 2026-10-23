@@ -38,7 +38,7 @@ LAYERS: dict[str, tuple[str, ...]] = {
     "core": (
         "policy", "receipts", "evidence_qualification", "verification",
         "pending_verification", "resumption", "readmission", "contextual_recall",
-        "governance_projection", "portable_evidence",
+        "governance_projection", "portable_evidence", "content_terms",
     ),
     "state": (
         "substrate", "sqlite_substrate", "graphiti_driver", "projections", "residue", "visibility",

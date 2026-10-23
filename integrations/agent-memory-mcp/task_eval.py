@@ -249,6 +249,9 @@ async def run(cases: dict, answerer: Answerer, *, k: int, selectivity: bool, ans
             "AGENT_MEMORY_MCP_SCOPE": cases["scope"],
             "PATH": os.environ.get("PATH", ""),
         }
+        # Experiment branch: forward the bounded runtime candidate flag to the server.
+        if os.environ.get("AGENT_MEMORY_EXPERIMENTAL_LEXICAL_ADMISSION"):
+            env["AGENT_MEMORY_EXPERIMENTAL_LEXICAL_ADMISSION"] = os.environ["AGENT_MEMORY_EXPERIMENTAL_LEXICAL_ADMISSION"]
         params = StdioServerParameters(command=sys.executable, args=[str(SERVER)], env=env)
         async with Client(params) as client:
             for record in cases["records"]:
@@ -301,6 +304,7 @@ async def run(cases: dict, answerer: Answerer, *, k: int, selectivity: bool, ans
     fts.close()
     return {
         "schema": "mcp-gate2-task-eval/0.1.0",
+        "experimental_lexical_admission": os.environ.get("AGENT_MEMORY_EXPERIMENTAL_LEXICAL_ADMISSION") or None,
         "qualification": "author-visible task-level diagnostic; NOT blinded, NOT a benchmark, reader is NOT an agent",
         "answerer": answerer_name,
         "abstain_below": ABSTAIN_BELOW if answerer_name == "onnx-squad" else None,
