@@ -13,8 +13,11 @@ do not advertise substring matching as verified answer correctness.
 from __future__ import annotations
 
 import importlib.util
+from contextlib import asynccontextmanager
 from pathlib import Path
+from types import SimpleNamespace
 import unittest
+from unittest.mock import patch
 
 from agentmem_ref.api import context_selection
 
@@ -96,6 +99,59 @@ class AnswerScoreValidity(unittest.TestCase):
         verdict = task_eval.judge(None, ["Orion Field"])
         self.assertFalse(verdict["correct"])
         self.assertTrue(verdict["abstained"])
+
+
+class AnswerLevelEvidenceCompleteness(unittest.IsolatedAsyncioTestCase):
+    async def test_truncated_returned_key_does_not_count_as_complete_evidence(self):
+        # Drive task_eval.run through a substituted protocol client, while
+        # leaving the same quality.score() and indexed FTS5 comparator intact.
+        # The only source delivered by MCP is truncated. Merely returning its
+        # logical key must not count as full evidence coverage.
+        cases = {
+            "tenant": "tenant:adversarial-test",
+            "scope": "project:adversarial-test",
+            "records": [{"key": "memory:heat",
+                         "text": "The greenhouse is heated by a propane burner."}],
+            "tasks": [{"id": "A", "question": "How is the greenhouse heated?",
+                       "required": ["memory:heat"], "forbidden": [],
+                       "gold": ["propane"]}],
+        }
+
+        class FakeClient:
+            async def call_tool(self, name, arguments):
+                if name == "memory_remember":
+                    return SimpleNamespace(is_error=False,
+                                           structured_content={"committed": True})
+                if name == "memory_find":
+                    return SimpleNamespace(is_error=False, structured_content={
+                        "answer_generated": False,
+                        "evidence": [{
+                            "state": "truncated",
+                            "memory_ref": "memory:heat",
+                            "content": "The greenhouse is heated by...",
+                        }],
+                        "selection_assessment": "undetermined",
+                        "profile": "all_returned",
+                    })
+                raise AssertionError(name)
+
+        @asynccontextmanager
+        async def client_session(*args, **kwargs):
+            yield FakeClient()
+
+        with patch.object(task_eval, "Client", client_session):
+            report = await task_eval.run(
+                cases, lambda question, texts: (None, None),
+                k=1, selectivity=False, answerer_name="adversarial-test",
+            )
+        mcp = report["rows"][0]["mcp"]["evidence"]
+        fts = report["rows"][0]["fts5"]["evidence"]
+        self.assertEqual(mcp["required_key_hits"], 1)
+        self.assertFalse(
+            mcp["required_complete"],
+            "task_eval credited truncated MCP content because the required source key appeared",
+        )
+        self.assertTrue(fts["required_complete"])
 
 
 if __name__ == "__main__":
