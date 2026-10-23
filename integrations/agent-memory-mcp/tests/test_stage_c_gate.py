@@ -52,6 +52,20 @@ class StageCGateTests(unittest.TestCase):
         self.assertEqual(outcome["status"], "PASS")
         self.assertEqual(outcome["counts"]["unanswerable_abstained"], 1)
 
+    def test_support_check_candidate_on_answerable_passes_but_never_as_verified(self):
+        report, manifest = cohort()
+        report["rows"][0]["mcp_evidence_assessment_reason"] = "answer_span_candidate_not_verified"
+        report["rows"][1]["mcp_evidence_assessment_reason"] = "no_answer_span_in_current_evidence"
+        self.assertEqual(module.assess(report, manifest)["status"], "PASS")
+        report["rows"][0]["mcp_evidence_assessment"] = "verified"
+        self.assertEqual(module.assess(report, manifest)["status"], "BLOCKED")
+
+    def test_false_abstention_on_answerable_fails(self):
+        report, manifest = cohort()
+        report["rows"][0]["mcp_evidence_assessment"] = "insufficient_evidence"
+        report["rows"][0]["mcp_evidence_assessment_reason"] = "no_answer_span_in_current_evidence"
+        self.assertEqual(module.assess(report, manifest)["status"], "BLOCKED")
+
     def test_current_unverified_on_no_answer_fails_closed(self):
         report, manifest = cohort()
         report["rows"][1]["mcp_evidence_assessment"] = "unverified"

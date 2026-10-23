@@ -201,6 +201,51 @@ class ActualMcpConsumerLoop(unittest.IsolatedAsyncioTestCase):
                     "Neovim" in item["content"] for item in recovered["evidence"]
                 ), recovered)
 
+    @unittest.skipUnless(os.environ.get("AGENT_MEMORY_MCP_SUPPORT_MODEL_DIR"),
+                         "host did not provide the pinned answer-support model")
+    async def test_host_support_check_marks_unsupported_questions_over_a_populated_store(self):
+        # Real stdio subprocess, real SQLite, real pinned model. Delivered evidence must be the
+        # same with and without the check; only the assessment may differ, and it must persist.
+        with tempfile.TemporaryDirectory() as temp:
+            base = {"AGENT_MEMORY_MCP_ROOT": str(Path(temp) / "store"),
+                    "AGENT_MEMORY_MCP_TENANT": "tenant:stage-c", "AGENT_MEMORY_MCP_ACTOR": "agent:stage-c",
+                    "AGENT_MEMORY_MCP_SCOPE": "project:stage-c", "PATH": os.environ.get("PATH", "")}
+            plain = StdioServerParameters(command=sys.executable, args=[str(HERE / "server.py")], env=base)
+            checked = StdioServerParameters(command=sys.executable, args=[str(HERE / "server.py")], env={
+                **base, "AGENT_MEMORY_MCP_SUPPORT_MODEL_DIR": os.environ["AGENT_MEMORY_MCP_SUPPORT_MODEL_DIR"]})
+            records = {"memory:lab:freezer": "The lab freezer is set to minus eighty degrees.",
+                       "memory:lab:badge": "Lab badges are renewed at the front desk each January.",
+                       "memory:lab:manager": "Priya manages the lab inventory spreadsheet."}
+            questions = {"What temperature is the lab freezer set to?": "unverified",
+                         "What is the door code for the lab?": "insufficient_evidence"}
+            async with Client(plain) as client:
+                for key, text in records.items():
+                    self.assertTrue(_result(await client.call_tool(
+                        "memory_remember", {"key": key, "text": text}), "committed")["committed"])
+                before = {q: _result(await client.call_tool("memory_find", {"question": q}), "evidence")
+                          for q in questions}
+            for q in questions:
+                self.assertEqual(before[q]["answer_support"]["status"], "not_configured")
+                self.assertEqual(before[q]["evidence_assessment"], "unverified")
+            for attempt in range(2):  # a fresh server process each time
+                async with Client(checked) as client:
+                    tools = {t.name: t for t in (await client.list_tools()).tools}
+                    self.assertEqual(set(tools["memory_find"].input_schema["properties"]),
+                                     {"question", "max_items", "experimental_selectivity"})
+                    for q, expected in questions.items():
+                        found = _result(await client.call_tool("memory_find", {"question": q}), "evidence")
+                        with self.subTest(question=q, attempt=attempt):
+                            self.assertEqual(found["evidence"], before[q]["evidence"])
+                            self.assertEqual(found["profile"], "all_returned")
+                            self.assertEqual(found["evidence_assessment"], expected)
+                            self.assertEqual(found["answer_support"]["status"], "checked")
+                            self.assertFalse(found["answer_generated"])
+                            self.assertFalse(found["answerability_verified"])
+                            if expected == "unverified":
+                                freezer = [e["fact_ref"] for e in found["evidence"]
+                                           if e["memory_ref"] == "memory:lab:freezer"]
+                                self.assertEqual(found["answer_support"]["span_fact_refs"], freezer)
+
     async def test_same_key_rewrite_is_visible_not_silently_merged(self):
         # Real runtime semantics: a second explicit write under one key moves the head but
         # leaves the first fact current and findable. The harness must be able to tell.

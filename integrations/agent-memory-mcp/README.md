@@ -111,56 +111,81 @@ evidence, does not grant arbitrary deletion authority, and makes no claim of acc
 no-answer calibration. The reversible forgetting tool is host-bound, never permanent. An external model used by the agent harness may
 receive retrieved memory text, so use test data and a trusted harness.
 
-### Stage C: conservative host-side evidence insufficiency (unqualified slice)
+### Stage C: host-side evidence insufficiency (BLOCKED; optional answer-support check)
 
-`memory_find` now includes `evidence_assessment` and `evidence_assessment_reason` without
-changing retrieval or the default `all_returned` profile. When it delivers **no complete,
-attributed** item (resolved state, nonempty text, fact reference and logical memory reference),
-the result is `insufficient_evidence` with reason `no_complete_attributed_evidence`.
-Truncated or unattributed text remains visible but cannot pass this minimal guard.
-If every otherwise-complete candidate is known through the runtime history to
-be a **non-head key generation**, the result is also `insufficient_evidence`,
-with reason `only_non_head_evidence`. The older text is **not removed** from
-ordinary recall, and unknown head states are not treated as known stale.
-When at least one complete candidate is not known to be non-head, the result
-is **`unverified`**, not `sufficient`; its reason is
-`answer_entailment_not_checked`. The existing
-`answerability_verified=false` remains unchanged. An agent or host must not treat
-`unverified` as permission to answer.
+`memory_find` adds `evidence_assessment`, `evidence_assessment_reason` and an `answer_support`
+block. It never changes retrieval, the default `all_returned` profile or the delivered
+evidence. Retrieval relevance is not answer support: a populated store returns plausible
+memories for almost any question.
 
-The MCP server also tells the model to abstain from answering from memory on
-`insufficient_evidence`; `unverified` remains a warning to inspect support, not
-an answerability approval. Prompt instructions alone are not proof that an
-actual agent obeys them, so a real-agent Stage D pilot remains mandatory.
+| assessment / reason | meaning |
+|---|---|
+| `insufficient_evidence` / `no_complete_attributed_evidence` | no resolved, attributed, nonempty item was delivered |
+| `insufficient_evidence` / `only_non_head_evidence` | every complete item is a known non-head key generation (still disclosed) |
+| `insufficient_evidence` / `no_answer_span_in_current_evidence` | the host's answer-support check found no answer span in any current, complete item, alone or all together |
+| `unverified` / `answer_span_candidate_not_verified` | the check found a candidate span; **not** verification: it can pick a wrong span or the wrong subject |
+| `unverified` / `answer_entailment_not_checked` | the host has not enabled the check (the previous behavior) |
+| `unverified` / `answer_support_check_unavailable` | enabled but the model failed to load or run; nothing is claimed either way |
 
-The populated-store acceptance gate validates the **entire fixed manifest**, its
-source profile, retrieval evidence and post-retrieval gold labels; subset-only success,
-relabeling or a replaced provider fails closed. Each receipt includes the SHA-256 of
-the manifest used. Offline gate tests only validate admission, not MCP behavior.
+Nothing in this slice reports evidence as verified, and `answerability_verified` stays false.
 
-The separate populated-store acceptance gate reuses the existing 18-record,
-14-question `quality_cases_dev.json` cohort: 11 answerable controls and
-three unanswerable controls whose retrieved context contains distractors.
-It records the answerability metadata alongside full-evidence coverage and
-**fails unless** the unanswerable controls are marked insufficient while all
-11 required sources are still delivered. Labels are joined after MCP calls,
-not passed to the tool. From the repo root, in the qualified venv, run:
+**Optional answer-support check (host-enabled, off by default).** `answer_support.py` runs
+`optimum/roberta-base-squad2` (the ONNX export of `deepset/roberta-base-squad2`, SQuAD 2.0,
+CC-BY-4.0) at a pinned revision, with every file pinned by sha256. It uses the existing
+optional `semantic` extra: onnxruntime, tokenizers and numpy. There is no new package, no
+LLM and no network at run time.
 
-    python -m unittest discover -s integrations/agent-memory-mcp/tests -p "test_stage_c_gate.py" -v
+The decision rule is the Hugging Face question-answering pipeline with
+`handle_impossible_answer=True` at its default windowing: a span is found when its
+probability beats the model's own null answer, with a margin of 0. The rule was fixed
+before either Stage C cohort was run. There is no threshold fitted to these cases.
+On the 732 question/memory pairs of both cohorts, it agreed with the reference PyTorch
+pipeline on every pair (`reports/validation/mcp-stage-c/`).
+
+The check reads only items that are resolved, attributed, nonempty and not known to be
+non-head. The trusted host enables it:
+
+    pip install -e ".[semantic]" -c reference/requirements-semantic.txt
+    python integrations/agent-memory-mcp/answer_support.py fetch /abs/path/support-model
+    AGENT_MEMORY_MCP_SUPPORT_MODEL_DIR=/abs/path/support-model   # in the MCP server environment
+
+The model loads once per server process, which takes about 7 s including hashing the 496 MB
+graph. Each check then takes about 40 ms per window on one CPU thread.
+
+The MCP server tells the model to abstain from answering from memory on
+`insufficient_evidence`. Prompt instructions are not proof that an actual agent obeys them, so
+a real-agent Stage D pilot remains mandatory.
+
+**Evidence.** Run from the repo root, in a venv with the extra, with
+`AGENT_MEMORY_MCP_SUPPORT_MODEL_DIR` set:
+
     python integrations/agent-memory-mcp/stage_c_gate.py --out /tmp/am-stage-c.json
+    python integrations/agent-memory-mcp/stage_c_adversarial.py --support-model-dir "$AGENT_MEMORY_MCP_SUPPORT_MODEL_DIR" --out /tmp/am-stage-c-adv.json
 
-A nonzero status from the second command is an expected **Stage C BLOCKED**
-signal until detection works on a populated store; it is not evidence that
-the earlier Gate 1 or Stage A/B lifecycle operations regressed. No measured
-result from this new gate is claimed until a fresh real-MCP run is attached.
+Both commands run real stdio MCP over governed SQLite:
+- `stage_c_gate.py` runs the 18-record, 14-question development cohort
+  (`quality_cases_dev.json`).
+- `stage_c_adversarial.py` runs the held-out cohort (`quality_cases_adversarial.json`).
+  That cohort was frozen in its own commit before any model was run on it. It applies a
+  correction, a same-key rewrite and a forget through the real tools. It restarts the server
+  and compares the arms with the check disabled and enabled.
 
-This guard is intentionally narrow. Unrelated, yet complete and attributed, recalled
-memories can still produce `unverified` for a question with no answer. This slice
-has **not** solved semantic insufficiency, calibrated abstention, or the populated-store
-no-answer problem. The alpha acceptance workflow adds three real-MCP empty-scope
-negative controls and one answerable control, but **Stage C remains BLOCKED** pending
-populated-store negative tests and verified task-level abstention. Historical Gate 1 and
-Stage A/B evidence are untouched.
+Labels are joined after the MCP calls and are never tool arguments.
+
+**Stage C remains BLOCKED.** The pre-registered held-out criterion requires zero false
+abstentions. With the check enabled:
+- **Held-out cohort:** 10 of 12 unanswerable questions are marked insufficient, against 0 of
+  12 without it. 12 of 12 answerable questions have their required memory delivered, but one
+  (an inference question: *which food can Noor not eat* over *Noor is allergic to peanuts*)
+  is falsely marked insufficient. Two unanswerable questions get a wrong-type candidate span:
+  a date offered as a departure time, and a gym name offered as a climbing grade.
+- **Development cohort:** 3 of 3 abstain, 11 of 11 answerable questions are kept, and each
+  candidate span is in the required memory.
+
+Known limits: extractive QA misses answers that need inference or negation, and accepts spans
+of the wrong type. It does not check whose memory a span comes from. The cohorts are small and
+author-written, not calibrated or blinded. Historical Gate 1 and Stage A/B evidence are
+untouched.
 
 ## Internal alpha lifecycle slice: reversible, host-bound forgetting
 

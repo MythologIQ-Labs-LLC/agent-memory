@@ -27,6 +27,13 @@ MAX_TOTAL_CHARS = 5000
 MAX_TOKENS = 1250
 
 OpenMemory = Callable[..., ContextManager[Any]]
+# Returns the host's answer-support checker, None when the host has not enabled one, or raises.
+LoadSupport = Callable[[], Any]
+
+
+def _support_from_environment() -> Any:
+    from answer_support import from_environment
+    return from_environment()
 
 
 @dataclass(frozen=True)
@@ -111,12 +118,14 @@ def _read_correction_record(path: Path, key: str, text: str) -> tuple[Path, str]
 class LocalMemoryBridge:
     """Each operation opens and closes an isolated host-bound real runtime."""
 
-    def __init__(self, config: HostConfig, opener: OpenMemory | None = None):
+    def __init__(self, config: HostConfig, opener: OpenMemory | None = None,
+                 support: LoadSupport = _support_from_environment):
         self.config = config
         if opener is None:
             from agentmem_ref.host_activation import open_qualified_memory
             opener = open_qualified_memory
         self._opener = opener
+        self._load_support = support
 
     def _open(self, **host_options: Any) -> ContextManager[Any]:
         return self._opener(
@@ -374,15 +383,48 @@ class LocalMemoryBridge:
         # retrieval rank. A returned old generation is still disclosed, but
         # cannot alone count as potentially answer-supporting current evidence.
         # Unknown head state remains unknown; do not fabricate a stale verdict.
+        current = [item for item in complete_attributed if item.get("latest_for_key") is not False]
+        result["answer_support"] = {"status": "not_run", "method": None, "model": None,
+                                    "checked_fact_refs": [], "span_fact_refs": [], "joint_span": None}
         if not complete_attributed:
             assessment, reason = "insufficient_evidence", "no_complete_attributed_evidence"
-        elif all(item.get("latest_for_key") is False for item in complete_attributed):
+        elif not current:
             assessment, reason = "insufficient_evidence", "only_non_head_evidence"
         else:
-            assessment, reason = "unverified", "answer_entailment_not_checked"
+            assessment, reason = self._assess_support(question, current, result["answer_support"])
         result["evidence_assessment"] = assessment
         result["evidence_assessment_reason"] = reason
         return result
+
+    def _assess_support(self, question: str, current: list[dict], record: dict) -> tuple[str, str]:
+        """Answer support over the delivered evidence; never changes or reorders that evidence.
+
+        Only a checker the host enabled can turn delivered evidence into ``insufficient_evidence``,
+        and only when no current, complete item (alone or all together) holds an answer span. A
+        found span is a candidate, not verification: the result stays ``unverified``. A checker
+        that is enabled but cannot load or run claims nothing either way.
+        """
+        try:
+            checker = self._load_support()
+        except Exception:  # enabled but unusable: report it, never guess
+            record["status"] = "unavailable"
+            return "unverified", "answer_support_check_unavailable"
+        if checker is None:
+            record["status"] = "not_configured"
+            return "unverified", "answer_entailment_not_checked"
+        from answer_support import METHOD, MODEL_REF
+        try:
+            outcome = checker.check(question, [item["content"] for item in current])
+        except Exception:
+            record["status"] = "unavailable"
+            return "unverified", "answer_support_check_unavailable"
+        refs = [item["fact_ref"] for item in current]
+        record.update(status="checked", method=METHOD, model=MODEL_REF, checked_fact_refs=refs,
+                      span_fact_refs=[ref for ref, found in zip(refs, outcome["per_item"]) if found],
+                      joint_span=bool(outcome["joint"]))
+        if not record["span_fact_refs"] and not record["joint_span"]:
+            return "insufficient_evidence", "no_answer_span_in_current_evidence"
+        return "unverified", "answer_span_candidate_not_verified"
 
     def get(self, key: str) -> dict:
         """Exact logical memory lookup through governed recall, not raw SQLite."""

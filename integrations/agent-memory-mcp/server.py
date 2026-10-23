@@ -96,8 +96,9 @@ def memory_find(question: str, max_items: int = 5,
 
     Accuracy and answerability are not guaranteed. A result with
     evidence_assessment=insufficient_evidence cannot support an answer; unverified
-    means evidence was delivered but entailment was not checked. Neither field
-    authorizes the model to invent facts. With experimental_selectivity
+    means evidence was delivered but not verified as answering the question, even
+    when the host's optional answer_support check found a candidate span in it.
+    Neither field authorizes the model to invent facts. With experimental_selectivity
     the opt-in evidence-qualified selector declines returned memories that carry
     no evidence for the question on a grounded basis; each declined memory is
     listed under ``unavailable`` (state ``omitted_selection``) with its versioned

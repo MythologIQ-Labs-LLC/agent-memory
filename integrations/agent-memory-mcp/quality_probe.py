@@ -102,6 +102,11 @@ def score(keys: list[str], required: list[str], forbidden: list[str], *,
     }
 
 
+def span_keys(evidence: list[dict], support: dict | None) -> list[str]:
+    refs = set((support or {}).get("span_fact_refs") or [])
+    return [e.get("memory_ref") for e in evidence if e.get("fact_ref") in refs]
+
+
 def aggregate(rows: list[dict], arm: str) -> dict:
     x = [r[arm] for r in rows]
     answered = [o for o in x if o["required_total"]]
@@ -172,6 +177,9 @@ async def run(cases: dict, k: int = 5, *, selectivity: bool = False) -> dict:
             "AGENT_MEMORY_MCP_SCOPE": cases["scope"],
             "PATH": os.environ.get("PATH", ""),
         }
+        # The host, not the model, enables the optional Stage C answer-support check.
+        if os.environ.get("AGENT_MEMORY_MCP_SUPPORT_MODEL_DIR"):
+            env["AGENT_MEMORY_MCP_SUPPORT_MODEL_DIR"] = os.environ["AGENT_MEMORY_MCP_SUPPORT_MODEL_DIR"]
         params = StdioServerParameters(command=sys.executable, args=[str(SERVER)], env=env)
         rows = []
         async with Client(params) as client:
@@ -238,6 +246,9 @@ async def run(cases: dict, k: int = 5, *, selectivity: bool = False) -> dict:
                     "mcp_evidence_assessment": content.get("evidence_assessment"),
                     "mcp_evidence_assessment_reason": content.get("evidence_assessment_reason"),
                     "mcp_evidence_count": content.get("evidence_count"),
+                    "mcp_answer_support": content.get("answer_support"),
+                    # which delivered memories the support check found an answer span in
+                    "mcp_span_keys": span_keys(evidence, content.get("answer_support")),
                 })
                 if content.get("answer_generated") is not False:
                     raise AssertionError("MCP provider must not claim to answer questions")

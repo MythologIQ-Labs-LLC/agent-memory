@@ -60,6 +60,17 @@ class FakeMemory:
         }
 
 
+class FakeSupport:
+    def __init__(self, *, per_item, joint, error=False):
+        self.per_item, self.joint, self.error, self.asked = per_item, joint, error, []
+
+    def check(self, question, contexts):
+        self.asked.append((question, list(contexts)))
+        if self.error:
+            raise RuntimeError("inference failed")
+        return {"per_item": list(self.per_item), "joint": self.joint}
+
+
 class BridgeTests(unittest.TestCase):
     def setUp(self):
         self.calls = []
@@ -74,7 +85,9 @@ class BridgeTests(unittest.TestCase):
             finally:
                 self.closes.append("closed")
 
-        self.bridge = LocalMemoryBridge(self.config, opener)
+        self.opener = opener
+        # Hermetic: the host's optional answer-support check is off unless a test enables it.
+        self.bridge = LocalMemoryBridge(self.config, opener, support=lambda: None)
 
     def test_save_calls_real_facade_contract_and_closes(self):
         result = self.bridge.remember("memory:editor", "Our editor is Neovim.")
@@ -170,6 +183,96 @@ class BridgeTests(unittest.TestCase):
         self.assertEqual(result["evidence"][0]["content"], "The editor is Vim.")
         self.assertIs(result["evidence"][0]["latest_for_key"], False)
         self.assertFalse(result["answerability_verified"])
+
+    def _bridge_with_support(self, checker):
+        return LocalMemoryBridge(self.config, self.opener, support=lambda: checker)
+
+    def test_support_check_without_any_span_is_insufficient_and_keeps_the_evidence(self):
+        checker = FakeSupport(per_item=[False], joint=False)
+        result = self._bridge_with_support(checker).find("What is the garage access code?")
+        self.assertEqual(result["evidence_assessment"], "insufficient_evidence")
+        self.assertEqual(result["evidence_assessment_reason"], "no_answer_span_in_current_evidence")
+        self.assertEqual(checker.asked, [("What is the garage access code?", ["Our editor is Neovim."])])
+        self.assertEqual([e["content"] for e in result["evidence"]], ["Our editor is Neovim."])
+        self.assertEqual(result["profile"], "all_returned")
+        self.assertFalse(result["answerability_verified"])
+        self.assertFalse(result["answer_generated"])
+        support = result["answer_support"]
+        self.assertEqual(support["status"], "checked")
+        self.assertEqual(support["checked_fact_refs"], ["fact:qualified-1"])
+        self.assertEqual(support["span_fact_refs"], [])
+        self.assertIs(support["joint_span"], False)
+
+    def test_support_check_span_is_a_candidate_never_verification(self):
+        result = self._bridge_with_support(FakeSupport(per_item=[True], joint=True)).find("Which editor?")
+        self.assertEqual(result["evidence_assessment"], "unverified")
+        self.assertEqual(result["evidence_assessment_reason"], "answer_span_candidate_not_verified")
+        self.assertEqual(result["answer_support"]["span_fact_refs"], ["fact:qualified-1"])
+        self.assertFalse(result["answerability_verified"])
+
+    def test_support_check_joint_span_alone_keeps_unverified(self):
+        result = self._bridge_with_support(FakeSupport(per_item=[False], joint=True)).find("Which editor?")
+        self.assertEqual(result["evidence_assessment"], "unverified")
+        self.assertEqual(result["answer_support"]["span_fact_refs"], [])
+        self.assertIs(result["answer_support"]["joint_span"], True)
+
+    def test_support_check_does_not_change_delivered_evidence(self):
+        plain = self.bridge.find("Which editor?")
+        checked = self._bridge_with_support(FakeSupport(per_item=[False], joint=False)).find("Which editor?")
+        self.assertEqual(plain["evidence"], checked["evidence"])
+        self.assertEqual(plain["unavailable"], checked["unavailable"])
+        self.assertEqual(plain["answer_support"]["status"], "not_configured")
+        recalls = [c[2] for c in self.calls if c[0] == "recall_context"]
+        self.assertEqual(recalls[0], recalls[1])
+
+    def test_support_check_unusable_claims_nothing(self):
+        def broken():
+            raise RuntimeError("model digest mismatch")
+        for bridge in (LocalMemoryBridge(self.config, self.opener, support=broken),
+                       self._bridge_with_support(FakeSupport(per_item=[], joint=False, error=True))):
+            with self.subTest(bridge=bridge):
+                result = bridge.find("Which editor?")
+                self.assertEqual(result["evidence_assessment"], "unverified")
+                self.assertEqual(result["evidence_assessment_reason"], "answer_support_check_unavailable")
+                self.assertEqual(result["answer_support"]["status"], "unavailable")
+                self.assertEqual(result["evidence_count"], 1)
+
+    def test_support_check_never_runs_on_stale_or_incomplete_evidence(self):
+        package = {"status": "complete", "items": [
+            {"state": "resolved", "content": "The editor is Vim.", "fact_ref": "fact:previous",
+             "provenance": {"memory_ref": "memory:editor"}},
+            {"state": "resolved", "content": "The editor is Helix.", "fact_ref": "fact:current",
+             "provenance": {"memory_ref": "memory:editor"}},
+            {"state": "truncated", "content": "The editor is", "fact_ref": "fact:part",
+             "provenance": {"memory_ref": "memory:other"}},
+        ]}
+        history = {"history": {"current_fact_uuid": "fact:current", "state_version": 3}}
+        checker = FakeSupport(per_item=[True], joint=True)
+        with patch.object(FakeMemory, "recall_context", return_value=package), \
+                patch.object(FakeMemory, "history", return_value=history, create=True):
+            result = self._bridge_with_support(checker).find("Which editor is current?")
+        self.assertEqual(checker.asked, [("Which editor is current?", ["The editor is Helix."])])
+        self.assertEqual(result["answer_support"]["checked_fact_refs"], ["fact:current"])
+        self.assertEqual(len(result["evidence"]), 3)
+
+    def test_no_complete_evidence_does_not_load_the_support_check(self):
+        def must_not_load():
+            raise AssertionError("support check loaded without complete evidence")
+        bridge = LocalMemoryBridge(self.config, self.opener, support=must_not_load)
+        with patch.object(FakeMemory, "recall_context", return_value={"status": "empty", "items": []}):
+            result = bridge.find("Anything?")
+        self.assertEqual(result["evidence_assessment_reason"], "no_complete_attributed_evidence")
+        self.assertEqual(result["answer_support"]["status"], "not_run")
+
+    def test_support_check_is_enabled_only_by_the_host_environment(self):
+        bridge = LocalMemoryBridge(self.config, self.opener)
+        with patch.dict(os.environ, {}, clear=False):
+            os.environ.pop("AGENT_MEMORY_MCP_SUPPORT_MODEL_DIR", None)
+            self.assertEqual(bridge.find("Which editor?")["answer_support"]["status"], "not_configured")
+        with patch.dict(os.environ, {"AGENT_MEMORY_MCP_SUPPORT_MODEL_DIR": "relative/model"}):
+            result = bridge.find("Which editor?")
+        self.assertEqual(result["answer_support"]["status"], "unavailable")
+        self.assertEqual(result["evidence_assessment"], "unverified")
 
     def test_selectivity_is_explicit_opt_in(self):
         self.bridge.find("preferred editor", experimental_selectivity=True)
