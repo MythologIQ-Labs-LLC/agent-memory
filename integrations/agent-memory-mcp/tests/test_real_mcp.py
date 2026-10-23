@@ -160,6 +160,44 @@ class ActualMcpConsumerLoop(unittest.IsolatedAsyncioTestCase):
                     "Neovim" in item["content"] for item in recovered["evidence"]
                 ), recovered)
 
+    async def test_same_key_rewrite_is_visible_not_silently_merged(self):
+        # Real runtime semantics: a second explicit write under one key moves the head but
+        # leaves the first fact current and findable. The harness must be able to tell.
+        with tempfile.TemporaryDirectory() as temp:
+            env = {
+                "AGENT_MEMORY_MCP_ROOT": str(Path(temp) / "store"),
+                "AGENT_MEMORY_MCP_TENANT": "tenant:rewrite",
+                "AGENT_MEMORY_MCP_ACTOR": "agent:rewrite",
+                "AGENT_MEMORY_MCP_SCOPE": "project:rewrite",
+            }
+            with patch.dict(os.environ, env):
+                async with Client(module.mcp, raise_exceptions=True) as client:
+                    first = _result(await client.call_tool("memory_remember", {
+                        "key": "memory:editor", "text": "The owner writes Python in Neovim.",
+                    }), "committed")
+                    second = _result(await client.call_tool("memory_remember", {
+                        "key": "memory:editor", "text": "The owner writes Python in VS Code.",
+                    }), "committed")
+                    self.assertTrue(first["committed"] and second["committed"], (first, second))
+                    got = _result(await client.call_tool("memory_get", {"key": "memory:editor"}), "evidence")
+                    self.assertEqual(got["lookup_status"], "found", got)
+                    self.assertEqual([e["content"] for e in got["evidence"]], ["The owner writes Python in VS Code."])
+                    self.assertEqual(got["key_versions"], 2, got)
+                    self.assertTrue(got["earlier_versions_remain_recallable"], got)
+                    self.assertTrue(got["evidence"][0]["latest_for_key"], got)
+                    found = _result(await client.call_tool("memory_find", {
+                        "question": "Which editor does the owner use for Python?", "max_items": 5,
+                    }), "evidence")
+                    by_text = {e["content"]: e for e in found["evidence"]}
+                    self.assertIn("The owner writes Python in VS Code.", by_text, found)
+                    self.assertTrue(by_text["The owner writes Python in VS Code."]["latest_for_key"])
+                    older = by_text.get("The owner writes Python in Neovim.")
+                    if older is not None:  # the earlier generation may still be retrieved
+                        self.assertFalse(older["latest_for_key"], older)
+                        self.assertIn("memory:editor", found["conflicting_keys"], found)
+                    else:
+                        self.assertEqual(found["conflicting_keys"], [])
+
     async def test_missing_host_configuration_is_tool_error_not_success(self):
         with patch.dict(os.environ, {}, clear=True):
             async with Client(module.mcp, raise_exceptions=True) as client:

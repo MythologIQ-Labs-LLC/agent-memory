@@ -16,6 +16,7 @@ from __future__ import annotations
 
 from pathlib import Path
 import sys
+from typing import Any
 
 from mcp.server import MCPServer
 from mcp.server.mcpserver.exceptions import ToolError
@@ -26,6 +27,10 @@ from mcp.server.mcpserver.exceptions import ToolError
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from bridge import HostConfig, LocalMemoryBridge
 
+# Tool results must reach the harness as structured content as well as text. The MCP SDK
+# (2.x) derives an output schema only from a parametrised mapping such as dict[str, Any];
+# a bare `dict` annotation has no type hints, so results were serialised as text only and
+# clients reading `structured_content` saw None.
 mcp = MCPServer(
     "Agent Memory Local",
     instructions=(
@@ -62,7 +67,7 @@ def _tool_call(action):
 
 
 @mcp.tool()
-def memory_remember(key: str, text: str) -> dict:
+def memory_remember(key: str, text: str) -> dict[str, Any]:
     """Persist an explicit piece of memory under an agent-chosen logical key.
 
     Key examples: 'memory:owner:preferred_editor'. Do not store secrets,
@@ -73,7 +78,7 @@ def memory_remember(key: str, text: str) -> dict:
 
 
 @mcp.tool()
-def memory_get(key: str) -> dict:
+def memory_get(key: str) -> dict[str, Any]:
     """Retrieve a previously stored logical key through governed exact recall.
 
     Does not generate an answer. Returns authorized memory evidence and states.
@@ -83,7 +88,7 @@ def memory_get(key: str) -> dict:
 
 @mcp.tool()
 def memory_find(question: str, max_items: int = 5,
-                experimental_selectivity: bool = False) -> dict:
+                experimental_selectivity: bool = False) -> dict[str, Any]:
     """Retrieve bounded, potentially relevant evidence for a question.
 
     Accuracy and answerability are not guaranteed. The experimental selector

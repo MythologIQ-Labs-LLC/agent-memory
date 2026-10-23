@@ -72,6 +72,12 @@ framing, and tool schemas provided by the official SDK.
   not proof that the key never existed. If several governed facts resolve under
   the same logical key, returns lookup_status=ambiguous_multiple_versions
   without guessing which one supersedes the others. No direct database access.
+  A second memory_remember under an existing key is **not a correction**: the runtime
+  commits a new generation and moves the key's head, but the earlier fact stays a
+  current-state fact. memory_get serves the head and reports key_versions and
+  earlier_versions_remain_recallable=true; memory_find may still return the earlier
+  text and marks every item latest_for_key=true/false (None when unknown) and lists
+  conflicting_keys. Nothing is silently merged or hidden.
 - memory_find(question, max_items=5, experimental_selectivity=False):
   governed recall_context within bounded delivery budgets, defaulting to
   all_returned. The experimental #819 selector must be opted into deliberately.

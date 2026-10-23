@@ -1,0 +1,6 @@
+python 3.12.3
+mcp 2.3.0
+mcp-types 2.3.0
+agent-memory-reference 0.2.0
+pydantic 2.14.1
+anyio 4.15.1
