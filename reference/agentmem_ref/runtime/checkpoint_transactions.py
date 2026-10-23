@@ -13,6 +13,7 @@ from __future__ import annotations
 
 from contextlib import contextmanager
 from dataclasses import dataclass
+import tempfile
 from typing import Iterator, Mapping
 
 from . import restart_runtime as _rr
@@ -284,13 +285,21 @@ class CheckpointTransactionSupport:
     def _atomic_journal_write(self, records: tuple[dict, ...]) -> None:
         path = self._store.journal_path
         path.parent.mkdir(parents=True, exist_ok=True)
-        tmp = path.with_name(f".{path.name}.tmp")
         payload = b"".join(
             _rr._canonical_bytes(dict(record)) + b"\n" for record in records
         )
-        with tmp.open("wb") as handle:
-            handle.write(payload)
-            handle.flush()
-            _rr.os.fsync(handle.fileno())
-        _rr.os.replace(tmp, path)
-        _RECOVERY_FSYNC_DIRECTORY(path.parent)
+        temporary = None
+        try:
+            with tempfile.NamedTemporaryFile(
+                mode="wb", prefix=f".{path.name}.", suffix=".tmp",
+                dir=path.parent, delete=False,
+            ) as handle:
+                temporary = type(path)(handle.name)
+                handle.write(payload)
+                handle.flush()
+                _rr.os.fsync(handle.fileno())
+            _rr.os.replace(temporary, path)
+            _RECOVERY_FSYNC_DIRECTORY(path.parent)
+        finally:
+            if temporary is not None:
+                temporary.unlink(missing_ok=True)
