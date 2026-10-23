@@ -1,0 +1,8 @@
+head 32dbc8374b24026e2d8f3e8ab8e5afba87e0c7f7 selector 57bfb3fcf890813c19c401bbfdf6aa7bfc2f1464 start 13:21:14
+locomo exit=0 13:26:14
+locomo-adversarial exit=0 13:27:45
+scale-1000 exit=0 13:28:16
+lme-session exit=0 13:28:35
+lme-turn exit=0 13:44:10
+scale-19000 exit=0 14:00:33
+== done 14:00:33
