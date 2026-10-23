@@ -131,9 +131,13 @@ def validate_cases(data: dict) -> None:
             raise ValueError("invalid required/forbidden key sets")
 
 
-async def run(cases: dict, k: int = 5) -> dict:
+async def run(cases: dict, k: int = 5, *, selectivity: bool = False) -> dict:
+    """``selectivity`` is passed through as the tool's ``experimental_selectivity`` argument, so
+    the two consumer profiles can be measured through the same real MCP path (Gate 2 before/after)."""
     if type(k) is not int or not 1 <= k <= 8:
         raise ValueError("MCP provider supports k from 1 to 8")
+    if type(selectivity) is not bool:
+        raise ValueError("selectivity must be a bool")
     validate_cases(cases)
     # This *small fictional development fixture* fits under both delivery
     # budgets for either arm, including the five highest-length documents.
@@ -173,7 +177,7 @@ async def run(cases: dict, k: int = 5) -> dict:
                 start = time.perf_counter()
                 result = await client.call_tool("memory_find", {
                     "question": question, "max_items": k,
-                    "experimental_selectivity": False,
+                    "experimental_selectivity": selectivity,
                 })
                 mcp_ms = (time.perf_counter() - start) * 1000
                 if result.is_error or not isinstance(result.structured_content, dict):
@@ -208,7 +212,15 @@ async def run(cases: dict, k: int = 5) -> dict:
                     "mcp_unavailable_items": len(content.get("unavailable") or []),
                     "mcp_elapsed_ms": mcp_ms, "fts5_elapsed_ms": fts_ms,
                     "mcp_package_status": content.get("package_status"),
+                    "mcp_profile": content.get("profile"),
                     "mcp_selection_assessment": content.get("selection_assessment"),
+                    "mcp_selection_policy_version": content.get("selection_policy_version"),
+                    # which returned facts the selector declined, with its versioned reason
+                    "mcp_omitted": [
+                        {"fact_ref": o.get("fact_ref"), "reason": o.get("reason"),
+                         "absence_grounding": o.get("absence_grounding")}
+                        for o in (content.get("unavailable") or []) if o.get("state") == "omitted_selection"
+                    ],
                     "mcp_answer_generated": content.get("answer_generated"),
                 })
                 if content.get("answer_generated") is not False:
@@ -218,7 +230,9 @@ async def run(cases: dict, k: int = 5) -> dict:
         "schema": "mcp-gate2-retrieval-probe/0.1.0",
         "qualification": "author-visible development diagnostic only; NOT blinded",
         "measures": "full seeded source evidence coverage, key-only hits, distraction, empty-context; not answer correctness",
-        "provider": "real stdio MCP / all_returned profile / governed SQLite",
+        "provider": ("real stdio MCP / governed SQLite / memory_find experimental_selectivity="
+                     f"{selectivity} ({'evidence_qualified' if selectivity else 'all_returned'} profile)"),
+        "selectivity": selectivity,
         "comparator": "indexed SQLite FTS5 unicode61 bm25 OR terms; not ingestion/security cost parity",
         "budget": {"max_items": k, "provider_char_cap": 5000, "provider_token_cap": 1250,
                    "fts5_char_cap": None, "fts5_token_cap": None,
@@ -235,9 +249,11 @@ def main() -> int:
     parser.add_argument("--cases", type=Path, default=CASES)
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--max-items", type=int, default=5)
+    parser.add_argument("--selectivity", action="store_true",
+                        help="call memory_find with experimental_selectivity=true (evidence_qualified profile)")
     args = parser.parse_args()
     data = json.loads(args.cases.read_text(encoding="utf-8"))
-    report = asyncio.run(run(data, k=args.max_items))
+    report = asyncio.run(run(data, k=args.max_items, selectivity=args.selectivity))
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps(report["summary"], indent=2))

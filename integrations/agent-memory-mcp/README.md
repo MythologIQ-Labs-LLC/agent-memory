@@ -86,6 +86,16 @@ framing, and tool schemas provided by the official SDK.
 - memory_find(question, max_items=5, experimental_selectivity=False):
   governed recall_context within bounded delivery budgets, defaulting to
   all_returned. The experimental #819 selector must be opted into deliberately.
+  With it, `profile` is `evidence_qualified`, `selection_policy_version` names the
+  selector policy (`0.5.0`: term absence is grounded for a single statement, and for a
+  third-person statement when one side names a subject the other never mentions; a
+  first-person statement without a shared term stays delivered as uncertain), and every
+  declined memory appears under `unavailable` with state `omitted_selection`, its reason
+  (`no_query_term_evidence` / `subject_mismatch`), `absence_grounding` and the inspected
+  subjects. Declined content is never read. The recall itself is identical in both profiles;
+  `selection_assessment` is `evidence_delivered`, `undetermined`, `no_relevant_evidence`
+  (every returned fact declined on a grounded basis: not proof that no memory exists) or
+  `no_returned_candidates`.
 
 The bridge does not expose correction/forget without qualified lifecycle
 evidence, does not grant action authority, and makes no claim of accurate
@@ -121,6 +131,11 @@ From the repository root in the venv from above:
 
     python -m unittest discover -s integrations/agent-memory-mcp/tests -p "test_quality_probe.py" -v
     python integrations/agent-memory-mcp/quality_probe.py --out /tmp/am-gate2-dev.json
+    python integrations/agent-memory-mcp/quality_probe.py --selectivity --out /tmp/am-gate2-dev-selective.json
+
+`--selectivity` calls `memory_find` with `experimental_selectivity=true` so both consumer
+profiles are measured through the same real MCP path; the report records which was used
+(`selectivity`) and, per question, the declined facts with their reasons (`mcp_omitted`).
 
 The output contains per-question returned keys and scored evidence,
 not retrieved plaintext or made-up answers. It reports:

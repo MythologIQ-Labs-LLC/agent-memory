@@ -13,7 +13,7 @@ a consumer-side delivery policy, never authority:
   delivers the content and says so (``certainty: uncertain``), it never converts a lack of word
   overlap into an asserted negative when the fact carries non-lexical evidence.
 
-Decision order for one returned fact (policy ``evidence-qualified-context-selection/0.4.1``):
+Decision order for one returned fact (policy ``evidence-qualified-context-selection/0.5.0``):
 
 1. ``preserved_exact_identity``: a caller-authorised ``logical_memory_refs`` hit (route
    ``exact_logical_identity``). Delivered whatever its wording.
@@ -28,9 +28,16 @@ Decision order for one returned fact (policy ``evidence-qualified-context-select
    model, no corpus or benchmark vocabulary.
 
    * no query content term occurs in the fact in any folded form → ``no_query_term_evidence``
-     (declined) **only when the fact is a single statement** (one sentence). A longer text can
-     carry the answer in other words (an implicit relation, a paraphrase), so for it the absence
-     of a shared term is uncertainty, not absence: delivered as ``undetermined_multi_statement``;
+     (declined) when the absence is *grounded*, recorded as ``absence_grounding``:
+     ``single_statement`` (one sentence: the absence is an observation about the whole
+     statement); ``fact_subject_absent`` (policy 0.5.0: a third-person fact names its own
+     subject, by proper-noun possessive or persisted proposition entity, and the query mentions
+     none of it); ``query_subject_absent`` (policy 0.5.0: the query names a subject by
+     proper-noun possessive and the third-person fact mentions none of it). A first-person fact
+     is about its speaker, whom any query from the caller may concern in other words, so for it
+     the absence of a shared term stays uncertainty: delivered as
+     ``undetermined_multi_statement``; so does a multi-statement third-person fact when neither
+     side names a subject (nothing grounds the absence);
    * the query names a subject by a proper-noun possessive (``Liora's canoe``; a lowercase
      possessive such as ``composer's`` names no subject) and the fact grounds a different
      subject the same way or through its persisted write-time proposition entity, and the
@@ -69,7 +76,7 @@ import re
 from typing import Any, Mapping, Sequence
 
 POLICY_ID = "evidence-qualified-context-selection"
-POLICY_VERSION = "0.4.1"
+POLICY_VERSION = "0.5.0"
 BASIS = "post_admission_query_evidence_qualification"
 EXACT_IDENTITY_ROUTE = "exact_logical_identity"
 LEXICAL_ROUTE = "lexical"
@@ -241,14 +248,29 @@ def qualify(
     single = single_statement(text)
     record["matched_terms"] = matched
     record["single_statement"] = single
-    if not matched:
-        if single:
-            return {**record, "outcome": "omitted", "reason": "no_query_term_evidence", "certainty": "grounded"}
-        return {**record, "outcome": "delivered", "evidence": "undetermined_multi_statement", "certainty": "uncertain"}
     anchors = possessive_subjects(query)
-    record["query_subjects"] = sorted(anchors)
     speaker_query = first_person(query)
     speaker_fact = first_person(text, proposition)
+    if not matched:
+        if single:
+            return {**record, "outcome": "omitted", "reason": "no_query_term_evidence", "certainty": "grounded",
+                    "absence_grounding": "single_statement"}
+        if not speaker_fact:
+            # Policy 0.5.0: for a third-person statement the absence of every query term is
+            # grounded when one side names a subject the other side never mentions (with no
+            # shared content term, a named subject on either side is by construction absent
+            # from the other). A first-person statement is about its speaker and stays uncertain.
+            subject = grounded_subject(text, proposition)
+            record["query_subjects"] = sorted(anchors)
+            record["fact_subjects"] = sorted(subject)
+            if subject:
+                return {**record, "outcome": "omitted", "reason": "no_query_term_evidence", "certainty": "grounded",
+                        "absence_grounding": "fact_subject_absent"}
+            if anchors:
+                return {**record, "outcome": "omitted", "reason": "no_query_term_evidence", "certainty": "grounded",
+                        "absence_grounding": "query_subject_absent"}
+        return {**record, "outcome": "delivered", "evidence": "undetermined_multi_statement", "certainty": "uncertain"}
+    record["query_subjects"] = sorted(anchors)
     if not anchors:
         if speaker_query:
             # The caller asks about themselves: a fact grounded on a third party by possessive,

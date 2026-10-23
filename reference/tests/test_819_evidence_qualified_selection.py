@@ -163,7 +163,12 @@ class ProfileContract(_Store):
         package = self.context("Which car does our family drive?")
         self.assertIn(mine_too, _delivered(package))
 
-    def test_term_absence_is_grounded_only_for_a_single_statement(self):
+    def test_term_absence_is_grounded_for_a_single_statement_or_a_named_third_person_subject(self):
+        # Policy 0.3.0 to 0.4.1 grounded term absence only for a single statement; policy 0.5.0
+        # (Gate 2 remediation) also grounds it for a longer third-person statement whose own
+        # subject (here the persisted proposition entity "moon exhibit") the query never mentions.
+        # The original 0.3.0 assertion (such a fact delivered as undetermined_multi_statement) is
+        # preserved in reports/validation/mcp-gate2-task-probe/step3/ as the superseded revision.
         short = self.put("memory:a", "The autumn science festival begins Friday.")
         long = self.put("memory:b", "The autumn science festival begins Friday. The committee that plans "
                                     "the eclipse viewing meets afterwards in the same hall.")
@@ -173,14 +178,16 @@ class ProfileContract(_Store):
         if short in decisions:
             self.assertEqual(decisions[short]["outcome"], "omitted")
             self.assertEqual(decisions[short]["reason"], "no_query_term_evidence")
+            self.assertEqual(decisions[short]["absence_grounding"], "single_statement")
         # the longer one matches ("committee", "eclipse", "meet"); now make one that does not
         unrelated_long = self.put("memory:c", "The moon exhibit has a new display case. Tickets are sold at the "
                                               "door. Visitors may bring cameras.")
         package = self.context("What time does the lunar eclipse committee meet?")
         decisions = package["selection"]["decisions"]
-        self.assertEqual(decisions[unrelated_long]["outcome"], "delivered")
-        self.assertEqual(decisions[unrelated_long]["evidence"], "undetermined_multi_statement")
-        self.assertEqual(decisions[unrelated_long]["certainty"], "uncertain")
+        self.assertEqual(decisions[unrelated_long]["outcome"], "omitted")
+        self.assertEqual(decisions[unrelated_long]["reason"], "no_query_term_evidence")
+        self.assertEqual(decisions[unrelated_long]["absence_grounding"], "fact_subject_absent")
+        self.assertEqual(decisions[unrelated_long]["fact_subjects"], ["exhibit", "moon"])
         self.assertFalse(decisions[unrelated_long]["single_statement"])
         self.assertIn(long, _delivered(package))
 
@@ -321,6 +328,83 @@ class ProfileContract(_Store):
         second = self.context("What color is Liora's canoe?")
         self.assertEqual(_delivered(first), _delivered(second), [teal])
         self.assertEqual(_omitted(first), _omitted(second), {orange: "subject_mismatch"})
+
+
+class GroundedAbsenceForThirdPersonStatements(_Store):
+    """Policy 0.5.0 (Gate 2 remediation): the absence of every query content term is a grounded
+    observation for a *third-person* statement when one side names a subject the other side does
+    not mention; it stays uncertainty for a first-person statement (its subject is the speaker)
+    and for a statement that names no subject against a query that names none."""
+
+    def test_third_person_fact_about_another_named_subject_is_declined_without_shared_terms(self):
+        self.put("memory:a", "The office printer is a Brother HL-L2400D. Its toner is TN830.")
+        liora = self.put("memory:b", "Liora's canoe is teal. The hull was inspected on Tuesday.")
+        mara = self.put("memory:c", "Mara's eldest performs on the cello. Their next recital is in November.")
+        package = self.context("What model is the office printer?")
+        omitted = _omitted(package)
+        self.assertEqual(omitted.get(liora), "no_query_term_evidence")
+        self.assertEqual(omitted.get(mara), "no_query_term_evidence")
+        decisions = package["selection"]["decisions"]
+        for ref in (liora, mara):
+            self.assertEqual(decisions[ref]["absence_grounding"], "fact_subject_absent")
+            self.assertEqual(decisions[ref]["certainty"], "grounded")
+            self.assertFalse(decisions[ref]["single_statement"])
+        self.assertEqual(decisions[liora]["fact_subjects"], ["liora"])
+
+    def test_query_about_a_named_subject_declines_a_third_person_fact_naming_nobody(self):
+        canoe = self.put("memory:a", "Liora's canoe is teal. The hull was inspected on Tuesday.")
+        exhibit = self.put("memory:b", "The moon exhibit has a new display case. The museum catalog is updated.")
+        package = self.context("What color is Liora's canoe?")
+        self.assertIn(canoe, _delivered(package))
+        decision = package["selection"]["decisions"][exhibit]
+        self.assertEqual((decision["outcome"], decision["reason"], decision["absence_grounding"]),
+                         ("omitted", "no_query_term_evidence", "query_subject_absent"))
+        self.assertEqual(decision["query_subjects"], ["liora"])
+
+    def test_first_person_statement_without_shared_terms_stays_uncertain(self):
+        # a first-person memory is about its speaker: a paraphrase cannot be excluded (0.3.0 data:
+        # every required LongMemEval and LoCoMo item lost by the rejected rule was first person)
+        mine = self.put("memory:a", "I've been practising a lot lately. The recital is in November, which is soon.")
+        package = self.context("Which instrument does Liora's child play?")
+        decision = package["selection"]["decisions"][mine]
+        self.assertEqual((decision["outcome"], decision["evidence"], decision["certainty"]),
+                         ("delivered", "undetermined_multi_statement", "uncertain"))
+        package = self.context("Which instrument is the one I play?")
+        self.assertIn(mine, _delivered(package))
+        self.assertNotEqual(package["selection"]["decisions"][mine]["outcome"], "omitted")
+
+    def test_no_named_subject_on_either_side_stays_uncertain(self):
+        # neither the query nor the fact names a subject: the fact's words are not evidence for
+        # the query, but nothing grounds the absence either, so it is delivered as uncertain
+        # (the write-time interpreter records no proposition entity for this text)
+        nobody = self.put("memory:a", "Nothing was decided at the meeting. Everyone went home early.")
+        package = self.context("What model is the office printer?")
+        decision = package["selection"]["decisions"][nobody]
+        self.assertEqual((decision["outcome"], decision["evidence"], decision["certainty"]),
+                         ("delivered", "undetermined_multi_statement", "uncertain"))
+
+    def test_persisted_proposition_entity_grounds_the_fact_subject(self):
+        proposition = {"status": "known", "entity": "autumn science festival", "property": "begin", "value": "friday"}
+        verdict = context_selection.qualify(
+            "When does the lunar eclipse committee meet?", "ref-festival",
+            {"route_provenance": [{"route_id": "lexical"}]},
+            "The autumn science festival begins Friday. Registration closes on Wednesday.", proposition)
+        self.assertEqual((verdict["outcome"], verdict["reason"], verdict["absence_grounding"]),
+                         ("omitted", "no_query_term_evidence", "fact_subject_absent"))
+        # the same words with no persisted entity and no possessive name nobody: uncertain
+        verdict = context_selection.qualify(
+            "When does the lunar eclipse committee meet?", "ref-festival",
+            {"route_provenance": [{"route_id": "lexical"}]},
+            "The autumn science festival begins Friday. Registration closes on Wednesday.", None)
+        self.assertEqual(verdict["outcome"], "delivered")
+        self.assertEqual(verdict["evidence"], "undetermined_multi_statement")
+
+    def test_single_statement_absence_records_its_grounding(self):
+        verdict = context_selection.qualify(
+            "What model is the office printer?", "ref-short",
+            {"route_provenance": [{"route_id": "lexical"}]}, "Omar uses VS Code to edit Markdown documents.", None)
+        self.assertEqual((verdict["outcome"], verdict["reason"], verdict["absence_grounding"]),
+                         ("omitted", "no_query_term_evidence", "single_statement"))
 
 
 class SelectorUnit(unittest.TestCase):
