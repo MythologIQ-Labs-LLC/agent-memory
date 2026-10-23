@@ -116,15 +116,24 @@ class ProfileContract(_Store):
                 self.assertNotIn("provenance", item)
 
     def test_no_relevant_evidence_is_an_explicit_assessment_not_a_bare_empty_status(self):
-        self.put("memory:a", "The autumn science festival begins Friday.")
-        self.put("memory:b", "The moon exhibit has a new display case.")
-        package = self.context("What time does the lunar eclipse committee meet?")
+        # Policy 0.5.2: only an observation (a conflict of named subjects) grounds a decline;
+        # facts that merely share no content term are delivered as uncertain (see next block).
+        self.put("memory:a", "Bastien's umbrella is yellow.")
+        self.put("memory:b", "Bastien's umbrella has a bent rib.")
+        package = self.context("What colour is Odile's umbrella?")
         receipts.validate(context_package.PACKAGE_SCHEMA, package)
         self.assertEqual(package["status"], "empty")
         self.assertEqual(_delivered(package), [])
         self.assertEqual(package["selection"]["assessment"], "no_relevant_evidence")
-        self.assertEqual(set(_omitted(package).values()), {"no_query_term_evidence"})
+        self.assertEqual(set(_omitted(package).values()), {"subject_mismatch"})
         self.assertEqual(package["budget"]["used_chars"], 0)
+        # lexical absence alone is not a negative: delivered, labelled, assessment left open
+        festival = self.put("memory:c", "The autumn science festival begins Friday.")
+        package = self.context("What time does the lunar eclipse committee meet?")
+        if festival in package["selection"]["decisions"]:  # admitted on function words only
+            self.assertIn(festival, _delivered(package))
+            self.assertEqual(package["selection"]["decisions"][festival]["evidence"], "undetermined_single_statement")
+            self.assertEqual(package["selection"]["assessment"], "undetermined")
         # distinct from a recall that returned nothing
         nothing = self.context("zxqv")
         self.assertEqual(nothing["status"], "empty")
@@ -163,7 +172,7 @@ class ProfileContract(_Store):
         package = self.context("Which car does our family drive?")
         self.assertIn(mine_too, _delivered(package))
 
-    def test_term_absence_is_grounded_only_for_a_single_statement(self):
+    def test_term_absence_is_never_grounded(self):
         # Policy 0.5.0 briefly grounded term absence for a longer third-person statement whose own
         # subject the query never mentioned; the owner's review (PR #843, 5628673295) showed that a
         # paraphrase shares no token and still answers, so 0.5.1 restored the 0.3.0 contract here.
@@ -172,11 +181,12 @@ class ProfileContract(_Store):
                                     "the eclipse viewing meets afterwards in the same hall.")
         package = self.context("What time does the lunar eclipse committee meet?")
         decisions = package["selection"]["decisions"]
-        # the short fact shares no content term with the question: declined
+        # the short fact shares no content term with the question: uncertain, not declined (0.5.2)
         if short in decisions:
-            self.assertEqual(decisions[short]["outcome"], "omitted")
-            self.assertEqual(decisions[short]["reason"], "no_query_term_evidence")
-            self.assertEqual(decisions[short]["absence_grounding"], "single_statement")
+            self.assertEqual(decisions[short]["outcome"], "delivered")
+            self.assertEqual(decisions[short]["evidence"], "undetermined_single_statement")
+            self.assertEqual(decisions[short]["certainty"], "uncertain")
+            self.assertNotIn("absence_grounding", decisions[short])
         # the longer one matches ("committee", "eclipse", "meet"); now make one that does not
         unrelated_long = self.put("memory:c", "The moon exhibit has a new display case. Tickets are sold at the "
                                               "door. Visitors may bring cameras.")
@@ -392,12 +402,13 @@ class SubjectConflictWithoutSharedTerms(_Store):
         verdict = context_selection.qualify("When does the lunar eclipse committee meet?", "ref-festival", lexical, text, proposition)
         self.assertEqual((verdict["outcome"], verdict["evidence"]), ("delivered", "undetermined_multi_statement"))
 
-    def test_single_statement_absence_records_its_grounding(self):
+    def test_single_statement_absence_is_uncertainty_not_grounding(self):
         verdict = context_selection.qualify(
             "What model is the office printer?", "ref-short",
             {"route_provenance": [{"route_id": "lexical"}]}, "Omar uses VS Code to edit Markdown documents.", None)
-        self.assertEqual((verdict["outcome"], verdict["reason"], verdict["absence_grounding"]),
-                         ("omitted", "no_query_term_evidence", "single_statement"))
+        self.assertEqual((verdict["outcome"], verdict["evidence"], verdict["certainty"]),
+                         ("delivered", "undetermined_single_statement", "uncertain"))
+        self.assertNotIn("absence_grounding", verdict)
 
 
 class SelectorUnit(unittest.TestCase):
@@ -443,7 +454,7 @@ class SelectorUnit(unittest.TestCase):
         self.assertEqual((verdict["outcome"], verdict["evidence"]), ("delivered", "preserved_corroborated_route"))
         lexical_only = {"route_provenance": [{"route_id": "lexical"}], "admission_basis": {"currentness": "current_state"}}
         verdict = context_selection.qualify("lunar eclipse", "ref-1", lexical_only, "unrelated words entirely", None)
-        self.assertEqual((verdict["outcome"], verdict["reason"]), ("omitted", "no_query_term_evidence"))
+        self.assertEqual((verdict["outcome"], verdict["evidence"]), ("delivered", "undetermined_single_statement"))
 
     def test_assessment_tells_absence_from_uncertainty(self):
         a = context_selection.assessment
