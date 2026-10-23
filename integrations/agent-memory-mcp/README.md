@@ -105,3 +105,44 @@ at equal budgets, without breaking scope or losing required evidence.
 
 Until both gates pass, this is a developer preview, not production 1.0.
 No GitHub Actions, merges, tags, accepted benchmark modification or release.
+
+## Gate 2: real MCP evidence usefulness diagnostic (author-visible)
+
+This is a deliberately **small development cohort**, not a blinded holdout,
+qualified answer-generation benchmark or production-readiness score.
+
+The committed test corpus is `quality_cases_dev.json`: 18 fictional records
+with 14 queries (11 answerable by annotated source keys and 3 no-answer).
+The probe calls **real** `memory_remember` and `memory_find` over the same
+stdio MCP protocol proven in Gate 1, then runs an in-memory **SQLite FTS5**
+(`unicode61` / `bm25` / simple OR-term query) over the exact text.
+
+From the repository root in the venv from above:
+
+    python -m unittest discover -s integrations/agent-memory-mcp/tests -p "test_quality_probe.py" -v
+    python integrations/agent-memory-mcp/quality_probe.py --out /tmp/am-gate2-dev.json
+
+The output contains per-question returned keys and scored source-key evidence,
+not retrieved plaintext or made-up answers. It reports:
+
+- Complete required-source coverage, missing gold evidence and irrelevant items.
+- Explicit forbidden-key incidence and empty context on no-answer questions.
+- Query p50/p95 for the actual MCP roundtrip versus indexed FTS5 search.
+
+**Interpretation:** The source labels are development annotations, not proof
+that the text entails the answer. Empty context on an unanswerable question
+is a context proxy, **not** proof an agent abstained; neither arm generates
+answers in this probe. FTS5 doesn't pay Agent Memory governance/ingestion
+costs, and its context text/token bounds are not identical, so timing and
+cost are descriptive, not apples-to-apples. These facts are stated in the
+JSON output rather than silently buried in a benchmark claim.
+
+After executing this transparent diagnostic, freeze candidate changes and
+run a **separate, previously unrevealed task set** with a real answer-generating
+agent harness, blinded gold answers and an equal-capacity indexed baseline.
+That later experiment must evaluate actual correct answers and justified
+abstention, not merely whether a source identifier appeared.
+
+Do not merge this development probe into the frozen baseline or interpret
+any gain as #819 resolved. Prefer fixing demonstrated correctness defects
+over adding more evaluation plumbing.
