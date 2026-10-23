@@ -1,0 +1,6 @@
+ERROR: test_forget_reports_the_committed_operation_and_receipt (test_bridge.BridgeTests.test_forget_reports_the_committed_operation_and_receipt)
+KeyError: 'operation'
+FAIL: test_forget_commit_of_another_action_is_not_reported_as_forgotten (test_bridge.BridgeTests.test_forget_commit_of_another_action_is_not_reported_as_forgotten)
+AssertionError: True is not false
+Ran 21 tests in 0.012s
+FAILED (failures=1, errors=1)

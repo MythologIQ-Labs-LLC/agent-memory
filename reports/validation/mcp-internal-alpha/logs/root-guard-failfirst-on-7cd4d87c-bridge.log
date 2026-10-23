@@ -1,0 +1,83 @@
+...........F..F..F..............xx...............Tool 'memory_find' failed: 'Error executing tool memory_find: Invalid memory tool input or delivery limit'
+.Tool 'memory_find' failed: 'Error executing tool memory_find: Agent Memory host configuration is missing or unsafe'
+.execute program '/home/user/eval/alpha/venv/bin/python': <_UnixSubprocessTransport pid=800 running stdin=<_UnixWritePipeTransport fd=7 idle bufsize=0> stdout=<_UnixReadPipeTransport fd=8 polling>>
+<_UnixReadPipeTransport fd=8 polling> was closed by peer
+<_UnixSubprocessTransport pid=800 running stdin=<_UnixWritePipeTransport closed fd=7 closed> stdout=<_UnixReadPipeTransport closed fd=8 closed>> exited with return code 0
+execute program '/home/user/eval/alpha/venv/bin/python': <_UnixSubprocessTransport pid=803 running stdin=<_UnixWritePipeTransport fd=7 idle bufsize=0> stdout=<_UnixReadPipeTransport fd=8 polling>>
+<_UnixReadPipeTransport fd=8 polling> was closed by peer
+<_UnixSubprocessTransport pid=803 running stdin=<_UnixWritePipeTransport closed fd=7 closed> stdout=<_UnixReadPipeTransport closed fd=8 closed>> exited with return code 0
+......E......
+======================================================================
+ERROR: test_symlinked_host_root_ancestor_is_a_tool_error_without_writing (test_real_mcp.ActualMcpConsumerLoop.test_symlinked_host_root_ancestor_is_a_tool_error_without_writing)
+----------------------------------------------------------------------
+  + Exception Group Traceback (most recent call last):
+  |   File "/usr/lib/python3.12/unittest/async_case.py", line 90, in _callTestMethod
+  |     if self._callMaybeAsync(method) is not None:
+  |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |   File "/usr/lib/python3.12/unittest/async_case.py", line 112, in _callMaybeAsync
+  |     return self._asyncioRunner.run(
+  |            ^^^^^^^^^^^^^^^^^^^^^^^^
+  |   File "/usr/lib/python3.12/asyncio/runners.py", line 118, in run
+  |     return self._loop.run_until_complete(task)
+  |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |   File "/usr/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+  |     return future.result()
+  |            ^^^^^^^^^^^^^^^
+  |   File "/tmp/alpha-failfirst/agent-memory-mcp/tests/test_real_mcp.py", line 327, in test_symlinked_host_root_ancestor_is_a_tool_error_without_writing
+  |     async with Client(module.mcp, raise_exceptions=True) as client:
+  |   File "/home/user/eval/alpha/venv/lib/python3.12/site-packages/mcp/client/client.py", line 480, in __aexit__
+  |     await self._exit_stack.__aexit__(exc_type, exc_val, exc_tb)
+  |   File "/usr/lib/python3.12/contextlib.py", line 754, in __aexit__
+  |     raise exc_details[1]
+  |   File "/usr/lib/python3.12/contextlib.py", line 737, in __aexit__
+  |     cb_suppress = await cb(*exc_details)
+  |                   ^^^^^^^^^^^^^^^^^^^^^^
+  |   File "/home/user/eval/alpha/venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 847, in __aexit__
+  |     raise BaseExceptionGroup(
+  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Exception Group Traceback (most recent call last):
+    |   File "/usr/lib/python3.12/contextlib.py", line 737, in __aexit__
+    |     cb_suppress = await cb(*exc_details)
+    |                   ^^^^^^^^^^^^^^^^^^^^^^
+    |   File "/home/user/eval/alpha/venv/lib/python3.12/site-packages/mcp/client/session.py", line 514, in __aexit__
+    |     result = await self._task_group.__aexit__(exc_type, exc_val, exc_tb)
+    |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "/home/user/eval/alpha/venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 847, in __aexit__
+    |     raise BaseExceptionGroup(
+    | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+    +-+---------------- 1 ----------------
+      | Traceback (most recent call last):
+      |   File "/tmp/alpha-failfirst/agent-memory-mcp/tests/test_real_mcp.py", line 332, in test_symlinked_host_root_ancestor_is_a_tool_error_without_writing
+      |     self.assertTrue(result.is_error, result)
+      | AssertionError: False is not true : meta={'io.modelcontextprotocol/serverInfo': {'name': 'Agent Memory Local', 'version': ''}} content=[TextContent(type='text', text='{\n  "committed": true,\n  "key": "memory:redirected",\n  "fact_ref": "ref-0004",\n  "stage": "commit",\n  "outcome": "allow_with_ledger",\n  "refusal": null,\n  "authoritative_answer": false\n}', annotations=None, meta=None)] structured_content={'committed': True, 'key': 'memory:redirected', 'fact_ref': 'ref-0004', 'stage': 'commit', 'outcome': 'allow_with_ledger', 'refusal': None, 'authoritative_answer': False} is_error=False result_type='complete'
+      +------------------------------------
+
+======================================================================
+FAIL: test_parent_traversal_rejected_even_in_absolute_store_path (test_bridge.BridgeTests.test_parent_traversal_rejected_even_in_absolute_store_path)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/alpha-failfirst/agent-memory-mcp/tests/test_bridge.py", line 331, in test_parent_traversal_rejected_even_in_absolute_store_path
+    with self.assertRaisesRegex(ValueError, "parent traversal"):
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_reparse_attribute_rejected_without_is_junction (test_bridge.BridgeTests.test_reparse_attribute_rejected_without_is_junction)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/alpha-failfirst/agent-memory-mcp/tests/test_bridge.py", line 319, in test_reparse_attribute_rejected_without_is_junction
+    with self.assertRaisesRegex(ValueError, "junction"):
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_symlinked_parent_rejected_when_final_store_root_does_not_exist (test_bridge.BridgeTests.test_symlinked_parent_rejected_when_final_store_root_does_not_exist)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/alpha-failfirst/agent-memory-mcp/tests/test_bridge.py", line 294, in test_symlinked_parent_rejected_when_final_store_root_does_not_exist
+    with self.assertRaisesRegex(ValueError, "symlink"):
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 64 tests in 2.427s
+
+FAILED (failures=3, errors=1, expected failures=2)

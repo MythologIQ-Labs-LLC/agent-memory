@@ -1,0 +1,141 @@
+repo head 7cd4d87c28d12571eff8ea4485d5c68a3420fecf tracked tree clean: True
+PASS A1 exactly the four alpha tools are advertised
+PASS A1 no tool exposes tenant/scope/actor/root or an approval/evidence/permanence parameter
+PASS A1 memory_forget takes exactly one argument: key
+PASS A1 save committed: memory:studio:kiln_cone
+PASS A1 save committed: memory:studio:glaze_supplier
+PASS A1 get returns the exact text and fact_ref
+PASS A1 find surfaces the memory for a natural-language question
+PASS A2 a fresh server process (new pid)
+PASS A2 the same fact is retrieved after restart
+PASS A3 no grant: committed=false, status host_authorization_required, not permanent
+PASS A3 no grant: every store file is byte-identical afterwards
+PASS A3 no grant: the memory is still found with its fact_ref
+PASS A4 wrong key: committed=false, host_authorization_required
+PASS A4 wrong key: every store file is byte-identical afterwards
+PASS A4 wrong key: the kiln memory is still found
+PASS A4 the granted key itself is untouched until forget is called on it
+PASS A5 authorized: committed=true, status forgotten, outcome pruning-committed, not permanent
+PASS A5 get: the forgotten key is not_found_or_unavailable, no content
+PASS A5 find: the forgotten content is not delivered
+PASS A5 forgetting an already forgotten key does not commit again
+PASS A5 the other memory in the scope is unaffected
+PASS A6 after restart: forgotten key not_found_or_unavailable, no content
+PASS A6 after restart: find never delivers the forgotten content
+PASS A6 after restart: the remaining memory is still findable
+PASS A7 other project: cannot read the key
+PASS A7 other project: cannot find the content
+PASS A7 other project: a granted forget of another project's key does not commit
+Tool 'memory_get' raised an unexpected exception
+Traceback (most recent call last):
+  File "/home/user/eval/alpha/venv/lib/python3.12/site-packages/mcp/server/mcpserver/tools/base.py", line 179, in run
+    result = await self.fn_metadata.call_fn(self.fn, self.is_async, validated, pass_directly)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/alpha/venv/lib/python3.12/site-packages/mcp/server/mcpserver/utilities/func_metadata.py", line 164, in call_fn
+    return await anyio.to_thread.run_sync(functools.partial(fn, **kwargs))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/alpha/venv/lib/python3.12/site-packages/anyio/to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/alpha/venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2706, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/home/user/eval/alpha/venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 1100, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/alpha/agent-memory/integrations/agent-memory-mcp/server.py", line 86, in memory_get
+    return _tool_call(lambda: _bridge().get(key))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/alpha/agent-memory/integrations/agent-memory-mcp/server.py", line 56, in _tool_call
+    return action()
+           ^^^^^^^^
+  File "/home/user/eval/alpha/agent-memory/integrations/agent-memory-mcp/server.py", line 86, in <lambda>
+    return _tool_call(lambda: _bridge().get(key))
+                              ^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/alpha/agent-memory/integrations/agent-memory-mcp/bridge.py", line 251, in get
+    with self._open() as memory:
+  File "/usr/lib/python3.12/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/home/user/eval/alpha/agent-memory/reference/agentmem_ref/api/host_activation.py", line 34, in open_qualified_memory
+    memory = AgentMemory.open(
+             ^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/alpha/agent-memory/reference/agentmem_ref/api/surface.py", line 617, in open
+    raise RuntimeRecoveryError(
+agentmem_ref.runtime.restart_runtime.RuntimeRecoveryError: requested tenant 'tenant:stranger' does not match recovered runtime tenant 'tenant:alpha'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/user/eval/alpha/venv/lib/python3.12/site-packages/mcp/server/mcpserver/server.py", line 442, in _handle_call_tool
+    return await self.call_tool(params.name, params.arguments or {}, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/alpha/venv/lib/python3.12/site-packages/mcp/server/mcpserver/server.py", line 548, in call_tool
+    return await self._tool_manager.call_tool(name, arguments, context, convert_result=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/alpha/venv/lib/python3.12/site-packages/mcp/server/mcpserver/tools/tool_manager.py", line 87, in call_tool
+    return await tool.run(arguments, context, convert_result=convert_result)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/alpha/venv/lib/python3.12/site-packages/mcp/server/mcpserver/tools/base.py", line 213, in run
+    raise UnexpectedToolError(f"Error executing tool {self.name}") from exc
+mcp.server.mcpserver.exceptions.UnexpectedToolError: Error executing tool memory_get
+PASS A7 other tenant: cannot read the key (error or empty, never the content)
+Tool 'memory_forget' raised an unexpected exception
+Traceback (most recent call last):
+  File "/home/user/eval/alpha/venv/lib/python3.12/site-packages/mcp/server/mcpserver/tools/base.py", line 179, in run
+    result = await self.fn_metadata.call_fn(self.fn, self.is_async, validated, pass_directly)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/alpha/venv/lib/python3.12/site-packages/mcp/server/mcpserver/utilities/func_metadata.py", line 164, in call_fn
+    return await anyio.to_thread.run_sync(functools.partial(fn, **kwargs))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/alpha/venv/lib/python3.12/site-packages/anyio/to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/alpha/venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2706, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/home/user/eval/alpha/venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 1100, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/alpha/agent-memory/integrations/agent-memory-mcp/server.py", line 116, in memory_forget
+    return _tool_call(lambda: _bridge().forget(key))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/alpha/agent-memory/integrations/agent-memory-mcp/server.py", line 56, in _tool_call
+    return action()
+           ^^^^^^^^
+  File "/home/user/eval/alpha/agent-memory/integrations/agent-memory-mcp/server.py", line 116, in <lambda>
+    return _tool_call(lambda: _bridge().forget(key))
+                              ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/alpha/agent-memory/integrations/agent-memory-mcp/bridge.py", line 124, in forget
+    with self._open() as memory:
+  File "/usr/lib/python3.12/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/home/user/eval/alpha/agent-memory/reference/agentmem_ref/api/host_activation.py", line 34, in open_qualified_memory
+    memory = AgentMemory.open(
+             ^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/alpha/agent-memory/reference/agentmem_ref/api/surface.py", line 617, in open
+    raise RuntimeRecoveryError(
+agentmem_ref.runtime.restart_runtime.RuntimeRecoveryError: requested tenant 'tenant:stranger' does not match recovered runtime tenant 'tenant:alpha'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/user/eval/alpha/venv/lib/python3.12/site-packages/mcp/server/mcpserver/server.py", line 442, in _handle_call_tool
+    return await self.call_tool(params.name, params.arguments or {}, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/alpha/venv/lib/python3.12/site-packages/mcp/server/mcpserver/server.py", line 548, in call_tool
+    return await self._tool_manager.call_tool(name, arguments, context, convert_result=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/alpha/venv/lib/python3.12/site-packages/mcp/server/mcpserver/tools/tool_manager.py", line 87, in call_tool
+    return await tool.run(arguments, context, convert_result=convert_result)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/alpha/venv/lib/python3.12/site-packages/mcp/server/mcpserver/tools/base.py", line 213, in run
+    raise UnexpectedToolError(f"Error executing tool {self.name}") from exc
+mcp.server.mcpserver.exceptions.UnexpectedToolError: Error executing tool memory_forget
+PASS A7 other tenant: a granted forget does not commit (error or committed=false)
+PASS A7 the owning project still has its memory after the foreign forget attempts
+PASS final: no server process left running
+transcript alpha-workflow-7cd4d87c.json sha256 2e217612efb1d0bce16d5e0ae3b9b58763e080965da05abb0043739860c0a73a
+
+31/31 checks passed
