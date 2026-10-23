@@ -1,0 +1,152 @@
+test_conflicting_named_subject_with_a_shared_term_is_still_declined (integrations.agent-memory-mcp.tests.test_gate2_review_generalization.GroundedExclusionsStay.test_conflicting_named_subject_with_a_shared_term_is_still_declined) ... ok
+test_conflicting_named_subject_without_a_shared_term_is_still_declined (integrations.agent-memory-mcp.tests.test_gate2_review_generalization.GroundedExclusionsStay.test_conflicting_named_subject_without_a_shared_term_is_still_declined) ... ok
+test_query_with_only_function_words_matched_still_has_no_negative_certificate (integrations.agent-memory-mcp.tests.test_gate2_review_generalization.GroundedExclusionsStay.test_query_with_only_function_words_matched_still_has_no_negative_certificate) ... ok
+test_both_harnesses_use_the_same_full_delivery_function (integrations.agent-memory-mcp.tests.test_gate2_review_generalization.OneFullDeliveryContract.test_both_harnesses_use_the_same_full_delivery_function) ... ERROR
+test_full_delivery_requires_resolved_state_exact_text_and_attribution (integrations.agent-memory-mcp.tests.test_gate2_review_generalization.OneFullDeliveryContract.test_full_delivery_requires_resolved_state_exact_text_and_attribution) ... ERROR
+test_scorer_requires_the_fully_delivered_keys (integrations.agent-memory-mcp.tests.test_gate2_review_generalization.OneFullDeliveryContract.test_scorer_requires_the_fully_delivered_keys) ... FAIL
+test_no_returned_fact_is_declined_on_lexical_absence_alone (integrations.agent-memory-mcp.tests.test_gate2_review_generalization.SingleStatementParaphrase.test_no_returned_fact_is_declined_on_lexical_absence_alone) ... 
+  test_no_returned_fact_is_declined_on_lexical_absence_alone (integrations.agent-memory-mcp.tests.test_gate2_review_generalization.SingleStatementParaphrase.test_no_returned_fact_is_declined_on_lexical_absence_alone) (query='Who repaired the bicycle?') ... FAIL
+  test_no_returned_fact_is_declined_on_lexical_absence_alone (integrations.agent-memory-mcp.tests.test_gate2_review_generalization.SingleStatementParaphrase.test_no_returned_fact_is_declined_on_lexical_absence_alone) (query='Where is my automobile parked?') ... FAIL
+  test_no_returned_fact_is_declined_on_lexical_absence_alone (integrations.agent-memory-mcp.tests.test_gate2_review_generalization.SingleStatementParaphrase.test_no_returned_fact_is_declined_on_lexical_absence_alone) (query='What time does the ferry depart?') ... FAIL
+test_no_shared_term_single_statement_is_delivered_uncertain (integrations.agent-memory-mcp.tests.test_gate2_review_generalization.SingleStatementParaphrase.test_no_shared_term_single_statement_is_delivered_uncertain) ... 
+  test_no_shared_term_single_statement_is_delivered_uncertain (integrations.agent-memory-mcp.tests.test_gate2_review_generalization.SingleStatementParaphrase.test_no_shared_term_single_statement_is_delivered_uncertain) (query='Who repaired the bicycle?') ... FAIL
+  test_no_shared_term_single_statement_is_delivered_uncertain (integrations.agent-memory-mcp.tests.test_gate2_review_generalization.SingleStatementParaphrase.test_no_shared_term_single_statement_is_delivered_uncertain) (query='Where is my automobile parked?') ... FAIL
+  test_no_shared_term_single_statement_is_delivered_uncertain (integrations.agent-memory-mcp.tests.test_gate2_review_generalization.SingleStatementParaphrase.test_no_shared_term_single_statement_is_delivered_uncertain) (query='What time does the ferry depart?') ... FAIL
+test_aggregate_reports_strict_and_proxy_side_by_side (integrations.agent-memory-mcp.tests.test_gate2_review_generalization.StrictAnswerMeasure.test_aggregate_reports_strict_and_proxy_side_by_side) ... ERROR
+test_article_and_punctuation_normalisation_follow_squad (integrations.agent-memory-mcp.tests.test_gate2_review_generalization.StrictAnswerMeasure.test_article_and_punctuation_normalisation_follow_squad) ... ERROR
+test_hedged_answer_is_not_an_exact_match (integrations.agent-memory-mcp.tests.test_gate2_review_generalization.StrictAnswerMeasure.test_hedged_answer_is_not_an_exact_match) ... ERROR
+test_partial_span_gets_partial_f1 (integrations.agent-memory-mcp.tests.test_gate2_review_generalization.StrictAnswerMeasure.test_partial_span_gets_partial_f1) ... ERROR
+test_wrong_location_mentioning_the_gold_is_not_an_exact_match (integrations.agent-memory-mcp.tests.test_gate2_review_generalization.StrictAnswerMeasure.test_wrong_location_mentioning_the_gold_is_not_an_exact_match) ... ERROR
+
+======================================================================
+ERROR: test_both_harnesses_use_the_same_full_delivery_function (integrations.agent-memory-mcp.tests.test_gate2_review_generalization.OneFullDeliveryContract.test_both_harnesses_use_the_same_full_delivery_function)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/g2/wt-993ba1c4/integrations/agent-memory-mcp/tests/test_gate2_review_generalization.py", line 134, in test_both_harnesses_use_the_same_full_delivery_function
+    self.assertIs(task_eval.quality.fully_delivered_keys.__code__, quality.fully_delivered_keys.__code__)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'am_mcp_quality_probe' has no attribute 'fully_delivered_keys'
+
+======================================================================
+ERROR: test_full_delivery_requires_resolved_state_exact_text_and_attribution (integrations.agent-memory-mcp.tests.test_gate2_review_generalization.OneFullDeliveryContract.test_full_delivery_requires_resolved_state_exact_text_and_attribution)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/g2/wt-993ba1c4/integrations/agent-memory-mcp/tests/test_gate2_review_generalization.py", line 144, in test_full_delivery_requires_resolved_state_exact_text_and_attribution
+    self.assertEqual(quality.fully_delivered_keys(evidence, seeded), ["memory:a"])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'am_generalization_quality_probe' has no attribute 'fully_delivered_keys'
+
+======================================================================
+ERROR: test_aggregate_reports_strict_and_proxy_side_by_side (integrations.agent-memory-mcp.tests.test_gate2_review_generalization.StrictAnswerMeasure.test_aggregate_reports_strict_and_proxy_side_by_side)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/g2/wt-993ba1c4/integrations/agent-memory-mcp/tests/test_gate2_review_generalization.py", line 123, in test_aggregate_reports_strict_and_proxy_side_by_side
+    self.assertEqual(summary["answerable_exact_match"], 1)
+                     ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'answerable_exact_match'
+
+======================================================================
+ERROR: test_article_and_punctuation_normalisation_follow_squad (integrations.agent-memory-mcp.tests.test_gate2_review_generalization.StrictAnswerMeasure.test_article_and_punctuation_normalisation_follow_squad)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/g2/wt-993ba1c4/integrations/agent-memory-mcp/tests/test_gate2_review_generalization.py", line 108, in test_article_and_punctuation_normalisation_follow_squad
+    self.assertTrue(verdict["exact_match"])
+                    ~~~~~~~^^^^^^^^^^^^^^^
+KeyError: 'exact_match'
+
+======================================================================
+ERROR: test_hedged_answer_is_not_an_exact_match (integrations.agent-memory-mcp.tests.test_gate2_review_generalization.StrictAnswerMeasure.test_hedged_answer_is_not_an_exact_match)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/g2/wt-993ba1c4/integrations/agent-memory-mcp/tests/test_gate2_review_generalization.py", line 99, in test_hedged_answer_is_not_an_exact_match
+    self.assertFalse(verdict["exact_match"])
+                     ~~~~~~~^^^^^^^^^^^^^^^
+KeyError: 'exact_match'
+
+======================================================================
+ERROR: test_partial_span_gets_partial_f1 (integrations.agent-memory-mcp.tests.test_gate2_review_generalization.StrictAnswerMeasure.test_partial_span_gets_partial_f1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/g2/wt-993ba1c4/integrations/agent-memory-mcp/tests/test_gate2_review_generalization.py", line 113, in test_partial_span_gets_partial_f1
+    self.assertFalse(verdict["exact_match"])
+                     ~~~~~~~^^^^^^^^^^^^^^^
+KeyError: 'exact_match'
+
+======================================================================
+ERROR: test_wrong_location_mentioning_the_gold_is_not_an_exact_match (integrations.agent-memory-mcp.tests.test_gate2_review_generalization.StrictAnswerMeasure.test_wrong_location_mentioning_the_gold_is_not_an_exact_match)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/g2/wt-993ba1c4/integrations/agent-memory-mcp/tests/test_gate2_review_generalization.py", line 104, in test_wrong_location_mentioning_the_gold_is_not_an_exact_match
+    self.assertFalse(verdict["exact_match"])
+                     ~~~~~~~^^^^^^^^^^^^^^^
+KeyError: 'exact_match'
+
+======================================================================
+FAIL: test_scorer_requires_the_fully_delivered_keys (integrations.agent-memory-mcp.tests.test_gate2_review_generalization.OneFullDeliveryContract.test_scorer_requires_the_fully_delivered_keys)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/g2/wt-993ba1c4/integrations/agent-memory-mcp/tests/test_gate2_review_generalization.py", line 130, in test_scorer_requires_the_fully_delivered_keys
+    with self.assertRaises(TypeError):
+AssertionError: TypeError not raised
+
+======================================================================
+FAIL: test_no_returned_fact_is_declined_on_lexical_absence_alone (integrations.agent-memory-mcp.tests.test_gate2_review_generalization.SingleStatementParaphrase.test_no_returned_fact_is_declined_on_lexical_absence_alone) (query='Who repaired the bicycle?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/g2/wt-993ba1c4/integrations/agent-memory-mcp/tests/test_gate2_review_generalization.py", line 72, in test_no_returned_fact_is_declined_on_lexical_absence_alone
+    self.assertNotEqual(_verdict(query, text).get("reason"), "no_query_term_evidence")
+AssertionError: 'no_query_term_evidence' == 'no_query_term_evidence'
+
+======================================================================
+FAIL: test_no_returned_fact_is_declined_on_lexical_absence_alone (integrations.agent-memory-mcp.tests.test_gate2_review_generalization.SingleStatementParaphrase.test_no_returned_fact_is_declined_on_lexical_absence_alone) (query='Where is my automobile parked?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/g2/wt-993ba1c4/integrations/agent-memory-mcp/tests/test_gate2_review_generalization.py", line 72, in test_no_returned_fact_is_declined_on_lexical_absence_alone
+    self.assertNotEqual(_verdict(query, text).get("reason"), "no_query_term_evidence")
+AssertionError: 'no_query_term_evidence' == 'no_query_term_evidence'
+
+======================================================================
+FAIL: test_no_returned_fact_is_declined_on_lexical_absence_alone (integrations.agent-memory-mcp.tests.test_gate2_review_generalization.SingleStatementParaphrase.test_no_returned_fact_is_declined_on_lexical_absence_alone) (query='What time does the ferry depart?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/g2/wt-993ba1c4/integrations/agent-memory-mcp/tests/test_gate2_review_generalization.py", line 72, in test_no_returned_fact_is_declined_on_lexical_absence_alone
+    self.assertNotEqual(_verdict(query, text).get("reason"), "no_query_term_evidence")
+AssertionError: 'no_query_term_evidence' == 'no_query_term_evidence'
+
+======================================================================
+FAIL: test_no_shared_term_single_statement_is_delivered_uncertain (integrations.agent-memory-mcp.tests.test_gate2_review_generalization.SingleStatementParaphrase.test_no_shared_term_single_statement_is_delivered_uncertain) (query='Who repaired the bicycle?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/g2/wt-993ba1c4/integrations/agent-memory-mcp/tests/test_gate2_review_generalization.py", line 66, in test_no_shared_term_single_statement_is_delivered_uncertain
+    self.assertEqual(verdict["outcome"], "delivered", verdict)
+AssertionError: 'omitted' != 'delivered'
+- omitted
++ delivered
+ : {'fact_ref': 'ref', 'routes': ['lexical'], 'matched_terms': [], 'single_statement': True, 'outcome': 'omitted', 'reason': 'no_query_term_evidence', 'certainty': 'grounded', 'absence_grounding': 'single_statement'}
+
+======================================================================
+FAIL: test_no_shared_term_single_statement_is_delivered_uncertain (integrations.agent-memory-mcp.tests.test_gate2_review_generalization.SingleStatementParaphrase.test_no_shared_term_single_statement_is_delivered_uncertain) (query='Where is my automobile parked?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/g2/wt-993ba1c4/integrations/agent-memory-mcp/tests/test_gate2_review_generalization.py", line 66, in test_no_shared_term_single_statement_is_delivered_uncertain
+    self.assertEqual(verdict["outcome"], "delivered", verdict)
+AssertionError: 'omitted' != 'delivered'
+- omitted
++ delivered
+ : {'fact_ref': 'ref', 'routes': ['lexical'], 'matched_terms': [], 'single_statement': True, 'outcome': 'omitted', 'reason': 'no_query_term_evidence', 'certainty': 'grounded', 'absence_grounding': 'single_statement'}
+
+======================================================================
+FAIL: test_no_shared_term_single_statement_is_delivered_uncertain (integrations.agent-memory-mcp.tests.test_gate2_review_generalization.SingleStatementParaphrase.test_no_shared_term_single_statement_is_delivered_uncertain) (query='What time does the ferry depart?')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/g2/wt-993ba1c4/integrations/agent-memory-mcp/tests/test_gate2_review_generalization.py", line 66, in test_no_shared_term_single_statement_is_delivered_uncertain
+    self.assertEqual(verdict["outcome"], "delivered", verdict)
+AssertionError: 'omitted' != 'delivered'
+- omitted
++ delivered
+ : {'fact_ref': 'ref', 'routes': ['lexical'], 'matched_terms': [], 'single_statement': True, 'outcome': 'omitted', 'reason': 'no_query_term_evidence', 'certainty': 'grounded', 'absence_grounding': 'single_statement'}
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.003s
+
+FAILED (failures=7, errors=7)

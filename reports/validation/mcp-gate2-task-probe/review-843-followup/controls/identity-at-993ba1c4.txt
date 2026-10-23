@@ -1,0 +1,3 @@
+head 993ba1c4ab5b8e253eb6cad1e2fdce46709ba238 dirty=1 selector_blob=57bfb3fc task_eval_blob=6538dccb test_blob=508fc96f
+agentmem_ref from /home/user/eval/g2/wt-993ba1c4/reference/agentmem_ref/__init__.py
+rc=0

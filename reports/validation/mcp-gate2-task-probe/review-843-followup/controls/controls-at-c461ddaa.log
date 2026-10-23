@@ -1,0 +1,70 @@
+test_truncated_returned_key_does_not_count_as_complete_evidence (integrations.agent-memory-mcp.tests._review_controls.AnswerLevelEvidenceCompleteness.test_truncated_returned_key_does_not_count_as_complete_evidence) ... FAIL
+test_explicit_negation_cannot_be_scored_correct (integrations.agent-memory-mcp.tests._review_controls.AnswerScoreValidity.test_explicit_negation_cannot_be_scored_correct) ... FAIL
+test_gold_word_inside_another_word_cannot_be_scored_correct (integrations.agent-memory-mcp.tests._review_controls.AnswerScoreValidity.test_gold_word_inside_another_word_cannot_be_scored_correct) ... FAIL
+test_missing_answer_is_not_correct_on_answerable_task (integrations.agent-memory-mcp.tests._review_controls.AnswerScoreValidity.test_missing_answer_is_not_correct_on_answerable_task) ... ok
+test_named_third_person_fact_has_implicit_heating_answer (integrations.agent-memory-mcp.tests._review_controls.SelectorParaphraseNonExclusion.test_named_third_person_fact_has_implicit_heating_answer) ... FAIL
+test_named_third_person_fact_has_implicit_landing_answer (integrations.agent-memory-mcp.tests._review_controls.SelectorParaphraseNonExclusion.test_named_third_person_fact_has_implicit_landing_answer) ... FAIL
+test_unavailable_is_not_a_negative_evidence_verdict (integrations.agent-memory-mcp.tests._review_controls.SelectorParaphraseNonExclusion.test_unavailable_is_not_a_negative_evidence_verdict) ... ok
+
+======================================================================
+FAIL: test_truncated_returned_key_does_not_count_as_complete_evidence (integrations.agent-memory-mcp.tests._review_controls.AnswerLevelEvidenceCompleteness.test_truncated_returned_key_does_not_count_as_complete_evidence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/async_case.py", line 90, in _callTestMethod
+    if self._callMaybeAsync(method) is not None:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/async_case.py", line 112, in _callMaybeAsync
+    return self._asyncioRunner.run(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/user/eval/g2/wt-c461ddaa/integrations/agent-memory-mcp/tests/_review_controls.py", line 150, in test_truncated_returned_key_does_not_count_as_complete_evidence
+    self.assertFalse(
+AssertionError: True is not false : task_eval credited truncated MCP content because the required source key appeared
+
+======================================================================
+FAIL: test_explicit_negation_cannot_be_scored_correct (integrations.agent-memory-mcp.tests._review_controls.AnswerScoreValidity.test_explicit_negation_cannot_be_scored_correct)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/g2/wt-c461ddaa/integrations/agent-memory-mcp/tests/_review_controls.py", line 86, in test_explicit_negation_cannot_be_scored_correct
+    self.assertIsNot(
+AssertionError: unexpectedly identical: True : The gold phrase is explicitly negated, but a substring judge called it correct.
+
+======================================================================
+FAIL: test_gold_word_inside_another_word_cannot_be_scored_correct (integrations.agent-memory-mcp.tests._review_controls.AnswerScoreValidity.test_gold_word_inside_another_word_cannot_be_scored_correct)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/g2/wt-c461ddaa/integrations/agent-memory-mcp/tests/_review_controls.py", line 93, in test_gold_word_inside_another_word_cannot_be_scored_correct
+    self.assertIsNot(
+AssertionError: unexpectedly identical: True : Substring containment is not a word-level match, much less answer correctness.
+
+======================================================================
+FAIL: test_named_third_person_fact_has_implicit_heating_answer (integrations.agent-memory-mcp.tests._review_controls.SelectorParaphraseNonExclusion.test_named_third_person_fact_has_implicit_heating_answer)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/g2/wt-c461ddaa/integrations/agent-memory-mcp/tests/_review_controls.py", line 65, in test_named_third_person_fact_has_implicit_heating_answer
+    self.assertEqual(
+AssertionError: 'omitted' != 'delivered'
+- omitted
++ delivered
+ : A third-party possessive is not a semantic irrelevance certificate: {'fact_ref': 'ref-fuel', 'routes': ['lexical'], 'matched_terms': [], 'single_statement': False, 'query_subjects': [], 'fact_subjects': ['isa'], 'outcome': 'omitted', 'reason': 'no_query_term_evidence', 'certainty': 'grounded', 'absence_grounding': 'fact_subject_absent'}
+
+======================================================================
+FAIL: test_named_third_person_fact_has_implicit_landing_answer (integrations.agent-memory-mcp.tests._review_controls.SelectorParaphraseNonExclusion.test_named_third_person_fact_has_implicit_landing_answer)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/eval/g2/wt-c461ddaa/integrations/agent-memory-mcp/tests/_review_controls.py", line 51, in test_named_third_person_fact_has_implicit_landing_answer
+    self.assertEqual(
+AssertionError: 'omitted' != 'delivered'
+- omitted
++ delivered
+ : Do not classify paraphrase absence as proved irrelevance: {'fact_ref': 'ref-landing', 'routes': ['lexical'], 'matched_terms': [], 'single_statement': False, 'query_subjects': [], 'fact_subjects': ['nia'], 'outcome': 'omitted', 'reason': 'no_query_term_evidence', 'certainty': 'grounded', 'absence_grounding': 'fact_subject_absent'}
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.008s
+
+FAILED (failures=5)
