@@ -232,6 +232,12 @@ async def run(cases: dict, k: int = 5, *, selectivity: bool = False) -> dict:
                         for o in (content.get("unavailable") or []) if o.get("state") == "omitted_selection"
                     ],
                     "mcp_answer_generated": content.get("answer_generated"),
+                    # Stage C assessment is host-visible metadata, not a generated
+                    # answer or a qualified correctness/entailment determination.
+                    "mcp_answerability_verified": content.get("answerability_verified"),
+                    "mcp_evidence_assessment": content.get("evidence_assessment"),
+                    "mcp_evidence_assessment_reason": content.get("evidence_assessment_reason"),
+                    "mcp_evidence_count": content.get("evidence_count"),
                 })
                 if content.get("answer_generated") is not False:
                     raise AssertionError("MCP provider must not claim to answer questions")

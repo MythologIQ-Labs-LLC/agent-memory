@@ -123,6 +123,22 @@ its reason is `answer_entailment_not_checked`. The existing
 `answerability_verified=false` remains unchanged. An agent or host must not treat
 `unverified` as permission to answer.
 
+The separate populated-store acceptance gate reuses the existing 18-record,
+14-question `quality_cases_dev.json` cohort: 11 answerable controls and
+three unanswerable controls whose retrieved context contains distractors.
+It records the answerability metadata alongside full-evidence coverage and
+**fails unless** the unanswerable controls are marked insufficient while all
+11 required sources are still delivered. Labels are joined after MCP calls,
+not passed to the tool. From the repo root, in the qualified venv, run:
+
+    python -m unittest discover -s integrations/agent-memory-mcp/tests -p "test_stage_c_gate.py" -v
+    python integrations/agent-memory-mcp/stage_c_gate.py --out /tmp/am-stage-c.json
+
+A nonzero status from the second command is an expected **Stage C BLOCKED**
+signal until detection works on a populated store; it is not evidence that
+the earlier Gate 1 or Stage A/B lifecycle operations regressed. No measured
+result from this new gate is claimed until a fresh real-MCP run is attached.
+
 This guard is intentionally narrow. Unrelated, yet complete and attributed, recalled
 memories can still produce `unverified` for a question with no answer. This slice
 has **not** solved semantic insufficiency, calibrated abstention, or the populated-store
