@@ -1,8 +1,8 @@
 # Agent Memory: minimum local MCP consumer
 
-**Development candidate, not production-qualified.** A real agent harness can call three
+**Development candidate, not production-qualified.** A real agent harness can call four
 MCP tools against the Agent Memory SQLite facade: explicit save, exact logical-key recall,
-and bounded question retrieval. This is not a separate database or an answer-generation engine.
+bounded question retrieval, and reversible host-scoped forgetting (disabled by default). This is not a separate database or an answer-generation engine.
 
 Unlike the existing Hermes observation-only provider, this is an actual read/write consumer.
 
@@ -98,10 +98,56 @@ framing, and tool schemas provided by the official SDK.
   (every returned fact declined on a grounded basis: not proof that no memory exists) or
   `no_returned_candidates`.
 
-The bridge does not expose correction/forget without qualified lifecycle
-evidence, does not grant action authority, and makes no claim of accurate
-no-answer calibration. An external model used by the agent harness may
+The bridge does not expose correction without qualified lifecycle
+evidence, does not grant arbitrary deletion authority, and makes no claim of accurate
+no-answer calibration. The reversible forgetting tool is host-bound, never permanent. An external model used by the agent harness may
 receive retrieved memory text, so use test data and a trusted harness.
+
+## Internal alpha lifecycle slice: reversible, host-bound forgetting
+
+`memory_forget(key)` is present in the four-tool alpha catalog but **disabled by
+default**. For a single operator-authorized prune only, a trusted MCP host must
+bind BOTH of these variables when starting the local server:
+
+    AGENT_MEMORY_MCP_PRUNE_APPROVED_KEY=memory:owner:the_exact_key
+    AGENT_MEMORY_MCP_PRUNE_EVIDENCE_REF=host-record:<genuine-existing-operator-record-ref>
+
+These claims are not supplied through MCP tool arguments. The target must
+match **exactly**; a different key, missing approval or missing evidence reference
+returns `committed=false`, `host_authorization_required` before opening the
+store. No arbitrary target, risk class, approval reference, authority override
+or `permanent=True` exists on the tool surface. On a correctly bound call,
+the bridge invokes only `AgentMemory.forget(key, permanent=False,
+evidence_refs=(host_ref,))`; the existing facade can still refuse/park the
+action. Only `committed=true` means the governed tombstone was committed.
+After operator use, remove the grant from the host environment and restart
+the MCP subprocess. Do not place secrets in either variable.
+
+**Security limitations:** A host environment value is **not** proof that a
+human approved anything and the facade does not verify the provenance of an
+arbitrary evidence-ref string cryptographically. A host operator is responsible
+for maintaining a genuine record and provisioning the exact key. This mechanism
+is suitable only for a **trusted single-user test deployment** with controlled
+process environment and protected local directory. It is not general autonomous
+agent deletion, authenticated operator approval, data erasure, or production
+authorization. Deleted canonical generations and audit metadata are not
+cryptographically shredded. The tool must not be enabled on an untrusted host.
+
+The previous Gate 1 receipt and its original three-tool discovery test remain
+historical evidence at their original commits. The alpha catalog adds a fourth
+tool and must qualify independently: a working Gate 1 three-tool replay **does
+not qualify the new forget tool**.
+
+Acceptance for this first slice: save a fictional key, verify retrieval,
+attempt forgetting with no grant (refused, still retrievable), attempt the
+wrong key under an exact host grant (refused), forget the approved key through
+the real MCP SDK (only if the public facade commits), then reconnect to prove
+its content is no longer visible in `memory_get` or ordinary `memory_find`.
+Cross-scope refusal and ordinary save/get/find must keep working.
+
+The full internal alpha remains **BLOCKED** until the separately governed
+correction workflow and meaningful insufficient-evidence/abstention behavior
+work end to end. Do not call this first slice a completed alpha.
 
 ## Two acceptance gates
 
