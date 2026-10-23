@@ -44,7 +44,7 @@ class SelectorParaphraseNonExclusion(unittest.TestCase):
         # landing location, even though none of the query's content terms
         # appears literally in either sentence.
         query = "Where did the aircraft touch down?"
-        fact = "Captain Nia's plane landed at Orion Field. Her passengers cheered."
+        fact = "Captain Nia's plane landed at Orion Field. The passengers cheered."
         verdict = context_selection.qualify(query, "ref-landing", LEXICAL_ONLY, fact, None)
         self.assertFalse(set(context_selection.content_terms(query)) &
                          set(context_selection.content_terms(fact)))
