@@ -103,5 +103,18 @@ def memory_find(question: str, max_items: int = 5,
     ))
 
 
+@mcp.tool()
+def memory_forget(key: str) -> dict[str, Any]:
+    """Request non-permanent forgetting of exactly one host-authorized memory key.
+
+    Disabled unless the trusted MCP host binds BOTH
+    AGENT_MEMORY_MCP_PRUNE_APPROVED_KEY and AGENT_MEMORY_MCP_PRUNE_EVIDENCE_REF.
+    The agent cannot provide those claims as tool arguments. A refusal or
+    parked governance decision is NOT successful deletion. This tombstones a
+    current memory when allowed; it does not securely erase audit history.
+    """
+    return _tool_call(lambda: _bridge().forget(key))
+
+
 if __name__ == "__main__":
     mcp.run(transport="stdio")
