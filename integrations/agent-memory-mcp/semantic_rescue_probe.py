@@ -125,16 +125,11 @@ def execute(cases: dict, representation_dir: Path, *, k: int = 5) -> dict:
                     posture = memory.semantic_retrieval_posture()
                     if semantic == "required" and posture.get("status") != "enabled":
                         raise RuntimeError("semantic=required did not enable the pinned vector route")
-                    # A rebuilt derived cache is not canon; verifying it
-                    # ensures we do not count stale or damaged representation.
-                    if semantic == "required":
-                        verified = memory.verify_semantic_store(rebuild=True)
-                        if verified.get("status") not in ("complete", "ok", "verified"):
-                            # Keep the report, do not invent success from unknown shape.
-                            if verified.get("status") in ("incomplete", "failed", "refused"):
-                                raise RuntimeError(f"representation verification failed: {verified}")
-                    else:
-                        verified = None
+                    # Verify AFTER retrieval, because the vector cache is
+                    # derived lazily from canonical facts during those reads.
+                    # Verification checks numeric rows against the pinned
+                    # model; no automatic rebuilding can conceal a mismatch.
+                    verified = None
                     rows = []
                     for task in cases["tasks"]:
                         start = time.perf_counter()
@@ -165,6 +160,10 @@ def execute(cases: dict, representation_dir: Path, *, k: int = 5) -> dict:
                             "raw_returned_count": len(package.get("recall", {}).get("returned") or []),
                             "delivered_count": len(items),
                         })
+                    if semantic == "required":
+                        verified = memory.verify_semantic_store(rebuild=False)
+                        if verified.get("mismatched") or verified.get("orphans"):
+                            raise RuntimeError(f"derived vector store failed verification: {verified}")
                     results[name] = {
                         "semantic_mode": semantic, "lexical_flag": flag or "off",
                         "semantic_posture": {key: posture.get(key) for key in ("status", "mode", "reason")},
