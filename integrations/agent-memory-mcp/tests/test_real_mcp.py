@@ -95,7 +95,7 @@ class ActualMcpConsumerLoop(unittest.IsolatedAsyncioTestCase):
                     ), recovered)
 
     async def test_selectivity_declines_are_visible_with_their_grounding(self):
-        """Policy 0.5.1 through the real server: a returned third-person memory about a different
+        """Policy 0.5.2 through the real server: a returned third-person memory about a different
         named subject that shares no content term with a question about Liora is declined as a
         subject mismatch, listed under ``unavailable`` with state ``omitted_selection``, its reason
         and the inspected subjects; without the opt-in the same memory is delivered. The recall is
@@ -125,7 +125,7 @@ class ActualMcpConsumerLoop(unittest.IsolatedAsyncioTestCase):
                     self.assertEqual(selective["profile"], "evidence_qualified")
                     self.assertEqual([e["memory_ref"] for e in selective["evidence"]], ["memory:liora-canoe"])
                     self.assertEqual(selective["selection_assessment"], "evidence_delivered")
-                    self.assertEqual(selective["selection_policy_version"], "0.5.1")
+                    self.assertEqual(selective["selection_policy_version"], "0.5.2")
                     declined = [u for u in selective["unavailable"] if u["state"] == "omitted_selection"]
                     self.assertEqual(len(declined), 1, selective["unavailable"])
                     self.assertEqual(declined[0]["reason"], "subject_mismatch")

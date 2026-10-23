@@ -1,0 +1,1845 @@
+{
+  "abstain_below": 0.2,
+  "answerer": "onnx-squad",
+  "budget": {
+    "max_items": 5
+  },
+  "comparator": "indexed SQLite FTS5 unicode61 bm25 OR terms over the same texts; same reader",
+  "dataset": {
+    "cases_sha256": "5f0b49ce972a8586701716e86439a8c784f97156478f1549daf0c71837ac2ff0",
+    "records": 24,
+    "tasks": 26
+  },
+  "experimental_lexical_admission": "content_term",
+  "provider": "real stdio MCP memory_find experimental_selectivity=True",
+  "qualification": "author-visible task-level diagnostic; NOT blinded, NOT a benchmark, reader is NOT an agent",
+  "reader_files_sha256": {
+    "config.json": "7fb86e3e72b743b46c4aae43933e0e8cd5b5691e2a4884c795a68845f56f2e99",
+    "model_quantized.onnx": "fb134f63a53c22ce070ccaedd3a299b57ed546e71ab391579e418e8d0bd69ee6",
+    "tokenizer.json": "343989712a36cd8b253efeaf8baf6a08b9d2583f78e395e83832e8ee9f8d8ee1",
+    "tokenizer_config.json": "90f2948be0167107e7663ad93ad5b83066bb4eb8431e1bfcbef4921f5fdd039e"
+  },
+  "rows": [
+    {
+      "fts5": {
+        "answer": "eight",
+        "confidence": 0.9083205832284179,
+        "delivered_chars": 133,
+        "elapsed_ms": 0.3142190000744449,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.5,
+          "forbidden_keys_present": [
+            "memory:wren-van"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 1
+        },
+        "keys": [
+          "memory:wren-bakery",
+          "memory:wren-van"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": false,
+          "exact_match": false,
+          "false_answer": false,
+          "gold_phrase_present": false,
+          "negated": false,
+          "token_f1": 0.0
+        }
+      },
+      "gold": [
+        "six"
+      ],
+      "id": "D1",
+      "mcp": {
+        "answer": "eight",
+        "confidence": 0.8986408796361492,
+        "delivered_chars": 177,
+        "elapsed_ms": 34.11499499998172,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.3333333333333333,
+          "forbidden_keys_present": [
+            "memory:wren-van"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 2
+        },
+        "keys": [
+          "memory:wren-bakery",
+          "memory:wren-van",
+          "memory:me-languages"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": false,
+          "exact_match": false,
+          "false_answer": false,
+          "gold_phrase_present": false,
+          "negated": false,
+          "token_f1": 0.0
+        }
+      },
+      "question": "What time does Wren's bakery open on weekdays?",
+      "required": [
+        "memory:wren-bakery"
+      ]
+    },
+    {
+      "fts5": {
+        "answer": "blue",
+        "confidence": 0.9953862711497767,
+        "delivered_chars": 133,
+        "elapsed_ms": 0.14088199986872496,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.5,
+          "forbidden_keys_present": [
+            "memory:wren-bakery"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 1
+        },
+        "keys": [
+          "memory:wren-van",
+          "memory:wren-bakery"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "exact_match": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false,
+          "token_f1": 1.0
+        }
+      },
+      "gold": [
+        "blue"
+      ],
+      "id": "D2",
+      "mcp": {
+        "answer": "blue",
+        "confidence": 0.9953862711497767,
+        "delivered_chars": 133,
+        "elapsed_ms": 35.30396299993299,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.5,
+          "forbidden_keys_present": [
+            "memory:wren-bakery"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 1
+        },
+        "keys": [
+          "memory:wren-van",
+          "memory:wren-bakery"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "exact_match": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false,
+          "token_f1": 1.0
+        }
+      },
+      "question": "What colour is Wren's van?",
+      "required": [
+        "memory:wren-van"
+      ]
+    },
+    {
+      "fts5": {
+        "answer": "shellfish",
+        "confidence": 0.98975888339832,
+        "delivered_chars": 107,
+        "elapsed_ms": 0.11308900002404698,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.5,
+          "forbidden_keys_present": [
+            "memory:okafor-car"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 1
+        },
+        "keys": [
+          "memory:okafor-allergy",
+          "memory:okafor-car"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "exact_match": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false,
+          "token_f1": 1.0
+        }
+      },
+      "gold": [
+        "shellfish"
+      ],
+      "id": "D3",
+      "mcp": {
+        "answer": "shellfish",
+        "confidence": 0.98975888339832,
+        "delivered_chars": 107,
+        "elapsed_ms": 34.881734999999026,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.5,
+          "forbidden_keys_present": [
+            "memory:okafor-car"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 1
+        },
+        "keys": [
+          "memory:okafor-allergy",
+          "memory:okafor-car"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "exact_match": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false,
+          "token_f1": 1.0
+        }
+      },
+      "question": "What is Dr. Okafor allergic to?",
+      "required": [
+        "memory:okafor-allergy"
+      ]
+    },
+    {
+      "fts5": {
+        "answer": "a silver Volvo estate",
+        "confidence": 0.35317650681057317,
+        "delivered_chars": 107,
+        "elapsed_ms": 0.10022000014942023,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.5,
+          "forbidden_keys_present": [
+            "memory:okafor-allergy"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 1
+        },
+        "keys": [
+          "memory:okafor-car",
+          "memory:okafor-allergy"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "exact_match": false,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false,
+          "token_f1": 0.8
+        }
+      },
+      "gold": [
+        "silver volvo",
+        "volvo"
+      ],
+      "id": "D4",
+      "mcp": {
+        "answer": "a silver Volvo estate",
+        "confidence": 0.35317650681057317,
+        "delivered_chars": 107,
+        "elapsed_ms": 29.219096999895555,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.5,
+          "forbidden_keys_present": [
+            "memory:okafor-allergy"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 1
+        },
+        "keys": [
+          "memory:okafor-car",
+          "memory:okafor-allergy"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "exact_match": false,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false,
+          "token_f1": 0.8
+        }
+      },
+      "question": "What car does Dr. Okafor drive?",
+      "required": [
+        "memory:okafor-car"
+      ]
+    },
+    {
+      "fts5": {
+        "answer": "Pickle",
+        "confidence": 0.9974968460661504,
+        "delivered_chars": 109,
+        "elapsed_ms": 0.10690699991755537,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.5,
+          "forbidden_keys_present": [
+            "memory:sana-commute"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 1
+        },
+        "keys": [
+          "memory:sana-cat",
+          "memory:sana-commute"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "exact_match": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false,
+          "token_f1": 1.0
+        }
+      },
+      "gold": [
+        "pickle"
+      ],
+      "id": "D5",
+      "mcp": {
+        "answer": "Pickle",
+        "confidence": 0.9974968460661504,
+        "delivered_chars": 109,
+        "elapsed_ms": 32.14787100000649,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.5,
+          "forbidden_keys_present": [
+            "memory:sana-commute"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 1
+        },
+        "keys": [
+          "memory:sana-cat",
+          "memory:sana-commute"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "exact_match": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false,
+          "token_f1": 1.0
+        }
+      },
+      "question": "What is the name of Sana's cat?",
+      "required": [
+        "memory:sana-cat"
+      ]
+    },
+    {
+      "fts5": {
+        "answer": "along the canal path",
+        "confidence": 0.8260537638178674,
+        "delivered_chars": 109,
+        "elapsed_ms": 0.09505699995315808,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.5,
+          "forbidden_keys_present": [
+            "memory:sana-cat"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 1
+        },
+        "keys": [
+          "memory:sana-commute",
+          "memory:sana-cat"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": false,
+          "exact_match": false,
+          "false_answer": false,
+          "gold_phrase_present": false,
+          "negated": false,
+          "token_f1": 0.0
+        }
+      },
+      "gold": [
+        "cycles",
+        "cycling"
+      ],
+      "id": "D6",
+      "mcp": {
+        "answer": "along the canal path",
+        "confidence": 0.8260537638178674,
+        "delivered_chars": 109,
+        "elapsed_ms": 29.657340999847293,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.5,
+          "forbidden_keys_present": [
+            "memory:sana-cat"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 1
+        },
+        "keys": [
+          "memory:sana-commute",
+          "memory:sana-cat"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": false,
+          "exact_match": false,
+          "false_answer": false,
+          "gold_phrase_present": false,
+          "negated": false,
+          "token_f1": 0.0
+        }
+      },
+      "question": "How does Sana get to the studio?",
+      "required": [
+        "memory:sana-commute"
+      ]
+    },
+    {
+      "fts5": {
+        "answer": null,
+        "confidence": null,
+        "delivered_chars": 0,
+        "elapsed_ms": 0.057647999938126304,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.0,
+          "forbidden_keys_present": [],
+          "required_complete": false,
+          "required_hits": 0,
+          "required_key_hits": 0,
+          "required_total": 1,
+          "unexpected_evidence_items": 0
+        },
+        "keys": [],
+        "verdict": {
+          "abstained": true,
+          "answerable": true,
+          "correct": false,
+          "exact_match": false,
+          "false_answer": false,
+          "token_f1": 0.0
+        }
+      },
+      "gold": [
+        "portuguese"
+      ],
+      "id": "D7",
+      "mcp": {
+        "answer": null,
+        "confidence": null,
+        "delivered_chars": 0,
+        "elapsed_ms": 27.926140000090527,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.0,
+          "forbidden_keys_present": [],
+          "required_complete": false,
+          "required_hits": 0,
+          "required_key_hits": 0,
+          "required_total": 1,
+          "unexpected_evidence_items": 0
+        },
+        "keys": [],
+        "profile": "evidence_qualified",
+        "selection_assessment": "no_returned_candidates",
+        "verdict": {
+          "abstained": true,
+          "answerable": true,
+          "correct": false,
+          "exact_match": false,
+          "false_answer": false,
+          "token_f1": 0.0
+        }
+      },
+      "question": "Which language am I studying?",
+      "required": [
+        "memory:me-languages"
+      ]
+    },
+    {
+      "fts5": {
+        "answer": "forty-three",
+        "confidence": 0.9627494995815429,
+        "delivered_chars": 38,
+        "elapsed_ms": 0.10466100002304302,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 1.0,
+          "forbidden_keys_present": [],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 0
+        },
+        "keys": [
+          "memory:me-shoes"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "exact_match": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false,
+          "token_f1": 1.0
+        }
+      },
+      "gold": [
+        "forty-three",
+        "43"
+      ],
+      "id": "D8",
+      "mcp": {
+        "answer": "forty-three",
+        "confidence": 0.9627494995815429,
+        "delivered_chars": 38,
+        "elapsed_ms": 30.032386000129918,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 1.0,
+          "forbidden_keys_present": [],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 0
+        },
+        "keys": [
+          "memory:me-shoes"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "exact_match": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false,
+          "token_f1": 1.0
+        }
+      },
+      "question": "What size are my running shoes?",
+      "required": [
+        "memory:me-shoes"
+      ]
+    },
+    {
+      "fts5": {
+        "answer": "Mr. Halvorsen",
+        "confidence": 0.990866946701482,
+        "delivered_chars": 54,
+        "elapsed_ms": 0.10330200007047097,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 1.0,
+          "forbidden_keys_present": [],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 0
+        },
+        "keys": [
+          "memory:me-landlord"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "exact_match": false,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false,
+          "token_f1": 0.6666666666666666
+        }
+      },
+      "gold": [
+        "halvorsen"
+      ],
+      "id": "D9",
+      "mcp": {
+        "answer": "Mr. Halvorsen",
+        "confidence": 0.990866946701482,
+        "delivered_chars": 54,
+        "elapsed_ms": 38.78214199994545,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 1.0,
+          "forbidden_keys_present": [],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 0
+        },
+        "keys": [
+          "memory:me-landlord"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "exact_match": false,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false,
+          "token_f1": 0.6666666666666666
+        }
+      },
+      "question": "Who do I pay rent to?",
+      "required": [
+        "memory:me-landlord"
+      ]
+    },
+    {
+      "fts5": {
+        "answer": "March 14",
+        "confidence": 0.975915276835574,
+        "delivered_chars": 193,
+        "elapsed_ms": 0.12844100001530023,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.3333333333333333,
+          "forbidden_keys_present": [
+            "memory:tern-budget"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 2
+        },
+        "keys": [
+          "memory:tern-deadline",
+          "memory:tern-budget",
+          "memory:gannet-standup"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "exact_match": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false,
+          "token_f1": 1.0
+        }
+      },
+      "gold": [
+        "march 14",
+        "14 march"
+      ],
+      "id": "D10",
+      "mcp": {
+        "answer": "March 14",
+        "confidence": 0.975915276835574,
+        "delivered_chars": 193,
+        "elapsed_ms": 33.46788700014258,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.3333333333333333,
+          "forbidden_keys_present": [
+            "memory:tern-budget"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 2
+        },
+        "keys": [
+          "memory:tern-deadline",
+          "memory:tern-budget",
+          "memory:gannet-standup"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "exact_match": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false,
+          "token_f1": 1.0
+        }
+      },
+      "question": "When does Project Tern ship its beta?",
+      "required": [
+        "memory:tern-deadline"
+      ]
+    },
+    {
+      "fts5": {
+        "answer": "forty thousand euros",
+        "confidence": 0.9656962663449479,
+        "delivered_chars": 193,
+        "elapsed_ms": 0.10885500000767934,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.3333333333333333,
+          "forbidden_keys_present": [
+            "memory:tern-deadline"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 2
+        },
+        "keys": [
+          "memory:tern-budget",
+          "memory:tern-deadline",
+          "memory:gannet-standup"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "exact_match": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false,
+          "token_f1": 1.0
+        }
+      },
+      "gold": [
+        "forty thousand euros",
+        "forty thousand"
+      ],
+      "id": "D11",
+      "mcp": {
+        "answer": "forty thousand euros",
+        "confidence": 0.9656962663449479,
+        "delivered_chars": 193,
+        "elapsed_ms": 32.57243899997775,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.3333333333333333,
+          "forbidden_keys_present": [
+            "memory:tern-deadline"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 2
+        },
+        "keys": [
+          "memory:tern-budget",
+          "memory:tern-deadline",
+          "memory:gannet-standup"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "exact_match": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false,
+          "token_f1": 1.0
+        }
+      },
+      "question": "How large is Project Tern's budget?",
+      "required": [
+        "memory:tern-budget"
+      ]
+    },
+    {
+      "fts5": {
+        "answer": "the Loft room",
+        "confidence": 0.2400563596329859,
+        "delivered_chars": 193,
+        "elapsed_ms": 0.13120600010552153,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.3333333333333333,
+          "forbidden_keys_present": [],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 2
+        },
+        "keys": [
+          "memory:gannet-standup",
+          "memory:tern-budget",
+          "memory:tern-deadline"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "exact_match": false,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false,
+          "token_f1": 0.6666666666666666
+        }
+      },
+      "gold": [
+        "loft"
+      ],
+      "id": "D12",
+      "mcp": {
+        "answer": "the Loft room at nine",
+        "confidence": 0.2022816996320467,
+        "delivered_chars": 193,
+        "elapsed_ms": 35.70201399998041,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.3333333333333333,
+          "forbidden_keys_present": [],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 2
+        },
+        "keys": [
+          "memory:gannet-standup",
+          "memory:tern-deadline",
+          "memory:tern-budget"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "exact_match": false,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false,
+          "token_f1": 0.4
+        }
+      },
+      "question": "Where does Project Gannet hold its standup?",
+      "required": [
+        "memory:gannet-standup"
+      ]
+    },
+    {
+      "fts5": {
+        "answer": "Ravensbourne bucket",
+        "confidence": 0.5623453722661373,
+        "delivered_chars": 97,
+        "elapsed_ms": 0.14005200000610785,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.5,
+          "forbidden_keys_present": [
+            "memory:server-os"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 1
+        },
+        "keys": [
+          "memory:server-os",
+          "memory:server-backups"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "exact_match": false,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false,
+          "token_f1": 0.6666666666666666
+        }
+      },
+      "gold": [
+        "ravensbourne"
+      ],
+      "id": "D13",
+      "mcp": {
+        "answer": "Ravensbourne bucket",
+        "confidence": 0.5623453722661373,
+        "delivered_chars": 97,
+        "elapsed_ms": 37.30521900001804,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.5,
+          "forbidden_keys_present": [
+            "memory:server-os"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 1
+        },
+        "keys": [
+          "memory:server-os",
+          "memory:server-backups"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "exact_match": false,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false,
+          "token_f1": 0.6666666666666666
+        }
+      },
+      "question": "Where are the build server's backups stored?",
+      "required": [
+        "memory:server-backups"
+      ]
+    },
+    {
+      "fts5": {
+        "answer": null,
+        "confidence": null,
+        "delivered_chars": 0,
+        "elapsed_ms": 0.07282299998223607,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.0,
+          "forbidden_keys_present": [],
+          "required_complete": false,
+          "required_hits": 0,
+          "required_key_hits": 0,
+          "required_total": 1,
+          "unexpected_evidence_items": 0
+        },
+        "keys": [],
+        "verdict": {
+          "abstained": true,
+          "answerable": true,
+          "correct": false,
+          "exact_match": false,
+          "false_answer": false,
+          "token_f1": 0.0
+        }
+      },
+      "gold": [
+        "ivo"
+      ],
+      "id": "D14",
+      "mcp": {
+        "answer": null,
+        "confidence": null,
+        "delivered_chars": 0,
+        "elapsed_ms": 34.63089199999558,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.0,
+          "forbidden_keys_present": [],
+          "required_complete": false,
+          "required_hits": 0,
+          "required_key_hits": 0,
+          "required_total": 1,
+          "unexpected_evidence_items": 0
+        },
+        "keys": [],
+        "profile": "evidence_qualified",
+        "selection_assessment": "no_returned_candidates",
+        "verdict": {
+          "abstained": true,
+          "answerable": true,
+          "correct": false,
+          "exact_match": false,
+          "false_answer": false,
+          "token_f1": 0.0
+        }
+      },
+      "question": "Who fixed the bicycle?",
+      "required": [
+        "memory:tandem-repair"
+      ]
+    },
+    {
+      "fts5": {
+        "answer": "clarinet",
+        "confidence": 0.649267270075103,
+        "delivered_chars": 41,
+        "elapsed_ms": 0.08787200022197794,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.0,
+          "forbidden_keys_present": [],
+          "required_complete": false,
+          "required_hits": 0,
+          "required_key_hits": 0,
+          "required_total": 1,
+          "unexpected_evidence_items": 1
+        },
+        "keys": [
+          "memory:alba-instrument"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": false,
+          "exact_match": false,
+          "false_answer": false,
+          "gold_phrase_present": false,
+          "negated": false,
+          "token_f1": 0.0
+        }
+      },
+      "gold": [
+        "dunmore street",
+        "dunmore"
+      ],
+      "id": "D15",
+      "mcp": {
+        "answer": null,
+        "confidence": null,
+        "delivered_chars": 0,
+        "elapsed_ms": 31.428101000074093,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.0,
+          "forbidden_keys_present": [],
+          "required_complete": false,
+          "required_hits": 0,
+          "required_key_hits": 0,
+          "required_total": 1,
+          "unexpected_evidence_items": 0
+        },
+        "keys": [],
+        "profile": "evidence_qualified",
+        "selection_assessment": "no_returned_candidates",
+        "verdict": {
+          "abstained": true,
+          "answerable": true,
+          "correct": false,
+          "exact_match": false,
+          "false_answer": false,
+          "token_f1": 0.0
+        }
+      },
+      "question": "Which pharmacy is open after midnight?",
+      "required": [
+        "memory:late-chemist"
+      ]
+    },
+    {
+      "fts5": {
+        "answer": "tart apples",
+        "confidence": 0.3190392424577211,
+        "delivered_chars": 69,
+        "elapsed_ms": 0.12249800010977197,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 1.0,
+          "forbidden_keys_present": [],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 0
+        },
+        "keys": [
+          "memory:chutney"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "exact_match": false,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false,
+          "token_f1": 0.6666666666666666
+        }
+      },
+      "gold": [
+        "apples",
+        "apple"
+      ],
+      "id": "D16",
+      "mcp": {
+        "answer": "tart apples",
+        "confidence": 0.3190392424577211,
+        "delivered_chars": 69,
+        "elapsed_ms": 32.33944299995528,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 1.0,
+          "forbidden_keys_present": [],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 0
+        },
+        "keys": [
+          "memory:chutney"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "exact_match": false,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false,
+          "token_f1": 0.6666666666666666
+        }
+      },
+      "question": "What fruit goes into Grandma's chutney?",
+      "required": [
+        "memory:chutney"
+      ]
+    },
+    {
+      "fts5": {
+        "answer": "quarter past three",
+        "confidence": 0.9182917807045508,
+        "delivered_chars": 97,
+        "elapsed_ms": 0.11130000007142371,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 0.5,
+          "forbidden_keys_present": [
+            "memory:alba-instrument"
+          ],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 1
+        },
+        "keys": [
+          "memory:alba-school",
+          "memory:alba-instrument"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "exact_match": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false,
+          "token_f1": 1.0
+        }
+      },
+      "gold": [
+        "quarter past three",
+        "3:15"
+      ],
+      "id": "D17",
+      "mcp": {
+        "answer": "quarter past three",
+        "confidence": 0.8849541879473651,
+        "delivered_chars": 56,
+        "elapsed_ms": 31.714880999970774,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 1.0,
+          "forbidden_keys_present": [],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 0
+        },
+        "keys": [
+          "memory:alba-school"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "exact_match": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false,
+          "token_f1": 1.0
+        }
+      },
+      "question": "When does Alba's school finish on Fridays?",
+      "required": [
+        "memory:alba-school"
+      ]
+    },
+    {
+      "fts5": {
+        "answer": "behind the pantry door",
+        "confidence": 0.8285610123071978,
+        "delivered_chars": 49,
+        "elapsed_ms": 0.1032909999594267,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 1.0,
+          "forbidden_keys_present": [],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 0
+        },
+        "keys": [
+          "memory:garden-shed"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "exact_match": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false,
+          "token_f1": 1.0
+        }
+      },
+      "gold": [
+        "behind the pantry door",
+        "pantry"
+      ],
+      "id": "D18",
+      "mcp": {
+        "answer": "behind the pantry door",
+        "confidence": 0.8285610123071978,
+        "delivered_chars": 49,
+        "elapsed_ms": 35.18778200009365,
+        "evidence": {
+          "empty_context_on_no_answer": null,
+          "evidence_precision": 1.0,
+          "forbidden_keys_present": [],
+          "required_complete": true,
+          "required_hits": 1,
+          "required_key_hits": 1,
+          "required_total": 1,
+          "unexpected_evidence_items": 0
+        },
+        "keys": [
+          "memory:garden-shed"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": true,
+          "correct": true,
+          "exact_match": true,
+          "false_answer": false,
+          "gold_phrase_present": true,
+          "negated": false,
+          "token_f1": 1.0
+        }
+      },
+      "question": "Where is the shed key kept?",
+      "required": [
+        "memory:garden-shed"
+      ]
+    },
+    {
+      "fts5": {
+        "answer": "guest network",
+        "confidence": 0.46788869295695934,
+        "delivered_chars": 55,
+        "elapsed_ms": 0.10880900003940042,
+        "evidence": {
+          "empty_context_on_no_answer": false,
+          "evidence_precision": 0.0,
+          "forbidden_keys_present": [],
+          "required_complete": null,
+          "required_hits": 0,
+          "required_key_hits": 0,
+          "required_total": 0,
+          "unexpected_evidence_items": 1
+        },
+        "keys": [
+          "memory:guest-wifi"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": false,
+          "correct": false,
+          "false_answer": true
+        }
+      },
+      "gold": null,
+      "id": "V1",
+      "mcp": {
+        "answer": "guest network",
+        "confidence": 0.46788869295695934,
+        "delivered_chars": 55,
+        "elapsed_ms": 32.54151699979957,
+        "evidence": {
+          "empty_context_on_no_answer": false,
+          "evidence_precision": 0.0,
+          "forbidden_keys_present": [],
+          "required_complete": null,
+          "required_hits": 0,
+          "required_key_hits": 0,
+          "required_total": 0,
+          "unexpected_evidence_items": 1
+        },
+        "keys": [
+          "memory:guest-wifi"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": false,
+          "correct": false,
+          "false_answer": true
+        }
+      },
+      "question": "What is the password for the office printer?",
+      "required": []
+    },
+    {
+      "fts5": {
+        "answer": "The quarterly review takes place at the Corn Exchange",
+        "confidence": 0.33341003046681383,
+        "delivered_chars": 111,
+        "elapsed_ms": 0.17440200008422835,
+        "evidence": {
+          "empty_context_on_no_answer": false,
+          "evidence_precision": 0.0,
+          "forbidden_keys_present": [],
+          "required_complete": null,
+          "required_hits": 0,
+          "required_key_hits": 0,
+          "required_total": 0,
+          "unexpected_evidence_items": 2
+        },
+        "keys": [
+          "memory:review-venue",
+          "memory:tern-budget"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": false,
+          "correct": false,
+          "false_answer": true
+        }
+      },
+      "gold": null,
+      "id": "V2",
+      "mcp": {
+        "answer": "The quarterly review takes place at the Corn Exchange",
+        "confidence": 0.33341003046681383,
+        "delivered_chars": 111,
+        "elapsed_ms": 31.842869000001883,
+        "evidence": {
+          "empty_context_on_no_answer": false,
+          "evidence_precision": 0.0,
+          "forbidden_keys_present": [],
+          "required_complete": null,
+          "required_hits": 0,
+          "required_key_hits": 0,
+          "required_total": 0,
+          "unexpected_evidence_items": 2
+        },
+        "keys": [
+          "memory:review-venue",
+          "memory:tern-budget"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": false,
+          "correct": false,
+          "false_answer": true
+        }
+      },
+      "question": "When does the quarterly budget committee meet?",
+      "required": []
+    },
+    {
+      "fts5": {
+        "answer": null,
+        "confidence": 0.15517945356579935,
+        "delivered_chars": 133,
+        "elapsed_ms": 0.10353399989071477,
+        "evidence": {
+          "empty_context_on_no_answer": false,
+          "evidence_precision": 0.0,
+          "forbidden_keys_present": [],
+          "required_complete": null,
+          "required_hits": 0,
+          "required_key_hits": 0,
+          "required_total": 0,
+          "unexpected_evidence_items": 2
+        },
+        "keys": [
+          "memory:wren-van",
+          "memory:wren-bakery"
+        ],
+        "verdict": {
+          "abstained": true,
+          "answerable": false,
+          "correct": true,
+          "false_answer": false
+        }
+      },
+      "gold": null,
+      "id": "V3",
+      "mcp": {
+        "answer": null,
+        "confidence": 0.15517945356579935,
+        "delivered_chars": 133,
+        "elapsed_ms": 31.154866000179027,
+        "evidence": {
+          "empty_context_on_no_answer": false,
+          "evidence_precision": 0.0,
+          "forbidden_keys_present": [],
+          "required_complete": null,
+          "required_hits": 0,
+          "required_key_hits": 0,
+          "required_total": 0,
+          "unexpected_evidence_items": 2
+        },
+        "keys": [
+          "memory:wren-van",
+          "memory:wren-bakery"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "undetermined",
+        "verdict": {
+          "abstained": true,
+          "answerable": false,
+          "correct": true,
+          "false_answer": false
+        }
+      },
+      "question": "What is Wren's phone number?",
+      "required": []
+    },
+    {
+      "fts5": {
+        "answer": "gate twelve",
+        "confidence": 0.5055197591531548,
+        "delivered_chars": 45,
+        "elapsed_ms": 0.10710199990171532,
+        "evidence": {
+          "empty_context_on_no_answer": false,
+          "evidence_precision": 0.0,
+          "forbidden_keys_present": [],
+          "required_complete": null,
+          "required_hits": 0,
+          "required_key_hits": 0,
+          "required_total": 0,
+          "unexpected_evidence_items": 1
+        },
+        "keys": [
+          "memory:me-flight"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": false,
+          "correct": false,
+          "false_answer": true
+        }
+      },
+      "gold": null,
+      "id": "V4",
+      "mcp": {
+        "answer": "gate twelve",
+        "confidence": 0.5055197591531548,
+        "delivered_chars": 45,
+        "elapsed_ms": 31.28294100019957,
+        "evidence": {
+          "empty_context_on_no_answer": false,
+          "evidence_precision": 0.0,
+          "forbidden_keys_present": [],
+          "required_complete": null,
+          "required_hits": 0,
+          "required_key_hits": 0,
+          "required_total": 0,
+          "unexpected_evidence_items": 1
+        },
+        "keys": [
+          "memory:me-flight"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": false,
+          "correct": false,
+          "false_answer": true
+        }
+      },
+      "question": "Which gate does the train to Porto leave from?",
+      "required": []
+    },
+    {
+      "fts5": {
+        "answer": "shellfish",
+        "confidence": 0.826503557062303,
+        "delivered_chars": 107,
+        "elapsed_ms": 0.09872900000118534,
+        "evidence": {
+          "empty_context_on_no_answer": false,
+          "evidence_precision": 0.0,
+          "forbidden_keys_present": [],
+          "required_complete": null,
+          "required_hits": 0,
+          "required_key_hits": 0,
+          "required_total": 0,
+          "unexpected_evidence_items": 2
+        },
+        "keys": [
+          "memory:okafor-car",
+          "memory:okafor-allergy"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": false,
+          "correct": false,
+          "false_answer": true
+        }
+      },
+      "gold": null,
+      "id": "V5",
+      "mcp": {
+        "answer": "shellfish",
+        "confidence": 0.4605988714283367,
+        "delivered_chars": 107,
+        "elapsed_ms": 30.202279999912207,
+        "evidence": {
+          "empty_context_on_no_answer": false,
+          "evidence_precision": 0.0,
+          "forbidden_keys_present": [],
+          "required_complete": null,
+          "required_hits": 0,
+          "required_key_hits": 0,
+          "required_total": 0,
+          "unexpected_evidence_items": 2
+        },
+        "keys": [
+          "memory:okafor-allergy",
+          "memory:okafor-car"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": false,
+          "correct": false,
+          "false_answer": true
+        }
+      },
+      "question": "What is the name of Dr. Okafor's dog?",
+      "required": []
+    },
+    {
+      "fts5": {
+        "answer": "October",
+        "confidence": 0.23174220324654815,
+        "delivered_chars": 118,
+        "elapsed_ms": 0.10946599991257244,
+        "evidence": {
+          "empty_context_on_no_answer": false,
+          "evidence_precision": 0.0,
+          "forbidden_keys_present": [],
+          "required_complete": null,
+          "required_hits": 0,
+          "required_key_hits": 0,
+          "required_total": 0,
+          "unexpected_evidence_items": 2
+        },
+        "keys": [
+          "memory:boiler-service",
+          "memory:sana-cat"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": false,
+          "correct": false,
+          "false_answer": true
+        }
+      },
+      "gold": null,
+      "id": "V6",
+      "mcp": {
+        "answer": "The boiler was serviced in October",
+        "confidence": 0.21676049582175172,
+        "delivered_chars": 118,
+        "elapsed_ms": 36.97405999992043,
+        "evidence": {
+          "empty_context_on_no_answer": false,
+          "evidence_precision": 0.0,
+          "forbidden_keys_present": [],
+          "required_complete": null,
+          "required_hits": 0,
+          "required_key_hits": 0,
+          "required_total": 0,
+          "unexpected_evidence_items": 2
+        },
+        "keys": [
+          "memory:sana-cat",
+          "memory:boiler-service"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": false,
+          "correct": false,
+          "false_answer": true
+        }
+      },
+      "question": "How old is the boiler?",
+      "required": []
+    },
+    {
+      "fts5": {
+        "answer": "Wren",
+        "confidence": 0.8674091765764345,
+        "delivered_chars": 73,
+        "elapsed_ms": 0.10988799999722687,
+        "evidence": {
+          "empty_context_on_no_answer": false,
+          "evidence_precision": 0.0,
+          "forbidden_keys_present": [],
+          "required_complete": null,
+          "required_hits": 0,
+          "required_key_hits": 0,
+          "required_total": 0,
+          "unexpected_evidence_items": 1
+        },
+        "keys": [
+          "memory:wren-bakery"
+        ],
+        "verdict": {
+          "abstained": false,
+          "answerable": false,
+          "correct": false,
+          "false_answer": true
+        }
+      },
+      "gold": null,
+      "id": "V7",
+      "mcp": {
+        "answer": "Wren",
+        "confidence": 0.8674091765764345,
+        "delivered_chars": 73,
+        "elapsed_ms": 34.13345700005266,
+        "evidence": {
+          "empty_context_on_no_answer": false,
+          "evidence_precision": 0.0,
+          "forbidden_keys_present": [],
+          "required_complete": null,
+          "required_hits": 0,
+          "required_key_hits": 0,
+          "required_total": 0,
+          "unexpected_evidence_items": 1
+        },
+        "keys": [
+          "memory:wren-bakery"
+        ],
+        "profile": "evidence_qualified",
+        "selection_assessment": "evidence_delivered",
+        "verdict": {
+          "abstained": false,
+          "answerable": false,
+          "correct": false,
+          "false_answer": true
+        }
+      },
+      "question": "Who is the landlord of the bakery?",
+      "required": []
+    },
+    {
+      "fts5": {
+        "answer": null,
+        "confidence": null,
+        "delivered_chars": 0,
+        "elapsed_ms": 0.0843650000206253,
+        "evidence": {
+          "empty_context_on_no_answer": true,
+          "evidence_precision": null,
+          "forbidden_keys_present": [],
+          "required_complete": null,
+          "required_hits": 0,
+          "required_key_hits": 0,
+          "required_total": 0,
+          "unexpected_evidence_items": 0
+        },
+        "keys": [],
+        "verdict": {
+          "abstained": true,
+          "answerable": false,
+          "correct": true,
+          "false_answer": false
+        }
+      },
+      "gold": null,
+      "id": "V8",
+      "mcp": {
+        "answer": null,
+        "confidence": null,
+        "delivered_chars": 0,
+        "elapsed_ms": 29.903524000019388,
+        "evidence": {
+          "empty_context_on_no_answer": true,
+          "evidence_precision": null,
+          "forbidden_keys_present": [],
+          "required_complete": null,
+          "required_hits": 0,
+          "required_key_hits": 0,
+          "required_total": 0,
+          "unexpected_evidence_items": 0
+        },
+        "keys": [],
+        "profile": "evidence_qualified",
+        "selection_assessment": "no_returned_candidates",
+        "verdict": {
+          "abstained": true,
+          "answerable": false,
+          "correct": true,
+          "false_answer": false
+        }
+      },
+      "question": "What did the committee decide about parking?",
+      "required": []
+    }
+  ],
+  "schema": "mcp-gate2-task-eval/0.1.0",
+  "selectivity": true,
+  "summary": {
+    "fts5": {
+      "answerable_abstained": 2,
+      "answerable_exact_match": 8,
+      "answerable_gold_phrase_match": 13,
+      "answerable_mean_token_f1": 0.6370370370370371,
+      "answerable_no_match": 3,
+      "answerable_total": 18,
+      "correctness_measure": "gold_phrase_match_proxy_not_verified_answer_correctness",
+      "delivered_chars_total": 2364,
+      "required_evidence_complete": 15,
+      "retrieval_p50_ms": 0.10795549997055787,
+      "strict_measure": "squad_v1.1_normalized_exact_match_and_token_f1_lower_bound",
+      "unanswerable_abstained": 2,
+      "unanswerable_false_answer": 6,
+      "unanswerable_total": 8,
+      "unexpected_evidence_items": 26
+    },
+    "mcp": {
+      "answerable_abstained": 3,
+      "answerable_exact_match": 8,
+      "answerable_gold_phrase_match": 13,
+      "answerable_mean_token_f1": 0.6222222222222222,
+      "answerable_no_match": 2,
+      "answerable_total": 18,
+      "correctness_measure": "gold_phrase_match_proxy_not_verified_answer_correctness",
+      "delivered_chars_total": 2326,
+      "required_evidence_complete": 15,
+      "retrieval_p50_ms": 32.440479999877425,
+      "strict_measure": "squad_v1.1_normalized_exact_match_and_token_f1_lower_bound",
+      "unanswerable_abstained": 2,
+      "unanswerable_false_answer": 6,
+      "unanswerable_total": 8,
+      "unexpected_evidence_items": 25
+    }
+  }
+}

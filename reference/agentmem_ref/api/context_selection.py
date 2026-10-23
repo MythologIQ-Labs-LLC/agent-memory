@@ -13,7 +13,7 @@ a consumer-side delivery policy, never authority:
   delivers the content and says so (``certainty: uncertain``), it never converts a lack of word
   overlap into an asserted negative when the fact carries non-lexical evidence.
 
-Decision order for one returned fact (policy ``evidence-qualified-context-selection/0.5.1``):
+Decision order for one returned fact (policy ``evidence-qualified-context-selection/0.5.2``):
 
 1. ``preserved_exact_identity``: a caller-authorised ``logical_memory_refs`` hit (route
    ``exact_logical_identity``). Delivered whatever its wording.
@@ -27,19 +27,25 @@ Decision order for one returned fact (policy ``evidence-qualified-context-select
    ``works``/``work``, ``graduated``/``graduate`` and ``Mara's``/``Mara`` agree. No learned
    model, no corpus or benchmark vocabulary.
 
-   * no query content term occurs in the fact in any folded form → ``no_query_term_evidence``
-     (declined) **only when the fact is a single statement** (``absence_grounding:
-     single_statement``: the absence is an observation about the whole statement). For a longer
-     fact the absence of a shared term is uncertainty, not absence: a paraphrase (``aircraft
-     touch down`` / ``plane landed``) shares no token and still carries the answer, so it is
-     delivered as ``undetermined_multi_statement``. Policy 0.5.0 also declined a multi-statement
-     third-person fact whose own named subject the query never mentioned; the owner's independent
-     review (PR #843, review 5628673295) showed that this is lexical mismatch dressed as evidence,
-     and policy 0.5.1 withdrew it. The one subject observation that survives without a shared
-     term is a *conflict of named subjects* (policy 0.5.1): the query names a subject by
-     proper-noun possessive, the fact grounds a different subject and never mentions the
+   * no query content term occurs in the fact in any folded form: the fact is **never declined
+     for that absence** (policy 0.5.2). A paraphrase shares no token and still carries the
+     answer, whether it is one sentence (``Mechanic Oren fixed Tamsin's bike`` for ``Who repaired
+     the bicycle?``) or several (``Captain Nia's plane landed at Orion Field. ...`` for ``Where
+     did the aircraft touch down?``), so a lack of shared words is lexical mismatch, not
+     evidence of irrelevance. It is delivered as ``undetermined_single_statement`` or
+     ``undetermined_multi_statement`` (uncertain). History: 0.3.0 to 0.5.1 declined a single
+     statement here (``no_query_term_evidence``, ``absence_grounding: single_statement``); 0.5.0
+     also declined a longer third-person fact whose named subject the query never mentioned. The
+     owner's independent review (PR #843, review 5628673295) showed the multi-statement case is
+     lexical mismatch dressed as evidence; 0.5.1 withdrew it and 0.5.2 withdraws the same
+     reasoning for a single statement. The reason token ``no_query_term_evidence`` stays in the
+     vocabulary for earlier receipts and is no longer produced. The one observation that
+     survives without a shared term is a *conflict of named subjects*: the query names a subject
+     by proper-noun possessive, the fact grounds a different subject and never mentions the
      query's, so it is declined as ``subject_mismatch`` exactly as it would be with a shared
-     term. A first-person fact is never a subject mismatch (0.3.1);
+     term. A first-person fact is never a subject mismatch (0.3.1). Fewer irrelevant
+     candidates must come from admission (a lexical candidate admitted on function words
+     alone), not from the consumer certifying an absence;
    * the query names a subject by a proper-noun possessive (``Liora's canoe``; a lowercase
      possessive such as ``composer's`` names no subject) and the fact grounds a different
      subject the same way or through its persisted write-time proposition entity, and the
@@ -77,12 +83,17 @@ from __future__ import annotations
 import re
 from typing import Any, Mapping, Sequence
 
+from ..core.content_terms import (  # noqa: F401 - re-exported: FUNCTION_WORDS, content_terms
+    _POSSESSIVE, _WORD, FUNCTION_WORDS, _contraction_base, _fold, _possessive_base, _tokens, content_terms,
+)
+
 POLICY_ID = "evidence-qualified-context-selection"
-POLICY_VERSION = "0.5.1"
+POLICY_VERSION = "0.5.2"
 BASIS = "post_admission_query_evidence_qualification"
 EXACT_IDENTITY_ROUTE = "exact_logical_identity"
 LEXICAL_ROUTE = "lexical"
 
+# ``no_query_term_evidence`` is no longer produced (0.5.2); kept so earlier receipts validate.
 OMITTED_REASONS = ("no_query_term_evidence", "subject_mismatch")
 DELIVERED_EVIDENCE = (
     "preserved_exact_identity",
@@ -93,82 +104,16 @@ DELIVERED_EVIDENCE = (
     "subject_only_evidence",
     "ungrounded_subject",
     "undetermined_query",
+    "undetermined_single_statement",
     "undetermined_multi_statement",
     "attribute_undetermined",
 )
 ASSESSMENTS = ("evidence_delivered", "undetermined", "no_relevant_evidence", "no_returned_candidates")
 
-_WORD = re.compile(r"[^\W_]+(?:'[^\W_]+)?", re.UNICODE)
 _STATEMENT_END = re.compile(r"[.!?]+(?:\s|$)")
+
 # First-person markers: a query in the first person is about the caller (``speaker``).
 FIRST_PERSON = frozenset({"i", "me", "my", "mine", "myself", "we", "us", "our", "ours", "ourselves"})
-_POSSESSIVE = re.compile(r"^(.+?)'s$|^(.+?s)'$")
-# Bounded English function words (articles, pronouns, auxiliaries, prepositions, conjunctions,
-# question words). Grammatical glue only: no nouns, no domain or benchmark vocabulary.
-FUNCTION_WORDS = frozenset("""
-a an the and or but nor so yet if then than that this these those there here
-i me my mine myself we us our ours ourselves you your yours yourself yourselves
-he him his himself she her hers herself it its itself they them their theirs themselves
-who whom whose which what when where why how whether
-is am are was were be been being
-do does did doing done have has had having
-can could may might must shall should will would
-of to in on at by for from with without about into onto upon over under
-between among through during before after above below up down out off
-again further once more most some any all each every both few other such
-no not only own same too very just also
-tell say said know want need like please
-""".split())
-
-
-def _fold(term: str) -> str:
-    """A bounded, deterministic English morphology fold. It is a normaliser for equality tests,
-    not a lemmatiser: both sides of a comparison are folded the same way."""
-
-    match = _POSSESSIVE.match(term)
-    if match:
-        term = match.group(1) or match.group(2)
-    if any(character.isdigit() for character in term) or len(term) <= 3:
-        return term
-    if term.endswith("ies") and len(term) > 4:
-        term = term[:-3] + "y"
-    elif term.endswith(("sses", "xes", "zes", "ches", "shes")):
-        term = term[:-2]
-    elif term.endswith("s") and not term.endswith(("ss", "us", "is")):
-        term = term[:-1]
-    for suffix in ("ing", "ed"):
-        if term.endswith(suffix) and len(term) - len(suffix) >= 3:
-            term = term[: -len(suffix)]
-            if len(term) >= 4 and term[-1] == term[-2] and term[-1] not in "aeiou":
-                term = term[:-1]
-            break
-    if term.endswith("e") and len(term) > 3:
-        term = term[:-1]
-    return term
-
-
-def _tokens(text: str) -> list[str]:
-    return _WORD.findall(text.casefold().replace("’", "'"))
-
-
-def content_terms(text: str) -> frozenset[str]:
-    """The folded content terms of ``text``: every token that is not a function word."""
-
-    return frozenset(_fold(token) for token in _tokens(text)
-                     if _possessive_base(token) not in FUNCTION_WORDS and _contraction_base(token) not in FUNCTION_WORDS)
-
-
-def _possessive_base(token: str) -> str:
-    match = _POSSESSIVE.match(token)
-    return (match.group(1) or match.group(2)) if match else token
-
-
-def _contraction_base(token: str) -> str:
-    """``i'm`` → ``i``, ``we've`` → ``we``, ``don't`` → ``don``: the word a contraction starts
-    with, for function-word and first-person tests (0.4.1; a contracted first-person marker was
-    previously missed, so a first-person fact could be declined as a third party's)."""
-
-    return token.split("'", 1)[0]
 
 
 def single_statement(text: str) -> bool:
@@ -254,20 +199,19 @@ def qualify(
     speaker_query = first_person(query)
     speaker_fact = first_person(text, proposition)
     if not matched:
-        if single:
-            return {**record, "outcome": "omitted", "reason": "no_query_term_evidence", "certainty": "grounded",
-                    "absence_grounding": "single_statement"}
         if not speaker_fact and anchors:
-            # Policy 0.5.1: with no shared content term the only grounded observation left is a
-            # conflict of named subjects (the query is about one named party, the fact grounds a
-            # different one and never mentions the query's). Absence alone, on either side,
-            # is lexical mismatch, not evidence (review 5628673295): the fact stays uncertain.
+            # With no shared content term the only grounded observation left is a conflict of
+            # named subjects (the query is about one named party, the fact grounds a different one
+            # and never mentions the query's). Absence alone, on either side and for one sentence
+            # or several, is lexical mismatch, not evidence (review 5628673295; 0.5.1 for longer
+            # facts, 0.5.2 for a single statement): the fact stays uncertain.
             subject = grounded_subject(text, proposition)
             record["query_subjects"] = sorted(anchors)
             record["fact_subjects"] = sorted(subject)
             if subject and not (anchors & subject):
                 return {**record, "outcome": "omitted", "reason": "subject_mismatch", "certainty": "grounded"}
-        return {**record, "outcome": "delivered", "evidence": "undetermined_multi_statement", "certainty": "uncertain"}
+        evidence = "undetermined_single_statement" if single else "undetermined_multi_statement"
+        return {**record, "outcome": "delivered", "evidence": evidence, "certainty": "uncertain"}
     record["query_subjects"] = sorted(anchors)
     if not anchors:
         if speaker_query:

@@ -172,6 +172,9 @@ async def run(cases: dict, k: int = 5, *, selectivity: bool = False) -> dict:
             "AGENT_MEMORY_MCP_SCOPE": cases["scope"],
             "PATH": os.environ.get("PATH", ""),
         }
+        # Experiment branch: forward the bounded runtime candidate flag to the server.
+        if os.environ.get("AGENT_MEMORY_EXPERIMENTAL_LEXICAL_ADMISSION"):
+            env["AGENT_MEMORY_EXPERIMENTAL_LEXICAL_ADMISSION"] = os.environ["AGENT_MEMORY_EXPERIMENTAL_LEXICAL_ADMISSION"]
         params = StdioServerParameters(command=sys.executable, args=[str(SERVER)], env=env)
         rows = []
         async with Client(params) as client:
@@ -238,6 +241,7 @@ async def run(cases: dict, k: int = 5, *, selectivity: bool = False) -> dict:
         fts.close()
     return {
         "schema": "mcp-gate2-retrieval-probe/0.1.0",
+        "experimental_lexical_admission": os.environ.get("AGENT_MEMORY_EXPERIMENTAL_LEXICAL_ADMISSION") or None,
         "qualification": "author-visible development diagnostic only; NOT blinded",
         "measures": "full seeded source evidence coverage, key-only hits, distraction, empty-context; not answer correctness",
         "provider": ("real stdio MCP / governed SQLite / memory_find experimental_selectivity="

@@ -59,8 +59,8 @@ KNOWN_RED = (
 class SingleStatementParaphrase(unittest.TestCase):
     """A one-sentence fact sharing no content term with the query may still be the answer.
 
-    Recorded as expected failures (see ``KNOWN_RED``): they turn into unexpected successes, and
-    so fail the suite, the day the defect is repaired without updating this record."""
+    Expected failures on the PR branch (``KNOWN_RED``); repaired here by selector 0.5.2, which this
+    experiment pairs with content-term admission so the owner's no-safe-answer control still holds."""
 
     CASES = [
         # third person, named subject on the fact side only
@@ -71,7 +71,6 @@ class SingleStatementParaphrase(unittest.TestCase):
         ("What time does the ferry depart?", "Boats to the island leave at noon."),
     ]
 
-    @unittest.expectedFailure  # KNOWN_RED
     def test_no_shared_term_single_statement_is_delivered_uncertain(self):
         for query, text in self.CASES:
             with self.subTest(query=query):
@@ -81,7 +80,6 @@ class SingleStatementParaphrase(unittest.TestCase):
                 self.assertEqual(verdict["outcome"], "delivered", verdict)
                 self.assertEqual(verdict.get("certainty"), "uncertain", verdict)
 
-    @unittest.expectedFailure  # KNOWN_RED
     def test_no_returned_fact_is_declined_on_lexical_absence_alone(self):
         for query, text in self.CASES:
             with self.subTest(query=query):

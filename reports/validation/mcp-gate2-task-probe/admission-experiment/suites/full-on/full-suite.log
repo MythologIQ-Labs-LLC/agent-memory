@@ -1,0 +1,402 @@
+...............................F........................................ [  2%]
+.........................................FF...... [  3%]
+......................................................................................... [  6%]
+...F..................................................................... [  8%]
+................x........................................s........................ [ 11%]
+...............................................................................FF.FF.F.F.................. [ 14%]
+................ [ 14%]
+............................................F................... [ 16%]
+................................................... [ 18%]
+....................ssssssssssss........................................ [ 20%]
+..................................................................................................... [ 23%]
+................................................F............. [ 25%]
+........................................................... [ 27%]
+......................................................................................................................... [ 30%]
+........................................................................ [ 32%]
+...................................................................................................................................... [ 36%]
+............................. [ 37%]
+......................................................................................................................................... [ 41%]
+..................................................................................................................... [ 45%]
+..................................................... [ 47%]
+..................s....................................... [ 48%]
+........................................................ [ 50%]
+.......................................................................................................................... [ 54%]
+....................sssssss.................... [ 55%]
+........................................................................ [ 57%]
+..................................................F......... [ 59%]
+........................................................................ [ 61%]
+...................................................................... [ 63%]
+..................................................................................................... [ 66%]
+........................................................................................................ [ 70%]
+........................................................................ [ 72%]
+............................................................................................................................................................................. [ 77%]
+........................ssss......................................... [ 79%]
+............................................................... [ 81%]
+........................................................................ [ 83%]
+.................................................. [ 85%]
+.................................sssssssss...................... [ 87%]
+................................................................ [ 89%]
+........................................................................ [ 91%]
+...............................F.................. [ 92%]
+........................................................................s. [ 94%]
+..................................................................................................................................... [ 99%]
+.................................                                        [100%]
+=================================== FAILURES ===================================
+____ ImportedRuntimeIdentity.test_own_checkout_at_frozen_revision_is_served ____
+
+self = <tests.test_644_v7_gauntlet_identity.ImportedRuntimeIdentity testMethod=test_own_checkout_at_frozen_revision_is_served>
+
+    def test_own_checkout_at_frozen_revision_is_served(self):
+        reply = ask(str(ROOT / "reference"))
+>       self.assertEqual(reply["status"], "ok", reply)
+E       AssertionError: 'system_error' != 'ok'
+E       - system_error
+E       + ok
+E        : {'adapter_evidence': {'adapter_kind': 'agent_memory_public_stdio', 'frozen_runtime_revision': '2ad4cf23d366fc784a486b0245550230e64bfa25', 'public_contract': '1.8.0', 'runtime_identity': {'frozen_runtime_revision': '2ad4cf23d366fc784a486b0245550230e64bfa25', 'frozen_runtime_tree': 'f9b5ff9e79a54ef053ce89eb975256b63e211714', 'imported_package': '/home/user/eval/g2/wt-exp/reference/agentmem_ref', 'matches_frozen_revision': False, 'same_checkout': True, 'verified': False}, 'surface': 'AgentMemory public facade', 'translation_only': True}, 'authority_effect': 'none', 'contract_family': 'agent-memory-gauntlet-operation', 'contract_version': '0.1.0', 'direction': 'response', 'error': {'code': 'runtime_identity_unverified', 'message': "imported agentmem_ref is not this checkout's runtime at FROZEN_RUNTIME_REVISION", 'source': 'system_adapter'}, 'operation': 'describe', 'request_id': 'r1', 'result': None, 'status': 'system_error', 'timing': {'elapsed_ms': 0.005168999450688716}}
+
+reference/tests/test_644_v7_gauntlet_identity.py:71: AssertionError
+_ ReplayEvidenceFreshness.test_a_runtime_edit_still_makes_replay_evidence_stale _
+
+self = <tests.test_770_v7_lane_freeze_independent.ReplayEvidenceFreshness testMethod=test_a_runtime_edit_still_makes_replay_evidence_stale>
+
+    def test_a_runtime_edit_still_makes_replay_evidence_stale(self):
+        verifier = runpy.run_path(str(REPO_ROOT / "scripts/verify_644_v7_replays.py"))
+        manifest = json.loads((self.EVIDENCE_ROOT / self.REPLAY_ID / "manifest.json").read_text(encoding="utf-8"))
+        # The manifest pins the protected runtime that generated this replay,
+        # rather than assuming a forever-fixed pre-v7 ancestor.
+        baseline = manifest["source_commit"]
+>       self.assertFalse(verifier["runtime_changed_since"](baseline))
+E       AssertionError: True is not false
+
+reference/tests/test_770_v7_lane_freeze_independent.py:269: AssertionError
+_ ReplayEvidenceFreshness.test_lane_records_do_not_make_replay_evidence_stale __
+
+self = <tests.test_770_v7_lane_freeze_independent.ReplayEvidenceFreshness testMethod=test_lane_records_do_not_make_replay_evidence_stale>
+
+    def test_lane_records_do_not_make_replay_evidence_stale(self):
+        verifier = runpy.run_path(str(REPO_ROOT / "scripts/verify_644_v7_replays.py"))
+        result = verifier["verify"](evidence_root=self.EVIDENCE_ROOT)
+>       self.assertEqual({row["replay"]: row["status"] for row in result["replays"]},
+                         {row["replay"]: "VERIFIED" for row in result["replays"]}, result)
+E       AssertionError: {'typ[54 chars]1': 'STALE', 'governed-persisted-typed-slot-su[216 chars]ALE'} != {'typ[54 chars]1': 'VERIFIED', 'governed-persisted-typed-slot[231 chars]IED'}
+E       Diff is 1379 characters long. Set self.maxDiff to None to see it. : {'replays': [{'replay': 'typed-sufficiency-noninterference-and-negative-controls-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}, {'replay': 'governed-persisted-typed-slot-sufficiency-admission-recheck-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}, {'replay': 'governed-admitted-typed-value-coherence-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}, {'replay': 'committed-governed-transition-witness-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}, {'replay': 'same-slot-safety-counterevidence-and-immutable-stop-gate-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}], 'evidence_verified': False, 'acceptance': "NOT GRANTED: requires an independent reviewer's decision recorded in META_LEDGER"}
+
+reference/tests/test_770_v7_lane_freeze_independent.py:259: AssertionError
+_ RestartAndRoutes.test_exact_identity_lexical_vector_and_composed_routes_share_admission _
+
+self = <tests.test_776_adversarial_review.RestartAndRoutes testMethod=test_exact_identity_lexical_vector_and_composed_routes_share_admission>
+
+    def test_exact_identity_lexical_vector_and_composed_routes_share_admission(self):
+        h = _Store(self, vector=True)
+        old, new = h.chain("kiln", KILN)
+        keep = h.chain("pump", [("The water pump service interval was 7 days.", None),
+                                ("The water pump service interval became 14 days.", S)])
+        h.prune("kiln")
+        ctx = _context()
+        composed = h.recall(logical_memory_refs=("memory:776r:kiln", "memory:776r:pump"))
+        self.assertIn(old, composed.candidates)  # residue is rediscovered by some route ...
+        self.assertFalse({old, new} & set(composed.admitted))  # ... but never admitted
+        self.assertFalse({old, new} & set(composed.ranked_admitted))
+        vector_hits = [hit for hit in composed.provenance_for(old) if hit.route_id == SEMANTIC_VECTOR_ROUTE]
+        self.assertTrue(vector_hits, "vector route should rediscover the pruned residue")
+>       self.assertIn(keep[0], composed.admitted)
+E       AssertionError: 'ref-0018' not found in ['ref-0025']
+
+reference/tests/test_776_adversarial_review.py:291: AssertionError
+_____________ ProfileContract.test_term_absence_is_never_grounded ______________
+
+self = <tests.test_819_evidence_qualified_selection.ProfileContract testMethod=test_term_absence_is_never_grounded>
+
+    def test_term_absence_is_never_grounded(self):
+        # Policy 0.5.0 briefly grounded term absence for a longer third-person statement whose own
+        # subject the query never mentioned; the owner's review (PR #843, 5628673295) showed that a
+        # paraphrase shares no token and still answers, so 0.5.1 restored the 0.3.0 contract here.
+        short = self.put("memory:a", "The autumn science festival begins Friday.")
+        long = self.put("memory:b", "The autumn science festival begins Friday. The committee that plans "
+                                    "the eclipse viewing meets afterwards in the same hall.")
+        package = self.context("What time does the lunar eclipse committee meet?")
+        decisions = package["selection"]["decisions"]
+        # the short fact shares no content term with the question: uncertain, not declined (0.5.2)
+        if short in decisions:
+            self.assertEqual(decisions[short]["outcome"], "delivered")
+            self.assertEqual(decisions[short]["evidence"], "undetermined_single_statement")
+            self.assertEqual(decisions[short]["certainty"], "uncertain")
+            self.assertNotIn("absence_grounding", decisions[short])
+        # the longer one matches ("committee", "eclipse", "meet"); now make one that does not
+        unrelated_long = self.put("memory:c", "The moon exhibit has a new display case. Tickets are sold at the "
+                                              "door. Visitors may bring cameras.")
+        package = self.context("What time does the lunar eclipse committee meet?")
+        decisions = package["selection"]["decisions"]
+>       self.assertEqual(decisions[unrelated_long]["outcome"], "delivered")
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'ref-0022'
+
+reference/tests/test_819_evidence_qualified_selection.py:195: KeyError
+_ ProfileContract.test_uncertainty_is_delivered_and_labelled_rather_than_excluded _
+
+self = <tests.test_819_evidence_qualified_selection.ProfileContract testMethod=test_uncertainty_is_delivered_and_labelled_rather_than_excluded>
+
+    def test_uncertainty_is_delivered_and_labelled_rather_than_excluded(self):
+        self.put("memory:a", "Liora's canoe is teal.")
+        unowned = self.put("memory:b", "The canoe was repainted last spring.")
+        package = self.context("What color is Liora's canoe?")
+        decisions = package["selection"]["decisions"]
+        self.assertIn(unowned, _delivered(package))
+        self.assertEqual(decisions[unowned]["evidence"], "ungrounded_subject")
+        self.assertEqual(decisions[unowned]["certainty"], "uncertain")
+        self.assertEqual(package["selection"]["uncertain_count"], 1)
+        # a query with no content terms cannot ground any exclusion
+        only_function_words = self.context("what is it")
+        for decision in only_function_words["selection"]["decisions"].values():
+            self.assertEqual(decision["outcome"], "delivered")
+            self.assertEqual(decision["evidence"], "undetermined_query")
+>       self.assertEqual(only_function_words["selection"]["assessment"], "undetermined")
+E       AssertionError: 'no_returned_candidates' != 'undetermined'
+E       - no_returned_candidates
+E       + undetermined
+
+reference/tests/test_819_evidence_qualified_selection.py:156: AssertionError
+_ SubjectConflictWithoutSharedTerms.test_first_person_statement_without_shared_terms_stays_uncertain _
+
+self = <tests.test_819_evidence_qualified_selection.SubjectConflictWithoutSharedTerms testMethod=test_first_person_statement_without_shared_terms_stays_uncertain>
+
+    def test_first_person_statement_without_shared_terms_stays_uncertain(self):
+        mine = self.put("memory:a", "I've been practising a lot lately. The recital is in November, which is soon.")
+        package = self.context("Which instrument does Liora's child play?")
+>       decision = package["selection"]["decisions"][mine]
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'ref-0004'
+
+reference/tests/test_819_evidence_qualified_selection.py:386: KeyError
+_ SubjectConflictWithoutSharedTerms.test_named_query_subject_keeps_a_fact_naming_nobody_as_uncertain _
+
+self = <tests.test_819_evidence_qualified_selection.SubjectConflictWithoutSharedTerms testMethod=test_named_query_subject_keeps_a_fact_naming_nobody_as_uncertain>
+
+    def test_named_query_subject_keeps_a_fact_naming_nobody_as_uncertain(self):
+        canoe = self.put("memory:a", "Liora's canoe is teal. The hull was inspected on Tuesday.")
+        exhibit = self.put("memory:b", "The moon exhibit has a new display case. The museum catalog is updated.")
+        package = self.context("What color is Liora's canoe?")
+        self.assertIn(canoe, _delivered(package))
+>       decision = package["selection"]["decisions"][exhibit]
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'ref-0011'
+
+reference/tests/test_819_evidence_qualified_selection.py:379: KeyError
+_ SubjectConflictWithoutSharedTerms.test_query_without_a_named_subject_keeps_a_named_third_person_fact_as_uncertain _
+
+self = <tests.test_819_evidence_qualified_selection.SubjectConflictWithoutSharedTerms testMethod=test_query_without_a_named_subject_keeps_a_named_third_person_fact_as_uncertain>
+
+    def test_query_without_a_named_subject_keeps_a_named_third_person_fact_as_uncertain(self):
+        # the fact's own subject being absent from the query grounds nothing: "Captain Nia's
+        # plane landed at Orion Field" answers "Where did the aircraft touch down?"
+        liora = self.put("memory:a", "Liora's canoe is teal. The hull was inspected on Tuesday.")
+        self.put("memory:b", "The office printer is a Brother HL-L2400D. Its toner is TN830.")
+        package = self.context("What model is the office printer?")
+>       decision = package["selection"]["decisions"][liora]
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'ref-0004'
+
+reference/tests/test_819_evidence_qualified_selection.py:366: KeyError
+_ SubjectConflictWithoutSharedTerms.test_zero_overlap_fact_about_a_different_named_subject_is_a_subject_mismatch _
+
+self = <tests.test_819_evidence_qualified_selection.SubjectConflictWithoutSharedTerms testMethod=test_zero_overlap_fact_about_a_different_named_subject_is_a_subject_mismatch>
+
+    def test_zero_overlap_fact_about_a_different_named_subject_is_a_subject_mismatch(self):
+        canoe = self.put("memory:a", "Liora's canoe is teal. The hull was inspected on Tuesday.")
+        mara = self.put("memory:b", "Mara's eldest performs on the cello. Their next recital is in November.")
+        package = self.context("What color is Liora's canoe?")
+        self.assertIn(canoe, _delivered(package))
+>       decision = package["selection"]["decisions"][mara]
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'ref-0011'
+
+reference/tests/test_819_evidence_qualified_selection.py:353: KeyError
+_ FirstOpenConfigurationSafety.test_forced_two_creator_race_admits_exactly_one_initializer _
+
+self = <tests.test_836_first_open_configuration_safety.FirstOpenConfigurationSafety testMethod=test_forced_two_creator_race_admits_exactly_one_initializer>
+
+        def test_forced_two_creator_race_admits_exactly_one_initializer(self):
+            """Deterministic form of the fresh-root race: both processes pass the database-exists
+            check and both call the fresh-store creator. Exactly one may initialise the root; the
+            other must fail closed; the survivor's write is durable and the root reopens cleanly."""
+            worker = """
+    import sys, time
+    from pathlib import Path
+    from agentmem_ref import AgentMemory
+    from agentmem_ref.runtime import sqlite_composition as composition
+    root = Path(sys.argv[1])
+    name = sys.argv[2]
+    real_create = composition.SQLiteConfiguredCompositionRuntime.create.__func__
+    def gated_create(cls, *args, **kwargs):
+        (root / ("create-ready-" + name)).write_text("ready", encoding="utf-8")
+        deadline = time.monotonic() + 20
+        while not (root / "create-go").exists():
+            if time.monotonic() > deadline:
+                raise TimeoutError("other initializer never reached the creator")
+            time.sleep(0.005)
+        return real_create(cls, *args, **kwargs)
+    composition.SQLiteConfiguredCompositionRuntime.create = classmethod(gated_create)
+    try:
+        runtime = AgentMemory.open(root)
+    except Exception as exc:
+        print("REFUSED:" + type(exc).__name__)
+    else:
+        try:
+            print("OPENED:" + str(runtime.remember("memory:" + name, "written by " + name)["committed"]))
+        finally:
+            runtime.close()
+    """
+            with tempfile.TemporaryDirectory() as directory:
+                root = Path(directory) / "runtime"
+                root.mkdir()
+                environment = os.environ.copy()
+                reference_dir = str(Path(__file__).resolve().parents[1])
+                environment["PYTHONPATH"] = reference_dir + os.pathsep + environment.get("PYTHONPATH", "")
+                processes = [
+                    subprocess.Popen(
+                        [sys.executable, "-c", worker, str(root), name],
+                        stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+                        env=environment,
+                    )
+                    for name in ("A", "B")
+                ]
+                try:
+                    deadline = time.monotonic() + 20
+                    while not all((root / ("create-ready-" + name)).exists() for name in ("A", "B")):
+                        if any(p.poll() is not None for p in processes):
+                            self.fail("an initializer exited before both reached the creator")
+                        if time.monotonic() > deadline:
+                            self.fail("initializers did not both reach the creator")
+                        time.sleep(0.02)
+                    (root / "create-go").write_text("go", encoding="utf-8")
+                    outcomes = [p.communicate(timeout=30) for p in processes]
+                    results = []
+                    for p, (stdout, stderr) in zip(processes, outcomes):
+                        self.assertEqual(p.returncode, 0, (stdout, stderr))
+                        results.append(stdout.strip())
+                    self.assertEqual(sorted(r.split(":")[0] for r in results), ["OPENED", "REFUSED"], results)
+                    self.assertIn("OPENED:True", results)
+>                   self.assertIn("REFUSED:RuntimeRecoveryError", results)
+E                   AssertionError: 'REFUSED:RuntimeRecoveryError' not found in ['OPENED:True', 'REFUSED:OperationalError']
+
+reference/tests/test_836_first_open_configuration_safety.py:287: AssertionError
+_ BenchmarkIntegrationContractTests.test_evaluation_only_change_keeps_runtime_baseline_equivalence _
+
+self = <tests.test_benchmark_integration_contract.BenchmarkIntegrationContractTests testMethod=test_evaluation_only_change_keeps_runtime_baseline_equivalence>
+
+    def test_evaluation_only_change_keeps_runtime_baseline_equivalence(self):
+        register = json.loads((REPO_ROOT / "reports" / "runtime" / "baseline-register.json").read_text(encoding="utf-8"))
+        boundary = json.loads((REPO_ROOT / register["baselines"][-1]["source_boundary"]).read_text(encoding="utf-8"))
+        excluded = [item["path"] for item in boundary["excluded_non_runtime_paths"]]
+        self.assertEqual(excluded, ["reference/agentmem_ref/evaluation"])
+        self.assertIs(boundary["baseline_mutation"], False)
+        available = subprocess.run(
+            ["git", "cat-file", "-e", f"{boundary['frozen_revision']}^{{commit}}"],
+            cwd=REPO_ROOT, capture_output=True, text=True, check=False,
+        )
+        if available.returncode != 0:
+            self.skipTest("frozen Runtime Baseline v1 revision is not available in this checkout")
+        result = subprocess.run(
+            [sys.executable, "scripts/check_runtime_baseline_equivalence.py", "--candidate", "HEAD"],
+            cwd=REPO_ROOT, capture_output=True, text=True, check=False,
+        )
+>       self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+E       AssertionError: 1 != 0 : undeclared protected change: reference/agentmem_ref/api/context_package.py
+E       undeclared protected change: reference/agentmem_ref/api/context_selection.py
+E       undeclared protected change: reference/agentmem_ref/api/host_activation.py
+E       undeclared protected change: reference/agentmem_ref/content_terms.py
+E       undeclared protected change: reference/agentmem_ref/context_package.py
+E       undeclared protected change: reference/agentmem_ref/context_selection.py
+E       undeclared protected change: reference/agentmem_ref/core/content_terms.py
+E       undeclared protected change: reference/agentmem_ref/host_activation.py
+E       declared blob mismatch for reference/agentmem_ref/api/surface.py: declared ba8924d450139f6ef7ea322bb2b3b021139c7e8d, candidate 1de5e7ad751b4226c65d992954a219eb0742a85d
+E       declared blob mismatch for reference/agentmem_ref/runtime/adapter.py: declared 2c0d3b6d2fbca899afe0d021b563064e91659f77, candidate ae6f659a6c7d5640bfc44a262a5025f7dc6c6c0e
+
+reference/tests/test_benchmark_integration_contract.py:379: AssertionError
+_ LoCoMoEvidenceBenchmarkTests.test_aggregate_evidence_recall_improves_without_authority_leakage _
+
+self = <tests.test_locomo_evidence_benchmark.LoCoMoEvidenceBenchmarkTests testMethod=test_aggregate_evidence_recall_improves_without_authority_leakage>
+
+    def test_aggregate_evidence_recall_improves_without_authority_leakage(self) -> None:
+        report = self._report()
+        lexical = report["lexical_only"]["aggregate"]
+        multi = report["query_driven_multi_route"]["aggregate"]
+    
+        self.assertEqual(lexical["question_count"], 3)
+        self.assertEqual(lexical["evidence_count"], 4)
+        self.assertEqual(multi["question_count"], 3)
+        self.assertEqual(report["excluded_empty_evidence_questions"], 1)
+        self.assertGreater(
+            multi["at_k"]["5"]["micro_recall"],
+            lexical["at_k"]["5"]["micro_recall"],
+        )
+        self.assertEqual(multi["at_k"]["5"]["micro_recall"], 1.0)
+        # Ranking policy history on this fixture (#538/#531):
+        # - 2.0.0 replaced the ascending-insertion-id tie-break with newer-first. Gold D2:1
+        #   and non-gold D2:2 tied on every relevance stage (each shares one stopword with
+        #   the query), so D2:2 ranked first and the MRR delta fell to -0.083333.
+        # - 2.1.0 orders the lexical stage by Okapi BM25 over the admitted set. D2:1 now
+        #   wins on relevance, not on tie order, and the MRR delta is +0.027778.
+        # - 3.0.0 applies temporal order only under an established temporal intent (#538,
+        #   ADR-039 proposed). The pottery question is atemporal; its gold D1:3 had reached
+        #   rank 4 under 2.x only because it was newer than equally scored distractors. That
+        #   coincidental gain is gone, and the MRR delta is +0.011111.
+>       self.assertAlmostEqual(report["comparison"]["mean_reciprocal_rank_delta"], 0.011111)
+E       AssertionError: 0.055555 != 0.011111 within 7 places (0.044444 difference)
+
+reference/tests/test_locomo_evidence_benchmark.py:83: AssertionError
+_ GauntletTests.test_live_runtime_is_monotonic_against_frozen_pre_550_baseline _
+
+self = <tests.test_temporal_currentness_gauntlet.GauntletTests testMethod=test_live_runtime_is_monotonic_against_frozen_pre_550_baseline>
+
+    def test_live_runtime_is_monotonic_against_frozen_pre_550_baseline(self):
+        """Freeze gold and old evidence, not known defects.
+    
+        The baseline remains the immutable record of policy 3.0.1 at 0bace49. Later
+        bounded remediation is allowed to turn ``fail``/``honest_unknown`` into stronger
+        outcomes, but it may not regress a required pass. The fixture executes setup once
+        per case, so an intentional setup-level remediation may change all probe digests
+        in that case; observation drift in unrelated cases remains forbidden.
+        """
+        frozen = json.loads(BASELINE.read_text(encoding="utf-8"))
+        self.assertEqual(frozen["provenance"]["fixture_sha256"], FIXTURE_SHA256)
+        self.assertEqual(frozen["provenance"]["runtime_changes_since_boundary"], [])
+    
+        frozen_units = tc.units(frozen["rows"])
+        live_units = tc.units(self.rows)
+        self.assertEqual(set(live_units), set(frozen_units))
+    
+        required_regressions = {
+            "/".join(key): (old, live_units[key])
+            for key, old in frozen_units.items()
+            if key[3] == "required" and old == "pass" and live_units[key] != "pass"
+            and VERSIONED_GOLD_SUPERSEDED_UNITS.get(key) != (old, live_units[key])
+        }
+>       self.assertEqual(required_regressions, {})
+E       AssertionError: {'A3-two-valid-relevance-decides/current-i[61 chars]il')} != {}
+E       + {}
+E       - {'A3-two-valid-relevance-decides/current-inferred/current_demoted_as_stale_rate/required': ('pass',
+E       -                                                                                             'fail')}
+
+reference/tests/test_temporal_currentness_gauntlet.py:312: AssertionError
+=============================== warnings summary ===============================
+reference/tests/test_test_import_convention.py::TestImportConvention::test_no_test_module_uses_a_relative_import
+  <unknown>:79: SyntaxWarning: invalid escape sequence '\+'
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED reference/tests/test_644_v7_gauntlet_identity.py::ImportedRuntimeIdentity::test_own_checkout_at_frozen_revision_is_served
+FAILED reference/tests/test_770_v7_lane_freeze_independent.py::ReplayEvidenceFreshness::test_a_runtime_edit_still_makes_replay_evidence_stale
+FAILED reference/tests/test_770_v7_lane_freeze_independent.py::ReplayEvidenceFreshness::test_lane_records_do_not_make_replay_evidence_stale
+FAILED reference/tests/test_776_adversarial_review.py::RestartAndRoutes::test_exact_identity_lexical_vector_and_composed_routes_share_admission
+FAILED reference/tests/test_819_evidence_qualified_selection.py::ProfileContract::test_term_absence_is_never_grounded
+FAILED reference/tests/test_819_evidence_qualified_selection.py::ProfileContract::test_uncertainty_is_delivered_and_labelled_rather_than_excluded
+FAILED reference/tests/test_819_evidence_qualified_selection.py::SubjectConflictWithoutSharedTerms::test_first_person_statement_without_shared_terms_stays_uncertain
+FAILED reference/tests/test_819_evidence_qualified_selection.py::SubjectConflictWithoutSharedTerms::test_named_query_subject_keeps_a_fact_naming_nobody_as_uncertain
+FAILED reference/tests/test_819_evidence_qualified_selection.py::SubjectConflictWithoutSharedTerms::test_query_without_a_named_subject_keeps_a_named_third_person_fact_as_uncertain
+FAILED reference/tests/test_819_evidence_qualified_selection.py::SubjectConflictWithoutSharedTerms::test_zero_overlap_fact_about_a_different_named_subject_is_a_subject_mismatch
+FAILED reference/tests/test_836_first_open_configuration_safety.py::FirstOpenConfigurationSafety::test_forced_two_creator_race_admits_exactly_one_initializer
+FAILED reference/tests/test_benchmark_integration_contract.py::BenchmarkIntegrationContractTests::test_evaluation_only_change_keeps_runtime_baseline_equivalence
+FAILED reference/tests/test_locomo_evidence_benchmark.py::LoCoMoEvidenceBenchmarkTests::test_aggregate_evidence_recall_improves_without_authority_leakage
+FAILED reference/tests/test_temporal_currentness_gauntlet.py::GauntletTests::test_live_runtime_is_monotonic_against_frozen_pre_550_baseline
+14 failed, 3260 passed, 35 skipped, 1 xfailed, 1 warning, 2195 subtests passed in 325.36s (0:05:25)
