@@ -27,11 +27,17 @@ admitted. The first version of the rule used the substrate's exact tokens and lo
 `I graduated with a degree…` for `What degrees did my friends graduate with?`. Today such a fact is
 admitted only through "with". So admission uses the selector's morphology fold, one definition for both.
 
-## Results (flag OFF = existing default, byte for byte; flag ON = candidate)
+## Results (flag OFF = existing *default profile*; flag ON = candidate)
 
-**Default unchanged when the flag is off.** On all 500 questions of both LongMemEval planes, the
-default arm returned the same ids at the experiment head with the flag off as at the PR head. Dev, task
-and LoCoMo default-arm totals are also identical.
+**The default `all_returned` profile is unchanged when the flag is off.** On all 500 questions of both
+LongMemEval planes, the default arm returned the same ids at the experiment head with the flag off as at
+the PR head. Dev, task and LoCoMo default-arm totals are also identical.
+
+**Flag off does not mean every consumer behaviour is unchanged.** This branch also changes the opt-in
+`evidence_qualified` selector from 0.5.1 to 0.5.2 unconditionally (commit `c115b958`). With the flag off,
+the owner's `test_no_safe_answer…` control fails here (see Suites). 0.5.2 is bound to this isolated
+experiment: the branch is not a drop-in optional change. A standalone admission experiment must not
+silently change the existing opt-in selector contract (review 5632809923, point 3).
 
 ### Development and task cohorts (real stdio MCP server, k=5; `arms/`)
 
