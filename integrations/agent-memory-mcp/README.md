@@ -69,7 +69,9 @@ framing, and tool schemas provided by the official SDK.
   The model receives only facts whose resolved memory_ref exactly matches
   the requested key. A missing/withheld/out-of-budget key returns
   lookup_status=not_found_or_unavailable, **not** a guessed nearby memory and
-  not proof that the key never existed. No direct database access.
+  not proof that the key never existed. If several governed facts resolve under
+  the same logical key, returns lookup_status=ambiguous_multiple_versions
+  without guessing which one supersedes the others. No direct database access.
 - memory_find(question, max_items=5, experimental_selectivity=False):
   governed recall_context within bounded delivery budgets, defaulting to
   all_returned. The experimental #819 selector must be opted into deliberately.
