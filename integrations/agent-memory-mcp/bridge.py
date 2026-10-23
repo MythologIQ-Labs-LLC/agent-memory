@@ -39,8 +39,18 @@ class HostConfig:
         if not raw_root or not Path(raw_root).is_absolute():
             raise ValueError("AGENT_MEMORY_MCP_ROOT must be an absolute, host-owned local path")
         root = Path(raw_root)
-        if root.is_symlink():
-            raise ValueError("AGENT_MEMORY_MCP_ROOT must not be a symlink")
+        # The host supplies a *local canonical path*, not a path that
+        # traverses a redirected parent. Checking only root.is_symlink()
+        # misses /trusted/link/subdir where "link" points elsewhere.
+        # Windows junctions are also redirections, even when is_symlink()
+        # returns False. This is a configuration preflight, not a substitute
+        # for filesystem ACLs or a race-free directory handle.
+        if ".." in root.parts:
+            raise ValueError("AGENT_MEMORY_MCP_ROOT must not contain parent traversal")
+        for component in (root, *root.parents):
+            junction = getattr(component, "is_junction", None)
+            if component.is_symlink() or (callable(junction) and junction()):
+                raise ValueError("AGENT_MEMORY_MCP_ROOT must not traverse a symlink or junction")
         claims = {
             "tenant": os.environ.get("AGENT_MEMORY_MCP_TENANT", ""),
             "actor": os.environ.get("AGENT_MEMORY_MCP_ACTOR", ""),
