@@ -31,6 +31,7 @@ from dataclasses import asdict, dataclass
 import hashlib
 import json
 import os
+import tempfile
 from pathlib import Path
 from typing import Iterable, Mapping
 
@@ -491,14 +492,22 @@ def _fsync_directory(path: Path) -> None:
 def _atomic_json_write(path: Path, value: dict | bytes) -> None:
     """Write ``value`` as one canonical JSON line, atomically; ``bytes`` are written as given."""
     path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_name(f".{path.name}.tmp")
     payload = _canonical_bytes(value) + b"\n"
-    with tmp.open("wb") as handle:
-        handle.write(payload)
-        handle.flush()
-        os.fsync(handle.fileno())
-    os.replace(tmp, path)
-    _fsync_directory(path.parent)
+    temporary: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="wb", prefix=f".{path.name}.", suffix=".tmp",
+            dir=path.parent, delete=False,
+        ) as handle:
+            temporary = Path(handle.name)
+            handle.write(payload)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, path)
+        _fsync_directory(path.parent)
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
 
 
 def _append_json_line(path: Path, value: dict) -> bytes:
