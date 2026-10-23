@@ -1,0 +1,123 @@
+{
+ "raw": {
+  "strict": 15,
+  "cases": 77,
+  "metrics": {
+   "mean_precision": 0.1806,
+   "mean_recall": 0.9535,
+   "active_passes": 4,
+   "active_total": 43
+  },
+  "returned_count": 686,
+  "must_exclude_failure_cases": 2,
+  "unexpected_belief_failure_cases": 60,
+  "missing_expected_failure_cases": 2,
+  "no_answer_cases": 9,
+  "no_answer_correct": 5,
+  "no_answer_empty_relevant": 5
+ },
+ "default": {
+  "strict": 15,
+  "cases": 77,
+  "metrics": {
+   "mean_precision": 0.1806,
+   "mean_recall": 0.9535,
+   "active_passes": 4,
+   "active_total": 43
+  },
+  "returned_count": 686,
+  "must_exclude_failure_cases": 2,
+  "unexpected_belief_failure_cases": 60,
+  "missing_expected_failure_cases": 2,
+  "no_answer_cases": 9,
+  "no_answer_correct": 5,
+  "no_answer_empty_relevant": 5
+ },
+ "lexical": {
+  "strict": 22,
+  "cases": 77,
+  "metrics": {
+   "mean_precision": 0.3243,
+   "mean_recall": 0.9535,
+   "active_passes": 9,
+   "active_total": 43
+  },
+  "returned_count": 236,
+  "must_exclude_failure_cases": 2,
+  "unexpected_belief_failure_cases": 53,
+  "missing_expected_failure_cases": 2,
+  "no_answer_cases": 9,
+  "no_answer_correct": 5,
+  "no_answer_empty_relevant": 5
+ },
+ "eq": {
+  "strict": 16,
+  "cases": 77,
+  "metrics": {
+   "mean_precision": 0.1833,
+   "mean_recall": 0.9535,
+   "active_passes": 4,
+   "active_total": 43
+  },
+  "returned_count": 678,
+  "must_exclude_failure_cases": 2,
+  "unexpected_belief_failure_cases": 59,
+  "missing_expected_failure_cases": 2,
+  "no_answer_cases": 9,
+  "no_answer_correct": 5,
+  "no_answer_empty_relevant": 5
+ },
+ "fts5": {
+  "strict": 19,
+  "cases": 77,
+  "metrics": {
+   "mean_precision": 0.2903,
+   "mean_recall": 0.9535,
+   "active_passes": 6,
+   "active_total": 43
+  },
+  "returned_count": 254,
+  "must_exclude_failure_cases": 2,
+  "unexpected_belief_failure_cases": 56,
+  "missing_expected_failure_cases": 2,
+  "no_answer_cases": 9,
+  "no_answer_correct": 5,
+  "no_answer_empty_relevant": 5
+ }
+}
+{
+ "raw": {
+  "improved": [],
+  "regressed": []
+ },
+ "lexical": {
+  "improved": [
+   "alias-kube-resolves",
+   "alias-mongo-resolves",
+   "messy-typo-blind-spot",
+   "multi-scope-prelude-uses-primary-scope-only",
+   "preference-flood-relevant-entity-survives",
+   "alias-dlq-abbreviation-resolves",
+   "universal-scope-explicit-query-no-relevant"
+  ],
+  "regressed": []
+ },
+ "eq": {
+  "improved": [
+   "canonical-name-match-mara"
+  ],
+  "regressed": []
+ },
+ "fts5": {
+  "improved": [
+   "alias-mongo-resolves",
+   "alias-protagonist-resolves",
+   "multi-scope-prelude-uses-primary-scope-only",
+   "alias-dlq-abbreviation-resolves",
+   "universal-scope-explicit-query-no-relevant"
+  ],
+  "regressed": [
+   "fuzzy-scope-filter-discriminates-after-fuzzy-fires"
+  ]
+ }
+}

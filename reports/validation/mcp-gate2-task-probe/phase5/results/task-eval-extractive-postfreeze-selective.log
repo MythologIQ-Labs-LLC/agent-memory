@@ -1,0 +1,28 @@
+{
+  "mcp": {
+    "answerable_total": 16,
+    "answerable_correct": 11,
+    "answerable_abstained": 0,
+    "answerable_wrong": 5,
+    "unanswerable_total": 6,
+    "unanswerable_abstained": 0,
+    "unanswerable_false_answer": 6,
+    "required_evidence_complete": 16,
+    "unexpected_evidence_items": 46,
+    "delivered_chars_total": 5261,
+    "retrieval_p50_ms": 46.54511050000565
+  },
+  "fts5": {
+    "answerable_total": 16,
+    "answerable_correct": 9,
+    "answerable_abstained": 0,
+    "answerable_wrong": 7,
+    "unanswerable_total": 6,
+    "unanswerable_abstained": 0,
+    "unanswerable_false_answer": 6,
+    "required_evidence_complete": 16,
+    "unexpected_evidence_items": 45,
+    "delivered_chars_total": 5098,
+    "retrieval_p50_ms": 0.143611000112287
+  }
+}
