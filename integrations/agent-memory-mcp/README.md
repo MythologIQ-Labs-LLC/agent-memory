@@ -1,8 +1,9 @@
 # Agent Memory: minimum local MCP consumer
 
-**Development candidate, not production-qualified.** A real agent harness can call four
+**Development candidate, not production-qualified.** A real agent harness can call five
 MCP tools against the Agent Memory SQLite facade: explicit save, exact logical-key recall,
-bounded question retrieval, and reversible host-scoped forgetting (disabled by default). This is not a separate database or an answer-generation engine.
+bounded question retrieval, and two host-authorized lifecycle actions that are disabled by default:
+reversible forgetting and governed correction. This is not a separate database or an answer-generation engine.
 
 Unlike the existing Hermes observation-only provider, this is an actual read/write consumer.
 
@@ -105,14 +106,14 @@ framing, and tool schemas provided by the official SDK.
   (every returned fact declined on a grounded basis: not proof that no memory exists) or
   `no_returned_candidates`.
 
-The bridge does not expose correction without qualified lifecycle
+The bridge does not expose correction without host-held qualified lifecycle
 evidence, does not grant arbitrary deletion authority, and makes no claim of accurate
 no-answer calibration. The reversible forgetting tool is host-bound, never permanent. An external model used by the agent harness may
 receive retrieved memory text, so use test data and a trusted harness.
 
 ## Internal alpha lifecycle slice: reversible, host-bound forgetting
 
-`memory_forget(key)` is present in the four-tool alpha catalog but **disabled by
+`memory_forget(key)` is present in the alpha catalog but **disabled by
 default**. For a single operator-authorized prune only, a trusted MCP host must
 bind BOTH of these variables when starting the local server:
 
@@ -152,9 +153,53 @@ the real MCP SDK (only if the public facade commits), then reconnect to prove
 its content is no longer visible in `memory_get` or ordinary `memory_find`.
 Cross-scope refusal and ordinary save/get/find must keep working.
 
-The full internal alpha remains **BLOCKED** until the separately governed
-correction workflow and meaningful insufficient-evidence/abstention behavior
-work end to end. Do not call this first slice a completed alpha.
+## Internal alpha lifecycle slice: host-authorized governed correction
+
+`memory_correct(key, text)` replaces the current value of one key, and it is **disabled by
+default**. Correction is `REQUIRE_REVIEW` in the governance policy at every risk class. It
+commits only with qualified, independent lifecycle evidence. Writing the same key again with
+`memory_remember` is **not** a correction: the old value is not retired.
+
+For one operator-authorized correction, the person running the host writes a small JSON
+record outside the memory store and names it when starting the server:
+
+    AGENT_MEMORY_MCP_CORRECTION_RECORD=/absolute/path/to/correction.json
+    # correction.json: {"key": "memory:owner:the_exact_key", "text": "the exact corrected text", ...}
+
+The bridge accepts the record only when all of these hold:
+- it is an absolute path;
+- it is a regular file, not a symlink;
+- it is at most 16 KiB;
+- it is a JSON object;
+- its `key` and `text` equal the tool call's arguments exactly.
+
+Otherwise the tool returns `committed=false`, `host_authorization_required` without opening the
+store.
+
+With a matching record, the bridge proceeds as follows:
+1. It builds one artifact-bound `EvidenceItem` (the record's path and SHA-256).
+2. It opens the store with a host-held `VerifierRegistry`, whose verifier re-reads that exact
+   file and checks the digest and the key/text.
+3. It calls only the public `AgentMemory.correct(key, text, evidence=(item,))`.
+
+The facade's own policy decides the outcome. Only `status="corrected"` (`committed=true`,
+`operation="correction"`) means the old value was retired. After that, `memory_get` and
+`memory_find` serve the new value and its new `fact_ref`, and the old value is not current
+evidence.
+
+A refusal or a parked review is not a correction. The tool exposes no risk class, approval,
+attestation or evidence argument. A high-risk correction would also need a human-confirmation
+attestation, which this surface does not provide, so it stays parked. After use, remove the
+variable and restart the subprocess.
+
+**Security limitations:** the record is not authentication. Anyone who can write that file
+and set the host environment can authorize a correction. The verifier proves only that the
+file named by the host still holds the exact authorized key/text. It does not prove who wrote
+it. This is suitable only for the same **trusted single-user test deployment** as forgetting.
+
+The full internal alpha remains **BLOCKED** until meaningful insufficient-evidence/abstention
+behavior works end to end, from the host's side, and a pilot (including Windows) passes. Do not
+call these lifecycle slices a completed alpha.
 
 ## Two acceptance gates
 
