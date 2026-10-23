@@ -71,6 +71,21 @@ class FakeSupport:
         return {"per_item": list(self.per_item), "joint": self.joint}
 
 
+class FakeSuccessor:
+    """A stand-in classifier; the decision itself is the real answer_support.decide."""
+
+    def __init__(self, *, answering, joint):
+        import answer_support
+        self.METHOD = answer_support.Answerability.METHOD
+        self.MODEL_REF = answer_support.Answerability.MODEL_REF
+        self.REASONS = answer_support.Answerability.REASONS
+        self.answering, self.joint = answering, joint
+
+    def check(self, question, contexts):
+        import answer_support
+        return answer_support.decide(question, contexts, self.answering, self.joint)
+
+
 class BridgeTests(unittest.TestCase):
     def setUp(self):
         self.calls = []
@@ -215,6 +230,29 @@ class BridgeTests(unittest.TestCase):
         self.assertEqual(result["evidence_assessment"], "unverified")
         self.assertEqual(result["answer_support"]["span_fact_refs"], [])
         self.assertIs(result["answer_support"]["joint_span"], True)
+
+    def test_successor_reports_each_decision_step_and_its_own_reasons(self):
+        import answer_support
+        checker = FakeSuccessor(answering=[True], joint=False)
+        result = self._bridge_with_support(checker).find("Which editor does Imogen use?")
+        support = result["answer_support"]
+        self.assertEqual(support["method"], answer_support.ANSWERABILITY.method)
+        self.assertEqual(support["subject_terms"], ["imogen"])
+        self.assertEqual(support["answering_fact_refs"], ["fact:qualified-1"])
+        self.assertEqual(support["subject_applicable_fact_refs"], [])
+        self.assertEqual(support["supported_fact_refs"], [])
+        self.assertNotIn("span_fact_refs", support)
+        self.assertEqual(result["evidence_assessment"], "insufficient_evidence")
+        self.assertEqual(result["evidence_assessment_reason"], "no_supported_answer_in_current_evidence")
+        self.assertEqual([e["content"] for e in result["evidence"]], ["Our editor is Neovim."])
+
+    def test_successor_support_without_any_span_is_a_candidate_not_verification(self):
+        result = self._bridge_with_support(FakeSuccessor(answering=[True], joint=False)).find("Which editor?")
+        self.assertEqual(result["evidence_assessment"], "unverified")
+        self.assertEqual(result["evidence_assessment_reason"], "supported_answer_candidate_not_verified")
+        self.assertEqual(result["answer_support"]["supported_fact_refs"], ["fact:qualified-1"])
+        self.assertFalse(result["answerability_verified"])
+        self.assertFalse(result["answer_generated"])
 
     def test_support_check_does_not_change_delivered_evidence(self):
         plain = self.bridge.find("Which editor?")

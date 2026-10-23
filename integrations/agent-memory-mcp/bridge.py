@@ -385,7 +385,8 @@ class LocalMemoryBridge:
         # Unknown head state remains unknown; do not fabricate a stale verdict.
         current = [item for item in complete_attributed if item.get("latest_for_key") is not False]
         result["answer_support"] = {"status": "not_run", "method": None, "model": None,
-                                    "checked_fact_refs": [], "span_fact_refs": [], "joint_span": None}
+                                    "checked_fact_refs": [], "supported_fact_refs": [],
+                                    "joint_supported": None}
         if not complete_attributed:
             assessment, reason = "insufficient_evidence", "no_complete_attributed_evidence"
         elif not current:
@@ -400,9 +401,9 @@ class LocalMemoryBridge:
         """Answer support over the delivered evidence; never changes or reorders that evidence.
 
         Only a checker the host enabled can turn delivered evidence into ``insufficient_evidence``,
-        and only when no current, complete item (alone or all together) holds an answer span. A
-        found span is a candidate, not verification: the result stays ``unverified``. A checker
-        that is enabled but cannot load or run claims nothing either way.
+        and only when no current, complete item (alone or all together) supports an answer under
+        that checker's method. Support is a candidate, not verification: the result stays
+        ``unverified``. A checker that is enabled but cannot load or run claims nothing either way.
         """
         try:
             checker = self._load_support()
@@ -412,19 +413,33 @@ class LocalMemoryBridge:
         if checker is None:
             record["status"] = "not_configured"
             return "unverified", "answer_entailment_not_checked"
-        from answer_support import METHOD, MODEL_REF
+        import answer_support
         try:
             outcome = checker.check(question, [item["content"] for item in current])
         except Exception:
             record["status"] = "unavailable"
             return "unverified", "answer_support_check_unavailable"
+        method = getattr(checker, "METHOD", answer_support.EXTRACTIVE.method)
+        insufficient, candidate = getattr(checker, "REASONS", answer_support.AnswerSupport.REASONS)
         refs = [item["fact_ref"] for item in current]
-        record.update(status="checked", method=METHOD, model=MODEL_REF, checked_fact_refs=refs,
-                      span_fact_refs=[ref for ref, found in zip(refs, outcome["per_item"]) if found],
-                      joint_span=bool(outcome["joint"]))
-        if not record["span_fact_refs"] and not record["joint_span"]:
-            return "insufficient_evidence", "no_answer_span_in_current_evidence"
-        return "unverified", "answer_span_candidate_not_verified"
+        supported = [ref for ref, found in zip(refs, outcome["per_item"]) if found]
+        record.update(status="checked", method=method,
+                      model=getattr(checker, "MODEL_REF", answer_support.EXTRACTIVE.model_ref),
+                      checked_fact_refs=refs, supported_fact_refs=supported,
+                      joint_supported=bool(outcome["joint"]))
+        if method == answer_support.EXTRACTIVE.method:
+            # The original candidate's support is an answer span; keep its historical field names.
+            record.update(span_fact_refs=supported, joint_span=bool(outcome["joint"]))
+        else:
+            # Each step of the successor's decision, so a host can see why an item did not count.
+            record.update(
+                subject_terms=outcome["subjects"],
+                subject_applicable_fact_refs=[r for r, ok in zip(refs, outcome["applicable"]) if ok],
+                answering_fact_refs=[r for r, ok in zip(refs, outcome["answering"]) if ok],
+                joint_applicable=outcome["joint_applicable"], joint_answering=outcome["joint_answering"])
+        if not supported and not record["joint_supported"]:
+            return "insufficient_evidence", insufficient
+        return "unverified", candidate
 
     def get(self, key: str) -> dict:
         """Exact logical memory lookup through governed recall, not raw SQLite."""

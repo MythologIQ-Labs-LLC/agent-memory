@@ -42,7 +42,12 @@ class AnswerSupportLoadingTests(unittest.TestCase):
             self.assertIsNone(answer_support.from_environment())
 
 
-@unittest.skipUnless(os.environ.get(answer_support.ENV_DIR), "pinned support model not provided by the host")
+def _original_model() -> bool:
+    raw = os.environ.get(answer_support.ENV_DIR, "")
+    return bool(raw) and (Path(raw) / answer_support.EXTRACTIVE.graph).is_file()
+
+
+@unittest.skipUnless(_original_model(), "pinned extractive support model not provided by the host")
 class RealPinnedModelTests(unittest.TestCase):
     def test_span_found_only_where_the_text_answers(self):
         checker = answer_support.from_environment()

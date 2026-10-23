@@ -17,8 +17,9 @@ from typing import Any
 PROBE_SCHEMA = "mcp-gate2-retrieval-probe/0.1.0"
 GATE_SCHEMA = "agent-memory-stage-c-populated-store/0.3.0"
 # An answerable task keeps its evidence and is never called verified. With the host's optional
-# answer-support check, a found span is still only a candidate.
-ANSWERABLE_REASONS = ("answer_entailment_not_checked", "answer_span_candidate_not_verified")
+# answer-support check, supported evidence is still only a candidate.
+ANSWERABLE_REASONS = ("answer_entailment_not_checked", "answer_span_candidate_not_verified",
+                      "supported_answer_candidate_not_verified")
 
 
 def assess(report: dict[str, Any], manifest: dict[str, Any]) -> dict[str, Any]:
@@ -98,16 +99,17 @@ def assess(report: dict[str, Any], manifest: dict[str, Any]) -> dict[str, Any]:
             passed = common and abstained
             goal = "populated-store unanswerable question marked insufficient"
         support = row.get("mcp_answer_support") or {}
-        span = row.get("mcp_span_keys")
+        supported = row.get("mcp_supported_keys")
         checks.append({"task_id": task_id, "goal": goal, "passed": bool(passed),
                        "assessment": assessment, "assessment_reason": reason,
                        "required_complete": mcp.get("required_complete"),
                        "returned_items": len(keys),
-                       # diagnostics only: which delivered memories held a candidate span
+                       # diagnostics only: which delivered memories the check counted as support
                        "support_status": support.get("status"),
-                       "span_keys": span,
-                       "span_in_required": (bool(set(span) & set(required))
-                                            if required and isinstance(span, list) else None)})
+                       "support_method": support.get("method"),
+                       "supported_keys": supported,
+                       "support_in_required": (bool(set(supported) & set(required))
+                                            if required and isinstance(supported, list) else None)})
     if counts["answerable"] == 0 or counts["no_answer"] == 0:
         raise ValueError("Stage C requires both positive and negative controls")
     return {"status": "PASS" if all(c["passed"] for c in checks) else "BLOCKED",

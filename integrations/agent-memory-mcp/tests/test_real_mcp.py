@@ -244,7 +244,7 @@ class ActualMcpConsumerLoop(unittest.IsolatedAsyncioTestCase):
                             if expected == "unverified":
                                 freezer = [e["fact_ref"] for e in found["evidence"]
                                            if e["memory_ref"] == "memory:lab:freezer"]
-                                self.assertEqual(found["answer_support"]["span_fact_refs"], freezer)
+                                self.assertEqual(found["answer_support"]["supported_fact_refs"], freezer)
 
     async def test_same_key_rewrite_is_visible_not_silently_merged(self):
         # Real runtime semantics: a second explicit write under one key moves the head but
