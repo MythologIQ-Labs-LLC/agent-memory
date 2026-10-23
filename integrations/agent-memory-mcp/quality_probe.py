@@ -78,7 +78,7 @@ def score(keys: list[str], required: list[str], forbidden: list[str]) -> dict:
         "unexpected_evidence_items": extras,
         "forbidden_keys_present": sorted(observed & set(forbidden)),
         "empty_context_on_no_answer": len(keys) == 0 if not wanted else None,
-        "evidence_precision": hits / len(keys) if keys else (1.0 if not wanted else 0.0),
+        "evidence_precision": hits / len(keys) if keys else (None if not wanted else 0.0),
     }
 
 
@@ -98,7 +98,9 @@ def aggregate(rows: list[dict], arm: str) -> dict:
         "no_answer_total": len(no_answer),
         "unexpected_evidence_items": sum(o["unexpected_evidence_items"] for o in x),
         "forbidden_key_incidences": sum(len(o["forbidden_keys_present"]) for o in x),
-        "mean_evidence_precision": statistics.mean(o["evidence_precision"] for o in x),
+        "mean_evidence_precision_on_answerable": statistics.mean(
+            o["evidence_precision"] for o in answered
+        ) if answered else None,
         "p50_ms": statistics.median(latencies),
         "p95_ms": p95,
     }
