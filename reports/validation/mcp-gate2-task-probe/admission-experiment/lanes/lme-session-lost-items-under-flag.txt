@@ -1,0 +1,31 @@
+{'gold': ('list', "['answer_280352e9']"), 'ids': ('dict', "{'default': ['ultrachat_214101', 'answer_280352e9', '5dac7cc2_1', 'ultrachat_359984', 'ec6ca9ef', 'ultrachat_486410', '9"), 'items': ('int', '53'), 'scores': ('dict', "{'default': {'abstained': False, 'complete': True, 'delivered': 43, 'gold': 1, 'hits': 1, 'precision': 0.023255813953488")}
+questions losing required items ON vs OFF (default arm): 22 items: 28
+  6d550036 [multi-session] Q='How many projects have I led or am currently leading?' shared_content=[] gold_len=225
+  6d550036 [multi-session] Q='How many projects have I led or am currently leading?' shared_content=[] gold_len=247
+  gpt4_f2262a51 [multi-session] Q='How many different doctors did I visit?' shared_content=[] gold_len=281
+  gpt4_f2262a51 [multi-session] Q='How many different doctors did I visit?' shared_content=[] gold_len=270
+  gpt4_15e38248 [multi-session] Q='How many pieces of furniture did I buy, assemble, sell, or fix in the past few m' shared_content=[] gold_len=284
+  gpt4_15e38248 [multi-session] Q='How many pieces of furniture did I buy, assemble, sell, or fix in the past few m' shared_content=[] gold_len=193
+  d682f1a2 [multi-session] Q='How many different types of food delivery services have I used recently?' shared_content=[] gold_len=194
+  gpt4_d12ceb0e [multi-session] Q='What is the average age of me, my parents, and my grandparents?' shared_content=[] gold_len=333
+  gpt4_31ff4165 [multi-session] Q='How many health-related devices do I use in a day?' shared_content=[] gold_len=270
+  gpt4_194be4b3 [multi-session] Q='How many musical instruments do I currently own?' shared_content=[] gold_len=308
+  gpt4_194be4b3 [multi-session] Q='How many musical instruments do I currently own?' shared_content=[] gold_len=181
+  1a8a66a6 [multi-session] Q='How many magazine subscriptions do I currently have?' shared_content=[] gold_len=277
+  06878be2 [single-session-preference] Q='Can you suggest some accessories that would complement my current photography se' shared_content=[] gold_len=207
+  06f04340 [single-session-preference] Q='What should I serve for dinner this weekend with my homegrown ingredients?' shared_content=[] gold_len=158
+  09d032c9 [single-session-preference] Q="I've been having trouble with the battery life on my phone lately. Any tips?" shared_content=[] gold_len=240
+  38146c39 [single-session-preference] Q="I've been feeling like my chocolate chip cookies need something extra. Any advic" shared_content=[] gold_len=257
+  a1cc6108 [multi-session] Q='How old was I when Alex was born?' shared_content=[] gold_len=461
+  ba358f49 [multi-session] Q='How many years will I be when my friend Rachel gets married?' shared_content=[] gold_len=380
+  bc149d6b [multi-session] Q='What is the total weight of the new feed I purchased in the past two months?' shared_content=[] gold_len=274
+  157a136e [multi-session] Q='How many years older is my grandma than me?' shared_content=[] gold_len=365
+  c18a7dc8 [multi-session] Q='How many years older am I than when I graduated from college?' shared_content=[] gold_len=446
+  8e91e7d9 [multi-session] Q='What is the total number of siblings I have?' shared_content=[] gold_len=237
+  8e91e7d9 [multi-session] Q='What is the total number of siblings I have?' shared_content=[] gold_len=341
+  gpt4_e061b84f [temporal-reasoning] Q='What is the order of the three sports events I participated in during the past m' shared_content=[] gold_len=234
+  gpt4_e061b84f [temporal-reasoning] Q='What is the order of the three sports events I participated in during the past m' shared_content=[] gold_len=180
+  gpt4_4929293b [temporal-reasoning] Q='What was the the life event of one of my relatives that I participated in a week' shared_content=[] gold_len=319
+  gpt4_8279ba03 [temporal-reasoning] Q='What kitchen appliance did I buy 10 days ago?' shared_content=[] gold_len=218
+  gpt4_68e94288 [temporal-reasoning] Q='What was the social media activity I participated 5 days ago?' shared_content=[] gold_len=245
+by type: {'multi-session': 19, 'single-session-preference': 4, 'temporal-reasoning': 5}

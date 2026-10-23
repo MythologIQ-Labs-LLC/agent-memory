@@ -1,0 +1,861 @@
+{
+  "budget": {
+    "caveat": "FTS5 does not incur governed ingestion or MCP transport costs",
+    "development_fixture_full_text_fits_both_caps": true,
+    "fts5_char_cap": null,
+    "fts5_token_cap": null,
+    "max_items": 5,
+    "provider_char_cap": 5000,
+    "provider_token_cap": 1250
+  },
+  "comparator": "indexed SQLite FTS5 unicode61 bm25 OR terms; not ingestion/security cost parity",
+  "dataset": {
+    "records": 18,
+    "tasks": 14
+  },
+  "experimental_lexical_admission": "content_term",
+  "measures": "full seeded source evidence coverage, key-only hits, distraction, empty-context; not answer correctness",
+  "provider": "real stdio MCP / governed SQLite / memory_find experimental_selectivity=True (evidence_qualified profile)",
+  "qualification": "author-visible development diagnostic only; NOT blinded",
+  "rows": [
+    {
+      "forbidden": [
+        "memory:bastien-canoe",
+        "memory:liora-bicycle"
+      ],
+      "fts5": {
+        "empty_context_on_no_answer": null,
+        "evidence_precision": 0.25,
+        "forbidden_keys_present": [
+          "memory:bastien-canoe",
+          "memory:liora-bicycle"
+        ],
+        "required_complete": true,
+        "required_hits": 1,
+        "required_key_hits": 1,
+        "required_total": 1,
+        "unexpected_evidence_items": 3
+      },
+      "fts5_elapsed_ms": 0.21097600006214634,
+      "fts5_keys": [
+        "memory:liora-canoe",
+        "memory:bastien-canoe",
+        "memory:liora-bicycle",
+        "memory:liora-sibling"
+      ],
+      "gold": [
+        "memory:liora-canoe"
+      ],
+      "id": "A1",
+      "mcp": {
+        "empty_context_on_no_answer": null,
+        "evidence_precision": 0.3333333333333333,
+        "forbidden_keys_present": [
+          "memory:liora-bicycle"
+        ],
+        "required_complete": true,
+        "required_hits": 1,
+        "required_key_hits": 1,
+        "required_total": 1,
+        "unexpected_evidence_items": 2
+      },
+      "mcp_answer_generated": false,
+      "mcp_elapsed_ms": 32.899525999937396,
+      "mcp_full_text_keys": [
+        "memory:liora-canoe",
+        "memory:liora-bicycle",
+        "memory:liora-sibling"
+      ],
+      "mcp_incomplete_text_items": 0,
+      "mcp_keys": [
+        "memory:liora-canoe",
+        "memory:liora-bicycle",
+        "memory:liora-sibling"
+      ],
+      "mcp_omitted": [
+        {
+          "absence_grounding": null,
+          "fact_ref": "ref-0018",
+          "reason": "subject_mismatch"
+        }
+      ],
+      "mcp_package_status": "complete",
+      "mcp_profile": "evidence_qualified",
+      "mcp_selection_assessment": "evidence_delivered",
+      "mcp_selection_policy_version": "0.5.2",
+      "mcp_unattributed_items": 0,
+      "mcp_unavailable_items": 1,
+      "question": "What color is Liora's canoe?"
+    },
+    {
+      "forbidden": [
+        "memory:mara-child"
+      ],
+      "fts5": {
+        "empty_context_on_no_answer": null,
+        "evidence_precision": 0.5,
+        "forbidden_keys_present": [
+          "memory:mara-child"
+        ],
+        "required_complete": true,
+        "required_hits": 1,
+        "required_key_hits": 1,
+        "required_total": 1,
+        "unexpected_evidence_items": 1
+      },
+      "fts5_elapsed_ms": 0.09341200006929284,
+      "fts5_keys": [
+        "memory:mara-parent",
+        "memory:mara-child"
+      ],
+      "gold": [
+        "memory:mara-parent"
+      ],
+      "id": "A2",
+      "mcp": {
+        "empty_context_on_no_answer": null,
+        "evidence_precision": 0.5,
+        "forbidden_keys_present": [
+          "memory:mara-child"
+        ],
+        "required_complete": true,
+        "required_hits": 1,
+        "required_key_hits": 1,
+        "required_total": 1,
+        "unexpected_evidence_items": 1
+      },
+      "mcp_answer_generated": false,
+      "mcp_elapsed_ms": 30.47099199989134,
+      "mcp_full_text_keys": [
+        "memory:mara-child",
+        "memory:mara-parent"
+      ],
+      "mcp_incomplete_text_items": 0,
+      "mcp_keys": [
+        "memory:mara-child",
+        "memory:mara-parent"
+      ],
+      "mcp_omitted": [],
+      "mcp_package_status": "complete",
+      "mcp_profile": "evidence_qualified",
+      "mcp_selection_assessment": "undetermined",
+      "mcp_selection_policy_version": "0.5.2",
+      "mcp_unattributed_items": 0,
+      "mcp_unavailable_items": 0,
+      "question": "Where does Mara's parent work?"
+    },
+    {
+      "forbidden": [
+        "memory:mara-parent"
+      ],
+      "fts5": {
+        "empty_context_on_no_answer": null,
+        "evidence_precision": 0.5,
+        "forbidden_keys_present": [
+          "memory:mara-parent"
+        ],
+        "required_complete": true,
+        "required_hits": 1,
+        "required_key_hits": 1,
+        "required_total": 1,
+        "unexpected_evidence_items": 1
+      },
+      "fts5_elapsed_ms": 0.08230399998865323,
+      "fts5_keys": [
+        "memory:mara-parent",
+        "memory:mara-child"
+      ],
+      "gold": [
+        "memory:mara-child"
+      ],
+      "id": "A3",
+      "mcp": {
+        "empty_context_on_no_answer": null,
+        "evidence_precision": 0.5,
+        "forbidden_keys_present": [
+          "memory:mara-parent"
+        ],
+        "required_complete": true,
+        "required_hits": 1,
+        "required_key_hits": 1,
+        "required_total": 1,
+        "unexpected_evidence_items": 1
+      },
+      "mcp_answer_generated": false,
+      "mcp_elapsed_ms": 31.829134999952657,
+      "mcp_full_text_keys": [
+        "memory:mara-child",
+        "memory:mara-parent"
+      ],
+      "mcp_incomplete_text_items": 0,
+      "mcp_keys": [
+        "memory:mara-child",
+        "memory:mara-parent"
+      ],
+      "mcp_omitted": [],
+      "mcp_package_status": "complete",
+      "mcp_profile": "evidence_qualified",
+      "mcp_selection_assessment": "undetermined",
+      "mcp_selection_policy_version": "0.5.2",
+      "mcp_unattributed_items": 0,
+      "mcp_unavailable_items": 0,
+      "question": "Which instrument does Mara's child play?"
+    },
+    {
+      "forbidden": [
+        "memory:liora-canoe"
+      ],
+      "fts5": {
+        "empty_context_on_no_answer": null,
+        "evidence_precision": 0.25,
+        "forbidden_keys_present": [
+          "memory:liora-canoe"
+        ],
+        "required_complete": true,
+        "required_hits": 1,
+        "required_key_hits": 1,
+        "required_total": 1,
+        "unexpected_evidence_items": 3
+      },
+      "fts5_elapsed_ms": 0.07525399996666238,
+      "fts5_keys": [
+        "memory:office-printer",
+        "memory:liora-bicycle",
+        "memory:liora-canoe",
+        "memory:liora-sibling"
+      ],
+      "gold": [
+        "memory:liora-sibling"
+      ],
+      "id": "A4",
+      "mcp": {
+        "empty_context_on_no_answer": null,
+        "evidence_precision": 0.25,
+        "forbidden_keys_present": [
+          "memory:liora-canoe"
+        ],
+        "required_complete": true,
+        "required_hits": 1,
+        "required_key_hits": 1,
+        "required_total": 1,
+        "unexpected_evidence_items": 3
+      },
+      "mcp_answer_generated": false,
+      "mcp_elapsed_ms": 34.57831700006864,
+      "mcp_full_text_keys": [
+        "memory:office-printer",
+        "memory:liora-bicycle",
+        "memory:liora-canoe",
+        "memory:liora-sibling"
+      ],
+      "mcp_incomplete_text_items": 0,
+      "mcp_keys": [
+        "memory:office-printer",
+        "memory:liora-bicycle",
+        "memory:liora-canoe",
+        "memory:liora-sibling"
+      ],
+      "mcp_omitted": [],
+      "mcp_package_status": "complete",
+      "mcp_profile": "evidence_qualified",
+      "mcp_selection_assessment": "undetermined",
+      "mcp_selection_policy_version": "0.5.2",
+      "mcp_unattributed_items": 0,
+      "mcp_unavailable_items": 0,
+      "question": "Where does Liora's brother live?"
+    },
+    {
+      "forbidden": [
+        "memory:kitchen-printer"
+      ],
+      "fts5": {
+        "empty_context_on_no_answer": null,
+        "evidence_precision": 1.0,
+        "forbidden_keys_present": [],
+        "required_complete": true,
+        "required_hits": 1,
+        "required_key_hits": 1,
+        "required_total": 1,
+        "unexpected_evidence_items": 0
+      },
+      "fts5_elapsed_ms": 0.09540300015942194,
+      "fts5_keys": [
+        "memory:office-printer"
+      ],
+      "gold": [
+        "memory:office-printer"
+      ],
+      "id": "A5",
+      "mcp": {
+        "empty_context_on_no_answer": null,
+        "evidence_precision": 1.0,
+        "forbidden_keys_present": [],
+        "required_complete": true,
+        "required_hits": 1,
+        "required_key_hits": 1,
+        "required_total": 1,
+        "unexpected_evidence_items": 0
+      },
+      "mcp_answer_generated": false,
+      "mcp_elapsed_ms": 60.84672499991939,
+      "mcp_full_text_keys": [
+        "memory:office-printer"
+      ],
+      "mcp_incomplete_text_items": 0,
+      "mcp_keys": [
+        "memory:office-printer"
+      ],
+      "mcp_omitted": [],
+      "mcp_package_status": "complete",
+      "mcp_profile": "evidence_qualified",
+      "mcp_selection_assessment": "evidence_delivered",
+      "mcp_selection_policy_version": "0.5.2",
+      "mcp_unattributed_items": 0,
+      "mcp_unavailable_items": 0,
+      "question": "What model is the office printer?"
+    },
+    {
+      "forbidden": [
+        "memory:kitchen-printer"
+      ],
+      "fts5": {
+        "empty_context_on_no_answer": null,
+        "evidence_precision": 1.0,
+        "forbidden_keys_present": [],
+        "required_complete": true,
+        "required_hits": 1,
+        "required_key_hits": 1,
+        "required_total": 1,
+        "unexpected_evidence_items": 0
+      },
+      "fts5_elapsed_ms": 0.10158500003853987,
+      "fts5_keys": [
+        "memory:office-printer"
+      ],
+      "gold": [
+        "memory:office-printer"
+      ],
+      "id": "A6",
+      "mcp": {
+        "empty_context_on_no_answer": null,
+        "evidence_precision": 0.3333333333333333,
+        "forbidden_keys_present": [],
+        "required_complete": true,
+        "required_hits": 1,
+        "required_key_hits": 1,
+        "required_total": 1,
+        "unexpected_evidence_items": 2
+      },
+      "mcp_answer_generated": false,
+      "mcp_elapsed_ms": 36.16240600013043,
+      "mcp_full_text_keys": [
+        "memory:office-printer",
+        "memory:quail-owner",
+        "memory:code-editor"
+      ],
+      "mcp_incomplete_text_items": 0,
+      "mcp_keys": [
+        "memory:office-printer",
+        "memory:quail-owner",
+        "memory:code-editor"
+      ],
+      "mcp_omitted": [],
+      "mcp_package_status": "complete",
+      "mcp_profile": "evidence_qualified",
+      "mcp_selection_assessment": "evidence_delivered",
+      "mcp_selection_policy_version": "0.5.2",
+      "mcp_unattributed_items": 0,
+      "mcp_unavailable_items": 0,
+      "question": "Which toner cartridge does the office printer use?"
+    },
+    {
+      "forbidden": [
+        "memory:omar-editor",
+        "memory:code-editor"
+      ],
+      "fts5": {
+        "empty_context_on_no_answer": null,
+        "evidence_precision": 1.0,
+        "forbidden_keys_present": [],
+        "required_complete": true,
+        "required_hits": 1,
+        "required_key_hits": 1,
+        "required_total": 1,
+        "unexpected_evidence_items": 0
+      },
+      "fts5_elapsed_ms": 0.10285200005455408,
+      "fts5_keys": [
+        "memory:maya-editor"
+      ],
+      "gold": [
+        "memory:maya-editor"
+      ],
+      "id": "A7",
+      "mcp": {
+        "empty_context_on_no_answer": null,
+        "evidence_precision": 0.3333333333333333,
+        "forbidden_keys_present": [
+          "memory:code-editor"
+        ],
+        "required_complete": true,
+        "required_hits": 1,
+        "required_key_hits": 1,
+        "required_total": 1,
+        "unexpected_evidence_items": 2
+      },
+      "mcp_answer_generated": false,
+      "mcp_elapsed_ms": 30.72881900016,
+      "mcp_full_text_keys": [
+        "memory:maya-editor",
+        "memory:quail-owner",
+        "memory:code-editor"
+      ],
+      "mcp_incomplete_text_items": 0,
+      "mcp_keys": [
+        "memory:maya-editor",
+        "memory:quail-owner",
+        "memory:code-editor"
+      ],
+      "mcp_omitted": [],
+      "mcp_package_status": "complete",
+      "mcp_profile": "evidence_qualified",
+      "mcp_selection_assessment": "evidence_delivered",
+      "mcp_selection_policy_version": "0.5.2",
+      "mcp_unattributed_items": 0,
+      "mcp_unavailable_items": 0,
+      "question": "Which editor and language server does Maya use for Python?"
+    },
+    {
+      "forbidden": [
+        "memory:meridian-meeting"
+      ],
+      "fts5": {
+        "empty_context_on_no_answer": null,
+        "evidence_precision": 0.2,
+        "forbidden_keys_present": [
+          "memory:meridian-meeting"
+        ],
+        "required_complete": true,
+        "required_hits": 1,
+        "required_key_hits": 1,
+        "required_total": 1,
+        "unexpected_evidence_items": 4
+      },
+      "fts5_elapsed_ms": 0.10100300005433382,
+      "fts5_keys": [
+        "memory:quail-meeting",
+        "memory:quail-owner",
+        "memory:meridian-meeting",
+        "memory:mara-child",
+        "memory:meridian-owner"
+      ],
+      "gold": [
+        "memory:quail-meeting"
+      ],
+      "id": "A8",
+      "mcp": {
+        "empty_context_on_no_answer": null,
+        "evidence_precision": 0.2,
+        "forbidden_keys_present": [
+          "memory:meridian-meeting"
+        ],
+        "required_complete": true,
+        "required_hits": 1,
+        "required_key_hits": 1,
+        "required_total": 1,
+        "unexpected_evidence_items": 4
+      },
+      "mcp_answer_generated": false,
+      "mcp_elapsed_ms": 32.918463999976666,
+      "mcp_full_text_keys": [
+        "memory:quail-meeting",
+        "memory:quail-owner",
+        "memory:meridian-meeting",
+        "memory:mara-child",
+        "memory:meridian-owner"
+      ],
+      "mcp_incomplete_text_items": 0,
+      "mcp_keys": [
+        "memory:quail-meeting",
+        "memory:quail-owner",
+        "memory:meridian-meeting",
+        "memory:mara-child",
+        "memory:meridian-owner"
+      ],
+      "mcp_omitted": [],
+      "mcp_package_status": "complete",
+      "mcp_profile": "evidence_qualified",
+      "mcp_selection_assessment": "evidence_delivered",
+      "mcp_selection_policy_version": "0.5.2",
+      "mcp_unattributed_items": 0,
+      "mcp_unavailable_items": 0,
+      "question": "Where will Project Quail hold its next review?"
+    },
+    {
+      "forbidden": [
+        "memory:meridian-owner"
+      ],
+      "fts5": {
+        "empty_context_on_no_answer": null,
+        "evidence_precision": 0.25,
+        "forbidden_keys_present": [
+          "memory:meridian-owner"
+        ],
+        "required_complete": true,
+        "required_hits": 1,
+        "required_key_hits": 1,
+        "required_total": 1,
+        "unexpected_evidence_items": 3
+      },
+      "fts5_elapsed_ms": 0.0856479998674331,
+      "fts5_keys": [
+        "memory:quail-meeting",
+        "memory:quail-owner",
+        "memory:meridian-owner",
+        "memory:meridian-meeting"
+      ],
+      "gold": [
+        "memory:quail-owner"
+      ],
+      "id": "A9",
+      "mcp": {
+        "empty_context_on_no_answer": null,
+        "evidence_precision": 0.25,
+        "forbidden_keys_present": [
+          "memory:meridian-owner"
+        ],
+        "required_complete": true,
+        "required_hits": 1,
+        "required_key_hits": 1,
+        "required_total": 1,
+        "unexpected_evidence_items": 3
+      },
+      "mcp_answer_generated": false,
+      "mcp_elapsed_ms": 31.916777000105867,
+      "mcp_full_text_keys": [
+        "memory:quail-owner",
+        "memory:quail-meeting",
+        "memory:meridian-owner",
+        "memory:meridian-meeting"
+      ],
+      "mcp_incomplete_text_items": 0,
+      "mcp_keys": [
+        "memory:quail-owner",
+        "memory:quail-meeting",
+        "memory:meridian-owner",
+        "memory:meridian-meeting"
+      ],
+      "mcp_omitted": [],
+      "mcp_package_status": "complete",
+      "mcp_profile": "evidence_qualified",
+      "mcp_selection_assessment": "evidence_delivered",
+      "mcp_selection_policy_version": "0.5.2",
+      "mcp_unattributed_items": 0,
+      "mcp_unavailable_items": 0,
+      "question": "Who maintains Project Quail?"
+    },
+    {
+      "forbidden": [
+        "memory:quail-meeting"
+      ],
+      "fts5": {
+        "empty_context_on_no_answer": null,
+        "evidence_precision": 0.25,
+        "forbidden_keys_present": [
+          "memory:quail-meeting"
+        ],
+        "required_complete": true,
+        "required_hits": 1,
+        "required_key_hits": 1,
+        "required_total": 1,
+        "unexpected_evidence_items": 3
+      },
+      "fts5_elapsed_ms": 0.09958299983736651,
+      "fts5_keys": [
+        "memory:meridian-meeting",
+        "memory:meridian-owner",
+        "memory:quail-meeting",
+        "memory:quail-owner"
+      ],
+      "gold": [
+        "memory:meridian-meeting"
+      ],
+      "id": "A10",
+      "mcp": {
+        "empty_context_on_no_answer": null,
+        "evidence_precision": 0.25,
+        "forbidden_keys_present": [
+          "memory:quail-meeting"
+        ],
+        "required_complete": true,
+        "required_hits": 1,
+        "required_key_hits": 1,
+        "required_total": 1,
+        "unexpected_evidence_items": 3
+      },
+      "mcp_answer_generated": false,
+      "mcp_elapsed_ms": 33.23270300006698,
+      "mcp_full_text_keys": [
+        "memory:meridian-meeting",
+        "memory:meridian-owner",
+        "memory:quail-meeting",
+        "memory:quail-owner"
+      ],
+      "mcp_incomplete_text_items": 0,
+      "mcp_keys": [
+        "memory:meridian-meeting",
+        "memory:meridian-owner",
+        "memory:quail-meeting",
+        "memory:quail-owner"
+      ],
+      "mcp_omitted": [],
+      "mcp_package_status": "complete",
+      "mcp_profile": "evidence_qualified",
+      "mcp_selection_assessment": "evidence_delivered",
+      "mcp_selection_policy_version": "0.5.2",
+      "mcp_unattributed_items": 0,
+      "mcp_unavailable_items": 0,
+      "question": "When is Project Meridian's design review?"
+    },
+    {
+      "forbidden": [
+        "memory:bastien-canoe"
+      ],
+      "fts5": {
+        "empty_context_on_no_answer": null,
+        "evidence_precision": 0.5,
+        "forbidden_keys_present": [
+          "memory:bastien-canoe"
+        ],
+        "required_complete": true,
+        "required_hits": 1,
+        "required_key_hits": 1,
+        "required_total": 1,
+        "unexpected_evidence_items": 1
+      },
+      "fts5_elapsed_ms": 0.08365200005755469,
+      "fts5_keys": [
+        "memory:telescope",
+        "memory:bastien-canoe"
+      ],
+      "gold": [
+        "memory:telescope"
+      ],
+      "id": "A11",
+      "mcp": {
+        "empty_context_on_no_answer": null,
+        "evidence_precision": 0.3333333333333333,
+        "forbidden_keys_present": [
+          "memory:bastien-canoe"
+        ],
+        "required_complete": true,
+        "required_hits": 1,
+        "required_key_hits": 1,
+        "required_total": 1,
+        "unexpected_evidence_items": 2
+      },
+      "mcp_answer_generated": false,
+      "mcp_elapsed_ms": 36.52480000005198,
+      "mcp_full_text_keys": [
+        "memory:telescope",
+        "memory:bastien-canoe",
+        "memory:quail-owner"
+      ],
+      "mcp_incomplete_text_items": 0,
+      "mcp_keys": [
+        "memory:telescope",
+        "memory:bastien-canoe",
+        "memory:quail-owner"
+      ],
+      "mcp_omitted": [],
+      "mcp_package_status": "complete",
+      "mcp_profile": "evidence_qualified",
+      "mcp_selection_assessment": "evidence_delivered",
+      "mcp_selection_policy_version": "0.5.2",
+      "mcp_unattributed_items": 0,
+      "mcp_unavailable_items": 0,
+      "question": "What mount does Bastien's telescope use?"
+    },
+    {
+      "forbidden": [
+        "memory:code-editor",
+        "memory:maya-editor"
+      ],
+      "fts5": {
+        "empty_context_on_no_answer": false,
+        "evidence_precision": 0.0,
+        "forbidden_keys_present": [
+          "memory:code-editor"
+        ],
+        "required_complete": null,
+        "required_hits": 0,
+        "required_key_hits": 0,
+        "required_total": 0,
+        "unexpected_evidence_items": 2
+      },
+      "fts5_elapsed_ms": 0.08914800014281354,
+      "fts5_keys": [
+        "memory:omar-editor",
+        "memory:code-editor"
+      ],
+      "gold": [],
+      "id": "N1",
+      "mcp": {
+        "empty_context_on_no_answer": false,
+        "evidence_precision": 0.0,
+        "forbidden_keys_present": [
+          "memory:code-editor"
+        ],
+        "required_complete": null,
+        "required_hits": 0,
+        "required_key_hits": 0,
+        "required_total": 0,
+        "unexpected_evidence_items": 2
+      },
+      "mcp_answer_generated": false,
+      "mcp_elapsed_ms": 35.09308200000305,
+      "mcp_full_text_keys": [
+        "memory:code-editor",
+        "memory:omar-editor"
+      ],
+      "mcp_incomplete_text_items": 0,
+      "mcp_keys": [
+        "memory:code-editor",
+        "memory:omar-editor"
+      ],
+      "mcp_omitted": [],
+      "mcp_package_status": "complete",
+      "mcp_profile": "evidence_qualified",
+      "mcp_selection_assessment": "evidence_delivered",
+      "mcp_selection_policy_version": "0.5.2",
+      "mcp_unattributed_items": 0,
+      "mcp_unavailable_items": 0,
+      "question": "What is the garage door access code?"
+    },
+    {
+      "forbidden": [
+        "memory:festival",
+        "memory:moon-exhibit"
+      ],
+      "fts5": {
+        "empty_context_on_no_answer": true,
+        "evidence_precision": null,
+        "forbidden_keys_present": [],
+        "required_complete": null,
+        "required_hits": 0,
+        "required_key_hits": 0,
+        "required_total": 0,
+        "unexpected_evidence_items": 0
+      },
+      "fts5_elapsed_ms": 0.06580299987035687,
+      "fts5_keys": [],
+      "gold": [],
+      "id": "N2",
+      "mcp": {
+        "empty_context_on_no_answer": true,
+        "evidence_precision": null,
+        "forbidden_keys_present": [],
+        "required_complete": null,
+        "required_hits": 0,
+        "required_key_hits": 0,
+        "required_total": 0,
+        "unexpected_evidence_items": 0
+      },
+      "mcp_answer_generated": false,
+      "mcp_elapsed_ms": 31.537941000124192,
+      "mcp_full_text_keys": [],
+      "mcp_incomplete_text_items": 0,
+      "mcp_keys": [],
+      "mcp_omitted": [],
+      "mcp_package_status": "empty",
+      "mcp_profile": "evidence_qualified",
+      "mcp_selection_assessment": "no_returned_candidates",
+      "mcp_selection_policy_version": "0.5.2",
+      "mcp_unattributed_items": 0,
+      "mcp_unavailable_items": 0,
+      "question": "When does the lunar eclipse committee meet?"
+    },
+    {
+      "forbidden": [
+        "memory:quail-meeting"
+      ],
+      "fts5": {
+        "empty_context_on_no_answer": false,
+        "evidence_precision": 0.0,
+        "forbidden_keys_present": [
+          "memory:quail-meeting"
+        ],
+        "required_complete": null,
+        "required_hits": 0,
+        "required_key_hits": 0,
+        "required_total": 0,
+        "unexpected_evidence_items": 1
+      },
+      "fts5_elapsed_ms": 0.08780500002103508,
+      "fts5_keys": [
+        "memory:quail-meeting"
+      ],
+      "gold": [],
+      "id": "N3",
+      "mcp": {
+        "empty_context_on_no_answer": false,
+        "evidence_precision": 0.0,
+        "forbidden_keys_present": [
+          "memory:quail-meeting"
+        ],
+        "required_complete": null,
+        "required_hits": 0,
+        "required_key_hits": 0,
+        "required_total": 0,
+        "unexpected_evidence_items": 1
+      },
+      "mcp_answer_generated": false,
+      "mcp_elapsed_ms": 33.4782909999376,
+      "mcp_full_text_keys": [
+        "memory:quail-meeting"
+      ],
+      "mcp_incomplete_text_items": 0,
+      "mcp_keys": [
+        "memory:quail-meeting"
+      ],
+      "mcp_omitted": [],
+      "mcp_package_status": "complete",
+      "mcp_profile": "evidence_qualified",
+      "mcp_selection_assessment": "evidence_delivered",
+      "mcp_selection_policy_version": "0.5.2",
+      "mcp_unattributed_items": 0,
+      "mcp_unavailable_items": 0,
+      "question": "What is the WiFi password for Harbour Library?"
+    }
+  ],
+  "schema": "mcp-gate2-retrieval-probe/0.1.0",
+  "selectivity": true,
+  "summary": {
+    "fts5": {
+      "answerable_complete": 11,
+      "answerable_total": 11,
+      "forbidden_key_incidences": 11,
+      "mean_evidence_precision_on_answerable": 0.5181818181818182,
+      "no_answer_empty_context": 1,
+      "no_answer_total": 3,
+      "p50_ms": 0.0912800001060532,
+      "p95_ms": 0.21097600006214634,
+      "required_hits": 11,
+      "required_total": 11,
+      "unexpected_evidence_items": 22
+    },
+    "mcp": {
+      "answerable_complete": 11,
+      "answerable_total": 11,
+      "forbidden_key_incidences": 11,
+      "mean_evidence_precision_on_answerable": 0.3893939393939394,
+      "no_answer_empty_context": 1,
+      "no_answer_total": 3,
+      "p50_ms": 33.07558350002182,
+      "p95_ms": 60.84672499991939,
+      "required_hits": 11,
+      "required_total": 11,
+      "unexpected_evidence_items": 26
+    }
+  }
+}
