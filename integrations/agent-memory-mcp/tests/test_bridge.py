@@ -27,7 +27,10 @@ class FakeMemory:
 
     def forget(self, key, **kwargs):
         self.calls.append(("forget", key, kwargs))
-        return {"committed": True, "outcome": "allow_with_ledger", "stage": "forget"}
+        # Shaped like the real facade result (AgentMemory.forget, contract 1.8.0).
+        return {"committed": True, "outcome": "allow_with_ledger", "stage": "forget",
+                "receipt": {"receipt_id": "ref-0009", "requested_action": "pruning",
+                            "selected_action": "pruning", "before_state": "v1", "after_state": "v2"}}
 
     def recall_context(self, question, **kwargs):
         self.calls.append(("recall_context", question, kwargs))
@@ -228,6 +231,30 @@ class BridgeTests(unittest.TestCase):
         self.assertEqual(result["status"], "not_committed")
         self.assertEqual(result["outcome"], "require_review")
         self.assertEqual(result["refusal"], "insufficient_evidence")
+
+    def test_forget_reports_the_committed_operation_and_receipt(self):
+        # A host auditing the alpha must see which governed action committed, not only "allowed".
+        with patch.dict(os.environ, {
+            "AGENT_MEMORY_MCP_PRUNE_APPROVED_KEY": "memory:editor",
+            "AGENT_MEMORY_MCP_PRUNE_EVIDENCE_REF": "host-record:approved",
+        }, clear=True):
+            result = self.bridge.forget("memory:editor")
+        self.assertEqual(result["operation"], "pruning")
+        self.assertEqual(result["receipt_id"], "ref-0009")
+
+    def test_forget_commit_of_another_action_is_not_reported_as_forgotten(self):
+        # committed=true alone is not deletion: only a committed pruning is a tombstone.
+        with patch.dict(os.environ, {
+            "AGENT_MEMORY_MCP_PRUNE_APPROVED_KEY": "memory:editor",
+            "AGENT_MEMORY_MCP_PRUNE_EVIDENCE_REF": "host-record:approved",
+        }, clear=True), patch.object(FakeMemory, "forget", return_value={
+            "committed": True, "outcome": "allow_with_ledger",
+            "receipt": {"receipt_id": "ref-0010", "requested_action": "pruning", "selected_action": "defer"},
+        }):
+            result = self.bridge.forget("memory:editor")
+        self.assertFalse(result["committed"])
+        self.assertEqual(result["status"], "not_committed")
+        self.assertEqual(result["operation"], "defer")
 
     def test_forget_rejects_invalid_target_before_reading_host_grant(self):
         with self.assertRaises(ValueError):

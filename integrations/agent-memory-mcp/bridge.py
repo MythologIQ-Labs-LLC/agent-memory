@@ -136,6 +136,8 @@ class LocalMemoryBridge:
                 "committed": False,
                 "key": key,
                 "status": "host_authorization_required",
+                "operation": None,
+                "receipt_id": None,
                 "outcome": None,
                 "refusal": "host_authorization_required",
                 "permanent": False,
@@ -147,11 +149,18 @@ class LocalMemoryBridge:
             outcome = memory.forget(
                 key, permanent=False, evidence_refs=(evidence_ref,),
             )
+        # Only a committed *pruning* is a tombstone: the receipt names the action the
+        # governed decision actually selected, so a host can audit it, and a commit of
+        # anything else is never reported as forgotten.
+        receipt = outcome.get("receipt") or {}
+        operation = receipt.get("selected_action")
+        forgotten = outcome.get("committed") is True and operation == "pruning"
         return {
-            "committed": outcome.get("committed") is True,
+            "committed": forgotten,
             "key": key,
-            "status": ("forgotten" if outcome.get("committed") is True
-                       else "not_committed"),
+            "status": "forgotten" if forgotten else "not_committed",
+            "operation": operation,
+            "receipt_id": receipt.get("receipt_id"),
             "outcome": outcome.get("outcome"),
             "refusal": outcome.get("refusal"),
             "permanent": False,
