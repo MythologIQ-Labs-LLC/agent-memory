@@ -35,7 +35,7 @@ class QualityProbeScorer(unittest.TestCase):
         x = quality.score([], [], [])
         self.assertTrue(x["empty_context_on_no_answer"])
         self.assertIsNone(x["required_complete"])
-        self.assertEqual(x["evidence_precision"], 1.0)
+        self.assertIsNone(x["evidence_precision"])
 
     def test_required_evidence_and_extra_item_are_counted_separately(self):
         x = quality.score(["memory:required", "memory:other"], ["memory:required"],
@@ -89,6 +89,7 @@ class QualityProbeScorer(unittest.TestCase):
         self.assertEqual(summary["no_answer_empty_context"], 0)
         self.assertEqual(summary["no_answer_total"], 1)
         self.assertEqual(summary["unexpected_evidence_items"], 1)
+        self.assertEqual(summary["mean_evidence_precision_on_answerable"], 1.0)
 
 
 if __name__ == "__main__":
