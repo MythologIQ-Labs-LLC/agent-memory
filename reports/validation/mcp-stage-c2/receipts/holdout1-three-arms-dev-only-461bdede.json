@@ -1,0 +1,2698 @@
+{
+  "arms": {
+    "answerability-subject-grounded/1.0.0": {
+      "latency_ms": {
+        "first_call": 2083.6,
+        "later_max": 462.3,
+        "later_median": 371.5
+      },
+      "meets_criterion": true,
+      "model_dir": "/home/user/eval/models/qnli-electra-base-c7dea87",
+      "rows": [
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "paraphrase",
+          "current_full_text_keys": [
+            "memory:adv:noor-kayak",
+            "memory:adv:book-club",
+            "memory:adv:tobias-kayak",
+            "memory:adv:noor-allergy",
+            "memory:adv:plant-sitter"
+          ],
+          "elapsed_ms": 2083.6,
+          "forgotten_delivered": false,
+          "id": "P1",
+          "joint_supported": true,
+          "keys": [
+            "memory:adv:noor-kayak",
+            "memory:adv:book-club",
+            "memory:adv:tobias-kayak",
+            "memory:adv:noor-allergy",
+            "memory:adv:plant-sitter"
+          ],
+          "profile": "all_returned",
+          "question": "Where is Noor's kayak stored?",
+          "reason": "supported_answer_candidate_not_verified",
+          "required": [
+            "memory:adv:noor-kayak"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:adv:noor-kayak"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "paraphrase",
+          "current_full_text_keys": [
+            "memory:adv:dentist",
+            "memory:adv:tobias-employer",
+            "memory:adv:flight",
+            "memory:adv:tobias-kayak",
+            "memory:adv:climbing"
+          ],
+          "elapsed_ms": 382.5,
+          "forgotten_delivered": false,
+          "id": "P2",
+          "joint_supported": true,
+          "keys": [
+            "memory:adv:dentist",
+            "memory:adv:tobias-employer",
+            "memory:adv:flight",
+            "memory:adv:tobias-kayak",
+            "memory:adv:climbing"
+          ],
+          "profile": "all_returned",
+          "question": "What does Tobias do for a living?",
+          "reason": "supported_answer_candidate_not_verified",
+          "required": [
+            "memory:adv:tobias-employer"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:adv:tobias-employer",
+            "memory:adv:climbing"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "paraphrase",
+          "current_full_text_keys": [
+            "memory:adv:noor-allergy",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak"
+          ],
+          "elapsed_ms": 262.5,
+          "forgotten_delivered": false,
+          "id": "P3",
+          "joint_supported": true,
+          "keys": [
+            "memory:adv:noor-allergy",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak"
+          ],
+          "profile": "all_returned",
+          "question": "Which food can Noor not eat?",
+          "reason": "supported_answer_candidate_not_verified",
+          "required": [
+            "memory:adv:noor-allergy"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:adv:noor-allergy"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "paraphrase",
+          "current_full_text_keys": [
+            "memory:adv:book-club",
+            "memory:adv:vet",
+            "memory:adv:greenhouse",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak"
+          ],
+          "elapsed_ms": 428.2,
+          "forgotten_delivered": false,
+          "id": "P4",
+          "joint_supported": true,
+          "keys": [
+            "memory:adv:book-club",
+            "memory:adv:vet",
+            "memory:adv:greenhouse",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak"
+          ],
+          "profile": "all_returned",
+          "question": "Who is the dog's veterinarian?",
+          "reason": "supported_answer_candidate_not_verified",
+          "required": [
+            "memory:adv:vet"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:adv:vet"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "plain",
+          "current_full_text_keys": [
+            "memory:adv:pepper-food",
+            "memory:adv:vet",
+            "memory:adv:car-insurance",
+            "memory:adv:tobias-employer",
+            "memory:adv:noor-allergy"
+          ],
+          "elapsed_ms": 356.2,
+          "forgotten_delivered": false,
+          "id": "P5",
+          "joint_supported": true,
+          "keys": [
+            "memory:adv:pepper-food",
+            "memory:adv:vet",
+            "memory:adv:car-insurance",
+            "memory:adv:tobias-employer",
+            "memory:adv:noor-allergy"
+          ],
+          "profile": "all_returned",
+          "question": "How often is Pepper fed?",
+          "reason": "supported_answer_candidate_not_verified",
+          "required": [
+            "memory:adv:pepper-food"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:adv:pepper-food"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "paraphrase",
+          "current_full_text_keys": [
+            "memory:adv:book-club",
+            "memory:adv:dentist",
+            "memory:adv:flight",
+            "memory:adv:lease",
+            "memory:adv:climbing"
+          ],
+          "elapsed_ms": 401.0,
+          "forgotten_delivered": false,
+          "id": "P6",
+          "joint_supported": true,
+          "keys": [
+            "memory:adv:book-club",
+            "memory:adv:dentist",
+            "memory:adv:flight",
+            "memory:adv:lease",
+            "memory:adv:climbing"
+          ],
+          "profile": "all_returned",
+          "question": "What book is the reading group currently on?",
+          "reason": "supported_answer_candidate_not_verified",
+          "required": [
+            "memory:adv:book-club"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:adv:book-club"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "competing_fact",
+          "current_full_text_keys": [
+            "memory:adv:car-insurance",
+            "memory:adv:hotel",
+            "memory:adv:flight",
+            "memory:adv:lease",
+            "memory:adv:vet"
+          ],
+          "elapsed_ms": 364.2,
+          "forgotten_delivered": false,
+          "id": "P7",
+          "joint_supported": true,
+          "keys": [
+            "memory:adv:car-insurance",
+            "memory:adv:hotel",
+            "memory:adv:flight",
+            "memory:adv:lease",
+            "memory:adv:vet"
+          ],
+          "profile": "all_returned",
+          "question": "Which company insures the car?",
+          "reason": "supported_answer_candidate_not_verified",
+          "required": [
+            "memory:adv:car-insurance"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:adv:car-insurance"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "paraphrase",
+          "current_full_text_keys": [
+            "memory:adv:hotel",
+            "memory:adv:flight",
+            "memory:adv:plant-sitter",
+            "memory:adv:coffee"
+          ],
+          "elapsed_ms": 312.1,
+          "forgotten_delivered": false,
+          "id": "P8",
+          "joint_supported": true,
+          "keys": [
+            "memory:adv:hotel",
+            "memory:adv:flight",
+            "memory:adv:plant-sitter",
+            "memory:adv:coffee",
+            "memory:adv:coffee"
+          ],
+          "profile": "all_returned",
+          "question": "Where will Ines sleep while attending the conference?",
+          "reason": "supported_answer_candidate_not_verified",
+          "required": [
+            "memory:adv:hotel"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": true,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:adv:hotel"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "competing_subject",
+          "current_full_text_keys": [
+            "memory:adv:tobias-kayak",
+            "memory:adv:noor-kayak",
+            "memory:adv:tobias-employer",
+            "memory:adv:climbing"
+          ],
+          "elapsed_ms": 332.2,
+          "forgotten_delivered": false,
+          "id": "P9",
+          "joint_supported": true,
+          "keys": [
+            "memory:adv:tobias-kayak",
+            "memory:adv:noor-kayak",
+            "memory:adv:tobias-employer",
+            "memory:adv:climbing"
+          ],
+          "profile": "all_returned",
+          "question": "Where does Tobias keep his kayak?",
+          "reason": "supported_answer_candidate_not_verified",
+          "required": [
+            "memory:adv:tobias-kayak"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:adv:tobias-kayak"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "superseded_corrected",
+          "current_full_text_keys": [
+            "memory:adv:dentist",
+            "memory:adv:pepper-food",
+            "memory:adv:greenhouse",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak"
+          ],
+          "elapsed_ms": 396.6,
+          "forgotten_delivered": false,
+          "id": "P10",
+          "joint_supported": true,
+          "keys": [
+            "memory:adv:dentist",
+            "memory:adv:pepper-food",
+            "memory:adv:greenhouse",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak"
+          ],
+          "profile": "all_returned",
+          "question": "What day is the dental cleaning?",
+          "reason": "supported_answer_candidate_not_verified",
+          "required": [
+            "memory:adv:dentist"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:adv:dentist"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "superseded_rewritten",
+          "current_full_text_keys": [
+            "memory:adv:coffee",
+            "memory:adv:hotel",
+            "memory:adv:plant-sitter",
+            "memory:adv:flight"
+          ],
+          "elapsed_ms": 302.5,
+          "forgotten_delivered": false,
+          "id": "P11",
+          "joint_supported": true,
+          "keys": [
+            "memory:adv:coffee",
+            "memory:adv:coffee",
+            "memory:adv:hotel",
+            "memory:adv:plant-sitter",
+            "memory:adv:flight"
+          ],
+          "profile": "all_returned",
+          "question": "How does Ines take her coffee?",
+          "reason": "supported_answer_candidate_not_verified",
+          "required": [
+            "memory:adv:coffee"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": true,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:adv:coffee"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "paraphrase",
+          "current_full_text_keys": [
+            "memory:adv:choir"
+          ],
+          "elapsed_ms": 80.4,
+          "forgotten_delivered": false,
+          "id": "P12",
+          "joint_supported": true,
+          "keys": [
+            "memory:adv:choir"
+          ],
+          "profile": "all_returned",
+          "question": "What voice part does Wren sing?",
+          "reason": "supported_answer_candidate_not_verified",
+          "required": [
+            "memory:adv:choir"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:adv:choir"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "insufficient_evidence",
+          "category": "competing_subject_absent",
+          "current_full_text_keys": [
+            "memory:adv:noor-kayak",
+            "memory:adv:tobias-kayak",
+            "memory:adv:coffee",
+            "memory:adv:plant-sitter"
+          ],
+          "elapsed_ms": 315.7,
+          "forgotten_delivered": false,
+          "id": "U1",
+          "joint_supported": false,
+          "keys": [
+            "memory:adv:noor-kayak",
+            "memory:adv:tobias-kayak",
+            "memory:adv:coffee",
+            "memory:adv:coffee",
+            "memory:adv:plant-sitter"
+          ],
+          "profile": "all_returned",
+          "question": "Where does Imogen keep her kayak?",
+          "reason": "no_supported_answer_in_current_evidence",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": true,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "insufficient_evidence",
+          "category": "related_non_answering",
+          "current_full_text_keys": [
+            "memory:adv:greenhouse-lock",
+            "memory:adv:greenhouse",
+            "memory:adv:dentist",
+            "memory:adv:flight",
+            "memory:adv:plant-sitter"
+          ],
+          "elapsed_ms": 402.6,
+          "forgotten_delivered": false,
+          "id": "U2",
+          "joint_supported": false,
+          "keys": [
+            "memory:adv:greenhouse-lock",
+            "memory:adv:greenhouse",
+            "memory:adv:dentist",
+            "memory:adv:flight",
+            "memory:adv:plant-sitter"
+          ],
+          "profile": "all_returned",
+          "question": "What is the combination for the greenhouse lock?",
+          "reason": "no_supported_answer_in_current_evidence",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "insufficient_evidence",
+          "category": "related_non_answering",
+          "current_full_text_keys": [
+            "memory:adv:router",
+            "memory:adv:greenhouse",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak",
+            "memory:adv:book-club"
+          ],
+          "elapsed_ms": 406.5,
+          "forgotten_delivered": false,
+          "id": "U3",
+          "joint_supported": false,
+          "keys": [
+            "memory:adv:router",
+            "memory:adv:greenhouse",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak",
+            "memory:adv:book-club"
+          ],
+          "profile": "all_returned",
+          "question": "What is the home WiFi password?",
+          "reason": "no_supported_answer_in_current_evidence",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "insufficient_evidence",
+          "category": "related_non_answering",
+          "current_full_text_keys": [
+            "memory:adv:tobias-employer",
+            "memory:adv:book-club",
+            "memory:adv:car-insurance",
+            "memory:adv:noor-allergy",
+            "memory:adv:plant-sitter"
+          ],
+          "elapsed_ms": 374.7,
+          "forgotten_delivered": false,
+          "id": "U4",
+          "joint_supported": false,
+          "keys": [
+            "memory:adv:tobias-employer",
+            "memory:adv:book-club",
+            "memory:adv:car-insurance",
+            "memory:adv:noor-allergy",
+            "memory:adv:plant-sitter"
+          ],
+          "profile": "all_returned",
+          "question": "What is Tobias's salary?",
+          "reason": "no_supported_answer_in_current_evidence",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "insufficient_evidence",
+          "category": "absent",
+          "current_full_text_keys": [
+            "memory:adv:book-club",
+            "memory:adv:car-insurance",
+            "memory:adv:tobias-employer",
+            "memory:adv:noor-allergy",
+            "memory:adv:plant-sitter"
+          ],
+          "elapsed_ms": 371.1,
+          "forgotten_delivered": false,
+          "id": "U5",
+          "joint_supported": false,
+          "keys": [
+            "memory:adv:book-club",
+            "memory:adv:car-insurance",
+            "memory:adv:tobias-employer",
+            "memory:adv:noor-allergy",
+            "memory:adv:plant-sitter"
+          ],
+          "profile": "all_returned",
+          "question": "When is Pepper's birthday?",
+          "reason": "no_supported_answer_in_current_evidence",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "insufficient_evidence",
+          "category": "related_non_answering",
+          "current_full_text_keys": [
+            "memory:adv:book-club",
+            "memory:adv:hotel",
+            "memory:adv:flight",
+            "memory:adv:lease",
+            "memory:adv:vet"
+          ],
+          "elapsed_ms": 366.3,
+          "forgotten_delivered": false,
+          "id": "U6",
+          "joint_supported": false,
+          "keys": [
+            "memory:adv:book-club",
+            "memory:adv:hotel",
+            "memory:adv:flight",
+            "memory:adv:lease",
+            "memory:adv:vet"
+          ],
+          "profile": "all_returned",
+          "question": "Who wrote The Glass Orchard?",
+          "reason": "no_supported_answer_in_current_evidence",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "insufficient_evidence",
+          "category": "related_non_answering",
+          "current_full_text_keys": [
+            "memory:adv:car-insurance",
+            "memory:adv:book-club",
+            "memory:adv:hotel",
+            "memory:adv:flight",
+            "memory:adv:lease"
+          ],
+          "elapsed_ms": 367.6,
+          "forgotten_delivered": false,
+          "id": "U7",
+          "joint_supported": false,
+          "keys": [
+            "memory:adv:car-insurance",
+            "memory:adv:book-club",
+            "memory:adv:hotel",
+            "memory:adv:flight",
+            "memory:adv:lease"
+          ],
+          "profile": "all_returned",
+          "question": "How much does the car insurance cost per month?",
+          "reason": "no_supported_answer_in_current_evidence",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "unverified",
+          "category": "related_non_answering",
+          "current_full_text_keys": [
+            "memory:adv:flight",
+            "memory:adv:noor-allergy"
+          ],
+          "elapsed_ms": 200.8,
+          "forgotten_delivered": false,
+          "id": "U8",
+          "joint_supported": true,
+          "keys": [
+            "memory:adv:flight",
+            "memory:adv:noor-allergy"
+          ],
+          "profile": "all_returned",
+          "question": "What time does Ines's flight to Lisbon depart?",
+          "reason": "supported_answer_candidate_not_verified",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:adv:flight"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "insufficient_evidence",
+          "category": "forgotten",
+          "current_full_text_keys": [
+            "memory:adv:greenhouse",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak",
+            "memory:adv:book-club",
+            "memory:adv:car-insurance"
+          ],
+          "elapsed_ms": 371.0,
+          "forgotten_delivered": false,
+          "id": "U9",
+          "joint_supported": false,
+          "keys": [
+            "memory:adv:greenhouse",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak",
+            "memory:adv:book-club",
+            "memory:adv:car-insurance"
+          ],
+          "profile": "all_returned",
+          "question": "Where is the shed key kept?",
+          "reason": "no_supported_answer_in_current_evidence",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "insufficient_evidence",
+          "category": "absent",
+          "current_full_text_keys": [
+            "memory:adv:book-club",
+            "memory:adv:lease",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak",
+            "memory:adv:noor-allergy"
+          ],
+          "elapsed_ms": 416.4,
+          "forgotten_delivered": false,
+          "id": "U10",
+          "joint_supported": false,
+          "keys": [
+            "memory:adv:book-club",
+            "memory:adv:lease",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak",
+            "memory:adv:noor-allergy"
+          ],
+          "profile": "all_returned",
+          "question": "What is the name of Noor's cat?",
+          "reason": "no_supported_answer_in_current_evidence",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "insufficient_evidence",
+          "category": "competing_subject_absent",
+          "current_full_text_keys": [
+            "memory:adv:lease",
+            "memory:adv:hotel",
+            "memory:adv:flight",
+            "memory:adv:vet",
+            "memory:adv:greenhouse"
+          ],
+          "elapsed_ms": 390.5,
+          "forgotten_delivered": false,
+          "id": "U11",
+          "joint_supported": false,
+          "keys": [
+            "memory:adv:lease",
+            "memory:adv:hotel",
+            "memory:adv:flight",
+            "memory:adv:vet",
+            "memory:adv:greenhouse"
+          ],
+          "profile": "all_returned",
+          "question": "When does the office lease expire?",
+          "reason": "no_supported_answer_in_current_evidence",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "insufficient_evidence",
+          "category": "related_non_answering",
+          "current_full_text_keys": [
+            "memory:adv:climbing",
+            "memory:adv:tobias-employer",
+            "memory:adv:tobias-kayak"
+          ],
+          "elapsed_ms": 246.4,
+          "forgotten_delivered": false,
+          "id": "U12",
+          "joint_supported": false,
+          "keys": [
+            "memory:adv:climbing",
+            "memory:adv:tobias-employer",
+            "memory:adv:tobias-kayak"
+          ],
+          "profile": "all_returned",
+          "question": "What climbing grade can Tobias lead?",
+          "reason": "no_supported_answer_in_current_evidence",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": []
+        }
+      ],
+      "stable_across_restart": true,
+      "summary": {
+        "abstentions_on_undelivered_answerable": [],
+        "answerable": 12,
+        "answerable_required_delivered": 12,
+        "false_abstentions": [],
+        "false_sufficiency": [
+          "U8"
+        ],
+        "invariants_hold": true,
+        "support_in_required": 12,
+        "unanswerable": 12,
+        "unanswerable_abstained": 11
+      }
+    },
+    "extractive-qa-null-comparison/1.0.0": {
+      "latency_ms": {
+        "first_call": 3760.1,
+        "later_max": 476.3,
+        "later_median": 295.0
+      },
+      "meets_criterion": false,
+      "model_dir": "/home/user/eval/models/roberta-base-squad2-db07770",
+      "rows": [
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "paraphrase",
+          "current_full_text_keys": [
+            "memory:adv:noor-kayak",
+            "memory:adv:book-club",
+            "memory:adv:tobias-kayak",
+            "memory:adv:noor-allergy",
+            "memory:adv:plant-sitter"
+          ],
+          "elapsed_ms": 3760.1,
+          "forgotten_delivered": false,
+          "id": "P1",
+          "joint_supported": true,
+          "keys": [
+            "memory:adv:noor-kayak",
+            "memory:adv:book-club",
+            "memory:adv:tobias-kayak",
+            "memory:adv:noor-allergy",
+            "memory:adv:plant-sitter"
+          ],
+          "profile": "all_returned",
+          "question": "Where is Noor's kayak stored?",
+          "reason": "answer_span_candidate_not_verified",
+          "required": [
+            "memory:adv:noor-kayak"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:adv:noor-kayak",
+            "memory:adv:tobias-kayak"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "paraphrase",
+          "current_full_text_keys": [
+            "memory:adv:dentist",
+            "memory:adv:tobias-employer",
+            "memory:adv:flight",
+            "memory:adv:tobias-kayak",
+            "memory:adv:climbing"
+          ],
+          "elapsed_ms": 302.9,
+          "forgotten_delivered": false,
+          "id": "P2",
+          "joint_supported": true,
+          "keys": [
+            "memory:adv:dentist",
+            "memory:adv:tobias-employer",
+            "memory:adv:flight",
+            "memory:adv:tobias-kayak",
+            "memory:adv:climbing"
+          ],
+          "profile": "all_returned",
+          "question": "What does Tobias do for a living?",
+          "reason": "answer_span_candidate_not_verified",
+          "required": [
+            "memory:adv:tobias-employer"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:adv:tobias-employer",
+            "memory:adv:climbing"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "insufficient_evidence",
+          "category": "paraphrase",
+          "current_full_text_keys": [
+            "memory:adv:noor-allergy",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak"
+          ],
+          "elapsed_ms": 278.4,
+          "forgotten_delivered": false,
+          "id": "P3",
+          "joint_supported": false,
+          "keys": [
+            "memory:adv:noor-allergy",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak"
+          ],
+          "profile": "all_returned",
+          "question": "Which food can Noor not eat?",
+          "reason": "no_answer_span_in_current_evidence",
+          "required": [
+            "memory:adv:noor-allergy"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "paraphrase",
+          "current_full_text_keys": [
+            "memory:adv:book-club",
+            "memory:adv:vet",
+            "memory:adv:greenhouse",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak"
+          ],
+          "elapsed_ms": 288.0,
+          "forgotten_delivered": false,
+          "id": "P4",
+          "joint_supported": true,
+          "keys": [
+            "memory:adv:book-club",
+            "memory:adv:vet",
+            "memory:adv:greenhouse",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak"
+          ],
+          "profile": "all_returned",
+          "question": "Who is the dog's veterinarian?",
+          "reason": "answer_span_candidate_not_verified",
+          "required": [
+            "memory:adv:vet"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:adv:vet"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "plain",
+          "current_full_text_keys": [
+            "memory:adv:pepper-food",
+            "memory:adv:vet",
+            "memory:adv:car-insurance",
+            "memory:adv:tobias-employer",
+            "memory:adv:noor-allergy"
+          ],
+          "elapsed_ms": 258.2,
+          "forgotten_delivered": false,
+          "id": "P5",
+          "joint_supported": true,
+          "keys": [
+            "memory:adv:pepper-food",
+            "memory:adv:vet",
+            "memory:adv:car-insurance",
+            "memory:adv:tobias-employer",
+            "memory:adv:noor-allergy"
+          ],
+          "profile": "all_returned",
+          "question": "How often is Pepper fed?",
+          "reason": "answer_span_candidate_not_verified",
+          "required": [
+            "memory:adv:pepper-food"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:adv:pepper-food"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "paraphrase",
+          "current_full_text_keys": [
+            "memory:adv:book-club",
+            "memory:adv:dentist",
+            "memory:adv:flight",
+            "memory:adv:lease",
+            "memory:adv:climbing"
+          ],
+          "elapsed_ms": 280.8,
+          "forgotten_delivered": false,
+          "id": "P6",
+          "joint_supported": true,
+          "keys": [
+            "memory:adv:book-club",
+            "memory:adv:dentist",
+            "memory:adv:flight",
+            "memory:adv:lease",
+            "memory:adv:climbing"
+          ],
+          "profile": "all_returned",
+          "question": "What book is the reading group currently on?",
+          "reason": "answer_span_candidate_not_verified",
+          "required": [
+            "memory:adv:book-club"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:adv:book-club"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "competing_fact",
+          "current_full_text_keys": [
+            "memory:adv:car-insurance",
+            "memory:adv:hotel",
+            "memory:adv:flight",
+            "memory:adv:lease",
+            "memory:adv:vet"
+          ],
+          "elapsed_ms": 263.3,
+          "forgotten_delivered": false,
+          "id": "P7",
+          "joint_supported": true,
+          "keys": [
+            "memory:adv:car-insurance",
+            "memory:adv:hotel",
+            "memory:adv:flight",
+            "memory:adv:lease",
+            "memory:adv:vet"
+          ],
+          "profile": "all_returned",
+          "question": "Which company insures the car?",
+          "reason": "answer_span_candidate_not_verified",
+          "required": [
+            "memory:adv:car-insurance"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:adv:car-insurance"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "paraphrase",
+          "current_full_text_keys": [
+            "memory:adv:hotel",
+            "memory:adv:flight",
+            "memory:adv:plant-sitter",
+            "memory:adv:coffee"
+          ],
+          "elapsed_ms": 236.9,
+          "forgotten_delivered": false,
+          "id": "P8",
+          "joint_supported": true,
+          "keys": [
+            "memory:adv:hotel",
+            "memory:adv:flight",
+            "memory:adv:plant-sitter",
+            "memory:adv:coffee",
+            "memory:adv:coffee"
+          ],
+          "profile": "all_returned",
+          "question": "Where will Ines sleep while attending the conference?",
+          "reason": "answer_span_candidate_not_verified",
+          "required": [
+            "memory:adv:hotel"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": true,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:adv:hotel"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "competing_subject",
+          "current_full_text_keys": [
+            "memory:adv:tobias-kayak",
+            "memory:adv:noor-kayak",
+            "memory:adv:tobias-employer",
+            "memory:adv:climbing"
+          ],
+          "elapsed_ms": 227.4,
+          "forgotten_delivered": false,
+          "id": "P9",
+          "joint_supported": true,
+          "keys": [
+            "memory:adv:tobias-kayak",
+            "memory:adv:noor-kayak",
+            "memory:adv:tobias-employer",
+            "memory:adv:climbing"
+          ],
+          "profile": "all_returned",
+          "question": "Where does Tobias keep his kayak?",
+          "reason": "answer_span_candidate_not_verified",
+          "required": [
+            "memory:adv:tobias-kayak"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:adv:tobias-kayak"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "superseded_corrected",
+          "current_full_text_keys": [
+            "memory:adv:dentist",
+            "memory:adv:pepper-food",
+            "memory:adv:greenhouse",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak"
+          ],
+          "elapsed_ms": 286.4,
+          "forgotten_delivered": false,
+          "id": "P10",
+          "joint_supported": true,
+          "keys": [
+            "memory:adv:dentist",
+            "memory:adv:pepper-food",
+            "memory:adv:greenhouse",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak"
+          ],
+          "profile": "all_returned",
+          "question": "What day is the dental cleaning?",
+          "reason": "answer_span_candidate_not_verified",
+          "required": [
+            "memory:adv:dentist"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:adv:dentist"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "superseded_rewritten",
+          "current_full_text_keys": [
+            "memory:adv:coffee",
+            "memory:adv:hotel",
+            "memory:adv:plant-sitter",
+            "memory:adv:flight"
+          ],
+          "elapsed_ms": 220.7,
+          "forgotten_delivered": false,
+          "id": "P11",
+          "joint_supported": true,
+          "keys": [
+            "memory:adv:coffee",
+            "memory:adv:coffee",
+            "memory:adv:hotel",
+            "memory:adv:plant-sitter",
+            "memory:adv:flight"
+          ],
+          "profile": "all_returned",
+          "question": "How does Ines take her coffee?",
+          "reason": "answer_span_candidate_not_verified",
+          "required": [
+            "memory:adv:coffee"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": true,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:adv:coffee"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "paraphrase",
+          "current_full_text_keys": [
+            "memory:adv:choir"
+          ],
+          "elapsed_ms": 84.1,
+          "forgotten_delivered": false,
+          "id": "P12",
+          "joint_supported": true,
+          "keys": [
+            "memory:adv:choir"
+          ],
+          "profile": "all_returned",
+          "question": "What voice part does Wren sing?",
+          "reason": "answer_span_candidate_not_verified",
+          "required": [
+            "memory:adv:choir"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:adv:choir"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "insufficient_evidence",
+          "category": "competing_subject_absent",
+          "current_full_text_keys": [
+            "memory:adv:noor-kayak",
+            "memory:adv:tobias-kayak",
+            "memory:adv:coffee",
+            "memory:adv:plant-sitter"
+          ],
+          "elapsed_ms": 328.9,
+          "forgotten_delivered": false,
+          "id": "U1",
+          "joint_supported": false,
+          "keys": [
+            "memory:adv:noor-kayak",
+            "memory:adv:tobias-kayak",
+            "memory:adv:coffee",
+            "memory:adv:coffee",
+            "memory:adv:plant-sitter"
+          ],
+          "profile": "all_returned",
+          "question": "Where does Imogen keep her kayak?",
+          "reason": "no_answer_span_in_current_evidence",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": true,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "insufficient_evidence",
+          "category": "related_non_answering",
+          "current_full_text_keys": [
+            "memory:adv:greenhouse-lock",
+            "memory:adv:greenhouse",
+            "memory:adv:dentist",
+            "memory:adv:flight",
+            "memory:adv:plant-sitter"
+          ],
+          "elapsed_ms": 387.8,
+          "forgotten_delivered": false,
+          "id": "U2",
+          "joint_supported": false,
+          "keys": [
+            "memory:adv:greenhouse-lock",
+            "memory:adv:greenhouse",
+            "memory:adv:dentist",
+            "memory:adv:flight",
+            "memory:adv:plant-sitter"
+          ],
+          "profile": "all_returned",
+          "question": "What is the combination for the greenhouse lock?",
+          "reason": "no_answer_span_in_current_evidence",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "insufficient_evidence",
+          "category": "related_non_answering",
+          "current_full_text_keys": [
+            "memory:adv:router",
+            "memory:adv:greenhouse",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak",
+            "memory:adv:book-club"
+          ],
+          "elapsed_ms": 397.4,
+          "forgotten_delivered": false,
+          "id": "U3",
+          "joint_supported": false,
+          "keys": [
+            "memory:adv:router",
+            "memory:adv:greenhouse",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak",
+            "memory:adv:book-club"
+          ],
+          "profile": "all_returned",
+          "question": "What is the home WiFi password?",
+          "reason": "no_answer_span_in_current_evidence",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "insufficient_evidence",
+          "category": "related_non_answering",
+          "current_full_text_keys": [
+            "memory:adv:tobias-employer",
+            "memory:adv:book-club",
+            "memory:adv:car-insurance",
+            "memory:adv:noor-allergy",
+            "memory:adv:plant-sitter"
+          ],
+          "elapsed_ms": 370.5,
+          "forgotten_delivered": false,
+          "id": "U4",
+          "joint_supported": false,
+          "keys": [
+            "memory:adv:tobias-employer",
+            "memory:adv:book-club",
+            "memory:adv:car-insurance",
+            "memory:adv:noor-allergy",
+            "memory:adv:plant-sitter"
+          ],
+          "profile": "all_returned",
+          "question": "What is Tobias's salary?",
+          "reason": "no_answer_span_in_current_evidence",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "insufficient_evidence",
+          "category": "absent",
+          "current_full_text_keys": [
+            "memory:adv:book-club",
+            "memory:adv:car-insurance",
+            "memory:adv:tobias-employer",
+            "memory:adv:noor-allergy",
+            "memory:adv:plant-sitter"
+          ],
+          "elapsed_ms": 439.8,
+          "forgotten_delivered": false,
+          "id": "U5",
+          "joint_supported": false,
+          "keys": [
+            "memory:adv:book-club",
+            "memory:adv:car-insurance",
+            "memory:adv:tobias-employer",
+            "memory:adv:noor-allergy",
+            "memory:adv:plant-sitter"
+          ],
+          "profile": "all_returned",
+          "question": "When is Pepper's birthday?",
+          "reason": "no_answer_span_in_current_evidence",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "insufficient_evidence",
+          "category": "related_non_answering",
+          "current_full_text_keys": [
+            "memory:adv:book-club",
+            "memory:adv:hotel",
+            "memory:adv:flight",
+            "memory:adv:lease",
+            "memory:adv:vet"
+          ],
+          "elapsed_ms": 432.9,
+          "forgotten_delivered": false,
+          "id": "U6",
+          "joint_supported": false,
+          "keys": [
+            "memory:adv:book-club",
+            "memory:adv:hotel",
+            "memory:adv:flight",
+            "memory:adv:lease",
+            "memory:adv:vet"
+          ],
+          "profile": "all_returned",
+          "question": "Who wrote The Glass Orchard?",
+          "reason": "no_answer_span_in_current_evidence",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "insufficient_evidence",
+          "category": "related_non_answering",
+          "current_full_text_keys": [
+            "memory:adv:car-insurance",
+            "memory:adv:book-club",
+            "memory:adv:hotel",
+            "memory:adv:flight",
+            "memory:adv:lease"
+          ],
+          "elapsed_ms": 409.3,
+          "forgotten_delivered": false,
+          "id": "U7",
+          "joint_supported": false,
+          "keys": [
+            "memory:adv:car-insurance",
+            "memory:adv:book-club",
+            "memory:adv:hotel",
+            "memory:adv:flight",
+            "memory:adv:lease"
+          ],
+          "profile": "all_returned",
+          "question": "How much does the car insurance cost per month?",
+          "reason": "no_answer_span_in_current_evidence",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "unverified",
+          "category": "related_non_answering",
+          "current_full_text_keys": [
+            "memory:adv:flight",
+            "memory:adv:noor-allergy"
+          ],
+          "elapsed_ms": 141.5,
+          "forgotten_delivered": false,
+          "id": "U8",
+          "joint_supported": true,
+          "keys": [
+            "memory:adv:flight",
+            "memory:adv:noor-allergy"
+          ],
+          "profile": "all_returned",
+          "question": "What time does Ines's flight to Lisbon depart?",
+          "reason": "answer_span_candidate_not_verified",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:adv:flight"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "insufficient_evidence",
+          "category": "forgotten",
+          "current_full_text_keys": [
+            "memory:adv:greenhouse",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak",
+            "memory:adv:book-club",
+            "memory:adv:car-insurance"
+          ],
+          "elapsed_ms": 417.6,
+          "forgotten_delivered": false,
+          "id": "U9",
+          "joint_supported": false,
+          "keys": [
+            "memory:adv:greenhouse",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak",
+            "memory:adv:book-club",
+            "memory:adv:car-insurance"
+          ],
+          "profile": "all_returned",
+          "question": "Where is the shed key kept?",
+          "reason": "no_answer_span_in_current_evidence",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "insufficient_evidence",
+          "category": "absent",
+          "current_full_text_keys": [
+            "memory:adv:book-club",
+            "memory:adv:lease",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak",
+            "memory:adv:noor-allergy"
+          ],
+          "elapsed_ms": 429.0,
+          "forgotten_delivered": false,
+          "id": "U10",
+          "joint_supported": false,
+          "keys": [
+            "memory:adv:book-club",
+            "memory:adv:lease",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak",
+            "memory:adv:noor-allergy"
+          ],
+          "profile": "all_returned",
+          "question": "What is the name of Noor's cat?",
+          "reason": "no_answer_span_in_current_evidence",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "insufficient_evidence",
+          "category": "competing_subject_absent",
+          "current_full_text_keys": [
+            "memory:adv:lease",
+            "memory:adv:hotel",
+            "memory:adv:flight",
+            "memory:adv:vet",
+            "memory:adv:greenhouse"
+          ],
+          "elapsed_ms": 378.9,
+          "forgotten_delivered": false,
+          "id": "U11",
+          "joint_supported": false,
+          "keys": [
+            "memory:adv:lease",
+            "memory:adv:hotel",
+            "memory:adv:flight",
+            "memory:adv:vet",
+            "memory:adv:greenhouse"
+          ],
+          "profile": "all_returned",
+          "question": "When does the office lease expire?",
+          "reason": "no_answer_span_in_current_evidence",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "unverified",
+          "category": "related_non_answering",
+          "current_full_text_keys": [
+            "memory:adv:climbing",
+            "memory:adv:tobias-employer",
+            "memory:adv:tobias-kayak"
+          ],
+          "elapsed_ms": 174.2,
+          "forgotten_delivered": false,
+          "id": "U12",
+          "joint_supported": true,
+          "keys": [
+            "memory:adv:climbing",
+            "memory:adv:tobias-employer",
+            "memory:adv:tobias-kayak"
+          ],
+          "profile": "all_returned",
+          "question": "What climbing grade can Tobias lead?",
+          "reason": "answer_span_candidate_not_verified",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:adv:climbing"
+          ]
+        }
+      ],
+      "stable_across_restart": true,
+      "summary": {
+        "abstentions_on_undelivered_answerable": [],
+        "answerable": 12,
+        "answerable_required_delivered": 12,
+        "false_abstentions": [
+          "P3"
+        ],
+        "false_sufficiency": [
+          "U12",
+          "U8"
+        ],
+        "invariants_hold": true,
+        "support_in_required": 11,
+        "unanswerable": 12,
+        "unanswerable_abstained": 10
+      }
+    },
+    "support_check_disabled": {
+      "latency_ms": {
+        "first_call": 144.7,
+        "later_max": 50.1,
+        "later_median": 36.2
+      },
+      "meets_criterion": false,
+      "model_dir": null,
+      "rows": [
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "paraphrase",
+          "current_full_text_keys": [
+            "memory:adv:noor-kayak",
+            "memory:adv:book-club",
+            "memory:adv:tobias-kayak",
+            "memory:adv:noor-allergy",
+            "memory:adv:plant-sitter"
+          ],
+          "elapsed_ms": 144.7,
+          "forgotten_delivered": false,
+          "id": "P1",
+          "joint_supported": null,
+          "keys": [
+            "memory:adv:noor-kayak",
+            "memory:adv:book-club",
+            "memory:adv:tobias-kayak",
+            "memory:adv:noor-allergy",
+            "memory:adv:plant-sitter"
+          ],
+          "profile": "all_returned",
+          "question": "Where is Noor's kayak stored?",
+          "reason": "answer_entailment_not_checked",
+          "required": [
+            "memory:adv:noor-kayak"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "paraphrase",
+          "current_full_text_keys": [
+            "memory:adv:dentist",
+            "memory:adv:tobias-employer",
+            "memory:adv:flight",
+            "memory:adv:tobias-kayak",
+            "memory:adv:climbing"
+          ],
+          "elapsed_ms": 38.2,
+          "forgotten_delivered": false,
+          "id": "P2",
+          "joint_supported": null,
+          "keys": [
+            "memory:adv:dentist",
+            "memory:adv:tobias-employer",
+            "memory:adv:flight",
+            "memory:adv:tobias-kayak",
+            "memory:adv:climbing"
+          ],
+          "profile": "all_returned",
+          "question": "What does Tobias do for a living?",
+          "reason": "answer_entailment_not_checked",
+          "required": [
+            "memory:adv:tobias-employer"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "paraphrase",
+          "current_full_text_keys": [
+            "memory:adv:noor-allergy",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak"
+          ],
+          "elapsed_ms": 34.6,
+          "forgotten_delivered": false,
+          "id": "P3",
+          "joint_supported": null,
+          "keys": [
+            "memory:adv:noor-allergy",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak"
+          ],
+          "profile": "all_returned",
+          "question": "Which food can Noor not eat?",
+          "reason": "answer_entailment_not_checked",
+          "required": [
+            "memory:adv:noor-allergy"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "paraphrase",
+          "current_full_text_keys": [
+            "memory:adv:book-club",
+            "memory:adv:vet",
+            "memory:adv:greenhouse",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak"
+          ],
+          "elapsed_ms": 36.9,
+          "forgotten_delivered": false,
+          "id": "P4",
+          "joint_supported": null,
+          "keys": [
+            "memory:adv:book-club",
+            "memory:adv:vet",
+            "memory:adv:greenhouse",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak"
+          ],
+          "profile": "all_returned",
+          "question": "Who is the dog's veterinarian?",
+          "reason": "answer_entailment_not_checked",
+          "required": [
+            "memory:adv:vet"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "plain",
+          "current_full_text_keys": [
+            "memory:adv:pepper-food",
+            "memory:adv:vet",
+            "memory:adv:car-insurance",
+            "memory:adv:tobias-employer",
+            "memory:adv:noor-allergy"
+          ],
+          "elapsed_ms": 33.7,
+          "forgotten_delivered": false,
+          "id": "P5",
+          "joint_supported": null,
+          "keys": [
+            "memory:adv:pepper-food",
+            "memory:adv:vet",
+            "memory:adv:car-insurance",
+            "memory:adv:tobias-employer",
+            "memory:adv:noor-allergy"
+          ],
+          "profile": "all_returned",
+          "question": "How often is Pepper fed?",
+          "reason": "answer_entailment_not_checked",
+          "required": [
+            "memory:adv:pepper-food"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "paraphrase",
+          "current_full_text_keys": [
+            "memory:adv:book-club",
+            "memory:adv:dentist",
+            "memory:adv:flight",
+            "memory:adv:lease",
+            "memory:adv:climbing"
+          ],
+          "elapsed_ms": 41.8,
+          "forgotten_delivered": false,
+          "id": "P6",
+          "joint_supported": null,
+          "keys": [
+            "memory:adv:book-club",
+            "memory:adv:dentist",
+            "memory:adv:flight",
+            "memory:adv:lease",
+            "memory:adv:climbing"
+          ],
+          "profile": "all_returned",
+          "question": "What book is the reading group currently on?",
+          "reason": "answer_entailment_not_checked",
+          "required": [
+            "memory:adv:book-club"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "competing_fact",
+          "current_full_text_keys": [
+            "memory:adv:car-insurance",
+            "memory:adv:hotel",
+            "memory:adv:flight",
+            "memory:adv:lease",
+            "memory:adv:vet"
+          ],
+          "elapsed_ms": 35.1,
+          "forgotten_delivered": false,
+          "id": "P7",
+          "joint_supported": null,
+          "keys": [
+            "memory:adv:car-insurance",
+            "memory:adv:hotel",
+            "memory:adv:flight",
+            "memory:adv:lease",
+            "memory:adv:vet"
+          ],
+          "profile": "all_returned",
+          "question": "Which company insures the car?",
+          "reason": "answer_entailment_not_checked",
+          "required": [
+            "memory:adv:car-insurance"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "paraphrase",
+          "current_full_text_keys": [
+            "memory:adv:hotel",
+            "memory:adv:flight",
+            "memory:adv:plant-sitter",
+            "memory:adv:coffee"
+          ],
+          "elapsed_ms": 35.6,
+          "forgotten_delivered": false,
+          "id": "P8",
+          "joint_supported": null,
+          "keys": [
+            "memory:adv:hotel",
+            "memory:adv:flight",
+            "memory:adv:plant-sitter",
+            "memory:adv:coffee",
+            "memory:adv:coffee"
+          ],
+          "profile": "all_returned",
+          "question": "Where will Ines sleep while attending the conference?",
+          "reason": "answer_entailment_not_checked",
+          "required": [
+            "memory:adv:hotel"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": true,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "competing_subject",
+          "current_full_text_keys": [
+            "memory:adv:tobias-kayak",
+            "memory:adv:noor-kayak",
+            "memory:adv:tobias-employer",
+            "memory:adv:climbing"
+          ],
+          "elapsed_ms": 32.9,
+          "forgotten_delivered": false,
+          "id": "P9",
+          "joint_supported": null,
+          "keys": [
+            "memory:adv:tobias-kayak",
+            "memory:adv:noor-kayak",
+            "memory:adv:tobias-employer",
+            "memory:adv:climbing"
+          ],
+          "profile": "all_returned",
+          "question": "Where does Tobias keep his kayak?",
+          "reason": "answer_entailment_not_checked",
+          "required": [
+            "memory:adv:tobias-kayak"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "superseded_corrected",
+          "current_full_text_keys": [
+            "memory:adv:dentist",
+            "memory:adv:pepper-food",
+            "memory:adv:greenhouse",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak"
+          ],
+          "elapsed_ms": 36.4,
+          "forgotten_delivered": false,
+          "id": "P10",
+          "joint_supported": null,
+          "keys": [
+            "memory:adv:dentist",
+            "memory:adv:pepper-food",
+            "memory:adv:greenhouse",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak"
+          ],
+          "profile": "all_returned",
+          "question": "What day is the dental cleaning?",
+          "reason": "answer_entailment_not_checked",
+          "required": [
+            "memory:adv:dentist"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "superseded_rewritten",
+          "current_full_text_keys": [
+            "memory:adv:coffee",
+            "memory:adv:hotel",
+            "memory:adv:plant-sitter",
+            "memory:adv:flight"
+          ],
+          "elapsed_ms": 35.6,
+          "forgotten_delivered": false,
+          "id": "P11",
+          "joint_supported": null,
+          "keys": [
+            "memory:adv:coffee",
+            "memory:adv:coffee",
+            "memory:adv:hotel",
+            "memory:adv:plant-sitter",
+            "memory:adv:flight"
+          ],
+          "profile": "all_returned",
+          "question": "How does Ines take her coffee?",
+          "reason": "answer_entailment_not_checked",
+          "required": [
+            "memory:adv:coffee"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": true,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": "paraphrase",
+          "current_full_text_keys": [
+            "memory:adv:choir"
+          ],
+          "elapsed_ms": 29.8,
+          "forgotten_delivered": false,
+          "id": "P12",
+          "joint_supported": null,
+          "keys": [
+            "memory:adv:choir"
+          ],
+          "profile": "all_returned",
+          "question": "What voice part does Wren sing?",
+          "reason": "answer_entailment_not_checked",
+          "required": [
+            "memory:adv:choir"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "unverified",
+          "category": "competing_subject_absent",
+          "current_full_text_keys": [
+            "memory:adv:noor-kayak",
+            "memory:adv:tobias-kayak",
+            "memory:adv:coffee",
+            "memory:adv:plant-sitter"
+          ],
+          "elapsed_ms": 37.3,
+          "forgotten_delivered": false,
+          "id": "U1",
+          "joint_supported": null,
+          "keys": [
+            "memory:adv:noor-kayak",
+            "memory:adv:tobias-kayak",
+            "memory:adv:coffee",
+            "memory:adv:coffee",
+            "memory:adv:plant-sitter"
+          ],
+          "profile": "all_returned",
+          "question": "Where does Imogen keep her kayak?",
+          "reason": "answer_entailment_not_checked",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": true,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "unverified",
+          "category": "related_non_answering",
+          "current_full_text_keys": [
+            "memory:adv:greenhouse-lock",
+            "memory:adv:greenhouse",
+            "memory:adv:dentist",
+            "memory:adv:flight",
+            "memory:adv:plant-sitter"
+          ],
+          "elapsed_ms": 36.3,
+          "forgotten_delivered": false,
+          "id": "U2",
+          "joint_supported": null,
+          "keys": [
+            "memory:adv:greenhouse-lock",
+            "memory:adv:greenhouse",
+            "memory:adv:dentist",
+            "memory:adv:flight",
+            "memory:adv:plant-sitter"
+          ],
+          "profile": "all_returned",
+          "question": "What is the combination for the greenhouse lock?",
+          "reason": "answer_entailment_not_checked",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "unverified",
+          "category": "related_non_answering",
+          "current_full_text_keys": [
+            "memory:adv:router",
+            "memory:adv:greenhouse",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak",
+            "memory:adv:book-club"
+          ],
+          "elapsed_ms": 36.2,
+          "forgotten_delivered": false,
+          "id": "U3",
+          "joint_supported": null,
+          "keys": [
+            "memory:adv:router",
+            "memory:adv:greenhouse",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak",
+            "memory:adv:book-club"
+          ],
+          "profile": "all_returned",
+          "question": "What is the home WiFi password?",
+          "reason": "answer_entailment_not_checked",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "unverified",
+          "category": "related_non_answering",
+          "current_full_text_keys": [
+            "memory:adv:tobias-employer",
+            "memory:adv:book-club",
+            "memory:adv:car-insurance",
+            "memory:adv:noor-allergy",
+            "memory:adv:plant-sitter"
+          ],
+          "elapsed_ms": 34.4,
+          "forgotten_delivered": false,
+          "id": "U4",
+          "joint_supported": null,
+          "keys": [
+            "memory:adv:tobias-employer",
+            "memory:adv:book-club",
+            "memory:adv:car-insurance",
+            "memory:adv:noor-allergy",
+            "memory:adv:plant-sitter"
+          ],
+          "profile": "all_returned",
+          "question": "What is Tobias's salary?",
+          "reason": "answer_entailment_not_checked",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "unverified",
+          "category": "absent",
+          "current_full_text_keys": [
+            "memory:adv:book-club",
+            "memory:adv:car-insurance",
+            "memory:adv:tobias-employer",
+            "memory:adv:noor-allergy",
+            "memory:adv:plant-sitter"
+          ],
+          "elapsed_ms": 34.1,
+          "forgotten_delivered": false,
+          "id": "U5",
+          "joint_supported": null,
+          "keys": [
+            "memory:adv:book-club",
+            "memory:adv:car-insurance",
+            "memory:adv:tobias-employer",
+            "memory:adv:noor-allergy",
+            "memory:adv:plant-sitter"
+          ],
+          "profile": "all_returned",
+          "question": "When is Pepper's birthday?",
+          "reason": "answer_entailment_not_checked",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "unverified",
+          "category": "related_non_answering",
+          "current_full_text_keys": [
+            "memory:adv:book-club",
+            "memory:adv:hotel",
+            "memory:adv:flight",
+            "memory:adv:lease",
+            "memory:adv:vet"
+          ],
+          "elapsed_ms": 36.7,
+          "forgotten_delivered": false,
+          "id": "U6",
+          "joint_supported": null,
+          "keys": [
+            "memory:adv:book-club",
+            "memory:adv:hotel",
+            "memory:adv:flight",
+            "memory:adv:lease",
+            "memory:adv:vet"
+          ],
+          "profile": "all_returned",
+          "question": "Who wrote The Glass Orchard?",
+          "reason": "answer_entailment_not_checked",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "unverified",
+          "category": "related_non_answering",
+          "current_full_text_keys": [
+            "memory:adv:car-insurance",
+            "memory:adv:book-club",
+            "memory:adv:hotel",
+            "memory:adv:flight",
+            "memory:adv:lease"
+          ],
+          "elapsed_ms": 38.8,
+          "forgotten_delivered": false,
+          "id": "U7",
+          "joint_supported": null,
+          "keys": [
+            "memory:adv:car-insurance",
+            "memory:adv:book-club",
+            "memory:adv:hotel",
+            "memory:adv:flight",
+            "memory:adv:lease"
+          ],
+          "profile": "all_returned",
+          "question": "How much does the car insurance cost per month?",
+          "reason": "answer_entailment_not_checked",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "unverified",
+          "category": "related_non_answering",
+          "current_full_text_keys": [
+            "memory:adv:flight",
+            "memory:adv:noor-allergy"
+          ],
+          "elapsed_ms": 31.0,
+          "forgotten_delivered": false,
+          "id": "U8",
+          "joint_supported": null,
+          "keys": [
+            "memory:adv:flight",
+            "memory:adv:noor-allergy"
+          ],
+          "profile": "all_returned",
+          "question": "What time does Ines's flight to Lisbon depart?",
+          "reason": "answer_entailment_not_checked",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "unverified",
+          "category": "forgotten",
+          "current_full_text_keys": [
+            "memory:adv:greenhouse",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak",
+            "memory:adv:book-club",
+            "memory:adv:car-insurance"
+          ],
+          "elapsed_ms": 36.5,
+          "forgotten_delivered": false,
+          "id": "U9",
+          "joint_supported": null,
+          "keys": [
+            "memory:adv:greenhouse",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak",
+            "memory:adv:book-club",
+            "memory:adv:car-insurance"
+          ],
+          "profile": "all_returned",
+          "question": "Where is the shed key kept?",
+          "reason": "answer_entailment_not_checked",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "unverified",
+          "category": "absent",
+          "current_full_text_keys": [
+            "memory:adv:book-club",
+            "memory:adv:lease",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak",
+            "memory:adv:noor-allergy"
+          ],
+          "elapsed_ms": 33.9,
+          "forgotten_delivered": false,
+          "id": "U10",
+          "joint_supported": null,
+          "keys": [
+            "memory:adv:book-club",
+            "memory:adv:lease",
+            "memory:adv:plant-sitter",
+            "memory:adv:noor-kayak",
+            "memory:adv:noor-allergy"
+          ],
+          "profile": "all_returned",
+          "question": "What is the name of Noor's cat?",
+          "reason": "answer_entailment_not_checked",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "unverified",
+          "category": "competing_subject_absent",
+          "current_full_text_keys": [
+            "memory:adv:lease",
+            "memory:adv:hotel",
+            "memory:adv:flight",
+            "memory:adv:vet",
+            "memory:adv:greenhouse"
+          ],
+          "elapsed_ms": 42.9,
+          "forgotten_delivered": false,
+          "id": "U11",
+          "joint_supported": null,
+          "keys": [
+            "memory:adv:lease",
+            "memory:adv:hotel",
+            "memory:adv:flight",
+            "memory:adv:vet",
+            "memory:adv:greenhouse"
+          ],
+          "profile": "all_returned",
+          "question": "When does the office lease expire?",
+          "reason": "answer_entailment_not_checked",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "unverified",
+          "category": "related_non_answering",
+          "current_full_text_keys": [
+            "memory:adv:climbing",
+            "memory:adv:tobias-employer",
+            "memory:adv:tobias-kayak"
+          ],
+          "elapsed_ms": 46.0,
+          "forgotten_delivered": false,
+          "id": "U12",
+          "joint_supported": null,
+          "keys": [
+            "memory:adv:climbing",
+            "memory:adv:tobias-employer",
+            "memory:adv:tobias-kayak"
+          ],
+          "profile": "all_returned",
+          "question": "What climbing grade can Tobias lead?",
+          "reason": "answer_entailment_not_checked",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        }
+      ],
+      "stable_across_restart": true,
+      "summary": {
+        "abstentions_on_undelivered_answerable": [],
+        "answerable": 12,
+        "answerable_required_delivered": 12,
+        "false_abstentions": [],
+        "false_sufficiency": [
+          "U1",
+          "U10",
+          "U11",
+          "U12",
+          "U2",
+          "U3",
+          "U4",
+          "U5",
+          "U6",
+          "U7",
+          "U8",
+          "U9"
+        ],
+        "invariants_hold": true,
+        "support_in_required": 0,
+        "unanswerable": 12,
+        "unanswerable_abstained": 0
+      }
+    }
+  },
+  "cases": "quality_cases_adversarial.json",
+  "criterion": {
+    "false_abstentions": 0,
+    "min_unanswerable_abstained": 9
+  },
+  "delivered_evidence_identical_across_arms": true,
+  "head": "65bd7c3b334cfd4b9928fb7f486870af84c6bb75",
+  "lifecycle": [
+    {
+      "committed": true,
+      "key": "memory:adv:dentist",
+      "op": "correct",
+      "operation": "correction",
+      "receipt_id": "ref-0153",
+      "status": "corrected"
+    },
+    {
+      "committed": true,
+      "key": "memory:adv:coffee",
+      "op": "rewrite",
+      "operation": null,
+      "receipt_id": null,
+      "status": null
+    },
+    {
+      "committed": true,
+      "key": "memory:adv:shed-key",
+      "op": "forget",
+      "operation": "pruning",
+      "receipt_id": "ref-0163",
+      "status": "forgotten"
+    }
+  ],
+  "manifest_sha256": "e40f9543903d131ad2a6cfbbe117e8f41cb70924e7568a986d7f2b94ce346991",
+  "provider": "real stdio MCP / governed SQLite / memory_find all_returned, max_items=5",
+  "qualification": "small author-written held-out cohort; not calibrated or blinded",
+  "qualified_arm": "answerability-subject-grounded/1.0.0",
+  "schema": "agent-memory-stage-c-adversarial/0.1.0",
+  "status": "PASS"
+}

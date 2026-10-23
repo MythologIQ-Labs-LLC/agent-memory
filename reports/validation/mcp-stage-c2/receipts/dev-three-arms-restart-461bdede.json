@@ -1,0 +1,1599 @@
+{
+  "arms": {
+    "answerability-subject-grounded/1.0.0": {
+      "latency_ms": {
+        "first_call": 2058.4,
+        "later_max": 416.3,
+        "later_median": 347.1
+      },
+      "meets_criterion": true,
+      "model_dir": "/home/user/eval/models/qnli-electra-base-c7dea87",
+      "rows": [
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:liora-canoe",
+            "memory:bastien-canoe",
+            "memory:liora-bicycle",
+            "memory:liora-sibling",
+            "memory:mara-child"
+          ],
+          "elapsed_ms": 2058.4,
+          "forgotten_delivered": false,
+          "id": "A1",
+          "joint_supported": true,
+          "keys": [
+            "memory:liora-canoe",
+            "memory:bastien-canoe",
+            "memory:liora-bicycle",
+            "memory:liora-sibling",
+            "memory:mara-child"
+          ],
+          "profile": "all_returned",
+          "question": "What color is Liora's canoe?",
+          "reason": "supported_answer_candidate_not_verified",
+          "required": [
+            "memory:liora-canoe"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:liora-canoe"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:mara-child",
+            "memory:mara-parent"
+          ],
+          "elapsed_ms": 200.6,
+          "forgotten_delivered": false,
+          "id": "A2",
+          "joint_supported": true,
+          "keys": [
+            "memory:mara-child",
+            "memory:mara-parent"
+          ],
+          "profile": "all_returned",
+          "question": "Where does Mara's parent work?",
+          "reason": "supported_answer_candidate_not_verified",
+          "required": [
+            "memory:mara-parent"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:mara-parent"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:mara-child",
+            "memory:mara-parent"
+          ],
+          "elapsed_ms": 200.3,
+          "forgotten_delivered": false,
+          "id": "A3",
+          "joint_supported": true,
+          "keys": [
+            "memory:mara-child",
+            "memory:mara-parent"
+          ],
+          "profile": "all_returned",
+          "question": "Which instrument does Mara's child play?",
+          "reason": "supported_answer_candidate_not_verified",
+          "required": [
+            "memory:mara-child"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:mara-child"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:office-printer",
+            "memory:liora-bicycle",
+            "memory:liora-canoe",
+            "memory:liora-sibling"
+          ],
+          "elapsed_ms": 346.0,
+          "forgotten_delivered": false,
+          "id": "A4",
+          "joint_supported": true,
+          "keys": [
+            "memory:office-printer",
+            "memory:liora-bicycle",
+            "memory:liora-canoe",
+            "memory:liora-sibling"
+          ],
+          "profile": "all_returned",
+          "question": "Where does Liora's brother live?",
+          "reason": "supported_answer_candidate_not_verified",
+          "required": [
+            "memory:liora-sibling"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:liora-sibling"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:office-printer",
+            "memory:moon-exhibit",
+            "memory:liora-bicycle",
+            "memory:liora-canoe",
+            "memory:mara-child"
+          ],
+          "elapsed_ms": 403.2,
+          "forgotten_delivered": false,
+          "id": "A5",
+          "joint_supported": true,
+          "keys": [
+            "memory:office-printer",
+            "memory:moon-exhibit",
+            "memory:liora-bicycle",
+            "memory:liora-canoe",
+            "memory:mara-child"
+          ],
+          "profile": "all_returned",
+          "question": "What model is the office printer?",
+          "reason": "supported_answer_candidate_not_verified",
+          "required": [
+            "memory:office-printer"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:office-printer"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:office-printer",
+            "memory:quail-owner",
+            "memory:code-editor",
+            "memory:moon-exhibit",
+            "memory:kitchen-printer"
+          ],
+          "elapsed_ms": 393.3,
+          "forgotten_delivered": false,
+          "id": "A6",
+          "joint_supported": true,
+          "keys": [
+            "memory:office-printer",
+            "memory:quail-owner",
+            "memory:code-editor",
+            "memory:moon-exhibit",
+            "memory:kitchen-printer"
+          ],
+          "profile": "all_returned",
+          "question": "Which toner cartridge does the office printer use?",
+          "reason": "supported_answer_candidate_not_verified",
+          "required": [
+            "memory:office-printer"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:office-printer"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:maya-editor",
+            "memory:quail-owner",
+            "memory:code-editor"
+          ],
+          "elapsed_ms": 281.6,
+          "forgotten_delivered": false,
+          "id": "A7",
+          "joint_supported": true,
+          "keys": [
+            "memory:maya-editor",
+            "memory:quail-owner",
+            "memory:code-editor"
+          ],
+          "profile": "all_returned",
+          "question": "Which editor and language server does Maya use for Python?",
+          "reason": "supported_answer_candidate_not_verified",
+          "required": [
+            "memory:maya-editor"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:maya-editor"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:quail-meeting",
+            "memory:quail-owner",
+            "memory:meridian-meeting",
+            "memory:office-printer",
+            "memory:mara-child"
+          ],
+          "elapsed_ms": 416.3,
+          "forgotten_delivered": false,
+          "id": "A8",
+          "joint_supported": true,
+          "keys": [
+            "memory:quail-meeting",
+            "memory:quail-owner",
+            "memory:meridian-meeting",
+            "memory:office-printer",
+            "memory:mara-child"
+          ],
+          "profile": "all_returned",
+          "question": "Where will Project Quail hold its next review?",
+          "reason": "supported_answer_candidate_not_verified",
+          "required": [
+            "memory:quail-meeting"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:quail-meeting"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:quail-owner",
+            "memory:quail-meeting",
+            "memory:meridian-owner",
+            "memory:meridian-meeting"
+          ],
+          "elapsed_ms": 315.4,
+          "forgotten_delivered": false,
+          "id": "A9",
+          "joint_supported": true,
+          "keys": [
+            "memory:quail-owner",
+            "memory:quail-meeting",
+            "memory:meridian-owner",
+            "memory:meridian-meeting"
+          ],
+          "profile": "all_returned",
+          "question": "Who maintains Project Quail?",
+          "reason": "supported_answer_candidate_not_verified",
+          "required": [
+            "memory:quail-owner"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:quail-owner"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:meridian-meeting",
+            "memory:meridian-owner",
+            "memory:quail-meeting",
+            "memory:quail-owner",
+            "memory:liora-bicycle"
+          ],
+          "elapsed_ms": 387.8,
+          "forgotten_delivered": false,
+          "id": "A10",
+          "joint_supported": true,
+          "keys": [
+            "memory:meridian-meeting",
+            "memory:meridian-owner",
+            "memory:quail-meeting",
+            "memory:quail-owner",
+            "memory:liora-bicycle"
+          ],
+          "profile": "all_returned",
+          "question": "When is Project Meridian's design review?",
+          "reason": "supported_answer_candidate_not_verified",
+          "required": [
+            "memory:meridian-meeting"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:meridian-meeting"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:telescope",
+            "memory:bastien-canoe",
+            "memory:quail-owner"
+          ],
+          "elapsed_ms": 274.0,
+          "forgotten_delivered": false,
+          "id": "A11",
+          "joint_supported": true,
+          "keys": [
+            "memory:telescope",
+            "memory:bastien-canoe",
+            "memory:quail-owner"
+          ],
+          "profile": "all_returned",
+          "question": "What mount does Bastien's telescope use?",
+          "reason": "supported_answer_candidate_not_verified",
+          "required": [
+            "memory:telescope"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:telescope"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "insufficient_evidence",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:code-editor",
+            "memory:omar-editor",
+            "memory:office-printer",
+            "memory:moon-exhibit",
+            "memory:liora-bicycle"
+          ],
+          "elapsed_ms": 364.2,
+          "forgotten_delivered": false,
+          "id": "N1",
+          "joint_supported": false,
+          "keys": [
+            "memory:code-editor",
+            "memory:omar-editor",
+            "memory:office-printer",
+            "memory:moon-exhibit",
+            "memory:liora-bicycle"
+          ],
+          "profile": "all_returned",
+          "question": "What is the garage door access code?",
+          "reason": "no_supported_answer_in_current_evidence",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "insufficient_evidence",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:code-editor",
+            "memory:moon-exhibit",
+            "memory:kitchen-printer",
+            "memory:festival",
+            "memory:liora-bicycle"
+          ],
+          "elapsed_ms": 348.2,
+          "forgotten_delivered": false,
+          "id": "N2",
+          "joint_supported": false,
+          "keys": [
+            "memory:code-editor",
+            "memory:moon-exhibit",
+            "memory:kitchen-printer",
+            "memory:festival",
+            "memory:liora-bicycle"
+          ],
+          "profile": "all_returned",
+          "question": "When does the lunar eclipse committee meet?",
+          "reason": "no_supported_answer_in_current_evidence",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "insufficient_evidence",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:quail-meeting",
+            "memory:code-editor",
+            "memory:office-printer",
+            "memory:moon-exhibit",
+            "memory:liora-bicycle"
+          ],
+          "elapsed_ms": 394.0,
+          "forgotten_delivered": false,
+          "id": "N3",
+          "joint_supported": false,
+          "keys": [
+            "memory:quail-meeting",
+            "memory:code-editor",
+            "memory:office-printer",
+            "memory:moon-exhibit",
+            "memory:liora-bicycle"
+          ],
+          "profile": "all_returned",
+          "question": "What is the WiFi password for Harbour Library?",
+          "reason": "no_supported_answer_in_current_evidence",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "answerability-subject-grounded/1.0.0",
+          "support_status": "checked",
+          "supported_keys": []
+        }
+      ],
+      "stable_across_restart": true,
+      "summary": {
+        "abstentions_on_undelivered_answerable": [],
+        "answerable": 11,
+        "answerable_required_delivered": 11,
+        "false_abstentions": [],
+        "false_sufficiency": [],
+        "invariants_hold": true,
+        "support_in_required": 11,
+        "unanswerable": 3,
+        "unanswerable_abstained": 3
+      }
+    },
+    "extractive-qa-null-comparison/1.0.0": {
+      "latency_ms": {
+        "first_call": 3315.1,
+        "later_max": 405.9,
+        "later_median": 267.6
+      },
+      "meets_criterion": true,
+      "model_dir": "/home/user/eval/models/roberta-base-squad2-db07770",
+      "rows": [
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:liora-canoe",
+            "memory:bastien-canoe",
+            "memory:liora-bicycle",
+            "memory:liora-sibling",
+            "memory:mara-child"
+          ],
+          "elapsed_ms": 3315.1,
+          "forgotten_delivered": false,
+          "id": "A1",
+          "joint_supported": true,
+          "keys": [
+            "memory:liora-canoe",
+            "memory:bastien-canoe",
+            "memory:liora-bicycle",
+            "memory:liora-sibling",
+            "memory:mara-child"
+          ],
+          "profile": "all_returned",
+          "question": "What color is Liora's canoe?",
+          "reason": "answer_span_candidate_not_verified",
+          "required": [
+            "memory:liora-canoe"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:liora-canoe"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:mara-child",
+            "memory:mara-parent"
+          ],
+          "elapsed_ms": 133.9,
+          "forgotten_delivered": false,
+          "id": "A2",
+          "joint_supported": true,
+          "keys": [
+            "memory:mara-child",
+            "memory:mara-parent"
+          ],
+          "profile": "all_returned",
+          "question": "Where does Mara's parent work?",
+          "reason": "answer_span_candidate_not_verified",
+          "required": [
+            "memory:mara-parent"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:mara-parent"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:mara-child",
+            "memory:mara-parent"
+          ],
+          "elapsed_ms": 131.3,
+          "forgotten_delivered": false,
+          "id": "A3",
+          "joint_supported": true,
+          "keys": [
+            "memory:mara-child",
+            "memory:mara-parent"
+          ],
+          "profile": "all_returned",
+          "question": "Which instrument does Mara's child play?",
+          "reason": "answer_span_candidate_not_verified",
+          "required": [
+            "memory:mara-child"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:mara-child"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:office-printer",
+            "memory:liora-bicycle",
+            "memory:liora-canoe",
+            "memory:liora-sibling"
+          ],
+          "elapsed_ms": 239.2,
+          "forgotten_delivered": false,
+          "id": "A4",
+          "joint_supported": true,
+          "keys": [
+            "memory:office-printer",
+            "memory:liora-bicycle",
+            "memory:liora-canoe",
+            "memory:liora-sibling"
+          ],
+          "profile": "all_returned",
+          "question": "Where does Liora's brother live?",
+          "reason": "answer_span_candidate_not_verified",
+          "required": [
+            "memory:liora-sibling"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:liora-sibling"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:office-printer",
+            "memory:moon-exhibit",
+            "memory:liora-bicycle",
+            "memory:liora-canoe",
+            "memory:mara-child"
+          ],
+          "elapsed_ms": 276.3,
+          "forgotten_delivered": false,
+          "id": "A5",
+          "joint_supported": true,
+          "keys": [
+            "memory:office-printer",
+            "memory:moon-exhibit",
+            "memory:liora-bicycle",
+            "memory:liora-canoe",
+            "memory:mara-child"
+          ],
+          "profile": "all_returned",
+          "question": "What model is the office printer?",
+          "reason": "answer_span_candidate_not_verified",
+          "required": [
+            "memory:office-printer"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:office-printer"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:office-printer",
+            "memory:quail-owner",
+            "memory:code-editor",
+            "memory:moon-exhibit",
+            "memory:kitchen-printer"
+          ],
+          "elapsed_ms": 269.6,
+          "forgotten_delivered": false,
+          "id": "A6",
+          "joint_supported": true,
+          "keys": [
+            "memory:office-printer",
+            "memory:quail-owner",
+            "memory:code-editor",
+            "memory:moon-exhibit",
+            "memory:kitchen-printer"
+          ],
+          "profile": "all_returned",
+          "question": "Which toner cartridge does the office printer use?",
+          "reason": "answer_span_candidate_not_verified",
+          "required": [
+            "memory:office-printer"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:office-printer"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:maya-editor",
+            "memory:quail-owner",
+            "memory:code-editor"
+          ],
+          "elapsed_ms": 185.5,
+          "forgotten_delivered": false,
+          "id": "A7",
+          "joint_supported": true,
+          "keys": [
+            "memory:maya-editor",
+            "memory:quail-owner",
+            "memory:code-editor"
+          ],
+          "profile": "all_returned",
+          "question": "Which editor and language server does Maya use for Python?",
+          "reason": "answer_span_candidate_not_verified",
+          "required": [
+            "memory:maya-editor"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:maya-editor"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:quail-meeting",
+            "memory:quail-owner",
+            "memory:meridian-meeting",
+            "memory:office-printer",
+            "memory:mara-child"
+          ],
+          "elapsed_ms": 289.3,
+          "forgotten_delivered": false,
+          "id": "A8",
+          "joint_supported": true,
+          "keys": [
+            "memory:quail-meeting",
+            "memory:quail-owner",
+            "memory:meridian-meeting",
+            "memory:office-printer",
+            "memory:mara-child"
+          ],
+          "profile": "all_returned",
+          "question": "Where will Project Quail hold its next review?",
+          "reason": "answer_span_candidate_not_verified",
+          "required": [
+            "memory:quail-meeting"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:quail-meeting"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:quail-owner",
+            "memory:quail-meeting",
+            "memory:meridian-owner",
+            "memory:meridian-meeting"
+          ],
+          "elapsed_ms": 220.7,
+          "forgotten_delivered": false,
+          "id": "A9",
+          "joint_supported": true,
+          "keys": [
+            "memory:quail-owner",
+            "memory:quail-meeting",
+            "memory:meridian-owner",
+            "memory:meridian-meeting"
+          ],
+          "profile": "all_returned",
+          "question": "Who maintains Project Quail?",
+          "reason": "answer_span_candidate_not_verified",
+          "required": [
+            "memory:quail-owner"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:quail-owner"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:meridian-meeting",
+            "memory:meridian-owner",
+            "memory:quail-meeting",
+            "memory:quail-owner",
+            "memory:liora-bicycle"
+          ],
+          "elapsed_ms": 267.1,
+          "forgotten_delivered": false,
+          "id": "A10",
+          "joint_supported": true,
+          "keys": [
+            "memory:meridian-meeting",
+            "memory:meridian-owner",
+            "memory:quail-meeting",
+            "memory:quail-owner",
+            "memory:liora-bicycle"
+          ],
+          "profile": "all_returned",
+          "question": "When is Project Meridian's design review?",
+          "reason": "answer_span_candidate_not_verified",
+          "required": [
+            "memory:meridian-meeting"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:meridian-meeting"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:telescope",
+            "memory:bastien-canoe",
+            "memory:quail-owner"
+          ],
+          "elapsed_ms": 183.0,
+          "forgotten_delivered": false,
+          "id": "A11",
+          "joint_supported": true,
+          "keys": [
+            "memory:telescope",
+            "memory:bastien-canoe",
+            "memory:quail-owner"
+          ],
+          "profile": "all_returned",
+          "question": "What mount does Bastien's telescope use?",
+          "reason": "answer_span_candidate_not_verified",
+          "required": [
+            "memory:telescope"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": [
+            "memory:telescope"
+          ]
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "insufficient_evidence",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:code-editor",
+            "memory:omar-editor",
+            "memory:office-printer",
+            "memory:moon-exhibit",
+            "memory:liora-bicycle"
+          ],
+          "elapsed_ms": 357.2,
+          "forgotten_delivered": false,
+          "id": "N1",
+          "joint_supported": false,
+          "keys": [
+            "memory:code-editor",
+            "memory:omar-editor",
+            "memory:office-printer",
+            "memory:moon-exhibit",
+            "memory:liora-bicycle"
+          ],
+          "profile": "all_returned",
+          "question": "What is the garage door access code?",
+          "reason": "no_answer_span_in_current_evidence",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "insufficient_evidence",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:code-editor",
+            "memory:moon-exhibit",
+            "memory:kitchen-printer",
+            "memory:festival",
+            "memory:liora-bicycle"
+          ],
+          "elapsed_ms": 342.5,
+          "forgotten_delivered": false,
+          "id": "N2",
+          "joint_supported": false,
+          "keys": [
+            "memory:code-editor",
+            "memory:moon-exhibit",
+            "memory:kitchen-printer",
+            "memory:festival",
+            "memory:liora-bicycle"
+          ],
+          "profile": "all_returned",
+          "question": "When does the lunar eclipse committee meet?",
+          "reason": "no_answer_span_in_current_evidence",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "insufficient_evidence",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:quail-meeting",
+            "memory:code-editor",
+            "memory:office-printer",
+            "memory:moon-exhibit",
+            "memory:liora-bicycle"
+          ],
+          "elapsed_ms": 372.9,
+          "forgotten_delivered": false,
+          "id": "N3",
+          "joint_supported": false,
+          "keys": [
+            "memory:quail-meeting",
+            "memory:code-editor",
+            "memory:office-printer",
+            "memory:moon-exhibit",
+            "memory:liora-bicycle"
+          ],
+          "profile": "all_returned",
+          "question": "What is the WiFi password for Harbour Library?",
+          "reason": "no_answer_span_in_current_evidence",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": "extractive-qa-null-comparison/1.0.0",
+          "support_status": "checked",
+          "supported_keys": []
+        }
+      ],
+      "stable_across_restart": true,
+      "summary": {
+        "abstentions_on_undelivered_answerable": [],
+        "answerable": 11,
+        "answerable_required_delivered": 11,
+        "false_abstentions": [],
+        "false_sufficiency": [],
+        "invariants_hold": true,
+        "support_in_required": 11,
+        "unanswerable": 3,
+        "unanswerable_abstained": 3
+      }
+    },
+    "support_check_disabled": {
+      "latency_ms": {
+        "first_call": 130.7,
+        "later_max": 37.9,
+        "later_median": 30.6
+      },
+      "meets_criterion": false,
+      "model_dir": null,
+      "rows": [
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:liora-canoe",
+            "memory:bastien-canoe",
+            "memory:liora-bicycle",
+            "memory:liora-sibling",
+            "memory:mara-child"
+          ],
+          "elapsed_ms": 130.7,
+          "forgotten_delivered": false,
+          "id": "A1",
+          "joint_supported": null,
+          "keys": [
+            "memory:liora-canoe",
+            "memory:bastien-canoe",
+            "memory:liora-bicycle",
+            "memory:liora-sibling",
+            "memory:mara-child"
+          ],
+          "profile": "all_returned",
+          "question": "What color is Liora's canoe?",
+          "reason": "answer_entailment_not_checked",
+          "required": [
+            "memory:liora-canoe"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:mara-child",
+            "memory:mara-parent"
+          ],
+          "elapsed_ms": 29.0,
+          "forgotten_delivered": false,
+          "id": "A2",
+          "joint_supported": null,
+          "keys": [
+            "memory:mara-child",
+            "memory:mara-parent"
+          ],
+          "profile": "all_returned",
+          "question": "Where does Mara's parent work?",
+          "reason": "answer_entailment_not_checked",
+          "required": [
+            "memory:mara-parent"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:mara-child",
+            "memory:mara-parent"
+          ],
+          "elapsed_ms": 27.6,
+          "forgotten_delivered": false,
+          "id": "A3",
+          "joint_supported": null,
+          "keys": [
+            "memory:mara-child",
+            "memory:mara-parent"
+          ],
+          "profile": "all_returned",
+          "question": "Which instrument does Mara's child play?",
+          "reason": "answer_entailment_not_checked",
+          "required": [
+            "memory:mara-child"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:office-printer",
+            "memory:liora-bicycle",
+            "memory:liora-canoe",
+            "memory:liora-sibling"
+          ],
+          "elapsed_ms": 28.3,
+          "forgotten_delivered": false,
+          "id": "A4",
+          "joint_supported": null,
+          "keys": [
+            "memory:office-printer",
+            "memory:liora-bicycle",
+            "memory:liora-canoe",
+            "memory:liora-sibling"
+          ],
+          "profile": "all_returned",
+          "question": "Where does Liora's brother live?",
+          "reason": "answer_entailment_not_checked",
+          "required": [
+            "memory:liora-sibling"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:office-printer",
+            "memory:moon-exhibit",
+            "memory:liora-bicycle",
+            "memory:liora-canoe",
+            "memory:mara-child"
+          ],
+          "elapsed_ms": 32.5,
+          "forgotten_delivered": false,
+          "id": "A5",
+          "joint_supported": null,
+          "keys": [
+            "memory:office-printer",
+            "memory:moon-exhibit",
+            "memory:liora-bicycle",
+            "memory:liora-canoe",
+            "memory:mara-child"
+          ],
+          "profile": "all_returned",
+          "question": "What model is the office printer?",
+          "reason": "answer_entailment_not_checked",
+          "required": [
+            "memory:office-printer"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:office-printer",
+            "memory:quail-owner",
+            "memory:code-editor",
+            "memory:moon-exhibit",
+            "memory:kitchen-printer"
+          ],
+          "elapsed_ms": 34.3,
+          "forgotten_delivered": false,
+          "id": "A6",
+          "joint_supported": null,
+          "keys": [
+            "memory:office-printer",
+            "memory:quail-owner",
+            "memory:code-editor",
+            "memory:moon-exhibit",
+            "memory:kitchen-printer"
+          ],
+          "profile": "all_returned",
+          "question": "Which toner cartridge does the office printer use?",
+          "reason": "answer_entailment_not_checked",
+          "required": [
+            "memory:office-printer"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:maya-editor",
+            "memory:quail-owner",
+            "memory:code-editor"
+          ],
+          "elapsed_ms": 29.1,
+          "forgotten_delivered": false,
+          "id": "A7",
+          "joint_supported": null,
+          "keys": [
+            "memory:maya-editor",
+            "memory:quail-owner",
+            "memory:code-editor"
+          ],
+          "profile": "all_returned",
+          "question": "Which editor and language server does Maya use for Python?",
+          "reason": "answer_entailment_not_checked",
+          "required": [
+            "memory:maya-editor"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:quail-meeting",
+            "memory:quail-owner",
+            "memory:meridian-meeting",
+            "memory:office-printer",
+            "memory:mara-child"
+          ],
+          "elapsed_ms": 30.5,
+          "forgotten_delivered": false,
+          "id": "A8",
+          "joint_supported": null,
+          "keys": [
+            "memory:quail-meeting",
+            "memory:quail-owner",
+            "memory:meridian-meeting",
+            "memory:office-printer",
+            "memory:mara-child"
+          ],
+          "profile": "all_returned",
+          "question": "Where will Project Quail hold its next review?",
+          "reason": "answer_entailment_not_checked",
+          "required": [
+            "memory:quail-meeting"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:quail-owner",
+            "memory:quail-meeting",
+            "memory:meridian-owner",
+            "memory:meridian-meeting"
+          ],
+          "elapsed_ms": 30.0,
+          "forgotten_delivered": false,
+          "id": "A9",
+          "joint_supported": null,
+          "keys": [
+            "memory:quail-owner",
+            "memory:quail-meeting",
+            "memory:meridian-owner",
+            "memory:meridian-meeting"
+          ],
+          "profile": "all_returned",
+          "question": "Who maintains Project Quail?",
+          "reason": "answer_entailment_not_checked",
+          "required": [
+            "memory:quail-owner"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:meridian-meeting",
+            "memory:meridian-owner",
+            "memory:quail-meeting",
+            "memory:quail-owner",
+            "memory:liora-bicycle"
+          ],
+          "elapsed_ms": 31.0,
+          "forgotten_delivered": false,
+          "id": "A10",
+          "joint_supported": null,
+          "keys": [
+            "memory:meridian-meeting",
+            "memory:meridian-owner",
+            "memory:quail-meeting",
+            "memory:quail-owner",
+            "memory:liora-bicycle"
+          ],
+          "profile": "all_returned",
+          "question": "When is Project Meridian's design review?",
+          "reason": "answer_entailment_not_checked",
+          "required": [
+            "memory:meridian-meeting"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": true,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:telescope",
+            "memory:bastien-canoe",
+            "memory:quail-owner"
+          ],
+          "elapsed_ms": 29.8,
+          "forgotten_delivered": false,
+          "id": "A11",
+          "joint_supported": null,
+          "keys": [
+            "memory:telescope",
+            "memory:bastien-canoe",
+            "memory:quail-owner"
+          ],
+          "profile": "all_returned",
+          "question": "What mount does Bastien's telescope use?",
+          "reason": "answer_entailment_not_checked",
+          "required": [
+            "memory:telescope"
+          ],
+          "required_complete": true,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:code-editor",
+            "memory:omar-editor",
+            "memory:office-printer",
+            "memory:moon-exhibit",
+            "memory:liora-bicycle"
+          ],
+          "elapsed_ms": 32.0,
+          "forgotten_delivered": false,
+          "id": "N1",
+          "joint_supported": null,
+          "keys": [
+            "memory:code-editor",
+            "memory:omar-editor",
+            "memory:office-printer",
+            "memory:moon-exhibit",
+            "memory:liora-bicycle"
+          ],
+          "profile": "all_returned",
+          "question": "What is the garage door access code?",
+          "reason": "answer_entailment_not_checked",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:code-editor",
+            "memory:moon-exhibit",
+            "memory:kitchen-printer",
+            "memory:festival",
+            "memory:liora-bicycle"
+          ],
+          "elapsed_ms": 29.7,
+          "forgotten_delivered": false,
+          "id": "N2",
+          "joint_supported": null,
+          "keys": [
+            "memory:code-editor",
+            "memory:moon-exhibit",
+            "memory:kitchen-printer",
+            "memory:festival",
+            "memory:liora-bicycle"
+          ],
+          "profile": "all_returned",
+          "question": "When does the lunar eclipse committee meet?",
+          "reason": "answer_entailment_not_checked",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        },
+        {
+          "answer_generated": false,
+          "answerability_verified": false,
+          "answerable": false,
+          "assessment": "unverified",
+          "category": null,
+          "current_full_text_keys": [
+            "memory:quail-meeting",
+            "memory:code-editor",
+            "memory:office-printer",
+            "memory:moon-exhibit",
+            "memory:liora-bicycle"
+          ],
+          "elapsed_ms": 30.8,
+          "forgotten_delivered": false,
+          "id": "N3",
+          "joint_supported": null,
+          "keys": [
+            "memory:quail-meeting",
+            "memory:code-editor",
+            "memory:office-printer",
+            "memory:moon-exhibit",
+            "memory:liora-bicycle"
+          ],
+          "profile": "all_returned",
+          "question": "What is the WiFi password for Harbour Library?",
+          "reason": "answer_entailment_not_checked",
+          "required": [],
+          "required_complete": null,
+          "superseded_text_as_current": false,
+          "superseded_text_disclosed": false,
+          "support_method": null,
+          "support_status": "not_configured",
+          "supported_keys": []
+        }
+      ],
+      "stable_across_restart": true,
+      "summary": {
+        "abstentions_on_undelivered_answerable": [],
+        "answerable": 11,
+        "answerable_required_delivered": 11,
+        "false_abstentions": [],
+        "false_sufficiency": [
+          "N1",
+          "N2",
+          "N3"
+        ],
+        "invariants_hold": true,
+        "support_in_required": 0,
+        "unanswerable": 3,
+        "unanswerable_abstained": 0
+      }
+    }
+  },
+  "cases": "quality_cases_dev.json",
+  "criterion": {
+    "false_abstentions": 0,
+    "min_unanswerable_abstained": 3
+  },
+  "delivered_evidence_identical_across_arms": true,
+  "head": "65bd7c3b334cfd4b9928fb7f486870af84c6bb75",
+  "lifecycle": [],
+  "manifest_sha256": "691240cfe45b15c0f908f00de5ebc4d2cd0ea8cec7dd1772e05310aa988e0ea3",
+  "provider": "real stdio MCP / governed SQLite / memory_find all_returned, max_items=5",
+  "qualification": "small author-written held-out cohort; not calibrated or blinded",
+  "qualified_arm": "answerability-subject-grounded/1.0.0",
+  "schema": "agent-memory-stage-c-adversarial/0.1.0",
+  "status": "PASS"
+}

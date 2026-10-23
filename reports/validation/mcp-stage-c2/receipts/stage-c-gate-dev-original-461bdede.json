@@ -1,0 +1,219 @@
+{
+  "checks": [
+    {
+      "assessment": "unverified",
+      "assessment_reason": "answer_span_candidate_not_verified",
+      "goal": "required full-text evidence preserved; answer not verified",
+      "passed": true,
+      "required_complete": true,
+      "returned_items": 5,
+      "support_in_required": true,
+      "support_method": "extractive-qa-null-comparison/1.0.0",
+      "support_status": "checked",
+      "supported_keys": [
+        "memory:liora-canoe"
+      ],
+      "task_id": "A1"
+    },
+    {
+      "assessment": "unverified",
+      "assessment_reason": "answer_span_candidate_not_verified",
+      "goal": "required full-text evidence preserved; answer not verified",
+      "passed": true,
+      "required_complete": true,
+      "returned_items": 2,
+      "support_in_required": true,
+      "support_method": "extractive-qa-null-comparison/1.0.0",
+      "support_status": "checked",
+      "supported_keys": [
+        "memory:mara-parent"
+      ],
+      "task_id": "A2"
+    },
+    {
+      "assessment": "unverified",
+      "assessment_reason": "answer_span_candidate_not_verified",
+      "goal": "required full-text evidence preserved; answer not verified",
+      "passed": true,
+      "required_complete": true,
+      "returned_items": 2,
+      "support_in_required": true,
+      "support_method": "extractive-qa-null-comparison/1.0.0",
+      "support_status": "checked",
+      "supported_keys": [
+        "memory:mara-child"
+      ],
+      "task_id": "A3"
+    },
+    {
+      "assessment": "unverified",
+      "assessment_reason": "answer_span_candidate_not_verified",
+      "goal": "required full-text evidence preserved; answer not verified",
+      "passed": true,
+      "required_complete": true,
+      "returned_items": 4,
+      "support_in_required": true,
+      "support_method": "extractive-qa-null-comparison/1.0.0",
+      "support_status": "checked",
+      "supported_keys": [
+        "memory:liora-sibling"
+      ],
+      "task_id": "A4"
+    },
+    {
+      "assessment": "unverified",
+      "assessment_reason": "answer_span_candidate_not_verified",
+      "goal": "required full-text evidence preserved; answer not verified",
+      "passed": true,
+      "required_complete": true,
+      "returned_items": 5,
+      "support_in_required": true,
+      "support_method": "extractive-qa-null-comparison/1.0.0",
+      "support_status": "checked",
+      "supported_keys": [
+        "memory:office-printer"
+      ],
+      "task_id": "A5"
+    },
+    {
+      "assessment": "unverified",
+      "assessment_reason": "answer_span_candidate_not_verified",
+      "goal": "required full-text evidence preserved; answer not verified",
+      "passed": true,
+      "required_complete": true,
+      "returned_items": 5,
+      "support_in_required": true,
+      "support_method": "extractive-qa-null-comparison/1.0.0",
+      "support_status": "checked",
+      "supported_keys": [
+        "memory:office-printer"
+      ],
+      "task_id": "A6"
+    },
+    {
+      "assessment": "unverified",
+      "assessment_reason": "answer_span_candidate_not_verified",
+      "goal": "required full-text evidence preserved; answer not verified",
+      "passed": true,
+      "required_complete": true,
+      "returned_items": 3,
+      "support_in_required": true,
+      "support_method": "extractive-qa-null-comparison/1.0.0",
+      "support_status": "checked",
+      "supported_keys": [
+        "memory:maya-editor"
+      ],
+      "task_id": "A7"
+    },
+    {
+      "assessment": "unverified",
+      "assessment_reason": "answer_span_candidate_not_verified",
+      "goal": "required full-text evidence preserved; answer not verified",
+      "passed": true,
+      "required_complete": true,
+      "returned_items": 5,
+      "support_in_required": true,
+      "support_method": "extractive-qa-null-comparison/1.0.0",
+      "support_status": "checked",
+      "supported_keys": [
+        "memory:quail-meeting"
+      ],
+      "task_id": "A8"
+    },
+    {
+      "assessment": "unverified",
+      "assessment_reason": "answer_span_candidate_not_verified",
+      "goal": "required full-text evidence preserved; answer not verified",
+      "passed": true,
+      "required_complete": true,
+      "returned_items": 4,
+      "support_in_required": true,
+      "support_method": "extractive-qa-null-comparison/1.0.0",
+      "support_status": "checked",
+      "supported_keys": [
+        "memory:quail-owner"
+      ],
+      "task_id": "A9"
+    },
+    {
+      "assessment": "unverified",
+      "assessment_reason": "answer_span_candidate_not_verified",
+      "goal": "required full-text evidence preserved; answer not verified",
+      "passed": true,
+      "required_complete": true,
+      "returned_items": 5,
+      "support_in_required": true,
+      "support_method": "extractive-qa-null-comparison/1.0.0",
+      "support_status": "checked",
+      "supported_keys": [
+        "memory:meridian-meeting"
+      ],
+      "task_id": "A10"
+    },
+    {
+      "assessment": "unverified",
+      "assessment_reason": "answer_span_candidate_not_verified",
+      "goal": "required full-text evidence preserved; answer not verified",
+      "passed": true,
+      "required_complete": true,
+      "returned_items": 3,
+      "support_in_required": true,
+      "support_method": "extractive-qa-null-comparison/1.0.0",
+      "support_status": "checked",
+      "supported_keys": [
+        "memory:telescope"
+      ],
+      "task_id": "A11"
+    },
+    {
+      "assessment": "insufficient_evidence",
+      "assessment_reason": "no_answer_span_in_current_evidence",
+      "goal": "populated-store unanswerable question marked insufficient",
+      "passed": true,
+      "required_complete": null,
+      "returned_items": 5,
+      "support_in_required": null,
+      "support_method": "extractive-qa-null-comparison/1.0.0",
+      "support_status": "checked",
+      "supported_keys": [],
+      "task_id": "N1"
+    },
+    {
+      "assessment": "insufficient_evidence",
+      "assessment_reason": "no_answer_span_in_current_evidence",
+      "goal": "populated-store unanswerable question marked insufficient",
+      "passed": true,
+      "required_complete": null,
+      "returned_items": 5,
+      "support_in_required": null,
+      "support_method": "extractive-qa-null-comparison/1.0.0",
+      "support_status": "checked",
+      "supported_keys": [],
+      "task_id": "N2"
+    },
+    {
+      "assessment": "insufficient_evidence",
+      "assessment_reason": "no_answer_span_in_current_evidence",
+      "goal": "populated-store unanswerable question marked insufficient",
+      "passed": true,
+      "required_complete": null,
+      "returned_items": 5,
+      "support_in_required": null,
+      "support_method": "extractive-qa-null-comparison/1.0.0",
+      "support_status": "checked",
+      "supported_keys": [],
+      "task_id": "N3"
+    }
+  ],
+  "counts": {
+    "answerable": 11,
+    "answerable_complete": 11,
+    "no_answer": 3,
+    "unanswerable_abstained": 3
+  },
+  "manifest_sha256": "691240cfe45b15c0f908f00de5ebc4d2cd0ea8cec7dd1772e05310aa988e0ea3",
+  "qualification": "author-visible populated-store development diagnostic; not calibrated",
+  "schema": "agent-memory-stage-c-populated-store/0.3.0",
+  "source_probe_schema": "mcp-gate2-retrieval-probe/0.1.0",
+  "status": "PASS"
+}

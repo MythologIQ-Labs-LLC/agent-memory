@@ -1,0 +1,16 @@
+$ env -u AGENT_MEMORY_REPRESENTATION_DIR -u AGENT_MEMORY_MCP_SUPPORT_MODEL_DIR python -m unittest discover -s integrations/agent-memory-mcp/tests -p test_*.py
+...s....................................................xx................sTool 'memory_find' failed: 'Error executing tool memory_find: Invalid memory tool input or delivery limit'
+.Tool 'memory_find' failed: 'Error executing tool memory_find: Agent Memory host configuration is missing or unsafe'
+.execute program '/home/user/eval/stagec2/venv/bin/python': <_UnixSubprocessTransport pid=3611 running stdin=<_UnixWritePipeTransport fd=7 idle bufsize=0> stdout=<_UnixReadPipeTransport fd=8 polling>>
+<_UnixReadPipeTransport fd=8 polling> was closed by peer
+<_UnixSubprocessTransport pid=3611 running stdin=<_UnixWritePipeTransport closed fd=7 closed> stdout=<_UnixReadPipeTransport closed fd=8 closed>> exited with return code 0
+execute program '/home/user/eval/stagec2/venv/bin/python': <_UnixSubprocessTransport pid=3614 running stdin=<_UnixWritePipeTransport fd=7 idle bufsize=0> stdout=<_UnixReadPipeTransport fd=8 polling>>
+<_UnixReadPipeTransport fd=8 polling> was closed by peer
+<_UnixSubprocessTransport pid=3614 running stdin=<_UnixWritePipeTransport closed fd=7 closed> stdout=<_UnixReadPipeTransport closed fd=8 closed>> exited with return code 0
+......Tool 'memory_remember' failed: 'Error executing tool memory_remember: Agent Memory host configuration is missing or unsafe'
+.......................ssssss......
+----------------------------------------------------------------------
+Ran 118 tests in 2.659s
+
+OK (skipped=8, expected failures=2)
+exit=0

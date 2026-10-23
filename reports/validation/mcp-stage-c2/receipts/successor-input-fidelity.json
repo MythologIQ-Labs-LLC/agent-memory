@@ -1,0 +1,1 @@
+{"purpose": "successor input construction equals the tokenizer's native [CLS] q [SEP] c [SEP] pair encoding (ids and token types); sampled logits compared", "pairs": 1956, "identical_inputs": 1956, "sampled_logit_max_abs_diff": 0.0}

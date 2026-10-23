@@ -1,0 +1,40 @@
+{
+ "note": "one process, one ORT thread, CPU; RSS = ru_maxrss after verified load; check = 5 short items + joint",
+ "models": [
+  {
+   "method": "extractive-qa-null-comparison/1.0.0",
+   "model": "optimum/roberta-base-squad2@db07770",
+   "files_bytes": 498415258,
+   "load_s": 2.54,
+   "rss_before_mb": 21,
+   "rss_after_load_mb": 1497,
+   "check_5_items_ms": 210.4
+  },
+  {
+   "method": "answerability-subject-grounded/1.0.0",
+   "model": "cross-encoder/qnli-electra-base@c7dea87",
+   "files_bytes": 438924542,
+   "load_s": 1.86,
+   "rss_before_mb": 21,
+   "rss_after_load_mb": 1331,
+   "check_5_items_ms": 289.5
+  }
+ ],
+ "memory_find_latency_ms_holdout2": {
+  "answerability-subject-grounded/1.0.0": {
+   "first_call": 2004.4,
+   "later_max": 431.1,
+   "later_median": 373.0
+  },
+  "extractive-qa-null-comparison/1.0.0": {
+   "first_call": 3267.1,
+   "later_max": 465.8,
+   "later_median": 293.5
+  },
+  "support_check_disabled": {
+   "first_call": 136.9,
+   "later_max": 57.7,
+   "later_median": 37.5
+  }
+ }
+}

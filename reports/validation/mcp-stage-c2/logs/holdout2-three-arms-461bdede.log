@@ -1,0 +1,105 @@
+{
+  "status": "BLOCKED",
+  "cases": "quality_cases_holdout2.json",
+  "qualified_arm": "answerability-subject-grounded/1.0.0",
+  "delivered_evidence_identical_across_arms": true,
+  "support_check_disabled": {
+    "answerable": 20,
+    "unanswerable": 20,
+    "answerable_required_delivered": 18,
+    "false_abstentions": [],
+    "abstentions_on_undelivered_answerable": [],
+    "support_in_required": 0,
+    "unanswerable_abstained": 0,
+    "false_sufficiency": [
+      "N01",
+      "N02",
+      "N03",
+      "N04",
+      "N05",
+      "N06",
+      "N07",
+      "N08",
+      "N09",
+      "N10",
+      "N11",
+      "N12",
+      "N13",
+      "N14",
+      "N15",
+      "N16",
+      "N17",
+      "N18",
+      "N19",
+      "N20"
+    ],
+    "invariants_hold": true,
+    "stable_across_restart": true,
+    "meets_criterion": false,
+    "latency_ms": {
+      "first_call": 136.9,
+      "later_median": 37.5,
+      "later_max": 57.7
+    }
+  },
+  "extractive-qa-null-comparison/1.0.0": {
+    "answerable": 20,
+    "unanswerable": 20,
+    "answerable_required_delivered": 18,
+    "false_abstentions": [],
+    "abstentions_on_undelivered_answerable": [
+      "A02"
+    ],
+    "support_in_required": 17,
+    "unanswerable_abstained": 14,
+    "false_sufficiency": [
+      "N01",
+      "N11",
+      "N13",
+      "N15",
+      "N16",
+      "N17"
+    ],
+    "invariants_hold": true,
+    "stable_across_restart": true,
+    "meets_criterion": false,
+    "latency_ms": {
+      "first_call": 3267.1,
+      "later_median": 293.5,
+      "later_max": 465.8
+    }
+  },
+  "answerability-subject-grounded/1.0.0": {
+    "answerable": 20,
+    "unanswerable": 20,
+    "answerable_required_delivered": 18,
+    "false_abstentions": [],
+    "abstentions_on_undelivered_answerable": [
+      "A02",
+      "A08"
+    ],
+    "support_in_required": 18,
+    "unanswerable_abstained": 9,
+    "false_sufficiency": [
+      "N01",
+      "N02",
+      "N03",
+      "N05",
+      "N08",
+      "N10",
+      "N11",
+      "N14",
+      "N15",
+      "N16",
+      "N17"
+    ],
+    "invariants_hold": true,
+    "stable_across_restart": true,
+    "meets_criterion": false,
+    "latency_ms": {
+      "first_call": 2004.4,
+      "later_median": 373.0,
+      "later_max": 431.1
+    }
+  }
+}

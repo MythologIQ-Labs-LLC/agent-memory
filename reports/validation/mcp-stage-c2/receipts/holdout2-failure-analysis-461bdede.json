@@ -1,0 +1,102 @@
+{
+ "categories": {
+  "A01": "inference",
+  "A02": "inference_yes_no",
+  "A03": "inference",
+  "A04": "competing_subject",
+  "A05": "competing_subject",
+  "A06": "paraphrase",
+  "A07": "plain",
+  "A08": "inference_multi_item",
+  "A09": "plain",
+  "A10": "paraphrase",
+  "A11": "inference",
+  "A12": "plain",
+  "A13": "paraphrase",
+  "A14": "plain",
+  "A15": "superseded_rewritten",
+  "A16": "superseded_corrected",
+  "A17": "inference",
+  "A18": "plain",
+  "A19": "inference",
+  "A20": "paraphrase",
+  "N01": "wrong_answer_type",
+  "N02": "wrong_answer_type",
+  "N03": "wrong_subject",
+  "N04": "wrong_subject",
+  "N05": "wrong_subject",
+  "N06": "related_non_answering",
+  "N07": "related_non_answering",
+  "N08": "forgotten",
+  "N09": "wrong_role",
+  "N10": "related_non_answering",
+  "N11": "wrong_subject",
+  "N12": "related_non_answering",
+  "N13": "wrong_answer_type",
+  "N14": "wrong_subject",
+  "N15": "wrong_subject",
+  "N16": "related_non_answering",
+  "N17": "wrong_answer_type",
+  "N18": "related_non_answering",
+  "N19": "absent",
+  "N20": "related_non_answering"
+ },
+ "counterfactual_per_item_only": {
+  "original": {
+   "false_abstentions_if_per_item_only": [],
+   "unanswerable_abstained_if_per_item_only": 15
+  },
+  "successor": {
+   "false_abstentions_if_per_item_only": [],
+   "unanswerable_abstained_if_per_item_only": 16
+  }
+ },
+ "joint_only_false_sufficiency": {
+  "original": [
+   "N15"
+  ],
+  "successor": [
+   "N01",
+   "N02",
+   "N03",
+   "N05",
+   "N11",
+   "N14",
+   "N15"
+  ]
+ },
+ "single_item_false_sufficiency": {
+  "original": {
+   "N01": [
+    "memory:h2:compost"
+   ],
+   "N11": [
+    "memory:h2:juniper"
+   ],
+   "N13": [
+    "memory:h2:piano"
+   ],
+   "N16": [
+    "memory:h2:landlord"
+   ],
+   "N17": [
+    "memory:h2:rent"
+   ]
+  },
+  "successor": {
+   "N08": [
+    "memory:h2:ravi-doctor"
+   ],
+   "N10": [
+    "memory:h2:boiler-model"
+   ],
+   "N16": [
+    "memory:h2:landlord"
+   ],
+   "N17": [
+    "memory:h2:rent"
+   ]
+  }
+ },
+ "status": "POST-HOC diagnostic of the frozen holdout-2 run. Not qualification: anything chosen from it needs a new holdout frozen first."
+}

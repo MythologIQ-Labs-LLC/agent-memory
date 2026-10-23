@@ -122,70 +122,88 @@ memories for almost any question.
 |---|---|
 | `insufficient_evidence` / `no_complete_attributed_evidence` | no resolved, attributed, nonempty item was delivered |
 | `insufficient_evidence` / `only_non_head_evidence` | every complete item is a known non-head key generation (still disclosed) |
-| `insufficient_evidence` / `no_answer_span_in_current_evidence` | the host's answer-support check found no answer span in any current, complete item, alone or all together |
-| `unverified` / `answer_span_candidate_not_verified` | the check found a candidate span; **not** verification: it can pick a wrong span or the wrong subject |
-| `unverified` / `answer_entailment_not_checked` | the host has not enabled the check (the previous behavior) |
+| `insufficient_evidence` / `no_answer_span_in_current_evidence` | original method: no answer span in any current, complete item, alone or together |
+| `insufficient_evidence` / `no_supported_answer_in_current_evidence` | successor method: no current, complete item (or all of them together) both names the question's subjects and answers it |
+| `unverified` / `answer_span_candidate_not_verified`, `supported_answer_candidate_not_verified` | support found; **not** verification |
+| `unverified` / `answer_entailment_not_checked` | the host has not enabled a check (the previous behavior) |
 | `unverified` / `answer_support_check_unavailable` | enabled but the model failed to load or run; nothing is claimed either way |
 
 Nothing in this slice reports evidence as verified, and `answerability_verified` stays false.
 
-**Optional answer-support check (host-enabled, off by default).** `answer_support.py` runs
-`optimum/roberta-base-squad2` (the ONNX export of `deepset/roberta-base-squad2`, SQuAD 2.0,
-CC-BY-4.0) at a pinned revision, with every file pinned by sha256. It uses the existing
-optional `semantic` extra: onnxruntime, tokenizers and numpy. There is no new package, no
-LLM and no network at run time.
+**Optional answer-support check (host-enabled, off by default).** `answer_support.py` holds two
+pinned methods. The host chooses one by the model directory it names in
+`AGENT_MEMORY_MCP_SUPPORT_MODEL_DIR`, and each directory layout matches exactly one pin set.
+Both methods:
+- use the existing optional `semantic` extra (onnxruntime, tokenizers, numpy): no new
+  package, no LLM and no network at run time;
+- pin every file by sha256;
+- read only items that are resolved, attributed, nonempty and not known to be non-head.
 
-The decision rule is the Hugging Face question-answering pipeline with
-`handle_impossible_answer=True` at its default windowing: a span is found when its
-probability beats the model's own null answer, with a margin of 0. The rule was fixed
-before either Stage C cohort was run. There is no threshold fitted to these cases.
-On the 732 question/memory pairs of both cohorts, it agreed with the reference PyTorch
-pipeline on every pair (`reports/validation/mcp-stage-c/`).
+- `extractive-qa-null-comparison/1.0.0` (the original, experimental): `optimum/roberta-base-squad2`.
+  A span counts when it beats the model's own null answer (the Hugging Face pipeline defaults,
+  margin 0). It does not check subjects.
+- `answerability-subject-grounded/1.0.0` (the successor, experimental). It separates *subject
+  applicability* from *answerability*, and the `answer_support` block reports each step:
+  - subject applicability (deterministic): every capitalised name the question uses after its
+    first word must occur in the item, compared with the runtime's own fold;
+  - answerability (`cross-encoder/qnli-electra-base`): the item answers the question when the
+    model's logit is above 0. No extractable span is needed;
+  - support means both, for one item or for all current items read together.
 
-The check reads only items that are resolved, attributed, nonempty and not known to be
-non-head. The trusted host enables it:
+Fetch and enable:
 
     pip install -e ".[semantic]" -c reference/requirements-semantic.txt
-    python integrations/agent-memory-mcp/answer_support.py fetch /abs/path/support-model
+    python integrations/agent-memory-mcp/answer_support.py fetch answerability /abs/path/support-model   # or: extractive
     AGENT_MEMORY_MCP_SUPPORT_MODEL_DIR=/abs/path/support-model   # in the MCP server environment
 
-The model loads once per server process, which takes about 7 s including hashing the 496 MB
-graph. Each check then takes about 40 ms per window on one CPU thread.
+Footprint and cost, measured on one CPU thread:
+
+| | Original | Successor |
+|---|---|---|
+| Model files | 498 MB | 439 MB |
+| Resident memory | about 1.5 GB | about 1.3 GB |
+| Load time | about 2.5 s | about 1.9 s |
+| `memory_find` median | about 290 ms | about 370 ms |
+
+Without a check, `memory_find` takes about 35 ms.
 
 The MCP server tells the model to abstain from answering from memory on
 `insufficient_evidence`. Prompt instructions are not proof that an actual agent obeys them, so
 a real-agent Stage D pilot remains mandatory.
 
-**Evidence.** Run from the repo root, in a venv with the extra, with
-`AGENT_MEMORY_MCP_SUPPORT_MODEL_DIR` set:
+**Evidence.** `stage_c_gate.py` runs the development cohort. `stage_c_adversarial.py` runs any
+cohort through real stdio MCP over governed SQLite. It applies a correction, a same-key rewrite
+and a forget through the real tools, restarts the server, and runs one arm with the check
+disabled plus one arm per `--support-model-dir`, all at the same retrieval budget
+(`max_items=5`). Labels are joined after the MCP calls and are never tool arguments.
 
-    python integrations/agent-memory-mcp/stage_c_gate.py --out /tmp/am-stage-c.json
-    python integrations/agent-memory-mcp/stage_c_adversarial.py --support-model-dir "$AGENT_MEMORY_MCP_SUPPORT_MODEL_DIR" --out /tmp/am-stage-c-adv.json
+Receipts:
+- `reports/validation/mcp-stage-c/`: the original method;
+- `reports/validation/mcp-stage-c2/`: the successor.
 
-Both commands run real stdio MCP over governed SQLite:
-- `stage_c_gate.py` runs the 18-record, 14-question development cohort
-  (`quality_cases_dev.json`).
-- `stage_c_adversarial.py` runs the held-out cohort (`quality_cases_adversarial.json`).
-  That cohort was frozen in its own commit before any model was run on it. It applies a
-  correction, a same-key rewrite and a forget through the real tools. It restarts the server
-  and compares the arms with the check disabled and enabled.
+**Stage C remains BLOCKED (NO-GO).** The second held-out cohort
+(`quality_cases_holdout2.json`) was frozen before the successor was designed. The successor was
+then frozen and run once.
 
-Labels are joined after the MCP calls and are never tool arguments.
+| Arm | False abstentions | Unanswerable abstained (needs 15) |
+|---|---|---|
+| Disabled | 0 | 0/20 |
+| Original | 0 | 14/20 |
+| Successor | 0 | **9/20** |
 
-**Stage C remains BLOCKED.** The pre-registered held-out criterion requires zero false
-abstentions. With the check enabled:
-- **Held-out cohort:** 10 of 12 unanswerable questions are marked insufficient, against 0 of
-  12 without it. 12 of 12 answerable questions have their required memory delivered, but one
-  (an inference question: *which food can Noor not eat* over *Noor is allergic to peanuts*)
-  is falsely marked insufficient. Two unanswerable questions get a wrong-type candidate span:
-  a date offered as a departure time, and a gym name offered as a climbing grade.
-- **Development cohort:** 3 of 3 abstain, 11 of 11 answerable questions are kept, and each
-  candidate span is in the required memory.
+In every arm, 18 of 20 answerable questions had their required memories delivered (A02 and A08
+are retrieval misses). Every arm was stable across restart, and the delivered evidence was
+identical in all of them.
 
-Known limits: extractive QA misses answers that need inference or negation, and accepts spans
-of the wrong type. It does not check whose memory a span comes from. The cohorts are small and
-author-written, not calibrated or blinded. Historical Gate 1 and Stage A/B evidence are
-untouched.
+Post-hoc analysis, not qualification:
+- 7 of the successor's 11 misses came only from reading all five memories together. The
+  classifier is trained on single sentences, and a name found anywhere in the joined text does
+  not tie the answer to that name.
+- The other misses, and 4 of the original's 6, are memories that answer a related question
+  with the wrong kind of value: a model name for a serial number, "by text message" for a phone
+  number, "the fifth of the month" for a time of day.
+- Neither method checks the expected answer type. Holdout 1 was used for failure analysis and
+  is development data now.
 
 ## Internal alpha lifecycle slice: reversible, host-bound forgetting
 

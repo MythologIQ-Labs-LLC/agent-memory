@@ -1,0 +1,224 @@
+repo head 461bdede21b03df88f01576f31863587611aa6d1 tracked tree clean: True
+PASS A1 exactly the five alpha tools are advertised
+PASS A1 no tool exposes tenant/scope/actor/root or an approval/evidence/permanence parameter
+PASS A1 memory_forget takes exactly one argument: key
+PASS A1 memory_correct takes exactly key and text
+PASS A1 save committed: memory:studio:kiln_cone
+PASS A1 save committed: memory:studio:glaze_supplier
+PASS A1 get returns the exact text and fact_ref
+PASS A1 find surfaces the memory for a natural-language question
+PASS A2 a fresh server process (new pid)
+PASS A2 the same fact is retrieved after restart
+PASS A3 no grant: committed=false, status host_authorization_required, not permanent
+PASS A3 no grant: every store file is byte-identical afterwards
+PASS A3 no grant: the memory is still found with its fact_ref
+PASS A4 wrong key: committed=false, host_authorization_required
+PASS A4 wrong key: every store file is byte-identical afterwards
+PASS A4 wrong key: the kiln memory is still found
+PASS A4 the granted key itself is untouched until forget is called on it
+PASS A5 authorized: committed=true, status forgotten, governed operation pruning with a receipt, not permanent
+PASS A5 get: the forgotten key is not_found_or_unavailable, no content
+PASS A5 find: the forgotten content is not delivered
+PASS A5 forgetting an already forgotten key does not commit again
+PASS A5 the other memory in the scope is unaffected
+PASS A6 after restart: forgotten key not_found_or_unavailable, no content
+PASS A6 after restart: find never delivers the forgotten content
+PASS A6 after restart: the remaining memory is still findable
+PASS A7 other project: cannot read the key
+PASS A7 other project: cannot find the content
+PASS A7 other project: a granted forget of another project's key does not commit
+Tool 'memory_get' raised an unexpected exception
+Traceback (most recent call last):
+  File "/home/user/eval/stagec2/venv/lib/python3.13/site-packages/mcp/server/mcpserver/tools/base.py", line 179, in run
+    result = await self.fn_metadata.call_fn(self.fn, self.is_async, validated, pass_directly)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/stagec2/venv/lib/python3.13/site-packages/mcp/server/mcpserver/utilities/func_metadata.py", line 164, in call_fn
+    return await anyio.to_thread.run_sync(functools.partial(fn, **kwargs))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/stagec2/venv/lib/python3.13/site-packages/anyio/to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/user/eval/stagec2/venv/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 2706, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/home/user/eval/stagec2/venv/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 1100, in run
+    result = context.run(func, *args)
+  File "/home/user/eval/stagec2/agent-memory/integrations/agent-memory-mcp/server.py", line 89, in memory_get
+    return _tool_call(lambda: _bridge().get(key))
+  File "/home/user/eval/stagec2/agent-memory/integrations/agent-memory-mcp/server.py", line 59, in _tool_call
+    return action()
+  File "/home/user/eval/stagec2/agent-memory/integrations/agent-memory-mcp/server.py", line 89, in <lambda>
+    return _tool_call(lambda: _bridge().get(key))
+                              ~~~~~~~~~~~~~^^^^^
+  File "/home/user/eval/stagec2/agent-memory/integrations/agent-memory-mcp/bridge.py", line 447, in get
+    with self._open() as memory:
+         ~~~~~~~~~~^^
+  File "/usr/lib/python3.13/contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "/home/user/eval/stagec2/agent-memory/reference/agentmem_ref/api/host_activation.py", line 34, in open_qualified_memory
+    memory = AgentMemory.open(
+        path, tenant=tenant, actor_id=actor_id, scope=scope, **host_options
+    )
+  File "/home/user/eval/stagec2/agent-memory/reference/agentmem_ref/api/surface.py", line 617, in open
+    raise RuntimeRecoveryError(
+        f"requested tenant {tenant!r} does not match recovered runtime tenant {actual_tenant!r}"
+    )
+agentmem_ref.runtime.restart_runtime.RuntimeRecoveryError: requested tenant 'tenant:stranger' does not match recovered runtime tenant 'tenant:alpha'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/user/eval/stagec2/venv/lib/python3.13/site-packages/mcp/server/mcpserver/server.py", line 442, in _handle_call_tool
+    return await self.call_tool(params.name, params.arguments or {}, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/stagec2/venv/lib/python3.13/site-packages/mcp/server/mcpserver/server.py", line 548, in call_tool
+    return await self._tool_manager.call_tool(name, arguments, context, convert_result=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/stagec2/venv/lib/python3.13/site-packages/mcp/server/mcpserver/tools/tool_manager.py", line 87, in call_tool
+    return await tool.run(arguments, context, convert_result=convert_result)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/stagec2/venv/lib/python3.13/site-packages/mcp/server/mcpserver/tools/base.py", line 213, in run
+    raise UnexpectedToolError(f"Error executing tool {self.name}") from exc
+mcp.server.mcpserver.exceptions.UnexpectedToolError: Error executing tool memory_get
+PASS A7 other tenant: cannot read the key (error or empty, never the content)
+Tool 'memory_forget' raised an unexpected exception
+Traceback (most recent call last):
+  File "/home/user/eval/stagec2/venv/lib/python3.13/site-packages/mcp/server/mcpserver/tools/base.py", line 179, in run
+    result = await self.fn_metadata.call_fn(self.fn, self.is_async, validated, pass_directly)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/stagec2/venv/lib/python3.13/site-packages/mcp/server/mcpserver/utilities/func_metadata.py", line 164, in call_fn
+    return await anyio.to_thread.run_sync(functools.partial(fn, **kwargs))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/stagec2/venv/lib/python3.13/site-packages/anyio/to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/user/eval/stagec2/venv/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 2706, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/home/user/eval/stagec2/venv/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 1100, in run
+    result = context.run(func, *args)
+  File "/home/user/eval/stagec2/agent-memory/integrations/agent-memory-mcp/server.py", line 123, in memory_forget
+    return _tool_call(lambda: _bridge().forget(key))
+  File "/home/user/eval/stagec2/agent-memory/integrations/agent-memory-mcp/server.py", line 59, in _tool_call
+    return action()
+  File "/home/user/eval/stagec2/agent-memory/integrations/agent-memory-mcp/server.py", line 123, in <lambda>
+    return _tool_call(lambda: _bridge().forget(key))
+                              ~~~~~~~~~~~~~~~~^^^^^
+  File "/home/user/eval/stagec2/agent-memory/integrations/agent-memory-mcp/bridge.py", line 186, in forget
+    with self._open() as memory:
+         ~~~~~~~~~~^^
+  File "/usr/lib/python3.13/contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "/home/user/eval/stagec2/agent-memory/reference/agentmem_ref/api/host_activation.py", line 34, in open_qualified_memory
+    memory = AgentMemory.open(
+        path, tenant=tenant, actor_id=actor_id, scope=scope, **host_options
+    )
+  File "/home/user/eval/stagec2/agent-memory/reference/agentmem_ref/api/surface.py", line 617, in open
+    raise RuntimeRecoveryError(
+        f"requested tenant {tenant!r} does not match recovered runtime tenant {actual_tenant!r}"
+    )
+agentmem_ref.runtime.restart_runtime.RuntimeRecoveryError: requested tenant 'tenant:stranger' does not match recovered runtime tenant 'tenant:alpha'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/user/eval/stagec2/venv/lib/python3.13/site-packages/mcp/server/mcpserver/server.py", line 442, in _handle_call_tool
+    return await self.call_tool(params.name, params.arguments or {}, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/stagec2/venv/lib/python3.13/site-packages/mcp/server/mcpserver/server.py", line 548, in call_tool
+    return await self._tool_manager.call_tool(name, arguments, context, convert_result=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/stagec2/venv/lib/python3.13/site-packages/mcp/server/mcpserver/tools/tool_manager.py", line 87, in call_tool
+    return await tool.run(arguments, context, convert_result=convert_result)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/stagec2/venv/lib/python3.13/site-packages/mcp/server/mcpserver/tools/base.py", line 213, in run
+    raise UnexpectedToolError(f"Error executing tool {self.name}") from exc
+mcp.server.mcpserver.exceptions.UnexpectedToolError: Error executing tool memory_forget
+PASS A7 other tenant: a granted forget does not commit (error or committed=false)
+PASS A7 the owning project still has its memory after the foreign forget attempts
+PASS B1 original value saved
+PASS B2 no record: committed=false, host_authorization_required
+PASS B2 no record: every store file is byte-identical afterwards
+PASS B3 record for different text: refused, store byte-identical
+PASS B3 the original value is still the current one
+PASS B4 authorized: committed=true, status corrected, operation correction, receipt, a new fact_ref
+PASS B5 get serves only the corrected value
+PASS B5 find delivers the corrected value and never the superseded one
+PASS B6 after restart: the corrected value persists with the same fact_ref
+PASS B6 after restart: find never delivers the superseded value
+PASS B7 other project: a record cannot correct another project's memory
+Tool 'memory_correct' raised an unexpected exception
+Traceback (most recent call last):
+  File "/home/user/eval/stagec2/venv/lib/python3.13/site-packages/mcp/server/mcpserver/tools/base.py", line 179, in run
+    result = await self.fn_metadata.call_fn(self.fn, self.is_async, validated, pass_directly)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/stagec2/venv/lib/python3.13/site-packages/mcp/server/mcpserver/utilities/func_metadata.py", line 164, in call_fn
+    return await anyio.to_thread.run_sync(functools.partial(fn, **kwargs))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/stagec2/venv/lib/python3.13/site-packages/anyio/to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/user/eval/stagec2/venv/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 2706, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/home/user/eval/stagec2/venv/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 1100, in run
+    result = context.run(func, *args)
+  File "/home/user/eval/stagec2/agent-memory/integrations/agent-memory-mcp/server.py", line 136, in memory_correct
+    return _tool_call(lambda: _bridge().correct(key, text))
+  File "/home/user/eval/stagec2/agent-memory/integrations/agent-memory-mcp/server.py", line 59, in _tool_call
+    return action()
+  File "/home/user/eval/stagec2/agent-memory/integrations/agent-memory-mcp/server.py", line 136, in <lambda>
+    return _tool_call(lambda: _bridge().correct(key, text))
+                              ~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/home/user/eval/stagec2/agent-memory/integrations/agent-memory-mcp/bridge.py", line 250, in correct
+    with self._open(verifier_registry=registry) as memory:
+         ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "/home/user/eval/stagec2/agent-memory/reference/agentmem_ref/api/host_activation.py", line 34, in open_qualified_memory
+    memory = AgentMemory.open(
+        path, tenant=tenant, actor_id=actor_id, scope=scope, **host_options
+    )
+  File "/home/user/eval/stagec2/agent-memory/reference/agentmem_ref/api/surface.py", line 617, in open
+    raise RuntimeRecoveryError(
+        f"requested tenant {tenant!r} does not match recovered runtime tenant {actual_tenant!r}"
+    )
+agentmem_ref.runtime.restart_runtime.RuntimeRecoveryError: requested tenant 'tenant:stranger' does not match recovered runtime tenant 'tenant:alpha'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/user/eval/stagec2/venv/lib/python3.13/site-packages/mcp/server/mcpserver/server.py", line 442, in _handle_call_tool
+    return await self.call_tool(params.name, params.arguments or {}, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/stagec2/venv/lib/python3.13/site-packages/mcp/server/mcpserver/server.py", line 548, in call_tool
+    return await self._tool_manager.call_tool(name, arguments, context, convert_result=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/stagec2/venv/lib/python3.13/site-packages/mcp/server/mcpserver/tools/tool_manager.py", line 87, in call_tool
+    return await tool.run(arguments, context, convert_result=convert_result)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/stagec2/venv/lib/python3.13/site-packages/mcp/server/mcpserver/tools/base.py", line 213, in run
+    raise UnexpectedToolError(f"Error executing tool {self.name}") from exc
+mcp.server.mcpserver.exceptions.UnexpectedToolError: Error executing tool memory_correct
+PASS B7 other tenant: a record cannot correct another tenant's memory
+PASS B7 the owning project still has the corrected value
+PASS C1 no-answer: insufficient evidence, default recall unchanged
+PASS C2 no-answer: insufficient evidence, default recall unchanged
+PASS C3 no-answer: insufficient evidence, default recall unchanged
+PASS C4 complete returned evidence remains delivered but never verified as an answer
+PASS final: no server process left running
+transcript alpha-workflow-461bdede.json sha256 27dd74da13b02899bbadcead5f7c7461682b68d2f01d9360b26919ada16d7126
+
+49/49 checks passed
