@@ -363,9 +363,19 @@ By construction every fact 0.5.1 declines was also declined by 0.5.0 (a conflict
 without a shared term was `fact_subject_absent` there), so 0.5.0's zero loss implies 0.5.1's. Re-executed
 anyway (`lanes-0.5.1/`):
 
-TBD-LANES-051
+| set | default complete | **eq 0.5.1 complete** | required items default → eq | eq questions losing vs default | delivered items default / eq 0.4.1 / eq 0.5.0 / **eq 0.5.1** / FTS5 |
+|---|---|---|---|---|---|
+| LongMemEval_S session, 500 q | 428/428 | **428/428** | 803 → 803 | **none** | 19,187 / 18,399 / 18,122 / **18,390** / 8,891 |
+| LongMemEval_S turn, 500 q | 369/428 | **369/428** | 756 → 756 (of 842) | **none** | 21,400 / 19,319 / 19,203 / **19,316** / 13,819 |
+| LoCoMo, 1,540 q | 1278/1531 | **1278/1531** | 1734 → 1734 | **none** | 15,310 / 15,310 / 15,310 / **15,310** / 15,269 |
+| LoCoMo adversarial cat. 5, 446 no-answer q | | identical to 0.4.1 | | | 0 declines |
+| AMB 77 (native scorer) | strict 15 | **strict 15** (0 improved, 0 regressed; the 0.5.0 gain on `canonical-name-match-mara` came from the withdrawn grounding) | 0 missing-expected changes | **none** | returned 686 / 686 / 678 / **686** / 254 |
+| 1k and 19k synthetic (#825 harness, 14 cases) | needed 11/11, strict 0, extras 52 | **needed 11/11**, strict 4, extras 21 (identical to 0.4.1) | 11 → 11 | **none** | FTS5: needed 11/11, strict 1, extras 42 |
+
+Executed at head `32dbc837` (selector blob `57bfb3fc`, equal to the blob committed there); summaries record
+both. On LongMemEval the 0.5.1 selector declines 9 (session) / 3 (turn) more items than 0.4.1, all
+subject conflicts without a shared term; on the first-person sets it is identical to 0.4.1.
 
 Suites at this revision: owner's 7 tests GREEN; selector/owner-control/challenge/package/audit suites
 **93 passed** (`logs/selector-0.5.1-GREEN.log`); MCP integration suites **42 OK** (bridge 12, real SDK 7,
-quality probe 10, task eval 6, owner's adversarial 7; `logs/mcp-suites-0.5.1.log`); full reference suite
-TBD-SUITE-051.
+quality probe 10, task eval 6, owner's adversarial 7; `logs/mcp-suites-0.5.1.log`); full reference suite at `993ba1c4` (`pytest reference/tests`): **3274 passed, 27 skipped, 1 xfailed, 4 failed**, the same four by-design v7 identity guards as in section 5.3 (`logs/full-suite-0.5.1.log`).
