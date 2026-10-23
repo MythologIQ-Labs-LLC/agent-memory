@@ -118,8 +118,13 @@ changing retrieval or the default `all_returned` profile. When it delivers **no 
 attributed** item (resolved state, nonempty text, fact reference and logical memory reference),
 the result is `insufficient_evidence` with reason `no_complete_attributed_evidence`.
 Truncated or unattributed text remains visible but cannot pass this minimal guard.
-When such an item is delivered, the result is **`unverified`**, not `sufficient`;
-its reason is `answer_entailment_not_checked`. The existing
+If every otherwise-complete candidate is known through the runtime history to
+be a **non-head key generation**, the result is also `insufficient_evidence`,
+with reason `only_non_head_evidence`. The older text is **not removed** from
+ordinary recall, and unknown head states are not treated as known stale.
+When at least one complete candidate is not known to be non-head, the result
+is **`unverified`**, not `sufficient`; its reason is
+`answer_entailment_not_checked`. The existing
 `answerability_verified=false` remains unchanged. An agent or host must not treat
 `unverified` as permission to answer.
 

@@ -363,20 +363,25 @@ class LocalMemoryBridge:
         # entailment: even complete, attributed evidence remains unverified.
         # Preserve all_returned and the full evidence list. Never silently
         # filter unrelated facts or claim that an empty result proves absence.
-        complete_attributed = any(
-            item.get("state") == "resolved"
+        complete_attributed = [
+            item for item in result["evidence"]
+            if item.get("state") == "resolved"
             and isinstance(item.get("fact_ref"), str) and bool(item["fact_ref"])
             and isinstance(item.get("memory_ref"), str) and bool(item["memory_ref"])
             and bool(item.get("content", "").strip())
-            for item in result["evidence"]
-        )
-        result["evidence_assessment"] = (
-            "unverified" if complete_attributed else "insufficient_evidence"
-        )
-        result["evidence_assessment_reason"] = (
-            "answer_entailment_not_checked" if complete_attributed
-            else "no_complete_attributed_evidence"
-        )
+        ]
+        # The public history head is stronger evidence about currentness than
+        # retrieval rank. A returned old generation is still disclosed, but
+        # cannot alone count as potentially answer-supporting current evidence.
+        # Unknown head state remains unknown; do not fabricate a stale verdict.
+        if not complete_attributed:
+            assessment, reason = "insufficient_evidence", "no_complete_attributed_evidence"
+        elif all(item.get("latest_for_key") is False for item in complete_attributed):
+            assessment, reason = "insufficient_evidence", "only_non_head_evidence"
+        else:
+            assessment, reason = "unverified", "answer_entailment_not_checked"
+        result["evidence_assessment"] = assessment
+        result["evidence_assessment_reason"] = reason
         return result
 
     def get(self, key: str) -> dict:

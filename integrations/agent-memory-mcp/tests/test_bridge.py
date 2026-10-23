@@ -147,6 +147,30 @@ class BridgeTests(unittest.TestCase):
                     [i["state"] for i in package["items"] if i["state"] in ("resolved", "truncated")],
                 )
 
+    def test_find_old_key_generation_alone_is_insufficient_but_still_visible(self):
+        # A stale fact can be recalled even when the runtime history says
+        # another generation is the current key head. Do not upgrade it to
+        # potential answer support or silently suppress the evidence.
+        package = {
+            "status": "complete",
+            "items": [{
+                "state": "resolved", "content": "The editor is Vim.",
+                "fact_ref": "fact:previous",
+                "provenance": {"memory_ref": "memory:editor"},
+            }],
+        }
+        history = {"history": {"current_fact_uuid": "fact:current", "state_version": 3}}
+        with patch.object(FakeMemory, "recall_context", return_value=package), \
+                patch.object(FakeMemory, "history", return_value=history, create=True):
+            result = self.bridge.find("Which editor is current?")
+        self.assertEqual(result["evidence_assessment"], "insufficient_evidence")
+        self.assertEqual(result["evidence_assessment_reason"], "only_non_head_evidence")
+        self.assertEqual(result["profile"], "all_returned")
+        self.assertEqual(result["non_head_keys"], ["memory:editor"])
+        self.assertEqual(result["evidence"][0]["content"], "The editor is Vim.")
+        self.assertIs(result["evidence"][0]["latest_for_key"], False)
+        self.assertFalse(result["answerability_verified"])
+
     def test_selectivity_is_explicit_opt_in(self):
         self.bridge.find("preferred editor", experimental_selectivity=True)
         args = [v for v in self.calls if v[0] == "recall_context"][0][2]
