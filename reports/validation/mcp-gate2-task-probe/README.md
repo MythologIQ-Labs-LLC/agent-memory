@@ -225,7 +225,7 @@ concentrates on third-person notes, which is what an agent writes through `memor
 |---|---|---|
 | selector, owner controls, independent challenges, context package, #691 audit and authorization suites (6 files) | **93 passed** | `logs/selector-0.5.0-GREEN.log` |
 | `integrations/agent-memory-mcp/tests` (bridge 12, real SDK 7, quality probe 10, task eval 6) | **35 OK**, no skips | `logs/mcp-suites-final.log` |
-| full reference suite at `9456708c` | result recorded in the follow-up evidence commit (`logs/full-suite.log`) | `logs/full-suite.log` |
+| full reference suite at `9456708c` (`pytest reference/tests`) | **3274 passed, 27 skipped, 1 xfailed, 4 failed**: the four are the by-design v7 identity guards that fail on every successor tree (`test_644_v7_gauntlet_identity::test_own_checkout_at_frozen_revision_is_served`, the two `test_770_v7_lane_freeze_independent::ReplayEvidenceFreshness` tests, `test_benchmark_integration_contract::test_evaluation_only_change_keeps_runtime_baseline_equivalence`), identical to the #819 and #839 qualifications (3268 passed there; +6 new tests here) | `logs/full-suite.log` |
 | Gate 1 workflow driver at committed head `9456708c` (26 checks: save, exact get, find, restart, cross-scope, wrong key, same-key rewrite, bad input, no host config) | **26/26** | `logs/gate1-workflow-rerun-9456708c.log`, transcript `logs/gate1-workflow-9456708c.json` |
 
 ## 6. What this does and does not establish; owner decisions
