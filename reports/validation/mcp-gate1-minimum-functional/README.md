@@ -1,7 +1,8 @@
 # Gate 1: Minimum Functional Product, Agent Memory as an MCP memory provider
 
-**Verdict: Gate 1 PASSES at the commit recorded in `gate1-workflow.json` (`repo_head`), after two
-corrections made on this branch.** This is the minimum-functioning-product gate only: a real
+**Verdict: Gate 1 PASSES, executed from a clean committed checkout of
+`b04206621059e4c31afa116a032f2c823ffef313` (section 7), after two corrections made on this
+branch.** This is the minimum-functioning-product gate only: a real
 agent harness can save, exactly retrieve, find by question, survive a server restart, and is
 refused across scopes, through the official MCP client over stdio. It says nothing about
 retrieval quality (Gate 2).
@@ -112,3 +113,30 @@ to the real-SDK suite. The driver verifies: `memory_get` serves exactly the head
 
 `gate1_workflow.py` (driver), `gate1-workflow.json` (full transcript: every request, every
 response, pids, store inspection, versions), `probe_same_key_rewrite.py`, `logs/`.
+
+## 7. Exact-revision re-execution (review 5623421596)
+
+The first transcript, `gate1-workflow.json`, records `repo_head 8b346c09` with the repaired
+`server_blob d10f99b1` and `bridge_blob d17832c5`: it was produced from the patched working tree
+before the fix commit existed. It is kept unmodified as the functional record and the fail-first
+pair with `logs/gate1-workflow-RED-8b346c09.log`; it is not an exact-commit execution.
+
+After the review's label change (`conflicting_keys` → `non_head_keys`, a version-divergence
+signal, not a verified contradiction) was committed, everything was re-run from the clean
+committed checkout:
+
+| item | value |
+|---|---|
+| executing head | `b04206621059e4c31afa116a032f2c823ffef313` |
+| `server.py` / `bridge.py` blobs at that head | `d10f99b1` / `416290d1` (identical to the blobs the transcript records) |
+| tracked tree clean before and after the run | yes / yes (recorded in the transcript) |
+| `test_bridge.py` | 12 OK (`logs/test_bridge-b0420662….log`) |
+| `test_real_mcp.py` | 6 OK (`logs/test_real_mcp-b0420662….log`) |
+| `gate1_workflow.py` | 24/24 (`logs/gate1-workflow-b0420662….log`) |
+| transcript | `gate1-workflow-b0420662.json`, sha256 `32e977a56f6b2f21ecb8b008a5a7cce3ef812a9d8930af0a25f666b10db7c91f` |
+
+The product limitation stands as the review states it: a second write under a key commits a new
+generation and does not retire the earlier current-state fact; `memory_find` keeps returning it,
+`latest_for_key` is a warning and `non_head_keys` a divergence signal, neither a correction. Gate 2
+(task correctness, no-answer behaviour, supported correct/forget or an honest read-only limitation,
+against an indexed baseline) is the next work and is not claimed here.
