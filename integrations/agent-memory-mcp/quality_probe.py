@@ -65,16 +65,22 @@ def fts_find(db: sqlite3.Connection, query: str, max_items: int) -> list[str]:
     )]
 
 
-def score(keys: list[str], required: list[str], forbidden: list[str]) -> dict:
-    # Scores *evidence identifiers*, not answers or entailment. A returned
-    # source can lack the answer or be inaccurate; that is out of this proxy.
+def score(keys: list[str], required: list[str], forbidden: list[str], *,
+          fully_delivered_keys: list[str] | None = None) -> dict:
+    # A source-key hit is NOT full evidence coverage if the MCP package only
+    # delivered part of the source, or lost its provenance. For the indexed
+    # FTS5 control the entire text of every returned source is retrievable.
     observed, wanted = set(keys), set(required)
-    hits = len(observed & wanted)
+    eligible = set(keys if fully_delivered_keys is None else fully_delivered_keys)
+    if not eligible.issubset(observed):
+        raise ValueError("fully delivered evidence must be a subset of returned keys")
+    hits = len(eligible & wanted)
     extras = sum(key not in wanted for key in keys)
     return {
+        "required_key_hits": len(observed & wanted),
         "required_hits": hits,
         "required_total": len(wanted),
-        "required_complete": wanted.issubset(observed) if wanted else None,
+        "required_complete": wanted.issubset(eligible) if wanted else None,
         "unexpected_evidence_items": extras,
         "forbidden_keys_present": sorted(observed & set(forbidden)),
         "empty_context_on_no_answer": len(keys) == 0 if not wanted else None,
@@ -129,6 +135,16 @@ async def run(cases: dict, k: int = 5) -> dict:
     if type(k) is not int or not 1 <= k <= 8:
         raise ValueError("MCP provider supports k from 1 to 8")
     validate_cases(cases)
+    # This *small fictional development fixture* fits under both delivery
+    # budgets for either arm, including the five highest-length documents.
+    # Fail if someone expands the corpus until the comparator silently gains
+    # a full-text advantage over the MCP char/token-bound package.
+    sizes = sorted((len(r["text"]) for r in cases["records"]), reverse=True)
+    if sizes and (sizes[0] > 1200 or sum(sizes[:k]) > 5000 or
+                  sum((n + 3) // 4 for n in sizes[:k]) > 1250 or
+                  any(not r["text"].isascii() for r in cases["records"])):
+        raise ValueError("corpus no longer fits equal full-text capacity; redesign the comparator")
+    by_key = {r["key"]: r["text"] for r in cases["records"]}
     fts = build_fts(cases["records"])
     with tempfile.TemporaryDirectory(prefix="am-mcp-quality-") as temp:
         env = {
@@ -164,7 +180,16 @@ async def run(cases: dict, k: int = 5) -> dict:
                     raise RuntimeError(f"failed MCP read for {task['id']}: {result!r}")
                 content = result.structured_content
                 evidence = content.get("evidence") or []
-                mcp_keys = [e["memory_ref"] for e in evidence if isinstance(e.get("memory_ref"), str)]
+                # Include even unidentified items in served-context burden;
+                # never silently erase a missing provenance item from scoring.
+                mcp_keys = [e.get("memory_ref") if isinstance(e.get("memory_ref"), str)
+                            else "<unattributed>" for e in evidence]
+                mcp_full_keys = [
+                    e["memory_ref"] for e in evidence
+                    if (isinstance(e.get("memory_ref"), str) and
+                        e.get("state") == "resolved" and
+                        e.get("content") == by_key.get(e["memory_ref"]))
+                ]
                 fts_start = time.perf_counter()
                 fts_keys = fts_find(fts, question, k)
                 fts_ms = (time.perf_counter() - fts_start) * 1000
@@ -173,9 +198,14 @@ async def run(cases: dict, k: int = 5) -> dict:
                 rows.append({
                     "id": task["id"], "question": question,
                     "gold": task["required"], "forbidden": task["forbidden"],
-                    "mcp_keys": mcp_keys, "fts5_keys": fts_keys,
-                    "mcp": score(mcp_keys, task["required"], task["forbidden"]),
+                    "mcp_keys": mcp_keys, "mcp_full_text_keys": mcp_full_keys,
+                    "fts5_keys": fts_keys,
+                    "mcp": score(mcp_keys, task["required"], task["forbidden"],
+                                 fully_delivered_keys=mcp_full_keys),
                     "fts5": score(fts_keys, task["required"], task["forbidden"]),
+                    "mcp_unattributed_items": mcp_keys.count("<unattributed>"),
+                    "mcp_incomplete_text_items": len(mcp_keys) - len(mcp_full_keys),
+                    "mcp_unavailable_items": len(content.get("unavailable") or []),
                     "mcp_elapsed_ms": mcp_ms, "fts5_elapsed_ms": fts_ms,
                     "mcp_package_status": content.get("package_status"),
                     "mcp_selection_assessment": content.get("selection_assessment"),
@@ -187,11 +217,13 @@ async def run(cases: dict, k: int = 5) -> dict:
     return {
         "schema": "mcp-gate2-retrieval-probe/0.1.0",
         "qualification": "author-visible development diagnostic only; NOT blinded",
-        "measures": "evidence-key coverage, distraction, empty-context, not agent answer correctness",
+        "measures": "full seeded source evidence coverage, key-only hits, distraction, empty-context; not answer correctness",
         "provider": "real stdio MCP / all_returned profile / governed SQLite",
         "comparator": "indexed SQLite FTS5 unicode61 bm25 OR terms; not ingestion/security cost parity",
         "budget": {"max_items": k, "provider_char_cap": 5000, "provider_token_cap": 1250,
-                   "fts5_char_cap": None, "fts5_token_cap": None},
+                   "fts5_char_cap": None, "fts5_token_cap": None,
+                   "development_fixture_full_text_fits_both_caps": True,
+                   "caveat": "FTS5 does not incur governed ingestion or MCP transport costs"},
         "dataset": {"records": len(cases["records"]), "tasks": len(cases["tasks"])},
         "summary": {"mcp": aggregate(rows, "mcp"), "fts5": aggregate(rows, "fts5")},
         "rows": rows,
