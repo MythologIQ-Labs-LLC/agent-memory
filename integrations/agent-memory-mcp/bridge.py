@@ -96,6 +96,48 @@ class LocalMemoryBridge:
             "authoritative_answer": False,
         }
 
+    def forget(self, key: str) -> dict:
+        """Request reversible pruning for one *host-bound* key only.
+
+        The MCP caller cannot choose an approval, evidence reference, scope,
+        risk class, or permanence. The local trusted host must explicitly
+        configure the exact authorized target and a genuine evidence reference.
+        Without this pair nothing is opened or changed. These env claims are
+        a limited developer-alpha host boundary, NOT authentication, human
+        verification, or a substitute for runtime governance.
+        """
+        key = _string("key", key, MAX_KEY_CHARS)
+        approved_key = os.environ.get("AGENT_MEMORY_MCP_PRUNE_APPROVED_KEY", "")
+        evidence_ref = os.environ.get("AGENT_MEMORY_MCP_PRUNE_EVIDENCE_REF", "")
+        if (not approved_key or key != approved_key or
+                not isinstance(evidence_ref, str) or not evidence_ref.strip() or
+                len(evidence_ref) > MAX_KEY_CHARS):
+            # No permission or key-existence information is disclosed.
+            return {
+                "committed": False,
+                "key": key,
+                "status": "host_authorization_required",
+                "outcome": None,
+                "refusal": "host_authorization_required",
+                "permanent": False,
+            }
+        with self._open() as memory:
+            # No fabricated SkillArtifact and no review/authority overrides.
+            # Even a correctly bound host grant cannot force a commit if the
+            # public facade's governed lifecycle policy rejects its evidence.
+            outcome = memory.forget(
+                key, permanent=False, evidence_refs=(evidence_ref,),
+            )
+        return {
+            "committed": outcome.get("committed") is True,
+            "key": key,
+            "status": ("forgotten" if outcome.get("committed") is True
+                       else "not_committed"),
+            "outcome": outcome.get("outcome"),
+            "refusal": outcome.get("refusal"),
+            "permanent": False,
+        }
+
     def _project(self, package: dict, *, asked: str) -> dict:
         evidence = []
         unavailable = []
