@@ -123,6 +123,11 @@ its reason is `answer_entailment_not_checked`. The existing
 `answerability_verified=false` remains unchanged. An agent or host must not treat
 `unverified` as permission to answer.
 
+The populated-store acceptance gate validates the **entire fixed manifest**, its
+source profile, retrieval evidence and post-retrieval gold labels; subset-only success,
+relabeling or a replaced provider fails closed. Each receipt includes the SHA-256 of
+the manifest used. Offline gate tests only validate admission, not MCP behavior.
+
 The separate populated-store acceptance gate reuses the existing 18-record,
 14-question `quality_cases_dev.json` cohort: 11 answerable controls and
 three unanswerable controls whose retrieved context contains distractors.
