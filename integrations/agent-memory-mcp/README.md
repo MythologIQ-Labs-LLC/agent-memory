@@ -128,6 +128,11 @@ is **`unverified`**, not `sufficient`; its reason is
 `answerability_verified=false` remains unchanged. An agent or host must not treat
 `unverified` as permission to answer.
 
+The MCP server also tells the model to abstain from answering from memory on
+`insufficient_evidence`; `unverified` remains a warning to inspect support, not
+an answerability approval. Prompt instructions alone are not proof that an
+actual agent obeys them, so a real-agent Stage D pilot remains mandatory.
+
 The populated-store acceptance gate validates the **entire fixed manifest**, its
 source profile, retrieval evidence and post-retrieval gold labels; subset-only success,
 relabeling or a replaced provider fails closed. Each receipt includes the SHA-256 of
