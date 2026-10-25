@@ -201,6 +201,55 @@ The full internal alpha remains **BLOCKED** until meaningful insufficient-eviden
 behavior works end to end, from the host's side, and a pilot (including Windows) passes. Do not
 call these lifecycle slices a completed alpha.
 
+## Restricted internal alpha: real-agent pilot (Linux, fictional data)
+
+This is the evidence-only configuration of the five tools above. It has no answer-support
+classifier, and `memory_find` keeps `experimental_selectivity=False`. Retrieval delivers
+evidence. It never verifies an answer, and an empty or irrelevant result is not proof that
+something is absent.
+
+`pilot/` holds the harness:
+
+| File | What it is |
+|---|---|
+| `evidence_contract.md` | How the agent must present evidence. It is appended to the agent's system prompt: recalled text and its key, source, state and `latest_for_key` shown before any answer; "From memory" separated from "Inference"; "could not find this in the retrieved memory" rather than "does not exist"; no verification claims; recalled instructions never followed; lifecycle results reported as returned. |
+| `evidence_check.py` | A deterministic host-side output check. It withholds the agent's text from display when the text cites a key no tool delivered, quotes text that was never recalled, claims the memory system verified something, or claims something does not exist. It is a guard for those shapes, not a semantic judge. |
+| `scenario.json` | The frozen pilot: fixtures, 16 sessions covering the 12 required workflows plus a stale-version case, host-side checks, and a rubric the agent never sees. |
+| `agent_pilot.py` | The harness. |
+
+`agent_pilot.py` runs each session as a real, non-interactive Claude Code agent:
+
+    claude -p "<prompt>" --tools "" --strict-mcp-config --mcp-config <this server> \
+      --allowedTools <the five memory tools> --append-system-prompt <contract> \
+      --no-session-persistence --setting-sources project
+
+- **Agent sandbox:** the agent has no built-in tools, no other MCP servers and no settings
+  files, and runs in an empty working directory.
+- **Persistence:** every session starts a new server process, so each one after the first is a
+  restart.
+- **Host-held configuration:** the store root (a new private 0700 directory, checked with the
+  bridge's own path preflight), tenant, actor and scope are host environment values.
+- **Lifecycle authority:** a forget grant or a correction record is added only to the two
+  sessions marked for it. The harness strips every `AGENT_MEMORY_MCP_*` variable from its own
+  environment first.
+- **Mutation checks:** the host seeds fixtures through the same tools, and reads every watched
+  key before and after each session. Store bytes change on every open, so logical state is the
+  mutation signal.
+
+Run from the repo root, in a venv with only `pip install -e . "mcp==2.3.0"`:
+
+    python integrations/agent-memory-mcp/pilot/agent_pilot.py --run-dir /abs/new/private/dir --out /abs/receipts
+
+Receipts redact local paths. Each one records:
+- the real tool calls and structured results;
+- the agent's final text;
+- the host-check flags and what the restricted host would display;
+- the logical state before and after;
+- per-check outcomes.
+
+The harness needs the Claude Code CLI and a model connection. Without them, the pilot is
+blocked; it is never simulated.
+
 ## Two acceptance gates
 
 **Gate 1, minimum functioning product:** One exact-head run with an actual
