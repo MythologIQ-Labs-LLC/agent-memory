@@ -1,0 +1,11 @@
+ERROR: test_hostenv (unittest.loader._FailedTest.test_hostenv)
+ModuleNotFoundError: No module named 'hostenv'
+Ran 1 test in 0.000s
+FAILED (errors=1)
+ERROR: test_unreadable_root_ancestor_is_a_configuration_error (test_bridge.BridgeTests.test_unreadable_root_ancestor_is_a_configuration_error)
+ERROR: test_windows_root_rules (test_bridge.BridgeTests.test_windows_root_rules)
+ERROR: test_windows_rules_are_applied_by_the_host_config_on_windows (test_bridge.BridgeTests.test_windows_rules_are_applied_by_the_host_config_on_windows)
+FAIL: test_correct_refuses_a_record_that_is_a_reparse_point (test_bridge.BridgeTests.test_correct_refuses_a_record_that_is_a_reparse_point)
+FAIL: test_correct_refuses_a_record_under_a_redirected_parent (test_bridge.BridgeTests.test_correct_refuses_a_record_under_a_redirected_parent)
+Ran 32 tests in 0.186s
+FAILED (failures=2, errors=3)

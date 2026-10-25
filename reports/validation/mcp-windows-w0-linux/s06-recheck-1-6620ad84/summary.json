@@ -1,0 +1,36 @@
+{
+ "schema": "agent-memory-mcp-agent-pilot-receipt/0.1.0",
+ "head": "6620ad8408e2b20c4b8292820d3440ad7cdf6faf",
+ "scenario": "scenario.json",
+ "scenario_sha256": "9e77dd85760472e79d5209de3d9e82ba445364fac6b66aa8646ea8535a3320e6",
+ "contract_sha256": "2b79715dc7a6eadf1052f09ace08f64ed4350b1cbbc7caaab9d41ce21bee8b16",
+ "agent": {
+  "harness": "Claude Code non-interactive (claude -p)",
+  "version": "2.1.310 (Claude Code)",
+  "models": [
+   "claude-sonnet-5-5"
+  ],
+  "flags": "--tools '' --strict-mcp-config --allowedTools <five memory tools> --append-system-prompt-file <evidence contract> --no-session-persistence --setting-sources project; prompt on stdin"
+ },
+ "host": {
+  "os": "posix",
+  "platform": "Linux-6.18.44-fc-v153-x86_64-with-glibc2.39",
+  "python": "3.13.16"
+ },
+ "sessions": [
+  {
+   "id": "S06",
+   "workflow": 6,
+   "checks_passed": true,
+   "failed_checks": [],
+   "host_check_flags": [],
+   "tools": [
+    "memory_find",
+    "memory_find",
+    "memory_find",
+    "memory_find"
+   ],
+   "model": "claude-sonnet-5-5"
+  }
+ ]
+}

@@ -1,0 +1,65 @@
+{
+  "phase": "W0 (Linux cloud container) - NOT Windows qualification",
+  "branch": "product/mcp-ab-agent-pilot-no-ci",
+  "start": "c9c8dafc31245ea092134dba8fcf711f3e8108b7",
+  "tested_commit": "6620ad84",
+  "python": "3.13.16",
+  "platform": "Linux-6.18.44-fc-v153-x86_64-with-glibc2.39",
+  "install": "pip install -e . \"mcp==2.3.0\" (no semantic extra)",
+  "pip_freeze": [
+    "annotated-types==0.8.0",
+    "anyio==4.15.1",
+    "attrs==26.1.0",
+    "cffi==2.1.1",
+    "click==8.5.0",
+    "cryptography==50.0.2",
+    "h11==0.16.0",
+    "httpcore2==2.16.0",
+    "httpx2==2.16.0",
+    "idna==3.20",
+    "jsonschema==4.26.0",
+    "jsonschema-specifications==2025.9.1",
+    "mcp==2.3.0",
+    "mcp-types==2.3.0",
+    "opentelemetry-api==1.45.1",
+    "pycparser==3.12",
+    "pydantic==2.14.1",
+    "pydantic_core==2.50.1",
+    "PyJWT==2.15.1",
+    "python-multipart==0.0.32",
+    "referencing==0.37.0",
+    "rfc8785==0.1.4",
+    "rpds-py==2026.9.1",
+    "sse-starlette==3.5.1",
+    "starlette==1.10.0",
+    "truststore==0.10.5",
+    "typing-inspection==0.4.4",
+    "typing_extensions==4.16.0",
+    "uvicorn==0.54.0"
+  ],
+  "agent": {
+    "harness": "Claude Code non-interactive (claude -p)",
+    "version": "2.1.310 (Claude Code)",
+    "models": [
+      "claude-sonnet-5-5"
+    ],
+    "flags": "--tools '' --strict-mcp-config --allowedTools <five memory tools> --append-system-prompt-file <evidence contract> --no-session-persistence --setting-sources project; prompt on stdin"
+  },
+  "host": {
+    "os": "posix",
+    "platform": "Linux-6.18.44-fc-v153-x86_64-with-glibc2.39",
+    "python": "3.13.16"
+  },
+  "s06_recheck": {
+    "contract_sha256": "2b79715dc7a6eadf1052f09ace08f64ed4350b1cbbc7caaab9d41ce21bee8b16",
+    "runs": 3,
+    "derived_conclusion_under_from_memory": 0,
+    "note": "full pilot S06 plus two S06-only runs; the Saturday comparison was under Inference every time"
+  },
+  "not_executed_here": [
+    "W1 native preflight",
+    "W2 native runtime qualification (Python 3.11, 3.12)",
+    "W3 native real-agent pilot",
+    "W4 native evidence"
+  ]
+}
