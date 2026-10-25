@@ -51,5 +51,18 @@ class ClaudeConfigBaselineTests(unittest.TestCase):
             self.assertEqual(preflight.config_snapshot(None), {"default": {}, "isolated": {}})
 
 
+
+class IsolatedConfigPathTests(unittest.TestCase):
+    def test_only_strict_child_of_dev_root_is_allowed(self):
+        with tempfile.TemporaryDirectory() as folder:
+            dev = Path(folder) / "dev"
+            inside = dev / "claude-config"
+            sibling = Path(folder) / "other"
+            self.assertTrue(preflight.is_strict_child(inside, dev))
+            self.assertFalse(preflight.is_strict_child(dev, dev))
+            self.assertFalse(preflight.is_strict_child(sibling, dev))
+            self.assertFalse(preflight.is_strict_child(Path(folder), dev))
+
+
 if __name__ == "__main__":
     unittest.main()
