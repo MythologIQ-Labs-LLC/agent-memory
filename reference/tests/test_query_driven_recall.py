@@ -230,6 +230,33 @@ class QueryDrivenRecallTests(unittest.TestCase):
         self.assertIn(related.fact_uuid, result.admitted)
         self.assertIn(SHARED_EVIDENCE_ROUTE, result.routes_executed)
 
+    def test_cross_project_explicit_seed_cannot_expand_graph(self) -> None:
+        foreign_seed = self._retain(
+            "memory:foreign-seed",
+            "foreign project anchor",
+            evidence_refs=("dialog:foreign:1", "session:cross-scope"),
+            project_ref="project-beta",
+        )
+        foreign_neighbor = self._retain(
+            "memory:foreign-neighbor",
+            "foreign project answer",
+            evidence_refs=("dialog:foreign:2", "session:cross-scope"),
+            project_ref="project-beta",
+        )
+        planner = DeterministicQueryDrivenRecallPlanner(
+            self.runtime.adapter,
+            config=QueryDrivenRecallConfig(lexical_anchor_limit=0),
+        )
+        result = planner.recall(
+            "unrelated query",
+            _context(),
+            logical_memory_refs=("memory:foreign-seed",),
+        )
+        self.assertNotIn(foreign_seed.fact_uuid, result.candidates)
+        self.assertNotIn(foreign_neighbor.fact_uuid, result.candidates)
+        self.assertNotIn(foreign_neighbor.fact_uuid, result.admitted)
+        self.assertEqual(result.route_hits, {})
+
     def test_default_runtime_behavior_remains_unexpanded_without_explicit_seed(self) -> None:
         self._retain(
             "memory:seed",
