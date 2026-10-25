@@ -1,0 +1,732 @@
+{
+  "schema": "mcp-stage-c-adversarial-cases/0.1.0",
+  "disclaimer": "Third fictional held-out Stage C cohort, authored by an independent evaluator and frozen in its own commit before the cycle-3 candidate was run on it or shown to its engineer. Never used to choose a model, rule, window or margin. Labels are joined by the host after MCP calls and are never tool arguments. Recall coverage was measured with the answer-support check disabled only; no support model was run while authoring. Small and author-written: provisional evidence, not a calibrated or blinded benchmark.",
+  "protocol": {
+    "authorship": "Authored, checked and frozen by an independent evaluator in a separate clone; the implementation engineer did not see questions, records or labels before freezing the cycle-3 candidate.",
+    "retrieval": "memory_find, max_items=5, default all_returned profile, identical for every arm",
+    "arms": [
+      "support check disabled",
+      "original candidate (extractive-qa-null-comparison/1.0.0)",
+      "cycle-2 candidate (answerability-subject-grounded/1.0.0)",
+      "cycle-3 corrected successor candidate"
+    ],
+    "false_abstention": "an answerable task whose required memories are all delivered as current, complete text (required_complete true), assessed insufficient_evidence",
+    "unanswerable_abstention": "an unanswerable task assessed insufficient_evidence",
+    "unsupported_candidate_support": "an unanswerable task with any delivered memory listed as supported, or an answerable task whose supported memories are not all among its required memories",
+    "retrieval_misses": "answerable tasks with required_complete false; reported separately and never silently excluded from discussion; an abstention on one is not a false abstention but is reported",
+    "cross_memory": "cross_memory tasks need exactly the two listed required memories combined; cross_memory_trap tasks deliver two memories linked by a shared name that together still do not answer the question",
+    "criterion": "zero false abstentions AND at least 75% of unanswerable tasks (18 of 24) assessed insufficient_evidence AND identical assessments across a server restart AND identical delivered evidence in every arm AND no generated or verified answer AND the forgotten memories never delivered AND corrected-away or rewritten-away text never delivered as current",
+    "min_unanswerable_abstained": 18,
+    "unanswerable_tasks": 24,
+    "fixed_before_evaluation": true,
+    "base_commit": "0de6d422a078f71cb343e7eb2be82d636fa86f44",
+    "source_hashes": {
+      "record_text_sha256": {
+        "memory:h3:gunnar-sesame": "bf0c18d35f6e0f2eb0942fbe2b5cee8b2ec1b7cb0a97fef9224ef7a93d8177dd",
+        "memory:h3:gunnar-race": "a80c9cf41ddd4eef56a4ade5c9b7eab27cb8816716497454612034ac715394f2",
+        "memory:h3:gunnar-car": "060c7a2135340d84ff2bf6443881d126ea925031fe3827c1e2a39f5fb511d46d",
+        "memory:h3:kestrel-hours": "d6d9b29d0a9bee6da3a410e6350513cad92ed69350afeddd77734ac16e7ed453",
+        "memory:h3:soledad-ferry": "6638e2519f58031abb7fc8c21a32a7dd9c96c61292726d034d3d78141be9cb6a",
+        "memory:h3:soledad-flatmate": "5b37fd73371f012c407c83ff4db602722a5de22722713bb2c46125ab083721e2",
+        "memory:h3:dmitri-job": "e5de97631a61eca15b92f1584d55371228521f0bc04c807946e1188a207ee309",
+        "memory:h3:soledad-bookclub": "f3253f9fd1c79c35d2687416519b36eced14641817dbbbcae382f7f5f3a8ac5a",
+        "memory:h3:kwame-job": "b8c82aa53bed8644515a1e3758300a473a3bce1aca7ba959f268f3b28c8fbbd3",
+        "memory:h3:tidewater-address": "5fad9eeb9378c305087a9c484a6d58d4faa564b716c43164b38cbf75fea06f1f",
+        "memory:h3:kwame-coffee": "1e9451bded9ba188a9b97c8fda7e21c4ab9cd09b875aa21153dd59539807cd37",
+        "memory:h3:lucan-coffee": "9874f03f6acffc34e98cbce8227fb930c44421582475efa9c50a7d0f0bfe9801",
+        "memory:h3:lucan-manager": "bf07f0cd0d05371ad3cfdf8db189ce59d676a939e2a2c90883b175a472cd5d30",
+        "memory:h3:ingrid-office": "4bd09267855bcfb678266b3c113b60202bab12d076eb93aae25a7ba57ca6216b",
+        "memory:h3:lucan-thermostat": "9b7dea6757108bda0f53278251232045d6bba15b2a827e13fd6992ec6cebe91f",
+        "memory:h3:azadeh-sister": "4c0fa658575faaae94b8340dc040aacc5689d1fd29ca433f68400e2a4c033111",
+        "memory:h3:nilufar-move": "0e0600d43897721ab256057da641aef8a5796d03a44e585d401775832dd51030",
+        "memory:h3:port-ellery-festival": "acc827ee8e54dbd3d4075eb6b410a1979bed4e03fd581949e401a4beb0712787",
+        "memory:h3:azadeh-portuguese": "c4fad280d38645e22a599886f9504f365735b89311d44ea9fcf3a3c31e581976",
+        "memory:h3:azadeh-dentist": "289a68985ffafcd6d299919036e24b30a6579cf05f2d1e2ffbe1ca0a0ac1195e",
+        "memory:h3:yusuf-cello": "665c787a50a2b5ec57b2a9f1c61eabb1d61e07873f2ddd3aa70e130f5e35bf7c",
+        "memory:h3:fenwick-rehearsal": "d0364759af5a71b6d7f1c2ef906963862e2d45ebb04b33350c3cfc4e6cb771a4",
+        "memory:h3:yusuf-flight": "b8d194ec76dad29cce9d3b3125b1cd0a84f289a5002defbf6706ebfabf9dd3a6",
+        "memory:h3:yusuf-bikeshed": "312d51319ae2c0adbe38fe7d0a13e1375479b6b0f7887c91ec7afc29b908065b",
+        "memory:h3:thandiwe-dog": "2710ef0cb4e20800f540b6a6d74c857a189724f61c091135fd461a26d0c33f6f",
+        "memory:h3:marlowe-vet": "fa862a1190c7cef7c555808dad5ae8386853bc73672712993ac39eee2142a2e2",
+        "memory:h3:osei-volunteer": "31eb43fcfeafba61ccf7151df6718b50accb229a5c96ee8b9c0ea7c04c6cdd25",
+        "memory:h3:thandiwe-pottery": "83afe12dfb4ae6a72a6153520f8ac162ea869f3b7d1d179265905e95cf8bdd32",
+        "memory:h3:thandiwe-alarm": "371b67a2c58f1dca2e32ee191a1ed4f3af1a18528b548a60e36ee77f1a99c7b3",
+        "memory:h3:rosalind-locker": "4281a453827761cd5614749fe486ecdeebc8a3b81b7526f3aecfcacd6b180018",
+        "memory:h3:bertrand-locker": "31be964e1da0abca82ca366f9532300dc026e0b8e2f18311fd0a9bf57777dbc0",
+        "memory:h3:rosalind-fig": "964e9e64910e1bb13757898c5739f63cabe397fe90cd75c0d7deb6071e3fd679",
+        "memory:h3:bertrand-lyon": "e72087f200a99f596713de15b44328deb05a85fea30051a46ef9c1657e4cb373",
+        "memory:h3:bertrand-library": "5cc8451be592d5705385114b0434a9eee9d9f7c4987de2e681e2c3428a3953c3"
+      },
+      "lifecycle_text_sha256": {
+        "correct:memory:h3:azadeh-dentist": "bcffecc42aa7ce32e4ea69cfdde97b0eaeb7e57b395e85094eae4e6929f7e01c",
+        "correct:memory:h3:bertrand-library": "16d59ea0b1c2660c612389c8d3d10c322fb9b33448f6b8323e2acd3e2db5ff29",
+        "rewrite:memory:h3:lucan-thermostat": "4978f62621f896aa0b3fb1cf85a9cca9794d81551c51abefc3a19550e339731c",
+        "rewrite:memory:h3:soledad-bookclub": "b2919f47d3224127f274a93b8a6ec1e57107edc42d02a3a30cc70db52248d0e4"
+      },
+      "files_at_base_commit_sha256": {
+        "integrations/agent-memory-mcp/bridge.py": "656867543564f498d3c3c8e08bf55e605b3d9f91084fd1ca096d4d22b30c9c0a",
+        "integrations/agent-memory-mcp/server.py": "714c89322888d6b5015c55702cdc6bf0d7479c87674f1c8da99cf83d5328a3a9",
+        "integrations/agent-memory-mcp/stage_c_adversarial.py": "abd070a3cb41d620fe1771abd41e45034d1c233790711ce360557eb72a110c8e",
+        "integrations/agent-memory-mcp/answer_support.py": "5fe5141739f1ae9ce570ed1770d84e437d9ad4fee8d9695051857f8275098d17"
+      }
+    },
+    "required_recall_coverage": {
+      "A01": true,
+      "A02": true,
+      "A03": true,
+      "A04": true,
+      "A05": true,
+      "A06": true,
+      "A07": true,
+      "A08": true,
+      "A09": true,
+      "A10": true,
+      "A11": true,
+      "A12": true,
+      "A13": true,
+      "A14": true,
+      "A15": true,
+      "A16": true,
+      "A17": true,
+      "A18": true,
+      "A19": true,
+      "A20": true,
+      "A21": true,
+      "A22": true,
+      "A23": true,
+      "A24": true,
+      "totals": {
+        "answerable_required_complete_true": 24,
+        "answerable_required_complete_false": 0,
+        "cross_memory_required_complete_true": 7,
+        "cross_memory_tasks": 7,
+        "cross_memory_trap_tasks_with_both_linked_memories_delivered": 1,
+        "cross_memory_trap_tasks": 6
+      },
+      "measured_with": "real stdio MCP, memory_find max_items=5, all_returned, support check disabled (no support model run); stage_c_adversarial.seed + ask_all; identical keys across a server restart",
+      "invariants_hold_support_disabled": true
+    }
+  },
+  "tenant": "tenant:stage-c-holdout3",
+  "scope": "project:stage-c-holdout3",
+  "records": [
+    {
+      "key": "memory:h3:gunnar-sesame",
+      "text": "Gunnar breaks out in hives after eating anything containing sesame, including tahini and sesame oil."
+    },
+    {
+      "key": "memory:h3:gunnar-race",
+      "text": "Gunnar is training for the Harrowgate half marathon at the end of September."
+    },
+    {
+      "key": "memory:h3:gunnar-car",
+      "text": "Gunnar's car is in for repairs at Kestrel Motors this week."
+    },
+    {
+      "key": "memory:h3:kestrel-hours",
+      "text": "Kestrel Motors closes at 5:30 p.m. on weekdays and stays shut on Sundays."
+    },
+    {
+      "key": "memory:h3:soledad-ferry",
+      "text": "Soledad cycles to the Ashgrove ferry terminal every weekday and catches the 8:05 boat across the bay."
+    },
+    {
+      "key": "memory:h3:soledad-flatmate",
+      "text": "Soledad shares a flat with her cousin Dmitri."
+    },
+    {
+      "key": "memory:h3:dmitri-job",
+      "text": "Dmitri's job is working night shifts as a paramedic."
+    },
+    {
+      "key": "memory:h3:soledad-bookclub",
+      "text": "Soledad's book club is reading The Salt Orchard this month."
+    },
+    {
+      "key": "memory:h3:kwame-job",
+      "text": "Kwame works as a lab technician at the Tidewater Seed Bank."
+    },
+    {
+      "key": "memory:h3:tidewater-address",
+      "text": "The Tidewater Seed Bank's street address is 41 Quarrystone Road, next to the old tram depot."
+    },
+    {
+      "key": "memory:h3:kwame-coffee",
+      "text": "Kwame drinks his coffee black with no sugar."
+    },
+    {
+      "key": "memory:h3:lucan-coffee",
+      "text": "Lucan takes his coffee with oat milk and two sugars."
+    },
+    {
+      "key": "memory:h3:lucan-manager",
+      "text": "Lucan reports to a manager named Ingrid Halvorsen."
+    },
+    {
+      "key": "memory:h3:ingrid-office",
+      "text": "Ingrid Halvorsen's office is on the ninth floor of the Brackwater building."
+    },
+    {
+      "key": "memory:h3:lucan-thermostat",
+      "text": "The thermostat in Lucan's flat is set to 19 degrees."
+    },
+    {
+      "key": "memory:h3:azadeh-sister",
+      "text": "Azadeh's younger sister is called Nilufar."
+    },
+    {
+      "key": "memory:h3:nilufar-move",
+      "text": "Nilufar now lives in the seaside town of Port Ellery; she moved there last spring to study marine biology."
+    },
+    {
+      "key": "memory:h3:port-ellery-festival",
+      "text": "Port Ellery hosts a kite festival on its beach every August."
+    },
+    {
+      "key": "memory:h3:azadeh-portuguese",
+      "text": "Azadeh is learning Portuguese at the Larkspur Language Centre on Thursdays."
+    },
+    {
+      "key": "memory:h3:azadeh-dentist",
+      "text": "Azadeh's dentist appointment is on 9 June at 3 p.m."
+    },
+    {
+      "key": "memory:h3:yusuf-cello",
+      "text": "Yusuf plays the cello in the Fenwick Community Orchestra."
+    },
+    {
+      "key": "memory:h3:fenwick-rehearsal",
+      "text": "The Fenwick Community Orchestra rehearses on Tuesday evenings in the basement of Corran Hall."
+    },
+    {
+      "key": "memory:h3:yusuf-flight",
+      "text": "Yusuf's flight to Reykjavik is on 14 March and leaves from gate B22."
+    },
+    {
+      "key": "memory:h3:yusuf-bikeshed",
+      "text": "The padlock code for the bike shed at Yusuf's building is 3381."
+    },
+    {
+      "key": "memory:h3:thandiwe-dog",
+      "text": "Thandiwe's dog is a retired greyhound named Marlowe."
+    },
+    {
+      "key": "memory:h3:marlowe-vet",
+      "text": "Marlowe the greyhound is registered with Dr. Osei at the Clearwater vet practice."
+    },
+    {
+      "key": "memory:h3:osei-volunteer",
+      "text": "Dr. Osei also volunteers at the Saltmarsh wildlife rescue on weekends."
+    },
+    {
+      "key": "memory:h3:thandiwe-pottery",
+      "text": "Thandiwe goes to a pottery class at the Kilnworks studio on Saturdays."
+    },
+    {
+      "key": "memory:h3:thandiwe-alarm",
+      "text": "Thandiwe's home alarm PIN is 5520."
+    },
+    {
+      "key": "memory:h3:rosalind-locker",
+      "text": "Rosalind's gym locker is number 87."
+    },
+    {
+      "key": "memory:h3:bertrand-locker",
+      "text": "Bertrand's gym locker is number 212."
+    },
+    {
+      "key": "memory:h3:rosalind-fig",
+      "text": "Rosalind waters the fiddle-leaf fig on her balcony every Sunday morning."
+    },
+    {
+      "key": "memory:h3:bertrand-lyon",
+      "text": "Bertrand grew up in Lyon and still speaks French with his parents."
+    },
+    {
+      "key": "memory:h3:bertrand-library",
+      "text": "Bertrand's library books are due back on 3 October."
+    }
+  ],
+  "lifecycle": [
+    {
+      "op": "correct",
+      "key": "memory:h3:azadeh-dentist",
+      "text": "Azadeh's dentist appointment is on 16 June at 3 p.m.",
+      "superseded_text": "Azadeh's dentist appointment is on 9 June at 3 p.m."
+    },
+    {
+      "op": "correct",
+      "key": "memory:h3:bertrand-library",
+      "text": "Bertrand's library books are due back on 10 October.",
+      "superseded_text": "Bertrand's library books are due back on 3 October."
+    },
+    {
+      "op": "rewrite",
+      "key": "memory:h3:lucan-thermostat",
+      "text": "The thermostat in Lucan's flat is now set to 21 degrees.",
+      "superseded_text": "The thermostat in Lucan's flat is set to 19 degrees."
+    },
+    {
+      "op": "rewrite",
+      "key": "memory:h3:soledad-bookclub",
+      "text": "Soledad's book club has switched to reading Lanterns of Vell this month.",
+      "superseded_text": "Soledad's book club is reading The Salt Orchard this month."
+    },
+    {
+      "op": "forget",
+      "key": "memory:h3:yusuf-bikeshed"
+    },
+    {
+      "op": "forget",
+      "key": "memory:h3:thandiwe-alarm"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "A01",
+      "category": "cross_memory",
+      "question": "What is the street address of the place where Kwame works?",
+      "required": [
+        "memory:h3:kwame-job",
+        "memory:h3:tidewater-address"
+      ],
+      "forbidden": []
+    },
+    {
+      "id": "A02",
+      "category": "cross_memory",
+      "question": "Which town does Azadeh's younger sister live in?",
+      "required": [
+        "memory:h3:azadeh-sister",
+        "memory:h3:nilufar-move"
+      ],
+      "forbidden": []
+    },
+    {
+      "id": "A03",
+      "category": "cross_memory",
+      "question": "On which evening of the week does the orchestra Yusuf plays in rehearse?",
+      "required": [
+        "memory:h3:yusuf-cello",
+        "memory:h3:fenwick-rehearsal"
+      ],
+      "forbidden": []
+    },
+    {
+      "id": "A04",
+      "category": "cross_memory",
+      "question": "Which vet is Thandiwe's dog registered with?",
+      "required": [
+        "memory:h3:thandiwe-dog",
+        "memory:h3:marlowe-vet"
+      ],
+      "forbidden": []
+    },
+    {
+      "id": "A05",
+      "category": "cross_memory",
+      "question": "On which floor is the office of Lucan's manager?",
+      "required": [
+        "memory:h3:lucan-manager",
+        "memory:h3:ingrid-office"
+      ],
+      "forbidden": []
+    },
+    {
+      "id": "A06",
+      "category": "cross_memory",
+      "question": "What job does Soledad's cousin do?",
+      "required": [
+        "memory:h3:soledad-flatmate",
+        "memory:h3:dmitri-job"
+      ],
+      "forbidden": []
+    },
+    {
+      "id": "A07",
+      "category": "cross_memory",
+      "question": "What time on weekdays does the garage repairing Gunnar's car close?",
+      "required": [
+        "memory:h3:gunnar-car",
+        "memory:h3:kestrel-hours"
+      ],
+      "forbidden": []
+    },
+    {
+      "id": "A08",
+      "category": "plain",
+      "question": "What time is the boat Soledad catches on weekdays?",
+      "required": [
+        "memory:h3:soledad-ferry"
+      ],
+      "forbidden": []
+    },
+    {
+      "id": "A09",
+      "category": "plain",
+      "question": "Which language is Azadeh learning?",
+      "required": [
+        "memory:h3:azadeh-portuguese"
+      ],
+      "forbidden": []
+    },
+    {
+      "id": "A10",
+      "category": "plain",
+      "question": "Which race is Gunnar training for?",
+      "required": [
+        "memory:h3:gunnar-race"
+      ],
+      "forbidden": []
+    },
+    {
+      "id": "A11",
+      "category": "plain",
+      "question": "Which gate does Yusuf's flight to Reykjavik leave from?",
+      "required": [
+        "memory:h3:yusuf-flight"
+      ],
+      "forbidden": []
+    },
+    {
+      "id": "A12",
+      "category": "paraphrase",
+      "question": "On what day of the week does Rosalind give her balcony fig its water?",
+      "required": [
+        "memory:h3:rosalind-fig"
+      ],
+      "forbidden": []
+    },
+    {
+      "id": "A13",
+      "category": "paraphrase",
+      "question": "What tongue does Bertrand use when he talks with his mum and dad?",
+      "required": [
+        "memory:h3:bertrand-lyon"
+      ],
+      "forbidden": []
+    },
+    {
+      "id": "A14",
+      "category": "paraphrase",
+      "question": "On what date is Yusuf flying out to Reykjavik?",
+      "required": [
+        "memory:h3:yusuf-flight"
+      ],
+      "forbidden": []
+    },
+    {
+      "id": "A15",
+      "category": "inference",
+      "question": "Can Gunnar safely eat hummus made with tahini?",
+      "required": [
+        "memory:h3:gunnar-sesame"
+      ],
+      "forbidden": []
+    },
+    {
+      "id": "A16",
+      "category": "inference",
+      "question": "In which country did Bertrand grow up?",
+      "required": [
+        "memory:h3:bertrand-lyon"
+      ],
+      "forbidden": []
+    },
+    {
+      "id": "A17",
+      "category": "inference",
+      "question": "Which seed does Gunnar need to keep out of his food?",
+      "required": [
+        "memory:h3:gunnar-sesame"
+      ],
+      "forbidden": []
+    },
+    {
+      "id": "A18",
+      "category": "competing_subject",
+      "question": "What is the number of Rosalind's gym locker?",
+      "required": [
+        "memory:h3:rosalind-locker"
+      ],
+      "forbidden": [
+        "memory:h3:bertrand-locker"
+      ]
+    },
+    {
+      "id": "A19",
+      "category": "competing_subject",
+      "question": "How does Lucan take his coffee?",
+      "required": [
+        "memory:h3:lucan-coffee"
+      ],
+      "forbidden": [
+        "memory:h3:kwame-coffee"
+      ]
+    },
+    {
+      "id": "A20",
+      "category": "competing_subject",
+      "question": "How does Kwame take his coffee?",
+      "required": [
+        "memory:h3:kwame-coffee"
+      ],
+      "forbidden": [
+        "memory:h3:lucan-coffee"
+      ]
+    },
+    {
+      "id": "A21",
+      "category": "superseded_corrected",
+      "question": "When is Azadeh's dentist appointment?",
+      "required": [
+        "memory:h3:azadeh-dentist"
+      ],
+      "forbidden": []
+    },
+    {
+      "id": "A22",
+      "category": "superseded_corrected",
+      "question": "When are Bertrand's library books due back?",
+      "required": [
+        "memory:h3:bertrand-library"
+      ],
+      "forbidden": []
+    },
+    {
+      "id": "A23",
+      "category": "superseded_rewritten",
+      "question": "What temperature is the thermostat in Lucan's flat set to?",
+      "required": [
+        "memory:h3:lucan-thermostat"
+      ],
+      "forbidden": []
+    },
+    {
+      "id": "A24",
+      "category": "superseded_rewritten",
+      "question": "Which book is Soledad's book club reading this month?",
+      "required": [
+        "memory:h3:soledad-bookclub"
+      ],
+      "forbidden": []
+    },
+    {
+      "id": "U01",
+      "category": "wrong_subject",
+      "question": "What instrument does Kwame play?",
+      "required": [],
+      "forbidden": [
+        "memory:h3:yusuf-cello"
+      ]
+    },
+    {
+      "id": "U02",
+      "category": "wrong_subject",
+      "question": "Which language is Lucan learning?",
+      "required": [],
+      "forbidden": [
+        "memory:h3:azadeh-portuguese"
+      ]
+    },
+    {
+      "id": "U03",
+      "category": "wrong_subject",
+      "question": "How does Rosalind take her coffee?",
+      "required": [],
+      "forbidden": [
+        "memory:h3:kwame-coffee",
+        "memory:h3:lucan-coffee"
+      ]
+    },
+    {
+      "id": "U04",
+      "category": "wrong_subject",
+      "question": "What food is Soledad allergic to?",
+      "required": [],
+      "forbidden": [
+        "memory:h3:gunnar-sesame"
+      ]
+    },
+    {
+      "id": "U05",
+      "category": "wrong_subject",
+      "question": "On what date does Bertrand fly to Reykjavik?",
+      "required": [],
+      "forbidden": [
+        "memory:h3:yusuf-flight"
+      ]
+    },
+    {
+      "id": "U06",
+      "category": "wrong_answer_type",
+      "question": "At what time of day does Thandiwe's pottery class start?",
+      "required": [],
+      "forbidden": [
+        "memory:h3:thandiwe-pottery"
+      ]
+    },
+    {
+      "id": "U07",
+      "category": "wrong_answer_type",
+      "question": "At what time of day does Yusuf's flight to Reykjavik take off?",
+      "required": [],
+      "forbidden": [
+        "memory:h3:yusuf-flight"
+      ]
+    },
+    {
+      "id": "U08",
+      "category": "wrong_answer_type",
+      "question": "What is the combination for Rosalind's gym locker?",
+      "required": [],
+      "forbidden": [
+        "memory:h3:rosalind-locker"
+      ]
+    },
+    {
+      "id": "U09",
+      "category": "wrong_answer_type",
+      "question": "At what time of day does Azadeh's Portuguese class begin?",
+      "required": [],
+      "forbidden": [
+        "memory:h3:azadeh-portuguese"
+      ]
+    },
+    {
+      "id": "U10",
+      "category": "related_non_answering",
+      "question": "What was Gunnar's finishing time in his last half marathon?",
+      "required": [],
+      "forbidden": [
+        "memory:h3:gunnar-race"
+      ]
+    },
+    {
+      "id": "U11",
+      "category": "related_non_answering",
+      "question": "How many musicians play in the Fenwick Community Orchestra?",
+      "required": [],
+      "forbidden": [
+        "memory:h3:fenwick-rehearsal"
+      ]
+    },
+    {
+      "id": "U12",
+      "category": "related_non_answering",
+      "question": "How many years has Kwame worked at the Tidewater Seed Bank?",
+      "required": [],
+      "forbidden": [
+        "memory:h3:kwame-job"
+      ]
+    },
+    {
+      "id": "U13",
+      "category": "related_non_answering",
+      "question": "How tall is Rosalind's fiddle-leaf fig?",
+      "required": [],
+      "forbidden": [
+        "memory:h3:rosalind-fig"
+      ]
+    },
+    {
+      "id": "U14",
+      "category": "forgotten",
+      "question": "What is the padlock code for the bike shed at Yusuf's building?",
+      "required": [],
+      "forbidden": [
+        "memory:h3:yusuf-bikeshed"
+      ]
+    },
+    {
+      "id": "U15",
+      "category": "forgotten",
+      "question": "What is Thandiwe's home alarm PIN?",
+      "required": [],
+      "forbidden": [
+        "memory:h3:thandiwe-alarm"
+      ]
+    },
+    {
+      "id": "U16",
+      "category": "absent",
+      "question": "What is Gunnar's favourite film?",
+      "required": [],
+      "forbidden": []
+    },
+    {
+      "id": "U17",
+      "category": "absent",
+      "question": "Which university did Lucan attend?",
+      "required": [],
+      "forbidden": []
+    },
+    {
+      "id": "U18",
+      "category": "absent",
+      "question": "What is the name of Rosalind's landlord?",
+      "required": [],
+      "forbidden": []
+    },
+    {
+      "id": "U19",
+      "category": "cross_memory_trap",
+      "question": "What time does the place where Kwame works open in the morning?",
+      "required": [],
+      "forbidden": [
+        "memory:h3:kwame-job",
+        "memory:h3:tidewater-address"
+      ]
+    },
+    {
+      "id": "U20",
+      "category": "cross_memory_trap",
+      "question": "What is the phone number of the vet Thandiwe's dog is registered with?",
+      "required": [],
+      "forbidden": [
+        "memory:h3:thandiwe-dog",
+        "memory:h3:marlowe-vet"
+      ]
+    },
+    {
+      "id": "U21",
+      "category": "cross_memory_trap",
+      "question": "Which university does Azadeh's younger sister attend?",
+      "required": [],
+      "forbidden": [
+        "memory:h3:azadeh-sister",
+        "memory:h3:nilufar-move"
+      ]
+    },
+    {
+      "id": "U22",
+      "category": "cross_memory_trap",
+      "question": "On which floor is Lucan's own desk?",
+      "required": [],
+      "forbidden": [
+        "memory:h3:lucan-manager",
+        "memory:h3:ingrid-office"
+      ]
+    },
+    {
+      "id": "U23",
+      "category": "cross_memory_trap",
+      "question": "Which hospital does Soledad's cousin work for?",
+      "required": [],
+      "forbidden": [
+        "memory:h3:soledad-flatmate",
+        "memory:h3:dmitri-job"
+      ]
+    },
+    {
+      "id": "U24",
+      "category": "cross_memory_trap",
+      "question": "What is the name of the mechanic repairing Gunnar's car?",
+      "required": [],
+      "forbidden": [
+        "memory:h3:gunnar-car",
+        "memory:h3:kestrel-hours"
+      ]
+    }
+  ]
+}
