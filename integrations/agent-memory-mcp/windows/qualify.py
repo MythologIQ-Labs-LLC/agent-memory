@@ -165,7 +165,7 @@ def main() -> int:
         steps["isolated_claude_config_contained"] = {
             "passed": not config_dir or (
                 "isolated" in cfg_baseline and
-                pf.overlaps(config_dir, dev) and
+                pf.is_strict_child(config_dir, dev) and
                 not pf.overlaps(config_dir, Path.home() / ".claude")
             ),
             "changed": bool(config_dir and now_cfg["isolated"] != cfg_baseline.get("isolated")),
