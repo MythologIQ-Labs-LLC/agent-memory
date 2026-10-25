@@ -35,7 +35,9 @@ or elevation.
          --dev-dir D:\am-win-dev --claude-config-dir D:\am-win-dev\claude-config [--stable-path <stable install or data>]
 
    It checks all ten required properties and writes `preflight.json`. **Any FAIL is NO-GO: stop
-   there and report the failing property.**
+   there and report the failing property.** Unknown Windows integrity level is a failure, not
+   proof of a non-elevated shell. The preflight snapshots the default Claude configuration even
+   when `--claude-config-dir` is set, then checks it did not change during the CLI probe.
 
 ## W2 + W3: runtime qualification and real-agent pilot
 
@@ -53,6 +55,9 @@ For each Python version, the runner does the following:
    - the 16-session real-agent pilot.
 3. Re-checks the preflight baseline. The base interpreters' packages, the user and machine
    environment variables, and the default Claude Code configuration must all be unchanged.
+   Isolated Claude configuration changes inside the development directory are recorded, not
+   treated as changes to the stable installation. Older preflight reports lacking the default
+   configuration baseline do not qualify.
 
 The support-model variable is never set. No Stage C code path is enabled.
 
