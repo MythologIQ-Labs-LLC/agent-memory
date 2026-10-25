@@ -1,0 +1,201 @@
+{
+ "run1-e3b3af65": {
+  "head": "e3b3af65",
+  "agent": {
+   "harness": "Claude Code non-interactive (claude -p)",
+   "version": "2.1.310 (Claude Code)",
+   "models": [
+    "claude-sonnet-5-5"
+   ],
+   "flags": "--tools '' --strict-mcp-config --allowedTools <five memory tools> --append-system-prompt <evidence contract> --no-session-persistence --setting-sources project"
+  },
+  "sessions": 16,
+  "sessions_all_checks_passed": 16,
+  "display_withheld": {
+   "S15": [
+    "absence_claim"
+   ],
+   "S16": [
+    "uncited_key"
+   ]
+  },
+  "tool_calls": 19,
+  "tool_errors": {
+   "S15": 2
+  },
+  "lifecycle_receipts": {
+   "S08": [
+    [
+     "memory_correct",
+     "corrected",
+     "correction",
+     "ref-0676"
+    ]
+   ],
+   "S10": [
+    [
+     "memory_forget",
+     "forgotten",
+     "pruning",
+     "ref-0823"
+    ]
+   ],
+   "S12": [
+    [
+     "memory_forget",
+     "host_authorization_required",
+     null,
+     null
+    ]
+   ],
+   "S13": [
+    [
+     "memory_correct",
+     "host_authorization_required",
+     null,
+     null
+    ]
+   ]
+  },
+  "tools_available_every_session": [
+   "mcp__agent-memory__memory_correct",
+   "mcp__agent-memory__memory_find",
+   "mcp__agent-memory__memory_forget",
+   "mcp__agent-memory__memory_get",
+   "mcp__agent-memory__memory_remember"
+  ],
+  "cost_usd": 0.22,
+  "elapsed_s_median": 7.8
+ },
+ "run2-3d986520": {
+  "head": "3d986520",
+  "agent": {
+   "harness": "Claude Code non-interactive (claude -p)",
+   "version": "2.1.310 (Claude Code)",
+   "models": [
+    "claude-sonnet-5-5"
+   ],
+   "flags": "--tools '' --strict-mcp-config --allowedTools <five memory tools> --append-system-prompt <evidence contract> --no-session-persistence --setting-sources project"
+  },
+  "sessions": 16,
+  "sessions_all_checks_passed": 16,
+  "display_withheld": {
+   "S16": [
+    "unsourced_quote"
+   ]
+  },
+  "tool_calls": 20,
+  "tool_errors": {
+   "S15": 2,
+   "S16": 1
+  },
+  "lifecycle_receipts": {
+   "S08": [
+    [
+     "memory_correct",
+     "corrected",
+     "correction",
+     "ref-0673"
+    ]
+   ],
+   "S10": [
+    [
+     "memory_forget",
+     "forgotten",
+     "pruning",
+     "ref-0820"
+    ]
+   ],
+   "S12": [
+    [
+     "memory_forget",
+     "host_authorization_required",
+     null,
+     null
+    ]
+   ],
+   "S13": [
+    [
+     "memory_correct",
+     "host_authorization_required",
+     null,
+     null
+    ]
+   ]
+  },
+  "tools_available_every_session": [
+   "mcp__agent-memory__memory_correct",
+   "mcp__agent-memory__memory_find",
+   "mcp__agent-memory__memory_forget",
+   "mcp__agent-memory__memory_get",
+   "mcp__agent-memory__memory_remember"
+  ],
+  "cost_usd": 0.2,
+  "elapsed_s_median": 7.9
+ },
+ "run3-b9cfa1e9": {
+  "head": "b9cfa1e9",
+  "agent": {
+   "harness": "Claude Code non-interactive (claude -p)",
+   "version": "2.1.310 (Claude Code)",
+   "models": [
+    "claude-sonnet-5-5"
+   ],
+   "flags": "--tools '' --strict-mcp-config --allowedTools <five memory tools> --append-system-prompt <evidence contract> --no-session-persistence --setting-sources project"
+  },
+  "sessions": 16,
+  "sessions_all_checks_passed": 16,
+  "display_withheld": {
+   "S11": [
+    "unsourced_quote"
+   ]
+  },
+  "tool_calls": 19,
+  "tool_errors": {
+   "S15": 2
+  },
+  "lifecycle_receipts": {
+   "S08": [
+    [
+     "memory_correct",
+     "corrected",
+     "correction",
+     "ref-0682"
+    ]
+   ],
+   "S10": [
+    [
+     "memory_forget",
+     "forgotten",
+     "pruning",
+     "ref-0829"
+    ]
+   ],
+   "S12": [
+    [
+     "memory_forget",
+     "host_authorization_required",
+     null,
+     null
+    ]
+   ],
+   "S13": [
+    [
+     "memory_correct",
+     "host_authorization_required",
+     null,
+     null
+    ]
+   ]
+  },
+  "tools_available_every_session": [
+   "mcp__agent-memory__memory_correct",
+   "mcp__agent-memory__memory_find",
+   "mcp__agent-memory__memory_forget",
+   "mcp__agent-memory__memory_get",
+   "mcp__agent-memory__memory_remember"
+  ],
+  "cost_usd": 0.2,
+  "elapsed_s_median": 7.3
+ }
+}

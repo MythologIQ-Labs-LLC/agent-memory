@@ -1,0 +1,53 @@
+{
+  "branch": "product/mcp-ab-agent-pilot-no-ci",
+  "base": "93766a6253ca2c70192515336d65a9904b4753ca",
+  "python": "3.13.16",
+  "platform": "Linux-6.18.44-fc-v153-x86_64-with-glibc2.39",
+  "install": [
+    "python -m venv venv",
+    "pip install -e . \"mcp==2.3.0\"   (no semantic extra; onnxruntime/tokenizers absent)"
+  ],
+  "pip_freeze": [
+    "annotated-types==0.8.0",
+    "anyio==4.15.1",
+    "attrs==26.1.0",
+    "cffi==2.1.1",
+    "click==8.5.0",
+    "cryptography==50.0.2",
+    "h11==0.16.0",
+    "httpcore2==2.16.0",
+    "httpx2==2.16.0",
+    "idna==3.20",
+    "jsonschema==4.26.0",
+    "jsonschema-specifications==2025.9.1",
+    "mcp==2.3.0",
+    "mcp-types==2.3.0",
+    "opentelemetry-api==1.45.1",
+    "pycparser==3.12",
+    "pydantic==2.14.1",
+    "pydantic_core==2.50.1",
+    "PyJWT==2.15.1",
+    "python-multipart==0.0.32",
+    "referencing==0.37.0",
+    "rfc8785==0.1.4",
+    "rpds-py==2026.9.1",
+    "sse-starlette==3.5.1",
+    "starlette==1.10.0",
+    "truststore==0.10.5",
+    "typing-inspection==0.4.4",
+    "typing_extensions==4.16.0",
+    "uvicorn==0.54.0"
+  ],
+  "agent": {
+    "cli": "2.1.310 (Claude Code)",
+    "model_reported_by_cli": "claude-sonnet-5-5",
+    "connection": "Claude Code cloud container; model access managed by the host (apiKeySource none); no API key in the harness",
+    "flags": "--tools '' --strict-mcp-config --allowedTools <five memory tools> --append-system-prompt <evidence contract> --no-session-persistence --setting-sources project"
+  },
+  "external_dependencies": [
+    "Claude Code CLI (claude -p) and its managed model connection",
+    "official MCP Python SDK 2.3.0"
+  ],
+  "store": "new private 0700 directory per run under the pilot work dir, bridge path preflight passed; removed after the run",
+  "redaction": "local paths -> <RUN>/<REPO>/<VENV>/<HOME>/<TMP>; stream receipts keep assistant/user/result events and a minimal init"
+}
