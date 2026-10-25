@@ -99,9 +99,24 @@ def overlaps(a: Path, b: Path) -> bool:
     return a == b or a in b.parents or b in a.parents
 
 
-def elevated() -> bool:
+def elevated() -> bool | None:
+    """Return None if the integrity level cannot be verified (fail closed)."""
     code, out = run(["whoami", "/groups"])
-    return code == 0 and "S-1-16-12288" in out  # High Mandatory Level
+    if code != 0:
+        return None
+    # Mandatory integrity SIDs: medium 8192, high 12288, system 16384.
+    levels = [int(x) for x in re.findall(r"S-1-16-(\\d+)", out)]
+    if not levels:
+        return None
+    return max(levels) >= 12288
+
+
+def config_snapshot(config_dir: Path | None) -> dict[str, dict[str, str | None]]:
+    """Always baseline the default Claude files, even with isolated config."""
+    return {
+        "default": {str(f): sha256_or_none(f) for f in claude_config_files(None)},
+        "isolated": {str(f): sha256_or_none(f) for f in claude_config_files(config_dir)} if config_dir else {},
+    }
 
 
 def main() -> int:
@@ -190,7 +205,8 @@ def main() -> int:
     finally:
         run(["cmd", "/c", "rmdir", "/s", "/q", str(probe)])
     check(7, "non-elevated user; private ACLs can be set and verified in the dev dir",
-          not is_elevated and acl_ok, {"elevated": is_elevated, "user_sid_known": bool(acl_ok), "acl_error": acl_detail})
+          is_elevated is False and acl_ok, {"elevated": is_elevated, "integrity_level_verified": is_elevated is not None,
+                                         "user_sid_known": bool(acl_ok), "acl_error": acl_detail})
     # 8. Junction redirection cannot escape the test boundary
     box = dev / "preflight-junction"
     escape_refused, written_behind = False, None
@@ -220,8 +236,7 @@ def main() -> int:
     # 10. Claude Code CLI runs without modifying another installation's configuration
     cli = shutil.which("claude")
     config_dir = options.claude_config_dir
-    files = claude_config_files(config_dir)
-    before = {str(f): sha256_or_none(f) for f in files}
+    before = config_snapshot(config_dir)
     env = dict(os.environ)
     if config_dir:
         env["CLAUDE_CONFIG_DIR"] = str(config_dir)
@@ -230,12 +245,12 @@ def main() -> int:
                                  "--setting-sources", "project", "--output-format", "json"], env=env, timeout=300,
                                 stdin="Reply with the single word: ready")
                              if cli else (-1, "claude not found"))
-    after = {str(f): sha256_or_none(f) for f in files}
-    default_untouched = config_dir is not None or before == after
+    after = config_snapshot(config_dir)
+    default_untouched = before["default"] == after["default"]
     check(10, "Claude Code CLI available and another installation's configuration untouched",
           bool(cli) and probe_code == 0 and default_untouched,
           {"cli_found": bool(cli), "version": version, "probe_exit": probe_code,
-           "isolated_config_dir": bool(config_dir), "default_config_changed": None if config_dir else before != after,
+           "isolated_config_dir": bool(config_dir), "default_config_changed": not default_untouched,
            "advice": None if default_untouched else "use --claude-config-dir and log in there once"})
 
     decision = "GO" if all(c["result"] == "PASS" for c in checks) else "NO-GO"
