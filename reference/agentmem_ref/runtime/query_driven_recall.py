@@ -148,6 +148,12 @@ class DeterministicQueryDrivenRecallPlanner:
             current = self.adapter.current_fact_uuid(logical_ref)
             if current is None:
                 continue
+            # A caller-supplied identity is not authority to traverse its graph.
+            # Do not let an ineligible seed expand into neighbor candidates;
+            # final canonical admission remains the authority for results.
+            seed_fact = substrate.get_fact(current)
+            if seed_fact is None or not self.adapter.domain_eligible(seed_fact, context):
+                continue
             hits.append(
                 RetrievalRouteHit(
                     route_id=EXACT_IDENTITY_ROUTE,
