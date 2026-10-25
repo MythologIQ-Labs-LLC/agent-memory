@@ -86,6 +86,17 @@ class TranscriptTests(unittest.TestCase):
                                                  "body": {"lookup_status": "found"}, "raw": None}])
         self.assertEqual(record["final_text"], "Final.")
 
+    def test_stream_receipts_keep_only_the_conversation_and_a_minimal_init(self):
+        events = [{"type": "system", "subtype": "init", "model": "m", "tools": ["t"], "scratchpad_path": "/tmp/x",
+                   "messaging_socket_path": "/tmp/cc-socks/1.sock", "plugins": [{"name": "p"}]},
+                  {"type": "rate_limit_event", "x": 1}, {"type": "assistant", "message": {}},
+                  {"type": "system", "subtype": "post_turn_summary"}, {"type": "result", "result": "r"}]
+        kept = pilot.conversation_events(events)
+        self.assertEqual([e["type"] for e in kept], ["system", "assistant", "result"])
+        self.assertNotIn("scratchpad_path", kept[0])
+        self.assertNotIn("plugins", kept[0])
+        self.assertEqual(pilot.redact({"s": "/tmp/cc-socks/1.sock"}, Path("/nowhere")), {"s": "<TMP>"})
+
     def test_receipts_are_redacted(self):
         run = Path("/tmp/pilot-run-x")
         self.assertEqual(pilot.redact({"p": "/tmp/pilot-run-x/store/root", "h": str(Path.home()) + "/x"}, run),

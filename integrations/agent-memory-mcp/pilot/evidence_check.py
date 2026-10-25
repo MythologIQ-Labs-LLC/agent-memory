@@ -20,7 +20,8 @@ import re
 from typing import Iterable
 
 KEY = re.compile(r"memory:[A-Za-z0-9_.:-]*[A-Za-z0-9_]")
-QUOTE = re.compile(r"\"([^\"\n]{12,})\"")
+# Quotes pair left to right; spans shorter than 12 characters are paired but not checked.
+QUOTE = re.compile(r"\"([^\"\n]*)\"")
 # "confirmed" is left out: agents use it for a tool's commit result ("the save was confirmed").
 VERIFY = re.compile(
     r"(?<!not )(?<!never )(?<!n't )\b(?:verified|validated)\b[^.\n]{0,40}\b(?:by|in|through)\s+(?:the\s+)?"
@@ -53,7 +54,7 @@ def check(final_text: str, *, delivered_contents: Iterable[str], delivered_keys:
         flags.append({"flag": "uncited_key", "detail": key})
     for quoted in QUOTE.findall(text):
         q = quoted.strip()
-        if not any(q in c for c in contents) and q not in named_text:
+        if len(q) >= 12 and not any(q in c for c in contents) and q not in named_text:
             flags.append({"flag": "unsourced_quote", "detail": q[:120]})
     for pattern, name in ((VERIFY, "verification_claim"), (VERIFY_SUBJECT, "verification_claim"), (ABSENCE, "absence_claim")):
         for match in pattern.finditer(text):

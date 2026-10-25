@@ -216,12 +216,29 @@ def evaluate(check: dict, calls: list[dict], evidence: list[dict], before: dict,
     raise ValueError(f"unknown check {check}")
 
 
+CONVERSATION = ("assistant", "user", "result")
+INIT_FIELDS = ("type", "subtype", "model", "tools", "mcp_servers", "claude_code_version", "permissionMode", "apiKeySource")
+
+
+def conversation_events(events: list[dict]) -> list[dict]:
+    """What a stream receipt keeps: the conversation, the result, and a minimal init (no local
+    environment: sockets, scratchpad, installed skills or plugins, rate limits)."""
+    kept = []
+    for event in events:
+        if event.get("type") == "system" and event.get("subtype") == "init":
+            kept.append({k: event.get(k) for k in INIT_FIELDS})
+        elif event.get("type") in CONVERSATION:
+            kept.append(event)
+    return kept
+
+
 def redact(value, run: Path):
     """Local paths become labels; a path is matched only where one starts, not inside another."""
     text = json.dumps(value)
     for path, label in ((str(run), "<RUN>"), (str(MCP_DIR.parents[1]), "<REPO>"), (sys.prefix, "<VENV>"),
                         (str(Path.home()), "<HOME>")):
         text = re.sub(r"(?<![\w./-])" + re.escape(path) + r"(?![\w.-])", label, text)
+    text = re.sub(r"(?<![\w./-])/tmp/[^\"\s]*", "<TMP>", text)
     return json.loads(text)
 
 
@@ -256,7 +273,7 @@ async def main_async(run: Path, out: Path, only: set[str] | None, scenario_path:
         receipt = redact(receipt, run)
         (out / f"{session['id']}.json").write_text(json.dumps(receipt, indent=1) + "\n", encoding="utf-8")
         (out / f"{session['id']}.stream.jsonl").write_text(
-            "\n".join(json.dumps(redact(e, run)) for e in events) + "\n", encoding="utf-8")
+            "\n".join(json.dumps(redact(e, run)) for e in conversation_events(events)) + "\n", encoding="utf-8")
         rows.append({"id": session["id"], "workflow": session["workflow"], "checks_passed": all(c["passed"] for c in checks),
                      "failed_checks": [c["check"] for c in checks if not c["passed"]],
                      "host_check_flags": sorted({f["flag"] for f in flags}),

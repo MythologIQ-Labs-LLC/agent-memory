@@ -1,0 +1,16 @@
+{"id": "S01", "workflow": 1, "checks_passed": true, "failed_checks": [], "host_check_flags": [], "tools": ["memory_remember", "memory_get"], "model": "claude-sonnet-5-5"}
+{"id": "S02", "workflow": 2, "checks_passed": true, "failed_checks": [], "host_check_flags": [], "tools": ["memory_get"], "model": "claude-sonnet-5-5"}
+{"id": "S03", "workflow": 3, "checks_passed": true, "failed_checks": [], "host_check_flags": [], "tools": ["memory_find"], "model": "claude-sonnet-5-5"}
+{"id": "S04", "workflow": 4, "checks_passed": true, "failed_checks": [], "host_check_flags": [], "tools": ["memory_find"], "model": "claude-sonnet-5-5"}
+{"id": "S05", "workflow": 5, "checks_passed": true, "failed_checks": [], "host_check_flags": [], "tools": ["memory_find"], "model": "claude-sonnet-5-5"}
+{"id": "S06", "workflow": 6, "checks_passed": true, "failed_checks": [], "host_check_flags": [], "tools": ["memory_find", "memory_find"], "model": "claude-sonnet-5-5"}
+{"id": "S07", "workflow": 7, "checks_passed": true, "failed_checks": [], "host_check_flags": [], "tools": ["memory_find"], "model": "claude-sonnet-5-5"}
+{"id": "S08", "workflow": 7, "checks_passed": true, "failed_checks": [], "host_check_flags": [], "tools": ["memory_correct"], "model": "claude-sonnet-5-5"}
+{"id": "S09", "workflow": 7, "checks_passed": true, "failed_checks": [], "host_check_flags": [], "tools": ["memory_find"], "model": "claude-sonnet-5-5"}
+{"id": "S10", "workflow": 8, "checks_passed": true, "failed_checks": [], "host_check_flags": [], "tools": ["memory_forget"], "model": "claude-sonnet-5-5"}
+{"id": "S11", "workflow": 8, "checks_passed": true, "failed_checks": [], "host_check_flags": [], "tools": ["memory_find"], "model": "claude-sonnet-5-5"}
+{"id": "S12", "workflow": 9, "checks_passed": true, "failed_checks": [], "host_check_flags": [], "tools": ["memory_forget"], "model": "claude-sonnet-5-5"}
+{"id": "S13", "workflow": 10, "checks_passed": true, "failed_checks": [], "host_check_flags": [], "tools": ["memory_correct"], "model": "claude-sonnet-5-5"}
+{"id": "S14", "workflow": 11, "checks_passed": true, "failed_checks": [], "host_check_flags": [], "tools": ["memory_find"], "model": "claude-sonnet-5-5"}
+{"id": "S15", "workflow": 11, "checks_passed": true, "failed_checks": [], "host_check_flags": [], "tools": ["memory_find", "memory_find"], "model": "claude-sonnet-5-5"}
+{"id": "S16", "workflow": 12, "checks_passed": true, "failed_checks": [], "host_check_flags": ["unsourced_quote"], "tools": ["memory_find", "memory_find"], "model": "claude-sonnet-5-5"}
