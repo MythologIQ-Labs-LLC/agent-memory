@@ -174,6 +174,7 @@ class DeterministicQueryDrivenRecallPlanner:
                     substrate,
                     tenant,
                     hits,
+                    context=context,
                     seed_ref=seed_ref,
                     logical_memory_ref=logical_ref,
                     expanded_seeds=expanded_seeds,
@@ -196,6 +197,7 @@ class DeterministicQueryDrivenRecallPlanner:
                     substrate,
                     tenant,
                     hits,
+                    context=context,
                     seed_ref=fact.uuid,
                     logical_memory_ref="",
                     expanded_seeds=expanded_seeds,
@@ -253,6 +255,7 @@ class DeterministicQueryDrivenRecallPlanner:
         tenant: str,
         hits: list[RetrievalRouteHit],
         *,
+        context: RecallContext,
         seed_ref: str,
         logical_memory_ref: str,
         expanded_seeds: set[str],
@@ -260,7 +263,12 @@ class DeterministicQueryDrivenRecallPlanner:
         if seed_ref in expanded_seeds:
             return
         seed_fact = substrate.get_fact(seed_ref)
-        if seed_fact is None or seed_fact.is_event_invalid or seed_fact.is_transaction_expired:
+        if (
+            seed_fact is None
+            or seed_fact.is_event_invalid
+            or seed_fact.is_transaction_expired
+            or not self.adapter.domain_eligible(seed_fact, context)
+        ):
             return
         expanded_seeds.add(seed_ref)
         for fact, shared_refs, score in substrate.evidence_neighbors(
