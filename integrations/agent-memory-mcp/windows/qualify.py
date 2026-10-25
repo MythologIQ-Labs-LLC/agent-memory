@@ -153,9 +153,18 @@ def main() -> int:
         steps["base_interpreters_unchanged"] = {"passed": now_pip == base["pip_freeze_sha256"]}
         steps["user_and_machine_environment_unchanged"] = {
             "passed": pf.environment_digest(pf.registry_environment()) == base["registry_environment_sha256"]}
-        if config_dir is None:
-            now_cfg = {str(f): pf.sha256_or_none(f) for f in pf.claude_config_files(None)}
-            steps["default_claude_config_unchanged"] = {"passed": now_cfg == base["claude_config_sha256"]}
+        now_cfg = pf.config_snapshot(config_dir)
+        # A legacy preflight without both baselines is not sufficient evidence.
+        cfg_baseline = base.get("claude_config_sha256", {})
+        steps["default_claude_config_unchanged"] = {
+            "passed": isinstance(cfg_baseline, dict) and
+                      "default" in cfg_baseline and now_cfg["default"] == cfg_baseline["default"]
+        }
+        steps["isolated_claude_config_unchanged"] = {
+            "passed": not config_dir or (
+                "isolated" in cfg_baseline and now_cfg["isolated"] == cfg_baseline["isolated"]
+            )
+        }
         decision = "GO" if steps and all(s["passed"] for s in steps.values()) else "NO-GO"
         results[version] = {"decision": decision, "failed_steps": [k for k, s in steps.items() if not s["passed"]]}
         (out / "summary.json").write_text(redact_text(json.dumps({
