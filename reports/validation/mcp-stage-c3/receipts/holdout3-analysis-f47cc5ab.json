@@ -1,0 +1,180 @@
+{
+ "arms": {
+  "answerability-subject-grounded/1.0.0": {
+   "cross_memory_answerable_not_abstained": 7,
+   "cross_memory_answered_by_anchor_alone": [
+    "A01",
+    "A02",
+    "A05"
+   ],
+   "cross_memory_candidates_with_both_required_facts": [],
+   "false_abstentions": {
+    "A15": "inference"
+   },
+   "false_sufficiency_by_category": {
+    "cross_memory_trap": [
+     "U19",
+     "U20",
+     "U24"
+    ],
+    "wrong_answer_type": [
+     "U06",
+     "U07",
+     "U08"
+    ],
+    "wrong_subject": [
+     "U02",
+     "U03",
+     "U05"
+    ]
+   },
+   "latency_ms": {
+    "first_call": 2974.9,
+    "later_max": 443.9,
+    "later_median": 361.3
+   },
+   "meets_criterion": false,
+   "unanswerable_abstained": "15/24"
+  },
+  "answerability-subject-grounded/1.1.0": {
+   "cross_memory_answerable_not_abstained": 7,
+   "cross_memory_answered_by_anchor_alone": [
+    "A01",
+    "A02",
+    "A05"
+   ],
+   "cross_memory_candidates_with_both_required_facts": [
+    "A03",
+    "A04",
+    "A06",
+    "A07"
+   ],
+   "false_abstentions": {
+    "A15": "inference",
+    "A17": "inference"
+   },
+   "false_sufficiency_by_category": {
+    "cross_memory_trap": [
+     "U20",
+     "U24"
+    ],
+    "wrong_answer_type": [
+     "U06",
+     "U07",
+     "U08"
+    ]
+   },
+   "latency_ms": {
+    "first_call": 2169.1,
+    "later_max": 469.0,
+    "later_median": 366.5
+   },
+   "meets_criterion": false,
+   "unanswerable_abstained": "19/24"
+  },
+  "extractive-qa-null-comparison/1.0.0": {
+   "cross_memory_answerable_not_abstained": 6,
+   "cross_memory_answered_by_anchor_alone": [
+    "A01",
+    "A03",
+    "A04",
+    "A07"
+   ],
+   "cross_memory_candidates_with_both_required_facts": [],
+   "false_abstentions": {
+    "A05": "cross_memory"
+   },
+   "false_sufficiency_by_category": {
+    "cross_memory_trap": [
+     "U19",
+     "U20",
+     "U24"
+    ],
+    "wrong_answer_type": [
+     "U06",
+     "U07",
+     "U08",
+     "U09"
+    ],
+    "wrong_subject": [
+     "U05"
+    ]
+   },
+   "latency_ms": {
+    "first_call": 4944.2,
+    "later_max": 481.7,
+    "later_median": 322.2
+   },
+   "meets_criterion": false,
+   "unanswerable_abstained": "16/24"
+  },
+  "support_check_disabled": {
+   "cross_memory_answerable_not_abstained": 7,
+   "cross_memory_answered_by_anchor_alone": [],
+   "cross_memory_candidates_with_both_required_facts": [],
+   "false_abstentions": {},
+   "false_sufficiency_by_category": {
+    "absent": [
+     "U16",
+     "U17",
+     "U18"
+    ],
+    "cross_memory_trap": [
+     "U19",
+     "U20",
+     "U21",
+     "U22",
+     "U23",
+     "U24"
+    ],
+    "forgotten": [
+     "U14",
+     "U15"
+    ],
+    "related_non_answering": [
+     "U10",
+     "U11",
+     "U12",
+     "U13"
+    ],
+    "wrong_answer_type": [
+     "U06",
+     "U07",
+     "U08",
+     "U09"
+    ],
+    "wrong_subject": [
+     "U01",
+     "U02",
+     "U03",
+     "U04",
+     "U05"
+    ]
+   },
+   "latency_ms": {
+    "first_call": 143.4,
+    "later_max": 73.9,
+    "later_median": 39.4
+   },
+   "meets_criterion": false,
+   "unanswerable_abstained": "0/24"
+  }
+ },
+ "criterion": {
+  "false_abstentions": 0,
+  "min_unanswerable_abstained": 18
+ },
+ "delivered_evidence_identical_across_arms": true,
+ "notes": [
+  "A15 and A17 are single-memory inference questions (yes/no and a world-knowledge step); the QNLI classifier says the memory does not answer them, so 1.1.0 abstains.",
+  "In 3 of the 7 cross_memory tasks 1.1.0 counts the anchor memory alone as support although it does not contain the answer: the tasks are not abstained, but that support is misattributed.",
+  "The evaluator reported that only 1 of 6 cross_memory_trap tasks delivers both linked memories, so the traps test the bounded pair rule weakly."
+ ],
+ "qualified_arm": "answerability-subject-grounded/1.1.0",
+ "result": "BLOCKED",
+ "retrieval": {
+  "answerable_required_delivered": "24/24",
+  "retrieval_misses": []
+ },
+ "status": "qualification run on the evaluator-frozen holdout 3 (51eb49b9) at f47cc5ab; this per-category breakdown was produced after the run"
+}

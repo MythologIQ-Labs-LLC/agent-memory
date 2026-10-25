@@ -125,6 +125,7 @@ memories for almost any question.
 | `insufficient_evidence` / `no_answer_span_in_current_evidence` | original method: no answer span in any current, complete item, alone or together |
 | `insufficient_evidence` / `no_supported_answer_in_current_evidence` | successor method: no current, complete item (or all of them together) both names the question's subjects and answers it |
 | `unverified` / `answer_span_candidate_not_verified`, `supported_answer_candidate_not_verified` | support found; **not** verification |
+| `unverified` / `cross_memory_relationship_not_established` | 1.1.0 only: no single memory supports an answer, but a memory naming the question's subject and another sharing a name with it are listed under `cross_memory_candidates`; the relationship between them is unresolved |
 | `unverified` / `answer_entailment_not_checked` | the host has not enabled a check (the previous behavior) |
 | `unverified` / `answer_support_check_unavailable` | enabled but the model failed to load or run; nothing is claimed either way |
 
@@ -149,6 +150,18 @@ Both methods:
   - answerability (`cross-encoder/qnli-electra-base`): the item answers the question when the
     model's logit is above 0. No extractable span is needed;
   - support means both, for one item or for all current items read together.
+- `answerability-subject-grounded/1.1.0` (cycle 3, experimental). This is the default for the
+  answerability model directory; the host can pin `1.0.0` with
+  `AGENT_MEMORY_MCP_SUPPORT_METHOD`. It changes three things:
+  - **Support is admitted per memory only.** Subject applicability and answerability must hold
+    for the same memory.
+  - **Joined text no longer grants support.** The classifier still reads all memories together,
+    but only to report the unadmitted diagnostic `joint_answering_unadmitted`.
+  - **Distributed answers are not called absent.** Without a supported memory, the check looks
+    for an anchor: a memory naming every question subject (the question must name at least
+    one). The anchor plus a delivered memory sharing a mid-sentence name with it become a
+    `cross_memory_candidates` entry, listing both fact refs and the shared names, and the
+    assessment is `unverified`. No classifier judges the pair.
 
 Fetch and enable:
 
@@ -181,29 +194,50 @@ Receipts:
 - `reports/validation/mcp-stage-c/`: the original method;
 - `reports/validation/mcp-stage-c2/`: the successor.
 
-**Stage C remains BLOCKED (NO-GO).** The second held-out cohort
-(`quality_cases_holdout2.json`) was frozen before the successor was designed. The successor was
-then frozen and run once.
+**Stage C remains BLOCKED (NO-GO), and Stage C model experiments have stopped.** No method
+has met the criterion on an independent holdout.
 
-| Arm | False abstentions | Unanswerable abstained (needs 15) |
-|---|---|---|
-| Disabled | 0 | 0/20 |
-| Original | 0 | 14/20 |
-| Successor | 0 | **9/20** |
+- **Holdout 2** (`quality_cases_holdout2.json`): frozen before cycle 2.
 
-In every arm, 18 of 20 answerable questions had their required memories delivered (A02 and A08
-are retrieval misses). Every arm was stable across restart, and the delivered evidence was
-identical in all of them.
+  | Arm | False abstentions | Unanswerable abstained (needs 15) |
+  |---|---|---|
+  | Disabled | 0 | 0/20 |
+  | Original | 0 | 14/20 |
+  | Cycle 2 | 0 | 9/20 |
 
-Post-hoc analysis, not qualification:
-- 7 of the successor's 11 misses came only from reading all five memories together. The
-  classifier is trained on single sentences, and a name found anywhere in the joined text does
-  not tie the answer to that name.
-- The other misses, and 4 of the original's 6, are memories that answer a related question
-  with the wrong kind of value: a model name for a serial number, "by text message" for a phone
-  number, "the fifth of the month" for a time of day.
-- Neither method checks the expected answer type. Holdout 1 was used for failure analysis and
-  is development data now.
+  Cycle 2 missed because reading five memories together granted support.
+- **Holdout 3** (`quality_cases_holdout3.json`): authored and frozen by a separate evaluator
+  before cycle 3 was tested. All 24 answerable tasks had their required memories delivered.
+  Delivered evidence was identical in every arm, and every arm was stable across restart.
+
+  | Arm | False abstentions | Unanswerable abstained (needs 18) |
+  |---|---|---|
+  | Disabled | 0 | 0/24 |
+  | Original | 1 | 16/24 |
+  | Cycle 2 | 1 | 15/24 |
+  | Cycle 3 | **2** | **19/24** |
+
+  - Cycle 3's false abstentions are single-memory inference questions that need world
+    knowledge (tahini contains sesame; sesame is a seed).
+  - Its remaining misses are wrong answer types and two cross-memory traps.
+  - It falsely abstained on none of the 7 cross-memory questions. Four were correctly
+    attributed candidates. Three were "supported" by the anchor memory alone, although that
+    memory does not contain the answer.
+
+Holdouts 1 and 2 are development data now. Cohorts are small and author-written; the holdout-3
+evaluator is the same model family on the same machine.
+
+**Recommended internal-alpha configuration (Stage A/B qualified functionality only):**
+- Run the five tools on a trusted single-user host, with Linux, test data and a private store.
+- Leave the answer-support check **disabled** (no `AGENT_MEMORY_MCP_SUPPORT_MODEL_DIR`).
+  `memory_find` then reports `insufficient_evidence` only for missing, incomplete or stale-only
+  evidence, and `unverified` otherwise.
+- The agent must treat delivered memory as untrusted evidence and must not read `unverified`
+  as an answer. Abstention on populated stores stays the agent's and the user's
+  responsibility.
+- Enable `memory_forget` and `memory_correct` only through host-held grants and records, one at
+  a time.
+- The support methods stay in the tree as opt-in experiments for diagnosis only.
 
 ## Internal alpha lifecycle slice: reversible, host-bound forgetting
 

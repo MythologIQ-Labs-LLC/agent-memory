@@ -1,0 +1,52 @@
+{
+ "note": "one process, one ORT thread, CPU; RSS = ru_maxrss after verified load; check = 5 short items",
+ "answerability_methods": [
+  {
+   "method": "answerability-subject-grounded/1.0.0",
+   "load_s": 1.52,
+   "rss_after_load_mb": 1331,
+   "check_5_items_ms": 260.7
+  },
+  {
+   "method": "answerability-subject-grounded/1.1.0",
+   "load_s": 1.88,
+   "rss_after_load_mb": 1331,
+   "check_5_items_ms": 278.1
+  }
+ ],
+ "extractive_from_cycle2": {
+  "method": "extractive-qa-null-comparison/1.0.0",
+  "model": "optimum/roberta-base-squad2@db07770",
+  "files_bytes": 498415258,
+  "load_s": 2.54,
+  "rss_before_mb": 21,
+  "rss_after_load_mb": 1497,
+  "check_5_items_ms": 210.4
+ },
+ "model_files_bytes": {
+  "extractive": 498415258,
+  "answerability": 438924542
+ },
+ "memory_find_latency_ms_holdout3": {
+  "answerability-subject-grounded/1.0.0": {
+   "first_call": 2974.9,
+   "later_max": 443.9,
+   "later_median": 361.3
+  },
+  "answerability-subject-grounded/1.1.0": {
+   "first_call": 2169.1,
+   "later_max": 469.0,
+   "later_median": 366.5
+  },
+  "extractive-qa-null-comparison/1.0.0": {
+   "first_call": 4944.2,
+   "later_max": 481.7,
+   "later_median": 322.2
+  },
+  "support_check_disabled": {
+   "first_call": 143.4,
+   "later_max": 73.9,
+   "later_median": 39.4
+  }
+ }
+}

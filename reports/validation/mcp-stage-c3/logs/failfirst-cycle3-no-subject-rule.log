@@ -1,0 +1,3 @@
+FAIL: test_a_question_that_names_no_one_has_no_subject_to_bridge_from (test_support_decision.PerMemoryDecisionTests.test_a_question_that_names_no_one_has_no_subject_to_bridge_from)
+Ran 27 tests in 0.088s
+FAILED (failures=1, skipped=8)
