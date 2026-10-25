@@ -99,6 +99,12 @@ def overlaps(a: Path, b: Path) -> bool:
     return a == b or a in b.parents or b in a.parents
 
 
+def is_strict_child(child: Path, parent: Path) -> bool:
+    child_path = Path(os.path.normcase(os.path.abspath(child)))
+    parent_path = Path(os.path.normcase(os.path.abspath(parent)))
+    return child_path != parent_path and parent_path in child_path.parents
+
+
 def elevated() -> bool | None:
     """Return None if the integrity level cannot be verified (fail closed)."""
     code, out = run(["whoami", "/groups"])
@@ -180,6 +186,12 @@ def main() -> int:
         dev_problems.append("not empty (only the clone, preflight.json and claude-config may be present)")
     if os.path.normcase(os.path.abspath(REPO.parent)) != os.path.normcase(os.path.abspath(dev)):
         dev_problems.append("the clone must be directly inside --dev-dir")
+    if options.claude_config_dir is not None:
+        cfg = options.claude_config_dir
+        if not cfg.is_absolute() or not is_strict_child(cfg, dev):
+            dev_problems.append("isolated Claude config must be a descendant of the development directory")
+        if overlaps(cfg, Path.home() / ".claude") or overlaps(cfg, Path.home() / ".claude.json"):
+            dev_problems.append("isolated Claude config overlaps the default Claude installation")
     check(4, "isolated development directory", not dev_problems, {"problems": dev_problems})
     # 5. Separate from any stable installation or data
     stable_candidates = [Path(os.environ.get("LOCALAPPDATA", "")) / "agent-memory", Path.home() / ".agent-memory",
