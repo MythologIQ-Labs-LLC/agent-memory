@@ -1,0 +1,4 @@
+FAIL: test_a_key_that_appears_inside_recalled_text_is_cited_evidence (test_evidence_check.EvidenceCheckTests.test_a_key_that_appears_inside_recalled_text_is_cited_evidence)
+FAIL: test_a_negated_absence_statement_is_not_an_absence_claim (test_evidence_check.EvidenceCheckTests.test_a_negated_absence_statement_is_not_an_absence_claim)
+Ran 9 tests in 0.001s
+FAILED (failures=2)
