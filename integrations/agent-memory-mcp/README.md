@@ -304,6 +304,21 @@ The guard is a narrow deterministic filter, not a semantic judge.
 - Not a calibrated abstention result; Stage C remains NO-GO.
 - Not Windows-qualified.
 
+### Windows
+
+Native-Windows qualification (W1–W4) is described in `windows/README.md`. The portable host
+corrections (W0) are covered by Linux-side tests:
+- `hostenv.py`;
+- Windows store-root rules in `bridge.py`;
+- the correction-record ancestor guard;
+- a stdin prompt and a contract file for the agent CLI;
+- verified server exit;
+- UTF-8 I/O.
+
+Native NTFS negatives live in `tests/test_windows_native.py`; they are skipped off Windows, and
+a skip is never a pass. **Windows remains unqualified until that runbook passes on a real
+Windows machine.**
+
 ## Two acceptance gates
 
 **Gate 1, minimum functioning product:** One exact-head run with an actual

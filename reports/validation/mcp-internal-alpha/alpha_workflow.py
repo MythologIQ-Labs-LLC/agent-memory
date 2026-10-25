@@ -30,7 +30,7 @@ TOOLS = {"memory_remember", "memory_get", "memory_find", "memory_forget", "memor
 GRANT_KEY, GRANT_REF = "AGENT_MEMORY_MCP_PRUNE_APPROVED_KEY", "AGENT_MEMORY_MCP_PRUNE_EVIDENCE_REF"
 transcript: list[dict] = []
 checks: list[tuple[str, bool, str]] = []
-git = lambda *a: subprocess.run(["git", "-C", str(repo), *a], capture_output=True, text=True).stdout.strip()
+git = lambda *a: subprocess.run(["git", "-C", str(repo), *a], capture_output=True, text=True, encoding="utf-8").stdout.strip()
 CLEAN_BEFORE = git("status", "--porcelain", "--untracked-files=no") == ""
 print("repo head", git("rev-parse", "HEAD"), "tracked tree clean:", CLEAN_BEFORE)
 
@@ -68,9 +68,17 @@ def store_digest(root: Path) -> dict:
             for p in sorted(root.rglob("*")) if p.is_file()}
 
 
-def live_server_pids():
-    found = subprocess.run(["pgrep", "-f", str(SERVER)], capture_output=True, text=True)
-    return [int(p) for p in found.stdout.split() if p.strip()]
+def live_server_pids(wait_s: float = 10.0):
+    """Server processes still running, waiting up to ``wait_s`` for exit (Windows kills are not
+    instant). None when this host cannot list processes: the check then fails, it never passes."""
+    sys.path.insert(0, str(SERVER.parent))
+    import hostenv
+    deadline = time.monotonic() + wait_s
+    while True:
+        alive = hostenv.processes_with(str(SERVER))
+        if not alive or time.monotonic() > deadline:
+            return alive
+        time.sleep(0.5)
 
 
 async def call(client, step, tool, args, **extra):
@@ -84,7 +92,10 @@ def contents(r):
 
 
 async def main():
-    with tempfile.TemporaryDirectory(prefix="alpha-") as temp:
+    # Windows may still hold the SQLite file briefly after a server exits; cleanup is retried
+    # and its outcome is recorded rather than raised past the checks or silently ignored.
+    with tempfile.TemporaryDirectory(prefix="alpha-", ignore_cleanup_errors=True) as temp:
+        temp_used = Path(temp)
         root = Path(temp) / "agent-memory-store"
         k_kiln, t_kiln = "memory:studio:kiln_cone", "The studio kiln fires bisque at cone 04 on Fridays."
         k_glaze, t_glaze = "memory:studio:glaze_supplier", "Glaze materials come from Harbourline Ceramics."
@@ -199,14 +210,14 @@ async def main():
             r = await call(client, "B2 correct without a host record", "memory_correct", {"key": k_fire, "text": t_new})
             check("B2 no record: committed=false, host_authorization_required", body(r).get("committed") is False and body(r).get("status") == "host_authorization_required", repr(body(r))[:300])
             check("B2 no record: every store file is byte-identical afterwards", store_digest(root) == before)
-        wrong = records / "wrong-text.json"; wrong.write_text(json.dumps({"key": k_fire, "text": "Bisque firings happen on Mondays."}))
+        wrong = records / "wrong-text.json"; wrong.write_text(json.dumps({"key": k_fire, "text": "Bisque firings happen on Mondays."}), encoding="utf-8")
         async with Client(params(root, "project:alpha", correction_record=wrong)) as client:
             before = store_digest(root)
             r = await call(client, "B3 correct with a record for different text", "memory_correct", {"key": k_fire, "text": t_new})
             check("B3 record for different text: refused, store byte-identical", body(r).get("committed") is False and body(r).get("status") == "host_authorization_required" and store_digest(root) == before, repr(body(r))[:300])
             r = await call(client, "B3 get still original", "memory_get", {"key": k_fire})
             check("B3 the original value is still the current one", [e["content"] for e in body(r).get("evidence", [])] == [t_old], repr(body(r))[:200])
-        authority = records / "firing-day.json"; authority.write_text(json.dumps({"key": k_fire, "text": t_new, "reason": "kiln schedule changed"}))
+        authority = records / "firing-day.json"; authority.write_text(json.dumps({"key": k_fire, "text": t_new, "reason": "kiln schedule changed"}), encoding="utf-8")
         async with Client(params(root, "project:alpha", correction_record=authority)) as client:
             r = await call(client, "B4 authorized correction", "memory_correct", {"key": k_fire, "text": t_new}, record_sha256=hashlib.sha256(authority.read_bytes()).hexdigest())
             b = body(r); new_ref = b.get("fact_ref")
@@ -224,7 +235,7 @@ async def main():
             check("B6 after restart: the corrected value persists with the same fact_ref", [e["content"] for e in ev] == [t_new] and ev[0]["fact_ref"] == new_ref, repr(body(r))[:300])
             r = await call(client, "B6 find after restart", "memory_find", {"question": q_fire, "max_items": 8})
             check("B6 after restart: find never delivers the superseded value", t_new in contents(r) and t_old not in json.dumps(body(r)), repr(contents(r))[:300])
-        other_record = records / "other-project.json"; other_record.write_text(json.dumps({"key": k_fire, "text": "Bisque firings happen on Sundays."}))
+        other_record = records / "other-project.json"; other_record.write_text(json.dumps({"key": k_fire, "text": "Bisque firings happen on Sundays."}), encoding="utf-8")
         async with Client(params(root, "project:other-team", correction_record=other_record)) as client:
             r = await call(client, "B7 other project correct with a matching record", "memory_correct", {"key": k_fire, "text": "Bisque firings happen on Sundays."}, scope="project:other-team")
             check("B7 other project: a record cannot correct another project's memory", body(r).get("committed") is False, repr(body(r))[:300])
@@ -236,7 +247,9 @@ async def main():
             check("B7 the owning project still has the corrected value", [e["content"] for e in body(r).get("evidence", [])] == [t_new], repr(body(r))[:200])
 
         time.sleep(0.5)
-        check("final: no server process left running", live_server_pids() == [], str(live_server_pids()))
+        alive = live_server_pids()
+        check("final: no server process left running", alive == [],
+              "process inspection unavailable on this host" if alive is None else str(alive))
 
     report = {
         "kind": "internal_alpha_real_stdio_mcp_workflow",
@@ -248,13 +261,16 @@ async def main():
         "packages": {n: md.version(n) for n in ("mcp", "agent-memory-reference", "pydantic", "anyio")},
         "checks": [{"name": n, "ok": ok, "detail": d if not ok else ""} for n, ok, d in checks],
         "passed": sum(1 for _, ok, _ in checks if ok), "total": len(checks),
+        "temp_store_removed": not temp_used.exists(),
         "tracked_tree_clean_before": CLEAN_BEFORE,
         "tracked_tree_clean_after": git("status", "--porcelain", "--untracked-files=no") == "",
         "transcript": transcript,
     }
     target = out / f"alpha-workflow-{report['repo_head'][:8]}.json"
-    target.write_text(json.dumps(report, indent=2, default=str) + "\n")
+    target.write_text(json.dumps(report, indent=2, default=str) + "\n", encoding="utf-8")
     print("transcript", target.name, "sha256", hashlib.sha256(target.read_bytes()).hexdigest())
+    if not report["temp_store_removed"]:
+        print("WARNING: the temporary store could not be removed (still locked?)")
     print(f"\n{report['passed']}/{report['total']} checks passed")
     return 0 if report["passed"] == report["total"] else 1
 

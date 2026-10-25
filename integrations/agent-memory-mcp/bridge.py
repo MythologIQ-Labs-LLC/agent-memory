@@ -14,7 +14,7 @@ from dataclasses import dataclass
 import hashlib
 import json
 import os
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 import stat
 from typing import Any, Callable, ContextManager
 
@@ -27,6 +27,53 @@ MAX_TOTAL_CHARS = 5000
 MAX_TOKENS = 1250
 
 OpenMemory = Callable[..., ContextManager[Any]]
+_IS_WINDOWS = os.name == "nt"
+_WINDOWS_DEVICE_NAMES = frozenset({"CON", "PRN", "AUX", "NUL", "CONIN$", "CONOUT$",
+                                   *(f"COM{i}" for i in range(1, 10)), *(f"LPT{i}" for i in range(1, 10))})
+_DRIVE_FIXED = 3
+
+
+def _redirected(component: Path) -> bool:
+    """A symlink, a Windows junction, or any other reparse point. lstat() sees the link itself,
+    not its target; Python 3.11 has no Path.is_junction(), so the reparse attribute is checked too.
+    A component that cannot be inspected for another reason raises (the caller fails closed)."""
+    try:
+        attributes = getattr(component.lstat(), "st_file_attributes", 0)
+    except FileNotFoundError:
+        attributes = 0
+    junction = getattr(component, "is_junction", None)
+    is_reparse_point = bool(attributes & getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400))
+    return component.is_symlink() or (callable(junction) and junction()) or is_reparse_point
+
+
+def _drive_type(drive: str) -> int:
+    """GetDriveTypeW for ``C:``; 0 (unknown) whenever it cannot be asked."""
+    try:
+        import ctypes
+        return int(ctypes.windll.kernel32.GetDriveTypeW(drive + "\\"))
+    except Exception:
+        return 0
+
+
+def _windows_root_problem(root: PureWindowsPath, drive_type: Callable[[str], int] = _drive_type) -> str | None:
+    """Why a Windows store root is not a plain local path, or None. Only a drive-letter path on a
+    fixed local drive passes: no UNC share or extended (\\\\?\\) prefix, no mapped network,
+    removable or unknown drive, no alternate data stream, no reserved device name, and no name
+    ending in a dot or space (Windows silently strips those, so the path would not be the one
+    checked)."""
+    drive = root.drive
+    if len(drive) != 2 or drive[1] != ":" or not drive[0].isalpha():
+        return "must be on a local drive letter (no UNC share or extended path prefix)"
+    if drive_type(drive) != _DRIVE_FIXED:
+        return "must be on a fixed local drive (not a network, removable or unknown drive)"
+    for part in root.parts[1:]:
+        if ":" in part:
+            return "must not name an alternate data stream"
+        if part.split(".", 1)[0].rstrip(" ").upper() in _WINDOWS_DEVICE_NAMES:
+            return "must not use a reserved device name"
+        if part != part.rstrip(". "):
+            return "must not have a name ending in a dot or space"
+    return None
 
 
 @dataclass(frozen=True)
@@ -50,17 +97,16 @@ class HostConfig:
         # for filesystem ACLs or a race-free directory handle.
         if ".." in root.parts:
             raise ValueError("AGENT_MEMORY_MCP_ROOT must not contain parent traversal")
+        if _IS_WINDOWS:
+            problem = _windows_root_problem(PureWindowsPath(raw_root))
+            if problem:
+                raise ValueError(f"AGENT_MEMORY_MCP_ROOT {problem}")
         for component in (root, *root.parents):
-            junction = getattr(component, "is_junction", None)
-            # Windows junctions and other directory reparse points must also
-            # be refused on Python 3.11, which lacks Path.is_junction().
-            # lstat() sees the link itself, not its target.
             try:
-                attributes = getattr(component.lstat(), "st_file_attributes", 0)
-            except FileNotFoundError:
-                attributes = 0
-            is_reparse_point = bool(attributes & getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400))
-            if component.is_symlink() or (callable(junction) and junction()) or is_reparse_point:
+                redirected = _redirected(component)
+            except OSError as exc:
+                raise ValueError("AGENT_MEMORY_MCP_ROOT has a component that cannot be inspected") from exc
+            if redirected:
                 raise ValueError("AGENT_MEMORY_MCP_ROOT must not traverse a symlink or junction")
         claims = {
             "tenant": os.environ.get("AGENT_MEMORY_MCP_TENANT", ""),
@@ -91,11 +137,14 @@ def _host_correction_record(key: str, text: str) -> tuple[Path, str] | None:
 
 
 def _read_correction_record(path: Path, key: str, text: str) -> tuple[Path, str] | None:
-    """Absolute path, a regular file that is not a symlink, bounded size, a JSON object whose
-    "key" and "text" equal the requested correction exactly; otherwise None."""
+    """Absolute path, no redirected component (symlink, junction or other reparse point, the
+    record itself included), a regular file of bounded size, a JSON object whose "key" and "text"
+    equal the requested correction exactly; otherwise None."""
     if not path.is_absolute() or ".." in path.parts:
         return None
     try:
+        if any(_redirected(component) for component in (path, *path.parents)):
+            return None
         info = path.lstat()
         if not stat.S_ISREG(info.st_mode) or info.st_size > MAX_CORRECTION_RECORD_BYTES:
             return None

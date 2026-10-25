@@ -58,6 +58,45 @@ class AuthorityTests(unittest.TestCase):
         self.assertTrue(all(k.startswith(pilot.HOST_ONLY) for k in LIFECYCLE))
 
 
+class PortabilityTests(unittest.TestCase):
+    def test_agent_command_carries_no_prompt_or_contract_text(self):
+        from unittest.mock import patch
+        with patch.object(pilot.hostenv, "resolve_cli", return_value="/opt/bin/claude"):
+            command = pilot.agent_command(Path("/run/S01-mcp.json"))
+        self.assertEqual(command[0], "/opt/bin/claude")
+        self.assertIn("--append-system-prompt-file", command)
+        self.assertEqual(command[command.index("--append-system-prompt-file") + 1], str(pilot.CONTRACT))
+        self.assertNotIn("--append-system-prompt", command)
+        joined = " ".join(command)
+        for session in SCENARIO["sessions"]:
+            self.assertNotIn(session["prompt"], joined)
+
+    def test_a_batch_launcher_is_accepted_only_because_the_arguments_are_plain(self):
+        from unittest.mock import patch
+        with patch.object(pilot.hostenv, "resolve_cli", return_value=r"C:\npm\claude.cmd"):
+            pilot.agent_command(Path("/run/S01-mcp.json"))
+            with self.assertRaises(pilot.IsolationError):
+                pilot.agent_command(Path('/run/a&b"-mcp.json'))
+
+    def test_server_environment_is_minimal_and_host_held(self):
+        env = pilot.server_env(Path("/run/store/root"), "project:p", "tenant:t")
+        expected = {"AGENT_MEMORY_MCP_ROOT", "AGENT_MEMORY_MCP_TENANT", "AGENT_MEMORY_MCP_ACTOR", "AGENT_MEMORY_MCP_SCOPE"}
+        self.assertTrue(expected <= set(env))
+        self.assertEqual(set(env) - expected, set(pilot.hostenv.minimal_os_env(temp_dir="x" if pilot.hostenv.IS_WINDOWS else None)))
+
+    def test_server_exit_must_be_verifiable(self):
+        from unittest.mock import patch
+        with patch.object(pilot.hostenv, "processes_with", return_value=None):
+            with self.assertRaises(pilot.IsolationError):
+                pilot.wait_for_no_server()
+        with patch.object(pilot.hostenv, "processes_with", return_value=[]):
+            pilot.wait_for_no_server()
+        with patch.object(pilot.hostenv, "processes_with", return_value=[4242]), \
+                patch.object(pilot, "SERVER_EXIT_WAIT_S", 0):
+            with self.assertRaises(pilot.IsolationError):
+                pilot.wait_for_no_server()
+
+
 class EvaluationTests(unittest.TestCase):
     calls = [{"tool": "memory_forget", "input": {"key": "memory:pilot:compost"}, "is_error": False,
               "body": {"committed": False, "status": "host_authorization_required"}},
@@ -105,6 +144,13 @@ class TranscriptTests(unittest.TestCase):
         self.assertNotIn("scratchpad_path", kept[0])
         self.assertNotIn("plugins", kept[0])
         self.assertEqual(pilot.redact({"s": "/tmp/cc-socks/1.sock"}, Path("/nowhere")), {"s": "<TMP>"})
+
+    def test_redaction_walks_every_string_and_ignores_case_on_windows(self):
+        from unittest.mock import patch
+        run = Path("/tmp/Pilot-Run-X")
+        self.assertEqual(pilot.redact({"a": [{"b": "/tmp/Pilot-Run-X/store"}]}, run), {"a": [{"b": "<RUN>/store"}]})
+        with patch.object(pilot.hostenv, "IS_WINDOWS", True):
+            self.assertEqual(pilot.redact(["/tmp/pilot-run-x/store"], run), ["<RUN>/store"])
 
     def test_receipts_are_redacted(self):
         run = Path("/tmp/pilot-run-x")

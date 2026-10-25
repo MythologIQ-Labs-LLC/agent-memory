@@ -291,6 +291,32 @@ class BridgeTests(unittest.TestCase):
             self.assertEqual(result["status"], "host_authorization_required")
         self.assertEqual(self.calls, [])
 
+    def test_correct_refuses_a_record_under_a_redirected_parent(self):
+        import bridge
+        with tempfile.TemporaryDirectory() as temp:
+            real = Path(temp) / "real"
+            real.mkdir()
+            (real / "record.json").write_text(json.dumps({"key": "memory:editor", "text": "Helix."}), encoding="utf-8")
+            (Path(temp) / "link").symlink_to(real, target_is_directory=True)
+            self.assertIsNotNone(bridge._read_correction_record(real / "record.json", "memory:editor", "Helix."))
+            self.assertIsNone(bridge._read_correction_record(Path(temp) / "link" / "record.json", "memory:editor", "Helix."))
+
+    def test_correct_refuses_a_record_that_is_a_reparse_point(self):
+        import bridge
+        with tempfile.TemporaryDirectory() as temp:
+            record = Path(temp) / "record.json"
+            record.write_text(json.dumps({"key": "memory:editor", "text": "Helix."}), encoding="utf-8")
+            real_lstat = Path.lstat
+
+            def lstat_with_reparse(component, *args, **kwargs):
+                info = real_lstat(component, *args, **kwargs)
+                if component == record:
+                    return SimpleNamespace(st_mode=info.st_mode, st_size=info.st_size,
+                                           st_file_attributes=getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400))
+                return info
+            with patch.object(Path, "lstat", lstat_with_reparse):
+                self.assertIsNone(bridge._read_correction_record(record, "memory:editor", "Helix."))
+
     def test_correct_refuses_a_symlinked_relative_or_malformed_record(self):
         with tempfile.TemporaryDirectory() as temp:
             record = self._record(temp)
@@ -420,6 +446,39 @@ class BridgeTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, "symlink"):
                     HostConfig.from_environment()
             self.assertFalse((real / "new-store").exists())
+
+    def test_unreadable_root_ancestor_is_a_configuration_error(self):
+        def denied(component, *args, **kwargs):
+            raise PermissionError("access denied")
+        with patch.object(Path, "lstat", denied), patch.dict(os.environ, {
+                "AGENT_MEMORY_MCP_ROOT": "/denied/store", "AGENT_MEMORY_MCP_TENANT": "tenant:a",
+                "AGENT_MEMORY_MCP_ACTOR": "agent:local", "AGENT_MEMORY_MCP_SCOPE": "project:local"}):
+            with self.assertRaisesRegex(ValueError, "cannot be inspected"):
+                HostConfig.from_environment()
+
+    def test_windows_root_rules(self):
+        from pathlib import PureWindowsPath
+        import bridge
+        fixed = lambda drive: 3
+        ok = PureWindowsPath(r"C:\dev\agent-memory\store")
+        self.assertIsNone(bridge._windows_root_problem(ok, fixed))
+        for raw, drive_type in ((r"\\server\share\store", fixed), (r"\\?\C:\dev\store", fixed),
+                                (r"C:\dev\store:stream", fixed), (r"C:\dev\NUL\store", fixed),
+                                (r"C:\dev\aux.txt", fixed), (r"C:\dev\store. ", fixed),
+                                (r"Z:\dev\store", lambda d: 4), (r"E:\dev\store", lambda d: 2),
+                                (r"C:\dev\store", lambda d: 0)):
+            with self.subTest(root=raw):
+                self.assertIsNotNone(bridge._windows_root_problem(PureWindowsPath(raw), drive_type))
+
+    def test_windows_rules_are_applied_by_the_host_config_on_windows(self):
+        import bridge
+        with patch.object(bridge, "_IS_WINDOWS", True), \
+                patch.object(bridge, "_windows_root_problem", return_value="network drive") as rule, \
+                patch.dict(os.environ, {"AGENT_MEMORY_MCP_ROOT": "/dev-root/store", "AGENT_MEMORY_MCP_TENANT": "tenant:a",
+                                        "AGENT_MEMORY_MCP_ACTOR": "agent:local", "AGENT_MEMORY_MCP_SCOPE": "project:local"}):
+            with self.assertRaisesRegex(ValueError, "network drive"):
+                HostConfig.from_environment()
+        rule.assert_called_once()
 
     def test_reparse_attribute_rejected_without_is_junction(self):
         # Simulate the Windows FILE_ATTRIBUTE_REPARSE_POINT bit on a machine

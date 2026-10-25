@@ -29,6 +29,7 @@ from pathlib import Path
 import re
 import subprocess
 import sys
+import tempfile
 import time
 import uuid
 
@@ -47,20 +48,34 @@ HOST_ONLY = ("AGENT_MEMORY_MCP_", "AGENT_MEMORY_REPRESENTATION_DIR")
 sys.path.insert(0, str(MCP_DIR))
 sys.path.insert(0, str(HERE))
 import evidence_check  # noqa: E402
+import hostenv  # noqa: E402
 from bridge import HostConfig  # noqa: E402
+from hostenv import IsolationError, private_dir  # noqa: E402
 
-
-def private_dir(path: Path) -> Path:
-    path.mkdir(parents=True, exist_ok=True)
-    os.chmod(path, 0o700)
-    return path
+SERVER_EXIT_WAIT_S = 15
 
 
 def server_env(root: Path, scope: str, tenant: str, extra: dict | None = None) -> dict:
-    env = {"AGENT_MEMORY_MCP_ROOT": str(root), "AGENT_MEMORY_MCP_TENANT": tenant,
-           "AGENT_MEMORY_MCP_ACTOR": ACTOR, "AGENT_MEMORY_MCP_SCOPE": scope, "PATH": "/usr/bin:/bin"}
+    """Host-held identity and store root over the minimal OS environment (a private TEMP on Windows)."""
+    env = hostenv.minimal_os_env(temp_dir=root.parent / "tmp" if hostenv.IS_WINDOWS else None)
+    env.update({"AGENT_MEMORY_MCP_ROOT": str(root), "AGENT_MEMORY_MCP_TENANT": tenant,
+                "AGENT_MEMORY_MCP_ACTOR": ACTOR, "AGENT_MEMORY_MCP_SCOPE": scope})
     env.update(extra or {})
     return env
+
+
+def wait_for_no_server() -> None:
+    """Fail closed unless every server process started for this pilot has exited."""
+    deadline = time.monotonic() + SERVER_EXIT_WAIT_S
+    while True:
+        alive = hostenv.processes_with(str(SERVER))
+        if alive is None:
+            raise IsolationError("cannot inspect processes on this host, so server exit cannot be verified")
+        if not alive:
+            return
+        if time.monotonic() > deadline:
+            raise IsolationError(f"{len(alive)} MCP server process(es) still running after the session")
+        time.sleep(0.5)
 
 
 def assert_safe_root(env: dict) -> None:
@@ -118,9 +133,8 @@ def session_host(scenario: dict, session: dict, run: Path, root: Path) -> tuple[
         summary["lifecycle_authority"] = {"forget_grant_key": host["forget_grant"]["key"]}
     if "correction_record" in host:
         records = private_dir(run / "records")
-        record = records / f"{session['id']}-correction.json"
-        record.write_text(json.dumps(host["correction_record"]), encoding="utf-8")
-        os.chmod(record, 0o600)
+        record = hostenv.private_file(records / f"{session['id']}-correction.json",
+                                      json.dumps(host["correction_record"]).encode("utf-8"))
         extra["AGENT_MEMORY_MCP_CORRECTION_RECORD"] = str(record)
         summary["lifecycle_authority"] = {"correction_record_key": host["correction_record"]["key"],
                                           "record_sha256": hashlib.sha256(record.read_bytes()).hexdigest()}
@@ -128,25 +142,33 @@ def session_host(scenario: dict, session: dict, run: Path, root: Path) -> tuple[
 
 
 def run_agent(session: dict, env: dict, run: Path) -> tuple[list[dict], float]:
-    config = run / f"{session['id']}-mcp.json"
-    config.write_text(json.dumps({"mcpServers": {"agent-memory": {
-        "type": "stdio", "command": sys.executable, "args": [str(SERVER)], "env": env}}}), encoding="utf-8")
-    os.chmod(config, 0o600)
+    config = hostenv.private_file(run / f"{session['id']}-mcp.json", json.dumps({"mcpServers": {"agent-memory": {
+        "type": "stdio", "command": sys.executable, "args": [str(SERVER)], "env": env}}}).encode("utf-8"))
     cwd = private_dir(run / "agent-cwd")
     parent = {k: v for k, v in os.environ.items() if not k.startswith(HOST_ONLY)}
-    command = ["claude", "-p", session["prompt"], "--output-format", "stream-json", "--verbose",
-               "--tools", "", "--strict-mcp-config", "--mcp-config", str(config),
-               "--allowedTools", ALLOWED, "--append-system-prompt", CONTRACT.read_text(encoding="utf-8"),
-               "--no-session-persistence", "--setting-sources", "project", "--session-id", str(uuid.uuid4())]
+    command = agent_command(config)
     started = time.perf_counter()
-    done = subprocess.run(command, cwd=cwd, env=parent, stdin=subprocess.DEVNULL,
-                          capture_output=True, text=True, timeout=900)
+    try:
+        # The prompt goes in on stdin and the contract from a file, so no free text is on the command line.
+        done = subprocess.run(command, cwd=cwd, env=parent, input=session["prompt"], capture_output=True,
+                              text=True, encoding="utf-8", errors="strict", timeout=900)
+    finally:
+        config.unlink()
     elapsed = time.perf_counter() - started
-    config.unlink()
+    wait_for_no_server()
     events = [json.loads(line) for line in done.stdout.splitlines() if line.strip().startswith("{")]
     if done.returncode != 0 or not any(e.get("type") == "result" for e in events):
         raise RuntimeError(f"agent run failed for {session['id']}: rc={done.returncode} {done.stderr[-500:]}")
     return events, elapsed
+
+
+def agent_command(config: Path) -> list[str]:
+    command = [hostenv.resolve_cli("claude"), "-p", "--output-format", "stream-json", "--verbose",
+               "--tools", "", "--strict-mcp-config", "--mcp-config", str(config),
+               "--allowedTools", ALLOWED, "--append-system-prompt-file", str(CONTRACT),
+               "--no-session-persistence", "--setting-sources", "project", "--session-id", str(uuid.uuid4())]
+    hostenv.assert_launchable(command)
+    return command
 
 
 def _tool_body(content) -> dict | None:
@@ -233,13 +255,23 @@ def conversation_events(events: list[dict]) -> list[dict]:
 
 
 def redact(value, run: Path):
-    """Local paths become labels; a path is matched only where one starts, not inside another."""
-    text = json.dumps(value)
-    for path, label in ((str(run), "<RUN>"), (str(MCP_DIR.parents[1]), "<REPO>"), (sys.prefix, "<VENV>"),
-                        (str(Path.home()), "<HOME>")):
-        text = re.sub(r"(?<![\w./-])" + re.escape(path) + r"(?![\w.-])", label, text)
-    text = re.sub(r"(?<![\w./-])/tmp/[^\"\s]*", "<TMP>", text)
-    return json.loads(text)
+    """Local paths become labels in every string of a receipt; a path is matched only where one
+    starts, in either separator form, case-insensitively on Windows."""
+    if isinstance(value, dict):
+        return {k: redact(v, run) for k, v in value.items()}
+    if isinstance(value, list):
+        return [redact(v, run) for v in value]
+    if not isinstance(value, str):
+        return value
+    flags = re.IGNORECASE if hostenv.IS_WINDOWS else 0
+    for path, label in ((run, "<RUN>"), (MCP_DIR.parents[1], "<REPO>"), (Path(sys.prefix), "<VENV>"),
+                        (Path(tempfile.gettempdir()), "<TMP>"), (Path.home(), "<HOME>")):
+        for form in sorted({str(path), path.as_posix()}, key=len, reverse=True):
+            value = re.sub(r"(?<![\w./\\-])" + re.escape(form) + r"(?![\w.-])", label, value, flags=flags)
+    if not hostenv.IS_WINDOWS:
+        value = re.sub(r"(?<![\w./-])/tmp/[^\"\s]*", "<TMP>", value)
+    # Nothing below the system temp directory (sockets, scratchpads) survives.
+    return re.sub(r"<TMP>[^\"\s]*", "<TMP>", value)
 
 
 async def main_async(run: Path, out: Path, only: set[str] | None, scenario_path: Path = SCENARIO) -> dict:
@@ -247,6 +279,8 @@ async def main_async(run: Path, out: Path, only: set[str] | None, scenario_path:
     scenario = json.loads(scenario_bytes)
     run = private_dir(run)
     root = private_dir(run / "store") / "root"
+    if hostenv.IS_WINDOWS:
+        private_dir(root.parent / "tmp")
     assert_safe_root(server_env(root, scenario["scope"], scenario["tenant"]))
     await seed(scenario, root)
     out.mkdir(parents=True, exist_ok=True)
@@ -279,15 +313,20 @@ async def main_async(run: Path, out: Path, only: set[str] | None, scenario_path:
                      "host_check_flags": sorted({f["flag"] for f in flags}),
                      "tools": [c["tool"] for c in record["tool_calls"]], "model": record["model"]})
         print(json.dumps(rows[-1]), flush=True)
+    wait_for_no_server()
     head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=HERE, capture_output=True, text=True).stdout.strip()
-    agent = subprocess.run(["claude", "--version"], capture_output=True, text=True).stdout.strip()
+    agent = subprocess.run([hostenv.resolve_cli("claude"), "--version"], capture_output=True, text=True,
+                           encoding="utf-8").stdout.strip()
     summary = {"schema": "agent-memory-mcp-agent-pilot-receipt/0.1.0", "head": head, "scenario": scenario_path.name,
                "scenario_sha256": hashlib.sha256(scenario_bytes).hexdigest(),
                "contract_sha256": hashlib.sha256(CONTRACT.read_bytes()).hexdigest(),
                "agent": {"harness": "Claude Code non-interactive (claude -p)", "version": agent,
                          "models": sorted({r["model"] for r in rows if r["model"]}),
                          "flags": "--tools '' --strict-mcp-config --allowedTools <five memory tools> "
-                                  "--append-system-prompt <evidence contract> --no-session-persistence --setting-sources project"},
+                                  "--append-system-prompt-file <evidence contract> --no-session-persistence "
+                                  "--setting-sources project; prompt on stdin"},
+               "host": {"os": os.name, "platform": __import__("platform").platform(terse=True),
+                        "python": hostenv.python_version()},
                "sessions": rows}
     (out / "summary.json").write_text(json.dumps(summary, indent=1) + "\n", encoding="utf-8")
     return summary
