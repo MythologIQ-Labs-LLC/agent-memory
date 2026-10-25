@@ -435,8 +435,20 @@ class LocalMemoryBridge:
             record.update(
                 subject_terms=outcome["subjects"],
                 subject_applicable_fact_refs=[r for r, ok in zip(refs, outcome["applicable"]) if ok],
-                answering_fact_refs=[r for r, ok in zip(refs, outcome["answering"]) if ok],
-                joint_applicable=outcome["joint_applicable"], joint_answering=outcome["joint_answering"])
+                answering_fact_refs=[r for r, ok in zip(refs, outcome["answering"]) if ok])
+            if "joint_applicable" in outcome:  # 1.0.0 admits a joined-text answer as support
+                record.update(joint_applicable=outcome["joint_applicable"],
+                              joint_answering=outcome["joint_answering"])
+        if "cross_memory_candidates" in outcome:
+            # Per-memory admission: only single memories grant support. Joined text is reported
+            # as an unadmitted diagnostic, and a linked pair is a candidate with its facts named.
+            record.update(
+                support_scope="per_memory", joint_supported=None,
+                cross_memory_candidates=[
+                    {**c, "facts": [refs[i] for i in c["facts"]]} for c in outcome["cross_memory_candidates"]],
+                diagnostics=outcome["diagnostics"])
+            if not supported and record["cross_memory_candidates"]:
+                return "unverified", checker.CROSS_MEMORY_REASON
         if not supported and not record["joint_supported"]:
             return "insufficient_evidence", insufficient
         return "unverified", candidate

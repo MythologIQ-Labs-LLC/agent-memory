@@ -7,10 +7,25 @@ module). This module then decides, for those items only, whether any of them sup
 the question. It never changes, reorders or removes the delivered evidence, and it never makes
 an answer or verifies one: a supported item stays ``unverified`` evidence.
 
-Two pinned methods exist. The host chooses one by the model directory it names in
-``AGENT_MEMORY_MCP_SUPPORT_MODEL_DIR``; each directory layout matches exactly one pin set.
+Two pinned models exist. The host chooses one by the model directory it names in
+``AGENT_MEMORY_MCP_SUPPORT_MODEL_DIR``; each directory layout matches exactly one pin set. The
+answerability model serves two method versions; the newest is the default and
+``AGENT_MEMORY_MCP_SUPPORT_METHOD`` (host-set, never a tool argument) can pin the other.
 
-``answerability-subject-grounded/1.0.0`` (the successor) keeps three questions apart:
+``answerability-subject-grounded/1.1.0`` (cycle 3, the default) is 1.0.0 below with support
+admitted *per memory only*: subject applicability and answerability must hold for the same
+memory. Reading all current memories together still runs, but only as the unadmitted diagnostic
+``joint_answering_unadmitted``; it can no longer turn a subject named in one memory into support
+for an answer found in another. When no single memory is supported, a bounded two-memory check
+keeps a distributed answer from being called absent: a memory that names every question subject
+(the anchor; the question must name at least one subject) and another delivered memory sharing a
+*name* with it (a capitalised word in
+mid-sentence, not a question subject) form a ``cross_memory_candidates`` entry naming both facts
+and the shared names. That is not support and no classifier is asked to bless the pair: a shared
+name does not establish how the facts relate, so the assessment stays ``unverified``
+(``cross_memory_relationship_not_established``) instead of claiming absence.
+
+``answerability-subject-grounded/1.0.0`` (cycle 2) keeps three questions apart:
 
 1. *Subject applicability* (deterministic). Every name the question uses (a capitalised word
    after its first word, possessive stripped, not a function word) must occur in the item,
@@ -49,6 +64,7 @@ import urllib.request
 from typing import Any, Sequence
 
 ENV_DIR = "AGENT_MEMORY_MCP_SUPPORT_MODEL_DIR"
+METHOD_ENV = "AGENT_MEMORY_MCP_SUPPORT_METHOD"
 
 
 @dataclass(frozen=True)
@@ -230,8 +246,57 @@ def decide(question: str, contexts: Sequence[str], answering: Sequence[bool],
             "joint_applicable": joint_applicable, "joint_answering": bool(joint_answering)}
 
 
+def memory_names(text: str) -> frozenset[str]:
+    """Folded names in a memory: capitalised words that do not start a sentence, not function words."""
+    from agentmem_ref.api.context_selection import FUNCTION_WORDS, _STATEMENT_END, _WORD, content_terms
+
+    names: set[str] = set()
+    for sentence in _STATEMENT_END.split(text.replace("\u2019", "'")):
+        for token in _WORD.findall(sentence)[1:]:
+            base = token.split("'", 1)[0]
+            if base[:1].isupper() and base.casefold() not in FUNCTION_WORDS:
+                names |= content_terms(base)
+    return frozenset(names)
+
+
+def decide_per_memory(question: str, contexts: Sequence[str], answering: Sequence[bool],
+                      joint_answering: bool) -> dict[str, Any]:
+    """1.1.0: support only where one memory is both subject-applicable and answering.
+
+    Without such a memory, each pair (anchor, partner) with the anchor naming every question
+    subject and the partner sharing a name with it is a cross-memory *candidate* with its facts
+    and shared names: an unresolved relationship, never support and never proof of absence.
+    """
+    from agentmem_ref.api.context_selection import content_terms
+
+    subjects = named_subjects(question)
+    applicable = [grounded(subjects, text) for text in contexts]
+    per_item = [a and b for a, b in zip(applicable, answering)]
+    candidates: list[dict[str, Any]] = []
+    # A bridge starts from a memory naming the question's subject; a question naming no one has none.
+    if subjects and not any(per_item):
+        terms = [content_terms(text) for text in contexts]
+        names = [memory_names(text) for text in contexts]
+        seen: set[tuple[int, int]] = set()
+        for anchor in (i for i, ok in enumerate(applicable) if ok):
+            for partner in range(len(contexts)):
+                pair = tuple(sorted((anchor, partner)))
+                if partner == anchor or pair in seen:
+                    continue
+                links = ((names[anchor] | names[partner]) & terms[anchor] & terms[partner]) - subjects
+                if not links:
+                    continue
+                seen.add(pair)
+                candidates.append({"facts": list(pair), "link_terms": sorted(links),
+                                   "relationship": "shared_name_unresolved"})
+    return {"per_item": per_item, "joint": any(per_item), "subjects": sorted(subjects),
+            "applicable": applicable, "answering": list(answering),
+            "cross_memory_candidates": candidates,
+            "diagnostics": {"joint_answering_unadmitted": bool(joint_answering)}}
+
+
 class Answerability:
-    """The successor: subject-grounded, sentence-level answerability (QNLI cross-encoder)."""
+    """Cycle 2: subject-grounded, sentence-level answerability (QNLI cross-encoder)."""
 
     METHOD = ANSWERABILITY.method
     MODEL_REF = ANSWERABILITY.model_ref
@@ -267,7 +332,30 @@ class Answerability:
         return decide(question, contexts, answering, joint)
 
 
-_LOADED: dict[str, Any] = {}
+class AnswerabilityPerMemory(Answerability):
+    """Cycle 3: per-memory support, joined text only as a diagnostic, bounded linked pairs."""
+
+    METHOD = "answerability-subject-grounded/1.1.0"
+    CROSS_MEMORY_REASON = "cross_memory_relationship_not_established"
+
+    def check(self, question: str, contexts: Sequence[str]) -> dict[str, Any]:
+        answering = [self.answers(question, text) for text in contexts]
+        joint = len(contexts) > 1 and self.answers(question, "\n".join(contexts))
+        return decide_per_memory(question, contexts, answering, joint)
+
+
+_METHODS = {EXTRACTIVE.method: AnswerSupport, Answerability.METHOD: Answerability,
+            AnswerabilityPerMemory.METHOD: AnswerabilityPerMemory}
+
+
+def methods_for(spec: Spec) -> tuple[str, ...]:
+    """The method versions a pinned model serves, the default first."""
+    if spec is ANSWERABILITY:
+        return (AnswerabilityPerMemory.METHOD, Answerability.METHOD)
+    return (EXTRACTIVE.method,)
+
+
+_LOADED: dict[tuple[str, str], Any] = {}
 
 
 def _spec_for(model_dir: Path) -> Spec:
@@ -282,13 +370,16 @@ def from_environment() -> Any:
     raw = os.environ.get(ENV_DIR, "")
     if not raw:
         return None
-    if raw not in _LOADED:
-        model_dir = Path(raw)
-        if not model_dir.is_absolute():
-            raise SupportCheckUnavailable("support model directory must be an absolute path")
-        spec = _spec_for(model_dir)
-        _LOADED[raw] = (Answerability if spec is ANSWERABILITY else AnswerSupport)(model_dir)
-    return _LOADED[raw]
+    model_dir = Path(raw)
+    if not model_dir.is_absolute():
+        raise SupportCheckUnavailable("support model directory must be an absolute path")
+    offered = methods_for(_spec_for(model_dir))
+    method = os.environ.get(METHOD_ENV) or offered[0]
+    if method not in offered:
+        raise SupportCheckUnavailable("requested support method is not served by this model directory")
+    if (raw, method) not in _LOADED:
+        _LOADED[(raw, method)] = _METHODS[method](model_dir)
+    return _LOADED[(raw, method)]
 
 
 def fetch(spec: Spec, model_dir: Path) -> None:

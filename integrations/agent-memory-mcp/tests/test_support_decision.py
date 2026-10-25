@@ -76,6 +76,81 @@ class DecisionTests(unittest.TestCase):
         self.assertTrue(out["joint"])
 
 
+class PerMemoryDecisionTests(unittest.TestCase):
+    """answerability-subject-grounded/1.1.0: support is per memory; joined text never grants it."""
+
+    def decide(self, question, texts, answering, joint_answering=False):
+        return answer_support.decide_per_memory(question, texts, answering, joint_answering)
+
+    def test_concatenated_memories_never_grant_support(self):
+        texts = ["Marisol is going to Lisbon in May.", "Elena's car is a red Fiat.", "Rent is due on the fifth."]
+        out = self.decide("What car does Marisol drive?", texts, [False, True, False], joint_answering=True)
+        self.assertEqual(out["per_item"], [False, False, False])
+        self.assertFalse(out["joint"])
+        self.assertEqual(out["cross_memory_candidates"], [])
+        self.assertEqual(out["diagnostics"], {"joint_answering_unadmitted": True})
+
+    def test_subject_in_one_memory_cannot_authorise_an_answer_in_an_unlinked_one(self):
+        texts = ["Marisol works at the harbour office.", "The red Fiat is parked on Birch Lane."]
+        out = self.decide("What car does Marisol drive?", texts, [False, True])
+        self.assertEqual(out["per_item"], [False, False])
+        self.assertEqual(out["cross_memory_candidates"], [])
+
+    def test_linked_pair_is_an_unresolved_candidate_with_its_facts_and_link_not_support(self):
+        texts = ["Elena is planning a trip to Kyoto with her sister Marisol.",
+                 "The rent is due on the fifth.",
+                 "Marisol has been vegetarian for ten years."]
+        out = self.decide("Will Elena's travel companion eat meat?", texts, [False, False, False])
+        self.assertEqual(out["per_item"], [False, False, False])
+        self.assertFalse(out["joint"])
+        self.assertEqual(out["cross_memory_candidates"],
+                         [{"facts": [0, 2], "link_terms": ["marisol"], "relationship": "shared_name_unresolved"}])
+
+    def test_the_question_subject_itself_is_not_a_link(self):
+        texts = ["Elena teaches chemistry.", "Elena swims on Tuesdays."]
+        out = self.decide("Which car does Elena drive?", texts, [False, False])
+        self.assertEqual(out["cross_memory_candidates"], [])
+
+    def test_a_capitalised_sentence_start_is_not_a_name(self):
+        texts = ["Rent for the studio is due on the fifth.", "Rent increases are announced in May."]
+        self.assertEqual(answer_support.memory_names(texts[0]), frozenset())
+        out = self.decide("When is the rent due for Ivo?", ["Ivo rents the studio.", *texts], [False, False, False])
+        self.assertEqual(out["cross_memory_candidates"], [])
+
+    def test_no_bridge_starts_without_a_memory_naming_the_subject(self):
+        texts = ["Kesh lives with Marisol.", "Marisol has been vegetarian for ten years."]
+        out = self.decide("Does Elena's companion eat meat?", texts, [False, False])
+        self.assertEqual(out["cross_memory_candidates"], [])
+
+    def test_a_question_that_names_no_one_has_no_subject_to_bridge_from(self):
+        texts = ["The shed was repainted by Kesh in May.", "Kesh keeps spare tools in the garage."]
+        out = self.decide("Where is the shed key kept?", texts, [False, False])
+        self.assertEqual(out["subjects"], [])
+        self.assertEqual(out["cross_memory_candidates"], [])
+
+    def test_single_memory_support_still_wins_and_no_candidate_is_formed(self):
+        texts = ["Noor is allergic to peanuts.", "Noor's neighbour Kesh waters the plants."]
+        out = self.decide("Which food can Noor not eat?", texts, [True, False])
+        self.assertEqual(out["per_item"], [True, False])
+        self.assertTrue(out["joint"])
+        self.assertEqual(out["cross_memory_candidates"], [])
+
+    def test_names_come_from_mid_sentence_capitals_folded(self):
+        from agentmem_ref.api.context_selection import content_terms
+        self.assertEqual(answer_support.memory_names("Elena is planning a trip to Kyoto with her sister Marisol."),
+                         {"kyoto", "marisol"})
+        self.assertEqual(answer_support.memory_names("It rained. Then Ines's flight left for Lisbon."),
+                         content_terms("Ines Lisbon"))
+
+
+class MethodSelectionTests(unittest.TestCase):
+    def test_answerability_layout_offers_both_versions_and_defaults_to_the_correction(self):
+        self.assertEqual(answer_support.methods_for(answer_support.ANSWERABILITY),
+                         ("answerability-subject-grounded/1.1.0", "answerability-subject-grounded/1.0.0"))
+        self.assertEqual(answer_support.methods_for(answer_support.EXTRACTIVE),
+                         ("extractive-qa-null-comparison/1.0.0",))
+
+
 class FromEnvironmentTests(unittest.TestCase):
     def test_each_pinned_layout_selects_its_own_method(self):
         self.assertEqual({spec.method for spec in answer_support.SPECS},
@@ -96,8 +171,27 @@ class RealAnswerabilityModelTests(unittest.TestCase):
     def setUpClass(cls):
         cls.checker = answer_support.from_environment()
 
-    def test_method_is_the_successor(self):
-        self.assertEqual(self.checker.METHOD, answer_support.ANSWERABILITY.method)
+    def test_method_is_the_corrected_successor_by_default(self):
+        if os.environ.get(answer_support.METHOD_ENV):
+            self.skipTest("host selected a method explicitly")
+        self.assertEqual(self.checker.METHOD, "answerability-subject-grounded/1.1.0")
+
+    def test_cross_memory_answer_is_an_attributed_candidate_not_support(self):
+        if self.checker.METHOD != "answerability-subject-grounded/1.1.0":
+            self.skipTest("cycle-3 behaviour")
+        out = self.checker.check("Will Elena's travel companion eat meat on the Kyoto trip?",
+                                 ["Elena is planning a trip to Kyoto in April with her sister Marisol.",
+                                  "Marisol has been vegetarian for ten years."])
+        self.assertEqual(out["per_item"], [False, False])
+        self.assertFalse(out["joint"])
+        self.assertEqual([c["facts"] for c in out["cross_memory_candidates"]], [[0, 1]])
+        self.assertEqual(out["cross_memory_candidates"][0]["link_terms"], ["marisol"])
+
+    def test_u1_and_p1_hold_under_per_memory_support(self):
+        texts = ["Noor keeps her kayak at the Pinecrest boathouse. It is painted yellow.",
+                 "Tobias stores his kayak in his garage on Elm Street."]
+        self.assertEqual(self.checker.check("Where does Imogen keep her kayak?", texts)["per_item"], [False, False])
+        self.assertEqual(self.checker.check("Where is Noor's kayak stored?", texts)["per_item"], [True, False])
 
     def test_p3_inferential_answer_is_supported(self):
         out = self.checker.check("Which food can Noor not eat?",

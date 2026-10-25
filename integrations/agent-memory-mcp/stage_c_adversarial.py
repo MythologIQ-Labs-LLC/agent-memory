@@ -5,7 +5,8 @@ was run on it. This driver seeds its records, applies its lifecycle steps throug
 (governed correction with a host record, a same-key rewrite, a host-granted reversible forget),
 restarts the server, asks every question, restarts again and asks every question again. It runs
 arms over the same store at the same retrieval budget: the host's answer-support check disabled
-(the prior behavior), then one arm per ``--support-model-dir`` in the order given. The last one
+(the prior behavior), then one arm per ``--support-model-dir`` in the order given; ``DIR@METHOD``
+pins a method version the directory's model serves (host setting AGENT_MEMORY_MCP_SUPPORT_METHOD). The last one
 is the candidate under qualification; the others are reported for comparison. Labels are joined
 after the MCP calls; they are never tool arguments.
 
@@ -98,7 +99,12 @@ async def seed(cases: dict, root: Path, temp: Path) -> list[dict]:
 
 
 async def ask_all(cases: dict, root: Path, support_dir: str | None) -> list[dict]:
-    extra = {"AGENT_MEMORY_MCP_SUPPORT_MODEL_DIR": support_dir} if support_dir else {}
+    extra = {}
+    if support_dir:
+        directory, _, method = support_dir.partition("@")
+        extra["AGENT_MEMORY_MCP_SUPPORT_MODEL_DIR"] = directory
+        if method:
+            extra["AGENT_MEMORY_MCP_SUPPORT_METHOD"] = method
     by_key = {r["key"]: r["text"] for r in cases["records"]}
     lifecycle = cases.get("lifecycle", [])
     for step in lifecycle:
@@ -119,6 +125,7 @@ async def ask_all(cases: dict, root: Path, support_dir: str | None) -> list[dict
                             and by_key.get(e.get("memory_ref")) == e.get("content")]
             support = out.get("answer_support") or {}
             supported_refs = set(support.get("supported_fact_refs") or [])
+            by_ref = {e.get("fact_ref"): e.get("memory_ref") for e in evidence}
             rows.append({
                 "id": task["id"], "category": task.get("category"), "question": task["question"],
                 "answerable": bool(task["required"]), "required": task["required"],
@@ -127,6 +134,8 @@ async def ask_all(cases: dict, root: Path, support_dir: str | None) -> list[dict
                 "assessment": out.get("evidence_assessment"), "reason": out.get("evidence_assessment_reason"),
                 "support_status": support.get("status"), "support_method": support.get("method"),
                 "joint_supported": support.get("joint_supported"),
+                "cross_memory_candidates": [[by_ref.get(f) for f in c["facts"]]
+                                            for c in support.get("cross_memory_candidates") or []],
                 "supported_keys": [e.get("memory_ref") for e in evidence if e.get("fact_ref") in supported_refs],
                 "superseded_text_as_current": any(e.get("content") in superseded and e.get("latest_for_key") is not False
                                                   for e in evidence),
@@ -151,6 +160,11 @@ def summarise(rows: list[dict]) -> dict[str, Any]:
                                                         and r["assessment"] == "insufficient_evidence"),
         "support_in_required": sum(bool(set(r["supported_keys"]) & set(r["required"])) for r in delivered),
         "unanswerable_abstained": sum(r["assessment"] == "insufficient_evidence" for r in unanswerable),
+        "retrieval_misses": sorted(r["id"] for r in answerable if not r["required_complete"]),
+        "unsupported_candidate_support": sorted(
+            [r["id"] for r in unanswerable if r["supported_keys"]]
+            + [r["id"] for r in answerable if not set(r["supported_keys"]) <= set(r["required"])]),
+        "cross_memory_candidate_tasks": sorted(r["id"] for r in rows if r.get("cross_memory_candidates")),
         "false_sufficiency": sorted(r["id"] for r in unanswerable if r["assessment"] != "insufficient_evidence"),
         "invariants_hold": all(r["profile"] == "all_returned" and r["answer_generated"] is False
                                and r["answerability_verified"] is False and not r["forgotten_delivered"]
@@ -214,7 +228,9 @@ def main() -> int:
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--cases", type=Path, default=CASES)
     options = parser.parse_args()
-    report = asyncio.run(run([str(Path(d).resolve()) for d in options.support_model_dir], options.cases))
+    dirs = [str(Path(d.partition("@")[0]).resolve()) + ("@" + d.partition("@")[2] if "@" in d else "")
+            for d in options.support_model_dir]
+    report = asyncio.run(run(dirs, options.cases))
     options.out.parent.mkdir(parents=True, exist_ok=True)
     options.out.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps({"status": report["status"], "cases": report["cases"], "qualified_arm": report["qualified_arm"],

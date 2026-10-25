@@ -86,6 +86,20 @@ class FakeSuccessor:
         return answer_support.decide(question, contexts, self.answering, self.joint)
 
 
+class FakePerMemory(FakeSuccessor):
+    """Stand-in classifier for 1.1.0; the decision is the real answer_support.decide_per_memory."""
+
+    def __init__(self, *, answering, joint):
+        import answer_support
+        super().__init__(answering=answering, joint=joint)
+        self.METHOD = answer_support.AnswerabilityPerMemory.METHOD
+        self.CROSS_MEMORY_REASON = answer_support.AnswerabilityPerMemory.CROSS_MEMORY_REASON
+
+    def check(self, question, contexts):
+        import answer_support
+        return answer_support.decide_per_memory(question, contexts, self.answering, self.joint)
+
+
 class BridgeTests(unittest.TestCase):
     def setUp(self):
         self.calls = []
@@ -253,6 +267,35 @@ class BridgeTests(unittest.TestCase):
         self.assertEqual(result["answer_support"]["supported_fact_refs"], ["fact:qualified-1"])
         self.assertFalse(result["answerability_verified"])
         self.assertFalse(result["answer_generated"])
+
+    def test_per_memory_successor_names_cross_memory_facts_and_does_not_claim_absence(self):
+        package = {"status": "complete", "items": [
+            {"state": "resolved", "content": "Elena is planning a trip with her sister Marisol.",
+             "fact_ref": "fact:trip", "provenance": {"memory_ref": "memory:trip"}},
+            {"state": "resolved", "content": "Marisol has been vegetarian for ten years.",
+             "fact_ref": "fact:diet", "provenance": {"memory_ref": "memory:diet"}},
+        ]}
+        with patch.object(FakeMemory, "recall_context", return_value=package):
+            result = self._bridge_with_support(FakePerMemory(answering=[False, False], joint=True)).find(
+                "Will Elena's companion eat meat?")
+        support = result["answer_support"]
+        self.assertEqual(result["evidence_assessment"], "unverified")
+        self.assertEqual(result["evidence_assessment_reason"], "cross_memory_relationship_not_established")
+        self.assertEqual(support["supported_fact_refs"], [])
+        self.assertIsNone(support["joint_supported"])
+        self.assertEqual(support["support_scope"], "per_memory")
+        self.assertEqual(support["cross_memory_candidates"],
+                         [{"facts": ["fact:trip", "fact:diet"], "link_terms": ["marisol"],
+                           "relationship": "shared_name_unresolved"}])
+        self.assertEqual(support["diagnostics"], {"joint_answering_unadmitted": True})
+        self.assertFalse(result["answerability_verified"])
+
+    def test_per_memory_successor_joined_answer_alone_is_insufficient(self):
+        result = self._bridge_with_support(FakePerMemory(answering=[False], joint=True)).find("Which editor?")
+        self.assertEqual(result["evidence_assessment"], "insufficient_evidence")
+        self.assertEqual(result["evidence_assessment_reason"], "no_supported_answer_in_current_evidence")
+        self.assertEqual(result["answer_support"]["diagnostics"], {"joint_answering_unadmitted": True})
+        self.assertEqual(result["evidence_count"], 1)
 
     def test_support_check_does_not_change_delivered_evidence(self):
         plain = self.bridge.find("Which editor?")

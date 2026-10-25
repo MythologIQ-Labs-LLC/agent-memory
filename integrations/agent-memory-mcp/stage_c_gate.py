@@ -19,7 +19,7 @@ GATE_SCHEMA = "agent-memory-stage-c-populated-store/0.3.0"
 # An answerable task keeps its evidence and is never called verified. With the host's optional
 # answer-support check, supported evidence is still only a candidate.
 ANSWERABLE_REASONS = ("answer_entailment_not_checked", "answer_span_candidate_not_verified",
-                      "supported_answer_candidate_not_verified")
+                      "supported_answer_candidate_not_verified", "cross_memory_relationship_not_established")
 
 
 def assess(report: dict[str, Any], manifest: dict[str, Any]) -> dict[str, Any]:
