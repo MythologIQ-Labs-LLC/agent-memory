@@ -160,10 +160,15 @@ def main() -> int:
             "passed": isinstance(cfg_baseline, dict) and
                       "default" in cfg_baseline and now_cfg["default"] == cfg_baseline["default"]
         }
-        steps["isolated_claude_config_unchanged"] = {
+        # The isolated directory is inside --dev-dir and may legitimately change
+        # during an authenticated pilot. Report changes, but do not fail admission.
+        steps["isolated_claude_config_contained"] = {
             "passed": not config_dir or (
-                "isolated" in cfg_baseline and now_cfg["isolated"] == cfg_baseline["isolated"]
-            )
+                "isolated" in cfg_baseline and
+                pf.overlaps(config_dir, dev) and
+                not pf.overlaps(config_dir, Path.home() / ".claude")
+            ),
+            "changed": bool(config_dir and now_cfg["isolated"] != cfg_baseline.get("isolated")),
         }
         decision = "GO" if steps and all(s["passed"] for s in steps.values()) else "NO-GO"
         results[version] = {"decision": decision, "failed_steps": [k for k, s in steps.items() if not s["passed"]]}
