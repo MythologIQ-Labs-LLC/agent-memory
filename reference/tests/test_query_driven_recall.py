@@ -257,6 +257,39 @@ class QueryDrivenRecallTests(unittest.TestCase):
         self.assertNotIn(foreign_neighbor.fact_uuid, result.admitted)
         self.assertEqual(result.route_hits, {})
 
+    def test_graph_expansion_rechecks_scope_after_seed_selection(self) -> None:
+        seed = self._retain(
+            "memory:revoked-seed",
+            "pottery class anchor",
+            evidence_refs=("dialog:guard:1", "session:guard"),
+        )
+        neighbor = self._retain(
+            "memory:revoked-neighbor",
+            "blue bowl",
+            evidence_refs=("dialog:guard:2", "session:guard"),
+        )
+        planner = DeterministicQueryDrivenRecallPlanner(
+            self.runtime.adapter,
+            config=QueryDrivenRecallConfig(lexical_anchor_limit=0),
+        )
+        substrate = self.runtime.adapter.checkpoint_substrate()
+        hits = []
+        # Simulate scope becoming ineligible after route planning but before
+        # neighbor expansion. No traversal-derived hit may escape this boundary.
+        from unittest.mock import patch
+        with patch.object(self.runtime.adapter, "domain_eligible", return_value=False):
+            planner._expand_seed(
+                substrate,
+                TENANT,
+                hits,
+                context=_context(),
+                seed_ref=seed.fact_uuid,
+                logical_memory_ref="memory:revoked-seed",
+                expanded_seeds=set(),
+            )
+        self.assertEqual(hits, [])
+        self.assertNotEqual(seed.fact_uuid, neighbor.fact_uuid)
+
     def test_default_runtime_behavior_remains_unexpanded_without_explicit_seed(self) -> None:
         self._retain(
             "memory:seed",
