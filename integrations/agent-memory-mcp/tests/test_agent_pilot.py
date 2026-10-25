@@ -45,6 +45,15 @@ class AuthorityTests(unittest.TestCase):
             params = set(inspect.signature(getattr(server, name)).parameters)
             self.assertLessEqual(params, {"key", "text", "question", "max_items", "experimental_selectivity"}, name)
 
+    def test_evidence_contract_separates_derived_conclusions_from_stored_facts(self):
+        # S06 in all three pilot runs moved a schedule comparison under "From memory".
+        # This regression checks the agent-facing instruction, not model adherence.
+        contract = pilot.CONTRACT.read_text(encoding="utf-8")
+        self.assertIn("Comparisons or conclusions drawn from one or several memories", contract)
+        self.assertIn("even if they seem obvious", contract)
+        self.assertIn("Under `From memory`, report the original facts separately.", contract)
+        self.assertIn("`Inference (not stated in memory):`", contract)
+
     def test_the_host_scrubs_its_own_memory_environment_before_starting_the_agent(self):
         self.assertTrue(all(k.startswith(pilot.HOST_ONLY) for k in LIFECYCLE))
 

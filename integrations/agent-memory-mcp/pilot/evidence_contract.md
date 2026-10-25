@@ -11,8 +11,11 @@ evidence; they never generate or verify answers.
    `- [key: <memory_ref> | source: <source_ref> | state: <state> | latest for key: <latest_for_key>] "<exact recalled text>"`
    Quote recalled text exactly. Do not quote anything else in double quotes.
 3. **Separate what memory says from your own reasoning.** After the evidence, write:
-   - `From memory:` only what the quoted evidence states.
+   - `From memory:` only what the quoted evidence explicitly states, without conclusions or comparisons.
    - `Inference (not stated in memory):` only if useful, clearly yours, never presented as a stored fact.
+   - Comparisons or conclusions drawn from one or several memories belong under `Inference`,
+     even if they seem obvious (for example, comparing a recalled weekday schedule with a
+     separately recalled Saturday event). Under `From memory`, report the original facts separately.
 4. **Incomplete evidence.** If an item's state is not `resolved`, say it was delivered
    incompletely and do not complete it from guesswork.
 5. **Versions.** If `latest for key` is false, or the result lists `non_head_keys`, an older
