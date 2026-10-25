@@ -1,0 +1,41 @@
+test_default_config_is_snapshotted_with_isolated_config (test_windows_preflight_guards.ClaudeConfigBaselineTests.test_default_config_is_snapshotted_with_isolated_config) ... ok
+test_default_only_snapshot_is_present_without_isolation (test_windows_preflight_guards.ClaudeConfigBaselineTests.test_default_only_snapshot_is_present_without_isolation) ... ok
+test_failed_inspection_is_unknown_not_non_elevated (test_windows_preflight_guards.IntegrityLevelTests.test_failed_inspection_is_unknown_not_non_elevated) ... ok
+test_high_and_system_are_elevated (test_windows_preflight_guards.IntegrityLevelTests.test_high_and_system_are_elevated) ... 
+  test_high_and_system_are_elevated (test_windows_preflight_guards.IntegrityLevelTests.test_high_and_system_are_elevated) (level=12288) ... FAIL
+  test_high_and_system_are_elevated (test_windows_preflight_guards.IntegrityLevelTests.test_high_and_system_are_elevated) (level=16384) ... FAIL
+test_medium_is_not_elevated (test_windows_preflight_guards.IntegrityLevelTests.test_medium_is_not_elevated) ... FAIL
+test_missing_integrity_sid_is_unknown (test_windows_preflight_guards.IntegrityLevelTests.test_missing_integrity_sid_is_unknown) ... ok
+test_only_strict_child_of_dev_root_is_allowed (test_windows_preflight_guards.IsolatedConfigPathTests.test_only_strict_child_of_dev_root_is_allowed) ... ok
+
+======================================================================
+FAIL: test_high_and_system_are_elevated (test_windows_preflight_guards.IntegrityLevelTests.test_high_and_system_are_elevated) (level=12288)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>/integrations/agent-memory-mcp/tests/test_windows_preflight_guards.py", line 31, in test_high_and_system_are_elevated
+    self.assertIs(preflight.elevated(), True)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None is not True
+
+======================================================================
+FAIL: test_high_and_system_are_elevated (test_windows_preflight_guards.IntegrityLevelTests.test_high_and_system_are_elevated) (level=16384)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>/integrations/agent-memory-mcp/tests/test_windows_preflight_guards.py", line 31, in test_high_and_system_are_elevated
+    self.assertIs(preflight.elevated(), True)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None is not True
+
+======================================================================
+FAIL: test_medium_is_not_elevated (test_windows_preflight_guards.IntegrityLevelTests.test_medium_is_not_elevated)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>/integrations/agent-memory-mcp/tests/test_windows_preflight_guards.py", line 26, in test_medium_is_not_elevated
+    self.assertIs(preflight.elevated(), False)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None is not False
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.005s
+
+FAILED (failures=3)

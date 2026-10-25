@@ -111,7 +111,7 @@ def elevated() -> bool | None:
     if code != 0:
         return None
     # Mandatory integrity SIDs: medium 8192, high 12288, system 16384.
-    levels = [int(x) for x in re.findall(r"S-1-16-(\\d+)", out)]
+    levels = [int(x) for x in re.findall(r"S-1-16-(\d+)", out)]
     if not levels:
         return None
     return max(levels) >= 12288
