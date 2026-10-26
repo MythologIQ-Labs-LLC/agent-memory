@@ -113,23 +113,28 @@ def run_580() -> dict:
 
 def run_m4(pairs: int = 50) -> dict:
     out = {}
-    memory = AgentMemory.open(tempfile.mkdtemp(), tenant="tenant:m4", scope="benchmark:m4")
-    try:
-        for index in range(pairs):
-            category, old_t, new_t, query = CONFLICT_TEMPLATES[index % len(CONFLICT_TEMPLATES)]
-            scope = f"user:conflict_{index:05d}"
-            domains = ["tenant:m4", scope]
-            overrides = {"scope": scope, "isolation_domain_refs": domains,
-                         "required_isolation_domain_refs": domains, "project_ref": scope}
-            old = memory.remember(f"memory:m4:{index}:old", old_t.format(old=f"OLD_{category}_{index:04d}"),
-                                  overrides=overrides)["fact_uuid"]
-            new = memory.remember(f"memory:m4:{index}:new", new_t.format(new=f"NEW_{category}_{index:04d}"),
-                                  overrides=overrides)["fact_uuid"]
-            recall = memory.recall(query, target_domain_refs=domains, project_ref=scope, budget=1)
+    root = tempfile.mkdtemp()
+    for index in range(pairs):
+        category, old_t, new_t, query = CONFLICT_TEMPLATES[index % len(CONFLICT_TEMPLATES)]
+        scope = f"user:conflict_{index:05d}"
+        # Real scoped handle, not fabricated proposal ownership (#786).
+        # Reopen serially in the same store so persistent ids and ordering
+        # remain part of the same benchmark cohort.
+        with AgentMemory.open(root, tenant="tenant:m4", scope=scope) as memory:
+            old_result = memory.remember(
+                f"memory:m4:{index}:old",
+                old_t.format(old=f"OLD_{category}_{index:04d}"),
+            )
+            new_result = memory.remember(
+                f"memory:m4:{index}:new",
+                new_t.format(new=f"NEW_{category}_{index:04d}"),
+            )
+            if not old_result["committed"] or not new_result["committed"]:
+                raise AssertionError(f"M4 scoped seeding refused at {index}")
+            old, new = old_result["fact_uuid"], new_result["fact_uuid"]
+            recall = memory.recall(query, budget=1)
             top = recall["returned"][0] if recall["returned"] else None
             out[f"{category}/{index}"] = "new" if top == new else "old" if top == old else "neither"
-    finally:
-        memory.close()
     return out
 
 
