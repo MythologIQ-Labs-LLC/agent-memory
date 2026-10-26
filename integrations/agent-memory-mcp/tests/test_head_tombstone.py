@@ -87,11 +87,14 @@ class HeadTombstoneTests(unittest.TestCase):
         self.assertNotIn("fact:head", repr(result))
 
     def test_governed_refusal_is_not_reported_as_success(self):
-        self.memory.outcome = {"committed": False, "refusal": "requires_review"}
+        self.memory.outcome = {"committed": False, "outcome": "require_review",
+                               "refusal": "secret_internal_detail"}
         result = self._run_enabled()
         self.assertFalse(result["committed"])
+        self.assertTrue(result["review_required"])
+        self.assertEqual(result["next_step"], "host_governance_review")
         self.assertEqual(result["status"], "governed_refusal")
-        self.assertNotIn("requires_review", repr(result))
+        self.assertNotIn("secret_internal_detail", repr(result))
 
 
 class HeadCorrectionTests(unittest.TestCase):
@@ -160,12 +163,15 @@ class HeadCorrectionTests(unittest.TestCase):
         self.assertEqual(self.memory.calls[-1][-1], {"replacement_kind": "state_change"})
 
     def test_policy_refusal_never_falls_back_to_remember(self):
-        self.memory.outcome = {"committed": False, "refusal": "review_required"}
+        self.memory.outcome = {"committed": False, "outcome": "require_review",
+                               "refusal": "secret_internal_detail"}
         result = self._correct()
         self.assertFalse(result["committed"])
+        self.assertTrue(result["review_required"])
+        self.assertEqual(result["next_step"], "host_governance_review")
         self.assertIsNone(result["new_fact_ref"])
         self.assertEqual(result["status"], "governed_refusal")
-        self.assertNotIn("review_required", repr(result))
+        self.assertNotIn("secret_internal_detail", repr(result))
         self.assertNotIn("I now use", repr(result))
         self.assertFalse(any(entry[0] == "remember" for entry in self.memory.calls))
 
