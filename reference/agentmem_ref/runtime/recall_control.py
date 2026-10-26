@@ -583,7 +583,9 @@ class ControlledRecallPlanner:
         exact_budget = plan.budget_for(EXACT_IDENTITY_ROUTE)
         explicit_seeds: list[tuple[str, str]] = []
         if exact_budget.candidate_limit:
-            for logical_ref in unique_logical_refs[: exact_budget.candidate_limit]:
+            for logical_ref in unique_logical_refs:
+                if len(explicit_seeds) >= exact_budget.candidate_limit:
+                    break
                 current = self.adapter.current_fact_uuid(logical_ref)
                 if current is None:
                     continue
@@ -640,7 +642,9 @@ class ControlledRecallPlanner:
         ):
             graph_seed_refs: list[str] = []
             graph_seed_limit = min(MAX_GRAPH_SEED_REFS, graph_budget.candidate_limit)
-            for logical_ref in unique_logical_refs[:graph_seed_limit]:
+            for logical_ref in unique_logical_refs:
+                if len(graph_seed_refs) >= graph_seed_limit:
+                    break
                 current = self.adapter.current_fact_uuid(logical_ref)
                 if current is not None:
                     seed_fact = substrate.get_fact(current)
