@@ -301,6 +301,12 @@ class LocalMemoryBridge:
         result["evidence"] = exact if status == "found" else []
         result["evidence_count"] = len(result["evidence"])
         result["lookup_status"] = status
+        # A positive upstream selector assessment does not certify that this
+        # exact-key consumer actually delivered a verified head.
+        result["delivery_assessment"] = (
+            "verified_exact_head_delivered" if status == "found"
+            else "no_verified_exact_head"
+        )
         # Only a history-confirmed, fully delivered head is a successful get.
         # Earlier generations are not enumerated and might still appear in
         # memory_find as independently current facts.
