@@ -132,6 +132,21 @@ class ScopedIdentityTests(unittest.TestCase):
                     ScopeDistinctMemory.open(Path(directory), tenant="tenant:one", actor_id="agent:one", scope="project:e\u0301")
                 opener.assert_not_called()
 
+    def test_invalid_actor_rejected_before_runtime_or_implicit_store_init(self):
+        with tempfile.TemporaryDirectory() as directory:
+            with patch("agentmem_ref.api.scoped_identity.AgentMemory.open") as opener:
+                for actor in ("", " ", "agent:e\u0301", None):
+                    with self.subTest(actor=actor), self.assertRaisesRegex(ValueError, "actor_id"):
+                        ScopeDistinctMemory.open(Path(directory), tenant="tenant:one", scope="project:a", actor_id=actor)
+                opener.assert_not_called()
+            self.assertFalse((Path(directory) / ".agent-memory-scoped-v1").exists())
+
+    def test_direct_facade_constructor_rejects_noncanonical_actor(self):
+        fake = FakeMemory("tenant:one", "project:a", "actor: ", {})
+        with self.assertRaisesRegex(ValueError, "actor_id"):
+            ScopeDistinctMemory(fake, tenant="tenant:one", scope="project:a", actor_id="actor: ")
+        self.assertEqual(fake.calls, [])
+
     def test_two_projects_same_public_key_create_separate_heads(self):
         store = {}
         a, b = scoped("project:a", store), scoped("project:b", store)
