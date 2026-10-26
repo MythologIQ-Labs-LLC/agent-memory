@@ -71,7 +71,14 @@ framing, and tool schemas provided by the official SDK.
   lookup_status=not_found_or_unavailable, **not** a guessed nearby memory and
   not proof that the key never existed. If several governed facts resolve under
   the same logical key, returns lookup_status=ambiguous_multiple_versions
-  without guessing which one supersedes the others. No direct database access.
+  without guessing which one supersedes the others. For one candidate, the
+  public history must independently confirm that its fact_ref is the live head
+  and the delivery state must be fully resolved; stale or unverifiable heads
+  return lookup_status=head_unverified_or_changed, and truncated content
+  returns lookup_status=incomplete_evidence. In these failure states the
+  bridge returns no memory text, no successful get, and no state counter.
+  This deliberately treats unverified and stale evidence identically.
+  No direct database access.
   A second memory_remember under an existing key is **not a correction**: the runtime
   commits a new generation and moves the key's head, but the earlier fact stays a
   current-state fact. memory_get serves the head only and reports key_state_version
