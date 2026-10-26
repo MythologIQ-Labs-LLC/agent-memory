@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from pathlib import Path
 import unicodedata
 from typing import Any
 
@@ -18,6 +19,9 @@ from .surface import AgentMemory
 
 _NAMESPACE = "scope-key-v1:"
 _MAX_KEY_LENGTH = 512
+# A physically separate durable root. An existing legacy tenant-wide store
+# at the caller's parent root is never adopted or rewritten by this mode.
+_SCOPED_STORE_DIRECTORY = ".agent-memory-scoped-v1"
 
 
 def scope_distinct_key(tenant: str, scope: str, public_key: str) -> str:
@@ -47,7 +51,7 @@ def scope_distinct_key(tenant: str, scope: str, public_key: str) -> str:
 class ScopeDistinctMemory:
     """Bounded current-head consumer for a host-owned project scope.
 
-    New dedicated store only. Do not mix it with legacy direct-key consumers.
+    New dedicated child store only. Do not expose the child path to legacy\n    direct-key consumers.
     Key allocation is not security isolation if raw AgentMemory handles are
     exposed to the same untrusted principal.
     """
@@ -70,8 +74,14 @@ class ScopeDistinctMemory:
     ) -> "ScopeDistinctMemory":
         # The caller running this constructor is the trusted host. The model
         # must not select tenant/scope/actor per memory operation.
+        parent = Path(path)
+        # The parent is host-owned. Never silently open the legacy runtime at
+        # that path; scope-distinct mode uses its own persistent child root.
+        # This is physical namespace separation, not a replacement for the
+        # host's filesystem access controls or the canonical scope guard.
+        scoped_root = parent / _SCOPED_STORE_DIRECTORY
         memory = AgentMemory.open(
-            path, tenant=tenant, actor_id=actor_id, scope=scope, purpose=purpose
+            scoped_root, tenant=tenant, actor_id=actor_id, scope=scope, purpose=purpose
         )
         try:
             return cls(memory, tenant=tenant, scope=scope, actor_id=actor_id)
