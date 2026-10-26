@@ -38,6 +38,7 @@ from typing import Any, Callable, Protocol, Sequence
 
 from benchmark_ranking_variants import VARIANTS, apply_ranking_variant
 from agentmem_ref import AgentMemory
+from scoped_benchmark_host import SerializedScopedBenchmarkHost
 
 
 UPSTREAM_REPOSITORY = "mazaiying/AgentMemBench"
@@ -249,12 +250,12 @@ class LexicalOverlapAdapter:
 
 
 class AgentMemoryAdapter:
-    """Public ``AgentMemory`` facade behind the upstream adapter protocol.
+    """#786 candidate: host-bound user scopes, not forged per-call identities.
 
-    One governed runtime per ``reset`` under a single tenant. Each upstream
-    ``user_id`` becomes its own governed scope / isolation domain, so user
-    separation is enforced by canonical recall admission, not by the adapter.
-    Deletion uses the facade default (governed tombstone).
+    The same tenant and durable store remain shared, but one actual facade
+    scope is active at a time. The host serializes switching and operations,
+    including the upstream concurrency phase. Throughput and latency are NOT
+    comparable to the old single-handle/fabricated-scope implementation.
     """
 
     name = "agent_memory"
@@ -262,8 +263,9 @@ class AgentMemoryAdapter:
 
     def __init__(self) -> None:
         self._temporary: tempfile.TemporaryDirectory | None = None
-        self._memory: AgentMemory | None = None
+        self._host: SerializedScopedBenchmarkHost | None = None
         self._stats = self._fresh_stats()
+        self._counter = 0
         self.reset()
 
     @staticmethod
@@ -285,25 +287,15 @@ class AgentMemoryAdapter:
     def _scope(self, user_id: str) -> str:
         return f"user:{user_id}"
 
-    def _overrides(self, user_id: str) -> dict[str, Any]:
-        scope = self._scope(user_id)
-        domains = [self.tenant, scope]
-        return {
-            "scope": scope,
-            "isolation_domain_refs": domains,
-            "required_isolation_domain_refs": domains,
-            "project_ref": scope,
-        }
-
     def reset(self) -> None:
         self.close()
         self._temporary = tempfile.TemporaryDirectory(prefix="agent-memory-agentmembench-")
-        self._memory = AgentMemory.open(
-            self._temporary.name,
-            tenant=self.tenant,
-            actor_id="agent:benchmark",
-            scope="benchmark:agentmembench",
-            purpose="AgentMemBench operational evaluation",
+        root = self._temporary.name
+        self._host = SerializedScopedBenchmarkHost(
+            lambda scope: AgentMemory.open(
+                root, tenant=self.tenant, actor_id="agent:benchmark",
+                scope=scope, purpose="AgentMemBench operational evaluation",
+            )
         )
         self._targets: dict[str, tuple[str, str]] = {}
         self._texts: dict[str, str] = {}
@@ -314,56 +306,58 @@ class AgentMemoryAdapter:
         bucket[key] = bucket.get(key, 0) + 1
 
     def add(self, text: str, user_id: str) -> list[str]:
-        assert self._memory is not None
-        target = f"memory:agentmembench:{self._counter}"
-        self._counter += 1
-        self._stats["remember_calls"] += 1
-        result = self._memory.remember(target, text, overrides=self._overrides(user_id))
-        if not result.get("committed") or not result.get("fact_uuid"):
-            self._tally(self._stats["remember_refusals"], str(result.get("refusal") or result.get("outcome")))
-            return []
-        self._stats["remember_committed"] += 1
-        self._targets[target] = (user_id, str(result["fact_uuid"]))
-        self._texts[str(result["fact_uuid"])] = text
-        return [target]
+        assert self._host is not None
+        with self._host.use(user_id) as memory:
+            target = f"memory:agentmembench:{self._counter}"
+            self._counter += 1
+            self._stats["remember_calls"] += 1
+            result = memory.remember(target, text)
+            if not result.get("committed") or not result.get("fact_uuid"):
+                self._tally(self._stats["remember_refusals"], str(result.get("refusal") or result.get("outcome")))
+                return []
+            self._stats["remember_committed"] += 1
+            self._targets[target] = (user_id, str(result["fact_uuid"]))
+            self._texts[str(result["fact_uuid"])] = text
+            return [target]
 
     def search(self, query: str, user_id: str, limit: int) -> list[str]:
-        assert self._memory is not None
-        scope = self._scope(user_id)
-        recalled = self._memory.recall(query, target_domain_refs=[self.tenant, scope], project_ref=scope)
-        self._stats["recall_calls"] += 1
-        self._stats["candidate_count"] += len(recalled["candidates"])
-        # Contract 1.3.0 (#548) declares candidates domain-eligible; older contracts
-        # exposed every retrieval match, so candidate counts are compared per scope.
-        self._tally(
-            self._stats["candidate_scopes"],
-            str((recalled.get("candidate_policy") or {}).get("candidate_scope", "retrieval_candidates")),
-        )
-        self._stats["admitted_count"] += len(recalled["admitted"])
-        for candidate, decision in recalled["admissions"].items():
-            if candidate not in recalled["admitted"]:
-                self._tally(self._stats["refusal_reasons"], str(decision.get("refusal") or "not_admitted"))
-        return [self._texts[uuid] for uuid in recalled["admitted"] if uuid in self._texts][:limit]
+        assert self._host is not None
+        with self._host.use(user_id) as memory:
+            recalled = memory.recall(query)
+            self._stats["recall_calls"] += 1
+            self._stats["candidate_count"] += len(recalled["candidates"])
+            self._tally(
+                self._stats["candidate_scopes"],
+                str((recalled.get("candidate_policy") or {}).get("candidate_scope", "retrieval_candidates")),
+            )
+            self._stats["admitted_count"] += len(recalled["admitted"])
+            for candidate, decision in recalled["admissions"].items():
+                if candidate not in recalled["admitted"]:
+                    self._tally(self._stats["refusal_reasons"], str(decision.get("refusal") or "not_admitted"))
+            return [self._texts[uuid] for uuid in recalled["admitted"] if uuid in self._texts][:limit]
 
     def delete(self, memory_ids: list[str]) -> None:
-        assert self._memory is not None
+        assert self._host is not None
         for target in memory_ids:
             user_id, _ = self._targets[target]
-            self._stats["forget_calls"] += 1
-            result = self._memory.forget(target, overrides=self._overrides(user_id))
-            self._stats["forget_committed"] += int(bool(result.get("committed")))
-            self._tally(self._stats["forget_outcomes"], str(result.get("outcome") or result.get("refusal")))
+            with self._host.use(user_id) as memory:
+                self._stats["forget_calls"] += 1
+                result = memory.forget(target)
+                self._stats["forget_committed"] += int(bool(result.get("committed")))
+                self._tally(self._stats["forget_outcomes"], str(result.get("outcome") or result.get("refusal")))
 
     def close(self) -> None:
-        if self._memory is not None:
-            self._memory.close()
-            self._memory = None
+        if self._host is not None:
+            self._host.close()
+            self._host = None
         if self._temporary is not None:
             self._temporary.cleanup()
             self._temporary = None
 
     def governance(self) -> dict[str, Any]:
         stats = json.loads(json.dumps(self._stats))
+        if self._host is not None:
+            stats["scope_binding"] = self._host.posture()
         self._stats = self._fresh_stats()
         return stats
 
@@ -671,8 +665,9 @@ def _run_backend(backend: str, phases: Sequence[str], records: list[dict[str, An
     output["authority_effect"] = "none"
     if backend == "agent_memory":
         output["boundary"] = (
-            "public AgentMemory facade; one tenant, one governed scope per upstream user_id; "
-            "candidate generation followed by canonical governed admission; deletion = governed tombstone"
+            "UNACCEPTED #786 candidate: public AgentMemory facade; one tenant/shared store; "
+            "host-owned serialized user-specific handles; no spoofed write overrides; "
+            "latency/concurrency not comparable to legacy; deletion = governed tombstone"
         )
     return output
 
@@ -776,7 +771,15 @@ def run(
             "governance": "governance (Agent Memory refusal/outcome tallies per phase)",
         },
         "comparability": {
-            "status": "bounded-operational-profile" if corpus_class != "synthetic" else "synthetic-smoke-only",
+            "status": (
+                "unaccepted-scope-host-migration-candidate"
+                if "agent_memory" in backends else
+                ("bounded-operational-profile" if corpus_class != "synthetic" else "synthetic-smoke-only")
+            ),
+            "scope_host_migration": (
+                "serialized-host-bound-scope-v1; score, latency and concurrency parity unqualified"
+                if "agent_memory" in backends else "not_applicable"
+            ),
             "upstream_llm_judged_retrieval": "not_run",
             "latency_note": "local in-process latency; not comparable to upstream service-backed latency",
             "reference_systems": "upstream Mem0/Graphiti/LangMem/Letta/Naive RAG results are not reproduced here",
