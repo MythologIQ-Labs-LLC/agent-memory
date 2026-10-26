@@ -892,6 +892,8 @@ class AgentMemory:
             raise ValueError("recall principal differs from host-bound identity")
         if project_ref is not None and project_ref != self.scope:
             raise ValueError("recall project differs from host-bound identity")
+        if purpose is not None and purpose != self.purpose:
+            raise ValueError("recall purpose differs from host-bound identity")
         if target_domain_refs is not None and not set(target_domain_refs).issubset(self._domain_refs()):
             raise ValueError("recall domains exceed host-bound identity")
         intent = resolve_intent(query, temporal_intent, reference_time=reference_time)
