@@ -19,6 +19,7 @@ from run_agentmembench import AgentMemoryAdapter
 class FakeScopeRuntime:
     def __init__(self):
         self.records = {}
+        self.records_by_root = {}
         self.opened = []
         self.closed = []
         self.calls = []
@@ -27,6 +28,8 @@ class FakeScopeRuntime:
     def open(self, root, **kwargs):
         scope = kwargs["scope"]
         self.opened.append(scope)
+        store = self.records_by_root.setdefault(str(root), {})
+        self.records = store
         parent = self
 
         class Handle:
@@ -36,7 +39,7 @@ class FakeScopeRuntime:
                 with parent.lock:
                     parent.calls.append(("remember", scope, target))
                     ref = f"fact:{target}"
-                    parent.records[target] = (scope, text, ref, True)
+                    store[target] = (scope, text, ref, True)
                 return {"committed": True, "fact_uuid": ref}
 
             def recall(self, query, **kw):
@@ -45,7 +48,7 @@ class FakeScopeRuntime:
                 with parent.lock:
                     parent.calls.append(("recall", scope, query))
                     visible = [
-                        row[2] for row in parent.records.values()
+                        row[2] for row in store.values()
                         if row[0] == scope and row[3] and query.lower() in row[1].lower()
                     ]
                 return {
@@ -59,10 +62,10 @@ class FakeScopeRuntime:
                     raise AssertionError("untrusted proposal override")
                 with parent.lock:
                     parent.calls.append(("forget", scope, target))
-                    old_scope, text, ref, active = parent.records[target]
+                    old_scope, text, ref, active = store[target]
                     if old_scope != scope:
                         raise AssertionError("cross-scope delete")
-                    parent.records[target] = (scope, text, ref, False)
+                    store[target] = (scope, text, ref, False)
                 return {"committed": True, "outcome": "allow_with_ledger"}
 
             def close(self):
