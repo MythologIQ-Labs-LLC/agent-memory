@@ -276,8 +276,14 @@ class LocalMemoryBridge:
                 key, replacement_text, replacement_kind=replacement_kind,
             )
         committed = isinstance(outcome, dict) and outcome.get("committed") is True
+        review_required = (
+            not committed and isinstance(outcome, dict)
+            and outcome.get("outcome") in ("require_review", "require_external_verification")
+        )
         return {
             "committed": committed,
+            "review_required": review_required,
+            "next_step": "host_governance_review" if review_required else None,
             "status": "governed_correction_committed" if committed else "governed_refusal",
             "key": key,
             "correction_kind": replacement_kind,
@@ -316,8 +322,14 @@ class LocalMemoryBridge:
                 }
             outcome = memory.forget(key, permanent=False)
         committed = isinstance(outcome, dict) and outcome.get("committed") is True
+        review_required = (
+            not committed and isinstance(outcome, dict)
+            and outcome.get("outcome") in ("require_review", "require_external_verification")
+        )
         return {
             "committed": committed,
+            "review_required": review_required,
+            "next_step": "host_governance_review" if review_required else None,
             "status": "head_tombstoned" if committed else "governed_refusal",
             "key": key,
             "head_only": True,
