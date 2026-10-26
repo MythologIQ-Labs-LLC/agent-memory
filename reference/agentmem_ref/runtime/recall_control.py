@@ -650,11 +650,16 @@ class ControlledRecallPlanner:
                     seed_fact = substrate.get_fact(current)
                     if seed_fact is not None and self.adapter.domain_eligible(seed_fact, context):
                         graph_seed_refs.append(current)
-            graph_results = self.graph_retriever.search(
-                substrate,
-                tuple(graph_seed_refs),
-                group_id=tenant,
-                candidate_limit=graph_budget.candidate_limit,
+            # No eligible seed means no graph traversal. Never invoke an adapter
+            # with an empty seed set and rely on its private empty-input behavior.
+            graph_results = (
+                self.graph_retriever.search(
+                    substrate,
+                    tuple(graph_seed_refs),
+                    group_id=tenant,
+                    candidate_limit=graph_budget.candidate_limit,
+                )
+                if graph_seed_refs else ()
             )
             for graph_hit in graph_results:
                 graph_candidate_hits[graph_hit.candidate_ref] = graph_hit
