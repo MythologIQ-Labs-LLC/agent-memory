@@ -384,6 +384,43 @@ class RecallControlTests(unittest.TestCase):
         self.assertEqual(result.candidates, [own.fact_uuid])
         self.assertEqual(result.route_candidate_counts[EXACT_IDENTITY_ROUTE], 1)
 
+    def test_foreign_and_unknown_seeds_have_identical_public_trace(self) -> None:
+        foreign = self._retain(
+            "memory:oracle-foreign",
+            "nonmatching origin",
+            evidence_refs=("session:oracle",),
+            project_ref="project-beta",
+        )
+        fixed = _FixedController(RecallControlPlan(
+            controller_ref="test:seed-oracle",
+            controller_version="1",
+            route_budgets=(
+                RecallRouteBudget(LEXICAL_ROUTE, 0),
+                RecallRouteBudget(EXACT_IDENTITY_ROUTE, 2),
+                RecallRouteBudget(SHARED_EVIDENCE_ROUTE, 2, anchor_limit=0),
+            ),
+        ))
+        planner = ControlledRecallPlanner(self.runtime.adapter, controller=fixed)
+        foreign_result = planner.recall(
+            "no matching text", _context(),
+            logical_memory_refs=("memory:oracle-foreign",),
+        )
+        missing_result = planner.recall(
+            "no matching text", _context(),
+            logical_memory_refs=("memory:oracle-absent",),
+        )
+        self.assertNotIn(foreign.fact_uuid, foreign_result.candidates)
+        self.assertEqual(foreign_result.candidates, missing_result.candidates)
+        self.assertEqual(foreign_result.admitted, missing_result.admitted)
+        self.assertEqual(foreign_result.ranked_admitted, missing_result.ranked_admitted)
+        self.assertEqual(foreign_result.recall.route_hits, missing_result.recall.route_hits)
+        self.assertEqual(
+            foreign_result.route_candidate_counts, missing_result.route_candidate_counts,
+        )
+        self.assertEqual(
+            foreign_result.recall.routes_executed, missing_result.recall.routes_executed,
+        )
+
     def test_unavailable_route_plan_fails_closed(self) -> None:
         fixed = _FixedController(
             RecallControlPlan(
