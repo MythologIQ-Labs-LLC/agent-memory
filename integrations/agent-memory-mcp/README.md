@@ -63,8 +63,20 @@ framing, and tool schemas provided by the official SDK.
 
 ## Tool semantics
 
-- memory_remember(key, text): explicit persisted write with
+- memory_remember(key, text, create_only=False): explicit persisted write with
   source_ref=mcp:agent-observation; no automatic conversation ingestion.
+  `create_only=True` performs a scope-filtered public-history precondition
+  before writing. A live head, tombstone, nonzero/ambiguous state or failed
+  history read returns `committed=false`, `stage=precondition`,
+  `refusal=key_exists_or_unavailable`, without echoing memory content or
+  writing a second fact. A verified absent key can be written only through
+  the existing governed `AgentMemory.remember` policy; passing this
+  precondition grants no memory authority. The opt-in guard is **not**
+  cross-process atomic: the trusted host must serialize concurrent writers,
+  and it does not guarantee a globally unique logical key. When updating an
+  existing fact, use the separate governed correction workflow and honor a
+  `require_review` outcome rather than silently issuing another remember.
+  Default `create_only=False` preserves the frozen Gate 1 write behavior.
 - memory_get(key): governed recall plus **strict provenance-key verification**.
   The model receives only facts whose resolved memory_ref exactly matches
   the requested key. A missing/withheld/out-of-budget key returns
