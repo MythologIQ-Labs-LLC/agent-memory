@@ -72,6 +72,66 @@ class BridgeTests(unittest.TestCase):
         self.assertEqual(opened[2]["tenant"], "tenant:a")
         self.assertEqual(opened[2]["scope"], "project:local")
 
+    def test_create_only_allows_fresh_key_with_verified_absent_history(self):
+        absent = {"history": {"current_fact_uuid": None, "state_version": 0,
+                              "tombstoned": False}}
+        with patch.object(FakeMemory, "history", return_value=absent):
+            result = self.bridge.remember("memory:editor", "Neovim.", create_only=True)
+        self.assertTrue(result["committed"], result)
+        self.assertEqual(len([x for x in self.calls if x[0] == "remember"]), 1)
+        self.assertEqual(len([x for x in self.calls if x[0] == "history"]), 0)
+        self.assertEqual(self.closes, ["closed"])
+
+    def test_create_only_refuses_existing_without_second_write(self):
+        reply = self.bridge.remember("memory:editor", "VS Code.", create_only=True)
+        self.assertFalse(reply["committed"])
+        self.assertEqual(reply["stage"], "precondition")
+        self.assertEqual(reply["refusal"], "key_exists_or_unavailable")
+        self.assertIsNone(reply["fact_ref"])
+        self.assertFalse(any(x[0] == "remember" for x in self.calls))
+        self.assertNotIn("VS Code", repr(reply))
+        self.assertEqual(self.closes, ["closed"])
+
+    def test_create_only_refuses_deleted_or_unverifiable_key(self):
+        shapes = [
+            {"history": {"current_fact_uuid": None, "state_version": 2,
+                         "tombstoned": True}},
+            {"history": {"current_fact_uuid": None, "state_version": 0,
+                         "tombstoned": True}},
+            {"history": {"current_fact_uuid": None, "state_version": True,
+                         "tombstoned": False}},
+            {"history": {"current_fact_uuid": None, "state_version": None,
+                         "tombstoned": False}},
+            {"validation_error": "foreign_scope_or_unavailable"},
+            {},
+        ]
+        for doc in shapes:
+            with self.subTest(doc=doc), patch.object(FakeMemory, "history",
+                                                      return_value=doc):
+                self.calls.clear()
+                reply = self.bridge.remember("memory:editor", "private new", create_only=True)
+                self.assertFalse(reply["committed"])
+                self.assertEqual(reply["refusal"], "key_exists_or_unavailable")
+                self.assertFalse(any(x[0] == "remember" for x in self.calls))
+                self.assertNotIn("private new", repr(reply))
+
+    def test_create_only_history_failure_fails_closed_without_leaking(self):
+        with patch.object(FakeMemory, "history",
+                          side_effect=RuntimeError("sensitive storage path")):
+            reply = self.bridge.remember("memory:editor", "private text", create_only=True)
+        self.assertEqual(reply["refusal"], "key_exists_or_unavailable")
+        self.assertFalse(reply["committed"])
+        self.assertNotIn("sensitive", repr(reply))
+        self.assertNotIn("private text", repr(reply))
+        self.assertFalse(any(x[0] == "remember" for x in self.calls))
+
+    def test_create_only_rejects_nonboolean_before_open(self):
+        for bad in (1, "true", None):
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                self.bridge.remember("memory:editor", "text", create_only=bad)
+        self.assertEqual(self.calls, [])
+        self.assertEqual(self.closes, [])
+
     def test_refused_write_is_not_reported_as_remembered(self):
         refusal = {
             "committed": False,
