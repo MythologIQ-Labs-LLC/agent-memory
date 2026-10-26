@@ -650,6 +650,12 @@ class ControlledRecallPlanner:
                     seed_fact = substrate.get_fact(current)
                     if seed_fact is not None and self.adapter.domain_eligible(seed_fact, context):
                         graph_seed_refs.append(current)
+            # Revalidate scope at the actual traversal boundary.
+            graph_seed_refs = [
+                ref
+                for ref in graph_seed_refs
+                if self.adapter.domain_eligible(substrate.get_fact(ref), context)
+            ]
             # No eligible seed means no graph traversal. Never invoke an adapter
             # with an empty seed set and rely on its private empty-input behavior.
             graph_results = (
