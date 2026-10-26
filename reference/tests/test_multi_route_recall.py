@@ -233,6 +233,26 @@ class MultiRouteRecallTests(unittest.TestCase):
         self.assertNotIn(foreign.fact_uuid, result.route_hits)
         self.assertNotIn(SHARED_EVIDENCE_ROUTE, result.routes_executed)
 
+    def test_foreign_and_absent_explicit_seeds_are_indistinguishable(self) -> None:
+        foreign = self._retain(
+            "memory:oracle-foreign", "foreign unmatched content",
+            project_ref="project-beta",
+        )
+        out_of_scope = self.runtime.multi_route_recall(
+            "unmatched vocabulary", _context(),
+            logical_memory_refs=("memory:oracle-foreign",),
+        )
+        missing = self.runtime.multi_route_recall(
+            "unmatched vocabulary", _context(),
+            logical_memory_refs=("memory:oracle-missing",),
+        )
+        self.assertNotIn(foreign.fact_uuid, out_of_scope.candidates)
+        self.assertEqual(out_of_scope.candidates, missing.candidates)
+        self.assertEqual(out_of_scope.admitted, missing.admitted)
+        self.assertEqual(out_of_scope.ranked_admitted, missing.ranked_admitted)
+        self.assertEqual(out_of_scope.route_hits, missing.route_hits)
+        self.assertEqual(out_of_scope.routes_executed, missing.routes_executed)
+
     def test_exact_identity_does_not_resurrect_superseded_currentness(self) -> None:
         deploy = self._retain(MEMORY_DEPLOY, "deploy window is Thursday")
         substrate = self.runtime.adapter.checkpoint_substrate()
