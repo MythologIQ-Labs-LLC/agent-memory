@@ -160,6 +160,9 @@ class ScopedHostTests(unittest.TestCase):
         class FailingActor:
             def __get__(self, obj, owner):
                 raise RuntimeError("sensitive cached identity failure")
+
+            def __set__(self, obj, value):
+                raise RuntimeError("actor identity is read-only")
         # An existing public facade can become misconfigured after first open.
         # This simulates a descriptor that raises during every later check.
         original_class = handle.__class__
