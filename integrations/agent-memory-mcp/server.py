@@ -101,6 +101,23 @@ def memory_find(question: str, max_items: int = 5,
 
 
 @mcp.tool()
+def memory_correct_head(
+    key: str, expected_fact_ref: str, replacement_text: str,
+    replacement_kind: str = "error_correction",
+) -> dict[str, Any]:
+    """Submit a governed correction, never an implicit second remember.
+
+    A trusted host must enable AGENT_MEMORY_MCP_ALLOW_HEAD_CORRECTION=enabled
+    and serialize writers. The expected fact reference must be obtained from
+    an authorized memory_get. Replacements are subject to ordinary policy
+    review; a refusal is a refusal, not a fallback write.
+    """
+    return _tool_call(lambda: _bridge().correct_head(
+        key, expected_fact_ref, replacement_text, replacement_kind=replacement_kind,
+    ))
+
+
+@mcp.tool()
 def memory_tombstone_head(key: str, expected_fact_ref: str) -> dict[str, Any]:
     """Opt-in governed pruning of the currently visible head for an exact key.
 
