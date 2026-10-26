@@ -104,6 +104,70 @@ class BridgeTests(unittest.TestCase):
         args = [v for v in self.calls if v[0] == "recall_context"][0][2]
         self.assertEqual(args["consumer_profile"], "evidence_qualified")
 
+    def test_find_verified_heads_only_omits_old_without_changing_default(self):
+        def two_versions(self_, question, **kwargs):
+            return {"status": "complete", "items": [
+                {"fact_ref": "fact:old", "state": "resolved", "content": "old value",
+                 "provenance": {"memory_ref": "memory:editor"}},
+                {"fact_ref": "fact:new", "state": "resolved", "content": "new value",
+                 "provenance": {"memory_ref": "memory:editor"}},
+            ]}
+        with patch.object(FakeMemory, "recall_context", two_versions), patch.object(
+            FakeMemory, "history", return_value={
+                "history": {"current_fact_uuid": "fact:new", "state_version": 2}
+            },
+        ):
+            unfiltered = self.bridge.find("editor", max_items=2)
+            strict = self.bridge.find("editor", max_items=2, verified_key_heads_only=True)
+        self.assertEqual(unfiltered["evidence_filter"], "none")
+        self.assertEqual(unfiltered["evidence_count"], 2)
+        self.assertEqual(strict["evidence_filter"], "verified_key_heads_only")
+        self.assertEqual([e["content"] for e in strict["evidence"]], ["new value"])
+        self.assertEqual(strict["evidence_count"], 1)
+        self.assertEqual(strict["filtered_count"], 1)
+        self.assertEqual(strict["non_head_keys"], [])
+        self.assertNotIn("old value", repr(strict))
+        self.assertFalse(strict["answerability_verified"])
+        self.assertFalse(strict["answer_generated"])
+
+    def test_find_verified_heads_only_refuses_unknown_and_truncated(self):
+        def uncertain(self_, question, **kwargs):
+            return {"status": "complete", "items": [
+                {"fact_ref": "fact:old", "state": "resolved", "content": "private old value",
+                 "provenance": {"memory_ref": "memory:editor"}},
+                {"fact_ref": "fact:partial", "state": "truncated", "content": "private partial",
+                 "provenance": {"memory_ref": "memory:editor"}},
+                {"fact_ref": "fact:no-key", "state": "resolved", "content": "private anonymous",
+                 "provenance": {}},
+            ]}
+        with patch.object(FakeMemory, "recall_context", uncertain), patch.object(
+            FakeMemory, "history", side_effect=RuntimeError("unknown head")
+        ):
+            strict = self.bridge.find("editor", verified_key_heads_only=True)
+        self.assertEqual(strict["evidence"], [])
+        self.assertEqual(strict["evidence_count"], 0)
+        self.assertEqual(strict["filtered_count"], 3)
+        self.assertEqual(strict["non_head_keys"], [])
+        for secret in ("private old", "private partial", "private anonymous"):
+            self.assertNotIn(secret, repr(strict))
+        self.assertIn("does not prove absence", strict["filter_caveat"])
+
+    def test_find_head_filter_keeps_original_budget_and_profile(self):
+        self.bridge.find("preferred editor", max_items=2,
+                         experimental_selectivity=True, verified_key_heads_only=True)
+        calls = [x for x in self.calls if x[0] == "recall_context"]
+        self.assertEqual(len(calls), 1)
+        self.assertEqual(calls[0][2]["max_items"], 2)
+        self.assertEqual(calls[0][2]["consumer_profile"], "evidence_qualified")
+
+    def test_find_filter_rejects_nonboolean_option_before_open(self):
+        for keyword in ({"verified_key_heads_only": 1},
+                        {"verified_key_heads_only": "yes"},
+                        {"experimental_selectivity": "yes"}):
+            with self.subTest(keyword=keyword), self.assertRaises(ValueError):
+                self.bridge.find("editor", **keyword)
+        self.assertEqual(self.calls, [])
+
     def test_exact_key_uses_governed_logical_memory_ref(self):
         self.bridge.get("memory:editor")
         args = [v for v in self.calls if v[0] == "recall_context"][0][2]
