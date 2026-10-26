@@ -1,6 +1,6 @@
 # Agent Memory: minimum local MCP consumer
 
-**Development candidate, not production-qualified.** A real agent harness can call three
+**Development candidate, not production-qualified.** The qualified Gate 1 head exposes three
 MCP tools against the Agent Memory SQLite facade: explicit save, exact logical-key recall,
 and bounded question retrieval. This is not a separate database or an answer-generation engine.
 
@@ -87,10 +87,51 @@ framing, and tool schemas provided by the official SDK.
   governed recall_context within bounded delivery budgets, defaulting to
   all_returned. The experimental #819 selector must be opted into deliberately.
 
-The bridge does not expose correction/forget without qualified lifecycle
+The Gate 1 bridge does not expose correction/whole-key forgetting without qualified lifecycle
 evidence, does not grant action authority, and makes no claim of accurate
 no-answer calibration. An external model used by the agent harness may
 receive retrieved memory text, so use test data and a trusted harness.
+
+## Experimental governed lifecycle: head-only tombstone
+
+The development branch `product/mcp-governed-tombstone-no-ci` adds
+`memory_tombstone_head(key, expected_fact_ref)`. This is **not** a generic
+`memory_forget` or whole-key deletion operation. It calls the public
+`AgentMemory.history` and `AgentMemory.forget(permanent=False)` APIs only.
+
+The host must explicitly set this extra environment variable:
+
+    AGENT_MEMORY_MCP_ALLOW_HEAD_TOMBSTONE=enabled
+
+Absent that exact value, the tool refuses **before opening the store**.
+The model cannot set this variable through MCP tool arguments. For a legitimate
+request, first call `memory_get(key)` under the same trusted host scope and
+supply its authorized current `fact_ref` as `expected_fact_ref`. The bridge
+checks the public, scope-filtered current head against that reference. Missing,
+foreign, revoked and stale references return the same
+`status=unavailable_or_changed` with `committed=false`. If eligible, the
+runtime alone decides whether the governed prune commits; policy refusal is
+reported as `governed_refusal` with `committed=false`.
+
+The success label is **`head_tombstoned`**, intentionally not `forgotten`.
+The operation cannot prove that older independently current facts, derived
+representations or previously exported text have been removed. Earlier writes
+under the same key can still be returned by `memory_find`. It does not
+perform permanent erasure or validate that every earlier generation is gone.
+The precondition is also **not atomic across separate writer processes**:
+a host must serialize all writes to this development store. Do not use this
+tool as a cross-process compare-and-swap or privacy-erasure guarantee.
+
+This additional preview tool does not change the frozen Gate 1 proof or
+qualify Gate 2. The original Gate 1 transcript and tool list remain immutable
+historical evidence for the three-tool head. Run the new tests explicitly:
+
+    .venv/bin/python -m unittest discover -s integrations/agent-memory-mcp/tests -p "test_head_tombstone.py" -v
+    .venv/bin/python -m unittest discover -s integrations/agent-memory-mcp/tests -p "test_real_mcp.py" -v
+
+Acceptance still requires a clean checkout, the official MCP SDK, a genuine
+stdio/reconnect test, authorization negatives, and independent deletion
+regression evidence. Until those pass, this is a development candidate only.
 
 ## Two acceptance gates
 
