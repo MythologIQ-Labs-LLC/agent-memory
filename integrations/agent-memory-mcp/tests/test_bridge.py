@@ -200,6 +200,8 @@ class BridgeTests(unittest.TestCase):
                  "provenance": {"memory_ref": "memory:editor"}},
                 {"fact_ref": "fact:no-key", "state": "resolved", "content": "private anonymous",
                  "provenance": {}},
+                {"fact_ref": "private:unresolved-id", "state": "unresolved",
+                 "reason": "private internal policy"},
             ]}
         with patch.object(FakeMemory, "recall_context", uncertain), patch.object(
             FakeMemory, "history", side_effect=RuntimeError("unknown head")
@@ -210,7 +212,9 @@ class BridgeTests(unittest.TestCase):
         self.assertEqual(strict["filtered_count"], 3)
         self.assertEqual(strict["delivery_assessment"], "no_verified_key_heads")
         self.assertEqual(strict["non_head_keys"], [])
-        for secret in ("private old", "private partial", "private anonymous"):
+        self.assertEqual(strict["unavailable"], [])
+        for secret in ("private old", "private partial", "private anonymous",
+                       "private:unresolved-id", "private internal policy"):
             self.assertNotIn(secret, repr(strict))
         self.assertIn("does not prove absence", strict["filter_caveat"])
 
