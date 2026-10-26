@@ -202,6 +202,21 @@ class ActualMcpConsumerLoop(unittest.IsolatedAsyncioTestCase):
                         self.assertIn("memory:editor", found["non_head_keys"], found)
                     else:
                         self.assertEqual(found["non_head_keys"], [])
+                    strict = _result(await client.call_tool("memory_find", {
+                        "question": "Which editor does the owner use for Python?",
+                        "max_items": 5,
+                        "verified_key_heads_only": True,
+                    }), "evidence")
+                    self.assertEqual(strict["evidence_filter"], "verified_key_heads_only")
+                    self.assertFalse(strict["answerability_verified"])
+                    self.assertEqual(strict["non_head_keys"], [])
+                    self.assertTrue(all(e["latest_for_key"] is True and
+                                        e["state"] == "resolved" for e in strict["evidence"]))
+                    self.assertNotIn("The owner writes Python in Neovim.", [
+                        e["content"] for e in strict["evidence"]
+                    ])
+                    # An opt-in filter cannot increase the fixed candidate budget.
+                    self.assertLessEqual(strict["evidence_count"], found["evidence_count"])
                 # the markers must survive a restart of the server (fresh in-process client)
                 async with Client(module.mcp, raise_exceptions=True) as client:
                     again = _result(await client.call_tool("memory_get", {"key": "memory:editor"}), "evidence")
