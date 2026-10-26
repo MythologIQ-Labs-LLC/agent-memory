@@ -219,7 +219,7 @@ class ActualMcpConsumerLoop(unittest.IsolatedAsyncioTestCase):
                 "AGENT_MEMORY_MCP_ACTOR": "agent:tombstone",
                 "AGENT_MEMORY_MCP_SCOPE": "project:tombstone",
             }
-            with patch.dict(os.environ, env):
+            with patch.dict(os.environ, {**env, "AGENT_MEMORY_MCP_ALLOW_HEAD_TOMBSTONE": ""}):
                 async with Client(module.mcp, raise_exceptions=True) as client:
                     refused = await client.call_tool("memory_tombstone_head", {
                         "key": "memory:editor", "expected_fact_ref": "fact:unavailable",
