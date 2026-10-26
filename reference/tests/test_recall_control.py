@@ -353,6 +353,37 @@ class RecallControlTests(unittest.TestCase):
         self.assertEqual(result.candidates, [known.fact_uuid])
         self.assertEqual(result.recall.routes_executed, (EXACT_IDENTITY_ROUTE,))
 
+    def test_rejected_identity_does_not_consume_exact_seed_budget(self) -> None:
+        other = self._retain(
+            "memory:budget-other",
+            "outside domain item",
+            evidence_refs=("session:budget",),
+            project_ref="project-beta",
+        )
+        own = self._retain(
+            "memory:budget-own",
+            "eligible domain item",
+            evidence_refs=("session:budget",),
+        )
+        fixed = _FixedController(RecallControlPlan(
+            controller_ref="test:budget-eligibility",
+            controller_version="1",
+            route_budgets=(
+                RecallRouteBudget(LEXICAL_ROUTE, 0),
+                RecallRouteBudget(EXACT_IDENTITY_ROUTE, 1),
+                RecallRouteBudget(SHARED_EVIDENCE_ROUTE, 0),
+            ),
+        ))
+        result = ControlledRecallPlanner(
+            self.runtime.adapter, controller=fixed,
+        ).recall(
+            "unrelated query", _context(),
+            logical_memory_refs=("memory:budget-other", "memory:budget-own"),
+        )
+        self.assertNotIn(other.fact_uuid, result.candidates)
+        self.assertEqual(result.candidates, [own.fact_uuid])
+        self.assertEqual(result.route_candidate_counts[EXACT_IDENTITY_ROUTE], 1)
+
     def test_unavailable_route_plan_fails_closed(self) -> None:
         fixed = _FixedController(
             RecallControlPlan(
