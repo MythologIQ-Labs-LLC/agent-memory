@@ -89,6 +89,9 @@ framing, and tool schemas provided by the official SDK.
   return lookup_status=head_unverified_or_changed, and truncated content
   returns lookup_status=incomplete_evidence. In these failure states the
   bridge returns no memory text, no successful get, and no state counter.
+  The consumer-specific delivery_assessment is no_verified_exact_head; only
+  a confirmed complete head yields verified_exact_head_delivered. An upstream
+  selection_assessment cannot override this exact-key refusal.
   This deliberately treats unverified and stale evidence identically.
   No direct database access.
   A second memory_remember under an existing key is **not a correction**: the runtime
