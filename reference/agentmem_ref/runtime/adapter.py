@@ -282,6 +282,35 @@ class GovernedMemoryAdapter:
             return policy.evaluate_with_external_verification(proposal, attestation)
         return policy.evaluate(proposal)
 
+    def _write_target_unavailable(self, proposal: policy.Proposal) -> bool:
+        """#786: enforce live target ownership *inside* the canonical write gate.
+
+        Public history deliberately hides other scopes' heads. It cannot be
+        consulted to decide whether this writer may reuse a tenant-wide id.
+        Existing-head eligibility must use trusted adapter scope metadata,
+        prior to any supersession/write. A missing canonical scope or missing
+        live substrate fact is not evidence of write authority.
+        """
+        current_uuid = self._current_fact_by_memory.get(proposal.target_reference)
+        if current_uuid is None:
+            # New logical id, or a previously deleted generation. The latter's
+            # recreation policy belongs to #776 and is not changed here.
+            return False
+        fact = self._substrate.get_fact(current_uuid)
+        if fact is None:
+            return True
+        write_scope = self._write_scope(proposal)
+        context = RecallContext(
+            target_domain_refs=tuple(write_scope["domain_refs"]),
+            principal_ref=proposal.actor_id,
+            project_ref=proposal.project_ref,
+            task_ref=proposal.task_ref,
+            purpose=proposal.purpose,
+        )
+        return self._domain_identity_refusal(
+            current_uuid, fact.group_id, context
+        ) is not None
+
     def commit_proposal(
         self,
         proposal: policy.Proposal,
@@ -366,12 +395,15 @@ class GovernedMemoryAdapter:
 
         stale = self._is_stale(proposal)
         readmission_blocked = self._readmission_blocked(proposal, fact_text, attestation)
+        target_unavailable = self._write_target_unavailable(proposal)
         selected = self._select_action(
             decision,
             proposal,
-            blocked_by_stale=stale or readmission_blocked,
+            blocked_by_stale=stale or readmission_blocked or target_unavailable,
         )
-        commits = selected == proposal.operation
+        # The selector may fall back to the only permitted action even when
+        # blocked_by_stale=True; a foreign live target must never commit.
+        commits = selected == proposal.operation and not target_unavailable
         before_state = f"v{self._state_version.get(proposal.target_reference, 0)}"
 
         if readmission_blocked:
@@ -445,7 +477,10 @@ class GovernedMemoryAdapter:
         self.events.extend(events)
 
         refusal = None
-        if stale:
+        if target_unavailable:
+            # Do not disclose the other scope's identity, head or provenance.
+            refusal = "write_target_unavailable"
+        elif stale:
             refusal = "stale_authorization"
         elif readmission_blocked:
             refusal = "rejected_value_requires_reconciliation"
