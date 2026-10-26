@@ -365,6 +365,57 @@ class RecallControlTests(unittest.TestCase):
         self.assertEqual(spy.calls, 0)
         self.assertEqual(result.route_candidate_counts[TYPED_GRAPH_ROUTE], 0)
 
+    def test_graph_seed_rechecked_at_traversal_boundary(self) -> None:
+        from unittest.mock import patch
+        from agentmem_ref.recall_control import TYPED_GRAPH_ROUTE
+
+        seed = self._retain(
+            "memory:graph-revoked", "eligible graph seed",
+            evidence_refs=("session:graph-race",),
+        )
+
+        class GraphSpy:
+            def __init__(self):
+                self.calls = 0
+
+            def available_for(self, substrate):
+                return True
+
+            def search(self, substrate, refs, *, group_id, candidate_limit):
+                self.calls += 1
+                return []
+
+        spy = GraphSpy()
+        fixed = _FixedController(RecallControlPlan(
+            controller_ref="test:graph-recheck",
+            controller_version="1",
+            route_budgets=(
+                RecallRouteBudget(LEXICAL_ROUTE, 0),
+                RecallRouteBudget(EXACT_IDENTITY_ROUTE, 0),
+                RecallRouteBudget(TYPED_GRAPH_ROUTE, 1),
+                RecallRouteBudget(SHARED_EVIDENCE_ROUTE, 0),
+            ),
+        ))
+        original = self.runtime.adapter.domain_eligible
+        checks = [0]
+
+        def scope_check(fact, context):
+            if fact is not None and fact.uuid == seed.fact_uuid:
+                checks[0] += 1
+                return checks[0] == 1
+            return original(fact, context)
+
+        with patch.object(self.runtime.adapter, "domain_eligible", side_effect=scope_check):
+            result = ControlledRecallPlanner(
+                self.runtime.adapter, controller=fixed, graph_retriever=spy,
+            ).recall(
+                "unmatched vocabulary", _context(),
+                logical_memory_refs=("memory:graph-revoked",),
+            )
+        self.assertGreaterEqual(checks[0], 2)
+        self.assertEqual(spy.calls, 0)
+        self.assertEqual(result.route_candidate_counts[TYPED_GRAPH_ROUTE], 0)
+
     def test_exact_identity_budget_resolves_only_current_logical_refs(self) -> None:
         known = self._retain(
             "memory:known",
