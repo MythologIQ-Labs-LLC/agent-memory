@@ -324,6 +324,47 @@ class RecallControlTests(unittest.TestCase):
         self.assertEqual(spy.seeds, [(own.fact_uuid,)])
         self.assertNotIn(other.fact_uuid, result.candidates)
 
+    def test_graph_adapter_not_called_for_only_ineligible_seeds(self) -> None:
+        from agentmem_ref.recall_control import TYPED_GRAPH_ROUTE
+
+        self._retain(
+            "memory:ineligible-graph",
+            "other project seed",
+            evidence_refs=("session:graph-negative",),
+            project_ref="project-beta",
+        )
+
+        class GraphSpy:
+            def __init__(self):
+                self.calls = 0
+
+            def available_for(self, substrate):
+                return True
+
+            def search(self, substrate, refs, *, group_id, candidate_limit):
+                self.calls += 1
+                raise AssertionError("graph adapter invoked without eligible seeds")
+
+        spy = GraphSpy()
+        fixed = _FixedController(RecallControlPlan(
+            controller_ref="test:empty-graph-seeds",
+            controller_version="1",
+            route_budgets=(
+                RecallRouteBudget(LEXICAL_ROUTE, 0),
+                RecallRouteBudget(EXACT_IDENTITY_ROUTE, 0),
+                RecallRouteBudget(TYPED_GRAPH_ROUTE, 1),
+                RecallRouteBudget(SHARED_EVIDENCE_ROUTE, 0),
+            ),
+        ))
+        result = ControlledRecallPlanner(
+            self.runtime.adapter, controller=fixed, graph_retriever=spy,
+        ).recall(
+            "unmatched vocabulary", _context(),
+            logical_memory_refs=("memory:ineligible-graph",),
+        )
+        self.assertEqual(spy.calls, 0)
+        self.assertEqual(result.route_candidate_counts[TYPED_GRAPH_ROUTE], 0)
+
     def test_exact_identity_budget_resolves_only_current_logical_refs(self) -> None:
         known = self._retain(
             "memory:known",
