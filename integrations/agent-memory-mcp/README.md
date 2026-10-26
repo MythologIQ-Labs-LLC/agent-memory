@@ -140,7 +140,10 @@ This development branch also adds
 It does **not** issue a second `memory_remember`, because that would leave the
 old current-state fact potentially discoverable. Correction uses the
 runtime's public `AgentMemory.correct` API and preserves all existing PAMA
-approval and refusal rules. A policy refusal stays a refusal.
+approval and refusal rules. A policy refusal stays a refusal. When PAMA specifically requests review or
+external verification, the tool reports `review_required=true` and
+`next_step=host_governance_review`; it does **not** generate approval
+evidence, bypass the decision, or disclose internal refusal details.
 
 The trusted MCP host must set:
 
