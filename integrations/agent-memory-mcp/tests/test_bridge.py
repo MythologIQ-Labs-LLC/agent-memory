@@ -402,6 +402,41 @@ class BridgeTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, "symlink"):
                     HostConfig.from_environment()
 
+    def test_symlinked_ancestor_of_root_is_rejected(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            parent = Path(temporary)
+            trusted = parent / "real"
+            trusted.mkdir()
+            alias = parent / "alias"
+            try:
+                alias.symlink_to(trusted, target_is_directory=True)
+            except (OSError, NotImplementedError) as error:
+                self.skipTest(f"symlink privilege unavailable: {error}")
+            # The root itself is an ordinary directory. Only its *parent*
+            # is a symlink, which root.is_symlink() alone misses.
+            (trusted / "store").mkdir()
+            self.assertFalse((alias / "store").is_symlink())
+            with patch.dict(os.environ, {
+                "AGENT_MEMORY_MCP_ROOT": str(alias / "store"),
+                "AGENT_MEMORY_MCP_TENANT": "tenant:a",
+                "AGENT_MEMORY_MCP_ACTOR": "agent:a",
+                "AGENT_MEMORY_MCP_SCOPE": "project:a",
+            }, clear=True):
+                with self.assertRaisesRegex(ValueError, "symlink"):
+                    HostConfig.from_environment()
+
+    def test_parent_traversal_in_root_is_rejected(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary) / "store" / ".." / "other"
+            with patch.dict(os.environ, {
+                "AGENT_MEMORY_MCP_ROOT": str(root),
+                "AGENT_MEMORY_MCP_TENANT": "tenant:a",
+                "AGENT_MEMORY_MCP_ACTOR": "agent:a",
+                "AGENT_MEMORY_MCP_SCOPE": "project:a",
+            }, clear=True):
+                with self.assertRaisesRegex(ValueError, "parent traversal"):
+                    HostConfig.from_environment()
+
 
 if __name__ == "__main__":
     unittest.main()
