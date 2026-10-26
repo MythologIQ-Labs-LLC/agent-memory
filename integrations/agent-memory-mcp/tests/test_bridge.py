@@ -125,6 +125,7 @@ class BridgeTests(unittest.TestCase):
         self.assertEqual([e["content"] for e in strict["evidence"]], ["new value"])
         self.assertEqual(strict["evidence_count"], 1)
         self.assertEqual(strict["filtered_count"], 1)
+        self.assertEqual(strict["delivery_assessment"], "verified_key_heads_delivered")
         self.assertEqual(strict["non_head_keys"], [])
         self.assertNotIn("old value", repr(strict))
         self.assertFalse(strict["answerability_verified"])
@@ -147,6 +148,7 @@ class BridgeTests(unittest.TestCase):
         self.assertEqual(strict["evidence"], [])
         self.assertEqual(strict["evidence_count"], 0)
         self.assertEqual(strict["filtered_count"], 3)
+        self.assertEqual(strict["delivery_assessment"], "no_verified_key_heads")
         self.assertEqual(strict["non_head_keys"], [])
         for secret in ("private old", "private partial", "private anonymous"):
             self.assertNotIn(secret, repr(strict))
