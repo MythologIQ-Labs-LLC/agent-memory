@@ -175,11 +175,19 @@ class LocalMemoryBridge:
         })
 
     def find(self, question: str, *, max_items: int = 5,
-             experimental_selectivity: bool = False) -> dict:
-        """Retrieve evidence, not an answer. Relevance is not guaranteed."""
+             experimental_selectivity: bool = False,
+             verified_key_heads_only: bool = False) -> dict:
+        """Retrieve untrusted evidence, optionally refusing unverified key heads.
+
+        The opt-in filter is a conservative consumer constraint, NOT a relevance
+        fix or a claim of answerability. It can drop necessary evidence: never
+        refill from a wider search or infer absence from an empty result.
+        """
         question = _string("question", question, MAX_QUERY_CHARS)
         if type(max_items) is not int or not 1 <= max_items <= MAX_ITEMS:
             raise ValueError("max_items must be an integer from 1 to 8")
+        if type(experimental_selectivity) is not bool or type(verified_key_heads_only) is not bool:
+            raise ValueError("selectivity options must be booleans")
         profile = "evidence_qualified" if experimental_selectivity else "all_returned"
         with self._open() as memory:
             package = memory.recall_context(
@@ -189,7 +197,28 @@ class LocalMemoryBridge:
             )
             result = self._project(package, asked=question)
             self._annotate_key_heads(memory, result)
+            if verified_key_heads_only:
+                before = len(result["evidence"])
+                # Do not serve an old generation, an unknown/withheld head or
+                # truncated evidence as a verified current-key value. The
+                # public history/read scope remains the sole source of proof.
+                result["evidence"] = [
+                    item for item in result["evidence"]
+                    if item.get("latest_for_key") is True and item.get("state") == "resolved"
+                ]
+                result["evidence_count"] = len(result["evidence"])
+                result["filtered_count"] = before - result["evidence_count"]
+                # No stale logical keys or fact references in the strict output.
+                result["non_head_keys"] = []
         result["profile"] = profile
+        result["evidence_filter"] = (
+            "verified_key_heads_only" if verified_key_heads_only else "none"
+        )
+        if verified_key_heads_only:
+            result["filter_caveat"] = (
+                "This filter checks the visible key head, not relevance, temporal "
+                "truth or answerability. Empty evidence does not prove absence."
+            )
         return result
 
     def get(self, key: str) -> dict:
