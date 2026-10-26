@@ -139,6 +139,10 @@ class ScopedHostTests(unittest.TestCase):
             def scope(self, value):
                 pass
 
+            def close(self):
+                self.is_closed = True
+                self.closed.append("unreadable-scope")
+
         self.host.close()
         handle = FailingScope("user:alice", self.closed)
         self.host = SerializedScopedBenchmarkHost(
