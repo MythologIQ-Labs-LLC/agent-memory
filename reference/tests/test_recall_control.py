@@ -248,6 +248,36 @@ class RecallControlTests(unittest.TestCase):
             "required_isolation_domain_missing",
         )
 
+    def test_foreign_seed_is_inert_even_when_evidence_is_shared(self) -> None:
+        foreign = self._retain(
+            "memory:out-of-project-seed",
+            "foreign seed material",
+            evidence_refs=("session:shared-guard", "dialog:foreign"),
+            project_ref="project-beta",
+        )
+        local = self._retain(
+            "memory:local-neighbor",
+            "local material",
+            evidence_refs=("session:shared-guard", "dialog:local"),
+        )
+        fixed = _FixedController(RecallControlPlan(
+            controller_ref="test:scope-guard",
+            controller_version="1",
+            route_budgets=(
+                RecallRouteBudget(LEXICAL_ROUTE, 0),
+                RecallRouteBudget(EXACT_IDENTITY_ROUTE, 3),
+                RecallRouteBudget(SHARED_EVIDENCE_ROUTE, 3, anchor_limit=0),
+            ),
+        ))
+        result = ControlledRecallPlanner(self.runtime.adapter, controller=fixed).recall(
+            "unmatched vocabulary", _context(),
+            logical_memory_refs=("memory:out-of-project-seed",),
+        )
+        self.assertNotIn(foreign.fact_uuid, result.candidates)
+        self.assertNotIn(local.fact_uuid, result.candidates)
+        self.assertEqual(result.recall.route_hits, {})
+        self.assertEqual(result.route_candidate_counts[SHARED_EVIDENCE_ROUTE], 0)
+
     def test_exact_identity_budget_resolves_only_current_logical_refs(self) -> None:
         known = self._retain(
             "memory:known",
