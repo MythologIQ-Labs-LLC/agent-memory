@@ -113,7 +113,8 @@ framing, and tool schemas provided by the official SDK.
   fully resolved facts that are confirmed current key heads. Old generations,
   unknown/unverifiable heads, missing key provenance, and truncated texts are
   dropped. The filter reports `filtered_count`, with no stale text or filtered
-  key references in its evidence/non-head-key output. It does **not** refill the
+  key references in its evidence/non-head-key output; unresolved package
+  references and reasons are also withheld from strict-mode results. It does **not** refill the
   retrieval budget, verify the semantic relevance or temporal truth of a
   remaining fact, prove a key does not exist, generate an answer, or certify
   that the evidence is sufficient. It can lose a required fact and may
