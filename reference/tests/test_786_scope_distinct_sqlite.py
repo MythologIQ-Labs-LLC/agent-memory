@@ -10,6 +10,7 @@ import unittest
 from pathlib import Path
 
 from agentmem_ref.api.scoped_identity import ScopeDistinctMemory
+from agentmem_ref import AgentMemory
 
 TENANT = "tenant:scoped-786"
 ACTOR = "agent:scoped-786"
@@ -43,6 +44,30 @@ class ScopeDistinctSQLiteTests(unittest.TestCase):
                 root, tenant=TENANT, actor_id=ACTOR, scope="project:b",
             ) as recovered_other:
                 self.assertEqual(recovered_other.history(KEY)["current_fact_ref"], second_ref)
+
+    def test_legacy_root_and_scoped_child_remain_independent(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            with AgentMemory.open(
+                root, tenant=TENANT, actor_id=ACTOR, scope="project:a",
+            ) as legacy:
+                old = legacy.remember(KEY, "Legacy gateway is in Oslo")
+                self.assertTrue(old["committed"], old)
+                old_ref = old["fact_uuid"]
+            with ScopeDistinctMemory.open(
+                root, tenant=TENANT, actor_id=ACTOR, scope="project:a",
+            ) as scoped:
+                new = scoped.remember(KEY, "Scoped gateway is in Turku")
+                self.assertTrue(new["committed"], new)
+                self.assertNotEqual(new["fact_ref"], old_ref)
+                self.assertEqual(scoped.history(KEY)["current_fact_ref"], new["fact_ref"])
+            with AgentMemory.open(
+                root, tenant=TENANT, actor_id=ACTOR, scope="project:a",
+            ) as legacy:
+                self.assertEqual(
+                    legacy.history(KEY)["history"]["current_fact_uuid"], old_ref
+                )
+            self.assertTrue((root / ".agent-memory-scoped-v1").is_dir())
 
     def test_two_keys_inside_same_scope_do_not_collide(self):
         with tempfile.TemporaryDirectory() as temp:
