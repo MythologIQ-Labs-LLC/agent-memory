@@ -63,6 +63,30 @@ class CrossProjectWriteTargetTests(unittest.TestCase):
                 admitted = reopened.recall("Orrin gateway region", logical_memory_refs=(KEY,))
                 self.assertIn(first_ref, admitted["admitted"])
 
+    def test_other_project_cannot_forge_owner_scope_in_proposal(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            with open_in(root, "project:a") as owner:
+                initial = owner.remember(KEY, "Orrin gateway region is Oslo")
+                self.assertTrue(initial["committed"])
+                original = initial["fact_uuid"]
+            with open_in(root, "project:b") as other:
+                attempted = {
+                    "scope": "project:a",
+                    "project_ref": "project:a",
+                    "isolation_domain_refs": [TENANT, "project:a"],
+                    "required_isolation_domain_refs": [TENANT, "project:a"],
+                }
+                try:
+                    forged = other.remember(
+                        KEY, "Orrin gateway region is Turku", overrides=attempted,
+                    )
+                except ValueError:
+                    forged = {"committed": False}
+                self.assertFalse(forged["committed"], forged)
+            with open_in(root, "project:a") as owner:
+                self.assertEqual(owner.history(KEY)["history"]["current_fact_uuid"], original)
+
     def test_other_project_cannot_correct_owner_with_qualified_evidence(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
