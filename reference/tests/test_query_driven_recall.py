@@ -239,9 +239,9 @@ class QueryDrivenRecallTests(unittest.TestCase):
         )
         foreign_neighbor = self._retain(
             "memory:foreign-neighbor",
-            "foreign project answer",
+            "authorized project answer",
             evidence_refs=("dialog:foreign:2", "session:cross-scope"),
-            project_ref="project-beta",
+            project_ref=PROJECT,
         )
         planner = DeterministicQueryDrivenRecallPlanner(
             self.runtime.adapter,
@@ -258,37 +258,44 @@ class QueryDrivenRecallTests(unittest.TestCase):
         self.assertEqual(result.route_hits, {})
 
     def test_graph_expansion_rechecks_scope_after_seed_selection(self) -> None:
+        from unittest.mock import patch
+
         seed = self._retain(
             "memory:revoked-seed",
-            "pottery class anchor",
+            "seed without lexical overlap",
             evidence_refs=("dialog:guard:1", "session:guard"),
         )
         neighbor = self._retain(
             "memory:revoked-neighbor",
-            "blue bowl",
+            "neighbor without lexical overlap",
             evidence_refs=("dialog:guard:2", "session:guard"),
         )
         planner = DeterministicQueryDrivenRecallPlanner(
             self.runtime.adapter,
             config=QueryDrivenRecallConfig(lexical_anchor_limit=0),
         )
-        substrate = self.runtime.adapter.checkpoint_substrate()
-        hits = []
-        # Simulate scope becoming ineligible after route planning but before
-        # neighbor expansion. No traversal-derived hit may escape this boundary.
-        from unittest.mock import patch
-        with patch.object(self.runtime.adapter, "domain_eligible", return_value=False):
-            planner._expand_seed(
-                substrate,
-                TENANT,
-                hits,
-                context=_context(),
-                seed_ref=seed.fact_uuid,
-                logical_memory_ref="memory:revoked-seed",
-                expanded_seeds=set(),
+        original = self.runtime.adapter.domain_eligible
+        calls = [0]
+
+        def eligibility(fact, context):
+            if fact.uuid == seed.fact_uuid:
+                calls[0] += 1
+                return calls[0] == 1
+            return original(fact, context)
+
+        with patch.object(self.runtime.adapter, "domain_eligible", side_effect=eligibility):
+            result = planner.recall(
+                "query with no matching vocabulary",
+                _context(),
+                logical_memory_refs=("memory:revoked-seed",),
             )
-        self.assertEqual(hits, [])
-        self.assertNotEqual(seed.fact_uuid, neighbor.fact_uuid)
+        self.assertGreaterEqual(calls[0], 2)
+        self.assertNotIn(neighbor.fact_uuid, result.candidates)
+        self.assertNotIn(neighbor.fact_uuid, result.admitted)
+        self.assertFalse(any(
+            hit.seed_candidate_ref == seed.fact_uuid
+            for hits in result.route_hits.values() for hit in hits
+        ))
 
     def test_default_runtime_behavior_remains_unexpanded_without_explicit_seed(self) -> None:
         self._retain(
