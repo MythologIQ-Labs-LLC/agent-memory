@@ -32,6 +32,14 @@ class SerializedScopedBenchmarkHost:
         self.opens = 0
         self.switches = 0
 
+    def _matches_binding(self, handle: T | None, scope: str) -> bool:
+        return (
+            handle is not None
+            and getattr(handle, "scope", None) == scope
+            and getattr(handle, "tenant", None) == self._tenant
+            and getattr(handle, "actor_id", None) == self._actor_id
+        )
+
     @contextmanager
     def use(self, user_id: str) -> Iterator[T]:
         if not isinstance(user_id, str) or not user_id.strip():
@@ -52,17 +60,22 @@ class SerializedScopedBenchmarkHost:
                 # A host callback is not proof that the returned runtime is
                 # bound to the requested principal/project. A wrongly bound
                 # facade must never be handed to a benchmark operation.
-                if (
-                    getattr(opened, "scope", None) != requested_scope
-                    or getattr(opened, "tenant", None) != self._tenant
-                    or getattr(opened, "actor_id", None) != self._actor_id
-                ):
+                if not self._matches_binding(opened, requested_scope):
                     if opened is not None:
                         opened.close()
                     raise RuntimeError("opened runtime identity does not match host binding")
                 self._handle = opened
                 self._active_scope = requested_scope
                 self.opens += 1
+            # Runtime identity is checked on *every* use, not just open.
+            # A tampered cached facade cannot borrow the earlier authorization.
+            if not self._matches_binding(self._handle, requested_scope):
+                compromised = self._handle
+                self._handle = None
+                self._active_scope = None
+                if compromised is not None:
+                    compromised.close()
+                raise RuntimeError("cached runtime identity no longer matches host binding")
             assert self._handle is not None
             yield self._handle
 
