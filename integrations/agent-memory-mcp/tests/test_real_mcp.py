@@ -317,6 +317,50 @@ class ActualMcpConsumerLoop(unittest.IsolatedAsyncioTestCase):
                         self.assertIsNone(corrected["new_fact_ref"])
                         self.assertIn("VS Code", current["evidence"][0]["content"])
 
+    async def test_lifecycle_tools_cannot_change_another_scope(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = str(Path(temp) / "store")
+            base = {
+                "AGENT_MEMORY_MCP_ROOT": root,
+                "AGENT_MEMORY_MCP_TENANT": "tenant:scope-review",
+                "AGENT_MEMORY_MCP_ACTOR": "agent:scope-review",
+                "AGENT_MEMORY_MCP_SCOPE": "project:owner",
+                "AGENT_MEMORY_MCP_ALLOW_HEAD_CORRECTION": "enabled",
+                "AGENT_MEMORY_MCP_ALLOW_HEAD_TOMBSTONE": "enabled",
+            }
+            with patch.dict(os.environ, base):
+                async with Client(module.mcp, raise_exceptions=True) as owner:
+                    created = _result(await owner.call_tool("memory_remember", {
+                        "key": "memory:private:editor",
+                        "text": "The private editor is Neovim.",
+                    }), "committed")
+                    self.assertTrue(created["committed"])
+                    visible = _result(await owner.call_tool("memory_get", {
+                        "key": "memory:private:editor",
+                    }), "evidence")
+                    fact_ref = visible["evidence"][0]["fact_ref"]
+            with patch.dict(os.environ, {**base, "AGENT_MEMORY_MCP_SCOPE": "project:other"}):
+                async with Client(module.mcp, raise_exceptions=True) as other:
+                    pruned = _result(await other.call_tool("memory_tombstone_head", {
+                        "key": "memory:private:editor", "expected_fact_ref": fact_ref,
+                    }), "committed")
+                    changed = _result(await other.call_tool("memory_correct_head", {
+                        "key": "memory:private:editor", "expected_fact_ref": fact_ref,
+                        "replacement_text": "The private editor is VS Code.",
+                    }), "committed")
+                    for response in (pruned, changed):
+                        self.assertFalse(response["committed"])
+                        self.assertEqual(response["status"], "unavailable_or_changed")
+                        self.assertNotIn("Neovim", repr(response))
+            with patch.dict(os.environ, base):
+                async with Client(module.mcp, raise_exceptions=True) as owner:
+                    still = _result(await owner.call_tool("memory_get", {
+                        "key": "memory:private:editor",
+                    }), "evidence")
+                    self.assertEqual(still["lookup_status"], "found", still)
+                    self.assertEqual(still["evidence"][0]["fact_ref"], fact_ref)
+                    self.assertIn("Neovim", still["evidence"][0]["content"])
+
     async def test_missing_host_configuration_is_tool_error_not_success(self):
         with patch.dict(os.environ, {}, clear=True):
             async with Client(module.mcp, raise_exceptions=True) as client:
