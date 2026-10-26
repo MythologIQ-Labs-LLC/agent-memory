@@ -216,24 +216,34 @@ class LocalMemoryBridge:
         # Identical values are not independently authoritative either: do
         # not silently choose an arbitrary generation.
         if len(exact) > 1:
-            result["evidence"] = []
-            result["evidence_count"] = 0
-            result["lookup_status"] = "ambiguous_multiple_versions"
+            # Never guess between two delivered versions of the same key.
+            status = "ambiguous_multiple_versions"
+        elif not exact:
+            status = "not_found_or_unavailable"
+        elif exact[0].get("state") != "resolved":
+            # A shortened content fragment cannot fulfill an exact-key read.
+            status = "incomplete_evidence"
+        elif exact[0].get("latest_for_key") is not True:
+            # A single exact-key candidate may be a non-head fact, or the
+            # public history check may have failed. Neither is a safe answer.
+            # Conflate these cases so this route is not a history oracle.
+            status = "head_unverified_or_changed"
         else:
-            result["evidence"] = exact
-            result["evidence_count"] = len(exact)
-            result["lookup_status"] = "found" if exact else "not_found_or_unavailable"
-        # The exact route serves the key's head only. This lookup cannot enumerate earlier
-        # generations written under the same key (the public history read describes the live
-        # generation), and the runtime does not retire them: they may still surface through
-        # memory_find as current-state facts. State that as a caveat, not as a count.
-        result["key_state_version"] = exact[0].get("key_state_version") if len(exact) == 1 else None
+            status = "found"
+        result["evidence"] = exact if status == "found" else []
+        result["evidence_count"] = len(result["evidence"])
+        result["lookup_status"] = status
+        # Only a history-confirmed, fully delivered head is a successful get.
+        # Earlier generations are not enumerated and might still appear in
+        # memory_find as independently current facts.
+        result["key_state_version"] = exact[0].get("key_state_version") if status == "found" else None
         result["earlier_generations_enumerated"] = False
         result["caveat"] = (
             "key_state_version is the runtime's governance state counter for the key's current "
             "generation, not a count of written versions. Earlier generations written under this "
             "key are not enumerated here and may still be returned by memory_find as current-state "
-            "facts; check latest_for_key on each item."
+            "facts. A non-head, unknown-head or truncated candidate is never served as an "
+            "exact-key success; check latest_for_key in memory_find."
         )
         # Unrelated returned fact identifiers and their states are not part
         # of an exact-key result; don't launder them into a wrong answer.
