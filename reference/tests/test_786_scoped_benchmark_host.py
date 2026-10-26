@@ -13,7 +13,9 @@ from scoped_benchmark_host import SerializedScopedBenchmarkHost
 
 
 class FakeFacade:
-    def __init__(self, scope, closed):
+    def __init__(self, scope, closed, tenant="tenant:bench", actor_id="agent:bench"):
+        self.tenant = tenant
+        self.actor_id = actor_id
         self.scope = scope
         self.closed = closed
         self.is_closed = False
@@ -37,7 +39,7 @@ class ScopedHostTests(unittest.TestCase):
         def opener(scope):
             self.created.append(scope)
             return FakeFacade(scope, self.closed)
-        self.host = SerializedScopedBenchmarkHost(opener)
+        self.host = SerializedScopedBenchmarkHost(opener, tenant="tenant:bench", actor_id="agent:bench")
 
     def tearDown(self):
         self.host.close()
@@ -63,8 +65,8 @@ class ScopedHostTests(unittest.TestCase):
     def test_misbound_facade_is_closed_and_never_issued(self):
         wrong = FakeFacade("user:bob", self.closed)
         self.host.close()
-        self.host = SerializedScopedBenchmarkHost(lambda requested: wrong)
-        with self.assertRaisesRegex(RuntimeError, "scope does not match"):
+        self.host = SerializedScopedBenchmarkHost(lambda requested: wrong, tenant="tenant:bench", actor_id="agent:bench")
+        with self.assertRaisesRegex(RuntimeError, "identity does not match"):
             with self.host.use("alice"):
                 self.fail("a misbound handle escaped to its caller")
         self.assertTrue(wrong.is_closed)
@@ -80,12 +82,31 @@ class ScopedHostTests(unittest.TestCase):
 
         unbound = Unbound()
         self.host.close()
-        self.host = SerializedScopedBenchmarkHost(lambda requested: unbound)
-        with self.assertRaisesRegex(RuntimeError, "scope does not match"):
+        self.host = SerializedScopedBenchmarkHost(lambda requested: unbound, tenant="tenant:bench", actor_id="agent:bench")
+        with self.assertRaisesRegex(RuntimeError, "identity does not match"):
             with self.host.use("alice"):
                 pass
         self.assertTrue(unbound.closed)
         self.assertEqual(self.host.posture()["opens"], 0)
+
+    def test_wrong_tenant_or_actor_is_closed_before_use(self):
+        for overrides in ({"tenant": "tenant:foreign"}, {"actor_id": "agent:foreign"}):
+            with self.subTest(overrides=overrides):
+                self.host.close()
+                fake = FakeFacade("user:alice", self.closed, **overrides)
+                self.host = SerializedScopedBenchmarkHost(
+                    lambda requested: fake, tenant="tenant:bench", actor_id="agent:bench"
+                )
+                with self.assertRaisesRegex(RuntimeError, "identity does not match"):
+                    with self.host.use("alice"):
+                        self.fail("misbound tenant or actor escaped to caller")
+                self.assertTrue(fake.is_closed)
+                self.assertEqual(self.host.posture()["opens"], 0)
+
+    def test_missing_host_identity_is_refused_at_construction(self):
+        for tenant, actor in (("", "agent:bench"), ("tenant:bench", "")):
+            with self.assertRaisesRegex(ValueError, "must be nonempty"):
+                SerializedScopedBenchmarkHost(lambda scope: None, tenant=tenant, actor_id=actor)
 
     def test_scope_is_host_owned_not_tool_overridable(self):
         with self.host.use("alice") as handle:
@@ -116,7 +137,7 @@ class ScopedHostTests(unittest.TestCase):
                 raise RuntimeError("open denied")
             return FakeFacade(scope, self.closed)
         self.host.close()
-        self.host = SerializedScopedBenchmarkHost(opener)
+        self.host = SerializedScopedBenchmarkHost(opener, tenant="tenant:bench", actor_id="agent:bench")
         with self.host.use("alice") as old:
             pass
         with self.assertRaisesRegex(RuntimeError, "open denied"):
