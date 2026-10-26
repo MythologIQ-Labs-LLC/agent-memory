@@ -27,6 +27,9 @@ class FakeFormalStore:
         parent = self
 
         class FakeHandle:
+            def __init__(self):
+                self.scope = scope
+
             def remember(self, target, text, **kwargs):
                 if kwargs:
                     raise AssertionError("fabricated identity override")
