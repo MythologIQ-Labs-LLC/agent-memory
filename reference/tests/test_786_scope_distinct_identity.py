@@ -72,6 +72,25 @@ class ScopedIdentityTests(unittest.TestCase):
                 paths, [parent / ".agent-memory-scoped-v1"] * 3,
             )
 
+    def test_symlinked_scoped_child_refused_before_runtime_open(self):
+        with tempfile.TemporaryDirectory() as directory:
+            parent = Path(directory)
+            legacy = parent / "legacy"
+            legacy.mkdir()
+            link = parent / ".agent-memory-scoped-v1"
+            try:
+                link.symlink_to(legacy, target_is_directory=True)
+            except (OSError, NotImplementedError) as error:
+                self.skipTest(f"symlink capability unavailable: {error}")
+            with patch("agentmem_ref.api.scoped_identity.AgentMemory.open") as opener:
+                with self.assertRaisesRegex(ValueError, "must not be a symlink"):
+                    ScopeDistinctMemory.open(
+                        parent, tenant="tenant:one", scope="project:a",
+                        actor_id="agent:one",
+                    )
+                opener.assert_not_called()
+            self.assertEqual(list(legacy.iterdir()), [])
+
     def test_two_projects_same_public_key_create_separate_heads(self):
         store = {}
         a, b = scoped("project:a", store), scoped("project:b", store)
