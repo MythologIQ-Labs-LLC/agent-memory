@@ -247,7 +247,10 @@ class LocalMemoryBridge:
                 )
                 # Upstream selection/package assessment is not the final
                 # consumer delivery assessment after conservative filtering.
-                # No stale logical keys or fact references in the strict output.
+                # Do not surface raw references or reasons for unresolved
+                # package items in a strict consumer result. They were not
+                # verified as in-scope current key heads.
+                result["unavailable"] = []
                 result["non_head_keys"] = []
         result["profile"] = profile
         result["evidence_filter"] = (
