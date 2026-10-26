@@ -80,6 +80,11 @@ class ScopeDistinctMemory:
         # This is physical namespace separation, not a replacement for the
         # host's filesystem access controls or the canonical scope guard.
         scoped_root = parent / _SCOPED_STORE_DIRECTORY
+        # A redirected child could silently land this mode on a pre-existing
+        # legacy store. The host must own this parent and prevent concurrent
+        # filesystem mutation; this preflight is not TOCTOU-proof.
+        if scoped_root.is_symlink():
+            raise ValueError("scope-distinct store path must not be a symlink")
         memory = AgentMemory.open(
             scoped_root, tenant=tenant, actor_id=actor_id, scope=scope, purpose=purpose
         )
