@@ -8,7 +8,7 @@ import sys
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from run_dependency_pair_015_candidate import require_exact_versions, probe_manifest_delta
+from run_dependency_pair_015_candidate import require_exact_versions, probe_manifest_delta, probe_trace
 
 
 class FakeCheckpoint:
@@ -68,6 +68,37 @@ class MigrationCandidateTests(unittest.TestCase):
         probe_manifest_delta(FakeCheckpoint, fake_tree, capture)
         self.assertEqual(len(calls), 5)
         self.assertTrue(all(rep == "kv" for _, rep in calls))
+
+
+    def test_trace_probe_never_claims_enforcement_or_citation_integrity(self):
+        record = {}
+        class Key:
+            def public_key(self):
+                return "trust-key"
+        def sign(document, key):
+            record.update(document)
+            return {"signed": True}
+        def validate(signed):
+            self.assertTrue(signed["signed"])
+        def verify(signed, *, public_key_or_jwk):
+            self.assertEqual(public_key_or_jwk, "trust-key")
+            return SimpleNamespace(revocation={"status": "not_checked"}, citations={})
+        result = probe_trace(sign, Key, validate, verify)
+        self.assertEqual(record["policy"]["enforcement_mode"], "declared")
+        self.assertFalse(result["policy_enforcement_claimed"])
+        self.assertFalse(result["citation_bytes_authenticated"])
+
+    def test_trace_probe_rejects_absent_revocation_or_citation_result(self):
+        class Key:
+            def public_key(self):
+                return "key"
+        for verdict, expected in (
+            (SimpleNamespace(revocation=None, citations={}), "revocation"),
+            (SimpleNamespace(revocation={}, citations=None), "citation"),
+        ):
+            with self.subTest(expected=expected), self.assertRaisesRegex(AssertionError, expected):
+                probe_trace(lambda record, key: {}, Key, lambda record: None,
+                            lambda signed, **kwargs: verdict)
 
 
 if __name__ == "__main__":
