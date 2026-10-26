@@ -98,6 +98,25 @@ class CrossProjectWriteTargetTests(unittest.TestCase):
             with open_in(root, "project:a") as owner:
                 self.assertEqual(owner.history(KEY)["history"]["current_fact_uuid"], original)
 
+    def test_other_project_cannot_dispute_owner_fact(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            with open_in(root, "project:a") as owner:
+                first = owner.remember(KEY, "Orrin gateway region is Oslo")
+                self.assertTrue(first["committed"])
+                original = first["fact_uuid"]
+            with open_in(root, "project:b") as other:
+                denied = other.dispute(
+                    KEY, fact_uuid=original,
+                    evidence=review_evidence("project:b"), risk_class="low",
+                )
+                self.assertFalse(denied["committed"], denied)
+                self.assertIsNone(denied["fact_uuid"])
+            with open_in(root, "project:a") as owner:
+                self.assertEqual(owner.history(KEY)["history"]["current_fact_uuid"], original)
+                recalled = owner.recall("Orrin gateway region", logical_memory_refs=(KEY,))
+                self.assertIn(original, recalled["admitted"])
+
     def test_same_project_keeps_existing_explicit_rewrite_behavior(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
