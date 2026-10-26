@@ -1,0 +1,21 @@
+##### 07cd8692-runtime(ef8fff6)
+fanout-starvation  fanout=1 limit=8 hidden_present=False canonical(opaque)=['visible']  reported(exclude)=['visible']
+fanout-starvation  fanout=1 limit=8 hidden_present=True  canonical(opaque)=['hidden']  reported(exclude)=['visible']
+limit-truncation   fanout=8 limit=1 hidden_present=False canonical(opaque)=['visible']  reported(exclude)=['visible']
+limit-truncation   fanout=8 limit=1 hidden_present=True  canonical(opaque)=['hidden']  reported(exclude)=['visible']
+both-roomy         fanout=8 limit=8 hidden_present=False canonical(opaque)=['visible']  reported(exclude)=['visible']
+both-roomy         fanout=8 limit=8 hidden_present=True  canonical(opaque)=['hidden', 'visible']  reported(exclude)=['visible']
+##### independent-repair(a055e0e)
+fanout-starvation  fanout=1 limit=8 hidden_present=False canonical(opaque)=['visible']  reported(exclude)=['visible']
+fanout-starvation  fanout=1 limit=8 hidden_present=True  canonical(opaque)=['hidden', 'visible']  reported(exclude)=['visible']
+limit-truncation   fanout=8 limit=1 hidden_present=False canonical(opaque)=['visible']  reported(exclude)=['visible']
+limit-truncation   fanout=8 limit=1 hidden_present=True  canonical(opaque)=['visible']  reported(exclude)=['visible']
+both-roomy         fanout=8 limit=8 hidden_present=False canonical(opaque)=['visible']  reported(exclude)=['visible']
+both-roomy         fanout=8 limit=8 hidden_present=True  canonical(opaque)=['hidden', 'visible']  reported(exclude)=['visible']
+##### owner-repair(2ad4cf23)
+fanout-starvation  fanout=1 limit=8 hidden_present=False canonical(opaque)=['visible']  reported(exclude)=['visible']
+fanout-starvation  fanout=1 limit=8 hidden_present=True  canonical(opaque)=['hidden', 'visible']  reported(exclude)=['visible']
+limit-truncation   fanout=8 limit=1 hidden_present=False canonical(opaque)=['visible']  reported(exclude)=['visible']
+limit-truncation   fanout=8 limit=1 hidden_present=True  canonical(opaque)=['visible']  reported(exclude)=['visible']
+both-roomy         fanout=8 limit=8 hidden_present=False canonical(opaque)=['visible']  reported(exclude)=['visible']
+both-roomy         fanout=8 limit=8 hidden_present=True  canonical(opaque)=['hidden', 'visible']  reported(exclude)=['visible']

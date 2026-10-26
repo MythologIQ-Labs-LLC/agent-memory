@@ -1,0 +1,12 @@
+##### 07cd8692-runtime
+hub=400 opaque_every=-: p50 0.217 ms/search  returned=8 visible=8 opaque=0
+hub=400 opaque_every=4: p50 0.208 ms/search  returned=8 visible=6 opaque=2
+hub=400 opaque_every=2: p50 0.215 ms/search  returned=8 visible=4 opaque=4
+##### independent-repair-a055e0e
+hub=400 opaque_every=-: p50 0.214 ms/search  returned=8 visible=8 opaque=0
+hub=400 opaque_every=4: p50 0.239 ms/search  returned=8 visible=8 opaque=0
+hub=400 opaque_every=2: p50 0.239 ms/search  returned=8 visible=8 opaque=0
+##### owner-repair-2ad4cf23
+hub=400 opaque_every=-: p50 0.248 ms/search  returned=8 visible=8 opaque=0
+hub=400 opaque_every=4: p50 0.224 ms/search  returned=8 visible=8 opaque=0
+hub=400 opaque_every=2: p50 0.246 ms/search  returned=8 visible=8 opaque=0

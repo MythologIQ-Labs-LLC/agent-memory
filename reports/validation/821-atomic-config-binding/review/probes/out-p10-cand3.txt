@@ -1,0 +1,30 @@
+create    w_before     call#1  rc=77  db=True  state=None row=None file=None witness=None tmp_left=False reopen: REFUSED RuntimeRecoveryError: required SQLite runtime state is missing
+create    w_before     call#2  rc=77  db=True  state=1 row=1 file=None witness=0 tmp_left=False reopen: OK gen=1 scheme=sqlite_transaction
+create    w_tmp        call#1  rc=77  db=True  state=None row=None file=None witness=None tmp_left=True reopen: REFUSED RuntimeRecoveryError: required SQLite runtime state is missing
+create    w_tmp        call#2  rc=77  db=True  state=1 row=1 file=None witness=0 tmp_left=True reopen: OK gen=1 scheme=sqlite_transaction
+create    w_renamed    call#1  rc=77  db=True  state=None row=None file=None witness=0 tmp_left=False reopen: REFUSED RuntimeRecoveryError: required SQLite runtime state is missing  <-- WITNESS LEADS DB
+create    w_renamed    call#2  rc=77  db=True  state=1 row=1 file=None witness=1 tmp_left=False reopen: OK gen=1 scheme=sqlite_transaction
+create    w_after      call#1  rc=77  db=True  state=None row=None file=None witness=0 tmp_left=False reopen: REFUSED RuntimeRecoveryError: required SQLite runtime state is missing  <-- WITNESS LEADS DB
+create    w_after      call#2  rc=77  db=True  state=1 row=1 file=None witness=1 tmp_left=False reopen: OK gen=1 scheme=sqlite_transaction
+create    post_commit  call#99 rc=77  db=True  state=1 row=1 file=None witness=0 tmp_left=False reopen: OK gen=1 scheme=sqlite_transaction
+remember  post_commit  call#1  rc=77  db=True  state=3 row=3 file=None witness=2 tmp_left=False reopen: OK gen=3 scheme=sqlite_transaction
+remember  w_before     call#1  rc=77  db=True  state=3 row=3 file=None witness=2 tmp_left=False reopen: OK gen=3 scheme=sqlite_transaction
+remember  w_tmp        call#1  rc=77  db=True  state=3 row=3 file=None witness=2 tmp_left=True reopen: OK gen=3 scheme=sqlite_transaction
+remember  w_renamed    call#1  rc=77  db=True  state=3 row=3 file=None witness=3 tmp_left=False reopen: OK gen=3 scheme=sqlite_transaction
+remember  w_after      call#1  rc=77  db=True  state=3 row=3 file=None witness=3 tmp_left=False reopen: OK gen=3 scheme=sqlite_transaction
+recall    post_commit  call#1  rc=77  db=True  state=3 row=3 file=None witness=2 tmp_left=False reopen: OK gen=3 scheme=sqlite_transaction
+recall    w_before     call#1  rc=77  db=True  state=3 row=3 file=None witness=2 tmp_left=False reopen: OK gen=3 scheme=sqlite_transaction
+recall    w_tmp        call#1  rc=77  db=True  state=3 row=3 file=None witness=2 tmp_left=True reopen: OK gen=3 scheme=sqlite_transaction
+recall    w_renamed    call#1  rc=77  db=True  state=3 row=3 file=None witness=3 tmp_left=False reopen: OK gen=3 scheme=sqlite_transaction
+recall    w_after      call#1  rc=77  db=True  state=3 row=3 file=None witness=3 tmp_left=False reopen: OK gen=3 scheme=sqlite_transaction
+snapshot  post_commit  call#1  rc=77  db=True  state=3 row=3 file=None witness=2 tmp_left=False reopen: OK gen=3 scheme=sqlite_transaction
+snapshot  w_before     call#1  rc=77  db=True  state=3 row=3 file=None witness=2 tmp_left=False reopen: OK gen=3 scheme=sqlite_transaction
+snapshot  w_tmp        call#1  rc=77  db=True  state=3 row=3 file=None witness=2 tmp_left=True reopen: OK gen=3 scheme=sqlite_transaction
+snapshot  w_renamed    call#1  rc=77  db=True  state=3 row=3 file=None witness=3 tmp_left=False reopen: OK gen=3 scheme=sqlite_transaction
+snapshot  w_after      call#1  rc=77  db=True  state=3 row=3 file=None witness=3 tmp_left=False reopen: OK gen=3 scheme=sqlite_transaction
+migrate   post_commit  call#1  rc=77  db=True  state=4 row=4 file=3 witness=None tmp_left=False reopen: OK gen=4 scheme=sqlite_transaction
+migrate   w_before     call#1  rc=77  db=True  state=4 row=4 file=3 witness=None tmp_left=False reopen: OK gen=4 scheme=sqlite_transaction
+migrate   w_tmp        call#1  rc=77  db=True  state=4 row=4 file=3 witness=None tmp_left=True reopen: OK gen=4 scheme=sqlite_transaction
+migrate   w_renamed    call#1  rc=77  db=True  state=4 row=4 file=3 witness=4 tmp_left=False reopen: OK gen=4 scheme=sqlite_transaction
+migrate   w_after      call#1  rc=77  db=True  state=4 row=4 file=3 witness=4 tmp_left=False reopen: OK gen=4 scheme=sqlite_transaction
+PROBLEMS: 2

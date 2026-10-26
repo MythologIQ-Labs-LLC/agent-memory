@@ -1,0 +1,33 @@
+{
+ "attestation": "none: hashes bind contents for review; they are not signatures and confer no acceptance",
+ "command": "python reference/run_786_security_replays_dsl3.py --all",
+ "fixture": {
+  "path": "reference/fixtures/786-security-replays/evidence-reference-authorization-v1.json",
+  "sha256": "fed458c85afa1f812c864d8a208578986b5803be5f9dce1a3d8ae888d4e33ae5"
+ },
+ "observations_sha256": "70da7a3a6ff594a992960c5e606d19d8d33c887cc3dd1b88b3c70ad0ab0cf7f6",
+ "replay_id": "evidence-reference-authorization-v1",
+ "report": {
+  "path": "report.json",
+  "sha256": "68dae241dab2071d17b055e61499d0c4c76f1a2a493714ea15f86e4dc5c59433"
+ },
+ "runner": {
+  "path": "reference/run_786_security_replays_dsl3.py",
+  "sha256": "e48cc6f8536a7586f9ef5893fed0517e3147b8078a0ee62f2c06854a5b282202",
+  "version": "786-security-replay-runner/3"
+ },
+ "runner_base": {
+  "path": "reference/run_786_security_replays_dsl2.py",
+  "sha256": "73f0cd175b5a97f8e61d168bfc93cd796152aab02c76209bf2374153f35dba86",
+  "version": "786-security-replay-runner/2"
+ },
+ "runner_root": {
+  "path": "reference/run_786_security_replays.py",
+  "sha256": "21db05148c369815fa154bfa83db0b3b35f6c4712596ec0f137002a6611d8269",
+  "version": "786-security-replay-runner/1"
+ },
+ "runtime_tree": "2a00f31f7ddd9e5677e5c968523def77d186dec5",
+ "schema": "786-security-replay-manifest/3",
+ "source_commit": "03ddaef9c0c497466ae52603a69d51078df0b444",
+ "verdict": "PASS"
+}

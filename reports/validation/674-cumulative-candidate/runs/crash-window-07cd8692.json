@@ -1,0 +1,247 @@
+{
+  "python": "3.13.16",
+  "results": [
+    {
+      "child_exit": 77,
+      "child_stderr": "",
+      "child_stdout": "",
+      "crash_unix_time": 1792590934.661,
+      "crashed": true,
+      "durable_state": {
+        "binding_file_present": false,
+        "binding_row_generation": 2,
+        "binding_temp_files": [],
+        "database_present": true,
+        "facts": 1,
+        "journal_tail_generation": 2,
+        "runtime_state_generation": 2,
+        "witness_generation": 2
+      },
+      "elapsed_s": 0.355,
+      "phase": "steady",
+      "point": "pre_commit",
+      "reopen": {
+        "base_generation": 2,
+        "deploy_returned": 1,
+        "lunch_returned": 0,
+        "outcome": "recovered",
+        "recovery_posture": "recovered_exact_configuration"
+      }
+    },
+    {
+      "child_exit": 77,
+      "child_stderr": "",
+      "child_stdout": "",
+      "crash_unix_time": 1792590935.46,
+      "crashed": true,
+      "durable_state": {
+        "binding_file_present": false,
+        "binding_row_generation": 3,
+        "binding_temp_files": [],
+        "database_present": true,
+        "facts": 2,
+        "journal_tail_generation": 3,
+        "runtime_state_generation": 3,
+        "witness_generation": 2
+      },
+      "elapsed_s": 0.438,
+      "phase": "steady",
+      "point": "post_commit",
+      "reopen": {
+        "base_generation": 3,
+        "deploy_returned": 1,
+        "lunch_returned": 1,
+        "outcome": "recovered",
+        "recovery_posture": "recovered_exact_configuration"
+      }
+    },
+    {
+      "child_exit": 0,
+      "child_stderr": "",
+      "child_stdout": "COMPLETED_WITHOUT_CRASH",
+      "crash_unix_time": 1792590936.109,
+      "crashed": false,
+      "durable_state": {
+        "binding_file_present": false,
+        "binding_row_generation": 3,
+        "binding_temp_files": [],
+        "database_present": true,
+        "facts": 2,
+        "journal_tail_generation": 3,
+        "runtime_state_generation": 3,
+        "witness_generation": 3
+      },
+      "elapsed_s": 0.363,
+      "hook": "never_reached: the seam is not on this checkout's publication path",
+      "phase": "steady",
+      "point": "mid_bind_file",
+      "reopen": {
+        "base_generation": 3,
+        "deploy_returned": 1,
+        "lunch_returned": 1,
+        "outcome": "recovered",
+        "recovery_posture": "recovered_exact_configuration"
+      }
+    },
+    {
+      "child_exit": 77,
+      "child_stderr": "",
+      "child_stdout": "",
+      "crash_unix_time": 1792590936.664,
+      "crashed": true,
+      "durable_state": {
+        "binding_file_present": false,
+        "binding_row_generation": 2,
+        "binding_temp_files": [],
+        "database_present": true,
+        "facts": 1,
+        "journal_tail_generation": 2,
+        "runtime_state_generation": 2,
+        "witness_generation": 2
+      },
+      "elapsed_s": 0.301,
+      "phase": "steady",
+      "point": "mid_bind_row",
+      "reopen": {
+        "base_generation": 2,
+        "deploy_returned": 1,
+        "lunch_returned": 0,
+        "outcome": "recovered",
+        "recovery_posture": "recovered_exact_configuration"
+      }
+    },
+    {
+      "child_exit": 77,
+      "child_stderr": "",
+      "child_stdout": "",
+      "crash_unix_time": 1792590937.245,
+      "crashed": true,
+      "durable_state": {
+        "binding_file_present": false,
+        "binding_row_generation": 3,
+        "binding_temp_files": [],
+        "database_present": true,
+        "facts": 2,
+        "journal_tail_generation": 3,
+        "runtime_state_generation": 3,
+        "witness_generation": 3
+      },
+      "elapsed_s": 0.295,
+      "phase": "steady",
+      "point": "post_bind",
+      "reopen": {
+        "base_generation": 3,
+        "deploy_returned": 1,
+        "lunch_returned": 1,
+        "outcome": "recovered",
+        "recovery_posture": "recovered_exact_configuration"
+      }
+    },
+    {
+      "child_exit": 77,
+      "child_stderr": "",
+      "child_stdout": "",
+      "crash_unix_time": 1792590937.866,
+      "crashed": true,
+      "durable_state": {
+        "binding_file_present": false,
+        "binding_row_generation": "no_table",
+        "binding_temp_files": [],
+        "database_present": true,
+        "facts": 0,
+        "journal_tail_generation": null,
+        "runtime_state_generation": null,
+        "witness_generation": null
+      },
+      "elapsed_s": 0.305,
+      "phase": "create",
+      "point": "pre_commit",
+      "reopen": {
+        "error": "RuntimeRecoveryError: required SQLite runtime state is missing",
+        "outcome": "failed_closed"
+      }
+    },
+    {
+      "child_exit": 77,
+      "child_stderr": "",
+      "child_stdout": "",
+      "crash_unix_time": 1792590938.382,
+      "crashed": true,
+      "durable_state": {
+        "binding_file_present": false,
+        "binding_row_generation": 1,
+        "binding_temp_files": [],
+        "database_present": true,
+        "facts": 0,
+        "journal_tail_generation": 1,
+        "runtime_state_generation": 1,
+        "witness_generation": 0
+      },
+      "elapsed_s": 0.259,
+      "phase": "create",
+      "point": "post_commit",
+      "reopen": {
+        "base_generation": 1,
+        "deploy_returned": 0,
+        "lunch_returned": 0,
+        "outcome": "recovered",
+        "recovery_posture": "recovered_exact_configuration"
+      }
+    },
+    {
+      "child_exit": 0,
+      "child_stderr": "",
+      "child_stdout": "COMPLETED_WITHOUT_CRASH",
+      "crash_unix_time": 1792590939.072,
+      "crashed": false,
+      "durable_state": {
+        "binding_file_present": false,
+        "binding_row_generation": 1,
+        "binding_temp_files": [],
+        "database_present": true,
+        "facts": 0,
+        "journal_tail_generation": 1,
+        "runtime_state_generation": 1,
+        "witness_generation": 1
+      },
+      "elapsed_s": 0.403,
+      "hook": "never_reached: the seam is not on this checkout's publication path",
+      "phase": "create",
+      "point": "mid_bind_file",
+      "reopen": {
+        "base_generation": 1,
+        "deploy_returned": 0,
+        "lunch_returned": 0,
+        "outcome": "recovered",
+        "recovery_posture": "recovered_exact_configuration"
+      }
+    },
+    {
+      "child_exit": 77,
+      "child_stderr": "",
+      "child_stdout": "",
+      "crash_unix_time": 1792590939.591,
+      "crashed": true,
+      "durable_state": {
+        "binding_file_present": false,
+        "binding_row_generation": "no_table",
+        "binding_temp_files": [],
+        "database_present": true,
+        "facts": 0,
+        "journal_tail_generation": null,
+        "runtime_state_generation": null,
+        "witness_generation": 0
+      },
+      "elapsed_s": 0.24,
+      "phase": "create",
+      "point": "mid_bind_row",
+      "reopen": {
+        "error": "RuntimeRecoveryError: required SQLite runtime state is missing",
+        "outcome": "failed_closed"
+      }
+    }
+  ],
+  "revision": "07cd8692bcf26fd677c71f805f04f73a6332ed91",
+  "runtime_tree_dirty": false,
+  "sqlite": "3.45.1"
+}

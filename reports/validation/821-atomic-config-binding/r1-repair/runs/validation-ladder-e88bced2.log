@@ -1,0 +1,39 @@
+HEAD e88bced24157d668179882f63e921ea569df1d51 tree 4fbd6ebdd2646b68ca867af0869e3034fdcea88f dirty=[0] start 2026-10-16T19:31:41Z
+test_821 exit=0
+Ran 48 tests in 14.163s
+OK
+crash_window exit=0
+create  pre_commit     crashed=True  state_gen=None journal_gen=None file_gen=- row_gen=no_table witness=None facts=0 -> failed_closed RuntimeRecoveryError: required SQLite runtime state is missing
+create  post_commit    crashed=True  state_gen=1 journal_gen=1 file_gen=- row_gen=1 witness=0 facts=0 -> recovered (1, 0, 0)
+create  mid_bind_file  crashed=False state_gen=1 journal_gen=1 file_gen=- row_gen=1 witness=1 facts=0 -> recovered (hook never reached) (1, 0, 0)
+create  mid_bind_row   crashed=True  state_gen=None journal_gen=None file_gen=- row_gen=no_table witness=0 facts=0 -> failed_closed RuntimeRecoveryError: required SQLite runtime state is missing
+revision e88bced24157d668179882f63e921ea569df1d51 runtime_tree_dirty=False
+r1_kill exit=0
+r1_loop exit=0
+run_786_security_replays.py exit=0
+cross-scope-write-authority-denial-v2: PASS (12/12 cases) report sha256 1e75da8311eb991d1b1b7f1f33fb5bcc797c7325c3485327f896e038e31da019
+deleted-lineage-generations-and-restart-v2: PASS (8/8 cases) report sha256 ed9661879b3034296bd43a77e377644b3c129870cbb1d56cc8aa627f24bb14fd
+public-tombstone-redaction-and-observer-separation-v2: PASS (8/8 cases) report sha256 9ded0c61a42ec5a726564bda05d5ebbe8a5ad81499450cb8a0b7a93fe9fa6b19
+run_786_security_replays_dsl2.py exit=0
+cross-scope-write-authority-denial-v3: PASS (13/13 cases) report sha256 464ba69cccf6512889e56172471364833fb9784005a7bea7795e5f1e1fa3c8ad
+deleted-lineage-generations-and-restart-v3: PASS (10/10 cases) report sha256 5d4d3d8e12a1480adbd550b71e201a6bf77c502894f86b5eba8d30814be86b10
+public-tombstone-redaction-and-observer-separation-v3: PASS (8/8 cases) report sha256 8a95dea1569c475dd01372a156685a1f9de8798e3e73eb8a80bccfc778fd5915
+run_786_security_replays_dsl3.py exit=0
+evidence-reference-authorization-v1: PASS (13/13 cases) report sha256 e46ec1467e2fa8ccaa7bae70f8d645720ef07d8e764833a618da65567e07ce1d
+dirty after replays=[0]
+suite nomodel exit=1
+FAIL: test_own_checkout_at_frozen_revision_is_served (tests.test_644_v7_gauntlet_identity.ImportedRuntimeIdentity.test_own_checkout_at_frozen_revision_is_served)
+FAIL: test_a_runtime_edit_still_makes_replay_evidence_stale (tests.test_770_v7_lane_freeze_independent.ReplayEvidenceFreshness.test_a_runtime_edit_still_makes_replay_evidence_stale)
+FAIL: test_lane_records_do_not_make_replay_evidence_stale (tests.test_770_v7_lane_freeze_independent.ReplayEvidenceFreshness.test_lane_records_do_not_make_replay_evidence_stale)
+FAIL: test_evaluation_only_change_keeps_runtime_baseline_equivalence (tests.test_benchmark_integration_contract.BenchmarkIntegrationContractTests.test_evaluation_only_change_keeps_runtime_baseline_equivalence)
+Ran 3081 tests in 294.454s
+FAILED (failures=4, skipped=35, expected failures=1)
+suite model exit=1
+FAIL: test_own_checkout_at_frozen_revision_is_served (tests.test_644_v7_gauntlet_identity.ImportedRuntimeIdentity.test_own_checkout_at_frozen_revision_is_served)
+FAIL: test_a_runtime_edit_still_makes_replay_evidence_stale (tests.test_770_v7_lane_freeze_independent.ReplayEvidenceFreshness.test_a_runtime_edit_still_makes_replay_evidence_stale)
+FAIL: test_lane_records_do_not_make_replay_evidence_stale (tests.test_770_v7_lane_freeze_independent.ReplayEvidenceFreshness.test_lane_records_do_not_make_replay_evidence_stale)
+FAIL: test_evaluation_only_change_keeps_runtime_baseline_equivalence (tests.test_benchmark_integration_contract.BenchmarkIntegrationContractTests.test_evaluation_only_change_keeps_runtime_baseline_equivalence)
+Ran 3081 tests in 293.585s
+FAILED (failures=4, skipped=30, expected failures=1)
+dirty at end=[0] end 2026-10-16T19:42:13Z
+VAL_DONE

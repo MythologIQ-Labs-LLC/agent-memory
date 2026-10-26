@@ -1,0 +1,56 @@
+### p1
+adapter.governed_recall                    | raised UngovernedDurableWrite      | adapter-export changed: [] | rows changed: [] | gen 2->- | durably bound after next facade op: []
+admit_preselected_candidates               | raised UngovernedDurableWrite      | adapter-export changed: ['clock_tick'] clock 7->8 | rows changed: [] | gen 2->- | durably bound after next facade op: ['clock_tick', 'events']
+recall_planner.recall                      | raised UngovernedDurableWrite      | adapter-export changed: ['clock_tick'] clock 7->8 | rows changed: [] | gen 2->- | durably bound after next facade op: ['clock_tick', 'events']
+ConfiguredCompositionRuntime.multi_route (base cls) | raised UngovernedDurableWrite      | adapter-export changed: ['clock_tick'] clock 7->8 | rows changed: [] | gen 2->- | durably bound after next facade op: ['clock_tick', 'events']
+projections.correct (record_correction)    | returned "CorrectionResult(memory_id='memory:x', n" | adapter-export changed: ['state_version'] | rows changed: [] | gen 2->- | durably bound after next facade op: ['state_version']
+adapter.record_correction                  | returned '2'                       | adapter-export changed: ['state_version'] | rows changed: [] | gen 2->- | durably bound after next facade op: ['state_version']
+adapter.set_shared_domain_members          | returned 'None'                    | adapter-export changed: ['shared_domain_members'] | rows changed: [] | gen 2->- | durably bound after next facade op: ['shared_domain_members']
+shared_revocation.bootstrap_shared_domain_members | returned 'None'                    | adapter-export changed: ['shared_domain_members'] | rows changed: [] | gen 2->- | durably bound after next facade op: ['shared_domain_members']
+adapter.extension_state[...] = ...         | returned 'None'                    | adapter-export changed: ['extension_state'] | rows changed: [] | gen 2->- | durably bound after next facade op: ['extension_state']
+adapter.events.append                      | returned 'None'                    | adapter-export changed: ['events'] | rows changed: [] | gen 2->- | durably bound after next facade op: ['events']
+rebuild_projection                         | returned 'RebuildResult(decision=None, committed=T' | adapter-export changed: [] | rows changed: [] | gen 2->- | durably bound after next facade op: []
+### p2
+A commits: A='A done'; B (unlocked direct adapter call during A's txn): NOT refused; decision ids ['ref-0009']; recall events in live adapter after A: 1; next supported recall decision ids ['ref-0012']; reopen OK
+A fails: A="raised A's operation fails -> rollback"; B (unlocked direct adapter call during A's txn): NOT refused; decision ids ['ref-0009']; recall events in live adapter after A: 0; next supported recall decision ids ['ref-0009']; reopen OK
+### p3
+(a) persist_visibility_snapshot raised simulated binding write failure (ENOSPC)
+(a) after failure: SQLite committed gen/tables containing op:probe = (3, ['governance_residual']); in-memory base.visibility_snapshots has op:probe: False
+(a) after next facade op: committed = (4, []); in-memory has op:probe: False
+(a) reopened: recovered visibility ops = []
+(b) remember raised simulated binding write failure (ENOSPC)
+(b) close then reopen FAILED RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation
+### p4
+authorize  direct (docs/44 form)    -> EXCEPTION UngovernedDurableWrite: durable write outside a runtime generation refused: this SQL | reopen OK
+authorize  via run_governed_read    -> result stage=action_authority refusal=None | reopen OK
+witness    direct (docs/44 form)    -> EXCEPTION UngovernedDurableWrite: durable write outside a runtime generation refused: this SQL | reopen OK
+witness    via run_governed_read    -> result stage=execution_evidence refusal='no bound decision for action' | reopen OK
+recall     direct (docs/44 form)    -> EXCEPTION UngovernedDurableWrite: durable write outside a runtime generation refused: this SQL | reopen OK
+recall     via run_governed_read    -> result stage=recall refusal=None | reopen OK
+commit     direct (docs/44 form)    -> EXCEPTION UngovernedDurableWrite: durable write outside a runtime generation refused: this SQL | reopen OK
+commit     via run_governed_read    -> result stage=commit refusal=None | reopen OK
+### p5
+generation interrupted by KeyboardInterrupt
+connection.in_transaction after interrupt: True
+direct adapter.governed_recall after interrupt: NOT refused, admitted ['ref-0004']
+facade recall after interrupt: RuntimeError nested SQLite substrate transactions are unsupported
+close then reopen OK
+### p6
+tamper fact text                              -> reopen FAILED RuntimeRecoveryError: SQLite canonical substrate digest mismatch
+tamper id_counter +1                          -> reopen FAILED RuntimeRecoveryError: SQLite canonical substrate digest mismatch
+tamper id_counter -1                          -> reopen FAILED RuntimeRecoveryError: SQLite canonical substrate digest mismatch
+tamper drop last journal row                  -> reopen FAILED RuntimeRecoveryError: SQLite runtime generation/journal mismatch
+tamper runtime_state generation-1             -> reopen FAILED RuntimeRecoveryError: SQLite runtime generation/journal mismatch
+tamper governance_residual edit               -> reopen FAILED RuntimeRecoveryError: SQLite governance state digest mismatch: governance commitment mismatch
+close() after refused + ungoverned acts: rows changed: []
+reopened: shared_domain_members = {} state_version = {'memory:x': 1}
+### p7
+governed_recall inside substrate.transaction(): NOT refused, committed; admitted ['ref-0004']
+close then reopen FAILED RuntimeRecoveryError: SQLite canonical substrate digest mismatch
+### p8
+second-instance adapter.mint_id(): ref-0008 (not refused)
+then reopen FAILED RuntimeRecoveryError: SQLite canonical substrate digest mismatch
+### p9
+direct planner recall: refused UngovernedDurableWrite
+sidecar vector rows before=0 after refusal=1
+close then skip

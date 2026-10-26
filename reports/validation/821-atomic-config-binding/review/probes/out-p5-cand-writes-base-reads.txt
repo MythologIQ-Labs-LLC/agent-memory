@@ -1,0 +1,21 @@
+writer=cand reader=base
+writer create+write: OK gen=1 scheme=sqlite_transaction -> wrote gen=2
+reader opens writer store: REFUSED RuntimeRecoveryError: required configuration-bound state missing: configuration-binding.json
+reader attempts write: REFUSED RuntimeRecoveryError: required configuration-bound state missing: configuration-binding.json
+  db unchanged by reader: True {'db': True, 'file_gen': None, 'state_gen': 2, 'journal_gen': 2, 'row_gen': 2, 'row_payload_gen': 2, 'table': True}
+writer reopens: OK gen=2 scheme=sqlite_transaction
+[821/coherent] writer open only: OK gen=3 scheme=legacy_file | tables unchanged: True | binding file unchanged: True
+[821/coherent] writer open again: OK gen=3 scheme=legacy_file | tables unchanged: True
+[821/coherent] writer recall: OK gen=3 scheme=legacy_file -> recall gen=4 {'db': True, 'file_gen': 3, 'state_gen': 4, 'journal_gen': 4, 'row_gen': 4, 'row_payload_gen': 4, 'table': True}
+[821/coherent]   legacy file unchanged: True
+[821/coherent] reader opens migrated: REFUSED RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation | unchanged: True
+[821/coherent] writer reopens: OK gen=4 scheme=sqlite_transaction
+[821/stranded] writer open only: REFUSED RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation | tables unchanged: True | binding file unchanged: True
+[821/stranded] writer open again: REFUSED RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation | tables unchanged: True
+[821/stranded] writer recall: REFUSED RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation {'db': True, 'file_gen': 2, 'state_gen': 3, 'journal_gen': 3, 'row_gen': None, 'row_payload_gen': None, 'table': False}
+[821/stranded]   legacy file unchanged: True
+[821/stranded] reader opens migrated: REFUSED RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation | unchanged: True
+[821/stranded] writer reopens: REFUSED RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation
+[809/cross-scope] open: OK gen=11 scheme=legacy_file | open wrote nothing: True | recall: OK gen=11 scheme=legacy_file -> recall gen=12 | {'db': True, 'file_gen': 11, 'state_gen': 12, 'journal_gen': 12, 'row_gen': 12, 'row_payload_gen': 12, 'table': True} | legacy file unchanged: True | reader: REFUSED RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation | writer reopen: OK gen=12 scheme=sqlite_transaction
+[809/forward-reference] open: OK gen=6 scheme=legacy_file | open wrote nothing: True | recall: OK gen=6 scheme=legacy_file -> recall gen=7 | {'db': True, 'file_gen': 6, 'state_gen': 7, 'journal_gen': 7, 'row_gen': 7, 'row_payload_gen': 7, 'table': True} | legacy file unchanged: True | reader: REFUSED RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation | writer reopen: OK gen=7 scheme=sqlite_transaction
+[809/shared-membership] open: OK gen=9 scheme=legacy_file | open wrote nothing: True | recall: OK gen=9 scheme=legacy_file -> recall gen=10 | {'db': True, 'file_gen': 9, 'state_gen': 10, 'journal_gen': 10, 'row_gen': 10, 'row_payload_gen': 10, 'table': True} | legacy file unchanged: True | reader: REFUSED RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation | writer reopen: OK gen=10 scheme=sqlite_transaction

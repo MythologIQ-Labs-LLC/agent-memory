@@ -1,0 +1,65 @@
+# fail-first: test_809_legacy_self_reference at the unmodified runtime
+HEAD 09214af54234726072e2d70aec6278e99472c1af (runtime reference/agentmem_ref tree 4bfe33f27d229412f160e79a80fe0a44b3ed0c2a, identical to e88bced2: yes)
+working-tree changes: tests, fixture, amendment only; sha256 of the test module 9d8f1b2087be8377db0cb774edc2774d38a60575f7b485cc23e9805f551debe4
+python 3.13.16  date 2026-10-20T22:14:54Z
+command: python -m unittest discover -s reference/tests -t reference -p test_809_legacy_self_reference.py -v  (x3), then -p 'test_809_legacy_upgrade*.py' (controls)
+--- run 1
+test_pending_status_and_the_legacy_dependency_of_the_deleted_source ... ok
+test_forgetting_a_self_citing_fact_after_the_upgrade_is_an_ordinary_deletion ... ok
+test_a_second_run_rewrites_nothing_and_restart_reads_the_same ... FAIL
+test_a_new_write_citing_its_own_predicted_id_binds_nothing ... ok
+test_no_edge_is_fabricated_or_dropped_without_a_durable_reason ... FAIL
+test_project_b_sees_only_its_own_fact_before_and_after ... ok
+test_the_store_and_script_are_byte_frozen_and_v7_produced ... ok
+test_the_v7_rows_really_cite_themselves_and_carry_no_derivation_record ... ok
+test_recall_after_the_upgrade_keeps_the_deleted_source_dependency ... /usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f433caf8c70>
+test_self_references_are_forward_and_unbound_the_prior_dependency_stays ... FAIL
+FAIL: test_a_second_run_rewrites_nothing_and_restart_reads_the_same
+AssertionError: {'eligible': 4, 'unknown_reference': 3, 'forward_reference': 1} != {'unknown_reference': 3, 'eligible': 2, 'forward_reference': 3}
+FAIL: test_no_edge_is_fabricated_or_dropped_without_a_durable_reason
+AssertionError: False is not true : ('ref-0018', 'ref-0018', 'eligible')
+FAIL: test_self_references_are_forward_and_unbound_the_prior_dependency_stays
+AssertionError: {'ref-0018': 'eligible'} != {'ref-0018': 'forward_reference'}
+Ran 10 tests in 0.843s
+FAILED (failures=3)
+--- run 2
+test_pending_status_and_the_legacy_dependency_of_the_deleted_source ... ok
+test_forgetting_a_self_citing_fact_after_the_upgrade_is_an_ordinary_deletion ... ok
+test_a_second_run_rewrites_nothing_and_restart_reads_the_same ... FAIL
+test_a_new_write_citing_its_own_predicted_id_binds_nothing ... ok
+test_no_edge_is_fabricated_or_dropped_without_a_durable_reason ... FAIL
+test_project_b_sees_only_its_own_fact_before_and_after ... ok
+test_the_store_and_script_are_byte_frozen_and_v7_produced ... ok
+test_the_v7_rows_really_cite_themselves_and_carry_no_derivation_record ... ok
+test_recall_after_the_upgrade_keeps_the_deleted_source_dependency ... /usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7ff5e3ae0c70>
+test_self_references_are_forward_and_unbound_the_prior_dependency_stays ... FAIL
+FAIL: test_a_second_run_rewrites_nothing_and_restart_reads_the_same
+AssertionError: {'eligible': 4, 'unknown_reference': 3, 'forward_reference': 1} != {'unknown_reference': 3, 'eligible': 2, 'forward_reference': 3}
+FAIL: test_no_edge_is_fabricated_or_dropped_without_a_durable_reason
+AssertionError: False is not true : ('ref-0018', 'ref-0018', 'eligible')
+FAIL: test_self_references_are_forward_and_unbound_the_prior_dependency_stays
+AssertionError: {'ref-0018': 'eligible'} != {'ref-0018': 'forward_reference'}
+Ran 10 tests in 0.718s
+FAILED (failures=3)
+--- run 3
+test_pending_status_and_the_legacy_dependency_of_the_deleted_source ... ok
+test_forgetting_a_self_citing_fact_after_the_upgrade_is_an_ordinary_deletion ... ok
+test_a_second_run_rewrites_nothing_and_restart_reads_the_same ... FAIL
+test_a_new_write_citing_its_own_predicted_id_binds_nothing ... ok
+test_no_edge_is_fabricated_or_dropped_without_a_durable_reason ... FAIL
+test_project_b_sees_only_its_own_fact_before_and_after ... ok
+test_the_store_and_script_are_byte_frozen_and_v7_produced ... ok
+test_the_v7_rows_really_cite_themselves_and_carry_no_derivation_record ... ok
+test_recall_after_the_upgrade_keeps_the_deleted_source_dependency ... /usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fa800b54c70>
+test_self_references_are_forward_and_unbound_the_prior_dependency_stays ... FAIL
+FAIL: test_a_second_run_rewrites_nothing_and_restart_reads_the_same
+AssertionError: {'eligible': 4, 'unknown_reference': 3, 'forward_reference': 1} != {'unknown_reference': 3, 'eligible': 2, 'forward_reference': 3}
+FAIL: test_no_edge_is_fabricated_or_dropped_without_a_durable_reason
+AssertionError: False is not true : ('ref-0018', 'ref-0018', 'eligible')
+FAIL: test_self_references_are_forward_and_unbound_the_prior_dependency_stays
+AssertionError: {'ref-0018': 'eligible'} != {'ref-0018': 'forward_reference'}
+Ran 10 tests in 0.808s
+FAILED (failures=3)
+--- frozen-store controls
+Ran 12 tests in 2.370s
+OK

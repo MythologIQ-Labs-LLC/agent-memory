@@ -1,0 +1,27 @@
+{
+  "acceptance": "NOT GRANTED: requires an independent reviewer's decision recorded in META_LEDGER",
+  "evidence_verified": true,
+  "replays": [
+    {
+      "problems": [],
+      "reexecuted": true,
+      "replay": "cross-scope-write-authority-denial-v2",
+      "status": "VERIFIED",
+      "verdict": "PASS"
+    },
+    {
+      "problems": [],
+      "reexecuted": true,
+      "replay": "deleted-lineage-generations-and-restart-v2",
+      "status": "VERIFIED",
+      "verdict": "PASS"
+    },
+    {
+      "problems": [],
+      "reexecuted": true,
+      "replay": "public-tombstone-redaction-and-observer-separation-v2",
+      "status": "VERIFIED",
+      "verdict": "PASS"
+    }
+  ]
+}

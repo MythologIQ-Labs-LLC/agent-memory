@@ -1,0 +1,28 @@
+{
+ "attestation": "none: hashes bind contents for review; they are not signatures and confer no acceptance",
+ "command": "python reference/run_786_security_replays_dsl2.py --all",
+ "fixture": {
+  "path": "reference/fixtures/786-security-replays/deleted-lineage-generations-and-restart-v3.json",
+  "sha256": "412799ee22c77760adb33264dd32ade2ee9764cd069e770a5b4f66fe0a5eba00"
+ },
+ "observations_sha256": "510ff2a621a1e201f3f15504e13aa47cdfd0fbf8306e1bbf951900afdea459af",
+ "replay_id": "deleted-lineage-generations-and-restart-v3",
+ "report": {
+  "path": "report.json",
+  "sha256": "43cbc38313bbaf2fab9fe583cac19faae1788188df942d4535304a2a97f32180"
+ },
+ "runner": {
+  "path": "reference/run_786_security_replays_dsl2.py",
+  "sha256": "73f0cd175b5a97f8e61d168bfc93cd796152aab02c76209bf2374153f35dba86",
+  "version": "786-security-replay-runner/2"
+ },
+ "runner_base": {
+  "path": "reference/run_786_security_replays.py",
+  "sha256": "21db05148c369815fa154bfa83db0b3b35f6c4712596ec0f137002a6611d8269",
+  "version": "786-security-replay-runner/1"
+ },
+ "runtime_tree": "8e01228027bfc4b779f3aa6230915e3c9b78ecaf",
+ "schema": "786-security-replay-manifest/2",
+ "source_commit": "07cd8692bcf26fd677c71f805f04f73a6332ed91",
+ "verdict": "PASS"
+}

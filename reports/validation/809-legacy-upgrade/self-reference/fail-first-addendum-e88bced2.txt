@@ -1,0 +1,79 @@
+# fail-first after addendum (section 9): test_809_legacy_self_reference at the unmodified runtime
+HEAD 89c51f124d937a2f72292e5bf333cd11c2204c69 + working tree (tests and records only); reference/agentmem_ref identical to e88bced2: yes
+sha256 of the test module 49757beeb387a94ff07b351c01e1ed418f91764acab57aca11559534f57deb65
+python 3.13.16  date 2026-10-20T22:24:34Z
+--- run 1
+test_pending_status_and_the_legacy_dependency_of_the_deleted_source ... ok
+test_forgetting_a_self_citing_fact_after_the_upgrade_is_an_ordinary_deletion ... ok
+test_forgetting_self_citers_on_a_pending_store_terminates_and_recovers ... ok
+test_a_second_run_rewrites_nothing_and_restart_reads_the_same ... FAIL
+test_a_new_write_citing_its_own_predicted_id_binds_nothing ... ok
+test_no_edge_is_fabricated_or_dropped_without_a_durable_reason ... FAIL
+test_after_the_upgrade_a_self_citer_is_not_its_own_residue ... FAIL
+test_on_a_pending_store_a_self_citer_is_its_own_residue ... ok
+test_project_b_sees_only_its_own_fact_before_and_after ... ok
+test_the_store_and_script_are_byte_frozen_and_v7_produced ... ok
+test_the_v7_rows_really_cite_themselves_and_carry_no_derivation_record ... ok
+test_recall_after_the_upgrade_keeps_the_deleted_source_dependency ... (ResourceWarning, see F8)
+test_self_references_are_forward_and_unbound_the_prior_dependency_stays ... FAIL
+FAIL: test_a_second_run_rewrites_nothing_and_restart_reads_the_same
+AssertionError: {'eligible': 4, 'unknown_reference': 3, 'forward_reference': 1} != {'unknown_reference': 3, 'eligible': 2, 'forward_reference': 3}
+FAIL: test_no_edge_is_fabricated_or_dropped_without_a_durable_reason
+AssertionError: False is not true : ('ref-0018', 'ref-0018', 'eligible')
+FAIL: test_after_the_upgrade_a_self_citer_is_not_its_own_residue
+AssertionError: {'self': ['ref-0018'], 'mixed': ['ref-0025']} != {'self': [], 'mixed': []}
+FAIL: test_self_references_are_forward_and_unbound_the_prior_dependency_stays
+AssertionError: {'ref-0018': 'eligible'} != {'ref-0018': 'forward_reference'}
+Ran 13 tests in 1.058s
+FAILED (failures=4)
+--- run 2
+test_pending_status_and_the_legacy_dependency_of_the_deleted_source ... ok
+test_forgetting_a_self_citing_fact_after_the_upgrade_is_an_ordinary_deletion ... ok
+test_forgetting_self_citers_on_a_pending_store_terminates_and_recovers ... ok
+test_a_second_run_rewrites_nothing_and_restart_reads_the_same ... FAIL
+test_a_new_write_citing_its_own_predicted_id_binds_nothing ... ok
+test_no_edge_is_fabricated_or_dropped_without_a_durable_reason ... FAIL
+test_after_the_upgrade_a_self_citer_is_not_its_own_residue ... FAIL
+test_on_a_pending_store_a_self_citer_is_its_own_residue ... ok
+test_project_b_sees_only_its_own_fact_before_and_after ... ok
+test_the_store_and_script_are_byte_frozen_and_v7_produced ... ok
+test_the_v7_rows_really_cite_themselves_and_carry_no_derivation_record ... ok
+test_recall_after_the_upgrade_keeps_the_deleted_source_dependency ... (ResourceWarning, see F8)
+test_self_references_are_forward_and_unbound_the_prior_dependency_stays ... FAIL
+FAIL: test_a_second_run_rewrites_nothing_and_restart_reads_the_same
+AssertionError: {'eligible': 4, 'unknown_reference': 3, 'forward_reference': 1} != {'unknown_reference': 3, 'eligible': 2, 'forward_reference': 3}
+FAIL: test_no_edge_is_fabricated_or_dropped_without_a_durable_reason
+AssertionError: False is not true : ('ref-0018', 'ref-0018', 'eligible')
+FAIL: test_after_the_upgrade_a_self_citer_is_not_its_own_residue
+AssertionError: {'self': ['ref-0018'], 'mixed': ['ref-0025']} != {'self': [], 'mixed': []}
+FAIL: test_self_references_are_forward_and_unbound_the_prior_dependency_stays
+AssertionError: {'ref-0018': 'eligible'} != {'ref-0018': 'forward_reference'}
+Ran 13 tests in 0.915s
+FAILED (failures=4)
+--- run 3
+test_pending_status_and_the_legacy_dependency_of_the_deleted_source ... ok
+test_forgetting_a_self_citing_fact_after_the_upgrade_is_an_ordinary_deletion ... ok
+test_forgetting_self_citers_on_a_pending_store_terminates_and_recovers ... ok
+test_a_second_run_rewrites_nothing_and_restart_reads_the_same ... FAIL
+test_a_new_write_citing_its_own_predicted_id_binds_nothing ... ok
+test_no_edge_is_fabricated_or_dropped_without_a_durable_reason ... FAIL
+test_after_the_upgrade_a_self_citer_is_not_its_own_residue ... FAIL
+test_on_a_pending_store_a_self_citer_is_its_own_residue ... ok
+test_project_b_sees_only_its_own_fact_before_and_after ... ok
+test_the_store_and_script_are_byte_frozen_and_v7_produced ... ok
+test_the_v7_rows_really_cite_themselves_and_carry_no_derivation_record ... ok
+test_recall_after_the_upgrade_keeps_the_deleted_source_dependency ... (ResourceWarning, see F8)
+test_self_references_are_forward_and_unbound_the_prior_dependency_stays ... FAIL
+FAIL: test_a_second_run_rewrites_nothing_and_restart_reads_the_same
+AssertionError: {'eligible': 4, 'unknown_reference': 3, 'forward_reference': 1} != {'unknown_reference': 3, 'eligible': 2, 'forward_reference': 3}
+FAIL: test_no_edge_is_fabricated_or_dropped_without_a_durable_reason
+AssertionError: False is not true : ('ref-0018', 'ref-0018', 'eligible')
+FAIL: test_after_the_upgrade_a_self_citer_is_not_its_own_residue
+AssertionError: {'self': ['ref-0018'], 'mixed': ['ref-0025']} != {'self': [], 'mixed': []}
+FAIL: test_self_references_are_forward_and_unbound_the_prior_dependency_stays
+AssertionError: {'ref-0018': 'eligible'} != {'ref-0018': 'forward_reference'}
+Ran 13 tests in 0.947s
+FAILED (failures=4)
+--- frozen-store controls
+Ran 12 tests in 2.266s
+OK

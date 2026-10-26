@@ -1,0 +1,531 @@
+# fail-first: tests/test_821_atomic_config_binding.py (as committed in this commit) + reference/fixtures/821-legacy-stores copied into a clean d2fc9782 worktree; no runtime change
+# command (from reference/): python3 -W ignore -m unittest -v tests.test_821_atomic_config_binding
+test_m6_a_failed_binding_keeps_no_uncommitted_visibility_snapshot (tests.test_821_atomic_config_binding.BindingFailureRollsBack.test_m6_a_failed_binding_keeps_no_uncommitted_visibility_snapshot) ... ERROR
+test_m6_exception_and_interrupt_in_binding_publication (tests.test_821_atomic_config_binding.BindingFailureRollsBack.test_m6_exception_and_interrupt_in_binding_publication) ... 
+  test_m6_exception_and_interrupt_in_binding_publication (tests.test_821_atomic_config_binding.BindingFailureRollsBack.test_m6_exception_and_interrupt_in_binding_publication) (failure='OSError') ... ERROR
+  test_m6_exception_and_interrupt_in_binding_publication (tests.test_821_atomic_config_binding.BindingFailureRollsBack.test_m6_exception_and_interrupt_in_binding_publication) (failure='KeyboardInterrupt') ... ERROR
+test_a_new_store_writes_no_binding_file (tests.test_821_atomic_config_binding.CloseRecoveryAndDoctor.test_a_new_store_writes_no_binding_file) ... FAIL
+test_m19_close_and_recovery_write_nothing (tests.test_821_atomic_config_binding.CloseRecoveryAndDoctor.test_m19_close_and_recovery_write_nothing) ... ok
+test_m20_doctor_reports_the_in_transaction_binding (tests.test_821_atomic_config_binding.CloseRecoveryAndDoctor.test_m20_doctor_reports_the_in_transaction_binding) ... ERROR
+test_m18_kill_loop_always_reopens_to_the_last_committed_generation (tests.test_821_atomic_config_binding.CrashWindow.test_m18_kill_loop_always_reopens_to_the_last_committed_generation) ... 
+  test_m18_kill_loop_always_reopens_to_the_last_committed_generation (tests.test_821_atomic_config_binding.CrashWindow.test_m18_kill_loop_always_reopens_to_the_last_committed_generation) (cycle=0, point='none') ... ERROR
+  test_m18_kill_loop_always_reopens_to_the_last_committed_generation (tests.test_821_atomic_config_binding.CrashWindow.test_m18_kill_loop_always_reopens_to_the_last_committed_generation) (cycle=1, point='post_op') ... ERROR
+  test_m18_kill_loop_always_reopens_to_the_last_committed_generation (tests.test_821_atomic_config_binding.CrashWindow.test_m18_kill_loop_always_reopens_to_the_last_committed_generation) (cycle=2, point='mid_bind') ... ERROR
+  test_m18_kill_loop_always_reopens_to_the_last_committed_generation (tests.test_821_atomic_config_binding.CrashWindow.test_m18_kill_loop_always_reopens_to_the_last_committed_generation) (cycle=3, point='mid_bind') ... FAIL
+  test_m18_kill_loop_always_reopens_to_the_last_committed_generation (tests.test_821_atomic_config_binding.CrashWindow.test_m18_kill_loop_always_reopens_to_the_last_committed_generation) (cycle=4, point='post_commit') ... FAIL
+  test_m18_kill_loop_always_reopens_to_the_last_committed_generation (tests.test_821_atomic_config_binding.CrashWindow.test_m18_kill_loop_always_reopens_to_the_last_committed_generation) (cycle=5, point='pre_commit') ... FAIL
+  test_m18_kill_loop_always_reopens_to_the_last_committed_generation (tests.test_821_atomic_config_binding.CrashWindow.test_m18_kill_loop_always_reopens_to_the_last_committed_generation) (cycle=6, point='pre_commit') ... FAIL
+  test_m18_kill_loop_always_reopens_to_the_last_committed_generation (tests.test_821_atomic_config_binding.CrashWindow.test_m18_kill_loop_always_reopens_to_the_last_committed_generation) (cycle=7, point='post_op') ... FAIL
+  test_m18_kill_loop_always_reopens_to_the_last_committed_generation (tests.test_821_atomic_config_binding.CrashWindow.test_m18_kill_loop_always_reopens_to_the_last_committed_generation) (cycle=8, point='none') ... FAIL
+  test_m18_kill_loop_always_reopens_to_the_last_committed_generation (tests.test_821_atomic_config_binding.CrashWindow.test_m18_kill_loop_always_reopens_to_the_last_committed_generation) (cycle=9, point='mid_bind') ... FAIL
+test_m1_crash_before_commit_recovers_the_prior_generation (tests.test_821_atomic_config_binding.CrashWindow.test_m1_crash_before_commit_recovers_the_prior_generation) ... ok
+test_m2_crash_immediately_after_commit_recovers_the_committed_generation (tests.test_821_atomic_config_binding.CrashWindow.test_m2_crash_immediately_after_commit_recovers_the_committed_generation) ... FAIL
+test_m3_crash_during_binding_publication_rolls_the_generation_back (tests.test_821_atomic_config_binding.CrashWindow.test_m3_crash_during_binding_publication_rolls_the_generation_back) ... FAIL
+test_m4_crash_after_the_operation_returned_recovers_it (tests.test_821_atomic_config_binding.CrashWindow.test_m4_crash_after_the_operation_returned_recovers_it) ... ok
+test_m5_crash_after_the_first_generation_commits_in_create (tests.test_821_atomic_config_binding.CrashWindow.test_m5_crash_after_the_first_generation_commits_in_create) ... ERROR
+test_a7_the_same_operations_publish_byte_identical_digests_and_journal (tests.test_821_atomic_config_binding.LegacyStores.test_a7_the_same_operations_publish_byte_identical_digests_and_journal)
+A #821 runtime replaying the coherent fixture's writes publishes the same canonical, ... FAIL
+test_m11_deleting_the_row_of_a_migrated_store_does_not_reach_the_legacy_file (tests.test_821_atomic_config_binding.LegacyStores.test_m11_deleting_the_row_of_a_migrated_store_does_not_reach_the_legacy_file) ... ERROR
+test_m14_a_coherent_legacy_store_migrates_inside_its_next_generation (tests.test_821_atomic_config_binding.LegacyStores.test_m14_a_coherent_legacy_store_migrates_inside_its_next_generation) ... ERROR
+test_m15_a_store_stranded_by_the_old_window_stays_refused (tests.test_821_atomic_config_binding.LegacyStores.test_m15_a_store_stranded_by_the_old_window_stays_refused) ... ok
+test_m16_a_tampered_or_missing_legacy_file_stays_refused (tests.test_821_atomic_config_binding.LegacyStores.test_m16_a_tampered_or_missing_legacy_file_stays_refused) ... ok
+test_m17_a_changed_configuration_is_still_refused (tests.test_821_atomic_config_binding.LegacyStores.test_m17_a_changed_configuration_is_still_refused) ... ok
+test_a5_the_binder_refuses_a_row_that_does_not_bind_the_previous_generation (tests.test_821_atomic_config_binding.OwnershipAndStaleWriters.test_a5_the_binder_refuses_a_row_that_does_not_bind_the_previous_generation) ... ERROR
+test_m12_a_stale_handle_cannot_rebind_another_process_generation (tests.test_821_atomic_config_binding.OwnershipAndStaleWriters.test_m12_a_stale_handle_cannot_rebind_another_process_generation) ... ERROR
+test_m13_the_row_is_written_only_inside_the_owning_generation (tests.test_821_atomic_config_binding.OwnershipAndStaleWriters.test_m13_the_row_is_written_only_inside_the_owning_generation) ... ERROR
+test_m10_a_deleted_row_is_refused (tests.test_821_atomic_config_binding.TamperedBindingsAreRefused.test_m10_a_deleted_row_is_refused) ... FAIL
+test_m7_tampered_rows (tests.test_821_atomic_config_binding.TamperedBindingsAreRefused.test_m7_tampered_rows) ... ERROR
+test_m8_a_row_from_another_tenant_or_store_is_refused (tests.test_821_atomic_config_binding.TamperedBindingsAreRefused.test_m8_a_row_from_another_tenant_or_store_is_refused) ... 
+  test_m8_a_row_from_another_tenant_or_store_is_refused (tests.test_821_atomic_config_binding.TamperedBindingsAreRefused.test_m8_a_row_from_another_tenant_or_store_is_refused) (tenant='tenant:other') ... ERROR
+  test_m8_a_row_from_another_tenant_or_store_is_refused (tests.test_821_atomic_config_binding.TamperedBindingsAreRefused.test_m8_a_row_from_another_tenant_or_store_is_refused) (tenant='tenant:821') ... ERROR
+test_m9_a_replayed_older_row_is_refused (tests.test_821_atomic_config_binding.TamperedBindingsAreRefused.test_m9_a_replayed_older_row_is_refused) ... ERROR
+
+======================================================================
+ERROR: test_m6_a_failed_binding_keeps_no_uncommitted_visibility_snapshot (tests.test_821_atomic_config_binding.BindingFailureRollsBack.test_m6_a_failed_binding_keeps_no_uncommitted_visibility_snapshot)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 281, in test_m6_a_failed_binding_keeps_no_uncommitted_visibility_snapshot
+    with mock.patch.object(sqlite_substrate.SQLiteTemporalGraph, "write_runtime_configuration_binding",
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           side_effect=OSError("injected")):
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/unittest/mock.py", line 1503, in __enter__
+    original, local = self.get_original()
+                      ~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/unittest/mock.py", line 1473, in get_original
+    raise AttributeError(
+        "%s does not have the attribute %r" % (target, name)
+    )
+AttributeError: <class 'agentmem_ref.state.sqlite_substrate.SQLiteTemporalGraph'> does not have the attribute 'write_runtime_configuration_binding'
+
+======================================================================
+ERROR: test_m6_exception_and_interrupt_in_binding_publication (tests.test_821_atomic_config_binding.BindingFailureRollsBack.test_m6_exception_and_interrupt_in_binding_publication) (failure='OSError')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 266, in test_m6_exception_and_interrupt_in_binding_publication
+    with mock.patch.object(sqlite_substrate.SQLiteTemporalGraph, "write_runtime_configuration_binding",
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           side_effect=failure):
+                           ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/unittest/mock.py", line 1503, in __enter__
+    original, local = self.get_original()
+                      ~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/unittest/mock.py", line 1473, in get_original
+    raise AttributeError(
+        "%s does not have the attribute %r" % (target, name)
+    )
+AttributeError: <class 'agentmem_ref.state.sqlite_substrate.SQLiteTemporalGraph'> does not have the attribute 'write_runtime_configuration_binding'
+
+======================================================================
+ERROR: test_m6_exception_and_interrupt_in_binding_publication (tests.test_821_atomic_config_binding.BindingFailureRollsBack.test_m6_exception_and_interrupt_in_binding_publication) (failure='KeyboardInterrupt')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 266, in test_m6_exception_and_interrupt_in_binding_publication
+    with mock.patch.object(sqlite_substrate.SQLiteTemporalGraph, "write_runtime_configuration_binding",
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           side_effect=failure):
+                           ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/unittest/mock.py", line 1503, in __enter__
+    original, local = self.get_original()
+                      ~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/unittest/mock.py", line 1473, in get_original
+    raise AttributeError(
+        "%s does not have the attribute %r" % (target, name)
+    )
+AttributeError: <class 'agentmem_ref.state.sqlite_substrate.SQLiteTemporalGraph'> does not have the attribute 'write_runtime_configuration_binding'
+
+======================================================================
+ERROR: test_m20_doctor_reports_the_in_transaction_binding (tests.test_821_atomic_config_binding.CloseRecoveryAndDoctor.test_m20_doctor_reports_the_in_transaction_binding)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 552, in test_m20_doctor_reports_the_in_transaction_binding
+    self.assertEqual(report["durable_state"]["configuration_binding_scheme"], "sqlite_transaction")
+                     ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'configuration_binding_scheme'
+
+======================================================================
+ERROR: test_m18_kill_loop_always_reopens_to_the_last_committed_generation (tests.test_821_atomic_config_binding.CrashWindow.test_m18_kill_loop_always_reopens_to_the_last_committed_generation) (cycle=0, point='none')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 251, in test_m18_kill_loop_always_reopens_to_the_last_committed_generation
+    self.assertEqual(_row(self.root)[0], generation)
+                     ~~~~~~~~~~~~~~~^^^
+TypeError: 'NoneType' object is not subscriptable
+
+======================================================================
+ERROR: test_m18_kill_loop_always_reopens_to_the_last_committed_generation (tests.test_821_atomic_config_binding.CrashWindow.test_m18_kill_loop_always_reopens_to_the_last_committed_generation) (cycle=1, point='post_op')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 251, in test_m18_kill_loop_always_reopens_to_the_last_committed_generation
+    self.assertEqual(_row(self.root)[0], generation)
+                     ~~~~~~~~~~~~~~~^^^
+TypeError: 'NoneType' object is not subscriptable
+
+======================================================================
+ERROR: test_m18_kill_loop_always_reopens_to_the_last_committed_generation (tests.test_821_atomic_config_binding.CrashWindow.test_m18_kill_loop_always_reopens_to_the_last_committed_generation) (cycle=2, point='mid_bind')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 251, in test_m18_kill_loop_always_reopens_to_the_last_committed_generation
+    self.assertEqual(_row(self.root)[0], generation)
+                     ~~~~~~~~~~~~~~~^^^
+TypeError: 'NoneType' object is not subscriptable
+
+======================================================================
+ERROR: test_m5_crash_after_the_first_generation_commits_in_create (tests.test_821_atomic_config_binding.CrashWindow.test_m5_crash_after_the_first_generation_commits_in_create)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 236, in test_m5_crash_after_the_first_generation_commits_in_create
+    self.assertEqual(_row(self.root)[0], 1)
+                     ~~~~~~~~~~~~~~~^^^
+TypeError: 'NoneType' object is not subscriptable
+
+======================================================================
+ERROR: test_m11_deleting_the_row_of_a_migrated_store_does_not_reach_the_legacy_file (tests.test_821_atomic_config_binding.LegacyStores.test_m11_deleting_the_row_of_a_migrated_store_does_not_reach_the_legacy_file)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 462, in test_m11_deleting_the_row_of_a_migrated_store_does_not_reach_the_legacy_file
+    connection.execute(f"DELETE FROM {BINDING_TABLE}")
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: runtime_configuration_binding
+
+======================================================================
+ERROR: test_m14_a_coherent_legacy_store_migrates_inside_its_next_generation (tests.test_821_atomic_config_binding.LegacyStores.test_m14_a_coherent_legacy_store_migrates_inside_its_next_generation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 444, in test_m14_a_coherent_legacy_store_migrates_inside_its_next_generation
+    self.assertEqual(memory.runtime.durable_runtime.binding_scheme, "legacy_file")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SQLiteConfigBoundRestartRuntime' object has no attribute 'binding_scheme'. Did you mean: 'binding_store'?
+
+======================================================================
+ERROR: test_a5_the_binder_refuses_a_row_that_does_not_bind_the_previous_generation (tests.test_821_atomic_config_binding.OwnershipAndStaleWriters.test_a5_the_binder_refuses_a_row_that_does_not_bind_the_previous_generation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 410, in test_a5_the_binder_refuses_a_row_that_does_not_bind_the_previous_generation
+    generation, payload = _row(self.root)
+    ^^^^^^^^^^^^^^^^^^^
+TypeError: cannot unpack non-iterable NoneType object
+
+======================================================================
+ERROR: test_m12_a_stale_handle_cannot_rebind_another_process_generation (tests.test_821_atomic_config_binding.OwnershipAndStaleWriters.test_m12_a_stale_handle_cannot_rebind_another_process_generation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 385, in test_m12_a_stale_handle_cannot_rebind_another_process_generation
+    self.assertEqual(_row(self.root)[0], _state_generation(self.root))
+                     ~~~~~~~~~~~~~~~^^^
+TypeError: 'NoneType' object is not subscriptable
+
+======================================================================
+ERROR: test_m13_the_row_is_written_only_inside_the_owning_generation (tests.test_821_atomic_config_binding.OwnershipAndStaleWriters.test_m13_the_row_is_written_only_inside_the_owning_generation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 400, in test_m13_the_row_is_written_only_inside_the_owning_generation
+    substrate.write_runtime_configuration_binding(99, {"forged": True})
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SQLiteTemporalGraph' object has no attribute 'write_runtime_configuration_binding'
+
+======================================================================
+ERROR: test_m7_tampered_rows (tests.test_821_atomic_config_binding.TamperedBindingsAreRefused.test_m7_tampered_rows)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 305, in test_m7_tampered_rows
+    generation, payload = _row(self.root)
+    ^^^^^^^^^^^^^^^^^^^
+TypeError: cannot unpack non-iterable NoneType object
+
+======================================================================
+ERROR: test_m8_a_row_from_another_tenant_or_store_is_refused (tests.test_821_atomic_config_binding.TamperedBindingsAreRefused.test_m8_a_row_from_another_tenant_or_store_is_refused) (tenant='tenant:other')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 345, in test_m8_a_row_from_another_tenant_or_store_is_refused
+    _write_row(self.root, own[0], json.dumps(_sealed({**foreign[1], "base": {**foreign[1]["base"], "generation": own[0]}})))
+                          ~~~^^^
+TypeError: 'NoneType' object is not subscriptable
+
+======================================================================
+ERROR: test_m8_a_row_from_another_tenant_or_store_is_refused (tests.test_821_atomic_config_binding.TamperedBindingsAreRefused.test_m8_a_row_from_another_tenant_or_store_is_refused) (tenant='tenant:821')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 345, in test_m8_a_row_from_another_tenant_or_store_is_refused
+    _write_row(self.root, own[0], json.dumps(_sealed({**foreign[1], "base": {**foreign[1]["base"], "generation": own[0]}})))
+                          ~~~^^^
+TypeError: 'NoneType' object is not subscriptable
+
+======================================================================
+ERROR: test_m9_a_replayed_older_row_is_refused (tests.test_821_atomic_config_binding.TamperedBindingsAreRefused.test_m9_a_replayed_older_row_is_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 355, in test_m9_a_replayed_older_row_is_refused
+    _write_row(self.root, old[0], json.dumps(old[1]))
+                          ~~~^^^
+TypeError: 'NoneType' object is not subscriptable
+
+======================================================================
+FAIL: test_a_new_store_writes_no_binding_file (tests.test_821_atomic_config_binding.CloseRecoveryAndDoctor.test_a_new_store_writes_no_binding_file)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 544, in test_a_new_store_writes_no_binding_file
+    self.assertFalse((self.root / "configuration-binding.json").exists())
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_m18_kill_loop_always_reopens_to_the_last_committed_generation (tests.test_821_atomic_config_binding.CrashWindow.test_m18_kill_loop_always_reopens_to_the_last_committed_generation) (cycle=3, point='mid_bind')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 247, in test_m18_kill_loop_always_reopens_to_the_last_committed_generation
+    _run_child(self.root, point, text)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 164, in _run_child
+    raise AssertionError(f"child failed ({done.returncode}): {done.stderr[-2000:]}")
+AssertionError: child failed (1): Traceback (most recent call last):
+  File "<string>", line 42, in <module>
+    m = AgentMemory.open(root, tenant='tenant:821', actor_id="agent:a", scope='project:821', purpose="821")
+  File "<d2fc9782-worktree>/reference/agentmem_ref/api/surface.py", line 524, in open
+    runtime = SQLiteConfiguredCompositionRuntime.recover(
+        root,
+    ...<2 lines>...
+        vector_retriever=semantic["retriever"],
+    )
+  File "<d2fc9782-worktree>/reference/agentmem_ref/runtime/sqlite_composition.py", line 43, in recover
+    durable = SQLiteConfigBoundRestartRuntime.recover(
+        root,
+    ...<2 lines>...
+        verifier_registry=verifier_registry,
+    )
+  File "<d2fc9782-worktree>/reference/agentmem_ref/runtime/sqlite_runtime.py", line 712, in recover
+    evidence = binding_store.recover(
+        plan=plan,
+        base_evidence=base.recovery_evidence,
+        provider_failures=provider_failures,
+    )
+  File "<d2fc9782-worktree>/reference/agentmem_ref/runtime/configured_restart.py", line 337, in recover
+    raise RuntimeRecoveryError(
+        f"configuration binding does not match recovered base checkpoint: {key}"
+    )
+agentmem_ref.runtime.restart_runtime.RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation
+
+
+======================================================================
+FAIL: test_m18_kill_loop_always_reopens_to_the_last_committed_generation (tests.test_821_atomic_config_binding.CrashWindow.test_m18_kill_loop_always_reopens_to_the_last_committed_generation) (cycle=4, point='post_commit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 247, in test_m18_kill_loop_always_reopens_to_the_last_committed_generation
+    _run_child(self.root, point, text)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 164, in _run_child
+    raise AssertionError(f"child failed ({done.returncode}): {done.stderr[-2000:]}")
+AssertionError: child failed (1): Traceback (most recent call last):
+  File "<string>", line 42, in <module>
+    m = AgentMemory.open(root, tenant='tenant:821', actor_id="agent:a", scope='project:821', purpose="821")
+  File "<d2fc9782-worktree>/reference/agentmem_ref/api/surface.py", line 524, in open
+    runtime = SQLiteConfiguredCompositionRuntime.recover(
+        root,
+    ...<2 lines>...
+        vector_retriever=semantic["retriever"],
+    )
+  File "<d2fc9782-worktree>/reference/agentmem_ref/runtime/sqlite_composition.py", line 43, in recover
+    durable = SQLiteConfigBoundRestartRuntime.recover(
+        root,
+    ...<2 lines>...
+        verifier_registry=verifier_registry,
+    )
+  File "<d2fc9782-worktree>/reference/agentmem_ref/runtime/sqlite_runtime.py", line 712, in recover
+    evidence = binding_store.recover(
+        plan=plan,
+        base_evidence=base.recovery_evidence,
+        provider_failures=provider_failures,
+    )
+  File "<d2fc9782-worktree>/reference/agentmem_ref/runtime/configured_restart.py", line 337, in recover
+    raise RuntimeRecoveryError(
+        f"configuration binding does not match recovered base checkpoint: {key}"
+    )
+agentmem_ref.runtime.restart_runtime.RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation
+
+
+======================================================================
+FAIL: test_m18_kill_loop_always_reopens_to_the_last_committed_generation (tests.test_821_atomic_config_binding.CrashWindow.test_m18_kill_loop_always_reopens_to_the_last_committed_generation) (cycle=5, point='pre_commit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 247, in test_m18_kill_loop_always_reopens_to_the_last_committed_generation
+    _run_child(self.root, point, text)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 164, in _run_child
+    raise AssertionError(f"child failed ({done.returncode}): {done.stderr[-2000:]}")
+AssertionError: child failed (1): Traceback (most recent call last):
+  File "<string>", line 42, in <module>
+    m = AgentMemory.open(root, tenant='tenant:821', actor_id="agent:a", scope='project:821', purpose="821")
+  File "<d2fc9782-worktree>/reference/agentmem_ref/api/surface.py", line 524, in open
+    runtime = SQLiteConfiguredCompositionRuntime.recover(
+        root,
+    ...<2 lines>...
+        vector_retriever=semantic["retriever"],
+    )
+  File "<d2fc9782-worktree>/reference/agentmem_ref/runtime/sqlite_composition.py", line 43, in recover
+    durable = SQLiteConfigBoundRestartRuntime.recover(
+        root,
+    ...<2 lines>...
+        verifier_registry=verifier_registry,
+    )
+  File "<d2fc9782-worktree>/reference/agentmem_ref/runtime/sqlite_runtime.py", line 712, in recover
+    evidence = binding_store.recover(
+        plan=plan,
+        base_evidence=base.recovery_evidence,
+        provider_failures=provider_failures,
+    )
+  File "<d2fc9782-worktree>/reference/agentmem_ref/runtime/configured_restart.py", line 337, in recover
+    raise RuntimeRecoveryError(
+        f"configuration binding does not match recovered base checkpoint: {key}"
+    )
+agentmem_ref.runtime.restart_runtime.RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation
+
+
+======================================================================
+FAIL: test_m18_kill_loop_always_reopens_to_the_last_committed_generation (tests.test_821_atomic_config_binding.CrashWindow.test_m18_kill_loop_always_reopens_to_the_last_committed_generation) (cycle=6, point='pre_commit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 247, in test_m18_kill_loop_always_reopens_to_the_last_committed_generation
+    _run_child(self.root, point, text)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 164, in _run_child
+    raise AssertionError(f"child failed ({done.returncode}): {done.stderr[-2000:]}")
+AssertionError: child failed (1): Traceback (most recent call last):
+  File "<string>", line 42, in <module>
+    m = AgentMemory.open(root, tenant='tenant:821', actor_id="agent:a", scope='project:821', purpose="821")
+  File "<d2fc9782-worktree>/reference/agentmem_ref/api/surface.py", line 524, in open
+    runtime = SQLiteConfiguredCompositionRuntime.recover(
+        root,
+    ...<2 lines>...
+        vector_retriever=semantic["retriever"],
+    )
+  File "<d2fc9782-worktree>/reference/agentmem_ref/runtime/sqlite_composition.py", line 43, in recover
+    durable = SQLiteConfigBoundRestartRuntime.recover(
+        root,
+    ...<2 lines>...
+        verifier_registry=verifier_registry,
+    )
+  File "<d2fc9782-worktree>/reference/agentmem_ref/runtime/sqlite_runtime.py", line 712, in recover
+    evidence = binding_store.recover(
+        plan=plan,
+        base_evidence=base.recovery_evidence,
+        provider_failures=provider_failures,
+    )
+  File "<d2fc9782-worktree>/reference/agentmem_ref/runtime/configured_restart.py", line 337, in recover
+    raise RuntimeRecoveryError(
+        f"configuration binding does not match recovered base checkpoint: {key}"
+    )
+agentmem_ref.runtime.restart_runtime.RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation
+
+
+======================================================================
+FAIL: test_m18_kill_loop_always_reopens_to_the_last_committed_generation (tests.test_821_atomic_config_binding.CrashWindow.test_m18_kill_loop_always_reopens_to_the_last_committed_generation) (cycle=7, point='post_op')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 247, in test_m18_kill_loop_always_reopens_to_the_last_committed_generation
+    _run_child(self.root, point, text)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 164, in _run_child
+    raise AssertionError(f"child failed ({done.returncode}): {done.stderr[-2000:]}")
+AssertionError: child failed (1): Traceback (most recent call last):
+  File "<string>", line 42, in <module>
+    m = AgentMemory.open(root, tenant='tenant:821', actor_id="agent:a", scope='project:821', purpose="821")
+  File "<d2fc9782-worktree>/reference/agentmem_ref/api/surface.py", line 524, in open
+    runtime = SQLiteConfiguredCompositionRuntime.recover(
+        root,
+    ...<2 lines>...
+        vector_retriever=semantic["retriever"],
+    )
+  File "<d2fc9782-worktree>/reference/agentmem_ref/runtime/sqlite_composition.py", line 43, in recover
+    durable = SQLiteConfigBoundRestartRuntime.recover(
+        root,
+    ...<2 lines>...
+        verifier_registry=verifier_registry,
+    )
+  File "<d2fc9782-worktree>/reference/agentmem_ref/runtime/sqlite_runtime.py", line 712, in recover
+    evidence = binding_store.recover(
+        plan=plan,
+        base_evidence=base.recovery_evidence,
+        provider_failures=provider_failures,
+    )
+  File "<d2fc9782-worktree>/reference/agentmem_ref/runtime/configured_restart.py", line 337, in recover
+    raise RuntimeRecoveryError(
+        f"configuration binding does not match recovered base checkpoint: {key}"
+    )
+agentmem_ref.runtime.restart_runtime.RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation
+
+
+======================================================================
+FAIL: test_m18_kill_loop_always_reopens_to_the_last_committed_generation (tests.test_821_atomic_config_binding.CrashWindow.test_m18_kill_loop_always_reopens_to_the_last_committed_generation) (cycle=8, point='none')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 247, in test_m18_kill_loop_always_reopens_to_the_last_committed_generation
+    _run_child(self.root, point, text)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 164, in _run_child
+    raise AssertionError(f"child failed ({done.returncode}): {done.stderr[-2000:]}")
+AssertionError: child failed (1): Traceback (most recent call last):
+  File "<string>", line 42, in <module>
+    m = AgentMemory.open(root, tenant='tenant:821', actor_id="agent:a", scope='project:821', purpose="821")
+  File "<d2fc9782-worktree>/reference/agentmem_ref/api/surface.py", line 524, in open
+    runtime = SQLiteConfiguredCompositionRuntime.recover(
+        root,
+    ...<2 lines>...
+        vector_retriever=semantic["retriever"],
+    )
+  File "<d2fc9782-worktree>/reference/agentmem_ref/runtime/sqlite_composition.py", line 43, in recover
+    durable = SQLiteConfigBoundRestartRuntime.recover(
+        root,
+    ...<2 lines>...
+        verifier_registry=verifier_registry,
+    )
+  File "<d2fc9782-worktree>/reference/agentmem_ref/runtime/sqlite_runtime.py", line 712, in recover
+    evidence = binding_store.recover(
+        plan=plan,
+        base_evidence=base.recovery_evidence,
+        provider_failures=provider_failures,
+    )
+  File "<d2fc9782-worktree>/reference/agentmem_ref/runtime/configured_restart.py", line 337, in recover
+    raise RuntimeRecoveryError(
+        f"configuration binding does not match recovered base checkpoint: {key}"
+    )
+agentmem_ref.runtime.restart_runtime.RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation
+
+
+======================================================================
+FAIL: test_m18_kill_loop_always_reopens_to_the_last_committed_generation (tests.test_821_atomic_config_binding.CrashWindow.test_m18_kill_loop_always_reopens_to_the_last_committed_generation) (cycle=9, point='mid_bind')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 247, in test_m18_kill_loop_always_reopens_to_the_last_committed_generation
+    _run_child(self.root, point, text)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 164, in _run_child
+    raise AssertionError(f"child failed ({done.returncode}): {done.stderr[-2000:]}")
+AssertionError: child failed (1): Traceback (most recent call last):
+  File "<string>", line 42, in <module>
+    m = AgentMemory.open(root, tenant='tenant:821', actor_id="agent:a", scope='project:821', purpose="821")
+  File "<d2fc9782-worktree>/reference/agentmem_ref/api/surface.py", line 524, in open
+    runtime = SQLiteConfiguredCompositionRuntime.recover(
+        root,
+    ...<2 lines>...
+        vector_retriever=semantic["retriever"],
+    )
+  File "<d2fc9782-worktree>/reference/agentmem_ref/runtime/sqlite_composition.py", line 43, in recover
+    durable = SQLiteConfigBoundRestartRuntime.recover(
+        root,
+    ...<2 lines>...
+        verifier_registry=verifier_registry,
+    )
+  File "<d2fc9782-worktree>/reference/agentmem_ref/runtime/sqlite_runtime.py", line 712, in recover
+    evidence = binding_store.recover(
+        plan=plan,
+        base_evidence=base.recovery_evidence,
+        provider_failures=provider_failures,
+    )
+  File "<d2fc9782-worktree>/reference/agentmem_ref/runtime/configured_restart.py", line 337, in recover
+    raise RuntimeRecoveryError(
+        f"configuration binding does not match recovered base checkpoint: {key}"
+    )
+agentmem_ref.runtime.restart_runtime.RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation
+
+
+======================================================================
+FAIL: test_m2_crash_immediately_after_commit_recovers_the_committed_generation (tests.test_821_atomic_config_binding.CrashWindow.test_m2_crash_immediately_after_commit_recovers_the_committed_generation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 217, in test_m2_crash_immediately_after_commit_recovers_the_committed_generation
+    self.assertIsNotNone(bound, "the committed generation carries its binding row")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : the committed generation carries its binding row
+
+======================================================================
+FAIL: test_m3_crash_during_binding_publication_rolls_the_generation_back (tests.test_821_atomic_config_binding.CrashWindow.test_m3_crash_during_binding_publication_rolls_the_generation_back)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 223, in test_m3_crash_during_binding_publication_rolls_the_generation_back
+    self.assertEqual(_state_generation(self.root), before)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 3 != 2
+
+======================================================================
+FAIL: test_a7_the_same_operations_publish_byte_identical_digests_and_journal (tests.test_821_atomic_config_binding.LegacyStores.test_a7_the_same_operations_publish_byte_identical_digests_and_journal)
+A #821 runtime replaying the coherent fixture's writes publishes the same canonical,
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 520, in test_a7_the_same_operations_publish_byte_identical_digests_and_journal
+    self.assertFalse((root / "configuration-binding.json").exists())
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_m10_a_deleted_row_is_refused (tests.test_821_atomic_config_binding.TamperedBindingsAreRefused.test_m10_a_deleted_row_is_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<d2fc9782-worktree>/reference/tests/test_821_atomic_config_binding.py", line 360, in test_m10_a_deleted_row_is_refused
+    self.assertIsNotNone(_row(self.root))
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None
+
+----------------------------------------------------------------------
+Ran 24 tests in 6.222s
+
+FAILED (failures=12, errors=17)

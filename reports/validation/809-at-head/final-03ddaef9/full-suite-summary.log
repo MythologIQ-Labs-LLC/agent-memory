@@ -1,0 +1,37 @@
+# Full reference suite at 03ddaef9 (protected tree 2a00f31f), repository root, clean tree; command: python3 -m pytest reference/tests -q -p no:cacheprovider --tb=line
+=================================== FAILURES ===================================
+E   AssertionError: 'system_error' != 'ok'
+    - system_error
+    + ok
+     : {'adapter_evidence': {'adapter_kind': 'agent_memory_public_stdio', 'frozen_runtime_revision': '16a248b1e28f455fbf19217114175f0c20df2a01', 'public_contract': '1.6.0', 'runtime_identity': {'frozen_runtime_revision': '16a248b1e28f455fbf19217114175f0c20df2a01', 'frozen_runtime_tree': 'f9ccd0472e32cb68a5caf988a017078a73425cc5', 'imported_package': '/tmp/claude-0/-home-user-agent-memory/d36426e4-2c3f-5d02-b5a0-991ea8f96c90/scratchpad/wt-809/reference/agentmem_ref', 'matches_frozen_revision': False, 'same_checkout': True, 'verified': False}, 'surface': 'AgentMemory public facade', 'translation_only': True}, 'authority_effect': 'none', 'contract_family': 'agent-memory-gauntlet-operation', 'contract_version': '0.1.0', 'direction': 'response', 'error': {'code': 'runtime_identity_unverified', 'message': "imported agentmem_ref is not this checkout's runtime at FROZEN_RUNTIME_REVISION", 'source': 'system_adapter'}, 'operation': 'describe', 'request_id': 'r1', 'result': None, 'status': 'system_error', 'timing': {'elapsed_ms': 0.009306000038122875}}
+/usr/lib/python3.13/unittest/case.py:732: AssertionError: 'system_error' != 'ok'
+E   AssertionError: True is not false
+/usr/lib/python3.13/unittest/case.py:738: AssertionError: True is not false
+E   AssertionError: {'typ[54 chars]1': 'STALE', 'governed-persisted-typed-slot-su[216 chars]ALE'} != {'typ[54 chars]1': 'VERIFIED', 'governed-persisted-typed-slot[231 chars]IED'}
+    Diff is 1379 characters long. Set self.maxDiff to None to see it. : {'replays': [{'replay': 'typed-sufficiency-noninterference-and-negative-controls-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}, {'replay': 'governed-persisted-typed-slot-sufficiency-admission-recheck-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}, {'replay': 'governed-admitted-typed-value-coherence-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}, {'replay': 'committed-governed-transition-witness-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}, {'replay': 'same-slot-safety-counterevidence-and-immutable-stop-gate-v1', 'status': 'STALE', 'verdict': 'PASS', 'problems': ['runtime files differ from the evidence source commit'], 'reexecuted': False}], 'evidence_verified': False, 'acceptance': "NOT GRANTED: requires an independent reviewer's decision recorded in META_LEDGER"}
+/usr/lib/python3.13/unittest/case.py:732: AssertionError: {'typ[54 chars]1': 'STALE', 'governed-persisted-typed-slot-su[216 chars]ALE'} != {'typ[54 chars]1': 'VERIFIED', 'governed-persisted-typed-slot[231 chars]IED'}
+E   AssertionError: 1 != 0 : undeclared protected change: reference/agentmem_ref/api/contract.py
+    undeclared protected change: reference/agentmem_ref/api/surface.py
+    undeclared protected change: reference/agentmem_ref/memory/checkpoint_migration.py
+    undeclared protected change: reference/agentmem_ref/memory/procedural_memory.py
+    undeclared protected change: reference/agentmem_ref/runtime/representation_cache.py
+    undeclared protected change: reference/agentmem_ref/runtime/restart_runtime.py
+    undeclared protected change: reference/agentmem_ref/runtime/runtime_composition.py
+    undeclared protected change: reference/agentmem_ref/state/sqlite_substrate.py
+    undeclared protected change: reference/agentmem_ref/state/substrate.py
+    declared blob mismatch for reference/agentmem_ref/runtime/adapter.py: declared 36be4dece830ff01a872d333c4c639e81e50fe00, candidate 9912f175f3e3370b4f91e55a65f481fa31812254
+    declared blob mismatch for reference/agentmem_ref/runtime/recall_control.py: declared 5136922f5a23b70399b1b422159a0d14f0fa1312, candidate dfb024efd644998145e7016af5592e546301bf89
+    undeclared identity identity.public_contract_version changed: frozen='1.6.0', candidate='1.8.0'
+/usr/lib/python3.13/unittest/case.py:900: AssertionError: 1 != 0 : undeclared protected change: reference/agentmem_ref/api/contract.py
+=============================== warnings summary ===============================
+reference/tests/test_test_import_convention.py::TestImportConvention::test_no_test_module_uses_a_relative_import
+  <unknown>:79: SyntaxWarning: invalid escape sequence '\+'
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED reference/tests/test_644_v7_gauntlet_identity.py::ImportedRuntimeIdentity::test_own_checkout_at_frozen_revision_is_served
+FAILED reference/tests/test_770_v7_lane_freeze_independent.py::ReplayEvidenceFreshness::test_a_runtime_edit_still_makes_replay_evidence_stale
+FAILED reference/tests/test_770_v7_lane_freeze_independent.py::ReplayEvidenceFreshness::test_lane_records_do_not_make_replay_evidence_stale
+FAILED reference/tests/test_benchmark_integration_contract.py::BenchmarkIntegrationContractTests::test_evaluation_only_change_keeps_runtime_baseline_equivalence
+4 failed, 2979 passed, 35 skipped, 1 xfailed, 1 warning, 2079 subtests passed in 302.21s (0:05:02)
+exit 1

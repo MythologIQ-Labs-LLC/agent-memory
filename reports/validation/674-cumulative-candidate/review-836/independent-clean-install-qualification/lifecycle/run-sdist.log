@@ -1,0 +1,12 @@
+OK   open_remember_recall_history_posture: {"contract_version": "1.8.0", "stage": "commit", "recall_stage": "recall", "admitted": 1, "returned": 1, "history_version": 1, "posture_stage": "posture", "binding": "sqlite_transaction"}
+OK   correct_parks_without_evidence_commits_with_qualified_evidence: {"parked_outcome": "require_review", "corrected_outcome": "allow_with_ledger", "history_version": 2}
+OK   forget_reversible_tombstones_and_withholds: {"forget_outcome": "allow_with_ledger", "tombstoned": true, "public_events": 0, "deleted_ids_in_public_history": false, "admitted_after_forget": []}
+OK   permanent_forget_without_evidence_refused: {"outcome": "require_external_verification", "m2_still_current": true}
+OK   close_reopen_same_process: {"m2_admitted_after_reopen": true, "m1_tombstoned_after_reopen": true, "m1_admitted_after_reopen": [], "binding": "sqlite_transaction"}
+OK   process_restart_recall_and_deletion_persist: {"m2": ["ref-0011"], "m1": [], "m1_tombstoned": true, "posture": "posture", "binding": "sqlite_transaction"}
+OK   recreate_deleted_id_old_content_does_not_reappear: {"recreate_committed": true, "new_admitted": true, "old_generation_reappears": false, "history_version": 1, "tombstoned_flag_now": false}
+OK   cross_tenant_open_same_state: {"opened": false, "refused": "RuntimeRecoveryError: requested tenant 'tenant:other' does not match recovered runtime tenant 'tenant:consumer'"}
+OK   cross_project_same_tenant_isolation: {"recall_stage": "recall", "admitted": [], "candidates": [], "correct_committed": false, "correct_outcome": null, "correct_refusal": "fact_not_found", "history_visible_version": 0, "history_current": null, "alpha_m2_still": ["ref-0011"], "alpha_m2_version": 1}
+OK   interrupted_recovery_and_integrity_negatives: {"binding_only": "refused: incomplete durable state: configuration binding exists without SQLite runtime database", "binding_only_sqlite_created": false, "config_removed": {"opened": true, "m2": ["ref-0011"], "posture": "posture", "binding": null}, "config_regenerated_identical": true, "truncated_db
+OK   package_resources: {"profile_id": "rc1-local-sqlite-composition", "source_schemas_dir_exists": false, "packaged_schemas": 74, "contract_version": "1.8.0"}
+final_state_ok: True | steps failed: []

@@ -1,0 +1,28 @@
+{
+ "attestation": "none: hashes bind contents for review; they are not signatures and confer no acceptance",
+ "command": "python reference/run_786_security_replays_dsl2.py --all",
+ "fixture": {
+  "path": "reference/fixtures/786-security-replays/public-tombstone-redaction-and-observer-separation-v3.json",
+  "sha256": "80338243a6f4a995dccd7b90f7e6688728fb6a4bf11753b06d8d522996b3f8e4"
+ },
+ "observations_sha256": "1049e53713a4b8603995584de76955e429b0dd009285a19fb9ca0fcaff2c92ff",
+ "replay_id": "public-tombstone-redaction-and-observer-separation-v3",
+ "report": {
+  "path": "report.json",
+  "sha256": "10081e1bc7d9d06a2898d5fd16bd8aaa2ed414a009c1078a0bc0dac1322a3017"
+ },
+ "runner": {
+  "path": "reference/run_786_security_replays_dsl2.py",
+  "sha256": "73f0cd175b5a97f8e61d168bfc93cd796152aab02c76209bf2374153f35dba86",
+  "version": "786-security-replay-runner/2"
+ },
+ "runner_base": {
+  "path": "reference/run_786_security_replays.py",
+  "sha256": "21db05148c369815fa154bfa83db0b3b35f6c4712596ec0f137002a6611d8269",
+  "version": "786-security-replay-runner/1"
+ },
+ "runtime_tree": "3c232f81712f085c9b094ee7f0de95b62a05f7eb",
+ "schema": "786-security-replay-manifest/2",
+ "source_commit": "d0d2a97c63b50700001da06b9df7fe81b580fc09",
+ "verdict": "PASS"
+}

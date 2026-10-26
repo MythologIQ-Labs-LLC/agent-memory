@@ -1,0 +1,6 @@
+41c41,43
+< from agentmem_ref.state.sqlite_substrate import UNGOVERNED_WRITE_MESSAGE, UngovernedDurableWrite  # noqa: E402
+---
+> # fail-first shim (base run only): the repair's names do not exist on 77c472e6
+> UngovernedDurableWrite = getattr(sqlite_substrate, "UngovernedDurableWrite", type("UngovernedDurableWrite", (RuntimeError,), {}))
+> UNGOVERNED_WRITE_MESSAGE = getattr(sqlite_substrate, "UNGOVERNED_WRITE_MESSAGE", "<absent on base>")

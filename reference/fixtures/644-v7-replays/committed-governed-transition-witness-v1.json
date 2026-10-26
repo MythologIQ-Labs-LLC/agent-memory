@@ -1,0 +1,743 @@
+{
+  "replay_id": "committed-governed-transition-witness-v1",
+  "fixture_version": 1,
+  "dsl_version": "644-v7-replay-dsl/1",
+  "owning_issue": 644,
+  "frozen_on": "2026-10-10",
+  "status": "frozen_before_execution",
+  "base_commit": "c4827f9fef055b0bc2a9bd94b28adba22bfc42d0",
+  "independence": "Expected outcomes were written from the contract documents listed in contract_sources before any replay runner existed or executed. They are not derived from running the implementation under test. The original 126-case independent holdout (heldout_bench.py, sha256 25ce88eb...) and its vocabulary were not used. A failing expectation is a finding, never a reason to edit this fixture; a corrected expectation requires a superseding fixture version with a recorded reason.",
+  "stop_lines": [
+    "no fixture edit after first execution; supersede with -v2 and record why",
+    "no expectation weakened to obtain PASS",
+    "no runtime change motivated by a replay outcome without a preregistered reproducer",
+    "a replay verdict is evidence, not v7 acceptance; acceptance requires independent review"
+  ],
+  "title": "A transition witness appears only for a committed, cited, scoped governed replacement and never asserts more",
+  "contract_sources": [
+    {
+      "path": "docs/78-committed-governed-transition-witness.md",
+      "sha256_at_base": "6bf60c2ee2e1dad0ed87aa9213bcca52de6ee4ef41ccc2aef3d6ed918348c661"
+    }
+  ],
+  "invariants": [
+    {
+      "id": "T1",
+      "statement": "An asserted change without a committed governed application produces no witness.",
+      "falsified_by": "any witness"
+    },
+    {
+      "id": "T2",
+      "statement": "An explicit governed application of the semantic proposal produces exactly one applied_state_change_observed witness naming the source, the prior, the supplied current head and the original semantic proposal.",
+      "falsified_by": "count, status or references differing"
+    },
+    {
+      "id": "T3",
+      "statement": "A witness never asserts the immediate successor, answer quality, stop or mutation authority.",
+      "falsified_by": "any of those flags true or authority not none"
+    },
+    {
+      "id": "T4",
+      "statement": "A witness requires both the source and the current head in the supplied admitted set.",
+      "falsified_by": "a witness from either alone"
+    },
+    {
+      "id": "T5",
+      "statement": "A reader in another project sees no witness.",
+      "falsified_by": "any witness"
+    },
+    {
+      "id": "T6",
+      "statement": "A correction that does not cite the semantic proposal, or cites a fabricated proposal identity, produces no witness.",
+      "falsified_by": "any witness"
+    },
+    {
+      "id": "T7",
+      "statement": "A cited error correction yields applied_error_correction_observed, never a state-change witness.",
+      "falsified_by": "another status"
+    },
+    {
+      "id": "T8",
+      "statement": "Duplicate admitted references are refused.",
+      "falsified_by": "no ValueError"
+    },
+    {
+      "id": "T9",
+      "statement": "The witness survives restart unchanged.",
+      "falsified_by": "different witness after reopen"
+    },
+    {
+      "id": "T10",
+      "statement": "A later governed change of the same target still yields a witness whose current head is the latest head, with immediate_successor_verified false.",
+      "falsified_by": "no witness or immediate successor asserted"
+    },
+    {
+      "id": "T11",
+      "statement": "If the source fact is no longer current (forgotten) no witness is produced.",
+      "falsified_by": "any witness"
+    },
+    {
+      "id": "T12",
+      "statement": "Witness serialization contains no raw fact text or values, and observation writes nothing.",
+      "falsified_by": "fact text in output, or a changed state digest or event count"
+    }
+  ],
+  "cases": [
+    {
+      "id": "T1-asserted-change-only",
+      "invariants": [
+        "T1"
+      ],
+      "kind": "witness",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:prior",
+          "text": "Halyard bridge wire protocol is serial",
+          "prop": {
+            "s": "Halyard bridge",
+            "a": "wire protocol",
+            "v": "serial",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:source",
+          "text": "Halyard bridge wire protocol changed to ethernet",
+          "prop": {
+            "s": "Halyard bridge",
+            "a": "wire protocol",
+            "v": "ethernet",
+            "assertion": "change",
+            "cardinality": "single",
+            "replaces": "serial"
+          }
+        }
+      ],
+      "admitted": [
+        "memory:prior",
+        "memory:source"
+      ],
+      "expect": {
+        "witness_count": {
+          "eq": 0
+        }
+      }
+    },
+    {
+      "id": "T2-applied-state-change",
+      "invariants": [
+        "T2",
+        "T3",
+        "T12"
+      ],
+      "kind": "witness",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:prior",
+          "text": "Halyard bridge wire protocol is serial",
+          "prop": {
+            "s": "Halyard bridge",
+            "a": "wire protocol",
+            "v": "serial",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:source",
+          "text": "Halyard bridge wire protocol changed to ethernet",
+          "prop": {
+            "s": "Halyard bridge",
+            "a": "wire protocol",
+            "v": "ethernet",
+            "assertion": "change",
+            "cardinality": "single",
+            "replaces": "serial"
+          }
+        },
+        {
+          "op": "apply_open_proposal"
+        }
+      ],
+      "admitted": [
+        "memory:source",
+        "memory:prior@2"
+      ],
+      "probes": [
+        "state_unchanged",
+        "text_absent"
+      ],
+      "expect": {
+        "witness_count": {
+          "eq": 1
+        },
+        "witnesses": {
+          "eq": [
+            {
+              "status": "applied_state_change_observed",
+              "source": "memory:source",
+              "prior": "memory:prior",
+              "current": "memory:prior@2",
+              "proposal": "open_proposal"
+            }
+          ]
+        },
+        "state_unchanged": {
+          "eq": true
+        },
+        "text_absent": {
+          "eq": true
+        },
+        "immediate_successor_verified_any": {
+          "eq": false
+        },
+        "can_stop_any": {
+          "eq": false
+        },
+        "answer_quality_verified_any": {
+          "eq": false
+        },
+        "authority_effect_all_none": {
+          "eq": true
+        }
+      }
+    },
+    {
+      "id": "T4-source-only",
+      "invariants": [
+        "T4"
+      ],
+      "kind": "witness",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:prior",
+          "text": "Halyard bridge wire protocol is serial",
+          "prop": {
+            "s": "Halyard bridge",
+            "a": "wire protocol",
+            "v": "serial",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:source",
+          "text": "Halyard bridge wire protocol changed to ethernet",
+          "prop": {
+            "s": "Halyard bridge",
+            "a": "wire protocol",
+            "v": "ethernet",
+            "assertion": "change",
+            "cardinality": "single",
+            "replaces": "serial"
+          }
+        },
+        {
+          "op": "apply_open_proposal"
+        }
+      ],
+      "admitted": [
+        "memory:source"
+      ],
+      "expect": {
+        "witness_count": {
+          "eq": 0
+        }
+      }
+    },
+    {
+      "id": "T4-current-only",
+      "invariants": [
+        "T4"
+      ],
+      "kind": "witness",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:prior",
+          "text": "Halyard bridge wire protocol is serial",
+          "prop": {
+            "s": "Halyard bridge",
+            "a": "wire protocol",
+            "v": "serial",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:source",
+          "text": "Halyard bridge wire protocol changed to ethernet",
+          "prop": {
+            "s": "Halyard bridge",
+            "a": "wire protocol",
+            "v": "ethernet",
+            "assertion": "change",
+            "cardinality": "single",
+            "replaces": "serial"
+          }
+        },
+        {
+          "op": "apply_open_proposal"
+        }
+      ],
+      "admitted": [
+        "memory:prior@2"
+      ],
+      "expect": {
+        "witness_count": {
+          "eq": 0
+        }
+      }
+    },
+    {
+      "id": "T5-other-project-reader",
+      "invariants": [
+        "T5"
+      ],
+      "kind": "witness",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:prior",
+          "text": "Halyard bridge wire protocol is serial",
+          "prop": {
+            "s": "Halyard bridge",
+            "a": "wire protocol",
+            "v": "serial",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:source",
+          "text": "Halyard bridge wire protocol changed to ethernet",
+          "prop": {
+            "s": "Halyard bridge",
+            "a": "wire protocol",
+            "v": "ethernet",
+            "assertion": "change",
+            "cardinality": "single",
+            "replaces": "serial"
+          }
+        },
+        {
+          "op": "apply_open_proposal"
+        }
+      ],
+      "admitted": [
+        "memory:source",
+        "memory:prior@2"
+      ],
+      "observe_scope": "project:b",
+      "expect": {
+        "witness_count": {
+          "eq": 0
+        }
+      }
+    },
+    {
+      "id": "T6-uncited-correction",
+      "invariants": [
+        "T6"
+      ],
+      "kind": "witness",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:prior",
+          "text": "Halyard bridge wire protocol is serial",
+          "prop": {
+            "s": "Halyard bridge",
+            "a": "wire protocol",
+            "v": "serial",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:source",
+          "text": "Halyard bridge wire protocol changed to ethernet",
+          "prop": {
+            "s": "Halyard bridge",
+            "a": "wire protocol",
+            "v": "ethernet",
+            "assertion": "change",
+            "cardinality": "single",
+            "replaces": "serial"
+          }
+        },
+        {
+          "op": "correct",
+          "ref": "memory:prior",
+          "text": "Halyard bridge wire protocol is ethernet",
+          "kind": "state_change",
+          "cite": "none"
+        }
+      ],
+      "admitted": [
+        "memory:source",
+        "memory:prior@2"
+      ],
+      "expect": {
+        "witness_count": {
+          "eq": 0
+        }
+      }
+    },
+    {
+      "id": "T6-forged-proposal-citation",
+      "invariants": [
+        "T6"
+      ],
+      "kind": "witness",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:prior",
+          "text": "Halyard bridge wire protocol is serial",
+          "prop": {
+            "s": "Halyard bridge",
+            "a": "wire protocol",
+            "v": "serial",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:source",
+          "text": "Halyard bridge wire protocol changed to ethernet",
+          "prop": {
+            "s": "Halyard bridge",
+            "a": "wire protocol",
+            "v": "ethernet",
+            "assertion": "change",
+            "cardinality": "single",
+            "replaces": "serial"
+          }
+        },
+        {
+          "op": "correct",
+          "ref": "memory:prior",
+          "text": "Halyard bridge wire protocol is ethernet",
+          "kind": "state_change",
+          "cite": "forged"
+        }
+      ],
+      "admitted": [
+        "memory:source",
+        "memory:prior@2"
+      ],
+      "expect": {
+        "witness_count": {
+          "eq": 0
+        }
+      }
+    },
+    {
+      "id": "T7-cited-error-correction",
+      "invariants": [
+        "T7",
+        "T3"
+      ],
+      "kind": "witness",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:prior",
+          "text": "Halyard bridge wire protocol is serial",
+          "prop": {
+            "s": "Halyard bridge",
+            "a": "wire protocol",
+            "v": "serial",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:source",
+          "text": "Halyard bridge wire protocol changed to ethernet",
+          "prop": {
+            "s": "Halyard bridge",
+            "a": "wire protocol",
+            "v": "ethernet",
+            "assertion": "change",
+            "cardinality": "single",
+            "replaces": "serial"
+          }
+        },
+        {
+          "op": "correct",
+          "ref": "memory:prior",
+          "text": "Halyard bridge wire protocol is ethernet",
+          "kind": "error_correction",
+          "cite": "open_proposal"
+        }
+      ],
+      "admitted": [
+        "memory:source",
+        "memory:prior@2"
+      ],
+      "expect": {
+        "witness_count": {
+          "eq": 1
+        },
+        "witness_statuses": {
+          "eq": [
+            "applied_error_correction_observed"
+          ]
+        },
+        "immediate_successor_verified_any": {
+          "eq": false
+        },
+        "can_stop_any": {
+          "eq": false
+        },
+        "answer_quality_verified_any": {
+          "eq": false
+        },
+        "authority_effect_all_none": {
+          "eq": true
+        }
+      }
+    },
+    {
+      "id": "T8-duplicate-admitted",
+      "invariants": [
+        "T8"
+      ],
+      "kind": "witness",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:prior",
+          "text": "Halyard bridge wire protocol is serial",
+          "prop": {
+            "s": "Halyard bridge",
+            "a": "wire protocol",
+            "v": "serial",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:source",
+          "text": "Halyard bridge wire protocol changed to ethernet",
+          "prop": {
+            "s": "Halyard bridge",
+            "a": "wire protocol",
+            "v": "ethernet",
+            "assertion": "change",
+            "cardinality": "single",
+            "replaces": "serial"
+          }
+        },
+        {
+          "op": "apply_open_proposal"
+        }
+      ],
+      "admitted": [
+        "memory:source",
+        "memory:source"
+      ],
+      "expect": {
+        "raises": {
+          "eq": "ValueError"
+        }
+      }
+    },
+    {
+      "id": "T9-restart",
+      "invariants": [
+        "T9"
+      ],
+      "kind": "witness",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:prior",
+          "text": "Halyard bridge wire protocol is serial",
+          "prop": {
+            "s": "Halyard bridge",
+            "a": "wire protocol",
+            "v": "serial",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:source",
+          "text": "Halyard bridge wire protocol changed to ethernet",
+          "prop": {
+            "s": "Halyard bridge",
+            "a": "wire protocol",
+            "v": "ethernet",
+            "assertion": "change",
+            "cardinality": "single",
+            "replaces": "serial"
+          }
+        },
+        {
+          "op": "apply_open_proposal"
+        },
+        {
+          "op": "reopen"
+        }
+      ],
+      "admitted": [
+        "memory:source",
+        "memory:prior@2"
+      ],
+      "expect": {
+        "witness_count": {
+          "eq": 1
+        },
+        "witness_statuses": {
+          "eq": [
+            "applied_state_change_observed"
+          ]
+        }
+      }
+    },
+    {
+      "id": "T10-later-governed-change",
+      "invariants": [
+        "T10",
+        "T3"
+      ],
+      "kind": "witness",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:prior",
+          "text": "Halyard bridge wire protocol is serial",
+          "prop": {
+            "s": "Halyard bridge",
+            "a": "wire protocol",
+            "v": "serial",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:source",
+          "text": "Halyard bridge wire protocol changed to ethernet",
+          "prop": {
+            "s": "Halyard bridge",
+            "a": "wire protocol",
+            "v": "ethernet",
+            "assertion": "change",
+            "cardinality": "single",
+            "replaces": "serial"
+          }
+        },
+        {
+          "op": "apply_open_proposal"
+        },
+        {
+          "op": "correct",
+          "ref": "memory:prior",
+          "text": "Halyard bridge wire protocol is fibre",
+          "kind": "state_change",
+          "cite": "none"
+        }
+      ],
+      "admitted": [
+        "memory:source",
+        "memory:prior@3"
+      ],
+      "expect": {
+        "witness_count": {
+          "eq": 1
+        },
+        "witnesses": {
+          "eq": [
+            {
+              "status": "applied_state_change_observed",
+              "source": "memory:source",
+              "prior": "memory:prior",
+              "current": "memory:prior@3",
+              "proposal": "open_proposal"
+            }
+          ]
+        },
+        "immediate_successor_verified_any": {
+          "eq": false
+        },
+        "can_stop_any": {
+          "eq": false
+        },
+        "answer_quality_verified_any": {
+          "eq": false
+        },
+        "authority_effect_all_none": {
+          "eq": true
+        }
+      }
+    },
+    {
+      "id": "T11-source-forgotten",
+      "invariants": [
+        "T11"
+      ],
+      "kind": "witness",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:prior",
+          "text": "Halyard bridge wire protocol is serial",
+          "prop": {
+            "s": "Halyard bridge",
+            "a": "wire protocol",
+            "v": "serial",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:source",
+          "text": "Halyard bridge wire protocol changed to ethernet",
+          "prop": {
+            "s": "Halyard bridge",
+            "a": "wire protocol",
+            "v": "ethernet",
+            "assertion": "change",
+            "cardinality": "single",
+            "replaces": "serial"
+          }
+        },
+        {
+          "op": "apply_open_proposal"
+        },
+        {
+          "op": "forget",
+          "ref": "memory:source"
+        }
+      ],
+      "admitted": [
+        "memory:source",
+        "memory:prior@2"
+      ],
+      "expect": {
+        "witness_count": {
+          "eq": 0
+        }
+      }
+    }
+  ]
+}

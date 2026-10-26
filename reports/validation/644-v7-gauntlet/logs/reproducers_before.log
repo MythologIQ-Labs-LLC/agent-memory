@@ -1,0 +1,59 @@
+.FFFFE
+======================================================================
+ERROR: test_own_checkout_at_frozen_revision_is_served (tests.test_644_v7_gauntlet_identity.ImportedRuntimeIdentity.test_own_checkout_at_frozen_revision_is_served)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/v7g/repo/reference/tests/test_644_v7_gauntlet_identity.py", line 72, in test_own_checkout_at_frozen_revision_is_served
+    identity = reply["adapter_evidence"]["runtime_identity"]
+               ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'runtime_identity'
+
+======================================================================
+FAIL: test_v7_digest_follows_the_recorded_basis (tests.test_644_v7_gauntlet_identity.ConfigurationDigestBasis.test_v7_digest_follows_the_recorded_basis)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/v7g/repo/reference/tests/test_644_v7_gauntlet_identity.py", line 65, in test_v7_digest_follows_the_recorded_basis
+    self.assertEqual(manifest["system"]["configuration_digest"], digest(identity))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'sha256:1c6adb534f95dfbd3899c0a65954bce41e83ef5d76058f95d06f623da0f275a4' != 'sha256:0b0f366a27c3ce11b043c34e369c0f3f4790ac72c9a45fe72d46db5cafb91d4f'
+- sha256:1c6adb534f95dfbd3899c0a65954bce41e83ef5d76058f95d06f623da0f275a4
++ sha256:0b0f366a27c3ce11b043c34e369c0f3f4790ac72c9a45fe72d46db5cafb91d4f
+
+
+======================================================================
+FAIL: test_foreign_runtime_is_refused_not_mislabelled (tests.test_644_v7_gauntlet_identity.ImportedRuntimeIdentity.test_foreign_runtime_is_refused_not_mislabelled) (operation='describe')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/v7g/repo/reference/tests/test_644_v7_gauntlet_identity.py", line 86, in test_foreign_runtime_is_refused_not_mislabelled
+    self.assertNotEqual(reply["status"], "ok", reply)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'ok' == 'ok' : {'adapter_evidence': {'adapter_kind': 'agent_memory_public_stdio', 'frozen_runtime_revision': '16a248b1e28f455fbf19217114175f0c20df2a01', 'public_contract': '1.6.0', 'surface': 'AgentMemory public facade', 'translation_only': True}, 'authority_effect': 'none', 'contract_family': 'agent-memory-gauntlet-operation', 'contract_version': '0.1.0', 'direction': 'response', 'error': None, 'operation': 'describe', 'request_id': 'r1', 'result': {'adapter_enforces_memory_policy': False, 'frozen_runtime_revision': '16a248b1e28f455fbf19217114175f0c20df2a01', 'public_contract': '1.6.0', 'runtime': 'agent-memory-rc1-local', 'runtime_profile': 'rc1-local-sqlite-composition', 'runtime_version': '0.2.0-rc1', 'surface': 'AgentMemory public facade', 'system': 'Agent Memory', 'transport': 'stdio'}, 'status': 'ok', 'timing': {'elapsed_ms': 0.0053290000039396546}}
+
+======================================================================
+FAIL: test_foreign_runtime_is_refused_not_mislabelled (tests.test_644_v7_gauntlet_identity.ImportedRuntimeIdentity.test_foreign_runtime_is_refused_not_mislabelled) (operation='health')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/v7g/repo/reference/tests/test_644_v7_gauntlet_identity.py", line 87, in test_foreign_runtime_is_refused_not_mislabelled
+    self.assertEqual(reply["error"]["code"], "runtime_identity_unverified")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'health_failed' != 'runtime_identity_unverified'
+- health_failed
++ runtime_identity_unverified
+
+
+======================================================================
+FAIL: test_foreign_runtime_is_refused_not_mislabelled (tests.test_644_v7_gauntlet_identity.ImportedRuntimeIdentity.test_foreign_runtime_is_refused_not_mislabelled) (operation='recall')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/v7g/repo/reference/tests/test_644_v7_gauntlet_identity.py", line 87, in test_foreign_runtime_is_refused_not_mislabelled
+    self.assertEqual(reply["error"]["code"], "runtime_identity_unverified")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'recall_error' != 'runtime_identity_unverified'
+- recall_error
++ runtime_identity_unverified
+
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.946s
+
+FAILED (failures=4, errors=1)

@@ -1,0 +1,8 @@
+control: no call                             | call returned                            | reopen OK (1 returned)
+control: facade recall                       | call returned                            | reopen OK (1 returned)
+adapter.governed_recall (issue #816)         | call raised UngovernedDurableWrite       | reopen OK (1 returned)
+adapter.mint_id                              | call raised UngovernedDurableWrite       | reopen OK (1 returned)
+adapter.now                                  | call raised UngovernedDurableWrite       | reopen OK (1 returned)
+base SQLite runtime governed_recall          | call returned                            | reopen OK (1 returned)
+stale handle, other process wrote; direct    | call raised UngovernedDurableWrite       | reopen OK (2 returned)
+stale handle, other process wrote; facade    | call raised RuntimeCheckpointConflict    | reopen OK (2 returned)

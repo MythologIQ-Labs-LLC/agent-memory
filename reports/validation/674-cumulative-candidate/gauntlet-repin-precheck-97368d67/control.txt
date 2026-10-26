@@ -1,0 +1,7 @@
+System: agent-memory-runtime-baseline-v7 @ git-commit:2ad4cf23d366fc784a486b0245550230e64bfa25
+Negotiation: eligible
+Execution: blocked
+Failure: system_adapter / runtime_identity_unverified: imported agentmem_ref is not this checkout's runtime at FROZEN_RUNTIME_REVISION
+Normalized evidence: /tmp/claude-0/-home-user-agent-memory/d41e5087-c642-5965-a920-d612859a1976/scratchpad/gauntlet/control/gauntlet-gauntlet-orchestration-retrieval-probe-v1-agent-memory-runtime-baseline-v7-5f6a39b4d0e3/normalized-run.json
+Authority effect: none
+control exit=${PIPESTATUS[0]}

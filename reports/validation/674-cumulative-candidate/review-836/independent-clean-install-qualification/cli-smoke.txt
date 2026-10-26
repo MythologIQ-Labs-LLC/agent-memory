@@ -1,0 +1,180 @@
+##### wheel CLI
+--- agent-memory --help
+usage: agent-memory [-h] {config,discover,doctor} ...
+
+Validate, discover, and diagnose the Agent Memory reference runtime.
+
+positional arguments:
+  {config,discover,doctor}
+    config              runtime configuration operations
+    discover            observe explicitly declared existing-stack signals
+                        without mutating configuration
+    doctor              diagnose configuration and bounded durable-state
+                        recovery
+
+--- gauntlet list
+Gauntlet profiles: 4
+- durability-recovery-alpha-v1 [gauntlet_native_gap]
+  Claim-driven durability/recovery alpha for public reopen recovery, durable correction/deletion, deterministic recovered observation, scope isolation, and truthful checkpoint capability posture. Behavioral outcome and evidence sufficiency are reported separately.
+- gauntlet-orchestration-retrieval-probe-v1 [baseline_or_probe]
+  Deterministic three-record retrieval probe used to qualify Gauntlet orchestration, adapter transport, evidence normalization, and failure attribution. It is not an external efficacy benchmark.
+- golden-keyed-retrieval-v1 [baseline_or_probe]
+  Benchmark-author golden path: a deliberately small keyed-retrieval benchmark bound to a committed benchmark integration descriptor and a frozen input file. It demonstrates exact input identity, native-result retention, descriptor-driven normalization, and evaluator-integrity controls. It is not an external efficacy benchmark.
+- governance-isolation-deletion-alpha-v1 [gauntlet_native_gap]
+--- evaluation --help (optional deps?)
+usage: agent-memory [-h] {config,discover,doctor} ...
+agent-memory: error: argument command: invalid choice: 'evaluation' (choose from 'config', 'discover', 'doctor')
+--- open a state dir then doctor/config validate
+remember: {'committed': True, 'fact_uuid': 'ref-0011'}
+posture stage: posture | binding: None
+agent-memory.sqlite3
+generation-witness.json
+runtime-config.json
+{
+  "authority_effect": "none",
+  "canonical_owner_capability_id": "semantic_fact_memory",
+  "canonical_owner_component_id": "reference-governed-memory",
+  "command": "config_validate",
+  "configuration_digest": "sha256:a0ed220265c2b4876857d66b20b5e2903e07129d58260d19a600b391a2ac6034",
+  "entry_mode": "bootstrap_agent_memory_first",
+  "plan": {
+    "authority_effect": "none",
+    "canonical_owner": {
+      "capability_id": "semantic_fact_memory",
+      "component_id": "reference-governed-memory"
+    },
+    "configuration_digest": "sha256:a0ed220265c2b4876857d66b20b5e2903e07129d58260d19a600b391
+{
+  "authority_effect": "none",
+  "command": "doctor",
+  "configuration": {
+    "authority_effect": "none",
+    "digest": "sha256:a0ed220265c2b4876857d66b20b5e2903e07129d58260d19a600b391a2ac6034",
+    "entry_mode": "bootstrap_agent_memory_first",
+    "profile_id": "rc1-local-sqlite-composition",
+    "profile_version": "1.0.0",
+    "required_projection_ids": [
+      "rc1-local-derived-index"
+    ],
+    "route_count": 3,
+    "status": "valid"
+  },
+  "configuration_startable": true,
+  "currentness": {
+    "degraded_operations": 0,
+    "operation_count": 0,
+    "pending_operations": 0,
+    "quiescent_operations": 0,
+    "status": "not_observed"
+  },
+  "durable_state": {
+    "configuration_binding_present": true,
+    "configuration_binding_scheme": "sqlite_transaction",
+    "database": "/tmp/claude-0/-home-user-agent-memory/52bb9ff5-5273-5d50-a739-f16662c77034/scratchpad/install/state-cli-wheel/agent-memory.sqlite3",
+    "profile": "sqlite_single_host_v1",
+    "state_dir": "/tmp/claude-0/-home-user-agent-memory/52bb9ff5-5273-5d50-a739-f16662c77034/scratchpad/install/state-cli-wheel",
+    "status": "recovered"
+  },
+  "operational_readiness": "provider_availability_not_probed",
+  "provider_availability": {
+    "detail": "configuration and recovery evidence do not prove live provider availability",
+    "status": "not_probed"
+  },
+  "qualification": {
+    "binding_count": 0,
+    "scope": "configured_routes_only",
+    "status": "valid_for_configured_routes"
+  },
+  "recovery": {
+    "ba
+doctor exit=0
+##### sdist CLI
+--- agent-memory --help
+usage: agent-memory [-h] {config,discover,doctor} ...
+
+Validate, discover, and diagnose the Agent Memory reference runtime.
+
+positional arguments:
+  {config,discover,doctor}
+    config              runtime configuration operations
+    discover            observe explicitly declared existing-stack signals
+                        without mutating configuration
+    doctor              diagnose configuration and bounded durable-state
+                        recovery
+
+--- gauntlet list
+Gauntlet profiles: 4
+- durability-recovery-alpha-v1 [gauntlet_native_gap]
+  Claim-driven durability/recovery alpha for public reopen recovery, durable correction/deletion, deterministic recovered observation, scope isolation, and truthful checkpoint capability posture. Behavioral outcome and evidence sufficiency are reported separately.
+- gauntlet-orchestration-retrieval-probe-v1 [baseline_or_probe]
+  Deterministic three-record retrieval probe used to qualify Gauntlet orchestration, adapter transport, evidence normalization, and failure attribution. It is not an external efficacy benchmark.
+- golden-keyed-retrieval-v1 [baseline_or_probe]
+  Benchmark-author golden path: a deliberately small keyed-retrieval benchmark bound to a committed benchmark integration descriptor and a frozen input file. It demonstrates exact input identity, native-result retention, descriptor-driven normalization, and evaluator-integrity controls. It is not an external efficacy benchmark.
+- governance-isolation-deletion-alpha-v1 [gauntlet_native_gap]
+--- evaluation --help (optional deps?)
+usage: agent-memory [-h] {config,discover,doctor} ...
+agent-memory: error: argument command: invalid choice: 'evaluation' (choose from 'config', 'discover', 'doctor')
+--- open a state dir then doctor/config validate
+remember: {'committed': True, 'fact_uuid': 'ref-0011'}
+posture stage: posture | binding: None
+agent-memory.sqlite3
+generation-witness.json
+runtime-config.json
+{
+  "authority_effect": "none",
+  "canonical_owner_capability_id": "semantic_fact_memory",
+  "canonical_owner_component_id": "reference-governed-memory",
+  "command": "config_validate",
+  "configuration_digest": "sha256:a0ed220265c2b4876857d66b20b5e2903e07129d58260d19a600b391a2ac6034",
+  "entry_mode": "bootstrap_agent_memory_first",
+  "plan": {
+    "authority_effect": "none",
+    "canonical_owner": {
+      "capability_id": "semantic_fact_memory",
+      "component_id": "reference-governed-memory"
+    },
+    "configuration_digest": "sha256:a0ed220265c2b4876857d66b20b5e2903e07129d58260d19a600b391
+{
+  "authority_effect": "none",
+  "command": "doctor",
+  "configuration": {
+    "authority_effect": "none",
+    "digest": "sha256:a0ed220265c2b4876857d66b20b5e2903e07129d58260d19a600b391a2ac6034",
+    "entry_mode": "bootstrap_agent_memory_first",
+    "profile_id": "rc1-local-sqlite-composition",
+    "profile_version": "1.0.0",
+    "required_projection_ids": [
+      "rc1-local-derived-index"
+    ],
+    "route_count": 3,
+    "status": "valid"
+  },
+  "configuration_startable": true,
+  "currentness": {
+    "degraded_operations": 0,
+    "operation_count": 0,
+    "pending_operations": 0,
+    "quiescent_operations": 0,
+    "status": "not_observed"
+  },
+  "durable_state": {
+    "configuration_binding_present": true,
+    "configuration_binding_scheme": "sqlite_transaction",
+    "database": "/tmp/claude-0/-home-user-agent-memory/52bb9ff5-5273-5d50-a739-f16662c77034/scratchpad/install/state-cli-sdist/agent-memory.sqlite3",
+    "profile": "sqlite_single_host_v1",
+    "state_dir": "/tmp/claude-0/-home-user-agent-memory/52bb9ff5-5273-5d50-a739-f16662c77034/scratchpad/install/state-cli-sdist",
+    "status": "recovered"
+  },
+  "operational_readiness": "provider_availability_not_probed",
+  "provider_availability": {
+    "detail": "configuration and recovery evidence do not prove live provider availability",
+    "status": "not_probed"
+  },
+  "qualification": {
+    "binding_count": 0,
+    "scope": "configured_routes_only",
+    "status": "valid_for_configured_routes"
+  },
+  "recovery": {
+    "ba
+doctor exit=0

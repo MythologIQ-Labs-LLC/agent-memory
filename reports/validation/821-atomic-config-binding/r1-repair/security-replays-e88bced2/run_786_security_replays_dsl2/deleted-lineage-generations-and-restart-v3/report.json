@@ -1,0 +1,1648 @@
+{
+ "authority_boundary": "A replay verdict is evidence for independent review. It is not successor acceptance, not publication, and not stop authority. sha256 values are integrity bindings, not signatures.",
+ "cases": [
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "current",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "historical",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "by_ref_unknown",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "mentions",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": null,
+       "events": [],
+       "state_version": 3,
+       "tombstoned": true
+      }
+     },
+     "observable": "owner_history",
+     "observed": {
+      "current": null,
+      "events": [],
+      "state_version": 3,
+      "tombstoned": true
+     }
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "Deleting an old lineage, then re-creating the same logical memory ... without returning any old deleted version in explicit historical retrieval",
+     "observables": [
+      "current",
+      "historical",
+      "mentions"
+     ],
+     "source": "docs/774-776-lineage-integration-contract.md"
+    },
+    {
+     "clause": "a reader who could have read the deleted head (same tenant; domain, project and task eligible against the canonical `_fact_scope`, which survives pruning and permanent deletion) reads `{\"current_fact_uuid\": null, \"tombstoned\": true, \"events\": [], \"state_version\": <canonical>}` and, with a value probe, `rejected_values: []`; no deleted-generation identifier, timestamp, event or value is served",
+     "observables": [
+      "by_ref_unknown",
+      "owner_history"
+     ],
+     "source": "docs/plan-776-777-772-exact-head-qualification.md"
+    },
+    {
+     "clause": "Versions are generation-relative ... After a governed deletion of the head the id reports `0` to any writer, a re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one; the owner of the deleted generation still reads the version its deletion recorded (`tombstoned`, DUR-DEL-001).",
+     "observables": [
+      "owner_history"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    }
+   ],
+   "error": null,
+   "id": "L1-deletion-withholds-live",
+   "implementation_evidence": [],
+   "invariants": [
+    "L1"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "by_ref_unknown": true,
+    "current": [],
+    "historical": [],
+    "mentions": [],
+    "owner_history": {
+     "current": null,
+     "events": [],
+     "state_version": 3,
+     "tombstoned": true
+    }
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "current",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "historical",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "by_ref_unknown",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "mentions",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": null,
+       "events": [],
+       "state_version": 3,
+       "tombstoned": true
+      }
+     },
+     "observable": "owner_history",
+     "observed": {
+      "current": null,
+      "events": [],
+      "state_version": 3,
+      "tombstoned": true
+     }
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "Deleting an old lineage, then re-creating the same logical memory ... without returning any old deleted version in explicit historical retrieval",
+     "observables": [
+      "current",
+      "historical",
+      "mentions"
+     ],
+     "source": "docs/774-776-lineage-integration-contract.md"
+    },
+    {
+     "clause": "a reader who could have read the deleted head (same tenant; domain, project and task eligible against the canonical `_fact_scope`, which survives pruning and permanent deletion) reads `{\"current_fact_uuid\": null, \"tombstoned\": true, \"events\": [], \"state_version\": <canonical>}` and, with a value probe, `rejected_values: []`; no deleted-generation identifier, timestamp, event or value is served",
+     "observables": [
+      "by_ref_unknown",
+      "owner_history"
+     ],
+     "source": "docs/plan-776-777-772-exact-head-qualification.md"
+    },
+    {
+     "clause": "Versions are generation-relative ... After a governed deletion of the head the id reports `0` to any writer, a re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one; the owner of the deleted generation still reads the version its deletion recorded (`tombstoned`, DUR-DEL-001).",
+     "observables": [
+      "owner_history"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    }
+   ],
+   "error": null,
+   "id": "L1-deletion-withholds-after-restart",
+   "implementation_evidence": [],
+   "invariants": [
+    "L1"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "by_ref_unknown": true,
+    "current": [],
+    "historical": [],
+    "mentions": [],
+    "owner_history": {
+     "current": null,
+     "events": [],
+     "state_version": 3,
+     "tombstoned": true
+    }
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": "gen2",
+       "events": [
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt"
+       ],
+       "state_version": 1,
+       "tombstoned": false
+      }
+     },
+     "observable": "owner_history",
+     "observed": {
+      "current": "gen2",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "owner_history_mentions",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       "gen2"
+      ]
+     },
+     "observable": "historical",
+     "observed": [
+      "gen2"
+     ]
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "mentions",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "old_semantics",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "new_semantics",
+     "observed": true
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "Deleting an old lineage, then re-creating the same logical memory ... without returning any old deleted version in explicit historical retrieval",
+     "observables": [
+      "historical",
+      "mentions"
+     ],
+     "source": "docs/774-776-lineage-integration-contract.md"
+    },
+    {
+     "clause": "The new generation's head must not traverse into the deleted generation",
+     "observables": [
+      "owner_history",
+      "old_semantics",
+      "new_semantics"
+     ],
+     "source": "docs/774-776-lineage-integration-contract.md"
+    },
+    {
+     "clause": "a re-created memory shows only its live generation",
+     "observables": [
+      "owner_history",
+      "owner_history_mentions"
+     ],
+     "source": "docs/plan-776-777-772-exact-head-qualification.md"
+    }
+   ],
+   "error": null,
+   "id": "L2-owner-recreation",
+   "implementation_evidence": [
+    "old_exists"
+   ],
+   "invariants": [
+    "L2"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "historical": [
+     "gen2"
+    ],
+    "mentions": [],
+    "new_semantics": true,
+    "old_exists": true,
+    "old_semantics": false,
+    "owner_history": {
+     "current": "gen2",
+     "events": [
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt"
+     ],
+     "state_version": 1,
+     "tombstoned": false
+    },
+    "owner_history_mentions": []
+   },
+   "outcome": "pass",
+   "recorded": {
+    "old_exists": true
+   }
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "owner_historical",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "owner_mentions",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": null,
+       "events": [],
+       "state_version": 3,
+       "tombstoned": true
+      }
+     },
+     "observable": "owner_history",
+     "observed": {
+      "current": null,
+      "events": [],
+      "state_version": 3,
+      "tombstoned": true
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "other_mentions",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": "gen-b",
+       "events": [
+        "memory.propose",
+        "memory.authorize",
+        "memory.commit",
+        "memory.receipt"
+       ],
+       "state_version": 1,
+       "tombstoned": false
+      }
+     },
+     "observable": "other_history",
+     "observed": {
+      "current": "gen-b",
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ],
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "other_history_mentions",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "a_rem",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "target_unavailable"
+     },
+     "observable": "a_rem_refusal",
+     "observed": "target_unavailable"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "v0"
+     },
+     "observable": "a_rem_after",
+     "observed": "v0"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "a_cor",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "fact_not_found"
+     },
+     "observable": "a_cor_refusal",
+     "observed": "fact_not_found"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "a_del",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "fact_not_found"
+     },
+     "observable": "a_del_refusal",
+     "observed": "fact_not_found"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "a_disp",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "fact_not_found"
+     },
+     "observable": "a_disp_refusal",
+     "observed": "fact_not_found"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "a_disp_fact",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "already_deleted"
+     },
+     "observable": "a_disp_fact_refusal",
+     "observed": "already_deleted"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "a_mentions",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "gen-b"
+     },
+     "observable": "head",
+     "observed": "gen-b"
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "| B re-creates A's **deleted** id | allowed (fresh generation) | unchanged, with isolation proven (A cannot write it back while B's generation is live) |",
+     "observables": [
+      "owner_historical",
+      "owner_mentions",
+      "other_mentions",
+      "head",
+      "a_rem"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "a reader who could have read the deleted head (same tenant; domain, project and task eligible against the canonical `_fact_scope`, which survives pruning and permanent deletion) reads `{\"current_fact_uuid\": null, \"tombstoned\": true, \"events\": [], \"state_version\": <canonical>}` and, with a value probe, `rejected_values: []`; no deleted-generation identifier, timestamp, event or value is served",
+     "observables": [
+      "owner_history"
+     ],
+     "source": "docs/plan-776-777-772-exact-head-qualification.md"
+    },
+    {
+     "clause": "Versions are generation-relative ... After a governed deletion of the head the id reports `0` to any writer, a re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one; the owner of the deleted generation still reads the version its deletion recorded (`tombstoned`, DUR-DEL-001).",
+     "observables": [
+      "owner_history"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "a re-created memory shows only its live generation",
+     "observables": [
+      "other_history",
+      "other_history_mentions"
+     ],
+     "source": "docs/plan-776-777-772-exact-head-qualification.md"
+    },
+    {
+     "clause": "`remember` onto a live head outside the writer's scope: `committed: false`, `refusal: \"target_unavailable\"`, receipt `before_state`/`after_state` `v0`, `state_snapshot` `v0`. Nothing is written, no episode is retained, no version moves.",
+     "observables": [
+      "a_rem_refusal",
+      "a_rem_after",
+      "a_mentions"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "A refused `promotion` tells the writer that the id is unavailable to it.",
+     "observables": [
+      "a_rem_refusal"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "A governed-deleted generation is closed. At the fact level (`dispute` of a tombstoned fact by its uuid, a governed pruning of one of its versions, the adapter's delete of a member of a deleted lineage) the answer is `already_deleted`; at the facade's logical-reference level (`forget`, permanent `forget`, `correct`, `dispute` by `target_reference`) the former owner reads the bare `fact_not_found` result, because the reference has no visible head. Either answer is the same whether or not another scope has since re-created the id, and neither moves or reads the live generation [...] The one further governed act is the escalation of a reversible pruning to a permanent deletion by a writer eligible for that generation: it keeps the tombstone's `deleted_at`, recorded version and lineage, erases the content, and neither reads nor moves a live generation another scope holds.",
+     "observables": [
+      "a_cor",
+      "a_cor_refusal",
+      "a_del",
+      "a_del_refusal",
+      "a_disp",
+      "a_disp_refusal",
+      "a_disp_fact",
+      "a_disp_fact_refusal"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    }
+   ],
+   "error": null,
+   "id": "L3-other-project-recreation-is-isolated",
+   "implementation_evidence": [],
+   "invariants": [
+    "L3"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "a_cor": false,
+    "a_cor_refusal": "fact_not_found",
+    "a_del": false,
+    "a_del_refusal": "fact_not_found",
+    "a_disp": false,
+    "a_disp_fact": false,
+    "a_disp_fact_refusal": "already_deleted",
+    "a_disp_refusal": "fact_not_found",
+    "a_mentions": [],
+    "a_rem": false,
+    "a_rem_after": "v0",
+    "a_rem_refusal": "target_unavailable",
+    "head": "gen-b",
+    "other_history": {
+     "current": "gen-b",
+     "events": [
+      "memory.propose",
+      "memory.authorize",
+      "memory.commit",
+      "memory.receipt"
+     ],
+     "state_version": 1,
+     "tombstoned": false
+    },
+    "other_history_mentions": [],
+    "other_mentions": [],
+    "owner_historical": [],
+    "owner_history": {
+     "current": null,
+     "events": [],
+     "state_version": 3,
+     "tombstoned": true
+    },
+    "owner_mentions": []
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": null,
+       "events": [],
+       "state_version": 3,
+       "tombstoned": true
+      }
+     },
+     "observable": "owner_history",
+     "observed": {
+      "current": null,
+      "events": [],
+      "state_version": 3,
+      "tombstoned": true
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "a_cor",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "fact_not_found"
+     },
+     "observable": "a_cor_refusal",
+     "observed": "fact_not_found"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "a_del",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "fact_not_found"
+     },
+     "observable": "a_del_refusal",
+     "observed": "fact_not_found"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "a_disp",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "fact_not_found"
+     },
+     "observable": "a_disp_refusal",
+     "observed": "fact_not_found"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "a_disp_fact",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "already_deleted"
+     },
+     "observable": "a_disp_fact_refusal",
+     "observed": "already_deleted"
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "A governed-deleted generation is closed. At the fact level (`dispute` of a tombstoned fact by its uuid, a governed pruning of one of its versions, the adapter's delete of a member of a deleted lineage) the answer is `already_deleted`; at the facade's logical-reference level (`forget`, permanent `forget`, `correct`, `dispute` by `target_reference`) the former owner reads the bare `fact_not_found` result, because the reference has no visible head. Either answer is the same whether or not another scope has since re-created the id, and neither moves or reads the live generation [...] The one further governed act is the escalation of a reversible pruning to a permanent deletion by a writer eligible for that generation: it keeps the tombstone's `deleted_at`, recorded version and lineage, erases the content, and neither reads nor moves a live generation another scope holds.",
+     "observables": [
+      "a_cor",
+      "a_cor_refusal",
+      "a_del",
+      "a_del_refusal",
+      "a_disp",
+      "a_disp_refusal",
+      "a_disp_fact",
+      "a_disp_fact_refusal"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "a reader who could have read the deleted head (same tenant; domain, project and task eligible against the canonical `_fact_scope`, which survives pruning and permanent deletion) reads `{\"current_fact_uuid\": null, \"tombstoned\": true, \"events\": [], \"state_version\": <canonical>}` and, with a value probe, `rejected_values: []`; no deleted-generation identifier, timestamp, event or value is served",
+     "observables": [
+      "owner_history"
+     ],
+     "source": "docs/plan-776-777-772-exact-head-qualification.md"
+    },
+    {
+     "clause": "Versions are generation-relative ... After a governed deletion of the head the id reports `0` to any writer, a re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one; the owner of the deleted generation still reads the version its deletion recorded (`tombstoned`, DUR-DEL-001).",
+     "observables": [
+      "owner_history"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    }
+   ],
+   "error": null,
+   "id": "L3-control-former-owner-answers-without-a-re-creation",
+   "implementation_evidence": [],
+   "invariants": [
+    "L3"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "a_cor": false,
+    "a_cor_refusal": "fact_not_found",
+    "a_del": false,
+    "a_del_refusal": "fact_not_found",
+    "a_disp": false,
+    "a_disp_fact": false,
+    "a_disp_fact_refusal": "already_deleted",
+    "a_disp_refusal": "fact_not_found",
+    "owner_history": {
+     "current": null,
+     "events": [],
+     "state_version": 3,
+     "tombstoned": true
+    }
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "again_head",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "already_deleted"
+     },
+     "observable": "again_head_refusal",
+     "observed": "already_deleted"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "again_member",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "already_deleted"
+     },
+     "observable": "again_member_refusal",
+     "observed": "already_deleted"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "head_tombstone_unchanged",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "historical",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "old_semantics",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": null
+     },
+     "observable": "at_v1",
+     "observed": null
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": null,
+       "events": [],
+       "state_version": 3,
+       "tombstoned": true
+      }
+     },
+     "observable": "owner_history",
+     "observed": {
+      "current": null,
+      "events": [],
+      "state_version": 3,
+      "tombstoned": true
+     }
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "A governed-deleted generation is closed. At the fact level (`dispute` of a tombstoned fact by its uuid, a governed pruning of one of its versions, the adapter's delete of a member of a deleted lineage) the answer is `already_deleted`; at the facade's logical-reference level (`forget`, permanent `forget`, `correct`, `dispute` by `target_reference`) the former owner reads the bare `fact_not_found` result, because the reference has no visible head. Either answer is the same whether or not another scope has since re-created the id, and neither moves or reads the live generation [...] The one further governed act is the escalation of a reversible pruning to a permanent deletion by a writer eligible for that generation: it keeps the tombstone's `deleted_at`, recorded version and lineage, erases the content, and neither reads nor moves a live generation another scope holds.",
+     "observables": [
+      "again_head",
+      "again_head_refusal",
+      "again_member",
+      "again_member_refusal"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "FIXED: `already_deleted` for a tombstoned fact or a direct member of a deleted lineage; only pruning -> permanent deletion is a further governed act, and that escalation keeps `deleted_at`, `state_version` and the lineage (the tombstone is reassigned, not mutated, so the durable maps see it)",
+     "observables": [
+      "head_tombstone_unchanged"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "A governed-deleted generation is closed. At the fact level (`dispute` of a tombstoned fact by its uuid, a governed pruning of one of its versions, the adapter's delete of a member of a deleted lineage) the answer is `already_deleted`; at the facade's logical-reference level (`forget`, permanent `forget`, `correct`, `dispute` by `target_reference`) the former owner reads the bare `fact_not_found` result, because the reference has no visible head. Either answer is the same whether or not another scope has since re-created the id, and neither moves or reads the live generation [...] The one further governed act is the escalation of a reversible pruning to a permanent deletion by a writer eligible for that generation: it keeps the tombstone's `deleted_at`, recorded version and lineage, erases the content, and neither reads nor moves a live generation another scope holds.",
+     "observables": [
+      "head_tombstone_unchanged"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "Deleting an old lineage, then re-creating the same logical memory ... without returning any old deleted version in explicit historical retrieval",
+     "observables": [
+      "historical",
+      "old_semantics"
+     ],
+     "source": "docs/774-776-lineage-integration-contract.md"
+    },
+    {
+     "clause": "Verify admission and logical-generation membership before resolving a predecessor, including #776 deletion and re-created memory IDs. Never cross a deleted-lineage boundary",
+     "observables": [
+      "at_v1"
+     ],
+     "source": "docs/774-strict-successor-target-policy.md"
+    },
+    {
+     "clause": "a reader who could have read the deleted head (same tenant; domain, project and task eligible against the canonical `_fact_scope`, which survives pruning and permanent deletion) reads `{\"current_fact_uuid\": null, \"tombstoned\": true, \"events\": [], \"state_version\": <canonical>}` and, with a value probe, `rejected_values: []`; no deleted-generation identifier, timestamp, event or value is served",
+     "observables": [
+      "owner_history"
+     ],
+     "source": "docs/plan-776-777-772-exact-head-qualification.md"
+    },
+    {
+     "clause": "Versions are generation-relative ... After a governed deletion of the head the id reports `0` to any writer, a re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one; the owner of the deleted generation still reads the version its deletion recorded (`tombstoned`, DUR-DEL-001).",
+     "observables": [
+      "owner_history"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    }
+   ],
+   "error": null,
+   "id": "L5b-a-deleted-head-or-version-cannot-be-deleted-again",
+   "implementation_evidence": [
+    "head_tombstone",
+    "member_tombstone_record"
+   ],
+   "invariants": [
+    "L5",
+    "L1"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "again_head": false,
+    "again_head_refusal": "already_deleted",
+    "again_member": false,
+    "again_member_refusal": "already_deleted",
+    "at_v1": null,
+    "head_tombstone": {
+     "declared_derived_refs": [
+      "rc1-local-derived-index"
+     ],
+     "deleted_at": "T",
+     "deleted_fact_uuids": [
+      "<memory:f>",
+      "<memory:f@2>"
+     ],
+     "fact_uuid": "<memory:f@2>",
+     "memory_id": "memory:f",
+     "mode": "pruning",
+     "reversible": true,
+     "state_version": 3
+    },
+    "head_tombstone_unchanged": true,
+    "historical": [],
+    "member_tombstone_record": null,
+    "old_semantics": false,
+    "owner_history": {
+     "current": null,
+     "events": [],
+     "state_version": 3,
+     "tombstoned": true
+    }
+   },
+   "outcome": "pass",
+   "recorded": {
+    "head_tombstone": {
+     "declared_derived_refs": [
+      "rc1-local-derived-index"
+     ],
+     "deleted_at": "T",
+     "deleted_fact_uuids": [
+      "<memory:f>",
+      "<memory:f@2>"
+     ],
+     "fact_uuid": "<memory:f@2>",
+     "memory_id": "memory:f",
+     "mode": "pruning",
+     "reversible": true,
+     "state_version": 3
+    },
+    "member_tombstone_record": null
+   }
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "gen3"
+     },
+     "observable": "owner_at_gen3",
+     "observed": "gen3"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": null
+     },
+     "observable": "other_at_gen3",
+     "observed": null
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": null
+     },
+     "observable": "owner_at_v1",
+     "observed": null
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": null
+     },
+     "observable": "owner_at_v2",
+     "observed": null
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": null
+     },
+     "observable": "owner_at_genb",
+     "observed": null
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": null
+     },
+     "observable": "other_at_genb",
+     "observed": null
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": null
+     },
+     "observable": "other_at_v2",
+     "observed": null
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "gen3"
+     },
+     "observable": "head",
+     "observed": "gen3"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "b_back",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": null,
+       "events": [],
+       "state_version": 2,
+       "tombstoned": true
+      }
+     },
+     "observable": "other_history",
+     "observed": {
+      "current": null,
+      "events": [],
+      "state_version": 2,
+      "tombstoned": true
+     }
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "Verify admission and logical-generation membership before resolving a predecessor, including #776 deletion and re-created memory IDs. Never cross a deleted-lineage boundary",
+     "observables": [
+      "owner_at_gen3",
+      "other_at_gen3",
+      "owner_at_v1",
+      "owner_at_v2",
+      "owner_at_genb",
+      "other_at_genb",
+      "other_at_v2"
+     ],
+     "source": "docs/774-strict-successor-target-policy.md"
+    },
+    {
+     "clause": "Historical predecessor traversal must not cross generation boundaries after memory-ID re-creation. Ordinary stated state-change history remains reachable when not deleted.",
+     "observables": [
+      "owner_at_v1",
+      "owner_at_v2",
+      "head"
+     ],
+     "source": "docs/774-776-lineage-integration-contract.md"
+    },
+    {
+     "clause": "| B re-creates A's **deleted** id | allowed (fresh generation) | unchanged, with isolation proven (A cannot write it back while B's generation is live) |",
+     "observables": [
+      "b_back",
+      "head"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "every deleted generation stays a #774 as-of barrier for everyone",
+     "observables": [
+      "owner_at_v1",
+      "owner_at_v2",
+      "other_at_v2"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "Versions are generation-relative ... After a governed deletion of the head the id reports `0` to any writer, a re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one; the owner of the deleted generation still reads the version its deletion recorded (`tombstoned`, DUR-DEL-001).",
+     "observables": [
+      "other_history"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "a reader who could have read the deleted head (same tenant; domain, project and task eligible against the canonical `_fact_scope`, which survives pruning and permanent deletion) reads `{\"current_fact_uuid\": null, \"tombstoned\": true, \"events\": [], \"state_version\": <canonical>}` and, with a value probe, `rejected_values: []`; no deleted-generation identifier, timestamp, event or value is served",
+     "observables": [
+      "other_history"
+     ],
+     "source": "docs/plan-776-777-772-exact-head-qualification.md"
+    }
+   ],
+   "error": null,
+   "id": "L4-three-generations-as-of-barriers",
+   "implementation_evidence": [],
+   "invariants": [
+    "L4",
+    "L3"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "b_back": false,
+    "head": "gen3",
+    "other_at_gen3": null,
+    "other_at_genb": null,
+    "other_at_v2": null,
+    "other_history": {
+     "current": null,
+     "events": [],
+     "state_version": 2,
+     "tombstoned": true
+    },
+    "owner_at_gen3": "gen3",
+    "owner_at_genb": null,
+    "owner_at_v1": null,
+    "owner_at_v2": null
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "d1",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "deleted_mentions",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       "memory:f",
+       "memory:f@3"
+      ]
+     },
+     "observable": "kept_mentions",
+     "observed": [
+      "memory:f",
+      "memory:f@3"
+     ]
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "memory:f@3"
+     },
+     "observable": "head",
+     "observed": "memory:f@3"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       "memory:f@3"
+      ]
+     },
+     "observable": "current",
+     "observed": [
+      "memory:f@3"
+     ]
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "Tombstoning only one superseded version must not mark its still-live current successor deleted or hide it from current recall",
+     "observables": [
+      "d1",
+      "deleted_mentions",
+      "kept_mentions",
+      "head",
+      "current"
+     ],
+     "source": "docs/774-776-lineage-integration-contract.md"
+    },
+    {
+     "clause": "Historical predecessor traversal must not cross generation boundaries after memory-ID re-creation. Ordinary stated state-change history remains reachable when not deleted.",
+     "observables": [
+      "kept_mentions"
+     ],
+     "source": "docs/774-776-lineage-integration-contract.md"
+    },
+    {
+     "clause": "Deletion of one superseded fact must not hide its live successor.",
+     "observables": [
+      "head",
+      "current"
+     ],
+     "source": "docs/774-776-lineage-integration-contract.md"
+    }
+   ],
+   "error": null,
+   "id": "L5-partial-deletion-withholds-only-that-version",
+   "implementation_evidence": [],
+   "invariants": [
+    "L5"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "current": [
+     "memory:f@3"
+    ],
+    "d1": true,
+    "deleted_mentions": [],
+    "head": "memory:f@3",
+    "kept_mentions": [
+     "memory:f",
+     "memory:f@3"
+    ]
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "d1",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "deleted_mentions_after",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       "memory:f",
+       "memory:f@3"
+      ]
+     },
+     "observable": "kept_mentions_after",
+     "observed": [
+      "memory:f",
+      "memory:f@3"
+     ]
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "memory:f@3"
+     },
+     "observable": "head_after",
+     "observed": "memory:f@3"
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       "memory:f@3"
+      ]
+     },
+     "observable": "current_after",
+     "observed": [
+      "memory:f@3"
+     ]
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "Tombstoning only one superseded version must not mark its still-live current successor deleted or hide it from current recall",
+     "observables": [
+      "d1",
+      "deleted_mentions_after",
+      "kept_mentions_after",
+      "head_after",
+      "current_after"
+     ],
+     "source": "docs/774-776-lineage-integration-contract.md"
+    },
+    {
+     "clause": "Historical predecessor traversal must not cross generation boundaries after memory-ID re-creation. Ordinary stated state-change history remains reachable when not deleted.",
+     "observables": [
+      "kept_mentions_after"
+     ],
+     "source": "docs/774-776-lineage-integration-contract.md"
+    },
+    {
+     "clause": "Deletion of one superseded fact must not hide its live successor.",
+     "observables": [
+      "head_after",
+      "current_after"
+     ],
+     "source": "docs/774-776-lineage-integration-contract.md"
+    }
+   ],
+   "error": null,
+   "id": "L5-partial-deletion-withholds-only-that-version-after-restart",
+   "implementation_evidence": [],
+   "invariants": [
+    "L5"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "current_after": [
+     "memory:f@3"
+    ],
+    "d1": true,
+    "deleted_mentions_after": [],
+    "head_after": "memory:f@3",
+    "kept_mentions_after": [
+     "memory:f",
+     "memory:f@3"
+    ]
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "p1",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "v1_exists",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "v2_exists",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "mentions",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "other_unknown",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": []
+     },
+     "observable": "other_history_mentions",
+     "observed": []
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "old_semantics",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "current": null,
+       "events": [],
+       "state_version": 3,
+       "tombstoned": true
+      }
+     },
+     "observable": "owner_history",
+     "observed": {
+      "current": null,
+      "events": [],
+      "state_version": 3,
+      "tombstoned": true
+     }
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": {
+       "pending": [],
+       "status": "complete"
+      }
+     },
+     "observable": "derived",
+     "observed": {
+      "pending": [],
+      "status": "complete"
+     }
+    }
+   ],
+   "clauses": [
+    {
+     "clause": "| B `forget` / permanent forget of A's memory | commits, tombstones / physically deletes A's lineage | bare `fact_not_found`; no tombstone |",
+     "observables": [
+      "p1",
+      "v1_exists",
+      "v2_exists"
+     ],
+     "source": "docs/786-cross-scope-write-authority.md"
+    },
+    {
+     "clause": "| purge | no | intended no recoverable copies | no | required full deletion outcome |",
+     "observables": [
+      "v1_exists",
+      "v2_exists"
+     ],
+     "source": "docs/28-retention-deletion-and-tombstones.md"
+    },
+    {
+     "clause": "### Prune versus delete [...] Expected: pruned memory remains recoverable under policy; deleted memory follows stronger semantics.",
+     "observables": [
+      "p1"
+     ],
+     "source": "docs/28-retention-deletion-and-tombstones.md"
+    },
+    {
+     "clause": "Deleting an old lineage, then re-creating the same logical memory ... without returning any old deleted version in explicit historical retrieval",
+     "observables": [
+      "mentions",
+      "old_semantics"
+     ],
+     "source": "docs/774-776-lineage-integration-contract.md"
+    },
+    {
+     "clause": "a reader outside that scope reads byte-identically to a memory that never existed",
+     "observables": [
+      "other_unknown",
+      "other_history_mentions"
+     ],
+     "source": "docs/plan-776-777-772-exact-head-qualification.md"
+    },
+    {
+     "clause": "a reader who could have read the deleted head (same tenant; domain, project and task eligible against the canonical `_fact_scope`, which survives pruning and permanent deletion) reads `{\"current_fact_uuid\": null, \"tombstoned\": true, \"events\": [], \"state_version\": <canonical>}` and, with a value probe, `rejected_values: []`; no deleted-generation identifier, timestamp, event or value is served",
+     "observables": [
+      "owner_history"
+     ],
+     "source": "docs/plan-776-777-772-exact-head-qualification.md"
+    },
+    {
+     "clause": "Versions are generation-relative ... After a governed deletion of the head the id reports `0` to any writer, a re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one; the owner of the deleted generation still reads the version its deletion recorded (`tombstoned`, DUR-DEL-001).",
+     "observables": [
+      "owner_history"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "Authorized permanent `forget` and every `open` reconcile them against canonical facts and report the outcome in `semantic_retrieval_posture()[\"derived_reconciliation\"]` ... None of this is an erasure claim about rollback journals, backups, snapshots or the filesystem.",
+     "observables": [
+      "derived"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "The system should not claim full deletion where it cannot demonstrate it.",
+     "observables": [
+      "derived"
+     ],
+     "source": "docs/28-retention-deletion-and-tombstones.md"
+    }
+   ],
+   "error": null,
+   "id": "L6-permanent-deletion-removes-canonical-facts-and-withholds-every-public-read",
+   "implementation_evidence": [
+    "derived_stores_checked"
+   ],
+   "invariants": [
+    "L6"
+   ],
+   "kind": "lifecycle",
+   "observations": {
+    "derived": {
+     "pending": [],
+     "status": "complete"
+    },
+    "derived_stores_checked": 0,
+    "mentions": [],
+    "old_semantics": false,
+    "other_history_mentions": [],
+    "other_unknown": true,
+    "owner_history": {
+     "current": null,
+     "events": [],
+     "state_version": 3,
+     "tombstoned": true
+    },
+    "p1": true,
+    "v1_exists": false,
+    "v2_exists": false
+   },
+   "outcome": "pass",
+   "recorded": {
+    "derived_stores_checked": 0
+   }
+  }
+ ],
+ "dsl_version": "786-security-replay-dsl/2",
+ "invariants": {
+  "L1": {
+   "cases": [
+    "L1-deletion-withholds-live",
+    "L1-deletion-withholds-after-restart",
+    "L5b-a-deleted-head-or-version-cannot-be-deleted-again"
+   ],
+   "holds": true,
+   "statement": "After a governed deletion no version of the deleted generation is admitted to current or historical recall, nor by logical reference, and the owner's history reads tombstoned with no events, live and after restart."
+  },
+  "L2": {
+   "cases": [
+    "L2-owner-recreation"
+   ],
+   "holds": true,
+   "statement": "The owner's re-creation is visible only as its own generation: old versions are withheld from recall, history (its whole payload) and write_semantics."
+  },
+  "L3": {
+   "cases": [
+    "L3-other-project-recreation-is-isolated",
+    "L3-control-former-owner-answers-without-a-re-creation",
+    "L4-three-generations-as-of-barriers"
+   ],
+   "holds": true,
+   "statement": "Another project's re-creation is isolated both ways: the former owner reads nothing of it and cannot write, correct, delete or dispute it (answering exactly as it would with no re-creation, except that a remember on an open id is the documented disclosure); the new generation reads nothing of the former."
+  },
+  "L4": {
+   "cases": [
+    "L4-three-generations-as-of-barriers"
+   ],
+   "holds": true,
+   "statement": "Every deleted version is an as-of barrier for every reader, and a live generation resolves only for its owner, only from its own start."
+  },
+  "L5": {
+   "cases": [
+    "L5b-a-deleted-head-or-version-cannot-be-deleted-again",
+    "L5-partial-deletion-withholds-only-that-version",
+    "L5-partial-deletion-withholds-only-that-version-after-restart"
+   ],
+   "holds": true,
+   "statement": "A governed deletion of one superseded version withholds only that version, live and after restart; a deleted head or lineage member cannot be deleted again (already_deleted) and the attempt leaves the recorded tombstone (deleted_at, version, lineage) unchanged, live and after restart."
+  },
+  "L6": {
+   "cases": [
+    "L6-permanent-deletion-removes-canonical-facts-and-withholds-every-public-read"
+   ],
+   "holds": true,
+   "statement": "After a permanent deletion the canonical substrate holds no fact of the lineage, no public read of any scope serves an identifier or text of it, the derived-store reconciliation reports complete, and the owner still reads tombstoned. This is a claim about canonical facts and public reads only, not about rollback journals, WAL frames, backups, snapshots or the filesystem (docs/28: no full-deletion claim where it cannot be demonstrated)."
+  }
+ },
+ "observations_sha256": "510ff2a621a1e201f3f15504e13aa47cdfd0fbf8306e1bbf951900afdea459af",
+ "provenance": {
+  "dirty_exclusion": "reports/validation/786-security-replays-v3/",
+  "dirty_paths": [],
+  "fixture": {
+   "path": "reference/fixtures/786-security-replays/deleted-lineage-generations-and-restart-v3.json",
+   "sha256": "412799ee22c77760adb33264dd32ade2ee9764cd069e770a5b4f66fe0a5eba00"
+  },
+  "platform": "Linux-6.18.44-fc-v139-x86_64-with-glibc2.39",
+  "python": "3.13.16",
+  "runner": {
+   "path": "reference/run_786_security_replays_dsl2.py",
+   "sha256": "73f0cd175b5a97f8e61d168bfc93cd796152aab02c76209bf2374153f35dba86",
+   "version": "786-security-replay-runner/2"
+  },
+  "runner_base": {
+   "path": "reference/run_786_security_replays.py",
+   "sha256": "21db05148c369815fa154bfa83db0b3b35f6c4712596ec0f137002a6611d8269",
+   "version": "786-security-replay-runner/1"
+  },
+  "runtime_tree": "4bfe33f27d229412f160e79a80fe0a44b3ed0c2a",
+  "source_commit": "e88bced24157d668179882f63e921ea569df1d51",
+  "sqlite": "3.45.1"
+ },
+ "replay_id": "deleted-lineage-generations-and-restart-v3",
+ "schema": "786-security-replay-report/2",
+ "summary": {
+  "cases": 10,
+  "errors": 0,
+  "failed": 0,
+  "passed": 10
+ },
+ "verdict": "PASS",
+ "verdict_reasons": [
+  "every expectation held on a clean source tree"
+ ]
+}

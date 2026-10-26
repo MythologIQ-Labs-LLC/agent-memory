@@ -1,0 +1,2023 @@
+* Creating isolated environment: venv+pip...
+* Installing packages in isolated environment:
+  - setuptools>=69
+  - wheel
+* Getting build dependencies for sdist...
+running egg_info
+creating reference/agent_memory_reference.egg-info
+writing reference/agent_memory_reference.egg-info/PKG-INFO
+writing dependency_links to reference/agent_memory_reference.egg-info/dependency_links.txt
+writing entry points to reference/agent_memory_reference.egg-info/entry_points.txt
+writing requirements to reference/agent_memory_reference.egg-info/requires.txt
+writing top-level names to reference/agent_memory_reference.egg-info/top_level.txt
+writing manifest file 'reference/agent_memory_reference.egg-info/SOURCES.txt'
+reading manifest file 'reference/agent_memory_reference.egg-info/SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+adding license file 'LICENSE'
+adding license file 'NOTICE'
+writing manifest file 'reference/agent_memory_reference.egg-info/SOURCES.txt'
+WARNING `project.license` as a TOML table is deprecated
+!!
+
+        ********************************************************************************
+        Please use a simple string containing a SPDX expression for `project.license`. You can also use `project.license-files`. (Both options available on setuptools>=77.0.0).
+
+        By 2027-Feb-18, you need to update your project and remove deprecated calls
+        or your builds will no longer be supported.
+
+        See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
+        ********************************************************************************
+
+!!
+* Installed build dependency versions:
+  - setuptools==84.2.1
+  - wheel==0.48.0
+* Building sdist...
+running sdist
+running egg_info
+writing reference/agent_memory_reference.egg-info/PKG-INFO
+writing dependency_links to reference/agent_memory_reference.egg-info/dependency_links.txt
+writing entry points to reference/agent_memory_reference.egg-info/entry_points.txt
+writing requirements to reference/agent_memory_reference.egg-info/requires.txt
+writing top-level names to reference/agent_memory_reference.egg-info/top_level.txt
+reading manifest file 'reference/agent_memory_reference.egg-info/SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+adding license file 'LICENSE'
+adding license file 'NOTICE'
+writing manifest file 'reference/agent_memory_reference.egg-info/SOURCES.txt'
+running check
+creating agent_memory_reference-0.2.0
+creating agent_memory_reference-0.2.0/reference/agent_memory_reference.egg-info
+creating agent_memory_reference-0.2.0/reference/agentmem_ref
+creating agent_memory_reference-0.2.0/reference/agentmem_ref/_profiles
+creating agent_memory_reference-0.2.0/reference/agentmem_ref/api
+creating agent_memory_reference-0.2.0/reference/agentmem_ref/contracts
+creating agent_memory_reference-0.2.0/reference/agentmem_ref/core
+creating agent_memory_reference-0.2.0/reference/agentmem_ref/crg
+creating agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation
+creating agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation/integrations
+creating agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation/lanes
+creating agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+creating agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+creating agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+creating agent_memory_reference-0.2.0/reference/agentmem_ref/state
+creating agent_memory_reference-0.2.0/schemas
+creating agent_memory_reference-0.2.0/tests
+copying files to agent_memory_reference-0.2.0...
+copying LICENSE -> agent_memory_reference-0.2.0
+copying MANIFEST.in -> agent_memory_reference-0.2.0
+copying NOTICE -> agent_memory_reference-0.2.0
+copying README.md -> agent_memory_reference-0.2.0
+copying pyproject.toml -> agent_memory_reference-0.2.0
+copying setup.py -> agent_memory_reference-0.2.0
+copying reference/agent_memory_reference.egg-info/PKG-INFO -> agent_memory_reference-0.2.0/reference/agent_memory_reference.egg-info
+copying reference/agent_memory_reference.egg-info/SOURCES.txt -> agent_memory_reference-0.2.0/reference/agent_memory_reference.egg-info
+copying reference/agent_memory_reference.egg-info/dependency_links.txt -> agent_memory_reference-0.2.0/reference/agent_memory_reference.egg-info
+copying reference/agent_memory_reference.egg-info/entry_points.txt -> agent_memory_reference-0.2.0/reference/agent_memory_reference.egg-info
+copying reference/agent_memory_reference.egg-info/requires.txt -> agent_memory_reference-0.2.0/reference/agent_memory_reference.egg-info
+copying reference/agent_memory_reference.egg-info/top_level.txt -> agent_memory_reference-0.2.0/reference/agent_memory_reference.egg-info
+copying reference/agentmem_ref/__init__.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/__main__.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/_paths.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/a2a_collaboration.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/action_authority.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/adapter.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/agent_manifest_correlation.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/agent_manifest_external_evidence.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/approval_evidence.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/architecture_family_closeout.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/architecture_family_evidence.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/authority_laundering_depth.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/authority_laundering_harness.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/autonomous_maintenance_harness.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/auxiliary_checkpoint.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/benchmark_security.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/capabilities.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/cedar_policy_comparator.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/checkpoint_behavior_harness.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/checkpoint_migration.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/checkpoint_transactions.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/cli.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/cmcp_external_evidence.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/code_graph_qualification.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/codegenome_cognitive_mesh.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/codegenome_profile.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/codegenome_scope_residue.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/cognitive_classification.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/cognitive_mesh.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/component_failure_probe.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/component_fallback.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/composition.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/concurrency_evidence.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/conditional_memory_harness.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/conditional_memory_influence.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/configured_restart.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/console.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/contextual_recall.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/contextual_recall_adapter.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/contract.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/cross_fact_currentness.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/crossing.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/dashclaw_authority.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/dashclaw_external_verdict.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/dashclaw_governed_commit.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/decision_overwrite.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/deletion_completeness.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/derivation_currentness.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/derivation_currentness_depth.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/derivation_currentness_harness.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/derivation_evidence.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/discovery.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/doctor.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/domain_schema_discovery_harness.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/domain_schema_mutation.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/enforcement_composition.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/enforcement_evidence.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/epistemic_memory.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/evidence_qualification.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/evidence_sufficiency.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/evolveai_cognitive_mesh.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/evolveai_profile.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/external_evidence.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/failure_checkpoint.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/failure_memory.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/fixture_conformance.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/forbidden_hits.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/framework_lifecycle.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/governance_projection.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/governed_transition_witness.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/graphiti_driver.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/hindsight_qualification.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/interchange.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/interchange_propagation.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/langgraph_lifecycle_comparator.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/latent_predictive_state_harness.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/locomo_evidence_benchmark.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/logical_state_algebra_pressure.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/long_horizon_benchmark.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/long_horizon_dataset.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/maf_lifecycle_comparator.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/maintenance_run.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/maintenance_run_bindings.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/maintenance_run_rules.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/maintenance_run_state.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/mcp_interaction.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/mem0_comparator.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/memos_qualification.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/metabolism.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/opa_policy_comparator.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/operational_memory_benchmark.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/pending_verification.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/policy.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/policy_projection_compatibility.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/portable_evidence.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/precedent_applicability.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/precedent_candidate_harness.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/precedent_candidate_retrieval.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/predictive_memory.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/procedural_memory.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/projection_governance.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/projections.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/proposition_extraction.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/proposition_semantics.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/qualification.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/query_driven_recall.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/ranking_policy.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/readmission.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/recall_control.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/recall_observation_receipt.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/receipts.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/representation_cache.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/representation_onnx.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/residue.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/resource_exchange.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/resource_provider_substitution.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/restart_runtime.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/resumption.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/retrieval_quality_benchmark.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/reusable_grant_harness.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/reusable_grants.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/runtime_behavior.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/runtime_composition.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/runtime_config.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/runtime_trace_correlation.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/scope_governance.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/security_evidence_depth.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/security_finding.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/security_finding_depth.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/security_finding_harness.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/semantic_readmission_adapter.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/shared_revocation.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/sleeper_poisoning_depth.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/sleeper_poisoning_harness.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/sqlite_composition.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/sqlite_runtime.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/sqlite_substrate.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/structural_mutation.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/structural_pama.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/substrate.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/surface.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/systems_characterization.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/telemetry.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/telemetry_retention.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/temporal_commitment.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/temporal_intent.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/temporal_order_constraints.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/temporal_transparency.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/temporal_trust.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/trace_action_evidence.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/typed_proposition.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/unsafe_composition_depth.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/unsafe_composition_harness.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/uor_content_reference.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/vector_retrieval.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/verification.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/visibility.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/visibility_characterization.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/write_claims.py -> agent_memory_reference-0.2.0/reference/agentmem_ref
+copying reference/agentmem_ref/_profiles/rc1-local.json -> agent_memory_reference-0.2.0/reference/agentmem_ref/_profiles
+copying reference/agentmem_ref/api/__init__.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/api
+copying reference/agentmem_ref/api/contract.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/api
+copying reference/agentmem_ref/api/surface.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/api
+copying reference/agentmem_ref/contracts/__init__.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/contracts
+copying reference/agentmem_ref/contracts/capabilities.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/contracts
+copying reference/agentmem_ref/contracts/cognitive_classification.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/contracts
+copying reference/agentmem_ref/contracts/component_failure_probe.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/contracts
+copying reference/agentmem_ref/contracts/component_fallback.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/contracts
+copying reference/agentmem_ref/contracts/evolveai_profile.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/contracts
+copying reference/agentmem_ref/contracts/hindsight_qualification.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/contracts
+copying reference/agentmem_ref/contracts/memos_qualification.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/contracts
+copying reference/agentmem_ref/contracts/qualification.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/contracts
+copying reference/agentmem_ref/contracts/resource_exchange.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/contracts
+copying reference/agentmem_ref/contracts/resource_provider_substitution.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/contracts
+copying reference/agentmem_ref/core/__init__.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/core
+copying reference/agentmem_ref/core/contextual_recall.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/core
+copying reference/agentmem_ref/core/evidence_qualification.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/core
+copying reference/agentmem_ref/core/governance_projection.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/core
+copying reference/agentmem_ref/core/pending_verification.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/core
+copying reference/agentmem_ref/core/policy.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/core
+copying reference/agentmem_ref/core/portable_evidence.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/core
+copying reference/agentmem_ref/core/readmission.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/core
+copying reference/agentmem_ref/core/receipts.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/core
+copying reference/agentmem_ref/core/resumption.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/core
+copying reference/agentmem_ref/core/verification.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/core
+copying reference/agentmem_ref/crg/__init__.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/crg
+copying reference/agentmem_ref/crg/code_graph_qualification.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/crg
+copying reference/agentmem_ref/crg/codegenome_cognitive_mesh.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/crg
+copying reference/agentmem_ref/crg/codegenome_profile.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/crg
+copying reference/agentmem_ref/crg/codegenome_scope_residue.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/crg
+copying reference/agentmem_ref/evaluation/__init__.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/benchmark_golden_keyed_retrieval.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/benchmark_integration.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/cli.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/contract.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/failure_recall_shadow.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/gauntlet_agent_memory.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/gauntlet_agent_memory_durability.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/gauntlet_baselines.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/gauntlet_cli.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/gauntlet_contract.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/gauntlet_durability.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/gauntlet_durability_fixtures.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/gauntlet_governance.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/gauntlet_orchestrator.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/gauntlet_probe.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/gauntlet_profiles.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/gauntlet_transport.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/identity_link_checkpoint.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/identity_link_journal.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/normalize.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/property_registry.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/proposition_link_preflight.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/registry.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/same_harness_lane.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/scorecard.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/temporal_currentness.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/ui_catalog.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/integrations/agent-memory-agentmembench-memdialogue-operational-v1.json -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation/integrations
+copying reference/agentmem_ref/evaluation/integrations/agent-memory-agentmembench-mesa-formal-v1.json -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation/integrations
+copying reference/agentmem_ref/evaluation/integrations/agent-memory-longmemeval-retrieval-currentness-v1.json -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation/integrations
+copying reference/agentmem_ref/evaluation/integrations/amb-precisionmembench-retrieval-v1.json -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation/integrations
+copying reference/agentmem_ref/evaluation/integrations/golden-keyed-retrieval-v1.json -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation/integrations
+copying reference/agentmem_ref/evaluation/integrations/swe-context-bench-lite-external-retrieval-v1.json -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation/integrations
+copying reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v1.json -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation/lanes
+copying reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v2.json -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation/lanes
+copying reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v3.json -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation/lanes
+copying reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v4.json -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation/lanes
+copying reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v5.json -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation/lanes
+copying reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v6.json -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation/lanes
+copying reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v7.json -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation/lanes
+copying reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v1.json -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation/lanes
+copying reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v2.json -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation/lanes
+copying reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v3.json -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation/lanes
+copying reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v4.json -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation/lanes
+copying reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v5.json -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation/lanes
+copying reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v6.json -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation/lanes
+copying reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v7.json -> agent_memory_reference-0.2.0/reference/agentmem_ref/evaluation/lanes
+copying reference/agentmem_ref/harness/__init__.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/architecture_family_closeout.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/architecture_family_evidence.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/authority_laundering_depth.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/authority_laundering_harness.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/autonomous_maintenance_harness.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/benchmark_security.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/cedar_policy_comparator.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/checkpoint_behavior_harness.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/concurrency_evidence.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/conditional_memory_harness.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/derivation_currentness_depth.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/derivation_currentness_harness.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/domain_schema_discovery_harness.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/fixture_conformance.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/forbidden_hits.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/langgraph_lifecycle_comparator.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/latent_predictive_state_harness.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/locomo_evidence_benchmark.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/logical_state_algebra_pressure.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/long_horizon_benchmark.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/long_horizon_dataset.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/maf_lifecycle_comparator.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/mem0_comparator.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/opa_policy_comparator.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/operational_memory_benchmark.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/precedent_candidate_harness.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/retrieval_quality_benchmark.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/reusable_grant_harness.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/security_evidence_depth.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/security_finding_depth.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/security_finding_harness.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/sleeper_poisoning_depth.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/sleeper_poisoning_harness.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/systems_characterization.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/unsafe_composition_depth.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/unsafe_composition_harness.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/harness/visibility_characterization.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/harness
+copying reference/agentmem_ref/memory/__init__.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/a2a_collaboration.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/action_authority.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/agent_manifest_correlation.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/agent_manifest_external_evidence.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/approval_evidence.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/checkpoint_migration.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/cmcp_external_evidence.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/cognitive_mesh.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/conditional_memory_influence.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/crossing.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/dashclaw_authority.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/dashclaw_external_verdict.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/dashclaw_governed_commit.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/decision_overwrite.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/deletion_completeness.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/derivation_currentness.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/derivation_evidence.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/domain_schema_mutation.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/enforcement_composition.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/enforcement_evidence.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/epistemic_memory.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/evolveai_cognitive_mesh.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/external_evidence.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/failure_checkpoint.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/failure_memory.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/framework_lifecycle.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/interchange.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/interchange_propagation.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/maintenance_run.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/maintenance_run_bindings.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/maintenance_run_rules.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/maintenance_run_state.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/mcp_interaction.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/metabolism.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/policy_projection_compatibility.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/precedent_applicability.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/precedent_candidate_retrieval.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/predictive_memory.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/procedural_memory.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/reusable_grants.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/runtime_trace_correlation.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/security_finding.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/structural_mutation.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/structural_pama.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/telemetry.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/telemetry_retention.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/temporal_commitment.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/temporal_transparency.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/temporal_trust.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/trace_action_evidence.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/memory/uor_content_reference.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/memory
+copying reference/agentmem_ref/runtime/__init__.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/adapter.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/auxiliary_checkpoint.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/checkpoint_transactions.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/cli.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/composition.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/configured_restart.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/contextual_recall_adapter.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/cross_fact_currentness.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/discovery.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/doctor.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/evidence_sufficiency.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/governed_transition_witness.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/projection_governance.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/proposition_extraction.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/proposition_semantics.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/query_driven_recall.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/ranking_policy.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/recall_control.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/recall_observation_receipt.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/representation_cache.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/representation_onnx.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/restart_runtime.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/runtime_behavior.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/runtime_composition.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/runtime_config.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/scope_governance.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/semantic_readmission_adapter.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/shared_revocation.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/sqlite_composition.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/sqlite_runtime.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/temporal_intent.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/temporal_order_constraints.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/typed_proposition.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/vector_retrieval.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/write_claims.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/runtime
+copying reference/agentmem_ref/state/__init__.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/state
+copying reference/agentmem_ref/state/graphiti_driver.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/state
+copying reference/agentmem_ref/state/projections.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/state
+copying reference/agentmem_ref/state/residue.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/state
+copying reference/agentmem_ref/state/sqlite_substrate.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/state
+copying reference/agentmem_ref/state/substrate.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/state
+copying reference/agentmem_ref/state/visibility.py -> agent_memory_reference-0.2.0/reference/agentmem_ref/state
+copying schemas/a2a-collaboration-evidence.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/agent-manifest-memory-correlation.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/api-action-envelope.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/api-execution-observation.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/api-posture-report.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/api-proposal-envelope.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/api-recall-context.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/api-result-envelope.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/api-target-envelope.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/approval-evidence.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/approval-verification-result.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/benchmark-deficit-ledger.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/benchmark-security-report.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/benchmark-ui-catalog.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/boundary-crossing-receipt.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/calibration-results.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/component-capability-profile.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/component-capability-qualification.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/concurrency-evidence.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/conditional-memory-influence.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/conformance-report.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/contextual-recall-admission.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/decision-composition-receipt.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/decision-receipt.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/deletion-completeness-chain.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/derivation-currentness-evaluation.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/derivation-evidence.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/enforcement-posture-report.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/execution-witness.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/external-enforcement-decision-projection.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/external-evidence-normalized.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/external-policy-decision.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/framework-lifecycle-event.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/gauntlet-operation-envelope.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/gauntlet-profile-requirements.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/gauntlet-system-adapter.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/governance-context-projection.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/isolation-domain-constraints.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/maintenance-run-evidence.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/mcp-interaction-evidence.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/mem0-comparator-report.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/memory-audit-event.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/memory-benchmark-integration.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/memory-benchmark-run.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/memory-unit.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/pama-decision.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/policy-projection-compatibility.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/portable-governance-evidence.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/precedent-applicability-result.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/precedent-candidate-retrieval.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/provider-probes.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/resource-exchange-receipt.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/reusable-grant-evaluation.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/reusable-grant-proposal.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/reusable-grant-revocation.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/reusable-grant.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/runtime-baseline-declaration.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/runtime-configuration.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/runtime-trace-correlation.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/same-harness-lane.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/security-evidence-depth-report.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/security-finding-evidence.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/source-record.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/structural-mutation-impact.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/telemetry-projection.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/temporal-commitment.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/temporal-currentness-evaluation.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/temporal-external-witness.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/temporal-signer-attestation.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/temporal-signer-trust.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/temporal-transparency-receipt.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/trace-action-evidence-bundle.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/uor-content-reference.schema.json -> agent_memory_reference-0.2.0/schemas
+copying schemas/write-readable-visibility.schema.json -> agent_memory_reference-0.2.0/schemas
+copying tests/test_architecture_index_validator.py -> agent_memory_reference-0.2.0/tests
+copying tests/test_deficit_evidence_audit.py -> agent_memory_reference-0.2.0/tests
+Writing agent_memory_reference-0.2.0/setup.cfg
+Creating tar archive
+removing 'agent_memory_reference-0.2.0' (and everything under it)
+WARNING `project.license` as a TOML table is deprecated
+!!
+
+        ********************************************************************************
+        Please use a simple string containing a SPDX expression for `project.license`. You can also use `project.license-files`. (Both options available on setuptools>=77.0.0).
+
+        By 2027-Feb-18, you need to update your project and remove deprecated calls
+        or your builds will no longer be supported.
+
+        See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
+        ********************************************************************************
+
+!!
+* Building wheel from sdist
+* Creating isolated environment: venv+pip...
+* Installing packages in isolated environment:
+  - setuptools>=69
+  - wheel
+* Getting build dependencies for wheel...
+running egg_info
+writing reference/agent_memory_reference.egg-info/PKG-INFO
+writing dependency_links to reference/agent_memory_reference.egg-info/dependency_links.txt
+writing entry points to reference/agent_memory_reference.egg-info/entry_points.txt
+writing requirements to reference/agent_memory_reference.egg-info/requires.txt
+writing top-level names to reference/agent_memory_reference.egg-info/top_level.txt
+reading manifest file 'reference/agent_memory_reference.egg-info/SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+adding license file 'LICENSE'
+adding license file 'NOTICE'
+writing manifest file 'reference/agent_memory_reference.egg-info/SOURCES.txt'
+WARNING `project.license` as a TOML table is deprecated
+!!
+
+        ********************************************************************************
+        Please use a simple string containing a SPDX expression for `project.license`. You can also use `project.license-files`. (Both options available on setuptools>=77.0.0).
+
+        By 2027-Feb-18, you need to update your project and remove deprecated calls
+        or your builds will no longer be supported.
+
+        See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
+        ********************************************************************************
+
+!!
+* Installed build dependency versions:
+  - setuptools==84.2.1
+  - wheel==0.48.0
+* Building wheel...
+running bdist_wheel
+running build
+running build_py
+creating build/lib/agentmem_ref
+copying reference/agentmem_ref/cli.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/recall_observation_receipt.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/derivation_evidence.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/resource_exchange.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/security_finding.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/maintenance_run_bindings.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/contextual_recall.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/forbidden_hits.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/opa_policy_comparator.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/query_driven_recall.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/discovery.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/architecture_family_closeout.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/agent_manifest_correlation.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/runtime_trace_correlation.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/visibility.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/benchmark_security.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/cognitive_classification.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/unsafe_composition_harness.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/approval_evidence.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/checkpoint_behavior_harness.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/telemetry.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/cognitive_mesh.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/runtime_composition.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/contract.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/proposition_semantics.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/evidence_qualification.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/reusable_grant_harness.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/reusable_grants.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/temporal_intent.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/langgraph_lifecycle_comparator.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/maintenance_run.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/conditional_memory_harness.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/policy_projection_compatibility.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/locomo_evidence_benchmark.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/predictive_memory.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/crossing.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/receipts.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/contextual_recall_adapter.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/authority_laundering_harness.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/sqlite_composition.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/representation_cache.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/memos_qualification.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/epistemic_memory.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/sleeper_poisoning_harness.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/domain_schema_discovery_harness.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/runtime_behavior.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/__init__.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/evolveai_cognitive_mesh.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/checkpoint_migration.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/structural_pama.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/proposition_extraction.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/resumption.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/codegenome_cognitive_mesh.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/precedent_candidate_harness.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/mcp_interaction.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/sleeper_poisoning_depth.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/precedent_candidate_retrieval.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/security_finding_depth.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/governed_transition_witness.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/projections.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/console.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/typed_proposition.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/autonomous_maintenance_harness.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/substrate.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/evidence_sufficiency.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/security_evidence_depth.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/systems_characterization.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/projection_governance.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/temporal_transparency.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/write_claims.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/framework_lifecycle.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/cross_fact_currentness.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/mem0_comparator.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/scope_governance.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/verification.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/evolveai_profile.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/domain_schema_mutation.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/checkpoint_transactions.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/maintenance_run_state.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/sqlite_runtime.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/doctor.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/decision_overwrite.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/runtime_config.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/structural_mutation.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/conditional_memory_influence.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/governance_projection.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/auxiliary_checkpoint.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/semantic_readmission_adapter.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/codegenome_scope_residue.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/component_fallback.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/derivation_currentness.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/a2a_collaboration.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/resource_provider_substitution.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/unsafe_composition_depth.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/security_finding_harness.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/failure_memory.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/temporal_trust.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/long_horizon_dataset.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/authority_laundering_depth.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/policy.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/maintenance_run_rules.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/composition.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/sqlite_substrate.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/temporal_commitment.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/vector_retrieval.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/_paths.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/operational_memory_benchmark.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/maf_lifecycle_comparator.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/code_graph_qualification.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/fixture_conformance.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/precedent_applicability.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/retrieval_quality_benchmark.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/hindsight_qualification.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/dashclaw_governed_commit.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/action_authority.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/concurrency_evidence.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/enforcement_composition.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/enforcement_evidence.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/pending_verification.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/deletion_completeness.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/residue.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/trace_action_evidence.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/surface.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/cedar_policy_comparator.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/readmission.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/procedural_memory.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/interchange_propagation.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/logical_state_algebra_pressure.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/visibility_characterization.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/qualification.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/recall_control.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/__main__.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/metabolism.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/temporal_order_constraints.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/portable_evidence.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/adapter.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/ranking_policy.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/interchange.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/restart_runtime.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/configured_restart.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/dashclaw_external_verdict.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/architecture_family_evidence.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/agent_manifest_external_evidence.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/codegenome_profile.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/representation_onnx.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/uor_content_reference.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/component_failure_probe.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/cmcp_external_evidence.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/shared_revocation.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/latent_predictive_state_harness.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/external_evidence.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/long_horizon_benchmark.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/dashclaw_authority.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/derivation_currentness_harness.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/capabilities.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/derivation_currentness_depth.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/telemetry_retention.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/failure_checkpoint.py -> build/lib/agentmem_ref
+copying reference/agentmem_ref/graphiti_driver.py -> build/lib/agentmem_ref
+creating build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/cli.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/recall_observation_receipt.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/query_driven_recall.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/discovery.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/runtime_composition.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/proposition_semantics.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/temporal_intent.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/contextual_recall_adapter.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/sqlite_composition.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/representation_cache.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/runtime_behavior.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/__init__.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/proposition_extraction.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/governed_transition_witness.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/typed_proposition.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/evidence_sufficiency.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/projection_governance.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/write_claims.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/cross_fact_currentness.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/scope_governance.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/checkpoint_transactions.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/sqlite_runtime.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/doctor.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/runtime_config.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/auxiliary_checkpoint.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/semantic_readmission_adapter.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/composition.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/vector_retrieval.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/recall_control.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/temporal_order_constraints.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/adapter.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/ranking_policy.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/restart_runtime.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/configured_restart.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/representation_onnx.py -> build/lib/agentmem_ref/runtime
+copying reference/agentmem_ref/runtime/shared_revocation.py -> build/lib/agentmem_ref/runtime
+creating build/lib/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/cli.py -> build/lib/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/identity_link_journal.py -> build/lib/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/proposition_link_preflight.py -> build/lib/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/gauntlet_contract.py -> build/lib/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/contract.py -> build/lib/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/gauntlet_agent_memory.py -> build/lib/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/gauntlet_orchestrator.py -> build/lib/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/normalize.py -> build/lib/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/benchmark_golden_keyed_retrieval.py -> build/lib/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/same_harness_lane.py -> build/lib/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/gauntlet_agent_memory_durability.py -> build/lib/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/temporal_currentness.py -> build/lib/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/__init__.py -> build/lib/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/gauntlet_governance.py -> build/lib/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/gauntlet_transport.py -> build/lib/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/gauntlet_durability.py -> build/lib/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/benchmark_integration.py -> build/lib/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/identity_link_checkpoint.py -> build/lib/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/property_registry.py -> build/lib/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/gauntlet_durability_fixtures.py -> build/lib/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/ui_catalog.py -> build/lib/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/registry.py -> build/lib/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/gauntlet_probe.py -> build/lib/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/gauntlet_profiles.py -> build/lib/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/failure_recall_shadow.py -> build/lib/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/gauntlet_baselines.py -> build/lib/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/scorecard.py -> build/lib/agentmem_ref/evaluation
+copying reference/agentmem_ref/evaluation/gauntlet_cli.py -> build/lib/agentmem_ref/evaluation
+creating build/lib/agentmem_ref/crg
+copying reference/agentmem_ref/crg/__init__.py -> build/lib/agentmem_ref/crg
+copying reference/agentmem_ref/crg/codegenome_cognitive_mesh.py -> build/lib/agentmem_ref/crg
+copying reference/agentmem_ref/crg/codegenome_scope_residue.py -> build/lib/agentmem_ref/crg
+copying reference/agentmem_ref/crg/code_graph_qualification.py -> build/lib/agentmem_ref/crg
+copying reference/agentmem_ref/crg/codegenome_profile.py -> build/lib/agentmem_ref/crg
+creating build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/forbidden_hits.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/opa_policy_comparator.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/architecture_family_closeout.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/benchmark_security.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/unsafe_composition_harness.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/checkpoint_behavior_harness.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/reusable_grant_harness.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/langgraph_lifecycle_comparator.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/conditional_memory_harness.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/locomo_evidence_benchmark.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/authority_laundering_harness.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/sleeper_poisoning_harness.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/domain_schema_discovery_harness.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/__init__.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/precedent_candidate_harness.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/sleeper_poisoning_depth.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/security_finding_depth.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/autonomous_maintenance_harness.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/security_evidence_depth.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/systems_characterization.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/mem0_comparator.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/unsafe_composition_depth.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/security_finding_harness.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/long_horizon_dataset.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/authority_laundering_depth.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/operational_memory_benchmark.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/maf_lifecycle_comparator.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/fixture_conformance.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/retrieval_quality_benchmark.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/concurrency_evidence.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/cedar_policy_comparator.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/logical_state_algebra_pressure.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/visibility_characterization.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/architecture_family_evidence.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/latent_predictive_state_harness.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/long_horizon_benchmark.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/derivation_currentness_harness.py -> build/lib/agentmem_ref/harness
+copying reference/agentmem_ref/harness/derivation_currentness_depth.py -> build/lib/agentmem_ref/harness
+creating build/lib/agentmem_ref/api
+copying reference/agentmem_ref/api/contract.py -> build/lib/agentmem_ref/api
+copying reference/agentmem_ref/api/__init__.py -> build/lib/agentmem_ref/api
+copying reference/agentmem_ref/api/surface.py -> build/lib/agentmem_ref/api
+creating build/lib/agentmem_ref/state
+copying reference/agentmem_ref/state/visibility.py -> build/lib/agentmem_ref/state
+copying reference/agentmem_ref/state/__init__.py -> build/lib/agentmem_ref/state
+copying reference/agentmem_ref/state/projections.py -> build/lib/agentmem_ref/state
+copying reference/agentmem_ref/state/substrate.py -> build/lib/agentmem_ref/state
+copying reference/agentmem_ref/state/sqlite_substrate.py -> build/lib/agentmem_ref/state
+copying reference/agentmem_ref/state/residue.py -> build/lib/agentmem_ref/state
+copying reference/agentmem_ref/state/graphiti_driver.py -> build/lib/agentmem_ref/state
+creating build/lib/agentmem_ref/contracts
+copying reference/agentmem_ref/contracts/resource_exchange.py -> build/lib/agentmem_ref/contracts
+copying reference/agentmem_ref/contracts/cognitive_classification.py -> build/lib/agentmem_ref/contracts
+copying reference/agentmem_ref/contracts/memos_qualification.py -> build/lib/agentmem_ref/contracts
+copying reference/agentmem_ref/contracts/__init__.py -> build/lib/agentmem_ref/contracts
+copying reference/agentmem_ref/contracts/evolveai_profile.py -> build/lib/agentmem_ref/contracts
+copying reference/agentmem_ref/contracts/component_fallback.py -> build/lib/agentmem_ref/contracts
+copying reference/agentmem_ref/contracts/resource_provider_substitution.py -> build/lib/agentmem_ref/contracts
+copying reference/agentmem_ref/contracts/hindsight_qualification.py -> build/lib/agentmem_ref/contracts
+copying reference/agentmem_ref/contracts/qualification.py -> build/lib/agentmem_ref/contracts
+copying reference/agentmem_ref/contracts/component_failure_probe.py -> build/lib/agentmem_ref/contracts
+copying reference/agentmem_ref/contracts/capabilities.py -> build/lib/agentmem_ref/contracts
+creating build/lib/agentmem_ref/core
+copying reference/agentmem_ref/core/contextual_recall.py -> build/lib/agentmem_ref/core
+copying reference/agentmem_ref/core/evidence_qualification.py -> build/lib/agentmem_ref/core
+copying reference/agentmem_ref/core/receipts.py -> build/lib/agentmem_ref/core
+copying reference/agentmem_ref/core/__init__.py -> build/lib/agentmem_ref/core
+copying reference/agentmem_ref/core/resumption.py -> build/lib/agentmem_ref/core
+copying reference/agentmem_ref/core/verification.py -> build/lib/agentmem_ref/core
+copying reference/agentmem_ref/core/governance_projection.py -> build/lib/agentmem_ref/core
+copying reference/agentmem_ref/core/policy.py -> build/lib/agentmem_ref/core
+copying reference/agentmem_ref/core/pending_verification.py -> build/lib/agentmem_ref/core
+copying reference/agentmem_ref/core/readmission.py -> build/lib/agentmem_ref/core
+copying reference/agentmem_ref/core/portable_evidence.py -> build/lib/agentmem_ref/core
+creating build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/derivation_evidence.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/security_finding.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/maintenance_run_bindings.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/agent_manifest_correlation.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/runtime_trace_correlation.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/approval_evidence.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/telemetry.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/cognitive_mesh.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/reusable_grants.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/maintenance_run.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/policy_projection_compatibility.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/predictive_memory.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/crossing.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/epistemic_memory.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/__init__.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/evolveai_cognitive_mesh.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/checkpoint_migration.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/structural_pama.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/mcp_interaction.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/precedent_candidate_retrieval.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/temporal_transparency.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/framework_lifecycle.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/domain_schema_mutation.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/maintenance_run_state.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/decision_overwrite.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/structural_mutation.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/conditional_memory_influence.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/derivation_currentness.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/a2a_collaboration.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/failure_memory.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/temporal_trust.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/maintenance_run_rules.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/temporal_commitment.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/precedent_applicability.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/dashclaw_governed_commit.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/action_authority.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/enforcement_composition.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/enforcement_evidence.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/deletion_completeness.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/trace_action_evidence.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/procedural_memory.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/interchange_propagation.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/metabolism.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/interchange.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/dashclaw_external_verdict.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/agent_manifest_external_evidence.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/uor_content_reference.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/cmcp_external_evidence.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/external_evidence.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/dashclaw_authority.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/telemetry_retention.py -> build/lib/agentmem_ref/memory
+copying reference/agentmem_ref/memory/failure_checkpoint.py -> build/lib/agentmem_ref/memory
+running egg_info
+writing reference/agent_memory_reference.egg-info/PKG-INFO
+writing dependency_links to reference/agent_memory_reference.egg-info/dependency_links.txt
+writing entry points to reference/agent_memory_reference.egg-info/entry_points.txt
+writing requirements to reference/agent_memory_reference.egg-info/requires.txt
+writing top-level names to reference/agent_memory_reference.egg-info/top_level.txt
+reading manifest file 'reference/agent_memory_reference.egg-info/SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+adding license file 'LICENSE'
+adding license file 'NOTICE'
+writing manifest file 'reference/agent_memory_reference.egg-info/SOURCES.txt'
+creating build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/a2a-collaboration-evidence.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/agent-manifest-memory-correlation.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/api-action-envelope.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/api-execution-observation.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/api-posture-report.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/api-proposal-envelope.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/api-recall-context.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/api-result-envelope.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/api-target-envelope.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/approval-evidence.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/approval-verification-result.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/benchmark-deficit-ledger.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/benchmark-security-report.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/benchmark-ui-catalog.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/boundary-crossing-receipt.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/calibration-results.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/component-capability-profile.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/component-capability-qualification.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/concurrency-evidence.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/conditional-memory-influence.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/conformance-report.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/contextual-recall-admission.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/decision-composition-receipt.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/decision-receipt.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/deletion-completeness-chain.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/derivation-currentness-evaluation.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/derivation-evidence.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/enforcement-posture-report.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/execution-witness.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/external-enforcement-decision-projection.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/external-evidence-normalized.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/external-policy-decision.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/framework-lifecycle-event.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/gauntlet-operation-envelope.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/gauntlet-profile-requirements.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/gauntlet-system-adapter.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/governance-context-projection.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/isolation-domain-constraints.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/maintenance-run-evidence.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/mcp-interaction-evidence.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/mem0-comparator-report.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/memory-audit-event.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/memory-benchmark-integration.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/memory-benchmark-run.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/memory-unit.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/pama-decision.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/policy-projection-compatibility.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/portable-governance-evidence.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/precedent-applicability-result.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/precedent-candidate-retrieval.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/provider-probes.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/resource-exchange-receipt.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/reusable-grant-evaluation.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/reusable-grant-proposal.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/reusable-grant-revocation.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/reusable-grant.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/runtime-baseline-declaration.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/runtime-configuration.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/runtime-trace-correlation.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/same-harness-lane.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/security-evidence-depth-report.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/security-finding-evidence.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/source-record.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/structural-mutation-impact.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/telemetry-projection.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/temporal-commitment.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/temporal-currentness-evaluation.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/temporal-external-witness.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/temporal-signer-attestation.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/temporal-signer-trust.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/temporal-transparency-receipt.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/trace-action-evidence-bundle.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/uor-content-reference.schema.json -> build/lib/agentmem_ref/_schemas
+copying reference/agentmem_ref/_schemas/write-readable-visibility.schema.json -> build/lib/agentmem_ref/_schemas
+creating build/lib/agentmem_ref/_profiles
+copying reference/agentmem_ref/_profiles/rc1-local.json -> build/lib/agentmem_ref/_profiles
+creating build/lib/agentmem_ref/evaluation/lanes
+copying reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v1.json -> build/lib/agentmem_ref/evaluation/lanes
+copying reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v2.json -> build/lib/agentmem_ref/evaluation/lanes
+copying reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v3.json -> build/lib/agentmem_ref/evaluation/lanes
+copying reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v4.json -> build/lib/agentmem_ref/evaluation/lanes
+copying reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v5.json -> build/lib/agentmem_ref/evaluation/lanes
+copying reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v6.json -> build/lib/agentmem_ref/evaluation/lanes
+copying reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v7.json -> build/lib/agentmem_ref/evaluation/lanes
+copying reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v1.json -> build/lib/agentmem_ref/evaluation/lanes
+copying reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v2.json -> build/lib/agentmem_ref/evaluation/lanes
+copying reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v3.json -> build/lib/agentmem_ref/evaluation/lanes
+copying reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v4.json -> build/lib/agentmem_ref/evaluation/lanes
+copying reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v5.json -> build/lib/agentmem_ref/evaluation/lanes
+copying reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v6.json -> build/lib/agentmem_ref/evaluation/lanes
+copying reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v7.json -> build/lib/agentmem_ref/evaluation/lanes
+creating build/lib/agentmem_ref/evaluation/integrations
+copying reference/agentmem_ref/evaluation/integrations/agent-memory-agentmembench-memdialogue-operational-v1.json -> build/lib/agentmem_ref/evaluation/integrations
+copying reference/agentmem_ref/evaluation/integrations/agent-memory-agentmembench-mesa-formal-v1.json -> build/lib/agentmem_ref/evaluation/integrations
+copying reference/agentmem_ref/evaluation/integrations/agent-memory-longmemeval-retrieval-currentness-v1.json -> build/lib/agentmem_ref/evaluation/integrations
+copying reference/agentmem_ref/evaluation/integrations/amb-precisionmembench-retrieval-v1.json -> build/lib/agentmem_ref/evaluation/integrations
+copying reference/agentmem_ref/evaluation/integrations/golden-keyed-retrieval-v1.json -> build/lib/agentmem_ref/evaluation/integrations
+copying reference/agentmem_ref/evaluation/integrations/swe-context-bench-lite-external-retrieval-v1.json -> build/lib/agentmem_ref/evaluation/integrations
+installing to build/bdist.linux-x86_64/wheel
+running install
+running install_lib
+creating build/bdist.linux-x86_64/wheel
+creating build/bdist.linux-x86_64/wheel/agentmem_ref
+copying build/lib/agentmem_ref/cli.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/recall_observation_receipt.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/derivation_evidence.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/resource_exchange.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/security_finding.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/maintenance_run_bindings.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/contextual_recall.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/forbidden_hits.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/opa_policy_comparator.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/query_driven_recall.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/discovery.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/architecture_family_closeout.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/agent_manifest_correlation.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/runtime_trace_correlation.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+creating build/bdist.linux-x86_64/wheel/agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/cli.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/recall_observation_receipt.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/query_driven_recall.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/discovery.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/runtime_composition.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/proposition_semantics.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/temporal_intent.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/contextual_recall_adapter.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/sqlite_composition.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/representation_cache.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/runtime_behavior.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/__init__.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/proposition_extraction.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/governed_transition_witness.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/typed_proposition.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/evidence_sufficiency.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/projection_governance.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/write_claims.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/cross_fact_currentness.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/scope_governance.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/checkpoint_transactions.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/sqlite_runtime.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/doctor.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/runtime_config.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/auxiliary_checkpoint.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/semantic_readmission_adapter.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/composition.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/vector_retrieval.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/recall_control.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/temporal_order_constraints.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/adapter.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/ranking_policy.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/restart_runtime.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/configured_restart.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/representation_onnx.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/runtime/shared_revocation.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/runtime
+copying build/lib/agentmem_ref/visibility.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/benchmark_security.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/cognitive_classification.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/unsafe_composition_harness.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/approval_evidence.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/checkpoint_behavior_harness.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/telemetry.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/cognitive_mesh.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/runtime_composition.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/contract.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/proposition_semantics.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+creating build/bdist.linux-x86_64/wheel/agentmem_ref/evaluation
+copying build/lib/agentmem_ref/evaluation/cli.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation
+copying build/lib/agentmem_ref/evaluation/identity_link_journal.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation
+copying build/lib/agentmem_ref/evaluation/proposition_link_preflight.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation
+copying build/lib/agentmem_ref/evaluation/gauntlet_contract.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation
+copying build/lib/agentmem_ref/evaluation/contract.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation
+copying build/lib/agentmem_ref/evaluation/gauntlet_agent_memory.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation
+copying build/lib/agentmem_ref/evaluation/gauntlet_orchestrator.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation
+copying build/lib/agentmem_ref/evaluation/normalize.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation
+copying build/lib/agentmem_ref/evaluation/benchmark_golden_keyed_retrieval.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation
+copying build/lib/agentmem_ref/evaluation/same_harness_lane.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation
+copying build/lib/agentmem_ref/evaluation/gauntlet_agent_memory_durability.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation
+copying build/lib/agentmem_ref/evaluation/temporal_currentness.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation
+copying build/lib/agentmem_ref/evaluation/__init__.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation
+copying build/lib/agentmem_ref/evaluation/gauntlet_governance.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation
+copying build/lib/agentmem_ref/evaluation/gauntlet_transport.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation
+copying build/lib/agentmem_ref/evaluation/gauntlet_durability.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation
+copying build/lib/agentmem_ref/evaluation/benchmark_integration.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation
+creating build/bdist.linux-x86_64/wheel/agentmem_ref/evaluation/lanes
+copying build/lib/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v3.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation/lanes
+copying build/lib/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v6.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation/lanes
+copying build/lib/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v3.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation/lanes
+copying build/lib/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v4.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation/lanes
+copying build/lib/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v2.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation/lanes
+copying build/lib/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v4.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation/lanes
+copying build/lib/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v5.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation/lanes
+copying build/lib/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v7.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation/lanes
+copying build/lib/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v1.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation/lanes
+copying build/lib/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v5.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation/lanes
+copying build/lib/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v6.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation/lanes
+copying build/lib/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v2.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation/lanes
+copying build/lib/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v1.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation/lanes
+copying build/lib/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v7.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation/lanes
+copying build/lib/agentmem_ref/evaluation/identity_link_checkpoint.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation
+copying build/lib/agentmem_ref/evaluation/property_registry.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation
+creating build/bdist.linux-x86_64/wheel/agentmem_ref/evaluation/integrations
+copying build/lib/agentmem_ref/evaluation/integrations/agent-memory-longmemeval-retrieval-currentness-v1.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation/integrations
+copying build/lib/agentmem_ref/evaluation/integrations/agent-memory-agentmembench-memdialogue-operational-v1.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation/integrations
+copying build/lib/agentmem_ref/evaluation/integrations/agent-memory-agentmembench-mesa-formal-v1.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation/integrations
+copying build/lib/agentmem_ref/evaluation/integrations/golden-keyed-retrieval-v1.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation/integrations
+copying build/lib/agentmem_ref/evaluation/integrations/swe-context-bench-lite-external-retrieval-v1.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation/integrations
+copying build/lib/agentmem_ref/evaluation/integrations/amb-precisionmembench-retrieval-v1.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation/integrations
+copying build/lib/agentmem_ref/evaluation/gauntlet_durability_fixtures.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation
+copying build/lib/agentmem_ref/evaluation/ui_catalog.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation
+copying build/lib/agentmem_ref/evaluation/registry.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation
+copying build/lib/agentmem_ref/evaluation/gauntlet_probe.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation
+copying build/lib/agentmem_ref/evaluation/gauntlet_profiles.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation
+copying build/lib/agentmem_ref/evaluation/failure_recall_shadow.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation
+copying build/lib/agentmem_ref/evaluation/gauntlet_baselines.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation
+copying build/lib/agentmem_ref/evaluation/scorecard.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation
+copying build/lib/agentmem_ref/evaluation/gauntlet_cli.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/evaluation
+copying build/lib/agentmem_ref/evidence_qualification.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/reusable_grant_harness.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+creating build/bdist.linux-x86_64/wheel/agentmem_ref/crg
+copying build/lib/agentmem_ref/crg/__init__.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/crg
+copying build/lib/agentmem_ref/crg/codegenome_cognitive_mesh.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/crg
+copying build/lib/agentmem_ref/crg/codegenome_scope_residue.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/crg
+copying build/lib/agentmem_ref/crg/code_graph_qualification.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/crg
+copying build/lib/agentmem_ref/crg/codegenome_profile.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/crg
+copying build/lib/agentmem_ref/reusable_grants.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/temporal_intent.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/langgraph_lifecycle_comparator.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/maintenance_run.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/conditional_memory_harness.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/policy_projection_compatibility.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/locomo_evidence_benchmark.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/predictive_memory.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/crossing.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/receipts.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/contextual_recall_adapter.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+creating build/bdist.linux-x86_64/wheel/agentmem_ref/_profiles
+copying build/lib/agentmem_ref/_profiles/rc1-local.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_profiles
+creating build/bdist.linux-x86_64/wheel/agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/forbidden_hits.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/opa_policy_comparator.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/architecture_family_closeout.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/benchmark_security.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/unsafe_composition_harness.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/checkpoint_behavior_harness.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/reusable_grant_harness.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/langgraph_lifecycle_comparator.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/conditional_memory_harness.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/locomo_evidence_benchmark.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/authority_laundering_harness.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/sleeper_poisoning_harness.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/domain_schema_discovery_harness.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/__init__.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/precedent_candidate_harness.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/sleeper_poisoning_depth.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/security_finding_depth.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/autonomous_maintenance_harness.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/security_evidence_depth.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/systems_characterization.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/mem0_comparator.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/unsafe_composition_depth.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/security_finding_harness.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/long_horizon_dataset.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/authority_laundering_depth.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/operational_memory_benchmark.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/maf_lifecycle_comparator.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/fixture_conformance.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/retrieval_quality_benchmark.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/concurrency_evidence.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/cedar_policy_comparator.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/logical_state_algebra_pressure.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/visibility_characterization.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/architecture_family_evidence.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/latent_predictive_state_harness.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/long_horizon_benchmark.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/derivation_currentness_harness.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/harness/derivation_currentness_depth.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/harness
+copying build/lib/agentmem_ref/authority_laundering_harness.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/sqlite_composition.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/representation_cache.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/memos_qualification.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/epistemic_memory.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/sleeper_poisoning_harness.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/domain_schema_discovery_harness.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/runtime_behavior.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/__init__.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/evolveai_cognitive_mesh.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/checkpoint_migration.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/structural_pama.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/proposition_extraction.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/resumption.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/codegenome_cognitive_mesh.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/precedent_candidate_harness.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/mcp_interaction.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/sleeper_poisoning_depth.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/precedent_candidate_retrieval.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/security_finding_depth.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/governed_transition_witness.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/projections.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+creating build/bdist.linux-x86_64/wheel/agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/external-policy-decision.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/external-enforcement-decision-projection.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/api-posture-report.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/derivation-currentness-evaluation.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/runtime-configuration.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/api-proposal-envelope.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/component-capability-qualification.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/governance-context-projection.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/security-finding-evidence.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/gauntlet-operation-envelope.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/structural-mutation-impact.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/concurrency-evidence.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/source-record.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/enforcement-posture-report.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/memory-benchmark-integration.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/decision-receipt.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/resource-exchange-receipt.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/contextual-recall-admission.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/approval-evidence.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/approval-verification-result.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/maintenance-run-evidence.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/conditional-memory-influence.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/gauntlet-system-adapter.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/gauntlet-profile-requirements.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/policy-projection-compatibility.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/mcp-interaction-evidence.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/temporal-signer-trust.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/calibration-results.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/temporal-external-witness.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/a2a-collaboration-evidence.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/api-result-envelope.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/api-target-envelope.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/same-harness-lane.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/memory-benchmark-run.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/api-execution-observation.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/runtime-baseline-declaration.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/framework-lifecycle-event.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/deletion-completeness-chain.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/temporal-commitment.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/uor-content-reference.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/benchmark-deficit-ledger.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/temporal-currentness-evaluation.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/mem0-comparator-report.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/boundary-crossing-receipt.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/benchmark-ui-catalog.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/memory-audit-event.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/agent-manifest-memory-correlation.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/security-evidence-depth-report.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/temporal-transparency-receipt.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/isolation-domain-constraints.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/precedent-candidate-retrieval.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/write-readable-visibility.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/decision-composition-receipt.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/conformance-report.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/reusable-grant-revocation.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/component-capability-profile.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/derivation-evidence.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/external-evidence-normalized.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/portable-governance-evidence.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/provider-probes.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/memory-unit.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/api-recall-context.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/trace-action-evidence-bundle.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/reusable-grant.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/precedent-applicability-result.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/reusable-grant-evaluation.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/execution-witness.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/benchmark-security-report.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/telemetry-projection.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/temporal-signer-attestation.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/pama-decision.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/api-action-envelope.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/runtime-trace-correlation.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/_schemas/reusable-grant-proposal.schema.json -> build/bdist.linux-x86_64/wheel/./agentmem_ref/_schemas
+copying build/lib/agentmem_ref/console.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/typed_proposition.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/autonomous_maintenance_harness.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/substrate.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/evidence_sufficiency.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+creating build/bdist.linux-x86_64/wheel/agentmem_ref/api
+copying build/lib/agentmem_ref/api/contract.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/api
+copying build/lib/agentmem_ref/api/__init__.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/api
+copying build/lib/agentmem_ref/api/surface.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/api
+copying build/lib/agentmem_ref/security_evidence_depth.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/systems_characterization.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/projection_governance.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/temporal_transparency.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/write_claims.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/framework_lifecycle.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/cross_fact_currentness.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/mem0_comparator.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/scope_governance.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/verification.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/evolveai_profile.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/domain_schema_mutation.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/checkpoint_transactions.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/maintenance_run_state.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/sqlite_runtime.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/doctor.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/decision_overwrite.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/runtime_config.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/structural_mutation.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/conditional_memory_influence.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/governance_projection.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/auxiliary_checkpoint.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/semantic_readmission_adapter.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/codegenome_scope_residue.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/component_fallback.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/derivation_currentness.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/a2a_collaboration.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/resource_provider_substitution.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/unsafe_composition_depth.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/security_finding_harness.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/failure_memory.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/temporal_trust.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/long_horizon_dataset.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/authority_laundering_depth.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/policy.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/maintenance_run_rules.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/composition.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/sqlite_substrate.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/temporal_commitment.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/vector_retrieval.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/_paths.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/operational_memory_benchmark.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/maf_lifecycle_comparator.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/code_graph_qualification.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/fixture_conformance.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/precedent_applicability.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/retrieval_quality_benchmark.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/hindsight_qualification.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/dashclaw_governed_commit.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/action_authority.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/concurrency_evidence.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/enforcement_composition.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/enforcement_evidence.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/pending_verification.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/deletion_completeness.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/residue.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/trace_action_evidence.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+creating build/bdist.linux-x86_64/wheel/agentmem_ref/state
+copying build/lib/agentmem_ref/state/visibility.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/state
+copying build/lib/agentmem_ref/state/__init__.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/state
+copying build/lib/agentmem_ref/state/projections.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/state
+copying build/lib/agentmem_ref/state/substrate.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/state
+copying build/lib/agentmem_ref/state/sqlite_substrate.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/state
+copying build/lib/agentmem_ref/state/residue.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/state
+copying build/lib/agentmem_ref/state/graphiti_driver.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/state
+copying build/lib/agentmem_ref/surface.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/cedar_policy_comparator.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/readmission.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/procedural_memory.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/interchange_propagation.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/logical_state_algebra_pressure.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/visibility_characterization.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/qualification.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/recall_control.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/__main__.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/metabolism.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/temporal_order_constraints.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/portable_evidence.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+creating build/bdist.linux-x86_64/wheel/agentmem_ref/contracts
+copying build/lib/agentmem_ref/contracts/resource_exchange.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/contracts
+copying build/lib/agentmem_ref/contracts/cognitive_classification.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/contracts
+copying build/lib/agentmem_ref/contracts/memos_qualification.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/contracts
+copying build/lib/agentmem_ref/contracts/__init__.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/contracts
+copying build/lib/agentmem_ref/contracts/evolveai_profile.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/contracts
+copying build/lib/agentmem_ref/contracts/component_fallback.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/contracts
+copying build/lib/agentmem_ref/contracts/resource_provider_substitution.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/contracts
+copying build/lib/agentmem_ref/contracts/hindsight_qualification.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/contracts
+copying build/lib/agentmem_ref/contracts/qualification.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/contracts
+copying build/lib/agentmem_ref/contracts/component_failure_probe.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/contracts
+copying build/lib/agentmem_ref/contracts/capabilities.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/contracts
+copying build/lib/agentmem_ref/adapter.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/ranking_policy.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/interchange.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/restart_runtime.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/configured_restart.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/dashclaw_external_verdict.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/architecture_family_evidence.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/agent_manifest_external_evidence.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/codegenome_profile.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+creating build/bdist.linux-x86_64/wheel/agentmem_ref/core
+copying build/lib/agentmem_ref/core/contextual_recall.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/core
+copying build/lib/agentmem_ref/core/evidence_qualification.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/core
+copying build/lib/agentmem_ref/core/receipts.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/core
+copying build/lib/agentmem_ref/core/__init__.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/core
+copying build/lib/agentmem_ref/core/resumption.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/core
+copying build/lib/agentmem_ref/core/verification.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/core
+copying build/lib/agentmem_ref/core/governance_projection.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/core
+copying build/lib/agentmem_ref/core/policy.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/core
+copying build/lib/agentmem_ref/core/pending_verification.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/core
+copying build/lib/agentmem_ref/core/readmission.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/core
+copying build/lib/agentmem_ref/core/portable_evidence.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/core
+copying build/lib/agentmem_ref/representation_onnx.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/uor_content_reference.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/component_failure_probe.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/cmcp_external_evidence.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/shared_revocation.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/latent_predictive_state_harness.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/external_evidence.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/long_horizon_benchmark.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/dashclaw_authority.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/derivation_currentness_harness.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/capabilities.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/derivation_currentness_depth.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/telemetry_retention.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+creating build/bdist.linux-x86_64/wheel/agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/derivation_evidence.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/security_finding.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/maintenance_run_bindings.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/agent_manifest_correlation.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/runtime_trace_correlation.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/approval_evidence.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/telemetry.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/cognitive_mesh.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/reusable_grants.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/maintenance_run.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/policy_projection_compatibility.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/predictive_memory.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/crossing.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/epistemic_memory.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/__init__.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/evolveai_cognitive_mesh.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/checkpoint_migration.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/structural_pama.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/mcp_interaction.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/precedent_candidate_retrieval.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/temporal_transparency.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/framework_lifecycle.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/domain_schema_mutation.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/maintenance_run_state.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/decision_overwrite.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/structural_mutation.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/conditional_memory_influence.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/derivation_currentness.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/a2a_collaboration.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/failure_memory.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/temporal_trust.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/maintenance_run_rules.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/temporal_commitment.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/precedent_applicability.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/dashclaw_governed_commit.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/action_authority.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/enforcement_composition.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/enforcement_evidence.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/deletion_completeness.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/trace_action_evidence.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/procedural_memory.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/interchange_propagation.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/metabolism.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/interchange.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/dashclaw_external_verdict.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/agent_manifest_external_evidence.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/uor_content_reference.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/cmcp_external_evidence.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/external_evidence.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/dashclaw_authority.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/telemetry_retention.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/memory/failure_checkpoint.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref/memory
+copying build/lib/agentmem_ref/failure_checkpoint.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+copying build/lib/agentmem_ref/graphiti_driver.py -> build/bdist.linux-x86_64/wheel/./agentmem_ref
+running install_egg_info
+Copying reference/agent_memory_reference.egg-info to build/bdist.linux-x86_64/wheel/./agent_memory_reference-0.2.0-py3.13.egg-info
+running install_scripts
+creating build/bdist.linux-x86_64/wheel/agent_memory_reference-0.2.0.dist-info/WHEEL
+creating '/tmp/claude-0/-home-user-agent-memory/52bb9ff5-5273-5d50-a739-f16662c77034/scratchpad/install/dist/.tmp-ehrirlew/agent_memory_reference-0.2.0-py3-none-any.whl' and adding 'build/bdist.linux-x86_64/wheel' to it
+adding 'agent_memory_reference-0.2.0.dist-info/licenses/LICENSE'
+adding 'agent_memory_reference-0.2.0.dist-info/licenses/NOTICE'
+adding 'agentmem_ref/__init__.py'
+adding 'agentmem_ref/__main__.py'
+adding 'agentmem_ref/_paths.py'
+adding 'agentmem_ref/a2a_collaboration.py'
+adding 'agentmem_ref/action_authority.py'
+adding 'agentmem_ref/adapter.py'
+adding 'agentmem_ref/agent_manifest_correlation.py'
+adding 'agentmem_ref/agent_manifest_external_evidence.py'
+adding 'agentmem_ref/approval_evidence.py'
+adding 'agentmem_ref/architecture_family_closeout.py'
+adding 'agentmem_ref/architecture_family_evidence.py'
+adding 'agentmem_ref/authority_laundering_depth.py'
+adding 'agentmem_ref/authority_laundering_harness.py'
+adding 'agentmem_ref/autonomous_maintenance_harness.py'
+adding 'agentmem_ref/auxiliary_checkpoint.py'
+adding 'agentmem_ref/benchmark_security.py'
+adding 'agentmem_ref/capabilities.py'
+adding 'agentmem_ref/cedar_policy_comparator.py'
+adding 'agentmem_ref/checkpoint_behavior_harness.py'
+adding 'agentmem_ref/checkpoint_migration.py'
+adding 'agentmem_ref/checkpoint_transactions.py'
+adding 'agentmem_ref/cli.py'
+adding 'agentmem_ref/cmcp_external_evidence.py'
+adding 'agentmem_ref/code_graph_qualification.py'
+adding 'agentmem_ref/codegenome_cognitive_mesh.py'
+adding 'agentmem_ref/codegenome_profile.py'
+adding 'agentmem_ref/codegenome_scope_residue.py'
+adding 'agentmem_ref/cognitive_classification.py'
+adding 'agentmem_ref/cognitive_mesh.py'
+adding 'agentmem_ref/component_failure_probe.py'
+adding 'agentmem_ref/component_fallback.py'
+adding 'agentmem_ref/composition.py'
+adding 'agentmem_ref/concurrency_evidence.py'
+adding 'agentmem_ref/conditional_memory_harness.py'
+adding 'agentmem_ref/conditional_memory_influence.py'
+adding 'agentmem_ref/configured_restart.py'
+adding 'agentmem_ref/console.py'
+adding 'agentmem_ref/contextual_recall.py'
+adding 'agentmem_ref/contextual_recall_adapter.py'
+adding 'agentmem_ref/contract.py'
+adding 'agentmem_ref/cross_fact_currentness.py'
+adding 'agentmem_ref/crossing.py'
+adding 'agentmem_ref/dashclaw_authority.py'
+adding 'agentmem_ref/dashclaw_external_verdict.py'
+adding 'agentmem_ref/dashclaw_governed_commit.py'
+adding 'agentmem_ref/decision_overwrite.py'
+adding 'agentmem_ref/deletion_completeness.py'
+adding 'agentmem_ref/derivation_currentness.py'
+adding 'agentmem_ref/derivation_currentness_depth.py'
+adding 'agentmem_ref/derivation_currentness_harness.py'
+adding 'agentmem_ref/derivation_evidence.py'
+adding 'agentmem_ref/discovery.py'
+adding 'agentmem_ref/doctor.py'
+adding 'agentmem_ref/domain_schema_discovery_harness.py'
+adding 'agentmem_ref/domain_schema_mutation.py'
+adding 'agentmem_ref/enforcement_composition.py'
+adding 'agentmem_ref/enforcement_evidence.py'
+adding 'agentmem_ref/epistemic_memory.py'
+adding 'agentmem_ref/evidence_qualification.py'
+adding 'agentmem_ref/evidence_sufficiency.py'
+adding 'agentmem_ref/evolveai_cognitive_mesh.py'
+adding 'agentmem_ref/evolveai_profile.py'
+adding 'agentmem_ref/external_evidence.py'
+adding 'agentmem_ref/failure_checkpoint.py'
+adding 'agentmem_ref/failure_memory.py'
+adding 'agentmem_ref/fixture_conformance.py'
+adding 'agentmem_ref/forbidden_hits.py'
+adding 'agentmem_ref/framework_lifecycle.py'
+adding 'agentmem_ref/governance_projection.py'
+adding 'agentmem_ref/governed_transition_witness.py'
+adding 'agentmem_ref/graphiti_driver.py'
+adding 'agentmem_ref/hindsight_qualification.py'
+adding 'agentmem_ref/interchange.py'
+adding 'agentmem_ref/interchange_propagation.py'
+adding 'agentmem_ref/langgraph_lifecycle_comparator.py'
+adding 'agentmem_ref/latent_predictive_state_harness.py'
+adding 'agentmem_ref/locomo_evidence_benchmark.py'
+adding 'agentmem_ref/logical_state_algebra_pressure.py'
+adding 'agentmem_ref/long_horizon_benchmark.py'
+adding 'agentmem_ref/long_horizon_dataset.py'
+adding 'agentmem_ref/maf_lifecycle_comparator.py'
+adding 'agentmem_ref/maintenance_run.py'
+adding 'agentmem_ref/maintenance_run_bindings.py'
+adding 'agentmem_ref/maintenance_run_rules.py'
+adding 'agentmem_ref/maintenance_run_state.py'
+adding 'agentmem_ref/mcp_interaction.py'
+adding 'agentmem_ref/mem0_comparator.py'
+adding 'agentmem_ref/memos_qualification.py'
+adding 'agentmem_ref/metabolism.py'
+adding 'agentmem_ref/opa_policy_comparator.py'
+adding 'agentmem_ref/operational_memory_benchmark.py'
+adding 'agentmem_ref/pending_verification.py'
+adding 'agentmem_ref/policy.py'
+adding 'agentmem_ref/policy_projection_compatibility.py'
+adding 'agentmem_ref/portable_evidence.py'
+adding 'agentmem_ref/precedent_applicability.py'
+adding 'agentmem_ref/precedent_candidate_harness.py'
+adding 'agentmem_ref/precedent_candidate_retrieval.py'
+adding 'agentmem_ref/predictive_memory.py'
+adding 'agentmem_ref/procedural_memory.py'
+adding 'agentmem_ref/projection_governance.py'
+adding 'agentmem_ref/projections.py'
+adding 'agentmem_ref/proposition_extraction.py'
+adding 'agentmem_ref/proposition_semantics.py'
+adding 'agentmem_ref/qualification.py'
+adding 'agentmem_ref/query_driven_recall.py'
+adding 'agentmem_ref/ranking_policy.py'
+adding 'agentmem_ref/readmission.py'
+adding 'agentmem_ref/recall_control.py'
+adding 'agentmem_ref/recall_observation_receipt.py'
+adding 'agentmem_ref/receipts.py'
+adding 'agentmem_ref/representation_cache.py'
+adding 'agentmem_ref/representation_onnx.py'
+adding 'agentmem_ref/residue.py'
+adding 'agentmem_ref/resource_exchange.py'
+adding 'agentmem_ref/resource_provider_substitution.py'
+adding 'agentmem_ref/restart_runtime.py'
+adding 'agentmem_ref/resumption.py'
+adding 'agentmem_ref/retrieval_quality_benchmark.py'
+adding 'agentmem_ref/reusable_grant_harness.py'
+adding 'agentmem_ref/reusable_grants.py'
+adding 'agentmem_ref/runtime_behavior.py'
+adding 'agentmem_ref/runtime_composition.py'
+adding 'agentmem_ref/runtime_config.py'
+adding 'agentmem_ref/runtime_trace_correlation.py'
+adding 'agentmem_ref/scope_governance.py'
+adding 'agentmem_ref/security_evidence_depth.py'
+adding 'agentmem_ref/security_finding.py'
+adding 'agentmem_ref/security_finding_depth.py'
+adding 'agentmem_ref/security_finding_harness.py'
+adding 'agentmem_ref/semantic_readmission_adapter.py'
+adding 'agentmem_ref/shared_revocation.py'
+adding 'agentmem_ref/sleeper_poisoning_depth.py'
+adding 'agentmem_ref/sleeper_poisoning_harness.py'
+adding 'agentmem_ref/sqlite_composition.py'
+adding 'agentmem_ref/sqlite_runtime.py'
+adding 'agentmem_ref/sqlite_substrate.py'
+adding 'agentmem_ref/structural_mutation.py'
+adding 'agentmem_ref/structural_pama.py'
+adding 'agentmem_ref/substrate.py'
+adding 'agentmem_ref/surface.py'
+adding 'agentmem_ref/systems_characterization.py'
+adding 'agentmem_ref/telemetry.py'
+adding 'agentmem_ref/telemetry_retention.py'
+adding 'agentmem_ref/temporal_commitment.py'
+adding 'agentmem_ref/temporal_intent.py'
+adding 'agentmem_ref/temporal_order_constraints.py'
+adding 'agentmem_ref/temporal_transparency.py'
+adding 'agentmem_ref/temporal_trust.py'
+adding 'agentmem_ref/trace_action_evidence.py'
+adding 'agentmem_ref/typed_proposition.py'
+adding 'agentmem_ref/unsafe_composition_depth.py'
+adding 'agentmem_ref/unsafe_composition_harness.py'
+adding 'agentmem_ref/uor_content_reference.py'
+adding 'agentmem_ref/vector_retrieval.py'
+adding 'agentmem_ref/verification.py'
+adding 'agentmem_ref/visibility.py'
+adding 'agentmem_ref/visibility_characterization.py'
+adding 'agentmem_ref/write_claims.py'
+adding 'agentmem_ref/_profiles/rc1-local.json'
+adding 'agentmem_ref/_schemas/a2a-collaboration-evidence.schema.json'
+adding 'agentmem_ref/_schemas/agent-manifest-memory-correlation.schema.json'
+adding 'agentmem_ref/_schemas/api-action-envelope.schema.json'
+adding 'agentmem_ref/_schemas/api-execution-observation.schema.json'
+adding 'agentmem_ref/_schemas/api-posture-report.schema.json'
+adding 'agentmem_ref/_schemas/api-proposal-envelope.schema.json'
+adding 'agentmem_ref/_schemas/api-recall-context.schema.json'
+adding 'agentmem_ref/_schemas/api-result-envelope.schema.json'
+adding 'agentmem_ref/_schemas/api-target-envelope.schema.json'
+adding 'agentmem_ref/_schemas/approval-evidence.schema.json'
+adding 'agentmem_ref/_schemas/approval-verification-result.schema.json'
+adding 'agentmem_ref/_schemas/benchmark-deficit-ledger.schema.json'
+adding 'agentmem_ref/_schemas/benchmark-security-report.schema.json'
+adding 'agentmem_ref/_schemas/benchmark-ui-catalog.schema.json'
+adding 'agentmem_ref/_schemas/boundary-crossing-receipt.schema.json'
+adding 'agentmem_ref/_schemas/calibration-results.schema.json'
+adding 'agentmem_ref/_schemas/component-capability-profile.schema.json'
+adding 'agentmem_ref/_schemas/component-capability-qualification.schema.json'
+adding 'agentmem_ref/_schemas/concurrency-evidence.schema.json'
+adding 'agentmem_ref/_schemas/conditional-memory-influence.schema.json'
+adding 'agentmem_ref/_schemas/conformance-report.schema.json'
+adding 'agentmem_ref/_schemas/contextual-recall-admission.schema.json'
+adding 'agentmem_ref/_schemas/decision-composition-receipt.schema.json'
+adding 'agentmem_ref/_schemas/decision-receipt.schema.json'
+adding 'agentmem_ref/_schemas/deletion-completeness-chain.schema.json'
+adding 'agentmem_ref/_schemas/derivation-currentness-evaluation.schema.json'
+adding 'agentmem_ref/_schemas/derivation-evidence.schema.json'
+adding 'agentmem_ref/_schemas/enforcement-posture-report.schema.json'
+adding 'agentmem_ref/_schemas/execution-witness.schema.json'
+adding 'agentmem_ref/_schemas/external-enforcement-decision-projection.schema.json'
+adding 'agentmem_ref/_schemas/external-evidence-normalized.schema.json'
+adding 'agentmem_ref/_schemas/external-policy-decision.schema.json'
+adding 'agentmem_ref/_schemas/framework-lifecycle-event.schema.json'
+adding 'agentmem_ref/_schemas/gauntlet-operation-envelope.schema.json'
+adding 'agentmem_ref/_schemas/gauntlet-profile-requirements.schema.json'
+adding 'agentmem_ref/_schemas/gauntlet-system-adapter.schema.json'
+adding 'agentmem_ref/_schemas/governance-context-projection.schema.json'
+adding 'agentmem_ref/_schemas/isolation-domain-constraints.schema.json'
+adding 'agentmem_ref/_schemas/maintenance-run-evidence.schema.json'
+adding 'agentmem_ref/_schemas/mcp-interaction-evidence.schema.json'
+adding 'agentmem_ref/_schemas/mem0-comparator-report.schema.json'
+adding 'agentmem_ref/_schemas/memory-audit-event.schema.json'
+adding 'agentmem_ref/_schemas/memory-benchmark-integration.schema.json'
+adding 'agentmem_ref/_schemas/memory-benchmark-run.schema.json'
+adding 'agentmem_ref/_schemas/memory-unit.schema.json'
+adding 'agentmem_ref/_schemas/pama-decision.schema.json'
+adding 'agentmem_ref/_schemas/policy-projection-compatibility.schema.json'
+adding 'agentmem_ref/_schemas/portable-governance-evidence.schema.json'
+adding 'agentmem_ref/_schemas/precedent-applicability-result.schema.json'
+adding 'agentmem_ref/_schemas/precedent-candidate-retrieval.schema.json'
+adding 'agentmem_ref/_schemas/provider-probes.schema.json'
+adding 'agentmem_ref/_schemas/resource-exchange-receipt.schema.json'
+adding 'agentmem_ref/_schemas/reusable-grant-evaluation.schema.json'
+adding 'agentmem_ref/_schemas/reusable-grant-proposal.schema.json'
+adding 'agentmem_ref/_schemas/reusable-grant-revocation.schema.json'
+adding 'agentmem_ref/_schemas/reusable-grant.schema.json'
+adding 'agentmem_ref/_schemas/runtime-baseline-declaration.schema.json'
+adding 'agentmem_ref/_schemas/runtime-configuration.schema.json'
+adding 'agentmem_ref/_schemas/runtime-trace-correlation.schema.json'
+adding 'agentmem_ref/_schemas/same-harness-lane.schema.json'
+adding 'agentmem_ref/_schemas/security-evidence-depth-report.schema.json'
+adding 'agentmem_ref/_schemas/security-finding-evidence.schema.json'
+adding 'agentmem_ref/_schemas/source-record.schema.json'
+adding 'agentmem_ref/_schemas/structural-mutation-impact.schema.json'
+adding 'agentmem_ref/_schemas/telemetry-projection.schema.json'
+adding 'agentmem_ref/_schemas/temporal-commitment.schema.json'
+adding 'agentmem_ref/_schemas/temporal-currentness-evaluation.schema.json'
+adding 'agentmem_ref/_schemas/temporal-external-witness.schema.json'
+adding 'agentmem_ref/_schemas/temporal-signer-attestation.schema.json'
+adding 'agentmem_ref/_schemas/temporal-signer-trust.schema.json'
+adding 'agentmem_ref/_schemas/temporal-transparency-receipt.schema.json'
+adding 'agentmem_ref/_schemas/trace-action-evidence-bundle.schema.json'
+adding 'agentmem_ref/_schemas/uor-content-reference.schema.json'
+adding 'agentmem_ref/_schemas/write-readable-visibility.schema.json'
+adding 'agentmem_ref/api/__init__.py'
+adding 'agentmem_ref/api/contract.py'
+adding 'agentmem_ref/api/surface.py'
+adding 'agentmem_ref/contracts/__init__.py'
+adding 'agentmem_ref/contracts/capabilities.py'
+adding 'agentmem_ref/contracts/cognitive_classification.py'
+adding 'agentmem_ref/contracts/component_failure_probe.py'
+adding 'agentmem_ref/contracts/component_fallback.py'
+adding 'agentmem_ref/contracts/evolveai_profile.py'
+adding 'agentmem_ref/contracts/hindsight_qualification.py'
+adding 'agentmem_ref/contracts/memos_qualification.py'
+adding 'agentmem_ref/contracts/qualification.py'
+adding 'agentmem_ref/contracts/resource_exchange.py'
+adding 'agentmem_ref/contracts/resource_provider_substitution.py'
+adding 'agentmem_ref/core/__init__.py'
+adding 'agentmem_ref/core/contextual_recall.py'
+adding 'agentmem_ref/core/evidence_qualification.py'
+adding 'agentmem_ref/core/governance_projection.py'
+adding 'agentmem_ref/core/pending_verification.py'
+adding 'agentmem_ref/core/policy.py'
+adding 'agentmem_ref/core/portable_evidence.py'
+adding 'agentmem_ref/core/readmission.py'
+adding 'agentmem_ref/core/receipts.py'
+adding 'agentmem_ref/core/resumption.py'
+adding 'agentmem_ref/core/verification.py'
+adding 'agentmem_ref/crg/__init__.py'
+adding 'agentmem_ref/crg/code_graph_qualification.py'
+adding 'agentmem_ref/crg/codegenome_cognitive_mesh.py'
+adding 'agentmem_ref/crg/codegenome_profile.py'
+adding 'agentmem_ref/crg/codegenome_scope_residue.py'
+adding 'agentmem_ref/evaluation/__init__.py'
+adding 'agentmem_ref/evaluation/benchmark_golden_keyed_retrieval.py'
+adding 'agentmem_ref/evaluation/benchmark_integration.py'
+adding 'agentmem_ref/evaluation/cli.py'
+adding 'agentmem_ref/evaluation/contract.py'
+adding 'agentmem_ref/evaluation/failure_recall_shadow.py'
+adding 'agentmem_ref/evaluation/gauntlet_agent_memory.py'
+adding 'agentmem_ref/evaluation/gauntlet_agent_memory_durability.py'
+adding 'agentmem_ref/evaluation/gauntlet_baselines.py'
+adding 'agentmem_ref/evaluation/gauntlet_cli.py'
+adding 'agentmem_ref/evaluation/gauntlet_contract.py'
+adding 'agentmem_ref/evaluation/gauntlet_durability.py'
+adding 'agentmem_ref/evaluation/gauntlet_durability_fixtures.py'
+adding 'agentmem_ref/evaluation/gauntlet_governance.py'
+adding 'agentmem_ref/evaluation/gauntlet_orchestrator.py'
+adding 'agentmem_ref/evaluation/gauntlet_probe.py'
+adding 'agentmem_ref/evaluation/gauntlet_profiles.py'
+adding 'agentmem_ref/evaluation/gauntlet_transport.py'
+adding 'agentmem_ref/evaluation/identity_link_checkpoint.py'
+adding 'agentmem_ref/evaluation/identity_link_journal.py'
+adding 'agentmem_ref/evaluation/normalize.py'
+adding 'agentmem_ref/evaluation/property_registry.py'
+adding 'agentmem_ref/evaluation/proposition_link_preflight.py'
+adding 'agentmem_ref/evaluation/registry.py'
+adding 'agentmem_ref/evaluation/same_harness_lane.py'
+adding 'agentmem_ref/evaluation/scorecard.py'
+adding 'agentmem_ref/evaluation/temporal_currentness.py'
+adding 'agentmem_ref/evaluation/ui_catalog.py'
+adding 'agentmem_ref/evaluation/integrations/agent-memory-agentmembench-memdialogue-operational-v1.json'
+adding 'agentmem_ref/evaluation/integrations/agent-memory-agentmembench-mesa-formal-v1.json'
+adding 'agentmem_ref/evaluation/integrations/agent-memory-longmemeval-retrieval-currentness-v1.json'
+adding 'agentmem_ref/evaluation/integrations/amb-precisionmembench-retrieval-v1.json'
+adding 'agentmem_ref/evaluation/integrations/golden-keyed-retrieval-v1.json'
+adding 'agentmem_ref/evaluation/integrations/swe-context-bench-lite-external-retrieval-v1.json'
+adding 'agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v1.json'
+adding 'agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v2.json'
+adding 'agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v3.json'
+adding 'agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v4.json'
+adding 'agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v5.json'
+adding 'agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v6.json'
+adding 'agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v7.json'
+adding 'agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v1.json'
+adding 'agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v2.json'
+adding 'agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v3.json'
+adding 'agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v4.json'
+adding 'agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v5.json'
+adding 'agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v6.json'
+adding 'agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v7.json'
+adding 'agentmem_ref/harness/__init__.py'
+adding 'agentmem_ref/harness/architecture_family_closeout.py'
+adding 'agentmem_ref/harness/architecture_family_evidence.py'
+adding 'agentmem_ref/harness/authority_laundering_depth.py'
+adding 'agentmem_ref/harness/authority_laundering_harness.py'
+adding 'agentmem_ref/harness/autonomous_maintenance_harness.py'
+adding 'agentmem_ref/harness/benchmark_security.py'
+adding 'agentmem_ref/harness/cedar_policy_comparator.py'
+adding 'agentmem_ref/harness/checkpoint_behavior_harness.py'
+adding 'agentmem_ref/harness/concurrency_evidence.py'
+adding 'agentmem_ref/harness/conditional_memory_harness.py'
+adding 'agentmem_ref/harness/derivation_currentness_depth.py'
+adding 'agentmem_ref/harness/derivation_currentness_harness.py'
+adding 'agentmem_ref/harness/domain_schema_discovery_harness.py'
+adding 'agentmem_ref/harness/fixture_conformance.py'
+adding 'agentmem_ref/harness/forbidden_hits.py'
+adding 'agentmem_ref/harness/langgraph_lifecycle_comparator.py'
+adding 'agentmem_ref/harness/latent_predictive_state_harness.py'
+adding 'agentmem_ref/harness/locomo_evidence_benchmark.py'
+adding 'agentmem_ref/harness/logical_state_algebra_pressure.py'
+adding 'agentmem_ref/harness/long_horizon_benchmark.py'
+adding 'agentmem_ref/harness/long_horizon_dataset.py'
+adding 'agentmem_ref/harness/maf_lifecycle_comparator.py'
+adding 'agentmem_ref/harness/mem0_comparator.py'
+adding 'agentmem_ref/harness/opa_policy_comparator.py'
+adding 'agentmem_ref/harness/operational_memory_benchmark.py'
+adding 'agentmem_ref/harness/precedent_candidate_harness.py'
+adding 'agentmem_ref/harness/retrieval_quality_benchmark.py'
+adding 'agentmem_ref/harness/reusable_grant_harness.py'
+adding 'agentmem_ref/harness/security_evidence_depth.py'
+adding 'agentmem_ref/harness/security_finding_depth.py'
+adding 'agentmem_ref/harness/security_finding_harness.py'
+adding 'agentmem_ref/harness/sleeper_poisoning_depth.py'
+adding 'agentmem_ref/harness/sleeper_poisoning_harness.py'
+adding 'agentmem_ref/harness/systems_characterization.py'
+adding 'agentmem_ref/harness/unsafe_composition_depth.py'
+adding 'agentmem_ref/harness/unsafe_composition_harness.py'
+adding 'agentmem_ref/harness/visibility_characterization.py'
+adding 'agentmem_ref/memory/__init__.py'
+adding 'agentmem_ref/memory/a2a_collaboration.py'
+adding 'agentmem_ref/memory/action_authority.py'
+adding 'agentmem_ref/memory/agent_manifest_correlation.py'
+adding 'agentmem_ref/memory/agent_manifest_external_evidence.py'
+adding 'agentmem_ref/memory/approval_evidence.py'
+adding 'agentmem_ref/memory/checkpoint_migration.py'
+adding 'agentmem_ref/memory/cmcp_external_evidence.py'
+adding 'agentmem_ref/memory/cognitive_mesh.py'
+adding 'agentmem_ref/memory/conditional_memory_influence.py'
+adding 'agentmem_ref/memory/crossing.py'
+adding 'agentmem_ref/memory/dashclaw_authority.py'
+adding 'agentmem_ref/memory/dashclaw_external_verdict.py'
+adding 'agentmem_ref/memory/dashclaw_governed_commit.py'
+adding 'agentmem_ref/memory/decision_overwrite.py'
+adding 'agentmem_ref/memory/deletion_completeness.py'
+adding 'agentmem_ref/memory/derivation_currentness.py'
+adding 'agentmem_ref/memory/derivation_evidence.py'
+adding 'agentmem_ref/memory/domain_schema_mutation.py'
+adding 'agentmem_ref/memory/enforcement_composition.py'
+adding 'agentmem_ref/memory/enforcement_evidence.py'
+adding 'agentmem_ref/memory/epistemic_memory.py'
+adding 'agentmem_ref/memory/evolveai_cognitive_mesh.py'
+adding 'agentmem_ref/memory/external_evidence.py'
+adding 'agentmem_ref/memory/failure_checkpoint.py'
+adding 'agentmem_ref/memory/failure_memory.py'
+adding 'agentmem_ref/memory/framework_lifecycle.py'
+adding 'agentmem_ref/memory/interchange.py'
+adding 'agentmem_ref/memory/interchange_propagation.py'
+adding 'agentmem_ref/memory/maintenance_run.py'
+adding 'agentmem_ref/memory/maintenance_run_bindings.py'
+adding 'agentmem_ref/memory/maintenance_run_rules.py'
+adding 'agentmem_ref/memory/maintenance_run_state.py'
+adding 'agentmem_ref/memory/mcp_interaction.py'
+adding 'agentmem_ref/memory/metabolism.py'
+adding 'agentmem_ref/memory/policy_projection_compatibility.py'
+adding 'agentmem_ref/memory/precedent_applicability.py'
+adding 'agentmem_ref/memory/precedent_candidate_retrieval.py'
+adding 'agentmem_ref/memory/predictive_memory.py'
+adding 'agentmem_ref/memory/procedural_memory.py'
+adding 'agentmem_ref/memory/reusable_grants.py'
+adding 'agentmem_ref/memory/runtime_trace_correlation.py'
+adding 'agentmem_ref/memory/security_finding.py'
+adding 'agentmem_ref/memory/structural_mutation.py'
+adding 'agentmem_ref/memory/structural_pama.py'
+adding 'agentmem_ref/memory/telemetry.py'
+adding 'agentmem_ref/memory/telemetry_retention.py'
+adding 'agentmem_ref/memory/temporal_commitment.py'
+adding 'agentmem_ref/memory/temporal_transparency.py'
+adding 'agentmem_ref/memory/temporal_trust.py'
+adding 'agentmem_ref/memory/trace_action_evidence.py'
+adding 'agentmem_ref/memory/uor_content_reference.py'
+adding 'agentmem_ref/runtime/__init__.py'
+adding 'agentmem_ref/runtime/adapter.py'
+adding 'agentmem_ref/runtime/auxiliary_checkpoint.py'
+adding 'agentmem_ref/runtime/checkpoint_transactions.py'
+adding 'agentmem_ref/runtime/cli.py'
+adding 'agentmem_ref/runtime/composition.py'
+adding 'agentmem_ref/runtime/configured_restart.py'
+adding 'agentmem_ref/runtime/contextual_recall_adapter.py'
+adding 'agentmem_ref/runtime/cross_fact_currentness.py'
+adding 'agentmem_ref/runtime/discovery.py'
+adding 'agentmem_ref/runtime/doctor.py'
+adding 'agentmem_ref/runtime/evidence_sufficiency.py'
+adding 'agentmem_ref/runtime/governed_transition_witness.py'
+adding 'agentmem_ref/runtime/projection_governance.py'
+adding 'agentmem_ref/runtime/proposition_extraction.py'
+adding 'agentmem_ref/runtime/proposition_semantics.py'
+adding 'agentmem_ref/runtime/query_driven_recall.py'
+adding 'agentmem_ref/runtime/ranking_policy.py'
+adding 'agentmem_ref/runtime/recall_control.py'
+adding 'agentmem_ref/runtime/recall_observation_receipt.py'
+adding 'agentmem_ref/runtime/representation_cache.py'
+adding 'agentmem_ref/runtime/representation_onnx.py'
+adding 'agentmem_ref/runtime/restart_runtime.py'
+adding 'agentmem_ref/runtime/runtime_behavior.py'
+adding 'agentmem_ref/runtime/runtime_composition.py'
+adding 'agentmem_ref/runtime/runtime_config.py'
+adding 'agentmem_ref/runtime/scope_governance.py'
+adding 'agentmem_ref/runtime/semantic_readmission_adapter.py'
+adding 'agentmem_ref/runtime/shared_revocation.py'
+adding 'agentmem_ref/runtime/sqlite_composition.py'
+adding 'agentmem_ref/runtime/sqlite_runtime.py'
+adding 'agentmem_ref/runtime/temporal_intent.py'
+adding 'agentmem_ref/runtime/temporal_order_constraints.py'
+adding 'agentmem_ref/runtime/typed_proposition.py'
+adding 'agentmem_ref/runtime/vector_retrieval.py'
+adding 'agentmem_ref/runtime/write_claims.py'
+adding 'agentmem_ref/state/__init__.py'
+adding 'agentmem_ref/state/graphiti_driver.py'
+adding 'agentmem_ref/state/projections.py'
+adding 'agentmem_ref/state/residue.py'
+adding 'agentmem_ref/state/sqlite_substrate.py'
+adding 'agentmem_ref/state/substrate.py'
+adding 'agentmem_ref/state/visibility.py'
+adding 'agent_memory_reference-0.2.0.dist-info/METADATA'
+adding 'agent_memory_reference-0.2.0.dist-info/WHEEL'
+adding 'agent_memory_reference-0.2.0.dist-info/entry_points.txt'
+adding 'agent_memory_reference-0.2.0.dist-info/top_level.txt'
+adding 'agent_memory_reference-0.2.0.dist-info/RECORD'
+removing build/bdist.linux-x86_64/wheel
+WARNING `project.license` as a TOML table is deprecated
+!!
+
+        ********************************************************************************
+        Please use a simple string containing a SPDX expression for `project.license`. You can also use `project.license-files`. (Both options available on setuptools>=77.0.0).
+
+        By 2027-Feb-18, you need to update your project and remove deprecated calls
+        or your builds will no longer be supported.
+
+        See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
+        ********************************************************************************
+
+!!
+WARNING Package 'agentmem_ref._schemas' is absent from the `packages` configuration.
+!!
+
+        ********************************************************************************
+        ############################
+        # Package would be ignored #
+        ############################
+        Python recognizes 'agentmem_ref._schemas' as an importable package[^1],
+        but it is absent from setuptools' `packages` configuration.
+
+        This leads to an ambiguous overall configuration. If you want to distribute this
+        package, please make sure that 'agentmem_ref._schemas' is explicitly added
+        to the `packages` configuration field.
+
+        Alternatively, you can also rely on setuptools' discovery methods
+        (for example by using `find_namespace_packages(...)`/`find_namespace:`
+        instead of `find_packages(...)`/`find:`).
+
+        You can read more about "package discovery" on setuptools documentation page:
+
+        - https://setuptools.pypa.io/en/latest/userguide/package_discovery.html
+
+        If you don't want 'agentmem_ref._schemas' to be distributed and are
+        already explicitly excluding 'agentmem_ref._schemas' via
+        `find_namespace_packages(...)/find_namespace` or `find_packages(...)/find`,
+        you can try to use `exclude_package_data`, or `include-package-data=False` in
+        combination with a more fine grained `package-data` configuration.
+
+        You can read more about "package data files" on setuptools documentation page:
+
+        - https://setuptools.pypa.io/en/latest/userguide/datafiles.html
+
+
+        [^1]: For Python, any directory (with suitable naming) can be imported,
+              even if it does not contain any `.py` files.
+              On the other hand, currently there is no concept of package data
+              directory, all directories are treated like packages.
+        ********************************************************************************
+
+!!
+Successfully built agent_memory_reference-0.2.0.tar.gz and agent_memory_reference-0.2.0-py3-none-any.whl

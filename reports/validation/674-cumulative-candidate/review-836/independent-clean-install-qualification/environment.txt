@@ -1,0 +1,57 @@
+head: 3df781c2efbfd122b8dc29f37b09efa8037f1dd3 (PR #836 branch claude/cool-meitner-0q368g, verified unchanged at execution)
+protected tree reference/agentmem_ref: f9b5ff9e79a54ef053ce89eb975256b63e211714
+declaration blob: 7de94f11d7d521f07d2fe22317662ac6f92f89fa
+build: python3 -m build (build 1.6.1, setuptools in isolated env per pyproject >=69), clean full-history worktree, no editable install, tree clean after build
+platform: Linux 6.18.44-fc-v139 x86_64
+pythons: 3.13.16 (/usr/bin/python3.13, wheel and sdist), 3.12.3 (wheel), 3.11.17 (wheel)
+venvs: python -m venv, pip upgraded; dependencies resolved from PyPI via the environment proxy
+-- venv-wheel:
+   agent-memory-reference    0.2.0
+   attrs                     26.1.0
+   cffi                      2.1.1
+   cryptography              50.0.2
+   jsonschema                4.26.0
+   jsonschema-specifications 2025.9.1
+   pip                       26.2.2
+   pycparser                 3.11
+   referencing               0.37.0
+   rfc8785                   0.1.4
+   rpds-py                   2026.9.1
+-- venv-sdist:
+   agent-memory-reference    0.2.0
+   attrs                     26.1.0
+   cffi                      2.1.1
+   cryptography              50.0.2
+   jsonschema                4.26.0
+   jsonschema-specifications 2025.9.1
+   pip                       26.2.2
+   pycparser                 3.11
+   referencing               0.37.0
+   rfc8785                   0.1.4
+   rpds-py                   2026.9.1
+-- venv-wheel-py3.11:
+   agent-memory-reference    0.2.0
+   attrs                     26.1.0
+   cffi                      2.1.1
+   cryptography              50.0.2
+   jsonschema                4.26.0
+   jsonschema-specifications 2025.9.1
+   pip                       26.2.2
+   pycparser                 3.11
+   referencing               0.37.0
+   rfc8785                   0.1.4
+   rpds-py                   2026.9.1
+   setuptools                79.0.1
+-- venv-wheel-py3.12:
+   agent-memory-reference    0.2.0
+   attrs                     26.1.0
+   cffi                      2.1.1
+   cryptography              50.0.2
+   jsonschema                4.26.0
+   jsonschema-specifications 2025.9.1
+   pip                       26.2.2
+   pycparser                 3.11
+   referencing               0.37.0
+   rfc8785                   0.1.4
+   rpds-py                   2026.9.1
+import identity: agentmem_ref.__file__ under each venv's site-packages; direct_url.json archive_info (not editable); cwd /tmp; PYTHONPATH unset; scripts run with python -I

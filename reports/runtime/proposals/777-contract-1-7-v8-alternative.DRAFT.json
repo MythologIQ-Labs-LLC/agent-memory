@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "baseline_id": "agent-memory-runtime-baseline-v8",
+  "predecessor_baseline_id": "agent-memory-runtime-baseline-v7",
+  "issue": 777,
+  "declared_changes": [
+    {
+      "path": "reference/agentmem_ref/api/contract.py",
+      "blob": "6345ecf151a156ff203ae19a6d973464da36f272"
+    },
+    {
+      "path": "reference/agentmem_ref/api/surface.py",
+      "blob": "7efa416077af6428599be68b6b8d6ceea32487ad"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/adapter.py",
+      "blob": "2ba953cf0c7522d9cc7091df29390ae24c0dc672"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/recall_control.py",
+      "blob": "c049d23f178f5ea6d12dcec8cd02c47e704fcef9"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/restart_runtime.py",
+      "blob": "a79b7d10cdea9298244829ef7bd42f61490c4eba"
+    }
+  ],
+  "identity_deltas": [
+    {
+      "identity_path": "identity.public_contract_version",
+      "from": "1.6.0",
+      "to": "1.7.0"
+    }
+  ],
+  "pyproject_change": null,
+  "acceptance_evidence_required": [
+    {
+      "kind": "public_gauntlet",
+      "ref": "gauntlet-orchestration-retrieval-probe-v1"
+    },
+    {
+      "kind": "replay",
+      "ref": "public-redaction-v1-7-0-api-compatibility-and-audit-boundary-v1"
+    },
+    {
+      "kind": "replay",
+      "ref": "deleted-lineage-transitive-cache-and-recreation-security-v1"
+    },
+    {
+      "kind": "lane",
+      "ref": "amb-precisionmembench-retrieval-v8"
+    },
+    {
+      "kind": "lane",
+      "ref": "longmemeval-s-retrieval-parity-v8"
+    },
+    {
+      "kind": "replay",
+      "ref": "subject-domain-historical-currentness-noninterference-v1"
+    }
+  ]
+}

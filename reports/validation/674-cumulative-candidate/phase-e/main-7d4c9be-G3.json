@@ -1,0 +1,27 @@
+{
+  "label": "main-7d4c9be",
+  "reference": "/home/user/wt-main/reference",
+  "scenarios": {
+    "G": {
+      "facade_remember_ms": {
+        "p50": 5.88,
+        "p95": 8.25
+      },
+      "facade_recall_ms": {
+        "p50": 61.76,
+        "p95": 92.37,
+        "mean_admitted": 393,
+        "queries": 200,
+        "corpus": 1500
+      },
+      "high_degree_graph_recall_ms": {
+        "p50": 1.64,
+        "p95": 2.01,
+        "hub_degree": 400,
+        "graph_route_count": 8,
+        "foreign_in_candidates": 0,
+        "alpha_admitted": 4
+      }
+    }
+  }
+}

@@ -230,6 +230,55 @@ class QueryDrivenRecallTests(unittest.TestCase):
         self.assertIn(related.fact_uuid, result.admitted)
         self.assertIn(SHARED_EVIDENCE_ROUTE, result.routes_executed)
 
+    def test_foreign_explicit_seed_does_not_expand_or_boost_visible_neighbor(self) -> None:
+        foreign = self._retain(
+            "memory:foreign-seed", "restricted beta plan",
+            evidence_refs=("session:cross-project",), project_ref="project-beta",
+        )
+        visible = self._retain(
+            "memory:alpha-neighbor", "visible alpha summary",
+            evidence_refs=("session:cross-project",),
+        )
+        planner = DeterministicQueryDrivenRecallPlanner(
+            self.runtime.adapter, config=QueryDrivenRecallConfig(lexical_anchor_limit=0),
+        )
+        result = planner.recall(
+            "visible", _context(), logical_memory_refs=("memory:foreign-seed",),
+        )
+        self.assertIn(visible.fact_uuid, result.admitted)
+        self.assertNotIn(foreign.fact_uuid, result.candidates)
+        self.assertFalse(any(
+            hit.route_id == SHARED_EVIDENCE_ROUTE
+            for hit in result.provenance_for(visible.fact_uuid)
+        ))
+
+    def test_foreign_neighbor_is_prefiltered_but_valid_neighbor_still_expands(self) -> None:
+        seed = self._retain(
+            "memory:seed", "pottery lesson begins",
+            evidence_refs=("session:cross-project",),
+        )
+        foreign = self._retain(
+            "memory:foreign-neighbor", "restricted beta memo",
+            evidence_refs=("session:cross-project",), project_ref="project-beta",
+        )
+        allowed = self._retain(
+            "memory:allowed-neighbor", "indirect answer text",
+            evidence_refs=("session:cross-project",),
+        )
+        planner = DeterministicQueryDrivenRecallPlanner(
+            self.runtime.adapter, config=QueryDrivenRecallConfig(lexical_anchor_limit=0),
+        )
+        result = planner.recall(
+            "unrelatedword", _context(), logical_memory_refs=("memory:seed",),
+        )
+        self.assertIn(seed.fact_uuid, result.admitted)
+        self.assertIn(allowed.fact_uuid, result.admitted)
+        self.assertNotIn(foreign.fact_uuid, result.candidates)
+        self.assertIn(
+            SHARED_EVIDENCE_ROUTE,
+            {hit.route_id for hit in result.provenance_for(allowed.fact_uuid)},
+        )
+
     def test_default_runtime_behavior_remains_unexpanded_without_explicit_seed(self) -> None:
         self._retain(
             "memory:seed",

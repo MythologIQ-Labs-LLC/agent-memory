@@ -1,0 +1,170 @@
+# Preregistration baseline: the #809 expectations executed ONCE on the unmodified integration candidate
+# tree: 28f257c9cba5b1e1b683e5a6246f12bf075a5162 (protected blobs: 59e8f97cb9de3dfc92f583616b79b2ee54c6fa4d pyproject.toml, 17b1ba101932f3c9cc6e03008e42541e5f2f050e reference/agentmem_ref)
+# working tree at run time (test and record files only, no runtime file touched):
+#    M reference/tests/test_786_cross_scope_write_authority.py
+#    M reports/validation/786-security-replays-v3/README.md
+#    M reports/validation/805-at-head/independent-replay-review-v3-preexecution.md
+#   ?? reference/tests/test_809_evidence_reference_authorization.py
+#   ?? reports/validation/805-at-head/independent-replay-review-v3-erratum.md
+#   ?? reports/validation/809-at-head/
+# command: python3 -m pytest reference/tests/test_809_evidence_reference_authorization.py 'reference/tests/test_786_cross_scope_write_authority.py::EvidenceReferenceOracle' -q -p no:cacheprovider --tb=line
+F....FFF...FFFFFF..F           [100%]
+=================================== FAILURES ===================================
+E   AssertionError: 'memory.dispute' not found in ['memory.propose', 'memory.authorize', 'memory.commit', 'memory.receipt', 'memory.propose', 'memory.authorize'] : deleted
+/usr/lib/python3.13/unittest/case.py:732: AssertionError: 'memory.dispute' not found in ['memory.propose', 'memory.authorize', 'memory.commit', 'memory.receipt', 'memory.propose', 'memory.authorize'] : deleted
+E   AssertionError: 0 != 1 : ('deleted', [])
+/usr/lib/python3.13/unittest/case.py:900: AssertionError: 0 != 1 : ('deleted', [])
+E   AssertionError: '{"ad[2417 chars]"}, "ref-X": {"admission_basis": {"admission_m[5703 chars]ll"}' != '{"ad[2417 chars]"}, "<self>": {"admission_basis": {"admission_[6111 chars]ll"}'
+    Diff is 16763 characters long. Set self.maxDiff to None to see it. : recall
+/usr/lib/python3.13/unittest/case.py:732: AssertionError: '{"ad[2417 chars]"}, "ref-X": {"admission_basis": {"admission_m[5703 chars]ll"}' != '{"ad[2417 chars]"}, "<self>": {"admission_basis": {"admission_[6111 chars]ll"}'
+E   AssertionError: '{"co[82 chars]id": null, "events": [], "state_version": 0, "[166 chars]ry"}' != '{"co[82 chars]id": "<self>", "events": [{"component": "gover[1337 chars]ry"}'
+    Diff is 1782 characters long. Set self.maxDiff to None to see it. : history
+/usr/lib/python3.13/unittest/case.py:732: AssertionError: '{"co[82 chars]id": null, "events": [], "state_version": 0, "[166 chars]ry"}' != '{"co[82 chars]id": "<self>", "events": [{"component": "gover[1337 chars]ry"}'
+E   AssertionError: 'null' != '{"authority_effect": "none", "cardinality[403 chars]e"}}'
+    - null
+    + {"authority_effect": "none", "cardinality": {"basis": "none", "class": "<label>"}, "classifier": {"version": "1.0.0"}, "clause_count": 0, "ended_values": [], "interpreter": {"ref": "agent-memory-deterministic-write-semantics", "version": "1.1.0"}, "markers": {}, "proposal_ineligible_reasons": ["proposition_<label>"], "proposition": {"basis": "none", "status": "<label>"}, "relation_count": 0, "relations": [], "self_validity": {"status": "none"}}
+     : write_semantics
+/usr/lib/python3.13/unittest/case.py:732: AssertionError: 'null' != '{"authority_effect": "none", "cardinality[403 chars]e"}}'
+E   AssertionError: 0 != 1 : ('deleted', [])
+/usr/lib/python3.13/unittest/case.py:900: AssertionError: 0 != 1 : ('deleted', [])
+E   AssertionError: '{"ad[2417 chars]"}, "ref-X": {"admission_basis": {"admission_m[5703 chars]ll"}' != '{"ad[2417 chars]"}, "<self>": {"admission_basis": {"admission_[6111 chars]ll"}'
+    Diff is 16763 characters long. Set self.maxDiff to None to see it. : recall
+/usr/lib/python3.13/unittest/case.py:732: AssertionError: '{"ad[2417 chars]"}, "ref-X": {"admission_basis": {"admission_m[5703 chars]ll"}' != '{"ad[2417 chars]"}, "<self>": {"admission_basis": {"admission_[6111 chars]ll"}'
+E   AssertionError: '{"co[82 chars]id": null, "events": [], "state_version": 0, "[166 chars]ry"}' != '{"co[82 chars]id": "<self>", "events": [{"component": "gover[1337 chars]ry"}'
+    Diff is 1782 characters long. Set self.maxDiff to None to see it. : history
+/usr/lib/python3.13/unittest/case.py:732: AssertionError: '{"co[82 chars]id": null, "events": [], "state_version": 0, "[166 chars]ry"}' != '{"co[82 chars]id": "<self>", "events": [{"component": "gover[1337 chars]ry"}'
+E   AssertionError: 'null' != '{"authority_effect": "none", "cardinality[403 chars]e"}}'
+    - null
+    + {"authority_effect": "none", "cardinality": {"basis": "none", "class": "<label>"}, "classifier": {"version": "1.0.0"}, "clause_count": 0, "ended_values": [], "interpreter": {"ref": "agent-memory-deterministic-write-semantics", "version": "1.1.0"}, "markers": {}, "proposal_ineligible_reasons": ["proposition_<label>"], "proposition": {"basis": "none", "status": "<label>"}, "relation_count": 0, "relations": [], "self_validity": {"status": "none"}}
+     : write_semantics
+/usr/lib/python3.13/unittest/case.py:732: AssertionError: 'null' != '{"authority_effect": "none", "cardinality[403 chars]e"}}'
+E   AssertionError: 0 != 1 : ('deleted', [])
+/usr/lib/python3.13/unittest/case.py:900: AssertionError: 0 != 1 : ('deleted', [])
+E   AssertionError: '{"ad[2417 chars]"}, "ref-X": {"admission_basis": {"admission_m[5703 chars]ll"}' != '{"ad[2417 chars]"}, "<self>": {"admission_basis": {"admission_[6111 chars]ll"}'
+    Diff is 16763 characters long. Set self.maxDiff to None to see it. : recall
+/usr/lib/python3.13/unittest/case.py:732: AssertionError: '{"ad[2417 chars]"}, "ref-X": {"admission_basis": {"admission_m[5703 chars]ll"}' != '{"ad[2417 chars]"}, "<self>": {"admission_basis": {"admission_[6111 chars]ll"}'
+E   AssertionError: '{"co[82 chars]id": null, "events": [], "state_version": 0, "[166 chars]ry"}' != '{"co[82 chars]id": "<self>", "events": [{"component": "gover[1337 chars]ry"}'
+    Diff is 1782 characters long. Set self.maxDiff to None to see it. : history
+/usr/lib/python3.13/unittest/case.py:732: AssertionError: '{"co[82 chars]id": null, "events": [], "state_version": 0, "[166 chars]ry"}' != '{"co[82 chars]id": "<self>", "events": [{"component": "gover[1337 chars]ry"}'
+E   AssertionError: 'null' != '{"authority_effect": "none", "cardinality[403 chars]e"}}'
+    - null
+    + {"authority_effect": "none", "cardinality": {"basis": "none", "class": "<label>"}, "classifier": {"version": "1.0.0"}, "clause_count": 0, "ended_values": [], "interpreter": {"ref": "agent-memory-deterministic-write-semantics", "version": "1.1.0"}, "markers": {}, "proposal_ineligible_reasons": ["proposition_<label>"], "proposition": {"basis": "none", "status": "<label>"}, "relation_count": 0, "relations": [], "self_validity": {"status": "none"}}
+     : write_semantics
+/usr/lib/python3.13/unittest/case.py:732: AssertionError: 'null' != '{"authority_effect": "none", "cardinality[403 chars]e"}}'
+E   AssertionError: 0 != 1 : ('deleted', [])
+/usr/lib/python3.13/unittest/case.py:900: AssertionError: 0 != 1 : ('deleted', [])
+E   AssertionError: '{"ad[2417 chars]"}, "ref-X": {"admission_basis": {"admission_m[5703 chars]ll"}' != '{"ad[2417 chars]"}, "<self>": {"admission_basis": {"admission_[6111 chars]ll"}'
+    Diff is 16763 characters long. Set self.maxDiff to None to see it. : recall
+/usr/lib/python3.13/unittest/case.py:732: AssertionError: '{"ad[2417 chars]"}, "ref-X": {"admission_basis": {"admission_m[5703 chars]ll"}' != '{"ad[2417 chars]"}, "<self>": {"admission_basis": {"admission_[6111 chars]ll"}'
+E   AssertionError: '{"co[82 chars]id": null, "events": [], "state_version": 0, "[166 chars]ry"}' != '{"co[82 chars]id": "<self>", "events": [{"component": "gover[1337 chars]ry"}'
+    Diff is 1782 characters long. Set self.maxDiff to None to see it. : history
+/usr/lib/python3.13/unittest/case.py:732: AssertionError: '{"co[82 chars]id": null, "events": [], "state_version": 0, "[166 chars]ry"}' != '{"co[82 chars]id": "<self>", "events": [{"component": "gover[1337 chars]ry"}'
+E   AssertionError: 'null' != '{"authority_effect": "none", "cardinality[403 chars]e"}}'
+    - null
+    + {"authority_effect": "none", "cardinality": {"basis": "none", "class": "<label>"}, "classifier": {"version": "1.0.0"}, "clause_count": 0, "ended_values": [], "interpreter": {"ref": "agent-memory-deterministic-write-semantics", "version": "1.1.0"}, "markers": {}, "proposal_ineligible_reasons": ["proposition_<label>"], "proposition": {"basis": "none", "status": "<label>"}, "relation_count": 0, "relations": [], "self_validity": {"status": "none"}}
+     : write_semantics
+/usr/lib/python3.13/unittest/case.py:732: AssertionError: 'null' != '{"authority_effect": "none", "cardinality[403 chars]e"}}'
+E   AssertionError: {'admitted': 0, 'events': [], 'write_semantics': False} != {'admitted': 1, 'events': ['memory.propose', 'memory.a[66 chars]True}
+    - {'admitted': 0, 'events': [], 'write_semantics': False}
+    + {'admitted': 1,
+    +  'events': ['memory.propose',
+    +             'memory.authorize',
+    +             'memory.commit',
+    +             'memory.receipt'],
+    +  'write_semantics': True} : deleted
+/usr/lib/python3.13/unittest/case.py:732: AssertionError: {'admitted': 0, 'events': [], 'write_semantics': False} != {'admitted': 1, 'events': ['memory.propose', 'memory.a[66 chars]True}
+E   AssertionError: Tuples differ: (1, 0) != (1, 1)
+    
+    First differing element 1:
+    0
+    1
+    
+    - (1, 0)
+    ?     ^
+    
+    + (1, 1)
+    ?     ^
+/usr/lib/python3.13/unittest/case.py:732: AssertionError: Tuples differ: (1, 0) != (1, 1)
+E   AssertionError: Tuples differ: (1, 0) != (1, 1)
+    
+    First differing element 1:
+    0
+    1
+    
+    - (1, 0)
+    ?     ^
+    
+    + (1, 1)
+    ?     ^
+/usr/lib/python3.13/unittest/case.py:732: AssertionError: Tuples differ: (1, 0) != (1, 1)
+E   AssertionError: Tuples differ: (0, 1) != (1, 1)
+    
+    First differing element 0:
+    0
+    1
+    
+    - (0, 1)
+    ?  ^
+    
+    + (1, 1)
+    ?  ^
+/usr/lib/python3.13/unittest/case.py:732: AssertionError: Tuples differ: (0, 1) != (1, 1)
+E   AssertionError: Lists differ: [0, 0, 0] != [1, 1, 1]
+    
+    First differing element 0:
+    0
+    1
+    
+    - [0, 0, 0]
+    + [1, 1, 1]
+/usr/lib/python3.13/unittest/case.py:732: AssertionError: Lists differ: [0, 0, 0] != [1, 1, 1]
+E   AssertionError: 0 != 1
+/usr/lib/python3.13/unittest/case.py:900: AssertionError: 0 != 1
+E   AssertionError: False is not true : a reference that named no fact at commit never binds
+/usr/lib/python3.13/unittest/case.py:744: AssertionError: False is not true : a reference that named no fact at commit never binds
+E   AssertionError: unexpectedly None : the adapter records a canonical derivation set distinct from episode_uuids
+/usr/lib/python3.13/unittest/case.py:732: AssertionError: unexpectedly None : the adapter records a canonical derivation set distinct from episode_uuids
+E   AssertionError: 'derived_from_tombstoned_source' is not None
+/usr/lib/python3.13/unittest/case.py:732: AssertionError: 'derived_from_tombstoned_source' is not None
+E   AssertionError: 'derived_from_tombstoned_source' is not None
+/usr/lib/python3.13/unittest/case.py:732: AssertionError: 'derived_from_tombstoned_source' is not None
+E   AssertionError: 'derived_from_tombstoned_source' is not None
+/usr/lib/python3.13/unittest/case.py:732: AssertionError: 'derived_from_tombstoned_source' is not None
+E   AssertionError: 'derived_from_tombstoned_source' is not None
+/usr/lib/python3.13/unittest/case.py:732: AssertionError: 'derived_from_tombstoned_source' is not None
+Unexpected success
+----------------------------- Captured stdout call -----------------------------
+uu
+/usr/local/lib/python3.13/dist-packages/_pytest/unittest.py:368: Failed: Unexpected success
+=========================== short test summary info ============================
+FAILED reference/tests/test_809_evidence_reference_authorization.py::FourReferencesIndistinguishable::test_a_dispute_citing_a_foreign_deleted_reference_is_indistinguishable_in_the_citers_history
+SUBFAILED(label='deleted', permanent=False) reference/tests/test_809_evidence_reference_authorization.py::FourReferencesIndistinguishable::test_after_pruning_and_after_attested_permanent_deletion
+SUBFAILED(channel='recall', permanent=False) reference/tests/test_809_evidence_reference_authorization.py::FourReferencesIndistinguishable::test_after_pruning_and_after_attested_permanent_deletion
+SUBFAILED(channel='history', permanent=False) reference/tests/test_809_evidence_reference_authorization.py::FourReferencesIndistinguishable::test_after_pruning_and_after_attested_permanent_deletion
+SUBFAILED(channel='write_semantics', permanent=False) reference/tests/test_809_evidence_reference_authorization.py::FourReferencesIndistinguishable::test_after_pruning_and_after_attested_permanent_deletion
+SUBFAILED(label='deleted', permanent=True) reference/tests/test_809_evidence_reference_authorization.py::FourReferencesIndistinguishable::test_after_pruning_and_after_attested_permanent_deletion
+SUBFAILED(channel='recall', permanent=True) reference/tests/test_809_evidence_reference_authorization.py::FourReferencesIndistinguishable::test_after_pruning_and_after_attested_permanent_deletion
+SUBFAILED(channel='history', permanent=True) reference/tests/test_809_evidence_reference_authorization.py::FourReferencesIndistinguishable::test_after_pruning_and_after_attested_permanent_deletion
+SUBFAILED(channel='write_semantics', permanent=True) reference/tests/test_809_evidence_reference_authorization.py::FourReferencesIndistinguishable::test_after_pruning_and_after_attested_permanent_deletion
+SUBFAILED(label='deleted', permanent=False) reference/tests/test_809_evidence_reference_authorization.py::FourReferencesIndistinguishable::test_the_same_after_an_in_process_reopen
+SUBFAILED(channel='recall', permanent=False) reference/tests/test_809_evidence_reference_authorization.py::FourReferencesIndistinguishable::test_the_same_after_an_in_process_reopen
+SUBFAILED(channel='history', permanent=False) reference/tests/test_809_evidence_reference_authorization.py::FourReferencesIndistinguishable::test_the_same_after_an_in_process_reopen
+SUBFAILED(channel='write_semantics', permanent=False) reference/tests/test_809_evidence_reference_authorization.py::FourReferencesIndistinguishable::test_the_same_after_an_in_process_reopen
+SUBFAILED(label='deleted', permanent=True) reference/tests/test_809_evidence_reference_authorization.py::FourReferencesIndistinguishable::test_the_same_after_an_in_process_reopen
+SUBFAILED(channel='recall', permanent=True) reference/tests/test_809_evidence_reference_authorization.py::FourReferencesIndistinguishable::test_the_same_after_an_in_process_reopen
+SUBFAILED(channel='history', permanent=True) reference/tests/test_809_evidence_reference_authorization.py::FourReferencesIndistinguishable::test_the_same_after_an_in_process_reopen
+SUBFAILED(channel='write_semantics', permanent=True) reference/tests/test_809_evidence_reference_authorization.py::FourReferencesIndistinguishable::test_the_same_after_an_in_process_reopen
+SUBFAILED(label='deleted') reference/tests/test_809_evidence_reference_authorization.py::FourReferencesIndistinguishable::test_the_same_in_a_genuine_process_restart
+SUBFAILED(permanent=False) reference/tests/test_809_evidence_reference_authorization.py::CanaryAndReCreation::test_a_canary_citing_a_live_foreign_fact_does_not_vanish_when_that_fact_is_deleted
+SUBFAILED(permanent=True) reference/tests/test_809_evidence_reference_authorization.py::CanaryAndReCreation::test_a_canary_citing_a_live_foreign_fact_does_not_vanish_when_that_fact_is_deleted
+FAILED reference/tests/test_809_evidence_reference_authorization.py::CanaryAndReCreation::test_the_citing_scope_may_re_create_the_deleted_id_and_its_own_derivations_follow_its_own_deletions
+FAILED reference/tests/test_809_evidence_reference_authorization.py::CrossScopeChains::test_a_chain_rooted_in_a_foreign_deleted_reference_is_not_tainted
+FAILED reference/tests/test_809_evidence_reference_authorization.py::CrossScopeChains::test_a_purged_foreign_identifier_binds_nothing
+FAILED reference/tests/test_809_evidence_reference_authorization.py::LateBinding::test_a_reference_that_names_no_fact_at_commit_never_binds_later
+FAILED reference/tests/test_809_evidence_reference_authorization.py::RecordedDerivation::test_the_canonical_derivation_is_recorded_apart_from_the_caller_supplied_evidence
+FAILED reference/tests/test_809_evidence_reference_authorization.py::SharedDomainAndRestrictions::test_a_foreign_unknown_reference_binds_nothing_at_the_adapter
+FAILED reference/tests/test_809_evidence_reference_authorization.py::SharedDomainAndRestrictions::test_a_member_binds_a_stranger_does_not
+FAILED reference/tests/test_809_evidence_reference_authorization.py::SharedDomainAndRestrictions::test_membership_granted_later_gives_no_retroactive_binding
+FAILED reference/tests/test_809_evidence_reference_authorization.py::SharedDomainAndRestrictions::test_project_and_task_restrictions_decide_what_binds
+FAILED reference/tests/test_786_cross_scope_write_authority.py::EvidenceReferenceOracle::test_fr3_2_citing_a_deleted_foreign_uuid_is_observable_to_the_citer
+30 failed, 9 passed, 23 subtests passed in 5.09s

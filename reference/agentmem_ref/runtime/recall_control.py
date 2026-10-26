@@ -12,15 +12,31 @@ weights, and relation density remain non-authoritative candidate evidence.
 from __future__ import annotations
 
 from collections import deque
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 import math
 import re
-from typing import Protocol
+from typing import Callable, Protocol
 
+from . import typed_proposition as typed
+from .evidence_sufficiency import (
+    CoverageNeed,
+    CoverageObservation,
+    RouteWorkObservation,
+    SufficiencyObservation,
+    SufficiencyReport,
+    assess_sufficiency,
+    TYPED_OBSERVATION,
+    TypedValueClaim,
+)
 from .adapter import RecallContext, eligible_search
 from .contextual_recall_adapter import admission_mode_for_intent, admit_preselected_candidates
 from .temporal_intent import resolve_intent
 from .temporal_order_constraints import ExplicitCurrentCrossFactRankingPolicy
+from .recall_observation_receipt import (
+    RecallObservationReceipt,
+    RouteObservation,
+    capture_recall_observation,
+)
 from .restart_runtime import RuntimeRecoveryError
 from .runtime_composition import (
     EXACT_IDENTITY_ROUTE,
@@ -32,6 +48,7 @@ from .runtime_composition import (
 from .vector_retrieval import NativeVectorCandidateRetriever, SEMANTIC_VECTOR_ROUTE
 from ..state.substrate import (
     EvidenceNeighborTemporalGraphPort,
+    Fact,
     TypedRelation,
     TypedRelationTemporalGraphPort,
 )
@@ -44,6 +61,8 @@ GRAPH_OUTGOING = "outgoing"
 GRAPH_INCOMING = "incoming"
 GRAPH_BOTH = "both"
 MAX_GRAPH_SEED_REFS = 16
+# Per expanded node, at most max_fanout * this many eligibility/fact probes.
+MAX_GRAPH_ELIGIBILITY_PROBE_FACTOR = 16
 
 # Pre-existing route precedence of the controlled planner, now declared rather than implicit.
 CONTROLLED_RECALL_RANKING_POLICY = ExplicitCurrentCrossFactRankingPolicy(
@@ -150,9 +169,10 @@ class GraphCandidateHit:
 class NativeTypedGraphCandidateRetriever:
     """Bounded deterministic traversal over Agent Memory canonical relations.
 
-    Relation group filtering is applied during expansion as containment and work
-    control. Fact-level scope, isolation, currentness, dispute, and tombstone
-    checks remain at governed recall admission.
+    Relation group filtering bounds an unqualified raw traversal. A governed
+    caller must additionally supply both identity and fact eligibility checks,
+    including every intermediate hop; final admission still controls
+    currentness, dispute, tombstone, and all consequential use.
     """
 
     def __init__(self, spec: GraphTraversalSpec | None = None) -> None:
@@ -168,7 +188,22 @@ class NativeTypedGraphCandidateRetriever:
         *,
         group_id: str,
         candidate_limit: int,
+        eligible: Callable[[Fact], bool] | None = None,
+        eligible_identity: Callable[[str, str], bool] | None = None,
+        exclude=None,
+        opaque=None,
     ) -> list[GraphCandidateHit]:
+        """Bounded traversal from eligible seeds through eligible nodes only.
+
+        ``eligible`` / ``eligible_identity`` (#835): the governed caller's fact and
+        identity eligibility predicates, applied to every seed and every hop, so an
+        ineligible node is neither reported nor traversed through.
+        ``exclude`` (#777): nodes that may neither be reported nor traversed through
+        (a deleted generation confers no reachability); it covers the seeds too (#836 A).
+        ``opaque`` (#836 B): nodes that may be reported as a candidate (admission then
+        refuses them and records why) but confer no reachability: a seed that is opaque
+        is not expanded and an opaque hop is never continued through.
+        """
         if candidate_limit < 0:
             raise ValueError("graph candidate_limit must be non-negative")
         if candidate_limit == 0 or not seed_refs:
@@ -178,15 +213,33 @@ class NativeTypedGraphCandidateRetriever:
 
         best_by_candidate: dict[str, GraphCandidateHit] = {}
         for seed_ref in tuple(dict.fromkeys(seed_refs)):
-            if substrate.get_fact(seed_ref) is None:
+            if eligible_identity is not None and not eligible_identity(seed_ref, group_id):
                 continue
-            for hit in self._traverse_seed(substrate, seed_ref, group_id=group_id):
+            seed_fact = substrate.get_fact(seed_ref)
+            if seed_fact is None or (eligible is not None and not eligible(seed_fact)):
+                continue
+            if (exclude is not None and exclude(seed_ref)) or (opaque is not None and opaque(seed_ref)):
+                continue  # #836 A: a withheld seed confers no reachability either
+            for hit in self._traverse_seed(
+                substrate, seed_ref, group_id=group_id,
+                eligible=eligible, eligible_identity=eligible_identity, exclude=exclude, opaque=opaque,
+            ):
                 existing = best_by_candidate.get(hit.candidate_ref)
                 if existing is None or self._hit_key(hit) < self._hit_key(existing):
                     best_by_candidate[hit.candidate_ref] = hit
 
         ordered = sorted(best_by_candidate.values(), key=self._hit_key)
-        return ordered[:candidate_limit]
+        if opaque is None:
+            return ordered[:candidate_limit]
+        # #836 B follow-up: withheld hits never displace accessible discovery at the budget
+        # boundary. Accessible hits fill the route budget first; withheld hits are reported
+        # for the refusal audit only in the budget that remains (a route never returns more
+        # than its budget: RouteObservation).
+        accessible = [hit for hit in ordered if not opaque(hit.candidate_ref)]
+        audited = [hit for hit in ordered if opaque(hit.candidate_ref)]
+        kept = accessible[:candidate_limit]
+        kept += audited[: candidate_limit - len(kept)]
+        return sorted(kept, key=self._hit_key)
 
     def _traverse_seed(
         self,
@@ -194,6 +247,10 @@ class NativeTypedGraphCandidateRetriever:
         seed_ref: str,
         *,
         group_id: str,
+        eligible: Callable[[Fact], bool] | None = None,
+        eligible_identity: Callable[[str, str], bool] | None = None,
+        exclude=None,
+        opaque=None,
     ) -> list[GraphCandidateHit]:
         queue = deque(
             [
@@ -232,7 +289,19 @@ class NativeTypedGraphCandidateRetriever:
                 group_id=group_id,
                 relation_types=relation_filter,
             )
-            for next_ref, relation in neighbors[: self.spec.max_fanout]:
+            accepted_fanout = 0
+            eligibility_probes = 0
+            # The fanout counts usable NEW paths, not ineligible or stale
+            # edges. Cyclic, stale, weak, and non-improving edges are rejected
+            # from the already-materialized adjacency without spending the
+            # probe ceiling, so relation history cannot hide a current path.
+            # Only identity/fact checks are capped: a hub with many
+            # ineligible neighbors cannot force an unbounded check loop, at
+            # the cost of not reaching an eligible neighbor ranked behind them.
+            probe_limit = self.spec.max_fanout * MAX_GRAPH_ELIGIBILITY_PROBE_FACTOR
+            for next_ref, relation in neighbors:
+                if accepted_fanout >= self.spec.max_fanout or eligibility_probes >= probe_limit:
+                    break
                 if next_ref in path_refs:
                     continue
                 if relation.is_event_invalid or relation.is_transaction_expired:
@@ -240,11 +309,23 @@ class NativeTypedGraphCandidateRetriever:
                 next_score = path_score * relation.retrieval_weight
                 if next_score < self.spec.min_path_score:
                     continue
-                if substrate.get_fact(next_ref) is None:
-                    continue
                 prior_score = best_score_by_node.get(next_ref)
                 if prior_score is not None and next_score <= prior_score:
                     continue
+                eligibility_probes += 1
+                if eligible_identity is not None and not eligible_identity(next_ref, group_id):
+                    continue
+                next_fact = substrate.get_fact(next_ref)
+                if next_fact is None or (eligible is not None and not eligible(next_fact)):
+                    continue
+                if exclude is not None and exclude(next_ref):
+                    continue  # #777: a deleted generation confers no reachability and is never reported
+                # #836 B follow-up: a withheld neighbour is reported for the refusal audit but
+                # spends none of the discovery budget an accessible sibling needs (it already
+                # counted against the probe ceiling above, so the work stays bounded).
+                is_opaque = opaque is not None and opaque(next_ref)
+                if not is_opaque:
+                    accepted_fanout += 1
                 best_score_by_node[next_ref] = next_score
 
                 next_path = path_refs + (next_ref,)
@@ -266,6 +347,8 @@ class NativeTypedGraphCandidateRetriever:
                     hop_count=len(next_relation_ids),
                 )
                 hits.append(hit)
+                if is_opaque:
+                    continue  # #836 B: reported as a candidate, never continued through
                 queue.append(
                     (
                         next_ref,
@@ -495,6 +578,67 @@ class ControlledRecallResult:
     graph_candidate_hits: dict[str, GraphCandidateHit] = field(default_factory=dict)
     controller_calls: int = 1
     authority_effect: str = "none"
+    observation_receipt: RecallObservationReceipt | None = None
+
+    def observation_unchanged(self) -> bool:
+        """Detect result tampering; never authorize a stop or state action."""
+        receipt = self.observation_receipt
+        if type(receipt) is not RecallObservationReceipt:
+            return False
+        try:
+            return receipt.matches_mutable_result(
+                candidates=self.recall.candidates,
+                admitted=self.recall.admitted,
+                ranked=self.recall.ranked_admitted,
+                route_counts=self.route_candidate_counts,
+                routes_executed=self.recall.routes_executed,
+                query=self.recall.query,
+                plan=self.plan.to_dict(),
+                refusals=self.recall.refusals,
+                policy_version=self.recall.policy_version,
+                admission_mode=self.recall.admission_mode,
+                evaluated_at=self.recall.evaluated_at,
+            ) is True
+        except Exception:
+            # validation(644): a caller-mutated result is untrusted input. Any
+            # malformed field (missing attribute, hostile mapping) fails closed.
+            return False
+
+    def observe_evidence_sufficiency(
+        self,
+        *,
+        needs: tuple[CoverageNeed, ...] = (),
+        coverage: tuple[CoverageObservation, ...] = (),
+        contradictions: tuple[tuple[str, str], ...] = (),
+    ) -> SufficiencyReport:
+        """Diagnose already-admitted evidence without changing the recall.
+
+        Manual support metadata is unverified even when labeled typed; estimates
+        cannot count toward mechanical coverage, and this path never proposes a stop. No output can stop retrieval,
+        certify an answer, change ranking, admit a candidate, or mutate state.
+        Count-target agreement is reported separately from typed coverage.
+        """
+        executed = set(self.recall.routes_executed)
+        report = assess_sufficiency(SufficiencyObservation(
+            admitted_refs=tuple(self.recall.admitted),
+            needs=needs,
+            coverage=coverage,
+            contradictions=contradictions,
+            route_work=tuple(
+                RouteWorkObservation(
+                    route_id=budget.route_id,
+                    candidate_limit=budget.candidate_limit,
+                    returned_count=self.route_candidate_counts.get(budget.route_id, 0),
+                    executed=budget.route_id in executed,
+                )
+                for budget in self.plan.route_budgets
+            ),
+            count_target=self.plan.evidence_sufficiency_target,
+        ))
+        # Caller-supplied observations cannot authenticate their own origin.
+        # Preserve useful diagnostic counts but never even *recommend* a stop
+        # from manually asserted typed evidence.
+        return replace(report, continuation_proposal="continue_if_permitted")
 
     @property
     def ranked_admitted(self) -> list[str]:
@@ -583,9 +727,14 @@ class ControlledRecallPlanner:
         exact_budget = plan.budget_for(EXACT_IDENTITY_ROUTE)
         explicit_seeds: list[tuple[str, str]] = []
         if exact_budget.candidate_limit:
-            for logical_ref in unique_logical_refs[: exact_budget.candidate_limit]:
+            # Only eligible refs spend the quota. The scan stays linear in
+            # the refs already deduplicated above, so a fixed overscan cap
+            # would save no work while letting leading foreign refs starve it.
+            for logical_ref in unique_logical_refs:
+                if len(explicit_seeds) >= exact_budget.candidate_limit:
+                    break
                 current = self.adapter.current_fact_uuid(logical_ref)
-                if current is None:
+                if current is None or not self.adapter.domain_eligible_identity(current, tenant, context):
                     continue
                 hits.append(
                     RetrievalRouteHit(
@@ -637,18 +786,41 @@ class ControlledRecallPlanner:
         ):
             graph_seed_refs: list[str] = []
             graph_seed_limit = min(MAX_GRAPH_SEED_REFS, graph_budget.candidate_limit)
-            for logical_ref in unique_logical_refs[:graph_seed_limit]:
+            for logical_ref in unique_logical_refs:
+                if len(graph_seed_refs) >= graph_seed_limit:
+                    break
                 current = self.adapter.current_fact_uuid(logical_ref)
-                if current is not None:
+                if current is not None and self.adapter.domain_eligible_identity(current, tenant, context):
                     graph_seed_refs.append(current)
+            # #777/#836 B: a deleted generation confers no reachability. The canonical traversal
+            # may still surface a withheld node as a candidate (admission refuses it and the
+            # audit keeps the refusal, the #777 pin) but never continues through it, and never
+            # starts from one (#836 A); the REPORTED paths come from a traversal that neither
+            # reports nor passes through withheld nodes.
+            withheld = getattr(self.adapter, "public_identifier_withheld", None)
             graph_results = self.graph_retriever.search(
                 substrate,
                 tuple(graph_seed_refs),
                 group_id=tenant,
                 candidate_limit=graph_budget.candidate_limit,
+                eligible=lambda fact: self.adapter.domain_eligible(fact, context),
+                eligible_identity=lambda uuid, group_id: self.adapter.domain_eligible_identity(
+                    uuid, group_id, context,
+                ),
+                opaque=None if withheld is None else (lambda ref: withheld(ref, context)),
             )
-            for graph_hit in graph_results:
+            reported = graph_results if withheld is None else self.graph_retriever.search(
+                substrate, tuple(graph_seed_refs), group_id=tenant,
+                candidate_limit=graph_budget.candidate_limit,
+                # #835: the reported traversal is bounded by the same eligibility as the canonical one
+                eligible=lambda fact: self.adapter.domain_eligible(fact, context),
+                eligible_identity=lambda uuid, group_id: self.adapter.domain_eligible_identity(
+                    uuid, group_id, context,
+                ),
+                exclude=lambda ref: withheld(ref, context))  # #809: the reader's context
+            for graph_hit in reported:
                 graph_candidate_hits[graph_hit.candidate_ref] = graph_hit
+            for graph_hit in graph_results:
                 hits.append(
                     RetrievalRouteHit(
                         route_id=TYPED_GRAPH_ROUTE,
@@ -680,6 +852,7 @@ class ControlledRecallPlanner:
                     logical_memory_ref=logical_ref,
                     expanded_seeds=expanded_seeds,
                     candidate_limit=remaining,
+                    context=context,
                 )
                 remaining -= added
 
@@ -706,6 +879,7 @@ class ControlledRecallPlanner:
                     logical_memory_ref="",
                     expanded_seeds=expanded_seeds,
                     candidate_limit=remaining,
+                    context=context,
                 )
                 remaining -= added
             route_counts[SHARED_EVIDENCE_ROUTE] = shared_budget.candidate_limit - remaining
@@ -761,6 +935,37 @@ class ControlledRecallPlanner:
             query_temporal_intent=intent.to_dict(),
         )
         sufficient = len(ranked) >= plan.evidence_sufficiency_target
+        # Capture while route/admission membership is still planner-owned.
+        # The receipt is frozen and content-committed, NOT an attested durable
+        # state revision or a certificate of complete slot exploration.
+        receipt = capture_recall_observation(
+            query=query,
+            reader_domain_refs=tuple(context.target_domain_refs),
+            principal_ref=context.principal_ref,
+            project_ref=context.project_ref,
+            purpose=context.purpose,
+            task_ref=context.task_ref,
+            controller_ref=plan.controller_ref,
+            admission_policy=recall.policy_version,
+            admission_mode=recall.admission_mode,
+            evaluated_at=recall.evaluated_at,
+            candidates=recall.candidates,
+            admitted=recall.admitted,
+            ranked=recall.ranked_admitted,
+            route_observations=tuple(
+                RouteObservation(
+                    route_id=budget.route_id,
+                    candidate_limit=budget.candidate_limit,
+                    anchor_limit=budget.anchor_limit,
+                    returned_count=route_counts.get(budget.route_id, 0),
+                    executed=budget.candidate_limit > 0,
+                )
+                for budget in plan.route_budgets
+            ),
+            observed_route_counts=route_counts,
+            plan=plan.to_dict(),
+            refusals=recall.refusals,
+        )
         return ControlledRecallResult(
             plan=plan,
             recall=recall,
@@ -770,6 +975,139 @@ class ControlledRecallPlanner:
                 "evidence_target_met" if sufficient else "planned_routes_exhausted"
             ),
             graph_candidate_hits=graph_candidate_hits,
+            observation_receipt=receipt,
+        )
+
+    def observe_governed_transition_witnesses(
+        self, result: ControlledRecallResult, context: RecallContext,
+    ) -> tuple["GovernedTransitionWitness", ...]:
+        """Observe applied corrections without altering recall or resolving slots.
+
+        The adapter re-verifies reader scope and currently admitted source and
+        target facts, then cross-checks persisted proposals against committed
+        replacement evidence. This is no assertion of an immediate successor,
+        source independence, answer truth, or permission to stop retrieval.
+        """
+        if type(result) is not ControlledRecallResult or not isinstance(context, RecallContext):
+            raise TypeError("controlled recall result and context required")
+        lookup = getattr(self.adapter, "governed_applied_transition_witnesses", None)
+        if not callable(lookup):
+            raise RuntimeRecoveryError("governed replacement evidence reader unavailable")
+        return lookup(tuple(result.recall.admitted), context)
+
+    def observe_persisted_typed_coverage(
+        self,
+        result: ControlledRecallResult,
+        context: RecallContext,
+        *,
+        needs: tuple[CoverageNeed, ...],
+    ) -> SufficiencyReport:
+        """Read governed, persisted typed-slot support, NEVER a controller label.
+
+        Each fact is rechecked against CURRENT admission before its stored
+        semantics are consulted. A stale/as-of fact is conservatively omitted.
+        Only a validated caller-declared typed proposition with no qualifying
+        ineligibility/uncertainty flags is mechanically counted. Extracted
+        propositions, inferred lexical interpretations and controller claims
+        do not qualify. This is an inspection over read-time state, not an
+        atomic snapshot or a verification of statement truth.
+        """
+        if type(result) is not ControlledRecallResult or not isinstance(context, RecallContext):
+            raise TypeError("controlled recall result and recall context required")
+        if type(needs) is not tuple or not needs or any(type(n) is not CoverageNeed for n in needs):
+            raise ValueError("persisted coverage requires typed, non-empty needs")
+        expected: set[str] = set()
+        for need in needs:
+            key = need.key
+            # The caller may name the memory slot it needs, but may not declare
+            # which facts support it. Canonical slot identity is checked again
+            # against the actual persisted subject and attribute below.
+            if (not key.startswith("typed:") or key.count("|") != 1
+                    or any(not part for part in key[6:].split("|"))
+                    or typed.typed_slot(*key[6:].split("|")) != key):
+                raise ValueError("persisted coverage needs canonical typed slots")
+            if key in expected:
+                raise ValueError("persisted coverage needs unique slots")
+            expected.add(key)
+
+        lookup = getattr(self.adapter, "current_governed_typed_claim", None)
+        if not callable(lookup):
+            raise RuntimeRecoveryError("persisted coverage requires governed typed-slot lookup")
+        usable: list[str] = []
+        observations: list[CoverageObservation] = []
+        values: list[TypedValueClaim] = []
+        original = tuple(result.recall.admitted)
+        if len(original) != len(set(original)):
+            raise ValueError("recall contains duplicate admitted references")
+        for ref in original:
+            # The adapter alone decides current visibility and reads persisted
+            # typed evidence. The caller cannot supply or upgrade an origin.
+            current_visible, claim = lookup(ref, context)
+            slot = claim["slot"] if claim is not None else None
+            if not current_visible:
+                continue
+            usable.append(ref)
+            if slot in expected:
+                observations.append(CoverageObservation(
+                    candidate_ref=ref, need_keys=(slot,),
+                    origin=TYPED_OBSERVATION,
+                ))
+                values.append(TypedValueClaim(
+                    candidate_ref=ref,
+                    need_key=slot,
+                    value=claim["value"],
+                    cardinality=claim["cardinality"],
+                    assertion=claim["assertion"],
+                ))
+        executed = set(result.recall.routes_executed)
+        report = assess_sufficiency(SufficiencyObservation(
+            admitted_refs=tuple(usable),
+            needs=needs,
+            coverage=tuple(observations),
+            route_work=tuple(
+                RouteWorkObservation(
+                    route_id=budget.route_id,
+                    candidate_limit=budget.candidate_limit,
+                    returned_count=result.route_candidate_counts.get(budget.route_id, 0),
+                    executed=budget.route_id in executed,
+                )
+                for budget in result.plan.route_budgets
+            ),
+            count_target=result.plan.evidence_sufficiency_target,
+            typed_value_claims=tuple(values),
+        ))
+        census_reader = getattr(self.adapter, "current_typed_slot_obstacles", None)
+        if not callable(census_reader):
+            raise RuntimeRecoveryError("persisted sufficiency requires full admission-scoped slot audit")
+        obstacles = census_reader(tuple(sorted(expected)), original, context)
+        counters = tuple(
+            (slot,
+             obstacles[slot]["eligible_unretrieved"],
+             obstacles[slot]["qualified_counter_evidence"],
+             obstacles[slot]["declared_temporal_boundary"])
+            for slot in sorted(expected)
+        )
+        # A completeness verdict requires query-membership and read-revision
+        # attestation plus a policy for untyped counter-evidence. The current
+        # mutable recall result provides NEITHER. Not even a review-only stop
+        # recommendation is permitted, regardless of counted agreement.
+        if any(item[2] for item in counters):
+            diagnosis = "qualified_counter_evidence_unresolved"
+        elif any(item[1] for item in counters):
+            diagnosis = "slot_evidence_not_admitted"
+        elif any(item[3] for item in counters):
+            diagnosis = "declared_temporal_boundary_unresolved"
+        elif report.diagnosis == "mechanical_coverage_observed":
+            # validation(644): coverage read from a result whose planner receipt is
+            # missing or no longer matches is not even unattested coverage.
+            diagnosis = ("coverage_observed_unattested" if result.observation_unchanged()
+                         else "recall_observation_unverified")
+        else:
+            diagnosis = report.diagnosis
+        return replace(
+            report, diagnosis=diagnosis,
+            continuation_proposal="continue_if_permitted",
+            slot_obstacles=counters,
         )
 
     @staticmethod
@@ -787,8 +1125,8 @@ class ControlledRecallPlanner:
                 + ", ".join(sorted(unsupported))
             )
 
-    @staticmethod
     def _expand_seed(
+        self,
         substrate: EvidenceNeighborTemporalGraphPort,
         tenant: str,
         hits: list[RetrievalRouteHit],
@@ -797,11 +1135,14 @@ class ControlledRecallPlanner:
         logical_memory_ref: str,
         expanded_seeds: set[str],
         candidate_limit: int,
+        context: RecallContext,
     ) -> int:
-        if seed_ref in expanded_seeds or candidate_limit <= 0:
+        if (seed_ref in expanded_seeds or candidate_limit <= 0
+                or not self.adapter.domain_eligible_identity(seed_ref, tenant, context)):
             return 0
         seed_fact = substrate.get_fact(seed_ref)
-        if seed_fact is None or seed_fact.is_event_invalid or seed_fact.is_transaction_expired:
+        if (seed_fact is None or seed_fact.is_event_invalid or seed_fact.is_transaction_expired
+                or not self.adapter.domain_eligible(seed_fact, context)):
             return 0
         expanded_seeds.add(seed_ref)
         added = 0
@@ -809,6 +1150,8 @@ class ControlledRecallPlanner:
             seed_ref,
             group_ids=[tenant],
         ):
+            if not self.adapter.domain_eligible(fact, context):
+                continue
             if added >= candidate_limit:
                 break
             hits.append(

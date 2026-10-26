@@ -193,6 +193,8 @@ Where candidate generation itself would expose prohibited content or metadata to
 
 Where a trusted retrieval substrate may safely return cross-domain candidates for policy evaluation, discovery still grants no admission authority.
 
+**Graph/provenance seed boundary:** A retrieval route that *uses a seed memory's content, source references, or relations to discover other memories* must establish that the requester is eligible to inspect the **seed** before expanding it. Final admission of the discovered neighbor does not retroactively authorize the seed or its provenance. A wrong-project seed must not contribute a route hit, shared-source identifier, or rank boost to an otherwise visible neighbor. The same boundary applies at **every intermediate graph hop**: a multi-hop route must not reach an eligible fact by traversing an ineligible node, even if its final candidate could pass admission. The calling runtime must supply the applicable eligibility predicate to lower-level graph traversal. Direct library calls without that predicate are not governed recall. This is a candidate-generation precondition under the existing isolation contract, **not** a new PAMA permission or relaxation of the neighbor's normal admission checks.
+
 ```text
 semantic_relevance = 1.0
 same_agent = true

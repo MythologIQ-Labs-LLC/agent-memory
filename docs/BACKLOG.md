@@ -4,6 +4,19 @@ This file is the current repository-level work queue. Historical sprint plans, r
 
 The queue is kept small on purpose. Work that is blocked externally, or only interesting for later, must not pose as active implementation.
 
+## Active delivery queue (2026-10-21; live owners take precedence)
+
+The dated Phase A/Phase B sequence below preserves the program's rationale and historical owner rulings. **It is not a second release-status register.** Read live [release controller #410](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/410), the [runtime baseline register](../reports/runtime/baseline-register.json), the accepted [public API contract](44-public-api-contract.md), and exact [draft integration PR #836](https://github.com/MythologIQ-Labs-LLC/agent-memory/pull/836) before assigning implementation. The frozen v7 candidate has completed local test and benchmark execution but is still **unaccepted and unpublished**.
+
+At most three **active** engineering lanes until that acceptance decision:
+
+1. **Release convergence (#410/#674, P0):** explicit independent security findings and contract `1.8.0` ruling, a distinct distribution-version strategy, then docs/67 B1/B2 qualification and publication when authorized. Local execution alone does not authorize changing the baseline register. Do not amend the candidate protected tree or frozen lanes for cleanup.
+2. **Consumer delivery (#691, P0, isolated post-v7 tranche):** unchanged-selection, scope-admitted `recall_context()` content, writer-provenance minimization and a separately governed content-read audit. Keep it out of the frozen v7 candidate, and do not adopt its failed `lexical_content` selection experiment.
+3. **Task correctness (#819/#775/#825, P0):** improve precision, abstention and required-evidence preservation on independent holdouts, rather than training against known AMB examples. Require same-harness source-bound outcomes and no LongMemEval regression.
+
+External benchmark peer expansion (#789/#640/#818) and broad architecture work (#688/#689/#690/#636) remain in the program but are **queued/blocked**, not authorization to open unlimited concurrent implementation. Preserve existing issue ownership and use the existing [dashboard](../reports/benchmarks/dashboard/current.md) for evidence state. The number of open issues is not the active work-in-progress count.
+
+
 The previous RC1-era queue (reconciled 2026-09-23 against `3dc11b4`) is superseded by this file. Its RC1 critical path is closed: #427 (production canonical substrate) closed 2026-09-23, #440 (dependency pair re-qualification) closed 2026-09-24, and the developer facade (`AgentMemory.open/remember/recall/correct/forget/history/posture`) is shipped under public contract 1.4.0 with Runtime Baseline v2. That history stays in git and in `docs/META_LEDGER.md`.
 
 ## Program posture (owner direction 2026-10-07)
@@ -40,7 +53,7 @@ Benchmark deficits set priority and supply acceptance evidence. They do not defi
 2. After #694, most merged tranches must be runtime tranches. Proposal carried from #674: at least two runtime tranches merged for every evaluation tranche. Exact replays of frozen lanes that a runtime tranche requires count as part of that runtime tranche, not as separate evaluation tranches.
 3. A runtime tranche is product-complete only when its behaviour is reachable through `AgentMemory.open()/recall()`, or through the documented public surface it targets. A module that exists somewhere in the repository is not enough.
 
-## Phase A - external baseline (active)
+## Phase A - external baseline (historical freeze completed; comparator coverage ongoing)
 
 - [x] **#694 (P0)**: untouched formal AgentMemBench/MESA baseline. Executed 2026-10-07 (`docs/69`); M2 judged recall blocked on the judge credential, tracked separately (M1-M6 executed, or classified unsupported/blocked/not comparable), adapter frozen before any score is inspected, per-case M4 currentness failures stage-classified, results imported into the evidence model and the dashboard.
 - [ ] **#574 / #600 / #601**: one coherent cross-system comparison programme with strict evidence classes (same-harness reproduced, published external reference, Agent Memory longitudinal, adapted/diagnostic, unsupported, blocked, not run, not comparable). Unavailable evidence is never zero. Retrieval metrics and end-to-end QA are never mixed. There is no universal memory score.

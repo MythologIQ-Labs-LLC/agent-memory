@@ -1,0 +1,10 @@
+executed_at_utc=2026-10-21T17:00:04Z
+cwd=/home/user/wt-gauntlet
+HEAD=97368d6746de6402c99e4b6f1aa3c39e742ee9fa
+protected_tree=f9b5ff9e79a54ef053ce89eb975256b63e211714
+dirty_files=0
+python3=Python 3.13.16 at /usr/bin/python3.13; python=Python 3.13.16 at /usr/bin/python3.13
+PYTHONPATH=reference
+agentmem_ref_import=/home/user/wt-gauntlet/reference/agentmem_ref/__init__.py
+platform=Linux 6.18.44-fc-v139 x86_64
+EXIT=0

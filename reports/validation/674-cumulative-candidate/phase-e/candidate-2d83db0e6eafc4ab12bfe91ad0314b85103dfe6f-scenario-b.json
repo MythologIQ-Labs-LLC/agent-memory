@@ -1,0 +1,14 @@
+{
+  "label": "candidate-2d83db0e",
+  "reference": "/home/user/agent-memory/reference",
+  "scenarios": {
+    "B": {
+      "shared_domain_neighbour_via_typed_graph": true,
+      "shared_domain_neighbour_via_shared_evidence_route": true,
+      "shared_domain_neighbour_via_default_multi_route": true,
+      "beta_private_exposed_graph": false,
+      "beta_private_exposed_shared_evidence": false,
+      "beta_private_exposed_multi_route": false
+    }
+  }
+}

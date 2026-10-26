@@ -1,0 +1,7 @@
+test_opaque_node_must_not_fill_only_canonical_candidate_slot (tests.test_836_opaque_budget_noninterference.OpaqueGraphBudgetNoninterference.test_opaque_node_must_not_fill_only_canonical_candidate_slot) ... ok
+test_opaque_node_must_not_spend_eligible_fanout_one (tests.test_836_opaque_budget_noninterference.OpaqueGraphBudgetNoninterference.test_opaque_node_must_not_spend_eligible_fanout_one) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.228s
+
+OK

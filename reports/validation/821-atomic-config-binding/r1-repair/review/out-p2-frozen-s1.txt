@@ -1,0 +1,15 @@
+{
+ "seed": 1,
+ "kills": 186,
+ "spawned": 188,
+ "witness_refusals_in_writers": 0,
+ "mid_checks": 26,
+ "mid_lags": 6,
+ "final_recover_rc": 0,
+ "final_stderr_tail": "",
+ "final_witness_gen": 493,
+ "final_db_gen": 493,
+ "final_witness_ok": true,
+ "orphan_temporaries": 0,
+ "orphan_sample": []
+}

@@ -1,0 +1,39 @@
+{
+    "adapter_evidence": {
+        "adapter_kind": "agent_memory_public_stdio",
+        "frozen_runtime_revision": "2ad4cf23d366fc784a486b0245550230e64bfa25",
+        "public_contract": "1.8.0",
+        "runtime_identity": {
+            "frozen_runtime_revision": "2ad4cf23d366fc784a486b0245550230e64bfa25",
+            "frozen_runtime_tree": "f9b5ff9e79a54ef053ce89eb975256b63e211714",
+            "imported_package": "/home/user/wt-gauntlet/reference/agentmem_ref",
+            "matches_frozen_revision": true,
+            "same_checkout": true,
+            "verified": true
+        },
+        "surface": "AgentMemory public facade",
+        "translation_only": true
+    },
+    "authority_effect": "none",
+    "contract_family": "agent-memory-gauntlet-operation",
+    "contract_version": "0.1.0",
+    "direction": "response",
+    "error": null,
+    "operation": "describe",
+    "request_id": "identity-record",
+    "result": {
+        "adapter_enforces_memory_policy": false,
+        "frozen_runtime_revision": "2ad4cf23d366fc784a486b0245550230e64bfa25",
+        "public_contract": "1.8.0",
+        "runtime": "agent-memory-rc1-local",
+        "runtime_profile": "rc1-local-sqlite-composition",
+        "runtime_version": "0.2.0-rc1",
+        "surface": "AgentMemory public facade",
+        "system": "Agent Memory",
+        "transport": "stdio"
+    },
+    "status": "ok",
+    "timing": {
+        "elapsed_ms": 0.008510999975896993
+    }
+}

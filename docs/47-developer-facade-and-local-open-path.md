@@ -96,7 +96,7 @@ The local open path is fail closed:
 SQLite database present
     -> recover and verify
 
-configuration binding present but database absent
+configuration binding file or generation witness present but database absent
     -> refuse as incomplete state
 
 SQLite database corrupt or incompatible
@@ -118,6 +118,46 @@ One `AgentMemory` handle may be called from any thread, including worker pools a
 - Closing waits for any in-flight operation. Later calls from any thread raise `RuntimeError("AgentMemory runtime is closed")`.
 - Objects reached through `handle.runtime` are not independently thread-safe. Direct callers must hold `handle.runtime.serialization_lock`.
 - Multiple independent handles on the same store in one or more processes are not part of this contract. The bounded single-host profile remains single-writer, with generation-conflict detection.
+
+## Runtime-owned writes (#816)
+
+The SQLite database is the durable source of truth only for what a runtime generation published. A generation is one SQLite transaction that the owning runtime opens, on the thread that holds its serialization lock, and publishes with its journal record.
+
+- **Governed acts outside a generation are refused.** A governed act reached around the facade and the runtime's governed operations raises `UngovernedDurableWrite` (`agentmem_ref.state.sqlite_substrate`) before the identifier sequence, the deterministic clock or any governance state moves. Examples:
+  - `handle.runtime.adapter.governed_recall(...)`, `commit_proposal`, `governed_delete`, `governed_dispute`, `mint_id`, `now`, `record_event` and `upgrade_canonical_derivation`;
+  - the recall planner and preselected-candidate admission;
+  - the docs/44 module-level stages (`commit`, `recall`, `authorize`, `witness`) when they are called directly on a durable handle. They raise this error instead of returning a refusal envelope, so run them through `durable_runtime.run_governed_read`.
+- **What does not count as a generation.** A bare `substrate.transaction()`, or another thread acting while a generation is open, is refused the same way.
+- **What happens after a refusal.** The store stays exactly as the last generation left it, and `close()` followed by `open()` recovers normally.
+- **Interrupts roll back.** An exception or interrupt (`KeyboardInterrupt`) inside a generation rolls back the transaction and the adapter's governance state.
+- **Supported paths are unchanged.** These are the facade and the runtime's own governed operations: `handle.runtime.recall`, `retain`, `correct`, `dispute`, `delete_current`, and the durable runtime's `governed_recall`, `commit_proposal`, `governed_delete`, `run_governed_read`, `persist_visibility_snapshot` and `checkpoint`. Each publishes one generation.
+- **The configuration binding commits with every base generation (#821).** See "Atomic configuration binding" below. It is advanced even when the base SQLite runtime is driven directly.
+- **What `close()` does.** It publishes nothing, so a refused or failed act can never be bound into durable state by closing.
+- **Integrity checks are not relaxed.** Out-of-band changes to facts, the identifier sequence, the journal, the runtime state or governance rows still fail recovery.
+
+**What this boundary does not cover.** These remain host-privileged layers:
+
+- **Storage-level writes.** Writes through `SQLiteTemporalGraph` methods, raw SQL or a second `SQLiteTemporalGraph` instance on the same file are not refused. Fixtures and migration tooling use this layer and publish with an explicit `checkpoint()`. `close()` never binds such a write, and recovery refuses one that was not published.
+- **In-memory administrative seams.** `set_shared_domain_members`, `bootstrap_shared_domain_members`, `record_correction` / `projections.correct`, and direct edits to the adapter's `events` or `extension_state` change no durable row. The next generation publishes them, as before #816. Whether they should instead be refused, or confined to governed paths, is an open owner decision.
+- **Derived semantic vectors.** A refused direct planner recall may already have written derived semantic vectors to the sidecar cache. They are derived data, never authority, and deleted facts are not re-added.
+
+**Before this boundary.** A direct call advanced the identifier sequence in autocommit. That sequence is covered by the canonical substrate digest, so the next `open` failed with `SQLite canonical substrate digest mismatch`. From a stale handle, the same call also broke recovery of a generation another process had committed.
+
+## Atomic configuration binding (#821)
+
+Each generation binds the validated runtime configuration (configuration digest, resolved plan, required projections) to the generation it publishes. Until #821 that binding was the file `configuration-binding.json`, written after the SQLite commit: a process that stopped between the two left a committed generation that recovery then refused (`configuration binding does not match recovered base checkpoint`).
+
+- **One transaction.** The binding is now the singleton row `runtime_configuration_binding`, written by the owning runtime inside the generation's own SQLite transaction, after the runtime state and journal row and before `COMMIT` (protocol `sqlite_same_transaction_config_binding_v1`). A generation and its binding commit, or roll back, together. Generation 1 of a new store commits with its binding as well. New stores have no binding file.
+- **What the row binds.** The configuration and plan digests, the plan, the required projections, the tenant, and the generation's substrate, governance, interpretation and journal-tail digests, with a record digest. That digest is an unkeyed checksum: it detects corruption and mismatches, not a forger who can write the database.
+- **Recovery verifies it and repairs nothing.** A row that is corrupt, from another tenant or store, stale or replayed, or bound to a different configuration is refused with its own diagnostic. Recovery never writes. If the binding table exists, its row is required; the legacy file is read only when there is no table at all.
+- **Who can write it.** The owning runtime, on the thread running its open generation, after the generation CAS. Before replacing the row the binder verifies it, exactly as recovery would, as the binding of the handle's previous generation, so a row changed under an open handle is refused (`RuntimeCheckpointConflict`) and the generation rolls back. A stale handle or another process cannot rebind a newer generation. Storage-level holders (raw SQL, a second `SQLiteTemporalGraph`) remain the privileged layer described above.
+- **A failure while binding** (an exception or an interrupt) rolls back the whole generation; nothing is published. A generation whose visibility obligations the bound configuration does not require is refused the same way instead of committing a state recovery would refuse.
+- **Generation witness.** `generation-witness.json` records the last generation (and its journal record digest) the runtime committed. It is first written inside generation 1, once the database file exists, and then after every COMMIT, never before one, so it may lag the database but never lead it, and a lagging witness is accepted. Recovery reads it before the database, so a concurrent writer can only make it lag. It only ever refuses: a database behind it (restored from an older copy), a database whose journal disagrees with it (another store's database), an unreadable witness, a witness whose database is gone, or a witnessed store whose binding table is gone. If writing it fails after COMMIT, the generation stays committed and the next generation rewrites it. It is not a keyed or remote anchor: rolling back the whole directory, or deleting the witness, is not detected. **Restoring a backup deliberately** (`backup_to` copy over a live store) is refused as a rollback until the operator removes `generation-witness.json`; the refusal says so. Each writer records the witness through its own exclusively created temporary (`.generation-witness.json.<pid>.<random>.tmp`), so a published witness is always one writer's complete record (#821 R-1). Two writer processes can still rename in the opposite order of their commits, which steps the witness back to an older committed generation of the same history: a lag, accepted like any other. A writer killed between creating its temporary and renaming it leaves that temporary behind; nothing reads it, and an operator may delete such files while no writer is running.
+- **Stores written before #821** have no binding table. Their file is verified exactly as before, and the first generation a current runtime publishes (a `recall` publishes one) writes the row and the witness; the file is then left untouched and is not consulted while the table exists. A store already stranded by the old window (its file lags the committed generation) stays refused: recovery does not decide which configuration published that generation.
+- **Migration is one-way.** Older runtimes cannot open a store whose current generation is bound only by a row; they fail closed. Rolling the software back after a store has been touched therefore needs an explicit, owner-authorized procedure.
+- `posture()` reports `configuration_binding_scheme`: `sqlite_transaction`, `legacy_file`, or `unverified` when recovery failed.
+
+The file-checkpoint profile (`RestartSafeRuntime`, `ConfigBoundRestartRuntime`) is unchanged and still writes its binding file after its manifest.
 
 ## Boundaries
 

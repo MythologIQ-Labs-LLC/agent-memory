@@ -1,0 +1,14 @@
+branch head              : 97368d6746de6402c99e4b6f1aa3c39e742ee9fa
+adapter blob (worktree)  : 0f2f18b0d1ec62edc2a1d424af6cbaa967774ec2
+adapter blob (HEAD tree) : 0f2f18b0d1ec62edc2a1d424af6cbaa967774ec2
+manifest adapter.revision: git-blob:0f2f18b0d1ec62edc2a1d424af6cbaa967774ec2
+manifest blob (HEAD)     : a41e3e1f752ce8bd0d0bda4ce2b5bbf057b236da
+frozen identity          : {"actor": "agent:gauntlet-runtime-baseline-v7", "frozen_runtime_revision": "2ad4cf23d366fc784a486b0245550230e64bfa25", "public_contract": "1.8.0", "purpose": "Runtime Baseline v7 public Gauntlet qualification", "runtime_profile": "rc1-local-sqlite-composition", "scope": "scope:gauntlet-runtime-baseline-v7", "tenant": "tenant:gauntlet-runtime-baseline-v7"}
+recomputed digest        : sha256:e4548a487b8c83ef9172bb9076933b493a7d91b9de2239fd5409f7992b88ff82
+manifest digest          : sha256:e4548a487b8c83ef9172bb9076933b493a7d91b9de2239fd5409f7992b88ff82 MATCH
+system.revision          : git-commit:2ad4cf23d366fc784a486b0245550230e64bfa25
+protected tree @ revision: f9b5ff9e79a54ef053ce89eb975256b63e211714
+protected tree @ HEAD    : f9b5ff9e79a54ef053ce89eb975256b63e211714
+declaration blob @ HEAD  : 7de94f11d7d521f07d2fe22317662ac6f92f89fa
+recall_control blob @HEAD: 9fa861c36d9edde2df746c8e089a658576ea3bf4
+schema                   : schemas/gauntlet-system-adapter.schema.json VALID (jsonschema), required: ['contract_family', 'contract_version', 'system', 'adapter', 'transport', 'capabilities', 'authority_effect']

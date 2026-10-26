@@ -1,0 +1,2 @@
+reader: RuntimeRecoveryError: SQLite database is behind this store's generation witness (2 < 3): it was rolled back or replaced; explicit operator action is required
+reopen afterwards: OK gen=3 scheme=sqlite_transaction

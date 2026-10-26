@@ -1,0 +1,44 @@
+{
+  "agent_memory_revision": "5ed105d7030d5860f877b03a28a9201281d8d55b",
+  "authority_effect": "none",
+  "backend": "mem0_explicit",
+  "declaration_blob": "7de94f11d7d521f07d2fe22317662ac6f92f89fa",
+  "evidence_class": "same_harness_external_candidate",
+  "full_selection": true,
+  "granularity": "turn",
+  "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "lane_digest_sha256": "9a1dab91f13a7652a181f01c35ac85c941e8be2b2538f783bc3d41c2c4ad4f6d",
+  "lane_file": "reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v7.json",
+  "lane_id": "longmemeval-s-retrieval-parity-v7",
+  "local_execution_notes": {
+    "venv": "venv312-mem0 (AMB-lock-constrained environment carrying the LME workflow's exact MEM0_PINS)"
+  },
+  "mem0_optional_components": {
+    "fastembed_installed": false,
+    "spacy_installed": false
+  },
+  "resolved_packages": {
+    "agent-memory-reference": "0.2.0",
+    "mem0ai": "2.2.1",
+    "numpy": "2.4.3",
+    "onnxruntime": "1.22.1",
+    "openai": "2.26.0",
+    "posthog": "7.73.3",
+    "qdrant-client": "1.17.0",
+    "sentence-transformers": "5.2.3",
+    "tokenizers": "0.22.2",
+    "torch": "2.10.0"
+  },
+  "runner": "local cloud container, Linux-6.18.44-fc-v139-x86_64-with-glibc2.39, Python 3.12.3 (not a GitHub-hosted runner)",
+  "runner_backend": "mem0_explicit",
+  "runtime_baseline_line": "Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v6; declared_successor=agent-memory-runtime-baseline-v7 (issue #674); protected surface = frozen e98e6e7b776aa2dd680e84f3ed4773ad2afa4ae1 + 21 declared blobs; deltas=identity.public_contract_version 1.6.0->1.8.0; candidate=HEAD",
+  "runtime_baseline_state": "TRANSITION",
+  "source_blobs": {
+    "reference/amb_mem0_explicit_bridge.py": "ce41b1f5766b99cb968b798be3ad6d37c3283228",
+    "reference/longmemeval_mem0_explicit_bridge.py": "08366b72ac0d76fdc0754a8182e3b6fd61cb1912",
+    "reference/run_longmemeval.py": "6b9c237380f1d527e564161c2dac7fe32ada0ef9"
+  },
+  "subset_size": "0",
+  "upstream_revision": "9e0b455f4ef0e2ab8f2e582289761153549043fc",
+  "workflow_run_id": "local-lme-v7b-turn-mem0_explicit"
+}

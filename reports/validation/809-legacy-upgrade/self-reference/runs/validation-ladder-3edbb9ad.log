@@ -1,0 +1,36 @@
+HEAD 3edbb9ada2cac07acfefe2976cb3a6004525a15b runtime-tree 3386ec0f87fc25094aec7fa65a2a46403fe13602 dirty=[0] start 2026-10-20T22:26:17Z
+focused test_809_legacy*.py exit=0 Ran 25 tests in 3.815s OK 
+focused test_809_evidence_reference_authorization*.py exit=0 Ran 25 tests in 9.694s OK 
+focused test_809_security_replay*.py exit=0 Ran 8 tests in 10.956s OK 
+focused test_776*.py exit=0 Ran 46 tests in 34.049s OK 
+focused test_deletion_completeness*.py exit=0 Ran 6 tests in 0.018s OK 
+focused test_821*.py exit=0 Ran 48 tests in 19.271s OK 
+focused test_816*.py exit=0 Ran 25 tests in 3.553s OK 
+crash_window exit=0
+run_786_security_replays.py exit=0
+cross-scope-write-authority-denial-v2: PASS (12/12 cases) report sha256 9e1bbc4d7b91729694a5e578daad5811a2f1411f5267a86b3b8a5e25d37cb216
+deleted-lineage-generations-and-restart-v2: PASS (8/8 cases) report sha256 cfd699154233a76d7a5bf7a77e6e11905ee9dbf033c0f3dfdf59c6e19943e46f
+public-tombstone-redaction-and-observer-separation-v2: PASS (8/8 cases) report sha256 0a0b7228852a6e01197128cc157a6b8652e4d833bb83af7cd5f25aa327be5aad
+run_786_security_replays_dsl2.py exit=0
+cross-scope-write-authority-denial-v3: PASS (13/13 cases) report sha256 e81f5374d0bd2723d52077d7752bb3be40a3fdeea064e6d55c00f395ba568ff5
+deleted-lineage-generations-and-restart-v3: PASS (10/10 cases) report sha256 8ca5d8facf89635f87edaa96246528a26bc40651264e42d5b38855bed688e1d7
+public-tombstone-redaction-and-observer-separation-v3: PASS (8/8 cases) report sha256 9b6ffbd4f7fb25c04929daf70ff6a205273907435b4eefd70e13afb09df253e3
+run_786_security_replays_dsl3.py exit=0
+evidence-reference-authorization-v1: PASS (13/13 cases) report sha256 be128875c73efc8db1dd850095e21a975be77984a3b7dc15f7304d0a15bbd108
+dirty after replays=[0]
+suite nomodel exit=1
+FAIL: test_own_checkout_at_frozen_revision_is_served (tests.test_644_v7_gauntlet_identity.ImportedRuntimeIdentity.test_own_checkout_at_frozen_revision_is_served)
+FAIL: test_a_runtime_edit_still_makes_replay_evidence_stale (tests.test_770_v7_lane_freeze_independent.ReplayEvidenceFreshness.test_a_runtime_edit_still_makes_replay_evidence_stale)
+FAIL: test_lane_records_do_not_make_replay_evidence_stale (tests.test_770_v7_lane_freeze_independent.ReplayEvidenceFreshness.test_lane_records_do_not_make_replay_evidence_stale)
+FAIL: test_evaluation_only_change_keeps_runtime_baseline_equivalence (tests.test_benchmark_integration_contract.BenchmarkIntegrationContractTests.test_evaluation_only_change_keeps_runtime_baseline_equivalence)
+Ran 3094 tests in 378.384s
+FAILED (failures=4, skipped=35, expected failures=1)
+suite model exit=1
+FAIL: test_own_checkout_at_frozen_revision_is_served (tests.test_644_v7_gauntlet_identity.ImportedRuntimeIdentity.test_own_checkout_at_frozen_revision_is_served)
+FAIL: test_a_runtime_edit_still_makes_replay_evidence_stale (tests.test_770_v7_lane_freeze_independent.ReplayEvidenceFreshness.test_a_runtime_edit_still_makes_replay_evidence_stale)
+FAIL: test_lane_records_do_not_make_replay_evidence_stale (tests.test_770_v7_lane_freeze_independent.ReplayEvidenceFreshness.test_lane_records_do_not_make_replay_evidence_stale)
+FAIL: test_evaluation_only_change_keeps_runtime_baseline_equivalence (tests.test_benchmark_integration_contract.BenchmarkIntegrationContractTests.test_evaluation_only_change_keeps_runtime_baseline_equivalence)
+Ran 3094 tests in 390.489s
+FAILED (failures=4, skipped=30, expected failures=1)
+dirty at end=[0] end 2026-10-20T22:41:06Z
+VAL_DONE

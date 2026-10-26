@@ -1,0 +1,2 @@
+reader: RuntimeRecoveryError: SQLite configuration binding is stale or replayed: it binds generation 3, the store committed generation 2
+reopen afterwards: OK gen=3 scheme=sqlite_transaction

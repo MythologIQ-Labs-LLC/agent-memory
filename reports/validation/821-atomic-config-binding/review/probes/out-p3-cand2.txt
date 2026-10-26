@@ -1,0 +1,18 @@
+generation column bound as TEXT (INTEGER affinity coerces)     ACCEPTED OK gen=2 scheme=sqlite_transaction
+generation column stored as REAL (same value)                  ACCEPTED OK gen=2 scheme=sqlite_transaction
+payload_json stored as BLOB (same bytes)                       ACCEPTED OK gen=2 scheme=sqlite_transaction
+payload_json NULL (rebuilt table)                              REFUSED  REFUSED RuntimeRecoveryError: SQLite configuration binding is corrupt: not JSON
+extra singleton=2 junk row (rebuilt table)                     ACCEPTED OK gen=2 scheme=sqlite_transaction
+resealed row with an extra field (forger)                      ACCEPTED OK gen=2 scheme=sqlite_transaction
+resealed row without journal_record_digest                     REFUSED  REFUSED RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: journal_record_digest
+resealed row without tenant                                    REFUSED  REFUSED RuntimeRecoveryError: SQLite configuration binding belongs to another tenant
+DROP TABLE on a #821-created store (no legacy file)            REFUSED  REFUSED RuntimeRecoveryError: required configuration-bound state missing: configuration-binding.json
+table replaced by a VIEW                                       REFUSED  REFUSED RuntimeRecoveryError: required configuration-bound state missing: configuration-binding.json
+DOWNGRADE: drop table + forge legacy file from row content     ACCEPTED OK gen=2 scheme=legacy_file
+valid row + garbage legacy file                                ACCEPTED OK gen=2 scheme=sqlite_transaction
+migrated store: DROP TABLE (legacy file lags)                  REFUSED  REFUSED RuntimeRecoveryError: configuration binding does not match recovered base checkpoint: generation
+legacy store (file verifies) + corrupt injected row: no fallback REFUSED  REFUSED RuntimeRecoveryError: SQLite configuration binding is corrupt: not JSON
+legacy store + empty binding table (file verifies)             REFUSED  REFUSED RuntimeRecoveryError: SQLite configuration binding is corrupt: SQLite configuration binding table holds 0 bindings  <-- UNEXPECTED (expected ACCEPTED)
+DOWNGRADE: delete row + forge legacy file (table kept)         REFUSED  REFUSED RuntimeRecoveryError: SQLite configuration binding is corrupt: SQLite configuration binding table holds 0 bindings  <-- UNEXPECTED (expected ACCEPTED)
+live handle, previous row replaced by {plan_digest} only       publish refused: RuntimeCheckpointConflict: configuration binding changed under this handle; refusing to bind generation 3: SQLite configuration binding protocol is unsupported
+  -> reopen after that                                         REFUSED  REFUSED RuntimeRecoveryError: SQLite configuration binding protocol is unsupported  <-- UNEXPECTED (expected ACCEPTED)

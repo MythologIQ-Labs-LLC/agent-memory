@@ -1,0 +1,46 @@
+test_governed_route_does_not_expand_a_withheld_seed (tests.test_836_graph_exclusion_boundaries.FindingA_ExcludedSeed.test_governed_route_does_not_expand_a_withheld_seed) ... FAIL
+test_retriever_never_traverses_or_reports_from_an_excluded_seed (tests.test_836_graph_exclusion_boundaries.FindingA_ExcludedSeed.test_retriever_never_traverses_or_reports_from_an_excluded_seed) ... FAIL
+test_deleted_bridge_confers_no_canonical_reachability (tests.test_836_graph_exclusion_boundaries.FindingB_SoleDeletedBridge.test_deleted_bridge_confers_no_canonical_reachability) ... FAIL
+test_foreign_deleted_bridge_is_a_control (tests.test_836_graph_exclusion_boundaries.FindingB_SoleDeletedBridge.test_foreign_deleted_bridge_is_a_control) ... ok
+test_live_tail_is_reachable_before_the_bridge_is_deleted (tests.test_836_graph_exclusion_boundaries.FindingB_SoleDeletedBridge.test_live_tail_is_reachable_before_the_bridge_is_deleted) ... ok
+
+======================================================================
+FAIL: test_governed_route_does_not_expand_a_withheld_seed (tests.test_836_graph_exclusion_boundaries.FindingA_ExcludedSeed.test_governed_route_does_not_expand_a_withheld_seed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_836_graph_exclusion_boundaries.py", line 71, in test_governed_route_does_not_expand_a_withheld_seed
+    self.assertNotIn(tail, result.candidates, "no reachability through a withheld seed")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'ref-0025' unexpectedly found in ['ref-0018', 'ref-0025'] : no reachability through a withheld seed
+
+======================================================================
+FAIL: test_retriever_never_traverses_or_reports_from_an_excluded_seed (tests.test_836_graph_exclusion_boundaries.FindingA_ExcludedSeed.test_retriever_never_traverses_or_reports_from_an_excluded_seed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_836_graph_exclusion_boundaries.py", line 53, in test_retriever_never_traverses_or_reports_from_an_excluded_seed
+    self.assertEqual([h.candidate_ref for h in retriever.search(graph, ("seed",), group_id=TENANT, candidate_limit=8)],
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     ["tail"])
+                     ^^^^^^^^^
+AssertionError: Lists differ: [] != ['tail']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'tail'
+
+- []
++ ['tail']
+
+======================================================================
+FAIL: test_deleted_bridge_confers_no_canonical_reachability (tests.test_836_graph_exclusion_boundaries.FindingB_SoleDeletedBridge.test_deleted_bridge_confers_no_canonical_reachability)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_836_graph_exclusion_boundaries.py", line 101, in test_deleted_bridge_confers_no_canonical_reachability
+    self.assertNotIn(tail, result.candidates, "a deleted generation confers no reachability")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'ref-0025' unexpectedly found in ['ref-0018', 'ref-0004', 'ref-0025'] : a deleted generation confers no reachability
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.231s
+
+FAILED (failures=3)
