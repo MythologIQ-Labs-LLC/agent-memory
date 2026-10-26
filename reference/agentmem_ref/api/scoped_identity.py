@@ -51,7 +51,8 @@ def scope_distinct_key(tenant: str, scope: str, public_key: str) -> str:
 class ScopeDistinctMemory:
     """Bounded current-head consumer for a host-owned project scope.
 
-    New dedicated child store only. Do not expose the child path to legacy\n    direct-key consumers.
+    New dedicated child store only. Do not expose the child path to legacy
+    direct-key consumers.
     Key allocation is not security isolation if raw AgentMemory handles are
     exposed to the same untrusted principal.
     """
