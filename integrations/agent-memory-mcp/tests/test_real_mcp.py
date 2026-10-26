@@ -133,6 +133,8 @@ class ActualMcpConsumerLoop(unittest.IsolatedAsyncioTestCase):
                 command=sys.executable, args=[str(HERE / "server.py")], env=env,
             )
             async with Client(params) as client:
+                self.assertIsNotNone(client.server_info)
+                self.assertEqual(client.server_info.version, "0.1.0-dev")
                 tools = await client.list_tools()
                 self.assertEqual(
                     {tool.name for tool in tools.tools},
