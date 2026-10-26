@@ -77,11 +77,44 @@ class LocalMemoryBridge:
             purpose="local MCP explicit memory consumer",
         )
 
-    def remember(self, key: str, text: str) -> dict:
-        """Only an explicit agent tool call writes; source attribution is fixed."""
+    def remember(self, key: str, text: str, *, create_only: bool = False) -> dict:
+        """Explicit governed write, optionally refusing to overwrite a known key.
+
+        create_only is a public-history precondition, not a cross-process
+        compare-and-swap. The trusted host must serialize writers. An
+        inaccessible/tombstoned/ambiguous history never authorizes a new write.
+        """
         key = _string("key", key, MAX_KEY_CHARS)
         text = _string("text", text, MAX_TEXT_CHARS)
+        if type(create_only) is not bool:
+            raise ValueError("create_only must be a boolean")
         with self._open() as memory:
+            if create_only:
+                # Public history intentionally makes foreign and absent keys
+                # indistinguishable. If the head is visible, do not duplicate
+                # it. A deleted generation must not be implicitly resurrected.
+                try:
+                    document = memory.history(key)
+                    state = document.get("history") if isinstance(document, dict) else None
+                    safely_absent = (
+                        isinstance(state, dict)
+                        and state.get("current_fact_uuid") is None
+                        and state.get("tombstoned") is False
+                        and type(state.get("state_version")) is int
+                        and state["state_version"] == 0
+                    )
+                except Exception:
+                    safely_absent = False
+                if not safely_absent:
+                    return {
+                        "committed": False,
+                        "key": key,
+                        "fact_ref": None,
+                        "stage": "precondition",
+                        "outcome": "not_committed",
+                        "refusal": "key_exists_or_unavailable",
+                        "authoritative_answer": False,
+                    }
             outcome = memory.remember(key, text, source_ref="mcp:agent-observation")
         return {
             "committed": outcome.get("committed") is True,
