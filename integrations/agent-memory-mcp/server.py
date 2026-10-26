@@ -100,5 +100,17 @@ def memory_find(question: str, max_items: int = 5,
     ))
 
 
+@mcp.tool()
+def memory_tombstone_head(key: str, expected_fact_ref: str) -> dict[str, Any]:
+    """Opt-in governed pruning of the currently visible head for an exact key.
+
+    The trusted MCP host must set AGENT_MEMORY_MCP_ALLOW_HEAD_TOMBSTONE=enabled
+    and serialize writers. expected_fact_ref must come from an authorized
+    memory_get result. This is not whole-key erasure or permanent deletion;
+    older facts under a rewritten key may remain discoverable.
+    """
+    return _tool_call(lambda: _bridge().tombstone_head(key, expected_fact_ref))
+
+
 if __name__ == "__main__":
     mcp.run(transport="stdio")
