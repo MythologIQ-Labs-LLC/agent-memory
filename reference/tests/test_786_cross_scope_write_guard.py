@@ -11,6 +11,7 @@ import unittest
 from pathlib import Path
 
 from agentmem_ref import AgentMemory
+from agentmem_ref.memory import procedural_memory as pm
 
 TENANT = "tenant:write-target-786"
 ACTOR = "agent:write-target-786"
@@ -21,6 +22,21 @@ def open_in(root: Path, scope: str):
     return AgentMemory.open(
         root, tenant=TENANT, actor_id=ACTOR, scope=scope, purpose="786 guarded target replay",
     )
+
+
+def review_evidence(scope: str):
+    """Use the same qualified procedural evidence route as the public facade tests."""
+    skill = pm.SkillArtifact(
+        skill_id="skill:786-scope-guard",
+        version=1,
+        purpose="governed lifecycle review for scope regression",
+        scope=scope,
+        isolation_domain_refs=(TENANT, scope),
+        required_isolation_domain_refs=(TENANT, scope),
+        procedure_markdown="# verify\nConfirm the scope owns the live target before mutation.",
+        provenance_refs=("evidence:786-independent-source",),
+    )
+    return pm.evidence_for(skill)
 
 
 class CrossProjectWriteTargetTests(unittest.TestCase):
@@ -46,6 +62,41 @@ class CrossProjectWriteTargetTests(unittest.TestCase):
                 self.assertEqual(reopened.history(KEY)["history"]["current_fact_uuid"], first_ref)
                 admitted = reopened.recall("Orrin gateway region", logical_memory_refs=(KEY,))
                 self.assertIn(first_ref, admitted["admitted"])
+
+    def test_other_project_cannot_correct_owner_with_qualified_evidence(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            with open_in(root, "project:a") as owner:
+                first = owner.remember(KEY, "Orrin gateway region is Oslo")
+                self.assertTrue(first["committed"])
+                original = first["fact_uuid"]
+            with open_in(root, "project:b") as other:
+                attempted = other.correct(
+                    KEY, "Orrin gateway region is Turku",
+                    evidence=review_evidence("project:b"), risk_class="low",
+                )
+                self.assertFalse(attempted["committed"], attempted)
+                self.assertIsNone(attempted["fact_uuid"])
+                self.assertNotIn(original, repr(attempted))
+            with open_in(root, "project:a") as owner:
+                self.assertEqual(owner.history(KEY)["history"]["current_fact_uuid"], original)
+
+    def test_other_project_cannot_prune_owner_with_qualified_evidence(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            with open_in(root, "project:a") as owner:
+                first = owner.remember(KEY, "Orrin gateway region is Oslo")
+                self.assertTrue(first["committed"])
+                original = first["fact_uuid"]
+            with open_in(root, "project:b") as other:
+                attempted = other.forget(
+                    KEY, evidence=review_evidence("project:b"), risk_class="low",
+                )
+                self.assertFalse(attempted["committed"], attempted)
+                self.assertIsNone(attempted["fact_uuid"])
+                self.assertNotIn(original, repr(attempted))
+            with open_in(root, "project:a") as owner:
+                self.assertEqual(owner.history(KEY)["history"]["current_fact_uuid"], original)
 
     def test_same_project_keeps_existing_explicit_rewrite_behavior(self):
         with tempfile.TemporaryDirectory() as temporary:
