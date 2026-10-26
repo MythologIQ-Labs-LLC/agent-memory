@@ -215,6 +215,9 @@ class DeterministicMultiRouteRecallPlanner:
             current = self.adapter.current_fact_uuid(logical_ref)
             if current is None:
                 continue
+            seed_fact = substrate.get_fact(current)
+            if seed_fact is None or not self.adapter.domain_eligible(seed_fact, context):
+                continue
             hits.append(
                 RetrievalRouteHit(
                     route_id=EXACT_IDENTITY_ROUTE,
@@ -256,7 +259,12 @@ class DeterministicMultiRouteRecallPlanner:
             routes_executed.append(SHARED_EVIDENCE_ROUTE)
             for logical_ref, seed_ref in seed_pairs:
                 seed_fact = substrate.get_fact(seed_ref)
-                if seed_fact is None or seed_fact.is_event_invalid:
+                if (
+                    seed_fact is None
+                    or seed_fact.is_event_invalid
+                    or seed_fact.is_transaction_expired
+                    or not self.adapter.domain_eligible(seed_fact, context)
+                ):
                     continue
                 for fact, shared_refs, score in substrate.evidence_neighbors(
                     seed_ref,
