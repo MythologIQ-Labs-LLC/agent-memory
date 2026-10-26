@@ -80,6 +80,14 @@ class ScopeDistinctMemory:
     """
 
     def __init__(self, memory: AgentMemory, *, tenant: str, scope: str, actor_id: str):
+        # Bind canonical host identity even for directly supplied facades.
+        scope_distinct_key(tenant, scope, "_host_preflight")
+        if (
+            not isinstance(actor_id, str) or not actor_id
+            or actor_id != actor_id.strip()
+            or unicodedata.normalize("NFC", actor_id) != actor_id
+        ):
+            raise ValueError("actor_id must be a nonempty NFC canonical string")
         if (
             getattr(memory, "tenant", None) != tenant
             or getattr(memory, "scope", None) != scope
@@ -100,6 +108,12 @@ class ScopeDistinctMemory:
         # Verify host identity before any filesystem side effects. This same
         # canonical tuple defines every logical key issued by the handle.
         scope_distinct_key(tenant, scope, "_host_preflight")
+        if (
+            not isinstance(actor_id, str) or not actor_id
+            or actor_id != actor_id.strip()
+            or unicodedata.normalize("NFC", actor_id) != actor_id
+        ):
+            raise ValueError("actor_id must be a nonempty NFC canonical string")
         # Physical separation from the legacy root and lexical path checks.
         scoped_root = _scoped_store_root(path)
         memory = AgentMemory.open(
