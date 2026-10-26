@@ -212,12 +212,14 @@ class FacadeSemanticTests(unittest.TestCase):
     def test_out_of_scope_facts_are_never_semantic_candidates(self):
         root = tempfile.mkdtemp()
         with mock.patch.object(representation_onnx, "OnnxSentenceEmbeddingProvider", _Fixture):
+            # Seed through a real foreign-scope runtime, not through a
+            # forged proposal on the owner handle (#786).
+            with AgentMemory.open(
+                root, scope="project:other", semantic_retrieval="required"
+            ) as foreign:
+                written = foreign.remember("memory:x", "The user's dog is called Biscuit.")
+                self.assertTrue(written["committed"], written)
             with AgentMemory.open(root, semantic_retrieval="required") as memory:
-                domains = [memory.tenant, "project:other"]
-                memory.remember("memory:x", "The user's dog is called Biscuit.",
-                                overrides={"scope": "project:other", "project_ref": "project:other",
-                                           "isolation_domain_refs": domains,
-                                           "required_isolation_domain_refs": domains})
                 result = memory.recall("Which pet?")
                 self.assertEqual(result["candidates"], [])
 
