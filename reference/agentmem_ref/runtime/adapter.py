@@ -1275,13 +1275,19 @@ class GovernedMemoryAdapter:
         committed = refusal is None and selected == proposal.operation
         if refusal is None and stale:
             refusal = "stale_decision"
-        before_state = f"v{self._state_version.get(proposal.target_reference, 0)}"
+        before_state = (
+            "v0" if refusal == "write_target_unavailable"
+            else f"v{self._state_version.get(proposal.target_reference, 0)}"
+        )
 
         if committed:
             self._disputed.add(fact_uuid)
             self._state_version[proposal.target_reference] = self._state_version.get(proposal.target_reference, 0) + 1
 
-        after_state = f"v{self._state_version.get(proposal.target_reference, 0)}"
+        after_state = (
+            before_state if refusal == "write_target_unavailable"
+            else f"v{self._state_version.get(proposal.target_reference, 0)}"
+        )
         receipt_id = self._ids.next()
         receipt = receipts.build_receipt(
             receipt_id=receipt_id,
@@ -1449,7 +1455,10 @@ class GovernedMemoryAdapter:
         committed = refusal is None and selected == proposal.operation
         if refusal is None and stale:
             refusal = "stale_decision"
-        before_state = f"v{self._state_version.get(proposal.target_reference, 0)}"
+        before_state = (
+            "v0" if refusal == "write_target_unavailable"
+            else f"v{self._state_version.get(proposal.target_reference, 0)}"
+        )
 
         if committed:
             self._tombstones[fact_uuid] = {
@@ -1477,7 +1486,10 @@ class GovernedMemoryAdapter:
             selection_mode=self._selector.mode if selected != receipts.NO_ACTION else "none",
             timestamp=self._clock.now(),
             before_state=before_state,
-            after_state=f"v{self._state_version.get(proposal.target_reference, 0)}",
+            after_state=(
+                before_state if refusal == "write_target_unavailable"
+                else f"v{self._state_version.get(proposal.target_reference, 0)}"
+            ),
         )
         pama_decision = receipts.build_pama_decision(
             proposal, decision, selected, self._selector.mode if selected != receipts.NO_ACTION else None, receipt_id
