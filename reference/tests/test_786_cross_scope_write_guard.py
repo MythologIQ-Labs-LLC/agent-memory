@@ -87,6 +87,29 @@ class CrossProjectWriteTargetTests(unittest.TestCase):
             with open_in(root, "project:a") as owner:
                 self.assertEqual(owner.history(KEY)["history"]["current_fact_uuid"], original)
 
+    def test_identity_override_cannot_forge_task_on_facade(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            with open_in(Path(temporary), "project:b") as memory:
+                with self.assertRaisesRegex(ValueError, "protected fields"):
+                    memory.remember(
+                        "memory:task-specific", "This task is in progress",
+                        overrides={"task_ref": "task:owner"},
+                    )
+
+    def test_same_host_identity_override_is_not_rejected(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            with open_in(Path(temporary), "project:a") as memory:
+                domains = [TENANT, "project:a"]
+                result = memory.remember(
+                    "memory:legitimate", "The gateway is in Oslo",
+                    overrides={
+                        "scope": "project:a", "project_ref": "project:a",
+                        "isolation_domain_refs": domains,
+                        "required_isolation_domain_refs": domains,
+                    },
+                )
+                self.assertTrue(result["committed"], result)
+
     def test_other_project_cannot_correct_owner_with_qualified_evidence(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
