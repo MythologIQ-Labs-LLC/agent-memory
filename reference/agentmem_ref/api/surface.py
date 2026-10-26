@@ -525,7 +525,7 @@ class AgentMemory:
             protected = {
                 "contract_version", "proposal_id", "actor_id",
                 "charter_version", "state_snapshot", "operation",
-                "target_reference",
+                "target_reference", "task_ref",
             }
             attempted = protected.intersection(overrides)
             if attempted:
