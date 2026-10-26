@@ -177,6 +177,34 @@ class CrossProjectWriteTargetTests(unittest.TestCase):
                 self.assertEqual(memory.history(KEY)["history"]["current_fact_uuid"],
                                  two["fact_uuid"])
 
+    def test_owner_correction_remains_eligible_with_qualified_evidence(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            with open_in(root, "project:a") as owner:
+                initial = owner.remember(KEY, "Orrin gateway region is Oslo")
+                self.assertTrue(initial["committed"], initial)
+                corrected = owner.correct(
+                    KEY, "Orrin gateway region is Berlin",
+                    evidence=review_evidence("project:a"), risk_class="low",
+                )
+                self.assertTrue(corrected["committed"], corrected)
+                self.assertEqual(
+                    owner.history(KEY)["history"]["current_fact_uuid"],
+                    corrected["fact_uuid"],
+                )
+
+    def test_owner_pruning_remains_eligible_with_qualified_evidence(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            with open_in(root, "project:a") as owner:
+                initial = owner.remember(KEY, "Orrin gateway region is Oslo")
+                self.assertTrue(initial["committed"], initial)
+                removed = owner.forget(
+                    KEY, evidence=review_evidence("project:a"), risk_class="low",
+                )
+                self.assertTrue(removed["committed"], removed)
+                self.assertIsNone(owner.history(KEY)["history"]["current_fact_uuid"])
+
     def test_second_project_can_write_its_own_distinct_memory(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
