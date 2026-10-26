@@ -311,6 +311,42 @@ class GovernedMemoryAdapter:
             current_uuid, fact.group_id, context
         ) is not None
 
+    def history_eligible(self, memory_id: str, context: RecallContext) -> bool:
+        """Fail closed on history for identities outside the handle's scope.
+
+        All known versions must be eligible: a mixed-scope legacy lineage is
+        not safe to project as a single logical memory history. Retained
+        tombstones may authorize their owner only with durable scope metadata.
+        """
+        refs = [ref for ref, key in self._fact_memory.items() if key == memory_id]
+        if not refs:
+            return False
+        for ref in refs:
+            fact = self._substrate.get_fact(ref)
+            if fact is None and ref not in self._tombstones:
+                return False
+            group_id = fact.group_id if fact is not None else self._tenant
+            if self._domain_identity_refusal(ref, group_id, context) is not None:
+                return False
+        return True
+
+    @staticmethod
+    def _unavailable_target_decision(proposal: policy.Proposal, decision: policy.Decision) -> policy.Decision:
+        """Compose the canonical target-eligibility veto into PAMA authority.
+
+        A policy-level permit does not override unavailable target ownership.
+        A NO_ACTION receipt paired with a permitting decision is inconsistent;
+        the effective governance decision must instead block the operation.
+        """
+        return policy.Decision(
+            outcome="block",
+            permitted_actions=(),
+            prohibited_actions=(proposal.operation, "enter_pending_verification", "request_external_verification"),
+            reasons=("write_target_unavailable",),
+            policy_version=decision.policy_version,
+            constraints=decision.constraints,
+        )
+
     def commit_proposal(
         self,
         proposal: policy.Proposal,
@@ -379,6 +415,9 @@ class GovernedMemoryAdapter:
             decision = policy.evaluate_with_external_verification(proposal, attestation)
         else:
             decision = policy.evaluate(proposal)
+        target_unavailable = self._write_target_unavailable(proposal)
+        if target_unavailable:
+            decision = self._unavailable_target_decision(proposal, decision)
         authorize_event = self._event(
             "memory.authorize",
             proposal.target_reference,
@@ -395,7 +434,6 @@ class GovernedMemoryAdapter:
 
         stale = self._is_stale(proposal)
         readmission_blocked = self._readmission_blocked(proposal, fact_text, attestation)
-        target_unavailable = self._write_target_unavailable(proposal)
         # A foreign live target receives no selected action. The decision
         # envelope alone never confers write permission for this target.
         # This also prevents a misleading success-shaped receipt when the
@@ -408,7 +446,7 @@ class GovernedMemoryAdapter:
             )
         )
         commits = selected == proposal.operation
-        before_state = f"v{self._state_version.get(proposal.target_reference, 0)}"
+        before_state = "v0" if target_unavailable else f"v{self._state_version.get(proposal.target_reference, 0)}"
 
         if readmission_blocked:
             events.append(
@@ -448,7 +486,7 @@ class GovernedMemoryAdapter:
                     policy_version=decision.policy_version,
                 )
             )
-        after_state = f"v{self._state_version.get(proposal.target_reference, 0)}"
+        after_state = before_state if target_unavailable else f"v{self._state_version.get(proposal.target_reference, 0)}"
 
         receipt_id = self._ids.next()
         receipt = receipts.build_receipt(
@@ -1227,6 +1265,8 @@ class GovernedMemoryAdapter:
         events = [propose_event, authorize_event]
 
         refusal = self._dispute_refusal(proposal, fact_uuid)
+        if refusal == "write_target_unavailable":
+            decision = self._unavailable_target_decision(proposal, decision)
         stale = self._is_stale(proposal)
         selected = (
             receipts.NO_ACTION if refusal == "write_target_unavailable"
@@ -1399,6 +1439,8 @@ class GovernedMemoryAdapter:
         # fact must not report a tenant error, and a foreign fact must not report
         # a binding error.
         refusal = self._delete_refusal(proposal, fact_uuid)
+        if refusal == "write_target_unavailable":
+            decision = self._unavailable_target_decision(proposal, decision)
         stale = self._is_stale(proposal)
         selected = (
             receipts.NO_ACTION if refusal == "write_target_unavailable"
