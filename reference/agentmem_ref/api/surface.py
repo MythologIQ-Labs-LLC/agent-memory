@@ -480,7 +480,15 @@ class AgentMemory:
         self._require_open()
         if not target_reference:
             raise ValueError("target_reference must be non-empty")
-        state_snapshot = f"v{self.runtime.adapter.state_version(target_reference)}"
+        # A foreign target's version is not the writer's state to inspect.
+        # Unknown and inaccessible targets use the same public snapshot.
+        visible = self.runtime.adapter.history_eligible(
+            target_reference, self._handle_recall_context()
+        )
+        state_snapshot = (
+            f"v{self.runtime.adapter.state_version(target_reference)}"
+            if visible else "v0"
+        )
         refs = tuple(evidence_refs) or ((_content_ref(fact_text),) if fact_text else (f"state:{state_snapshot}",))
         material = {
             "actor_id": self.actor_id,
@@ -878,6 +886,14 @@ class AgentMemory:
         applicability. Intent only orders admitted candidates (ADR-039, proposed).
         """
         self._require_open()
+        # Caller-provided context can narrow retrieval, never impersonate the
+        # host-bound actor/project or add domains outside the handle's identity.
+        if principal_ref is not None and principal_ref != self.actor_id:
+            raise ValueError("recall principal differs from host-bound identity")
+        if project_ref is not None and project_ref != self.scope:
+            raise ValueError("recall project differs from host-bound identity")
+        if target_domain_refs is not None and not set(target_domain_refs).issubset(self._domain_refs()):
+            raise ValueError("recall domains exceed host-bound identity")
         intent = resolve_intent(query, temporal_intent, reference_time=reference_time)
         domains = tuple(target_domain_refs) if target_domain_refs is not None else self._domain_refs()
         envelope = {
@@ -1020,6 +1036,20 @@ class AgentMemory:
     @_serialized
     def history(self, target_reference: str, *, fact_text: str | None = None) -> dict:
         self._require_open()
+        # No caller-visible distinction between nonexistent and foreign
+        # histories. Check all known versions, not merely the current head.
+        if not self.runtime.adapter.history_eligible(
+            target_reference, self._handle_recall_context()
+        ):
+            unknown = {
+                "current_fact_uuid": None,
+                "state_version": 0,
+                "tombstoned": False,
+                "events": [],
+            }
+            if fact_text is not None:
+                unknown["rejected_values"] = []
+            return contract.result("history", contract.CURRENT, history=unknown)
         return history(
             self.runtime.adapter,
             {"contract_version": contract.CONTRACT_VERSION, "target_reference": target_reference},
