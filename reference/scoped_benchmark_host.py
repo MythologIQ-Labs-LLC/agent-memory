@@ -17,7 +17,13 @@ T = TypeVar("T")
 class SerializedScopedBenchmarkHost:
     """Own the only active runtime handle and its identity transition."""
 
-    def __init__(self, open_scope: Callable[[str], T]):
+    def __init__(self, open_scope: Callable[[str], T], *, tenant: str, actor_id: str):
+        if not isinstance(tenant, str) or not tenant.strip():
+            raise ValueError("host tenant must be nonempty")
+        if not isinstance(actor_id, str) or not actor_id.strip():
+            raise ValueError("host actor_id must be nonempty")
+        self._tenant = tenant
+        self._actor_id = actor_id
         self._open_scope = open_scope
         self._lock = threading.RLock()
         self._active_scope: str | None = None
@@ -46,10 +52,14 @@ class SerializedScopedBenchmarkHost:
                 # A host callback is not proof that the returned runtime is
                 # bound to the requested principal/project. A wrongly bound
                 # facade must never be handed to a benchmark operation.
-                if getattr(opened, "scope", None) != requested_scope:
+                if (
+                    getattr(opened, "scope", None) != requested_scope
+                    or getattr(opened, "tenant", None) != self._tenant
+                    or getattr(opened, "actor_id", None) != self._actor_id
+                ):
                     if opened is not None:
                         opened.close()
-                    raise RuntimeError("opened runtime scope does not match host request")
+                    raise RuntimeError("opened runtime identity does not match host binding")
                 self._handle = opened
                 self._active_scope = requested_scope
                 self.opens += 1
