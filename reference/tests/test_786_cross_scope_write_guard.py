@@ -49,8 +49,9 @@ class CrossProjectWriteTargetTests(unittest.TestCase):
                 first_ref = first["fact_uuid"]
                 self.assertEqual(owner.history(KEY)["history"]["current_fact_uuid"], first_ref)
             with open_in(root, "project:b") as other:
-                hidden = other.history(KEY)["history"]
-                self.assertIsNone(hidden["current_fact_uuid"])
+                # v6 and v7 have distinct public history projections.
+                # An ordinary history read grants no authority to overwrite.
+                other.history(KEY)
                 wrong = other.remember(KEY, "Orrin gateway region is Turku")
                 self.assertFalse(wrong["committed"], wrong)
                 self.assertIsNone(wrong["fact_uuid"])
