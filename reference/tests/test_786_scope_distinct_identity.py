@@ -83,13 +83,54 @@ class ScopedIdentityTests(unittest.TestCase):
             except (OSError, NotImplementedError) as error:
                 self.skipTest(f"symlink capability unavailable: {error}")
             with patch("agentmem_ref.api.scoped_identity.AgentMemory.open") as opener:
-                with self.assertRaisesRegex(ValueError, "must not be a symlink"):
+                with self.assertRaisesRegex(ValueError, "symlink"):
                     ScopeDistinctMemory.open(
                         parent, tenant="tenant:one", scope="project:a",
                         actor_id="agent:one",
                     )
                 opener.assert_not_called()
             self.assertEqual(list(legacy.iterdir()), [])
+
+    def test_symlinked_ancestor_refused_before_runtime_open(self):
+        with tempfile.TemporaryDirectory() as directory:
+            parent = Path(directory)
+            real = parent / "real"
+            real.mkdir()
+            alias = parent / "alias"
+            try:
+                alias.symlink_to(real, target_is_directory=True)
+            except (OSError, NotImplementedError) as exc:
+                self.skipTest(f"symlinks unavailable: {exc}")
+            with patch("agentmem_ref.api.scoped_identity.AgentMemory.open") as opener:
+                with self.assertRaisesRegex(ValueError, "symlink"):
+                    ScopeDistinctMemory.open(alias, tenant="tenant:one", actor_id="agent:one", scope="project:a")
+                opener.assert_not_called()
+
+    def test_relative_and_traversal_roots_refused_before_runtime(self):
+        with tempfile.TemporaryDirectory() as directory:
+            candidates = [Path("relative-host-root"), Path(directory) / "missing" / ".." / "other"]
+            with patch("agentmem_ref.api.scoped_identity.AgentMemory.open") as opener:
+                for root in candidates:
+                    with self.subTest(root=root), self.assertRaises(ValueError):
+                        ScopeDistinctMemory.open(root, tenant="tenant:one", actor_id="agent:one", scope="project:a")
+                opener.assert_not_called()
+
+    def test_existing_non_directory_child_refused_before_runtime(self):
+        with tempfile.TemporaryDirectory() as directory:
+            parent = Path(directory)
+            (parent / ".agent-memory-scoped-v1").write_text("unrelated store", encoding="utf-8")
+            with patch("agentmem_ref.api.scoped_identity.AgentMemory.open") as opener:
+                with self.assertRaisesRegex(ValueError, "must be a directory"):
+                    ScopeDistinctMemory.open(parent, tenant="tenant:one", actor_id="agent:one", scope="project:a")
+                opener.assert_not_called()
+            self.assertEqual((parent / ".agent-memory-scoped-v1").read_text(), "unrelated store")
+
+    def test_invalid_host_identity_refused_before_store_open(self):
+        with tempfile.TemporaryDirectory() as directory:
+            with patch("agentmem_ref.api.scoped_identity.AgentMemory.open") as opener:
+                with self.assertRaisesRegex(ValueError, "NFC"):
+                    ScopeDistinctMemory.open(Path(directory), tenant="tenant:one", actor_id="agent:one", scope="project:e\u0301")
+                opener.assert_not_called()
 
     def test_two_projects_same_public_key_create_separate_heads(self):
         store = {}
