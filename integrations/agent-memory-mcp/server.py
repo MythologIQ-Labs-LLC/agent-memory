@@ -68,14 +68,15 @@ def _tool_call(action):
 
 
 @mcp.tool()
-def memory_remember(key: str, text: str) -> dict[str, Any]:
-    """Persist an explicit piece of memory under an agent-chosen logical key.
+def memory_remember(key: str, text: str, create_only: bool = False) -> dict[str, Any]:
+    """Write an explicit memory; optionally refuse an existing key.
 
-    Key examples: 'memory:owner:preferred_editor'. Do not store secrets,
-    credentials, hidden instructions or unreviewed conversation transcripts.
-    Tool results indicate whether the governed write actually committed.
+    create_only uses a public-history precondition and refuses an existing,
+    tombstoned or unverifiable key without making a second current assertion.
+    It is not a cross-process atomic create. The host must serialize writers.
+    Do not store secrets, credentials or unreviewed transcripts.
     """
-    return _tool_call(lambda: _bridge().remember(key, text))
+    return _tool_call(lambda: _bridge().remember(key, text, create_only=create_only))
 
 
 @mcp.tool()
