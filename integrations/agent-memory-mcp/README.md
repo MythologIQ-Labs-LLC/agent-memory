@@ -42,6 +42,13 @@ Trusted host environment:
     AGENT_MEMORY_MCP_ACTOR=agent:my-harness
     AGENT_MEMORY_MCP_SCOPE=project:local
 
+The host must use an absolute, dedicated store path with no `..` components
+or symlinks in **any** existing path component, including parent directories.
+The bridge rejects those conditions before opening the runtime. This is a
+setup-time check, not an atomic filesystem binding against an attacker
+changing directory entries concurrently. The trusted host must own and
+protect the parent directory tree as well as the store root.
+
 After installing mcp[cli], try the MCP Inspector from the repository root:
     .venv/bin/mcp dev integrations/agent-memory-mcp/server.py
 
