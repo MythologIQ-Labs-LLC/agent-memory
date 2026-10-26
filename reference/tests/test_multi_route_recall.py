@@ -209,6 +209,30 @@ class MultiRouteRecallTests(unittest.TestCase):
         self.assertNotIn(deploy.fact_uuid, result.refusals)
         self.assertEqual(result.authority_effect, "none")
 
+    def test_foreign_seed_cannot_traverse_to_local_shared_evidence(self) -> None:
+        from dataclasses import replace
+
+        foreign = self.runtime.retain(
+            replace(_proposal("proposal:foreign-seed", "memory:foreign-seed", project_ref="project-beta"),
+                    evidence_refs=("session:shared-guard", "dialog:foreign")),
+            "out-of-project seed",
+        )
+        local = self.runtime.retain(
+            replace(_proposal("proposal:local-neighbor", "memory:local-neighbor"),
+                    evidence_refs=("session:shared-guard", "dialog:local")),
+            "authorized neighbor",
+        )
+        self.assertTrue(foreign.committed)
+        self.assertTrue(local.committed)
+        result = self.runtime.multi_route_recall(
+            "unmatched vocabulary", _context(),
+            logical_memory_refs=("memory:foreign-seed",),
+        )
+        self.assertNotIn(foreign.fact_uuid, result.candidates)
+        self.assertNotIn(local.fact_uuid, result.candidates)
+        self.assertNotIn(foreign.fact_uuid, result.route_hits)
+        self.assertNotIn(SHARED_EVIDENCE_ROUTE, result.routes_executed)
+
     def test_exact_identity_does_not_resurrect_superseded_currentness(self) -> None:
         deploy = self._retain(MEMORY_DEPLOY, "deploy window is Thursday")
         substrate = self.runtime.adapter.checkpoint_substrate()
