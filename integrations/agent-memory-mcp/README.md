@@ -90,9 +90,22 @@ framing, and tool schemas provided by the official SDK.
   verified contradiction; identical re-writes qualify. The bridge does not compare values,
   does not correct or retire the earlier generation, and does not hide it. None of these
   fields is canonical history. Nothing is silently merged.
-- memory_find(question, max_items=5, experimental_selectivity=False):
-  governed recall_context within bounded delivery budgets, defaulting to
-  all_returned. The experimental #819 selector must be opted into deliberately.
+- memory_find(question, max_items=5, experimental_selectivity=False,
+  verified_key_heads_only=False): governed recall_context within bounded delivery
+  budgets, defaulting to all_returned. The experimental #819 selector must
+  be opted into deliberately. The separate opt-in `verified_key_heads_only`
+  checks the public history of each delivered logical key and returns only
+  fully resolved facts that are confirmed current key heads. Old generations,
+  unknown/unverifiable heads, missing key provenance, and truncated texts are
+  dropped. The filter reports `filtered_count`, with no stale text or filtered
+  key references in its evidence/non-head-key output. It does **not** refill the
+  retrieval budget, verify the semantic relevance or temporal truth of a
+  remaining fact, prove a key does not exist, generate an answer, or certify
+  that the evidence is sufficient. It can lose a required fact and may
+  legitimately produce empty results even when relevant data exists. This
+  option is a model-facing safety constraint, **not** a qualified Gate 2
+  retrieval-quality improvement. Both options remain disabled by default.
+  Supplying a nonboolean value for either option is an error.
 
 The Gate 1 bridge does not expose correction/whole-key forgetting without qualified lifecycle
 evidence, does not grant action authority, and makes no claim of accurate
