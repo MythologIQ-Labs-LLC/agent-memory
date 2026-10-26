@@ -42,7 +42,15 @@ class SerializedScopedBenchmarkHost:
                     previous.close()
                     self.switches += 1
                 # Failed opens leave no prior handle/caller scope eligible.
-                self._handle = self._open_scope(requested_scope)
+                opened = self._open_scope(requested_scope)
+                # A host callback is not proof that the returned runtime is
+                # bound to the requested principal/project. A wrongly bound
+                # facade must never be handed to a benchmark operation.
+                if getattr(opened, "scope", None) != requested_scope:
+                    if opened is not None:
+                        opened.close()
+                    raise RuntimeError("opened runtime scope does not match host request")
+                self._handle = opened
                 self._active_scope = requested_scope
                 self.opens += 1
             assert self._handle is not None
