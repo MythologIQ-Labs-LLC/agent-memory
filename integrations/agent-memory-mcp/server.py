@@ -89,15 +89,18 @@ def memory_get(key: str) -> dict[str, Any]:
 
 @mcp.tool()
 def memory_find(question: str, max_items: int = 5,
-                experimental_selectivity: bool = False) -> dict[str, Any]:
-    """Retrieve bounded, potentially relevant evidence for a question.
+                experimental_selectivity: bool = False,
+                verified_key_heads_only: bool = False) -> dict[str, Any]:
+    """Retrieve bounded evidence, optionally limiting to confirmed key heads.
 
-    Accuracy and answerability are not guaranteed. The experimental selector
-    must be explicitly enabled and must not be mistaken for a qualified fix.
+    Both filters are off by default. verified_key_heads_only drops stale,
+    unknown-head and truncated evidence without refilling the result budget.
+    Neither filter verifies relevance, answerability or historical truth.
     """
     return _tool_call(lambda: _bridge().find(
         question, max_items=max_items,
-        experimental_selectivity=experimental_selectivity
+        experimental_selectivity=experimental_selectivity,
+        verified_key_heads_only=verified_key_heads_only,
     ))
 
 
