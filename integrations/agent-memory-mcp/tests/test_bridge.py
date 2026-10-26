@@ -23,6 +23,10 @@ class FakeMemory:
         self.calls.append(("remember", key, text, kwargs))
         return {"committed": True, "fact_uuid": "fact:qualified-1", "stage": "commit"}
 
+    def history(self, key):
+        self.calls.append(("history", key))
+        return {"history": {"current_fact_uuid": "fact:qualified-1", "state_version": 1}}
+
     def recall_context(self, question, **kwargs):
         self.calls.append(("recall_context", question, kwargs))
         return {
@@ -144,7 +148,11 @@ class BridgeTests(unittest.TestCase):
                 ],
             }
 
-        with patch.object(FakeMemory, "recall_context", mixed):
+        with patch.object(FakeMemory, "recall_context", mixed), patch.object(
+            FakeMemory, "history", return_value={
+                "history": {"current_fact_uuid": "fact:matching", "state_version": 4}
+            },
+        ):
             response = self.bridge.get("memory:editor")
         self.assertEqual(response["lookup_status"], "found")
         self.assertEqual([item["content"] for item in response["evidence"]], ["Neovim"])
@@ -171,6 +179,48 @@ class BridgeTests(unittest.TestCase):
         self.assertEqual(response["evidence"], [])
         self.assertNotIn("Vim", repr(response))
         self.assertNotIn("Neovim", repr(response))
+
+    def test_exact_get_refuses_stale_single_version_even_if_key_matches(self):
+        # Candidate retrieval may return an older same-key fact without the live head.
+        with patch.object(FakeMemory, "history", return_value={
+            "history": {"current_fact_uuid": "fact:new", "state_version": 2}
+        }):
+            result = self.bridge.get("memory:editor")
+        self.assertEqual(result["lookup_status"], "head_unverified_or_changed")
+        self.assertEqual(result["evidence"], [])
+        self.assertEqual(result["evidence_count"], 0)
+        self.assertIsNone(result["key_state_version"])
+        self.assertNotIn("Neovim", repr(result))
+
+    def test_exact_get_refuses_unverifiable_head_with_no_content(self):
+        with patch.object(FakeMemory, "history", side_effect=RuntimeError("unavailable")):
+            result = self.bridge.get("memory:editor")
+        self.assertEqual(result["lookup_status"], "head_unverified_or_changed")
+        self.assertEqual(result["evidence"], [])
+        self.assertNotIn("Neovim", repr(result))
+
+    def test_exact_get_does_not_treat_truncated_text_as_a_complete_value(self):
+        def truncated(self_, query, **kwargs):
+            return {
+                "status": "truncated",
+                "items": [{
+                    "fact_ref": "fact:qualified-1",
+                    "state": "truncated",
+                    "content": "Our editor is Neo",
+                    "provenance": {"memory_ref": "memory:editor"},
+                }],
+            }
+        with patch.object(FakeMemory, "recall_context", truncated):
+            result = self.bridge.get("memory:editor")
+        self.assertEqual(result["lookup_status"], "incomplete_evidence")
+        self.assertEqual(result["evidence"], [])
+        self.assertNotIn("Our editor is Neo", repr(result))
+
+    def test_exact_get_confirmed_head_is_found_with_state_counter(self):
+        result = self.bridge.get("memory:editor")
+        self.assertEqual(result["lookup_status"], "found")
+        self.assertEqual(result["evidence"][0]["latest_for_key"], True)
+        self.assertEqual(result["key_state_version"], 1)
 
     def test_invalid_request_never_opens_store(self):
         for bad in ("", " ", "x" * 161):
