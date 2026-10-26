@@ -242,6 +242,52 @@ class LocalMemoryBridge:
         return result
 
 
+
+    def correct_head(
+        self, key: str, expected_fact_ref: str, replacement_text: str,
+        *, replacement_kind: str = "error_correction",
+    ) -> dict:
+        """Submit a correction of the authorized current head to the runtime.
+
+        This never translates correction into an ordinary second remember call.
+        The runtime governs approval and lifecycle. The host must serialize
+        writers because the public history precheck is not a transactional CAS.
+        """
+        key = _string("key", key, MAX_KEY_CHARS)
+        expected_fact_ref = _string("expected_fact_ref", expected_fact_ref, MAX_KEY_CHARS)
+        replacement_text = _string("replacement_text", replacement_text, MAX_TEXT_CHARS)
+        if replacement_kind not in ("error_correction", "state_change"):
+            raise ValueError("replacement_kind must be error_correction or state_change")
+        if os.environ.get("AGENT_MEMORY_MCP_ALLOW_HEAD_CORRECTION") != "enabled":
+            raise ValueError("host has not enabled governed correction")
+        with self._open() as memory:
+            history = memory.history(key)
+            record = history.get("history") if isinstance(history, dict) else None
+            visible_head = record.get("current_fact_uuid") if isinstance(record, dict) else None
+            if not isinstance(visible_head, str) or visible_head != expected_fact_ref:
+                return {
+                    "committed": False,
+                    "status": "unavailable_or_changed",
+                    "key": key,
+                    "correction_kind": replacement_kind,
+                    "new_fact_ref": None,
+                }
+            outcome = memory.correct(
+                key, replacement_text, replacement_kind=replacement_kind,
+            )
+        committed = isinstance(outcome, dict) and outcome.get("committed") is True
+        return {
+            "committed": committed,
+            "status": "governed_correction_committed" if committed else "governed_refusal",
+            "key": key,
+            "correction_kind": replacement_kind,
+            "new_fact_ref": outcome.get("fact_uuid") if committed else None,
+            "note": (
+                "The runtime governs correction authority and history. "
+                "A refusal is not an implicit permission to write a second current fact."
+            ),
+        }
+
     def tombstone_head(self, key: str, expected_fact_ref: str) -> dict:
         """Request governed pruning of one currently visible key head.
 
