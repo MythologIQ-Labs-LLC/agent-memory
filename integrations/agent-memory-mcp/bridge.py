@@ -39,8 +39,17 @@ class HostConfig:
         if not raw_root or not Path(raw_root).is_absolute():
             raise ValueError("AGENT_MEMORY_MCP_ROOT must be an absolute, host-owned local path")
         root = Path(raw_root)
-        if root.is_symlink():
-            raise ValueError("AGENT_MEMORY_MCP_ROOT must not be a symlink")
+        # Checking only the final path component is insufficient: an
+        # attacker-controlled symlink in a parent can redirect the store.
+        # Reject lexical parent traversal and every symlink component.
+        # This is a setup preflight, not atomic directory-handle binding.
+        if ".." in root.parts:
+            raise ValueError("AGENT_MEMORY_MCP_ROOT must not contain parent traversal")
+        try:
+            if any(part.is_symlink() for part in (root, *root.parents)):
+                raise ValueError("AGENT_MEMORY_MCP_ROOT must not traverse symlinks")
+        except OSError as exc:
+            raise ValueError("AGENT_MEMORY_MCP_ROOT could not be safely inspected") from exc
         claims = {
             "tenant": os.environ.get("AGENT_MEMORY_MCP_TENANT", ""),
             "actor": os.environ.get("AGENT_MEMORY_MCP_ACTOR", ""),
