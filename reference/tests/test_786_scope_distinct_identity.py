@@ -1,4 +1,5 @@
 """#786 scoped identity candidate contract; full SQLite replay still required."""
+import hashlib
 import unittest
 from agentmem_ref.api.scoped_identity import ScopeDistinctMemory, scope_distinct_key
 
@@ -9,10 +10,10 @@ class FakeMemory:
     def remember(self, key, text):
         self.calls.append(("remember", key))
         self.store[key] = text
-        return {"committed": True, "fact_uuid": "fact:" + key, "outcome": "allow_with_ledger"}
+        return {"committed": True, "fact_uuid": "fact:" + hashlib.sha256(key.encode()).hexdigest()[:16], "outcome": "allow_with_ledger"}
     def history(self, key):
         self.calls.append(("history", key))
-        return {"history": {"current_fact_uuid": "fact:" + key if key in self.store else None,
+        return {"history": {"current_fact_uuid": ("fact:" + hashlib.sha256(key.encode()).hexdigest()[:16]) if key in self.store else None,
                 "state_version": 1 if key in self.store else 0, "tombstoned": False,
                 "events": [{"private": "forbidden"}]}}
     def correct(self, key, text, **kw):
