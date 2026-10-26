@@ -278,6 +278,52 @@ class RecallControlTests(unittest.TestCase):
         self.assertEqual(result.recall.route_hits, {})
         self.assertEqual(result.route_candidate_counts[SHARED_EVIDENCE_ROUTE], 0)
 
+    def test_graph_route_scope_filters_seed_ids(self) -> None:
+        from agentmem_ref.recall_control import TYPED_GRAPH_ROUTE
+
+        other = self._retain(
+            "memory:other-graph",
+            "other origin",
+            evidence_refs=("session:graph",),
+            project_ref="project-beta",
+        )
+        own = self._retain(
+            "memory:own-graph",
+            "own origin",
+            evidence_refs=("session:graph",),
+        )
+
+        class GraphSpy:
+            def __init__(self):
+                self.seeds = []
+
+            def available_for(self, substrate):
+                return True
+
+            def search(self, substrate, refs, *, group_id, candidate_limit):
+                self.seeds.append(tuple(refs))
+                return []
+
+        spy = GraphSpy()
+        fixed = _FixedController(RecallControlPlan(
+            controller_ref="test:graph",
+            controller_version="1",
+            route_budgets=(
+                RecallRouteBudget(LEXICAL_ROUTE, 0),
+                RecallRouteBudget(EXACT_IDENTITY_ROUTE, 0),
+                RecallRouteBudget(TYPED_GRAPH_ROUTE, 4),
+                RecallRouteBudget(SHARED_EVIDENCE_ROUTE, 0),
+            ),
+        ))
+        result = ControlledRecallPlanner(
+            self.runtime.adapter, controller=fixed, graph_retriever=spy,
+        ).recall(
+            "no matching terms", _context(),
+            logical_memory_refs=("memory:other-graph", "memory:own-graph"),
+        )
+        self.assertEqual(spy.seeds, [(own.fact_uuid,)])
+        self.assertNotIn(other.fact_uuid, result.candidates)
+
     def test_exact_identity_budget_resolves_only_current_logical_refs(self) -> None:
         known = self._retain(
             "memory:known",
