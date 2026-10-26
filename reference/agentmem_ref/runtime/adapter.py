@@ -1318,6 +1318,18 @@ class GovernedMemoryAdapter:
             return "target_binding_unknown"
         if bound_memory != proposal.target_reference:
             return "target_binding_mismatch"
+        # A valid tenant and fact->logical-memory binding does not authorize
+        # the requesting project to delete another project's fact (#786).
+        write_scope = self._write_scope(proposal)
+        context = RecallContext(
+            target_domain_refs=tuple(write_scope["domain_refs"]),
+            principal_ref=proposal.actor_id,
+            project_ref=proposal.project_ref,
+            task_ref=proposal.task_ref,
+            purpose=proposal.purpose,
+        )
+        if self._domain_identity_refusal(fact_uuid, fact.group_id, context) is not None:
+            return "write_target_unavailable"
         return None
 
     def governed_delete(
