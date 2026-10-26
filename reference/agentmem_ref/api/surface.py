@@ -518,10 +518,35 @@ class AgentMemory:
         if confidence is not None:
             envelope["confidence"] = confidence
         if overrides:
-            protected = {"contract_version", "proposal_id", "actor_id", "charter_version", "state_snapshot"}
+            # #786: a proposal's asserted domains are not proof of the
+            # facade handle's host-bound identity. An untrusted caller must
+            # not impersonate another project's identity by overriding the
+            # fields that the canonical adapter uses for write eligibility.
+            protected = {
+                "contract_version", "proposal_id", "actor_id",
+                "charter_version", "state_snapshot", "operation",
+                "target_reference",
+            }
             attempted = protected.intersection(overrides)
             if attempted:
-                raise ValueError(f"facade proposal overrides may not replace protected fields: {sorted(attempted)}")
+                raise ValueError(
+                    f"facade proposal overrides may not replace protected fields: {sorted(attempted)}"
+                )
+            bound = {
+                "tenant_ref": self.tenant,
+                "scope": self.scope,
+                "project_ref": self.scope,
+                "isolation_domain_refs": list(self._domain_refs()),
+                "required_isolation_domain_refs": list(self._domain_refs()),
+            }
+            for field, expected in bound.items():
+                if field not in overrides:
+                    continue
+                value = overrides[field]
+                # Tuples/lists express one domain set in the public envelope.
+                normalized = list(value) if isinstance(value, (tuple, list)) else value
+                if normalized != expected:
+                    raise ValueError("facade proposal may not override host-bound scope identity")
             envelope.update(dict(overrides))
         contract.validate_proposal_envelope(envelope)
         return envelope
