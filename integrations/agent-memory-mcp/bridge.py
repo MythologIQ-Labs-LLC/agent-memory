@@ -208,6 +208,12 @@ class LocalMemoryBridge:
                 ]
                 result["evidence_count"] = len(result["evidence"])
                 result["filtered_count"] = before - result["evidence_count"]
+                result["delivery_assessment"] = (
+                    "verified_key_heads_delivered"
+                    if result["evidence_count"] else "no_verified_key_heads"
+                )
+                # Upstream selection/package assessment is not the final
+                # consumer delivery assessment after conservative filtering.
                 # No stale logical keys or fact references in the strict output.
                 result["non_head_keys"] = []
         result["profile"] = profile
