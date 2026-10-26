@@ -24,6 +24,28 @@ _MAX_KEY_LENGTH = 512
 _SCOPED_STORE_DIRECTORY = ".agent-memory-scoped-v1"
 
 
+def _scoped_store_root(path) -> Path:
+    """Fail closed on lexical path redirection before opening any store.
+
+    The trusted host must also protect parent directories from concurrent
+    mutation; this preflight is not an atomic directory-handle guarantee.
+    """
+    parent = Path(path)
+    if not parent.is_absolute():
+        raise ValueError("scope-distinct host root must be absolute")
+    if ".." in parent.parts:
+        raise ValueError("scope-distinct host root must not contain parent traversal")
+    scoped_root = parent / _SCOPED_STORE_DIRECTORY
+    try:
+        if any(component.is_symlink() for component in (scoped_root, *scoped_root.parents)):
+            raise ValueError("scope-distinct store path must not traverse symlinks")
+        if scoped_root.exists() and not scoped_root.is_dir():
+            raise ValueError("scope-distinct store path must be a directory")
+    except OSError as exc:
+        raise ValueError("scope-distinct store path could not be safely inspected") from exc
+    return scoped_root
+
+
 def scope_distinct_key(tenant: str, scope: str, public_key: str) -> str:
     """Stable tenant/project/key tuple identity without raw key disclosure.
 
@@ -75,17 +97,11 @@ class ScopeDistinctMemory:
     ) -> "ScopeDistinctMemory":
         # The caller running this constructor is the trusted host. The model
         # must not select tenant/scope/actor per memory operation.
-        parent = Path(path)
-        # The parent is host-owned. Never silently open the legacy runtime at
-        # that path; scope-distinct mode uses its own persistent child root.
-        # This is physical namespace separation, not a replacement for the
-        # host's filesystem access controls or the canonical scope guard.
-        scoped_root = parent / _SCOPED_STORE_DIRECTORY
-        # A redirected child could silently land this mode on a pre-existing
-        # legacy store. The host must own this parent and prevent concurrent
-        # filesystem mutation; this preflight is not TOCTOU-proof.
-        if scoped_root.is_symlink():
-            raise ValueError("scope-distinct store path must not be a symlink")
+        # Verify host identity before any filesystem side effects. This same
+        # canonical tuple defines every logical key issued by the handle.
+        scope_distinct_key(tenant, scope, "_host_preflight")
+        # Physical separation from the legacy root and lexical path checks.
+        scoped_root = _scoped_store_root(path)
         memory = AgentMemory.open(
             scoped_root, tenant=tenant, actor_id=actor_id, scope=scope, purpose=purpose
         )
