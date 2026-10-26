@@ -1255,6 +1255,9 @@ class GovernedMemoryAdapter:
         correlation = self._ids.next()
         propose_event = self._event("memory.propose", proposal.target_reference, correlation)
         decision = self.evaluate_proposal(proposal, evidence=evidence, attestation=attestation)
+        refusal = self._dispute_refusal(proposal, fact_uuid)
+        if refusal == "write_target_unavailable":
+            decision = self._unavailable_target_decision(proposal, decision)
         authorize_event = self._event(
             "memory.authorize",
             proposal.target_reference,
@@ -1269,10 +1272,7 @@ class GovernedMemoryAdapter:
         )
         events = [propose_event, authorize_event]
 
-        refusal = self._dispute_refusal(proposal, fact_uuid)
-        if refusal == "write_target_unavailable":
-            decision = self._unavailable_target_decision(proposal, decision)
-        stale = self._is_stale(proposal)
+        stale = False if refusal == "write_target_unavailable" else self._is_stale(proposal)
         selected = (
             receipts.NO_ACTION if refusal == "write_target_unavailable"
             else self._select_action(decision, proposal, blocked_by_stale=stale)
@@ -1452,7 +1452,7 @@ class GovernedMemoryAdapter:
         refusal = self._delete_refusal(proposal, fact_uuid)
         if refusal == "write_target_unavailable":
             decision = self._unavailable_target_decision(proposal, decision)
-        stale = self._is_stale(proposal)
+        stale = False if refusal == "write_target_unavailable" else self._is_stale(proposal)
         selected = (
             receipts.NO_ACTION if refusal == "write_target_unavailable"
             else self._select_action(decision, proposal, blocked_by_stale=stale)
