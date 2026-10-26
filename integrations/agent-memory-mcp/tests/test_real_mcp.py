@@ -94,6 +94,45 @@ class ActualMcpConsumerLoop(unittest.IsolatedAsyncioTestCase):
                         "Neovim" in item["content"] for item in recovered["evidence"]
                     ), recovered)
 
+    async def test_create_only_write_refuses_duplicate_and_survives_restart(self):
+        with tempfile.TemporaryDirectory() as temp:
+            env = {
+                "AGENT_MEMORY_MCP_ROOT": str(Path(temp) / "store"),
+                "AGENT_MEMORY_MCP_TENANT": "tenant:create-once",
+                "AGENT_MEMORY_MCP_ACTOR": "agent:create-once",
+                "AGENT_MEMORY_MCP_SCOPE": "project:create-once",
+            }
+            with patch.dict(os.environ, env):
+                async with Client(module.mcp, raise_exceptions=True) as client:
+                    first = _result(await client.call_tool("memory_remember", {
+                        "key": "memory:editor",
+                        "text": "The current editor is Neovim.",
+                        "create_only": True,
+                    }), "committed")
+                    self.assertTrue(first["committed"], first)
+                    refused = _result(await client.call_tool("memory_remember", {
+                        "key": "memory:editor",
+                        "text": "The current editor is VS Code.",
+                        "create_only": True,
+                    }), "committed")
+                    self.assertFalse(refused["committed"], refused)
+                    self.assertEqual(refused["refusal"], "key_exists_or_unavailable")
+                    self.assertIsNone(refused["fact_ref"])
+                    self.assertNotIn("VS Code", repr(refused))
+                    exact = _result(await client.call_tool("memory_get", {
+                        "key": "memory:editor",
+                    }), "evidence")
+                    self.assertEqual(exact["lookup_status"], "found", exact)
+                    self.assertEqual([e["content"] for e in exact["evidence"]],
+                                     ["The current editor is Neovim."])
+                async with Client(module.mcp, raise_exceptions=True) as reopened:
+                    persisted = _result(await reopened.call_tool("memory_get", {
+                        "key": "memory:editor",
+                    }), "evidence")
+                    self.assertEqual(persisted["lookup_status"], "found", persisted)
+                    self.assertEqual([e["content"] for e in persisted["evidence"]],
+                                     ["The current editor is Neovim."])
+
     async def test_separately_configured_project_cannot_read_other_project(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp) / "my-memory"
