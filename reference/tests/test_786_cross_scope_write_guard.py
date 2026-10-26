@@ -111,6 +111,33 @@ class CrossProjectWriteTargetTests(unittest.TestCase):
                 )
                 self.assertTrue(result["committed"], result)
 
+    def test_host_bound_identity_override_matrix_fails_before_mutation(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            with open_in(root, "project:a") as owner:
+                original = owner.remember(KEY, "Orrin gateway region is Oslo")
+                self.assertTrue(original["committed"])
+                original_ref = original["fact_uuid"]
+            attempted_overrides = [
+                {"tenant_ref": "tenant:other"},
+                {"scope": "project:a"},
+                {"project_ref": "project:a"},
+                {"isolation_domain_refs": [TENANT, "project:a"]},
+                {"required_isolation_domain_refs": [TENANT, "project:a"]},
+                {"task_ref": "task:owner"},
+                {"operation": "correction"},
+                {"target_reference": "memory:different-target"},
+            ]
+            with open_in(root, "project:b") as other:
+                for override in attempted_overrides:
+                    with self.subTest(override=override), self.assertRaises(ValueError):
+                        other.remember(KEY, "Orrin gateway region is Turku",
+                                       overrides=override)
+            with open_in(root, "project:a") as owner:
+                self.assertEqual(
+                    owner.history(KEY)["history"]["current_fact_uuid"], original_ref
+                )
+
     def test_other_project_cannot_correct_owner_with_qualified_evidence(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
