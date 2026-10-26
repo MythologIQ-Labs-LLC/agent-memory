@@ -133,6 +133,46 @@ Acceptance still requires a clean checkout, the official MCP SDK, a genuine
 stdio/reconnect test, authorization negatives, and independent deletion
 regression evidence. Until those pass, this is a development candidate only.
 
+## Experimental governed correction: explicit current-head replacement
+
+This development branch also adds
+`memory_correct_head(key, expected_fact_ref, replacement_text, replacement_kind)`.
+It does **not** issue a second `memory_remember`, because that would leave the
+old current-state fact potentially discoverable. Correction uses the
+runtime's public `AgentMemory.correct` API and preserves all existing PAMA
+approval and refusal rules. A policy refusal stays a refusal.
+
+The trusted MCP host must set:
+
+    AGENT_MEMORY_MCP_ALLOW_HEAD_CORRECTION=enabled
+
+Without that exact host-side value, the tool refuses before opening the
+runtime. The model cannot change this setting through the tool call. Use an
+authorized `memory_get(key)` result as the source of `expected_fact_ref`.
+Missing, forbidden and stale heads yield the identical
+`status=unavailable_or_changed`; an unchanged authorized head may yield
+`governed_correction_committed` or `governed_refusal`, depending on the
+runtime's existing policy decision. Do not supply a fallback ordinary
+`memory_remember` after a correction refusal.
+
+`replacement_kind` must be either `error_correction` (previous assertion
+was wrong) or `state_change` (previous state was historically true). The
+choice is explicit, never inferred by this bridge. Host/operator consent to
+enable mutation and serialized writer ownership are prerequisites; this is not
+a cross-process compare-and-swap, and it is not an authorization mechanism.
+No privileged verification or external attestation is synthesized by the tool.
+
+To exercise the new tests:
+
+    .venv/bin/python -m unittest discover -s integrations/agent-memory-mcp/tests -p "test_head_tombstone.py" -v
+    .venv/bin/python -m unittest discover -s integrations/agent-memory-mcp/tests -p "test_real_mcp.py" -v
+
+An exact-head real-SDK run and independent scope/deletion/correction review are
+still required. Both lifecycle tools are unqualified development candidates.
+An older fact written independently under the same logical key may remain
+discoverable even after a head correction or head tombstone. No whole-key
+erasure guarantee or production support is implied.
+
 ## Two acceptance gates
 
 **Gate 1, minimum functioning product:** One exact-head run with an actual
