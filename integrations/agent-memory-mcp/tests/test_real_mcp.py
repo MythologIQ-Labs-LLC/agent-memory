@@ -136,7 +136,7 @@ class ActualMcpConsumerLoop(unittest.IsolatedAsyncioTestCase):
                 tools = await client.list_tools()
                 self.assertEqual(
                     {tool.name for tool in tools.tools},
-                    {"memory_remember", "memory_get", "memory_find", "memory_tombstone_head"},
+                    {"memory_remember", "memory_get", "memory_find", "memory_tombstone_head", "memory_correct_head"},
                 )
                 created = _result(await client.call_tool("memory_remember", {
                     "key": "memory:agent:editor",
@@ -258,6 +258,62 @@ class ActualMcpConsumerLoop(unittest.IsolatedAsyncioTestCase):
                         self.assertEqual(after["lookup_status"], "not_found_or_unavailable")
                     else:
                         self.assertEqual(reply["status"], "governed_refusal")
+
+    async def test_opt_in_governed_correction_preserves_runtime_decision(self):
+        with tempfile.TemporaryDirectory() as temp:
+            env = {
+                "AGENT_MEMORY_MCP_ROOT": str(Path(temp) / "store"),
+                "AGENT_MEMORY_MCP_TENANT": "tenant:correct",
+                "AGENT_MEMORY_MCP_ACTOR": "agent:correct",
+                "AGENT_MEMORY_MCP_SCOPE": "project:correct",
+                "AGENT_MEMORY_MCP_ALLOW_HEAD_CORRECTION": "",
+            }
+            with patch.dict(os.environ, env):
+                async with Client(module.mcp, raise_exceptions=True) as client:
+                    denied = await client.call_tool("memory_correct_head", {
+                        "key": "memory:editor", "expected_fact_ref": "fact:unknown",
+                        "replacement_text": "Now Neovim",
+                    })
+                    self.assertTrue(denied.is_error, denied)
+                    self.assertIsNone(denied.structured_content)
+                    saved = _result(await client.call_tool("memory_remember", {
+                        "key": "memory:editor",
+                        "text": "The current editor is VS Code.",
+                    }), "committed")
+                    self.assertTrue(saved["committed"], saved)
+                    got = _result(await client.call_tool("memory_get", {
+                        "key": "memory:editor",
+                    }), "evidence")
+                    old_ref = got["evidence"][0]["fact_ref"]
+            with patch.dict(os.environ, {**env, "AGENT_MEMORY_MCP_ALLOW_HEAD_CORRECTION": "enabled"}):
+                async with Client(module.mcp, raise_exceptions=True) as client:
+                    stale = _result(await client.call_tool("memory_correct_head", {
+                        "key": "memory:editor", "expected_fact_ref": "fact:stale",
+                        "replacement_text": "The current editor is Neovim.",
+                    }), "committed")
+                    self.assertEqual(stale["status"], "unavailable_or_changed")
+                    self.assertFalse(stale["committed"])
+                    corrected = _result(await client.call_tool("memory_correct_head", {
+                        "key": "memory:editor", "expected_fact_ref": old_ref,
+                        "replacement_text": "The current editor is Neovim.",
+                        "replacement_kind": "error_correction",
+                    }), "committed")
+                    self.assertIn(corrected["status"], (
+                        "governed_correction_committed", "governed_refusal",
+                    ))
+                    self.assertEqual(corrected["committed"],
+                                     corrected["status"] == "governed_correction_committed")
+                    self.assertEqual(corrected["correction_kind"], "error_correction")
+                    current = _result(await client.call_tool("memory_get", {
+                        "key": "memory:editor",
+                    }), "evidence")
+                    if corrected["committed"]:
+                        self.assertEqual(corrected["new_fact_ref"],
+                                         current["evidence"][0]["fact_ref"])
+                        self.assertIn("Neovim", current["evidence"][0]["content"])
+                    else:
+                        self.assertIsNone(corrected["new_fact_ref"])
+                        self.assertIn("VS Code", current["evidence"][0]["content"])
 
     async def test_missing_host_configuration_is_tool_error_not_success(self):
         with patch.dict(os.environ, {}, clear=True):
