@@ -432,8 +432,13 @@ class GovernedMemoryAdapter:
         )
         events = [propose_event, authorize_event]
 
-        stale = self._is_stale(proposal)
-        readmission_blocked = self._readmission_blocked(proposal, fact_text, attestation)
+        # Foreign targets are never inspected for lifecycle/readmission detail.
+        # The same blocked selection applies regardless of the hidden state.
+        stale = False if target_unavailable else self._is_stale(proposal)
+        readmission_blocked = (
+            False if target_unavailable
+            else self._readmission_blocked(proposal, fact_text, attestation)
+        )
         # A foreign live target receives no selected action. The decision
         # envelope alone never confers write permission for this target.
         # This also prevents a misleading success-shaped receipt when the
