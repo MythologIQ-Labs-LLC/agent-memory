@@ -108,6 +108,27 @@ class ScopedHostTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "must be nonempty"):
                 SerializedScopedBenchmarkHost(lambda scope: None, tenant=tenant, actor_id=actor)
 
+    def test_cached_scope_identity_change_cannot_borrow_prior_authorization(self):
+        with self.host.use("alice") as facade:
+            pass
+        facade.scope = "user:bob"
+        with self.assertRaisesRegex(RuntimeError, "cached runtime identity"):
+            with self.host.use("alice"):
+                self.fail("a tampered cached handle escaped")
+        self.assertTrue(facade.is_closed)
+        with self.host.use("alice") as reopened:
+            self.assertIsNot(reopened, facade)
+            self.assertEqual(reopened.scope, "user:alice")
+
+    def test_cached_actor_identity_change_is_refused(self):
+        with self.host.use("alice") as facade:
+            pass
+        facade.actor_id = "agent:foreign"
+        with self.assertRaisesRegex(RuntimeError, "cached runtime identity"):
+            with self.host.use("alice"):
+                self.fail("a mutated actor escaped")
+        self.assertTrue(facade.is_closed)
+
     def test_scope_is_host_owned_not_tool_overridable(self):
         with self.host.use("alice") as handle:
             self.assertEqual(handle.scope, "user:alice")
