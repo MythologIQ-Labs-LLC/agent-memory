@@ -1,6 +1,9 @@
 """#786 scoped identity candidate contract; full SQLite replay still required."""
 import hashlib
+import tempfile
 import unittest
+from pathlib import Path
+from unittest.mock import patch
 from agentmem_ref.api.scoped_identity import ScopeDistinctMemory, scope_distinct_key
 
 class FakeMemory:
@@ -29,6 +32,46 @@ def scoped(scope, store, tenant="tenant:one", actor="agent:one"):
     return ScopeDistinctMemory(fake, tenant=tenant, scope=scope, actor_id=actor)
 
 class ScopedIdentityTests(unittest.TestCase):
+    def test_open_uses_dedicated_child_not_existing_legacy_root(self):
+        with tempfile.TemporaryDirectory() as directory:
+            parent = Path(directory)
+            (parent / "legacy-state.db").write_text("legacy state", encoding="utf-8")
+            fake = FakeMemory("tenant:one", "project:a", "agent:one", {})
+            with patch("agentmem_ref.api.scoped_identity.AgentMemory.open",
+                       return_value=fake) as underlying:
+                with ScopeDistinctMemory.open(
+                    parent, tenant="tenant:one", scope="project:a",
+                    actor_id="agent:one",
+                ) as memory:
+                    self.assertTrue(memory.remember("memory:key", "Oslo")["committed"])
+                self.assertEqual(
+                    underlying.call_args.args[0],
+                    parent / ".agent-memory-scoped-v1",
+                )
+            self.assertEqual(
+                (parent / "legacy-state.db").read_text(encoding="utf-8"),
+                "legacy state",
+            )
+            self.assertTrue(fake.closed)
+
+    def test_reopen_uses_same_durable_child_path_across_scopes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            parent = Path(directory)
+            paths = []
+            for scope in ("project:a", "project:b", "project:a"):
+                fake = FakeMemory("tenant:one", scope, "agent:one", {})
+                with patch("agentmem_ref.api.scoped_identity.AgentMemory.open",
+                           return_value=fake) as underlying:
+                    with ScopeDistinctMemory.open(
+                        parent, tenant="tenant:one", scope=scope,
+                        actor_id="agent:one",
+                    ):
+                        pass
+                    paths.append(underlying.call_args.args[0])
+            self.assertEqual(
+                paths, [parent / ".agent-memory-scoped-v1"] * 3,
+            )
+
     def test_two_projects_same_public_key_create_separate_heads(self):
         store = {}
         a, b = scoped("project:a", store), scoped("project:b", store)
