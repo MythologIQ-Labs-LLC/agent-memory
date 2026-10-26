@@ -35,6 +35,8 @@ class FakeScopeRuntime:
         class Handle:
             def __init__(self):
                 self.scope = scope
+                self.tenant = kwargs["tenant"]
+                self.actor_id = kwargs["actor_id"]
 
             def remember(self, target, text, **kw):
                 if kw:
