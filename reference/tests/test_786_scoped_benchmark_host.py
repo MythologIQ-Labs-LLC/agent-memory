@@ -129,6 +129,45 @@ class ScopedHostTests(unittest.TestCase):
                 self.fail("a mutated actor escaped")
         self.assertTrue(facade.is_closed)
 
+    def test_identity_property_raising_during_open_closes_handle(self):
+        class FailingScope(FakeFacade):
+            @property
+            def scope(self):
+                raise RuntimeError("sensitive property failure")
+
+            @scope.setter
+            def scope(self, value):
+                pass
+
+        self.host.close()
+        handle = FailingScope("user:alice", self.closed)
+        self.host = SerializedScopedBenchmarkHost(
+            lambda requested: handle, tenant="tenant:bench", actor_id="agent:bench"
+        )
+        with self.assertRaisesRegex(RuntimeError, "identity does not match"):
+            with self.host.use("alice"):
+                self.fail("identity descriptor error must never release a handle")
+        self.assertTrue(handle.is_closed)
+        self.assertEqual(self.host.posture()["opens"], 0)
+
+    def test_cached_identity_descriptor_failure_closes_handle(self):
+        with self.host.use("alice") as handle:
+            pass
+        class FailingActor:
+            def __get__(self, obj, owner):
+                raise RuntimeError("sensitive cached identity failure")
+        # An existing public facade can become misconfigured after first open.
+        # This simulates a descriptor that raises during every later check.
+        original_class = handle.__class__
+        class BrokenFacade(original_class):
+            actor_id = FailingActor()
+        handle.__class__ = BrokenFacade
+        with self.assertRaisesRegex(RuntimeError, "cached runtime identity"):
+            with self.host.use("alice"):
+                self.fail("cached identity failure must not release a handle")
+        self.assertTrue(handle.is_closed)
+        self.assertEqual(self.host.posture()["opens"], 1)
+
     def test_scope_is_host_owned_not_tool_overridable(self):
         with self.host.use("alice") as handle:
             self.assertEqual(handle.scope, "user:alice")
