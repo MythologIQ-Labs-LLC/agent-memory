@@ -313,6 +313,7 @@ class BridgeTests(unittest.TestCase):
         }):
             result = self.bridge.get("memory:editor")
         self.assertEqual(result["lookup_status"], "head_unverified_or_changed")
+        self.assertEqual(result["delivery_assessment"], "no_verified_exact_head")
         self.assertEqual(result["evidence"], [])
         self.assertEqual(result["evidence_count"], 0)
         self.assertIsNone(result["key_state_version"])
@@ -339,12 +340,14 @@ class BridgeTests(unittest.TestCase):
         with patch.object(FakeMemory, "recall_context", truncated):
             result = self.bridge.get("memory:editor")
         self.assertEqual(result["lookup_status"], "incomplete_evidence")
+        self.assertEqual(result["delivery_assessment"], "no_verified_exact_head")
         self.assertEqual(result["evidence"], [])
         self.assertNotIn("Our editor is Neo", repr(result))
 
     def test_exact_get_confirmed_head_is_found_with_state_counter(self):
         result = self.bridge.get("memory:editor")
         self.assertEqual(result["lookup_status"], "found")
+        self.assertEqual(result["delivery_assessment"], "verified_exact_head_delivered")
         self.assertEqual(result["evidence"][0]["latest_for_key"], True)
         self.assertEqual(result["key_state_version"], 1)
 
