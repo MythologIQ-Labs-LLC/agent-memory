@@ -311,7 +311,7 @@ class RecallControlTests(unittest.TestCase):
             route_budgets=(
                 RecallRouteBudget(LEXICAL_ROUTE, 0),
                 RecallRouteBudget(EXACT_IDENTITY_ROUTE, 0),
-                RecallRouteBudget(TYPED_GRAPH_ROUTE, 4),
+                RecallRouteBudget(TYPED_GRAPH_ROUTE, 1),
                 RecallRouteBudget(SHARED_EVIDENCE_ROUTE, 0),
             ),
         ))
