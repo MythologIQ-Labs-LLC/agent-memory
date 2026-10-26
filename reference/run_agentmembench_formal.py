@@ -301,6 +301,7 @@ class AgentMemoryFormalAdapter:
                 root, tenant=self.tenant, actor_id="agent:benchmark",
                 scope=scope, purpose="AgentMemBench MESA formal evaluation",
             )
+            tenant=self.tenant, actor_id="agent:benchmark",
         )
         self._targets = {}
         self._texts = {}
