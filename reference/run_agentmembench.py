@@ -295,7 +295,7 @@ class AgentMemoryAdapter:
             lambda scope: AgentMemory.open(
                 root, tenant=self.tenant, actor_id="agent:benchmark",
                 scope=scope, purpose="AgentMemBench operational evaluation",
-            )
+            ),
             tenant=self.tenant, actor_id="agent:benchmark",
         )
         self._targets: dict[str, tuple[str, str]] = {}
