@@ -60,6 +60,33 @@ class ScopedHostTests(unittest.TestCase):
         self.assertEqual(self.closed, ["user:alice"])
         self.assertEqual(self.host.posture()["scope_switches"], 1)
 
+    def test_misbound_facade_is_closed_and_never_issued(self):
+        wrong = FakeFacade("user:bob", self.closed)
+        self.host.close()
+        self.host = SerializedScopedBenchmarkHost(lambda requested: wrong)
+        with self.assertRaisesRegex(RuntimeError, "scope does not match"):
+            with self.host.use("alice"):
+                self.fail("a misbound handle escaped to its caller")
+        self.assertTrue(wrong.is_closed)
+        self.assertEqual(self.host.posture()["opens"], 0)
+
+    def test_missing_runtime_scope_is_refused_even_if_open_succeeds(self):
+        class Unbound:
+            def __init__(self):
+                self.closed = False
+
+            def close(self):
+                self.closed = True
+
+        unbound = Unbound()
+        self.host.close()
+        self.host = SerializedScopedBenchmarkHost(lambda requested: unbound)
+        with self.assertRaisesRegex(RuntimeError, "scope does not match"):
+            with self.host.use("alice"):
+                pass
+        self.assertTrue(unbound.closed)
+        self.assertEqual(self.host.posture()["opens"], 0)
+
     def test_scope_is_host_owned_not_tool_overridable(self):
         with self.host.use("alice") as handle:
             self.assertEqual(handle.scope, "user:alice")
