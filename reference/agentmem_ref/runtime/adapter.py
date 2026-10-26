@@ -1174,6 +1174,18 @@ class GovernedMemoryAdapter:
             return "target_binding_unknown"
         if bound_memory != proposal.target_reference:
             return "target_binding_mismatch"
+        # #786: a known fact UUID is not authority to dispute a different
+        # project's fact. Same canonical scope guard as writes and deletion.
+        write_scope = self._write_scope(proposal)
+        context = RecallContext(
+            target_domain_refs=tuple(write_scope["domain_refs"]),
+            principal_ref=proposal.actor_id,
+            project_ref=proposal.project_ref,
+            task_ref=proposal.task_ref,
+            purpose=proposal.purpose,
+        )
+        if self._domain_identity_refusal(fact_uuid, fact.group_id, context) is not None:
+            return "write_target_unavailable"
         if fact_uuid in self._disputed:
             return "already_disputed"
         return None
@@ -1216,7 +1228,10 @@ class GovernedMemoryAdapter:
 
         refusal = self._dispute_refusal(proposal, fact_uuid)
         stale = self._is_stale(proposal)
-        selected = self._select_action(decision, proposal, blocked_by_stale=stale)
+        selected = (
+            receipts.NO_ACTION if refusal == "write_target_unavailable"
+            else self._select_action(decision, proposal, blocked_by_stale=stale)
+        )
         committed = refusal is None and selected == proposal.operation
         if refusal is None and stale:
             refusal = "stale_decision"
