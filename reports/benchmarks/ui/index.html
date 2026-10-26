@@ -1,0 +1,790 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Agent Memory · Benchmark Frontier</title>
+<meta name="description" content="Read-only per-metric benchmark leaderboards over accepted same-harness evidence. No aggregate score.">
+<link rel="icon" href="data:,">
+<style>
+:root{color-scheme:light dark;--bg:#f5f7fb;--panel:#ffffff;--panel-2:#eef2f8;--border:#c9d3e3;--text:#111a2b;--muted:#4a5a73;--accent:#0b57d0;--accent-ink:#ffffff;--warn-bg:#fff4d6;--warn-ink:#5a3d00;--bad-bg:#ffe3e0;--bad-ink:#7a1b12;--good-bg:#dff5e4;--good-ink:#0f5a2a;--neutral-bg:#e6ebf3;--neutral-ink:#2b3a52;--focus:#ff8a00}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0c1422;--panel:#142136;--panel-2:#1b2b45;--border:#304057;--text:#f2f5fb;--muted:#b0bfd1;--accent:#91c3ff;--accent-ink:#071526;--warn-bg:#4a3708;--warn-ink:#ffe2a6;--bad-bg:#4b1711;--bad-ink:#ffc3bb;--good-bg:#0f3a21;--good-ink:#bfeccb;--neutral-bg:#243650;--neutral-ink:#dbe5f3;--focus:#ffb14d}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:1400px;margin:auto;padding:clamp(16px,3vw,40px)}
+header.page{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+h1{font-size:clamp(1.5rem,2.8vw,2.3rem);margin:0 0 4px}
+h2{font-size:1.2rem;margin:0 0 10px}
+h3{font-size:1rem;margin:14px 0 6px}
+p{margin:6px 0}
+.muted{color:var(--muted)}
+a{color:var(--accent)}
+.skip{position:absolute;left:-999px;top:8px;background:var(--accent);color:var(--accent-ink);padding:8px 12px;border-radius:6px;z-index:10}
+.skip:focus{left:8px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;margin:18px 0}
+.snapshot{background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;min-width:260px;max-width:560px;font-size:.9rem}
+.snapshot dl{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;margin:4px 0 0}
+.snapshot dt{color:var(--muted)}
+.snapshot dd{margin:0;overflow-wrap:anywhere;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.82rem}
+.notice{background:var(--warn-bg);color:var(--warn-ink);border-radius:8px;padding:8px 12px;margin:8px 0}
+.error{background:var(--bad-bg);color:var(--bad-ink);border-radius:8px;padding:8px 12px;margin:8px 0}
+.error:empty,.notice:empty{display:none}
+.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.filters label{display:flex;flex-direction:column;gap:4px;font-size:.9rem}
+.filters .check{flex-direction:row;align-items:center;gap:8px;align-self:end;padding:10px 0}
+input,select,button{background:var(--panel-2);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:9px 10px;font:inherit}
+button{cursor:pointer}
+button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.counts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:0;padding:0;list-style:none}
+.counts li{background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:10px 12px}
+.counts .n{font-size:1.4rem;font-variant-numeric:tabular-nums;display:block}
+.counts .d{color:var(--muted);font-size:.85rem}
+.table-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--border);vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:.85rem;white-space:nowrap}
+th button{background:none;border:0;padding:0;color:inherit;font:inherit;font-weight:600;cursor:pointer}
+tbody tr.row:hover{background:var(--panel-2)}
+tr.detail>td{background:var(--panel-2);padding:14px 12px}
+.name{font-weight:600}
+.key{color:var(--muted);font-size:.78rem;overflow-wrap:anywhere;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.score{font-variant-numeric:tabular-nums;white-space:nowrap}
+.pill{display:inline-block;border:1px solid var(--border);border-radius:20px;padding:1px 9px;white-space:nowrap;font-size:.8rem;margin:1px 4px 1px 0;background:var(--neutral-bg);color:var(--neutral-ink)}
+.pill[data-tone="good"]{background:var(--good-bg);color:var(--good-ink)}
+.pill[data-tone="bad"]{background:var(--bad-bg);color:var(--bad-ink)}
+.pill[data-tone="warn"]{background:var(--warn-bg);color:var(--warn-ink)}
+.gap{height:8px;background:var(--neutral-bg);border:1px solid var(--border);border-radius:8px;overflow:hidden;min-width:90px;margin-top:6px}
+.gap>span{display:block;height:100%;background:var(--accent)}
+.gapcell .note{font-size:.8rem;color:var(--muted);display:block}
+.toggle{padding:6px 10px;font-size:.85rem}
+.inner{width:100%;margin:6px 0 10px;font-size:.9rem}
+.inner th,.inner td{padding:6px 8px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.cols h3{margin-top:0}
+ul.plain{margin:4px 0;padding-left:18px}
+code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.82rem;overflow-wrap:anywhere}
+.families{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+.family{border:1px solid var(--border);border-radius:10px;padding:10px 12px;background:var(--panel-2)}
+.family h3{margin:0 0 6px}
+.obj{border-top:1px solid var(--border);padding:6px 0;font-size:.9rem}
+.obj:first-of-type{border-top:0}
+.ref{border-top:1px solid var(--border);padding:8px 0}
+.ref:first-of-type{border-top:0}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+footer{color:var(--muted);font-size:.9rem;margin-top:24px}
+
+.refresh-status{padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--panel-2);margin-top:12px}
+.refresh-status strong{display:block}
+.refresh-status small{display:block;color:var(--muted)}
+.viability-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:14px 0}
+.viability-stat{background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:12px}
+.viability-stat strong{display:block;font-size:1.35rem;font-variant-numeric:tabular-nums}
+.viability-stat small{display:block;color:var(--muted)}
+.viability-meta{font-size:.87rem;color:var(--muted)}
+.viability-table td,.viability-table th{font-size:.9rem}
+.viability-table tr:focus-within{background:var(--panel-2)}
+#historical-cases{max-height:430px;overflow:auto}
+@media(max-width:760px){
+  main{padding:14px}
+  header.page{flex-direction:column}
+  .snapshot{max-width:100%}
+  table.main,table.main thead,table.main tbody,table.main tr,table.main td,table.main th{display:block}
+  table.main thead{position:absolute;left:-9999px}
+  table.main tr.row{border:1px solid var(--border);border-radius:10px;margin:10px 0;padding:6px 8px}
+  table.main td{border:0;padding:6px 4px}
+  table.main td::before{content:attr(data-label);display:block;color:var(--muted);font-size:.78rem;font-weight:600}
+  table.main tr.detail>td{border-radius:10px;margin:0 0 10px}
+  table.main tr.detail>td::before{content:none}
+  .gap{min-width:0}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<a class="skip" href="#leaderboard" id="skip">Skip to leaderboard</a>
+<main>
+<header class="page">
+  <div>
+    <h1>Agent Memory · Benchmark Frontier</h1>
+    <p class="muted">Per-metric leaderboards over accepted same-harness evidence. Native units, within-metric gaps, typed evidence states. No aggregate score, no authority.</p>
+  </div>
+  <div class="snapshot" id="snapshot" aria-live="polite" aria-label="Evidence snapshot">Loading evidence…</div>
+</header>
+
+<section class="card" aria-labelledby="src-h">
+  <h2 id="src-h">Evidence source</h2>
+  <p>This viewer renders only the generated read-only projection <code>frontier-leaderboards.json</code>. Rankings exist only inside one exact accepted comparison set. Published vendor scores never enter a ranking. A missing peer is an evidence gap, never a zero deficit.</p>
+  <label>Open a generated projection file <input type="file" id="upload" accept=".json,application/json"></label>
+  <div id="error" role="alert" class="error"></div>
+  <div id="stale" class="notice"></div>
+  <div id="refresh-status" class="refresh-status" role="status" aria-live="polite">Evidence refresh status unavailable in this snapshot.</div>
+</section>
+
+<section class="card" aria-labelledby="sum-h">
+  <h2 id="sum-h">Frontier coverage counts</h2>
+  <p class="muted">Counts with denominators. Not a score and not an average across metrics.</p>
+  <ul class="counts" id="counts" aria-label="Coverage counts"></ul>
+</section>
+
+
+<section class="card" aria-labelledby="quality-h" id="historical-quality">
+  <h2 id="quality-h">Historical product-viability comparison</h2>
+  <p>PrecisionMemBench v6, 77 identical single-turn retrieval cases. This diagnostic report is <strong>historical, source-bound and not admitted to the accepted leaderboard</strong>. It cannot establish overall product superiority, real-world task completion or current-runtime performance.</p>
+  <div id="historical-error" class="error" role="status"></div>
+  <div id="historical-summary" aria-live="polite"><p class="muted">Loading historical diagnostic evidence…</p></div>
+  <div id="historical-categories"></div>
+  <details id="historical-case-inspector">
+    <summary>Inspect all 77 paired cases and their native outcomes</summary>
+    <p class="viability-meta">These are benchmark-native case verdicts and diagnostic flags, not human quality assessments. Prompts, responses and gold identifiers are not embedded in this page.</p>
+    <label>Case outcome <select id="historical-case-filter"><option value="">All cases</option><option value="agent_only">Agent Memory only</option><option value="mem0_only">Mem0 only</option><option value="both_pass">Both pass</option><option value="both_fail">Both fail</option></select></label>
+    <div class="table-wrap" id="historical-cases"></div>
+  </details>
+  <p class="viability-meta">Human review: <strong>0 / 96</strong> required blinded review forms completed. Independently reviewed qualitative claims are not yet available. Neither a retrospective case pass nor high recall alone proves usable, correctly selected memory.</p>
+  <p class="viability-meta">Evidence and review: <a href="https://github.com/MythologIQ-Labs-LLC/agent-memory/pull/793">Case-level study PR #793</a> · <a href="https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/775">Selection-quality issue #775</a> · <a href="https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/789">External cohort expansion #789</a>.</p>
+</section>
+
+<section class="card" aria-labelledby="nav-h">
+  <h2 id="nav-h">Navigate benchmarks and metrics</h2>
+  <div class="filters">
+    <label>Benchmark<select id="f-benchmark"><option value="">All benchmarks</option></select></label>
+    <label>Profile / lane<select id="f-profile"><option value="">All profiles</option></select></label>
+    <label>Dimension<select id="f-dimension"><option value="">All dimensions</option></select></label>
+    <label>Metric<select id="f-metric"><option value="">All metrics</option></select></label>
+    <label>Ranking state<select id="f-state"><option value="">All evidence states</option></select></label>
+    <label>Competitive position<select id="f-comp"><option value="">Any position</option></select></label>
+    <label>Evidence currency<select id="f-currency"><option value="">Any currency</option><option value="stale">Stale or unordered evidence</option></select></label>
+    <label>Objective family<select id="f-family"><option value="">All families</option></select></label>
+    <label>Search<input id="f-search" type="search" placeholder="benchmark, metric, system, issue"></label>
+    <label>Sort<select id="f-sort"><option value="name">Benchmark / metric</option><option value="rank">Agent Memory rank</option><option value="gap">Deficit, grouped by unit</option></select></label>
+    <label class="check"><input type="checkbox" id="f-hide-superseded"> Hide superseded lanes</label>
+    <button type="button" id="f-reset">Reset filters</button>
+  </div>
+  <p id="status" role="status" aria-live="polite"></p>
+</section>
+
+<section class="card" aria-labelledby="lb-h" id="leaderboard" tabindex="-1">
+  <h2 id="lb-h">Native metric leaderboard</h2>
+  <p class="muted">Gap bars are valid within one metric only. A lead over lexical controls is not a market position. Adequacy is unknown unless separately established.</p>
+  <div class="table-wrap">
+    <table class="main" id="table">
+      <thead><tr>
+        <th scope="col">Benchmark / metric</th>
+        <th scope="col">Best eligible measured</th>
+        <th scope="col">Agent Memory</th>
+        <th scope="col">Gap to leader</th>
+        <th scope="col">Status</th>
+        <th scope="col">Evidence</th>
+      </tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+</section>
+
+<section class="card" aria-labelledby="obj-h">
+  <h2 id="obj-h">Frontier objectives and ownership <span class="pill" id="obj-state">registry: unknown</span></h2>
+  <p class="muted" id="obj-note">Objectives are ownership context across the nine capability families. They are never scores and never change a ranking.</p>
+  <div class="families" id="families"></div>
+</section>
+
+<section class="card" aria-labelledby="pub-h">
+  <h2 id="pub-h">Published references (not comparable, never ranked)</h2>
+  <p class="muted">Vendor or research numbers retained for market context. Different benchmarks, evaluators, budgets or populations; no numeric gap can be formed against them.</p>
+  <div id="published"></div>
+</section>
+
+<footer>
+  <p>A same-harness lead is certified only within the displayed comparison population, not across all products. "Best of reproduced" is not adequacy. Benchmark results grant no memory, lifecycle or governance authority.</p>
+</footer>
+</main>
+
+<script>
+"use strict";
+const SUPPORTED_SCHEMA = "0.2.0";
+const STATE_LABEL = {
+  ranked: ["Ranked", "neutral", "●"],
+  no_peer: ["No comparable peer", "warn", "○"],
+  agent_memory_missing: ["Agent Memory not measured", "warn", "○"],
+  non_comparable: ["Non-comparable", "neutral", "⊘"],
+  not_measured: ["Not measured", "neutral", "○"],
+  not_rankable: ["Not rankable", "neutral", "≡"],
+  coverage_only: ["Coverage only", "neutral", "□"],
+  invalid_row: ["Invalid row, refused", "bad", "✕"],
+};
+const COMP_LABEL = {
+  leading_vs_external: ["Leading vs external peer", "good", "▲"],
+  tied_leader: ["Tied for lead", "good", "≈"],
+  leading_vs_controls_only: ["Leads controls only", "warn", "△"],
+  behind_external: ["Behind external peer", "bad", "▼"],
+  behind_control: ["Behind a control", "bad", "▽"],
+};
+const CURRENCY_LABEL = {
+  current: ["Current", "neutral"],
+  superseded: ["Superseded", "warn"],
+  newer_unaccepted_evidence: ["Newer unaccepted evidence", "warn"],
+  undetermined: ["Chronology undetermined", "warn"],
+};
+const ROLE_LABEL = { subject: "Agent Memory", external_competitor: "External system", control: "Control baseline", unclassified: "Unclassified" };
+const REASON_TEXT = {
+  "evidence_class:same_profile": "same profile, but not an accepted same-harness lane",
+  "evidence_class:published_reference": "published reference; methodology not proven equivalent",
+  unknown_evidence_class: "unknown evidence class",
+  not_eligible_for_numeric_delta: "catalog marks this set ineligible for numeric deltas",
+  comparison_identity_incomplete: "comparison identity incomplete (input, selection or sample)",
+  direction_mismatch: "systems report different metric directions",
+  unit_mismatch: "systems report different units",
+  population_mismatch: "systems report different populations",
+  denominator_mismatch: "systems report different denominators",
+  unit_missing: "native unit not recorded",
+  population_missing: "population not recorded",
+  denominator_missing_or_invalid: "denominator missing or invalid",
+  measured_values_are_not_ordinal_numbers: "measured values are booleans or descriptive, not ordinal numbers",
+  no_measured_observation: "no system has a measured value",
+  no_eligible_peer_measurement: "no other eligible system measured this metric",
+  agent_memory_observation_not_eligible: "Agent Memory has no eligible measurement here",
+};
+const $ = (id) => document.getElementById(id);
+const safe = (s) => String(s ?? "");
+const isNum = (n) => typeof n === "number" && Number.isFinite(n);
+let dataset = null;
+let refreshStatus = null;
+let refreshStatusError = null;
+let rowsAll = [];
+let expanded = new Set();
+let writtenHash = null;
+
+function fmtValue(n, unit) {
+  if (!isNum(n)) return "—";
+  if (unit === "ratio") return (n * 100).toFixed(2) + "%";
+  if (unit === "count") return n.toLocaleString(undefined, { maximumFractionDigits: 0 }) + " " + unit;
+  return n.toLocaleString(undefined, { maximumFractionDigits: 4 }) + " " + safe(unit);
+}
+function fmtGap(r) {
+  if (r.unit === "ratio") return (isNum(r.gap_percentage_points) ? r.gap_percentage_points : r.gap_to_leader_native * 100).toFixed(2) + " pp";
+  return fmtValue(r.gap_to_leader_native, r.unit);
+}
+function reasonText(code) {
+  if (REASON_TEXT[code]) return REASON_TEXT[code];
+  const [kind, ...rest] = code.split(":");
+  const tail = rest.join(":");
+  switch (kind) {
+    case "provenance_missing": return "no run record for " + tail;
+    case "run_identity_mismatch": return "run identity differs from comparison identity (" + tail + ")";
+    case "run_revision_mismatch": return "system revision differs from its run record (" + tail + ")";
+    case "run_not_complete": return "run not complete (" + tail + ")";
+    case "invalid_observation": return "invalid observation (" + tail + ")";
+    case "comparison_state": return "comparison state is " + tail + ", not exact";
+    case "direction": return "direction " + tail + " cannot be ranked";
+    default: return code;
+  }
+}
+function el(tag, attrs = {}, children = []) {
+  const node = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "text") node.textContent = v;
+    else if (k === "class") node.className = v;
+    else if (v !== null && v !== undefined) node.setAttribute(k, v);
+  }
+  for (const child of [].concat(children)) if (child) node.appendChild(typeof child === "string" ? document.createTextNode(child) : child);
+  return node;
+}
+function pill(label, tone, glyph) {
+  return el("span", { class: "pill", "data-tone": tone, text: (glyph ? glyph + " " : "") + label });
+}
+
+/* ---------- validation: a malformed row must never render as a number or a win ---------- */
+function validRanked(r) {
+  return r.ranking_state === "ranked" && r.leader && r.agent_memory && isNum(r.leader.value) && isNum(r.agent_memory.value)
+    && isNum(r.gap_to_leader_native) && r.gap_to_leader_native >= 0 && Array.isArray(r.ranking) && r.ranking.length >= 2
+    && r.ranking.every((x) => isNum(x.value) && Number.isInteger(x.rank) && x.rank >= 1 && typeof x.system_id === "string")
+    && typeof r.unit === "string" && r.unit && ["higher_better", "lower_better", "zero_target"].includes(r.direction)
+    && (r.unit !== "ratio" || (r.leader.value >= 0 && r.leader.value <= 1 && r.agent_memory.value >= 0 && r.agent_memory.value <= 1));
+}
+function normalise(r) {
+  const copy = { ...r };
+  if (!STATE_LABEL[copy.ranking_state] || copy.ranking_state === "invalid_row") {
+    copy.ranking_state = "invalid_row"; copy.reasons = ["unknown ranking state"];
+  } else if (copy.ranking_state === "ranked" && !validRanked(copy)) {
+    copy.ranking_state = "invalid_row"; copy.reasons = ["row claims a ranking without consistent numeric evidence"];
+  } else if (copy.ranking_state !== "ranked" && (copy.leader || isNum(copy.gap_to_leader_native) || copy.competitive_state)) {
+    copy.ranking_state = "invalid_row"; copy.reasons = ["row carries a leader or gap without a ranking"];
+  }
+  if (copy.ranking_state === "invalid_row") { copy.leader = null; copy.agent_memory = null; copy.gap_to_leader_native = null; copy.gap_percentage_points = null; copy.competitive_state = null; copy.ranking = []; }
+  if (copy.competitive_state && !COMP_LABEL[copy.competitive_state]) copy.competitive_state = null;
+  if (!copy.currency || !CURRENCY_LABEL[copy.currency.state]) copy.currency = { state: "undetermined", superseded_by: null, unaccepted_sibling_revisions: [] };
+  copy.reasons = Array.isArray(copy.reasons) ? copy.reasons.map(safe) : [];
+  copy.objectives = Array.isArray(copy.objectives) ? copy.objectives : [];
+  return copy;
+}
+function accept(data) {
+  if (!data || typeof data !== "object") throw Error("Projection is not an object.");
+  if (data.schema_version !== SUPPORTED_SCHEMA) throw Error("Unsupported projection schema " + safe(data.schema_version) + "; this viewer supports " + SUPPORTED_SCHEMA + ".");
+  if (data.aggregate_score !== null) throw Error("Projection carries an aggregate score; refused.");
+  if (data.authority_effect !== "none") throw Error("Projection claims authority; refused.");
+  if (!Array.isArray(data.leaderboards) || !Array.isArray(data.metric_coverage) || typeof data.snapshot_id !== "string" || !data.snapshot_id) throw Error("Invalid projection: missing leaderboards, coverage or snapshot identity.");
+  dataset = data;
+  const list = data.leaderboards.map(normalise);
+  const covered = new Set(list.map((x) => x.metric_key));
+  const other = data.metric_coverage.filter((x) => !covered.has(x.metric_key)).map((x) => ({ ...x, ranking_state: "coverage_only", reasons: ["no comparison row in the accepted catalog"], currency: { state: "current" }, objectives: [], competitive_state: null, leader: null, agent_memory: null, ranking: [] }));
+  rowsAll = [...list, ...other];
+  expanded = new Set();
+  renderSnapshot(); renderCounts(); renderRefreshStatus(); populateFilters(); readHash(); renderObjectives(); renderPublished(); render();
+  $("error").textContent = "";
+}
+
+/* ---------- snapshot ---------- */
+function renderSnapshot() {
+  const s = dataset.snapshot || {};
+  const box = $("snapshot"); box.replaceChildren();
+  box.appendChild(el("strong", { text: "Evidence snapshot" }));
+  const dl = el("dl");
+  const add = (k, v) => { dl.appendChild(el("dt", { text: k })); dl.appendChild(el("dd", { text: safe(v || "—") })); };
+  add("Snapshot id", dataset.snapshot_id);
+  add("Accepted as of", s.as_of);
+  add("Evidence revision", s.evidence_revision);
+  add("Dashboard", s.dashboard_id);
+  add("Projection schema", dataset.schema_version);
+  box.appendChild(dl);
+  const stale = $("stale");
+  stale.textContent = s.repository_is_newer ? "Historical snapshot: the repository is newer than this accepted evidence snapshot. Values shown are bound to the snapshot identity above, not to the current checkout." : "";
+}
+
+/* ---------- counts ---------- */
+function renderCounts() {
+  const ul = $("counts"); ul.replaceChildren();
+  const total = rowsAll.length;
+  const ranked = rowsAll.filter((r) => r.ranking_state === "ranked");
+  const item = (label, n, denom) => ul.appendChild(el("li", {}, [el("span", { class: "n", text: n + " / " + denom }), el("span", { class: "d", text: label })]));
+  for (const key of Object.keys(STATE_LABEL)) {
+    if (key === "invalid_row" && !rowsAll.some((r) => r.ranking_state === key)) continue;
+    item(STATE_LABEL[key][0] + " metric rows", rowsAll.filter((r) => r.ranking_state === key).length, total);
+  }
+  for (const key of Object.keys(COMP_LABEL)) item(COMP_LABEL[key][0] + " (of ranked)", ranked.filter((r) => r.competitive_state === key).length, ranked.length);
+  item("Ranked rows with stale or unordered evidence", ranked.filter((r) => r.currency.state !== "current").length, ranked.length);
+  item("Adequacy threshold established", rowsAll.filter((r) => r.adequacy && r.adequacy.target !== null && r.adequacy.target !== undefined).length, total);
+  const peers=dataset.external_competitors && dataset.external_competitors.same_harness_measured;
+  if(Array.isArray(peers)){
+    // Count only peers with a ranked, eligible observation, not mere registry presence.
+    const eligible=new Set(rowsAll.filter(r=>r.ranking_state==="ranked")
+      .flatMap(r=>(r.ranking||[]).filter(x=>x.role==="external_competitor").map(x=>x.system_id)));
+    const valid=[...new Set(peers.filter(x=>typeof x==="string"&&eligible.has(x)))];
+    ul.appendChild(el("li",{},[el("span",{class:"n",text:String(valid.length)}),
+      el("span",{class:"d",text:"Distinct same-harness external memory systems measured · expansion target ≥6 (controls excluded)"})]));
+  }
+
+}
+
+/* ---------- filters ---------- */
+const FILTER_IDS = ["f-benchmark", "f-profile", "f-dimension", "f-metric", "f-state", "f-comp", "f-currency", "f-family", "f-search", "f-sort", "f-hide-superseded"];
+function fill(select, values, labeler) {
+  const current = select.value;
+  while (select.options.length > 1) select.remove(1);
+  for (const v of values) select.appendChild(el("option", { value: v, text: labeler ? labeler(v) : v }));
+  select.value = [...select.options].some((o) => o.value === current) ? current : "";
+}
+function uniq(fn) { return [...new Set(rowsAll.map(fn).filter((v) => v !== undefined && v !== null && v !== ""))].sort(); }
+function populateFilters() {
+  fill($("f-benchmark"), uniq((r) => r.benchmark_id || (r.benchmark_profile_id || "").split(":")[0]));
+  fill($("f-profile"), uniq((r) => r.task_profile));
+  fill($("f-dimension"), uniq((r) => r.dimension));
+  fill($("f-metric"), uniq((r) => r.metric_id));
+  fill($("f-state"), Object.keys(STATE_LABEL).filter((k) => k !== "invalid_row" || rowsAll.some((r) => r.ranking_state === k)), (k) => STATE_LABEL[k][0]);
+  fill($("f-comp"), Object.keys(COMP_LABEL), (k) => COMP_LABEL[k][0]);
+  const fam = (dataset.objectives && dataset.objectives.families) || {};
+  fill($("f-family"), Object.keys(fam).sort(), (k) => k + " · " + fam[k]);
+}
+function readHash() {
+  const params = new URLSearchParams(location.hash.replace(/^#/, ""));
+  for (const id of FILTER_IDS) {
+    const node = $(id); const v = params.get(id.replace("f-", ""));
+    if (v === null) continue;
+    if (node.type === "checkbox") node.checked = v === "1"; else node.value = v;
+  }
+}
+function writeHash() {
+  const params = new URLSearchParams();
+  for (const id of FILTER_IDS) {
+    const node = $(id); const key = id.replace("f-", "");
+    if (node.type === "checkbox") { if (node.checked) params.set(key, "1"); } else if (node.value) params.set(key, node.value);
+  }
+  const next = params.toString();
+  writtenHash = next;
+  if (next !== location.hash.replace(/^#/, "")) history.replaceState(null, "", next ? "#" + next : location.pathname + location.search);
+}
+function selectedRows() {
+  const f = Object.fromEntries(FILTER_IDS.map((id) => [id, $(id).type === "checkbox" ? $(id).checked : $(id).value]));
+  const term = f["f-search"].trim().toLowerCase();
+  let rows = rowsAll.filter((r) => {
+    const bench = r.benchmark_id || (r.benchmark_profile_id || "").split(":")[0];
+    if (f["f-benchmark"] && bench !== f["f-benchmark"]) return false;
+    if (f["f-profile"] && r.task_profile !== f["f-profile"]) return false;
+    if (f["f-dimension"] && r.dimension !== f["f-dimension"]) return false;
+    if (f["f-metric"] && r.metric_id !== f["f-metric"]) return false;
+    if (f["f-state"] && r.ranking_state !== f["f-state"]) return false;
+    if (f["f-comp"] && r.competitive_state !== f["f-comp"]) return false;
+    if (f["f-currency"] === "stale" && r.currency.state === "current") return false;
+    if (f["f-family"] && !r.objectives.some((o) => o.group === f["f-family"])) return false;
+    if (f["f-hide-superseded"] && r.currency.state === "superseded") return false;
+    if (term) {
+      const hay = [r.benchmark_id, r.benchmark_profile_id, r.task_profile, r.dimension, r.metric_id, r.metric_key, r.comparison_set_id,
+        ...(r.ranking || []).map((x) => x.system_id), ...r.objectives.flatMap((o) => [o.id, ...(o.owners || [])])].map((v) => safe(v).toLowerCase()).join(" ");
+      if (!hay.includes(term)) return false;
+    }
+    return true;
+  });
+  const byName = (a, b) => safe(a.metric_key).localeCompare(safe(b.metric_key));
+  if (f["f-sort"] === "rank") rows.sort((a, b) => ((a.agent_memory && a.agent_memory.rank) || 1e9) - ((b.agent_memory && b.agent_memory.rank) || 1e9) || byName(a, b));
+  else if (f["f-sort"] === "gap") rows.sort((a, b) => {
+    const ua = a.ranking_state === "ranked" ? a.unit : "~", ub = b.ranking_state === "ranked" ? b.unit : "~";
+    if (ua !== ub) return ua.localeCompare(ub);
+    return (isNum(b.gap_to_leader_native) ? b.gap_to_leader_native : -1) - (isNum(a.gap_to_leader_native) ? a.gap_to_leader_native : -1) || byName(a, b);
+  });
+  else rows.sort(byName);
+  return rows;
+}
+
+/* ---------- table ---------- */
+function cell(tr, label, content) {
+  const td = el("td", { "data-label": label });
+  for (const c of [].concat(content)) if (c) td.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
+  tr.appendChild(td); return td;
+}
+function rowId(r, i) { return "r-" + i; }
+function render() {
+  if (!dataset) return;
+  writeHash();
+  const rows = selectedRows();
+  const body = $("rows"); body.replaceChildren();
+  $("status").textContent = rows.length + " of " + rowsAll.length + " metric rows shown · " + rows.filter((r) => r.ranking_state === "ranked").length + " ranked in this view · " + rowsAll.filter((r) => r.ranking_state === "coverage_only").length + " coverage-only definitions overall";
+  rows.forEach((r, i) => {
+    const id = rowId(r, i);
+    const tr = el("tr", { class: "row", "data-state": r.ranking_state });
+    const bench = r.benchmark_id || (r.benchmark_profile_id || "").split(":")[0];
+    cell(tr, "Benchmark / metric", [
+      el("div", { class: "name", text: safe(bench) + " · " + safe(r.dimension) + " · " + safe(r.metric_id) }),
+      el("div", { class: "muted", text: safe(r.task_profile || r.benchmark_profile_id) + (r.direction ? " · " + r.direction.replaceAll("_", " ") : "") }),
+      el("div", { class: "key", text: safe(r.metric_key) }),
+    ]);
+    const ranked = r.ranking_state === "ranked";
+    if (ranked) {
+      const tie = r.leader_state === "tied";
+      cell(tr, "Best eligible measured", [
+        el("div", { class: "score", text: (tie ? "Tie: " + (r.co_leaders || []).join(" = ") : safe(r.leader.system_id)) + " · " + fmtValue(r.leader.value, r.unit) }),
+        el("div", { class: "muted", text: tie ? "shared rank 1" : ROLE_LABEL[r.leader.role] || safe(r.leader.role) }),
+      ]);
+      cell(tr, "Agent Memory", [
+        el("div", { class: "score", text: fmtValue(r.agent_memory.value, r.unit) + " · rank " + r.agent_memory.rank + " of " + r.ranking.length }),
+        el("div", { class: "muted", text: "denominator " + safe(r.agent_memory.denominator) + " · " + safe(r.agent_memory.population) }),
+      ]);
+      const gapTd = cell(tr, "Gap to leader", [el("span", { class: "score", text: fmtGap(r) })]);
+      gapTd.className = "gapcell";
+      const denom = Math.abs(r.leader.value);
+      if (denom > 0) {
+        const bar = el("div", { class: "gap", role: "img", "aria-label": "Deficit to leader " + fmtGap(r) + ", " + Math.round(Math.min(100, 100 * r.gap_to_leader_native / denom)) + " percent of the leader value" });
+        bar.appendChild(el("span", { style: "width:" + Math.min(100, Math.max(0, 100 * r.gap_to_leader_native / denom)).toFixed(1) + "%" }));
+        gapTd.appendChild(bar);
+      } else gapTd.appendChild(el("span", { class: "note", text: "no bar: leader value is zero" }));
+      gapTd.appendChild(el("span", { class: "note", text: r.direction === "higher_better" ? "leader − Agent Memory" : "Agent Memory − leader" }));
+    } else {
+      cell(tr, "Best eligible measured", el("span", { class: "muted", text: r.ranking_state === "no_peer" ? "No eligible peer" : "Not established" }));
+      cell(tr, "Agent Memory", r.agent_memory && isNum(r.agent_memory.value) ? el("span", { class: "score", text: fmtValue(r.agent_memory.value, r.agent_memory.unit) + " · unranked (no peer)" }) : el("span", { class: "muted", text: "No numeric claim" }));
+      cell(tr, "Gap to leader", el("span", { class: "muted", text: "No numeric gap" }));
+    }
+    const st = STATE_LABEL[r.ranking_state];
+    const statusTd = cell(tr, "Status", pill(st[0], st[1], st[2]));
+    if (r.competitive_state) { const c = COMP_LABEL[r.competitive_state]; statusTd.appendChild(pill(c[0], c[1], c[2])); }
+    if (r.currency.state !== "current" && r.ranking_state !== "coverage_only") { const c = CURRENCY_LABEL[r.currency.state]; statusTd.appendChild(pill(c[0], c[1], "⏱")); }
+    if (r.adequacy && (r.adequacy.target === null || r.adequacy.target === undefined)) statusTd.appendChild(pill("Adequacy unknown", "neutral", "?"));
+    statusTd.appendChild(el("span", { class: "sr-only", text: "Evidence class " + safe(r.evidence_class || "none") }));
+    const btn = el("button", { type: "button", class: "toggle", "aria-expanded": expanded.has(r.metric_key + r.comparison_set_id) ? "true" : "false", "aria-controls": id + "-d", text: "Details" });
+    btn.addEventListener("click", () => { const k = r.metric_key + r.comparison_set_id; if (expanded.has(k)) expanded.delete(k); else expanded.add(k); render(); const again = document.querySelector('[aria-controls="' + id + '-d"]'); if (again) again.focus(); });
+    cell(tr, "Evidence", [btn, el("div", { class: "muted", text: safe(r.evidence_class || "no comparison set") })]);
+    body.appendChild(tr);
+    if (expanded.has(r.metric_key + r.comparison_set_id)) body.appendChild(detailRow(r, id));
+  });
+  if (!rows.length) { const tr = el("tr"); const td = el("td", { text: "No metrics match these filters." }); td.colSpan = 6; tr.appendChild(td); body.appendChild(tr); }
+}
+function detailRow(r, id) {
+  const tr = el("tr", { class: "detail", id: id + "-d" });
+  const td = el("td", { "data-label": "Details" }); td.colSpan = 6; tr.appendChild(td);
+  const region = el("section", { "aria-label": "Details for " + safe(r.metric_key) });
+  td.appendChild(region);
+  const cols = el("div", { class: "cols" }); region.appendChild(cols);
+  // Ranked table for this one metric
+  const left = el("div"); cols.appendChild(left);
+  left.appendChild(el("h3", { text: "All systems in this comparison set" }));
+  const observed = Array.isArray(r.systems_observed) ? r.systems_observed : [];
+  if (r.ranking_state === "ranked" || observed.length) {
+    const wrap = el("div", { class: "table-wrap" });
+    const t = el("table", { class: "inner" });
+    t.appendChild(el("caption", { class: "sr-only", text: "Native ranked table for " + safe(r.metric_id) }));
+    const head = el("tr"); for (const h of ["Rank", "System", "Role", "Value", "Denominator", "Population", "Revision", "Eligibility"]) head.appendChild(el("th", { scope: "col", text: h }));
+    t.appendChild(el("thead", {}, head));
+    const tb = el("tbody");
+    const ranks = new Map((r.ranking || []).map((x) => [x.system_id, x]));
+    const list = [...(observed.length ? observed : r.ranking)].sort((x, y) => (((ranks.get(x.system_id) || {}).rank || 1e9) - ((ranks.get(y.system_id) || {}).rank || 1e9)) || safe(x.system_id).localeCompare(safe(y.system_id)));
+    for (const s of list) {
+      const rk = ranks.get(s.system_id);
+      const tr2 = el("tr");
+      tr2.appendChild(el("td", { text: rk ? String(rk.rank) : "—" }));
+      tr2.appendChild(el("td", { text: safe(s.system_id) + (s.role === "subject" ? " (subject)" : "") }));
+      tr2.appendChild(el("td", { text: ROLE_LABEL[s.role] || safe(s.role) }));
+      tr2.appendChild(el("td", { class: "score", text: isNum(s.value) ? fmtValue(s.value, s.unit) : (typeof s.value === "boolean" ? String(s.value) + " (boolean, not ranked)" : "— " + safe(s.state || "absent")) }));
+      tr2.appendChild(el("td", { text: safe(s.denominator ?? "—") }));
+      tr2.appendChild(el("td", { text: safe(s.population ?? "—") }));
+      tr2.appendChild(el("td", { class: "mono", text: safe((rk && rk.revision) || "—").slice(0, 12) }));
+      tr2.appendChild(el("td", { text: rk ? "eligible" : (s.exclusion_reason ? "excluded: " + reasonText(safe(s.exclusion_reason)) : "excluded") }));
+      tb.appendChild(tr2);
+    }
+    t.appendChild(tb); wrap.appendChild(t); left.appendChild(wrap);
+  } else left.appendChild(el("p", { class: "muted", text: "No comparison row; this metric is registered in the catalog without an accepted comparison." }));
+  // Why comparable / why not
+  const mid = el("div"); cols.appendChild(mid);
+  if (r.ranking_state === "ranked") {
+    mid.appendChild(el("h3", { text: "Why comparable?" }));
+    mid.appendChild(el("ul", { class: "plain" }, [
+      el("li", { text: "Evidence class same_harness, comparison state exact, eligible for numeric delta" }),
+      el("li", { text: "One frozen input " + safe(r.input_sha256).slice(0, 16) + "…, selection " + safe(r.selection_id).slice(0, 16) + ", sample " + safe(r.sample_count) }),
+      el("li", { text: "Shared direction " + safe(r.direction) + ", unit " + safe(r.unit) + ", denominator " + safe(r.agent_memory && r.agent_memory.denominator) + ", population " + safe(r.agent_memory && r.agent_memory.population) }),
+      el("li", { text: "Every ranked value has a complete run record whose identity and revision were verified against this comparison" }),
+      el("li", { text: r.direction === "higher_better" ? "Gap = leader − Agent Memory (non-negative)" : "Gap = Agent Memory − leader (non-negative)" }),
+    ]));
+    if (r.competitive_state === "leading_vs_controls_only") mid.appendChild(el("p", { class: "notice", text: "Agent Memory leads only lexical or no-memory controls here. No external memory system was measured in this set, so this is not a market position." }));
+    if (r.competitive_state === "behind_control") mid.appendChild(el("p", { class: "notice", text: "A control baseline leads this metric. The deficit is real and attributable within this harness." }));
+  } else {
+    mid.appendChild(el("h3", { text: "Why no numeric gap?" }));
+    mid.appendChild(el("ul", { class: "plain" }, (r.reasons.length ? r.reasons : ["no reason recorded; treated as non-comparable"]).map((c) => el("li", { text: reasonText(c) }))));
+  }
+  mid.appendChild(el("h3", { text: "Adequacy" }));
+  mid.appendChild(el("p", { text: r.adequacy && isNum(r.adequacy.target) ? "Target " + fmtValue(r.adequacy.target, r.unit) + " (" + safe(r.adequacy.state) + ")" : "No native adequacy threshold is established for this metric. A lead here does not mean the result is good enough." }));
+  if (r.peer_population) {
+    mid.appendChild(el("h3", { text: "Peer population" }));
+    mid.appendChild(el("p", { text: "External systems: " + ((r.peer_population.external_competitors || []).join(", ") || "none") + " · Controls: " + ((r.peer_population.controls || []).join(", ") || "none") + (r.peer_population.external_competitor_ranked ? "" : " · no external system is ranked in this row") }));
+  }
+  // Provenance and chronology
+  const right = el("div"); cols.appendChild(right);
+  right.appendChild(el("h3", { text: "Source and provenance" }));
+  const prov = el("ul", { class: "plain" });
+  prov.appendChild(el("li", {}, ["Comparison set ", el("code", { text: safe(r.comparison_set_id || "none") })]));
+  prov.appendChild(el("li", {}, ["Snapshot ", el("code", { text: safe(dataset.snapshot_id) })]));
+  if (r.dataset_id) prov.appendChild(el("li", {}, ["Dataset ", el("code", { text: safe(r.dataset_id) + " @ " + safe(r.dataset_revision) })]));
+  if (r.baseline_system) prov.appendChild(el("li", { text: "Scorecard baseline system: " + safe(r.baseline_system) }));
+  for (const x of r.ranking || []) {
+    const p = x.provenance || {};
+    const li = el("li", {}, [el("strong", { text: safe(x.system_id) }), " run ", el("code", { text: safe(x.run_id) }), " · revision ", el("code", { text: safe(x.revision) }), p.started_at ? " · started " + safe(p.started_at) : " · start time not recorded", p.adapter_id ? " · adapter " + safe(p.adapter_id) : ""]);
+    const ev = el("ul", { class: "plain" });
+    for (const e of x.evidence || []) ev.appendChild(el("li", {}, [el("code", { text: safe(e.uri || e.kind) }), e.sha256 ? " sha256 " + safe(e.sha256).slice(0, 12) + "…" : ""]));
+    li.appendChild(ev); prov.appendChild(li);
+  }
+  right.appendChild(prov);
+  right.appendChild(el("h3", { text: "Evidence chronology" }));
+  const cur = r.currency || {};
+  const curText = {
+    current: "This is the latest Agent Memory evidence in its structural lineage.",
+    superseded: "A later accepted same-harness run of this comparison exists: " + safe(cur.superseded_by) + ". Historical row.",
+    newer_unaccepted_evidence: "Newer Agent Memory evidence exists for this comparison but is not an accepted same-harness lane (revisions " + (cur.unaccepted_sibling_revisions || []).map((s) => safe(s).slice(0, 12)).join(", ") + "). This ranking stays bound to the accepted revision " + safe(cur.agent_memory_revision).slice(0, 12) + ".",
+    undetermined: "Repeated runs exist in this lineage but the catalog records no start time for them, so chronology cannot be established" + ((cur.unaccepted_sibling_revisions || []).length ? " (unaccepted sibling revisions " + cur.unaccepted_sibling_revisions.map((s) => safe(s).slice(0, 12)).join(", ") + ")" : "") + ".",
+  };
+  right.appendChild(el("p", { text: curText[cur.state] || "Chronology unknown." }));
+  right.appendChild(el("h3", { text: "Ownership" }));
+  if (r.objectives.length) right.appendChild(el("ul", { class: "plain" }, r.objectives.map((o) => el("li", { text: "Objective " + safe(o.id) + " (family " + safe(o.group) + ") · owners " + (o.owners || []).join(", ") + " · " + safe(o.linkage) + (dataset.objectives && dataset.objectives.state === "draft" ? " · DRAFT registry" : "") }))));
+  else right.appendChild(el("p", { class: "muted", text: dataset.objectives && dataset.objectives.state === "absent" ? "No objectives registry attached; ownership unavailable." : "No objective linked to this metric." }));
+  return tr;
+}
+
+/* ---------- objectives ---------- */
+function renderObjectives() {
+  const o = dataset.objectives || { state: "absent", families: {}, items: [] };
+  const state = ["absent", "draft", "canonical"].includes(o.state) ? o.state : "invalid";
+  const tone = state === "canonical" ? "good" : state === "draft" ? "warn" : "neutral";
+  const stPill = $("obj-state"); stPill.textContent = "registry: " + state.toUpperCase(); stPill.setAttribute("data-tone", tone);
+  $("obj-note").textContent = state === "absent" ? "No objectives registry is attached to this projection. The nine capability families are listed for coverage; ownership is unavailable." : state === "draft" ? "DRAFT registry read from an unmerged source (" + safe(o.source) + ", sha256 " + safe(o.sha256).slice(0, 12) + "…). Ownership context only; not canonical evidence and never a score." : state === "canonical" ? "Registry read from the committed repository data path (" + safe(o.source) + "). Ownership context only; never a score." : "Registry state is invalid; ignored.";
+  const grid = $("families"); grid.replaceChildren();
+  const fams = o.families || {};
+  for (const key of Object.keys(fams).sort()) {
+    const box = el("div", { class: "family" });
+    box.appendChild(el("h3", { text: key + " · " + safe(fams[key]) }));
+    const items = (o.items || []).filter((x) => x.group === key);
+    if (!items.length) box.appendChild(el("p", { class: "muted", text: state === "absent" ? "Registry absent" : "No objective registered" }));
+    for (const it of items) {
+      const d = el("div", { class: "obj" });
+      d.appendChild(el("div", {}, [el("strong", { text: safe(it.id) + " " + safe(it.capability) })]));
+      d.appendChild(el("div", { class: "muted", text: safe(it.benchmark) + " · " + safe(it.metric) + " · " + safe(it.source_kind) + (it.unmeasured_state ? " · " + safe(it.unmeasured_state) : "") }));
+      d.appendChild(el("div", { text: "Owners " + (it.owners || []).join(", ") + " · linked metric rows " + ((it.linked_metric_keys || []).length) + (it.deficit_selector ? " · deficit " + safe(it.deficit_selector) : "") }));
+      if ((it.linked_metric_keys || []).length) {
+        const b = el("button", { type: "button", class: "toggle", text: "Show linked rows" });
+        b.addEventListener("click", () => { $("f-reset").click(); $("f-family").value = key; $("f-search").value = safe(it.metric).split("/")[0].split(" and ")[0].trim(); render(); $("rows").scrollIntoView(); $("f-search").focus(); });
+        d.appendChild(b);
+      }
+      box.appendChild(d);
+    }
+    grid.appendChild(box);
+  }
+}
+
+/* ---------- published references ---------- */
+function renderPublished() {
+  const box = $("published"); box.replaceChildren();
+  const refs = Array.isArray(dataset.published_references) ? dataset.published_references : [];
+  if (!refs.length) { box.appendChild(el("p", { class: "muted", text: "No published references in this snapshot." })); return; }
+  for (const p of refs) {
+    const d = el("div", { class: "ref" });
+    d.appendChild(el("div", {}, [el("strong", { text: safe(p.system) }), " ", pill("published reference · not comparable", "neutral", "⊘")]));
+    d.appendChild(el("div", { class: "muted", text: safe(p.methodology) }));
+    const sig = Object.entries(p.signals || {}).map(([k, v]) => k + " " + safe(v)).join(" · ");
+    d.appendChild(el("div", { text: sig ? "Reported signals (vendor scale, not ranked): " + sig : "No signals recorded" }));
+    if (p.source) d.appendChild(el("a", { href: safe(p.source), rel: "noopener noreferrer", text: "Source" }));
+    box.appendChild(d);
+  }
+}
+
+
+/* Historical AMB v6 is an independent, non-rankable diagnostic source. */
+let historical = null;
+const HISTORICAL_BLOBS = {
+  agent_memory: "ea40e74850e2621ff39c65926c5ede89768e1a43",
+  mem0_oss: "426a2f3c69220efcf5e461aef54aa593b4b82155",
+  bm25_control: "4a7b779a2aed19dc4ef71d4fa5493b83220e6c92",
+};
+function requireHistoric(ok, message) { if (!ok) throw Error("Historical diagnostic refused: " + message); }
+function validateHistorical(d) {
+  requireHistoric(d && d.schema_version === "historical-amb-v6-ui/1" &&
+    d.evidence_status === "historical_source_bound_not_promoted" &&
+    d.eligible_for_frontier_rankings === false && d.authority_effect === "none", "wrong schema or evidence status");
+  requireHistoric(d.source_main_sha === "3eebb6d54e2a218c4fd10cf53c52acac8384c3e6", "unrecognized native source revision");
+  const arms = Object.keys(HISTORICAL_BLOBS);
+  requireHistoric(Array.isArray(d.source_reports) && d.source_reports.length === 3 &&
+    arms.every(id => d.source_reports.some(x => x.arm === id && x.git_blob_sha === HISTORICAL_BLOBS[id])), "source-blob identity");
+  requireHistoric(Array.isArray(d.cases) && d.cases.length === 77 && new Set(d.cases.map(x => x.case_id)).size === 77, "case population");
+  requireHistoric(Array.isArray(d.categories) && d.categories.length >= 1, "category population");
+  requireHistoric(d.review && d.review.status === "not_started" && d.review.completed_forms === 0 &&
+    d.review.required_forms === 96 && d.review.selected_cases === 24, "qualitative gate");
+  const outcomes = {agent_only:0,mem0_only:0,both_pass:0,both_fail:0}, counts = Object.fromEntries(arms.map(id => [id,0]));
+  const categories = {};
+  const diag = {unexpected_only:0,missing_only:0,both:0,neither:0};
+  for (const c of d.cases) {
+    requireHistoric(typeof c.case_id === "string" && c.case_id.length > 0 && typeof c.category === "string" &&
+      Object.keys(c.systems || {}).length === 3, "malformed case");
+    const a = c.systems.agent_memory, m = c.systems.mem0_oss;
+    const status = a.pass ? (m.pass ? "both_pass":"agent_only") : (m.pass ? "mem0_only":"both_fail");
+    requireHistoric(c.outcome === status && arms.every(id => {
+      const x = c.systems[id]; return x && typeof x.pass === "boolean" && typeof x.unexpected === "boolean" &&
+       typeof x.missing === "boolean" && Number.isInteger(x.context_tokens) && x.context_tokens >= 0;
+    }), "case verdict or metadata");
+    outcomes[status]++;
+    if (!categories[c.category]) categories[c.category] = {total:0,...Object.fromEntries(arms.map(id=>[id,0]))};
+    categories[c.category].total++;
+    for (const id of arms) {counts[id] += Number(c.systems[id].pass);categories[c.category][id]+=Number(c.systems[id].pass);}
+    if (!a.pass) diag[a.unexpected?(a.missing?"both":"unexpected_only"):(a.missing?"missing_only":"neither")]++;
+  }
+  requireHistoric(Object.keys(outcomes).every(k=>d.pair_outcomes[k]===outcomes[k]) &&
+    arms.every(id => {const x=d.systems[id];return x&&x.pass===counts[id]&&x.total===77 &&
+      Number.isInteger(x.precision_denominator)&&x.precision_denominator>0&&x.precision_denominator<=77 &&
+      Number.isInteger(x.recall_denominator)&&x.recall_denominator>0&&x.recall_denominator<=77 &&
+      isNum(x.mean_precision)&&x.mean_precision>=0&&x.mean_precision<=1&&isNum(x.mean_recall)&&x.mean_recall>=0&&x.mean_recall<=1;}),
+    "metric counts or means");
+  requireHistoric(d.categories.length===Object.keys(categories).length && d.categories.every(c=>{
+    const s=categories[c.category];return s&&c.total===s.total&&arms.every(id=>c[id]===s[id]);}), "category totals");
+  requireHistoric(Object.keys(diag).every(k=>d.agent_failure_diagnostics[k]===diag[k]), "failure diagnostics");
+  return d;
+}
+function historicalTable(headers, lines) {
+  const wrap=el("div",{class:"table-wrap"});
+  const table=el("table",{class:"viability-table"});
+  const head=el("thead"),h=el("tr");headers.forEach(v=>h.appendChild(el("th",{scope:"col",text:v})));head.appendChild(h);table.appendChild(head);
+  const body=el("tbody");
+  for(const line of lines){const tr=el("tr");line.forEach(v=>tr.appendChild(el("td",{text:safe(v)})));body.appendChild(tr);}
+  table.appendChild(body);wrap.appendChild(table);return wrap;
+}
+function renderHistorical(d) {
+  historical=d;
+  const box=$("historical-summary");box.replaceChildren();
+  const cards=el("div",{class:"viability-grid"});
+  const labels={agent_memory:"Agent Memory",mem0_oss:"Mem0 OSS",bm25_control:"BM25 control"};
+  for(const id of Object.keys(labels)){
+    const m=d.systems[id],card=el("div",{class:"viability-stat"});
+    card.appendChild(el("strong",{text:m.pass+" / "+m.total+" exact cases"}));
+    card.appendChild(el("span",{text:labels[id]}));
+    card.appendChild(el("small",{text:"Precision "+(m.mean_precision*100).toFixed(2)+"% (defined "+m.precision_denominator+"/77)"}));
+    card.appendChild(el("small",{text:"Recall "+(m.mean_recall*100).toFixed(2)+"% (defined "+m.recall_denominator+"/77)"}));
+    cards.appendChild(card);
+  }
+  box.appendChild(cards);
+  box.appendChild(el("p",{text:"Matched Agent Memory / Mem0: both pass "+d.pair_outcomes.both_pass+
+    " · Agent Memory only "+d.pair_outcomes.agent_only+" · Mem0 only "+d.pair_outcomes.mem0_only+
+    " · both fail "+d.pair_outcomes.both_fail+" of 77. Exploratory two-sided exact McNemar p = 0.125; superiority not statistically established."}));
+  box.appendChild(el("p",{class:"viability-meta",text:"Agent Memory native failure flags: "+
+    d.agent_failure_diagnostics.unexpected_only+" unexpected-memory-only; "+
+    d.agent_failure_diagnostics.missing_only+" missing-expected-only. These are structural scorer diagnostics, not causal or human task-success labels."}));
+  box.appendChild(el("p",{class:"viability-meta",text:"Critical denominator: Agent Memory mean recall uses 43 defined cases, not all 77 queries. No undefined recall was scored as zero or success. Published frontier rankings above remain on their own accepted evidence revision."}));
+  const categoryBox=$("historical-categories");categoryBox.replaceChildren();
+  categoryBox.appendChild(el("h3",{text:"Failure distribution by native category"}));
+  categoryBox.appendChild(historicalTable(["Category","Cases","Agent Memory pass","Mem0 pass","BM25 pass"],d.categories.map(x=>[
+    x.category,String(x.total),x.agent_memory+"/"+x.total,x.mem0_oss+"/"+x.total,x.bm25_control+"/"+x.total])));
+  showHistoricalCases();
+}
+function showHistoricalCases() {
+  if(!historical)return;
+  const filter=$("historical-case-filter").value;
+  const selected=historical.cases.filter(x=>!filter||x.outcome===filter);
+  const labels={agent_only:"Agent Memory only",mem0_only:"Mem0 only",both_fail:"Both fail",both_pass:"Both pass"};
+  $("historical-cases").replaceChildren(historicalTable(["Case ID","Category","Paired verdict","Agent flags","Mem0 flags"],selected.map(x=>{
+    const flags=id=>{const y=x.systems[id];return y.pass?"pass":(y.unexpected?"unexpected ":"")+(y.missing?"missing":"");};
+    return [x.case_id,x.category,labels[x.outcome],flags("agent_memory"),flags("mem0_oss")];
+  })));
+}
+$("historical-case-filter").addEventListener("change",showHistoricalCases);
+fetch("./historical-amb-v6.json",{cache:"no-store"})
+  .then(r=>{if(!r.ok)throw Error("Historical diagnostic JSON unavailable");return r.json();})
+  .then(d=>renderHistorical(validateHistorical(d)))
+  .catch(e=>{$("historical-error").textContent=safe(e.message);$("historical-summary").textContent="Historical diagnostic not available; no numerical claims rendered.";});
+
+
+/* Separate freshness control: presentation does not certify remote state. */
+function renderRefreshStatus() {
+  const box = $("refresh-status"); box.replaceChildren();
+  if (!dataset) { box.textContent = "Awaiting benchmark projection."; return; }
+  if (!refreshStatus) {
+    box.appendChild(el("strong", { text: "Refresh manifest unavailable" }));
+    box.appendChild(el("small", { text: refreshStatusError || "This page cannot verify that recorded evidence was refreshed." }));
+    return;
+  }
+  if (refreshStatus.schema_version !== "benchmark-refresh-status/1" ||
+      refreshStatus.authority_effect !== "none" ||
+      refreshStatus.accepted_evidence_only_in_rankings !== true ||
+      refreshStatus.catalog_snapshot_id !== dataset.snapshot_id ||
+      !Number.isInteger(refreshStatus.unregistered_source_count) ||
+      refreshStatus.unregistered_source_count < 0) {
+    box.appendChild(el("strong", { text: "STALE or invalid refresh manifest" }));
+    box.appendChild(el("small", { text: "Source and leaderboard projections do not share the required snapshot identity. Do not infer current performance." }));
+    return;
+  }
+  const awaiting=refreshStatus.unregistered_source_count;
+  box.appendChild(el("strong", { text: "Recorded-evidence projection: matching source manifest" }));
+  box.appendChild(el("small", { text: "Source JSON records fingerprinted: " + safe(refreshStatus.source_count) + " · Unregistered raw benchmark candidates: " + awaiting + " (unranked pending qualification)" }));
+  box.appendChild(el("small", { text: "This confirms projection consistency within this published artifact set, not live GitHub freshness, human review, or current production runtime quality." }));
+  const link = el("a", { href: "https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/benchmark-evidence-refresh-governance.md", rel: "noopener noreferrer", text: "Refresh governance contract" });
+  box.appendChild(link);
+}
+fetch("./refresh-status.json", {cache:"no-store"})
+  .then(r=>{if(!r.ok)throw Error("No evidence refresh manifest is published beside this viewer.");return r.json();})
+  .then(r=>{refreshStatus=r;refreshStatusError=null;renderRefreshStatus();})
+  .catch(e=>{refreshStatus=null;refreshStatusError=safe(e.message);renderRefreshStatus();});
+
+/* ---------- wiring ---------- */
+for (const id of FILTER_IDS) $(id).addEventListener($(id).type === "search" ? "input" : "change", render);
+$("f-reset").addEventListener("click", () => { for (const id of FILTER_IDS) { const n = $(id); if (n.type === "checkbox") n.checked = false; else n.value = id === "f-sort" ? "name" : ""; } render(); });
+window.addEventListener("hashchange", () => { if (dataset && location.hash.replace(/^#/, "") !== writtenHash) { readHash(); render(); } });
+$("skip").addEventListener("click", (e) => { e.preventDefault(); $("leaderboard").focus(); });
+$("upload").addEventListener("change", async (e) => {
+  const file = e.target.files && e.target.files[0]; if (!file) return;
+  try { accept(JSON.parse(await file.text())); } catch (err) { $("error").textContent = "Refused: " + safe(err.message); $("snapshot").textContent = "No projection loaded"; }
+});
+fetch("./frontier-leaderboards.json", { cache: "no-store" })
+  .then((r) => { if (!r.ok) throw Error("No generated projection found beside index.html. Build it with scripts/build_benchmark_frontier_leaderboards.py --write or open the JSON file above."); return r.json(); })
+  .then(accept)
+  .catch((err) => { $("snapshot").textContent = "No projection loaded"; $("error").textContent = safe(err.message); });
+</script>
+</body>
+</html>

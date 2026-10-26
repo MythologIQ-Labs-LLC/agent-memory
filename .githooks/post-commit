@@ -1,0 +1,36 @@
+#!/bin/sh
+# Local event-driven evidence refresh; deliberately installed via core.hooksPath.
+set -eu
+cd "$(git rev-parse --show-toplevel)"
+. .githooks/benchmark-refresh-paths.sh
+# post-merge supplies ORIG_HEAD; a plain commit compares with its first parent.
+base="${BENCHMARK_REFRESH_BASE:-HEAD^}"
+if git rev-parse --verify "$base" >/dev/null 2>&1; then
+  # First-parent diff works for normal commits AND merges.
+  changed="$(git diff --name-only "$base" HEAD)"
+else
+  changed="$(git diff-tree --root --no-commit-id --name-only -r HEAD)"
+fi
+printf '%s\n' "$changed" | benchmark_refresh_paths >/dev/null || exit 0
+if [ -n "$(git status --porcelain)" ]; then
+  echo "benchmark refresh BLOCKED: dirty tree. Refresh in a clean worktree; do not touch unrelated files." >&2
+  exit 1
+fi
+PYTHON="$(command -v python3 || command -v python || true)"
+if [ -z "$PYTHON" ]; then
+  echo "benchmark refresh BLOCKED: Python missing" >&2
+  exit 1
+fi
+"$PYTHON" scripts/refresh_benchmark_pages.py --write || {
+  echo "benchmark refresh BLOCKED: repair source/qualification and regenerate before publication." >&2
+  exit 1
+}
+git add -- reports/benchmarks/normalized reports/benchmarks/scorecards reports/benchmarks/ui
+if ! git diff --cached --quiet; then
+  # Plumbing, not `git commit`: inside post-merge MERGE_HEAD still exists and
+  # porcelain would record a second merge of the same branch. Record exactly
+  # one parent (HEAD); no hooks run for the companion commit.
+  tree="$(git write-tree)"
+  commit="$(git commit-tree "$tree" -p HEAD -m "chore(benchmarks): refresh recorded evidence projections [skip ci]")"
+  git update-ref -m "benchmark refresh companion commit" HEAD "$commit"
+fi
