@@ -242,4 +242,47 @@ class LocalMemoryBridge:
         return result
 
 
+    def tombstone_head(self, key: str, expected_fact_ref: str) -> dict:
+        """Request governed pruning of one currently visible key head.
+
+        This is NOT whole-key erasure: older independently current facts and
+        derived copies are not proved absent. The host must serialize writers;
+        history + mutation is not an atomic compare-and-swap across processes.
+        """
+        key = _string("key", key, MAX_KEY_CHARS)
+        expected_fact_ref = _string("expected_fact_ref", expected_fact_ref, MAX_KEY_CHARS)
+        if os.environ.get("AGENT_MEMORY_MCP_ALLOW_HEAD_TOMBSTONE") != "enabled":
+            raise ValueError("host has not enabled head tombstoning")
+        with self._open() as memory:
+            # The *public* history view is scope-filtered; no adapter or raw
+            # SQLite inspection, and no foreign/deleted identity diagnostics.
+            history = memory.history(key)
+            record = history.get("history") if isinstance(history, dict) else None
+            visible_head = record.get("current_fact_uuid") if isinstance(record, dict) else None
+            if not isinstance(visible_head, str) or visible_head != expected_fact_ref:
+                return {
+                    "committed": False,
+                    "status": "unavailable_or_changed",
+                    "key": key,
+                    "head_only": True,
+                    "permanent": False,
+                    "older_generations_checked": False,
+                }
+            outcome = memory.forget(key, permanent=False)
+        committed = isinstance(outcome, dict) and outcome.get("committed") is True
+        return {
+            "committed": committed,
+            "status": "head_tombstoned" if committed else "governed_refusal",
+            "key": key,
+            "head_only": True,
+            "permanent": False,
+            "older_generations_checked": False,
+            "warning": (
+                "Only the previously visible current head was submitted for governed pruning. "
+                "Earlier independently current facts may remain discoverable. "
+                "This is not permanent deletion or proof of whole-key erasure."
+            ),
+        }
+
+
 __all__ = ["HostConfig", "LocalMemoryBridge"]
