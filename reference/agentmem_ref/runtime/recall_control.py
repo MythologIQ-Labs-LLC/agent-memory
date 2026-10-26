@@ -587,6 +587,9 @@ class ControlledRecallPlanner:
                 current = self.adapter.current_fact_uuid(logical_ref)
                 if current is None:
                     continue
+                seed_fact = substrate.get_fact(current)
+                if seed_fact is None or not self.adapter.domain_eligible(seed_fact, context):
+                    continue
                 hits.append(
                     RetrievalRouteHit(
                         route_id=EXACT_IDENTITY_ROUTE,
@@ -640,7 +643,9 @@ class ControlledRecallPlanner:
             for logical_ref in unique_logical_refs[:graph_seed_limit]:
                 current = self.adapter.current_fact_uuid(logical_ref)
                 if current is not None:
-                    graph_seed_refs.append(current)
+                    seed_fact = substrate.get_fact(current)
+                    if seed_fact is not None and self.adapter.domain_eligible(seed_fact, context):
+                        graph_seed_refs.append(current)
             graph_results = self.graph_retriever.search(
                 substrate,
                 tuple(graph_seed_refs),
@@ -676,6 +681,8 @@ class ControlledRecallPlanner:
                     substrate,
                     tenant,
                     hits,
+                    adapter=self.adapter,
+                    context=context,
                     seed_ref=seed_ref,
                     logical_memory_ref=logical_ref,
                     expanded_seeds=expanded_seeds,
@@ -702,6 +709,8 @@ class ControlledRecallPlanner:
                     substrate,
                     tenant,
                     hits,
+                    adapter=self.adapter,
+                    context=context,
                     seed_ref=fact.uuid,
                     logical_memory_ref="",
                     expanded_seeds=expanded_seeds,
@@ -793,6 +802,8 @@ class ControlledRecallPlanner:
         tenant: str,
         hits: list[RetrievalRouteHit],
         *,
+        adapter,
+        context: RecallContext,
         seed_ref: str,
         logical_memory_ref: str,
         expanded_seeds: set[str],
@@ -801,7 +812,12 @@ class ControlledRecallPlanner:
         if seed_ref in expanded_seeds or candidate_limit <= 0:
             return 0
         seed_fact = substrate.get_fact(seed_ref)
-        if seed_fact is None or seed_fact.is_event_invalid or seed_fact.is_transaction_expired:
+        if (
+            seed_fact is None
+            or seed_fact.is_event_invalid
+            or seed_fact.is_transaction_expired
+            or not adapter.domain_eligible(seed_fact, context)
+        ):
             return 0
         expanded_seeds.add(seed_ref)
         added = 0
