@@ -396,14 +396,18 @@ class GovernedMemoryAdapter:
         stale = self._is_stale(proposal)
         readmission_blocked = self._readmission_blocked(proposal, fact_text, attestation)
         target_unavailable = self._write_target_unavailable(proposal)
-        selected = self._select_action(
-            decision,
-            proposal,
-            blocked_by_stale=stale or readmission_blocked or target_unavailable,
+        # A foreign live target receives no selected action. The decision
+        # envelope alone never confers write permission for this target.
+        # This also prevents a misleading success-shaped receipt when the
+        # fallback selector would otherwise return the requested operation.
+        selected = (
+            receipts.NO_ACTION if target_unavailable else self._select_action(
+                decision,
+                proposal,
+                blocked_by_stale=stale or readmission_blocked,
+            )
         )
-        # The selector may fall back to the only permitted action even when
-        # blocked_by_stale=True; a foreign live target must never commit.
-        commits = selected == proposal.operation and not target_unavailable
+        commits = selected == proposal.operation
         before_state = f"v{self._state_version.get(proposal.target_reference, 0)}"
 
         if readmission_blocked:
@@ -1381,7 +1385,10 @@ class GovernedMemoryAdapter:
         # a binding error.
         refusal = self._delete_refusal(proposal, fact_uuid)
         stale = self._is_stale(proposal)
-        selected = self._select_action(decision, proposal, blocked_by_stale=stale)
+        selected = (
+            receipts.NO_ACTION if refusal == "write_target_unavailable"
+            else self._select_action(decision, proposal, blocked_by_stale=stale)
+        )
         committed = refusal is None and selected == proposal.operation
         if refusal is None and stale:
             refusal = "stale_decision"
