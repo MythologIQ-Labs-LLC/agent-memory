@@ -47,6 +47,14 @@ class ScopedIdentityTests(unittest.TestCase):
         self.assertNotEqual(f("a", "b", "c"), f("a", "c", "b"))
         self.assertNotEqual(f("a:b", "c", "d"), f("a", "b:c", "d"))
 
+    def test_noncanonical_unicode_identity_is_refused(self):
+        f = scope_distinct_key
+        with self.assertRaisesRegex(ValueError, "NFC"):
+            f("tenant:one", "project:a", "memory:e\u0301")
+        with self.assertRaisesRegex(ValueError, "NFC"):
+            f("tenant:e\u0301", "project:a", "memory:key")
+        self.assertTrue(f("tenant:one", "project:a", "memory:é"))
+
     def test_internal_and_invalid_keys_refused_before_runtime(self):
         api = scoped("project:a", {})
         for key in ("", " ", "scope-key-v1:forged", "a" * 513, None):
