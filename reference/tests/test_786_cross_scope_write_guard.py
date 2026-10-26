@@ -204,6 +204,30 @@ class CrossProjectWriteTargetTests(unittest.TestCase):
                 self.assertEqual(memory.history(KEY)["history"]["current_fact_uuid"],
                                  two["fact_uuid"])
 
+    def test_lifecycle_operations_cannot_override_host_bound_project(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            with open_in(root, "project:b") as owner:
+                initial = owner.remember("memory:own", "This project owns the record.")
+                self.assertTrue(initial["committed"])
+                original = initial["fact_uuid"]
+                bad = {"project_ref": "project:a"}
+                attempts = [
+                    lambda: owner.correct("memory:own", "Forged correction",
+                                          overrides=bad),
+                    lambda: owner.forget("memory:own", overrides=bad),
+                    lambda: owner.dispute("memory:own", fact_uuid=original,
+                                          overrides=bad),
+                ]
+                for index, attempt in enumerate(attempts):
+                    with self.subTest(operation=index), self.assertRaisesRegex(
+                        ValueError, "host-bound scope identity"
+                    ):
+                        attempt()
+                self.assertEqual(
+                    owner.history("memory:own")["history"]["current_fact_uuid"], original
+                )
+
     def test_owner_correction_remains_eligible_with_qualified_evidence(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
