@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import unicodedata
 from typing import Any
 
 from .surface import AgentMemory
@@ -28,8 +29,11 @@ def scope_distinct_key(tenant: str, scope: str, public_key: str) -> str:
     for label, value in (
         ("tenant", tenant), ("scope", scope), ("public_key", public_key),
     ):
-        if not isinstance(value, str) or not value or value != value.strip():
-            raise ValueError(f"{label} must be a nonempty canonical string")
+        if (
+            not isinstance(value, str) or not value or value != value.strip()
+            or unicodedata.normalize("NFC", value) != value
+        ):
+            raise ValueError(f"{label} must be a nonempty NFC canonical string")
     if len(public_key) > _MAX_KEY_LENGTH:
         raise ValueError("public_key is too long")
     if public_key.startswith(_NAMESPACE):
