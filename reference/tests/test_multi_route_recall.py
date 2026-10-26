@@ -202,13 +202,11 @@ class MultiRouteRecallTests(unittest.TestCase):
             logical_memory_refs=(MEMORY_DEPLOY,),
         )
 
-        self.assertIn(deploy.fact_uuid, result.candidates)
+        self.assertNotIn(deploy.fact_uuid, result.candidates)
         self.assertNotIn(deploy.fact_uuid, result.admitted)
         self.assertNotIn(deploy.fact_uuid, result.ranked_admitted)
-        self.assertEqual(result.refusals[deploy.fact_uuid], "required_isolation_domain_missing")
-        hit = result.provenance_for(deploy.fact_uuid)[0]
-        self.assertEqual(hit.raw_score, 1.0)
-        self.assertEqual(hit.authority_effect, "none")
+        self.assertNotIn(deploy.fact_uuid, result.route_hits)
+        self.assertNotIn(deploy.fact_uuid, result.refusals)
         self.assertEqual(result.authority_effect, "none")
 
     def test_exact_identity_does_not_resurrect_superseded_currentness(self) -> None:
@@ -244,7 +242,8 @@ class MultiRouteRecallTests(unittest.TestCase):
 
         self.assertIn(deploy.fact_uuid, result.ranked_admitted)
         self.assertNotIn(backup.fact_uuid, result.ranked_admitted)
-        self.assertEqual(result.refusals[backup.fact_uuid], "required_isolation_domain_missing")
+        self.assertNotIn(backup.fact_uuid, result.candidates)
+        self.assertNotIn(backup.fact_uuid, result.refusals)
 
     def test_compatibility_recall_preserves_existing_lexical_behavior(self) -> None:
         deploy = self._retain(MEMORY_DEPLOY, "deploy window is Thursday")
