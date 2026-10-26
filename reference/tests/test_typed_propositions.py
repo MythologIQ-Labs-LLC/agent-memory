@@ -336,8 +336,13 @@ class CallerDeclaredControlTests(_Case):
         self.assertEqual(other.write_semantics(new).get("relations", []), [])
         self.reopen()
         self.assert_not_engaged(old)
-        task_scoped = self.write("c", "room_new", proposition=PROP["room_new"], overrides={"task_ref": "task:other"})
-        self.assertEqual(self.semantics(task_scoped).get("relations", []), [])
+        # Task-specific writes require a host-bound task identity. This
+        # facade is bound to a project only, so an untrusted override must
+        # not impersonate another task; adapter task-recall semantics remain
+        # separately covered by test_isolation_domains.py.
+        with self.assertRaisesRegex(ValueError, "protected fields"):
+            self.write("c", "room_new", proposition=PROP["room_new"],
+                       overrides={"task_ref": "task:other"})
 
     def test_dispute_refuses(self):
         old, new = self.declared_pair()
