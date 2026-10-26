@@ -33,12 +33,18 @@ class SerializedScopedBenchmarkHost:
         self.switches = 0
 
     def _matches_binding(self, handle: T | None, scope: str) -> bool:
-        return (
-            handle is not None
-            and getattr(handle, "scope", None) == scope
-            and getattr(handle, "tenant", None) == self._tenant
-            and getattr(handle, "actor_id", None) == self._actor_id
-        )
+        # A hostile or broken property descriptor can raise. Treat it as an
+        # identity mismatch, so use() closes the handle and clears its cache
+        # rather than accidentally retaining an unvalidated runtime.
+        try:
+            return (
+                handle is not None
+                and getattr(handle, "scope", None) == scope
+                and getattr(handle, "tenant", None) == self._tenant
+                and getattr(handle, "actor_id", None) == self._actor_id
+            )
+        except Exception:
+            return False
 
     @contextmanager
     def use(self, user_id: str) -> Iterator[T]:
