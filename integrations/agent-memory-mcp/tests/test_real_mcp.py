@@ -136,7 +136,7 @@ class ActualMcpConsumerLoop(unittest.IsolatedAsyncioTestCase):
                 tools = await client.list_tools()
                 self.assertEqual(
                     {tool.name for tool in tools.tools},
-                    {"memory_remember", "memory_get", "memory_find"},
+                    {"memory_remember", "memory_get", "memory_find", "memory_tombstone_head"},
                 )
                 created = _result(await client.call_tool("memory_remember", {
                     "key": "memory:agent:editor",
@@ -210,6 +210,54 @@ class ActualMcpConsumerLoop(unittest.IsolatedAsyncioTestCase):
                     }), "evidence")
                     for item in found["evidence"]:
                         self.assertEqual(item["latest_for_key"], item["content"] == "The owner writes Python in VS Code.", item)
+
+    async def test_opt_in_head_tombstone_is_not_whole_key_erasure(self):
+        with tempfile.TemporaryDirectory() as temp:
+            env = {
+                "AGENT_MEMORY_MCP_ROOT": str(Path(temp) / "store"),
+                "AGENT_MEMORY_MCP_TENANT": "tenant:tombstone",
+                "AGENT_MEMORY_MCP_ACTOR": "agent:tombstone",
+                "AGENT_MEMORY_MCP_SCOPE": "project:tombstone",
+            }
+            with patch.dict(os.environ, env):
+                async with Client(module.mcp, raise_exceptions=True) as client:
+                    refused = await client.call_tool("memory_tombstone_head", {
+                        "key": "memory:editor", "expected_fact_ref": "fact:unavailable",
+                    })
+                    self.assertTrue(refused.is_error, refused)
+                    self.assertIsNone(refused.structured_content)
+                    saved = _result(await client.call_tool("memory_remember", {
+                        "key": "memory:editor",
+                        "text": "I use Neovim to write Python.",
+                    }), "committed")
+                    self.assertTrue(saved["committed"], saved)
+                    before = _result(await client.call_tool("memory_get", {
+                        "key": "memory:editor",
+                    }), "evidence")
+                    self.assertEqual(before["lookup_status"], "found")
+                    expected = before["evidence"][0]["fact_ref"]
+            with patch.dict(os.environ, {**env, "AGENT_MEMORY_MCP_ALLOW_HEAD_TOMBSTONE": "enabled"}):
+                async with Client(module.mcp, raise_exceptions=True) as client:
+                    wrong = _result(await client.call_tool("memory_tombstone_head", {
+                        "key": "memory:editor", "expected_fact_ref": "fact:stale",
+                    }), "committed")
+                    self.assertEqual(wrong["status"], "unavailable_or_changed")
+                    self.assertFalse(wrong["committed"])
+                    reply = _result(await client.call_tool("memory_tombstone_head", {
+                        "key": "memory:editor", "expected_fact_ref": expected,
+                    }), "committed")
+                    self.assertTrue(reply["head_only"])
+                    self.assertFalse(reply["permanent"])
+                    self.assertFalse(reply["older_generations_checked"])
+                    self.assertIn(reply["status"], ("head_tombstoned", "governed_refusal"))
+                    if reply["committed"]:
+                        self.assertEqual(reply["status"], "head_tombstoned")
+                        after = _result(await client.call_tool("memory_get", {
+                            "key": "memory:editor",
+                        }), "evidence")
+                        self.assertEqual(after["lookup_status"], "not_found_or_unavailable")
+                    else:
+                        self.assertEqual(reply["status"], "governed_refusal")
 
     async def test_missing_host_configuration_is_tool_error_not_success(self):
         with patch.dict(os.environ, {}, clear=True):
