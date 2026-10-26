@@ -33,6 +33,9 @@ class FakeScopeRuntime:
         parent = self
 
         class Handle:
+            def __init__(self):
+                self.scope = scope
+
             def remember(self, target, text, **kw):
                 if kw:
                     raise AssertionError("untrusted proposal override")
