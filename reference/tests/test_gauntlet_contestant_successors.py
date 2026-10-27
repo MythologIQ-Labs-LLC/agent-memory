@@ -96,6 +96,14 @@ class SuccessorIdentityTests(unittest.TestCase):
                                capture_output=True, text=True, check=True).stdout.split()
         self.assertEqual(drift, [], "the protected runtime differs from the commit the successors pin; re-pin them")
 
+    def test_v7_declaration_requires_both_successor_runs(self):
+        declaration = json.loads((REPO_ROOT / "reports" / "runtime" / "baseline-v7-declaration.json").read_text())
+        required = {(item["kind"], item["ref"]) for item in declaration["acceptance_evidence_required"]}
+        self.assertIn(("public_gauntlet", f"{DURABILITY_RECOVERY_PROFILE_ID}:agent-memory-public-durability-adapter-v2"),
+                      required)
+        self.assertIn(("public_gauntlet", f"{GOVERNANCE_ALPHA_PROFILE_ID}:agent-memory-public-governance-adapter-v2"),
+                      required)
+
     def test_configuration_digest_is_the_live_runtime_digest(self):
         with tempfile.TemporaryDirectory() as temp:
             with AgentMemory.open(temp, store_profile="scope_distinct_v1") as memory:

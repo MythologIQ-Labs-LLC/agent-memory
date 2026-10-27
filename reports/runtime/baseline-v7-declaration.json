@@ -63,6 +63,14 @@
     {
       "kind": "replay",
       "ref": "mesa-formal-v4"
+    },
+    {
+      "kind": "public_gauntlet",
+      "ref": "durability-recovery-alpha-v1:agent-memory-public-durability-adapter-v2"
+    },
+    {
+      "kind": "public_gauntlet",
+      "ref": "governance-isolation-deletion-alpha-v1:agent-memory-public-governance-adapter-v2"
     }
   ]
 }
