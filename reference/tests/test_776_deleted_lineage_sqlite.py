@@ -175,5 +175,40 @@ class DeletedLineageSQLiteTests(unittest.TestCase):
                 self.assertEqual(repeat["outcome"], "block")
 
 
+    def test_deleted_id_cannot_be_reallocated_by_another_project(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            with _open(root) as owner:
+                old = owner.remember("memory:shared-name", "Scope owner original.")
+                self.assertTrue(old["committed"], old)
+                deletion = owner.forget("memory:shared-name")
+                self.assertTrue(deletion["committed"], deletion)
+
+            with AgentMemory.open(
+                root, tenant=TENANT, actor_id="agent:elsewhere",
+                scope="project:elsewhere", purpose="foreign recreation probe",
+            ) as outsider:
+                rebinding = outsider.remember(
+                    "memory:shared-name", "Foreign replacement should not exist."
+                )
+                self.assertFalse(rebinding["committed"], rebinding)
+                self.assertEqual(rebinding["outcome"], "block")
+                self.assertEqual(rebinding["receipt"]["selected_action"], "none")
+                self.assertEqual(rebinding["receipt"]["before_state"], "v0")
+                self.assertEqual(rebinding["receipt"]["after_state"], "v0")
+                fresh = outsider.remember("memory:foreign-own", "Fresh project B state.")
+                self.assertTrue(fresh["committed"], fresh)
+
+            with _open(root) as owner:
+                state = owner.history("memory:shared-name")["history"]
+                self.assertIsNone(state["current_fact_uuid"])
+                self.assertTrue(state["tombstoned"])
+                recalled = owner.recall(
+                    "Scope owner original",
+                    temporal_intent={"mode": "historical"},
+                )
+                self.assertNotIn(old["fact_uuid"], recalled["admitted"])
+
+
 if __name__ == "__main__":
     unittest.main()
