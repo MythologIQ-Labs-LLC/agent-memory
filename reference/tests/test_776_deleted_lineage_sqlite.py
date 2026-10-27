@@ -108,8 +108,10 @@ class DeletedLineageSQLiteTests(unittest.TestCase):
                     evidence_refs=(first["fact_uuid"],),
                 )
                 self.assertTrue(derived["committed"], derived)
+                # Identical text must remain visible when its logical-memory
+                # binding is independent of the deleted source lineage.
                 unrelated = memory.remember(
-                    "memory:other", "Unrelated Denver city archive audit."
+                    "memory:other", "Derived Denver city archive audit."
                 )
                 self.assertTrue(unrelated["committed"], unrelated)
 
