@@ -17,6 +17,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from agentmem_ref import AgentMemory
+from agentmem_ref.api import surface
 from agentmem_ref.api.surface import STORE_PROFILE_FILE, STORE_PROFILE_LEGACY
 from agentmem_ref.runtime import doctor
 from agentmem_ref.runtime.runtime_behavior import validate_runtime_behavior_contract
@@ -29,13 +30,17 @@ _CONFIG = "runtime-config.json"
 def open_tenant_wide(
     root,
     *,
-    tenant: str,
-    actor_id: str,
-    scope: str,
+    tenant: str = "tenant:local",
+    actor_id: str = "agent:local",
+    scope: str = "project:local",
     purpose: str = "local memory",
     charter_version: str = "charter:local-v1",
     task_ref: str = "",
     verifier_registry=None,
+    recall_control: str = surface.RECALL_CONTROL_DEFAULT,
+    proposition_extractor=None,
+    semantic_retrieval: str = surface.SEMANTIC_RETRIEVAL_DEFAULT,
+    representation_dir=None,
 ) -> AgentMemory:
     """Open ``scope``'s handle on a tenant-wide multi-project store (test-only)."""
     root = Path(root)
@@ -45,7 +50,10 @@ def open_tenant_wide(
         (root / STORE_PROFILE_FILE).unlink()  # a store written before profiles existed
     value = doctor.load_configuration_value(root / _CONFIG)
     plan = validate_runtime_behavior_contract(value, qualification_bindings=doctor.load_qualification_bindings(None))
-    runtime = SQLiteConfiguredCompositionRuntime.recover(root, plan=plan, verifier_registry=verifier_registry)
+    semantic = surface._semantic_route(root, semantic_retrieval, representation_dir)
+    runtime = SQLiteConfiguredCompositionRuntime.recover(
+        root, plan=plan, verifier_registry=verifier_registry, vector_retriever=semantic["retriever"],
+    )
     if runtime.adapter.checkpoint_tenant() != tenant:
         runtime.close()
         raise AssertionError("fixture tenant does not match the store")
@@ -60,5 +68,8 @@ def open_tenant_wide(
         purpose=purpose,
         runtime=runtime,
         task_ref=task_ref,
+        semantic=semantic,
+        recall_control=recall_control,
+        proposition_extractor=proposition_extractor,
         store_profile=STORE_PROFILE_LEGACY,
     )

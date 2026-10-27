@@ -183,7 +183,8 @@ class AdmittedSetBm25Tests(unittest.TestCase):
 
     def test_foreign_scope_text_cannot_change_admitted_ordering(self):
         def open_scope(root, scope):
-            return AgentMemory.open(root, tenant=TENANT, actor_id="agent:ranking", scope=scope, purpose="ranking tests")
+            return AgentMemory.open(root, tenant=TENANT, actor_id="agent:ranking", scope=scope, purpose="ranking tests",
+                                    store_profile="scope_distinct_v1")
 
         def order(foreign_text):
             with tempfile.TemporaryDirectory() as root:
@@ -201,8 +202,9 @@ class AdmittedSetBm25Tests(unittest.TestCase):
 
 
 class FacadeRankingTests(unittest.TestCase):
-    def _open(self, root: str, scope: str = SCOPE) -> AgentMemory:
-        return AgentMemory.open(root, tenant=TENANT, actor_id="agent:ranking", scope=scope, purpose="ranking tests")
+    def _open(self, root: str, scope: str = SCOPE, store_profile: str | None = None) -> AgentMemory:
+        return AgentMemory.open(root, tenant=TENANT, actor_id="agent:ranking", scope=scope, purpose="ranking tests",
+                                store_profile=store_profile)
 
     def test_equal_score_independent_writes_use_neutral_fallback_without_supersession(self):
         with tempfile.TemporaryDirectory() as root, self._open(root) as memory:
@@ -255,7 +257,8 @@ class FacadeRankingTests(unittest.TestCase):
 
     def test_wrong_scope_and_superseded_candidates_stay_refused_regardless_of_recency(self):
         with tempfile.TemporaryDirectory() as root:
-            with self._open(root) as memory:
+            # Two projects share this store, so it is a scope_distinct_v1 store (#786).
+            with self._open(root, store_profile="scope_distinct_v1") as memory:
                 first = memory.remember("memory:release", "The current release codename is Alder.")
                 corrected = memory.correct(
                     "memory:release", "The current release codename is Cedar.", evidence=_correction_evidence()

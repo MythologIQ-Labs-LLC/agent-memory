@@ -295,6 +295,8 @@ class AgentMemoryAdapter:
             lambda scope: AgentMemory.open(
                 root, tenant=self.tenant, actor_id="agent:benchmark",
                 scope=scope, purpose="AgentMemBench operational evaluation",
+                # Every benchmark user is a project in one shared store (#786).
+                store_profile="scope_distinct_v1",
             ),
             tenant=self.tenant, actor_id="agent:benchmark",
         )

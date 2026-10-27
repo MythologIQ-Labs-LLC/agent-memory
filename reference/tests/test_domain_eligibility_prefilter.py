@@ -25,6 +25,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "reference"))
 
 from agentmem_ref import AgentMemory  # noqa: E402
+from tests._tenant_wide_fixture import open_tenant_wide  # noqa: E402
 from agentmem_ref.api import contract  # noqa: E402
 from agentmem_ref.runtime.adapter import PREFILTER_POLICY_ID, PREFILTER_POLICY_VERSION  # noqa: E402
 from agentmem_ref.runtime.contextual_recall_adapter import admit_preselected_candidates  # noqa: E402
@@ -34,7 +35,7 @@ TENANT = "tenant:prefilter"
 
 
 def _open(root: str, scope: str) -> AgentMemory:
-    return AgentMemory.open(root, tenant=TENANT, actor_id="agent:prefilter", scope=scope, purpose="prefilter tests")
+    return open_tenant_wide(root, tenant=TENANT, actor_id="agent:prefilter", scope=scope, purpose="prefilter tests")
 
 
 def _write(root: str, scope: str, items: list[tuple[str, str]]) -> dict[str, str]:

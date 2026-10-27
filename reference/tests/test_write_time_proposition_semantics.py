@@ -27,6 +27,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "reference"))
 
 from agentmem_ref import AgentMemory  # noqa: E402
+from tests._tenant_wide_fixture import open_tenant_wide  # noqa: E402
 from agentmem_ref.memory import procedural_memory as pm  # noqa: E402
 from agentmem_ref.runtime import proposition_semantics as ps  # noqa: E402
 from agentmem_ref.runtime import ranking_policy  # noqa: E402
@@ -38,7 +39,7 @@ CURRENT = {"mode": "current"}
 
 
 def _open(root: str, scope: str = SCOPE) -> AgentMemory:
-    return AgentMemory.open(root, tenant=TENANT, actor_id="agent:semantics", scope=scope, purpose="semantics tests")
+    return open_tenant_wide(root, tenant=TENANT, actor_id="agent:semantics", scope=scope, purpose="semantics tests")
 
 
 def _evidence(scope: str = SCOPE):

@@ -12,6 +12,7 @@ import unittest
 from pathlib import Path
 
 from agentmem_ref import AgentMemory
+from tests._tenant_wide_fixture import open_tenant_wide  # noqa: E402
 from agentmem_ref.memory import procedural_memory as pm
 
 TENANT = "tenant:776-lineage"
@@ -184,7 +185,7 @@ class DeletedLineageSQLiteTests(unittest.TestCase):
                 deletion = owner.forget("memory:shared-name")
                 self.assertTrue(deletion["committed"], deletion)
 
-            with AgentMemory.open(
+            with open_tenant_wide(
                 root, tenant=TENANT, actor_id="agent:elsewhere",
                 scope="project:elsewhere", purpose="foreign recreation probe",
             ) as outsider:

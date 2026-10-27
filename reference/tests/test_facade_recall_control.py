@@ -20,6 +20,7 @@ from unittest import mock
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from agentmem_ref import AgentMemory  # noqa: E402
+from tests._tenant_wide_fixture import open_tenant_wide  # noqa: E402
 from agentmem_ref.api import surface  # noqa: E402
 from agentmem_ref.runtime import representation_onnx  # noqa: E402
 from agentmem_ref.runtime.recall_control import (  # noqa: E402
@@ -72,13 +73,13 @@ class FacadeShadowRecallControlTests(unittest.TestCase):
         # Two byte-identical copies of one seeded store, so audit sequence numbers and the
         # deterministic clock advance identically in both modes.
         root = Path(tempfile.mkdtemp()) / "seeded"
-        with AgentMemory.open(root, **open_kwargs) as memory:
+        with open_tenant_wide(root, **open_kwargs) as memory:
             seed(memory)
             tenant, actor_id, charter_version = memory.tenant, memory.actor_id, memory.charter_version
         if seed is _seed_adversarial:
             # Use an actual foreign project writer; do not impersonate one
             # through the local handle's proposal overrides (#786).
-            with AgentMemory.open(
+            with open_tenant_wide(
                 root, tenant=tenant, actor_id=actor_id,
                 charter_version=charter_version, scope="project:other",
                 purpose="shadow recall foreign-scope fixture",
@@ -91,7 +92,7 @@ class FacadeShadowRecallControlTests(unittest.TestCase):
         for mode in ("off", "shadow"):
             copy = Path(tempfile.mkdtemp()) / mode
             shutil.copytree(root, copy)
-            with AgentMemory.open(copy, recall_control=mode, **open_kwargs) as memory:
+            with open_tenant_wide(copy, recall_control=mode, **open_kwargs) as memory:
                 outputs[mode] = [memory.recall(query, **kwargs) for query, kwargs in queries]
         return outputs
 

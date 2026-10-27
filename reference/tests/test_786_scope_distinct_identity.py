@@ -7,22 +7,30 @@ from unittest.mock import patch
 from agentmem_ref.api.scoped_identity import ScopeDistinctMemory, scope_distinct_key
 
 class FakeMemory:
-    def __init__(self, tenant, scope, actor, store):
+    """Models a scope_distinct_v1 facade: the backing store binds every public key (#786)."""
+    def __init__(self, tenant, scope, actor, store, store_profile="scope_distinct_v1"):
         self.tenant, self.scope, self.actor_id = tenant, scope, actor
         self.store, self.calls, self.closed = store, [], False
+        self.store_profile = store_profile
+    def _k(self, key):
+        return scope_distinct_key(self.tenant, self.scope, key)
     def remember(self, key, text):
+        key = self._k(key)
         self.calls.append(("remember", key))
         self.store[key] = text
         return {"committed": True, "fact_uuid": "fact:" + hashlib.sha256(key.encode()).hexdigest()[:16], "outcome": "allow_with_ledger"}
     def history(self, key):
+        key = self._k(key)
         self.calls.append(("history", key))
         return {"history": {"current_fact_uuid": ("fact:" + hashlib.sha256(key.encode()).hexdigest()[:16]) if key in self.store else None,
                 "state_version": 1 if key in self.store else 0, "tombstoned": False,
                 "events": [{"private": "forbidden"}]}}
     def correct(self, key, text, **kw):
+        key = self._k(key)
         self.calls.append(("correct", key))
         return {"committed": False, "outcome": "require_review", "refusal": key}
     def forget(self, key, **kw):
+        key = self._k(key)
         self.calls.append(("forget", key))
         return {"committed": False, "outcome": "require_review", "refusal": key}
     def close(self): self.closed = True
@@ -48,6 +56,7 @@ class ScopedIdentityTests(unittest.TestCase):
                     underlying.call_args.args[0],
                     parent / ".agent-memory-scoped-v1",
                 )
+                self.assertEqual(underlying.call_args.kwargs["store_profile"], "scope_distinct_v1")
             self.assertEqual(
                 (parent / "legacy-state.db").read_text(encoding="utf-8"),
                 "legacy state",
@@ -179,6 +188,15 @@ class ScopedIdentityTests(unittest.TestCase):
             with self.subTest(key=key), self.assertRaises(ValueError):
                 api.remember(key, "no write")
         self.assertEqual(api._memory.calls, [])
+
+    def test_tenant_wide_backing_store_is_refused(self):
+        # A wrapper over a tenant-wide store would leave raw handles on that store
+        # able to bypass it; only a scope_distinct_v1 store may back it (#786).
+        for profile in ("single_project_v1", "legacy_unprofiled", None):
+            fake = FakeMemory("tenant:one", "project:a", "agent:one", {}, store_profile=profile)
+            with self.subTest(profile=profile), self.assertRaisesRegex(ValueError, "scope_distinct_v1"):
+                ScopeDistinctMemory(fake, tenant="tenant:one", scope="project:a", actor_id="agent:one")
+            self.assertEqual(fake.calls, [])
 
     def test_bad_host_binding_refused_before_mutation(self):
         fake = FakeMemory("tenant:one", "project:a", "agent:one", {})

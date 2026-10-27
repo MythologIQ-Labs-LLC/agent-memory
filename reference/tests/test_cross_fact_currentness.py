@@ -21,6 +21,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "reference"))
 
 from agentmem_ref import AgentMemory  # noqa: E402
+from tests._tenant_wide_fixture import open_tenant_wide  # noqa: E402
 from agentmem_ref.memory import procedural_memory as pm  # noqa: E402
 from agentmem_ref.runtime import cross_fact_currentness as cf  # noqa: E402
 from agentmem_ref.runtime import proposition_semantics as ps  # noqa: E402
@@ -49,7 +50,7 @@ VOLATILE_FIELDS = frozenset({"decision_id", "evaluated_at"})
 
 
 def _open(root: str, *, scope: str = SCOPE, actor_id: str = ACTOR) -> AgentMemory:
-    return AgentMemory.open(root, tenant=TENANT, actor_id=actor_id, scope=scope, purpose="cross-fact tests")
+    return open_tenant_wide(root, tenant=TENANT, actor_id=actor_id, scope=scope, purpose="cross-fact tests")
 
 
 def _qualified(scope: str = SCOPE):

@@ -28,6 +28,7 @@ sys.path.insert(0, str(ROOT / "reference"))
 
 from agentmem_ref import AgentMemory  # noqa: E402
 from agentmem_ref.api import contract  # noqa: E402
+from agentmem_ref.api.surface import STORE_PROFILE_SCOPE_DISTINCT  # noqa: E402
 from agentmem_ref.runtime.adapter import RecallContext  # noqa: E402
 from agentmem_ref.state import sqlite_substrate  # noqa: E402
 
@@ -36,8 +37,9 @@ HOME = ("user:a", "")
 
 
 def _open(root: str, scope: str = HOME[0], task_ref: str = HOME[1]) -> AgentMemory:
+    # Several projects share this store, so it is a scope_distinct_v1 store (#786).
     return AgentMemory.open(root, tenant=TENANT, actor_id="agent:591", scope=scope, purpose="591 tests",
-                            task_ref=task_ref)
+                            task_ref=task_ref, store_profile=STORE_PROFILE_SCOPE_DISTINCT)
 
 
 def _handle_identity(overrides: dict) -> tuple[str, str] | None:

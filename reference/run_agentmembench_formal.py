@@ -300,6 +300,9 @@ class AgentMemoryFormalAdapter:
             lambda scope: AgentMemory.open(
                 root, tenant=self.tenant, actor_id="agent:benchmark",
                 scope=scope, purpose="AgentMemBench MESA formal evaluation",
+                # Every benchmark user is a project in one shared store, so the store
+                # binds keys per project (#786 scope_distinct_v1).
+                store_profile="scope_distinct_v1",
             ),
             tenant=self.tenant, actor_id="agent:benchmark",
         )

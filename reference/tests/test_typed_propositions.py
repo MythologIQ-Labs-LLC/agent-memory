@@ -21,6 +21,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "reference"))
 
 from agentmem_ref import AgentMemory  # noqa: E402
+from tests._tenant_wide_fixture import open_tenant_wide  # noqa: E402
 from agentmem_ref.api import contract  # noqa: E402
 from agentmem_ref.memory import procedural_memory as pm  # noqa: E402
 from agentmem_ref.runtime import cross_fact_currentness as cf  # noqa: E402
@@ -82,7 +83,7 @@ class _Case(unittest.TestCase):
         self._temp.cleanup()
 
     def open(self, *, actor_id: str = ACTOR, scope: str = SCOPE, extractor=None) -> AgentMemory:
-        return AgentMemory.open(self.root, tenant=TENANT, actor_id=actor_id, scope=scope, purpose="typed tests",
+        return open_tenant_wide(self.root, tenant=TENANT, actor_id=actor_id, scope=scope, purpose="typed tests",
                                 proposition_extractor=extractor)
 
     def reopen(self, **kwargs) -> AgentMemory:

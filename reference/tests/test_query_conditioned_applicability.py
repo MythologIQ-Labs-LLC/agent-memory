@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "reference"))
 
 from agentmem_ref import AgentMemory  # noqa: E402
+from tests._tenant_wide_fixture import open_tenant_wide  # noqa: E402
 from agentmem_ref.runtime import ranking_policy, temporal_intent  # noqa: E402
 from agentmem_ref.runtime.runtime_composition import MULTI_ROUTE_RANKING_POLICY  # noqa: E402
 from agentmem_ref.runtime.temporal_intent import interpret_query  # noqa: E402
@@ -26,7 +27,7 @@ NOW = "2026-09-26T12:00:00Z"
 
 
 def _open(root: str, scope: str = SCOPE) -> AgentMemory:
-    return AgentMemory.open(root, tenant=TENANT, actor_id="agent:applicability", scope=scope, purpose="applicability tests")
+    return open_tenant_wide(root, tenant=TENANT, actor_id="agent:applicability", scope=scope, purpose="applicability tests")
 
 
 def _evidence(recalled: dict, fact_uuid: str) -> dict:

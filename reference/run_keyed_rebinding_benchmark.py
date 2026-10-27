@@ -24,6 +24,7 @@ from pathlib import Path
 from typing import Mapping
 
 from agentmem_ref import AgentMemory
+from agentmem_ref.api.surface import StoreIdentityError
 from agentmem_ref.memory import procedural_memory as pm
 
 BENCHMARK_ID = "agent-memory-keyed-rebinding-stale-resistance"
@@ -253,21 +254,29 @@ def run_benchmark(agent_memory_revision: str, *, key_count: int = 6, rounds: int
         sample_target = rebind_targets[0]
         sample_value = fixture["rebind_values"][sample_target][-1]
         # #786: a wrong-scope caller is a separately host-bound handle, not a
-        # context override on this project's handle. Same tenant, other project,
-        # requesting this project's logical key directly. (A different tenant
-        # cannot open this store at all.)
-        memory.close()
-        with AgentMemory.open(
-            root,
-            tenant=TENANT,
-            actor_id=ACTOR,
-            scope="project:other",
-            purpose=PURPOSE,
-        ) as wrong_handle:
-            wrong_scope = wrong_handle.recall(
-                sample_value,
-                logical_memory_refs=(sample_target,),
-            )
+        # context override on this project's handle: same tenant, other project,
+        # requesting this project's logical key directly. This benchmark store is a
+        # single_project_v1 store, so that caller is refused at open, before any
+        # read; a different tenant cannot open it either. Should it ever open, its
+        # recall is measured exactly as before.
+        wrong_scope_access = "refused_at_open"
+        wrong_scope = {"candidates": [], "admitted": [], "admissions": {}}
+        try:
+            with AgentMemory.open(
+                root,
+                tenant=TENANT,
+                actor_id=ACTOR,
+                scope="project:other",
+                purpose=PURPOSE,
+            ) as wrong_handle:
+                wrong_scope = wrong_handle.recall(
+                    sample_value,
+                    logical_memory_refs=(sample_target,),
+                )
+        except StoreIdentityError:
+            pass
+        else:
+            wrong_scope_access = "opened"
         wrong_scope_admissions = len(wrong_scope.get("admitted", []))
 
         pre_final = dict(current_fact)
@@ -350,6 +359,7 @@ def run_benchmark(agent_memory_revision: str, *, key_count: int = 6, rounds: int
         "unqualified_correction_committed": bool(unqualified.get("committed", False)),
         "unqualified_correction_outcome": unqualified.get("outcome"),
         "wrong_scope_admission_count": wrong_scope_admissions,
+        "wrong_scope_access": wrong_scope_access,
         "stale_currentness_violation_count": stale_admission_hits,
         "retrieval_evidence_authority_effect": "none",
         "candidate_presence_is_authority_effect": False,
