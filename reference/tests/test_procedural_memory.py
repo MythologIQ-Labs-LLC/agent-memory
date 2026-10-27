@@ -343,6 +343,51 @@ class ProceduralMemoryTests(unittest.TestCase):
             saved.commit.fact_uuid,
         )
 
+    def test_same_project_other_task_cannot_revoke_task_scoped_skill(self):
+        artifact = self.skill(version=1, branch="release")
+        candidate = self.runtime.propose_skill(artifact, actor_id="agent:release")
+        # The canonical write carries the task binding in PAMA metadata;
+        # the procedural artifact remains just content, not an authority grant.
+        task_scoped = replace(
+            candidate, proposal=replace(candidate.proposal, task_ref="task:owner"),
+        )
+        saved = self.runtime.commit_skill(task_scoped)
+        self.assertTrue(saved.commit.committed, saved.commit.refusal)
+
+        wrong_task = ProceduralMemoryRuntime(
+            substrate=self.substrate, adapter=self.adapter, registry=self.registry,
+            revocation_context=RecallContext(
+                target_domain_refs=(TENANT, PROJECT),
+                principal_ref="agent:release",
+                project_ref=PROJECT,
+                task_ref="task:intruder",
+                purpose=PURPOSE,
+            ),
+        )
+        with self.assertRaisesRegex(ValueError, "^no accessible current procedural skill$"):
+            wrong_task.revoke_skill(
+                artifact.skill_id, actor_id="agent:release",
+                evidence_refs=("evidence:claimed-owner",),
+            )
+        self.assertIsNone(self.adapter.tombstone(saved.commit.fact_uuid))
+
+        owner_task = ProceduralMemoryRuntime(
+            substrate=self.substrate, adapter=self.adapter, registry=self.registry,
+            revocation_context=RecallContext(
+                target_domain_refs=(TENANT, PROJECT),
+                principal_ref="agent:release",
+                project_ref=PROJECT,
+                task_ref="task:owner",
+                purpose=PURPOSE,
+            ),
+        )
+        result = owner_task.revoke_skill(
+            artifact.skill_id, actor_id="agent:release",
+            evidence_refs=("evidence:owner-revocation",),
+        )
+        self.assertTrue(result.commit.committed, result.commit.refusal)
+        self.assertIsNotNone(self.adapter.tombstone(saved.commit.fact_uuid))
+
     def test_revocation_preserves_host_project_and_scope_in_receipt(self):
         artifact = self.skill(version=1, branch="release")
         saved = self.runtime.commit_skill(
