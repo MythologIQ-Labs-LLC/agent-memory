@@ -120,7 +120,8 @@ def run_m4(pairs: int = 50) -> dict:
         # Real scoped handle, not fabricated proposal ownership (#786).
         # Reopen serially in the same store so persistent ids and ordering
         # remain part of the same benchmark cohort.
-        with AgentMemory.open(root, tenant="tenant:m4", scope=scope) as memory:
+        # Many projects share this store, so it binds keys per project (#786).
+        with AgentMemory.open(root, tenant="tenant:m4", scope=scope, store_profile="scope_distinct_v1") as memory:
             old_result = memory.remember(
                 f"memory:m4:{index}:old",
                 old_t.format(old=f"OLD_{category}_{index:04d}"),

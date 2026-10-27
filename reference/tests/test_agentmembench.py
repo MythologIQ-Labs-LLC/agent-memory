@@ -135,6 +135,9 @@ class ProfileReportTests(unittest.TestCase):
         self.assertIn("WildChat-4.8M", report["upstream"]["data_attribution"])
         self.assertFalse(report["input"]["matches_upstream_release"])
         self.assertEqual(report["comparability"]["status"], "synthetic-smoke-only")
+        # #786: the migration posture is stated beside, never instead of, the corpus boundary.
+        self.assertTrue(report["comparability"]["scope_host_migration"].startswith(
+            "unaccepted-scope-host-migration-candidate"))
         self.assertEqual(report["comparability"]["upstream_llm_judged_retrieval"], "not_run")
         self.assertEqual(report["claim_boundary"]["aggregate_memory_health_score"], "not_defined")
         self.assertTrue(report["dimensions"]["llm_portability"].startswith("not_exercised"))

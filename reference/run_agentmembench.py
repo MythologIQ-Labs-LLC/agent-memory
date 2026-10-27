@@ -775,13 +775,13 @@ def run(
             "governance": "governance (Agent Memory refusal/outcome tallies per phase)",
         },
         "comparability": {
-            "status": (
-                "unaccepted-scope-host-migration-candidate"
-                if "agent_memory" in backends else
-                ("bounded-operational-profile" if corpus_class != "synthetic" else "synthetic-smoke-only")
-            ),
+            # The corpus claim boundary is never replaced by a migration label: a synthetic
+            # run stays synthetic-smoke-only. The #786 scope-host migration posture is stated
+            # separately and remains unaccepted until a replay qualifies it.
+            "status": "bounded-operational-profile" if corpus_class != "synthetic" else "synthetic-smoke-only",
             "scope_host_migration": (
-                "serialized-host-bound-scope-v1; score, latency and concurrency parity unqualified"
+                "unaccepted-scope-host-migration-candidate: serialized-host-bound-scope-v1 over a "
+                "scope_distinct_v1 store; score, latency and concurrency parity unqualified"
                 if "agent_memory" in backends else "not_applicable"
             ),
             "upstream_llm_judged_retrieval": "not_run",
