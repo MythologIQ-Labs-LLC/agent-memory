@@ -34,8 +34,8 @@ class ScopeDistinctSQLiteTests(unittest.TestCase):
                 second = other.remember(KEY, "Orrin gateway is in Turku")
                 self.assertTrue(second["committed"], second)
                 second_ref = second["fact_ref"]
-                # These project roots are independent SQLite databases.
-                # Each may legitimately allocate the same local fact UUID.
+                # Local fact UUIDs are not an authorization boundary.
+                # Validate the project-specific persisted content instead.
                 self.assertEqual(other.history(KEY)["current_fact_ref"], second_ref)
                 self.assertEqual(
                     other._memory.runtime.adapter.checkpoint_substrate()
