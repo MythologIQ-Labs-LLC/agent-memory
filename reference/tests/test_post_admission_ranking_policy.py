@@ -182,16 +182,19 @@ class AdmittedSetBm25Tests(unittest.TestCase):
             )
 
     def test_foreign_scope_text_cannot_change_admitted_ordering(self):
+        def open_scope(root, scope):
+            return AgentMemory.open(root, tenant=TENANT, actor_id="agent:ranking", scope=scope, purpose="ranking tests")
+
         def order(foreign_text):
-            with tempfile.TemporaryDirectory() as root, AgentMemory.open(
-                root, tenant=TENANT, actor_id="agent:ranking", scope=SCOPE, purpose="ranking tests"
-            ) as memory:
-                a = memory.remember("memory:a", "The release codename is Alder and the train is late.")
-                b = memory.remember("memory:b", "The release train codename changed.")
-                other = {"scope": "project:other", "isolation_domain_refs": [TENANT, "project:other"],
-                         "required_isolation_domain_refs": [TENANT, "project:other"], "project_ref": "project:other"}
-                memory.remember("memory:foreign", foreign_text, overrides=other)
-                recalled = memory.recall("What is the release codename for the train?")
+            with tempfile.TemporaryDirectory() as root:
+                with open_scope(root, SCOPE) as memory:
+                    a = memory.remember("memory:a", "The release codename is Alder and the train is late.")
+                    b = memory.remember("memory:b", "The release train codename changed.")
+                # The foreign project writes through its own host-bound handle (#786).
+                with open_scope(root, "project:other") as other:
+                    self.assertTrue(other.remember("memory:foreign", foreign_text)["committed"])
+                with open_scope(root, SCOPE) as memory:
+                    recalled = memory.recall("What is the release codename for the train?")
                 ids = {a["fact_uuid"]: "a", b["fact_uuid"]: "b"}
                 return [ids[ref] for ref in recalled["admitted"] if ref in ids]
         self.assertEqual(order("codename codename codename release"), order("train train train release"))
@@ -251,23 +254,21 @@ class FacadeRankingTests(unittest.TestCase):
         self.assertEqual(first, third)
 
     def test_wrong_scope_and_superseded_candidates_stay_refused_regardless_of_recency(self):
-        with tempfile.TemporaryDirectory() as root, self._open(root) as memory:
-            first = memory.remember("memory:release", "The current release codename is Alder.")
-            corrected = memory.correct(
-                "memory:release", "The current release codename is Cedar.", evidence=_correction_evidence()
-            )
-            self.assertTrue(corrected["committed"])
-            self.assertEqual(corrected["outcome"], policy.ALLOW_WITH_LEDGER)
-            other_scope = {
-                "scope": "project:other",
-                "isolation_domain_refs": [TENANT, "project:other"],
-                "required_isolation_domain_refs": [TENANT, "project:other"],
-                "project_ref": "project:other",
-            }
-            # The foreign fact is the NEWEST write; recency must not admit it.
-            foreign = memory.remember("memory:foreign", "The current release codename is Zelkova.", overrides=other_scope)
-            self.assertTrue(foreign["committed"])
-            recalled = memory.recall(QUERY)
+        with tempfile.TemporaryDirectory() as root:
+            with self._open(root) as memory:
+                first = memory.remember("memory:release", "The current release codename is Alder.")
+                corrected = memory.correct(
+                    "memory:release", "The current release codename is Cedar.", evidence=_correction_evidence()
+                )
+                self.assertTrue(corrected["committed"])
+                self.assertEqual(corrected["outcome"], policy.ALLOW_WITH_LEDGER)
+            # The foreign fact is the NEWEST write; recency must not admit it. It is
+            # written by the other project's own host-bound handle (#786).
+            with self._open(root, scope="project:other") as other:
+                foreign = other.remember("memory:foreign", "The current release codename is Zelkova.")
+                self.assertTrue(foreign["committed"])
+            with self._open(root) as memory:
+                recalled = memory.recall(QUERY)
             # The superseded fact is in the caller's own scope: a visible, refused candidate.
             self.assertIn(first["fact_uuid"], recalled["candidates"])
             self.assertNotIn(first["fact_uuid"], recalled["admitted"])

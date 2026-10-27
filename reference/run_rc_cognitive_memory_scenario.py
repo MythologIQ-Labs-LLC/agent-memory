@@ -189,14 +189,24 @@ def run_scenario(agent_memory_revision: str) -> dict:
             "release branch main",
             logical_memory_refs=(PRIMARY,),
         )
-        wrong_scope = memory.recall(
-            "release branch main",
-            logical_memory_refs=(PRIMARY,),
-            target_domain_refs=("tenant:other", "project:other"),
-            project_ref="project:other",
-        )
         posture_before_restart = memory.posture()
         memory.close()
+
+        # #786: a wrong-scope caller is a separately host-bound handle, not a
+        # context override on this project's handle. Same tenant, other project,
+        # requesting this project's logical key directly. (A different tenant
+        # cannot open this store at all.)
+        with AgentMemory.open(
+            root,
+            tenant=TENANT,
+            actor_id=ACTOR,
+            scope="project:other",
+            purpose=PURPOSE,
+        ) as wrong_handle:
+            wrong_scope = wrong_handle.recall(
+                "release branch main",
+                logical_memory_refs=(PRIMARY,),
+            )
 
         first_recovery = AgentMemory.open(
             root,

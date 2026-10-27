@@ -252,16 +252,25 @@ def run_benchmark(agent_memory_revision: str, *, key_count: int = 6, rounds: int
 
         sample_target = rebind_targets[0]
         sample_value = fixture["rebind_values"][sample_target][-1]
-        wrong_scope = memory.recall(
-            sample_value,
-            logical_memory_refs=(sample_target,),
-            target_domain_refs=("tenant:other", "project:other"),
-            project_ref="project:other",
-        )
+        # #786: a wrong-scope caller is a separately host-bound handle, not a
+        # context override on this project's handle. Same tenant, other project,
+        # requesting this project's logical key directly. (A different tenant
+        # cannot open this store at all.)
+        memory.close()
+        with AgentMemory.open(
+            root,
+            tenant=TENANT,
+            actor_id=ACTOR,
+            scope="project:other",
+            purpose=PURPOSE,
+        ) as wrong_handle:
+            wrong_scope = wrong_handle.recall(
+                sample_value,
+                logical_memory_refs=(sample_target,),
+            )
         wrong_scope_admissions = len(wrong_scope.get("admitted", []))
 
         pre_final = dict(current_fact)
-        memory.close()
         memory = AgentMemory.open(
             root,
             tenant=TENANT,
