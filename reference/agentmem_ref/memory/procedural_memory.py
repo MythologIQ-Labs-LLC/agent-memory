@@ -22,7 +22,7 @@ from dataclasses import dataclass, field, replace
 from typing import Iterable
 
 from ..core import policy
-from ..runtime.adapter import CommitResult, GovernedMemoryAdapter, RecallContext
+from ..runtime.adapter import OWNERSHIP_CREATOR_PRINCIPAL, CommitResult, GovernedMemoryAdapter, RecallContext
 from ..contracts.capabilities import (
     CapabilityDeclaration,
     CapabilityRequirement,
@@ -243,15 +243,28 @@ class ProceduralMemoryRuntime:
         adapter: GovernedMemoryAdapter,
         registry: ComponentRegistry,
         revocation_context: RecallContext | None = None,
+        ownership: str | None = None,
     ) -> None:
         # Only the host that composes this runtime may establish the revoker's
         # identity. A caller-supplied actor_id on revoke_skill is NOT authority.
         if revocation_context is not None and not isinstance(revocation_context, RecallContext):
             raise ValueError("revocation_context must be a host-bound RecallContext")
+        # #786 candidate (opt-in, pending review): creator-principal ownership. The
+        # creator is the host-bound principal, never a caller-supplied actor id, and
+        # the canonical adapter enforces ownership on every later write and revocation.
+        if ownership not in (None, OWNERSHIP_CREATOR_PRINCIPAL):
+            raise ValueError(f"unsupported ownership mode {ownership!r}")
+        if ownership is not None and (revocation_context is None or not revocation_context.principal_ref):
+            raise ValueError("creator-principal ownership requires a host-bound principal context")
         self.substrate = substrate
         self.adapter = adapter
         self.registry = registry
         self._revocation_context = revocation_context
+        self._ownership = ownership
+
+    def _require_host_creator(self, actor_id: str) -> None:
+        if self._ownership is not None and actor_id != self._revocation_context.principal_ref:
+            raise ValueError("skill author does not match host-bound principal")
 
     def resolve_capability(self) -> ResolvedCapability:
         return self.registry.resolve(
@@ -269,6 +282,7 @@ class ProceduralMemoryRuntime:
         actor_id: str,
         proposal_id: str | None = None,
     ) -> SkillProposal:
+        self._require_host_creator(actor_id)
         current_version = self.adapter.state_version(artifact.memory_reference)
         if artifact.version != current_version + 1:
             raise ValueError(
@@ -327,6 +341,7 @@ class ProceduralMemoryRuntime:
     def commit_skill(self, skill_proposal: SkillProposal, *, evidence=None) -> SkillCommitResult:
         resolution = self.resolve_capability()
         self._validate_skill_proposal_binding(skill_proposal, require_approval=None)
+        self._require_host_creator(skill_proposal.proposal.actor_id)
         serialized = skill_proposal.artifact.serialize()
         SkillArtifact.from_text(serialized)
         # ADR-037 step 4b-2 (entry #24). Evidence is deliberately NOT attached
@@ -352,7 +367,7 @@ class ProceduralMemoryRuntime:
         # relevant adjudication -- a skill-version-advance policy, say -- can
         # supply it. This module does not author one.
         result = self.adapter.commit_proposal(
-            skill_proposal.proposal, serialized, evidence=evidence
+            skill_proposal.proposal, serialized, evidence=evidence, ownership=self._ownership,
         )
         if result.committed and self.adapter.state_version(skill_proposal.artifact.memory_reference) != skill_proposal.artifact.version:
             raise RuntimeError("committed procedural skill version diverged from governed state version")

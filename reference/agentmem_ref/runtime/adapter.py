@@ -195,6 +195,16 @@ class RecallContext:
 # project's memory through deletion or dispute.
 _UNAVAILABLE_TARGET_REFUSALS = frozenset({"write_target_unavailable", "fact_not_found"})
 
+# #786 candidate (isolated, opt-in, pending review): creator-principal ownership of a
+# logical memory lineage. The owner is recorded in canonical scope metadata only when
+# the host asks for it, is inherited by every later version, and is enforced inside
+# the canonical write and delete gates. Only the owner may replace a head; the owner
+# or an explicitly delegated principal may revoke it.
+OWNERSHIP_CREATOR_PRINCIPAL = "creator_principal_v1"
+OWNER_SCOPE_KEY = "owner_principal_ref"
+REVOCATION_DELEGATIONS_KEY = "revocation_delegation_authority"
+REVOCATION_OPERATIONS = frozenset({"pruning", "permanent_deletion"})
+
 
 class GovernedMemoryAdapter:
     """Wraps a permissive substrate in the governance it does not provide."""
@@ -320,9 +330,48 @@ class GovernedMemoryAdapter:
             task_ref=proposal.task_ref,
             purpose=proposal.purpose,
         )
-        return self._domain_identity_refusal(
-            current_uuid, fact.group_id, context
-        ) is not None
+        if self._domain_identity_refusal(current_uuid, fact.group_id, context) is not None:
+            return True
+        # #786 candidate: an owned lineage's head is replaced only by its owner.
+        return self._owner_refusal(proposal, current_uuid) is not None
+
+    def _lineage_owner(self, proposal: policy.Proposal, ownership: str | None) -> str | None:
+        """The owner a new head carries: inherited, or the creator when the host asks.
+
+        An unowned lineage is never claimed by a later version: ownership can only be
+        established by the write that creates the lineage.
+        """
+        current_uuid = self._current_fact_by_memory.get(proposal.target_reference)
+        if current_uuid is not None:
+            return (self._fact_scope.get(current_uuid) or {}).get(OWNER_SCOPE_KEY)
+        if ownership == OWNERSHIP_CREATOR_PRINCIPAL and proposal.target_reference not in self.tombstoned_ids():
+            if not proposal.actor_id:
+                raise ValueError("creator-principal ownership requires a proposing principal")
+            return proposal.actor_id
+        return None
+
+    def lineage_owner(self, memory_id: str) -> str | None:
+        """The recorded owner of a logical memory's current head, if it is owned."""
+        current_uuid = self._current_fact_by_memory.get(memory_id)
+        if current_uuid is None:
+            return None
+        return (self._fact_scope.get(current_uuid) or {}).get(OWNER_SCOPE_KEY)
+
+    def revocation_delegates(self, memory_id: str) -> tuple[str, ...]:
+        state = self.extension_state.get(REVOCATION_DELEGATIONS_KEY) or {}
+        return tuple((state.get("delegates") or {}).get(memory_id, ()))
+
+    def _owner_refusal(self, proposal: policy.Proposal, fact_uuid: str) -> str | None:
+        owner = (self._fact_scope.get(fact_uuid) or {}).get(OWNER_SCOPE_KEY)
+        if owner is None or proposal.actor_id == owner:
+            return None
+        bound_memory = self._fact_memory.get(fact_uuid, proposal.target_reference)
+        if (
+            proposal.operation in REVOCATION_OPERATIONS
+            and proposal.actor_id in self.revocation_delegates(bound_memory)
+        ):
+            return None
+        return "owner_required"
 
     def history_eligible(self, memory_id: str, context: RecallContext) -> bool:
         """Fail closed on history for identities outside the handle's scope.
@@ -372,6 +421,7 @@ class GovernedMemoryAdapter:
         replacement_kind: str = ERROR_CORRECTION,
         source_ref: str | None = None,
         typed_write: "Mapping[str, object] | None" = None,
+        ownership: str | None = None,
     ) -> CommitResult:
         """Commit a proposal through the governed path.
 
@@ -409,6 +459,8 @@ class GovernedMemoryAdapter:
         proposition or a persisted extraction record. It is write-time evidence
         only and grants nothing; PAMA decides exactly as without it.
         """
+        if ownership not in (None, OWNERSHIP_CREATOR_PRINCIPAL):
+            raise ValueError(f"unsupported ownership mode {ownership!r}")
         correlation = self._ids.next()
         propose_event = self._event("memory.propose", proposal.target_reference, correlation)
 
@@ -477,6 +529,7 @@ class GovernedMemoryAdapter:
 
         fact_uuid = None
         if commits:
+            owner = self._lineage_owner(proposal, ownership)
             # Episode material belongs to an authorized commit, not merely an
             # attempted proposal. A foreign/refused write must not mutate the
             # substrate before the canonical target gate has decided.
@@ -496,7 +549,9 @@ class GovernedMemoryAdapter:
                         attestation.authority_kind if attestation is not None else None
                     ),
                 )
-            fact_uuid = self._write(proposal, fact_text, temporal, source_ref=source_ref, typed_write=typed_write)
+            fact_uuid = self._write(
+                proposal, fact_text, temporal, source_ref=source_ref, typed_write=typed_write, owner=owner,
+            )
             self._current_fact_by_memory[proposal.target_reference] = fact_uuid
             events.append(
                 self._event(
@@ -670,9 +725,12 @@ class GovernedMemoryAdapter:
         *,
         source_ref: str | None = None,
         typed_write: "Mapping[str, object] | None" = None,
+        owner: str | None = None,
     ) -> str:
         declared = declared_temporal(temporal)
         scope = self._write_scope(proposal)
+        if owner is not None:
+            scope = {**scope, OWNER_SCOPE_KEY: owner}
         uuid = self._ids.next()
         attributes: dict = {DECLARED_TEMPORAL_KEY: declared} if declared else {}
         # #671 C1: immutable write provenance (actor, adapter tenant, purpose, channel, source_ref);
@@ -1419,6 +1477,10 @@ class GovernedMemoryAdapter:
             return "target_binding_unknown"
         if bound_memory != proposal.target_reference:
             return "target_binding_mismatch"
+        # #786 candidate: an owned lineage is revoked only by its owner or a
+        # governed delegate. Composed exactly like an unavailable target.
+        if self._owner_refusal(proposal, fact_uuid) is not None:
+            return "write_target_unavailable"
         return None
 
     def _proposal_scope_eligible(self, proposal: policy.Proposal, fact_uuid: str, group_id: str) -> bool:

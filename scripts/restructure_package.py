@@ -57,6 +57,7 @@ LAYERS: dict[str, tuple[str, ...]] = {
         "typed_proposition", "proposition_extraction",
         "representation_cache", "representation_onnx",
         "semantic_readmission_adapter", "write_claims", "scope_governance", "shared_revocation",
+        "revocation_delegation",
     ),
     "memory": (
         "a2a_collaboration", "agent_manifest_correlation", "agent_manifest_external_evidence",
