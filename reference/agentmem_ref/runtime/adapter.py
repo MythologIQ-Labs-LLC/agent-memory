@@ -291,10 +291,16 @@ class GovernedMemoryAdapter:
         prior to any supersession/write. A missing canonical scope or missing
         live substrate fact is not evidence of write authority.
         """
+        # #776: Never report a successful but permanently unservable write.
+        # A governed deletion fences the entire retained logical lineage during
+        # recall, so silently creating a new head under the same key would make
+        # the commit appear successful while admission still refuses its facts.
+        # Reuse requires an explicit, independently governed restore/migration
+        # operation that does not exist in this contract. Until then fail closed.
+        if proposal.target_reference in self.tombstoned_ids():
+            return True
         current_uuid = self._current_fact_by_memory.get(proposal.target_reference)
         if current_uuid is None:
-            # New logical id, or a previously deleted generation. The latter's
-            # recreation policy belongs to #776 and is not changed here.
             return False
         fact = self._substrate.get_fact(current_uuid)
         if fact is None:
