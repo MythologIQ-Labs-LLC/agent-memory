@@ -175,12 +175,13 @@ class RuntimeIdentityBoundaryTests(unittest.TestCase):
     def test_invalid_host_task_identity_does_not_create_runtime_root(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory) / "not-created"
-            with self.assertRaisesRegex(ValueError, "task_ref"):
-                AgentMemory.open(
-                    target, tenant=TENANT, actor_id=ACTOR, scope="project:a",
-                    task_ref=" task:a ",
-                )
-            self.assertFalse(target.exists())
+            for invalid in (" task:a ", "task:e\\u0301", "task:\\x00private"):
+                with self.subTest(task=invalid), self.assertRaisesRegex(ValueError, "task_ref"):
+                    AgentMemory.open(
+                        target, tenant=TENANT, actor_id=ACTOR, scope="project:a",
+                        task_ref=invalid,
+                    )
+                self.assertFalse(target.exists())
 
     def test_all_recall_planners_filter_foreign_explicit_seeds(self):
         with tempfile.TemporaryDirectory() as directory:
