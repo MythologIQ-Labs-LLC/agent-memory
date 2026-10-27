@@ -215,6 +215,12 @@ class DeterministicMultiRouteRecallPlanner:
             current = self.adapter.current_fact_uuid(logical_ref)
             if current is None:
                 continue
+            # Exact identity is a discovery hint, not caller authority.
+            # Filter before constructing any candidate, route provenance or
+            # graph seed that could echo an inaccessible fact's identifier.
+            seed_fact = substrate.get_fact(current)
+            if seed_fact is None or not self.adapter.domain_eligible(seed_fact, context):
+                continue
             hits.append(
                 RetrievalRouteHit(
                     route_id=EXACT_IDENTITY_ROUTE,
@@ -262,6 +268,10 @@ class DeterministicMultiRouteRecallPlanner:
                     seed_ref,
                     group_ids=[tenant],
                 ):
+                    # Relational reachability is never a grant to disclose a
+                    # candidate or its identifier across a project boundary.
+                    if not self.adapter.domain_eligible(fact, context):
+                        continue
                     hits.append(
                         RetrievalRouteHit(
                             route_id=SHARED_EVIDENCE_ROUTE,
