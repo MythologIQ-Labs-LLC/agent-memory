@@ -8,6 +8,9 @@ from pathlib import Path
 from agentmem_ref import AgentMemory
 from agentmem_ref.api import contract
 from agentmem_ref.state.substrate import Episode
+from agentmem_ref.runtime.recall_control import ControlledRecallPlanner
+from agentmem_ref.runtime.query_driven_recall import DeterministicQueryDrivenRecallPlanner
+from agentmem_ref.runtime.runtime_composition import DeterministicMultiRouteRecallPlanner
 
 
 TENANT = "tenant:786-runtime-boundary"
@@ -121,6 +124,35 @@ class RuntimeIdentityBoundaryTests(unittest.TestCase):
                 self.assertEqual(current["current_fact_uuid"], original_ref)
                 self.assertEqual(current["state_version"], original_version)
 
+
+    def test_all_recall_planners_filter_foreign_explicit_seeds(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            with AgentMemory.open(root, tenant=TENANT, actor_id=ACTOR, scope="project:a") as owner:
+                stored = owner.remember(KEY, "Private seed from project A")
+                self.assertTrue(stored["committed"], stored)
+
+            planners = (
+                DeterministicMultiRouteRecallPlanner,
+                ControlledRecallPlanner,
+                DeterministicQueryDrivenRecallPlanner,
+            )
+            with AgentMemory.open(root, tenant=TENANT, actor_id=ACTOR, scope="project:b") as outsider:
+                for planner_type in planners:
+                    with self.subTest(planner=planner_type.__name__):
+                        response = planner_type(outsider.runtime.adapter).recall(
+                            "Private seed",
+                            outsider._handle_recall_context(),
+                            logical_memory_refs=(KEY,),
+                        )
+                        result = response.recall if isinstance(
+                            response.recall, object
+                        ) and not callable(response.recall) else response
+                        # ControlledRecallResult wraps its MultiRouteRecallResult
+                        # while the other two planners return it directly.
+                        self.assertNotIn(stored["fact_uuid"], result.candidates)
+                        self.assertNotIn(stored["fact_uuid"], result.admitted)
+                        self.assertNotIn(stored["fact_uuid"], repr(result.route_hits))
 
     def test_rejected_foreign_write_cannot_persist_unapproved_episode(self):
         with tempfile.TemporaryDirectory() as directory:
