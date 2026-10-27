@@ -301,6 +301,7 @@ class AgentMemoryAdapter:
         self._targets: dict[str, tuple[str, str]] = {}
         self._texts: dict[str, str] = {}
         self._counter = 0
+        self._stats = self._fresh_stats()
 
     @staticmethod
     def _tally(bucket: dict[str, int], key: str) -> None:
