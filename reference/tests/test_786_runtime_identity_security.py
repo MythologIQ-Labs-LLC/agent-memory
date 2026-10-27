@@ -175,7 +175,9 @@ class RuntimeIdentityBoundaryTests(unittest.TestCase):
                     )
                 )
                 with outsider.runtime.serialization_lock:
-                    outcome = outsider.runtime.adapter.commit_proposal(
+                    # Exercise the durable boundary, not the in-memory adapter
+                    # alone. A rejected attempt still publishes its audit receipt.
+                    outcome = outsider.runtime.durable_runtime.commit_proposal(
                         proposal, "Overwrite project A", episode=episode
                     )
                     stored = outsider.runtime.adapter.checkpoint_substrate().get_episode(
@@ -186,6 +188,13 @@ class RuntimeIdentityBoundaryTests(unittest.TestCase):
                 self.assertIsNone(
                     stored,
                     "A blocked write inserted its episode before governance authorized it",
+                )
+            with AgentMemory.open(root, tenant=TENANT, actor_id=ACTOR, scope="project:b") as reopened:
+                self.assertIsNone(
+                    reopened.runtime.adapter.checkpoint_substrate().get_episode(
+                        "episode:786-foreign-write"
+                    ),
+                    "A refused episode survived the SQLite checkpoint and restart",
                 )
 
 
