@@ -311,7 +311,15 @@ class AgentMemory:
         semantic: dict | None = None,
         recall_control: str = RECALL_CONTROL_DEFAULT,
         proposition_extractor: Any = None,
+        task_ref: str = "",
     ) -> None:
+        if (
+            not isinstance(task_ref, str)
+            or task_ref != task_ref.strip()
+            or (task_ref and any(ord(ch) < 32 for ch in task_ref))
+        ):
+            raise ValueError("task_ref must be a canonical, optional host-bound string")
+        self.task_ref = task_ref
         self.root = root
         self.config_path = config_path
         self.qualification_path = qualification_path
@@ -347,6 +355,7 @@ class AgentMemory:
         representation_dir: str | Path | None = None,
         recall_control: str = RECALL_CONTROL_DEFAULT,
         proposition_extractor: Any = None,
+        task_ref: str = "",
     ) -> "AgentMemory":
         """Create or recover one qualified local SQLite composition.
 
@@ -381,6 +390,13 @@ class AgentMemory:
         from ..runtime.runtime_behavior import validate_runtime_behavior_contract
         from ..runtime.sqlite_composition import SQLiteConfiguredCompositionRuntime
 
+        # Validate host-bound task identity before filesystem creation.
+        if (
+            not isinstance(task_ref, str)
+            or task_ref != task_ref.strip()
+            or (task_ref and any(ord(ch) < 32 for ch in task_ref))
+        ):
+            raise ValueError("task_ref must be a canonical, optional host-bound string")
         root = Path(path)
         root.mkdir(parents=True, exist_ok=True)
         if not tenant or not actor_id or not charter_version or not scope:
@@ -443,6 +459,7 @@ class AgentMemory:
             semantic=semantic,
             recall_control=recall_control,
             proposition_extractor=proposition_extractor,
+            task_ref=task_ref,
         )
 
     @property
@@ -501,6 +518,8 @@ class AgentMemory:
             "fact_ref": _content_ref(fact_text) if fact_text else "",
             "risk_class": risk_class,
         }
+        if self.task_ref:
+            material["task_ref"] = self.task_ref
         envelope: dict[str, object] = {
             "contract_version": contract.CONTRACT_VERSION,
             "proposal_id": "facade:" + hashlib.sha256(_canonical_bytes(material)).hexdigest(),
@@ -523,6 +542,8 @@ class AgentMemory:
             "required_isolation_domain_refs": list(self._domain_refs()),
             "project_ref": self.scope,
         }
+        if self.task_ref:
+            envelope["task_ref"] = self.task_ref
         if confidence is not None:
             envelope["confidence"] = confidence
         if overrides:
@@ -758,6 +779,8 @@ class AgentMemory:
             "project_ref": self.scope,
             "purpose": self.purpose,
         }
+        if self.task_ref:
+            envelope["task_ref"] = self.task_ref
         return contract.recall_context_from_envelope(contract.validate_recall_context(envelope))
 
     @_serialized
@@ -903,6 +926,8 @@ class AgentMemory:
             raise ValueError("recall project differs from host-bound identity")
         if purpose is not None and purpose != self.purpose:
             raise ValueError("recall purpose differs from host-bound identity")
+        if task_ref is not None and task_ref != self.task_ref:
+            raise ValueError("recall task differs from host-bound identity")
         if target_domain_refs is not None and not set(target_domain_refs).issubset(self._domain_refs()):
             raise ValueError("recall domains exceed host-bound identity")
         intent = resolve_intent(query, temporal_intent, reference_time=reference_time)
@@ -914,8 +939,8 @@ class AgentMemory:
             "project_ref": self.scope if project_ref is None else project_ref,
             "purpose": self.purpose if purpose is None else purpose,
         }
-        if task_ref is not None:
-            envelope["task_ref"] = task_ref
+        if self.task_ref:
+            envelope["task_ref"] = self.task_ref
         if budget is not None:
             envelope["budget"] = {"k": budget}
         validated = contract.validate_recall_context(envelope)
