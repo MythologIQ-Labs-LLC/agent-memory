@@ -27,14 +27,35 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "reference"))
 
 from agentmem_ref import AgentMemory  # noqa: E402
+from agentmem_ref.api import contract  # noqa: E402
 from agentmem_ref.runtime.adapter import RecallContext  # noqa: E402
 from agentmem_ref.state import sqlite_substrate  # noqa: E402
 
 TENANT = "tenant:591"
+HOME = ("user:a", "")
 
 
-def _open(root: str) -> AgentMemory:
-    return AgentMemory.open(root, tenant=TENANT, actor_id="agent:591", scope="user:a", purpose="591 tests")
+def _open(root: str, scope: str = HOME[0], task_ref: str = HOME[1]) -> AgentMemory:
+    return AgentMemory.open(root, tenant=TENANT, actor_id="agent:591", scope=scope, purpose="591 tests",
+                            task_ref=task_ref)
+
+
+def _handle_identity(overrides: dict) -> tuple[str, str] | None:
+    """The real host-bound handle that owns these write fields, if one can (#786).
+
+    A facade handle binds exactly (tenant, scope) domains with project_ref == scope.
+    Compartment and shared-space identities have no facade handle and must be
+    seeded by the trusted host layer instead of a facade override.
+    """
+    scope = overrides.get("scope")
+    domains = [TENANT, scope]
+    if (overrides.get("isolation_domain_refs") == domains
+            and overrides.get("required_isolation_domain_refs") == domains
+            and overrides.get("project_ref") == scope
+            and set(overrides) <= {"scope", "isolation_domain_refs", "required_isolation_domain_refs",
+                                   "project_ref", "task_ref"}):
+        return scope, overrides.get("task_ref", "")
+    return None
 
 
 def _scope(user: str, **extra) -> dict:
@@ -55,19 +76,46 @@ class _Store(unittest.TestCase):
         self._temp = tempfile.TemporaryDirectory()
         self.root = self._temp.name
         self.memory = _open(self.root)
+        self._identity = HOME
 
     def tearDown(self) -> None:
         self.memory.close()
         self._temp.cleanup()
 
+    def _bind(self, identity: tuple[str, str]) -> AgentMemory:
+        # Real scoped handles opened serially on the same store (#786): a stale
+        # handle fails closed on the SQLite generation, so only one is live.
+        if identity != self._identity:
+            self.memory.close()
+            self.memory = _open(self.root, *identity)
+            self._identity = identity
+        return self.memory
+
     @property
     def adapter(self):
-        return self.memory.runtime.adapter
+        return self._bind(HOME).runtime.adapter
 
     def write(self, target: str, text: str, overrides: dict, **kwargs) -> str:
-        result = self.memory.remember(f"memory:{target}", text, overrides=overrides, **kwargs)
+        identity = _handle_identity(overrides)
+        if identity is not None:
+            result = self._bind(identity).remember(f"memory:{target}", text, **kwargs)
+        else:
+            result = self._host_write(f"memory:{target}", text, overrides, **kwargs)
         self.assertTrue(result["committed"], result)
         return result["fact_uuid"]
+
+    def _host_write(self, target: str, text: str, fields: dict, *, evidence_refs=()) -> dict:
+        """Trusted host seeding of an identity no facade handle can hold.
+
+        The facade still refuses these fields as overrides; this fixture is the
+        host composing the proposal, which is where identity authority lives.
+        """
+        memory = self._bind(HOME)
+        envelope = memory._proposal(target_reference=target, operation="promotion", fact_text=text,
+                                    proposed_strength="reinforced", evidence_refs=evidence_refs)
+        envelope.update(fields)
+        outcome = memory.runtime.retain(contract.proposal_from_envelope(envelope), text)
+        return {"committed": outcome.committed, "fact_uuid": outcome.fact_uuid, "refusal": outcome.refusal}
 
     def oracle(self, query: str, context: RecallContext) -> list[str]:
         """Pre-#591 semantics restated: full materialization, adapter predicate, overlap."""
@@ -82,17 +130,44 @@ class _Store(unittest.TestCase):
         return [uuid for _, uuid in sorted(scored)]
 
     def recall(self, query: str, context: RecallContext) -> dict:
-        return self.memory.recall(query, target_domain_refs=list(context.target_domain_refs),
-                                  principal_ref=context.principal_ref, project_ref=context.project_ref,
-                                  task_ref=context.task_ref or None)
+        """Governed recall for an explicit context through the layer the facade delegates to.
 
-    def pinned(self, query: str, context: RecallContext) -> dict:
-        recalled = self.recall(query, context)
+        The facade refuses caller contexts other than its host-bound identity (#786),
+        so arbitrary contexts are evaluated by the trusted runtime; ``pinned`` also
+        requires the facade to agree whenever the context is the handle's own identity.
+        """
+        result = self._bind(HOME).runtime.multi_route_recall(query, context)
+        admissions = {uuid: {"refusal": result.refusals.get(uuid)} for uuid in result.candidates}
+        for uuid in result.ranked_admitted:
+            ranking = result.ranking_evidence.get(uuid)
+            if ranking is not None:
+                admissions[uuid]["ranking_evidence"] = dict(ranking)
+        return {"candidates": list(result.candidates), "admitted": list(result.ranked_admitted),
+                "admissions": admissions}
+
+    def _facade_recall(self, query: str, context: RecallContext) -> dict | None:
+        memory = self._bind(HOME)
+        own = (context.principal_ref == memory.actor_id and context.project_ref == memory.scope
+               and (context.task_ref or "") == memory.task_ref
+               and set(context.target_domain_refs) <= {memory.tenant, memory.scope})
+        if not own:
+            return None
+        return memory.recall(query, target_domain_refs=list(context.target_domain_refs))
+
+    @staticmethod
+    def _pin(recalled: dict) -> dict:
         refusals = {uuid: decision.get("refusal") for uuid, decision in recalled["admissions"].items()
                     if uuid not in recalled["admitted"]}
         return {"candidates": list(recalled["candidates"]), "admitted": list(recalled["admitted"]), "refusals": refusals,
                 "ranking": {uuid: {k: v for k, v in (recalled["admissions"][uuid].get("ranking_evidence") or {}).items()}
                             for uuid in recalled["admitted"]}}
+
+    def pinned(self, query: str, context: RecallContext) -> dict:
+        state = self._pin(self.recall(query, context))
+        facade = self._facade_recall(query, context)
+        if facade is not None:
+            self.assertEqual(self._pin(facade), state)
+        return state
 
     def assert_matches_oracle(self, query: str, context: RecallContext) -> dict:
         state = self.pinned(query, context)
