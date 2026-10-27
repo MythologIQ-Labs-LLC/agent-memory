@@ -12,6 +12,7 @@ import unittest
 from pathlib import Path
 
 from agentmem_ref import AgentMemory
+from agentmem_ref.api.surface import StoreIdentityError
 from tests._tenant_wide_fixture import open_tenant_wide  # noqa: E402
 from agentmem_ref.memory import procedural_memory as pm
 
@@ -200,7 +201,14 @@ class DeletedLineageSQLiteTests(unittest.TestCase):
                 fresh = outsider.remember("memory:foreign-own", "Fresh project B state.")
                 self.assertTrue(fresh["committed"], fresh)
 
-            with _open(root) as owner:
+            # The store now holds two projects, so the public opener correctly refuses it
+            # (#786: its single-project record no longer matches canonical state). The owner
+            # is checked through the same tenant-wide test construction.
+            with self.assertRaises(StoreIdentityError):
+                _open(root)
+            with open_tenant_wide(
+                root, tenant=TENANT, actor_id="agent:776", scope=SCOPE, purpose="logical deletion regression",
+            ) as owner:
                 state = owner.history("memory:shared-name")["history"]
                 self.assertIsNone(state["current_fact_uuid"])
                 self.assertTrue(state["tombstoned"])

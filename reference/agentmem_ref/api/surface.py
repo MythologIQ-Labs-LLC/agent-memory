@@ -242,7 +242,8 @@ def _packaged_profile_text() -> str:
 
 def _atomic_write_text(path: Path, text: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_name(f".{path.name}.tmp")
+    # Unique per writer: concurrent first opens must not share a temporary file.
+    temporary = path.with_name(f".{path.name}.{os.getpid()}.{threading.get_ident()}.tmp")
     with temporary.open("w", encoding="utf-8", newline="\n") as handle:
         handle.write(text)
         if not text.endswith("\n"):
@@ -269,6 +270,33 @@ def _read_store_identity(path: Path) -> dict | None:
             and not isinstance(record.get("bound_project"), str))
     ):
         raise StoreIdentityError("store identity record is malformed")
+    return record
+
+
+def _claim_store_identity(path: Path, record: dict) -> dict:
+    """Bind a fresh root to one identity, atomically and exclusively (#786).
+
+    The record is written to a private temporary file and hard-linked into place:
+    linking fails if any record already exists, so of several concurrent first opens
+    exactly one identity wins and the rest re-read and check the winner. The claim
+    precedes store creation, so an interrupted creation leaves a claimed root that
+    only the claiming identity can complete.
+    """
+    temporary = path.with_name(f".{path.name}.{os.getpid()}.{threading.get_ident()}.claim")
+    try:
+        with temporary.open("x", encoding="utf-8", newline="\n") as handle:
+            handle.write(json.dumps(record, sort_keys=True) + "\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+        try:
+            os.link(temporary, path)
+        except FileExistsError:
+            winner = _read_store_identity(path)
+            if winner is None:
+                raise StoreIdentityError("store identity record vanished during claim")
+            return winner
+    finally:
+        temporary.unlink(missing_ok=True)
     return record
 
 
@@ -511,22 +539,46 @@ class AgentMemory:
                     "store and is never migrated implicitly"
                 )
             profile = STORE_PROFILE_LEGACY
+        elif binding.exists():
+            raise RuntimeRecoveryError(
+                "incomplete durable state: configuration binding exists without SQLite runtime database"
+            )
         else:
-            profile = store_profile or STORE_PROFILE_SINGLE_PROJECT
-            identity = {
+            requested_profile = store_profile or STORE_PROFILE_SINGLE_PROJECT
+            identity = _claim_store_identity(identity_path, {
                 "schema": _STORE_IDENTITY_SCHEMA,
                 "version": 1,
-                "profile": profile,
+                "profile": requested_profile,
                 "tenant": tenant,
-                "bound_project": scope if profile == STORE_PROFILE_SINGLE_PROJECT else None,
-            }
+                "bound_project": scope if requested_profile == STORE_PROFILE_SINGLE_PROJECT else None,
+            })
+            # A concurrent first open may have claimed the root for another identity.
+            _check_store_identity(identity, tenant=tenant, scope=scope, requested=store_profile)
+            profile = identity["profile"]
         if database.exists():
-            runtime = SQLiteConfiguredCompositionRuntime.recover(
-                root,
-                plan=plan,
-                verifier_registry=verifier_registry,
-                vector_retriever=semantic["retriever"],
-            )
+            try:
+                runtime = SQLiteConfiguredCompositionRuntime.recover(
+                    root,
+                    plan=plan,
+                    verifier_registry=verifier_registry,
+                    vector_retriever=semantic["retriever"],
+                )
+            except RuntimeRecoveryError as exc:
+                # #786: a claimed root whose first creation was interrupted (for example a
+                # concurrent first open locked the database before the creator's first
+                # checkpoint) holds a database file but no runtime state. No checkpoint ever
+                # completed, so nothing was committed: the claimed identity completes the
+                # creation instead of leaving the root permanently unopenable. A legacy
+                # (unclaimed) root keeps failing closed.
+                if profile == STORE_PROFILE_LEGACY or str(exc) != "required SQLite runtime state is missing":
+                    raise
+                runtime = SQLiteConfiguredCompositionRuntime.create(
+                    root,
+                    tenant=tenant,
+                    plan=plan,
+                    verifier_registry=verifier_registry,
+                    vector_retriever=semantic["retriever"],
+                )
         elif binding.exists():
             raise RuntimeRecoveryError(
                 "incomplete durable state: configuration binding exists without SQLite runtime database"
@@ -555,8 +607,12 @@ class AgentMemory:
                     "legacy store is bound to a different project or holds several projects; "
                     "it requires an explicit, governed migration"
                 )
-        elif not identity_path.exists():
-            _atomic_write_text(identity_path, json.dumps(identity, sort_keys=True))
+        elif profile == STORE_PROFILE_SINGLE_PROJECT:
+            # The record is a claim, not authority: canonical scope metadata must agree
+            # with it, so an edited bound_project cannot rebind another project's store.
+            if runtime.adapter.canonical_project_refs() - {identity["bound_project"]}:
+                runtime.close()
+                raise StoreIdentityError("store identity record does not match canonical store state")
         return cls(
             root=root,
             config_path=resolved_config,
@@ -674,38 +730,48 @@ class AgentMemory:
         if confidence is not None:
             envelope["confidence"] = confidence
         if overrides:
-            # #786: a proposal's asserted domains are not proof of the
-            # facade handle's host-bound identity. An untrusted caller must
-            # not impersonate another project's identity by overriding the
-            # fields that the canonical adapter uses for write eligibility.
-            protected = {
-                "contract_version", "proposal_id", "actor_id",
-                "charter_version", "state_snapshot", "operation",
-                "target_reference", "task_ref",
-            }
-            attempted = protected.intersection(overrides)
-            if attempted:
-                raise ValueError(
-                    f"facade proposal overrides may not replace protected fields: {sorted(attempted)}"
-                )
-            bound = {
-                "tenant_ref": self.tenant,
-                "scope": self.scope,
-                "project_ref": self.scope,
-                "isolation_domain_refs": list(self._domain_refs()),
-                "required_isolation_domain_refs": list(self._domain_refs()),
-            }
-            for field, expected in bound.items():
-                if field not in overrides:
-                    continue
-                value = overrides[field]
-                # Tuples/lists express one domain set in the public envelope.
-                normalized = list(value) if isinstance(value, (tuple, list)) else value
-                if normalized != expected:
-                    raise ValueError("facade proposal may not override host-bound scope identity")
+            self._check_overrides(overrides)
             envelope.update(dict(overrides))
         contract.validate_proposal_envelope(envelope)
         return envelope
+
+    def _check_overrides(self, overrides: Mapping[str, object] | None) -> None:
+        """Refuse identity-bearing overrides before anything else is decided (#786).
+
+        Every operation validates overrides first, so a refusal never depends on
+        whether the target exists.
+        """
+        if not overrides:
+            return
+        # #786: a proposal's asserted domains are not proof of the
+        # facade handle's host-bound identity. An untrusted caller must
+        # not impersonate another project's identity by overriding the
+        # fields that the canonical adapter uses for write eligibility.
+        protected = {
+            "contract_version", "proposal_id", "actor_id",
+            "charter_version", "state_snapshot", "operation",
+            "target_reference", "task_ref",
+        }
+        attempted = protected.intersection(overrides)
+        if attempted:
+            raise ValueError(
+                f"facade proposal overrides may not replace protected fields: {sorted(attempted)}"
+            )
+        bound = {
+            "tenant_ref": self.tenant,
+            "scope": self.scope,
+            "project_ref": self.scope,
+            "isolation_domain_refs": list(self._domain_refs()),
+            "required_isolation_domain_refs": list(self._domain_refs()),
+        }
+        for field, expected in bound.items():
+            if field not in overrides:
+                continue
+            value = overrides[field]
+            # Tuples/lists express one domain set in the public envelope.
+            normalized = list(value) if isinstance(value, (tuple, list)) else value
+            if normalized != expected:
+                raise ValueError("facade proposal may not override host-bound scope identity")
 
     @staticmethod
     def _commit_result(outcome, *, stage: str = "commit") -> dict:
@@ -977,6 +1043,7 @@ class AgentMemory:
         separate from correction/supersession and grants no truth or currentness authority.
         """
         target_reference = self._target(target_reference)
+        self._check_overrides(overrides)
         self._require_open()
         target_fact = fact_uuid or self.runtime.adapter.current_fact_uuid(target_reference)
         if not target_fact:
@@ -1171,6 +1238,7 @@ class AgentMemory:
     ) -> dict:
         """Tombstone by default; permanent deletion remains a stricter explicit request."""
         target_reference = self._target(target_reference)
+        self._check_overrides(overrides)
         self._require_open()
         if self.runtime.adapter.current_fact_uuid(target_reference) is None:
             return contract.result(
