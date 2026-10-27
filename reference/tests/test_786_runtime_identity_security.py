@@ -84,6 +84,10 @@ class RuntimeIdentityBoundaryTests(unittest.TestCase):
                     self.assertEqual(outcome["receipt"]["selected_action"], "none", outcome)
                     self.assertEqual(outcome["receipt"]["before_state"], "v0", outcome)
                     self.assertEqual(outcome["receipt"]["after_state"], "v0", outcome)
+                    self.assertNotIn(
+                        original_ref, repr(outcome),
+                        "A blocked mutation leaked its owner's canonical fact reference",
+                    )
                 unknown = outsider.history(KEY)["history"]
                 self.assertIsNone(unknown["current_fact_uuid"])
                 self.assertEqual(unknown["events"], [])
