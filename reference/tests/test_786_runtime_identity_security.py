@@ -145,9 +145,7 @@ class RuntimeIdentityBoundaryTests(unittest.TestCase):
                             outsider._handle_recall_context(),
                             logical_memory_refs=(KEY,),
                         )
-                        result = response.recall if isinstance(
-                            response.recall, object
-                        ) and not callable(response.recall) else response
+                        result = getattr(response, "recall", response)
                         # ControlledRecallResult wraps its MultiRouteRecallResult
                         # while the other two planners return it directly.
                         self.assertNotIn(stored["fact_uuid"], result.candidates)
