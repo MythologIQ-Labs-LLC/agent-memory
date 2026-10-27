@@ -388,6 +388,29 @@ class ProceduralMemoryTests(unittest.TestCase):
         self.assertTrue(result.commit.committed, result.commit.refusal)
         self.assertIsNotNone(self.adapter.tombstone(saved.commit.fact_uuid))
 
+    def test_revocation_refuses_unknown_canonical_scope_even_with_host_identity(self):
+        artifact = self.skill(version=1, branch="release")
+        saved = self.runtime.commit_skill(
+            self.runtime.propose_skill(artifact, actor_id="agent:release")
+        )
+        self.assertTrue(saved.commit.committed)
+        # Simulate a corrupt or legacy-unbound governance record. Supplying
+        # matching host assertions must NOT manufacture ownership metadata.
+        old_scope = self.adapter._fact_scope.pop(saved.commit.fact_uuid)
+        try:
+            before_events = len(self.adapter.events)
+            with self.assertRaisesRegex(
+                ValueError, "^no accessible current procedural skill$"
+            ):
+                self.runtime.revoke_skill(
+                    artifact.skill_id, actor_id="agent:release",
+                    evidence_refs=("evidence:asserted-owner",),
+                )
+            self.assertEqual(len(self.adapter.events), before_events)
+            self.assertIsNone(self.adapter.tombstone(saved.commit.fact_uuid))
+        finally:
+            self.adapter._fact_scope[saved.commit.fact_uuid] = old_scope
+
     def test_revocation_preserves_host_project_and_scope_in_receipt(self):
         artifact = self.skill(version=1, branch="release")
         saved = self.runtime.commit_skill(
