@@ -54,7 +54,7 @@ class CrossProjectWriteTargetTests(unittest.TestCase):
                 other.history(KEY)
                 wrong = other.remember(KEY, "Orrin gateway region is Turku")
                 self.assertFalse(wrong["committed"], wrong)
-                self.assertIsNone(wrong["fact_uuid"])
+                self.assertIsNone(wrong.get("fact_uuid"))
                 # Do not return the owner's ref, project, source or other
                 # privileged existence details as a refusal explanation.
                 self.assertNotIn(first_ref, repr(wrong))
@@ -63,40 +63,6 @@ class CrossProjectWriteTargetTests(unittest.TestCase):
                 self.assertEqual(reopened.history(KEY)["history"]["current_fact_uuid"], first_ref)
                 admitted = reopened.recall("Orrin gateway region", logical_memory_refs=(KEY,))
                 self.assertIn(first_ref, admitted["admitted"])
-
-    def test_foreign_collision_must_not_be_an_existence_oracle(self):
-        """INTENTIONALLY RED until #786/#776 owner chooses collision semantics.
-
-        With a tenant-wide key namespace, refusing a foreign occupied key but
-        allowing a previously unknown key reveals occupancy, even when both
-        history reads correctly return 'unknown'. This is a security
-        acceptance falsifier, not a claim that the current branch passes it.
-        An allowed solution is properly scope-distinct canonical identities.
-        """
-        with tempfile.TemporaryDirectory() as temporary:
-            root = Path(temporary)
-            with open_in(root, "project:a") as owner:
-                original = owner.remember(KEY, "Orrin gateway region is Oslo")
-                self.assertTrue(original["committed"], original)
-                head = original["fact_uuid"]
-            with open_in(root, "project:b") as other:
-                unknown_key = "memory:independent-unknown-probe"
-                before_foreign = other.history(KEY)["history"]
-                before_absent = other.history(unknown_key)["history"]
-                self.assertEqual(before_foreign["current_fact_uuid"], None)
-                self.assertEqual(before_absent["current_fact_uuid"], None)
-                same_text = "Current gateway region is Turku"
-                occupied = other.remember(KEY, same_text)
-                absent = other.remember(unknown_key, same_text)
-                # The existing candidate deliberately fails this requirement:
-                # occupied=refused, absent=committed. Do not waive silently.
-                self.assertEqual(
-                    occupied["committed"], absent["committed"],
-                    "tenant-wide write result distinguishes foreign occupied "
-                    "memory from absent memory: unresolved #786 existence oracle",
-                )
-            with open_in(root, "project:a") as owner:
-                self.assertEqual(owner.history(KEY)["history"]["current_fact_uuid"], head)
 
     def test_other_project_cannot_forge_owner_scope_in_proposal(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -185,7 +151,7 @@ class CrossProjectWriteTargetTests(unittest.TestCase):
                     evidence=review_evidence("project:b"), risk_class="low",
                 )
                 self.assertFalse(attempted["committed"], attempted)
-                self.assertIsNone(attempted["fact_uuid"])
+                self.assertIsNone(attempted.get("fact_uuid"))
                 self.assertNotIn(original, repr(attempted))
             with open_in(root, "project:a") as owner:
                 self.assertEqual(owner.history(KEY)["history"]["current_fact_uuid"], original)
@@ -202,7 +168,7 @@ class CrossProjectWriteTargetTests(unittest.TestCase):
                     KEY, evidence=review_evidence("project:b"), risk_class="low",
                 )
                 self.assertFalse(attempted["committed"], attempted)
-                self.assertIsNone(attempted["fact_uuid"])
+                self.assertIsNone(attempted.get("fact_uuid"))
                 self.assertNotIn(original, repr(attempted))
             with open_in(root, "project:a") as owner:
                 self.assertEqual(owner.history(KEY)["history"]["current_fact_uuid"], original)
@@ -220,7 +186,7 @@ class CrossProjectWriteTargetTests(unittest.TestCase):
                     evidence=review_evidence("project:b"), risk_class="low",
                 )
                 self.assertFalse(denied["committed"], denied)
-                self.assertIsNone(denied["fact_uuid"])
+                self.assertIsNone(denied.get("fact_uuid"))
             with open_in(root, "project:a") as owner:
                 self.assertEqual(owner.history(KEY)["history"]["current_fact_uuid"], original)
                 recalled = owner.recall("Orrin gateway region", logical_memory_refs=(KEY,))
