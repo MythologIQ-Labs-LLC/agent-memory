@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "baseline_id": "agent-memory-runtime-baseline-v7",
+  "predecessor_baseline_id": "agent-memory-runtime-baseline-v6",
+  "issue": 786,
+  "declared_changes": [
+    {
+      "path": "reference/agentmem_ref/api/scoped_identity.py",
+      "blob": "378ac09fea101287e19d9b3726661d5245f6a4bb"
+    },
+    {
+      "path": "reference/agentmem_ref/api/surface.py",
+      "blob": "590f17f4f86670931e9f205b01a08746558b3bd8"
+    },
+    {
+      "path": "reference/agentmem_ref/memory/procedural_memory.py",
+      "blob": "3ca311f6e5a393d823f869338db1726049459901"
+    },
+    {
+      "path": "reference/agentmem_ref/revocation_delegation.py",
+      "blob": "f41047fa2dd80dfc38e5d76bae0c58d2ae8c9475"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/adapter.py",
+      "blob": "5a61fecfe9b0a918853834e7e8334da75cf926ae"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/query_driven_recall.py",
+      "blob": "69f4eb9e3162da932e09a1f24371f5feeef43cdb"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/recall_control.py",
+      "blob": "d8fdc963b579928a923140757737fcd39a93e36b"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/revocation_delegation.py",
+      "blob": "ff9922d84c70e9e9b5a226844870c5fbc0eb7566"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/runtime_composition.py",
+      "blob": "7dd8b257118a953b52ef8d487e8ea8f7dcad27e8"
+    },
+    {
+      "path": "reference/agentmem_ref/scoped_identity.py",
+      "blob": "36c03894500f63f43541b105ac8dd59a2d2a274a"
+    }
+  ],
+  "identity_deltas": [],
+  "pyproject_change": null,
+  "acceptance_evidence_required": [
+    {
+      "kind": "public_gauntlet",
+      "ref": "gauntlet-orchestration-retrieval-probe-v1"
+    },
+    {
+      "kind": "lane",
+      "ref": "amb-precisionmembench-retrieval-v7"
+    },
+    {
+      "kind": "lane",
+      "ref": "longmemeval-s-retrieval-parity-v7"
+    },
+    {
+      "kind": "replay",
+      "ref": "mesa-formal-v4"
+    }
+  ]
+}
