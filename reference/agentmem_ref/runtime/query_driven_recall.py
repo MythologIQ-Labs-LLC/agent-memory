@@ -148,6 +148,9 @@ class DeterministicQueryDrivenRecallPlanner:
             current = self.adapter.current_fact_uuid(logical_ref)
             if current is None:
                 continue
+            seed = substrate.get_fact(current)
+            if seed is None or not self.adapter.domain_eligible(seed, context):
+                continue
             hits.append(
                 RetrievalRouteHit(
                     route_id=EXACT_IDENTITY_ROUTE,
@@ -171,6 +174,7 @@ class DeterministicQueryDrivenRecallPlanner:
                     seed_ref=seed_ref,
                     logical_memory_ref=logical_ref,
                     expanded_seeds=expanded_seeds,
+                    eligible=lambda fact: self.adapter.domain_eligible(fact, context),
                 )
 
             ranked_anchors: list[tuple[int, float, object]] = []
@@ -193,6 +197,7 @@ class DeterministicQueryDrivenRecallPlanner:
                     seed_ref=fact.uuid,
                     logical_memory_ref="",
                     expanded_seeds=expanded_seeds,
+                    eligible=lambda fact: self.adapter.domain_eligible(fact, context),
                 )
 
         by_candidate: dict[str, list[RetrievalRouteHit]] = {}
@@ -250,17 +255,23 @@ class DeterministicQueryDrivenRecallPlanner:
         seed_ref: str,
         logical_memory_ref: str,
         expanded_seeds: set[str],
+        eligible,
     ) -> None:
         if seed_ref in expanded_seeds:
             return
         seed_fact = substrate.get_fact(seed_ref)
-        if seed_fact is None or seed_fact.is_event_invalid or seed_fact.is_transaction_expired:
+        if (
+            seed_fact is None or seed_fact.is_event_invalid
+            or seed_fact.is_transaction_expired or not eligible(seed_fact)
+        ):
             return
         expanded_seeds.add(seed_ref)
         for fact, shared_refs, score in substrate.evidence_neighbors(
             seed_ref,
             group_ids=[tenant],
         ):
+            if not eligible(fact):
+                continue
             hits.append(
                 RetrievalRouteHit(
                     route_id=SHARED_EVIDENCE_ROUTE,
