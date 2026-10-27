@@ -1100,7 +1100,24 @@ class GovernedMemoryAdapter:
             return "out_of_scope"
         if fact.uuid in self._tombstones:
             return "tombstoned"
-        if any(source_ref in self._tombstones for source_ref in fact.episode_uuids):
+        # #776: deletion is a property of the *logical memory*, not only the
+        # latest UUID. A state-changed predecessor can be valid historical
+        # evidence, but never after any version of its logical memory was
+        # governed-deleted. Both maps are canonical durable adapter state.
+        deleted_lineages = self.tombstoned_ids()
+        if deleted_lineages:
+            lineage = self._fact_memory.get(fact.uuid)
+            if lineage is None:
+                # When deletion exists, unbound provenance cannot establish
+                # that this candidate is outside the deleted lineage.
+                return "unknown_scope"
+            if lineage in deleted_lineages:
+                return "tombstoned"
+        if any(
+            source_ref in self._tombstones
+            or self._fact_memory.get(source_ref) in deleted_lineages
+            for source_ref in fact.episode_uuids
+        ):
             return "derived_from_tombstoned_source"
         if fact.is_event_invalid:
             historical = self._historical_evidence_refusal(fact, mode, target_seconds)
