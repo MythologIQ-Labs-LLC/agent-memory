@@ -64,6 +64,21 @@ TEMPLATE_SOURCE = ROOT / "reference" / "run_semantic_route_ordering_report.py"
 TEMPLATE_BLOB_PREFIX = "745f789c"
 THRESHOLD = 0.5
 
+# --- amendment A3 (#786 candidate, pending re-gate) ---------------------------------------------
+# The G3b pin above is the frozen whole-file blob and is never edited. #786 changed code in the
+# template source file *around* CONFLICT_TEMPLATES, which the whole-file pin cannot distinguish
+# from a change to the templates themselves. A3 adds a narrower, stronger proof used only when
+# the file no longer has the frozen blob: the frozen blob object must still resolve; the
+# CONFLICT_TEMPLATES literal parsed from it and from the current file must be identical; the 15
+# derived texts must hash to the recorded digest; and the contamination comparison (tokeniser,
+# similarity, threshold) must hash to the recorded digest. Any difference is refused. Strict
+# historical behaviour stays available with --require-frozen-blob.
+TEMPLATE_AMENDMENT_ID = "plan-732-g3b-amendment-A3-786"
+TEMPLATE_FROZEN_BLOB = "745f789c01b7a542f906a9034ae63ebdd6776f7c"
+TEMPLATE_TEXTS_SHA256 = "bb4d4da3d02b41a7602d43e85977ef69f091864b5feb42df29e7977d62666fdc"
+# Identical at the gate-frozen checker revisions 7b5f7a1, 5555504 and 76a9e30.
+COMPARISON_RULE_SHA256 = "ede7c6e2171f0e26be478f21cc0d9912fef2d59b46a4570850385f589ad5ab45"
+
 P_FAMILIES = [f"P{i}" for i in range(1, 14)]
 R_FAMILIES = [f"R{i}" for i in range(1, 8)]
 N_FAMILIES = [f"N{i}" for i in range(1, 14)]
@@ -104,25 +119,69 @@ def similarity(a: str, b: str) -> float:
     return len(sa & sb) / len(union) if union else 0.0
 
 
-def template_texts() -> list[str]:
-    blob = subprocess.run(
-        ["git", "hash-object", str(TEMPLATE_SOURCE)], cwd=ROOT, capture_output=True, text=True, check=True
-    ).stdout.strip()
-    if not blob.startswith(TEMPLATE_BLOB_PREFIX):
-        raise SystemExit(f"template source blob {blob} is not the frozen {TEMPLATE_BLOB_PREFIX}")
-    tree = ast.parse(TEMPLATE_SOURCE.read_text(encoding="utf-8"))
+def _templates_from_source(text: str) -> list:
+    tree = ast.parse(text)
     for node in tree.body:
         if isinstance(node, ast.Assign) and any(getattr(t, "id", None) == "CONFLICT_TEMPLATES" for t in node.targets):
-            rows = ast.literal_eval(node.value)
-            break
-    else:
-        raise SystemExit("CONFLICT_TEMPLATES not found")
+            return ast.literal_eval(node.value)
+    raise SystemExit("CONFLICT_TEMPLATES not found")
+
+
+def _texts_from_templates(rows) -> list[str]:
     texts = []
     for _slot, old, new, query in rows:
         texts += [old.replace("{old}", ""), new.replace("{new}", ""), query]
     if len(texts) != 15:
         raise SystemExit(f"expected 15 template texts, found {len(texts)}")
     return texts
+
+
+def texts_digest(texts: list[str]) -> str:
+    return hashlib.sha256(json.dumps(texts, ensure_ascii=False, separators=(",", ":")).encode("utf-8")).hexdigest()
+
+
+def comparison_rule_digest() -> str:
+    """Digest of the contamination comparison exactly as this checker executes it."""
+    import inspect
+    import textwrap
+
+    try:
+        parts = [ast.dump(ast.parse(textwrap.dedent(inspect.getsource(function)))) for function in (tokens, similarity)]
+        parts += [TOKEN.pattern, repr(THRESHOLD)]
+    except (OSError, TypeError, SyntaxError, AttributeError):
+        return "unverifiable"  # an unreadable rule is a changed rule
+    return hashlib.sha256("\n".join(parts).encode("utf-8")).hexdigest()
+
+
+def template_basis(source: Path = None, *, require_frozen_blob: bool = False) -> tuple[list[str], str]:
+    """Return the 15 G3b template texts and the basis on which they were accepted."""
+    source = TEMPLATE_SOURCE if source is None else source
+    blob = subprocess.run(
+        ["git", "hash-object", str(source)], cwd=ROOT, capture_output=True, text=True, check=True
+    ).stdout.strip()
+    current = _texts_from_templates(_templates_from_source(source.read_text(encoding="utf-8")))
+    if blob.startswith(TEMPLATE_BLOB_PREFIX):
+        return current, "frozen_blob"
+    if require_frozen_blob:
+        raise SystemExit(f"template source blob {blob} is not the frozen {TEMPLATE_BLOB_PREFIX}")
+    frozen_source = subprocess.run(
+        ["git", "cat-file", "-p", TEMPLATE_FROZEN_BLOB], cwd=ROOT, capture_output=True, text=True,
+    )
+    if frozen_source.returncode != 0:
+        raise SystemExit(f"{TEMPLATE_AMENDMENT_ID}: frozen template blob {TEMPLATE_FROZEN_BLOB} is unavailable")
+    frozen_rows = _templates_from_source(frozen_source.stdout)
+    if _templates_from_source(source.read_text(encoding="utf-8")) != frozen_rows:
+        raise SystemExit(f"{TEMPLATE_AMENDMENT_ID}: CONFLICT_TEMPLATES differ from frozen blob {TEMPLATE_FROZEN_BLOB}")
+    frozen = _texts_from_templates(frozen_rows)
+    if current != frozen or texts_digest(current) != TEMPLATE_TEXTS_SHA256:
+        raise SystemExit(f"{TEMPLATE_AMENDMENT_ID}: template texts differ from the recorded digest")
+    if comparison_rule_digest() != COMPARISON_RULE_SHA256:
+        raise SystemExit(f"{TEMPLATE_AMENDMENT_ID}: contamination comparison differs from the recorded rule")
+    return current, TEMPLATE_AMENDMENT_ID
+
+
+def template_texts(*, require_frozen_blob: bool = False) -> list[str]:
+    return template_basis(require_frozen_blob=require_frozen_blob)[0]
 
 
 def record_texts(record: dict) -> list[str]:
@@ -289,11 +348,13 @@ def check(
     prior_texts: list[str],
     corpus_files: list | None = None,
     variant_files: list | None = None,
+    *,
+    require_frozen_blob: bool = False,
 ) -> dict:
     def file_of(files: list | None, index: int, default: str) -> str:
         return files[index] if files else default
 
-    templates = template_texts()
+    templates, basis = template_basis(require_frozen_blob=require_frozen_blob)
     rejections: list[dict] = []
     seen_ids: set = set()
     valid_cases: dict = {}
@@ -381,6 +442,7 @@ def check(
         "rejections": rejections,
         "valid_case_ids": sorted(valid_cases),
         "template_blob_prefix": TEMPLATE_BLOB_PREFIX,
+        "template_basis": basis,
         "authority_effect": "none",
     })
     return report
@@ -448,6 +510,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--prior", type=Path, action="append", default=[], help="prior corpus or variants file (holdouts)")
     parser.add_argument("--report", type=Path, help="write the full report here")
     parser.add_argument("--rejections", type=Path, help="write the compact {REJECTIONS} JSON here")
+    parser.add_argument("--require-frozen-blob", action="store_true",
+                        help="strict historical G3b: refuse unless the template source has the frozen blob")
     args = parser.parse_args(argv)
 
     corpus_files = variant_files = None
@@ -482,7 +546,8 @@ def main(argv: list[str] | None = None) -> int:
     if selection is not None and variants is None:
         # A selection without variants: every (base, type) pair is missing (K6_variant_set_complete).
         variants = []
-    report = check(corpus, variants, selection, prior_texts, corpus_files, variant_files)
+    report = check(corpus, variants, selection, prior_texts, corpus_files, variant_files,
+                   require_frozen_blob=args.require_frozen_blob)
     inputs = [args.corpus, args.variants, args.selection, *args.prior]
     if args.author_dir:
         inputs += [args.author_dir / name for names in assembled_files.values() for name in names]
