@@ -34,12 +34,23 @@ class ScopeDistinctSQLiteTests(unittest.TestCase):
                 second = other.remember(KEY, "Orrin gateway is in Turku")
                 self.assertTrue(second["committed"], second)
                 second_ref = second["fact_ref"]
-                self.assertNotEqual(first_ref, second_ref)
+                # These project roots are independent SQLite databases.
+                # Each may legitimately allocate the same local fact UUID.
                 self.assertEqual(other.history(KEY)["current_fact_ref"], second_ref)
+                self.assertEqual(
+                    other._memory.runtime.adapter.checkpoint_substrate()
+                    .get_fact(second_ref).fact_text,
+                    "Orrin gateway is in Turku",
+                )
             with ScopeDistinctMemory.open(
                 root, tenant=TENANT, actor_id=ACTOR, scope="project:a",
             ) as recovered_owner:
                 self.assertEqual(recovered_owner.history(KEY)["current_fact_ref"], first_ref)
+                self.assertEqual(
+                    recovered_owner._memory.runtime.adapter.checkpoint_substrate()
+                    .get_fact(first_ref).fact_text,
+                    "Orrin gateway is in Oslo",
+                )
             with ScopeDistinctMemory.open(
                 root, tenant=TENANT, actor_id=ACTOR, scope="project:b",
             ) as recovered_other:
@@ -59,13 +70,22 @@ class ScopeDistinctSQLiteTests(unittest.TestCase):
             ) as scoped:
                 new = scoped.remember(KEY, "Scoped gateway is in Turku")
                 self.assertTrue(new["committed"], new)
-                self.assertNotEqual(new["fact_ref"], old_ref)
                 self.assertEqual(scoped.history(KEY)["current_fact_ref"], new["fact_ref"])
+                self.assertEqual(
+                    scoped._memory.runtime.adapter.checkpoint_substrate()
+                    .get_fact(new["fact_ref"]).fact_text,
+                    "Scoped gateway is in Turku",
+                )
             with AgentMemory.open(
                 root, tenant=TENANT, actor_id=ACTOR, scope="project:a",
             ) as legacy:
                 self.assertEqual(
                     legacy.history(KEY)["history"]["current_fact_uuid"], old_ref
+                )
+                self.assertEqual(
+                    legacy.runtime.adapter.checkpoint_substrate()
+                    .get_fact(old_ref).fact_text,
+                    "Legacy gateway is in Oslo",
                 )
             self.assertTrue((root / ".agent-memory-scoped-v1").is_dir())
 
