@@ -397,8 +397,6 @@ class GovernedMemoryAdapter:
         only and grants nothing; PAMA decides exactly as without it.
         """
         correlation = self._ids.next()
-        if episode is not None:
-            self._substrate.add_episode(episode)
         propose_event = self._event("memory.propose", proposal.target_reference, correlation)
 
         if evidence:
@@ -466,6 +464,11 @@ class GovernedMemoryAdapter:
 
         fact_uuid = None
         if commits:
+            # Episode material belongs to an authorized commit, not merely an
+            # attempted proposal. A foreign/refused write must not mutate the
+            # substrate before the canonical target gate has decided.
+            if episode is not None:
+                self._substrate.add_episode(episode)
             if proposal.operation == "correction":
                 self._supersede_current(proposal, replacement_kind, temporal)
                 self._rejected_values.readmit(
