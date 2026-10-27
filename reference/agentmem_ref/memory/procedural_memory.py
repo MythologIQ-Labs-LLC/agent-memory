@@ -242,10 +242,16 @@ class ProceduralMemoryRuntime:
         substrate: TemporalGraphPort,
         adapter: GovernedMemoryAdapter,
         registry: ComponentRegistry,
+        revocation_context: RecallContext | None = None,
     ) -> None:
+        # Only the host that composes this runtime may establish the revoker's
+        # identity. A caller-supplied actor_id on revoke_skill is NOT authority.
+        if revocation_context is not None and not isinstance(revocation_context, RecallContext):
+            raise ValueError("revocation_context must be a host-bound RecallContext")
         self.substrate = substrate
         self.adapter = adapter
         self.registry = registry
+        self._revocation_context = revocation_context
 
     def resolve_capability(self) -> ResolvedCapability:
         return self.registry.resolve(
@@ -487,10 +493,20 @@ class ProceduralMemoryRuntime:
         proposal_id: str | None = None,
     ) -> RevocationResult:
         self.resolve_capability()
+        host = self._revocation_context
+        if host is None:
+            raise ValueError("host-bound revocation identity is required")
+        if not host.principal_ref or actor_id != host.principal_ref:
+            raise ValueError("revocation actor does not match host-bound principal")
+        if not host.project_ref or not host.purpose or not host.target_domain_refs:
+            raise ValueError("revocation requires a complete host-bound context")
         memory_ref = f"skill:{skill_id}"
         fact_uuid = self.adapter.current_fact_uuid(memory_ref)
-        if not fact_uuid:
-            raise ValueError(f"no current procedural skill exists for {skill_id!r}")
+        fact = self.substrate.get_fact(fact_uuid) if fact_uuid else None
+        # Unknown and foreign identifiers have the same preflight result:
+        # no fact UUID, version, residue or tombstone is exposed or mutated.
+        if not self.adapter.domain_eligible(fact, host):
+            raise ValueError("no accessible current procedural skill")
         current_version = self.adapter.state_version(memory_ref)
         proposal = policy.Proposal(
             proposal_id=proposal_id or f"proposal:revoke:{skill_id}:v{current_version}",
@@ -498,7 +514,7 @@ class ProceduralMemoryRuntime:
             charter_version="procedural-memory-v1",
             target_reference=memory_ref,
             target_class=policy.M3,
-            scope="procedural-memory",
+            scope=fact.group_id,
             operation="pruning",
             current_strength="promoted",
             proposed_strength="archived",
@@ -507,6 +523,12 @@ class ProceduralMemoryRuntime:
             risk_class="low",
             evidence_refs=evidence_refs,
             state_snapshot=f"v{current_version}",
+            tenant_ref=fact.group_id,
+            purpose=host.purpose,
+            isolation_domain_refs=tuple(host.target_domain_refs),
+            required_isolation_domain_refs=tuple(host.target_domain_refs),
+            project_ref=host.project_ref,
+            task_ref=host.task_ref,
         )
         result = self.adapter.governed_delete(proposal, fact_uuid)
         residue = tuple(self.adapter.undeclared_residue(fact_uuid))
