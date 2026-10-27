@@ -1,0 +1,104 @@
+{
+  "adapter": {
+    "id": "agent-memory-public-durability-adapter-v2",
+    "revision": "git-blob:0fd99c13b5f3bd4a8c3ec60c20cd1cebdbb6c366",
+    "version": "0.2.0"
+  },
+  "authority_effect": "none",
+  "benchmark_isolation": {
+    "description": "repository-owned disposable Agent Memory SQLite state keyed by unique Gauntlet run namespace",
+    "strategy": "disposable_instance"
+  },
+  "capabilities": {
+    "checkpoint": {
+      "notes": "the public AgentMemory facade does not expose checkpoint creation; private runtime access is deliberately not used by this adapter",
+      "support": "unsupported"
+    },
+    "correct": {
+      "notes": "the public correction path requires qualified evidence or attestation that the current neutral Gauntlet operation contract cannot yet carry without Agent Memory-specific semantics",
+      "support": "unsupported"
+    },
+    "describe": {
+      "notes": "translated public runtime identity only",
+      "support": "mapped"
+    },
+    "deterministic_recovery": {
+      "notes": "claimed for the frozen single-host SQLite profile and tested by repeated public reopen/observation",
+      "support": "native"
+    },
+    "durable_correction": {
+      "notes": "not qualified in this contestant configuration until a neutral evidence-bearing correction contract exists; refusal is preserved rather than bypassing PAMA",
+      "support": "unsupported"
+    },
+    "durable_deletion": {
+      "notes": "public governed pruning followed by AgentMemory.open() recovery/non-resurrection check",
+      "support": "native"
+    },
+    "forget": {
+      "notes": "public AgentMemory.forget() governed pruning",
+      "support": "native"
+    },
+    "health": {
+      "notes": "public AgentMemory.posture() health projection",
+      "support": "mapped"
+    },
+    "history": {
+      "notes": "public AgentMemory.history() lifecycle evidence",
+      "support": "native"
+    },
+    "recall": {
+      "notes": "public AgentMemory.recall() under the requested benchmark scope",
+      "support": "native"
+    },
+    "recover": {
+      "notes": "neutral recover operation maps directly to supported AgentMemory.open() create-or-recover behavior",
+      "support": "mapped"
+    },
+    "remember": {
+      "notes": "public AgentMemory.remember() under the requested benchmark scope",
+      "support": "native"
+    },
+    "reset": {
+      "notes": "adapter teardown of disposable benchmark state; not a native Agent Memory operation",
+      "support": "mapped"
+    },
+    "restart_recovery": {
+      "notes": "native persisted-state recovery through public AgentMemory.open()",
+      "support": "native"
+    },
+    "scope_isolation": {
+      "notes": "exercised through the public facade over one scope_distinct_v1 store per namespace: project-bound keys and canonical governed admission",
+      "support": "native"
+    }
+  },
+  "contract_family": "agent-memory-gauntlet-system-adapter",
+  "contract_version": "0.1.0",
+  "metadata": {
+    "baseline_id": "agent-memory-runtime-baseline-v7",
+    "baseline_status": "unaccepted transition candidate (docs/67 Step A); not a published baseline",
+    "provenance_class": "gauntlet_native_gap",
+    "public_facade_only": true,
+    "runtime_profile": "rc1-local-sqlite-composition",
+    "store_profile": "scope_distinct_v1",
+    "supersedes": {
+      "manifest": "fixtures/gauntlet/agent-memory-public-durability-adapter.json",
+      "reason": "v1 drives several projects through one tenant-wide store, which #786 store profiles refuse",
+      "sha256": "e33761c01f0245214fe542ba2483ebb2f4ba6a8bfa415f147d6fbaf14e09fbb5"
+    },
+    "transport_wrapper_revision": "git-blob:3d268ec5c9ec8150606b6abada86c9ccaf5ebe28"
+  },
+  "system": {
+    "configuration_digest": "sha256:a0ed220265c2b4876857d66b20b5e2903e07129d58260d19a600b391a2ac6034",
+    "id": "agent-memory-runtime-baseline-v7-candidate",
+    "kind": "agent_memory",
+    "revision": "git-commit:2b2a6199edf30feefd024aa10baace888aef5ffb",
+    "version": "0.2.0"
+  },
+  "transport": {
+    "kind": "stdio",
+    "startup": [
+      "python",
+      "examples/gauntlet/agent_memory_durability_v2_stdio.py"
+    ]
+  }
+}
