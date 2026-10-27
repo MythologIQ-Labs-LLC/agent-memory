@@ -141,5 +141,39 @@ class DeletedLineageSQLiteTests(unittest.TestCase):
                 self.assertIn(unrelated["fact_uuid"], recalled["admitted"])
 
 
+    def test_deleted_key_cannot_commit_invisible_recreation_after_restart(self):
+        # Existing contract has no governed restore. Failing closed is safer
+        # than committing a fact that canonical recall will never serve.
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            with _open(root) as owner:
+                first = owner.remember("memory:closed", "The original state was A.")
+                self.assertTrue(first["committed"], first)
+                erased = owner.forget("memory:closed")
+                self.assertTrue(erased["committed"], erased)
+                refused = owner.remember("memory:closed", "New state after deletion.")
+                self.assertFalse(refused["committed"], refused)
+                self.assertEqual(refused["outcome"], "block")
+                self.assertEqual(refused["receipt"]["selected_action"], "none")
+                independent = owner.remember("memory:fresh", "Unrelated memory survives.")
+                self.assertTrue(independent["committed"], independent)
+
+            with _open(root) as owner:
+                state = owner.history("memory:closed")["history"]
+                self.assertTrue(state["tombstoned"])
+                self.assertIsNone(state["current_fact_uuid"])
+                after = owner.recall(
+                    "New state after deletion", temporal_intent={"mode": "historical"},
+                )
+                self.assertNotIn(first["fact_uuid"], after["admitted"])
+                self.assertIn(
+                    independent["fact_uuid"],
+                    owner.recall("Unrelated memory survives")["admitted"],
+                )
+                repeat = owner.remember("memory:closed", "Another blocked recreation.")
+                self.assertFalse(repeat["committed"], repeat)
+                self.assertEqual(repeat["outcome"], "block")
+
+
 if __name__ == "__main__":
     unittest.main()
