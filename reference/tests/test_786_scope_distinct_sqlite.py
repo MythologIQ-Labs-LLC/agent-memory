@@ -56,6 +56,51 @@ class ScopeDistinctSQLiteTests(unittest.TestCase):
             ) as recovered_other:
                 self.assertEqual(recovered_other.history(KEY)["current_fact_ref"], second_ref)
 
+    def test_scoped_keys_hide_foreign_collision_and_preserve_owner(self):
+        # Project B sees the same successful local write regardless of whether
+        # another project used the same public key in the dedicated scoped store.
+        with tempfile.TemporaryDirectory() as occupied, tempfile.TemporaryDirectory() as free:
+            occupied_root, free_root = Path(occupied), Path(free)
+            with ScopeDistinctMemory.open(
+                occupied_root, tenant=TENANT, actor_id=ACTOR, scope="project:a",
+            ) as owner:
+                original = owner.remember(KEY, "Project A gateway is Oslo")
+                self.assertTrue(original["committed"], original)
+
+            with ScopeDistinctMemory.open(
+                occupied_root, tenant=TENANT, actor_id=ACTOR, scope="project:b",
+            ) as project_b:
+                occupied_result = project_b.remember(KEY, "Project B gateway is Turku")
+                self.assertTrue(occupied_result["committed"], occupied_result)
+                self.assertEqual(
+                    project_b.history(KEY)["current_fact_ref"],
+                    occupied_result["fact_ref"],
+                )
+
+            with ScopeDistinctMemory.open(
+                free_root, tenant=TENANT, actor_id=ACTOR, scope="project:b",
+            ) as project_b:
+                free_result = project_b.remember(KEY, "Project B gateway is Turku")
+                self.assertTrue(free_result["committed"], free_result)
+
+            self.assertEqual(
+                (occupied_result["committed"], occupied_result["status"]),
+                (free_result["committed"], free_result["status"]),
+                "Foreign scoped-key occupancy changed the independent writer outcome",
+            )
+
+            with ScopeDistinctMemory.open(
+                occupied_root, tenant=TENANT, actor_id=ACTOR, scope="project:a",
+            ) as owner:
+                self.assertEqual(
+                    owner.history(KEY)["current_fact_ref"], original["fact_ref"],
+                )
+                self.assertEqual(
+                    owner._memory.runtime.adapter.checkpoint_substrate()
+                    .get_fact(original["fact_ref"]).fact_text,
+                    "Project A gateway is Oslo",
+                )
+
     def test_legacy_root_and_scoped_child_remain_independent(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
