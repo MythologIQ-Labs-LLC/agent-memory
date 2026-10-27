@@ -125,6 +125,63 @@ class RuntimeIdentityBoundaryTests(unittest.TestCase):
                 self.assertEqual(current["state_version"], original_version)
 
 
+    def test_task_identity_is_bound_to_host_not_caller_query(self):
+        # Project membership alone cannot authorize a different task.
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            with AgentMemory.open(
+                root, tenant=TENANT, actor_id=ACTOR, scope="project:a",
+                task_ref="task:a",
+            ) as task_a:
+                saved = task_a.remember("memory:task-only", "Task A private design")
+                self.assertTrue(saved["committed"], saved)
+                own = task_a.recall("Task A private design")
+                self.assertIn(saved["fact_uuid"], own["admitted"])
+                self.assertIn(
+                    saved["fact_uuid"],
+                    task_a.recall("Task A private design", task_ref="task:a")["admitted"],
+                )
+
+            with AgentMemory.open(
+                root, tenant=TENANT, actor_id=ACTOR, scope="project:a",
+                task_ref="task:b",
+            ) as task_b:
+                ordinary = task_b.recall("Task A private design")
+                self.assertNotIn(saved["fact_uuid"], ordinary["admitted"])
+                self.assertNotIn(saved["fact_uuid"], ordinary["candidates"])
+                with self.assertRaisesRegex(ValueError, "task"):
+                    task_b.recall("Task A private design", task_ref="task:a")
+                history = task_b.history("memory:task-only")["history"]
+                self.assertIsNone(history["current_fact_uuid"])
+
+            with AgentMemory.open(
+                root, tenant=TENANT, actor_id=ACTOR, scope="project:a",
+            ) as unbound:
+                with self.assertRaisesRegex(ValueError, "task"):
+                    unbound.recall("Task A private design", task_ref="task:a")
+                self.assertNotIn(
+                    saved["fact_uuid"], unbound.recall("Task A private design")["admitted"],
+                )
+
+            with AgentMemory.open(
+                root, tenant=TENANT, actor_id=ACTOR, scope="project:a",
+                task_ref="task:a",
+            ) as recovered:
+                self.assertIn(
+                    saved["fact_uuid"],
+                    recovered.recall("Task A private design")["admitted"],
+                )
+
+    def test_invalid_host_task_identity_does_not_create_runtime_root(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory) / "not-created"
+            with self.assertRaisesRegex(ValueError, "task_ref"):
+                AgentMemory.open(
+                    target, tenant=TENANT, actor_id=ACTOR, scope="project:a",
+                    task_ref=" task:a ",
+                )
+            self.assertFalse(target.exists())
+
     def test_all_recall_planners_filter_foreign_explicit_seeds(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
