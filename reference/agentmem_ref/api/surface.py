@@ -834,7 +834,16 @@ class AgentMemory:
                 fact_uuid=None,
                 refusal="fact_not_found",
             )
-        refs = tuple(dict.fromkeys((f"fact:{target_fact}", *tuple(evidence_refs))))
+        # The canonical current fact UUID is not a caller-visible reference
+        # when this handle cannot read the logical memory. In particular, do
+        # not echo it inside a blocked PAMA receipt's evidence references.
+        visible = self.runtime.adapter.history_eligible(
+            target_reference, self._handle_recall_context()
+        )
+        refs = tuple(dict.fromkeys(
+            ((f"fact:{target_fact}",) if visible or fact_uuid is not None else ())
+            + tuple(evidence_refs)
+        ))
         proposal = contract.proposal_from_envelope(
             self._proposal(
                 target_reference=target_reference,
