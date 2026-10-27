@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import functools
 import threading
+import unicodedata
 
 import hashlib
 import importlib.resources
@@ -316,6 +317,7 @@ class AgentMemory:
         if (
             not isinstance(task_ref, str)
             or task_ref != task_ref.strip()
+            or unicodedata.normalize("NFC", task_ref) != task_ref
             or (task_ref and any(ord(ch) < 32 for ch in task_ref))
         ):
             raise ValueError("task_ref must be a canonical, optional host-bound string")
@@ -394,6 +396,7 @@ class AgentMemory:
         if (
             not isinstance(task_ref, str)
             or task_ref != task_ref.strip()
+            or unicodedata.normalize("NFC", task_ref) != task_ref
             or (task_ref and any(ord(ch) < 32 for ch in task_ref))
         ):
             raise ValueError("task_ref must be a canonical, optional host-bound string")
