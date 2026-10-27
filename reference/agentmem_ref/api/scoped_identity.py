@@ -15,7 +15,7 @@ from pathlib import Path
 import unicodedata
 from typing import Any
 
-from .surface import AgentMemory
+from .surface import STORE_PROFILE_SCOPE_DISTINCT, AgentMemory
 
 _NAMESPACE = "scope-key-v1:"
 _MAX_KEY_LENGTH = 512
@@ -94,6 +94,10 @@ class ScopeDistinctMemory:
             or getattr(memory, "actor_id", None) != actor_id
         ):
             raise ValueError("backing memory identity does not match trusted host binding")
+        # The backing store must itself bind keys per project (#786); a tenant-wide
+        # store would let any raw handle on it bypass this wrapper.
+        if getattr(memory, "store_profile", None) != STORE_PROFILE_SCOPE_DISTINCT:
+            raise ValueError("backing memory must be a scope_distinct_v1 store")
         self._memory = memory
         self._tenant = tenant
         self._scope = scope
@@ -117,7 +121,8 @@ class ScopeDistinctMemory:
         # Physical separation from the legacy root and lexical path checks.
         scoped_root = _scoped_store_root(path)
         memory = AgentMemory.open(
-            scoped_root, tenant=tenant, actor_id=actor_id, scope=scope, purpose=purpose
+            scoped_root, tenant=tenant, actor_id=actor_id, scope=scope, purpose=purpose,
+            store_profile=STORE_PROFILE_SCOPE_DISTINCT,
         )
         try:
             return cls(memory, tenant=tenant, scope=scope, actor_id=actor_id)
@@ -142,7 +147,10 @@ class ScopeDistinctMemory:
             or getattr(self._memory, "actor_id", None) != self._actor_id
         ):
             raise RuntimeError("host-bound memory is closed or identity changed")
-        return scope_distinct_key(self._tenant, self._scope, public_key)
+        # Validate here; the scope_distinct_v1 facade performs the binding itself,
+        # producing exactly scope_distinct_key(tenant, scope, public_key).
+        scope_distinct_key(self._tenant, self._scope, public_key)
+        return public_key
 
     @staticmethod
     def _outcome(result: dict) -> dict:

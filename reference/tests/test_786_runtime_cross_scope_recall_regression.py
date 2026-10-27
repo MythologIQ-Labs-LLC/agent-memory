@@ -3,7 +3,9 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from agentmem_ref import AgentMemory
+from agentmem_ref import AgentMemory  # noqa: F401
+
+from tests._tenant_wide_fixture import open_tenant_wide
 
 
 class CrossScopeRuntimeRegression(unittest.TestCase):
@@ -11,11 +13,11 @@ class CrossScopeRuntimeRegression(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             identity = {"tenant": "tenant:scope-test", "actor_id": "agent:scope-test"}
-            with AgentMemory.open(root, scope="project:a", **identity) as owner:
+            with open_tenant_wide(root, scope="project:a", **identity) as owner:
                 written = owner.remember("memory:private", "Orrin gateway is Oslo")
                 self.assertTrue(written["committed"])
                 ref = written["fact_uuid"]
-            with AgentMemory.open(root, scope="project:b", **identity) as other:
+            with open_tenant_wide(root, scope="project:b", **identity) as other:
                 self.assertNotIn(ref, other.recall("Orrin gateway")["admitted"])
                 try:
                     result = other.recall("Orrin gateway", project_ref="project:a",
@@ -28,8 +30,8 @@ class CrossScopeRuntimeRegression(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             identity = {"tenant": "tenant:scope-test", "actor_id": "agent:scope-test"}
-            with AgentMemory.open(root, scope="project:a", **identity) as owner:
+            with open_tenant_wide(root, scope="project:a", **identity) as owner:
                 self.assertTrue(owner.remember("memory:private", "Orrin gateway is Oslo")["committed"])
-            with AgentMemory.open(root, scope="project:b", **identity) as other:
+            with open_tenant_wide(root, scope="project:b", **identity) as other:
                 self.assertEqual(other.history("memory:private")["history"],
                                  other.history("memory:absent")["history"])

@@ -31,6 +31,7 @@ from ..core import policy
 from ..memory import action_authority
 from ..runtime import doctor
 from ..runtime.adapter import REPLACEMENT_KINDS, GovernedMemoryAdapter
+from ..runtime.restart_runtime import RuntimeRecoveryError
 from ..runtime.temporal_intent import declared_temporal, resolve_intent
 from . import contract
 
@@ -199,6 +200,28 @@ _DEFAULT_CONFIG_NAME = "runtime-config.json"
 _DATABASE_NAME = "agent-memory.sqlite3"
 _BINDING_NAME = "configuration-binding.json"
 
+# #786 store identity profiles (proposed contract; promotion requires owner approval).
+# A profile is recorded once, when a store is created, and never rewritten.
+STORE_PROFILE_FILE = "store-identity.json"
+STORE_PROFILE_SINGLE_PROJECT = "single_project_v1"
+STORE_PROFILE_SCOPE_DISTINCT = "scope_distinct_v1"
+# Reported for a store created before profiles existed. Never written to disk.
+STORE_PROFILE_LEGACY = "legacy_unprofiled"
+STORE_PROFILES = (STORE_PROFILE_SINGLE_PROJECT, STORE_PROFILE_SCOPE_DISTINCT)
+_STORE_IDENTITY_SCHEMA = "agent-memory-store-identity"
+
+
+class StoreIdentityError(RuntimeRecoveryError):
+    """The requested host identity cannot open this store under its identity profile.
+
+    Messages never name keys, facts, or other projects: a refusal is decided by
+    the store's profile and bound project alone, not by which memories exist.
+    """
+
+
+class _CanonicalTarget(str):
+    """A canonical logical memory id the runtime itself produced (never caller input)."""
+
 
 def _canonical_bytes(value: object) -> bytes:
     return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
@@ -227,6 +250,38 @@ def _atomic_write_text(path: Path, text: str) -> None:
         handle.flush()
         os.fsync(handle.fileno())
     os.replace(temporary, path)
+
+
+def _read_store_identity(path: Path) -> dict | None:
+    if not path.exists():
+        return None
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        raise StoreIdentityError("store identity record is unreadable") from exc
+    if (
+        not isinstance(record, dict)
+        or record.get("schema") != _STORE_IDENTITY_SCHEMA
+        or record.get("version") != 1
+        or record.get("profile") not in STORE_PROFILES
+        or not isinstance(record.get("tenant"), str)
+        or (record["profile"] == STORE_PROFILE_SINGLE_PROJECT
+            and not isinstance(record.get("bound_project"), str))
+    ):
+        raise StoreIdentityError("store identity record is malformed")
+    return record
+
+
+def _check_store_identity(record: dict, *, tenant: str, scope: str, requested: str | None) -> None:
+    if record["tenant"] != tenant:
+        raise StoreIdentityError("requested tenant does not match the store identity")
+    if requested is not None and requested != record["profile"]:
+        raise StoreIdentityError(f"store identity profile is {record['profile']!r}, not {requested!r}")
+    if record["profile"] == STORE_PROFILE_SINGLE_PROJECT and record["bound_project"] != scope:
+        raise StoreIdentityError(
+            "single-project store is bound to a different project; multi-project memory "
+            f"requires a {STORE_PROFILE_SCOPE_DISTINCT!r} store"
+        )
 
 
 def _checked_extractor(extractor: Any) -> Any:
@@ -313,7 +368,11 @@ class AgentMemory:
         recall_control: str = RECALL_CONTROL_DEFAULT,
         proposition_extractor: Any = None,
         task_ref: str = "",
+        store_profile: str = STORE_PROFILE_LEGACY,
     ) -> None:
+        if store_profile not in (*STORE_PROFILES, STORE_PROFILE_LEGACY):
+            raise ValueError(f"unknown store_profile {store_profile!r}")
+        self.store_profile = store_profile
         if (
             not isinstance(task_ref, str)
             or task_ref != task_ref.strip()
@@ -358,8 +417,22 @@ class AgentMemory:
         recall_control: str = RECALL_CONTROL_DEFAULT,
         proposition_extractor: Any = None,
         task_ref: str = "",
+        store_profile: str | None = None,
     ) -> "AgentMemory":
         """Create or recover one qualified local SQLite composition.
+
+        ``store_profile`` (#786, proposed) fixes how logical keys are owned. It is
+        recorded once, when the store is created, and every later open must agree:
+
+        * ``"single_project_v1"`` -- the default for a new store. Tenant-wide keys,
+          and the store is bound to the creating ``scope``; other projects are refused.
+        * ``"scope_distinct_v1"`` -- the only multi-project profile. Every public key
+          is bound to (tenant, scope, key) by this facade, so one project can neither
+          read, mutate, nor observe the occupancy of another project's keys.
+
+        A store created before profiles existed is never migrated: it opens only for
+        the single project its canonical scope metadata already contains, and only
+        without an explicit ``store_profile``.
 
         ``semantic_retrieval`` (#669) is ``"off"`` (default), ``"auto"`` or
         ``"required"``. ``auto`` enables the semantic vector route only when the
@@ -406,6 +479,8 @@ class AgentMemory:
             raise ValueError("tenant, actor_id, charter_version, and scope must be non-empty")
         if recall_control not in RECALL_CONTROL_MODES:
             raise ValueError(f"recall_control must be one of {RECALL_CONTROL_MODES}")
+        if store_profile is not None and store_profile not in STORE_PROFILES:
+            raise ValueError(f"store_profile must be one of {STORE_PROFILES}")
         _checked_extractor(proposition_extractor)
 
         if config_path is None:
@@ -423,6 +498,28 @@ class AgentMemory:
         semantic = _semantic_route(root, semantic_retrieval, representation_dir)
         database = root / _DATABASE_NAME
         binding = root / _BINDING_NAME
+        # #786: decide the store identity before any runtime is recovered or created.
+        identity_path = root / STORE_PROFILE_FILE
+        identity = _read_store_identity(identity_path)
+        if identity is not None:
+            _check_store_identity(identity, tenant=tenant, scope=scope, requested=store_profile)
+            profile = identity["profile"]
+        elif database.exists():
+            if store_profile is not None:
+                raise StoreIdentityError(
+                    "store predates identity profiles; it opens only as a restricted legacy "
+                    "store and is never migrated implicitly"
+                )
+            profile = STORE_PROFILE_LEGACY
+        else:
+            profile = store_profile or STORE_PROFILE_SINGLE_PROJECT
+            identity = {
+                "schema": _STORE_IDENTITY_SCHEMA,
+                "version": 1,
+                "profile": profile,
+                "tenant": tenant,
+                "bound_project": scope if profile == STORE_PROFILE_SINGLE_PROJECT else None,
+            }
         if database.exists():
             runtime = SQLiteConfiguredCompositionRuntime.recover(
                 root,
@@ -449,6 +546,17 @@ class AgentMemory:
             raise RuntimeRecoveryError(
                 f"requested tenant {tenant!r} does not match recovered runtime tenant {actual_tenant!r}"
             )
+        if profile == STORE_PROFILE_LEGACY:
+            # Restricted legacy mode: the store's tenant-wide keys stay safe only while
+            # a single trusted project uses it. Nothing on disk is rewritten.
+            if runtime.adapter.canonical_project_refs() - {scope}:
+                runtime.close()
+                raise StoreIdentityError(
+                    "legacy store is bound to a different project or holds several projects; "
+                    "it requires an explicit, governed migration"
+                )
+        elif not identity_path.exists():
+            _atomic_write_text(identity_path, json.dumps(identity, sort_keys=True))
         return cls(
             root=root,
             config_path=resolved_config,
@@ -463,6 +571,7 @@ class AgentMemory:
             recall_control=recall_control,
             proposition_extractor=proposition_extractor,
             task_ref=task_ref,
+            store_profile=profile,
         )
 
     @property
@@ -479,6 +588,21 @@ class AgentMemory:
 
     def _domain_refs(self) -> tuple[str, ...]:
         return tuple(dict.fromkeys((self.tenant, self.scope)))
+
+    def _target(self, target_reference: str) -> str:
+        """The canonical logical memory id for a caller's public key (#786).
+
+        In a ``scope_distinct_v1`` store the facade itself binds every public key
+        to (tenant, project, key); reserved or foreign canonical ids are refused,
+        so no caller can name another project's memory.
+        """
+        if isinstance(target_reference, _CanonicalTarget):
+            return str(target_reference)
+        if self.store_profile != STORE_PROFILE_SCOPE_DISTINCT:
+            return target_reference
+        from .scoped_identity import scope_distinct_key
+
+        return scope_distinct_key(self.tenant, self.scope, target_reference)
 
     def _proposal(
         self,
@@ -638,6 +762,7 @@ class AgentMemory:
         basis ``caller_declared`` and outranks any extractor, which is then not called. It
         grants nothing: PAMA, the read-path guards and the lifecycle are unchanged.
         """
+        target_reference = self._target(target_reference)
         from ..runtime import typed_proposition
         from ..runtime.cross_fact_currentness import validate_source_ref
 
@@ -715,6 +840,7 @@ class AgentMemory:
         governed correction; it grants nothing, and only explicit historical/as-of recall
         may return a state-changed record, labelled as non-current historical evidence.
         """
+        target_reference = self._target(target_reference)
         temporal = declared_temporal(
             {"valid_from": valid_from, "valid_until": valid_until, "observed_at": observed_at}
         )
@@ -818,7 +944,7 @@ class AgentMemory:
                 refusal="semantic_proposal_not_open" if proposal else "semantic_proposal_not_found",
             )
         return self.correct(
-            proposal["target_reference"],
+            _CanonicalTarget(proposal["target_reference"]),
             proposal["replacement_text"],
             evidence=evidence,
             attestation=attestation,
@@ -850,6 +976,7 @@ class AgentMemory:
         the actual ``memory.dispute`` transition and exact fact UUID. This is deliberately
         separate from correction/supersession and grants no truth or currentness authority.
         """
+        target_reference = self._target(target_reference)
         self._require_open()
         target_fact = fact_uuid or self.runtime.adapter.current_fact_uuid(target_reference)
         if not target_fact:
@@ -920,6 +1047,7 @@ class AgentMemory:
         records its confidence; ``reference_time`` anchors current/prospective
         applicability. Intent only orders admitted candidates (ADR-039, proposed).
         """
+        logical_memory_refs = tuple(self._target(ref) for ref in logical_memory_refs)
         self._require_open()
         # Caller-provided context can narrow retrieval, never impersonate the
         # host-bound actor/project or add domains outside the handle's identity.
@@ -1042,6 +1170,7 @@ class AgentMemory:
         overrides: Mapping[str, object] | None = None,
     ) -> dict:
         """Tombstone by default; permanent deletion remains a stricter explicit request."""
+        target_reference = self._target(target_reference)
         self._require_open()
         if self.runtime.adapter.current_fact_uuid(target_reference) is None:
             return contract.result(
@@ -1074,6 +1203,7 @@ class AgentMemory:
 
     @_serialized
     def history(self, target_reference: str, *, fact_text: str | None = None) -> dict:
+        target_reference = self._target(target_reference)
         self._require_open()
         # No caller-visible distinction between nonexistent and foreign
         # histories. Check all known versions, not merely the current head.

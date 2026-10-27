@@ -189,6 +189,13 @@ class RecallContext:
     purpose: str = ""
 
 
+# #786: refusals that compose into a blocking decision with no selected action and an
+# undisclosed state version. An absent fact and a fact the requester's scope may not
+# touch are answered identically, so sequential fact UUIDs cannot enumerate another
+# project's memory through deletion or dispute.
+_UNAVAILABLE_TARGET_REFUSALS = frozenset({"write_target_unavailable", "fact_not_found"})
+
+
 class GovernedMemoryAdapter:
     """Wraps a permissive substrate in the governance it does not provide."""
 
@@ -1236,23 +1243,17 @@ class GovernedMemoryAdapter:
             return "fact_not_found"
         if fact.group_id != self._tenant:
             return "cross_tenant_dispute"
+        # #786: a known fact UUID is not authority to dispute a different
+        # project's fact. Eligibility is decided before any binding detail, and
+        # an ineligible fact is answered exactly like an absent one: fact UUIDs
+        # are sequential, so any distinct refusal would enumerate foreign facts.
+        if not self._proposal_scope_eligible(proposal, fact_uuid, fact.group_id):
+            return "fact_not_found"
         bound_memory = self._fact_memory.get(fact_uuid)
         if bound_memory is None:
             return "target_binding_unknown"
         if bound_memory != proposal.target_reference:
             return "target_binding_mismatch"
-        # #786: a known fact UUID is not authority to dispute a different
-        # project's fact. Same canonical scope guard as writes and deletion.
-        write_scope = self._write_scope(proposal)
-        context = RecallContext(
-            target_domain_refs=tuple(write_scope["domain_refs"]),
-            principal_ref=proposal.actor_id,
-            project_ref=proposal.project_ref,
-            task_ref=proposal.task_ref,
-            purpose=proposal.purpose,
-        )
-        if self._domain_identity_refusal(fact_uuid, fact.group_id, context) is not None:
-            return "write_target_unavailable"
         if fact_uuid in self._disputed:
             return "already_disputed"
         return None
@@ -1280,7 +1281,7 @@ class GovernedMemoryAdapter:
         propose_event = self._event("memory.propose", proposal.target_reference, correlation)
         decision = self.evaluate_proposal(proposal, evidence=evidence, attestation=attestation)
         refusal = self._dispute_refusal(proposal, fact_uuid)
-        if refusal == "write_target_unavailable":
+        if refusal in _UNAVAILABLE_TARGET_REFUSALS:
             decision = self._unavailable_target_decision(proposal, decision)
         authorize_event = self._event(
             "memory.authorize",
@@ -1296,16 +1297,16 @@ class GovernedMemoryAdapter:
         )
         events = [propose_event, authorize_event]
 
-        stale = False if refusal == "write_target_unavailable" else self._is_stale(proposal)
+        stale = False if refusal in _UNAVAILABLE_TARGET_REFUSALS else self._is_stale(proposal)
         selected = (
-            receipts.NO_ACTION if refusal == "write_target_unavailable"
+            receipts.NO_ACTION if refusal in _UNAVAILABLE_TARGET_REFUSALS
             else self._select_action(decision, proposal, blocked_by_stale=stale)
         )
         committed = refusal is None and selected == proposal.operation
         if refusal is None and stale:
             refusal = "stale_decision"
         before_state = (
-            "v0" if refusal == "write_target_unavailable"
+            "v0" if refusal in _UNAVAILABLE_TARGET_REFUSALS
             else f"v{self._state_version.get(proposal.target_reference, 0)}"
         )
 
@@ -1314,7 +1315,7 @@ class GovernedMemoryAdapter:
             self._state_version[proposal.target_reference] = self._state_version.get(proposal.target_reference, 0) + 1
 
         after_state = (
-            before_state if refusal == "write_target_unavailable"
+            before_state if refusal in _UNAVAILABLE_TARGET_REFUSALS
             else f"v{self._state_version.get(proposal.target_reference, 0)}"
         )
         receipt_id = self._ids.next()
@@ -1405,6 +1406,12 @@ class GovernedMemoryAdapter:
             return "fact_not_found"
         if fact.group_id != self._tenant:
             return "cross_tenant_delete"
+        # A valid tenant and fact->logical-memory binding does not authorize
+        # the requesting project to delete another project's fact (#786), and
+        # an ineligible fact is answered exactly like an absent one so that
+        # sequential fact UUIDs cannot enumerate another project's memory.
+        if not self._proposal_scope_eligible(proposal, fact_uuid, fact.group_id):
+            return "fact_not_found"
         bound_memory = self._fact_memory.get(fact_uuid)
         if bound_memory is None:
             # Unknown provenance is not permission -- same stance as Loop 3's
@@ -1412,8 +1419,10 @@ class GovernedMemoryAdapter:
             return "target_binding_unknown"
         if bound_memory != proposal.target_reference:
             return "target_binding_mismatch"
-        # A valid tenant and fact->logical-memory binding does not authorize
-        # the requesting project to delete another project's fact (#786).
+        return None
+
+    def _proposal_scope_eligible(self, proposal: policy.Proposal, fact_uuid: str, group_id: str) -> bool:
+        """The canonical scope guard of a mutation proposal against an existing fact (#786)."""
         write_scope = self._write_scope(proposal)
         context = RecallContext(
             target_domain_refs=tuple(write_scope["domain_refs"]),
@@ -1422,9 +1431,17 @@ class GovernedMemoryAdapter:
             task_ref=proposal.task_ref,
             purpose=proposal.purpose,
         )
-        if self._domain_identity_refusal(fact_uuid, fact.group_id, context) is not None:
-            return "write_target_unavailable"
-        return None
+        return self._domain_identity_refusal(fact_uuid, group_id, context) is None
+
+    def canonical_project_refs(self) -> frozenset[str]:
+        """Projects named by canonical scope metadata, including retained tombstones (#786).
+
+        Host-side store identity checks use this to keep a pre-profile legacy store
+        bound to the single project it already contains. It grants nothing.
+        """
+        return frozenset(
+            scope["project_ref"] for scope in self._fact_scope.values() if scope.get("project_ref")
+        )
 
     def governed_delete(
         self,
@@ -1474,18 +1491,18 @@ class GovernedMemoryAdapter:
         # fact must not report a tenant error, and a foreign fact must not report
         # a binding error.
         refusal = self._delete_refusal(proposal, fact_uuid)
-        if refusal == "write_target_unavailable":
+        if refusal in _UNAVAILABLE_TARGET_REFUSALS:
             decision = self._unavailable_target_decision(proposal, decision)
-        stale = False if refusal == "write_target_unavailable" else self._is_stale(proposal)
+        stale = False if refusal in _UNAVAILABLE_TARGET_REFUSALS else self._is_stale(proposal)
         selected = (
-            receipts.NO_ACTION if refusal == "write_target_unavailable"
+            receipts.NO_ACTION if refusal in _UNAVAILABLE_TARGET_REFUSALS
             else self._select_action(decision, proposal, blocked_by_stale=stale)
         )
         committed = refusal is None and selected == proposal.operation
         if refusal is None and stale:
             refusal = "stale_decision"
         before_state = (
-            "v0" if refusal == "write_target_unavailable"
+            "v0" if refusal in _UNAVAILABLE_TARGET_REFUSALS
             else f"v{self._state_version.get(proposal.target_reference, 0)}"
         )
 
@@ -1516,7 +1533,7 @@ class GovernedMemoryAdapter:
             timestamp=self._clock.now(),
             before_state=before_state,
             after_state=(
-                before_state if refusal == "write_target_unavailable"
+                before_state if refusal in _UNAVAILABLE_TARGET_REFUSALS
                 else f"v{self._state_version.get(proposal.target_reference, 0)}"
             ),
         )

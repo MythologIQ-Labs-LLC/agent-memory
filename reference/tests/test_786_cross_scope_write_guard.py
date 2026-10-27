@@ -10,7 +10,9 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from agentmem_ref import AgentMemory
+from agentmem_ref import AgentMemory  # noqa: F401
+
+from tests._tenant_wide_fixture import open_tenant_wide
 from agentmem_ref.memory import procedural_memory as pm
 
 TENANT = "tenant:write-target-786"
@@ -19,7 +21,7 @@ KEY = "memory:gateway-region"
 
 
 def open_in(root: Path, scope: str):
-    return AgentMemory.open(
+    return open_tenant_wide(
         root, tenant=TENANT, actor_id=ACTOR, scope=scope, purpose="786 guarded target replay",
     )
 
