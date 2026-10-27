@@ -197,7 +197,7 @@ class ProceduralMemoryRevocationTest(unittest.TestCase):
     PURPOSE = "release_planning"
 
     def setUp(self):
-        from agentmem_ref.adapter import Clock
+        from agentmem_ref.adapter import Clock, RecallContext
         from agentmem_ref.capabilities import ComponentRegistry
         from agentmem_ref.procedural_memory import (
             ProceduralMemoryRuntime,
@@ -212,7 +212,15 @@ class ProceduralMemoryRevocationTest(unittest.TestCase):
         registry = ComponentRegistry()
         registry.register(reference_procedural_component())
         self.runtime = ProceduralMemoryRuntime(
-            substrate=self.substrate, adapter=self.adapter, registry=registry
+            substrate=self.substrate,
+            adapter=self.adapter,
+            registry=registry,
+            revocation_context=RecallContext(
+                target_domain_refs=(self.SKILL_TENANT, self.SKILL_PROJECT),
+                principal_ref="agent:release",
+                project_ref=self.SKILL_PROJECT,
+                purpose=self.PURPOSE,
+            ),
         )
         self.artifact = SkillArtifact(
             skill_id="release-workflow",
