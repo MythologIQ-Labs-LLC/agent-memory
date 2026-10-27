@@ -6,6 +6,8 @@ import unittest
 from pathlib import Path
 
 from agentmem_ref import AgentMemory
+from agentmem_ref.api import contract
+from agentmem_ref.state.substrate import Episode
 
 
 TENANT = "tenant:786-runtime-boundary"
@@ -90,6 +92,43 @@ class RuntimeIdentityBoundaryTests(unittest.TestCase):
                 current = owner.history(KEY)["history"]
                 self.assertEqual(current["current_fact_uuid"], original_ref)
                 self.assertEqual(current["state_version"], original_version)
+
+
+    def test_rejected_foreign_write_cannot_persist_unapproved_episode(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            with AgentMemory.open(root, tenant=TENANT, actor_id=ACTOR, scope="project:a") as owner:
+                first = owner.remember(KEY, "Project A private state")
+                self.assertTrue(first["committed"], first)
+
+            with AgentMemory.open(root, tenant=TENANT, actor_id=ACTOR, scope="project:b") as outsider:
+                episode = Episode(
+                    uuid="episode:786-foreign-write",
+                    content="Unapproved foreign raw episode",
+                    source_description="adversarial fixture",
+                    valid_at="2026-10-26T12:00:00Z",
+                    group_id=TENANT,
+                )
+                proposal = contract.proposal_from_envelope(
+                    outsider._proposal(
+                        target_reference=KEY,
+                        fact_text="Overwrite project A",
+                        operation="promotion",
+                    )
+                )
+                with outsider.runtime.serialization_lock:
+                    outcome = outsider.runtime.adapter.commit_proposal(
+                        proposal, "Overwrite project A", episode=episode
+                    )
+                    stored = outsider.runtime.adapter.checkpoint_substrate().get_episode(
+                        episode.uuid
+                    )
+                self.assertFalse(outcome.committed, outcome)
+                self.assertEqual(outcome.refusal, "write_target_unavailable")
+                self.assertIsNone(
+                    stored,
+                    "A blocked write inserted its episode before governance authorized it",
+                )
 
 
 if __name__ == "__main__":
