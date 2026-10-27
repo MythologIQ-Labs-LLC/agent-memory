@@ -587,6 +587,9 @@ class ControlledRecallPlanner:
                 current = self.adapter.current_fact_uuid(logical_ref)
                 if current is None:
                     continue
+                seed = substrate.get_fact(current)
+                if seed is None or not self.adapter.domain_eligible(seed, context):
+                    continue
                 hits.append(
                     RetrievalRouteHit(
                         route_id=EXACT_IDENTITY_ROUTE,
@@ -640,7 +643,9 @@ class ControlledRecallPlanner:
             for logical_ref in unique_logical_refs[:graph_seed_limit]:
                 current = self.adapter.current_fact_uuid(logical_ref)
                 if current is not None:
-                    graph_seed_refs.append(current)
+                    seed = substrate.get_fact(current)
+                    if seed is not None and self.adapter.domain_eligible(seed, context):
+                        graph_seed_refs.append(current)
             graph_results = self.graph_retriever.search(
                 substrate,
                 tuple(graph_seed_refs),
@@ -648,6 +653,9 @@ class ControlledRecallPlanner:
                 candidate_limit=graph_budget.candidate_limit,
             )
             for graph_hit in graph_results:
+                candidate = substrate.get_fact(graph_hit.candidate_ref)
+                if candidate is None or not self.adapter.domain_eligible(candidate, context):
+                    continue
                 graph_candidate_hits[graph_hit.candidate_ref] = graph_hit
                 hits.append(
                     RetrievalRouteHit(
@@ -659,7 +667,9 @@ class ControlledRecallPlanner:
                         currentness_basis=graph_hit.currentness_basis,
                     )
                 )
-            route_counts[TYPED_GRAPH_ROUTE] = len(graph_results)
+            route_counts[TYPED_GRAPH_ROUTE] = sum(
+                hit.route_id == TYPED_GRAPH_ROUTE for hit in hits
+            )
 
         shared_budget = plan.budget_for(SHARED_EVIDENCE_ROUTE)
         if (
@@ -680,6 +690,7 @@ class ControlledRecallPlanner:
                     logical_memory_ref=logical_ref,
                     expanded_seeds=expanded_seeds,
                     candidate_limit=remaining,
+                    eligible=lambda fact: self.adapter.domain_eligible(fact, context),
                 )
                 remaining -= added
 
@@ -706,6 +717,7 @@ class ControlledRecallPlanner:
                     logical_memory_ref="",
                     expanded_seeds=expanded_seeds,
                     candidate_limit=remaining,
+                    eligible=lambda fact: self.adapter.domain_eligible(fact, context),
                 )
                 remaining -= added
             route_counts[SHARED_EVIDENCE_ROUTE] = shared_budget.candidate_limit - remaining
@@ -797,11 +809,15 @@ class ControlledRecallPlanner:
         logical_memory_ref: str,
         expanded_seeds: set[str],
         candidate_limit: int,
+        eligible,
     ) -> int:
         if seed_ref in expanded_seeds or candidate_limit <= 0:
             return 0
         seed_fact = substrate.get_fact(seed_ref)
-        if seed_fact is None or seed_fact.is_event_invalid or seed_fact.is_transaction_expired:
+        if (
+            seed_fact is None or seed_fact.is_event_invalid
+            or seed_fact.is_transaction_expired or not eligible(seed_fact)
+        ):
             return 0
         expanded_seeds.add(seed_ref)
         added = 0
@@ -809,6 +825,8 @@ class ControlledRecallPlanner:
             seed_ref,
             group_ids=[tenant],
         ):
+            if not eligible(fact):
+                continue
             if added >= candidate_limit:
                 break
             hits.append(
