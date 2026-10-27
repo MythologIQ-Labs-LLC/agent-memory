@@ -100,6 +100,15 @@ raw discovery matches
 - **No score cutoff.** Ranking policy 3.2.0 (3.1.2 before #669) declares route scores not cross-comparable, so a cutoff has no meaning until a fusion stage exists (#673).
 - **Module-level `recall`** (the adapter path) has no ranking stage; its prefix is taken in admission order, which `return_policy.basis` does not yet distinguish.
 - **Facade**: `AgentMemory.recall(query, ..., budget=None)`; `budget=0` fails schema validation before any runtime call.
+- **#786 candidate (unqualified, not published)**: A facade opened with
+  `AgentMemory.open(..., task_ref="task:trusted")` binds that optional task identity
+  to both new write proposals and recall admission. Omitting it binds the handle
+  to the unscoped task context and cannot authorize task-specific facts.
+  `AgentMemory.recall(task_ref=...)` may restate the same bound value, but cannot
+  switch tasks, even within the same project. The host must establish task
+  identity; the model/query is not an authority source. This is a protected
+  security candidate and requires SQLite replay, regression qualification
+  and independent acceptance before any default or contract publication.
 - **Semantic vector route (#669).** `AgentMemory.open(..., semantic_retrieval="off"|"auto"|"required", representation_dir=None)`. The default is `off`.
   - When enabled, the pinned ONNX provider (optional extra `semantic`) adds domain-eligible candidates through the same governed admission.
   - Under ranking policy 3.2.0 (and 3.3.0), similarity is ordering-subordinate: it never counts toward corroboration, never moves a lexical score, and orders only after every relevance and temporal stage.
