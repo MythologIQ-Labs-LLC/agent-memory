@@ -175,7 +175,7 @@ class RuntimeIdentityBoundaryTests(unittest.TestCase):
     def test_invalid_host_task_identity_does_not_create_runtime_root(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory) / "not-created"
-            for invalid in (" task:a ", "task:e\\u0301", "task:\\x00private"):
+            for invalid in (" task:a ", "task:e\u0301", "task:\x00private"):
                 with self.subTest(task=invalid), self.assertRaisesRegex(ValueError, "task_ref"):
                     AgentMemory.open(
                         target, tenant=TENANT, actor_id=ACTOR, scope="project:a",
