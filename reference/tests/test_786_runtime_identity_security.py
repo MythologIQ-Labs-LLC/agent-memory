@@ -40,6 +40,30 @@ class RuntimeIdentityBoundaryTests(unittest.TestCase):
                 own = owner.recall("Private gateway region")
                 self.assertIn(first["fact_uuid"], own["admitted"])
 
+    def test_exact_seed_must_not_reveal_foreign_candidate_or_provenance(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            with AgentMemory.open(root, tenant=TENANT, actor_id=ACTOR, scope="project:a") as owner:
+                saved = owner.remember(KEY, "Hidden seed belongs to project A")
+                self.assertTrue(saved["committed"], saved)
+
+            with AgentMemory.open(root, tenant=TENANT, actor_id=ACTOR, scope="project:b") as outsider:
+                result = outsider.recall(
+                    "Hidden seed",
+                    logical_memory_refs=(KEY,),
+                )
+                self.assertNotIn(saved["fact_uuid"], result["candidates"])
+                self.assertNotIn(saved["fact_uuid"], result["admitted"])
+                self.assertNotIn(saved["fact_uuid"], repr(result))
+                self.assertNotIn(
+                    "shared_evidence_refs", repr(result.get("admissions", {})),
+                    "A foreign graph seed must never materialize a route hit",
+                )
+
+            with AgentMemory.open(root, tenant=TENANT, actor_id=ACTOR, scope="project:a") as owner:
+                result = owner.recall("Hidden seed", logical_memory_refs=(KEY,))
+                self.assertIn(saved["fact_uuid"], result["admitted"])
+
     def test_history_is_unknown_for_foreign_scope_before_and_after_restart(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
