@@ -1,0 +1,51 @@
+{
+  "acceptance": "NOT GRANTED: requires an independent reviewer's decision recorded in META_LEDGER",
+  "evidence_verified": false,
+  "replays": [
+    {
+      "problems": [
+        "re-execution produced different observations"
+      ],
+      "reexecuted": false,
+      "replay": "cross-scope-write-authority-denial-v3",
+      "status": "TAMPERED",
+      "verdict": "PASS"
+    },
+    {
+      "problems": [
+        "re-execution produced different observations"
+      ],
+      "reexecuted": false,
+      "replay": "deleted-lineage-generations-and-restart-v3",
+      "status": "TAMPERED",
+      "verdict": "PASS"
+    },
+    {
+      "problems": [
+        "re-execution produced different observations"
+      ],
+      "reexecuted": false,
+      "replay": "public-tombstone-redaction-and-observer-separation-v3",
+      "status": "TAMPERED",
+      "verdict": "PASS"
+    },
+    {
+      "problems": [
+        "re-execution produced different observations"
+      ],
+      "reexecuted": false,
+      "replay": "evidence-reference-authorization-v1",
+      "status": "TAMPERED",
+      "verdict": "PASS"
+    },
+    {
+      "problems": [
+        "runtime files differ from the evidence source commit"
+      ],
+      "reexecuted": false,
+      "replay": "scope-safe-graph-discovery-v2",
+      "status": "STALE",
+      "verdict": "PASS"
+    }
+  ]
+}
