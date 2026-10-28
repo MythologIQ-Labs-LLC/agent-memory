@@ -1,13 +1,13 @@
 # Successor security replays on the supported scope-distinct store (DSL/5): preregistration
 
-Frozen before first execution at the commit that adds this file.
+Frozen before first execution. First authored at `4d807b89`; revised after the independent pre-execution review (`PREEXECUTION_REVIEW.md`) and re-authored at base `9eb72391`, still unexecuted.
 
 | Successor | Supersedes | Cases | Changed or new |
 |---|---|---|---|
-| `cross-scope-write-authority-denial-v4` | `-v3` (DSL/2) | 15 | 11 (W1, W3, W4, W4b, W6, W7, W7c, W8b, W8; new W1h, W2h) |
-| `deleted-lineage-generations-and-restart-v4` | `-v3` (DSL/2) | 10 | 2 (L3, L4) |
-| `public-tombstone-redaction-and-observer-separation-v4` | `-v3` (DSL/2) | 8 | 2 (R6b, R5) |
-| `evidence-reference-authorization-v2` | `-v1` (DSL/3) | 13 | 0 |
+| `cross-scope-write-authority-denial-v4` | `-v3` (DSL/2) | 17 | 14 (W1, W2 (disposition), W3, W4, W4b, W6, W7, W7c, W8b, W8; new W1h, W2h, W7c-h, W8-h) |
+| `deleted-lineage-generations-and-restart-v4` | `-v3` (DSL/2) | 11 | 3 (L3, L4; new L3-h) |
+| `public-tombstone-redaction-and-observer-separation-v4` | `-v3` (DSL/2) | 8 | 3 (R3 (disposition), R6b, R5) |
+| `evidence-reference-authorization-v2` | `-v1` (DSL/3) | 16 | 6 (E6, E6a, E6r (dispositions); new E6-h, E6a-h, E6r-h) |
 
 - **Runner:** `reference/run_786_security_replays_dsl5.py`. It subclasses the byte-frozen DSL/1–3 runners, which are not
   edited. Every handle is opened through the public `AgentMemory.open(..., store_profile="scope_distinct_v1")`.

@@ -11,7 +11,7 @@
   "path": "reference/fixtures/786-security-replays/public-tombstone-redaction-and-observer-separation-v3.json",
   "sha256": "80338243a6f4a995dccd7b90f7e6688728fb6a4bf11753b06d8d522996b3f8e4"
  },
- "base_commit": "6a12e1cdea3cd1dd4f01531e6b1ed45c7d8e1bf6",
+ "base_commit": "9eb723911baa5b5b05593a8bf7ecd01335969d30",
  "independence": "Expected outcomes were written from the contract documents listed in contract_sources at base_commit, clause by clause (`clauses` on every case), before this fixture was first executed by the runner, and compared to those clauses by a separate reviewer before that first execution (the record is committed beside the evidence). A failing expectation is a finding, never a reason to edit this fixture; a corrected expectation requires a superseding -v4 with a recorded reason. Observables listed under `implementation_evidence` are recorded, never expected, and never count toward acceptance; observables listed under `controls` are positive controls expected for falsifiability (a refuse-everything runtime must fail), not derivations of a clause. No frozen holdout phrase or #644 fixture vocabulary is used.",
  "stop_lines": [
   "no fixture edit after first execution; supersede with -v4 and record why",
@@ -28,7 +28,7 @@
   },
   {
    "path": "docs/44-public-api-contract.md",
-   "sha256_at_base": "c6ba13869a20129ecf6d25dc3c6a34ab55b36a9a50ba8035236a60500be7e639"
+   "sha256_at_base": "f46abd06042889f1e6932a500241a1a409d38cb54dfd0fdf642e938fc8160d9b"
   },
   {
    "path": "docs/786-cross-scope-write-authority.md",
@@ -582,7 +582,8 @@
      "eq": "v2"
     }
    },
-   "dsl5_disposition": "carried forward unchanged: its observables do not depend on the store profile"
+   "record": [],
+   "dsl5_disposition": "On a scope-distinct store B's re-creation is B's own memory, so this case tests that A's deleted view is stable under namespacing. Cross-scope re-creation of A's canonical id is exercised by the host-layer variants W7c-h, W8-h, L3-h and E6-h (pre-execution review F-5). Expectations unchanged."
   },
   {
    "id": "R4-derived-from-deleted-withheld-live-derivation-kept",
@@ -1029,7 +1030,8 @@
       "early",
       "late",
       "v2",
-      "project:a"
+      "project:a",
+      "memory:t@2"
      ]
     },
     "a_back": {
@@ -1086,5 +1088,8 @@
    "record": [],
    "dsl5_disposition": "A's own deleted id stays open to A (SD, OPEN). B's history still carries only its own events."
   }
+ ],
+ "residuals": [
+  "Host-layer correct, permanent deletion and dispute by logical reference naming another project's canonical memory are not replayed by DSL/5, which has host steps for promotion (commit_with_episode) and governed pruning (delete_version) only. That canonical gate is covered by reference/tests/test_786_cross_scope_write_authority.py and test_786_cross_scope_write_guard.py on the tenant-wide test fixture (pre-execution review F-6)."
  ]
 }

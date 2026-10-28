@@ -11,7 +11,7 @@
   "path": "reference/fixtures/786-security-replays/evidence-reference-authorization-v1.json",
   "sha256": "fed458c85afa1f812c864d8a208578986b5803be5f9dce1a3d8ae888d4e33ae5"
  },
- "base_commit": "6a12e1cdea3cd1dd4f01531e6b1ed45c7d8e1bf6",
+ "base_commit": "9eb723911baa5b5b05593a8bf7ecd01335969d30",
  "independence": "Expected outcomes were written from the contract documents listed in contract_sources at base_commit, clause by clause (`clauses` on every case), and compared to those clauses by a separate reviewer before the runner's first execution. A failing expectation is a finding, never a reason to edit this fixture; a corrected expectation requires a superseding -v2 of this generation with a recorded reason. This fixture declares no `controls`; observables under `implementation_evidence` are recorded, never expected. No frozen holdout phrase, #644 or -v3 fixture vocabulary is used.",
  "stop_lines": [
   "no fixture edit after first execution; supersede and record why",
@@ -24,7 +24,7 @@
  "contract_sources": [
   {
    "path": "docs/44-public-api-contract.md",
-   "sha256_at_base": "c6ba13869a20129ecf6d25dc3c6a34ab55b36a9a50ba8035236a60500be7e639"
+   "sha256_at_base": "f46abd06042889f1e6932a500241a1a409d38cb54dfd0fdf642e938fc8160d9b"
   },
   {
    "path": "docs/786-cross-scope-write-authority.md",
@@ -64,7 +64,7 @@
   {
    "falsified_by": "the foreign citation withheld at any point, or B's own derivation surviving B's deletion",
    "id": "E6",
-   "statement": "B may re-create A's deleted id; B's derivation of its own new generation follows B's own deletion while B's citation of A's deleted fact stays admitted throughout, live and after reopen; a chain of B's memories rooted in A's deleted fact is admitted end to end."
+   "statement": "B's citation of A's deleted fact stays admitted throughout. When B re-creates A's deleted id at the canonical layer (host-built: E6-h, E6a-h, E6r-h), B's derivation of that generation follows B's own deletion of it, live and after reopen; through the facade B's same public key is B's own memory (E6, E6a, E6r). A chain of B's memories rooted in A's deleted fact is admitted end to end."
   }
  ],
  "cases": [
@@ -3482,7 +3482,8 @@
      "text": "Quillon ferry berth digest xi"
     }
    ],
-   "dsl5_disposition": "carried forward unchanged: its observables do not depend on the store profile"
+   "record": [],
+   "dsl5_disposition": "Through the facade, B's memory:q is B's own memory. B's re-creation of A's deleted canonical id is E6-h (pre-execution review F-5). Expectations unchanged."
   },
   {
    "clauses": [
@@ -3620,7 +3621,8 @@
      "require_committed": true
     }
    ],
-   "dsl5_disposition": "carried forward unchanged: its observables do not depend on the store profile"
+   "record": [],
+   "dsl5_disposition": "Through the facade, B's memory:q is B's own memory; the canonical-layer variant is E6a-h. Expectations unchanged."
   },
   {
    "clauses": [
@@ -3761,7 +3763,8 @@
      "op": "reopen"
     }
    ],
-   "dsl5_disposition": "carried forward unchanged: its observables do not depend on the store profile"
+   "record": [],
+   "dsl5_disposition": "Through the facade, B's memory:q is B's own memory; the canonical-layer variant is E6r-h. Expectations unchanged."
   },
   {
    "clauses": [
@@ -3898,6 +3901,469 @@
     }
    ],
    "dsl5_disposition": "carried forward unchanged: its observables do not depend on the store profile"
+  },
+  {
+   "clauses": [
+    {
+     "clause": "An id with no live head (never written or governed-deleted) is open to any writer in the tenant: creation and the #776 re-creation of a deleted id as a fresh generation are unchanged.",
+     "observables": [
+      "recreated"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "Versions are generation-relative: `state_version`, `state_snapshot`, `before_state` and `after_state` count within the live generation of a logical id. After a governed deletion of the head the id reports `0` to any writer, a re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one",
+     "observables": [
+      "recreated"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "A write citing a reference outside the writer's scope therefore commits, reads back and stays admitted exactly as a write citing an id nobody wrote: the same receipt, `history`, recall payload and `write_semantics`, live, after a reopen and after a restart, and whether or not the cited fact is later pruned or permanently deleted.",
+     "observables": [
+      "bf_before"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "A reference in `evidence_refs` becomes a canonical derivation link of the committed fact, and so carries deletion taint (`derived_from_tombstoned_source`, `derived_from_deleted_logical_memory`), only when it names a fact of the tenant the writer is eligible to read under the gates above; the decision is made once at commit and recorded with the fact.",
+     "observables": [
+      "bo_before"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "An id with no live head (never written or governed-deleted) is open to any writer in the tenant: creation and the #776 re-creation of a deleted id as a fresh generation are unchanged.",
+     "observables": [
+      "recreated"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "At the fact level (`dispute` of a tombstoned fact by its uuid, a governed pruning of one of its versions, the adapter's delete of a member of a deleted lineage) the answer is `already_deleted`; at the facade's logical-reference level (`forget`, permanent `forget`, `correct`, `dispute` by `target_reference`) the former owner reads the bare `fact_not_found` result, because the reference has no visible head.",
+     "observables": [
+      "bf_before",
+      "bo_before",
+      "recreated"
+     ]
+    }
+   ],
+   "expect": {
+    "bf_before": {
+     "eq": true
+    },
+    "bo_before": {
+     "eq": true
+    },
+    "recreated": {
+     "eq": "v1"
+    }
+   },
+   "id": "E6-h-host-built-re-creation-by-the-citing-scope",
+   "invariants": [
+    "E6"
+   ],
+   "probes": {
+    "bf_before": {
+     "as": "project:b",
+     "fact": "bf",
+     "logical_refs": [
+      "memory:bf"
+     ],
+     "probe": "recall_admits",
+     "query": "Quillon ferry berth digest nu"
+    },
+    "bo_before": {
+     "as": "project:b",
+     "fact": "bo",
+     "logical_refs": [
+      "memory:bo"
+     ],
+     "probe": "recall_admits",
+     "query": "Quillon ferry berth digest xi"
+    },
+    "recreated": {
+     "field": "after_state",
+     "name": "recreate",
+     "probe": "op_result"
+    }
+   },
+   "steps": [
+    {
+     "label": "q1",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "north"
+     },
+     "ref": "memory:q",
+     "require_committed": true,
+     "text": "Quillon ferry berth is north"
+    },
+    {
+     "label": "q2",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "south"
+     },
+     "ref": "memory:q2",
+     "require_committed": true,
+     "text": "Quillon ferry berth is south"
+    },
+    {
+     "op": "forget",
+     "ref": "memory:q",
+     "require_committed": true
+    },
+    {
+     "as": "project:b",
+     "evidence_refs": [
+      "q1"
+     ],
+     "label": "bf",
+     "op": "remember",
+     "ref": "memory:bf",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest nu"
+    },
+    {
+     "op": "commit_with_episode",
+     "ref": "memory:q",
+     "ref_scope": "project:a",
+     "episode": "episode:q-b",
+     "text": "Quillon ferry berth is east",
+     "as": "project:b",
+     "label": "q-b",
+     "name": "recreate",
+     "require_committed": true
+    },
+    {
+     "as": "project:b",
+     "evidence_refs": [
+      "q-b"
+     ],
+     "label": "bo",
+     "name": "bo",
+     "op": "remember",
+     "ref": "memory:bo",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest xi"
+    }
+   ],
+   "record": [],
+   "dsl5_disposition": "host-layer variant (pre-execution review F-5): B re-creates A's deleted canonical id through the host layer and, where the -v3 case does, deletes its own generation there. Expectations are the -v1 ones."
+  },
+  {
+   "clauses": [
+    {
+     "clause": "A write citing a reference outside the writer's scope therefore commits, reads back and stays admitted exactly as a write citing an id nobody wrote: the same receipt, `history`, recall payload and `write_semantics`, live, after a reopen and after a restart, and whether or not the cited fact is later pruned or permanently deleted.",
+     "observables": [
+      "bf_after"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "Within the writer's own scope the #776/#777 rule is unchanged: direct and transitive derivations of a deleted source are withheld tenant-wide, including after the source's payload is physically erased, and a dependency bound while the writer was a member of a shared domain survives the writer's later revocation.",
+     "observables": [
+      "bo_after"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "A reference in `evidence_refs` becomes a canonical derivation link of the committed fact, and so carries deletion taint (`derived_from_tombstoned_source`, `derived_from_deleted_logical_memory`), only when it names a fact of the tenant the writer is eligible to read under the gates above; the decision is made once at commit and recorded with the fact.",
+     "observables": [
+      "bo_after"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "An id with no live head (never written or governed-deleted) is open to any writer in the tenant: creation and the #776 re-creation of a deleted id as a fresh generation are unchanged.",
+     "observables": []
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "At the fact level (`dispute` of a tombstoned fact by its uuid, a governed pruning of one of its versions, the adapter's delete of a member of a deleted lineage) the answer is `already_deleted`; at the facade's logical-reference level (`forget`, permanent `forget`, `correct`, `dispute` by `target_reference`) the former owner reads the bare `fact_not_found` result, because the reference has no visible head.",
+     "observables": [
+      "bf_after",
+      "bo_after"
+     ]
+    }
+   ],
+   "expect": {
+    "bf_after": {
+     "eq": true
+    },
+    "bo_after": {
+     "eq": false
+    }
+   },
+   "id": "E6a-h-after-the-citing-scopes-own-host-built-deletion",
+   "invariants": [
+    "E6"
+   ],
+   "probes": {
+    "bf_after": {
+     "as": "project:b",
+     "fact": "bf",
+     "logical_refs": [
+      "memory:bf"
+     ],
+     "probe": "recall_admits",
+     "query": "Quillon ferry berth digest nu"
+    },
+    "bo_after": {
+     "as": "project:b",
+     "fact": "bo",
+     "logical_refs": [
+      "memory:bo"
+     ],
+     "probe": "recall_admits",
+     "query": "Quillon ferry berth digest xi"
+    }
+   },
+   "steps": [
+    {
+     "label": "q1",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "north"
+     },
+     "ref": "memory:q",
+     "require_committed": true,
+     "text": "Quillon ferry berth is north"
+    },
+    {
+     "label": "q2",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "south"
+     },
+     "ref": "memory:q2",
+     "require_committed": true,
+     "text": "Quillon ferry berth is south"
+    },
+    {
+     "op": "forget",
+     "ref": "memory:q",
+     "require_committed": true
+    },
+    {
+     "as": "project:b",
+     "evidence_refs": [
+      "q1"
+     ],
+     "label": "bf",
+     "op": "remember",
+     "ref": "memory:bf",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest nu"
+    },
+    {
+     "op": "commit_with_episode",
+     "ref": "memory:q",
+     "ref_scope": "project:a",
+     "episode": "episode:q-b",
+     "text": "Quillon ferry berth is east",
+     "as": "project:b",
+     "label": "q-b",
+     "name": "recreate",
+     "require_committed": true
+    },
+    {
+     "as": "project:b",
+     "evidence_refs": [
+      "q-b"
+     ],
+     "label": "bo",
+     "name": "bo",
+     "op": "remember",
+     "ref": "memory:bo",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest xi"
+    },
+    {
+     "op": "delete_version",
+     "ref": "memory:q",
+     "ref_scope": "project:a",
+     "fact": "q-b",
+     "as": "project:b",
+     "require_committed": true
+    }
+   ],
+   "record": [],
+   "dsl5_disposition": "host-layer variant (pre-execution review F-5): B re-creates A's deleted canonical id through the host layer and, where the -v3 case does, deletes its own generation there. Expectations are the -v1 ones."
+  },
+  {
+   "clauses": [
+    {
+     "clause": "A write citing a reference outside the writer's scope therefore commits, reads back and stays admitted exactly as a write citing an id nobody wrote: the same receipt, `history`, recall payload and `write_semantics`, live, after a reopen and after a restart, and whether or not the cited fact is later pruned or permanently deleted.",
+     "observables": [
+      "bf_after_reopen"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "Within the writer's own scope the #776/#777 rule is unchanged: direct and transitive derivations of a deleted source are withheld tenant-wide, including after the source's payload is physically erased, and a dependency bound while the writer was a member of a shared domain survives the writer's later revocation.",
+     "observables": [
+      "bo_after_reopen"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "clause": "A reference in `evidence_refs` becomes a canonical derivation link of the committed fact, and so carries deletion taint (`derived_from_tombstoned_source`, `derived_from_deleted_logical_memory`), only when it names a fact of the tenant the writer is eligible to read under the gates above; the decision is made once at commit and recorded with the fact.",
+     "observables": [
+      "bo_after_reopen"
+     ],
+     "source": "docs/44-public-api-contract.md"
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "An id with no live head (never written or governed-deleted) is open to any writer in the tenant: creation and the #776 re-creation of a deleted id as a fresh generation are unchanged.",
+     "observables": []
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "At the fact level (`dispute` of a tombstoned fact by its uuid, a governed pruning of one of its versions, the adapter's delete of a member of a deleted lineage) the answer is `already_deleted`; at the facade's logical-reference level (`forget`, permanent `forget`, `correct`, `dispute` by `target_reference`) the former owner reads the bare `fact_not_found` result, because the reference has no visible head.",
+     "observables": [
+      "bf_after_reopen",
+      "bo_after_reopen"
+     ]
+    }
+   ],
+   "expect": {
+    "bf_after_reopen": {
+     "eq": true
+    },
+    "bo_after_reopen": {
+     "eq": false
+    }
+   },
+   "id": "E6r-h-after-the-citing-scopes-own-host-built-deletion-and-reopen",
+   "invariants": [
+    "E6"
+   ],
+   "probes": {
+    "bf_after_reopen": {
+     "as": "project:b",
+     "fact": "bf",
+     "logical_refs": [
+      "memory:bf"
+     ],
+     "probe": "recall_admits",
+     "query": "Quillon ferry berth digest nu"
+    },
+    "bo_after_reopen": {
+     "as": "project:b",
+     "fact": "bo",
+     "logical_refs": [
+      "memory:bo"
+     ],
+     "probe": "recall_admits",
+     "query": "Quillon ferry berth digest xi"
+    }
+   },
+   "steps": [
+    {
+     "label": "q1",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "north"
+     },
+     "ref": "memory:q",
+     "require_committed": true,
+     "text": "Quillon ferry berth is north"
+    },
+    {
+     "label": "q2",
+     "op": "remember",
+     "prop": {
+      "a": "berth",
+      "assertion": "state",
+      "cardinality": "single",
+      "s": "Quillon ferry",
+      "v": "south"
+     },
+     "ref": "memory:q2",
+     "require_committed": true,
+     "text": "Quillon ferry berth is south"
+    },
+    {
+     "op": "forget",
+     "ref": "memory:q",
+     "require_committed": true
+    },
+    {
+     "as": "project:b",
+     "evidence_refs": [
+      "q1"
+     ],
+     "label": "bf",
+     "op": "remember",
+     "ref": "memory:bf",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest nu"
+    },
+    {
+     "op": "commit_with_episode",
+     "ref": "memory:q",
+     "ref_scope": "project:a",
+     "episode": "episode:q-b",
+     "text": "Quillon ferry berth is east",
+     "as": "project:b",
+     "label": "q-b",
+     "name": "recreate",
+     "require_committed": true
+    },
+    {
+     "as": "project:b",
+     "evidence_refs": [
+      "q-b"
+     ],
+     "label": "bo",
+     "name": "bo",
+     "op": "remember",
+     "ref": "memory:bo",
+     "require_committed": true,
+     "text": "Quillon ferry berth digest xi"
+    },
+    {
+     "op": "delete_version",
+     "ref": "memory:q",
+     "ref_scope": "project:a",
+     "fact": "q-b",
+     "as": "project:b",
+     "require_committed": true
+    },
+    {
+     "op": "reopen"
+    }
+   ],
+   "record": [],
+   "dsl5_disposition": "host-layer variant (pre-execution review F-5): B re-creates A's deleted canonical id through the host layer and, where the -v3 case does, deletes its own generation there. Expectations are the -v1 ones."
   }
+ ],
+ "residuals": [
+  "Host-layer correct, permanent deletion and dispute by logical reference naming another project's canonical memory are not replayed by DSL/5, which has host steps for promotion (commit_with_episode) and governed pruning (delete_version) only. That canonical gate is covered by reference/tests/test_786_cross_scope_write_authority.py and test_786_cross_scope_write_guard.py on the tenant-wide test fixture (pre-execution review F-6)."
  ]
 }
