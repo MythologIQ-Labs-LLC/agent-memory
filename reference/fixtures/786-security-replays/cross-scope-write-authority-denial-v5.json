@@ -1,0 +1,3423 @@
+{
+ "replay_id": "cross-scope-write-authority-denial-v5",
+ "fixture_version": 5,
+ "dsl_version": "786-security-replay-dsl/5",
+ "store_profile": "scope_distinct_v1",
+ "owning_issue": 786,
+ "frozen_on": "2026-10-28",
+ "status": "supersedes_v4_after_its_first_execution",
+ "supersession_reason": "First execution of -v4 at a99f1ee7: W1h h_mentions observed ['v1'], because the bare token matched the proposal's own charter_version ('charter:local-v1') in the host-layer CommitResult. It was not a version of the owner's memory. This is a fixture-token defect; -v4 is not edited. The one change: that token becomes \"'v1'\" (a version value in the result's repr). author_fixtures_dsl5_v5.py.",
+ "superseded_fixture": {
+  "path": "reference/fixtures/786-security-replays/cross-scope-write-authority-denial-v4.json",
+  "sha256": "f385f261be608f7ac880fb2f00ad6222e5851889f273670256e05ac6b9b74df0"
+ },
+ "base_commit": "9c23b1429ede742eab155bd8ee4d9ed2ec773bb1",
+ "independence": "Expected outcomes were written from the contract documents listed in contract_sources at base_commit, clause by clause (`clauses` on every case), before this fixture was first executed by the runner, and compared to those clauses by a separate reviewer before that first execution (the record is committed beside the evidence). A failing expectation is a finding, never a reason to edit this fixture; a corrected expectation requires a superseding -v4 with a recorded reason. Observables listed under `implementation_evidence` are recorded, never expected, and never count toward acceptance; observables listed under `controls` are positive controls expected for falsifiability (a refuse-everything runtime must fail), not derivations of a clause. No frozen holdout phrase or #644 fixture vocabulary is used.",
+ "stop_lines": [
+  "no fixture edit after first execution; supersede with -v4 and record why",
+  "no expectation weakened to obtain PASS",
+  "no runtime change motivated by a replay outcome without a preregistered reproducer",
+  "a replay verdict is evidence, not successor acceptance; acceptance requires independent review",
+  "a complete-scope override proves host re-declaration, never end-user isolation"
+ ],
+ "title": "On a scope-distinct store a public key names one memory per project; no project's operation moves, discloses or depends on another's, and the canonical write gate refuses host-built proposals naming another project's memory",
+ "contract_sources": [
+  {
+   "path": "docs/786-cross-scope-write-authority.md",
+   "sha256_at_base": "1dfa1e6b3fd1d9bc13d8b6dfac6c2b68edc58cfbec30cb6387e425f402e76b0a"
+  },
+  {
+   "path": "docs/44-public-api-contract.md",
+   "sha256_at_base": "f46abd06042889f1e6932a500241a1a409d38cb54dfd0fdf642e938fc8160d9b"
+  },
+  {
+   "path": "docs/plan-776-777-772-exact-head-qualification.md",
+   "sha256_at_base": "c8e724ae8cf58c0e61814c69cccff24c546b222dd6d4908b5d1b552b15734922"
+  }
+ ],
+ "invariants": [
+  {
+   "id": "W1",
+   "statement": "Another project's promotion of the same public key creates that project's own memory (receipt v0 -> v1, snapshot v0) and leaves the owner's head, version, recall and history byte-identical; a host-built promotion from another project that names the owner's canonical memory is refused with target_unavailable, v0/v0, retains no episode and discloses nothing (W1h).",
+   "falsified_by": "a commit, any other refusal token, a non-v0 state, or any owner-side change"
+  },
+  {
+   "id": "W2",
+   "statement": "correct, forget, permanent forget and dispute from another project of a public key it never wrote read byte-identically (ids and timestamps folded) to the same call on an id nobody wrote, and change nothing; a host-built governed pruning from another project naming the owner's canonical memory reads fact_not_found and changes nothing (W2h).",
+   "falsified_by": "any difference from the unknown-id result, a tombstone, a dispute mark or an invalidated head"
+  },
+  {
+   "id": "W3",
+   "statement": "Across restarts, another project's writes to the same public key act only on its own memory, which it may correct and delete like any owner; the owner's head, version, history and recall never move.",
+   "falsified_by": "a commit after a reopen"
+  },
+  {
+   "id": "W4",
+   "statement": "An override leaving required isolation domains outside the bound domains is malformed (ValueError with one fixed message, checked first); every other override that changes the handle's project or isolation domains -- a superset naming the owner's project, or a complete re-declaration of the owner's scope -- is refused with ValueError for any target and operation, so nothing is written, deleted or disputed (facade identity binding, store-open 1.0.0).",
+   "falsified_by": "a result instead of ValueError, a ValueError whose message differs by target, a commit of remember/correct under the superset override, or a documented disposition silently changing"
+  },
+  {
+   "id": "W5",
+   "statement": "The owner's own remember, correct and dispute stay admitted (a disputed head is recorded as disputed and, as documented, withheld from the owner's own admission while staying a visible candidate), and the same text in an unrelated memory of another project is independent.",
+   "falsified_by": "an owner operation refused, or either project's recall admitting the other's fact"
+  },
+  {
+   "id": "W6",
+   "statement": "A host-built proposal from another project naming the owner's canonical memory, and one parked by policy review, persist no episode, live and after restart; a committed proposal keeps its episode.",
+   "falsified_by": "an episode retrievable after a refusal or review park, or absent after a commit"
+  },
+  {
+   "id": "W7",
+   "statement": "Another project's operations on the same public key, and its attempts on the owner's fact by uuid, leave no event, identifier or text in the owner's history; a former owner may re-create its own deleted id whatever another project does with the same public key, and its fact-level answers on the deleted generation stay already_deleted; the other project's history names only its own memory.",
+   "falsified_by": "any extra event, identifier or text in the live generation's history, a non-blank view for the refused project, or a former-owner answer that differs between the control and the re-creation case"
+  },
+  {
+   "id": "W8",
+   "statement": "Generations are counted per (project, key): another project's first write is its own generation (v0 -> v1); the owner's re-creation of its deleted id starts its own counter; a refused or policy-parked proposal on a tombstoned or new id reports v0; the owner's deleted view keeps the version its deletion recorded until it re-creates.",
+   "falsified_by": "the former count in any writer's receipt, snapshot or history, a changed former-owner view, or a former-owner act admitted"
+  }
+ ],
+ "cases": [
+  {
+   "id": "W1-remember-over-live-head",
+   "invariants": [
+    "W1"
+   ],
+   "clauses": [
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "`remember` onto a live head outside the writer's scope: `committed: false`, `refusal: \"target_unavailable\"`, receipt `before_state`/`after_state` `v0`, `state_snapshot` `v0`. Nothing is written, no episode is retained, no version moves.",
+     "observables": [
+      "b1_committed",
+      "b1_refusal",
+      "b1_before",
+      "b1_after",
+      "b1_snapshot",
+      "b1_mentions",
+      "head",
+      "owner_history",
+      "owner_recall"
+     ]
+    },
+    {
+     "source": "docs/plan-776-777-772-exact-head-qualification.md",
+     "clause": "a reader outside that scope reads byte-identically to a memory that never existed",
+     "observables": [
+      "other_history_unknown"
+     ]
+    },
+    {
+     "source": "docs/786-cross-scope-write-authority.md",
+     "clause": "| same text in unrelated memories of two projects | independent | independent (positive control) |",
+     "observables": [
+      "other_recall"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "| A `scope_distinct_v1` store binds every public key to (tenant, scope, key) | the only multi-project profile |",
+     "observables": [
+      "b1_committed",
+      "b1_refusal",
+      "other_recall",
+      "other_history",
+      "other_history_mentions",
+      "head",
+      "owner_history",
+      "owner_recall",
+      "b1_mentions"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "An id with no live head (never written or governed-deleted) is open to any writer in the tenant: creation and the #776 re-creation of a deleted id as a fresh generation are unchanged.",
+     "observables": [
+      "b1_committed"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "Versions are generation-relative: `state_version`, `state_snapshot`, `before_state` and `after_state` count within the live generation of a logical id. After a governed deletion of the head the id reports `0` to any writer, a re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one",
+     "observables": [
+      "b1_before",
+      "b1_after",
+      "b1_snapshot"
+     ]
+    }
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dawn",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dawn",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "name": "a1",
+     "require_committed": true
+    },
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dusk",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dusk",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "as": "project:b",
+     "name": "b1"
+    }
+   ],
+   "probes": {
+    "b1_committed": {
+     "probe": "op_result",
+     "name": "b1",
+     "field": "committed"
+    },
+    "b1_refusal": {
+     "probe": "op_result",
+     "name": "b1",
+     "field": "refusal"
+    },
+    "b1_before": {
+     "probe": "op_result",
+     "name": "b1",
+     "field": "before_state"
+    },
+    "b1_after": {
+     "probe": "op_result",
+     "name": "b1",
+     "field": "after_state"
+    },
+    "b1_snapshot": {
+     "probe": "op_result",
+     "name": "b1",
+     "field": "state_snapshot"
+    },
+    "b1_mentions": {
+     "probe": "op_mentions",
+     "name": "b1",
+     "tokens": [
+      "memory:k",
+      "project:a",
+      "dawn"
+     ]
+    },
+    "head": {
+     "probe": "canonical_head",
+     "ref": "memory:k"
+    },
+    "owner_history": {
+     "probe": "history",
+     "ref": "memory:k"
+    },
+    "owner_recall": {
+     "probe": "recall_admitted",
+     "query": "Marrow lighthouse keeper shift"
+    },
+    "other_recall": {
+     "probe": "recall_admitted",
+     "query": "Marrow lighthouse keeper shift",
+     "as": "project:b"
+    },
+    "other_history": {
+     "probe": "history",
+     "ref": "memory:k",
+     "as": "project:b"
+    },
+    "other_history_mentions": {
+     "probe": "history_mentions",
+     "ref": "memory:k",
+     "as": "project:b",
+     "tokens": [
+      "memory:k",
+      "dawn",
+      "project:a"
+     ]
+    }
+   },
+   "expect": {
+    "b1_committed": {
+     "eq": true
+    },
+    "b1_refusal": {
+     "eq": null
+    },
+    "b1_before": {
+     "eq": "v0"
+    },
+    "b1_after": {
+     "eq": "v1"
+    },
+    "b1_snapshot": {
+     "eq": "v0"
+    },
+    "b1_mentions": {
+     "eq": []
+    },
+    "head": {
+     "eq": "memory:k"
+    },
+    "owner_history": {
+     "eq": {
+      "current": "memory:k",
+      "state_version": 1,
+      "tombstoned": false,
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ]
+     }
+    },
+    "owner_recall": {
+     "eq": [
+      "memory:k"
+     ]
+    },
+    "other_recall": {
+     "eq": [
+      "project:b|memory:k"
+     ]
+    },
+    "other_history": {
+     "eq": {
+      "current": "project:b|memory:k",
+      "state_version": 1,
+      "tombstoned": false,
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ]
+     }
+    },
+    "other_history_mentions": {
+     "eq": []
+    }
+   },
+   "record": [],
+   "dsl5_disposition": "B's key is B's own never-written memory: creation, not a write onto A's head (SD). A's side is byte-identical, as in -v3."
+  },
+  {
+   "id": "W2-correct-forget-dispute-by-other",
+   "invariants": [
+    "W2"
+   ],
+   "clauses": [
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "`correct`, `forget`, `dispute` on such a memory: the bare `fact_not_found` result, byte-identical to the result for an id nobody wrote.",
+     "observables": [
+      "correct_unknown",
+      "forget_unknown",
+      "permanent_unknown",
+      "dispute_unknown",
+      "tombstones",
+      "disputed",
+      "head",
+      "valid",
+      "owner_recall"
+     ]
+    }
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dawn",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dawn",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    }
+   ],
+   "probes": {
+    "correct_unknown": {
+     "probe": "op_same_as_unknown",
+     "op": "correct",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dusk",
+     "as": "project:b"
+    },
+    "forget_unknown": {
+     "probe": "op_same_as_unknown",
+     "op": "forget",
+     "ref": "memory:k",
+     "as": "project:b"
+    },
+    "permanent_unknown": {
+     "probe": "op_same_as_unknown",
+     "op": "forget",
+     "ref": "memory:k",
+     "permanent": true,
+     "as": "project:b"
+    },
+    "dispute_unknown": {
+     "probe": "op_same_as_unknown",
+     "op": "dispute",
+     "ref": "memory:k",
+     "as": "project:b"
+    },
+    "tombstones": {
+     "probe": "tombstoned_ids"
+    },
+    "disputed": {
+     "probe": "disputed"
+    },
+    "head": {
+     "probe": "canonical_head",
+     "ref": "memory:k"
+    },
+    "valid": {
+     "probe": "fact_valid",
+     "fact": "memory:k"
+    },
+    "owner_recall": {
+     "probe": "recall_admitted",
+     "query": "Marrow lighthouse keeper shift"
+    }
+   },
+   "expect": {
+    "correct_unknown": {
+     "eq": true
+    },
+    "forget_unknown": {
+     "eq": true
+    },
+    "permanent_unknown": {
+     "eq": true
+    },
+    "dispute_unknown": {
+     "eq": true
+    },
+    "tombstones": {
+     "eq": []
+    },
+    "disputed": {
+     "eq": []
+    },
+    "head": {
+     "eq": "memory:k"
+    },
+    "valid": {
+     "eq": true
+    },
+    "owner_recall": {
+     "eq": [
+      "memory:k"
+     ]
+    }
+   },
+   "record": [],
+   "dsl5_disposition": "On a scope-distinct store these facade probes compare B's own never-written key with an unknown id, so they test key binding (SD), not the canonical gate (pre-execution review F-6). The canonical gate is exercised by W2h; correct, permanent deletion and dispute by reference at the host layer are a recorded residual."
+  },
+  {
+   "id": "W3-refusal-survives-restart",
+   "invariants": [
+    "W3",
+    "W1"
+   ],
+   "clauses": [
+    {
+     "source": "docs/786-cross-scope-write-authority.md",
+     "clause": "| wrong-scope correction after restart (x2) | commits | refused; `_fact_scope` survives every restart |",
+     "observables": [
+      "b1",
+      "b2",
+      "b3",
+      "b4"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "`remember` onto a live head outside the writer's scope: `committed: false`, `refusal: \"target_unavailable\"`, receipt `before_state`/`after_state` `v0`, `state_snapshot` `v0`. Nothing is written, no episode is retained, no version moves.",
+     "observables": [
+      "b1_refusal",
+      "b1_after",
+      "b1_mentions",
+      "head",
+      "owner_history",
+      "owner_recall"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "`correct`, `forget`, `dispute` on such a memory: the bare `fact_not_found` result, byte-identical to the result for an id nobody wrote.",
+     "observables": [
+      "b2_refusal",
+      "b3_refusal",
+      "b4_refusal"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "| A `scope_distinct_v1` store binds every public key to (tenant, scope, key) | the only multi-project profile |",
+     "observables": [
+      "b1",
+      "b1_refusal",
+      "b3",
+      "b3_refusal",
+      "head",
+      "owner_history",
+      "owner_recall"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "Versions are generation-relative: `state_version`, `state_snapshot`, `before_state` and `after_state` count within the live generation of a logical id. After a governed deletion of the head the id reports `0` to any writer, a re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one",
+     "observables": [
+      "b1_after"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "At the fact level (`dispute` of a tombstoned fact by its uuid, a governed pruning of one of its versions, the adapter's delete of a member of a deleted lineage) the answer is `already_deleted`; at the facade's logical-reference level (`forget`, permanent `forget`, `correct`, `dispute` by `target_reference`) the former owner reads the bare `fact_not_found` result, because the reference has no visible head.",
+     "observables": [
+      "b4",
+      "b4_refusal"
+     ]
+    }
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dawn",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dawn",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    },
+    {
+     "op": "correct",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is noon",
+     "kind": "state_change",
+     "require_committed": true
+    },
+    {
+     "op": "reopen"
+    },
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dusk",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dusk",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "as": "project:b",
+     "name": "b1"
+    },
+    {
+     "op": "correct",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dusk",
+     "kind": "state_change",
+     "as": "project:b",
+     "name": "b2"
+    },
+    {
+     "op": "reopen"
+    },
+    {
+     "op": "forget",
+     "ref": "memory:k",
+     "as": "project:b",
+     "name": "b3"
+    },
+    {
+     "op": "dispute",
+     "ref": "memory:k",
+     "as": "project:b",
+     "name": "b4"
+    }
+   ],
+   "probes": {
+    "b1": {
+     "probe": "op_result",
+     "name": "b1",
+     "field": "committed"
+    },
+    "b1_refusal": {
+     "probe": "op_result",
+     "name": "b1",
+     "field": "refusal"
+    },
+    "b1_after": {
+     "probe": "op_result",
+     "name": "b1",
+     "field": "after_state"
+    },
+    "b1_mentions": {
+     "probe": "op_mentions",
+     "name": "b1",
+     "tokens": [
+      "memory:k",
+      "memory:k@2",
+      "v2",
+      "dawn",
+      "noon",
+      "project:a"
+     ]
+    },
+    "b2": {
+     "probe": "op_result",
+     "name": "b2",
+     "field": "committed"
+    },
+    "b2_refusal": {
+     "probe": "op_result",
+     "name": "b2",
+     "field": "refusal"
+    },
+    "b3": {
+     "probe": "op_result",
+     "name": "b3",
+     "field": "committed"
+    },
+    "b3_refusal": {
+     "probe": "op_result",
+     "name": "b3",
+     "field": "refusal"
+    },
+    "b4": {
+     "probe": "op_result",
+     "name": "b4",
+     "field": "committed"
+    },
+    "b4_refusal": {
+     "probe": "op_result",
+     "name": "b4",
+     "field": "refusal"
+    },
+    "head": {
+     "probe": "canonical_head",
+     "ref": "memory:k"
+    },
+    "owner_history": {
+     "probe": "history",
+     "ref": "memory:k"
+    },
+    "owner_recall": {
+     "probe": "recall_admitted",
+     "query": "Marrow lighthouse keeper shift"
+    }
+   },
+   "expect": {
+    "b1": {
+     "eq": true
+    },
+    "b1_refusal": {
+     "eq": null
+    },
+    "b1_after": {
+     "eq": "v1"
+    },
+    "b1_mentions": {
+     "eq": []
+    },
+    "b3": {
+     "eq": true
+    },
+    "b3_refusal": {
+     "eq": null
+    },
+    "b4": {
+     "eq": false
+    },
+    "b4_refusal": {
+     "eq": "fact_not_found"
+    },
+    "head": {
+     "eq": "memory:k@2"
+    },
+    "owner_history": {
+     "eq": {
+      "current": "memory:k@2",
+      "state_version": 2,
+      "tombstoned": false,
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt",
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ]
+     }
+    },
+    "owner_recall": {
+     "eq": [
+      "memory:k@2"
+     ]
+    }
+   },
+   "record": [
+    "b2",
+    "b2_refusal"
+   ],
+   "dsl5_disposition": "Across both restarts B acts only on its own memory (b1 creates, b3 deletes it, b4 reads its own deleted id as fact_not_found); A never moves. b2 corrects to the value already current, which no clause decides (R1)."
+  },
+  {
+   "id": "W4-overrides",
+   "invariants": [
+    "W4"
+   ],
+   "clauses": [
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "`overrides` re-declares the proposal's scope and is judged under that scope, exactly as a handle opened with it would be; it does not widen a partial claim (... an override that leaves `required_isolation_domain_refs` outside `isolation_domain_refs` is a malformed proposal and raises `ValueError` before any target is resolved).",
+     "observables": [
+      "bad_target",
+      "bad_unknown",
+      "bad_target_message",
+      "bad_unknown_message"
+     ]
+    },
+    {
+     "source": "docs/786-cross-scope-write-authority.md",
+     "clause": "override with a superset of domains + the owner's project | ... `remember`/`correct` refused by scope continuity (review F2); `forget`/`dispute` admitted as an eligible reader's",
+     "observables": [
+      "sup_rem_committed",
+      "sup_cor_committed"
+     ]
+    },
+    {
+     "source": "docs/786-cross-scope-write-authority.md",
+     "clause": "`write_target_refusal` now also requires **scope continuity** -- the head's own scope, read as a context, must be eligible for the scope the new fact would be stored under. A write cannot move a live memory out of its holders' reach",
+     "observables": [
+      "sup_rem_committed",
+      "sup_cor_committed"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "A write that replaces a live head must also keep the memory within reach of the scope that holds it (scope continuity) ... A project handle therefore cannot capture a tenant-wide or shared memory into its own scope",
+     "observables": [
+      "sup_rem_committed",
+      "sup_cor_committed"
+     ]
+    },
+    {
+     "source": "docs/786-cross-scope-write-authority.md",
+     "clause": "`promotion` reports `target_unavailable` (`WRITE_TARGET_REFUSAL`); every operation that presupposes an existing fact reports `fact_not_found`, the same token an id nobody wrote reports.",
+     "observables": [
+      "sup_rem_refusal"
+     ]
+    },
+    {
+     "source": "docs/786-cross-scope-write-authority.md",
+     "clause": "a refused target selects as a blocked action, commits nothing, reports `before_state = after_state = \"v0\"`",
+     "observables": [
+      "sup_rem_before"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "`remember` onto a live head outside the writer's scope: `committed: false`, `refusal: \"target_unavailable\"`, receipt `before_state`/`after_state` `v0`, `state_snapshot` `v0`. Nothing is written, no episode is retained, no version moves.",
+     "observables": [
+      "head",
+      "valid",
+      "owner_recall",
+      "tombstones"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "Proposal `overrides` may only restate that identity exactly, and the scope keywords of `recall` may restate it or narrow its isolation domains; neither may change it: [...] An internally inconsistent override keeps its `1.8.0` refusal (`required isolation domains must also be bound isolation domains`, replay W4) and is checked first. Any other override that changes the handle's tenant, project or isolation domains raises `ValueError` (`facade proposal may not override host-bound scope identity`) at the operation's entry, before any target is resolved, for every operation (`remember`, `correct`, `forget`, `dispute`), so nothing is written, deleted or disputed",
+     "observables": [
+      "bad_target",
+      "bad_unknown",
+      "bad_target_message",
+      "bad_unknown_message",
+      "sup_rem_committed",
+      "sup_rem_raised",
+      "sup_rem_message",
+      "sup_cor_committed",
+      "sup_cor_raised",
+      "sup_cor_message",
+      "head",
+      "valid",
+      "owner_recall",
+      "tombstones"
+     ]
+    }
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dawn",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dawn",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    },
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dusk",
+     "as": "project:b",
+     "overrides": {
+      "isolation_domain_refs": [
+       "tenant:s786",
+       "project:a"
+      ]
+     },
+     "name": "bad_target"
+    },
+    {
+     "op": "remember",
+     "ref": "memory:never",
+     "text": "Marrow lighthouse keeper shift is dusk",
+     "as": "project:b",
+     "overrides": {
+      "isolation_domain_refs": [
+       "tenant:s786",
+       "project:a"
+      ]
+     },
+     "name": "bad_unknown"
+    },
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dusk",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dusk",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "as": "project:b",
+     "overrides": {
+      "isolation_domain_refs": [
+       "tenant:s786",
+       "project:a",
+       "project:b"
+      ],
+      "project_ref": "project:a"
+     },
+     "name": "sup_rem"
+    },
+    {
+     "op": "correct",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dusk",
+     "kind": "state_change",
+     "as": "project:b",
+     "overrides": {
+      "isolation_domain_refs": [
+       "tenant:s786",
+       "project:a",
+       "project:b"
+      ],
+      "project_ref": "project:a"
+     },
+     "name": "sup_cor"
+    }
+   ],
+   "probes": {
+    "bad_target": {
+     "probe": "op_result",
+     "name": "bad_target",
+     "field": "raised"
+    },
+    "bad_unknown": {
+     "probe": "op_result",
+     "name": "bad_unknown",
+     "field": "raised"
+    },
+    "bad_target_message": {
+     "probe": "op_raised_message",
+     "name": "bad_target"
+    },
+    "bad_unknown_message": {
+     "probe": "op_raised_message",
+     "name": "bad_unknown"
+    },
+    "sup_rem_committed": {
+     "probe": "op_result",
+     "name": "sup_rem",
+     "field": "committed"
+    },
+    "sup_rem_refusal": {
+     "probe": "op_result",
+     "name": "sup_rem",
+     "field": "refusal"
+    },
+    "sup_rem_before": {
+     "probe": "op_result",
+     "name": "sup_rem",
+     "field": "before_state"
+    },
+    "sup_cor_committed": {
+     "probe": "op_result",
+     "name": "sup_cor",
+     "field": "committed"
+    },
+    "sup_cor_refusal": {
+     "probe": "op_result",
+     "name": "sup_cor",
+     "field": "refusal"
+    },
+    "head": {
+     "probe": "canonical_head",
+     "ref": "memory:k"
+    },
+    "valid": {
+     "probe": "fact_valid",
+     "fact": "memory:k"
+    },
+    "owner_recall": {
+     "probe": "recall_admitted",
+     "query": "Marrow lighthouse keeper shift"
+    },
+    "tombstones": {
+     "probe": "tombstoned_ids"
+    },
+    "sup_rem_raised": {
+     "probe": "op_result",
+     "name": "sup_rem",
+     "field": "raised"
+    },
+    "sup_cor_raised": {
+     "probe": "op_result",
+     "name": "sup_cor",
+     "field": "raised"
+    },
+    "sup_rem_message": {
+     "probe": "op_raised_message",
+     "name": "sup_rem"
+    },
+    "sup_cor_message": {
+     "probe": "op_raised_message",
+     "name": "sup_cor"
+    }
+   },
+   "expect": {
+    "bad_target": {
+     "eq": "ValueError"
+    },
+    "bad_unknown": {
+     "eq": "ValueError"
+    },
+    "bad_target_message": {
+     "eq": "required isolation domains must also be bound isolation domains"
+    },
+    "bad_unknown_message": {
+     "eq": "required isolation domains must also be bound isolation domains"
+    },
+    "sup_rem_committed": {
+     "eq": false
+    },
+    "sup_cor_committed": {
+     "eq": false
+    },
+    "head": {
+     "eq": "memory:k"
+    },
+    "valid": {
+     "eq": true
+    },
+    "owner_recall": {
+     "eq": [
+      "memory:k"
+     ]
+    },
+    "tombstones": {
+     "eq": []
+    },
+    "sup_rem_raised": {
+     "eq": "ValueError"
+    },
+    "sup_cor_raised": {
+     "eq": "ValueError"
+    },
+    "sup_rem_message": {
+     "eq": "facade proposal may not override host-bound scope identity"
+    },
+    "sup_cor_message": {
+     "eq": "facade proposal may not override host-bound scope identity"
+    }
+   },
+   "record": [
+    "sup_cor_refusal",
+    "sup_rem_before",
+    "sup_rem_refusal"
+   ],
+   "implementation_evidence": [
+    "sup_cor_refusal"
+   ],
+   "dsl5_disposition": "Facade W4 is the one behaviour the integration changes (docs/44): the superset declaration naming A's project changes the handle's identity and is refused with ValueError instead of reaching the canonical gate. The malformed declaration keeps its 1.8.0 message, checked first. Both the refusal and its message are stated in docs/44 (pre-execution review F-1)."
+  },
+  {
+   "id": "W4b-documented-dispositions-of-complete-and-superset-declarations",
+   "invariants": [
+    "W4"
+   ],
+   "clauses": [
+    {
+     "source": "docs/786-cross-scope-write-authority.md",
+     "clause": "override with a superset of domains + the owner's project | ... `remember`/`correct` refused by scope continuity (review F2); `forget`/`dispute` admitted as an eligible reader's",
+     "observables": [
+      "sup_disp",
+      "sup_forget",
+      "tombstones"
+     ]
+    },
+    {
+     "source": "docs/786-cross-scope-write-authority.md",
+     "clause": "forged **complete** scope via `overrides` | ... commits (documented: `overrides` is the host re-declaring scope exactly as `AgentMemory.open(scope=...)` would; ... the facade is not an authentication boundary)",
+     "observables": [
+      "complete",
+      "k2_head"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "Scope is privileged host input. ... the facade does not authenticate who submits them. ... a complete-scope override (replay case W4) is admitted exactly because the host is trusted to declare it. An exposed multi-user service must bind authenticated authority to the scope it submits before the facade sees it",
+     "observables": [
+      "complete",
+      "k2_head"
+     ]
+    },
+    {
+     "source": "docs/786-cross-scope-write-authority.md",
+     "clause": "Replay case W4 (a complete-scope override is admitted) holds only in that privileged-host model and must not be read as end-user isolation: a user who controls the handle controls the declared scope.",
+     "observables": [
+      "complete"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "Proposal `overrides` may only restate that identity exactly, and the scope keywords of `recall` may restate it or narrow its isolation domains; neither may change it: [...] An internally inconsistent override keeps its `1.8.0` refusal (`required isolation domains must also be bound isolation domains`, replay W4) and is checked first. Any other override that changes the handle's tenant, project or isolation domains raises `ValueError` (`facade proposal may not override host-bound scope identity`) at the operation's entry, before any target is resolved, for every operation (`remember`, `correct`, `forget`, `dispute`), so nothing is written, deleted or disputed",
+     "observables": [
+      "sup_disp",
+      "sup_forget",
+      "tombstones",
+      "complete",
+      "k2_head",
+      "sup_disp_raised",
+      "sup_forget_raised",
+      "complete_raised",
+      "sup_disp_message",
+      "sup_forget_message",
+      "complete_message"
+     ]
+    }
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dawn",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dawn",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    },
+    {
+     "op": "dispute",
+     "ref": "memory:k",
+     "as": "project:b",
+     "overrides": {
+      "isolation_domain_refs": [
+       "tenant:s786",
+       "project:a",
+       "project:b"
+      ],
+      "project_ref": "project:a"
+     },
+     "name": "sup_disp"
+    },
+    {
+     "op": "forget",
+     "ref": "memory:k",
+     "as": "project:b",
+     "overrides": {
+      "isolation_domain_refs": [
+       "tenant:s786",
+       "project:a",
+       "project:b"
+      ],
+      "project_ref": "project:a"
+     },
+     "name": "sup_forget"
+    },
+    {
+     "op": "remember",
+     "ref": "memory:k2",
+     "text": "Marrow lighthouse keeper shift is noon",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "noon",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    },
+    {
+     "op": "remember",
+     "ref": "memory:k2",
+     "text": "Marrow lighthouse keeper shift is dusk",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dusk",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "as": "project:b",
+     "overrides": {
+      "scope": "project:a",
+      "project_ref": "project:a",
+      "isolation_domain_refs": [
+       "tenant:s786",
+       "project:a"
+      ],
+      "required_isolation_domain_refs": [
+       "tenant:s786",
+       "project:a"
+      ]
+     },
+     "label": "complete",
+     "name": "complete"
+    }
+   ],
+   "probes": {
+    "sup_disp": {
+     "probe": "op_result",
+     "name": "sup_disp",
+     "field": "committed"
+    },
+    "sup_forget": {
+     "probe": "op_result",
+     "name": "sup_forget",
+     "field": "committed"
+    },
+    "tombstones": {
+     "probe": "tombstoned_ids"
+    },
+    "complete": {
+     "probe": "op_result",
+     "name": "complete",
+     "field": "committed"
+    },
+    "k2_head": {
+     "probe": "canonical_head",
+     "ref": "memory:k2"
+    },
+    "k2_owner_recall": {
+     "probe": "recall_admitted",
+     "query": "Marrow lighthouse keeper shift"
+    },
+    "sup_disp_raised": {
+     "probe": "op_result",
+     "name": "sup_disp",
+     "field": "raised"
+    },
+    "sup_forget_raised": {
+     "probe": "op_result",
+     "name": "sup_forget",
+     "field": "raised"
+    },
+    "complete_raised": {
+     "probe": "op_result",
+     "name": "complete",
+     "field": "raised"
+    },
+    "sup_disp_message": {
+     "probe": "op_raised_message",
+     "name": "sup_disp"
+    },
+    "sup_forget_message": {
+     "probe": "op_raised_message",
+     "name": "sup_forget"
+    },
+    "complete_message": {
+     "probe": "op_raised_message",
+     "name": "complete"
+    }
+   },
+   "expect": {
+    "sup_disp": {
+     "eq": false
+    },
+    "sup_forget": {
+     "eq": false
+    },
+    "tombstones": {
+     "eq": []
+    },
+    "complete": {
+     "eq": false
+    },
+    "k2_head": {
+     "eq": "memory:k2"
+    },
+    "sup_disp_raised": {
+     "eq": "ValueError"
+    },
+    "sup_forget_raised": {
+     "eq": "ValueError"
+    },
+    "complete_raised": {
+     "eq": "ValueError"
+    },
+    "sup_disp_message": {
+     "eq": "facade proposal may not override host-bound scope identity"
+    },
+    "sup_forget_message": {
+     "eq": "facade proposal may not override host-bound scope identity"
+    },
+    "complete_message": {
+     "eq": "facade proposal may not override host-bound scope identity"
+    }
+   },
+   "record": [
+    "k2_owner_recall"
+   ],
+   "implementation_evidence": [
+    "k2_owner_recall"
+   ],
+   "dsl5_disposition": "The -v3 dispositions (a superset declaration may dispute or delete; a complete re-declaration commits as the owner) followed from 'Scope is privileged host input' at the facade. Under store-open 1.0.0 the facade binds identity, so each is refused with ValueError and nothing is deleted or written. Host re-declaration remains available only through the module-level envelope surface."
+  },
+  {
+   "id": "W5-positive-controls-and-unrelated-same-text",
+   "invariants": [
+    "W5"
+   ],
+   "clauses": [
+    {
+     "source": "docs/786-cross-scope-write-authority.md",
+     "clause": "| same text in unrelated memories of two projects | independent | independent (positive control) |",
+     "observables": [
+      "a1",
+      "a2",
+      "a3",
+      "b1",
+      "other_recall",
+      "other_view_of_k",
+      "owner_view_of_other"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "Lifecycle refusals within the caller's own domain (`superseded_not_current`, `tombstoned`, `disputed`, ...) remain visible candidates with decisions",
+     "observables": [
+      "owner_recall",
+      "owner_candidates",
+      "disputed",
+      "head"
+     ]
+    }
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dawn",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dawn",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "name": "a1"
+    },
+    {
+     "op": "correct",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is noon",
+     "kind": "state_change",
+     "name": "a2"
+    },
+    {
+     "op": "dispute",
+     "ref": "memory:k",
+     "name": "a3"
+    },
+    {
+     "op": "remember",
+     "ref": "memory:other",
+     "text": "Marrow lighthouse keeper shift is noon",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "noon",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "as": "project:b",
+     "label": "other",
+     "name": "b1"
+    }
+   ],
+   "probes": {
+    "a1": {
+     "probe": "op_result",
+     "name": "a1",
+     "field": "committed"
+    },
+    "a2": {
+     "probe": "op_result",
+     "name": "a2",
+     "field": "committed"
+    },
+    "a3": {
+     "probe": "op_result",
+     "name": "a3",
+     "field": "committed"
+    },
+    "b1": {
+     "probe": "op_result",
+     "name": "b1",
+     "field": "committed"
+    },
+    "owner_recall": {
+     "probe": "recall_admitted",
+     "query": "Marrow lighthouse keeper shift"
+    },
+    "owner_candidates": {
+     "probe": "recall_candidates",
+     "query": "Marrow lighthouse keeper shift"
+    },
+    "disputed": {
+     "probe": "disputed"
+    },
+    "head": {
+     "probe": "canonical_head",
+     "ref": "memory:k"
+    },
+    "other_recall": {
+     "probe": "recall_admitted",
+     "query": "Marrow lighthouse keeper shift",
+     "as": "project:b"
+    },
+    "other_view_of_k": {
+     "probe": "history_same_as_unknown",
+     "ref": "memory:k",
+     "as": "project:b"
+    },
+    "owner_view_of_other": {
+     "probe": "history_same_as_unknown",
+     "ref": "memory:other"
+    }
+   },
+   "expect": {
+    "a1": {
+     "eq": true
+    },
+    "a2": {
+     "eq": true
+    },
+    "a3": {
+     "eq": true
+    },
+    "b1": {
+     "eq": true
+    },
+    "owner_recall": {
+     "eq": []
+    },
+    "owner_candidates": {
+     "eq": [
+      "memory:k",
+      "memory:k@2"
+     ]
+    },
+    "disputed": {
+     "eq": [
+      "memory:k@2"
+     ]
+    },
+    "head": {
+     "eq": "memory:k@2"
+    },
+    "other_recall": {
+     "eq": [
+      "other"
+     ]
+    },
+    "other_view_of_k": {
+     "eq": true
+    },
+    "owner_view_of_other": {
+     "eq": true
+    }
+   },
+   "dsl5_disposition": "carried forward unchanged: its observables do not depend on the store profile"
+  },
+  {
+   "id": "W6-denied-proposals-persist-no-episode",
+   "invariants": [
+    "W6"
+   ],
+   "clauses": [
+    {
+     "source": "docs/786-cross-scope-write-authority.md",
+     "clause": "the `episode` is now added only inside the commit branch, so no refused or parked proposal leaves episodic content",
+     "observables": [
+      "denied_committed",
+      "kept_committed",
+      "episode_denied",
+      "episode_parked",
+      "episode_kept",
+      "head",
+      "parked_head"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "`remember` onto a live head outside the writer's scope: `committed: false`, `refusal: \"target_unavailable\"`, receipt `before_state`/`after_state` `v0`, `state_snapshot` `v0`. Nothing is written, no episode is retained, no version moves.",
+     "observables": [
+      "denied_refusal",
+      "denied_before"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "`remember` onto a live head outside the writer's scope: `committed: false`, `refusal: \"target_unavailable\"`, receipt `before_state`/`after_state` `v0`, `state_snapshot` `v0`. Nothing is written, no episode is retained, no version moves.",
+     "observables": [
+      "denied_committed",
+      "denied_refusal",
+      "denied_before",
+      "episode_denied"
+     ]
+    }
+   ],
+   "record": [
+    "parked_committed"
+   ],
+   "implementation_evidence": [
+    "parked_committed"
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dawn",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dawn",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    },
+    {
+     "op": "commit_with_episode",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dusk",
+     "episode": "episode:denied",
+     "as": "project:b",
+     "name": "denied",
+     "ref_scope": "project:a"
+    },
+    {
+     "op": "commit_with_episode",
+     "ref": "memory:parked",
+     "text": "Marrow lighthouse keeper shift is noon",
+     "episode": "episode:parked",
+     "risk": "high",
+     "name": "parked"
+    },
+    {
+     "op": "commit_with_episode",
+     "ref": "memory:kept",
+     "text": "Marrow lighthouse keeper shift is night",
+     "episode": "episode:kept",
+     "name": "kept"
+    },
+    {
+     "op": "reopen"
+    }
+   ],
+   "probes": {
+    "denied_committed": {
+     "probe": "op_result",
+     "name": "denied",
+     "field": "committed"
+    },
+    "denied_refusal": {
+     "probe": "op_result",
+     "name": "denied",
+     "field": "refusal"
+    },
+    "denied_before": {
+     "probe": "op_result",
+     "name": "denied",
+     "field": "before_state"
+    },
+    "parked_committed": {
+     "probe": "op_result",
+     "name": "parked",
+     "field": "committed"
+    },
+    "kept_committed": {
+     "probe": "op_result",
+     "name": "kept",
+     "field": "committed"
+    },
+    "episode_denied": {
+     "probe": "episode_present",
+     "episode": "episode:denied"
+    },
+    "episode_parked": {
+     "probe": "episode_present",
+     "episode": "episode:parked"
+    },
+    "episode_kept": {
+     "probe": "episode_present",
+     "episode": "episode:kept"
+    },
+    "head": {
+     "probe": "canonical_head",
+     "ref": "memory:k"
+    },
+    "parked_head": {
+     "probe": "canonical_head",
+     "ref": "memory:parked"
+    }
+   },
+   "expect": {
+    "denied_committed": {
+     "eq": false
+    },
+    "denied_refusal": {
+     "eq": "target_unavailable"
+    },
+    "denied_before": {
+     "eq": "v0"
+    },
+    "kept_committed": {
+     "eq": true
+    },
+    "episode_denied": {
+     "eq": false
+    },
+    "episode_parked": {
+     "eq": false
+    },
+    "episode_kept": {
+     "eq": true
+    },
+    "head": {
+     "eq": "memory:k"
+    },
+    "parked_head": {
+     "eq": null
+    }
+   },
+   "dsl5_disposition": "H1: the denied proposal is host-built by B and names A's canonical memory (ref_scope), the host-layer route to the canonical write gate on a scope-distinct store. Expectations unchanged."
+  },
+  {
+   "id": "W7-refused-attempt-leaves-no-public-trace",
+   "invariants": [
+    "W7"
+   ],
+   "clauses": [
+    {
+     "source": "docs/786-cross-scope-write-authority.md",
+     "clause": "the authorize event of a write-target-refused proposal carries `authority_refs: [\"write-target:refused\"]` (schema-valid) and the public history projection withholds that correlation",
+     "observables": [
+      "b1",
+      "owner_history",
+      "owner_history_mentions",
+      "canonical_version"
+     ]
+    },
+    {
+     "source": "docs/plan-776-777-772-exact-head-qualification.md",
+     "clause": "a reader outside that scope reads byte-identically to a memory that never existed",
+     "observables": [
+      "other_history_unknown"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "| A `scope_distinct_v1` store binds every public key to (tenant, scope, key) | the only multi-project profile |",
+     "observables": [
+      "b1",
+      "other_history",
+      "other_history_mentions",
+      "owner_history",
+      "owner_history_mentions",
+      "canonical_version"
+     ]
+    }
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dawn",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dawn",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    },
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dusk",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dusk",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "as": "project:b",
+     "name": "b1"
+    },
+    {
+     "op": "correct",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is noon",
+     "kind": "state_change",
+     "require_committed": true
+    }
+   ],
+   "probes": {
+    "b1": {
+     "probe": "op_result",
+     "name": "b1",
+     "field": "committed"
+    },
+    "owner_history": {
+     "probe": "history",
+     "ref": "memory:k"
+    },
+    "owner_history_mentions": {
+     "probe": "history_mentions",
+     "ref": "memory:k",
+     "tokens": [
+      "dusk",
+      "project:b"
+     ]
+    },
+    "canonical_version": {
+     "probe": "canonical_version",
+     "ref": "memory:k"
+    },
+    "other_history": {
+     "probe": "history",
+     "ref": "memory:k",
+     "as": "project:b"
+    },
+    "other_history_mentions": {
+     "probe": "history_mentions",
+     "ref": "memory:k",
+     "as": "project:b",
+     "tokens": [
+      "memory:k",
+      "memory:k@2",
+      "dawn",
+      "noon",
+      "project:a"
+     ]
+    }
+   },
+   "expect": {
+    "b1": {
+     "eq": true
+    },
+    "canonical_version": {
+     "eq": 2
+    },
+    "owner_history_mentions": {
+     "eq": []
+    },
+    "owner_history": {
+     "eq": {
+      "current": "memory:k@2",
+      "state_version": 2,
+      "tombstoned": false,
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt",
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ]
+     }
+    },
+    "other_history": {
+     "eq": {
+      "current": "project:b|memory:k",
+      "state_version": 1,
+      "tombstoned": false,
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ]
+     }
+    },
+    "other_history_mentions": {
+     "eq": []
+    }
+   },
+   "record": [],
+   "dsl5_disposition": "B's remember creates B's own memory (SD); A's history still carries nothing of it."
+  },
+  {
+   "id": "W7b-refused-dispute-and-forget-attempts-leave-no-public-trace",
+   "invariants": [
+    "W7"
+   ],
+   "clauses": [
+    {
+     "source": "docs/786-cross-scope-write-authority.md",
+     "clause": "the authorize event of a write-target-refused proposal carries `authority_refs: [\"write-target:refused\"]` (schema-valid) and the public history projection withholds that correlation",
+     "observables": [
+      "bd",
+      "bf",
+      "bdf",
+      "owner_history",
+      "owner_history_mentions"
+     ]
+    },
+    {
+     "source": "docs/plan-776-777-772-exact-head-qualification.md",
+     "clause": "a reader outside that scope reads byte-identically to a memory that never existed",
+     "observables": [
+      "other_history_unknown"
+     ]
+    }
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dawn",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dawn",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    },
+    {
+     "op": "dispute",
+     "ref": "memory:k",
+     "as": "project:b",
+     "name": "bd"
+    },
+    {
+     "op": "forget",
+     "ref": "memory:k",
+     "as": "project:b",
+     "name": "bf"
+    },
+    {
+     "op": "dispute",
+     "ref": "memory:k",
+     "fact": "memory:k",
+     "as": "project:b",
+     "name": "bdf"
+    }
+   ],
+   "probes": {
+    "bd": {
+     "probe": "op_result",
+     "name": "bd",
+     "field": "committed"
+    },
+    "bf": {
+     "probe": "op_result",
+     "name": "bf",
+     "field": "committed"
+    },
+    "bdf": {
+     "probe": "op_result",
+     "name": "bdf",
+     "field": "committed"
+    },
+    "owner_history": {
+     "probe": "history",
+     "ref": "memory:k"
+    },
+    "owner_history_mentions": {
+     "probe": "history_mentions",
+     "ref": "memory:k",
+     "tokens": [
+      "project:b",
+      "dispute",
+      "forget"
+     ]
+    },
+    "other_history_unknown": {
+     "probe": "history_same_as_unknown",
+     "ref": "memory:k",
+     "as": "project:b"
+    }
+   },
+   "expect": {
+    "bd": {
+     "eq": false
+    },
+    "bf": {
+     "eq": false
+    },
+    "bdf": {
+     "eq": false
+    },
+    "other_history_unknown": {
+     "eq": true
+    },
+    "owner_history_mentions": {
+     "eq": []
+    },
+    "owner_history": {
+     "eq": {
+      "current": "memory:k",
+      "state_version": 1,
+      "tombstoned": false,
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ]
+     }
+    }
+   },
+   "dsl5_disposition": "carried forward unchanged: its observables do not depend on the store profile"
+  },
+  {
+   "id": "W7c-former-owner-attempts-leave-no-trace-in-the-new-generation",
+   "invariants": [
+    "W7",
+    "W8"
+   ],
+   "clauses": [
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "A governed-deleted generation is closed. At the fact level (`dispute` of a tombstoned fact by its uuid, a governed pruning of one of its versions, the adapter's delete of a member of a deleted lineage) the answer is `already_deleted`; at the facade's logical-reference level (`forget`, permanent `forget`, `correct`, `dispute` by `target_reference`) the former owner reads the bare `fact_not_found` result, because the reference has no visible head. Either answer is the same whether or not another scope has since re-created the id, and neither moves or reads the live generation [...] The one further governed act is the escalation of a reversible pruning to a permanent deletion by a writer eligible for that generation: it keeps the tombstone's `deleted_at`, recorded version and lineage, erases the content, and neither reads nor moves a live generation another scope holds.",
+     "observables": [
+      "a_disp",
+      "a_disp_refusal",
+      "a_del",
+      "a_del_refusal",
+      "a_forget",
+      "a_forget_refusal"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "`remember` onto a live head outside the writer's scope: `committed: false`, `refusal: \"target_unavailable\"`, receipt `before_state`/`after_state` `v0`, `state_snapshot` `v0`. Nothing is written, no episode is retained, no version moves.",
+     "observables": [
+      "a_rem",
+      "a_rem_refusal"
+     ]
+    },
+    {
+     "source": "docs/786-cross-scope-write-authority.md",
+     "clause": "| B re-creates A's **deleted** id | allowed (fresh generation) | unchanged, with isolation proven (A cannot write it back while B's generation is live) |",
+     "observables": [
+      "a_rem",
+      "other_recall"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "Staleness and the `before_state` of a committed deletion or dispute are judged against the version the writer may see: a memory whose live head lies outside the writer's scope reads `0` to that writer, the same `v0` its proposal's `state_snapshot` resolves.",
+     "observables": [
+      "a_disp_mentions"
+     ]
+    },
+    {
+     "source": "docs/786-cross-scope-write-authority.md",
+     "clause": "the authorize event of a write-target-refused proposal carries `authority_refs: [\"write-target:refused\"]` (schema-valid) and the public history projection withholds that correlation",
+     "observables": [
+      "other_history",
+      "other_history_mentions"
+     ]
+    },
+    {
+     "source": "docs/plan-776-777-772-exact-head-qualification.md",
+     "clause": "a re-created memory shows only its live generation",
+     "observables": [
+      "other_history_mentions"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "| A `scope_distinct_v1` store binds every public key to (tenant, scope, key) | the only multi-project profile |",
+     "observables": [
+      "a_rem",
+      "a_forget",
+      "other_history",
+      "other_history_mentions",
+      "other_recall"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "An id with no live head (never written or governed-deleted) is open to any writer in the tenant: creation and the #776 re-creation of a deleted id as a fresh generation are unchanged.",
+     "observables": [
+      "a_rem",
+      "a_rem_refusal"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "At the fact level (`dispute` of a tombstoned fact by its uuid, a governed pruning of one of its versions, the adapter's delete of a member of a deleted lineage) the answer is `already_deleted`; at the facade's logical-reference level (`forget`, permanent `forget`, `correct`, `dispute` by `target_reference`) the former owner reads the bare `fact_not_found` result, because the reference has no visible head.",
+     "observables": [
+      "a_disp",
+      "a_disp_refusal",
+      "a_del",
+      "a_del_refusal"
+     ]
+    }
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dawn",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dawn",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    },
+    {
+     "op": "forget",
+     "ref": "memory:k",
+     "require_committed": true
+    },
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dusk",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dusk",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "as": "project:b",
+     "label": "gen-b",
+     "require_committed": true
+    },
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is night",
+     "name": "a_rem"
+    },
+    {
+     "op": "dispute",
+     "ref": "memory:k",
+     "fact": "memory:k",
+     "name": "a_disp"
+    },
+    {
+     "op": "delete_version",
+     "ref": "memory:k",
+     "fact": "memory:k",
+     "name": "a_del"
+    },
+    {
+     "op": "forget",
+     "ref": "memory:k",
+     "name": "a_forget"
+    }
+   ],
+   "probes": {
+    "a_rem": {
+     "probe": "op_result",
+     "name": "a_rem",
+     "field": "committed"
+    },
+    "a_rem_refusal": {
+     "probe": "op_result",
+     "name": "a_rem",
+     "field": "refusal"
+    },
+    "a_disp": {
+     "probe": "op_result",
+     "name": "a_disp",
+     "field": "committed"
+    },
+    "a_disp_refusal": {
+     "probe": "op_result",
+     "name": "a_disp",
+     "field": "refusal"
+    },
+    "a_disp_mentions": {
+     "probe": "op_mentions",
+     "name": "a_disp",
+     "tokens": [
+      "gen-b",
+      "dusk",
+      "v2"
+     ]
+    },
+    "a_del": {
+     "probe": "op_result",
+     "name": "a_del",
+     "field": "committed"
+    },
+    "a_del_refusal": {
+     "probe": "op_result",
+     "name": "a_del",
+     "field": "refusal"
+    },
+    "a_forget": {
+     "probe": "op_result",
+     "name": "a_forget",
+     "field": "committed"
+    },
+    "a_forget_refusal": {
+     "probe": "op_result",
+     "name": "a_forget",
+     "field": "refusal"
+    },
+    "other_history": {
+     "probe": "history",
+     "ref": "memory:k",
+     "as": "project:b"
+    },
+    "other_history_mentions": {
+     "probe": "history_mentions",
+     "ref": "memory:k",
+     "as": "project:b",
+     "tokens": [
+      "memory:k",
+      "dawn",
+      "night",
+      "project:a",
+      "memory:k@2"
+     ]
+    },
+    "other_recall": {
+     "probe": "recall_admitted",
+     "query": "Marrow lighthouse keeper shift",
+     "as": "project:b"
+    }
+   },
+   "expect": {
+    "a_rem": {
+     "eq": true
+    },
+    "a_rem_refusal": {
+     "eq": null
+    },
+    "a_disp": {
+     "eq": false
+    },
+    "a_disp_refusal": {
+     "eq": "already_deleted"
+    },
+    "a_disp_mentions": {
+     "eq": []
+    },
+    "a_del": {
+     "eq": false
+    },
+    "a_del_refusal": {
+     "eq": "already_deleted"
+    },
+    "a_forget": {
+     "eq": true
+    },
+    "a_forget_refusal": {
+     "eq": null
+    },
+    "other_history_mentions": {
+     "eq": []
+    },
+    "other_history": {
+     "eq": {
+      "current": "gen-b",
+      "state_version": 1,
+      "tombstoned": false,
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ]
+     }
+    },
+    "other_recall": {
+     "eq": [
+      "gen-b"
+     ]
+    }
+   },
+   "record": [],
+   "dsl5_disposition": "B's generation lives in B's namespace, so A's own deleted id stays open to A: a_rem re-creates it and a_forget deletes that re-creation. The fact-level answers on A's deleted generation stay already_deleted. M1 drops version tokens from A's own receipt scan."
+  },
+  {
+   "id": "W7c-control-former-owner-attempts-without-a-re-creation",
+   "invariants": [
+    "W7",
+    "W8"
+   ],
+   "clauses": [
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "A governed-deleted generation is closed. At the fact level (`dispute` of a tombstoned fact by its uuid, a governed pruning of one of its versions, the adapter's delete of a member of a deleted lineage) the answer is `already_deleted`; at the facade's logical-reference level (`forget`, permanent `forget`, `correct`, `dispute` by `target_reference`) the former owner reads the bare `fact_not_found` result, because the reference has no visible head. Either answer is the same whether or not another scope has since re-created the id, and neither moves or reads the live generation [...] The one further governed act is the escalation of a reversible pruning to a permanent deletion by a writer eligible for that generation: it keeps the tombstone's `deleted_at`, recorded version and lineage, erases the content, and neither reads nor moves a live generation another scope holds.",
+     "observables": [
+      "a_disp",
+      "a_disp_refusal",
+      "a_del",
+      "a_del_refusal",
+      "a_forget",
+      "a_forget_refusal",
+      "a_disp_mentions"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "Versions are generation-relative ... After a governed deletion of the head the id reports `0` to any writer, a re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one; the owner of the deleted generation still reads the version its deletion recorded (`tombstoned`, DUR-DEL-001).",
+     "observables": [
+      "owner_history"
+     ]
+    }
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dawn",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dawn",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    },
+    {
+     "op": "forget",
+     "ref": "memory:k",
+     "require_committed": true
+    },
+    {
+     "op": "dispute",
+     "ref": "memory:k",
+     "fact": "memory:k",
+     "name": "a_disp"
+    },
+    {
+     "op": "delete_version",
+     "ref": "memory:k",
+     "fact": "memory:k",
+     "name": "a_del"
+    },
+    {
+     "op": "forget",
+     "ref": "memory:k",
+     "name": "a_forget"
+    }
+   ],
+   "probes": {
+    "a_disp": {
+     "probe": "op_result",
+     "name": "a_disp",
+     "field": "committed"
+    },
+    "a_disp_refusal": {
+     "probe": "op_result",
+     "name": "a_disp",
+     "field": "refusal"
+    },
+    "a_disp_mentions": {
+     "probe": "op_mentions",
+     "name": "a_disp",
+     "tokens": [
+      "v1",
+      "v2"
+     ]
+    },
+    "a_del": {
+     "probe": "op_result",
+     "name": "a_del",
+     "field": "committed"
+    },
+    "a_del_refusal": {
+     "probe": "op_result",
+     "name": "a_del",
+     "field": "refusal"
+    },
+    "a_forget": {
+     "probe": "op_result",
+     "name": "a_forget",
+     "field": "committed"
+    },
+    "a_forget_refusal": {
+     "probe": "op_result",
+     "name": "a_forget",
+     "field": "refusal"
+    },
+    "owner_history": {
+     "probe": "history",
+     "ref": "memory:k"
+    }
+   },
+   "expect": {
+    "a_disp": {
+     "eq": false
+    },
+    "a_disp_refusal": {
+     "eq": "already_deleted"
+    },
+    "a_disp_mentions": {
+     "eq": []
+    },
+    "a_del": {
+     "eq": false
+    },
+    "a_del_refusal": {
+     "eq": "already_deleted"
+    },
+    "a_forget": {
+     "eq": false
+    },
+    "a_forget_refusal": {
+     "eq": "fact_not_found"
+    },
+    "owner_history": {
+     "eq": {
+      "current": null,
+      "state_version": 2,
+      "tombstoned": true,
+      "events": []
+     }
+    }
+   },
+   "dsl5_disposition": "carried forward unchanged: its observables do not depend on the store profile"
+  },
+  {
+   "id": "W8b-refused-and-parked-proposals-on-a-tombstoned-id-report-v0",
+   "invariants": [
+    "W8"
+   ],
+   "clauses": [
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "Versions are generation-relative ... After a governed deletion of the head the id reports `0` to any writer, a re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one; the owner of the deleted generation still reads the version its deletion recorded (`tombstoned`, DUR-DEL-001).",
+     "observables": [
+      "parked_b_states",
+      "parked_b_after",
+      "parked_a_after",
+      "parked_a_snapshot",
+      "parked_b2_after",
+      "owner_history"
+     ]
+    },
+    {
+     "source": "docs/plan-776-777-772-exact-head-qualification.md",
+     "clause": "a reader outside that scope reads byte-identically to a memory that never existed",
+     "observables": [
+      "other_history",
+      "other_history_unknown"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "| A `scope_distinct_v1` store binds every public key to (tenant, scope, key) | the only multi-project profile |",
+     "observables": [
+      "parked_b_states",
+      "parked_b_after",
+      "parked_b2_after",
+      "other_summary",
+      "other_history_mentions"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "Versions are generation-relative: `state_version`, `state_snapshot`, `before_state` and `after_state` count within the live generation of a logical id. After a governed deletion of the head the id reports `0` to any writer, a re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one",
+     "observables": [
+      "other_summary"
+     ]
+    }
+   ],
+   "record": [
+    "other_history",
+    "other_history_unknown",
+    "parked_b"
+   ],
+   "implementation_evidence": [
+    "parked_b"
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dawn",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dawn",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    },
+    {
+     "op": "correct",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is noon",
+     "kind": "state_change",
+     "require_committed": true
+    },
+    {
+     "op": "forget",
+     "ref": "memory:k",
+     "require_committed": true
+    },
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dusk",
+     "as": "project:b",
+     "overrides": {
+      "risk_class": "medium"
+     },
+     "name": "parked_b"
+    },
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dusk",
+     "overrides": {
+      "risk_class": "high"
+     },
+     "name": "parked_a"
+    },
+    {
+     "op": "reopen"
+    },
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dusk",
+     "as": "project:b",
+     "overrides": {
+      "risk_class": "medium"
+     },
+     "name": "parked_b2"
+    }
+   ],
+   "probes": {
+    "parked_b": {
+     "probe": "op_result",
+     "name": "parked_b",
+     "field": "committed"
+    },
+    "parked_b_states": {
+     "probe": "op_mentions",
+     "name": "parked_b",
+     "tokens": [
+      "v1",
+      "v2",
+      "v3",
+      "memory:k",
+      "memory:k@2"
+     ]
+    },
+    "parked_b_after": {
+     "probe": "op_result",
+     "name": "parked_b",
+     "field": "after_state"
+    },
+    "parked_a_after": {
+     "probe": "op_result",
+     "name": "parked_a",
+     "field": "after_state"
+    },
+    "parked_a_snapshot": {
+     "probe": "op_result",
+     "name": "parked_a",
+     "field": "state_snapshot"
+    },
+    "parked_b2_after": {
+     "probe": "op_result",
+     "name": "parked_b2",
+     "field": "after_state"
+    },
+    "other_history": {
+     "probe": "history",
+     "ref": "memory:k",
+     "as": "project:b"
+    },
+    "other_history_unknown": {
+     "probe": "history_same_as_unknown",
+     "ref": "memory:k",
+     "as": "project:b"
+    },
+    "owner_history": {
+     "probe": "history",
+     "ref": "memory:k"
+    },
+    "other_summary": {
+     "probe": "history_summary",
+     "ref": "memory:k",
+     "as": "project:b"
+    },
+    "other_history_mentions": {
+     "probe": "history_mentions",
+     "ref": "memory:k",
+     "as": "project:b",
+     "tokens": [
+      "memory:k",
+      "memory:k@2",
+      "dawn",
+      "noon",
+      "v2",
+      "v3",
+      "project:a"
+     ]
+    }
+   },
+   "expect": {
+    "parked_b_states": {
+     "eq": []
+    },
+    "parked_b_after": {
+     "eq": "v0"
+    },
+    "parked_a_after": {
+     "eq": "v0"
+    },
+    "parked_a_snapshot": {
+     "eq": "v0"
+    },
+    "parked_b2_after": {
+     "eq": "v0"
+    },
+    "owner_history": {
+     "eq": {
+      "current": null,
+      "state_version": 3,
+      "tombstoned": true,
+      "events": []
+     }
+    },
+    "other_summary": {
+     "eq": {
+      "current": null,
+      "state_version": 0,
+      "tombstoned": false
+     }
+    },
+    "other_history_mentions": {
+     "eq": []
+    }
+   },
+   "dsl5_disposition": "B's parked proposal is on B's own new id. Its own-namespace history is not decided by a clause (R1); A's tombstoned view and the v0 receipts are unchanged."
+  },
+  {
+   "id": "W8-recreated-generation-starts-its-own-counter",
+   "invariants": [
+    "W8"
+   ],
+   "clauses": [
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "Versions are generation-relative ... After a governed deletion of the head the id reports `0` to any writer, a re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one; the owner of the deleted generation still reads the version its deletion recorded (`tombstoned`, DUR-DEL-001).",
+     "observables": [
+      "b1_snapshot",
+      "b1_before",
+      "b1_after",
+      "b1_mentions",
+      "b2_before",
+      "b2_after",
+      "owner_history",
+      "other_history",
+      "head"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "`remember` onto a live head outside the writer's scope: `committed: false`, `refusal: \"target_unavailable\"`, receipt `before_state`/`after_state` `v0`, `state_snapshot` `v0`. Nothing is written, no episode is retained, no version moves.",
+     "observables": [
+      "a_back",
+      "a_back_refusal"
+     ]
+    },
+    {
+     "source": "docs/786-cross-scope-write-authority.md",
+     "clause": "| B re-creates A's **deleted** id | allowed (fresh generation) | unchanged, with isolation proven (A cannot write it back while B's generation is live) |",
+     "observables": [
+      "a_back"
+     ]
+    },
+    {
+     "source": "docs/plan-776-777-772-exact-head-qualification.md",
+     "clause": "a re-created memory shows only its live generation",
+     "observables": [
+      "other_history_mentions"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "| A `scope_distinct_v1` store binds every public key to (tenant, scope, key) | the only multi-project profile |",
+     "observables": [
+      "b1_snapshot",
+      "b1_before",
+      "b1_after",
+      "a_back",
+      "other_history",
+      "other_history_mentions"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "An id with no live head (never written or governed-deleted) is open to any writer in the tenant: creation and the #776 re-creation of a deleted id as a fresh generation are unchanged.",
+     "observables": [
+      "a_back",
+      "a_back_refusal"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "Versions are generation-relative: `state_version`, `state_snapshot`, `before_state` and `after_state` count within the live generation of a logical id. After a governed deletion of the head the id reports `0` to any writer, a re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one",
+     "observables": [
+      "owner_history",
+      "head",
+      "b2_before",
+      "b2_after"
+     ]
+    }
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dawn",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dawn",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    },
+    {
+     "op": "correct",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is noon",
+     "kind": "state_change",
+     "require_committed": true
+    },
+    {
+     "op": "forget",
+     "ref": "memory:k",
+     "name": "a_del",
+     "require_committed": true
+    },
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dusk",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dusk",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "as": "project:b",
+     "label": "gen-b",
+     "name": "b1"
+    },
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is evening",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "evening",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "name": "a_back"
+    },
+    {
+     "op": "reopen"
+    },
+    {
+     "op": "correct",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is midnight",
+     "kind": "state_change",
+     "as": "project:b",
+     "label": "gen-b@2",
+     "name": "b2"
+    }
+   ],
+   "probes": {
+    "b1_snapshot": {
+     "probe": "op_result",
+     "name": "b1",
+     "field": "state_snapshot"
+    },
+    "b1_before": {
+     "probe": "op_result",
+     "name": "b1",
+     "field": "before_state"
+    },
+    "b1_after": {
+     "probe": "op_result",
+     "name": "b1",
+     "field": "after_state"
+    },
+    "b1_mentions": {
+     "probe": "op_mentions",
+     "name": "b1",
+     "tokens": [
+      "v3",
+      "memory:k",
+      "memory:k@2",
+      "dawn",
+      "noon"
+     ]
+    },
+    "b2_before": {
+     "probe": "op_result",
+     "name": "b2",
+     "field": "before_state"
+    },
+    "b2_after": {
+     "probe": "op_result",
+     "name": "b2",
+     "field": "after_state"
+    },
+    "a_back": {
+     "probe": "op_result",
+     "name": "a_back",
+     "field": "committed"
+    },
+    "a_back_refusal": {
+     "probe": "op_result",
+     "name": "a_back",
+     "field": "refusal"
+    },
+    "owner_history": {
+     "probe": "history",
+     "ref": "memory:k"
+    },
+    "other_history": {
+     "probe": "history",
+     "ref": "memory:k",
+     "as": "project:b"
+    },
+    "other_history_mentions": {
+     "probe": "history_mentions",
+     "ref": "memory:k",
+     "as": "project:b",
+     "tokens": [
+      "memory:k",
+      "memory:k@2",
+      "dawn",
+      "noon",
+      "evening",
+      "v3",
+      "project:a",
+      "memory:k@3"
+     ]
+    },
+    "head": {
+     "probe": "canonical_head",
+     "ref": "memory:k"
+    }
+   },
+   "expect": {
+    "b1_snapshot": {
+     "eq": "v0"
+    },
+    "b1_before": {
+     "eq": "v0"
+    },
+    "b1_after": {
+     "eq": "v1"
+    },
+    "b1_mentions": {
+     "eq": []
+    },
+    "b2_before": {
+     "eq": "v1"
+    },
+    "b2_after": {
+     "eq": "v2"
+    },
+    "a_back": {
+     "eq": true
+    },
+    "a_back_refusal": {
+     "eq": null
+    },
+    "owner_history": {
+     "eq": {
+      "current": "memory:k@3",
+      "state_version": 1,
+      "tombstoned": false,
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ]
+     }
+    },
+    "other_history_mentions": {
+     "eq": []
+    },
+    "other_history": {
+     "eq": {
+      "current": "gen-b@2",
+      "state_version": 2,
+      "tombstoned": false,
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt",
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ]
+     }
+    },
+    "head": {
+     "eq": "memory:k@3"
+    }
+   },
+   "record": [],
+   "dsl5_disposition": "B's first write is B's own generation (v0 -> v1, unchanged); A's own deleted id stays open to A, whose re-creation starts its own counter (history version 1)."
+  },
+  {
+   "id": "W1h-host-built-promotion-naming-the-owners-canonical-memory",
+   "invariants": [
+    "W1"
+   ],
+   "clauses": [
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "`remember` onto a live head outside the writer's scope: `committed: false`, `refusal: \"target_unavailable\"`, receipt `before_state`/`after_state` `v0`, `state_snapshot` `v0`. Nothing is written, no episode is retained, no version moves.",
+     "observables": [
+      "h_committed",
+      "h_refusal",
+      "h_before",
+      "h_after",
+      "h_mentions",
+      "episode",
+      "head",
+      "owner_history",
+      "owner_recall"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "| A `scope_distinct_v1` store binds every public key to (tenant, scope, key) | the only multi-project profile |",
+     "observables": [
+      "other_recall"
+     ]
+    }
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dawn",
+     "name": "a1",
+     "require_committed": true
+    },
+    {
+     "op": "commit_with_episode",
+     "ref": "memory:k",
+     "ref_scope": "project:a",
+     "episode": "episode:host-b",
+     "text": "Marrow lighthouse keeper shift is dusk",
+     "as": "project:b",
+     "name": "h"
+    }
+   ],
+   "probes": {
+    "h_committed": {
+     "probe": "op_result",
+     "name": "h",
+     "field": "committed"
+    },
+    "h_refusal": {
+     "probe": "op_result",
+     "name": "h",
+     "field": "refusal"
+    },
+    "h_before": {
+     "probe": "op_result",
+     "name": "h",
+     "field": "before_state"
+    },
+    "h_after": {
+     "probe": "op_result",
+     "name": "h",
+     "field": "after_state"
+    },
+    "h_mentions": {
+     "probe": "op_mentions",
+     "name": "h",
+     "tokens": [
+      "memory:k",
+      "dawn",
+      "'v1'"
+     ]
+    },
+    "episode": {
+     "probe": "episode_present",
+     "episode": "episode:host-b"
+    },
+    "head": {
+     "probe": "canonical_head",
+     "ref": "memory:k"
+    },
+    "owner_history": {
+     "probe": "history",
+     "ref": "memory:k"
+    },
+    "owner_recall": {
+     "probe": "recall_admitted",
+     "query": "Marrow lighthouse keeper shift"
+    },
+    "other_recall": {
+     "probe": "recall_admitted",
+     "query": "Marrow lighthouse keeper shift",
+     "as": "project:b"
+    }
+   },
+   "expect": {
+    "other_recall": {
+     "eq": []
+    },
+    "h_committed": {
+     "eq": false
+    },
+    "h_refusal": {
+     "eq": "target_unavailable"
+    },
+    "h_before": {
+     "eq": "v0"
+    },
+    "h_after": {
+     "eq": "v0"
+    },
+    "h_mentions": {
+     "eq": []
+    },
+    "episode": {
+     "eq": false
+    },
+    "head": {
+     "eq": "memory:k"
+    },
+    "owner_history": {
+     "eq": {
+      "current": "memory:k",
+      "state_version": 1,
+      "tombstoned": false,
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ]
+     }
+    },
+    "owner_recall": {
+     "eq": [
+      "memory:k"
+     ]
+    }
+   },
+   "dsl5_disposition": "H1: the -v3 W1 assertion, made through the host layer because the facade can no longer name A's memory on a scope-distinct store. The runner's host commit records before/after only, so state_snapshot is not captured. (-v5: the version token is the value 'v1', not the substring v1; see supersession_reason.)"
+  },
+  {
+   "id": "W2h-host-built-pruning-naming-the-owners-canonical-memory",
+   "invariants": [
+    "W2"
+   ],
+   "clauses": [
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "`correct`, `forget`, `dispute` on such a memory: the bare `fact_not_found` result, byte-identical to the result for an id nobody wrote.",
+     "observables": [
+      "h_committed",
+      "h_refusal",
+      "h_never_committed",
+      "h_never_refusal",
+      "tombstones",
+      "head",
+      "valid",
+      "owner_recall"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "The decision is the adapter's (`write_target_refusal`, `_delete_refusal`, `_dispute_refusal`); the facade only keeps the result shape non-disclosing",
+     "observables": [
+      "h_refusal",
+      "h_never_refusal"
+     ]
+    }
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dawn",
+     "require_committed": true
+    },
+    {
+     "op": "delete_version",
+     "ref": "memory:k",
+     "ref_scope": "project:a",
+     "fact": "memory:k",
+     "as": "project:b",
+     "name": "h"
+    },
+    {
+     "op": "delete_version",
+     "ref": "memory:never",
+     "ref_scope": "project:a",
+     "fact": "@literal:ref-999999",
+     "as": "project:b",
+     "name": "h_never"
+    }
+   ],
+   "probes": {
+    "h_committed": {
+     "probe": "op_result",
+     "name": "h",
+     "field": "committed"
+    },
+    "h_refusal": {
+     "probe": "op_result",
+     "name": "h",
+     "field": "refusal"
+    },
+    "h_never_committed": {
+     "probe": "op_result",
+     "name": "h_never",
+     "field": "committed"
+    },
+    "h_never_refusal": {
+     "probe": "op_result",
+     "name": "h_never",
+     "field": "refusal"
+    },
+    "tombstones": {
+     "probe": "tombstoned_ids"
+    },
+    "head": {
+     "probe": "canonical_head",
+     "ref": "memory:k"
+    },
+    "valid": {
+     "probe": "fact_valid",
+     "fact": "memory:k"
+    },
+    "owner_recall": {
+     "probe": "recall_admitted",
+     "query": "Marrow lighthouse keeper shift"
+    }
+   },
+   "expect": {
+    "h_committed": {
+     "eq": false
+    },
+    "h_refusal": {
+     "eq": "fact_not_found"
+    },
+    "h_never_committed": {
+     "eq": false
+    },
+    "h_never_refusal": {
+     "eq": "fact_not_found"
+    },
+    "tombstones": {
+     "eq": []
+    },
+    "head": {
+     "eq": "memory:k"
+    },
+    "valid": {
+     "eq": true
+    },
+    "owner_recall": {
+     "eq": [
+      "memory:k"
+     ]
+    }
+   },
+   "dsl5_disposition": "H1: the -v3 W2 deletion assertion through the host layer. The same host step naming an id nobody wrote is the control, and both must read fact_not_found."
+  },
+  {
+   "id": "W7c-h-former-owner-answers-after-a-host-built-cross-scope-re-creation",
+   "invariants": [
+    "W7",
+    "W8"
+   ],
+   "clauses": [
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "A governed-deleted generation is closed. At the fact level (`dispute` of a tombstoned fact by its uuid, a governed pruning of one of its versions, the adapter's delete of a member of a deleted lineage) the answer is `already_deleted`; at the facade's logical-reference level (`forget`, permanent `forget`, `correct`, `dispute` by `target_reference`) the former owner reads the bare `fact_not_found` result, because the reference has no visible head. Either answer is the same whether or not another scope has since re-created the id, and neither moves or reads the live generation [...] The one further governed act is the escalation of a reversible pruning to a permanent deletion by a writer eligible for that generation: it keeps the tombstone's `deleted_at`, recorded version and lineage, erases the content, and neither reads nor moves a live generation another scope holds.",
+     "observables": [
+      "a_disp",
+      "a_disp_refusal",
+      "a_del",
+      "a_del_refusal",
+      "a_forget",
+      "a_forget_refusal"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "`remember` onto a live head outside the writer's scope: `committed: false`, `refusal: \"target_unavailable\"`, receipt `before_state`/`after_state` `v0`, `state_snapshot` `v0`. Nothing is written, no episode is retained, no version moves.",
+     "observables": [
+      "a_rem",
+      "a_rem_refusal"
+     ]
+    },
+    {
+     "source": "docs/786-cross-scope-write-authority.md",
+     "clause": "| B re-creates A's **deleted** id | allowed (fresh generation) | unchanged, with isolation proven (A cannot write it back while B's generation is live) |",
+     "observables": [
+      "a_rem"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "Staleness and the `before_state` of a committed deletion or dispute are judged against the version the writer may see: a memory whose live head lies outside the writer's scope reads `0` to that writer, the same `v0` its proposal's `state_snapshot` resolves.",
+     "observables": [
+      "a_disp_mentions"
+     ]
+    },
+    {
+     "source": "docs/786-cross-scope-write-authority.md",
+     "clause": "the authorize event of a write-target-refused proposal carries `authority_refs: [\"write-target:refused\"]` (schema-valid) and the public history projection withholds that correlation",
+     "observables": []
+    },
+    {
+     "source": "docs/plan-776-777-772-exact-head-qualification.md",
+     "clause": "a re-created memory shows only its live generation",
+     "observables": []
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "An id with no live head (never written or governed-deleted) is open to any writer in the tenant: creation and the #776 re-creation of a deleted id as a fresh generation are unchanged.",
+     "observables": []
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "At the fact level (`dispute` of a tombstoned fact by its uuid, a governed pruning of one of its versions, the adapter's delete of a member of a deleted lineage) the answer is `already_deleted`; at the facade's logical-reference level (`forget`, permanent `forget`, `correct`, `dispute` by `target_reference`) the former owner reads the bare `fact_not_found` result, because the reference has no visible head.",
+     "observables": [
+      "a_del",
+      "a_del_refusal",
+      "a_disp",
+      "a_disp_mentions",
+      "a_disp_refusal",
+      "a_forget",
+      "a_forget_refusal",
+      "a_rem",
+      "a_rem_refusal",
+      "head"
+     ]
+    }
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dawn",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dawn",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    },
+    {
+     "op": "forget",
+     "ref": "memory:k",
+     "require_committed": true
+    },
+    {
+     "op": "commit_with_episode",
+     "ref": "memory:k",
+     "ref_scope": "project:a",
+     "episode": "episode:gen-b",
+     "text": "Marrow lighthouse keeper shift is dusk",
+     "as": "project:b",
+     "label": "gen-b",
+     "require_committed": true
+    },
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is night",
+     "name": "a_rem"
+    },
+    {
+     "op": "dispute",
+     "ref": "memory:k",
+     "fact": "memory:k",
+     "name": "a_disp"
+    },
+    {
+     "op": "delete_version",
+     "ref": "memory:k",
+     "fact": "memory:k",
+     "name": "a_del"
+    },
+    {
+     "op": "forget",
+     "ref": "memory:k",
+     "name": "a_forget"
+    }
+   ],
+   "probes": {
+    "a_rem": {
+     "probe": "op_result",
+     "name": "a_rem",
+     "field": "committed"
+    },
+    "a_rem_refusal": {
+     "probe": "op_result",
+     "name": "a_rem",
+     "field": "refusal"
+    },
+    "a_disp": {
+     "probe": "op_result",
+     "name": "a_disp",
+     "field": "committed"
+    },
+    "a_disp_refusal": {
+     "probe": "op_result",
+     "name": "a_disp",
+     "field": "refusal"
+    },
+    "a_disp_mentions": {
+     "probe": "op_mentions",
+     "name": "a_disp",
+     "tokens": [
+      "gen-b",
+      "dusk",
+      "v1",
+      "v2"
+     ]
+    },
+    "a_del": {
+     "probe": "op_result",
+     "name": "a_del",
+     "field": "committed"
+    },
+    "a_del_refusal": {
+     "probe": "op_result",
+     "name": "a_del",
+     "field": "refusal"
+    },
+    "a_forget": {
+     "probe": "op_result",
+     "name": "a_forget",
+     "field": "committed"
+    },
+    "a_forget_refusal": {
+     "probe": "op_result",
+     "name": "a_forget",
+     "field": "refusal"
+    },
+    "head": {
+     "probe": "canonical_head",
+     "ref": "memory:k"
+    }
+   },
+   "expect": {
+    "a_rem": {
+     "eq": false
+    },
+    "a_rem_refusal": {
+     "eq": "target_unavailable"
+    },
+    "a_disp": {
+     "eq": false
+    },
+    "a_disp_refusal": {
+     "eq": "already_deleted"
+    },
+    "a_disp_mentions": {
+     "eq": []
+    },
+    "a_del": {
+     "eq": false
+    },
+    "a_del_refusal": {
+     "eq": "already_deleted"
+    },
+    "a_forget": {
+     "eq": false
+    },
+    "a_forget_refusal": {
+     "eq": "fact_not_found"
+    },
+    "head": {
+     "eq": "gen-b"
+    }
+   },
+   "record": [],
+   "dsl5_disposition": "host-layer variant (pre-execution review F-5): B re-creates A's deleted canonical id through the host layer (OPEN). A's answers are the -v3 ones (FORMER: the same whether or not another scope has since re-created the id). B's facade cannot name that memory, so the B-side probes are replaced by the canonical head."
+  },
+  {
+   "id": "W8-h-host-built-cross-scope-re-creation-starts-its-own-counter",
+   "invariants": [
+    "W8"
+   ],
+   "clauses": [
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "Versions are generation-relative ... After a governed deletion of the head the id reports `0` to any writer, a re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one; the owner of the deleted generation still reads the version its deletion recorded (`tombstoned`, DUR-DEL-001).",
+     "observables": [
+      "b1_before",
+      "b1_after",
+      "b1_mentions",
+      "owner_history",
+      "head"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "`remember` onto a live head outside the writer's scope: `committed: false`, `refusal: \"target_unavailable\"`, receipt `before_state`/`after_state` `v0`, `state_snapshot` `v0`. Nothing is written, no episode is retained, no version moves.",
+     "observables": [
+      "a_back",
+      "a_back_refusal"
+     ]
+    },
+    {
+     "source": "docs/786-cross-scope-write-authority.md",
+     "clause": "| B re-creates A's **deleted** id | allowed (fresh generation) | unchanged, with isolation proven (A cannot write it back while B's generation is live) |",
+     "observables": [
+      "a_back"
+     ]
+    },
+    {
+     "source": "docs/plan-776-777-772-exact-head-qualification.md",
+     "clause": "a re-created memory shows only its live generation",
+     "observables": []
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "An id with no live head (never written or governed-deleted) is open to any writer in the tenant: creation and the #776 re-creation of a deleted id as a fresh generation are unchanged.",
+     "observables": [
+      "b1_before",
+      "b1_after"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "At the fact level (`dispute` of a tombstoned fact by its uuid, a governed pruning of one of its versions, the adapter's delete of a member of a deleted lineage) the answer is `already_deleted`; at the facade's logical-reference level (`forget`, permanent `forget`, `correct`, `dispute` by `target_reference`) the former owner reads the bare `fact_not_found` result, because the reference has no visible head.",
+     "observables": [
+      "a_back",
+      "a_back_refusal",
+      "b1_after",
+      "b1_before",
+      "b1_mentions",
+      "head",
+      "owner_history"
+     ]
+    }
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is dawn",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "dawn",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    },
+    {
+     "op": "correct",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is noon",
+     "kind": "state_change",
+     "require_committed": true
+    },
+    {
+     "op": "forget",
+     "ref": "memory:k",
+     "name": "a_del",
+     "require_committed": true
+    },
+    {
+     "op": "commit_with_episode",
+     "ref": "memory:k",
+     "ref_scope": "project:a",
+     "episode": "episode:gen-b",
+     "text": "Marrow lighthouse keeper shift is dusk",
+     "as": "project:b",
+     "label": "gen-b",
+     "name": "b1"
+    },
+    {
+     "op": "remember",
+     "ref": "memory:k",
+     "text": "Marrow lighthouse keeper shift is evening",
+     "prop": {
+      "s": "Marrow lighthouse keeper",
+      "a": "shift",
+      "v": "evening",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "name": "a_back"
+    },
+    {
+     "op": "reopen"
+    }
+   ],
+   "probes": {
+    "b1_before": {
+     "probe": "op_result",
+     "name": "b1",
+     "field": "before_state"
+    },
+    "b1_after": {
+     "probe": "op_result",
+     "name": "b1",
+     "field": "after_state"
+    },
+    "b1_mentions": {
+     "probe": "op_mentions",
+     "name": "b1",
+     "tokens": [
+      "v3",
+      "memory:k",
+      "memory:k@2",
+      "dawn",
+      "noon"
+     ]
+    },
+    "a_back": {
+     "probe": "op_result",
+     "name": "a_back",
+     "field": "committed"
+    },
+    "a_back_refusal": {
+     "probe": "op_result",
+     "name": "a_back",
+     "field": "refusal"
+    },
+    "owner_history": {
+     "probe": "history",
+     "ref": "memory:k"
+    },
+    "head": {
+     "probe": "canonical_head",
+     "ref": "memory:k"
+    }
+   },
+   "expect": {
+    "b1_before": {
+     "eq": "v0"
+    },
+    "b1_after": {
+     "eq": "v1"
+    },
+    "b1_mentions": {
+     "eq": []
+    },
+    "a_back": {
+     "eq": false
+    },
+    "a_back_refusal": {
+     "eq": "target_unavailable"
+    },
+    "owner_history": {
+     "eq": {
+      "current": null,
+      "state_version": 3,
+      "tombstoned": true,
+      "events": []
+     }
+    },
+    "head": {
+     "eq": "gen-b"
+    }
+   },
+   "record": [],
+   "dsl5_disposition": "host-layer variant (pre-execution review F-5): B's host-built re-creation of A's deleted canonical id starts its own counter (v0 -> v1). A's re-creation attempt then reads target_unavailable, and A keeps the version its deletion recorded. B's facade correction (-v3 b2) cannot name that memory and is dropped. The host commit records no state_snapshot."
+  }
+ ],
+ "residuals": [
+  "Host-layer correct, permanent deletion and dispute by logical reference naming another project's canonical memory are not replayed by DSL/5, which has host steps for promotion (commit_with_episode) and governed pruning (delete_version) only. That canonical gate is covered by reference/tests/test_786_cross_scope_write_authority.py and test_786_cross_scope_write_guard.py on the tenant-wide test fixture (pre-execution review F-6)."
+ ]
+}
