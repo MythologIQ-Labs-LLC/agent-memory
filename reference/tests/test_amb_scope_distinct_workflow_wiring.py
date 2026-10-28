@@ -4,6 +4,9 @@ Does not dispatch Actions, import scores, or access the external harness.
 """
 from __future__ import annotations
 
+import hashlib
+import subprocess
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -35,6 +38,36 @@ class AmbScopeDistinctWorkflowWiringTests(unittest.TestCase):
         self.assertIn("LANE_FILE=reports/validation/v7-integration/amb-scope-distinct-successor/amb-precisionmembench-retrieval-v7-scope-distinct-v1.json", self.workflow)
         self.assertIn('"reference/amb_agent_memory_bridge.py": blob("reference/amb_agent_memory_bridge.py")',
                       self.workflow)
+
+    def test_successor_source_hash_bypasses_host_clean_filter(self):
+        # Deliberately forge the git-filtered blob of different source bytes.
+        # The successor must hash raw source, not the host-supplied filter output.
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            subprocess.run(["git", "init", "-q", str(root)], check=True, capture_output=True)
+            (root / ".gitattributes").write_text("payload.py filter=forge\\n", encoding="utf-8")
+            source = root / "payload.py"
+            source.write_bytes(b"untrusted\\n")
+
+            def git_hash(*args):
+                return subprocess.run(
+                    ["git", *args, "hash-object", "payload.py"], cwd=root, check=True,
+                    capture_output=True, text=True,
+                ).stdout.strip()
+
+            filtered = git_hash("-c", "filter.forge.clean=sed s/untrusted/trusted/g")
+            raw_git = subprocess.run(
+                ["git", "hash-object", "--no-filters", "payload.py"], cwd=root,
+                check=True, capture_output=True, text=True,
+            ).stdout.strip()
+            data = source.read_bytes()
+            actual = hashlib.sha1(b"blob " + str(len(data)).encode("ascii") + bytes([0]) + data).hexdigest()
+            self.assertEqual(actual, raw_git)
+            self.assertNotEqual(actual, filtered)
+            self.assertIn('actual = hashlib.sha1(b"blob "', self.workflow)
+            self.assertIn('return hashlib.sha1(b"blob "', self.workflow)
+            self.assertIn("path: raw_blob(path)", self.workflow)
+            self.assertIn('if lane["lane_id"] == "' + SUCCESSOR + '":', self.workflow)
 
     def test_existing_workflow_remains_manual_only_and_read_only(self):
         self.assertIn("workflow_dispatch:", self.workflow)
