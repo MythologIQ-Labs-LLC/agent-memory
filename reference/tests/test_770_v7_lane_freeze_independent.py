@@ -253,19 +253,26 @@ class ReplayEvidenceFreshness(unittest.TestCase):
     )
     REPLAY_ID = "typed-sufficiency-noninterference-and-negative-controls-v1"
 
-    def test_lane_records_do_not_make_replay_evidence_stale(self):
+    def test_the_integrated_runtime_alone_makes_the_836_replay_evidence_stale(self):
+        # v7 integration (#786 x #836): the protected runtime changed after this evidence was
+        # recorded, so every family must be STALE for exactly that reason and for no other: the
+        # evidence stays untampered and verifiable, and needs a fresh qualification run.
         verifier = runpy.run_path(str(REPO_ROOT / "scripts/verify_644_v7_replays.py"))
         result = verifier["verify"](evidence_root=self.EVIDENCE_ROOT)
-        self.assertEqual({row["replay"]: row["status"] for row in result["replays"]},
-                         {row["replay"]: "VERIFIED" for row in result["replays"]}, result)
+        self.assertEqual({row["replay"]: (row["status"], row["problems"]) for row in result["replays"]},
+                         {row["replay"]: ("STALE", ["runtime files differ from the evidence source commit"])
+                          for row in result["replays"]}, result)
         self.assertEqual(len(result["replays"]), 5)
+        self.assertFalse(result["evidence_verified"])
 
     def test_a_runtime_edit_still_makes_replay_evidence_stale(self):
         verifier = runpy.run_path(str(REPO_ROOT / "scripts/verify_644_v7_replays.py"))
         manifest = json.loads((self.EVIDENCE_ROOT / self.REPLAY_ID / "manifest.json").read_text(encoding="utf-8"))
-        # The manifest pins the protected runtime that generated this replay,
-        # rather than assuming a forever-fixed pre-v7 ancestor.
-        baseline = manifest["source_commit"]
+        # The manifest pins the protected runtime that generated this replay; the integrated
+        # runtime differs from it. Lane records and reports committed since do not count, so
+        # HEAD itself is fresh, and an edit to a runtime file is still detected against it.
+        self.assertTrue(verifier["runtime_changed_since"](manifest["source_commit"]))
+        baseline = "HEAD"
         self.assertFalse(verifier["runtime_changed_since"](baseline))
         target = REPO_ROOT / "reference/agentmem_ref/runtime/adapter.py"
         original = target.read_bytes()
@@ -275,7 +282,6 @@ class ReplayEvidenceFreshness(unittest.TestCase):
         finally:
             target.write_bytes(original)
         self.assertFalse(verifier["runtime_changed_since"](baseline))
-
 
 if __name__ == "__main__":
     unittest.main()

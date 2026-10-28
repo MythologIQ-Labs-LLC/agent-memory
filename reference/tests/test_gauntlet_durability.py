@@ -19,6 +19,9 @@ from agentmem_ref.evaluation.gauntlet_profiles import (
 
 FIXTURE_DIR = REPO_ROOT / "fixtures" / "gauntlet"
 REAL_MANIFEST = FIXTURE_DIR / "agent-memory-public-durability-adapter.json"
+# v7 integration: the frozen v1 contestant recovers a second scope in its one store, which the
+# #786 single_project_v1 profile refuses; its qualifying successor is the scope_distinct_v1 v2.
+SUCCESSOR_MANIFEST = FIXTURE_DIR / "agent-memory-public-durability-adapter-v2.json"
 LOSSY_MANIFEST = FIXTURE_DIR / "durability-lossy-recovery-adapter.json"
 
 
@@ -96,10 +99,28 @@ class DurabilityRecoveryGauntletTests(unittest.TestCase):
             self.assertIn("forget", blocked["failure"]["message"])
             self.assertIn("--allow-destructive-operations", blocked["failure"]["message"])
 
-    def test_real_agent_memory_public_facade_qualifies_first_durability_slice(self):
+    def test_frozen_v1_contestant_is_stopped_only_at_wrong_scope_recovery(self):
+        # Classification, not a pass: v1 is incompatible with #786 store profiles.
         with tempfile.TemporaryDirectory() as temporary, _qualified_contestant_launch():
             result = run_gauntlet(
                 REAL_MANIFEST,
+                DURABILITY_RECOVERY_PROFILE_ID,
+                output_dir=Path(temporary) / "runs",
+                allow_external_process=True,
+                allow_destructive_operations=True,
+            )
+            self.assertEqual(result["status"], "complete", result)
+            cases = _case_map(load_run(result["artifacts"]["normalized_run"]["path"]))
+            isolation = cases["DUR-ISO-001"]
+            self.assertEqual(isolation["behavioral_outcome"], "blocked", isolation)
+            self.assertEqual(isolation["transition"], {"recover_right_scope": "ok", "recover_wrong_scope": "adapter_error"})
+            for case_id in ("DUR-REC-001", "DUR-DEL-001", "DUR-DET-001"):
+                self.assertEqual(cases[case_id]["behavioral_outcome"], "pass", cases[case_id])
+
+    def test_real_agent_memory_public_facade_qualifies_first_durability_slice(self):
+        with tempfile.TemporaryDirectory() as temporary, _qualified_contestant_launch():
+            result = run_gauntlet(
+                SUCCESSOR_MANIFEST,
                 DURABILITY_RECOVERY_PROFILE_ID,
                 output_dir=Path(temporary) / "runs",
                 allow_external_process=True,

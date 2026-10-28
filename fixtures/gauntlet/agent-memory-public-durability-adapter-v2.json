@@ -91,6 +91,11 @@
         "revision": "2b2a6199edf30feefd024aa10baace888aef5ffb",
         "superseded_at": "785f49c9606f5be69b789f2bb3766272dc578f8a",
         "reason": "the protected runtime changed (#786 store-open contract version separation); the pin names the runtime under test"
+      },
+      {
+        "revision": "785f49c9606f5be69b789f2bb3766272dc578f8a",
+        "superseded_at": "3b778a3ad05e2442a0e40d613f0c6cae3786798a",
+        "reason": "the protected runtime changed (v7 integration of #786 into the #836 cumulative runtime); the pin names the runtime under test"
       }
     ]
   },
@@ -98,7 +103,7 @@
     "configuration_digest": "sha256:a0ed220265c2b4876857d66b20b5e2903e07129d58260d19a600b391a2ac6034",
     "id": "agent-memory-runtime-baseline-v7-candidate",
     "kind": "agent_memory",
-    "revision": "git-commit:785f49c9606f5be69b789f2bb3766272dc578f8a",
+    "revision": "git-commit:3b778a3ad05e2442a0e40d613f0c6cae3786798a",
     "version": "0.2.0"
   },
   "transport": {

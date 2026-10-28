@@ -11,6 +11,9 @@ from agentmem_ref.evaluation.gauntlet_profiles import GOVERNANCE_ALPHA_PROFILE_I
 
 
 FIXTURE = REPO_ROOT / "fixtures" / "gauntlet" / "agent-memory-public-governance-adapter.json"
+# v7 integration: the frozen v1 contestant drives several projects in one store, which the #786
+# single_project_v1 profile refuses; its successor keeps every v1 claim boundary on scope_distinct_v1.
+SUCCESSOR = REPO_ROOT / "fixtures" / "gauntlet" / "agent-memory-public-governance-adapter-v2.json"
 
 
 def _cases(run: dict) -> dict[str, dict]:
@@ -18,10 +21,16 @@ def _cases(run: dict) -> dict[str, dict]:
 
 
 class AgentMemoryGovernanceGauntletTests(unittest.TestCase):
+    def test_frozen_v1_contestant_is_refused_by_the_store_profile(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            result = run_gauntlet(FIXTURE, GOVERNANCE_ALPHA_PROFILE_ID, output_dir=Path(temporary) / "runs")
+        self.assertEqual(result["status"], "blocked")
+        self.assertIn("StoreIdentityError", result["failure"]["message"])
+
     def test_public_facade_is_evaluated_as_real_system_without_adapter_side_tenant_claim(self):
         with tempfile.TemporaryDirectory() as temporary:
             result = run_gauntlet(
-                FIXTURE,
+                SUCCESSOR,
                 GOVERNANCE_ALPHA_PROFILE_ID,
                 output_dir=Path(temporary) / "runs",
             )

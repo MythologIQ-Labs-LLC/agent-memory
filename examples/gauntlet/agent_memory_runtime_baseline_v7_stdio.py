@@ -27,7 +27,7 @@ from agentmem_ref import AgentMemory
 CONTRACT_FAMILY = "agent-memory-gauntlet-operation"
 CONTRACT_VERSION = "0.1.0"
 PUBLIC_CONTRACT_VERSION = "1.8.0"
-FROZEN_RUNTIME_REVISION = "2ad4cf23d366fc784a486b0245550230e64bfa25"
+FROZEN_RUNTIME_REVISION = "3b778a3ad05e2442a0e40d613f0c6cae3786798a"
 TENANT = "tenant:gauntlet-runtime-baseline-v7"
 ACTOR = "agent:gauntlet-runtime-baseline-v7"
 SCOPE = "scope:gauntlet-runtime-baseline-v7"

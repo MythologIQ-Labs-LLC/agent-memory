@@ -76,14 +76,19 @@
         "revision": "2b2a6199edf30feefd024aa10baace888aef5ffb",
         "superseded_at": "785f49c9606f5be69b789f2bb3766272dc578f8a",
         "reason": "the protected runtime changed (#786 store-open contract version separation); the pin names the runtime under test"
+      },
+      {
+        "revision": "785f49c9606f5be69b789f2bb3766272dc578f8a",
+        "superseded_at": "3b778a3ad05e2442a0e40d613f0c6cae3786798a",
+        "reason": "the protected runtime changed (v7 integration of #786 into the #836 cumulative runtime); the pin names the runtime under test"
       }
     ]
   },
   "system": {
     "id": "agent-memory-public-runtime",
     "kind": "agent_memory",
-    "revision": "public-contract-1.6.0@785f49c9606f5be69b789f2bb3766272dc578f8a",
-    "version": "1.6.0"
+    "revision": "public-contract-1.8.0@3b778a3ad05e2442a0e40d613f0c6cae3786798a",
+    "version": "1.8.0"
   },
   "transport": {
     "callable": "agentmem_ref.evaluation.gauntlet_agent_memory_v2:agent_memory_public_adapter_v2",
