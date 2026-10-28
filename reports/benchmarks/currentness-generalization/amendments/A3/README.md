@@ -18,7 +18,8 @@
 ## Deliberate changes to historical behaviour
 
 - The frozen path and strict mode compare the **full** frozen blob, not the 32-bit prefix `745f789c`. A prefix collision with an altered template was demonstrated in review 1 (A4), and the gate-frozen checker would have accepted it. The genuine frozen bytes are classified exactly as before; replays on every recorded input are byte-identical.
-- The frozen path also checks the recorded template-text digest.
+- The frozen path also checks the recorded template-text digest, and refuses host shadowing, including in strict mode.
+- The blob is computed from the file's bytes, with CRLF normalised to LF. It no longer comes from `git hash-object`, whose clean filters host configuration can supply (review 3, R3-1).
 
 ## Evidence
 
@@ -32,11 +33,12 @@
   - the test counts and mutation sensitivity.
 - **`review-1/`** — independent review of `0173adf7`: **VETO** (B1–B3), with fixes.
 - **`review-2/`** — independent review of `656bbe4d`: **VETO** (N1), with the structural fix.
-- **`review-3/`** — independent review of the fixed revision.
+- **`review-3/`** — independent review of `98a84041`: **PASS, with advisories** R3-1 to R3-3. All are fixed in the next commit.
+- **`review-4/`** — independent confirmation of that delta.
 
 ## Stated limits
 
 - The checker cannot vouch for itself against edits to itself. The gate binds the checker blob, and `CHECKER_AUDIT_SHA256` only makes an unrecorded edit fail closed in band.
 - The static rules cannot rule out arbitrary code that another module runs at import time. The audited-blob list bounds what is accepted, and the repository scan covers tracked files.
 - The repository scan covers files tracked in this repository.
-- Every consumer imports the template source by name, so a changed `sys.path` order is a host decision, not a checker input.
+- Every consumer imports the template source by name, so a changed `sys.path` order, a `sitecustomize` or `.pth` hook, or an interpreter flag on the consumer's host is a host decision, not a checker input. The checker refuses the host artefacts it can see next to the source: packages, sibling modules, and unverifiable or mismatched bytecode.

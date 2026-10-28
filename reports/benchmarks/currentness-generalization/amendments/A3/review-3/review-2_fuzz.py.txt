@@ -1,0 +1,30 @@
+import copy, importlib.util, json, random, sys
+from pathlib import Path
+S = Path("/tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/scratchpad/judge-a3-r3")
+def load(p, tag):
+    spec = importlib.util.spec_from_file_location(tag, p); m = importlib.util.module_from_spec(spec); sys.modules[tag] = m; spec.loader.exec_module(m); return m
+old = load(S / "wt76/scripts/check_generalization_corpus.py", "o"); new = load(S / "repo/scripts/check_generalization_corpus.py", "n")
+T = old.template_texts(); assert T == new.template_basis()[0] and new.template_basis()[1] == new.TEMPLATE_AMENDMENT_ID
+F = S / "repo/reports/benchmarks/currentness-generalization/freeze"
+corpus = json.loads((F / "corpus.json").read_text()); variants = json.loads((F / "variants.json").read_text()); sel = json.loads((F / "selection.json").read_text())
+rng = random.Random(3); words = "the user now lives in project status budget current job prefers moved changed dollars what where is".split()
+def perturb(t):
+    toks = t.split()
+    for _ in range(rng.randint(0, 6)):
+        op = rng.random(); i = rng.randrange(len(toks) + 1)
+        if op < .4: toks.insert(i, rng.choice(words))
+        elif toks and op < .8: toks.pop(min(i, len(toks) - 1))
+        else: toks.insert(i, rng.choice(["OLD_x", "NEW_y", "?", "'s", "A"]))
+    return " ".join(toks)
+diffs = k7 = k8 = 0
+for trial in range(400):
+    c, v = copy.deepcopy(corpus), copy.deepcopy(variants)
+    for recs in (c, v):
+        for rec in rng.sample(recs, 15):
+            if "writes" in rec:
+                if rng.random() < .5: rec["query"] = perturb(rng.choice(T))
+                else: rng.choice(rec["writes"])["text"] = perturb(rng.choice(T))
+    prior = [perturb(rng.choice(T)) for _ in range(rng.randint(0, 3))]
+    a = old.check(c, v, sel, prior); b = new.check(c, v, sel, prior); b.pop("template_basis")
+    diffs += a != b; k7 += sum(r["rule"] == "K7_g3b_overlap" for r in a["rejections"]); k8 += sum(r["rule"] == "K8_holdout_overlap" for r in a["rejections"])
+print("trials 400, differing reports:", diffs, "K7 rejections:", k7, "K8:", k8)

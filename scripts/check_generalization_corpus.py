@@ -102,7 +102,7 @@ AUDITED_TEMPLATE_SOURCE_BLOBS = {
 # The checker cannot vouch for itself against edits to itself; the gate binds its blob. In band,
 # any change to this module's syntax tree (outside this assignment) refuses the amendment path
 # until a gate records the new digest (re-gate review 2, D1).
-CHECKER_AUDIT_SHA256 = "56a4723491d986044f611360a5a807b9cfbd9d2107d4be15fdf100a47eabe16d"
+CHECKER_AUDIT_SHA256 = "ac622bc3565f14eb0fedb1e8e46fd38845fc718328ea4682a82dbbe6ef02a14a"
 
 P_FAMILIES = [f"P{i}" for i in range(1, 14)]
 R_FAMILIES = [f"R{i}" for i in range(1, 8)]
@@ -159,6 +159,7 @@ def _templates_from_source(text: str) -> list:
 _DYNAMIC_NAMES = frozenset({
     "globals", "vars", "locals", "setattr", "delattr", "getattr", "exec", "eval", "compile",
     "__import__", "__builtins__", "builtins", "importlib", "inspect", "ctypes", "gc",
+    "operator", "attrgetter", "methodcaller", "itemgetter",
 })
 # Every dunder attribute (function __globals__, __self__, __dict__, __class__, ...), frame and
 # code attributes, sys._getframe and sys.modules, and the dynamic names reached as attributes.
@@ -199,8 +200,11 @@ def template_binding_violations(text: str) -> list[str]:
             violations.append(f"definition of {node.name!r} at line {line}")
         elif isinstance(node, ast.ImportFrom) and any(alias.name == "*" for alias in node.names):
             violations.append(f"star import at line {line}")
+        elif isinstance(node, ast.ImportFrom) and (node.module or "").split(".")[0] in _DYNAMIC_NAMES:
+            violations.append(f"import from {node.module!r} at line {line}")
         elif isinstance(node, ast.alias) and (
-                (node.asname or node.name.split(".")[0]) == TEMPLATE_NAME or node.name.split(".")[0] in _DYNAMIC_NAMES):
+                (node.asname or node.name.split(".")[0]) == TEMPLATE_NAME or node.name.split(".")[0] in _DYNAMIC_NAMES
+                or node.name in _DYNAMIC_ATTRIBUTES):
             violations.append(f"import binding {node.name!r}")
         elif isinstance(node, ast.ExceptHandler) and node.name == TEMPLATE_NAME:
             violations.append(f"exception binding at line {line}")
@@ -274,7 +278,11 @@ def shadowing_artifacts(source: Path) -> list[str]:
             if not flags & 0b10:
                 findings.append(f"unchecked hash-based bytecode {cached.name}")
                 continue
-            would_load = data[8:16] == util.source_hash(raw)
+            if data[8:16] != util.source_hash(raw):
+                # Normally recompiled, but loaded as-is under --check-hash-based-pycs never.
+                findings.append(f"hash-based bytecode {cached.name} that does not match the source")
+                continue
+            would_load = True
         else:
             would_load = (int.from_bytes(data[8:12], "little") == int(stat.st_mtime) & 0xFFFFFFFF
                           and int.from_bytes(data[12:16], "little") == stat.st_size & 0xFFFFFFFF)
@@ -292,6 +300,18 @@ def shadowing_artifacts(source: Path) -> list[str]:
         if not same:
             findings.append(f"bytecode {cached.name} differs from the source")
     return findings
+
+
+def source_blob(path: Path) -> str:
+    """The git blob id of ``path``'s bytes, computed here, not by ``git hash-object``.
+
+    ``git hash-object`` applies clean filters and attributes that untracked host state (a
+    .git/config, an attributes file, GIT_CONFIG_* environment variables) can supply, so it can be
+    made to report the frozen or an audited blob for any bytes (re-gate review 3, R3-1). The one
+    normalisation is the repository's own ``eol=lf``: CRLF becomes LF.
+    """
+    data = path.read_bytes().replace(b"\r\n", b"\n")
+    return hashlib.sha1(b"blob %d\0" % len(data) + data).hexdigest()
 
 
 def checker_audit_digest() -> str:
@@ -374,12 +394,14 @@ def comparison_rule_digest() -> str:
 def template_basis(source: Path = None, *, require_frozen_blob: bool = False) -> tuple[list[str], str]:
     """Return the 15 G3b template texts and the basis on which they were accepted."""
     source = TEMPLATE_SOURCE if source is None else source
-    blob = subprocess.run(
-        ["git", "hash-object", str(source)], cwd=ROOT, capture_output=True, text=True, check=True
-    ).stdout.strip()
+    blob = source_blob(source)
     # The historical rule pins the blob by its prefix; a 32-bit prefix is forgeable (re-gate review 1,
     # A4), so both paths require the full frozen blob and, on the frozen path, the recorded texts.
     if blob == TEMPLATE_FROZEN_BLOB:
+        # Host shadowing defeats the frozen bytes as much as changed ones (re-gate review 3, R3-2).
+        shadows = shadowing_artifacts(source)
+        if shadows:
+            raise SystemExit(f"host files would shadow the frozen template source: {'; '.join(shadows)}")
         frozen = _texts_from_templates(_templates_from_source(python_source(source)))
         if texts_digest(frozen) != TEMPLATE_TEXTS_SHA256:
             raise SystemExit(f"template texts at the frozen blob differ from the recorded digest")

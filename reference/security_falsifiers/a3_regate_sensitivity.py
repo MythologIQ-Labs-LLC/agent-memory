@@ -62,7 +62,7 @@ MUTATIONS = [
      "ast.FunctionDef) and (", True),
     ("star import allowed", 'elif isinstance(node, ast.ImportFrom) and any(alias.name == "*" for alias in node.names):',
      "elif False:", True),
-    ("import of dynamic modules allowed", " or node.name.split(\".\")[0] in _DYNAMIC_NAMES):", "):", True),
+    ("import of dynamic modules allowed", " or node.name.split(\".\")[0] in _DYNAMIC_NAMES\n", "\n", True),
     ("parameters allowed", "elif isinstance(node, ast.arg) and node.arg == TEMPLATE_NAME:", "elif False:", True),
     ("keyword names allowed", "elif isinstance(node, ast.keyword) and node.arg == TEMPLATE_NAME:", "elif False:", True),
     ("type parameters allowed", "elif type_params and isinstance(node, type_params) and node.name == TEMPLATE_NAME:",
@@ -90,6 +90,19 @@ MUTATIONS = [
      "        parts += []", True),
 
     ("frozen blob unavailability ignored", "    if frozen_source.returncode != 0:", "    if False:", True),
+    ("blob hashed by git hash-object with filters", "    blob = source_blob(source)",
+     '    blob = subprocess.run(["git", "hash-object", str(source)], cwd=ROOT, capture_output=True, text=True,\n'
+     "                          check=True).stdout.strip()", True),
+    ("frozen path skips shadowing", "        shadows = shadowing_artifacts(source)\n        if shadows:\n"
+     '            raise SystemExit(f"host files would shadow the frozen',
+     "        shadows = []\n        if shadows:\n            raise SystemExit(f\"host files would shadow the frozen", True),
+    ("mismatched checked-hash bytecode skipped", '                findings.append(f"hash-based bytecode {cached.name} that does not match the source")\n',
+     "", True),
+    ("attribute-access helpers allowed", '    "operator", "attrgetter", "methodcaller", "itemgetter",\n', "", True),
+    ("dynamic attributes importable by name", "\n                or node.name in _DYNAMIC_ATTRIBUTES):", "):", True),
+    ("import from dynamic modules allowed",
+     '        elif isinstance(node, ast.ImportFrom) and (node.module or "").split(".")[0] in _DYNAMIC_NAMES:',
+     "        elif False:", True),
     # Equivalent by construction.
     ("global clause removed", "elif isinstance(node, (ast.Global, ast.Nonlocal)) and TEMPLATE_NAME in node.names:",
      "elif False:", False),

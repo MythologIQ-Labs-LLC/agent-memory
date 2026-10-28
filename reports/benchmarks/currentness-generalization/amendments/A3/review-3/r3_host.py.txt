@@ -1,0 +1,61 @@
+"""Judge r3: host-state attacks on the 98a84041 checker in a scratch clone (attackrepo)."""
+import importlib.util, py_compile, shutil, subprocess, sys
+from pathlib import Path
+S = Path(__file__).resolve().parents[1]; R = S / "attackrepo"; REF = R / "reference"; T = REF / "run_semantic_route_ordering_report.py"
+FROZEN_BLOB, AUDITED_BLOB = "745f789c01b7a542f906a9034ae63ebdd6776f7c", "7cb9535695dd5bc760831eba50aefd5622fc1fa5"
+def git(*a, **k): return subprocess.run(["git", *a], cwd=R, capture_output=True, text=True, **k)
+def reset():
+    git("config", "--unset-all", "filter.judge.clean"); (R / ".git/info/attributes").unlink(missing_ok=True)
+    git("checkout", "-q", "--", "."); shutil.rmtree(REF / "run_semantic_route_ordering_report", ignore_errors=True)
+    for p in (REF / "__pycache__").glob("run_semantic_route_ordering_report.*"): p.unlink()
+reset()
+assert git("rev-parse", "HEAD").stdout.startswith("163b4604")
+def checkers():
+    out = []
+    for tag, path, kw in (("98a A3", R / "scripts/check_generalization_corpus.py", "require_frozen_blob=False"),
+                          ("98a strict", R / "scripts/check_generalization_corpus.py", "require_frozen_blob=True"),
+                          ("76a9e30", S / "wt76/scripts/check_generalization_corpus.py", None)):
+        call = f"c.template_basis({kw})[1]" if kw else "(c.template_texts(), 'frozen')[1]"
+        code = (f"import importlib.util as u, pathlib; s=u.spec_from_file_location('c', {str(path)!r}); c=u.module_from_spec(s); s.loader.exec_module(c)\n"
+                f"c.ROOT=pathlib.Path({str(R)!r}); c.TEMPLATE_SOURCE=c.ROOT/'reference/run_semantic_route_ordering_report.py'\n"
+                f"try: print('ACCEPT', {call})\nexcept SystemExit as e: print('refuse', str(e)[:110])")
+        r = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True)
+        out.append(f"{tag}: {(r.stdout or r.stderr).strip().splitlines()[-1]}")
+    return out
+def consumers():
+    a = subprocess.run([sys.executable, "-c", "from run_cross_fact_currentness_report import CONFLICT_TEMPLATES as t; print('consumer', 'EVIL' if 'EVIL' in repr(t) else 'frozen')"], cwd=REF, capture_output=True, text=True)
+    b = subprocess.run([sys.executable, "-c", "import run_semantic_route_ordering_report as m; t=m.run_m4.__globals__['CONFLICT_TEMPLATES']; print('run_m4', 'EVIL' if 'EVIL' in repr(t) else 'frozen')"], cwd=REF, capture_output=True, text=True)
+    return [(x.stdout or x.stderr).strip().splitlines()[-1] for x in (a, b)]
+def report(label):
+    blob = git("hash-object", str(T)).stdout.strip(); raw = subprocess.run(["git", "hash-object", "--no-filters", str(T)], cwd=R, capture_output=True, text=True).stdout.strip()
+    print(f"{label}\n   hash-object={blob[:12]} --no-filters={raw[:12]}\n   " + "\n   ".join(checkers() + consumers()))
+ALT = '(("location", "EVIL {old}", "EVIL {new}", "EVIL?"),)'
+frozen = git("cat-file", "-p", FROZEN_BLOB).stdout; audited = git("cat-file", "-p", AUDITED_BLOB).stdout
+(S / "blobs").mkdir(exist_ok=True); (S / "blobs/frozen.py").write_text(frozen); (S / "blobs/audited.py").write_text(audited)
+# H-a: git clean filter (untracked .git/config + .git/info/attributes) maps any bytes to the pinned blob
+(R / ".git/info/attributes").write_text("run_semantic_route_ordering_report.py filter=judge\n")
+git("config", "filter.judge.clean", f"cat {S / 'blobs/frozen.py'}")
+T.write_text(frozen + f"\nCONFLICT_TEMPLATES = {ALT}\n"); report("H-a1 frozen path: frozen bytes + trailing rebinding, clean filter -> frozen blob")
+git("config", "filter.judge.clean", f"cat {S / 'blobs/audited.py'}")
+K = '"SETALPMET_TCILFNOC"[::-1]'
+T.write_text(audited + f"\nfrom operator import attrgetter as _a\n_a('__glob' + 'als__')(run_m4)[{K}] = {ALT}\n")
+report("H-a2 A3 path: audited bytes + attrgetter rebinding (passes static rules), clean filter -> audited blob")
+reset()
+# H-b: frozen path does not run shadowing_artifacts
+T.write_text(frozen)
+pk = REF / "run_semantic_route_ordering_report"; pk.mkdir(); (pk / "__init__.py").write_text(frozen + f"\nCONFLICT_TEMPLATES = {ALT}\n")
+report("H-b1 frozen bytes + shadowing package directory"); shutil.rmtree(pk)
+evil = S / "blobs/evil.py"; evil.write_text(frozen + f"\nCONFLICT_TEMPLATES = {ALT}\n")
+py_compile.compile(str(evil), cfile=importlib.util.cache_from_source(str(T)), dfile=str(T), invalidation_mode=py_compile.PycInvalidationMode.UNCHECKED_HASH)
+report("H-b2 frozen bytes + unchecked-hash .pyc"); reset()
+# H-c: checked-hash pyc that does not match the source is 'stale' to the checker, but loads under --check-hash-based-pycs never
+T.write_text(audited)
+py_compile.compile(str(evil), cfile=importlib.util.cache_from_source(str(T)), dfile=str(T), invalidation_mode=py_compile.PycInvalidationMode.CHECKED_HASH)
+r = subprocess.run([sys.executable, "--check-hash-based-pycs", "never", "-c", "from run_cross_fact_currentness_report import CONFLICT_TEMPLATES as t; print('consumer(never)', 'EVIL' if 'EVIL' in repr(t) else 'frozen')"], cwd=REF, capture_output=True, text=True)
+report("H-c audited bytes + checked-hash .pyc of other code (checker run after a --check-hash-based-pycs never import)")
+print("   " + (r.stdout or r.stderr).strip().splitlines()[-1])
+py_compile.compile(str(evil), cfile=importlib.util.cache_from_source(str(T)), dfile=str(T), invalidation_mode=py_compile.PycInvalidationMode.CHECKED_HASH)
+print("   checker shadowing_artifacts with stale checked pyc present:", subprocess.run([sys.executable, "-c", f"import sys; sys.path.insert(0, {str(R/'scripts')!r}); import check_generalization_corpus as c, pathlib; print(c.shadowing_artifacts(pathlib.Path({str(T)!r})))"], capture_output=True, text=True).stdout.strip())
+r = subprocess.run([sys.executable, "--check-hash-based-pycs", "never", "-c", "from run_cross_fact_currentness_report import CONFLICT_TEMPLATES as t; print('consumer(never) again', 'EVIL' if 'EVIL' in repr(t) else 'frozen')"], cwd=REF, capture_output=True, text=True)
+print("   " + (r.stdout or r.stderr).strip().splitlines()[-1]); reset()
+print("clean:", git("status", "--short").stdout.strip() or "worktree clean")

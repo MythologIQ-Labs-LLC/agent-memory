@@ -334,6 +334,64 @@ class AmendmentA3Tests(unittest.TestCase):
         with self.assertRaisesRegex(SystemExit, "does not parse"):
             checker.template_basis(self.variant("def broken(:\n"))
 
+    def test_review_3_r1_git_filters_cannot_forge_the_blob(self):
+        # Untracked host configuration can make `git hash-object` report the frozen or the audited
+        # blob for any bytes; the checker hashes the bytes itself.
+        import os
+
+        evil = self.frozen + '\nCONFLICT_TEMPLATES = (("location", "EVIL {old}", "EVIL {new}", "EVIL?"),)\n'
+        target = self.variant(evil)
+        forged = Path(self.temp.name) / "forged-frozen.txt"
+        forged.write_text(self.frozen, encoding="utf-8")
+        attributes = Path(self.temp.name) / "attributes"
+        attributes.write_text("run_semantic_route_ordering_report.py filter=judge\n", encoding="utf-8")
+        env = {"GIT_CONFIG_COUNT": "2", "GIT_CONFIG_KEY_0": "core.attributesFile", "GIT_CONFIG_VALUE_0": str(attributes),
+               "GIT_CONFIG_KEY_1": "filter.judge.clean", "GIT_CONFIG_VALUE_1": f"cat {forged}"}
+        with mock.patch.dict(os.environ, env):
+            reported = subprocess.run(["git", "hash-object", str(target)], cwd=checker.ROOT, capture_output=True,
+                                      text=True, check=True).stdout.strip()
+            self.assertEqual(reported, checker.TEMPLATE_FROZEN_BLOB, "the attack precondition no longer holds")
+            self.assertNotEqual(checker.source_blob(target), checker.TEMPLATE_FROZEN_BLOB)
+            for strict in (False, True):
+                with self.subTest(strict=strict), self.assertRaises(SystemExit):
+                    checker.template_basis(target, require_frozen_blob=strict)
+        self.assertEqual(checker.source_blob(checker.TEMPLATE_SOURCE),
+                         subprocess.run(["git", "hash-object", "--no-filters", str(checker.TEMPLATE_SOURCE)],
+                                        cwd=checker.ROOT, capture_output=True, text=True, check=True).stdout.strip())
+
+    def test_review_3_r2_frozen_path_refuses_host_shadowing(self):
+        path = self.variant(self.frozen)
+        self.assertEqual(checker.template_basis(path)[1], "frozen_blob")
+        path.with_suffix("").mkdir()
+        (path.with_suffix("") / "__init__.py").write_text("CONFLICT_TEMPLATES = ()\n", encoding="utf-8")
+        for strict in (False, True):
+            with self.subTest(strict=strict), self.assertRaisesRegex(SystemExit, "would shadow the frozen"):
+                checker.template_basis(path, require_frozen_blob=strict)
+
+    def test_review_3_r3_mismatched_checked_hash_bytecode_is_refused(self):
+        import py_compile
+        import sys
+
+        directory = Path(tempfile.mkdtemp(dir=self.temp.name))
+        path = directory / "run_semantic_route_ordering_report.py"
+        other = directory / "other.py"
+        other.write_text(self.source + "\nX = ()\n", encoding="utf-8")
+        cache = directory / "__pycache__" / f"{path.stem}.{sys.implementation.cache_tag}.pyc"
+        py_compile.compile(str(other), cfile=str(cache), doraise=True,
+                           invalidation_mode=py_compile.PycInvalidationMode.CHECKED_HASH)
+        other.unlink()
+        path.write_text(self.source, encoding="utf-8")
+        with self.assertRaisesRegex(SystemExit, "does not match the source"):
+            checker.template_basis(path)
+
+    def test_review_3_attribute_access_helpers_are_refused(self):
+        for label, suffix in (("attrgetter", "\nfrom operator import attrgetter as _a\n"),
+                              ("from sys import modules", "\nfrom sys import modules as _m\n"),
+                              ("dotted dynamic module", "\nimport importlib.util\n"),
+                              ("dotted dynamic module from", "\nfrom ctypes.util import find_library\n")):
+            with self.subTest(label), self.assertRaisesRegex(SystemExit, "CONFLICT_TEMPLATES is rebound"):
+                checker.template_basis(self.variant(self.source + suffix))
+
     def test_frozen_path_checks_the_recorded_texts(self):
         with mock.patch.object(checker, "TEMPLATE_TEXTS_SHA256", "0" * 64):
             with self.assertRaisesRegex(SystemExit, "frozen blob differ from the recorded digest"):
