@@ -547,6 +547,20 @@ class SuccessorFreezeV4Tests(unittest.TestCase):
         self.assertEqual(self.v4["agent_memory"]["public_contract_version"], self.v3["agent_memory"]["public_contract_version"])
         self.assertIn({"kind": "replay", "ref": "mesa-formal-v4"}, declaration["acceptance_evidence_required"])
 
+    def test_replay_evaluation_reproduces_from_committed_files(self):
+        # The v4 replay (refrozen identity, pinned Python 3.11 environment, pinned upstream) and
+        # its prediction evaluation are evidence for the v7 acceptance step, not acceptance.
+        sys.path.insert(0, str(REFERENCE))
+        import evaluate_mesa_formal_v4_predictions as evaluation
+
+        committed = json.loads(evaluation.OUT.read_text(encoding="utf-8"))
+        self.assertEqual(evaluation.evaluate(), committed)
+        self.assertTrue(committed["all_predictions_hold"])
+        self.assertEqual(committed["runtime_tree"], self.v4["agent_memory"]["runtime_tree"])
+        self.assertEqual(committed["environment"]["packages"], self.v4["agent_memory"]["packages"])
+        self.assertEqual(committed["authority_effect"], "none")
+        self.assertIn("not benchmark acceptance", committed["status"])
+
     def test_predictions_are_preregistered_against_v3(self):
         for key in ("P1", "P2", "P3", "P4", "P5"):
             self.assertEqual(self.v4["predictions"][key], self.v3["predictions"][key], key)
