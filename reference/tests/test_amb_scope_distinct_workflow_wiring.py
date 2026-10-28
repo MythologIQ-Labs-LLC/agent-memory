@@ -45,9 +45,9 @@ class AmbScopeDistinctWorkflowWiringTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             subprocess.run(["git", "init", "-q", str(root)], check=True, capture_output=True)
-            (root / ".gitattributes").write_text("payload.py filter=forge\\n", encoding="utf-8")
+            (root / ".gitattributes").write_text("payload.py filter=forge" + chr(10), encoding="utf-8")
             source = root / "payload.py"
-            source.write_bytes(b"untrusted\\n")
+            source.write_bytes(b"untrusted" + bytes([10]))
 
             def git_hash(*args):
                 return subprocess.run(
