@@ -7,7 +7,30 @@
   },
   "owning_issue": 786,
   "frozen_on": "2026-10-27",
-  "status": "transition declaration (#786): protocol identity frozen before any run for the scope-host migration and the Runtime Baseline v7 transition; not executed, not published, not benchmark acceptance; no score inspected; v1, v2 and v3 are never edited",
+  "status": "transition declaration (#786), refrozen 2026-10-28 against the current runtime and runner: protocol identity frozen before any run for the scope-host migration and the Runtime Baseline v7 transition; not executed, not published, not benchmark acceptance; no score inspected; v1, v2 and v3 are never edited",
+  "refreeze": {
+    "refrozen_on": "2026-10-28",
+    "decision": "owner decision: refreeze mesa-formal-v4 against the actual current runtime and runner, then replay only in the pinned environment with the pinned upstream dataset",
+    "superseded_bytes": {
+      "commit": "ad95b2d6",
+      "sha256": "4ddb8b5df35eb2c39355d08556ce193185412a3d59c5571faa7b546d43e3c68d"
+    },
+    "changed": {
+      "agent_memory.runtime_tree": {
+        "from": "49e96c2049da3ffc9103fc3e357f1a3439bfe97c",
+        "to": "eafa528fad90c5ca044bc3c897d351520f921232"
+      }
+    },
+    "unchanged": "runner (sha256 ba6ca203...), upstream, arguments, phases, adapter, judge, classifier, deviations, predictions and every other field",
+    "why": "the protected runtime changed after the original freeze (#786 oracle-v2 hardening, store-open contract version separation, v2 Gauntlet adapters under evaluation/); no run was ever executed under the superseded identity and no score was inspected",
+    "runtime_delta_paths": [
+      "reference/agentmem_ref/api/store_contract.py",
+      "reference/agentmem_ref/api/surface.py",
+      "reference/agentmem_ref/evaluation/gauntlet_agent_memory_durability_v2.py",
+      "reference/agentmem_ref/evaluation/gauntlet_agent_memory_v2.py",
+      "reference/agentmem_ref/store_contract.py"
+    ]
+  },
   "run_id": "agent_memory_formal_v4_s2027_9170",
   "upstream": {
     "repository": "mazaiying/AgentMemBench",
@@ -182,7 +205,7 @@
     "sha256": "ba6ca203fbeb52ecf522160293fdd0af1d993ade4d13e3a0d6a44610b80e2a44"
   },
   "agent_memory": {
-    "runtime_tree": "49e96c2049da3ffc9103fc3e357f1a3439bfe97c",
+    "runtime_tree": "eafa528fad90c5ca044bc3c897d351520f921232",
     "runtime_tree_rule": "git tree id of reference/agentmem_ref at the executed revision (covers the runtime, ranking policy, interpreter, admission and the packaged rc1-local profile); the run refuses on mismatch or on any dirty/untracked file in the repository",
     "ranking_policy_id": "multi-route-default",
     "ranking_policy_version": "3.4.0",

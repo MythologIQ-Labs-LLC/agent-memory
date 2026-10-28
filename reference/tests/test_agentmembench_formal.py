@@ -6,7 +6,9 @@ non-benchmark text, so they cannot be used to fit the adapter to scores.
 
 from __future__ import annotations
 
+import hashlib
 import json
+import subprocess
 import sys
 import unittest
 from pathlib import Path
@@ -477,13 +479,16 @@ class SuccessorFreezeV4Tests(unittest.TestCase):
 
     CHANGED = {"freeze_id", "supersedes", "owning_issue", "frozen_on", "status", "run_id", "adapter", "runner",
                "agent_memory", "predictions"}
+    # 2026-10-28 owner decision: v4 is refrozen against the current runtime and runner. The
+    # refreeze adds only its provenance record and moves only agent_memory.runtime_tree.
+    ADDED = {"refreeze"}
 
     def setUp(self):
         self.v3 = formal.load_freeze(V3_FREEZE)
         self.v4 = formal.load_freeze(V4_FREEZE)
 
     def test_field_differences_are_exhaustive(self):
-        self.assertEqual(set(self.v4), set(self.v3))
+        self.assertEqual(set(self.v4), set(self.v3) | self.ADDED)
         for key in set(self.v3) - self.CHANGED:
             self.assertEqual(self.v4[key], self.v3[key], key)
         adapter_changed = {key for key in self.v3["adapter"] if self.v3["adapter"][key] != self.v4["adapter"][key]}
@@ -505,6 +510,31 @@ class SuccessorFreezeV4Tests(unittest.TestCase):
             "sha256": formal.sha256_file(V3_FREEZE),
         })
         self.assertIn("not executed, not published, not benchmark acceptance", self.v4["status"])
+
+    def test_refreeze_moves_only_the_runtime_tree_and_names_the_superseded_bytes(self):
+        refreeze = self.v4["refreeze"]
+        self.assertEqual(set(refreeze["changed"]), {"agent_memory.runtime_tree"})
+        self.assertEqual(refreeze["changed"]["agent_memory.runtime_tree"]["to"], self.v4["agent_memory"]["runtime_tree"])
+        self.assertIn("refrozen 2026-10-28", self.v4["status"])
+        superseded = subprocess.run(["git", "show", f"{refreeze['superseded_bytes']['commit']}:"
+                                     f"{V4_FREEZE.relative_to(formal.REPO_ROOT)}"],
+                                    cwd=formal.REPO_ROOT, capture_output=True)
+        if superseded.returncode:
+            self.skipTest("superseded commit not in this (shallow) checkout")
+        self.assertEqual(hashlib.sha256(superseded.stdout).hexdigest(), refreeze["superseded_bytes"]["sha256"])
+        previous = json.loads(superseded.stdout)
+        self.assertEqual(previous["agent_memory"]["runtime_tree"], refreeze["changed"]["agent_memory.runtime_tree"]["from"])
+        # Apart from the runtime tree, the status note and the added record, the bytes are the old ones.
+        current = json.loads(V4_FREEZE.read_text(encoding="utf-8"))
+        current.pop("refreeze")
+        current["agent_memory"]["runtime_tree"] = previous["agent_memory"]["runtime_tree"]
+        current["status"] = previous["status"]
+        self.assertEqual(current, previous)
+        tree_delta = subprocess.run(["git", "diff", "--name-only", previous["agent_memory"]["runtime_tree"],
+                                     self.v4["agent_memory"]["runtime_tree"]], cwd=formal.REPO_ROOT,
+                                    capture_output=True, text=True, check=True).stdout.split()
+        self.assertEqual(sorted("reference/agentmem_ref/" + path for path in tree_delta),
+                         sorted(refreeze["runtime_delta_paths"]))
 
     def test_binds_the_live_runner_and_unchanged_identities(self):
         observed = formal.observed_agent_memory_binding()
