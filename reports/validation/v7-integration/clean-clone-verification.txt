@@ -1,0 +1,19 @@
+clean clone of origin/integration/v7-786-836-reconciliation-no-ci at 8827735eec9ca7728b122f25a35423675567f677
+python: Python 3.12.3, bare python -> Python 3.12.3
+
+== declaration / baseline
+Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v6; declared_successor=agent-memory-runtime-baseline-v7 (issue #674); protected surface = frozen e98e6e7b776aa2dd680e84f3ed4773ad2afa4ae1 + 27 declared blobs; deltas=identity.public_contract_version 1.6.0->1.8.0; candidate=HEAD
+declaration blob 06e33d935562e8a7e8587578f1c81fd7c019e9f8
+runtime tree e9dce74b24f5941c4923402a8773433e22094a76 (integration merge 3b778a3a: e9dce74b24f5941c4923402a8773433e22094a76)
+Architecture catalog valid: 84 numbered docs, exactly one shelf each.
+
+== full reference suite (repo root: python3.12 -m unittest discover -s reference/tests -t reference)
+Ran 3382 tests in 360.937s
+OK (skipped=27, expected failures=1)
+
+== standalone security falsifiers
+test_786_store_profile_oracle_v2: OK
+store_profile_oracle_v2_sensitivity: every must-detect regression was detected
+store_open_contract_sensitivity: every must-detect regression was detected (7/7)
+a3_regate_sensitivity: every must-detect mutation was killed (53/53); 53 killed in total
+git status after run: 0 changed paths
