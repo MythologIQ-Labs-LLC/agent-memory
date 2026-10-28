@@ -1,0 +1,131 @@
+test_rf1a_identity_attributes_cannot_be_reassigned (tests.test_v7_review_findings.HandleIdentityIsFixedTests.test_rf1a_identity_attributes_cannot_be_reassigned) ... 
+  test_rf1a_identity_attributes_cannot_be_reassigned (tests.test_v7_review_findings.HandleIdentityIsFixedTests.test_rf1a_identity_attributes_cannot_be_reassigned) (attribute='scope') ... FAIL
+  test_rf1a_identity_attributes_cannot_be_reassigned (tests.test_v7_review_findings.HandleIdentityIsFixedTests.test_rf1a_identity_attributes_cannot_be_reassigned) (attribute='tenant') ... FAIL
+  test_rf1a_identity_attributes_cannot_be_reassigned (tests.test_v7_review_findings.HandleIdentityIsFixedTests.test_rf1a_identity_attributes_cannot_be_reassigned) (attribute='actor_id') ... FAIL
+  test_rf1a_identity_attributes_cannot_be_reassigned (tests.test_v7_review_findings.HandleIdentityIsFixedTests.test_rf1a_identity_attributes_cannot_be_reassigned) (attribute='purpose') ... FAIL
+  test_rf1a_identity_attributes_cannot_be_reassigned (tests.test_v7_review_findings.HandleIdentityIsFixedTests.test_rf1a_identity_attributes_cannot_be_reassigned) (attribute='task_ref') ... FAIL
+  test_rf1a_identity_attributes_cannot_be_reassigned (tests.test_v7_review_findings.HandleIdentityIsFixedTests.test_rf1a_identity_attributes_cannot_be_reassigned) (attribute='store_profile') ... FAIL
+  test_rf1a_identity_attributes_cannot_be_reassigned (tests.test_v7_review_findings.HandleIdentityIsFixedTests.test_rf1a_identity_attributes_cannot_be_reassigned) (attribute='charter_version') ... FAIL
+  test_rf1a_identity_attributes_cannot_be_reassigned (tests.test_v7_review_findings.HandleIdentityIsFixedTests.test_rf1a_identity_attributes_cannot_be_reassigned) (attribute='runtime') ... FAIL
+  test_rf1a_identity_attributes_cannot_be_reassigned (tests.test_v7_review_findings.HandleIdentityIsFixedTests.test_rf1a_identity_attributes_cannot_be_reassigned) (attribute='root') ... FAIL
+test_rf1b_scope_distinct_handle_cannot_be_rebound_to_another_project (tests.test_v7_review_findings.HandleIdentityIsFixedTests.test_rf1b_scope_distinct_handle_cannot_be_rebound_to_another_project) ... FAIL
+test_rf1c_single_project_store_cannot_be_bricked_through_a_handle (tests.test_v7_review_findings.HandleIdentityIsFixedTests.test_rf1c_single_project_store_cannot_be_bricked_through_a_handle) ... FAIL
+test_rf1d_direct_construction_must_name_its_store_profile (tests.test_v7_review_findings.HandleIdentityIsFixedTests.test_rf1d_direct_construction_must_name_its_store_profile) ... FAIL
+test_rf2_control_a_same_project_non_owner_still_cannot_recreate_the_owned_id (tests.test_v7_review_findings.OwnershipFenceDisclosureTests.test_rf2_control_a_same_project_non_owner_still_cannot_recreate_the_owned_id) ... ok
+test_rf2_foreign_writer_reads_a_deleted_owned_id_as_a_never_written_one (tests.test_v7_review_findings.OwnershipFenceDisclosureTests.test_rf2_foreign_writer_reads_a_deleted_owned_id_as_a_never_written_one) ... FAIL
+
+======================================================================
+FAIL: test_rf1a_identity_attributes_cannot_be_reassigned (tests.test_v7_review_findings.HandleIdentityIsFixedTests.test_rf1a_identity_attributes_cannot_be_reassigned) (attribute='scope')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_review_findings.py", line 46, in test_rf1a_identity_attributes_cannot_be_reassigned
+    with self.subTest(attribute=name), self.assertRaises(AttributeError):
+AssertionError: AttributeError not raised
+
+======================================================================
+FAIL: test_rf1a_identity_attributes_cannot_be_reassigned (tests.test_v7_review_findings.HandleIdentityIsFixedTests.test_rf1a_identity_attributes_cannot_be_reassigned) (attribute='tenant')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_review_findings.py", line 46, in test_rf1a_identity_attributes_cannot_be_reassigned
+    with self.subTest(attribute=name), self.assertRaises(AttributeError):
+AssertionError: AttributeError not raised
+
+======================================================================
+FAIL: test_rf1a_identity_attributes_cannot_be_reassigned (tests.test_v7_review_findings.HandleIdentityIsFixedTests.test_rf1a_identity_attributes_cannot_be_reassigned) (attribute='actor_id')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_review_findings.py", line 46, in test_rf1a_identity_attributes_cannot_be_reassigned
+    with self.subTest(attribute=name), self.assertRaises(AttributeError):
+AssertionError: AttributeError not raised
+
+======================================================================
+FAIL: test_rf1a_identity_attributes_cannot_be_reassigned (tests.test_v7_review_findings.HandleIdentityIsFixedTests.test_rf1a_identity_attributes_cannot_be_reassigned) (attribute='purpose')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_review_findings.py", line 46, in test_rf1a_identity_attributes_cannot_be_reassigned
+    with self.subTest(attribute=name), self.assertRaises(AttributeError):
+AssertionError: AttributeError not raised
+
+======================================================================
+FAIL: test_rf1a_identity_attributes_cannot_be_reassigned (tests.test_v7_review_findings.HandleIdentityIsFixedTests.test_rf1a_identity_attributes_cannot_be_reassigned) (attribute='task_ref')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_review_findings.py", line 46, in test_rf1a_identity_attributes_cannot_be_reassigned
+    with self.subTest(attribute=name), self.assertRaises(AttributeError):
+AssertionError: AttributeError not raised
+
+======================================================================
+FAIL: test_rf1a_identity_attributes_cannot_be_reassigned (tests.test_v7_review_findings.HandleIdentityIsFixedTests.test_rf1a_identity_attributes_cannot_be_reassigned) (attribute='store_profile')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_review_findings.py", line 46, in test_rf1a_identity_attributes_cannot_be_reassigned
+    with self.subTest(attribute=name), self.assertRaises(AttributeError):
+AssertionError: AttributeError not raised
+
+======================================================================
+FAIL: test_rf1a_identity_attributes_cannot_be_reassigned (tests.test_v7_review_findings.HandleIdentityIsFixedTests.test_rf1a_identity_attributes_cannot_be_reassigned) (attribute='charter_version')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_review_findings.py", line 46, in test_rf1a_identity_attributes_cannot_be_reassigned
+    with self.subTest(attribute=name), self.assertRaises(AttributeError):
+AssertionError: AttributeError not raised
+
+======================================================================
+FAIL: test_rf1a_identity_attributes_cannot_be_reassigned (tests.test_v7_review_findings.HandleIdentityIsFixedTests.test_rf1a_identity_attributes_cannot_be_reassigned) (attribute='runtime')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_review_findings.py", line 46, in test_rf1a_identity_attributes_cannot_be_reassigned
+    with self.subTest(attribute=name), self.assertRaises(AttributeError):
+AssertionError: AttributeError not raised
+
+======================================================================
+FAIL: test_rf1a_identity_attributes_cannot_be_reassigned (tests.test_v7_review_findings.HandleIdentityIsFixedTests.test_rf1a_identity_attributes_cannot_be_reassigned) (attribute='root')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_review_findings.py", line 46, in test_rf1a_identity_attributes_cannot_be_reassigned
+    with self.subTest(attribute=name), self.assertRaises(AttributeError):
+AssertionError: AttributeError not raised
+
+======================================================================
+FAIL: test_rf1b_scope_distinct_handle_cannot_be_rebound_to_another_project (tests.test_v7_review_findings.HandleIdentityIsFixedTests.test_rf1b_scope_distinct_handle_cannot_be_rebound_to_another_project)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_review_findings.py", line 55, in test_rf1b_scope_distinct_handle_cannot_be_rebound_to_another_project
+    with self.assertRaises(AttributeError):
+AssertionError: AttributeError not raised
+
+======================================================================
+FAIL: test_rf1c_single_project_store_cannot_be_bricked_through_a_handle (tests.test_v7_review_findings.HandleIdentityIsFixedTests.test_rf1c_single_project_store_cannot_be_bricked_through_a_handle)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_review_findings.py", line 67, in test_rf1c_single_project_store_cannot_be_bricked_through_a_handle
+    with self.assertRaises(AttributeError):
+AssertionError: AttributeError not raised
+
+======================================================================
+FAIL: test_rf1d_direct_construction_must_name_its_store_profile (tests.test_v7_review_findings.HandleIdentityIsFixedTests.test_rf1d_direct_construction_must_name_its_store_profile)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_review_findings.py", line 81, in test_rf1d_direct_construction_must_name_its_store_profile
+    with self.assertRaises(TypeError):
+AssertionError: TypeError not raised
+
+======================================================================
+FAIL: test_rf2_foreign_writer_reads_a_deleted_owned_id_as_a_never_written_one (tests.test_v7_review_findings.OwnershipFenceDisclosureTests.test_rf2_foreign_writer_reads_a_deleted_owned_id_as_a_never_written_one)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_review_findings.py", line 120, in test_rf2_foreign_writer_reads_a_deleted_owned_id_as_a_never_written_one
+    self.assertEqual(deleted_owned, never_written)
+AssertionError: Tuples differ: (False, 'target_unavailable') != (True, None)
+
+First differing element 0:
+False
+True
+
+- (False, 'target_unavailable')
++ (True, None)
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.280s
+
+FAILED (failures=13)
