@@ -89,6 +89,20 @@ class AmbScopeDistinctLaneFreezeTests(unittest.TestCase):
                              DECLARATION_BLOB)
         self.assertEqual(_blob(ROOT / "reports/runtime/baseline-v7-declaration.json"), DECLARATION_BLOB)
 
+    def test_candidate_lane_preserves_mesa_v5_exact_package_tree(self):
+        self.assertTrue(NEW_PATH.is_file())
+        self.assertFalse((LANES / NEW_PATH.name).exists(),
+                         "candidate lane must not mutate agentmem_ref before MESA-v5 execution")
+        freeze = json.loads((
+            ROOT / "reference/fixtures/benchmarks/agentmembench/mesa-formal-v5-freeze.json"
+        ).read_text(encoding="utf-8"))
+        tree = subprocess.run(
+            ["git", "rev-parse", "HEAD:reference/agentmem_ref"], cwd=ROOT,
+            capture_output=True, text=True, check=True,
+        ).stdout.strip()
+        self.assertEqual(freeze["agent_memory"]["runtime_tree"], tree)
+        self.assertEqual(tree, "975b09412b096a9eac4a92478e7d3a39700ba5d9")
+
     def test_successor_bridge_only_changes_explicit_store_profile_and_version(self):
         old = (ROOT / OLD_BRIDGE).read_text(encoding="utf-8")
         new = (ROOT / NEW_BRIDGE).read_text(encoding="utf-8")
