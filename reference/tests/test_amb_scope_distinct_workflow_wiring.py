@@ -32,6 +32,7 @@ class AmbScopeDistinctWorkflowWiringTests(unittest.TestCase):
         self.assertIn('if lane["lane_id"] == "' + SUCCESSOR + '":', self.workflow)
         self.assertIn('lane["harness"]["source_blobs"].items()', self.workflow)
         self.assertIn('"bridge_blobs": bridge_blobs,', self.workflow)
+        self.assertIn("LANE_FILE=reports/validation/v7-integration/amb-scope-distinct-successor/amb-precisionmembench-retrieval-v7-scope-distinct-v1.json", self.workflow)
         self.assertIn('"reference/amb_agent_memory_bridge.py": blob("reference/amb_agent_memory_bridge.py")',
                       self.workflow)
 
