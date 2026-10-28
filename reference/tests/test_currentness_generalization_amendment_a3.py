@@ -49,9 +49,16 @@ class AmendmentA3Tests(unittest.TestCase):
         with self.assertRaisesRegex(SystemExit, "is not the frozen 745f789c"):
             checker.template_basis(require_frozen_blob=True)
 
-    def test_code_change_around_the_templates_is_accepted(self):
-        _, basis = checker.template_basis(self.variant(self.source + "\n# unrelated harness change\n"))
+    def test_only_an_audited_template_source_blob_is_accepted(self):
+        # Re-gate review 2: a change around the templates is accepted only at an audited blob.
+        self.assertIn(subprocess.run(["git", "hash-object", str(checker.TEMPLATE_SOURCE)], cwd=checker.ROOT,
+                                     capture_output=True, text=True, check=True).stdout.strip(),
+                      checker.AUDITED_TEMPLATE_SOURCE_BLOBS)
+        _, basis = checker.template_basis(self.variant(self.source))
         self.assertEqual(basis, checker.TEMPLATE_AMENDMENT_ID)
+        for change in ("\n# unrelated harness change\n", "\nUNRELATED = 1\n"):
+            with self.subTest(change), self.assertRaisesRegex(SystemExit, "is not an audited template source"):
+                checker.template_basis(self.variant(self.source + change))
 
     def test_altered_template_text_is_refused(self):
         rows = checker._templates_from_source(self.source)
@@ -213,8 +220,119 @@ class AmendmentA3Tests(unittest.TestCase):
                 spec.loader.exec_module(mutated)
                 mutated.ROOT = checker.ROOT
                 mutated.TEMPLATE_SOURCE = checker.TEMPLATE_SOURCE
-                with self.assertRaisesRegex(SystemExit, "contamination comparison differs"):
+                # As if the editor also re-recorded the audit digest: the rule digest must still refuse.
+                mutated.CHECKER_AUDIT_SHA256 = mutated.checker_audit_digest()
+                with self.assertRaisesRegex(SystemExit, "contamination comparison differs from the recorded rule$"):
                     mutated.template_basis()
+
+    def _mutated_checker(self, text: str, label: str, *, rerecord_audit: bool):
+        path = Path(self.temp.name) / f"checker_{abs(hash(label))}.py"
+        path.write_text(text, encoding="utf-8")
+        spec = importlib.util.spec_from_file_location(f"checker_{abs(hash(label))}", path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        module.ROOT = checker.ROOT
+        module.TEMPLATE_SOURCE = checker.TEMPLATE_SOURCE
+        if rerecord_audit:
+            module.CHECKER_AUDIT_SHA256 = module.checker_audit_digest()
+        return module
+
+    def test_review_2_n1_namespace_rewrites_are_refused(self):
+        alt = '(("location", "EVIL {old}", "EVIL {new}", "EVIL?"),)'
+        key = '"SETALPMET_TCILFNOC"[::-1]'
+        cases = {
+            "function __globals__": f"\nrun_m4.__globals__[{key}] = {alt}\n",
+            "frame f_globals": f"\nimport sys as _s\n_s._getframe().f_globals[{key}] = {alt}\n",
+            "constructed getattr": f"\nimport sys as _s\ngetattr(_s, 'mod' + 'ules')[__name__] = None\n",
+            "builtins through __self__": f"\nprint.__self__.exec({key} + ' = ' + {alt!r})\n",
+            "inspect": "\nimport inspect\n",
+            "gc": "\nimport gc\n",
+        }
+        for label, suffix in cases.items():
+            with self.subTest(label), self.assertRaisesRegex(SystemExit, "CONFLICT_TEMPLATES is rebound"):
+                checker.template_basis(self.variant(self.source + suffix))
+
+    def test_review_2_d1_checker_edits_beside_k7_are_refused(self):
+        source = Path(checker.__file__).read_text(encoding="utf-8")
+        basis_line = "    templates, basis = template_basis(require_frozen_blob=require_frozen_blob)\n"
+        self.assertEqual(source.count(basis_line), 1)
+        mutations = {
+            "templates narrowed in place": source.replace(basis_line, basis_line + "    templates[:] = templates[:3]\n"),
+            "K7 rejections filtered": source.replace("    rejections.sort(key=",
+                                                     '    rejections = [r for r in rejections if r["rule"] != "K7"]\n'
+                                                     "    rejections.sort(key=", 1),
+            "overlap_rule wrapped": source + "\nimport functools\noverlap_rule = functools.wraps(overlap_rule)"
+                                             "(lambda record, references, rule: None)\n",
+            "THRESHOLD subclass": source.replace("THRESHOLD = 0.5\n", "class _T(float):\n    def __le__(self, other):\n"
+                                                 "        return False\nTHRESHOLD = _T(0.5)\n", 1),
+        }
+        for label, text in mutations.items():
+            with self.subTest(label):
+                self.assertNotEqual(text, source)
+                mutated = self._mutated_checker(text, label, rerecord_audit=False)
+                with self.assertRaisesRegex(SystemExit, "not the audited checker|differs from the recorded rule"):
+                    mutated.template_basis()
+        # Rebinding the rule objects is refused even when the audit digest is re-recorded.
+        for label in ("overlap_rule wrapped", "THRESHOLD subclass"):
+            with self.subTest(f"{label}, audit re-recorded"):
+                mutated = self._mutated_checker(mutations[label], label + "-rerecorded", rerecord_audit=True)
+                with self.assertRaisesRegex(SystemExit, "contamination comparison differs from the recorded rule$"):
+                    mutated.template_basis()
+
+    def test_checker_audit_digest_refuses_any_unrecorded_checker_edit(self):
+        source = Path(checker.__file__).read_text(encoding="utf-8")
+        self.assertEqual(checker.checker_audit_digest(), checker.CHECKER_AUDIT_SHA256)
+        mutated = self._mutated_checker(source + "\n_UNRELATED = 1\n", "unrelated", rerecord_audit=False)
+        with self.assertRaisesRegex(SystemExit, "not the audited checker"):
+            mutated.template_basis()
+
+    def test_review_2_h1_host_shadowing_is_refused(self):
+        import importlib.util as util
+        import marshal
+        import py_compile
+        import sys
+
+        def fresh():
+            directory = Path(tempfile.mkdtemp(dir=self.temp.name))
+            path = directory / "run_semantic_route_ordering_report.py"
+            path.write_text(self.source, encoding="utf-8")
+            return path
+
+        cache = lambda path, tag=sys.implementation.cache_tag: path.parent / "__pycache__" / f"{path.stem}.{tag}.pyc"
+        genuine = fresh()
+        py_compile.compile(str(genuine), cfile=str(cache(genuine)), doraise=True)
+        self.assertEqual(checker.shadowing_artifacts(genuine), [])
+        self.assertEqual(checker.template_basis(genuine)[1], checker.TEMPLATE_AMENDMENT_ID)
+
+        evil = self.source + '\nCONFLICT_TEMPLATES = (("location", "EVIL {old}", "EVIL {new}", "EVIL?"),)\n'
+        unchecked = fresh()
+        evil_path = unchecked.with_name("evil_source.py")
+        evil_path.write_text(evil, encoding="utf-8")
+        py_compile.compile(str(evil_path), cfile=str(cache(unchecked)), doraise=True,
+                           invalidation_mode=py_compile.PycInvalidationMode.UNCHECKED_HASH)
+        evil_path.unlink()
+        tampered = fresh()
+        py_compile.compile(str(tampered), cfile=str(cache(tampered)), doraise=True)
+        header = cache(tampered).read_bytes()[:16]
+        cache(tampered).write_bytes(header + marshal.dumps(compile(evil, str(tampered), "exec")))
+        foreign = fresh()
+        py_compile.compile(str(foreign), cfile=str(cache(foreign, "cpython-399")), doraise=True)
+        extension = fresh()
+        extension.with_name(f"{extension.stem}.cpython-312-x86_64-linux-gnu.so").write_bytes(b"\x7fELF")
+        for label, path, reason in (("unchecked hash pyc", unchecked, "unchecked hash-based bytecode"),
+                                    ("tampered timestamp pyc", tampered, "differs from the source"),
+                                    ("foreign interpreter pyc", foreign, "for another interpreter"),
+                                    ("extension module", extension, "sibling")):
+            with self.subTest(label), self.assertRaisesRegex(SystemExit, reason):
+                checker.template_basis(path)
+        self.assertTrue(util.MAGIC_NUMBER)
+
+    def test_review_2_h2_crlf_and_unparsable_sources(self):
+        crlf = Path(self.temp.name) / "crlf.py"
+        crlf.write_bytes(self.frozen.replace("\n", "\r\n").encode("utf-8"))
+        self.assertEqual(checker.python_source(crlf), self.frozen)
+        with self.assertRaisesRegex(SystemExit, "does not parse"):
+            checker.template_basis(self.variant("def broken(:\n"))
 
     def test_frozen_path_checks_the_recorded_texts(self):
         with mock.patch.object(checker, "TEMPLATE_TEXTS_SHA256", "0" * 64):

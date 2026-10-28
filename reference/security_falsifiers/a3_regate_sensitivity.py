@@ -34,7 +34,28 @@ MUTATIONS = [
     ("attribute store clause removed", "            if node.attr == TEMPLATE_NAME and isinstance(node.ctx, (ast.Store, ast.Del)):",
      "            if False:", True),
     ("dynamic namespace names allowed", "            elif node.id in _DYNAMIC_NAMES:", "            elif False:", True),
-    ("dynamic namespace attributes allowed", "            elif node.attr in _DYNAMIC_ATTRIBUTES:", "            elif False:", True),
+    ("dynamic namespace attributes allowed",
+     '            elif node.attr in _DYNAMIC_ATTRIBUTES or (node.attr.startswith("__") and node.attr.endswith("__")):',
+     "            elif False:", True),
+    ("dunder attributes allowed", ' or (node.attr.startswith("__") and node.attr.endswith("__")):', ":", True),
+    ("frame attributes allowed", '"modules", "_getframe", "f_globals",', '"modules",', True),
+    ("getattr allowed", '"globals", "vars", "locals", "setattr", "delattr", "getattr",',
+     '"globals", "vars", "locals", "setattr", "delattr",', True),
+    ("audited template blob list ignored", "    if blob not in AUDITED_TEMPLATE_SOURCE_BLOBS:", "    if False:", True),
+    ("checker audit digest ignored", "    if checker_audit_digest() != CHECKER_AUDIT_SHA256:", "    if False:", True),
+    ("rule object identity ignored", " or not _rule_objects_intact():", ":", True),
+    ("threshold type not checked", "type(THRESHOLD) is float and ", "", True),
+    ("wrapped functions allowed", ' and not hasattr(function, "__wrapped__")', "", True),
+    ("sibling modules allowed", '    findings += [f"sibling {other.name}"', '    findings += [] and [f"sibling {other.name}"', True),
+    ("unchecked bytecode allowed", '                findings.append(f"unchecked hash-based bytecode {cached.name}")\n                continue',
+     "                continue", True),
+    ("foreign bytecode allowed", '            findings.append(f"unverifiable bytecode {cached.name} for another interpreter")\n            continue',
+     "            continue", True),
+    ("bytecode contents not compared", '        if not same:\n            findings.append', '        if False:\n            findings.append', True),
+    ("CRLF not normalised", '    if as_python != as_utf8.replace("\\r\\n", "\\n").replace("\\r", "\\n"):',
+     "    if as_python != as_utf8:", True),
+    ("parse failure not reported", "        ast.parse(as_python)\n    except (SyntaxError, ValueError) as exc:",
+     "        pass\n    except (SyntaxError, ValueError) as exc:", True),
     ("dynamic definitions allowed", "node.name == TEMPLATE_NAME or node.name in _DYNAMIC_DEFINITIONS):",
      "node.name == TEMPLATE_NAME):", True),
     ("class and async definitions allowed", "(ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)) and (",
@@ -51,7 +72,7 @@ MUTATIONS = [
     ("name literals allowed", "isinstance(node.value, (str, bytes)) and (", "False and (", True),
     ("del allowed", "if node.id == TEMPLATE_NAME and isinstance(node.ctx, (ast.Store, ast.Del)):",
      "if node.id == TEMPLATE_NAME and isinstance(node.ctx, ast.Store):", True),
-    ("source decoded as UTF-8 only", "    if as_python != as_utf8:", "    if False:", True),
+    ("decode check disabled", '    if as_python != as_utf8.replace("\\r\\n", "\\n").replace("\\r", "\\n"):', "    if False:", True),
     ("shadowing package allowed", "    if source.with_suffix(\"\").is_dir():", "    if False:", True),
     ("prefix collision accepted on the amendment path", "    if blob.startswith(TEMPLATE_BLOB_PREFIX):\n        raise",
      "    if False:\n        raise", True),
@@ -60,18 +81,22 @@ MUTATIONS = [
     ("strict flag ignored", "    if require_frozen_blob:\n", "    if False:\n", True),
     ("literal comparison removed", "    if _templates_from_source(current_source) != frozen_rows:", "    if False:", True),
     ("text digest removed", "    if current != frozen or texts_digest(current) != TEMPLATE_TEXTS_SHA256:", "    if False:", True),
-    ("rule digest removed", "    if comparison_rule_digest() != COMPARISON_RULE_SHA256:", "    if False:", True),
+    ("rule digest removed", "    if comparison_rule_digest() != COMPARISON_RULE_SHA256 or not _rule_objects_intact():",
+     "    if not _rule_objects_intact():", True),
     ("rule digest without TOKEN flags", '        parts += [TOKEN.pattern, repr(THRESHOLD), f"flags={TOKEN.flags}"]',
      "        parts += [TOKEN.pattern, repr(THRESHOLD), \"flags=32\"]", True),
     ("rule digest without application sites",
      '        parts += _application_sites(ast.parse(Path(__file__).read_text(encoding="utf-8")))',
      "        parts += []", True),
-    ("unreadable rule accepted", '        return "unverifiable"', "        return COMPARISON_RULE_SHA256", True),
+
     ("frozen blob unavailability ignored", "    if frozen_source.returncode != 0:", "    if False:", True),
     # Equivalent by construction.
     ("global clause removed", "elif isinstance(node, (ast.Global, ast.Nonlocal)) and TEMPLATE_NAME in node.names:",
      "elif False:", False),
     ("binding identity clause removed", " or stores[0] is not top[0].targets[0]:", ":", False),
+    # getsource fails only for rule objects not defined in the checker file, which
+    # _rule_objects_intact refuses on its own.
+    ("unreadable rule accepted", '        return "unverifiable"', "        return COMPARISON_RULE_SHA256", False),
     ("frozen blob binding check removed", "    if template_binding_violations(frozen_source.stdout):", "    if False:", False),
 ]
 
@@ -84,6 +109,9 @@ def _load(text: str, directory: Path, index: int):
     spec.loader.exec_module(module)
     module.ROOT = CHECKER.ROOT
     module.TEMPLATE_SOURCE = CHECKER.TEMPLATE_SOURCE
+    # As if the editor also re-recorded the audit digest, so each remaining defence is exercised on
+    # its own; the audit digest itself has its own mutation.
+    module.CHECKER_AUDIT_SHA256 = module.checker_audit_digest()
     return module
 
 

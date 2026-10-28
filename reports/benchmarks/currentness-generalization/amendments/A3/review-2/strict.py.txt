@@ -1,0 +1,29 @@
+import importlib.util, subprocess, sys, shutil
+from pathlib import Path
+S = Path("/tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/scratchpad/judge-a3-r2")
+R = S / "attackrepo"; T = R / "reference/run_semantic_route_ordering_report.py"
+subprocess.run(["git", "checkout", "-q", "--", "."], cwd=R, check=True)
+def load(p, tag, root):
+    spec = importlib.util.spec_from_file_location(tag, p); m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+    m.ROOT = root; m.TEMPLATE_SOURCE = root / "reference/run_semantic_route_ordering_report.py"; return m
+new = load(R / "scripts/check_generalization_corpus.py", "n", R)
+old = load(S / "wt76/scripts/check_generalization_corpus.py", "o", R)  # 76a9e30 checker pointed at attackrepo
+def both(label):
+    out = []
+    for tag, fn in (("76a9e30", lambda: old.template_texts()), ("656 strict", lambda: new.template_basis(require_frozen_blob=True)), ("656 A3", lambda: new.template_basis())):
+        try: r = fn(); out.append(f"{tag}: ACCEPT " + (r[1] if isinstance(r, tuple) else "frozen"))
+        except SystemExit as e: out.append(f"{tag}: refuse '{str(e)[:85]}'")
+        except Exception as e: out.append(f"{tag}: {type(e).__name__} {str(e)[:60]}")
+    print(f"{label}:\n   " + "\n   ".join(out))
+both("current file")
+frozen = subprocess.run(["git", "cat-file", "-p", "745f789c01b7a542f906a9034ae63ebdd6776f7c"], cwd=R, capture_output=True).stdout
+T.write_bytes(frozen); both("frozen bytes")
+shutil.copy(R / "reference/tests/fixtures/currentness_a3/prefix-collision.txt", T)
+print("   prefix-collision blob:", subprocess.run(["git","hash-object",str(T)],capture_output=True,text=True).stdout.strip()); both("prefix collision")
+T.write_text("this is not python ((( \n"); both("unparsable non-frozen file")
+T.write_bytes(frozen.replace(b"\n", b"\r\n"))
+subprocess.run(["git", "config", "core.autocrlf", "true"], cwd=R)
+print("   CRLF frozen bytes, core.autocrlf=true, blob:", subprocess.run(["git","hash-object",str(T)],cwd=R,capture_output=True,text=True).stdout.strip()); both("CRLF frozen bytes (autocrlf)")
+r = subprocess.run([sys.executable, "-c", "import sys; sys.path.insert(0,'reference'); from run_cross_fact_currentness_report import CONFLICT_TEMPLATES as t; print(len(t))"], cwd=R, capture_output=True, text=True); print("   importer on CRLF file:", r.stdout.strip() or r.stderr[-100:])
+subprocess.run(["git", "config", "--unset", "core.autocrlf"], cwd=R)
+subprocess.run(["git", "checkout", "-q", "--", "."], cwd=R, check=True)

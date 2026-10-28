@@ -95,8 +95,43 @@ def independent_digest(source: str) -> str:
     return hashlib.sha256("\n".join(parts).encode("utf-8")).hexdigest()
 
 
-def recorded_digest(source: str) -> str:
-    return re.search(r'^COMPARISON_RULE_SHA256 = "([0-9a-f]{64})"', source, re.MULTILINE).group(1)
+def recorded_digest(source: str, name: str = "COMPARISON_RULE_SHA256") -> str:
+    return re.search(rf'^{name} = "([0-9a-f]{{64}})"', source, re.MULTILINE).group(1)
+
+
+class _UndoA3(ast.NodeTransformer):
+    """Rewrite HEAD's check() into its 76a9e30 form by undoing exactly the A3 lines."""
+
+    def visit_FunctionDef(self, node):
+        if node.name == "check":
+            node.args.kwonlyargs, node.args.kw_defaults = [], []
+        return self.generic_visit(node)
+
+    def visit_Assign(self, node):
+        value = node.value
+        if (isinstance(value, ast.Call) and getattr(value.func, "id", "") == "template_basis"
+                and isinstance(node.targets[0], ast.Tuple)):
+            return ast.Assign(targets=[ast.Name("templates", ast.Store())],
+                              value=ast.Call(ast.Name("template_texts", ast.Load()), [], []), lineno=node.lineno)
+        return self.generic_visit(node)
+
+    def visit_Dict(self, node):
+        keep = [(k, v) for k, v in zip(node.keys, node.values)
+                if not (isinstance(k, ast.Constant) and k.value == "template_basis")]
+        node.keys, node.values = [k for k, _ in keep], [v for _, v in keep]
+        return self.generic_visit(node)
+
+
+def check_body_equivalence(head_source: str) -> dict:
+    """check() at HEAD equals check() at the gate-frozen checker once the A3 lines are undone."""
+    def function(source):
+        return next(n for n in ast.parse(source).body if isinstance(n, ast.FunctionDef) and n.name == "check")
+    frozen = function(git("show", f"{FROZEN_CHECKER_REVISION}:{CHECKER}"))
+    head = _UndoA3().visit(function(head_source))
+    return {"against": git("rev-parse", FROZEN_CHECKER_REVISION),
+            "equal_after_undoing_a3": ast.dump(head) == ast.dump(frozen),
+            "a3_lines": ["keyword-only require_frozen_blob", "templates, basis = template_basis(...)",
+                         "report key template_basis"]}
 
 
 # --- 3./4. historical replay and strict mode -----------------------------------------------------
@@ -213,6 +248,20 @@ def repository_scan() -> dict:
     return {"rebinding_findings": findings, "shadowing_paths": shadows}
 
 
+def _audit(head_source: str) -> dict:
+    sys.path.insert(0, str(ROOT / "scripts"))
+    import check_generalization_corpus as checker  # the audited checker, for its recorded constants
+
+    blob = git("hash-object", TEMPLATE_SOURCE)
+    return {
+        "template_source_blob_audited": blob in checker.AUDITED_TEMPLATE_SOURCE_BLOBS,
+        "audited_template_source_blobs": checker.AUDITED_TEMPLATE_SOURCE_BLOBS,
+        "checker_audit_digest_recorded": recorded_digest(head_source, "CHECKER_AUDIT_SHA256"),
+        "checker_audit_digest_matches": checker.checker_audit_digest() == recorded_digest(head_source, "CHECKER_AUDIT_SHA256"),
+        "shadowing_artifacts": checker.shadowing_artifacts(ROOT / TEMPLATE_SOURCE),
+    }
+
+
 # --- 6. tests and sensitivity ----------------------------------------------------------------------
 
 def _unittest(*modules: str) -> dict:
@@ -263,6 +312,8 @@ def main(argv: list[str] | None = None) -> int:
             "matches_at_gate_revisions_and_head": len(set(digests.values()) | {recorded_digest(head_source)}) == 1,
         },
         "historical_replay": replay,
+        "check_body": check_body_equivalence(head_source),
+        "audit": _audit(head_source),
         "effective_value": effective_value(),
         "repository_scan": repository_scan(),
         "tests": _unittest("tests.test_currentness_generalization_amendment_a3", "tests.test_currentness_generalization"),
@@ -280,8 +331,12 @@ def main(argv: list[str] | None = None) -> int:
         "recorded rejections reproduced": rr["attempt2"]["equals_recorded_rejections_final"],
         "strict refuses current": replay["strict_mode_on_current_source"]["refused_with_historical_message"],
         "effective value frozen": record["effective_value"] == {"direct_equals_frozen": True, "consumer_equals_frozen": True},
-        "no rebinding or shadowing": not record["repository_scan"]["rebinding_findings"]
-                                     and not record["repository_scan"]["shadowing_paths"],
+        "no repository attribute or imported-name rebinding": not record["repository_scan"]["rebinding_findings"],
+        "no tracked or host shadowing": not record["repository_scan"]["shadowing_paths"]
+                                        and not record["audit"]["shadowing_artifacts"],
+        "check body equals 76a9e30 but A3": record["check_body"]["equal_after_undoing_a3"],
+        "template source is an audited blob": record["audit"]["template_source_blob_audited"],
+        "checker is the audited checker": record["audit"]["checker_audit_digest_matches"],
         "tests pass": record["tests"]["exit"] == 0,
         "sensitivity complete": record["mutation_sensitivity"]["exit"] == 0 and not record["mutation_sensitivity"]["survived"],
     }
