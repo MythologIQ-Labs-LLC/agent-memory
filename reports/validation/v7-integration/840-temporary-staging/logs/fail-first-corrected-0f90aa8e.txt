@@ -1,0 +1,348 @@
+test_i1_interrupted_configuration_write_retries_cleanly (tests.test_v7_840_temporary_staging.InterruptedInitializationTests.test_i1_interrupted_configuration_write_retries_cleanly) ... FAIL
+test_i2_planted_configuration_temporary_is_not_followed (tests.test_v7_840_temporary_staging.InterruptedInitializationTests.test_i2_planted_configuration_temporary_is_not_followed) ... FAIL
+test_i3_interrupted_creation_is_completed_by_the_claiming_identity (tests.test_v7_840_temporary_staging.InterruptedInitializationTests.test_i3_interrupted_creation_is_completed_by_the_claiming_identity) ... ok
+test_i4_planted_claim_temporary_is_not_followed (tests.test_v7_840_temporary_staging.InterruptedInitializationTests.test_i4_planted_claim_temporary_is_not_followed) ... ok
+test_s1_planted_symlinks_are_never_followed (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s1_planted_symlinks_are_never_followed) ... 
+  test_s1_planted_symlinks_are_never_followed (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s1_planted_symlinks_are_never_followed) (writer='surface._atomic_write_text') ... FAIL
+  test_s1_planted_symlinks_are_never_followed (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s1_planted_symlinks_are_never_followed) (writer='restart_runtime._atomic_json_write') ... FAIL
+  test_s1_planted_symlinks_are_never_followed (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s1_planted_symlinks_are_never_followed) (writer='configured_restart._atomic_json_write') ... FAIL
+  test_s1_planted_symlinks_are_never_followed (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s1_planted_symlinks_are_never_followed) (writer='checkpoint_migration._atomic_json_write') ... FAIL
+  test_s1_planted_symlinks_are_never_followed (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s1_planted_symlinks_are_never_followed) (writer='checkpoint_transactions._atomic_journal_write') ... FAIL
+test_s2_temporary_names_are_unpredictable (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s2_temporary_names_are_unpredictable) ... 
+  test_s2_temporary_names_are_unpredictable (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s2_temporary_names_are_unpredictable) (writer='surface._atomic_write_text') ... FAIL
+  test_s2_temporary_names_are_unpredictable (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s2_temporary_names_are_unpredictable) (writer='restart_runtime._atomic_json_write') ... FAIL
+  test_s2_temporary_names_are_unpredictable (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s2_temporary_names_are_unpredictable) (writer='configured_restart._atomic_json_write') ... FAIL
+  test_s2_temporary_names_are_unpredictable (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s2_temporary_names_are_unpredictable) (writer='checkpoint_migration._atomic_json_write') ... FAIL
+  test_s2_temporary_names_are_unpredictable (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s2_temporary_names_are_unpredictable) (writer='checkpoint_transactions._atomic_journal_write') ... FAIL
+test_s3_concurrent_writers_publish_one_complete_record (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s3_concurrent_writers_publish_one_complete_record) ... 
+  test_s3_concurrent_writers_publish_one_complete_record (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s3_concurrent_writers_publish_one_complete_record) (writer='restart_runtime._atomic_json_write') ... FAIL
+  test_s3_concurrent_writers_publish_one_complete_record (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s3_concurrent_writers_publish_one_complete_record) (writer='configured_restart._atomic_json_write') ... FAIL
+  test_s3_concurrent_writers_publish_one_complete_record (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s3_concurrent_writers_publish_one_complete_record) (writer='checkpoint_migration._atomic_json_write') ... FAIL
+  test_s3_concurrent_writers_publish_one_complete_record (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s3_concurrent_writers_publish_one_complete_record) (writer='checkpoint_transactions._atomic_journal_write') ... FAIL
+test_s4_fsync_failure_keeps_the_previous_record_and_no_temporary (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s4_fsync_failure_keeps_the_previous_record_and_no_temporary) ... 
+  test_s4_fsync_failure_keeps_the_previous_record_and_no_temporary (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s4_fsync_failure_keeps_the_previous_record_and_no_temporary) (writer='surface._atomic_write_text') ... FAIL
+  test_s4_fsync_failure_keeps_the_previous_record_and_no_temporary (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s4_fsync_failure_keeps_the_previous_record_and_no_temporary) (writer='restart_runtime._atomic_json_write') ... FAIL
+  test_s4_fsync_failure_keeps_the_previous_record_and_no_temporary (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s4_fsync_failure_keeps_the_previous_record_and_no_temporary) (writer='configured_restart._atomic_json_write') ... FAIL
+  test_s4_fsync_failure_keeps_the_previous_record_and_no_temporary (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s4_fsync_failure_keeps_the_previous_record_and_no_temporary) (writer='checkpoint_migration._atomic_json_write') ... FAIL
+  test_s4_fsync_failure_keeps_the_previous_record_and_no_temporary (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s4_fsync_failure_keeps_the_previous_record_and_no_temporary) (writer='checkpoint_transactions._atomic_journal_write') ... FAIL
+test_s5_replace_failure_keeps_the_previous_record_and_no_temporary (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s5_replace_failure_keeps_the_previous_record_and_no_temporary) ... 
+  test_s5_replace_failure_keeps_the_previous_record_and_no_temporary (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s5_replace_failure_keeps_the_previous_record_and_no_temporary) (writer='surface._atomic_write_text') ... FAIL
+  test_s5_replace_failure_keeps_the_previous_record_and_no_temporary (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s5_replace_failure_keeps_the_previous_record_and_no_temporary) (writer='restart_runtime._atomic_json_write') ... FAIL
+  test_s5_replace_failure_keeps_the_previous_record_and_no_temporary (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s5_replace_failure_keeps_the_previous_record_and_no_temporary) (writer='configured_restart._atomic_json_write') ... FAIL
+  test_s5_replace_failure_keeps_the_previous_record_and_no_temporary (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s5_replace_failure_keeps_the_previous_record_and_no_temporary) (writer='checkpoint_migration._atomic_json_write') ... FAIL
+  test_s5_replace_failure_keeps_the_previous_record_and_no_temporary (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s5_replace_failure_keeps_the_previous_record_and_no_temporary) (writer='checkpoint_transactions._atomic_journal_write') ... FAIL
+test_s6_published_file_mode_is_unchanged (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s6_published_file_mode_is_unchanged) ... ok
+
+======================================================================
+FAIL: test_i1_interrupted_configuration_write_retries_cleanly (tests.test_v7_840_temporary_staging.InterruptedInitializationTests.test_i1_interrupted_configuration_write_retries_cleanly)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_840_temporary_staging.py", line 216, in test_i1_interrupted_configuration_write_retries_cleanly
+    self.assertEqual(self.leftovers(set()), [], "an interrupted first open left a temporary behind")
+AssertionError: Lists differ: ['.runtime-config.json.457.140377097257088.tmp'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'.runtime-config.json.457.140377097257088.tmp'
+
+- ['.runtime-config.json.457.140377097257088.tmp']
++ [] : an interrupted first open left a temporary behind
+
+======================================================================
+FAIL: test_i2_planted_configuration_temporary_is_not_followed (tests.test_v7_840_temporary_staging.InterruptedInitializationTests.test_i2_planted_configuration_temporary_is_not_followed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_840_temporary_staging.py", line 229, in test_i2_planted_configuration_temporary_is_not_followed
+    self.assertEqual(self.victim.read_bytes(), VICTIM)
+AssertionError: b'{\n  "schema_version": "1.0.0",\n  "runti[8307 chars]n}\n' != b'victim bytes outside the store\n'
+
+======================================================================
+FAIL: test_s1_planted_symlinks_are_never_followed (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s1_planted_symlinks_are_never_followed) (writer='surface._atomic_write_text')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_840_temporary_staging.py", line 103, in test_s1_planted_symlinks_are_never_followed
+    self.assertEqual(self.victim.read_bytes(), VICTIM, "a planted temporary redirected the write")
+AssertionError: b'{"writer": "surface", "n": 1}\n' != b'victim bytes outside the store\n' : a planted temporary redirected the write
+
+======================================================================
+FAIL: test_s1_planted_symlinks_are_never_followed (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s1_planted_symlinks_are_never_followed) (writer='restart_runtime._atomic_json_write')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_840_temporary_staging.py", line 103, in test_s1_planted_symlinks_are_never_followed
+    self.assertEqual(self.victim.read_bytes(), VICTIM, "a planted temporary redirected the write")
+AssertionError: b'{"n":1,"writer":"agentmem_ref.runtime.restart_runtime"}\n' != b'victim bytes outside the store\n' : a planted temporary redirected the write
+
+======================================================================
+FAIL: test_s1_planted_symlinks_are_never_followed (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s1_planted_symlinks_are_never_followed) (writer='configured_restart._atomic_json_write')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_840_temporary_staging.py", line 103, in test_s1_planted_symlinks_are_never_followed
+    self.assertEqual(self.victim.read_bytes(), VICTIM, "a planted temporary redirected the write")
+AssertionError: b'{"n":1,"writer":"agentmem_ref.runtime.configured_restart"}\n' != b'victim bytes outside the store\n' : a planted temporary redirected the write
+
+======================================================================
+FAIL: test_s1_planted_symlinks_are_never_followed (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s1_planted_symlinks_are_never_followed) (writer='checkpoint_migration._atomic_json_write')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_840_temporary_staging.py", line 103, in test_s1_planted_symlinks_are_never_followed
+    self.assertEqual(self.victim.read_bytes(), VICTIM, "a planted temporary redirected the write")
+AssertionError: b'{"n":1,"writer":"agentmem_ref.memory.checkpoint_migration"}\n' != b'victim bytes outside the store\n' : a planted temporary redirected the write
+
+======================================================================
+FAIL: test_s1_planted_symlinks_are_never_followed (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s1_planted_symlinks_are_never_followed) (writer='checkpoint_transactions._atomic_journal_write')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_840_temporary_staging.py", line 103, in test_s1_planted_symlinks_are_never_followed
+    self.assertEqual(self.victim.read_bytes(), VICTIM, "a planted temporary redirected the write")
+AssertionError: b'{"n":1,"writer":"journal"}\n{"n":2,"writer":"journal"}\n' != b'victim bytes outside the store\n' : a planted temporary redirected the write
+
+======================================================================
+FAIL: test_s2_temporary_names_are_unpredictable (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s2_temporary_names_are_unpredictable) (writer='surface._atomic_write_text')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_840_temporary_staging.py", line 123, in test_s2_temporary_names_are_unpredictable
+    self.assertNotEqual(staged[0], staged[1], "one thread reused a predictable temporary")
+AssertionError: '.record.json.457.140377097257088.tmp' == '.record.json.457.140377097257088.tmp' : one thread reused a predictable temporary
+
+======================================================================
+FAIL: test_s2_temporary_names_are_unpredictable (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s2_temporary_names_are_unpredictable) (writer='restart_runtime._atomic_json_write')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_840_temporary_staging.py", line 123, in test_s2_temporary_names_are_unpredictable
+    self.assertNotEqual(staged[0], staged[1], "one thread reused a predictable temporary")
+AssertionError: '.record.json.tmp' == '.record.json.tmp' : one thread reused a predictable temporary
+
+======================================================================
+FAIL: test_s2_temporary_names_are_unpredictable (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s2_temporary_names_are_unpredictable) (writer='configured_restart._atomic_json_write')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_840_temporary_staging.py", line 123, in test_s2_temporary_names_are_unpredictable
+    self.assertNotEqual(staged[0], staged[1], "one thread reused a predictable temporary")
+AssertionError: '.record.json.tmp' == '.record.json.tmp' : one thread reused a predictable temporary
+
+======================================================================
+FAIL: test_s2_temporary_names_are_unpredictable (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s2_temporary_names_are_unpredictable) (writer='checkpoint_migration._atomic_json_write')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_840_temporary_staging.py", line 123, in test_s2_temporary_names_are_unpredictable
+    self.assertNotEqual(staged[0], staged[1], "one thread reused a predictable temporary")
+AssertionError: '.record.json.tmp' == '.record.json.tmp' : one thread reused a predictable temporary
+
+======================================================================
+FAIL: test_s2_temporary_names_are_unpredictable (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s2_temporary_names_are_unpredictable) (writer='checkpoint_transactions._atomic_journal_write')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_840_temporary_staging.py", line 123, in test_s2_temporary_names_are_unpredictable
+    self.assertNotEqual(staged[0], staged[1], "one thread reused a predictable temporary")
+AssertionError: '.record.json.tmp' == '.record.json.tmp' : one thread reused a predictable temporary
+
+======================================================================
+FAIL: test_s3_concurrent_writers_publish_one_complete_record (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s3_concurrent_writers_publish_one_complete_record) (writer='restart_runtime._atomic_json_write')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_840_temporary_staging.py", line 155, in test_s3_concurrent_writers_publish_one_complete_record
+    self.assertEqual(errors, [])
+AssertionError: Lists differ: ["FileNotFoundError: [Errno 2] No such fil[948 chars]on'"] != []
+
+First list contains 5 additional elements.
+First extra element 0:
+"FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmp0bvve3k3/restart_runtime._atomic_json_write/.record.json.tmp' -> '/tmp/tmp0bvve3k3/restart_runtime._atomic_json_write/record.json'"
+
+Diff is 1075 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_s3_concurrent_writers_publish_one_complete_record (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s3_concurrent_writers_publish_one_complete_record) (writer='configured_restart._atomic_json_write')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_840_temporary_staging.py", line 155, in test_s3_concurrent_writers_publish_one_complete_record
+    self.assertEqual(errors, [])
+AssertionError: Lists differ: ["FileNotFoundError: [Errno 2] No such fil[978 chars]on'"] != []
+
+First list contains 5 additional elements.
+First extra element 0:
+"FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmp0bvve3k3/configured_restart._atomic_json_write/.record.json.tmp' -> '/tmp/tmp0bvve3k3/configured_restart._atomic_json_write/record.json'"
+
+Diff is 1105 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_s3_concurrent_writers_publish_one_complete_record (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s3_concurrent_writers_publish_one_complete_record) (writer='checkpoint_migration._atomic_json_write')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_840_temporary_staging.py", line 155, in test_s3_concurrent_writers_publish_one_complete_record
+    self.assertEqual(errors, [])
+AssertionError: Lists differ: ["FileNotFoundError: [Errno 2] No such fil[998 chars]on'"] != []
+
+First list contains 5 additional elements.
+First extra element 0:
+"FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmp0bvve3k3/checkpoint_migration._atomic_json_write/.record.json.tmp' -> '/tmp/tmp0bvve3k3/checkpoint_migration._atomic_json_write/record.json'"
+
+Diff is 1125 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_s3_concurrent_writers_publish_one_complete_record (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s3_concurrent_writers_publish_one_complete_record) (writer='checkpoint_transactions._atomic_journal_write')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_840_temporary_staging.py", line 155, in test_s3_concurrent_writers_publish_one_complete_record
+    self.assertEqual(errors, [])
+AssertionError: Lists differ: ["FileNotFoundError: [Errno 2] No such fil[1058 chars]on'"] != []
+
+First list contains 5 additional elements.
+First extra element 0:
+"FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmp0bvve3k3/checkpoint_transactions._atomic_journal_write/.record.json.tmp' -> '/tmp/tmp0bvve3k3/checkpoint_transactions._atomic_journal_write/record.json'"
+
+Diff is 1215 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_s4_fsync_failure_keeps_the_previous_record_and_no_temporary (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s4_fsync_failure_keeps_the_previous_record_and_no_temporary) (writer='surface._atomic_write_text')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_840_temporary_staging.py", line 172, in test_s4_fsync_failure_keeps_the_previous_record_and_no_temporary
+    self.assertEqual(self.leftovers({target.name}, target.parent), [])
+AssertionError: Lists differ: ['.record.json.457.140377097257088.tmp'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'.record.json.457.140377097257088.tmp'
+
+- ['.record.json.457.140377097257088.tmp']
++ []
+
+======================================================================
+FAIL: test_s4_fsync_failure_keeps_the_previous_record_and_no_temporary (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s4_fsync_failure_keeps_the_previous_record_and_no_temporary) (writer='restart_runtime._atomic_json_write')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_840_temporary_staging.py", line 172, in test_s4_fsync_failure_keeps_the_previous_record_and_no_temporary
+    self.assertEqual(self.leftovers({target.name}, target.parent), [])
+AssertionError: Lists differ: ['.record.json.tmp'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'.record.json.tmp'
+
+- ['.record.json.tmp']
++ []
+
+======================================================================
+FAIL: test_s4_fsync_failure_keeps_the_previous_record_and_no_temporary (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s4_fsync_failure_keeps_the_previous_record_and_no_temporary) (writer='configured_restart._atomic_json_write')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_840_temporary_staging.py", line 172, in test_s4_fsync_failure_keeps_the_previous_record_and_no_temporary
+    self.assertEqual(self.leftovers({target.name}, target.parent), [])
+AssertionError: Lists differ: ['.record.json.tmp'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'.record.json.tmp'
+
+- ['.record.json.tmp']
++ []
+
+======================================================================
+FAIL: test_s4_fsync_failure_keeps_the_previous_record_and_no_temporary (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s4_fsync_failure_keeps_the_previous_record_and_no_temporary) (writer='checkpoint_migration._atomic_json_write')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_840_temporary_staging.py", line 172, in test_s4_fsync_failure_keeps_the_previous_record_and_no_temporary
+    self.assertEqual(self.leftovers({target.name}, target.parent), [])
+AssertionError: Lists differ: ['.record.json.tmp'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'.record.json.tmp'
+
+- ['.record.json.tmp']
++ []
+
+======================================================================
+FAIL: test_s4_fsync_failure_keeps_the_previous_record_and_no_temporary (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s4_fsync_failure_keeps_the_previous_record_and_no_temporary) (writer='checkpoint_transactions._atomic_journal_write')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_840_temporary_staging.py", line 172, in test_s4_fsync_failure_keeps_the_previous_record_and_no_temporary
+    self.assertEqual(self.leftovers({target.name}, target.parent), [])
+AssertionError: Lists differ: ['.record.json.tmp'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'.record.json.tmp'
+
+- ['.record.json.tmp']
++ []
+
+======================================================================
+FAIL: test_s5_replace_failure_keeps_the_previous_record_and_no_temporary (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s5_replace_failure_keeps_the_previous_record_and_no_temporary) (writer='surface._atomic_write_text')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_840_temporary_staging.py", line 185, in test_s5_replace_failure_keeps_the_previous_record_and_no_temporary
+    self.assertEqual(self.leftovers({target.name}, target.parent), [])
+AssertionError: Lists differ: ['.record.json.457.140377097257088.tmp'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'.record.json.457.140377097257088.tmp'
+
+- ['.record.json.457.140377097257088.tmp']
++ []
+
+======================================================================
+FAIL: test_s5_replace_failure_keeps_the_previous_record_and_no_temporary (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s5_replace_failure_keeps_the_previous_record_and_no_temporary) (writer='restart_runtime._atomic_json_write')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_840_temporary_staging.py", line 185, in test_s5_replace_failure_keeps_the_previous_record_and_no_temporary
+    self.assertEqual(self.leftovers({target.name}, target.parent), [])
+AssertionError: Lists differ: ['.record.json.tmp'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'.record.json.tmp'
+
+- ['.record.json.tmp']
++ []
+
+======================================================================
+FAIL: test_s5_replace_failure_keeps_the_previous_record_and_no_temporary (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s5_replace_failure_keeps_the_previous_record_and_no_temporary) (writer='configured_restart._atomic_json_write')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_840_temporary_staging.py", line 185, in test_s5_replace_failure_keeps_the_previous_record_and_no_temporary
+    self.assertEqual(self.leftovers({target.name}, target.parent), [])
+AssertionError: Lists differ: ['.record.json.tmp'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'.record.json.tmp'
+
+- ['.record.json.tmp']
++ []
+
+======================================================================
+FAIL: test_s5_replace_failure_keeps_the_previous_record_and_no_temporary (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s5_replace_failure_keeps_the_previous_record_and_no_temporary) (writer='checkpoint_migration._atomic_json_write')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_840_temporary_staging.py", line 185, in test_s5_replace_failure_keeps_the_previous_record_and_no_temporary
+    self.assertEqual(self.leftovers({target.name}, target.parent), [])
+AssertionError: Lists differ: ['.record.json.tmp'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'.record.json.tmp'
+
+- ['.record.json.tmp']
++ []
+
+======================================================================
+FAIL: test_s5_replace_failure_keeps_the_previous_record_and_no_temporary (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s5_replace_failure_keeps_the_previous_record_and_no_temporary) (writer='checkpoint_transactions._atomic_journal_write')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/user/agent-memory/reference/tests/test_v7_840_temporary_staging.py", line 185, in test_s5_replace_failure_keeps_the_previous_record_and_no_temporary
+    self.assertEqual(self.leftovers({target.name}, target.parent), [])
+AssertionError: Lists differ: ['.record.json.tmp'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'.record.json.tmp'
+
+- ['.record.json.tmp']
++ []
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.255s
+
+FAILED (failures=26)
