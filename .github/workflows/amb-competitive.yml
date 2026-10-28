@@ -94,6 +94,14 @@ jobs:
           # full history: the Runtime Baseline checker diffs against the frozen revision
           fetch-depth: 0
 
+      - name: Select separately frozen scope-distinct AMB lane
+        if: ${{ inputs.lane_id == 'amb-precisionmembench-retrieval-v7-scope-distinct-v1' }}
+        shell: bash
+        run: |
+          # This candidate lives outside agentmem_ref so the unexecuted MESA-v5
+          # exact runtime tree stays pinned. All historical lanes keep LANE_FILE.
+          echo "LANE_FILE=reports/validation/v7-integration/amb-scope-distinct-successor/amb-precisionmembench-retrieval-v7-scope-distinct-v1.json" >> "$GITHUB_ENV"
+
       - name: Checkout frozen AMB
         uses: actions/checkout@v7
         with:
