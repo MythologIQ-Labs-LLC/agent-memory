@@ -31,7 +31,7 @@ from ..core import policy
 from ..memory import action_authority
 from ..runtime import doctor
 from ..runtime.adapter import REPLACEMENT_KINDS, WRITE_TARGET_REFUSED_REF, GovernedMemoryAdapter
-from ..runtime.restart_runtime import RuntimeRecoveryError
+from ..runtime.restart_runtime import RuntimeRecoveryError, _stage_and_replace
 from ..runtime.temporal_intent import declared_temporal, resolve_intent
 from . import contract, store_contract
 
@@ -347,16 +347,9 @@ def _packaged_profile_text() -> str:
 
 
 def _atomic_write_text(path: Path, text: str) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    # Unique per writer: concurrent first opens must not share a temporary file.
-    temporary = path.with_name(f".{path.name}.{os.getpid()}.{threading.get_ident()}.tmp")
-    with temporary.open("w", encoding="utf-8", newline="\n") as handle:
-        handle.write(text)
-        if not text.endswith("\n"):
-            handle.write("\n")
-        handle.flush()
-        os.fsync(handle.fileno())
-    os.replace(temporary, path)
+    # #840: an exclusive, unpredictable temporary per write -- never a predictable name a
+    # planted symlink could redirect, and never left behind by a failed write.
+    _stage_and_replace(path, (text if text.endswith("\n") else text + "\n").encode("utf-8"))
 
 
 def _read_store_identity(path: Path) -> dict | None:

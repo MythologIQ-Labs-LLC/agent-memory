@@ -18,7 +18,7 @@
     },
     {
       "path": "reference/agentmem_ref/api/surface.py",
-      "blob": "c9bfe7fafe4b2641ae23ac6efb21a77a0fa09c05"
+      "blob": "ea9929dc786891c33e2bc077b6b075cdbc6e93ab"
     },
     {
       "path": "reference/agentmem_ref/evidence_sufficiency.py",
@@ -30,7 +30,7 @@
     },
     {
       "path": "reference/agentmem_ref/memory/checkpoint_migration.py",
-      "blob": "9893e63159a5e392e3e3b939804119fa59d9a65f"
+      "blob": "4c51790344677c910aad261397662830d770df45"
     },
     {
       "path": "reference/agentmem_ref/memory/procedural_memory.py",
@@ -49,8 +49,12 @@
       "blob": "89f3f6d711a69bf151a1ef3929b6100ece0cb32a"
     },
     {
+      "path": "reference/agentmem_ref/runtime/checkpoint_transactions.py",
+      "blob": "19b0fcda7837e94834be9795527d17d0cb4de948"
+    },
+    {
       "path": "reference/agentmem_ref/runtime/configured_restart.py",
-      "blob": "11ec6ac94b5779b32e82b6ffa680499c26e763b3"
+      "blob": "9c9cda6a60d6392424114e750c7500759c39f3c0"
     },
     {
       "path": "reference/agentmem_ref/runtime/doctor.py",
@@ -82,7 +86,7 @@
     },
     {
       "path": "reference/agentmem_ref/runtime/restart_runtime.py",
-      "blob": "85014e40fd81375bf83a24b51b4b14714a5d82be"
+      "blob": "aeb49a869b632f4bc4b3b64c9b33c78e68c275d9"
     },
     {
       "path": "reference/agentmem_ref/runtime/revocation_delegation.py",

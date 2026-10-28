@@ -42,6 +42,7 @@ from ..runtime.restart_runtime import (
     RuntimeProfile,
     RuntimeRecoveryError,
     SCHEMA_VERSION,
+    _stage_and_replace,
 )
 
 
@@ -210,14 +211,7 @@ def _fsync_directory(path: Path) -> None:
 
 
 def _atomic_json_write(path: Path, value: Mapping[str, object]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_name(f".{path.name}.tmp")
-    payload = _canonical_bytes(dict(value)) + b"\n"
-    with tmp.open("wb") as handle:
-        handle.write(payload)
-        handle.flush()
-        os.fsync(handle.fileno())
-    os.replace(tmp, path)
+    _stage_and_replace(path, _canonical_bytes(dict(value)) + b"\n")  # #840: exclusive temporary
     _fsync_directory(path.parent)
 
 

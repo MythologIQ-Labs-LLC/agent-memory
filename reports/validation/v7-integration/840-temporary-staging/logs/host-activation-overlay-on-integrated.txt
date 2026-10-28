@@ -1,0 +1,43 @@
+test_blank_host_identity_never_opens_runtime (t836ha.QualifiedHostActivation.test_blank_host_identity_never_opens_runtime) ... ok
+test_explicitly_qualified_migration_can_activate (t836ha.QualifiedHostActivation.test_explicitly_qualified_migration_can_activate) ... ERROR
+test_fresh_store_is_operational (t836ha.QualifiedHostActivation.test_fresh_store_is_operational) ... ok
+test_legacy_pending_store_never_reaches_consumer (t836ha.QualifiedHostActivation.test_legacy_pending_store_never_reaches_consumer) ... ERROR
+test_missing_and_malformed_legacy_counts_fail_closed (t836ha.QualifiedHostActivation.test_missing_and_malformed_legacy_counts_fail_closed) ... ok
+test_missing_host_identity_never_opens_runtime (t836ha.QualifiedHostActivation.test_missing_host_identity_never_opens_runtime) ... ok
+test_packaged_alias_is_exact_api_layer_module (t836ha.QualifiedHostActivation.test_packaged_alias_is_exact_api_layer_module) ... ok
+test_qualified_label_with_new_legacy_facts_is_refused (t836ha.QualifiedHostActivation.test_qualified_label_with_new_legacy_facts_is_refused) ... ok
+test_quarantined_upgrade_remains_blocked (t836ha.QualifiedHostActivation.test_quarantined_upgrade_remains_blocked) ... ok
+test_status_inspection_failure_does_not_leak_handle (t836ha.QualifiedHostActivation.test_status_inspection_failure_does_not_leak_handle) ... ok
+test_unknown_status_fails_closed_and_closes_handle (t836ha.QualifiedHostActivation.test_unknown_status_fails_closed_and_closes_handle) ... ok
+
+======================================================================
+ERROR: test_explicitly_qualified_migration_can_activate (t836ha.QualifiedHostActivation.test_explicitly_qualified_migration_can_activate)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/test_836_qualified_host_activation.py", line 93, in test_explicitly_qualified_migration_can_activate
+    with AgentMemory.open(target, **IDENTITY) as maintenance:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/agent-memory/reference/agentmem_ref/api/surface.py", line 748, in open
+    raise StoreIdentityError(
+agentmem_ref.api.surface.StoreIdentityError: legacy store is bound to a different project or holds several projects; it requires an explicit, governed migration
+
+======================================================================
+ERROR: test_legacy_pending_store_never_reaches_consumer (t836ha.QualifiedHostActivation.test_legacy_pending_store_never_reaches_consumer)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/test_836_qualified_host_activation.py", line 87, in test_legacy_pending_store_never_reaches_consumer
+    with open_qualified_memory(target, **IDENTITY):
+  File "/usr/lib/python3.12/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "<scratch>/host_activation.py", line 34, in open_qualified_memory
+    memory = AgentMemory.open(
+             ^^^^^^^^^^^^^^^^^
+  File "/home/user/agent-memory/reference/agentmem_ref/api/surface.py", line 748, in open
+    raise StoreIdentityError(
+agentmem_ref.api.surface.StoreIdentityError: legacy store is bound to a different project or holds several projects; it requires an explicit, governed migration
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.156s
+
+FAILED (errors=2)

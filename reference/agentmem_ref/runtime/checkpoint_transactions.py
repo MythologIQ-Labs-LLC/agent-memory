@@ -283,14 +283,8 @@ class CheckpointTransactionSupport:
 
     def _atomic_journal_write(self, records: tuple[dict, ...]) -> None:
         path = self._store.journal_path
-        path.parent.mkdir(parents=True, exist_ok=True)
-        tmp = path.with_name(f".{path.name}.tmp")
         payload = b"".join(
             _rr._canonical_bytes(dict(record)) + b"\n" for record in records
         )
-        with tmp.open("wb") as handle:
-            handle.write(payload)
-            handle.flush()
-            _rr.os.fsync(handle.fileno())
-        _rr.os.replace(tmp, path)
+        _rr._stage_and_replace(path, payload)  # #840: exclusive temporary
         _RECOVERY_FSYNC_DIRECTORY(path.parent)

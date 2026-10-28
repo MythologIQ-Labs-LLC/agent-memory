@@ -31,6 +31,7 @@ from dataclasses import asdict, dataclass
 import hashlib
 import json
 import os
+import secrets
 from pathlib import Path
 from typing import Iterable, Mapping
 
@@ -488,16 +489,44 @@ def _fsync_directory(path: Path) -> None:
         os.close(descriptor)
 
 
+def _exclusive_temporary(path: Path) -> tuple[Path, int]:
+    """A temporary only this write can have opened (#840).
+
+    A predictable ``.<name>.tmp`` opened with truncation follows a symlink planted at that
+    name (redirecting the write outside the store) and is shared by concurrent writers. This
+    one is created with ``O_EXCL`` (and ``O_NOFOLLOW`` where available) under a random name.
+    The mode stays ``0o666`` less the umask, as ``open("wb")`` created it and as the #821
+    generation witness keeps it.
+    """
+    flags = (os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0)
+             | getattr(os, "O_CLOEXEC", 0) | getattr(os, "O_BINARY", 0))
+    for _ in range(8):
+        temporary = path.with_name(f".{path.name}.{secrets.token_hex(8)}.tmp")
+        try:
+            return temporary, os.open(temporary, flags, 0o666)
+        except FileExistsError:
+            continue
+    raise FileExistsError(f"no unused temporary name for {path.name}")
+
+
+def _stage_and_replace(path: Path, payload: bytes) -> None:
+    """Publish ``payload`` at ``path`` through an exclusive temporary, which never outlives a failure (#840)."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary, descriptor = _exclusive_temporary(path)
+    try:
+        with os.fdopen(descriptor, "wb") as handle:
+            handle.write(payload)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, path)
+    except BaseException:
+        temporary.unlink(missing_ok=True)
+        raise
+
+
 def _atomic_json_write(path: Path, value: dict | bytes) -> None:
     """Write ``value`` as one canonical JSON line, atomically; ``bytes`` are written as given."""
-    path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_name(f".{path.name}.tmp")
-    payload = _canonical_bytes(value) + b"\n"
-    with tmp.open("wb") as handle:
-        handle.write(payload)
-        handle.flush()
-        os.fsync(handle.fileno())
-    os.replace(tmp, path)
+    _stage_and_replace(path, _canonical_bytes(value) + b"\n")
     _fsync_directory(path.parent)
 
 

@@ -27,6 +27,7 @@ from .restart_runtime import (
     RestartSafeRuntime,
     RuntimeProfile,
     RuntimeRecoveryError,
+    _stage_and_replace,
 )
 from .runtime_config import ResolvedRoute, RuntimeConfigurationPlan
 
@@ -98,14 +99,7 @@ def _digest(value: object) -> str:
 
 
 def _atomic_json_write(path: Path, value: Mapping[str, object]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_name(f".{path.name}.tmp")
-    payload = _canonical_bytes(value) + b"\n"
-    with temporary.open("wb") as handle:
-        handle.write(payload)
-        handle.flush()
-        os.fsync(handle.fileno())
-    os.replace(temporary, path)
+    _stage_and_replace(path, _canonical_bytes(value) + b"\n")  # #840: exclusive temporary
 
 
 def _read_json(path: Path) -> dict:

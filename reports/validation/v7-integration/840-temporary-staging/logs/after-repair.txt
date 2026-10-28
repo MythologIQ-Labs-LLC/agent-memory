@@ -1,0 +1,15 @@
+test_i1_interrupted_configuration_write_retries_cleanly (tests.test_v7_840_temporary_staging.InterruptedInitializationTests.test_i1_interrupted_configuration_write_retries_cleanly) ... ok
+test_i2_planted_configuration_temporary_is_not_followed (tests.test_v7_840_temporary_staging.InterruptedInitializationTests.test_i2_planted_configuration_temporary_is_not_followed) ... ok
+test_i3_interrupted_creation_is_completed_by_the_claiming_identity (tests.test_v7_840_temporary_staging.InterruptedInitializationTests.test_i3_interrupted_creation_is_completed_by_the_claiming_identity) ... ok
+test_i4_planted_claim_temporary_is_not_followed (tests.test_v7_840_temporary_staging.InterruptedInitializationTests.test_i4_planted_claim_temporary_is_not_followed) ... ok
+test_s1_planted_symlinks_are_never_followed (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s1_planted_symlinks_are_never_followed) ... ok
+test_s2_temporary_names_are_unpredictable (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s2_temporary_names_are_unpredictable) ... ok
+test_s3_concurrent_writers_publish_one_complete_record (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s3_concurrent_writers_publish_one_complete_record) ... ok
+test_s4_fsync_failure_keeps_the_previous_record_and_no_temporary (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s4_fsync_failure_keeps_the_previous_record_and_no_temporary) ... ok
+test_s5_replace_failure_keeps_the_previous_record_and_no_temporary (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s5_replace_failure_keeps_the_previous_record_and_no_temporary) ... ok
+test_s6_published_file_mode_is_unchanged (tests.test_v7_840_temporary_staging.WriterStagingTests.test_s6_published_file_mode_is_unchanged) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.318s
+
+OK
