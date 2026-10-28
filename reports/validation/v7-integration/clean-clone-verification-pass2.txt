@@ -1,0 +1,23 @@
+clean clone of origin/integration/v7-786-836-reconciliation-no-ci at d77296bbca73dc23f76e7558efc85a100bbeca45, refs/seals fetched (23 refs)
+python: Python 3.12.3; bare python -> Python 3.12.3
+
+== identity
+Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v6; declared_successor=agent-memory-runtime-baseline-v7 (issue #674); protected surface = frozen e98e6e7b776aa2dd680e84f3ed4773ad2afa4ae1 + 28 declared blobs; deltas=identity.public_contract_version 1.6.0->1.8.0; candidate=HEAD
+declaration blob 981108866e45a46b9e96ab283517324d6349e586; agentmem_ref tree 975b09412b096a9eac4a92478e7d3a39700ba5d9
+seal verification OK: 23 SESSION SEAL(s) anchored and matching
+Architecture catalog valid: 84 numbered docs, exactly one shelf each.
+
+== full reference suite (repo root)
+Ran 3414 tests in 360.775s
+OK (skipped=18, expected failures=1)
+
+== security falsifiers
+oracle v2: OK
+store_profile_oracle_v2_sensitivity: every must-detect regression was detected
+store_open_contract_sensitivity: every must-detect regression was detected (7/7)
+a3_regate_sensitivity: every must-detect mutation was killed (53/53); 53 killed in total
+
+== replay verifiers (--reexecute, v7 declaration)
+security: [('cross-scope-write-authority-denial-v5', 'VERIFIED', 'PASS'), ('deleted-lineage-generations-and-restart-v4', 'VERIFIED', 'PASS'), ('public-tombstone-redaction-and-observer-separation-v4', 'VERIFIED', 'PASS'), ('evidence-reference-authorization-v2', 'VERIFIED', 'PASS'), ('scope-safe-graph-discovery-v2', 'VERIFIED', 'PASS')] verified True
+#644: [('typed-sufficiency-noninterference-and-negative-controls-v1', 'VERIFIED', 'PASS'), ('governed-persisted-typed-slot-sufficiency-admission-recheck-v1', 'VERIFIED', 'PASS'), ('governed-admitted-typed-value-coherence-v1', 'VERIFIED', 'PASS'), ('committed-governed-transition-witness-v1', 'VERIFIED', 'PASS'), ('same-slot-safety-counterevidence-and-immutable-stop-gate-v1', 'VERIFIED', 'PASS')] verified True
+git status after run: 0 changed paths
