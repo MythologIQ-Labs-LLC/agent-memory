@@ -259,7 +259,7 @@ jobs:
                   # Hash actual source bytes. Git clean filters must not replace
                   # a different working-tree file with the pinned blob identity.
                   data = Path(path).read_bytes()
-                  actual = hashlib.sha1(b"blob " + str(len(data)).encode("ascii") + b"\\x00" + data).hexdigest()
+                  actual = hashlib.sha1(b"blob " + str(len(data)).encode("ascii") + bytes([0]) + data).hexdigest()
               else:
                   # Historic lane behavior remains unchanged.
                   actual = subprocess.run(["git", "hash-object", path], capture_output=True, text=True, check=True).stdout.strip()
@@ -342,7 +342,7 @@ jobs:
               # Avoid Git filters, attributes and environment rebinding.
               import hashlib
               data = Path(path).read_bytes()
-              return hashlib.sha1(b"blob " + str(len(data)).encode("ascii") + b"\\x00" + data).hexdigest()
+              return hashlib.sha1(b"blob " + str(len(data)).encode("ascii") + bytes([0]) + data).hexdigest()
 
           lane_file = os.environ["LANE_FILE"]
           lane = json.loads(Path(lane_file).read_text(encoding="utf-8"))
