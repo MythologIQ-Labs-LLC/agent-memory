@@ -81,13 +81,13 @@
     }
   },
   "identity": {
-    "a3_tests_blob": "d5abcbc46cd323c42cf468dfaa61f4287b8f8995",
+    "a3_tests_blob": "edb93cbabeac6540d5b36ab8c7aa11a41fed7a24",
     "checker_blob": "e2967b54bf0ad67bbce6f6c3ffb020e884d4ef5d",
     "frozen_template_blob": "745f789c01b7a542f906a9034ae63ebdd6776f7c",
-    "head": "a2014386abeed4b01e554eacf998dfe69688cae4",
+    "head": "f6ed487e20e0004def68c277a12a28bab52151c3",
     "python": "3.12.3",
     "template_source_blob": "7cb9535695dd5bc760831eba50aefd5622fc1fa5",
-    "tree": "da134345d7bbab1aea984304dcbae604dc34252b",
+    "tree": "ad6a9d4df211baba3990c3cdd557a44d7c42dae2",
     "worktree_clean_for_inputs": true
   },
   "mutation_sensitivity": {
@@ -98,8 +98,8 @@
       "frozen blob binding check removed"
     ],
     "exit": 0,
-    "killed": 49,
-    "summary": "every must-detect mutation was killed (49/49); 49 killed in total",
+    "killed": 53,
+    "summary": "every must-detect mutation was killed (53/53); 53 killed in total",
     "survived": []
   },
   "repository_scan": {
@@ -110,6 +110,6 @@
   "tests": {
     "exit": 0,
     "summary": "OK",
-    "tests": 54
+    "tests": 56
   }
 }
