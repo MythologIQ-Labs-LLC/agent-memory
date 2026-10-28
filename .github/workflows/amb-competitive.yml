@@ -16,6 +16,7 @@ on:
           - amb-precisionmembench-retrieval-v5
           - amb-precisionmembench-retrieval-v6
           - amb-precisionmembench-retrieval-v7
+          - amb-precisionmembench-retrieval-v7-scope-distinct-v1
       dataset:
         description: "AMB dataset"
         required: true
@@ -285,7 +286,17 @@ jobs:
             # order the E1 attribution check needs. The -v5 importer refuses an agent-memory artifact without it.
             export AGENT_MEMORY_AMB_CROSS_FACT_SIDECAR="$RUNNER_TEMP/amb-output/cross-fact.jsonl"
           fi
-          PYTHONPATH=reference python reference/run_amb_external.py --amb-root .external/amb -- "${args[@]}"
+          # Only the separately frozen successor uses bridge 0.5.0.
+          if [ "${{ inputs.lane_id }}" = "amb-precisionmembench-retrieval-v7-scope-distinct-v1" ]; then
+            if [ "${{ inputs.dataset }}" != "precisionmembench" ] || [ "${{ inputs.mode }}" != "retrieval" ]; then
+              echo "scope-distinct AMB successor is retrieval-only on precisionmembench" >&2
+              exit 1
+            fi
+            runner="reference/run_amb_external_scope_distinct.py"
+          else
+            runner="reference/run_amb_external.py"
+          fi
+          PYTHONPATH=reference python "$runner" --amb-root .external/amb -- "${args[@]}"
 
       - name: Record execution identity
         if: always()
@@ -321,6 +332,20 @@ jobs:
           memory = "${{ inputs.memory }}"
           mode = "${{ inputs.mode }}"
           lane_applies = "${{ inputs.dataset }}" == "precisionmembench" and mode == "retrieval"
+          if lane["lane_id"] == "amb-precisionmembench-retrieval-v7-scope-distinct-v1":
+              # New lane must pin the successor bridge AND runner by the
+              # committed source blobs, not by original 0.4.0 defaults.
+              bridge_blobs = {
+                  path: blob(path)
+                  for path in lane["harness"]["source_blobs"]
+                  if path.startswith("reference/")
+              }
+          else:
+              # Historical lanes keep their original execution identity.
+              bridge_blobs = {
+                  "reference/amb_agent_memory_bridge.py": blob("reference/amb_agent_memory_bridge.py"),
+                  "reference/amb_mem0_explicit_bridge.py": blob("reference/amb_mem0_explicit_bridge.py"),
+              }
           identity = {
               "evidence_class": "same_harness_external_candidate",
               "agent_memory_revision": os.environ["GITHUB_SHA"],
@@ -340,10 +365,7 @@ jobs:
               "declaration_blob": os.environ.get("DECLARATION_BLOB") or None,
               "full_selection": "${{ inputs.query_limit }}" == "0",
               "amb_pmb_return_cap": os.environ.get("AMB_PMB_RETURN_CAP"),
-              "bridge_blobs": {
-                  "reference/amb_agent_memory_bridge.py": blob("reference/amb_agent_memory_bridge.py"),
-                  "reference/amb_mem0_explicit_bridge.py": blob("reference/amb_mem0_explicit_bridge.py"),
-              },
+              "bridge_blobs": bridge_blobs,
               "resolved_packages": {
                   name: version(name)
                   for name in ("mem0ai", "qdrant-client", "sentence-transformers", "torch", "rank-bm25", "openai", "sqlalchemy", "posthog", "hindsight-all", "hindsight-client", "uv")
