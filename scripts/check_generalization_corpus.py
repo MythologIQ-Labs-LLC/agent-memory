@@ -52,6 +52,7 @@ import argparse
 import ast
 import copy
 import hashlib
+import importlib.util
 import json
 import re
 import subprocess
@@ -74,15 +75,18 @@ THRESHOLD = 0.5
 # similarity, threshold) must hash to the recorded digest. Any difference is refused. Strict
 # historical behaviour stays available with --require-frozen-blob.
 # Re-gate (#786): consumers read the module's runtime value, so the frozen literal must also be
-# the file's only binding of the name (a later rebinding, augmentation, global, import, attribute
-# or name-string use is refused), and the recorded comparison digest also covers how K7 applies
-# the rule (record_texts, overlap_rule).
+# the file's only binding of the name, the file must decode identically under Python and as
+# UTF-8, and dynamic-namespace primitives are refused. The recorded comparison digest also covers
+# how K7 and K8 apply the rule (record_texts, overlap_rule, every call site with its loop and
+# branch path, TOKEN flags). Both the frozen path and strict mode require the full frozen blob,
+# not its 32-bit prefix, and the frozen path checks the recorded template texts.
 TEMPLATE_AMENDMENT_ID = "plan-732-g3b-amendment-A3-786"
 TEMPLATE_FROZEN_BLOB = "745f789c01b7a542f906a9034ae63ebdd6776f7c"
 TEMPLATE_TEXTS_SHA256 = "bb4d4da3d02b41a7602d43e85977ef69f091864b5feb42df29e7977d62666fdc"
-# tokens, similarity, record_texts, overlap_rule, TOKEN and THRESHOLD; identical at the
-# gate-frozen checker revisions 7b5f7a1, 5555504 and 76a9e30.
-COMPARISON_RULE_SHA256 = "b41d71c8eccd44b5572d4b68d348a0271db7324b1a7e0324acbf57113966992d"
+# Identical at the gate-binding checker revisions 5555504 (A1 PASS) and 76a9e30 (freeze PASS). At
+# 7b5f7a1 the K7 loops iterate ``corpus`` instead of ``enumerate(corpus)`` (A1 L3): the same records
+# in the same order, but a different syntax tree, so that revision has another digest.
+COMPARISON_RULE_SHA256 = "0bcc7365667fe14a64ec355d5ee6c9e0d35b2aa432e52b53f574fce8761d1f03"
 TEMPLATE_NAME = "CONFLICT_TEMPLATES"
 
 P_FAMILIES = [f"P{i}" for i in range(1, 14)]
@@ -133,41 +137,92 @@ def _templates_from_source(text: str) -> list:
     raise SystemExit("CONFLICT_TEMPLATES not found")
 
 
+# Names and attributes through which a module can read or rewrite its own namespace without a
+# syntactic binding of TEMPLATE_NAME (globals().update(...), setattr(sys.modules[...]), exec,
+# a module __class__ swap, a module __getattr__). Neither the frozen blob nor the current file
+# uses any of them, so the rule refuses them outright (re-gate review 1, B2/A1/A2).
+_DYNAMIC_NAMES = frozenset({
+    "globals", "vars", "locals", "setattr", "delattr", "exec", "eval", "compile", "__import__",
+    "__builtins__", "builtins", "importlib",
+})
+_DYNAMIC_ATTRIBUTES = frozenset({
+    "__dict__", "__class__", "__setattr__", "__getattribute__", "__getattr__", "modules",
+})
+_DYNAMIC_DEFINITIONS = frozenset({"__getattr__", "__getattribute__", "__dir__", "__setattr__"})
+
+
 def template_binding_violations(text: str) -> list[str]:
     """Every way ``text`` could bind CONFLICT_TEMPLATES other than one top-level literal assignment.
 
-    Static and conservative: exec/eval of constructed strings and rebinding from other modules
-    are outside what one file's syntax can show (the re-gate evidence scans the repository for
-    the latter).
+    Static and conservative. Besides every syntactic binding form (assignment targets of any
+    kind, ``del``, ``global``/``nonlocal``, imports, definitions, parameters, keyword names,
+    patterns, type parameters, attribute stores, the name as a string or bytes literal), it
+    refuses the dynamic-namespace primitives in ``_DYNAMIC_NAMES`` and ``_DYNAMIC_ATTRIBUTES``.
+    Rebinding from other modules and shadowing by another file are outside one file's syntax;
+    ``template_basis`` refuses a shadowing package and the re-gate evidence scans the repository.
     """
     tree = ast.parse(text)
     violations, stores = [], []
+    type_params = tuple(getattr(ast, name) for name in ("TypeVar", "ParamSpec", "TypeVarTuple") if hasattr(ast, name))
     for node in ast.walk(tree):
-        if isinstance(node, ast.Name) and node.id == TEMPLATE_NAME and isinstance(node.ctx, (ast.Store, ast.Del)):
-            stores.append(node)
-        elif isinstance(node, ast.Attribute) and node.attr == TEMPLATE_NAME and isinstance(node.ctx, (ast.Store, ast.Del)):
-            violations.append(f"attribute binding at line {node.lineno}")
+        line = getattr(node, "lineno", "?")
+        if isinstance(node, ast.Name):
+            if node.id == TEMPLATE_NAME and isinstance(node.ctx, (ast.Store, ast.Del)):
+                stores.append(node)
+            elif node.id in _DYNAMIC_NAMES:
+                violations.append(f"dynamic namespace primitive {node.id!r} at line {line}")
+        elif isinstance(node, ast.Attribute):
+            if node.attr == TEMPLATE_NAME and isinstance(node.ctx, (ast.Store, ast.Del)):
+                violations.append(f"attribute binding at line {line}")
+            elif node.attr in _DYNAMIC_ATTRIBUTES:
+                violations.append(f"dynamic namespace attribute {node.attr!r} at line {line}")
         elif isinstance(node, (ast.Global, ast.Nonlocal)) and TEMPLATE_NAME in node.names:
-            violations.append(f"{type(node).__name__.lower()} declaration at line {node.lineno}")
-        elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)) and node.name == TEMPLATE_NAME:
-            violations.append(f"definition at line {node.lineno}")
+            violations.append(f"{type(node).__name__.lower()} declaration at line {line}")
+        elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)) and (
+                node.name == TEMPLATE_NAME or node.name in _DYNAMIC_DEFINITIONS):
+            violations.append(f"definition of {node.name!r} at line {line}")
         elif isinstance(node, ast.ImportFrom) and any(alias.name == "*" for alias in node.names):
-            violations.append(f"star import at line {node.lineno}")
-        elif isinstance(node, ast.alias) and (node.asname or node.name.split(".")[0]) == TEMPLATE_NAME:
-            violations.append("import binding")
+            violations.append(f"star import at line {line}")
+        elif isinstance(node, ast.alias) and (
+                (node.asname or node.name.split(".")[0]) == TEMPLATE_NAME or node.name.split(".")[0] in _DYNAMIC_NAMES):
+            violations.append(f"import binding {node.name!r}")
         elif isinstance(node, ast.ExceptHandler) and node.name == TEMPLATE_NAME:
-            violations.append(f"exception binding at line {node.lineno}")
+            violations.append(f"exception binding at line {line}")
         elif isinstance(node, (ast.MatchAs, ast.MatchStar)) and node.name == TEMPLATE_NAME:
-            violations.append(f"pattern binding at line {node.lineno}")
+            violations.append(f"pattern binding at line {line}")
         elif isinstance(node, ast.MatchMapping) and node.rest == TEMPLATE_NAME:
-            violations.append(f"pattern binding at line {node.lineno}")
-        elif isinstance(node, ast.Constant) and isinstance(node.value, str) and TEMPLATE_NAME in node.value:
-            violations.append(f"name used as a string at line {node.lineno}")
+            violations.append(f"pattern binding at line {line}")
+        elif isinstance(node, ast.arg) and node.arg == TEMPLATE_NAME:
+            violations.append(f"parameter binding at line {line}")
+        elif isinstance(node, ast.keyword) and node.arg == TEMPLATE_NAME:
+            violations.append(f"keyword name at line {line}")
+        elif type_params and isinstance(node, type_params) and node.name == TEMPLATE_NAME:
+            violations.append(f"type parameter at line {line}")
+        elif isinstance(node, ast.Constant) and isinstance(node.value, (str, bytes)) and (
+                TEMPLATE_NAME in (node.value if isinstance(node.value, str) else node.value.decode("latin-1"))):
+            violations.append(f"name used as a literal at line {line}")
     top = [node for node in tree.body if isinstance(node, ast.Assign) and len(node.targets) == 1
            and isinstance(node.targets[0], ast.Name) and node.targets[0].id == TEMPLATE_NAME]
     if len(stores) != 1 or len(top) != 1 or stores[0] is not top[0].targets[0]:
         violations.append(f"{len(stores)} name bindings; exactly one top-level assignment is required")
     return violations
+
+
+def python_source(path: Path) -> str:
+    """The source text exactly as the interpreter decodes it (PEP 263 cookie, BOM).
+
+    The checker reads UTF-8; a file Python would decode differently (for example a utf-7
+    cookie, where a UTF-8 comment becomes code) is refused (re-gate review 1, B1).
+    """
+    raw = path.read_bytes()
+    try:
+        as_python = importlib.util.decode_source(raw)
+        as_utf8 = raw.decode("utf-8")
+    except (UnicodeDecodeError, SyntaxError, LookupError) as exc:
+        raise SystemExit(f"{TEMPLATE_AMENDMENT_ID}: template source is not decodable: {exc}") from exc
+    if as_python != as_utf8:
+        raise SystemExit(f"{TEMPLATE_AMENDMENT_ID}: template source decodes differently under Python than as UTF-8")
+    return as_utf8
 
 
 def _texts_from_templates(rows) -> list[str]:
@@ -183,6 +238,36 @@ def texts_digest(texts: list[str]) -> str:
     return hashlib.sha256(json.dumps(texts, ensure_ascii=False, separators=(",", ":")).encode("utf-8")).hexdigest()
 
 
+def _application_sites(tree: ast.Module) -> list[str]:
+    """How K7 and K8 apply the rule: each overlap_rule call with every enclosing loop and branch header.
+
+    Dropping a call, narrowing its references, iterating fewer records or adding a condition on the
+    path changes the result; so does rebinding ``templates`` inside ``check``.
+    """
+    sites: list[str] = []
+
+    def visit(node, path):
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id == "overlap_rule":
+            sites.append(" > ".join(path + [ast.dump(node)]))
+        header = None
+        if isinstance(node, (ast.For, ast.AsyncFor)):
+            header = "for " + ast.dump(node.target) + " in " + ast.dump(node.iter)
+        elif isinstance(node, (ast.If, ast.While)):
+            header = type(node).__name__.lower() + " " + ast.dump(node.test)
+        elif isinstance(node, ast.comprehension):
+            header = "comp " + ast.dump(node.iter) + " if " + "".join(ast.dump(test) for test in node.ifs)
+        elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            header = "def " + node.name
+        for child in ast.iter_child_nodes(node):
+            visit(child, path + [header] if header else path)
+
+    visit(tree, [])
+    check_function = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "check")
+    bindings = sum(1 for node in ast.walk(check_function)
+                   if isinstance(node, ast.Name) and node.id == "templates" and isinstance(node.ctx, ast.Store))
+    return sites + [f"templates bindings in check: {bindings}"]
+
+
 def comparison_rule_digest() -> str:
     """Digest of the contamination comparison exactly as this checker executes it."""
     import inspect
@@ -191,8 +276,9 @@ def comparison_rule_digest() -> str:
     try:
         parts = [ast.dump(ast.parse(textwrap.dedent(inspect.getsource(function))))
                  for function in (tokens, similarity, record_texts, overlap_rule)]
-        parts += [TOKEN.pattern, repr(THRESHOLD)]
-    except (OSError, TypeError, SyntaxError, AttributeError):
+        parts += [TOKEN.pattern, repr(THRESHOLD), f"flags={TOKEN.flags}"]
+        parts += _application_sites(ast.parse(Path(__file__).read_text(encoding="utf-8")))
+    except (OSError, TypeError, SyntaxError, AttributeError, StopIteration):
         return "unverifiable"  # an unreadable rule is a changed rule
     return hashlib.sha256("\n".join(parts).encode("utf-8")).hexdigest()
 
@@ -203,18 +289,28 @@ def template_basis(source: Path = None, *, require_frozen_blob: bool = False) ->
     blob = subprocess.run(
         ["git", "hash-object", str(source)], cwd=ROOT, capture_output=True, text=True, check=True
     ).stdout.strip()
-    current = _texts_from_templates(_templates_from_source(source.read_text(encoding="utf-8")))
-    if blob.startswith(TEMPLATE_BLOB_PREFIX):
-        return current, "frozen_blob"
+    # The historical rule pins the blob by its prefix; a 32-bit prefix is forgeable (re-gate review 1,
+    # A4), so both paths require the full frozen blob and, on the frozen path, the recorded texts.
+    if blob == TEMPLATE_FROZEN_BLOB:
+        frozen = _texts_from_templates(_templates_from_source(python_source(source)))
+        if texts_digest(frozen) != TEMPLATE_TEXTS_SHA256:
+            raise SystemExit(f"template texts at the frozen blob differ from the recorded digest")
+        return frozen, "frozen_blob"
     if require_frozen_blob:
         raise SystemExit(f"template source blob {blob} is not the frozen {TEMPLATE_BLOB_PREFIX}")
+    if blob.startswith(TEMPLATE_BLOB_PREFIX):
+        raise SystemExit(f"{TEMPLATE_AMENDMENT_ID}: template source blob {blob} shares the frozen prefix but is not "
+                         f"the frozen blob {TEMPLATE_FROZEN_BLOB}")
+    if source.with_suffix("").is_dir():
+        raise SystemExit(f"{TEMPLATE_AMENDMENT_ID}: a package {source.with_suffix('').name}/ would shadow the template source")
     frozen_source = subprocess.run(
         ["git", "cat-file", "-p", TEMPLATE_FROZEN_BLOB], cwd=ROOT, capture_output=True, text=True,
     )
     if frozen_source.returncode != 0:
         raise SystemExit(f"{TEMPLATE_AMENDMENT_ID}: frozen template blob {TEMPLATE_FROZEN_BLOB} is unavailable")
     frozen_rows = _templates_from_source(frozen_source.stdout)
-    current_source = source.read_text(encoding="utf-8")
+    current_source = python_source(source)
+    current = _texts_from_templates(_templates_from_source(current_source))
     if _templates_from_source(current_source) != frozen_rows:
         raise SystemExit(f"{TEMPLATE_AMENDMENT_ID}: CONFLICT_TEMPLATES differ from frozen blob {TEMPLATE_FROZEN_BLOB}")
     if template_binding_violations(frozen_source.stdout):

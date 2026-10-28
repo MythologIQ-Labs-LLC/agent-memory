@@ -1,0 +1,18 @@
+import sys, subprocess, importlib.util
+from pathlib import Path
+sys.path.insert(0, "/home/user/agent-memory/scripts"); sys.path.insert(0, "/home/user/agent-memory/reference")
+import check_generalization_corpus as checker
+SRC = checker.TEMPLATE_SOURCE.read_text(encoding="utf-8")
+inject = '\nCONFLICT_TEMPLATES = (("location", "EVIL {old}", "EVIL {new}", "EVIL?"),)\n'
+# Python (PEP 263) decodes this file as UTF-7; the checker decodes it as UTF-8.
+body = ("# -*- coding: utf-7 -*-\n" + SRC).encode("utf-7") + b"# " + inject.encode("utf-7").replace(b"\n", b"+AAo-", 1) + b"\n"
+p = Path("variants/utf7_cookie.py").resolve(); p.write_bytes(body)
+print("checker sees bytes as utf-8 ok:", body.decode("utf-8")[-120:])
+print("binding violations (checker view):", checker.template_binding_violations(p.read_text(encoding="utf-8")))
+try:
+    print("template_basis:", checker.template_basis(p)[1])
+except SystemExit as e:
+    print("refused:", e)
+spec = importlib.util.spec_from_file_location("judge_utf7", p); m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+print("imported CONFLICT_TEMPLATES:", m.CONFLICT_TEMPLATES)
+print("blob", subprocess.run(["git","hash-object",str(p)],capture_output=True,text=True).stdout.strip())
