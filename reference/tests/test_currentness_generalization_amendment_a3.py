@@ -89,6 +89,48 @@ class AmendmentA3Tests(unittest.TestCase):
             with self.subTest(label), patcher, self.assertRaisesRegex(SystemExit, "contamination comparison differs"):
                 checker.template_basis()
 
+    def test_rebinding_the_templates_after_the_frozen_literal_is_refused(self):
+        # Consumers read the module's runtime value, not its first literal (re-gate finding).
+        rebinds = {
+            "reassigned": "\nCONFLICT_TEMPLATES = CONFLICT_TEMPLATES[:4]\n",
+            "augmented": '\nCONFLICT_TEMPLATES += (("x", "a {old}", "b {new}", "q"),)\n',
+            "annotated": "\nCONFLICT_TEMPLATES: tuple = ()\n",
+            "conditional": "\nif True:\n    CONFLICT_TEMPLATES = ()\n",
+            "deleted": "\ndel CONFLICT_TEMPLATES\n",
+            "loop target": "\nfor CONFLICT_TEMPLATES in [()]:\n    pass\n",
+            "walrus": "\n(CONFLICT_TEMPLATES := ())\n",
+            "global in function": "\ndef reset():\n    global CONFLICT_TEMPLATES\n    CONFLICT_TEMPLATES = ()\n",
+            "globals() string": "\nglobals()['CONFLICT_TEMPLATES'] = ()\n",
+            "module attribute": "\nimport sys\nsys.modules[__name__].CONFLICT_TEMPLATES = ()\n",
+            "import alias": "\nfrom os import sep as CONFLICT_TEMPLATES\n",
+            "star import": "\nfrom os.path import *\n",
+            "function": "\ndef CONFLICT_TEMPLATES():\n    return ()\n",
+            "except name": "\ntry:\n    pass\nexcept Exception as CONFLICT_TEMPLATES:\n    pass\n",
+            "match capture": "\nmatch 1:\n    case CONFLICT_TEMPLATES:\n        pass\n",
+        }
+        for label, suffix in rebinds.items():
+            with self.subTest(label), self.assertRaisesRegex(SystemExit, "CONFLICT_TEMPLATES is rebound"):
+                checker.template_basis(self.variant(self.source + suffix))
+
+    def test_binding_rule_accepts_the_frozen_blob_and_the_current_source(self):
+        self.assertEqual(checker.template_binding_violations(self.frozen), [])
+        self.assertEqual(checker.template_binding_violations(self.source), [])
+
+    def test_changed_rule_application_is_refused(self):
+        def strict_overlap(record, references, rule):
+            for text in checker.record_texts(record):
+                for reference in references:
+                    if checker.similarity(text, reference) > checker.THRESHOLD:
+                        raise checker.Reject(rule)
+
+        def queries_only(record):
+            return [record["query"]]
+
+        for label, patcher in (("strict inequality", mock.patch.object(checker, "overlap_rule", strict_overlap)),
+                               ("fewer texts compared", mock.patch.object(checker, "record_texts", queries_only))):
+            with self.subTest(label), patcher, self.assertRaisesRegex(SystemExit, "contamination comparison differs"):
+                checker.template_basis()
+
     def test_unavailable_frozen_blob_is_refused(self):
         with mock.patch.object(checker, "TEMPLATE_FROZEN_BLOB", "0" * 40):
             with self.assertRaisesRegex(SystemExit, "is unavailable"):

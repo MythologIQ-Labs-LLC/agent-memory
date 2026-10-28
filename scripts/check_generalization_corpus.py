@@ -73,11 +73,17 @@ THRESHOLD = 0.5
 # derived texts must hash to the recorded digest; and the contamination comparison (tokeniser,
 # similarity, threshold) must hash to the recorded digest. Any difference is refused. Strict
 # historical behaviour stays available with --require-frozen-blob.
+# Re-gate (#786): consumers read the module's runtime value, so the frozen literal must also be
+# the file's only binding of the name (a later rebinding, augmentation, global, import, attribute
+# or name-string use is refused), and the recorded comparison digest also covers how K7 applies
+# the rule (record_texts, overlap_rule).
 TEMPLATE_AMENDMENT_ID = "plan-732-g3b-amendment-A3-786"
 TEMPLATE_FROZEN_BLOB = "745f789c01b7a542f906a9034ae63ebdd6776f7c"
 TEMPLATE_TEXTS_SHA256 = "bb4d4da3d02b41a7602d43e85977ef69f091864b5feb42df29e7977d62666fdc"
-# Identical at the gate-frozen checker revisions 7b5f7a1, 5555504 and 76a9e30.
-COMPARISON_RULE_SHA256 = "ede7c6e2171f0e26be478f21cc0d9912fef2d59b46a4570850385f589ad5ab45"
+# tokens, similarity, record_texts, overlap_rule, TOKEN and THRESHOLD; identical at the
+# gate-frozen checker revisions 7b5f7a1, 5555504 and 76a9e30.
+COMPARISON_RULE_SHA256 = "b41d71c8eccd44b5572d4b68d348a0271db7324b1a7e0324acbf57113966992d"
+TEMPLATE_NAME = "CONFLICT_TEMPLATES"
 
 P_FAMILIES = [f"P{i}" for i in range(1, 14)]
 R_FAMILIES = [f"R{i}" for i in range(1, 8)]
@@ -127,6 +133,43 @@ def _templates_from_source(text: str) -> list:
     raise SystemExit("CONFLICT_TEMPLATES not found")
 
 
+def template_binding_violations(text: str) -> list[str]:
+    """Every way ``text`` could bind CONFLICT_TEMPLATES other than one top-level literal assignment.
+
+    Static and conservative: exec/eval of constructed strings and rebinding from other modules
+    are outside what one file's syntax can show (the re-gate evidence scans the repository for
+    the latter).
+    """
+    tree = ast.parse(text)
+    violations, stores = [], []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Name) and node.id == TEMPLATE_NAME and isinstance(node.ctx, (ast.Store, ast.Del)):
+            stores.append(node)
+        elif isinstance(node, ast.Attribute) and node.attr == TEMPLATE_NAME and isinstance(node.ctx, (ast.Store, ast.Del)):
+            violations.append(f"attribute binding at line {node.lineno}")
+        elif isinstance(node, (ast.Global, ast.Nonlocal)) and TEMPLATE_NAME in node.names:
+            violations.append(f"{type(node).__name__.lower()} declaration at line {node.lineno}")
+        elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)) and node.name == TEMPLATE_NAME:
+            violations.append(f"definition at line {node.lineno}")
+        elif isinstance(node, ast.ImportFrom) and any(alias.name == "*" for alias in node.names):
+            violations.append(f"star import at line {node.lineno}")
+        elif isinstance(node, ast.alias) and (node.asname or node.name.split(".")[0]) == TEMPLATE_NAME:
+            violations.append("import binding")
+        elif isinstance(node, ast.ExceptHandler) and node.name == TEMPLATE_NAME:
+            violations.append(f"exception binding at line {node.lineno}")
+        elif isinstance(node, (ast.MatchAs, ast.MatchStar)) and node.name == TEMPLATE_NAME:
+            violations.append(f"pattern binding at line {node.lineno}")
+        elif isinstance(node, ast.MatchMapping) and node.rest == TEMPLATE_NAME:
+            violations.append(f"pattern binding at line {node.lineno}")
+        elif isinstance(node, ast.Constant) and isinstance(node.value, str) and TEMPLATE_NAME in node.value:
+            violations.append(f"name used as a string at line {node.lineno}")
+    top = [node for node in tree.body if isinstance(node, ast.Assign) and len(node.targets) == 1
+           and isinstance(node.targets[0], ast.Name) and node.targets[0].id == TEMPLATE_NAME]
+    if len(stores) != 1 or len(top) != 1 or stores[0] is not top[0].targets[0]:
+        violations.append(f"{len(stores)} name bindings; exactly one top-level assignment is required")
+    return violations
+
+
 def _texts_from_templates(rows) -> list[str]:
     texts = []
     for _slot, old, new, query in rows:
@@ -146,7 +189,8 @@ def comparison_rule_digest() -> str:
     import textwrap
 
     try:
-        parts = [ast.dump(ast.parse(textwrap.dedent(inspect.getsource(function)))) for function in (tokens, similarity)]
+        parts = [ast.dump(ast.parse(textwrap.dedent(inspect.getsource(function))))
+                 for function in (tokens, similarity, record_texts, overlap_rule)]
         parts += [TOKEN.pattern, repr(THRESHOLD)]
     except (OSError, TypeError, SyntaxError, AttributeError):
         return "unverifiable"  # an unreadable rule is a changed rule
@@ -170,8 +214,14 @@ def template_basis(source: Path = None, *, require_frozen_blob: bool = False) ->
     if frozen_source.returncode != 0:
         raise SystemExit(f"{TEMPLATE_AMENDMENT_ID}: frozen template blob {TEMPLATE_FROZEN_BLOB} is unavailable")
     frozen_rows = _templates_from_source(frozen_source.stdout)
-    if _templates_from_source(source.read_text(encoding="utf-8")) != frozen_rows:
+    current_source = source.read_text(encoding="utf-8")
+    if _templates_from_source(current_source) != frozen_rows:
         raise SystemExit(f"{TEMPLATE_AMENDMENT_ID}: CONFLICT_TEMPLATES differ from frozen blob {TEMPLATE_FROZEN_BLOB}")
+    if template_binding_violations(frozen_source.stdout):
+        raise SystemExit(f"{TEMPLATE_AMENDMENT_ID}: frozen blob {TEMPLATE_FROZEN_BLOB} fails the binding rule")
+    violations = template_binding_violations(current_source)
+    if violations:
+        raise SystemExit(f"{TEMPLATE_AMENDMENT_ID}: CONFLICT_TEMPLATES is rebound: {'; '.join(violations)}")
     frozen = _texts_from_templates(frozen_rows)
     if current != frozen or texts_digest(current) != TEMPLATE_TEXTS_SHA256:
         raise SystemExit(f"{TEMPLATE_AMENDMENT_ID}: template texts differ from the recorded digest")
