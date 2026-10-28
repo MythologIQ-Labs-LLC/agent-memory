@@ -77,20 +77,28 @@ def _cross_fact_view(recall: dict, ref: str) -> dict:
 def run_m4(pairs: int = M4_PAIRS) -> dict:
     out = {}
     tenant = "tenant:agentmembench"
-    memory = AgentMemory.open(tempfile.mkdtemp(), tenant=tenant, actor_id="agent:benchmark",
-                              scope="benchmark:agentmembench", purpose="AgentMemBench MESA formal evaluation")
-    try:
-        for index in range(pairs):
-            category, old_t, new_t, query = CONFLICT_TEMPLATES[index % len(CONFLICT_TEMPLATES)]
-            scope = f"user:conflict_{index:05d}"
-            domains = [tenant, scope]
-            overrides = {"scope": scope, "isolation_domain_refs": domains,
-                         "required_isolation_domain_refs": domains, "project_ref": scope}
-            old = memory.remember(f"memory:m4:{index}:old", old_t.format(old=f"OLD_{category}_{index:04d}"),
-                                  overrides=overrides)["fact_uuid"]
-            new = memory.remember(f"memory:m4:{index}:new", new_t.format(new=f"NEW_{category}_{index:04d}"),
-                                  overrides=overrides)["fact_uuid"]
-            recall = memory.recall(query, target_domain_refs=domains, project_ref=scope, budget=1)
+    root = tempfile.mkdtemp()
+    for index in range(pairs):
+        category, old_t, new_t, query = CONFLICT_TEMPLATES[index % len(CONFLICT_TEMPLATES)]
+        scope = f"user:conflict_{index:05d}"
+        # One serialized host-bound scope at a time. The persistent store
+        # remains shared so identifiers and global-state interference
+        # remain visible to the qualification comparator. Many projects share
+        # it, so it binds keys per project (#786).
+        with AgentMemory.open(
+            root, tenant=tenant, actor_id="agent:benchmark", scope=scope,
+            purpose="AgentMemBench MESA formal evaluation", store_profile="scope_distinct_v1",
+        ) as memory:
+            old_result = memory.remember(
+                f"memory:m4:{index}:old", old_t.format(old=f"OLD_{category}_{index:04d}")
+            )
+            new_result = memory.remember(
+                f"memory:m4:{index}:new", new_t.format(new=f"NEW_{category}_{index:04d}")
+            )
+            if not old_result["committed"] or not new_result["committed"]:
+                raise AssertionError(f"M4 scoped seeding refused at {index}")
+            old, new = old_result["fact_uuid"], new_result["fact_uuid"]
+            recall = memory.recall(query, budget=1)
             top = recall["returned"][0] if recall["returned"] else None
             names = {old: "old", new: "new"}
             out[f"{category}/{index}"] = {
@@ -101,8 +109,6 @@ def run_m4(pairs: int = M4_PAIRS) -> dict:
                     recall["admissions"][ref].get("ranking_evidence", {}).get("ordered_before_next_by")
                     for ref in recall["admitted"]],
             }
-    finally:
-        memory.close()
     return out
 
 

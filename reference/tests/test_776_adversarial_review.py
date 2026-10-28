@@ -28,6 +28,7 @@ from tests.qualified_fixtures import corpus_for, rule
 from tests.test_644_combined_independent import _evidence, _prop
 from tests.test_runtime_composition import PROJECT, TENANT, _context, _plan, _proposal
 from tests.test_typed_propositions import PROP, TEXT
+from tests._tenant_wide_fixture import open_tenant_wide
 
 S, E = "state_change", "error_correction"
 KILN = [("The kiln firing schedule uses cone 6 glaze.", None),
@@ -134,7 +135,9 @@ class _Facade(unittest.TestCase):
         self.addCleanup(lambda: self.memory.closed or self.memory.close())
 
     def open(self, scope="project:a"):
-        return AgentMemory.open(self.root, tenant="tenant:c644", actor_id="agent:c644", scope=scope, purpose="c644")
+        # #786 store identity profiles: these review suites drive several projects through one tenant-wide
+        # store to exercise the canonical adapter gates; the test-only fixture reproduces that store.
+        return open_tenant_wide(self.root, tenant="tenant:c644", actor_id="agent:c644", scope=scope, purpose="c644")
 
     def reopen(self, scope="project:a"):
         self.memory.close()

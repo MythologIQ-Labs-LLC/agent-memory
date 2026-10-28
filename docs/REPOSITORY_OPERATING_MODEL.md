@@ -102,6 +102,22 @@ benchmark score != authority
 benchmark score != product requirement by itself
 ```
 
+## Component ownership, exit criteria and active priority
+
+The three roles are **operational boundaries**, not three separate products or three equal-priority development queues. The five-layer project model remains governed by [AGENT_MEMORY_PROJECT_MODEL.md](AGENT_MEMORY_PROJECT_MODEL.md); this section defines how work is routed without duplicating that model.
+
+| Role | Owns | Stops at / hands off | Completion evidence |
+|---|---|---|---|
+| **Runtime** | Developer-facing API, governed storage and lifecycle, candidate generation, retrieval admission, ranking, context delivery, and runtime security | Does not encode benchmark labels or turn benchmark verdicts into runtime authority; sends version-pinned behavior to Evaluation | Source changes, contract/security regression tests, and qualified runtime behavior including retrieval precision, recall and correct abstention |
+| **Theory / architecture / lessons** | Memory semantics, hypotheses, research synthesis, architectural decisions, failure lessons, and governance doctrine | Does not make a proposed mechanism implemented, qualified, or empirically superior; hands implementation requirements to Runtime and falsifiable hypotheses to Evaluation | Explicit accepted decisions where required, clear hypothesis/evidence distinction and traceable research/decision history |
+| **Benchmarking / Gauntlet** | Benchmark catalog, neutral SUT adapters, benchmark-native protocols and metrics, controlled execution, evaluator integrity, comparable evidence, scorecards and reproducible external entry | Does not own SUT internals, rewrite native benchmark scoring, grant memory authority or treat incompatible protocols as a single leaderboard | Frozen run identity, benchmark-native scores, comparison eligibility/coverage, evaluator-integrity evidence and reproducible receipts |
+
+**Gauntlet** means the public-facing umbrella of benchmark and assessment instruments used to pressure-test Agent Memory **and any participating memory system**. It is not one monolithic benchmark, the Agent Memory runtime, a separate authority service, or solely a conformance checklist. Its orchestrator and system/benchmark adapters connect memory systems to a portfolio of workloads; Memory Evaluation owns normalized evidence and reporting. A separately specified assessment profile, such as a proposed MemoryCheckpointAssessment, may join that portfolio after integration and qualification; its draft existence is not proof it has shipped.
+
+A result is **directly comparable** only when the benchmark revision, selection, native metric, operation protocol, adapter contributions and material execution conditions align. Otherwise declare the documented conditional comparison or **not directly comparable**; do not silently pool retrieval-only and answer-generation results, and do not collapse missing or unsupported states into zero. External user-submitted results remain distinguished from independently reproduced runs.
+
+**Present delivery priority: improve the Agent Memory runtime**, especially actual retrieval precision and answer/task correctness without abandoning recall, security, or abstention. Evaluation should supply bounded evidence and targeted replay for runtime changes; theory should clarify demonstrated gaps. Neither Gauntlet expansion nor documentation consolidation should displace runtime engineering without a separately authorized priority change. This priority statement is a routing rule, not a release/readiness assertion; live status belongs to [BACKLOG.md](BACKLOG.md), [#410](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/410) and the baseline register.
+
 ## Evidence-to-change flow
 
 External evaluation should normally move through this loop:

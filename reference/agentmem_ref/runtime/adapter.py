@@ -200,6 +200,17 @@ WRITE_TARGET_REFUSAL = "target_unavailable"
 #: authority ref the authorize event of a write-target-refused proposal carries
 WRITE_TARGET_REFUSED_REF = "write-target:refused"
 
+# #786 (security lineage, opt-in, pending durable SQLite qualification): creator-principal
+# ownership of a logical memory lineage. The owner is recorded in canonical scope metadata only
+# when the host asks for it, is inherited by every later version and generation, and is enforced
+# inside the canonical write and delete gates. Only the owner may replace a head or re-create a
+# deleted owned id; the owner or an explicitly delegated principal may revoke it. Refusals use
+# the contract's write-target token, so ownership adds no refusal vocabulary.
+OWNERSHIP_CREATOR_PRINCIPAL = "creator_principal_v1"
+OWNER_SCOPE_KEY = "owner_principal_ref"
+REVOCATION_DELEGATIONS_KEY = "revocation_delegation_authority"
+REVOCATION_OPERATIONS = frozenset({"pruning", "permanent_deletion"})
+
 
 @dataclass(frozen=True)
 class RecallContext:
@@ -407,13 +418,73 @@ class GovernedMemoryAdapter:
         """
         head = self._current_fact_by_memory.get(proposal.target_reference)
         if head is None:
+            # #786 ownership: a deleted owned id is re-created only by a principal that owned it.
+            owners = self._deleted_generation_owners(proposal.target_reference)
+            if owners and proposal.actor_id not in owners:
+                return WRITE_TARGET_REFUSAL
             return None
         if self.fact_eligible_for_writer(head, proposal) and self._scope_continuity_refusal(head, proposal) is None:
+            # #786 ownership: an owned lineage's head is replaced only by its owner.
+            if self._owner_refusal(proposal, head) is not None:
+                return WRITE_TARGET_REFUSAL
             return None
         # an operation that presupposes an existing fact (correction, ...) reads as "no such
         # fact", exactly as governed deletion and dispute do; a promotion onto a protected id
         # cannot claim absence, so it reports only that the id is unavailable to this writer
         return WRITE_TARGET_REFUSAL if proposal.operation == "promotion" else "fact_not_found"
+
+    def _lineage_owner(self, proposal: policy.Proposal, ownership: str | None) -> str | None:
+        """The owner a new head carries: inherited from the live head or a deleted owned
+        generation, or the creator when the host asks. An unowned lineage is never claimed by
+        a later version: ownership is established only by the write that creates it."""
+        current_uuid = self._current_fact_by_memory.get(proposal.target_reference)
+        if current_uuid is not None:
+            return (self._fact_scope.get(current_uuid) or {}).get(OWNER_SCOPE_KEY)
+        owners = self._deleted_generation_owners(proposal.target_reference)
+        if owners:
+            return proposal.actor_id  # write_target_refusal admitted only a prior owner
+        if ownership == OWNERSHIP_CREATOR_PRINCIPAL:
+            if not proposal.actor_id:
+                raise ValueError("creator-principal ownership requires a proposing principal")
+            return proposal.actor_id
+        return None
+
+    def _deleted_generation_owners(self, memory_id: str) -> frozenset[str]:
+        if not self._tombstones:
+            return frozenset()
+        return frozenset(
+            owner for uuid, bound in self._fact_memory.items()
+            if bound == memory_id and uuid in self._tombstones
+            and (owner := (self._fact_scope.get(uuid) or {}).get(OWNER_SCOPE_KEY))
+        )
+
+    def lineage_owner(self, memory_id: str) -> str | None:
+        """The recorded owner of a logical memory's current head, if it is owned."""
+        current_uuid = self._current_fact_by_memory.get(memory_id)
+        if current_uuid is None:
+            return None
+        return (self._fact_scope.get(current_uuid) or {}).get(OWNER_SCOPE_KEY)
+
+    def revocation_delegates(self, memory_id: str) -> tuple[str, ...]:
+        state = self.extension_state.get(REVOCATION_DELEGATIONS_KEY) or {}
+        return tuple((state.get("delegates") or {}).get(memory_id, ()))
+
+    def _owner_refusal(self, proposal: policy.Proposal, fact_uuid: str) -> str | None:
+        owner = (self._fact_scope.get(fact_uuid) or {}).get(OWNER_SCOPE_KEY)
+        if owner is None or proposal.actor_id == owner:
+            return None
+        bound_memory = self._fact_memory.get(fact_uuid, proposal.target_reference)
+        if proposal.operation in REVOCATION_OPERATIONS and proposal.actor_id in self.revocation_delegates(bound_memory):
+            return None
+        return "owner_required"
+
+    def canonical_project_refs(self) -> frozenset[str]:
+        """Projects named by canonical scope metadata, including retained tombstones (#786).
+
+        Host-side store identity checks (store-open contract) use this to keep a pre-profile
+        legacy store bound to the single project it already contains. It grants nothing.
+        """
+        return frozenset(scope["project_ref"] for scope in self._fact_scope.values() if scope.get("project_ref"))
 
     def commit_proposal(
         self,
@@ -427,6 +498,7 @@ class GovernedMemoryAdapter:
         replacement_kind: str = ERROR_CORRECTION,
         source_ref: str | None = None,
         typed_write: "Mapping[str, object] | None" = None,
+        ownership: str | None = None,
     ) -> CommitResult:
         """Commit a proposal through the governed path.
 
@@ -464,6 +536,8 @@ class GovernedMemoryAdapter:
         proposition or a persisted extraction record. It is write-time evidence
         only and grants nothing; PAMA decides exactly as without it.
         """
+        if ownership not in (None, OWNERSHIP_CREATOR_PRINCIPAL):
+            raise ValueError(f"unsupported ownership mode {ownership!r}")
         correlation = self._ids.next()
         # #786: the target's live head decides whether this writer may act on it at all. The
         # optional episode is retained only by a committed write (below); a refused proposal
@@ -535,6 +609,7 @@ class GovernedMemoryAdapter:
 
         fact_uuid = None
         if commits:
+            owner = self._lineage_owner(proposal, ownership)
             if episode is not None:
                 self._substrate.add_episode(episode)
             if proposal.operation == "correction":
@@ -551,7 +626,8 @@ class GovernedMemoryAdapter:
                         attestation.authority_kind if attestation is not None else None
                     ),
                 )
-            fact_uuid = self._write(proposal, fact_text, temporal, source_ref=source_ref, typed_write=typed_write)
+            fact_uuid = self._write(proposal, fact_text, temporal, source_ref=source_ref, typed_write=typed_write,
+                                    owner=owner)
             self._current_fact_by_memory[proposal.target_reference] = fact_uuid
             events.append(
                 self._event(
@@ -740,9 +816,12 @@ class GovernedMemoryAdapter:
         *,
         source_ref: str | None = None,
         typed_write: "Mapping[str, object] | None" = None,
+        owner: str | None = None,
     ) -> str:
         declared = declared_temporal(temporal)
         scope = self._write_scope(proposal)
+        if owner is not None:
+            scope = {**scope, OWNER_SCOPE_KEY: owner}
         uuid = self._ids.next()
         attributes: dict = {DECLARED_TEMPORAL_KEY: declared} if declared else {}
         # #671 C1: immutable write provenance (actor, adapter tenant, purpose, channel, source_ref);
@@ -2223,6 +2302,9 @@ class GovernedMemoryAdapter:
             return "target_binding_unknown"
         if bound_memory != proposal.target_reference:
             return "target_binding_mismatch"
+        if self._owner_refusal(proposal, fact_uuid) is not None:
+            # #786 ownership: an owned lineage is revoked only by its owner or a governed delegate.
+            return WRITE_TARGET_REFUSAL
         existing = self._tombstones.get(fact_uuid)
         if existing is not None and not (existing.get("reversible", True) and proposal.operation == "permanent_deletion"):
             # #786 (second review F-C): a governed-deleted fact is deleted; re-deleting it would

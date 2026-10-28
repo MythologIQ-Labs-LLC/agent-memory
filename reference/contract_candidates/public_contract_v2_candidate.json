@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "candidate_id": "agent-memory-public-contract-2.0.0-candidate",
+  "candidate_version": "2.0.0",
+  "predecessor_version": "1.6.0",
+  "issue": 786,
+  "status": "unaccepted candidate; not published; not wired into the runtime",
+  "disposition": "not promoted (owner decision, 2026-10-28): store-open semantics are versioned separately as agent-memory-store-open 1.0.0 (agentmem_ref.api.store_contract); the envelope contract stays 1.6.0 and 1.x envelopes remain current; this record is retained as the measured alternative",
+  "integration_note": "integration/v7-786-836-reconciliation-no-ci (2026-10-28): the envelope contract is the owner-accepted 1.8.0 of the #674 cumulative runtime (#836); the store-open contract stays separately versioned as agent-memory-store-open 1.0.0; this candidate remains not promoted and its measurements above are against its predecessor 1.6.0",
+  "breaking_changes": [
+    {
+      "id": "BC1-default-single-project-store",
+      "change": "AgentMemory.open on a new root records store-identity.json with profile single_project_v1 bound to the opening scope",
+      "observable": "opening that root for any other scope raises StoreIdentityError (a RuntimeRecoveryError) before any key is read",
+      "migration": "multi-project hosts create the root with store_profile='scope_distinct_v1'"
+    },
+    {
+      "id": "BC2-scope-distinct-canonical-keys",
+      "change": "in a scope_distinct_v1 store the facade binds every public key to scope_distinct_key(tenant, scope, key)",
+      "observable": "canonical memory ids and receipt memory_id values differ from the public key; public keys beginning with scope-key-v1: are refused",
+      "migration": "consumers address memories only by public key through the facade"
+    },
+    {
+      "id": "BC3-legacy-stores-restricted",
+      "change": "a store without a profile record opens only for the single project its canonical scope metadata contains",
+      "observable": "a pre-profile store holding several projects is refused for every project and left byte-identical",
+      "migration": "no automatic migration exists; a governed migration tool is an owner decision"
+    },
+    {
+      "id": "BC4-foreign-fact-refusal-code",
+      "change": "governed delete and dispute answer a fact outside the requester's scope exactly like an absent fact",
+      "observable": "refusal fact_not_found composed as block with no action instead of target_binding_mismatch or write_target_unavailable",
+      "migration": "consumers must not branch on the previous refusal codes for foreign facts"
+    },
+    {
+      "id": "BC5-scope-distinct-wrapper-backing",
+      "change": "ScopeDistinctMemory requires a scope_distinct_v1 backing store",
+      "observable": "wrapping a tenant-wide AgentMemory raises ValueError",
+      "migration": "open the wrapper with ScopeDistinctMemory.open"
+    }
+  ],
+  "additive_changes": [
+    "AgentMemory.open(..., store_profile=None|'single_project_v1'|'scope_distinct_v1') and AgentMemory.store_profile",
+    "StoreIdentityError",
+    "overrides are validated before any target lookup in forget and dispute"
+  ],
+  "unchanged": [
+    "proposal, recall-context, result, target, posture, action and observation envelope schemas",
+    "PAMA policy ref-p1 and ranking policy multi-route-default 3.4.0"
+  ],
+  "adr_030_consequence": "every 1.x envelope is incompatible against 2.0.0; the owner must decide whether to accept that, or keep 1.x envelopes current with a separate facade open-contract version",
+  "measured_repository_impact": {
+    "measured_at": "39989410",
+    "non_runtime_files_passing_store_profile": 14,
+    "tests_using_the_tenant_wide_test_fixture": 12,
+    "agent_memory_open_call_sites_outside_tests": 40,
+    "frozen_contestants_incompatible": [
+      "fixtures/gauntlet/agent-memory-public-durability-adapter.json",
+      "fixtures/gauntlet/agent-memory-public-governance-adapter.json"
+    ],
+    "frozen_benchmark_protocols_changed": [
+      "mesa-formal-v4 (declared, unexecuted)"
+    ],
+    "contract_version_literals_in_tests": 10
+  },
+  "promotion_requires": [
+    "explicit owner approval",
+    "identity delta identity.public_contract_version 1.6.0 -> 2.0.0 in the open v7 declaration",
+    "a decision on ADR-030 handling of 1.x envelopes",
+    "a governed migration path or an explicit no-migration decision for multi-project legacy stores"
+  ]
+}

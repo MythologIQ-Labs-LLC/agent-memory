@@ -211,10 +211,21 @@ def _apply_patch(case: Mapping[str, Any], patch: Mapping[str, Any] | None, trans
     return case
 
 
-def _open(root: str, scope: str = SCOPE):
+def _open(root: str, scope: str = SCOPE, store_profile: str | None = None):
     from agentmem_ref import AgentMemory
 
-    return AgentMemory.open(root, tenant=TENANT, actor_id=ACTOR, scope=scope, purpose=PURPOSE)
+    return AgentMemory.open(root, tenant=TENANT, actor_id=ACTOR, scope=scope, purpose=PURPOSE,
+                            store_profile=store_profile)
+
+
+def _store_profile(case: Mapping[str, Any]) -> str | None:
+    """#786: a case that seeds another project's memory needs a multi-project store.
+
+    Every other case keeps the default single-project store, exactly as before.
+    """
+    if any(op["op"] == "remember_foreign_scope" for op in case["setup"]):
+        return "scope_distinct_v1"
+    return None
 
 
 def _committed(result: Mapping[str, Any], what: str) -> str:
@@ -227,12 +238,14 @@ def _run_setup(memory, root: str, case: Mapping[str, Any]):
     keys: dict[str, str] = {}
     declared: dict[str, dict[str, str]] = {}
     targets: dict[str, str] = {}
+    key_targets: dict[str, str] = {}
     for op in case["setup"]:
         kind = op["op"]
         fields = {field: op[field] for field in DECLARED_FIELDS if op.get(field) is not None}
         if kind == "remember":
             keys[op["key"]] = _committed(memory.remember(f"memory:{op['target']}", op["text"], **fields), op["key"])
             targets[op["target"]] = op["key"]
+            key_targets[op["key"]] = op["target"]
             declared[op["key"]] = fields
         elif kind == "correct":
             result = memory.correct(
@@ -241,15 +254,18 @@ def _run_setup(memory, root: str, case: Mapping[str, Any]):
             )
             keys[op["key"]] = _committed(result, op["key"])
             targets[op["target"]] = op["key"]
+            key_targets[op["key"]] = op["target"]
             declared[op["key"]] = fields
         elif kind == "forget":
             if not memory.forget(f"memory:{op['target']}").get("committed"):
                 raise GauntletError(f"setup forget {op['target']} was not committed")
         elif kind == "dispute":
             fact_uuid = keys[op["key"]]
-            target_reference = memory.runtime.adapter._fact_memory.get(fact_uuid)
-            if not target_reference:
-                raise GauntletError(f"setup dispute {op['key']} has no canonical fact-to-memory binding")
+            # The public logical key that produced this fact (#786: canonical ids are
+            # store-internal and may be project-bound; the facade takes public keys).
+            if op["key"] not in key_targets:
+                raise GauntletError(f"setup dispute {op['key']} has no public logical key")
+            target_reference = f"memory:{key_targets[op['key']]}"
             result = memory.dispute(
                 target_reference,
                 fact_uuid=fact_uuid,
@@ -341,7 +357,7 @@ def execute_case(case: Mapping[str, Any], *, patch: Mapping[str, Any] | None = N
                  restart: bool = True) -> dict[str, Any]:
     case = _apply_patch(case, patch, transform)
     with tempfile.TemporaryDirectory() as root:
-        memory = _open(root)
+        memory = _open(root, store_profile=_store_profile(case))
         try:
             memory, keys, declared, targets = _run_setup(memory, root, case)
             probes = {probe["probe_id"]: _observe(memory, probe, keys, targets) for probe in case["probes"]}

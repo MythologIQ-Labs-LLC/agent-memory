@@ -1,0 +1,34 @@
+import importlib.util, json, re, subprocess, sys
+from pathlib import Path
+S = Path("/tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/scratchpad/judge-a3-r2")
+R = S / "attackrepo"; subprocess.run(["git", "checkout", "-q", "--", "."], cwd=R, check=True)
+sys.path.insert(0, str(S / "repo/scripts")); import a3_regate_evidence as ev  # independent digest impl
+ORIG = (R / "scripts/check_generalization_corpus.py").read_text()
+CALL = '            overlap_rule(record, templates, "K7_g3b_overlap")\n            if prior_texts:\n                overlap_rule(record, prior_texts, "K8_holdout_overlap")\n            valid_cases[rid] = record'
+assert ORIG.count(CALL) == 1
+TB = "    templates, basis = template_basis(require_frozen_blob=require_frozen_blob)\n"
+M = {
+ "baseline": ORIG,
+ "templates[:] narrowed in place": ORIG.replace(TB, TB + "    templates[:] = templates[:3]\n"),
+ "sibling early continue before K7": ORIG.replace(CALL, '            if "x" not in rid:\n                valid_cases[rid] = record\n                continue\n' + CALL),
+ "overlap_rule replaced via functools.wraps": ORIG + "\nimport functools\noverlap_rule = functools.wraps(overlap_rule)(lambda record, references, rule: None)\n",
+ "THRESHOLD float subclass": ORIG.replace("THRESHOLD = 0.5\n", "THRESHOLD = 0.5\nclass _T(float):\n    def __le__(self, other):\n        return False\nTHRESHOLD = _T(0.5)\n", 1),
+ "K7 rejections filtered afterwards": ORIG.replace('    rejections.sort(key=', '    rejections = [r for r in rejections if r["rule"] != "K7_g3b_overlap"]\n    rejections.sort(key=', 1),
+ "except handler drops K7": ORIG.replace('        except Reject as exc:\n            rejections.append({"id": rid if isinstance(rid, str) else "<missing>", "file": file_of(corpus_files',
+     '        except Reject as exc:\n            if exc.rule == "K7_g3b_overlap":\n                continue\n            rejections.append({"id": rid if isinstance(rid, str) else "<missing>", "file": file_of(corpus_files', 1),
+}
+F = R / "reports/benchmarks/currentness-generalization/freeze"
+corpus = json.loads((F / "corpus.json").read_text())
+corpus[0] = dict(corpus[0], query="What is the project's current status?")  # verbatim MESA template text
+for i, (label, text) in enumerate(M.items()):
+    assert label == "baseline" or text != ORIG, label
+    p = R / "scripts" / f"judge_mut{i}.py"; p.write_text(text)
+    spec = importlib.util.spec_from_file_location(f"judge_mut{i}", p); m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+    try: basis = m.template_basis()[1]
+    except SystemExit as e: basis = "refused " + str(e)[:60]
+    rep = m.check(corpus, None, None, [])
+    k7 = [r["id"] for r in rep["rejections"] if r["rule"] == "K7_g3b_overlap"]
+    try: ind = ev.independent_digest(text)==m.COMPARISON_RULE_SHA256
+    except Exception as e: ind = 'error ' + type(e).__name__
+    print(f"{label:42s} runtime_digest_ok={m.comparison_rule_digest()==m.COMPARISON_RULE_SHA256} independent_ok={ind} basis={basis} K7={k7}")
+    p.unlink()

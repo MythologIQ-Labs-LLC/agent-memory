@@ -156,17 +156,13 @@ class DeveloperFacade(unittest.TestCase):
             memory = self._open(Path(temporary))
             retained = memory.remember(TARGET, "shared release detail")
             candidate = retained["fact_uuid"]
-            result = memory.recall(
-                "shared release detail",
-                logical_memory_refs=(TARGET,),
-                target_domain_refs=("tenant:other", "project:other"),
-                project_ref="project:other",
-            )
-            self.assertNotIn(candidate, result["candidates"])
-            self.assertNotIn(candidate, result["admitted"])
-            self.assertNotIn(candidate, result["admissions"])
-            self.assertEqual(result["candidate_policy"]["candidate_scope"], "domain_eligible")
-            self.assertEqual(result["candidate_policy"]["admission"], "full_canonical_admission_on_every_candidate")
+            with self.assertRaisesRegex(ValueError, "recall project differs from host-bound identity"):
+                memory.recall(
+                    "shared release detail",
+                    logical_memory_refs=(TARGET,),
+                    target_domain_refs=("tenant:other", "project:other"),
+                    project_ref="project:other",
+                )
             memory.close()
 
     def test_confidence_does_not_change_mutation_authority(self):

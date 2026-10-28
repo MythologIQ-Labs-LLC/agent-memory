@@ -33,6 +33,25 @@ Contract `1.0.0` shipped this rule inverted (an older minor was reported `migrat
 
 Schema validation is a second, separate check ("serialization success is not semantic compatibility", ADR-030): a `current` envelope that fails its schema returns `stage: none` with `validation_error` naming the property.
 
+## Store-open contract (`agent-memory-store-open` `1.0.0`, #786; versioned independently of the envelope contract)
+
+#786 store identity profiles change what `AgentMemory.open` admits, not any envelope. They are therefore versioned by a separate **store-open contract** (`agentmem_ref.api.store_contract`), independently of the envelope contract. On the integrated v7 candidate (`integration/v7-786-836-reconciliation-no-ci`) the envelope `CONTRACT_VERSION` is the owner-accepted `1.8.0` (#836, write-target authority section below), and the store-open contract is `1.0.0`; neither version moves the other. Every `1.0.0`-`1.8.0` envelope, including the published v6 contract `1.6.0`, keeps the ADR-030 state in the table above on every store this runtime opens. The isolated 2.0.0 candidate (`reference/contract_candidates/`) measured the alternative: folding the open-time change into the envelope contract makes every 1.x envelope `incompatible`. It is not promoted.
+
+**Facade identity binding (store-open `1.0.0`).** A facade handle's tenant, project, task and principal are bound by its store. Proposal `overrides` and the scope keywords of `recall` may restate or narrow that identity, never change it: re-declaring another project's scope through one handle is multi-project access, which a `single_project_v1` or restricted legacy store does not admit and a `scope_distinct_v1` store answers with per-project keys. An internally inconsistent override keeps its `1.8.0` refusal (`required isolation domains must also be bound isolation domains`, replay W4) and is checked first. The module-level envelope surface (`propose`, `commit`, `recall`, `forget`, `history`, ...) is unchanged: an envelope it receives is judged exactly as contract `1.8.0` states, including W4's complete-scope declaration, because the host that submits an envelope is trusted to declare its scope. The facade-level W4 outcome is the one behaviour the integration changes, and replay W4 is re-preregistered for the integrated tree.
+
+| store-open `1.0.0` rule | observable |
+|---|---|
+| A new store records `store-identity.json` (record `version` 1) once, exclusively, before the database exists | `single_project_v1` by default, bound to the opening `scope`; `scope_distinct_v1` on request |
+| A `single_project_v1` store opens only for its bound project, and only while canonical scope metadata agrees with the record | any other project raises `StoreIdentityError` before a key is read |
+| A `scope_distinct_v1` store binds every public key to (tenant, scope, key) | the only multi-project profile |
+| A store without a record (`legacy_unprofiled`) opens only for the single project it already contains, without an explicit `store_profile` | a multi-project legacy store is refused for every project and left byte-identical; it is never migrated implicitly |
+| A record whose `version` is newer than this contract's | refused (`requires a newer store-open contract`), never opened, rewritten or downgraded |
+| A record whose `version` is not exactly the integer `1` (including JSON `true` and `1.0`) | refused as malformed |
+
+A host may pin the store-open contract it was written against: `AgentMemory.open(..., store_open_contract="1.0.0")`. The declaration is evaluated with ADR-030's four states against `STORE_OPEN_CONTRACT_VERSION`; anything but `current` raises `StoreIdentityError` before the filesystem is touched. No declaration, store-open or envelope, restores multi-project access to a single-project or legacy store. A handle reports both versions through `AgentMemory.store_open_contract` (`contract_id`, `contract_version`, `record_version`, `store_profile`, `envelope_contract_version`); `contract_version` remains the envelope version.
+
+Evidence: `reference/tests/test_786_store_open_contract.py` (both halves on real SQLite stores), `reference/security_falsifiers/store_open_contract_sensitivity.py` (seven injected regressions, each detected by a behavioural test). Runtime Baseline identity does not yet carry the store-open version: the declaration schema admits deltas only for identities the predecessor record already has, so adding `identity.store_open_contract_version` is a baseline-tooling change for v7 publication.
+
 ## The stages
 
 | function | stage | writes? | what it does |
@@ -100,6 +119,15 @@ raw discovery matches
 - **No score cutoff.** Ranking policy 3.2.0 (3.1.2 before #669) declares route scores not cross-comparable, so a cutoff has no meaning until a fusion stage exists (#673).
 - **Module-level `recall`** (the adapter path) has no ranking stage; its prefix is taken in admission order, which `return_policy.basis` does not yet distinguish.
 - **Facade**: `AgentMemory.recall(query, ..., budget=None)`; `budget=0` fails schema validation before any runtime call.
+- **#786 candidate (unqualified, not published)**: A facade opened with
+  `AgentMemory.open(..., task_ref="task:trusted")` binds that optional task identity
+  to both new write proposals and recall admission. Omitting it binds the handle
+  to the unscoped task context and cannot authorize task-specific facts.
+  `AgentMemory.recall(task_ref=...)` may restate the same bound value, but cannot
+  switch tasks, even within the same project. The host must establish task
+  identity; the model/query is not an authority source. This is a protected
+  security candidate and requires SQLite replay, regression qualification
+  and independent acceptance before any default or contract publication.
 - **Semantic vector route (#669).** `AgentMemory.open(..., semantic_retrieval="off"|"auto"|"required", representation_dir=None)`. The default is `off`.
   - When enabled, the pinned ONNX provider (optional extra `semantic`) adds domain-eligible candidates through the same governed admission.
   - Under ranking policy 3.2.0 (and 3.3.0), similarity is ordering-subordinate: it never counts toward corroboration, never moves a lexical score, and orders only after every relevance and temporal stage.

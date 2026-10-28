@@ -1,0 +1,33 @@
+"""Mutate a copy of the 0173adf7 checker in a way the comparison digest does not cover; show K7 outcome changes."""
+import importlib.util, re, shutil, sys
+from pathlib import Path
+NEW = Path(__file__).resolve().parent / "new"
+orig = (NEW / "scripts/check_generalization_corpus.py").read_text()
+def load(text, tag):
+    p = NEW / "scripts" / f"judge_{tag}.py"; p.write_text(text)
+    spec = importlib.util.spec_from_file_location(f"judge_{tag}", p); m = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = m; spec.loader.exec_module(m); return m, p
+mutations = {
+    "baseline": orig,
+    "TOKEN flag re.I": orig.replace('TOKEN = re.compile(r"[a-z0-9]+")', 'TOKEN = re.compile(r"[a-z0-9]+", re.I)'),
+    "K7 not applied to variants": orig.replace('                overlap_rule(record, templates, "K7_g3b_overlap")\n                if prior_texts:\n                    overlap_rule(record, prior_texts, "K8_holdout_overlap")\n                pairs.add(pair)', '                if prior_texts:\n                    overlap_rule(record, prior_texts, "K8_holdout_overlap")\n                pairs.add(pair)'),
+    "K7 compares 3 of 15 texts": orig.replace('overlap_rule(record, templates, "K7_g3b_overlap")', 'overlap_rule(record, templates[:3], "K7_g3b_overlap")'),
+}
+template_text = "What is the project's current status?"
+probe_texts = {"plain": template_text, "long-s": "Whatſ isſ theſ projectſ'sſ currentſ statusſ?"}
+import json
+F = NEW / "reports/benchmarks/currentness-generalization/freeze"
+corpus = json.loads((F / "corpus.json").read_text()); variants = json.loads((F / "variants.json").read_text()); selection = json.loads((F / "selection.json").read_text())
+vi = next(i for i, v in enumerate(variants) if "query" in v)
+variants[vi] = dict(variants[vi], query=template_text)  # contaminated variant query (verbatim MESA template)
+for label, text in mutations.items():
+    assert label == "baseline" or text != orig, label
+    m, p = load(text, re.sub(r"\W", "_", label))
+    texts, basis = m.template_basis()
+    sims = {k: round(max(m.similarity(t, ref) for ref in texts), 3) for k, t in probe_texts.items()}
+    # crafted variant rec contamination: run full check on frozen corpus/variants with one variant query replaced
+    rep = m.check(corpus, variants, selection, [])
+    k7 = [r for r in rep["rejections"] if r["rule"] == "K7_g3b_overlap"]
+    sims["K7_on_contaminated_variant"] = k7
+    print(f"{label:28s} digest_ok={m.comparison_rule_digest()==m.COMPARISON_RULE_SHA256} basis={basis} max_sim={sims}")
+    p.unlink()

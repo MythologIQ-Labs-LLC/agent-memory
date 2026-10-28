@@ -27,6 +27,10 @@ import unittest
 from pathlib import Path
 
 from agentmem_ref import AgentMemory
+# #786 store identity profiles: this module drives several projects through one tenant-wide store to
+# exercise the canonical adapter gates; AgentMemory.open admits that only as scope_distinct_v1, so the
+# test-only tenant-wide fixture reproduces the pre-profile store (tests/_tenant_wide_fixture.py).
+from tests._tenant_wide_fixture import open_tenant_wide
 from tests import test_809_legacy_upgrade as legacy
 from tests.test_809_legacy_upgrade import KEY, POLICY, QUERY, ROOT, TENANT
 
@@ -200,7 +204,7 @@ class NewWriteControl(unittest.TestCase):
     def test_a_new_write_citing_its_own_predicted_id_binds_nothing(self):  # control
         with tempfile.TemporaryDirectory() as tmp:
             def scenario(root, self_id):
-                m = AgentMemory.open(root, tenant=TENANT, actor_id="agent:legacy", scope="project:a", purpose="legacy")
+                m = open_tenant_wide(root, tenant=TENANT, actor_id="agent:legacy", scope="project:a", purpose="legacy")
                 try:
                     a1 = m.remember("memory:a", f"{QUERY} is Oslo")["fact_uuid"]
                     out = m.remember("memory:self", f"{QUERY} digest self", evidence_refs=(a1, self_id))["fact_uuid"]

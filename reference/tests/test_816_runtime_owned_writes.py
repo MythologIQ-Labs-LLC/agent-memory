@@ -40,6 +40,10 @@ from agentmem_ref.memory import procedural_memory as pm  # noqa: E402
 from agentmem_ref.runtime.restart_runtime import RuntimeCheckpointConflict, RuntimeRecoveryError  # noqa: E402
 from agentmem_ref.state import sqlite_substrate  # noqa: E402
 from agentmem_ref.state.sqlite_substrate import UNGOVERNED_WRITE_MESSAGE, UngovernedDurableWrite  # noqa: E402
+# #786 store identity profiles: this module drives several projects through one tenant-wide store to
+# exercise the canonical adapter gates; AgentMemory.open admits that only as scope_distinct_v1, so the
+# test-only tenant-wide fixture reproduces the pre-profile store (tests/_tenant_wide_fixture.py).
+from tests._tenant_wide_fixture import open_tenant_wide
 
 TENANT = "tenant:816"
 SCOPE = "project:816"
@@ -90,8 +94,10 @@ class _Store(unittest.TestCase):
     def tearDown(self) -> None:
         self._folder.cleanup()
 
-    def open(self, scope: str = SCOPE, actor: str = "agent:a") -> AgentMemory:
-        memory = AgentMemory.open(self.root, tenant=TENANT, actor_id=actor, scope=scope, purpose="816 qualification")
+    def open(self, scope: str = SCOPE, actor: str = "agent:a", *, tenant_wide: bool = False) -> AgentMemory:
+        # #786: a test that drives two projects through one store uses the test-only tenant-wide fixture.
+        opener = open_tenant_wide if tenant_wide else AgentMemory.open
+        memory = opener(self.root, tenant=TENANT, actor_id=actor, scope=scope, purpose="816 qualification")
         self.addCleanup(memory.close)
         return memory
 
@@ -472,14 +478,14 @@ class IntegrityChecksAreNotRelaxed(_Store):
 
 class SecurityRegressions(_Store):
     def test_cross_scope_correction_is_still_refused(self):
-        owner = self.open()
+        owner = self.open(tenant_wide=True)
         written = owner.remember("memory:x", "The deploy window is Thursday.")
         owner.close()
-        other = self.open(scope="project:other", actor="agent:b")
+        other = self.open(scope="project:other", actor="agent:b", tenant_wide=True)
         attempt = other.correct("memory:x", "The deploy window is never.", evidence=_evidence("project:other"))
         self.assertFalse(attempt["committed"], attempt)
         other.close()
-        self.assertEqual(self.open().recall("deploy window")["returned"], [written["fact_uuid"]])
+        self.assertEqual(self.open(tenant_wide=True).recall("deploy window")["returned"], [written["fact_uuid"]])
 
     def test_deleted_lineage_stays_deleted_and_a_refused_direct_delete_changes_no_tombstone(self):
         memory = self.open()

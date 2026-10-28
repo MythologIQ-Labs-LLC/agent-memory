@@ -6,6 +6,12 @@ Agent Memory keeps benchmark adapters, evaluator-integrity probes, frozen run ev
 
 The governing repository relationship is documented in [`docs/REPOSITORY_OPERATING_MODEL.md`](docs/REPOSITORY_OPERATING_MODEL.md).
 
+**What “Gauntlet” covers:** the externally usable portfolio of benchmark and assessment workloads, benchmark-native evaluators, neutral system adapters, orchestration, evaluator-integrity checks, evidence capture and comparable reporting. This is a **benchmarking laboratory for Agent Memory and third-party memory systems**, not the Agent Memory runtime, not a single score, and not a certification authority. The [repository operating model](docs/REPOSITORY_OPERATING_MODEL.md#component-ownership-exit-criteria-and-active-priority) owns the exact cross-role start/stop/handoff boundaries. [Gauntlet system-adapter contract](docs/GAUNTLET_SYSTEM_ADAPTER_CONTRACT.md) owns the external system interface.
+
+Gauntlet reports preserve each benchmark's native metrics. Cross-system comparisons require compatible workload/revision, selection, protocol, adapter contributions and metric definitions; when those differ, disclose **conditionally comparable** or **not directly comparable** rather than pretending the numbers share a denominator. A submitted run is not an independently reproduced run. A valid harness does not prove a good memory system.
+
+**Development priority:** runtime precision, recall preservation, correctness and calibrated abstention remain the active product objective. Benchmark development should be bounded to measuring, falsifying and replaying those improvements; broadening the portfolio is not automatically higher priority than implementing the runtime.
+
 The canonical current portfolio view is [`reports/benchmarks/dashboard/current.md`](reports/benchmarks/dashboard/current.md). Historical generated scorecards remain revision-bound snapshots and are not the current-state dashboard.
 
 ## Start here

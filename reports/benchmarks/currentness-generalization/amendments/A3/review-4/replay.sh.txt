@@ -1,0 +1,25 @@
+S=/tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/scratchpad/judge-a3-r4; cd $S/replay
+GC=reports/benchmarks/currentness-generalization
+T=reference/run_semantic_route_ordering_report.py
+run() { # label checker extra...
+  lab=$1; ck=$2; shift 2
+  python3.12 scripts/$ck $GC/freeze/corpus.json --variants $GC/freeze/variants.json --selection $GC/freeze/selection.json --report $S/out/$lab.freeze.json --rejections $S/out/$lab.freeze.rej "$@" > $S/out/$lab.freeze.out 2> $S/out/$lab.freeze.err; echo "$lab freeze rc=$?"
+  python3.12 scripts/$ck --author-dir $GC/authoring/attempt2/author-files --selection $GC/authoring/attempt2/selection.json --report $S/out/$lab.a2.json --rejections $S/out/$lab.a2.rej "$@" > $S/out/$lab.a2.out 2> $S/out/$lab.a2.err; echo "$lab a2 rc=$?"
+}
+# frozen-bytes mode
+git cat-file -p 745f789c01b7a542f906a9034ae63ebdd6776f7c > $T
+run F76 check76.py
+run Fa20 check_generalization_corpus.py
+run Fa20s check_generalization_corpus.py --require-frozen-blob
+# CRLF copy of frozen
+sed 's/$/\r/' $T > /tmp/crlf.$$ && cp /tmp/crlf.$$ $T && rm /tmp/crlf.$$
+run Ca20 check_generalization_corpus.py
+run Ca20s check_generalization_corpus.py --require-frozen-blob
+git checkout -q -- $T
+git hash-object --no-filters $T
+run Aa20 check_generalization_corpus.py
+run Aa20s check_generalization_corpus.py --require-frozen-blob
+# CRLF copy of audited
+sed 's/$/\r/' $T > /tmp/crlf.$$ && cp /tmp/crlf.$$ $T && rm /tmp/crlf.$$
+run ACa20 check_generalization_corpus.py
+git checkout -q -- $T; git status --short

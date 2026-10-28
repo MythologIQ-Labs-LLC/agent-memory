@@ -1,0 +1,54 @@
+"""Judge r2: review-1 attacks + new attacks against the 656bbe4d checker (scratch clone)."""
+import importlib.util, subprocess, sys
+from pathlib import Path
+S = Path("/tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/scratchpad/judge-a3-r2")
+REPO = S / "repo"
+sys.path.insert(0, str(REPO / "scripts")); sys.path.insert(0, str(REPO / "reference"))
+import check_generalization_corpus as checker
+assert subprocess.run(["git","rev-parse","HEAD"],cwd=REPO,capture_output=True,text=True).stdout.startswith("656bbe4d")
+SRC = checker.TEMPLATE_SOURCE.read_text(encoding="utf-8")
+FROZEN = tuple(checker._templates_from_source(SRC))
+ALT = '(("location", "EVIL {old}", "EVIL {new}", "EVIL?"),)'
+SIG = "def run_m4(pairs: int = 50) -> dict:"
+K = '"SETALPMET_TCILFNOC"[::-1]'
+V = {
+ # review-1
+ "r1_globals_update_kwarg": SRC + f"\nglobals().update(CONFLICT_TEMPLATES={ALT})\n",
+ "r1_vars_update_kwarg": SRC + f"\nvars().update(CONFLICT_TEMPLATES={ALT})\n",
+ "r1_globals_concat_key": SRC + f"\nglobals()['CONFLICT_' + 'TEMPLATES'] = {ALT}\n",
+ "r1_setattr_join": SRC + f"\nimport sys as _s\nsetattr(_s.modules[__name__], '_'.join(['CONFLICT', 'TEMPLATES']), {ALT})\n",
+ "r1_exec_bytes": SRC + f"\nexec(b'CONFLICT_TEMPLATES = {ALT}')\n",
+ "r1_module_class": SRC + ("\nimport sys as _s, types as _t\nclass _M(_t.ModuleType):\n    def __getattribute__(self, name):\n"
+    f"        if name.endswith('_TEMPLATES'):\n            return {ALT}\n        return super().__getattribute__(name)\n_s.modules[__name__].__class__ = _M\n"),
+ "r1_run_m4_parameter": SRC.replace(SIG, f"def run_m4(pairs: int = 50, CONFLICT_TEMPLATES={ALT}) -> dict:"),
+ "r1_lambda_parameter": SRC + f"\n_f = lambda CONFLICT_TEMPLATES={ALT}: CONFLICT_TEMPLATES\n",
+ # new
+ "n_func_globals_subscript": SRC + f"\nrun_m4.__globals__[{K}] = {ALT}\n",
+ "n_frame_f_globals": SRC + f"\nimport sys as _s\n_s._getframe().f_globals[{K}] = {ALT}\n",
+ "n_getattr_sys_modules": SRC + f"\nimport sys as _s, types as _t\ngetattr(_s, 'mod' + 'ules')[__name__] = _t.SimpleNamespace(**{{{K}: {ALT}, 'run_580': run_580, 'run_584': run_584, 'run_m4': run_m4}})\n",
+ "n_builtins_attr_exec": SRC + f"\nprint.__self__.exec('SETALPMET_TCILFNOC'[::-1] + ' = ' + {ALT!r})\n",
+ "n_getattr_dict": SRC + f"\nimport sys as _s\ngetattr(_s.modules.get, '__self__')\n" ,  # placeholder (uses modules, should be refused)
+}
+V.pop("n_getattr_dict")
+
+def effective(path, name):
+    code = (f"import sys; sys.path.insert(0, {str(REPO/'reference')!r}); import importlib.util as u\n"
+            f"s=u.spec_from_file_location('run_semantic_route_ordering_report', {str(path)!r}); m=u.module_from_spec(s)\n"
+            "sys.modules[s.name]=m; s.loader.exec_module(m)\n"
+            "from run_semantic_route_ordering_report import CONFLICT_TEMPLATES as imp\n"
+            "mod=sys.modules[s.name]; g=mod.run_m4.__globals__.get('CONFLICT_TEMPLATES') ; d=mod.run_m4.__defaults__\n"
+            "m4 = d[1] if d and len(d)>1 else g\n"
+            f"F={FROZEN!r}\n"
+            "print(('importer DIFFERS' if tuple(imp)!=F else 'importer same') + '; run_m4 ' + ('DIFFERS' if tuple(m4)!=F else 'same'))\n")
+    r = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True)
+    return r.stdout.strip() or ("ERR " + r.stderr.strip().splitlines()[-1])
+
+out = S / "variants"; out.mkdir(exist_ok=True)
+for name, text in V.items():
+    p = out / "run_semantic_route_ordering_report.py" if False else out / f"{name}.py"
+    p.write_text(text, encoding="utf-8")
+    try:
+        basis = "ACCEPTED " + checker.template_basis(p)[1]
+    except SystemExit as e:
+        basis = "refused: " + str(e)[30:120]
+    print(f"{name:26s} checker: {basis:80s} | {effective(p, name)}")

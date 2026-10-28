@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 """Formal AgentMemBench / MESA baseline for Agent Memory (#694).
 
+#786 protected successor candidate: this runner now uses real host-scoped
+facade handles rather than per-call fabricated identity. Its SHA differs from
+the accepted freeze by design. DO NOT treat --verify=False results, changed
+latencies, concurrency, or M4 evidence as the frozen score; issue an independent
+successor freeze only after same-harness qualification.
+
 This runner does not re-express the upstream workloads. It imports the pinned
 upstream harness module ``agentmembench/evaluation/unified_benchmark.py`` from a
 verified checkout of ``mazaiying/AgentMemBench`` and calls its own phase
@@ -67,6 +73,7 @@ if str(REFERENCE_ROOT) not in sys.path:
 from agentmem_ref import AgentMemory  # noqa: E402
 from agentmem_ref.api import contract  # noqa: E402
 from agentmem_ref.runtime import proposition_semantics  # noqa: E402
+from scoped_benchmark_host import SerializedScopedBenchmarkHost  # noqa: E402
 
 FREEZE_DIR = REFERENCE_ROOT / "fixtures" / "benchmarks" / "agentmembench"
 # The default (v1) freeze. Successor freezes (#671 C9: ``mesa-formal-v2``) are selected with
@@ -267,7 +274,7 @@ class AgentMemoryFormalAdapter:
 
     def __init__(self) -> None:
         self._temporary: tempfile.TemporaryDirectory | None = None
-        self._memory: AgentMemory | None = None
+        self._host: SerializedScopedBenchmarkHost | None = None
         self.phase_label = "init"
         self.traces: dict[str, list[dict[str, Any]]] = {}
         self.write_semantics: dict[str, dict[str, Any]] = {}
@@ -286,12 +293,18 @@ class AgentMemoryFormalAdapter:
         self._snapshot_write_semantics()
         self.close()
         self._temporary = tempfile.TemporaryDirectory(prefix="agent-memory-mesa-")
-        self._memory = AgentMemory.open(
-            self._temporary.name,
-            tenant=self.tenant,
-            actor_id="agent:benchmark",
-            scope="benchmark:agentmembench",
-            purpose="AgentMemBench MESA formal evaluation",
+        root = self._temporary.name
+        # #786: one host-owned identity at a time, with the same physical store.
+        # This changes timing and concurrency; a new formal freeze is mandatory.
+        self._host = SerializedScopedBenchmarkHost(
+            lambda scope: AgentMemory.open(
+                root, tenant=self.tenant, actor_id="agent:benchmark",
+                scope=scope, purpose="AgentMemBench MESA formal evaluation",
+                # Every benchmark user is a project in one shared store, so the store
+                # binds keys per project (#786 scope_distinct_v1).
+                store_profile="scope_distinct_v1",
+            ),
+            tenant=self.tenant, actor_id="agent:benchmark",
         )
         self._targets = {}
         self._texts = {}
@@ -300,55 +313,58 @@ class AgentMemoryFormalAdapter:
         self._ids = itertools.count()
 
     def add(self, text: str, user_id: str) -> list[str]:
-        assert self._memory is not None
-        target = f"memory:agentmembench:{next(self._ids)}"  # count() is atomic under the GIL
-        result = self._memory.remember(target, text, overrides=self._overrides(user_id))
-        committed = bool(result.get("committed") and result.get("fact_uuid"))
-        self._count("remember_calls")
-        if self._traced(user_id):
-            self._writes_by_user.setdefault(user_id, []).append({
-                "phase": self.phase_label,
-                "target": target,
-                "text": text,
-                "committed": committed,
-                "fact_uuid": str(result.get("fact_uuid")) if committed else None,
-                "refusal": None if committed else str(result.get("refusal") or result.get("outcome")),
-            })
-        if not committed:
-            self._count("remember_refused:" + str(result.get("refusal") or result.get("outcome")))
-            return []
-        self._count("remember_committed")
-        fact_uuid = str(result["fact_uuid"])
-        self._targets[target] = (user_id, fact_uuid)
-        self._texts[fact_uuid] = text
-        return [target]
+        assert self._host is not None
+        target = f"memory:agentmembench:{next(self._ids)}"
+        with self._host.use(user_id) as memory:
+            result = memory.remember(target, text)
+            committed = bool(result.get("committed") and result.get("fact_uuid"))
+            self._count("remember_calls")
+            if self._traced(user_id):
+                self._writes_by_user.setdefault(user_id, []).append({
+                    "phase": self.phase_label,
+                    "target": target,
+                    "text": text,
+                    "committed": committed,
+                    "fact_uuid": str(result.get("fact_uuid")) if committed else None,
+                    "refusal": None if committed else str(result.get("refusal") or result.get("outcome")),
+                })
+            if not committed:
+                self._count("remember_refused:" + str(result.get("refusal") or result.get("outcome")))
+                return []
+            self._count("remember_committed")
+            fact_uuid = str(result["fact_uuid"])
+            self._targets[target] = (user_id, fact_uuid)
+            self._texts[fact_uuid] = text
+            return [target]
 
     def search(self, query: str, user_id: str, limit: int) -> list[str]:
-        assert self._memory is not None
-        scope = self._scope(user_id)
-        recalled = self._memory.recall(
-            query, target_domain_refs=[self.tenant, scope], project_ref=scope, budget=limit
-        )
-        if self._traced(user_id):
-            # Inside the timed call only a reference is kept; the digest is built at reset.
-            self._pending_traces.append((self.phase_label, query, user_id, limit, recalled,
-                                         list(self._writes_by_user.get(user_id, ()))))
-        else:
-            self._count_recall(recalled)
-        return [self._texts[uuid] for uuid in recalled["returned"] if uuid in self._texts]
+        assert self._host is not None
+        with self._host.use(user_id) as memory:
+            # Host scope supplies project and domain. Do not invent proposal
+            # identity through overrides, and preserve the upstream return k.
+            recalled = memory.recall(query, budget=limit)
+            if self._traced(user_id):
+                self._pending_traces.append((
+                    self.phase_label, query, user_id, limit, recalled,
+                    list(self._writes_by_user.get(user_id, ())),
+                ))
+            else:
+                self._count_recall(recalled)
+            return [self._texts[uuid] for uuid in recalled["returned"] if uuid in self._texts]
 
     def delete(self, memory_ids: list[str]) -> None:
-        assert self._memory is not None
+        assert self._host is not None
         for target in memory_ids:
             user_id, _ = self._targets[target]
-            result = self._memory.forget(target, overrides=self._overrides(user_id))
-            self._count("forget_calls")
-            self._count("forget_committed", int(bool(result.get("committed"))))
+            with self._host.use(user_id) as memory:
+                result = memory.forget(target)
+                self._count("forget_calls")
+                self._count("forget_committed", int(bool(result.get("committed"))))
 
     def close(self) -> None:
-        if self._memory is not None:
-            self._memory.close()
-            self._memory = None
+        if self._host is not None:
+            self._host.close()
+            self._host = None
         if self._temporary is not None:
             self._temporary.cleanup()
             self._temporary = None
@@ -357,16 +373,6 @@ class AgentMemoryFormalAdapter:
 
     def _scope(self, user_id: str) -> str:
         return f"user:{user_id}"
-
-    def _overrides(self, user_id: str) -> dict[str, Any]:
-        scope = self._scope(user_id)
-        domains = [self.tenant, scope]
-        return {
-            "scope": scope,
-            "isolation_domain_refs": domains,
-            "required_isolation_domain_refs": domains,
-            "project_ref": scope,
-        }
 
     def _traced(self, user_id: str) -> bool:
         return user_id.startswith(self.trace_user_prefixes)
@@ -438,32 +444,27 @@ class AgentMemoryFormalAdapter:
         }
 
     def _snapshot_write_semantics(self) -> None:
-        """Read write-time interpretation of traced facts before the runtime is discarded."""
+        """Collect pending traces and scoped semantics before closing a phase."""
 
         for phase, query, user_id, limit, recalled, writes in self._pending_traces:
             self._count_recall(recalled, phase)
-            self.traces.setdefault(phase, []).append(self._trace(query, user_id, limit, recalled, writes))
+            self.traces.setdefault(phase, []).append(
+                self._trace(query, user_id, limit, recalled, writes)
+            )
         self._pending_traces = []
-        if self._memory is None:
-            return
-        with self._memory.runtime.serialization_lock:
+        if self._host is not None:
             self._read_write_semantics()
 
     def _read_write_semantics(self) -> None:
-        assert self._memory is not None
+        assert self._host is not None
+        # The public facade binds read identity to its host. No raw adapter
+        # bypass and no synthetic cross-scope context at snapshot time.
         for user_id, writes in self._writes_by_user.items():
-            envelope = {
-                "contract_version": contract.CONTRACT_VERSION,
-                "target_domain_refs": [self.tenant, self._scope(user_id)],
-                "principal_ref": "agent:benchmark",
-                "project_ref": self._scope(user_id),
-                "purpose": "AgentMemBench MESA formal evaluation",
-            }
-            context = contract.recall_context_from_envelope(contract.validate_recall_context(envelope))
-            for write in writes:
-                if write["fact_uuid"]:
-                    value = self._memory.runtime.adapter.write_semantics(write["fact_uuid"], context)
-                    self.write_semantics[f"{write['phase']}:{write['fact_uuid']}"] = value
+            with self._host.use(user_id) as memory:
+                for write in writes:
+                    if write["fact_uuid"]:
+                        value = memory.write_semantics(write["fact_uuid"])
+                        self.write_semantics[f"{write['phase']}:{write['fact_uuid']}"] = value
 
 
 # M4 failure-stage classification (frozen) -------------------------------------------
@@ -1007,6 +1008,14 @@ def run_formal(upstream_root: Path, output_dir: Path, *, phases: Sequence[str] |
         "finished_at": finished.isoformat(),
         "phase_wall_seconds": phase_wall,
         "adapter_tallies": {phase: dict(counter) for phase, counter in adapter.tallies.items()},
+        "scope_binding_migration": {
+            "mode": "serialized-host-bound-scope-candidate-v1",
+            "candidate_only": True,
+            "timing_comparable_to_legacy": False,
+            "concurrency_comparable_to_legacy": False,
+            "accepted_frozen_score": False,
+            "requires_successor_freeze": True,
+        },
         "judge": {**freeze["judge"], "status": "blocked_pending_authorized_credential",
                   "recall_at_k": None},
     }

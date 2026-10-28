@@ -800,8 +800,9 @@ class RealRepository(unittest.TestCase):
         self.assertIn("public Gauntlet path: **complete** via `stdio`", rendered)
 
     def test_register_carries_v6_as_the_current_entry(self) -> None:
-        # Published v6 remains the last baseline. The #644 candidate is
-        # declared for TRANSITION validation, not published or accepted as v7.
+        # Published v6 remains the last baseline. The one integrated v7 successor (#674 cumulative
+        # runtime, #786 store identity profiles and store-open contract) is declared for TRANSITION
+        # validation, not published or accepted.
         register = checker.load_register(REPO_ROOT, REGISTER)
         self.assertEqual([item["baseline_id"] for item in register["baselines"]], [V1, V2, V3, V4, V5, V6])
         self.assertEqual(register["declared_successor"], {

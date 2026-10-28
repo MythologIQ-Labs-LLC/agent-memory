@@ -348,6 +348,15 @@ class MechanismOffTests(unittest.TestCase):
         for path in runtime_tree.rglob("*.py"):
             self.assertNotIn("cross_fact_mechanism_off", path.read_text(encoding="utf-8"), path)
 
+    def test_report_m4_runs_its_projects_in_a_scope_distinct_store(self):
+        # #786: the C7 report's M4 drives one shared store through many user scopes; a store
+        # without the scope_distinct_v1 profile refuses the second scope at open.
+        sys.path.insert(0, str(REFERENCE / "tests"))
+        report = _load("run_cross_fact_currentness_report", REFERENCE / "run_cross_fact_currentness_report.py")
+        result = report.run_m4(pairs=3)
+        self.assertEqual(len(result), 3)
+        self.assertTrue(all(row["top1"] in ("old", "new") for row in result.values()), result)
+
     def test_off_restores_the_live_policy_even_on_error(self):
         live = runtime_composition.MULTI_ROUTE_RANKING_POLICY
         with self.assertRaises(RuntimeError):

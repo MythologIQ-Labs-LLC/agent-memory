@@ -11,6 +11,10 @@ import unittest
 
 from agentmem_ref import AgentMemory
 from agentmem_ref.runtime.runtime_composition import AsOfTarget
+# #786 store identity profiles: this module drives several projects through one tenant-wide store to
+# exercise the canonical adapter gates; AgentMemory.open admits that only as scope_distinct_v1, so the
+# test-only tenant-wide fixture reproduces the pre-profile store (tests/_tenant_wide_fixture.py).
+from tests._tenant_wide_fixture import open_tenant_wide
 from tests.test_644_combined_independent import _evidence, _prop
 from tests.test_776_adversarial_review import _Facade
 
@@ -18,6 +22,10 @@ HIST = {"mode": "historical"}
 
 
 class StrictSelectorOnSQLiteFacade(_Facade):
+    def open(self, scope="project:a"):
+        # #786: this class drives two projects through one store (test-only tenant-wide fixture).
+        return open_tenant_wide(self.root, tenant="tenant:c644", actor_id="agent:c644", scope=scope, purpose="c644")
+
     def _select(self, query, **kw):
         runtime = self.memory.runtime
         with runtime.serialization_lock:

@@ -1,0 +1,2753 @@
+{
+  "assertion_filter_version": "6.1.0",
+  "authority_effect": "none",
+  "blockers": [],
+  "comparison": {
+    "580_label_changes": {
+      "F23-has-moved-now-lives/current-explicit": {
+        "denver": [
+          "unknown_temporal_basis",
+          "limited_by_cross_fact_state_change"
+        ]
+      },
+      "F23-has-moved-now-lives/current-inferred": {
+        "denver": [
+          "unknown_temporal_basis",
+          "limited_by_cross_fact_state_change"
+        ]
+      },
+      "F24-no-longer-works-at/current-inferred": {
+        "acme": [
+          "unknown_temporal_basis",
+          "limited_by_cross_fact_state_change"
+        ]
+      },
+      "F28-used-to-prefer-now-prefer/current-inferred": {
+        "tea": [
+          "unknown_temporal_basis",
+          "limited_by_cross_fact_state_change"
+        ]
+      },
+      "F28-used-to-prefer-now-prefer/plain-now": {
+        "tea": [
+          "unknown_temporal_basis",
+          "limited_by_cross_fact_state_change"
+        ]
+      }
+    },
+    "580_order_digest_changes": [
+      "F23-has-moved-now-lives/current-explicit",
+      "F23-has-moved-now-lives/current-inferred",
+      "F24-no-longer-works-at/current-inferred",
+      "F28-used-to-prefer-now-prefer/current-inferred",
+      "F28-used-to-prefer-now-prefer/plain-now"
+    ],
+    "580_preregistered_units_observed": true,
+    "580_unit_status_changes": {
+      "F23-has-moved-now-lives/current-explicit/current_applicability_accuracy/target": [
+        "honest_unknown",
+        "pass"
+      ],
+      "F23-has-moved-now-lives/current-explicit/self_description_currentness_rate/target": [
+        "honest_unknown",
+        "pass"
+      ],
+      "F23-has-moved-now-lives/current-explicit/stale_as_current_rate/target": [
+        "honest_unknown",
+        "pass"
+      ],
+      "F23-has-moved-now-lives/current-inferred/current_applicability_accuracy/target": [
+        "honest_unknown",
+        "pass"
+      ],
+      "F23-has-moved-now-lives/current-inferred/self_description_currentness_rate/target": [
+        "honest_unknown",
+        "pass"
+      ],
+      "F23-has-moved-now-lives/current-inferred/stale_as_current_rate/target": [
+        "honest_unknown",
+        "pass"
+      ],
+      "F24-no-longer-works-at/current-inferred/self_description_currentness_rate/target": [
+        "honest_unknown",
+        "pass"
+      ],
+      "F24-no-longer-works-at/current-inferred/stale_as_current_rate/target": [
+        "honest_unknown",
+        "pass"
+      ],
+      "F28-used-to-prefer-now-prefer/current-inferred/self_description_currentness_rate/target": [
+        "honest_unknown",
+        "pass"
+      ],
+      "F28-used-to-prefer-now-prefer/current-inferred/stale_as_current_rate/target": [
+        "honest_unknown",
+        "pass"
+      ],
+      "F28-used-to-prefer-now-prefer/plain-now/self_description_currentness_rate/target": [
+        "honest_unknown",
+        "pass"
+      ],
+      "F28-used-to-prefer-now-prefer/plain-now/stale_as_current_rate/target": [
+        "honest_unknown",
+        "pass"
+      ]
+    },
+    "584_admitted_order_changes": {},
+    "controls": {
+      "accepted/location": {
+        "off": {
+          "admitted": [
+            "old",
+            "new"
+          ],
+          "old": {
+            "label": "unknown_temporal_basis",
+            "limited_by": null,
+            "refusal": null
+          }
+        },
+        "on": {
+          "admitted": [
+            "new",
+            "old"
+          ],
+          "old": {
+            "label": "limited_by_cross_fact_state_change",
+            "limited_by": [
+              "ref-0011"
+            ],
+            "refusal": null
+          }
+        }
+      },
+      "accepted/proper-name": {
+        "off": {
+          "admitted": [
+            "old",
+            "new"
+          ],
+          "old": {
+            "label": "unknown_temporal_basis",
+            "limited_by": null,
+            "refusal": null
+          }
+        },
+        "on": {
+          "admitted": [
+            "new",
+            "old"
+          ],
+          "old": {
+            "label": "limited_by_cross_fact_state_change",
+            "limited_by": [
+              "ref-0011"
+            ],
+            "refusal": null
+          }
+        }
+      },
+      "bare-attribution": {
+        "off": {
+          "admitted": [
+            "old",
+            "new"
+          ],
+          "old": {
+            "label": "unknown_temporal_basis",
+            "limited_by": null,
+            "refusal": null
+          }
+        },
+        "on": {
+          "admitted": [
+            "old",
+            "new"
+          ],
+          "old": {
+            "label": "unknown_temporal_basis",
+            "limited_by": null,
+            "refusal": "change_evidence_not_assertive:4"
+          }
+        }
+      },
+      "comma-attribution": {
+        "off": {
+          "admitted": [
+            "old",
+            "new"
+          ],
+          "old": {
+            "label": "unknown_temporal_basis",
+            "limited_by": null,
+            "refusal": null
+          }
+        },
+        "on": {
+          "admitted": [
+            "old",
+            "new"
+          ],
+          "old": {
+            "label": "unknown_temporal_basis",
+            "limited_by": null,
+            "refusal": "change_evidence_not_assertive:3"
+          }
+        }
+      },
+      "conditional": {
+        "off": {
+          "admitted": [
+            "old",
+            "new"
+          ],
+          "old": {
+            "label": "unknown_temporal_basis",
+            "limited_by": null,
+            "refusal": null
+          }
+        },
+        "on": {
+          "admitted": [
+            "old",
+            "new"
+          ],
+          "old": {
+            "label": "unknown_temporal_basis",
+            "limited_by": null,
+            "refusal": "change_evidence_not_assertive:4"
+          }
+        }
+      },
+      "epistemic": {
+        "off": {
+          "admitted": [
+            "old",
+            "new"
+          ],
+          "old": {
+            "label": "unknown_temporal_basis",
+            "limited_by": null,
+            "refusal": null
+          }
+        },
+        "on": {
+          "admitted": [
+            "old",
+            "new"
+          ],
+          "old": {
+            "label": "unknown_temporal_basis",
+            "limited_by": null,
+            "refusal": "change_evidence_not_assertive:4"
+          }
+        }
+      },
+      "hedged": {
+        "off": {
+          "admitted": [
+            "old",
+            "new"
+          ],
+          "old": {
+            "label": "unknown_temporal_basis",
+            "limited_by": null,
+            "refusal": null
+          }
+        },
+        "on": {
+          "admitted": [
+            "old",
+            "new"
+          ],
+          "old": {
+            "label": "unknown_temporal_basis",
+            "limited_by": null,
+            "refusal": "relation_not_state_change"
+          }
+        }
+      },
+      "interjection": {
+        "off": {
+          "admitted": [
+            "old",
+            "new"
+          ],
+          "old": {
+            "label": "unknown_temporal_basis",
+            "limited_by": null,
+            "refusal": null
+          }
+        },
+        "on": {
+          "admitted": [
+            "old",
+            "new"
+          ],
+          "old": {
+            "label": "unknown_temporal_basis",
+            "limited_by": null,
+            "refusal": "change_evidence_not_assertive:4"
+          }
+        }
+      },
+      "negated": {
+        "off": {
+          "admitted": [
+            "old",
+            "new"
+          ],
+          "old": {
+            "label": "unknown_temporal_basis",
+            "limited_by": null,
+            "refusal": null
+          }
+        },
+        "on": {
+          "admitted": [
+            "old",
+            "new"
+          ],
+          "old": {
+            "label": "unknown_temporal_basis",
+            "limited_by": null,
+            "refusal": "change_evidence_not_assertive:6"
+          }
+        }
+      },
+      "no-marker": {
+        "off": {
+          "admitted": [
+            "new",
+            "old"
+          ],
+          "old": {
+            "label": "unknown_temporal_basis",
+            "limited_by": null,
+            "refusal": null
+          }
+        },
+        "on": {
+          "admitted": [
+            "new",
+            "old"
+          ],
+          "old": {
+            "label": "unknown_temporal_basis",
+            "limited_by": null,
+            "refusal": null
+          }
+        }
+      },
+      "parenthetical": {
+        "off": {
+          "admitted": [
+            "old",
+            "new"
+          ],
+          "old": {
+            "label": "unknown_temporal_basis",
+            "limited_by": null,
+            "refusal": null
+          }
+        },
+        "on": {
+          "admitted": [
+            "old",
+            "new"
+          ],
+          "old": {
+            "label": "unknown_temporal_basis",
+            "limited_by": null,
+            "refusal": "change_evidence_not_assertive:1"
+          }
+        }
+      },
+      "possessive-other": {
+        "off": {
+          "admitted": [
+            "old",
+            "new"
+          ],
+          "old": {
+            "label": "unknown_temporal_basis",
+            "limited_by": null,
+            "refusal": null
+          }
+        },
+        "on": {
+          "admitted": [
+            "old",
+            "new"
+          ],
+          "old": {
+            "label": "unknown_temporal_basis",
+            "limited_by": null,
+            "refusal": "change_evidence_not_assertive:2"
+          }
+        }
+      },
+      "question": {
+        "off": {
+          "admitted": [
+            "old",
+            "new"
+          ],
+          "old": {
+            "label": "unknown_temporal_basis",
+            "limited_by": null,
+            "refusal": null
+          }
+        },
+        "on": {
+          "admitted": [
+            "old",
+            "new"
+          ],
+          "old": {
+            "label": "unknown_temporal_basis",
+            "limited_by": null,
+            "refusal": "change_evidence_not_assertive:1"
+          }
+        }
+      },
+      "self-claim": {
+        "off": {
+          "admitted": [
+            "old",
+            "new"
+          ],
+          "old": {
+            "label": "unknown_temporal_basis",
+            "limited_by": null,
+            "refusal": null
+          }
+        },
+        "on": {
+          "admitted": [
+            "old",
+            "new"
+          ],
+          "old": {
+            "label": "unknown_temporal_basis",
+            "limited_by": null,
+            "refusal": "relation_not_state_change"
+          }
+        }
+      },
+      "three-capitalised": {
+        "off": {
+          "admitted": [
+            "old",
+            "new"
+          ],
+          "old": {
+            "label": "unknown_temporal_basis",
+            "limited_by": null,
+            "refusal": null
+          }
+        },
+        "on": {
+          "admitted": [
+            "old",
+            "new"
+          ],
+          "old": {
+            "label": "unknown_temporal_basis",
+            "limited_by": null,
+            "refusal": "change_evidence_not_assertive:4"
+          }
+        }
+      },
+      "two-lowercase": {
+        "off": {
+          "admitted": [
+            "old",
+            "new"
+          ],
+          "old": {
+            "label": "unknown_temporal_basis",
+            "limited_by": null,
+            "refusal": null
+          }
+        },
+        "on": {
+          "admitted": [
+            "old",
+            "new"
+          ],
+          "old": {
+            "label": "unknown_temporal_basis",
+            "limited_by": null,
+            "refusal": null
+          }
+        }
+      }
+    },
+    "m4": {
+      "location/0": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/10": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/100": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/105": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/110": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/115": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/120": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/125": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/130": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/135": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/140": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/145": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/15": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/150": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/155": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/160": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/165": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/170": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/175": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/180": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/185": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/190": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/195": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/20": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/200": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/205": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/210": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/215": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/220": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/225": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/230": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/235": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/240": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/245": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/25": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/30": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/35": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/40": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/45": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/5": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/50": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/55": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/60": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/65": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/70": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/75": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/80": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/85": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/90": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "location/95": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/104": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/109": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/114": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/119": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/124": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/129": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/134": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/139": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/14": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/144": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/149": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/154": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/159": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/164": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/169": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/174": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/179": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/184": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/189": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/19": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/194": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/199": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/204": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/209": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/214": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/219": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/224": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/229": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/234": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/239": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/24": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/244": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/249": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/29": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/34": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/39": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/4": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/44": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/49": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/54": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/59": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/64": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/69": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/74": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/79": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/84": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/89": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/9": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/94": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "numeric/99": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "preference/102": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/107": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/112": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/117": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/12": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/122": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/127": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/132": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/137": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/142": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/147": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/152": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/157": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/162": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/167": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/17": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/172": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/177": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/182": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/187": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/192": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/197": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/2": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/202": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/207": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/212": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/217": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/22": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/222": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/227": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/232": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/237": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/242": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/247": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/27": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/32": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/37": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/42": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/47": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/52": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/57": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/62": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/67": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/7": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/72": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/77": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/82": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/87": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/92": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "preference/97": {
+        "admitted_changed": false,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "new",
+          "new"
+        ]
+      },
+      "role/1": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/101": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/106": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/11": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/111": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/116": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/121": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/126": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/131": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/136": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/141": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/146": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/151": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/156": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/16": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/161": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/166": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/171": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/176": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/181": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/186": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/191": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/196": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/201": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/206": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/21": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/211": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/216": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/221": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/226": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/231": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/236": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/241": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/246": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/26": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/31": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/36": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/41": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/46": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/51": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/56": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/6": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/61": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/66": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/71": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/76": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/81": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/86": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/91": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "role/96": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/103": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/108": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/113": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/118": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/123": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/128": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/13": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/133": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/138": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/143": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/148": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/153": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/158": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/163": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/168": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/173": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/178": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/18": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/183": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/188": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/193": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/198": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/203": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/208": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/213": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/218": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/223": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/228": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/23": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/233": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/238": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/243": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/248": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/28": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/3": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/33": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/38": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/43": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/48": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/53": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/58": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/63": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/68": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/73": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/78": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/8": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/83": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/88": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/93": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      },
+      "status/98": {
+        "admitted_changed": true,
+        "limited": true,
+        "refusal": null,
+        "top1": [
+          "old",
+          "new"
+        ]
+      }
+    },
+    "m4_limited": 250,
+    "m4_pairs": 250,
+    "m4_refusals": {},
+    "m4_top1_new": {
+      "off": 50,
+      "on": 250
+    }
+  },
+  "ranking_policy": {
+    "cross_fact_policy": "explicit_current_interpreted_cross_fact_v1",
+    "off": "3.2.0",
+    "on": "3.4.0"
+  },
+  "report": "cross-fact-currentness-ordering-difference-671"
+}

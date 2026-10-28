@@ -26,6 +26,12 @@ sys.path.insert(0, str(ROOT / "reference"))
 import run_786_security_replays as runner_v1  # noqa: E402
 import run_786_security_replays_dsl2 as runner_v2  # noqa: E402
 import run_786_security_replays_dsl3 as runner  # noqa: E402
+from tests._tenant_wide_fixture import frozen_runner_store  # noqa: E402
+
+# v7 integration: the frozen runner opens several projects in one root, which the default
+# single_project_v1 store profile refuses; only its store opener is routed to the tenant-wide
+# fixture (reference/tests/_tenant_wide_fixture.py), the runner and fixtures stay frozen.
+setUpModule, tearDownModule = frozen_runner_store(runner_v1)
 
 DECLARATION = ROOT / "reports/runtime/proposals/786-cumulative-v6-to-v8.PROPOSED.json"
 REPLAY = "evidence-reference-authorization-v1"

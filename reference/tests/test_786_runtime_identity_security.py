@@ -1,0 +1,272 @@
+"""Real SQLite security regression tests for #786. No fake memory backends."""
+from __future__ import annotations
+
+import tempfile
+import unittest
+from pathlib import Path
+
+from agentmem_ref import AgentMemory  # noqa: F401
+
+from tests._tenant_wide_fixture import open_tenant_wide
+from agentmem_ref.api import contract
+from agentmem_ref.state.substrate import Episode
+from agentmem_ref.runtime.recall_control import ControlledRecallPlanner
+from agentmem_ref.runtime.query_driven_recall import DeterministicQueryDrivenRecallPlanner
+from agentmem_ref.runtime.runtime_composition import DeterministicMultiRouteRecallPlanner
+
+
+TENANT = "tenant:786-runtime-boundary"
+ACTOR = "agent:786-runtime-boundary"
+KEY = "memory:786-shared-logical-name"
+
+
+class RuntimeIdentityBoundaryTests(unittest.TestCase):
+    def test_caller_cannot_impersonate_another_project_during_recall(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            with open_tenant_wide(root, tenant=TENANT, actor_id=ACTOR, scope="project:a") as owner:
+                first = owner.remember(KEY, "Private gateway region is Oslo")
+                self.assertTrue(first["committed"], first)
+
+            with open_tenant_wide(root, tenant=TENANT, actor_id=ACTOR, scope="project:b") as outsider:
+                ordinary = outsider.recall("Private gateway region")
+                self.assertNotIn(first["fact_uuid"], ordinary["admitted"])
+                with self.assertRaisesRegex(ValueError, "project"):
+                    outsider.recall("Private gateway region", project_ref="project:a")
+                with self.assertRaisesRegex(ValueError, "domains"):
+                    outsider.recall(
+                        "Private gateway region",
+                        target_domain_refs=(TENANT, "project:a"),
+                    )
+                with self.assertRaisesRegex(ValueError, "principal"):
+                    outsider.recall("Private gateway region", principal_ref="agent:impersonated")
+
+            with open_tenant_wide(root, tenant=TENANT, actor_id=ACTOR, scope="project:a") as owner:
+                own = owner.recall("Private gateway region")
+                self.assertIn(first["fact_uuid"], own["admitted"])
+
+    def test_exact_seed_must_not_reveal_foreign_candidate_or_provenance(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            with open_tenant_wide(root, tenant=TENANT, actor_id=ACTOR, scope="project:a") as owner:
+                saved = owner.remember(KEY, "Hidden seed belongs to project A")
+                self.assertTrue(saved["committed"], saved)
+
+            with open_tenant_wide(root, tenant=TENANT, actor_id=ACTOR, scope="project:b") as outsider:
+                result = outsider.recall(
+                    "Hidden seed",
+                    logical_memory_refs=(KEY,),
+                )
+                self.assertNotIn(saved["fact_uuid"], result["candidates"])
+                self.assertNotIn(saved["fact_uuid"], result["admitted"])
+                self.assertNotIn(saved["fact_uuid"], repr(result))
+                self.assertNotIn(
+                    "shared_evidence_refs", repr(result.get("admissions", {})),
+                    "A foreign graph seed must never materialize a route hit",
+                )
+
+            with open_tenant_wide(root, tenant=TENANT, actor_id=ACTOR, scope="project:a") as owner:
+                result = owner.recall("Hidden seed", logical_memory_refs=(KEY,))
+                self.assertIn(saved["fact_uuid"], result["admitted"])
+
+    def test_history_is_unknown_for_foreign_scope_before_and_after_restart(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            with open_tenant_wide(root, tenant=TENANT, actor_id=ACTOR, scope="project:a") as owner:
+                first = owner.remember(KEY, "History belongs to project A")
+                self.assertTrue(first["committed"], first)
+                own = owner.history(KEY)["history"]
+                self.assertEqual(own["current_fact_uuid"], first["fact_uuid"])
+
+            for _ in range(2):
+                with open_tenant_wide(root, tenant=TENANT, actor_id=ACTOR, scope="project:b") as outsider:
+                    shown = outsider.history(KEY)["history"]
+                    self.assertIsNone(shown["current_fact_uuid"])
+                    self.assertEqual(shown["state_version"], 0)
+                    self.assertFalse(shown["tombstoned"])
+                    self.assertEqual(shown["events"], [])
+                    self.assertEqual(outsider.history(KEY, fact_text="History belongs to project A")["history"]["rejected_values"], [])
+
+            with open_tenant_wide(root, tenant=TENANT, actor_id=ACTOR, scope="project:a") as owner:
+                own = owner.history(KEY)["history"]
+                self.assertEqual(own["current_fact_uuid"], first["fact_uuid"])
+
+    def test_foreign_mutations_return_consistent_refusals_and_preserve_owner(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            with open_tenant_wide(root, tenant=TENANT, actor_id=ACTOR, scope="project:a") as owner:
+                first = owner.remember(KEY, "Owner's canonical gateway is Oslo")
+                self.assertTrue(first["committed"], first)
+                original_ref = first["fact_uuid"]
+                original_version = owner.history(KEY)["history"]["state_version"]
+
+            with open_tenant_wide(root, tenant=TENANT, actor_id=ACTOR, scope="project:b") as outsider:
+                outcomes = (
+                    outsider.remember(KEY, "Foreign replacement is Turku"),
+                    outsider.correct(KEY, "Foreign correction"),
+                    outsider.forget(KEY),
+                    outsider.dispute(KEY),
+                )
+                for outcome, operation in zip(outcomes, ("promotion", "correction", "pruning", "dispute")):
+                    self.assertFalse(outcome["committed"], outcome)
+                    # Contract 1.8.0 composition (#836): the PAMA outcome is kept, the selected action is
+                    # blocked, and the refusal is a non-disclosing 1.8.0 token.
+                    self.assertIn(outcome.get("refusal"), ("target_unavailable", "fact_not_found"), outcome)
+                    # remember carries a v0 -> v0 receipt; correct, forget and dispute return the bare
+                    # fact_not_found result, byte-identical to an id nobody wrote (contract 1.8.0)
+                    if "receipt" in outcome:
+                        self.assertNotEqual(outcome["receipt"]["selected_action"], operation, outcome)
+                        self.assertEqual(outcome["receipt"]["before_state"], "v0", outcome)
+                        self.assertEqual(outcome["receipt"]["after_state"], "v0", outcome)
+                    else:
+                        self.assertEqual(outcome["refusal"], "fact_not_found", outcome)
+                    self.assertNotIn(
+                        original_ref, repr(outcome),
+                        "A blocked mutation leaked its owner's canonical fact reference",
+                    )
+                unknown = outsider.history(KEY)["history"]
+                self.assertIsNone(unknown["current_fact_uuid"])
+                self.assertEqual(unknown["events"], [])
+
+            with open_tenant_wide(root, tenant=TENANT, actor_id=ACTOR, scope="project:a") as owner:
+                current = owner.history(KEY)["history"]
+                self.assertEqual(current["current_fact_uuid"], original_ref)
+                self.assertEqual(current["state_version"], original_version)
+
+
+    def test_task_identity_is_bound_to_host_not_caller_query(self):
+        # Project membership alone cannot authorize a different task.
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            with open_tenant_wide(
+                root, tenant=TENANT, actor_id=ACTOR, scope="project:a",
+                task_ref="task:a",
+            ) as task_a:
+                saved = task_a.remember("memory:task-only", "Task A private design")
+                self.assertTrue(saved["committed"], saved)
+                own = task_a.recall("Task A private design")
+                self.assertIn(saved["fact_uuid"], own["admitted"])
+                self.assertIn(
+                    saved["fact_uuid"],
+                    task_a.recall("Task A private design", task_ref="task:a")["admitted"],
+                )
+
+            with open_tenant_wide(
+                root, tenant=TENANT, actor_id=ACTOR, scope="project:a",
+                task_ref="task:b",
+            ) as task_b:
+                ordinary = task_b.recall("Task A private design")
+                self.assertNotIn(saved["fact_uuid"], ordinary["admitted"])
+                self.assertNotIn(saved["fact_uuid"], ordinary["candidates"])
+                with self.assertRaisesRegex(ValueError, "task"):
+                    task_b.recall("Task A private design", task_ref="task:a")
+                history = task_b.history("memory:task-only")["history"]
+                self.assertIsNone(history["current_fact_uuid"])
+
+            with open_tenant_wide(
+                root, tenant=TENANT, actor_id=ACTOR, scope="project:a",
+            ) as unbound:
+                with self.assertRaisesRegex(ValueError, "task"):
+                    unbound.recall("Task A private design", task_ref="task:a")
+                self.assertNotIn(
+                    saved["fact_uuid"], unbound.recall("Task A private design")["admitted"],
+                )
+
+            with open_tenant_wide(
+                root, tenant=TENANT, actor_id=ACTOR, scope="project:a",
+                task_ref="task:a",
+            ) as recovered:
+                self.assertIn(
+                    saved["fact_uuid"],
+                    recovered.recall("Task A private design")["admitted"],
+                )
+
+    def test_invalid_host_task_identity_does_not_create_runtime_root(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory) / "not-created"
+            for invalid in (" task:a ", "task:e\u0301", "task:\x00private"):
+                with self.subTest(task=invalid), self.assertRaisesRegex(ValueError, "task_ref"):
+                    AgentMemory.open(
+                        target, tenant=TENANT, actor_id=ACTOR, scope="project:a",
+                        task_ref=invalid,
+                    )
+                self.assertFalse(target.exists())
+
+    def test_all_recall_planners_filter_foreign_explicit_seeds(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            with open_tenant_wide(root, tenant=TENANT, actor_id=ACTOR, scope="project:a") as owner:
+                stored = owner.remember(KEY, "Private seed from project A")
+                self.assertTrue(stored["committed"], stored)
+
+            planners = (
+                DeterministicMultiRouteRecallPlanner,
+                ControlledRecallPlanner,
+                DeterministicQueryDrivenRecallPlanner,
+            )
+            with open_tenant_wide(root, tenant=TENANT, actor_id=ACTOR, scope="project:b") as outsider:
+                for planner_type in planners:
+                    with self.subTest(planner=planner_type.__name__):
+                        # #816: governed recall on a runtime-owned SQLite store runs inside a generation,
+                        # exactly as the composition runs it.
+                        response = outsider.runtime.durable_runtime.run_governed_read(
+                            lambda: planner_type(outsider.runtime.adapter).recall(
+                                "Private seed",
+                                outsider._handle_recall_context(),
+                                logical_memory_refs=(KEY,),
+                            ))
+                        result = getattr(response, "recall", response)
+                        # ControlledRecallResult wraps its MultiRouteRecallResult
+                        # while the other two planners return it directly.
+                        self.assertNotIn(stored["fact_uuid"], result.candidates)
+                        self.assertNotIn(stored["fact_uuid"], result.admitted)
+                        self.assertNotIn(stored["fact_uuid"], repr(result.route_hits))
+
+    def test_rejected_foreign_write_cannot_persist_unapproved_episode(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            with open_tenant_wide(root, tenant=TENANT, actor_id=ACTOR, scope="project:a") as owner:
+                first = owner.remember(KEY, "Project A private state")
+                self.assertTrue(first["committed"], first)
+
+            with open_tenant_wide(root, tenant=TENANT, actor_id=ACTOR, scope="project:b") as outsider:
+                episode = Episode(
+                    uuid="episode:786-foreign-write",
+                    content="Unapproved foreign raw episode",
+                    source_description="adversarial fixture",
+                    valid_at="2026-10-26T12:00:00Z",
+                    group_id=TENANT,
+                )
+                proposal = contract.proposal_from_envelope(
+                    outsider._proposal(
+                        target_reference=KEY,
+                        fact_text="Overwrite project A",
+                        operation="promotion",
+                    )
+                )
+                with outsider.runtime.serialization_lock:
+                    # Exercise the durable boundary, not the in-memory adapter
+                    # alone. A rejected attempt still publishes its audit receipt.
+                    outcome = outsider.runtime.durable_runtime.commit_proposal(
+                        proposal, "Overwrite project A", episode=episode
+                    )
+                    stored = outsider.runtime.adapter.checkpoint_substrate().get_episode(
+                        episode.uuid
+                    )
+                self.assertFalse(outcome.committed, outcome)
+                self.assertEqual(outcome.refusal, "target_unavailable")
+                self.assertIsNone(
+                    stored,
+                    "A blocked write inserted its episode before governance authorized it",
+                )
+            with open_tenant_wide(root, tenant=TENANT, actor_id=ACTOR, scope="project:b") as reopened:
+                self.assertIsNone(
+                    reopened.runtime.adapter.checkpoint_substrate().get_episode(
+                        "episode:786-foreign-write"
+                    ),
+                    "A refused episode survived the SQLite checkpoint and restart",
+                )
+
+
+if __name__ == "__main__":
+    unittest.main()

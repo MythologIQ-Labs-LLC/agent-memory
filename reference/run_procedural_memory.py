@@ -58,12 +58,15 @@ def run() -> dict:
     adapter = GovernedMemoryAdapter(substrate, tenant=TENANT, clock=Clock())
     registry = ComponentRegistry()
     registry.register(reference_procedural_component())
-    runtime = ProceduralMemoryRuntime(substrate=substrate, adapter=adapter, registry=registry)
     context = RecallContext(
         target_domain_refs=(TENANT, PROJECT),
         principal_ref="agent:release",
         project_ref=PROJECT,
         purpose=PURPOSE,
+    )
+    runtime = ProceduralMemoryRuntime(
+        substrate=substrate, adapter=adapter, registry=registry,
+        revocation_context=context,
     )
 
     v1 = release_skill(1, "release")

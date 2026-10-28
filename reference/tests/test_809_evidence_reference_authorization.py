@@ -79,6 +79,10 @@ from agentmem_ref.state.sqlite_substrate import _canonical_bytes
 from agentmem_ref.substrate import InMemoryTemporalGraph
 from tests.test_644_combined_independent import _evidence, _prop
 from tests.test_786_cross_scope_write_authority import ACTOR, QUERY, TENANT, _TwoProjects, _proposal
+# #786 store identity profiles: this module drives several projects through one tenant-wide store to
+# exercise the canonical adapter gates; AgentMemory.open admits that only as scope_distinct_v1, so the
+# test-only tenant-wide fixture reproduces the pre-profile store (tests/_tenant_wide_fixture.py).
+from tests._tenant_wide_fixture import open_tenant_wide
 
 HIST = {"mode": "historical"}
 FOUR = ["memory.propose", "memory.authorize", "memory.commit", "memory.receipt"]
@@ -300,8 +304,9 @@ import json, sys
 sys.path.insert(0, sys.argv[1])
 import agentmem_ref
 from agentmem_ref import AgentMemory
+from tests._tenant_wide_fixture import open_tenant_wide
 root, tenant, actor, scope, query, refs = sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6], json.loads(sys.argv[7])
-m = AgentMemory.open(root, tenant=tenant, actor_id=actor, scope=scope, purpose="c786")
+m = open_tenant_wide(root, tenant=tenant, actor_id=actor, scope=scope, purpose="c786")
 out = {"package": agentmem_ref.__file__}
 for memory, uuid in refs.items():
     label = memory.split("-", 1)[1]
@@ -318,8 +323,9 @@ import json, sys
 sys.path.insert(0, sys.argv[1])
 import agentmem_ref
 from agentmem_ref import AgentMemory
+from tests._tenant_wide_fixture import open_tenant_wide
 root, tenant, actor, scope, query = sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6]
-m = AgentMemory.open(root, tenant=tenant, actor_id=actor, scope=scope, purpose="c786")
+m = open_tenant_wide(root, tenant=tenant, actor_id=actor, scope=scope, purpose="c786")
 out = {"package": agentmem_ref.__file__,
        "admitted": sorted(m.recall(f"{query} digest", temporal_intent={"mode": "historical"})["admitted"])}
 m.close()
@@ -519,14 +525,14 @@ class OwnScopeDeletionCompleteness(_Citer):
 
 class LateBinding(_Citer):
     def _scenario(self, root: str, future: str) -> tuple[str, str, bool, bool]:
-        m = AgentMemory.open(root, tenant=TENANT, actor_id=ACTOR, scope="project:a", purpose="c786")
+        m = open_tenant_wide(root, tenant=TENANT, actor_id=ACTOR, scope="project:a", purpose="c786")
         old = m.remember("memory:a", f"{QUERY} is Oslo", proposition=_prop("Oslo"))["fact_uuid"]
         self.assertTrue(m.forget("memory:a")["committed"])
         fwd = m.remember("memory:fwd", f"{QUERY} digest forward", evidence_refs=(future,))["fact_uuid"]
         late = m.remember("memory:late", f"{QUERY} digest late", evidence_refs=(old,))["fact_uuid"]
         got = set(m.recall(f"{QUERY} digest", temporal_intent=HIST)["admitted"])
         m.close()
-        m = AgentMemory.open(root, tenant=TENANT, actor_id=ACTOR, scope="project:a", purpose="c786")
+        m = open_tenant_wide(root, tenant=TENANT, actor_id=ACTOR, scope="project:a", purpose="c786")
         again = set(m.recall(f"{QUERY} digest", temporal_intent=HIST)["admitted"])
         m.close()
         return late, fwd, fwd in got and fwd in again, late in got or late in again
@@ -673,7 +679,8 @@ class SharedDomainDurable(_Citer):
     SHARED = {"isolation_domain_refs": ["shared:x"], "required_isolation_domain_refs": ["shared:x"]}
 
     def handle(self, actor: str) -> AgentMemory:
-        return AgentMemory.open(self.root, tenant=TENANT, actor_id=actor, scope="shared:x", purpose="c786")
+        return open_tenant_wide(self.root, tenant=TENANT, actor_id=actor, scope="shared:x", purpose="c786",
+                                host_declared_overrides=True)
 
     def test_binding_survives_revocation_and_reopen_and_a_later_grant_binds_nothing(self):
         self.fresh()

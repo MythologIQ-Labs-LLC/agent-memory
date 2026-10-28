@@ -1,0 +1,33 @@
+"""Mutation sensitivity: apply one mutation to a scratch clone's checker, run both test modules, restore."""
+import subprocess, sys
+from pathlib import Path
+H = Path(__file__).resolve().parent; P = H / "mut/scripts/check_generalization_corpus.py"; ORIG = P.read_text()
+M = {
+ "binding rule disabled": ("    tree = ast.parse(text)\n    violations, stores = [], []", "    return []\n    tree = ast.parse(text)\n    violations, stores = [], []"),
+ "binding check not called on current": ("    if violations:\n        raise SystemExit(f\"{TEMPLATE_AMENDMENT_ID}: CONFLICT_TEMPLATES is rebound", "    if False:\n        raise SystemExit(f\"{TEMPLATE_AMENDMENT_ID}: CONFLICT_TEMPLATES is rebound"),
+ "name-string clause removed": ("isinstance(node.value, str) and TEMPLATE_NAME in node.value", "isinstance(node.value, str) and False"),
+ "sole-top-level clause removed": ("    if len(stores) != 1 or len(top) != 1 or stores[0] is not top[0].targets[0]:", "    if False:"),
+ "stores-identity clause removed": (" or stores[0] is not top[0].targets[0]:", ":"),
+ "frozen-blob binding check removed": ("    if template_binding_violations(frozen_source.stdout):", "    if False:"),
+ "literal comparison removed": ("    if _templates_from_source(current_source) != frozen_rows:", "    if False:"),
+ "texts digest check removed": ("    if current != frozen or texts_digest(current) != TEMPLATE_TEXTS_SHA256:", "    if False:"),
+ "rule digest check removed": ("    if comparison_rule_digest() != COMPARISON_RULE_SHA256:", "    if False:"),
+ "rule digest reverted to 2 functions": ("for function in (tokens, similarity, record_texts, overlap_rule)]", "for function in (tokens, similarity)]"),
+ "strict flag ignored": ("    if require_frozen_blob:\n", "    if False:\n"),
+ "frozen-blob unavailability ignored": ("    if frozen_source.returncode != 0:", "    if False:"),
+ "unreadable rule accepted": ('        return "unverifiable"', '        return COMPARISON_RULE_SHA256'),
+ "attribute clause removed": ("elif isinstance(node, ast.Attribute) and node.attr == TEMPLATE_NAME", "elif False"),
+ "global clause removed": ("elif isinstance(node, (ast.Global, ast.Nonlocal)) and TEMPLATE_NAME in node.names", "elif False"),
+ "star-import clause removed": ('elif isinstance(node, ast.ImportFrom) and any(alias.name == "*" for alias in node.names)', "elif False"),
+ "MatchMapping clause removed": ("elif isinstance(node, ast.MatchMapping) and node.rest == TEMPLATE_NAME", "elif False"),
+ "MatchStar dropped": ("(ast.MatchAs, ast.MatchStar)", "ast.MatchAs"),
+ "AsyncFunctionDef/ClassDef dropped": ("(ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)", "ast.FunctionDef"),
+ "Del ctx dropped": ("isinstance(node.ctx, (ast.Store, ast.Del)):\n            stores", "isinstance(node.ctx, ast.Store):\n            stores"),
+}
+for label, (a, b) in M.items():
+    assert ORIG.count(a) == 1, label
+    P.write_text(ORIG.replace(a, b))
+    r = subprocess.run([sys.executable, "-m", "unittest", "tests.test_currentness_generalization_amendment_a3", "tests.test_currentness_generalization"], cwd=H / "mut/reference", capture_output=True, text=True)
+    last = [l for l in r.stderr.splitlines() if l.startswith(("OK", "FAILED"))]
+    print(f"{label:40s} {'KILLED' if r.returncode else 'SURVIVED'}  {last}")
+P.write_text(ORIG)

@@ -1,8 +1,12 @@
 from __future__ import annotations
 
+import contextlib
+import os
+import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 from agentmem_ref._paths import REPO_ROOT
 from agentmem_ref.evaluation.contract import load_run
@@ -16,6 +20,41 @@ from agentmem_ref.evaluation.gauntlet_profiles import (
 FIXTURE_DIR = REPO_ROOT / "fixtures" / "gauntlet"
 REAL_MANIFEST = FIXTURE_DIR / "agent-memory-public-durability-adapter.json"
 LOSSY_MANIFEST = FIXTURE_DIR / "durability-lossy-recovery-adapter.json"
+
+
+@contextlib.contextmanager
+def _qualified_contestant_launch():
+    """Launch the real stdio contestant under this harness's qualified interpreter.
+
+    The frozen manifest starts ``python examples/gauntlet/...``: a bare PATH lookup
+    and a repo-root-relative script. Whichever ``python`` is first on PATH (often a
+    system interpreter without the pinned dependencies) otherwise dies on import and
+    surfaces only as ``adapter_eof``, while the run records this interpreter's
+    version as its environment. Pin both to the interpreter actually under test.
+    """
+    with tempfile.TemporaryDirectory() as shim:
+        # A symlink would lose a virtual environment (pyvenv.cfg is found
+        # relative to the invoked path), so prefer the interpreter's own
+        # directory when its bare ``python`` is this interpreter.
+        home = Path(sys.executable).parent
+        bare = home / ("python.exe" if os.name == "nt" else "python")
+        if bare.exists() and os.path.samefile(bare, sys.executable):
+            search = str(home)
+        elif os.name != "nt":
+            launcher = Path(shim) / "python"
+            launcher.write_text(f'#!/bin/sh\nexec "{sys.executable}" "$@"\n', encoding="utf-8")
+            launcher.chmod(0o755)
+            search = shim
+        else:
+            search = str(home)
+        path = search + os.pathsep + os.environ.get("PATH", "")
+        previous = os.getcwd()
+        with mock.patch.dict(os.environ, {"PATH": path}):
+            os.chdir(REPO_ROOT)
+            try:
+                yield
+            finally:
+                os.chdir(previous)
 
 
 def _case_map(run: dict) -> dict[str, dict]:
@@ -58,7 +97,7 @@ class DurabilityRecoveryGauntletTests(unittest.TestCase):
             self.assertIn("--allow-destructive-operations", blocked["failure"]["message"])
 
     def test_real_agent_memory_public_facade_qualifies_first_durability_slice(self):
-        with tempfile.TemporaryDirectory() as temporary:
+        with tempfile.TemporaryDirectory() as temporary, _qualified_contestant_launch():
             result = run_gauntlet(
                 REAL_MANIFEST,
                 DURABILITY_RECOVERY_PROFILE_ID,

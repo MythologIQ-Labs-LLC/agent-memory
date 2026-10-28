@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import functools
 import threading
+import unicodedata
 
 import hashlib
 import importlib.resources
@@ -30,8 +31,9 @@ from ..core import policy
 from ..memory import action_authority
 from ..runtime import doctor
 from ..runtime.adapter import REPLACEMENT_KINDS, WRITE_TARGET_REFUSED_REF, GovernedMemoryAdapter
+from ..runtime.restart_runtime import RuntimeRecoveryError
 from ..runtime.temporal_intent import declared_temporal, resolve_intent
-from . import contract
+from . import contract, store_contract
 
 __all__ = [
     "AgentMemory",
@@ -303,6 +305,29 @@ _DATABASE_NAME = "agent-memory.sqlite3"
 _BINDING_NAME = "configuration-binding.json"
 _WITNESS_NAME = "generation-witness.json"
 
+# #786 store identity profiles, versioned by the store-open contract
+# (``store_contract.STORE_OPEN_CONTRACT_VERSION``), not by the envelope contract.
+# A profile is recorded once, when a store is created, and never rewritten.
+STORE_PROFILE_FILE = "store-identity.json"
+STORE_PROFILE_SINGLE_PROJECT = "single_project_v1"
+STORE_PROFILE_SCOPE_DISTINCT = "scope_distinct_v1"
+# Reported for a store created before profiles existed. Never written to disk.
+STORE_PROFILE_LEGACY = "legacy_unprofiled"
+STORE_PROFILES = (STORE_PROFILE_SINGLE_PROJECT, STORE_PROFILE_SCOPE_DISTINCT)
+_STORE_IDENTITY_SCHEMA = "agent-memory-store-identity"
+
+
+class StoreIdentityError(RuntimeRecoveryError):
+    """The requested host identity cannot open this store under its identity profile.
+
+    Messages never name keys, facts, or other projects: a refusal is decided by
+    the store's profile and bound project alone, not by which memories exist.
+    """
+
+
+class _CanonicalTarget(str):
+    """A canonical logical memory id the runtime itself produced (never caller input)."""
+
 
 def _canonical_bytes(value: object) -> bytes:
     return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
@@ -323,7 +348,8 @@ def _packaged_profile_text() -> str:
 
 def _atomic_write_text(path: Path, text: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_name(f".{path.name}.tmp")
+    # Unique per writer: concurrent first opens must not share a temporary file.
+    temporary = path.with_name(f".{path.name}.{os.getpid()}.{threading.get_ident()}.tmp")
     with temporary.open("w", encoding="utf-8", newline="\n") as handle:
         handle.write(text)
         if not text.endswith("\n"):
@@ -331,6 +357,89 @@ def _atomic_write_text(path: Path, text: str) -> None:
         handle.flush()
         os.fsync(handle.fileno())
     os.replace(temporary, path)
+
+
+def _read_store_identity(path: Path) -> dict | None:
+    if not path.exists():
+        return None
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        raise StoreIdentityError("store identity record is unreadable") from exc
+    if (
+        isinstance(record, dict)
+        and record.get("schema") == _STORE_IDENTITY_SCHEMA
+        and store_contract.record_compatibility(record.get("version")) == store_contract.MIGRATION_REQUIRED
+    ):
+        # Written under a newer store-open contract: its admission rules are not ours to
+        # apply, so the store is neither opened, rewritten nor downgraded.
+        raise StoreIdentityError(
+            "store identity record requires a newer store-open contract than "
+            f"{store_contract.STORE_OPEN_CONTRACT_ID} {store_contract.STORE_OPEN_CONTRACT_VERSION}"
+        )
+    if (
+        not isinstance(record, dict)
+        or record.get("schema") != _STORE_IDENTITY_SCHEMA
+        # Exact type: JSON true or 1.0 compare equal to 1 in Python and are not version 1.
+        or type(record.get("version")) is not int
+        or record.get("version") != store_contract.RECORD_VERSION
+        or record.get("profile") not in STORE_PROFILES
+        or not isinstance(record.get("tenant"), str)
+        or (record["profile"] == STORE_PROFILE_SINGLE_PROJECT
+            and not isinstance(record.get("bound_project"), str))
+    ):
+        raise StoreIdentityError("store identity record is malformed")
+    return record
+
+
+def _claim_store_identity(path: Path, record: dict) -> dict:
+    """Bind a fresh root to one identity, atomically and exclusively (#786).
+
+    The record is written to a private temporary file and hard-linked into place:
+    linking fails if any record already exists, so of several concurrent first opens
+    exactly one identity wins and the rest re-read and check the winner. The claim
+    precedes store creation, so an interrupted creation leaves a claimed root that
+    only the claiming identity can complete.
+    """
+    temporary = path.with_name(f".{path.name}.{os.getpid()}.{threading.get_ident()}.claim")
+    try:
+        with temporary.open("x", encoding="utf-8", newline="\n") as handle:
+            handle.write(json.dumps(record, sort_keys=True) + "\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+        try:
+            os.link(temporary, path)
+        except FileExistsError:
+            winner = _read_store_identity(path)
+            if winner is None:
+                raise StoreIdentityError("store identity record vanished during claim")
+            return winner
+    finally:
+        temporary.unlink(missing_ok=True)
+    return record
+
+
+def _check_store_identity(record: dict, *, tenant: str, scope: str, requested: str | None) -> None:
+    if record["tenant"] != tenant:
+        raise StoreIdentityError("requested tenant does not match the store identity")
+    if requested is not None and requested != record["profile"]:
+        raise StoreIdentityError(f"store identity profile is {record['profile']!r}, not {requested!r}")
+    if record["profile"] == STORE_PROFILE_SINGLE_PROJECT and record["bound_project"] != scope:
+        raise StoreIdentityError(
+            "single-project store is bound to a different project; multi-project memory "
+            f"requires a {STORE_PROFILE_SCOPE_DISTINCT!r} store"
+        )
+
+
+def _check_task_ref(task_ref: Any) -> None:
+    """A host-bound task identity is canonical: NFC, unpadded, no control characters (#786)."""
+    if (
+        not isinstance(task_ref, str)
+        or task_ref != task_ref.strip()
+        or unicodedata.normalize("NFC", task_ref) != task_ref
+        or (task_ref and any(ord(ch) < 32 for ch in task_ref))
+    ):
+        raise ValueError("task_ref must be a canonical, optional host-bound string")
 
 
 def _checked_extractor(extractor: Any) -> Any:
@@ -425,7 +534,14 @@ class AgentMemory:
         semantic: dict | None = None,
         recall_control: str = RECALL_CONTROL_DEFAULT,
         proposition_extractor: Any = None,
+        task_ref: str = "",
+        store_profile: str = STORE_PROFILE_LEGACY,
     ) -> None:
+        if store_profile not in (*STORE_PROFILES, STORE_PROFILE_LEGACY):
+            raise ValueError(f"unknown store_profile {store_profile!r}")
+        self.store_profile = store_profile
+        _check_task_ref(task_ref)
+        self.task_ref = task_ref
         self.root = root
         self.config_path = config_path
         self.qualification_path = qualification_path
@@ -464,8 +580,31 @@ class AgentMemory:
         representation_dir: str | Path | None = None,
         recall_control: str = RECALL_CONTROL_DEFAULT,
         proposition_extractor: Any = None,
+        task_ref: str = "",
+        store_profile: str | None = None,
+        store_open_contract: str | None = None,
     ) -> "AgentMemory":
         """Create or recover one qualified local SQLite composition.
+
+        ``store_profile`` (#786, store-open contract ``agent-memory-store-open`` 1.0.0) fixes how
+        logical keys are owned. It is recorded once, when the store is created, and every later
+        open must agree:
+
+        * ``"single_project_v1"`` -- the default for a new store. Tenant-wide keys, and the store
+          is bound to the creating ``scope``; other projects are refused.
+        * ``"scope_distinct_v1"`` -- the only multi-project profile. Every public key is bound to
+          (tenant, scope, key) by this facade, so one project can neither read, mutate, nor
+          observe the occupancy of another project's keys.
+
+        A store created before profiles existed is never migrated: it opens only for the single
+        project its canonical scope metadata already contains, and only without an explicit
+        ``store_profile``. A handle's tenant, project, task and principal are bound by its store:
+        proposal ``overrides`` and recall keywords may restate or narrow that identity, never
+        change it. These rules are versioned apart from the envelope contract: every envelope keeps
+        its ADR-030 state against ``contract.CONTRACT_VERSION``, and the module-level surface
+        judges envelopes exactly as that contract states. A host may pin the store-open contract
+        it was written against with ``store_open_contract``; any state other than ``current``
+        refuses the open before the filesystem is touched.
 
         ``semantic_retrieval`` (#669) is ``"off"`` (default), ``"auto"`` or
         ``"required"``. ``auto`` enables the semantic vector route only when the
@@ -498,12 +637,23 @@ class AgentMemory:
         from ..runtime.runtime_behavior import validate_runtime_behavior_contract
         from ..runtime.sqlite_composition import SQLiteConfiguredCompositionRuntime
 
+        # Validate host-bound identity and the host's store-open contract before filesystem creation.
+        _check_task_ref(task_ref)
+        if store_open_contract is not None:
+            state = store_contract.compatibility(store_open_contract)
+            if state != store_contract.CURRENT:
+                raise StoreIdentityError(
+                    f"host store-open contract {store_open_contract!r} is {state} against "
+                    f"{store_contract.STORE_OPEN_CONTRACT_ID} {store_contract.STORE_OPEN_CONTRACT_VERSION}"
+                )
         root = Path(path)
         root.mkdir(parents=True, exist_ok=True)
         if not tenant or not actor_id or not charter_version or not scope:
             raise ValueError("tenant, actor_id, charter_version, and scope must be non-empty")
         if recall_control not in RECALL_CONTROL_MODES:
             raise ValueError(f"recall_control must be one of {RECALL_CONTROL_MODES}")
+        if store_profile is not None and store_profile not in STORE_PROFILES:
+            raise ValueError(f"store_profile must be one of {STORE_PROFILES}")
         _checked_extractor(proposition_extractor)
 
         if config_path is None:
@@ -526,13 +676,58 @@ class AgentMemory:
                 "incomplete durable state: generation witness exists without SQLite runtime database"
             )
         semantic = _semantic_route(root, semantic_retrieval, representation_dir)
-        if database.exists():
-            runtime = SQLiteConfiguredCompositionRuntime.recover(
-                root,
-                plan=plan,
-                verifier_registry=verifier_registry,
-                vector_retriever=semantic["retriever"],
+        # #786: decide the store identity before any runtime is recovered or created.
+        identity_path = root / STORE_PROFILE_FILE
+        identity = _read_store_identity(identity_path)
+        if identity is not None:
+            _check_store_identity(identity, tenant=tenant, scope=scope, requested=store_profile)
+            profile = identity["profile"]
+        elif database.exists():
+            if store_profile is not None:
+                raise StoreIdentityError(
+                    "store predates identity profiles; it opens only as a restricted legacy "
+                    "store and is never migrated implicitly"
+                )
+            profile = STORE_PROFILE_LEGACY
+        elif binding.exists():
+            raise RuntimeRecoveryError(
+                "incomplete durable state: configuration binding exists without SQLite runtime database"
             )
+        else:
+            requested_profile = store_profile or STORE_PROFILE_SINGLE_PROJECT
+            identity = _claim_store_identity(identity_path, {
+                "schema": _STORE_IDENTITY_SCHEMA,
+                "version": store_contract.RECORD_VERSION,
+                "profile": requested_profile,
+                "tenant": tenant,
+                "bound_project": scope if requested_profile == STORE_PROFILE_SINGLE_PROJECT else None,
+            })
+            # A concurrent first open may have claimed the root for another identity.
+            _check_store_identity(identity, tenant=tenant, scope=scope, requested=store_profile)
+            profile = identity["profile"]
+        if database.exists():
+            try:
+                runtime = SQLiteConfiguredCompositionRuntime.recover(
+                    root,
+                    plan=plan,
+                    verifier_registry=verifier_registry,
+                    vector_retriever=semantic["retriever"],
+                )
+            except RuntimeRecoveryError as exc:
+                # #786: a claimed root whose first creation was interrupted before its first
+                # checkpoint holds a database file but no runtime state; nothing was committed, so
+                # the claiming identity completes the creation. A legacy (unclaimed) root, and any
+                # store whose generation witness exists (#821), keep failing closed.
+                if (profile == STORE_PROFILE_LEGACY or (root / _WITNESS_NAME).exists()
+                        or str(exc) != "required SQLite runtime state is missing"):
+                    raise
+                runtime = SQLiteConfiguredCompositionRuntime.create(
+                    root,
+                    tenant=tenant,
+                    plan=plan,
+                    verifier_registry=verifier_registry,
+                    vector_retriever=semantic["retriever"],
+                )
         elif binding.exists():
             raise RuntimeRecoveryError(
                 "incomplete durable state: configuration binding exists without SQLite runtime database"
@@ -552,6 +747,21 @@ class AgentMemory:
             raise RuntimeRecoveryError(
                 f"requested tenant {tenant!r} does not match recovered runtime tenant {actual_tenant!r}"
             )
+        if profile == STORE_PROFILE_LEGACY:
+            # Restricted legacy mode: the store's tenant-wide keys stay safe only while a single
+            # trusted project uses it. Nothing on disk is rewritten.
+            if runtime.adapter.canonical_project_refs() - {scope}:
+                runtime.close()
+                raise StoreIdentityError(
+                    "legacy store is bound to a different project or holds several projects; "
+                    "it requires an explicit, governed migration"
+                )
+        elif profile == STORE_PROFILE_SINGLE_PROJECT:
+            # The record is a claim, not authority: canonical scope metadata must agree with it,
+            # so an edited bound_project cannot rebind another project's store.
+            if runtime.adapter.canonical_project_refs() - {identity["bound_project"]}:
+                runtime.close()
+                raise StoreIdentityError("store identity record does not match canonical store state")
         # #802: retry any interrupted sidecar cleanup against the recovered canonical facts,
         # whatever the semantic mode. A derived cache is never authority, so its state never
         # refuses the canonical runtime: the outcome is recorded for the posture instead.
@@ -575,6 +785,8 @@ class AgentMemory:
             semantic=semantic,
             recall_control=recall_control,
             proposition_extractor=proposition_extractor,
+            task_ref=task_ref,
+            store_profile=profile,
         )
         handle._derived_reconciliation = reconciliation
         return handle
@@ -597,6 +809,64 @@ class AgentMemory:
     @property
     def contract_version(self) -> str:
         return contract.CONTRACT_VERSION
+
+    @property
+    def store_open_contract(self) -> dict:
+        """The store-open contract this handle was opened under (#786); read-only."""
+        return store_contract.describe(self.store_profile, contract.CONTRACT_VERSION)
+
+    def _target(self, target_reference: str) -> str:
+        """The canonical logical memory id for a caller's public key (#786).
+
+        In a ``scope_distinct_v1`` store the facade itself binds every public key to
+        (tenant, project, key); reserved or foreign canonical ids are refused, so no caller can
+        name another project's memory.
+        """
+        if isinstance(target_reference, _CanonicalTarget):
+            return str(target_reference)
+        if self.store_profile != STORE_PROFILE_SCOPE_DISTINCT:
+            return target_reference
+        from .scoped_identity import scope_distinct_key
+
+        return scope_distinct_key(self.tenant, self.scope, target_reference)
+
+    def _check_overrides(self, overrides: Mapping[str, object] | None) -> None:
+        """Bind proposal overrides to the handle's host-bound identity (#786, store-open 1.0.0).
+
+        Checked at every operation's entry, so a refusal never depends on whether the target
+        exists. An internally inconsistent scope keeps its contract 1.8.0 refusal (#786 review
+        F3, replay W4) and is checked first; an override may restate the handle's tenant,
+        project, task and domains but never change them, because re-declaring another
+        project's scope through one handle is multi-project access, which a profiled or
+        restricted legacy store does not admit.
+        """
+        if not overrides:
+            return
+        protected = {
+            "contract_version", "proposal_id", "actor_id", "charter_version", "state_snapshot",
+            "operation", "target_reference", "task_ref",
+        }
+        attempted = protected.intersection(overrides)
+        if attempted:
+            raise ValueError(f"facade proposal overrides may not replace protected fields: {sorted(attempted)}")
+        domains = overrides.get("isolation_domain_refs", self._domain_refs())
+        required = overrides.get("required_isolation_domain_refs", self._domain_refs())
+        if not set(required or ()).issubset(set(domains or ())):
+            raise ValueError("required isolation domains must also be bound isolation domains")
+        bound = {
+            "tenant_ref": self.tenant,
+            "scope": self.scope,
+            "project_ref": self.scope,
+            "isolation_domain_refs": list(self._domain_refs()),
+            "required_isolation_domain_refs": list(self._domain_refs()),
+        }
+        for field, expected in bound.items():
+            if field not in overrides:
+                continue
+            value = overrides[field]
+            normalized = list(value) if isinstance(value, (tuple, list)) else value
+            if normalized != expected:
+                raise ValueError("facade proposal may not override host-bound scope identity")
 
     @property
     def closed(self) -> bool:
@@ -687,20 +957,15 @@ class AgentMemory:
             "required_isolation_domain_refs": list(self._domain_refs()),
             "project_ref": self.scope,
         }
+        if self.task_ref:
+            envelope["task_ref"] = self.task_ref
         if confidence is not None:
             envelope["confidence"] = confidence
         if overrides:
-            protected = {"contract_version", "proposal_id", "actor_id", "charter_version", "state_snapshot"}
-            attempted = protected.intersection(overrides)
-            if attempted:
-                raise ValueError(f"facade proposal overrides may not replace protected fields: {sorted(attempted)}")
+            # #786 (review F3 and store-open 1.0.0): malformed or identity-changing overrides are
+            # refused before any target is resolved.
+            self._check_overrides(overrides)
             envelope.update(dict(overrides))
-            required = set(envelope.get("required_isolation_domain_refs") or ())
-            if not required.issubset(set(envelope.get("isolation_domain_refs") or ())):
-                # #786 (review F3): an internally inconsistent scope is a malformed proposal,
-                # refused before any target is resolved -- it is neither judged against the
-                # target nor allowed to learn the target's version through a PAMA block
-                raise ValueError("required isolation domains must also be bound isolation domains")
         # #786: the snapshot is resolved under the proposal's effective scope (overrides applied)
         state_snapshot = self._state_snapshot(target_reference, envelope)
         refs = tuple(evidence_refs) or ((_content_ref(fact_text),) if fact_text else (f"state:{state_snapshot}",))
@@ -715,6 +980,8 @@ class AgentMemory:
             "fact_ref": _content_ref(fact_text) if fact_text else "",
             "risk_class": risk_class,
         }
+        if self.task_ref:
+            material["task_ref"] = self.task_ref
         envelope["proposal_id"] = "facade:" + hashlib.sha256(_canonical_bytes(material)).hexdigest()
         envelope["state_snapshot"] = state_snapshot
         if "evidence_refs" not in (overrides or {}):
@@ -777,6 +1044,7 @@ class AgentMemory:
         basis ``caller_declared`` and outranks any extractor, which is then not called. It
         grants nothing: PAMA, the read-path guards and the lifecycle are unchanged.
         """
+        target_reference = self._target(target_reference)
         from ..runtime import typed_proposition
         from ..runtime.cross_fact_currentness import validate_source_ref
 
@@ -854,6 +1122,7 @@ class AgentMemory:
         governed correction; it grants nothing, and only explicit historical/as-of recall
         may return a state-changed record, labelled as non-current historical evidence.
         """
+        target_reference = self._target(target_reference)
         temporal = declared_temporal(
             {"valid_from": valid_from, "valid_until": valid_until, "observed_at": observed_at}
         )
@@ -921,6 +1190,8 @@ class AgentMemory:
             "project_ref": self.scope,
             "purpose": self.purpose,
         }
+        if self.task_ref:
+            envelope["task_ref"] = self.task_ref
         return contract.recall_context_from_envelope(contract.validate_recall_context(envelope))
 
     @_serialized
@@ -955,7 +1226,7 @@ class AgentMemory:
                 refusal="semantic_proposal_not_open" if proposal else "semantic_proposal_not_found",
             )
         return self.correct(
-            proposal["target_reference"],
+            _CanonicalTarget(proposal["target_reference"]),
             proposal["replacement_text"],
             evidence=evidence,
             attestation=attestation,
@@ -987,6 +1258,8 @@ class AgentMemory:
         the actual ``memory.dispute`` transition and exact fact UUID. This is deliberately
         separate from correction/supersession and grants no truth or currentness authority.
         """
+        target_reference = self._target(target_reference)
+        self._check_overrides(overrides)
         self._require_open()
 
         def envelope_for(refs):
@@ -1066,8 +1339,23 @@ class AgentMemory:
         bounded deterministic interpreter infers intent from generic temporal cues and
         records its confidence; ``reference_time`` anchors current/prospective
         applicability. Intent only orders admitted candidates (ADR-039, proposed).
+
+        Under the store-open contract the recall keywords may narrow the handle's host-bound
+        identity, never impersonate another principal, project, purpose or task, or add a domain
+        outside the handle's (#786).
         """
         self._require_open()
+        if principal_ref is not None and principal_ref != self.actor_id:
+            raise ValueError("recall principal differs from host-bound identity")
+        if project_ref is not None and project_ref != self.scope:
+            raise ValueError("recall project differs from host-bound identity")
+        if purpose is not None and purpose != self.purpose:
+            raise ValueError("recall purpose differs from host-bound identity")
+        if task_ref is not None and task_ref != self.task_ref:
+            raise ValueError("recall task differs from host-bound identity")
+        if target_domain_refs is not None and not set(target_domain_refs).issubset(self._domain_refs()):
+            raise ValueError("recall domains exceed host-bound identity")
+        logical_memory_refs = tuple(self._target(ref) for ref in logical_memory_refs)
         intent = resolve_intent(query, temporal_intent, reference_time=reference_time)
         domains = tuple(target_domain_refs) if target_domain_refs is not None else self._domain_refs()
         envelope = {
@@ -1077,8 +1365,8 @@ class AgentMemory:
             "project_ref": self.scope if project_ref is None else project_ref,
             "purpose": self.purpose if purpose is None else purpose,
         }
-        if task_ref is not None:
-            envelope["task_ref"] = task_ref
+        if self.task_ref:
+            envelope["task_ref"] = self.task_ref
         if budget is not None:
             envelope["budget"] = {"k": budget}
         validated = contract.validate_recall_context(envelope)
@@ -1186,6 +1474,8 @@ class AgentMemory:
         overrides: Mapping[str, object] | None = None,
     ) -> dict:
         """Tombstone by default; permanent deletion remains a stricter explicit request."""
+        target_reference = self._target(target_reference)
+        self._check_overrides(overrides)
         self._require_open()
         operation = "permanent_deletion" if permanent else "pruning"
         envelope = self._proposal(
@@ -1253,6 +1543,7 @@ class AgentMemory:
 
     @_serialized
     def history(self, target_reference: str, *, fact_text: str | None = None) -> dict:
+        target_reference = self._target(target_reference)
         self._require_open()
         raw = history(
             self.runtime.adapter,

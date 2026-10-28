@@ -52,7 +52,9 @@ import argparse
 import ast
 import copy
 import hashlib
+import importlib.util
 import json
+import marshal
 import re
 import subprocess
 import sys
@@ -63,6 +65,44 @@ ROOT = Path(__file__).resolve().parents[1]
 TEMPLATE_SOURCE = ROOT / "reference" / "run_semantic_route_ordering_report.py"
 TEMPLATE_BLOB_PREFIX = "745f789c"
 THRESHOLD = 0.5
+
+# --- amendment A3 (#786 candidate, pending re-gate) ---------------------------------------------
+# The G3b pin above is the frozen whole-file blob and is never edited. #786 changed code in the
+# template source file *around* CONFLICT_TEMPLATES, which the whole-file pin cannot distinguish
+# from a change to the templates themselves. A3 adds a narrower, stronger proof used only when
+# the file no longer has the frozen blob: the frozen blob object must still resolve; the
+# CONFLICT_TEMPLATES literal parsed from it and from the current file must be identical; the 15
+# derived texts must hash to the recorded digest; and the contamination comparison (tokeniser,
+# similarity, threshold) must hash to the recorded digest. Any difference is refused. Strict
+# historical behaviour stays available with --require-frozen-blob.
+# Re-gate (#786): consumers read the module's runtime value, so the frozen literal must also be
+# the file's only binding of the name, the file must decode identically under Python and as
+# UTF-8, and dynamic-namespace primitives are refused. The recorded comparison digest also covers
+# how K7 and K8 apply the rule (record_texts, overlap_rule, every call site with its loop and
+# branch path, TOKEN flags). Both the frozen path and strict mode require the full frozen blob,
+# not its 32-bit prefix, and the frozen path checks the recorded template texts.
+TEMPLATE_AMENDMENT_ID = "plan-732-g3b-amendment-A3-786"
+TEMPLATE_FROZEN_BLOB = "745f789c01b7a542f906a9034ae63ebdd6776f7c"
+TEMPLATE_TEXTS_SHA256 = "bb4d4da3d02b41a7602d43e85977ef69f091864b5feb42df29e7977d62666fdc"
+# Identical at the gate-binding checker revisions 5555504 (A1 PASS) and 76a9e30 (freeze PASS). At
+# 7b5f7a1 the K7 loops iterate ``corpus`` instead of ``enumerate(corpus)`` (A1 L3): the same records
+# in the same order, but a different syntax tree, so that revision has another digest.
+COMPARISON_RULE_SHA256 = "0bcc7365667fe14a64ec355d5ee6c9e0d35b2aa432e52b53f574fce8761d1f03"
+TEMPLATE_NAME = "CONFLICT_TEMPLATES"
+# Re-gate review 2 (#786): a deny-list of dynamic primitives cannot be complete (function
+# __globals__, frame f_globals, constructed getattr names, builtins reached through attributes).
+# A3 therefore accepts a changed template source only at an audited full blob: one whose effective
+# templates were verified by scripts/a3_regate_evidence.py and an independent review. The static
+# rules below are the audit's mechanical part and must still hold for an audited blob. A new blob
+# is a new audit, recorded here by the gate that passes it.
+AUDITED_TEMPLATE_SOURCE_BLOBS = {
+    "7cb9535695dd5bc760831eba50aefd5622fc1fa5":
+        "#786 run_m4 host binding (scope_distinct_v1, serial host-bound handles); templates unchanged",
+}
+# The checker cannot vouch for itself against edits to itself; the gate binds its blob. In band,
+# any change to this module's syntax tree (outside this assignment) refuses the amendment path
+# until a gate records the new digest (re-gate review 2, D1).
+CHECKER_AUDIT_SHA256 = "ac622bc3565f14eb0fedb1e8e46fd38845fc718328ea4682a82dbbe6ef02a14a"
 
 P_FAMILIES = [f"P{i}" for i in range(1, 14)]
 R_FAMILIES = [f"R{i}" for i in range(1, 8)]
@@ -104,25 +144,306 @@ def similarity(a: str, b: str) -> float:
     return len(sa & sb) / len(union) if union else 0.0
 
 
-def template_texts() -> list[str]:
-    blob = subprocess.run(
-        ["git", "hash-object", str(TEMPLATE_SOURCE)], cwd=ROOT, capture_output=True, text=True, check=True
-    ).stdout.strip()
-    if not blob.startswith(TEMPLATE_BLOB_PREFIX):
-        raise SystemExit(f"template source blob {blob} is not the frozen {TEMPLATE_BLOB_PREFIX}")
-    tree = ast.parse(TEMPLATE_SOURCE.read_text(encoding="utf-8"))
+def _templates_from_source(text: str) -> list:
+    tree = ast.parse(text)
     for node in tree.body:
         if isinstance(node, ast.Assign) and any(getattr(t, "id", None) == "CONFLICT_TEMPLATES" for t in node.targets):
-            rows = ast.literal_eval(node.value)
-            break
-    else:
-        raise SystemExit("CONFLICT_TEMPLATES not found")
+            return ast.literal_eval(node.value)
+    raise SystemExit("CONFLICT_TEMPLATES not found")
+
+
+# Names and attributes through which a module can read or rewrite its own namespace without a
+# syntactic binding of TEMPLATE_NAME (globals().update(...), setattr(sys.modules[...]), exec,
+# a module __class__ swap, a module __getattr__). Neither the frozen blob nor the current file
+# uses any of them, so the rule refuses them outright (re-gate review 1, B2/A1/A2).
+_DYNAMIC_NAMES = frozenset({
+    "globals", "vars", "locals", "setattr", "delattr", "getattr", "exec", "eval", "compile",
+    "__import__", "__builtins__", "builtins", "importlib", "inspect", "ctypes", "gc",
+    "operator", "attrgetter", "methodcaller", "itemgetter",
+})
+# Every dunder attribute (function __globals__, __self__, __dict__, __class__, ...), frame and
+# code attributes, sys._getframe and sys.modules, and the dynamic names reached as attributes.
+_DYNAMIC_ATTRIBUTES = frozenset({"modules", "_getframe", "f_globals", "f_locals", "f_back", "gi_frame", "cr_frame",
+                                 "tb_frame", "co_consts"}) | _DYNAMIC_NAMES
+_DYNAMIC_DEFINITIONS = frozenset({"__getattr__", "__getattribute__", "__dir__", "__setattr__"})
+
+
+def template_binding_violations(text: str) -> list[str]:
+    """Every way ``text`` could bind CONFLICT_TEMPLATES other than one top-level literal assignment.
+
+    Static and conservative. Besides every syntactic binding form (assignment targets of any
+    kind, ``del``, ``global``/``nonlocal``, imports, definitions, parameters, keyword names,
+    patterns, type parameters, attribute stores, the name as a string or bytes literal), it
+    refuses the dynamic-namespace primitives in ``_DYNAMIC_NAMES`` and ``_DYNAMIC_ATTRIBUTES``.
+    Rebinding from other modules and shadowing by another file are outside one file's syntax;
+    ``template_basis`` refuses a shadowing package and the re-gate evidence scans the repository.
+    """
+    tree = ast.parse(text)
+    violations, stores = [], []
+    type_params = tuple(getattr(ast, name) for name in ("TypeVar", "ParamSpec", "TypeVarTuple") if hasattr(ast, name))
+    for node in ast.walk(tree):
+        line = getattr(node, "lineno", "?")
+        if isinstance(node, ast.Name):
+            if node.id == TEMPLATE_NAME and isinstance(node.ctx, (ast.Store, ast.Del)):
+                stores.append(node)
+            elif node.id in _DYNAMIC_NAMES:
+                violations.append(f"dynamic namespace primitive {node.id!r} at line {line}")
+        elif isinstance(node, ast.Attribute):
+            if node.attr == TEMPLATE_NAME and isinstance(node.ctx, (ast.Store, ast.Del)):
+                violations.append(f"attribute binding at line {line}")
+            elif node.attr in _DYNAMIC_ATTRIBUTES or (node.attr.startswith("__") and node.attr.endswith("__")):
+                violations.append(f"dynamic namespace attribute {node.attr!r} at line {line}")
+        elif isinstance(node, (ast.Global, ast.Nonlocal)) and TEMPLATE_NAME in node.names:
+            violations.append(f"{type(node).__name__.lower()} declaration at line {line}")
+        elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)) and (
+                node.name == TEMPLATE_NAME or node.name in _DYNAMIC_DEFINITIONS):
+            violations.append(f"definition of {node.name!r} at line {line}")
+        elif isinstance(node, ast.ImportFrom) and any(alias.name == "*" for alias in node.names):
+            violations.append(f"star import at line {line}")
+        elif isinstance(node, ast.ImportFrom) and (node.module or "").split(".")[0] in _DYNAMIC_NAMES:
+            violations.append(f"import from {node.module!r} at line {line}")
+        elif isinstance(node, ast.alias) and (
+                (node.asname or node.name.split(".")[0]) == TEMPLATE_NAME or node.name.split(".")[0] in _DYNAMIC_NAMES
+                or node.name in _DYNAMIC_ATTRIBUTES):
+            violations.append(f"import binding {node.name!r}")
+        elif isinstance(node, ast.ExceptHandler) and node.name == TEMPLATE_NAME:
+            violations.append(f"exception binding at line {line}")
+        elif isinstance(node, (ast.MatchAs, ast.MatchStar)) and node.name == TEMPLATE_NAME:
+            violations.append(f"pattern binding at line {line}")
+        elif isinstance(node, ast.MatchMapping) and node.rest == TEMPLATE_NAME:
+            violations.append(f"pattern binding at line {line}")
+        elif isinstance(node, ast.arg) and node.arg == TEMPLATE_NAME:
+            violations.append(f"parameter binding at line {line}")
+        elif isinstance(node, ast.keyword) and node.arg == TEMPLATE_NAME:
+            violations.append(f"keyword name at line {line}")
+        elif type_params and isinstance(node, type_params) and node.name == TEMPLATE_NAME:
+            violations.append(f"type parameter at line {line}")
+        elif isinstance(node, ast.Constant) and isinstance(node.value, (str, bytes)) and (
+                TEMPLATE_NAME in (node.value if isinstance(node.value, str) else node.value.decode("latin-1"))):
+            violations.append(f"name used as a literal at line {line}")
+    top = [node for node in tree.body if isinstance(node, ast.Assign) and len(node.targets) == 1
+           and isinstance(node.targets[0], ast.Name) and node.targets[0].id == TEMPLATE_NAME]
+    if len(stores) != 1 or len(top) != 1 or stores[0] is not top[0].targets[0]:
+        violations.append(f"{len(stores)} name bindings; exactly one top-level assignment is required")
+    return violations
+
+
+def python_source(path: Path) -> str:
+    """The source text exactly as the interpreter decodes it (PEP 263 cookie, BOM).
+
+    The checker reads UTF-8; a file Python would decode differently (for example a utf-7
+    cookie, where a UTF-8 comment becomes code) is refused (re-gate review 1, B1).
+    """
+    raw = path.read_bytes()
+    try:
+        as_python = importlib.util.decode_source(raw)
+        as_utf8 = raw.decode("utf-8")
+    except (UnicodeDecodeError, SyntaxError, LookupError) as exc:
+        raise SystemExit(f"{TEMPLATE_AMENDMENT_ID}: template source is not decodable: {exc}") from exc
+    # decode_source applies universal newlines; a CRLF working copy is not a different program.
+    if as_python != as_utf8.replace("\r\n", "\n").replace("\r", "\n"):
+        raise SystemExit(f"{TEMPLATE_AMENDMENT_ID}: template source decodes differently under Python than as UTF-8")
+    try:
+        ast.parse(as_python)
+    except (SyntaxError, ValueError) as exc:
+        raise SystemExit(f"{TEMPLATE_AMENDMENT_ID}: template source does not parse: {exc}") from exc
+    return as_python
+
+
+def shadowing_artifacts(source: Path) -> list[str]:
+    """Host files an importer could load instead of ``source`` (re-gate review 1 A3, review 2 H1).
+
+    A package directory or a sibling module file with the same name (an extension module,
+    a sourceless .pyc) is refused. A bytecode cache entry is refused when an interpreter would
+    load it in place of the source and it cannot be verified: an unchecked hash-based .pyc always;
+    a timestamp or checked-hash .pyc that validates against the source only if it is this
+    interpreter's and its code equals the source compiled here.
+    """
+    import importlib.util as util
+    import sys as _sys
+
+    findings = []
+    stem = source.stem
+    if source.with_suffix("").is_dir():
+        findings.append(f"package {stem}/")
+    findings += [f"sibling {other.name}" for other in sorted(source.parent.glob(f"{stem}.*")) if other != source]
+    raw = source.read_bytes()
+    stat = source.stat()
+    for cached in sorted((source.parent / "__pycache__").glob(f"{stem}.*.pyc")):
+        data = cached.read_bytes()
+        if len(data) < 16:
+            continue
+        flags = int.from_bytes(data[4:8], "little")
+        if flags & 0b1:
+            if not flags & 0b10:
+                findings.append(f"unchecked hash-based bytecode {cached.name}")
+                continue
+            if data[8:16] != util.source_hash(raw):
+                # Normally recompiled, but loaded as-is under --check-hash-based-pycs never.
+                findings.append(f"hash-based bytecode {cached.name} that does not match the source")
+                continue
+            would_load = True
+        else:
+            would_load = (int.from_bytes(data[8:12], "little") == int(stat.st_mtime) & 0xFFFFFFFF
+                          and int.from_bytes(data[12:16], "little") == stat.st_size & 0xFFFFFFFF)
+        if not would_load:
+            continue  # stale: every interpreter recompiles from the source
+        tag = cached.name[len(stem) + 1:].split(".")[0]
+        if tag != _sys.implementation.cache_tag or data[:4] != util.MAGIC_NUMBER:
+            findings.append(f"unverifiable bytecode {cached.name} for another interpreter")
+            continue
+        optimize = {"opt-1": 1, "opt-2": 2}.get(cached.name.split(".")[-2], 0)
+        try:
+            same = marshal.loads(data[16:]) == compile(raw, str(source), "exec", dont_inherit=True, optimize=optimize)
+        except (ValueError, EOFError, TypeError, SyntaxError):
+            same = False
+        if not same:
+            findings.append(f"bytecode {cached.name} differs from the source")
+    return findings
+
+
+def source_blob(path: Path) -> str:
+    """The git blob id of ``path``'s bytes, computed here, not by ``git hash-object``.
+
+    ``git hash-object`` applies clean filters and attributes that untracked host state (a
+    .git/config, an attributes file, GIT_CONFIG_* environment variables) can supply, so it can be
+    made to report the frozen or an audited blob for any bytes (re-gate review 3, R3-1). The one
+    normalisation is the repository's own ``eol=lf``: CRLF becomes LF.
+    """
+    data = path.read_bytes().replace(b"\r\n", b"\n")
+    return hashlib.sha1(b"blob %d\0" % len(data) + data).hexdigest()
+
+
+def checker_audit_digest() -> str:
+    """Digest of this module's syntax tree, without the assignment that records it."""
+    tree = ast.parse(Path(__file__).read_text(encoding="utf-8"))
+    tree.body = [node for node in tree.body
+                 if not (isinstance(node, ast.Assign) and any(getattr(t, "id", "") == "CHECKER_AUDIT_SHA256"
+                                                              for t in node.targets))]
+    return hashlib.sha256(ast.dump(tree).encode("utf-8")).hexdigest()
+
+
+def _rule_objects_intact() -> bool:
+    """The bound rule objects are this module's own definitions, unwrapped, of their exact types."""
+    module_file = Path(__file__).resolve()
+    functions = (tokens, similarity, record_texts, overlap_rule, check)
+    return (type(THRESHOLD) is float and type(TOKEN) is re.Pattern
+            and all(type(function).__name__ == "function" and not hasattr(function, "__wrapped__")
+                    and Path(function.__code__.co_filename).resolve() == module_file
+                    and function.__globals__ is globals() for function in functions))
+
+
+def _texts_from_templates(rows) -> list[str]:
     texts = []
     for _slot, old, new, query in rows:
         texts += [old.replace("{old}", ""), new.replace("{new}", ""), query]
     if len(texts) != 15:
         raise SystemExit(f"expected 15 template texts, found {len(texts)}")
     return texts
+
+
+def texts_digest(texts: list[str]) -> str:
+    return hashlib.sha256(json.dumps(texts, ensure_ascii=False, separators=(",", ":")).encode("utf-8")).hexdigest()
+
+
+def _application_sites(tree: ast.Module) -> list[str]:
+    """How K7 and K8 apply the rule: each overlap_rule call with every enclosing loop and branch header.
+
+    Dropping a call, narrowing its references, iterating fewer records or adding a condition on the
+    path changes the result; so does rebinding ``templates`` inside ``check``.
+    """
+    sites: list[str] = []
+
+    def visit(node, path):
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id == "overlap_rule":
+            sites.append(" > ".join(path + [ast.dump(node)]))
+        header = None
+        if isinstance(node, (ast.For, ast.AsyncFor)):
+            header = "for " + ast.dump(node.target) + " in " + ast.dump(node.iter)
+        elif isinstance(node, (ast.If, ast.While)):
+            header = type(node).__name__.lower() + " " + ast.dump(node.test)
+        elif isinstance(node, ast.comprehension):
+            header = "comp " + ast.dump(node.iter) + " if " + "".join(ast.dump(test) for test in node.ifs)
+        elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            header = "def " + node.name
+        for child in ast.iter_child_nodes(node):
+            visit(child, path + [header] if header else path)
+
+    visit(tree, [])
+    check_function = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "check")
+    bindings = sum(1 for node in ast.walk(check_function)
+                   if isinstance(node, ast.Name) and node.id == "templates" and isinstance(node.ctx, ast.Store))
+    return sites + [f"templates bindings in check: {bindings}"]
+
+
+def comparison_rule_digest() -> str:
+    """Digest of the contamination comparison exactly as this checker executes it."""
+    import inspect
+    import textwrap
+
+    try:
+        parts = [ast.dump(ast.parse(textwrap.dedent(inspect.getsource(function))))
+                 for function in (tokens, similarity, record_texts, overlap_rule)]
+        parts += [TOKEN.pattern, repr(THRESHOLD), f"flags={TOKEN.flags}"]
+        parts += _application_sites(ast.parse(Path(__file__).read_text(encoding="utf-8")))
+    except (OSError, TypeError, SyntaxError, AttributeError, StopIteration):
+        return "unverifiable"  # an unreadable rule is a changed rule
+    return hashlib.sha256("\n".join(parts).encode("utf-8")).hexdigest()
+
+
+def template_basis(source: Path = None, *, require_frozen_blob: bool = False) -> tuple[list[str], str]:
+    """Return the 15 G3b template texts and the basis on which they were accepted."""
+    source = TEMPLATE_SOURCE if source is None else source
+    blob = source_blob(source)
+    # The historical rule pins the blob by its prefix; a 32-bit prefix is forgeable (re-gate review 1,
+    # A4), so both paths require the full frozen blob and, on the frozen path, the recorded texts.
+    if blob == TEMPLATE_FROZEN_BLOB:
+        # Host shadowing defeats the frozen bytes as much as changed ones (re-gate review 3, R3-2).
+        shadows = shadowing_artifacts(source)
+        if shadows:
+            raise SystemExit(f"host files would shadow the frozen template source: {'; '.join(shadows)}")
+        frozen = _texts_from_templates(_templates_from_source(python_source(source)))
+        if texts_digest(frozen) != TEMPLATE_TEXTS_SHA256:
+            raise SystemExit(f"template texts at the frozen blob differ from the recorded digest")
+        return frozen, "frozen_blob"
+    if require_frozen_blob:
+        raise SystemExit(f"template source blob {blob} is not the frozen {TEMPLATE_BLOB_PREFIX}")
+    if blob.startswith(TEMPLATE_BLOB_PREFIX):
+        raise SystemExit(f"{TEMPLATE_AMENDMENT_ID}: template source blob {blob} shares the frozen prefix but is not "
+                         f"the frozen blob {TEMPLATE_FROZEN_BLOB}")
+    shadows = shadowing_artifacts(source)
+    if shadows:
+        raise SystemExit(f"{TEMPLATE_AMENDMENT_ID}: host files would shadow the template source: {'; '.join(shadows)}")
+    frozen_source = subprocess.run(
+        ["git", "cat-file", "-p", TEMPLATE_FROZEN_BLOB], cwd=ROOT, capture_output=True, text=True,
+    )
+    if frozen_source.returncode != 0:
+        raise SystemExit(f"{TEMPLATE_AMENDMENT_ID}: frozen template blob {TEMPLATE_FROZEN_BLOB} is unavailable")
+    frozen_rows = _templates_from_source(frozen_source.stdout)
+    current_source = python_source(source)
+    current = _texts_from_templates(_templates_from_source(current_source))
+    if _templates_from_source(current_source) != frozen_rows:
+        raise SystemExit(f"{TEMPLATE_AMENDMENT_ID}: CONFLICT_TEMPLATES differ from frozen blob {TEMPLATE_FROZEN_BLOB}")
+    if template_binding_violations(frozen_source.stdout):
+        raise SystemExit(f"{TEMPLATE_AMENDMENT_ID}: frozen blob {TEMPLATE_FROZEN_BLOB} fails the binding rule")
+    violations = template_binding_violations(current_source)
+    if violations:
+        raise SystemExit(f"{TEMPLATE_AMENDMENT_ID}: CONFLICT_TEMPLATES is rebound: {'; '.join(violations)}")
+    frozen = _texts_from_templates(frozen_rows)
+    if current != frozen or texts_digest(current) != TEMPLATE_TEXTS_SHA256:
+        raise SystemExit(f"{TEMPLATE_AMENDMENT_ID}: template texts differ from the recorded digest")
+    if blob not in AUDITED_TEMPLATE_SOURCE_BLOBS:
+        raise SystemExit(f"{TEMPLATE_AMENDMENT_ID}: template source blob {blob} is not an audited template source")
+    if comparison_rule_digest() != COMPARISON_RULE_SHA256 or not _rule_objects_intact():
+        raise SystemExit(f"{TEMPLATE_AMENDMENT_ID}: contamination comparison differs from the recorded rule")
+    if checker_audit_digest() != CHECKER_AUDIT_SHA256:
+        raise SystemExit(f"{TEMPLATE_AMENDMENT_ID}: contamination comparison differs from the recorded rule "
+                         "(the checker is not the audited checker)")
+    return current, TEMPLATE_AMENDMENT_ID
+
+
+def template_texts(*, require_frozen_blob: bool = False) -> list[str]:
+    return template_basis(require_frozen_blob=require_frozen_blob)[0]
 
 
 def record_texts(record: dict) -> list[str]:
@@ -289,11 +610,13 @@ def check(
     prior_texts: list[str],
     corpus_files: list | None = None,
     variant_files: list | None = None,
+    *,
+    require_frozen_blob: bool = False,
 ) -> dict:
     def file_of(files: list | None, index: int, default: str) -> str:
         return files[index] if files else default
 
-    templates = template_texts()
+    templates, basis = template_basis(require_frozen_blob=require_frozen_blob)
     rejections: list[dict] = []
     seen_ids: set = set()
     valid_cases: dict = {}
@@ -381,6 +704,7 @@ def check(
         "rejections": rejections,
         "valid_case_ids": sorted(valid_cases),
         "template_blob_prefix": TEMPLATE_BLOB_PREFIX,
+        "template_basis": basis,
         "authority_effect": "none",
     })
     return report
@@ -448,6 +772,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--prior", type=Path, action="append", default=[], help="prior corpus or variants file (holdouts)")
     parser.add_argument("--report", type=Path, help="write the full report here")
     parser.add_argument("--rejections", type=Path, help="write the compact {REJECTIONS} JSON here")
+    parser.add_argument("--require-frozen-blob", action="store_true",
+                        help="strict historical G3b: refuse unless the template source has the frozen blob")
     args = parser.parse_args(argv)
 
     corpus_files = variant_files = None
@@ -482,7 +808,8 @@ def main(argv: list[str] | None = None) -> int:
     if selection is not None and variants is None:
         # A selection without variants: every (base, type) pair is missing (K6_variant_set_complete).
         variants = []
-    report = check(corpus, variants, selection, prior_texts, corpus_files, variant_files)
+    report = check(corpus, variants, selection, prior_texts, corpus_files, variant_files,
+                   require_frozen_blob=args.require_frozen_blob)
     inputs = [args.corpus, args.variants, args.selection, *args.prior]
     if args.author_dir:
         inputs += [args.author_dir / name for names in assembled_files.values() for name in names]

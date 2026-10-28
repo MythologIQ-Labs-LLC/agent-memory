@@ -84,7 +84,7 @@ def _canonical_fact_refs(root: Path) -> set[str]:
         return {str(row[0]) for row in connection.execute("SELECT uuid FROM facts")}
 
 
-def _open(root: Path, *, semantic_retrieval: str = "required", scope: str = SCOPE) -> AgentMemory:
+def _open(root: Path, *, semantic_retrieval: str = "required", scope: str = SCOPE, store_profile=None) -> AgentMemory:
     return AgentMemory.open(
         root,
         tenant=TENANT,
@@ -92,6 +92,7 @@ def _open(root: Path, *, semantic_retrieval: str = "required", scope: str = SCOP
         scope=scope,
         purpose="deterministic semantic erasure qualification",
         semantic_retrieval=semantic_retrieval,
+        store_profile=store_profile,
     )
 
 
@@ -117,7 +118,8 @@ def _authorized_permanent_forget(memory: AgentMemory, target: str = TARGET) -> d
     for this test authority fixture. Production callers must not self-ratify.
     """
     proposal = memory._proposal(
-        target_reference=target,
+        # #786: bind the canonical target the facade resolves (scope_distinct_v1 maps public keys)
+        target_reference=memory._target(target),
         operation="permanent_deletion",
         current_strength="reinforced",
         proposed_strength="not_applicable",
@@ -500,11 +502,12 @@ class SemanticSidecarLifecycleTests(unittest.TestCase):
             root, other_root = Path(folder), Path(other_folder)
             with _provider(), _open(other_root) as other:
                 other_deleted, other_control, other_path = _seed_cached_facts(other)
-            with _provider(), _open(root, scope="project:unrelated") as unrelated:
+            # #786: two projects share this root, so it is a scope_distinct_v1 store.
+            with _provider(), _open(root, scope="project:unrelated", store_profile="scope_distinct_v1") as unrelated:
                 kept = unrelated.remember("memory:unrelated-dog", "The dog next door barks.")
                 unrelated.recall("dog")
                 kept_ref = str(kept["fact_uuid"])
-            with _provider(), _open(root) as memory:
+            with _provider(), _open(root, store_profile="scope_distinct_v1") as memory:
                 deleted_ref, control_ref, cache_path = self._seed_with_extra(memory, kept_ref)
                 _authorized_permanent_forget(memory)
                 self.assertEqual(_stored_fact_refs(cache_path), {control_ref, kept_ref})

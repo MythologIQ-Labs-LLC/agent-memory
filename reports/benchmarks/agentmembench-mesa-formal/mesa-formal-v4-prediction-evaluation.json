@@ -1,0 +1,104 @@
+{
+  "all_predictions_hold": true,
+  "authority_effect": "none",
+  "c7_equal_to_v6_c7": true,
+  "checks": {
+    "P1_dual_version_rate": true,
+    "P1_outcomes": true,
+    "P2_win_basis": true,
+    "P3_primary_stages": true,
+    "P3_unmet_stages": true,
+    "P4_no_guard_failure": true,
+    "P5_upstream_consistent": true,
+    "P6_concurrency_non_latency": true,
+    "P6_conflict_non_latency": true,
+    "P6_deletion_non_latency": true,
+    "P6_isolation_non_latency": true,
+    "P6_retrieval_non_latency": true,
+    "P6_retrieved_digests": true,
+    "P6_scale_non_latency": true,
+    "report_binds_this_freeze": true,
+    "runtime_tree_is_the_frozen_tree": true
+  },
+  "environment": {
+    "packages": {
+      "cryptography": "50.0.1",
+      "httpx": "0.28.1",
+      "jsonschema": "4.26.0",
+      "numpy": "2.4.6",
+      "openai": "2.44.0",
+      "qdrant-client": "1.18.0",
+      "rfc8785": "0.1.4"
+    },
+    "python": "3.11.15"
+  },
+  "evidence_id": "mesa-formal-v4-prediction-evaluation",
+  "executed_at": "1172a20031b439c84ce319c4a1637c756ac0046b",
+  "freeze_id": "agent-memory-agentmembench-mesa-formal-v4",
+  "freeze_sha256": "6f484be94990492660c9b925bb2deb8f57f8ba0b1b844a53a91b5277ec9bfe6b",
+  "inputs_sha256": {
+    "reports/benchmarks/agentmembench-mesa-formal/agent_memory_formal_v3_s2027_9170.json": "fe82bed01917ae1ea8bbbf322b370e34ef02311a910df7eae038698b82a892c9",
+    "reports/benchmarks/agentmembench-mesa-formal/agent_memory_formal_v4_s2027_9170.json": "4c21b7f24e233c40280462c67fb03f0c07a1209d4a3f6b9d3515e740537d4963",
+    "reports/runtime/cross-fact-currentness-671/ordering-difference-report-v6.json": "9b3867f9ce12b929ec83964eb1b255c478d7eaca60822d787fefdb1b3231d797",
+    "reports/runtime/cross-fact-currentness-671/ordering-difference-report-v7.json": "9b3867f9ce12b929ec83964eb1b255c478d7eaca60822d787fefdb1b3231d797"
+  },
+  "judge": "M2 judged recall stays blocked (deviation D1): no authorized judge is provisioned",
+  "on_miss": "any miss of P1-P3 or P5, or any P6 difference, blocks v7 publication on this evidence; nothing is tuned; a remedy is a new plan",
+  "reported_only": {
+    "concurrency_throughput_ops_s": {
+      "1": {
+        "v3": 183.93169578760578,
+        "v4": 21.45638110849519
+      },
+      "16": {
+        "v3": 164.34481598017655,
+        "v4": 20.03215672776088
+      },
+      "4": {
+        "v3": 167.07816347549064,
+        "v4": 21.48590756355847
+      },
+      "8": {
+        "v3": 168.34094204791438,
+        "v4": 19.894013398255638
+      }
+    },
+    "phase_wall_seconds": {
+      "v3": {
+        "concurrency": 4.869,
+        "conflict": 4.302,
+        "deletion": 3.861,
+        "isolation": 3.671,
+        "retrieval": 14.302,
+        "scale": 8.926
+      },
+      "v4": {
+        "concurrency": 38.694,
+        "conflict": 29.109,
+        "deletion": 16.041,
+        "isolation": 64.119,
+        "retrieval": 57.476,
+        "scale": 212.771
+      }
+    }
+  },
+  "runner_label": {
+    "accepted_frozen_score": false,
+    "candidate_only": true,
+    "concurrency_comparable_to_legacy": false,
+    "mode": "serialized-host-bound-scope-candidate-v1",
+    "requires_successor_freeze": true,
+    "timing_comparable_to_legacy": false
+  },
+  "runtime_tree": "eafa528fad90c5ca044bc3c897d351520f921232",
+  "schema_version": 1,
+  "status": "replay executed under the refrozen v4 identity; predictions evaluated; not benchmark acceptance",
+  "upstream": {
+    "dataset_meta_sha256": "4f8e769641e1dafba52850f5954caf6f2ecfbead64af1965357aac25fdec23db",
+    "dataset_sha256": "33632710ae6495b95724df455ff6f9947d231ee68ebc0ef10eb8291fd55ca2a6",
+    "formal_results_sha256sums_sha256": "8322f56dc196c09889a216cbde5f8a86980066ca494012c251510f94ff23c68e",
+    "harness_sha256": "d0d407129aa506f6eacbf6df19a26c1a9ddd000aa0bfb931cb4e4ae984e594df",
+    "revision": "186c9a54edd47aae42d8b6990520f8e902b60303",
+    "worktree_dirty_including_ignored": false
+  }
+}

@@ -22,7 +22,7 @@ from dataclasses import dataclass, field, replace
 from typing import Iterable
 
 from ..core import policy
-from ..runtime.adapter import CommitResult, GovernedMemoryAdapter, RecallContext
+from ..runtime.adapter import OWNERSHIP_CREATOR_PRINCIPAL, CommitResult, GovernedMemoryAdapter, RecallContext
 from ..contracts.capabilities import (
     CapabilityDeclaration,
     CapabilityRequirement,
@@ -242,10 +242,29 @@ class ProceduralMemoryRuntime:
         substrate: TemporalGraphPort,
         adapter: GovernedMemoryAdapter,
         registry: ComponentRegistry,
+        revocation_context: RecallContext | None = None,
+        ownership: str | None = None,
     ) -> None:
+        # #786: only the host that composes this runtime may establish the revoker's identity.
+        # A caller-supplied actor_id or scope on revoke_skill is NOT authority.
+        if revocation_context is not None and not isinstance(revocation_context, RecallContext):
+            raise ValueError("revocation_context must be a host-bound RecallContext")
+        # #786 (opt-in, pending durable SQLite qualification): creator-principal ownership. The
+        # creator is the host-bound principal, never a caller-supplied actor id, and the canonical
+        # adapter enforces ownership on every later write and revocation.
+        if ownership not in (None, OWNERSHIP_CREATOR_PRINCIPAL):
+            raise ValueError(f"unsupported ownership mode {ownership!r}")
+        if ownership is not None and (revocation_context is None or not revocation_context.principal_ref):
+            raise ValueError("creator-principal ownership requires a host-bound principal context")
         self.substrate = substrate
         self.adapter = adapter
         self.registry = registry
+        self._revocation_context = revocation_context
+        self._ownership = ownership
+
+    def _require_host_creator(self, actor_id: str) -> None:
+        if self._ownership is not None and actor_id != self._revocation_context.principal_ref:
+            raise ValueError("skill author does not match host-bound principal")
 
     def resolve_capability(self) -> ResolvedCapability:
         return self.registry.resolve(
@@ -263,6 +282,7 @@ class ProceduralMemoryRuntime:
         actor_id: str,
         proposal_id: str | None = None,
     ) -> SkillProposal:
+        self._require_host_creator(actor_id)
         current_version = self._visible_version(artifact, actor_id)
         if artifact.version != current_version + 1:
             raise ValueError(
@@ -321,6 +341,7 @@ class ProceduralMemoryRuntime:
     def commit_skill(self, skill_proposal: SkillProposal, *, evidence=None) -> SkillCommitResult:
         resolution = self.resolve_capability()
         self._validate_skill_proposal_binding(skill_proposal, require_approval=None)
+        self._require_host_creator(skill_proposal.proposal.actor_id)
         serialized = skill_proposal.artifact.serialize()
         SkillArtifact.from_text(serialized)
         # ADR-037 step 4b-2 (entry #24). Evidence is deliberately NOT attached
@@ -346,7 +367,7 @@ class ProceduralMemoryRuntime:
         # relevant adjudication -- a skill-version-advance policy, say -- can
         # supply it. This module does not author one.
         result = self.adapter.commit_proposal(
-            skill_proposal.proposal, serialized, evidence=evidence
+            skill_proposal.proposal, serialized, evidence=evidence, ownership=self._ownership,
         )
         if result.committed and self.adapter.state_version(skill_proposal.artifact.memory_reference) != skill_proposal.artifact.version:
             raise RuntimeError("committed procedural skill version diverged from governed state version")
@@ -506,40 +527,45 @@ class ProceduralMemoryRuntime:
         required_isolation_domain_refs: tuple[str, ...] = (),
         purpose: str = "",
     ) -> RevocationResult:
-        """Revoke the current skill under the **caller's** declared scope.
+        """Revoke the current skill under the **host-bound** revocation identity.
 
-        #786 (review F4): a governed deletion is held to the targeted head's tenant / domain /
-        project eligibility, and that authority is the caller's to declare -- exactly as
-        ``propose_skill`` declares the artifact's. ``scope`` and ``isolation_domain_refs``
-        name the revoking principal's scope; a caller that declares none proposes under the
-        bare component label, which no retained skill's scope admits (fail closed). The
-        retained artifact's own scope is never copied into the proposal.
+        #786 (security lineage): the revoking principal and its scope are bound by the host that
+        composed this runtime (``revocation_context``), never by the caller. The keyword scope
+        fields (#786 review F4, contract 1.8.0) remain accepted only as a restatement of that
+        binding; a declaration that differs from it is refused before any target is resolved. A
+        head the host-bound principal may not act on reads exactly like a skill that does not
+        exist (third review F-R3-4): the same error, and no uuid or retention detail.
         """
         self.resolve_capability()
+        host = self._revocation_context
+        if host is None:
+            raise ValueError("host-bound revocation identity is required")
+        if not host.principal_ref or actor_id != host.principal_ref:
+            raise ValueError("revocation actor does not match host-bound principal")
+        if not host.project_ref or not host.purpose or not host.target_domain_refs:
+            raise ValueError("revocation requires a complete host-bound context")
+        domains = tuple(host.target_domain_refs)
+        if (
+            (scope and scope not in domains)
+            or (isolation_domain_refs and set(isolation_domain_refs) != set(domains))
+            or not set(required_isolation_domain_refs) <= set(domains)
+            or (purpose and purpose != host.purpose)
+        ):
+            raise ValueError("caller-declared revocation scope must restate the host-bound context")
         memory_ref = f"skill:{skill_id}"
         fact_uuid = self.adapter.current_fact_uuid(memory_ref)
-        if not fact_uuid:
+        if not fact_uuid or not self.adapter.fact_eligible_in_context(fact_uuid, host):
             raise ValueError(f"no current procedural skill exists for {skill_id!r}")
-        if scope:
-            scope_fields = {
-                "scope": scope,
-                "tenant_ref": scope,
-                "purpose": purpose,
-                "isolation_domain_refs": tuple(isolation_domain_refs),
-                "required_isolation_domain_refs": tuple(required_isolation_domain_refs),
-                "project_ref": _project_ref(tuple(isolation_domain_refs)),
-            }
-            caller = self.adapter.writer_context(
-                isolation_domain_refs=scope_fields["isolation_domain_refs"], scope=scope,
-                actor_id=actor_id, project_ref=scope_fields["project_ref"], purpose=purpose)
-            visible = self.adapter.fact_eligible_in_context(fact_uuid, caller)
-        else:
-            scope_fields = {"scope": "procedural-memory"}
-            visible = False
-        if not visible:
-            # #786 (third review F-R3-4): a head the caller may not act on reads exactly like a
-            # skill that does not exist -- the same error, and no uuid or retention detail
-            raise ValueError(f"no current procedural skill exists for {skill_id!r}")
+        tenant = self.substrate.get_fact(fact_uuid).group_id
+        scope_fields = {
+            "scope": tenant,
+            "tenant_ref": tenant,
+            "purpose": host.purpose,
+            "isolation_domain_refs": domains,
+            "required_isolation_domain_refs": domains,
+            "project_ref": host.project_ref,
+            "task_ref": host.task_ref,
+        }
         current_version = self.adapter.state_version(memory_ref)
         proposal = policy.Proposal(
             proposal_id=proposal_id or f"proposal:revoke:{skill_id}:v{current_version}",

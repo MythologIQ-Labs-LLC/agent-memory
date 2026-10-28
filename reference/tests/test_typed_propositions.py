@@ -21,6 +21,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "reference"))
 
 from agentmem_ref import AgentMemory  # noqa: E402
+from tests._tenant_wide_fixture import open_tenant_wide  # noqa: E402
 from agentmem_ref.api import contract  # noqa: E402
 from agentmem_ref.memory import procedural_memory as pm  # noqa: E402
 from agentmem_ref.runtime import cross_fact_currentness as cf  # noqa: E402
@@ -82,7 +83,7 @@ class _Case(unittest.TestCase):
         self._temp.cleanup()
 
     def open(self, *, actor_id: str = ACTOR, scope: str = SCOPE, extractor=None) -> AgentMemory:
-        return AgentMemory.open(self.root, tenant=TENANT, actor_id=actor_id, scope=scope, purpose="typed tests",
+        return open_tenant_wide(self.root, tenant=TENANT, actor_id=actor_id, scope=scope, purpose="typed tests",
                                 proposition_extractor=extractor)
 
     def reopen(self, **kwargs) -> AgentMemory:
@@ -336,8 +337,13 @@ class CallerDeclaredControlTests(_Case):
         self.assertEqual(other.write_semantics(new).get("relations", []), [])
         self.reopen()
         self.assert_not_engaged(old)
-        task_scoped = self.write("c", "room_new", proposition=PROP["room_new"], overrides={"task_ref": "task:other"})
-        self.assertEqual(self.semantics(task_scoped).get("relations", []), [])
+        # Task-specific writes require a host-bound task identity. This
+        # facade is bound to a project only, so an untrusted override must
+        # not impersonate another task; adapter task-recall semantics remain
+        # separately covered by test_isolation_domains.py.
+        with self.assertRaisesRegex(ValueError, "protected fields"):
+            self.write("c", "room_new", proposition=PROP["room_new"],
+                       overrides={"task_ref": "task:other"})
 
     def test_dispute_refuses(self):
         old, new = self.declared_pair()

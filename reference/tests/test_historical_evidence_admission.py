@@ -23,6 +23,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "reference"))
 
 from agentmem_ref import AgentMemory, policy  # noqa: E402
+from tests._tenant_wide_fixture import open_tenant_wide  # noqa: E402
 from agentmem_ref.memory import procedural_memory as pm  # noqa: E402
 
 TENANT = "tenant:history"
@@ -32,7 +33,7 @@ HISTORICAL = {"mode": "historical"}
 
 
 def _open(root: str, scope: str = SCOPE) -> AgentMemory:
-    return AgentMemory.open(root, tenant=TENANT, actor_id="agent:history", scope=scope, purpose="history tests")
+    return open_tenant_wide(root, tenant=TENANT, actor_id="agent:history", scope=scope, purpose="history tests")
 
 
 def _evidence(scope: str = SCOPE):

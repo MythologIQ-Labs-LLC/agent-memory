@@ -17,6 +17,7 @@ from unittest import mock
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from agentmem_ref import AgentMemory  # noqa: E402
+from tests._tenant_wide_fixture import open_tenant_wide  # noqa: E402
 from agentmem_ref.runtime import representation_onnx  # noqa: E402
 from agentmem_ref.runtime.ranking_policy import PostAdmissionRankingPolicy  # noqa: E402
 from agentmem_ref.runtime.runtime_composition import (  # noqa: E402
@@ -212,12 +213,14 @@ class FacadeSemanticTests(unittest.TestCase):
     def test_out_of_scope_facts_are_never_semantic_candidates(self):
         root = tempfile.mkdtemp()
         with mock.patch.object(representation_onnx, "OnnxSentenceEmbeddingProvider", _Fixture):
-            with AgentMemory.open(root, semantic_retrieval="required") as memory:
-                domains = [memory.tenant, "project:other"]
-                memory.remember("memory:x", "The user's dog is called Biscuit.",
-                                overrides={"scope": "project:other", "project_ref": "project:other",
-                                           "isolation_domain_refs": domains,
-                                           "required_isolation_domain_refs": domains})
+            # Seed through a real foreign-scope runtime, not through a
+            # forged proposal on the owner handle (#786).
+            with open_tenant_wide(
+                root, scope="project:other", semantic_retrieval="required"
+            ) as foreign:
+                written = foreign.remember("memory:x", "The user's dog is called Biscuit.")
+                self.assertTrue(written["committed"], written)
+            with open_tenant_wide(root, semantic_retrieval="required") as memory:
                 result = memory.recall("Which pet?")
                 self.assertEqual(result["candidates"], [])
 

@@ -20,6 +20,7 @@ from unittest import mock
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from agentmem_ref import AgentMemory  # noqa: E402
+from tests._tenant_wide_fixture import open_tenant_wide  # noqa: E402
 from agentmem_ref.api import surface  # noqa: E402
 from agentmem_ref.runtime import representation_onnx  # noqa: E402
 from agentmem_ref.runtime.recall_control import (  # noqa: E402
@@ -59,13 +60,8 @@ def _seed_adversarial(memory: AgentMemory) -> None:
     for index in range(40):
         memory.remember(f"memory:budget:{index}", f"The quarterly budget review number {index} discussed the budget.")
     memory.remember("memory:budget:current", "The budget is now final.")
-    domains = [memory.tenant, "project:other"]
-    memory.remember(
-        "memory:foreign",
-        "The budget of the other project is secret.",
-        overrides={"scope": "project:other", "project_ref": "project:other",
-                   "isolation_domain_refs": domains, "required_isolation_domain_refs": domains},
-    )
+    # The cross-project fixture is seeded under a distinct trusted handle
+    # after this writer closes. Proposal overrides cannot forge project identity.
 
 
 def _retrieval(result: dict) -> dict:
@@ -77,13 +73,26 @@ class FacadeShadowRecallControlTests(unittest.TestCase):
         # Two byte-identical copies of one seeded store, so audit sequence numbers and the
         # deterministic clock advance identically in both modes.
         root = Path(tempfile.mkdtemp()) / "seeded"
-        with AgentMemory.open(root, **open_kwargs) as memory:
+        with open_tenant_wide(root, **open_kwargs) as memory:
             seed(memory)
+            tenant, actor_id, charter_version = memory.tenant, memory.actor_id, memory.charter_version
+        if seed is _seed_adversarial:
+            # Use an actual foreign project writer; do not impersonate one
+            # through the local handle's proposal overrides (#786).
+            with open_tenant_wide(
+                root, tenant=tenant, actor_id=actor_id,
+                charter_version=charter_version, scope="project:other",
+                purpose="shadow recall foreign-scope fixture",
+            ) as foreign:
+                created = foreign.remember(
+                    "memory:foreign", "The budget of the other project is secret."
+                )
+                self.assertTrue(created["committed"], created)
         outputs = {}
         for mode in ("off", "shadow"):
             copy = Path(tempfile.mkdtemp()) / mode
             shutil.copytree(root, copy)
-            with AgentMemory.open(copy, recall_control=mode, **open_kwargs) as memory:
+            with open_tenant_wide(copy, recall_control=mode, **open_kwargs) as memory:
                 outputs[mode] = [memory.recall(query, **kwargs) for query, kwargs in queries]
         return outputs
 

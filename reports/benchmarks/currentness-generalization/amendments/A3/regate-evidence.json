@@ -1,0 +1,115 @@
+{
+  "all_checks_hold": true,
+  "amendment_id": "plan-732-g3b-amendment-A3-786",
+  "audit": {
+    "audited_template_source_blobs": {
+      "7cb9535695dd5bc760831eba50aefd5622fc1fa5": "#786 run_m4 host binding (scope_distinct_v1, serial host-bound handles); templates unchanged"
+    },
+    "checker_audit_digest_matches": true,
+    "checker_audit_digest_recorded": "ac622bc3565f14eb0fedb1e8e46fd38845fc718328ea4682a82dbbe6ef02a14a",
+    "shadowing_artifacts": [],
+    "template_source_blob_audited": true
+  },
+  "authority_effect": "none",
+  "check_body": {
+    "a3_lines": [
+      "keyword-only require_frozen_blob",
+      "templates, basis = template_basis(...)",
+      "report key template_basis"
+    ],
+    "against": "76a9e30e191dd1e21c524a5425c6d4708c24d768",
+    "equal_after_undoing_a3": true
+  },
+  "checks": {
+    "check body equals 76a9e30 but A3": true,
+    "checker is the audited checker": true,
+    "digest matches": true,
+    "effective value frozen": true,
+    "no repository attribute or imported-name rebinding": true,
+    "no tracked or host shadowing": true,
+    "recorded rejections reproduced": true,
+    "replay bases": true,
+    "replay byte-identical": true,
+    "sensitivity complete": true,
+    "strict refuses current": true,
+    "template source is an audited blob": true,
+    "tests pass": true,
+    "worktree clean": true
+  },
+  "comparison_digest": {
+    "independent": {
+      "5555504": "0bcc7365667fe14a64ec355d5ee6c9e0d35b2aa432e52b53f574fce8761d1f03",
+      "76a9e30": "0bcc7365667fe14a64ec355d5ee6c9e0d35b2aa432e52b53f574fce8761d1f03",
+      "HEAD": "0bcc7365667fe14a64ec355d5ee6c9e0d35b2aa432e52b53f574fce8761d1f03"
+    },
+    "matches_at_gate_revisions_and_head": true,
+    "recorded": "0bcc7365667fe14a64ec355d5ee6c9e0d35b2aa432e52b53f574fce8761d1f03"
+  },
+  "effective_value": {
+    "consumer_equals_frozen": true,
+    "direct_equals_frozen": true
+  },
+  "evidence_id": "plan-732-g3b-amendment-A3-786-regate-evidence",
+  "historical_replay": {
+    "comparisons": {
+      "attempt2": {
+        "equals_recorded_rejections_final": true,
+        "frozen_checker_exit": 0,
+        "head_basis": "plan-732-g3b-amendment-A3-786",
+        "head_exit": 0,
+        "head_strict_on_frozen_bytes_basis": "frozen_blob",
+        "rejections": [],
+        "rejections_byte_identical": true,
+        "report_identical_but_template_basis": true,
+        "stdout_byte_identical": true
+      },
+      "freeze": {
+        "frozen_checker_exit": 0,
+        "head_basis": "plan-732-g3b-amendment-A3-786",
+        "head_exit": 0,
+        "head_strict_on_frozen_bytes_basis": "frozen_blob",
+        "rejections": [],
+        "rejections_byte_identical": true,
+        "report_identical_but_template_basis": true,
+        "stdout_byte_identical": true
+      }
+    },
+    "frozen_checker_revision": "76a9e30e191dd1e21c524a5425c6d4708c24d768",
+    "strict_mode_on_current_source": {
+      "exit": 1,
+      "refused_with_historical_message": true
+    }
+  },
+  "identity": {
+    "a3_tests_blob": "edb93cbabeac6540d5b36ab8c7aa11a41fed7a24",
+    "checker_blob": "e2967b54bf0ad67bbce6f6c3ffb020e884d4ef5d",
+    "frozen_template_blob": "745f789c01b7a542f906a9034ae63ebdd6776f7c",
+    "head": "f6ed487e20e0004def68c277a12a28bab52151c3",
+    "python": "3.12.3",
+    "template_source_blob": "7cb9535695dd5bc760831eba50aefd5622fc1fa5",
+    "tree": "ad6a9d4df211baba3990c3cdd557a44d7c42dae2",
+    "worktree_clean_for_inputs": true
+  },
+  "mutation_sensitivity": {
+    "equivalent": [
+      "global clause removed",
+      "binding identity clause removed",
+      "unreadable rule accepted",
+      "frozen blob binding check removed"
+    ],
+    "exit": 0,
+    "killed": 53,
+    "summary": "every must-detect mutation was killed (53/53); 53 killed in total",
+    "survived": []
+  },
+  "repository_scan": {
+    "rebinding_findings": [],
+    "shadowing_paths": []
+  },
+  "schema_version": 1,
+  "tests": {
+    "exit": 0,
+    "summary": "OK",
+    "tests": 56
+  }
+}

@@ -29,6 +29,22 @@ query / task
 
 Candidate generation may be probabilistic. Admission and scope enforcement must be explicit and bounded.
 
+## Discovery and traversal boundaries
+
+The [actor/scope contract](29-actor-scope-consent-and-tenancy.md) and [isolation-domain contract](41-memory-isolation-domains-and-governed-crossing.md) govern permission to discover and traverse memory. [ADR-013](adr/ADR-013-governed-recall-planner-is-required.md) continues to govern recall admission. These are complementary boundaries, not competing admission authorities.
+
+For a caller-supplied logical identity or a candidate used as a graph-expansion origin, retrieval planning must distinguish the following stages:
+
+1. **Resolve and prefilter.** A logical reference is only a request to look up an identity, not proof of authorization. Check the current candidate against the caller's domain before it contributes an exact-route hit, expansion seed, provenance, or candidate budget.
+2. **Recheck immediately before traversal.** A selected seed may have been revoked or become ineligible. Re-evaluate the runtime's existing domain-eligibility predicate and relevant lifecycle conditions at the operation boundary. An ineligible or missing seed must not initiate evidence-neighbor or typed-graph traversal.
+3. **Collect bounded candidates.** Scope filtering must precede consumption of a limited seed budget: invalid, missing or foreign identities cannot crowd out eligible seeds. No eligible graph seed means no traversal call.
+4. **Admit canonically.** Every candidate that survives discovery still passes the existing canonical admission check. Early filtering is not admission and does not grant memory authority.
+5. **Return authorized evidence.** Caller-visible candidates, route counts, selection traces and provenance must not reveal an unauthorized seed or distinguish a foreign identity from an unknown one merely because of traversal side effects.
+
+These rules apply consistently to default multi-route, query-driven and controlled recall, including typed-graph and shared-evidence paths. They describe required behavior; they do not certify that a particular revision implements it. When testing canonical admission refusals, a deliberate prefilter bypass must be labeled **admission-only** and must not be presented as a test of ordinary discovery isolation.
+
+The implementation owners are the retrieval planners in `reference/agentmem_ref/runtime/`, using the adapter's existing domain-eligibility semantics, and their security regression tests under `reference/tests/`. Exact implementation maturity and acceptance remain governed by source revision, runtime-baseline succession and executed evidence. A security fix is not proof of better benchmark precision; benchmark interpretation remains with [BENCHMARKS.md](../BENCHMARKS.md).
+
 ## Retrieval modes
 
 A planner may compose:

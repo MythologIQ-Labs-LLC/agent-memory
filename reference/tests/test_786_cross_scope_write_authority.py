@@ -27,6 +27,10 @@ from agentmem_ref.api import contract, surface
 from agentmem_ref.runtime.adapter import Clock, GovernedMemoryAdapter
 from agentmem_ref.runtime.restart_runtime import RuntimeCheckpointConflict, RuntimeRecoveryError
 from agentmem_ref.substrate import Episode, InMemoryTemporalGraph
+# #786 store identity profiles: this module drives several projects through one tenant-wide store to
+# exercise the canonical adapter gates; AgentMemory.open admits that only as scope_distinct_v1, so the
+# test-only tenant-wide fixture reproduces the pre-profile store (tests/_tenant_wide_fixture.py).
+from tests._tenant_wide_fixture import open_tenant_wide
 import re
 from tests.test_644_combined_independent import _evidence, _prop
 
@@ -56,7 +60,9 @@ class _TwoProjects(unittest.TestCase):
         self.addCleanup(lambda: self.memory.closed or self.memory.close())
 
     def open(self, scope="project:a", **kwargs):
-        return AgentMemory.open(self.root, tenant=TENANT, actor_id=ACTOR, scope=scope, purpose="c786", **kwargs)
+        # host-declared overrides: these suites exercise the canonical gates on scopes a host declares
+        return open_tenant_wide(self.root, tenant=TENANT, actor_id=ACTOR, scope=scope, purpose="c786",
+                                host_declared_overrides=True, **kwargs)
 
     def reopen(self, scope="project:a"):
         self.memory.close()
@@ -1113,21 +1119,43 @@ class ProceduralReviewFindings(unittest.TestCase):
         with self.assertRaises(ValueError):  # a non-member still resolves the version as 0 and may not advance it
             self.runtime.propose_skill(_skill("shared:x", version=3, domains=("shared:x",), required=()), actor_id="agent:stranger")
 
+    def _host_runtime(self, actor: str, project: str):
+        """A procedural runtime composed by the host for one revoking principal (#786 security lineage)."""
+        from agentmem_ref.capabilities import ComponentRegistry
+        from agentmem_ref.runtime.adapter import RecallContext
+        registry = ComponentRegistry()
+        registry.register(pm.reference_procedural_component())
+        context = RecallContext(target_domain_refs=(TENANT, project), principal_ref=actor, project_ref=project, purpose="c786")
+        return pm.ProceduralMemoryRuntime(adapter=self.adapter, substrate=self.substrate, registry=registry,
+                                          revocation_context=context)
+
     def test_f4_revocation_carries_the_callers_scope_not_the_targets(self):
         head = self.runtime.commit_skill(self.runtime.propose_skill(_skill("project:a"), actor_id="agent:a")).commit.fact_uuid
         other = self.runtime.propose_skill(_skill("project:b"), actor_id="agent:b")
         self.assertFalse(self.runtime.commit_skill(other).commit.committed)
-        # fail closed: a bare or wrong-scope revocation reads like an unknown skill (third review F-R3-4)
-        with self.assertRaises(ValueError):
+        # Integration (#786 security lineage): the revoker's scope is the host's binding, not a caller
+        # declaration; a runtime composed without one refuses every revocation.
+        with self.assertRaisesRegex(ValueError, "host-bound revocation identity is required"):
             self.runtime.revoke_skill("deploy", actor_id="agent:b", evidence_refs=("ev:b",))
-        with self.assertRaises(ValueError):
-            self.runtime.revoke_skill("deploy", actor_id="agent:b", evidence_refs=("ev:b",), scope="project:b",
-                                      isolation_domain_refs=(TENANT, "project:b"),
-                                      required_isolation_domain_refs=(TENANT, "project:b"), purpose="c786")
+        b_host = self._host_runtime("agent:b", "project:b")
+        # fail closed: a wrong-scope revocation reads like an unknown skill (third review F-R3-4)
+        with self.assertRaises(ValueError) as foreign:
+            b_host.revoke_skill("deploy", actor_id="agent:b", evidence_refs=("ev:b",))
+        with self.assertRaises(ValueError) as unknown:
+            b_host.revoke_skill("never-written", actor_id="agent:b", evidence_refs=("ev:b",))
+        self.assertEqual(str(foreign.exception).replace("'deploy'", "<id>"),
+                         str(unknown.exception).replace("'never-written'", "<id>"))
+        # the caller may restate the host's scope, never another one
+        with self.assertRaisesRegex(ValueError, "must restate the host-bound context"):
+            b_host.revoke_skill("deploy", actor_id="agent:b", evidence_refs=("ev:b",), scope="project:a",
+                                isolation_domain_refs=(TENANT, "project:a"))
+        with self.assertRaisesRegex(ValueError, "does not match host-bound principal"):
+            b_host.revoke_skill("deploy", actor_id="agent:a", evidence_refs=("ev:b",))
         self.assertEqual(self.adapter.current_fact_uuid("skill:deploy"), head)
-        owner = self.runtime.revoke_skill("deploy", actor_id="agent:a", evidence_refs=("ev:a",), scope="project:a",
-                                          isolation_domain_refs=(TENANT, "project:a"),
-                                          required_isolation_domain_refs=(TENANT, "project:a"), purpose="c786")
+        owner = self._host_runtime("agent:a", "project:a").revoke_skill(
+            "deploy", actor_id="agent:a", evidence_refs=("ev:a",), scope="project:a",
+            isolation_domain_refs=(TENANT, "project:a"), required_isolation_domain_refs=(TENANT, "project:a"),
+            purpose="c786")
         self.assertTrue(owner.commit.committed, owner.commit.refusal)
 
 

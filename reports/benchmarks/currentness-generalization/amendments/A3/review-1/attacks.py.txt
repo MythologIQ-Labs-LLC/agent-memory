@@ -1,0 +1,86 @@
+"""Judge A3: try to get template_basis() to accept a source whose effective CONFLICT_TEMPLATES differs.
+
+For each variant: (1) run the 0173adf7 checker's template_basis(path); (2) import the variant as a
+module (the way run_cross_fact_currentness_report.py does: `from <mod> import CONFLICT_TEMPLATES`)
+and also read the value the module's own run_m4 sees (its globals); compare with the frozen value.
+"""
+import importlib.util
+import subprocess
+import sys
+from pathlib import Path
+
+REPO = Path("/home/user/agent-memory")
+sys.path.insert(0, str(REPO / "scripts"))
+sys.path.insert(0, str(REPO / "reference"))
+import check_generalization_corpus as checker  # noqa: E402
+
+HERE = Path(__file__).resolve().parent / "variants"
+HERE.mkdir(exist_ok=True)
+SRC = checker.TEMPLATE_SOURCE.read_text(encoding="utf-8")
+FROZEN_ROWS = tuple(checker._templates_from_source(SRC))
+ALT = '(("location", "EVIL {old}", "EVIL {new}", "EVIL?"),)'
+
+# run_m4 body token used by the module itself: replace its signature to add a parameter default.
+SIG = "def run_m4(pairs: int = 50) -> dict:"
+assert SIG in SRC
+
+VARIANTS = {
+    # keyword-argument name is a str field of ast.keyword, not an ast.Constant
+    "globals_update_kwarg": SRC + f"\nglobals().update(CONFLICT_TEMPLATES={ALT})\n",
+    "vars_update_kwarg": SRC + f"\nvars().update(CONFLICT_TEMPLATES={ALT})\n",
+    # constructed key (not exec/eval)
+    "globals_concat_key": SRC + f"\nglobals()['CONFLICT_' + 'TEMPLATES'] = {ALT}\n",
+    "setattr_join": SRC + f"\nimport sys as _s\nsetattr(_s.modules[__name__], '_'.join(['CONFLICT', 'TEMPLATES']), {ALT})\n",
+    # bytes literal exec (not a constructed string)
+    "exec_bytes": SRC + f"\nexec(b'CONFLICT_TEMPLATES = {ALT}')\n",
+    # module __class__ swap: importers see a different attribute, no name string
+    "module_class_getattribute": SRC + (
+        "\nimport sys as _s, types as _t\n"
+        "class _M(_t.ModuleType):\n"
+        "    def __getattribute__(self, name):\n"
+        "        if name.endswith('_TEMPLATES'):\n"
+        f"            return {ALT}\n"
+        "        return super().__getattribute__(name)\n"
+        "_s.modules[__name__].__class__ = _M\n"),
+    # function parameter shadows the global inside run_m4 (the module's own consumer)
+    "run_m4_parameter": SRC.replace(SIG, f"def run_m4(pairs: int = 50, CONFLICT_TEMPLATES={ALT}) -> dict:"),
+    "lambda_parameter": SRC + f"\n_f = lambda CONFLICT_TEMPLATES={ALT}: CONFLICT_TEMPLATES\n",
+    # PEP 263: Python decodes as UTF-7; the checker reads the bytes as UTF-8, where it is a comment
+    "_utf7_unused": "# -*- coding: utf-7 -*-\n" + SRC + "\n# +AAo-CONFLICT+AF8-TEMPLATES +AD0- " + ALT.replace("(", "+ACg-").replace(")", "+ACk-").replace('"', "+ACI-").replace("{", "+AHs-").replace("}", "+AH0-").replace("?", "+AD8-").replace(",", "+ACw-") + "\n",
+}
+
+
+def effective(path: Path, name: str):
+    spec = importlib.util.spec_from_file_location(f"judge_{name}", path)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    module = sys.modules[spec.name]
+    imported = getattr(module, "CONFLICT_TEMPLATES")  # what `from mod import CONFLICT_TEMPLATES` gets
+    run_m4_value = module.run_m4.__defaults__  # parameter default if any
+    m4 = None
+    if run_m4_value and len(run_m4_value) > 1:
+        m4 = run_m4_value[1]
+    return imported, m4
+
+
+for name, text in VARIANTS.items():
+    if name.startswith("_"):
+        continue
+    path = (HERE / f"{name}.py").resolve()
+    path.write_text(text, encoding="utf-8")
+    try:
+        _texts, basis = checker.template_basis(path)
+        verdict = f"ACCEPTED basis={basis}"
+    except SystemExit as exc:
+        verdict = f"refused: {str(exc)[:90]}"
+    try:
+        imported, m4 = effective(path, name)
+        glob = sys.modules[f"judge_{name}"].__dict__["CONFLICT_TEMPLATES"]
+        seen_by_m4 = m4 if m4 is not None else glob
+        eff = "DIFFERS" if tuple(imported) != FROZEN_ROWS else "same"
+        eff += f"; run_m4 uses {'DIFFERENT' if tuple(seen_by_m4) != FROZEN_ROWS else 'frozen'}"
+    except Exception as exc:  # noqa: BLE001
+        eff = f"import error {type(exc).__name__}: {exc}"
+    blob = subprocess.run(["git", "hash-object", str(path)], capture_output=True, text=True).stdout.strip()
+    print(f"{name:28s} checker: {verdict:60s} imported value: {eff}  blob={blob[:12]}")

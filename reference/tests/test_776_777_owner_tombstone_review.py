@@ -17,6 +17,10 @@ from dataclasses import replace
 
 from agentmem_ref import AgentMemory, policy
 from agentmem_ref.verification import TRANSITION_VERIFIER, VerifierRegistry
+# #786 store identity profiles: this module drives several projects through one tenant-wide store to
+# exercise the canonical adapter gates; AgentMemory.open admits that only as scope_distinct_v1, so the
+# test-only tenant-wide fixture reproduces the pre-profile store (tests/_tenant_wide_fixture.py).
+from tests._tenant_wide_fixture import open_tenant_wide
 from tests.qualified_fixtures import corpus_for, rule
 from tests.test_644_combined_independent import _evidence, _prop
 from tests.test_776_adversarial_review import _Facade
@@ -167,7 +171,7 @@ class PermanentDeletionVisibility(unittest.TestCase):
         self.registry.register(TRANSITION_VERIFIER, lambda item: any(v(item) for v in self._verifiers))
 
     def open(self, scope=PROJECT):
-        return AgentMemory.open(self.root, tenant=self.TENANT, actor_id="agent:c644", scope=scope,
+        return open_tenant_wide(self.root, tenant=self.TENANT, actor_id="agent:c644", scope=scope,
                                 purpose="c644", verifier_registry=self.registry)
 
     def purge(self, memory_handle, memory):

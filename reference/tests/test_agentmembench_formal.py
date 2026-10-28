@@ -6,7 +6,9 @@ non-benchmark text, so they cannot be used to fit the adapter to scores.
 
 from __future__ import annotations
 
+import hashlib
 import json
+import subprocess
 import sys
 import unittest
 from pathlib import Path
@@ -272,9 +274,13 @@ class JudgeTests(unittest.TestCase):
 
 V2_FREEZE = formal.FREEZE_DIR / "mesa-formal-v2-freeze.json"
 V3_FREEZE = formal.FREEZE_DIR / "mesa-formal-v3-freeze.json"
+V4_FREEZE = formal.FREEZE_DIR / "mesa-formal-v4-freeze.json"
 # The runner at 7b041a7, which the v1 freeze binds and where v1 replays run (docs/69
 # "Determinism"). Hard-coded: CI checkouts are shallow, so the commit is not readable there.
 V1_RUNNER_SHA256 = "58b2fced97a82d762a3cb24325af31173248431837880cd9b19b0a70ae55540c"
+# The runner v2 and v3 were frozen against (75b8696). #786 changed the runner, so the live
+# runner now executes under mesa-formal-v4; v2 and v3 keep binding this one.
+V2_V3_RUNNER_SHA256 = "bc2415929e95061bf50fd9c3db33bf61ad311716cdecc285deb71682c64677ea"
 # docs/plan-671-evidence-v5.md E5: the classifier and its stage vocabulary are unchanged
 # from 7b041a7 (sha256 of the function source, and of each tuple's JSON).
 CLASSIFIER_SOURCE_SHA256 = "65961b6f37f74845b0bd01f2d9cd05c0c62631a68bf6f3986caeeb2d7f870302"
@@ -291,12 +297,17 @@ CLASSIFIER_CONSTANT_SHA256 = {
 
 class FreezeTests(unittest.TestCase):
     def test_runner_digest_matches_freeze(self):
-        # The current runner executes under the v2 freeze; the v1 freeze keeps binding the
-        # 7b041a7 runner, so a v1 replay on this runner is refused by design (verify_self).
-        self.assertEqual(formal.sha256_file(Path(formal.__file__)), formal.load_freeze(V2_FREEZE)["runner"]["sha256"])
+        # The current runner executes under the v4 freeze (#786). Every earlier freeze keeps
+        # binding the runner it was frozen against, so replaying v1, v2 or v3 on this runner
+        # is refused by design (verify_self).
+        self.assertEqual(formal.sha256_file(Path(formal.__file__)), formal.load_freeze(V4_FREEZE)["runner"]["sha256"])
         self.assertEqual(formal.load_freeze()["runner"]["sha256"], V1_RUNNER_SHA256)
-        with self.assertRaises(SystemExit):
-            formal.verify_self(formal.load_freeze())
+        self.assertEqual(formal.load_freeze(V2_FREEZE)["runner"]["sha256"], V2_V3_RUNNER_SHA256)
+        self.assertEqual(formal.load_freeze(V3_FREEZE)["runner"]["sha256"], V2_V3_RUNNER_SHA256)
+        for frozen in (formal.load_freeze(), formal.load_freeze(V2_FREEZE), formal.load_freeze(V3_FREEZE)):
+            with self.assertRaises(SystemExit):
+                formal.verify_self(frozen)
+        formal.verify_self(formal.load_freeze(V4_FREEZE))
 
     def test_freeze_binds_runtime_baseline_v2_policy_and_contract(self):
         # Historical binding (#669): the v1 freeze binds the Runtime Baseline v2 runtime
@@ -444,7 +455,8 @@ class SuccessorFreezeV3Tests(unittest.TestCase):
         self.assertEqual(self.v3["agent_memory"]["ranking_policy_version"], "3.4.0")
         self.assertEqual(self.v3["agent_memory"]["public_contract_version"], "1.6.0")
         self.assertEqual(self.v3["agent_memory"]["ranking_policy_id"], observed["ranking_policy_id"])
-        self.assertEqual(formal.sha256_file(Path(formal.__file__)), self.v3["runner"]["sha256"])
+        # v3 keeps binding the runner it was frozen against; the live runner moved to v4 (#786).
+        self.assertEqual(self.v3["runner"]["sha256"], V2_V3_RUNNER_SHA256)
         declaration = json.loads((REFERENCE.parent / "reports" / "runtime" / "baseline-v6-declaration.json").read_text())
         deltas = {item["identity_path"]: item["to"] for item in declaration["identity_deltas"]}
         self.assertEqual(deltas["identity.ranking.active_policy_version"], self.v3["agent_memory"]["ranking_policy_version"])
@@ -455,6 +467,97 @@ class SuccessorFreezeV3Tests(unittest.TestCase):
             self.assertEqual(self.v3["predictions"][key], self.v2["predictions"][key], key)
         self.assertIn("any P6 difference", self.v3["predictions"]["on_miss"])
         self.assertIn("retrieved sha256", self.v3["predictions"]["P6"])
+
+
+
+class SuccessorFreezeV4Tests(unittest.TestCase):
+    """#786: mesa-formal-v4 differs from v3 only where listed; it is a transition declaration.
+
+    Freezing a protocol identity is not a run, a publication or benchmark acceptance; its
+    predictions are preregistered and are tested only by a replay at the frozen identity.
+    """
+
+    CHANGED = {"freeze_id", "supersedes", "owning_issue", "frozen_on", "status", "run_id", "adapter", "runner",
+               "agent_memory", "predictions"}
+    # 2026-10-28 owner decision: v4 is refrozen against the current runtime and runner. The
+    # refreeze adds only its provenance record and moves only agent_memory.runtime_tree.
+    ADDED = {"refreeze"}
+
+    def setUp(self):
+        self.v3 = formal.load_freeze(V3_FREEZE)
+        self.v4 = formal.load_freeze(V4_FREEZE)
+
+    def test_field_differences_are_exhaustive(self):
+        self.assertEqual(set(self.v4), set(self.v3) | self.ADDED)
+        for key in set(self.v3) - self.CHANGED:
+            self.assertEqual(self.v4[key], self.v3[key], key)
+        adapter_changed = {key for key in self.v3["adapter"] if self.v3["adapter"][key] != self.v4["adapter"][key]}
+        self.assertEqual(adapter_changed, {"surface", "search_mapping"})
+        self.assertIn("scope_distinct_v1", self.v4["adapter"]["surface"])
+        self.assertIn("contract 1.6.0", self.v4["adapter"]["surface"])
+        memory_changed = {key for key in self.v3["agent_memory"] if self.v3["agent_memory"][key] != self.v4["agent_memory"][key]}
+        self.assertEqual(memory_changed, {"runtime_tree"})
+        self.assertEqual(self.v4["m4_classifier"], self.v3["m4_classifier"])
+
+    def test_identity_and_supersession(self):
+        self.assertEqual(self.v4["freeze_id"], "agent-memory-agentmembench-mesa-formal-v4")
+        self.assertEqual(self.v4["owning_issue"], 786)
+        self.assertEqual(self.v4["run_id"], "agent_memory_formal_v4_s2027_9170")
+        self.assertNotEqual(self.v4["run_id"], self.v3["run_id"])
+        self.assertEqual(self.v4["supersedes"], {
+            "freeze_id": self.v3["freeze_id"],
+            "path": str(V3_FREEZE.relative_to(formal.REPO_ROOT)),
+            "sha256": formal.sha256_file(V3_FREEZE),
+        })
+        self.assertIn("not executed, not published, not benchmark acceptance", self.v4["status"])
+
+    def test_refreeze_moves_only_the_runtime_tree_and_names_the_superseded_bytes(self):
+        refreeze = self.v4["refreeze"]
+        self.assertEqual(set(refreeze["changed"]), {"agent_memory.runtime_tree"})
+        self.assertEqual(refreeze["changed"]["agent_memory.runtime_tree"]["to"], self.v4["agent_memory"]["runtime_tree"])
+        self.assertIn("refrozen 2026-10-28", self.v4["status"])
+        superseded = subprocess.run(["git", "show", f"{refreeze['superseded_bytes']['commit']}:"
+                                     f"{V4_FREEZE.relative_to(formal.REPO_ROOT)}"],
+                                    cwd=formal.REPO_ROOT, capture_output=True)
+        if superseded.returncode:
+            self.skipTest("superseded commit not in this (shallow) checkout")
+        self.assertEqual(hashlib.sha256(superseded.stdout).hexdigest(), refreeze["superseded_bytes"]["sha256"])
+        previous = json.loads(superseded.stdout)
+        self.assertEqual(previous["agent_memory"]["runtime_tree"], refreeze["changed"]["agent_memory.runtime_tree"]["from"])
+        # Apart from the runtime tree, the status note and the added record, the bytes are the old ones.
+        current = json.loads(V4_FREEZE.read_text(encoding="utf-8"))
+        current.pop("refreeze")
+        current["agent_memory"]["runtime_tree"] = previous["agent_memory"]["runtime_tree"]
+        current["status"] = previous["status"]
+        self.assertEqual(current, previous)
+        tree_delta = subprocess.run(["git", "diff", "--name-only", previous["agent_memory"]["runtime_tree"],
+                                     self.v4["agent_memory"]["runtime_tree"]], cwd=formal.REPO_ROOT,
+                                    capture_output=True, text=True, check=True).stdout.split()
+        self.assertEqual(sorted("reference/agentmem_ref/" + path for path in tree_delta),
+                         sorted(refreeze["runtime_delta_paths"]))
+
+    def test_binds_the_live_runner_and_records_its_integration_invalidation(self):
+        observed = formal.observed_agent_memory_binding()
+        self.assertEqual(formal.sha256_file(Path(formal.__file__)), self.v4["runner"]["sha256"])
+        self.assertEqual(self.v4["agent_memory"]["ranking_policy_id"], observed["ranking_policy_id"])
+        self.assertEqual(self.v4["agent_memory"]["ranking_policy_version"], self.v3["agent_memory"]["ranking_policy_version"])
+        declaration = json.loads((REFERENCE.parent / "reports" / "runtime" / "baseline-v7-declaration.json").read_text())
+        self.assertIn({"kind": "formal_replay", "ref": "mesa-formal-v4"}, declaration["acceptance_evidence_required"])
+        # Integration (#674 x #786): the one v7 declaration moves the envelope contract 1.6.0 -> 1.8.0
+        # (owner-accepted) and the protected tree. v4 stays frozen at the security lineage's identity
+        # (contract 1.6.0, runtime tree eafa528f): its committed replay is evidence for that tree only,
+        # and the integrated tree needs a fresh, owner-authorized freeze before any formal replay.
+        self.assertEqual(declaration["identity_deltas"],
+                         [{"identity_path": "identity.public_contract_version", "from": "1.6.0", "to": "1.8.0"}])
+        self.assertEqual(self.v4["agent_memory"]["public_contract_version"], "1.6.0")
+        self.assertNotEqual(observed["public_contract_version"], self.v4["agent_memory"]["public_contract_version"])
+        self.assertEqual(self.v4["agent_memory"]["runtime_tree"], "eafa528fad90c5ca044bc3c897d351520f921232")
+
+    def test_predictions_are_preregistered_against_v3(self):
+        for key in ("P1", "P2", "P3", "P4", "P5"):
+            self.assertEqual(self.v4["predictions"][key], self.v3["predictions"][key], key)
+        self.assertIn("concurrency and latency are reported only", self.v4["predictions"]["P6"])
+        self.assertIn("blocks v7 publication", self.v4["predictions"]["on_miss"])
 
 
 if __name__ == "__main__":

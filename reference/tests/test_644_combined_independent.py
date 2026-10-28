@@ -22,6 +22,10 @@ from agentmem_ref.runtime.recall_observation_receipt import (
     capture_recall_observation,
 )
 from agentmem_ref.runtime.temporal_intent import parse_time
+# #786 store identity profiles: this module drives several projects through one tenant-wide store to
+# exercise the canonical adapter gates; AgentMemory.open admits that only as scope_distinct_v1, so the
+# test-only tenant-wide fixture reproduces the pre-profile store (tests/_tenant_wide_fixture.py).
+from tests._tenant_wide_fixture import open_tenant_wide
 
 SUBJECT, ATTRIBUTE = "Orrin gateway", "region"
 SLOT = typed.typed_slot(SUBJECT, ATTRIBUTE)
@@ -89,7 +93,7 @@ class _Base(unittest.TestCase):
         self._dir.cleanup()
 
     def open(self, scope="project:a", tenant=None):
-        return AgentMemory.open(self.root, tenant=tenant or self.tenant, actor_id="agent:c644",
+        return open_tenant_wide(self.root, tenant=tenant or self.tenant, actor_id="agent:c644",
                                 scope=scope, purpose="c644")
 
     def reopen(self, scope="project:a"):

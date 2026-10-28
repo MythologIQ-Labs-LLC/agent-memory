@@ -74,6 +74,10 @@ from pathlib import Path
 import agentmem_ref
 from agentmem_ref import AgentMemory
 from tests.test_809_evidence_reference_authorization import _shape
+# #786 store identity profiles: this module drives several projects through one tenant-wide store to
+# exercise the canonical adapter gates; AgentMemory.open admits that only as scope_distinct_v1, so the
+# test-only tenant-wide fixture reproduces the pre-profile store (tests/_tenant_wide_fixture.py).
+from tests._tenant_wide_fixture import open_tenant_wide
 
 ROOT = Path(__file__).resolve().parents[2]
 FIXTURES = ROOT / "reference/fixtures/809-legacy-stores"
@@ -135,7 +139,7 @@ class _Store(unittest.TestCase):
         self.addCleanup(lambda: [h.close() for h in self.handles if not h.closed])
 
     def open(self, scope: str, actor: str = "agent:legacy") -> AgentMemory:
-        handle = AgentMemory.open(self.root, tenant=TENANT, actor_id=actor, scope=scope, purpose="legacy")
+        handle = open_tenant_wide(self.root, tenant=TENANT, actor_id=actor, scope=scope, purpose="legacy")
         self.handles.append(handle)
         return handle
 
@@ -162,8 +166,9 @@ import json, sys
 sys.path.insert(0, sys.argv[1])
 import agentmem_ref
 from agentmem_ref import AgentMemory
+from tests._tenant_wide_fixture import open_tenant_wide
 root, tenant, actor, scope = sys.argv[2:6]
-m = AgentMemory.open(root, tenant=tenant, actor_id=actor, scope=scope, purpose="legacy")
+m = open_tenant_wide(root, tenant=tenant, actor_id=actor, scope=scope, purpose="legacy")
 out = {"package": agentmem_ref.__file__, "status": m.legacy_upgrade_status(),
        "admitted": sorted(m.recall("Quillon ferry berth digest", temporal_intent={"mode": "historical"})["admitted"])}
 m.close()
@@ -361,7 +366,7 @@ class ForwardReferenceStore(_Store):
 class FreshStore(unittest.TestCase):
     def test_a_store_written_by_this_runtime_is_fresh_and_the_upgrade_is_a_no_op(self):
         with tempfile.TemporaryDirectory() as tmp:
-            m = AgentMemory.open(tmp + "/m", tenant=TENANT, actor_id="agent:legacy", scope="project:a", purpose="legacy")
+            m = open_tenant_wide(tmp + "/m", tenant=TENANT, actor_id="agent:legacy", scope="project:a", purpose="legacy")
             try:
                 a1 = m.remember("memory:a", f"{QUERY} is Oslo")["fact_uuid"]
                 m.remember("memory:d", f"{QUERY} digest own", evidence_refs=(a1,))

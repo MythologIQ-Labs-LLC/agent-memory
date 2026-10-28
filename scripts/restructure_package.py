@@ -59,6 +59,7 @@ LAYERS: dict[str, tuple[str, ...]] = {
         "recall_observation_receipt",
         "representation_cache", "representation_onnx",
         "semantic_readmission_adapter", "write_claims", "scope_governance", "shared_revocation",
+        "revocation_delegation",
     ),
     "memory": (
         "a2a_collaboration", "agent_manifest_correlation", "agent_manifest_external_evidence",
@@ -78,7 +79,7 @@ LAYERS: dict[str, tuple[str, ...]] = {
         "temporal_commitment", "temporal_transparency", "temporal_trust",
         "trace_action_evidence", "uor_content_reference", "action_authority",
     ),
-    "api": ("contract", "surface"),
+    "api": ("contract", "surface", "scoped_identity", "store_contract"),
     "crg": (
         "code_graph_qualification", "codegenome_profile", "codegenome_cognitive_mesh",
         "codegenome_scope_residue",

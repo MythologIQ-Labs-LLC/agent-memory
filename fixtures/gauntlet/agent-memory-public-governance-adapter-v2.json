@@ -1,0 +1,92 @@
+{
+  "adapter": {
+    "id": "agent-memory-public-governance-adapter-v2",
+    "revision": "git-blob:6223ebd993b0fd546fa05e2d6498d3ab1749a22f",
+    "version": "0.2.0"
+  },
+  "authority_effect": "none",
+  "benchmark_isolation": {
+    "description": "repository-owned disposable Agent Memory SQLite stores keyed by unique Gauntlet run namespace",
+    "strategy": "disposable_instance"
+  },
+  "capabilities": {
+    "classifier_authority_isolation": {
+      "support": "unsupported"
+    },
+    "deletion": {
+      "notes": "public AgentMemory.forget() governed pruning/non-resurrection semantics",
+      "support": "native"
+    },
+    "describe": {
+      "support": "mapped"
+    },
+    "durable_deletion": {
+      "notes": "runtime is restart-safe; alpha evaluator currently blocks GOV-DEL-002 until neutral restart lifecycle is bound",
+      "support": "native"
+    },
+    "foreign_cardinality_non_disclosure": {
+      "notes": "GOV-ISO-005 currently varies foreign tenant population; this single-tenant adapter cannot exercise that claim without manufacturing tenant routing",
+      "support": "unsupported"
+    },
+    "forget": {
+      "support": "native"
+    },
+    "health": {
+      "support": "mapped"
+    },
+    "recall": {
+      "support": "native"
+    },
+    "remember": {
+      "support": "native"
+    },
+    "reset": {
+      "notes": "adapter teardown of the disposable benchmark-owned SQLite store; not a native Agent Memory operation",
+      "support": "mapped"
+    },
+    "route_authority_isolation": {
+      "support": "unsupported"
+    },
+    "scope_isolation": {
+      "notes": "exercised through the public facade and canonical governed admission in one tenant, over one scope_distinct_v1 store per namespace",
+      "support": "native"
+    },
+    "source_trust": {
+      "support": "unsupported"
+    },
+    "tenant_isolation": {
+      "notes": "this adapter intentionally models one qualified local tenant and does not manufacture cross-tenant routing",
+      "support": "unsupported"
+    }
+  },
+  "contract_family": "agent-memory-gauntlet-system-adapter",
+  "contract_version": "0.1.0",
+  "metadata": {
+    "fixture_role": "real_system_public_facade_conformance",
+    "provenance_class": "gauntlet_native_gap",
+    "store_profile": "scope_distinct_v1",
+    "supersedes": {
+      "manifest": "fixtures/gauntlet/agent-memory-public-governance-adapter.json",
+      "reason": "v1 drives several projects through one tenant-wide store, which #786 store profiles refuse",
+      "sha256": "ef33d49bc24cf605cc205ff5835d77f5cd4ffeace6575d7318d68b0c1c1afd96"
+    },
+    "trusted_fixture": true,
+    "runtime_pin_history": [
+      {
+        "revision": "2b2a6199edf30feefd024aa10baace888aef5ffb",
+        "superseded_at": "785f49c9606f5be69b789f2bb3766272dc578f8a",
+        "reason": "the protected runtime changed (#786 store-open contract version separation); the pin names the runtime under test"
+      }
+    ]
+  },
+  "system": {
+    "id": "agent-memory-public-runtime",
+    "kind": "agent_memory",
+    "revision": "public-contract-1.6.0@785f49c9606f5be69b789f2bb3766272dc578f8a",
+    "version": "1.6.0"
+  },
+  "transport": {
+    "callable": "agentmem_ref.evaluation.gauntlet_agent_memory_v2:agent_memory_public_adapter_v2",
+    "kind": "in_process"
+  }
+}

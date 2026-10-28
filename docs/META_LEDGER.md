@@ -5424,3 +5424,54 @@ SHA256(content_hash + previous_hash) = f4e71a5f9ae3393832ca336c4dec76ebe3ec2168a
 **Decision**: Record the five replay packages that the v7 declaration requires. The fixtures were frozen in `7530378`, before any runner existed. The runner, the independent verifier and the tests were added in `afff1b5`. Every replay PASSes on a clean tree, and the evidence is reproducible byte for byte. `scripts/verify_644_v7_replays.py --reexecute` verifies all five. The tamper challenge detects every mutation except a fully consistent static forgery, which re-execution catches. That limitation is recorded: the sha256 bindings are not signatures. One preregistered protected repair (Entry #126) was required. `scripts/check_644_v7_replay_inventory.py` remains BLOCKED by design. F6, F7 and F12 remain open. This entry is **not acceptance, a PASS of v7, publication, merge approval, or a benchmark claim**.
 
 **Evidence still required**: an independent reviewer's re-execution and acceptance decision recorded in this ledger, a v7 public-gauntlet contestant, and workflow-imported lane evidence at the v7 candidate.
+
+---
+
+---
+
+### Entry #128: GATE TRIBUNAL — PASS (#732 G3b amendment A3; independent review 4)
+
+**Timestamp**: 2026-10-28
+**Phase**: GATE
+**Author**: Integration recorder (citing independent Judge's review; not the reviewer)
+**Risk Grade**: L2
+**Verdict**: PASS, narrowly scoped
+**Session**: #786 store-boundary qualification
+**Target**: `reports/benchmarks/currentness-generalization/amendments/A3/review-4/REVIEW.md`; independently reviewed `a2014386abeed4b01e554eacf998dfe69688cae4`, checker blob `e2967b54bf0ad67bbce6f6c3ffb020e884d4ef5d`. Evidence on engineering candidate `5960429b335761eda1c47579ba8072e0d0077f88`.
+
+**Content Hash**:
+SHA256(reports/benchmarks/currentness-generalization/amendments/A3/review-4/REVIEW.md) = 180b28d4730efa6f3c5cdf031d56ad37fdae8a48760f17d38051193373c60133
+
+**Previous Hash**: `a15ad4f55519ad3ba187b646ea2d635715b1c3d4bdf51f2d197d08d6fcd6ccf7`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = a0f56ec03b5a47e96a3d6b60ee7d8d389ae9f921f3db76467ae22cf8b36c7dd2
+
+**Re-sequenced (integration, 2026-10-28)**: recorded on the security branch `engineering/786-procedural-revocation-host-binding-20261027-no-ci` (`f3acce3b`) as Entry #124 (previous `f4e71a5f9ae3…`, chain `f7381a88c01d…`), concurrently with the #644 lineage's own #124-#127 on the same predecessor #123. The integration keeps both histories: this entry is renumbered #128 and re-chained after #127; its content hash, evidence and decision are unchanged.
+
+**Decision**: Record the independent review 4 **PASS** of A3's exact audited checker; this entry transcribes the independent verdict rather than self-certifying a new review. Review 1 and review 2 were VETO; review 3 was PASS with remediated host-advisories; review 4 independently verified the corrected checker. The later A4-1 test gaps were closed without changing the checker. Candidate evidence reports 53/53 must-detect mutations killed, byte-identical historical replay, and retained original frozen input, corpus, K-rules and 0.5 threshold. The 32-bit prefix bypass is replaced with the full blob; source bytes bypass Git clean filters.
+
+**Limits**: This gate accepts **only the G3b amendment's template-source authentication and contamination-rule equivalence**. It does not declare cross-fact currentness generalization successful, authorize benchmark tuning, accept M2 judged recall, publish Runtime Baseline v7, or close #732/#786. External host code/import-state control is outside this checker; the release boundary remains governed separately.
+
+---
+
+### Entry #129: SUBSTANTIATION — mesa-formal-v4 prediction replay (not formal benchmark acceptance)
+
+**Timestamp**: 2026-10-28
+**Phase**: SUBSTANTIATE
+**Author**: Integration recorder (binding executor's replay evidence)
+**Risk Grade**: L2
+**Session**: #786 store-boundary qualification
+**Target**: `reports/benchmarks/agentmembench-mesa-formal/mesa-formal-v4-prediction-evaluation.json`, refrozen `mesa-formal-v4` candidate and replay at `1172a20031b439c84ce319c4a1637c756ac0046b`.
+
+**Content Hash**:
+SHA256(reports/benchmarks/agentmembench-mesa-formal/mesa-formal-v4-prediction-evaluation.json) = 5014efd0569b6a5de221ccf137cac6fa2ced30e8873455b285cd95f2d32ec8bd
+
+**Previous Hash**: `a0f56ec03b5a47e96a3d6b60ee7d8d389ae9f921f3db76467ae22cf8b36c7dd2`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = 64d832111cc9b3db2c160b14bc2056d9023d18ff0ed8f80db6e4f18a9cfc1473
+
+**Re-sequenced (integration, 2026-10-28)**: recorded on the security branch `engineering/786-procedural-revocation-host-binding-20261027-no-ci` (`f3acce3b`) as Entry #125 (previous `f7381a88c01d…`, chain `5407d25e62ad…`), concurrently with the #644 lineage's own #124-#127 on the same predecessor #123. The integration keeps both histories: this entry is renumbered #129 and re-chained after #128; its content hash, evidence and decision are unchanged.
+
+**Decision**: Admit the **executed v4 replay as version-bound regression/prediction evidence, not as an accepted formal score or benchmark publication**. The report records all six preregistered predictions holding, 0 C7 blockers and matching v6 C7 output, a pinned CPython 3.11.15 package environment, and pinned upstream revision/dataset digests. The clean-clone qualification at `5960429b335761eda1c47579ba8072e0d0077f88` reproduced the prediction evaluator as reported by the executing engineer.
+
+**Limits**: `M2` judged recall remains **BLOCKED** without an authorized, version-pinned judge. Timing and throughput are labelled non-comparable with the predecessor; no formal latency or comparative performance claim is accepted. The prediction-evaluation record and the v4 freeze status both state `not benchmark acceptance`, and the v4 formal report labels itself `candidate_only` with `accepted_frozen_score: false`; this ledger entry preserves that constraint. Runtime Baseline v7 still requires docs/67 B1/B2, actual v7 lane and publication evidence. No Actions, release, merge, or retrospective benchmark-score update is authorized.

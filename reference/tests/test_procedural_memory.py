@@ -54,16 +54,17 @@ class ProceduralMemoryTests(unittest.TestCase):
         )
         self.registry = ComponentRegistry()
         self.registry.register(reference_procedural_component())
-        self.runtime = ProceduralMemoryRuntime(
-            substrate=self.substrate,
-            adapter=self.adapter,
-            registry=self.registry,
-        )
         self.context = RecallContext(
             target_domain_refs=(TENANT, PROJECT),
             principal_ref="agent:release",
             project_ref=PROJECT,
             purpose=PURPOSE,
+        )
+        self.runtime = ProceduralMemoryRuntime(
+            substrate=self.substrate,
+            adapter=self.adapter,
+            registry=self.registry,
+            revocation_context=self.context,
         )
 
     def skill(self, *, version: int, branch: str, skill_id: str = "release-workflow") -> SkillArtifact:
@@ -285,6 +286,146 @@ class ProceduralMemoryTests(unittest.TestCase):
         recalled = self.runtime.recall_and_activate("release workflow branch", context=self.context, purpose=PURPOSE)
         self.assertEqual(recalled.activated_skills, ())
         self.assertEqual(recalled.refusals[committed.commit.fact_uuid], "tombstoned")
+
+    def test_revocation_requires_host_binding_and_rejects_caller_actor_spoof(self):
+        artifact = self.skill(version=1, branch="release")
+        saved = self.runtime.commit_skill(
+            self.runtime.propose_skill(artifact, actor_id="agent:release")
+        )
+        self.assertTrue(saved.commit.committed)
+        unbound = ProceduralMemoryRuntime(
+            substrate=self.substrate, adapter=self.adapter, registry=self.registry
+        )
+        before = len(self.adapter.events)
+        with self.assertRaisesRegex(ValueError, "host-bound revocation identity"):
+            unbound.revoke_skill(
+                artifact.skill_id, actor_id="agent:release",
+                evidence_refs=("evidence:claimed-owner",),
+            )
+        with self.assertRaisesRegex(ValueError, "host-bound principal"):
+            self.runtime.revoke_skill(
+                artifact.skill_id, actor_id="agent:foreign",
+                evidence_refs=("evidence:claimed-owner",),
+            )
+        self.assertEqual(len(self.adapter.events), before)
+        self.assertEqual(
+            self.adapter.current_fact_uuid(artifact.memory_reference),
+            saved.commit.fact_uuid,
+        )
+        self.assertIsNone(self.adapter.tombstone(saved.commit.fact_uuid))
+
+    def test_foreign_project_cannot_revoke_skill_or_probe_fact_identity(self):
+        artifact = self.skill(version=1, branch="release")
+        saved = self.runtime.commit_skill(
+            self.runtime.propose_skill(artifact, actor_id="agent:release")
+        )
+        self.assertTrue(saved.commit.committed)
+        foreign = ProceduralMemoryRuntime(
+            substrate=self.substrate, adapter=self.adapter, registry=self.registry,
+            revocation_context=RecallContext(
+                target_domain_refs=(TENANT, OTHER_PROJECT),
+                principal_ref="agent:foreign",
+                project_ref=OTHER_PROJECT,
+                purpose=PURPOSE,
+            ),
+        )
+        before = len(self.adapter.events)
+        for target in (artifact.skill_id, "nonexistent-skill"):
+            with self.subTest(target=target), self.assertRaisesRegex(
+                ValueError, "^no current procedural skill exists for '[^']+'$"
+            ):
+                foreign.revoke_skill(
+                    target, actor_id="agent:foreign",
+                    evidence_refs=("evidence:untrusted",),
+                )
+        self.assertEqual(len(self.adapter.events), before)
+        self.assertIsNone(self.adapter.tombstone(saved.commit.fact_uuid))
+        self.assertEqual(
+            self.adapter.current_fact_uuid(artifact.memory_reference),
+            saved.commit.fact_uuid,
+        )
+
+    def test_same_project_other_task_cannot_revoke_task_scoped_skill(self):
+        artifact = self.skill(version=1, branch="release")
+        candidate = self.runtime.propose_skill(artifact, actor_id="agent:release")
+        # The canonical write carries the task binding in PAMA metadata;
+        # the procedural artifact remains just content, not an authority grant.
+        task_scoped = replace(
+            candidate, proposal=replace(candidate.proposal, task_ref="task:owner"),
+        )
+        saved = self.runtime.commit_skill(task_scoped)
+        self.assertTrue(saved.commit.committed, saved.commit.refusal)
+
+        wrong_task = ProceduralMemoryRuntime(
+            substrate=self.substrate, adapter=self.adapter, registry=self.registry,
+            revocation_context=RecallContext(
+                target_domain_refs=(TENANT, PROJECT),
+                principal_ref="agent:release",
+                project_ref=PROJECT,
+                task_ref="task:intruder",
+                purpose=PURPOSE,
+            ),
+        )
+        with self.assertRaisesRegex(ValueError, "^no current procedural skill exists for '[^']+'$"):
+            wrong_task.revoke_skill(
+                artifact.skill_id, actor_id="agent:release",
+                evidence_refs=("evidence:claimed-owner",),
+            )
+        self.assertIsNone(self.adapter.tombstone(saved.commit.fact_uuid))
+
+        owner_task = ProceduralMemoryRuntime(
+            substrate=self.substrate, adapter=self.adapter, registry=self.registry,
+            revocation_context=RecallContext(
+                target_domain_refs=(TENANT, PROJECT),
+                principal_ref="agent:release",
+                project_ref=PROJECT,
+                task_ref="task:owner",
+                purpose=PURPOSE,
+            ),
+        )
+        result = owner_task.revoke_skill(
+            artifact.skill_id, actor_id="agent:release",
+            evidence_refs=("evidence:owner-revocation",),
+        )
+        self.assertTrue(result.commit.committed, result.commit.refusal)
+        self.assertIsNotNone(self.adapter.tombstone(saved.commit.fact_uuid))
+
+    def test_revocation_refuses_unknown_canonical_scope_even_with_host_identity(self):
+        artifact = self.skill(version=1, branch="release")
+        saved = self.runtime.commit_skill(
+            self.runtime.propose_skill(artifact, actor_id="agent:release")
+        )
+        self.assertTrue(saved.commit.committed)
+        # Simulate a corrupt or legacy-unbound governance record. Supplying
+        # matching host assertions must NOT manufacture ownership metadata.
+        old_scope = self.adapter._fact_scope.pop(saved.commit.fact_uuid)
+        try:
+            before_events = len(self.adapter.events)
+            with self.assertRaisesRegex(
+                ValueError, "^no current procedural skill exists for '[^']+'$"
+            ):
+                self.runtime.revoke_skill(
+                    artifact.skill_id, actor_id="agent:release",
+                    evidence_refs=("evidence:asserted-owner",),
+                )
+            self.assertEqual(len(self.adapter.events), before_events)
+            self.assertIsNone(self.adapter.tombstone(saved.commit.fact_uuid))
+        finally:
+            self.adapter._fact_scope[saved.commit.fact_uuid] = old_scope
+
+    def test_revocation_preserves_host_project_and_scope_in_receipt(self):
+        artifact = self.skill(version=1, branch="release")
+        saved = self.runtime.commit_skill(
+            self.runtime.propose_skill(artifact, actor_id="agent:release")
+        )
+        self.assertTrue(saved.commit.committed)
+        result = self.runtime.revoke_skill(
+            artifact.skill_id, actor_id="agent:release",
+            evidence_refs=("evidence:owner-revocation",),
+        )
+        self.assertTrue(result.commit.committed, result.commit.refusal)
+        self.assertEqual(result.commit.receipt["selected_action"], "pruning")
+        self.assertIsNotNone(self.adapter.tombstone(saved.commit.fact_uuid))
 
     def test_metamemory_can_be_retained_but_not_applied_through_skill_activation(self):
         artifact = SkillArtifact(

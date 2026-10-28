@@ -12,6 +12,10 @@ import unittest
 from dataclasses import replace
 
 from agentmem_ref import AgentMemory, policy
+# #786 store identity profiles: this module drives several projects through one tenant-wide store to
+# exercise the canonical adapter gates; AgentMemory.open admits that only as scope_distinct_v1, so the
+# test-only tenant-wide fixture reproduces the pre-profile store (tests/_tenant_wide_fixture.py).
+from tests._tenant_wide_fixture import open_tenant_wide
 from tests.test_644_combined_independent import _evidence, _prop
 from tests.test_776_adversarial_review import KILN, S, _Facade, _Store
 from tests.test_runtime_composition import TENANT, _context
@@ -100,7 +104,7 @@ class RecallProjection(_Facade):
                 views = []
                 for deleted in (True, False):
                     root = tempfile.mkdtemp() + "/m"
-                    m = AgentMemory.open(root, tenant="tenant:c644", actor_id="agent:c644", scope="project:a",
+                    m = open_tenant_wide(root, tenant="tenant:c644", actor_id="agent:c644", scope="project:a",
                                          purpose="c644", recall_control=shadow)
                     m.remember("memory:keep", "Lighthouse rota is posted weekly")
                     if deleted:

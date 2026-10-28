@@ -1,0 +1,30 @@
+import sys, subprocess, py_compile, shutil, importlib.util
+from pathlib import Path
+S = Path("/tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/scratchpad/judge-a3-r2")
+R = S / "attackrepo"; REF = R / "reference"; T = REF / "run_semantic_route_ordering_report.py"
+subprocess.run(["git", "checkout", "-q", "--", "."], cwd=R, check=True)
+sys.path.insert(0, str(R / "scripts")); import check_generalization_corpus as c
+SRC = T.read_text(); inject = '\nCONFLICT_TEMPLATES = (("location", "EVIL {old}", "EVIL {new}", "EVIL?"),)\n'
+def basis(p=None):
+    try: return "ACCEPTED " + c.template_basis(p)[1]
+    except SystemExit as e: return "refused: " + str(e)[:110]
+def consumer():
+    r = subprocess.run([sys.executable, "-c", "from run_cross_fact_currentness_report import CONFLICT_TEMPLATES as t; print('consumer', 'EVIL' if 'EVIL' in repr(t) else 'frozen')"], cwd=REF, capture_output=True, text=True)
+    return r.stdout.strip() or r.stderr.strip().splitlines()[-1]
+# B1: utf-7 cookie
+body = ("# -*- coding: utf-7 -*-\n" + SRC).encode("utf-7") + b"# " + inject.encode("utf-7").replace(b"\n", b"+AAo-", 1) + b"\n"
+T.write_bytes(body); print("B1 utf7 cookie:", basis(), "|", consumer())
+# BOM + utf-8 (should be accepted? decode_source strips BOM -> differs)
+T.write_bytes(b"\xef\xbb\xbf" + SRC.encode()); print("BOM utf-8 (benign):", basis(), "|", consumer())
+T.write_text(SRC)
+# A3: package shadow
+pk = REF / "run_semantic_route_ordering_report"; pk.mkdir(); (pk / "__init__.py").write_text(SRC + inject)
+print("A3 package dir shadow:", basis(), "|", consumer()); shutil.rmtree(pk)
+# new: unchecked-hash pyc in __pycache__ (untracked host state, same class as the package shadow)
+evil = S / "evil_src.py"; evil.write_text(SRC + inject)
+cache = Path(importlib.util.cache_from_source(str(T)))
+py_compile.compile(str(evil), cfile=str(cache), dfile=str(T), invalidation_mode=py_compile.PycInvalidationMode.UNCHECKED_HASH)
+print("pyc unchecked-hash shadow:", basis(), "|", consumer(), "| blob", subprocess.run(["git","hash-object",str(T)],capture_output=True,text=True).stdout[:12]); cache.unlink()
+# new: extension-module shadow (.so is preferred over .py by FileFinder)
+so = REF / ("run_semantic_route_ordering_report" + importlib.machinery.EXTENSION_SUFFIXES[0]); so.write_bytes(b"not an elf")
+print("extension .so shadow:", basis(), "|", consumer()); so.unlink()

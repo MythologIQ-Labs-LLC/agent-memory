@@ -4,6 +4,8 @@
 
 <div align="center">
 
+<img src="assets/brand/agent-memory.webp" alt="Agent Memory official product logo" width="112" height="112">
+
 # 01010001 Agent Memory
 
 <p><sub><strong>Q Agent Memory</strong></sub></p>
@@ -18,7 +20,7 @@ Agent Memory's goal is to combine structured facts, temporal history, graph rela
 [![ADRs](https://img.shields.io/badge/ADRs-Canonical%20Index-2563eb)](docs/adr/README.md)
 [![License](https://img.shields.io/badge/License-Apache--2.0-0b7285)](LICENSE)
 
-**[Theory](#theory)** · **[Benchmarks](#benchmarks)** · **[Runtime](#runtime)** · **[Documentation index](docs/README.md)** · **[Current dashboard](reports/benchmarks/dashboard/current.md)** · **[Governance](GOVERNANCE.md)**
+**[Theory](#theory)** · **[Benchmarks](#benchmarks)** · **[Public benchmark site](https://mythologiq-labs-llc.github.io/agent-memory/)** · **[Runtime](#runtime)** · **[Documentation index](docs/README.md)** · **[Canonical evidence dashboard](reports/benchmarks/dashboard/current.md)** · **[Governance](GOVERNANCE.md)**
 
 </div>
 
@@ -99,6 +101,8 @@ Every architectural lookup starts at [`docs/ARCHITECTURE_INDEX.md`](docs/ARCHITE
 Research briefs, explorations, and ancestry harvests are evidence and provenance, not doctrine; see [`docs/40-aligned-projects-and-intellectual-lineage.md`](docs/40-aligned-projects-and-intellectual-lineage.md) and [`docs/SOURCE_RIGHTS_POLICY.md`](docs/SOURCE_RIGHTS_POLICY.md).
 
 ## Benchmarks
+
+**[Explore the Agent Memory GitHub Pages benchmark site](https://mythologiq-labs-llc.github.io/agent-memory/)** for an interactive evidence leaderboard, competitor coverage, and source-linked candidate runs. It is a read-only presentation, not the authority for accepted scores.
 
 Benchmarking is a first-class repository function. The canonical current evidence view is **[`reports/benchmarks/dashboard/current.md`](reports/benchmarks/dashboard/current.md)** (machine-readable: `current.json`). Numbers are intentionally not copied into this README; the dashboard distinguishes current accepted evidence, previous accepted evidence and deltas, evidence classes, and non-numeric states such as `not_run`, `blocked`, `unsupported`, and `evidence_gap`. There is no universal aggregate score.
 

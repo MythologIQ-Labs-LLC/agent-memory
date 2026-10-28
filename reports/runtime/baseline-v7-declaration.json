@@ -9,8 +9,16 @@
       "blob": "cadf93763d0ad172e573131ba718da8ca7200a16"
     },
     {
+      "path": "reference/agentmem_ref/api/scoped_identity.py",
+      "blob": "378ac09fea101287e19d9b3726661d5245f6a4bb"
+    },
+    {
+      "path": "reference/agentmem_ref/api/store_contract.py",
+      "blob": "83274c78ac581c54bc4ecd54118e84e01946ed9b"
+    },
+    {
       "path": "reference/agentmem_ref/api/surface.py",
-      "blob": "ba8924d450139f6ef7ea322bb2b3b021139c7e8d"
+      "blob": "c9bfe7fafe4b2641ae23ac6efb21a77a0fa09c05"
     },
     {
       "path": "reference/agentmem_ref/evidence_sufficiency.py",
@@ -26,15 +34,19 @@
     },
     {
       "path": "reference/agentmem_ref/memory/procedural_memory.py",
-      "blob": "d5c25f431dd9860587fc2514fabe649828fc1b07"
+      "blob": "d7194e168a7061e5330186ae3efb48d252a1a643"
     },
     {
       "path": "reference/agentmem_ref/recall_observation_receipt.py",
       "blob": "cfeeb6948f38cae0e04a87ed6e61c1344548509c"
     },
     {
+      "path": "reference/agentmem_ref/revocation_delegation.py",
+      "blob": "f41047fa2dd80dfc38e5d76bae0c58d2ae8c9475"
+    },
+    {
       "path": "reference/agentmem_ref/runtime/adapter.py",
-      "blob": "2c0d3b6d2fbca899afe0d021b563064e91659f77"
+      "blob": "89f3f6d711a69bf151a1ef3929b6100ece0cb32a"
     },
     {
       "path": "reference/agentmem_ref/runtime/configured_restart.py",
@@ -73,6 +85,10 @@
       "blob": "85014e40fd81375bf83a24b51b4b14714a5d82be"
     },
     {
+      "path": "reference/agentmem_ref/runtime/revocation_delegation.py",
+      "blob": "ff9922d84c70e9e9b5a226844870c5fbc0eb7566"
+    },
+    {
       "path": "reference/agentmem_ref/runtime/runtime_composition.py",
       "blob": "11d1f4ec7589cd072c72aab33465468282a28eb2"
     },
@@ -81,12 +97,20 @@
       "blob": "1c1d456fc25f6f183692df39d0e1169f836d12a7"
     },
     {
+      "path": "reference/agentmem_ref/scoped_identity.py",
+      "blob": "36c03894500f63f43541b105ac8dd59a2d2a274a"
+    },
+    {
       "path": "reference/agentmem_ref/state/sqlite_substrate.py",
       "blob": "c0168baad3df0d0a4ecb7360ff0cb264a97b0f5b"
     },
     {
       "path": "reference/agentmem_ref/state/substrate.py",
       "blob": "9d9aed0a0a258d096e36e1f1971ea248801ffeb5"
+    },
+    {
+      "path": "reference/agentmem_ref/store_contract.py",
+      "blob": "d7b506cb165abd3fc6b9014b6d6925f3af7f1064"
     }
   ],
   "identity_deltas": [
@@ -149,6 +173,18 @@
     {
       "kind": "security_replay",
       "ref": "scope-safe-graph-discovery-v2"
+    },
+    {
+      "kind": "formal_replay",
+      "ref": "mesa-formal-v4"
+    },
+    {
+      "kind": "public_gauntlet",
+      "ref": "durability-recovery-alpha-v1:agent-memory-public-durability-adapter-v2"
+    },
+    {
+      "kind": "public_gauntlet",
+      "ref": "governance-isolation-deletion-alpha-v1:agent-memory-public-governance-adapter-v2"
     }
   ]
 }

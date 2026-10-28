@@ -103,6 +103,18 @@ class RefusalOrderingTest(unittest.TestCase):
         result = self.adapter.governed_recall("deploy")
         self.assertNotIn("foreign-1", result.candidates)
 
+    @admission_only()
+    def test_unbound_unrelated_fact_remains_refused_after_deletion(self):
+        committed = self.adapter.commit_proposal(_proposal(), "deploy window Thursday")
+        self.adapter.governed_delete(
+            _proposal(proposal_id="p-del", target_reference="mem:A"),
+            committed.fact_uuid,
+        )
+        self.substrate.write_fact(_scopeless_fact(uuid="unbound-other"))
+        result = self.adapter.governed_recall("deploy")
+        self.assertNotIn("unbound-other", result.admitted)
+        self.assertEqual("unknown_scope", result.refusals["unbound-other"])
+
     @admission_only()  # exercises full admission's own domain refusal (#548)
 
     def test_tombstoned_source_outranks_unknown_scope(self):

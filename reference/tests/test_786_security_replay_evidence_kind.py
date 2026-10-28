@@ -40,7 +40,9 @@ class SecurityReplayEvidenceKind(unittest.TestCase):
 
         schema = _load(SCHEMA)
         kinds = schema["properties"]["acceptance_evidence_required"]["items"]["properties"]["kind"]["enum"]
-        self.assertEqual(kinds, ["public_gauntlet", "replay", "lane", "security_replay"])
+        # formal_replay (integration #674 x #786): the AgentMemBench MESA formal replay has its own freeze
+        # and runner, distinct from the #644 replay family that kind "replay" names.
+        self.assertEqual(kinds, ["public_gauntlet", "replay", "lane", "security_replay", "formal_replay"])
         base = {k: v for k, v in _load(DECLARATION).items()}
         validator = jsonschema.Draft202012Validator(schema)
         validator.validate({**base, "acceptance_evidence_required": [{"kind": "security_replay", "ref": "x-v2"}]})

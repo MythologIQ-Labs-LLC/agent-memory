@@ -1,0 +1,32 @@
+"""Differential: 76a9e30 checker (frozen template file) vs 0173adf7 checker (current template file, A3 path), K7-heavy inputs."""
+import copy, importlib.util, json, random, sys
+from pathlib import Path
+H = Path(__file__).resolve().parent
+def load(clone, tag):
+    spec = importlib.util.spec_from_file_location(tag, H / clone / "scripts/check_generalization_corpus.py")
+    m = importlib.util.module_from_spec(spec); sys.modules[tag] = m; spec.loader.exec_module(m); return m
+old, new = load("old", "chk_old"), load("new", "chk_new")
+T = old.template_texts(); assert T == new.template_basis()[0] and new.template_basis()[1] == new.TEMPLATE_AMENDMENT_ID
+F = H / "inputs/freeze"
+corpus = json.loads((F / "corpus.json").read_text()); variants = json.loads((F / "variants.json").read_text()); sel = json.loads((F / "selection.json").read_text())
+rng = random.Random(732); words = "the user now lives in project status budget current job prefers moved changed dollars what where".split()
+def perturb(t):
+    toks = t.split(); 
+    for _ in range(rng.randint(0, 6)):
+        op = rng.random(); i = rng.randrange(len(toks) + 1)
+        if op < .4: toks.insert(i, rng.choice(words))
+        elif toks and op < .8: toks.pop(min(i, len(toks) - 1))
+        else: toks.insert(i, "OLD_x")
+    return " ".join(toks)
+diffs = k7 = 0
+for trial in range(300):
+    c, v = copy.deepcopy(corpus), copy.deepcopy(variants)
+    for recs in (c, v):
+        for rec in rng.sample(recs, 15):
+            if "writes" in rec:
+                if rng.random() < .5: rec["query"] = perturb(rng.choice(T))
+                else: rng.choice(rec["writes"])["text"] = perturb(rng.choice(T))
+    prior = [perturb(rng.choice(T)) for _ in range(rng.randint(0, 3))]
+    a = old.check(c, v, sel, prior); b = new.check(c, v, sel, prior); b.pop("template_basis")
+    diffs += a != b; k7 += sum(r["rule"] == "K7_g3b_overlap" for r in a["rejections"])
+print("trials 300, differing reports:", diffs, "K7 rejections exercised:", k7)
