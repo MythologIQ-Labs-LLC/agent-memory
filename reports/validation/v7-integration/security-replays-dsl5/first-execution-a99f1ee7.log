@@ -1,0 +1,10 @@
+cross-scope-write-authority-denial-v4: FAIL (16/17 cases) report sha256 c797e7a943b45de7e4f2983b9a087b227360e181cfc0914672e248482a522925
+  - 1 case(s) did not pass: W1h-host-built-promotion-naming-the-owners-canonical-memory
+  W1h-host-built-promotion-naming-the-owners-canonical-memory: fail 
+    h_mentions: expected {'eq': []} observed ['v1']
+deleted-lineage-generations-and-restart-v4: PASS (11/11 cases) report sha256 d069ec774d72848a4c1f467c45c6d88ee3a88727f517e22d07c041235bdbc73a
+  - every expectation held on a clean source tree
+public-tombstone-redaction-and-observer-separation-v4: PASS (8/8 cases) report sha256 2e8ff2461f5ea1260f4a88c5f883a008af48833bd7b6db408d0fc2ef07f75bcb
+  - every expectation held on a clean source tree
+evidence-reference-authorization-v2: PASS (16/16 cases) report sha256 f5eaa66854b89f1df3b164214ceb81a06f59fc938b5381587d44f9092f1ad2fa
+  - every expectation held on a clean source tree
