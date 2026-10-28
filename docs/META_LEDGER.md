@@ -5305,3 +5305,49 @@ SHA256(content_hash + previous_hash) = f4e71a5f9ae3393832ca336c4dec76ebe3ec2168a
 - **Advisories A1–A5** are recorded in the audit report. Their wording refinements are carried into #757 design inputs. They do not alter any result.
 
 **Scope**: `diagnostic_not_score`. This is not R6 acceptance. The `measurement-v1` FAIL (0/212) stands, and #732 stays open. The owner chose option (b): cross-write proposition identity is designed first (#757). No v7 implementation and no evaluator tuning are authorized.
+
+
+---
+
+### Entry #124: GATE TRIBUNAL — PASS (#732 G3b amendment A3; independent review 4)
+
+**Timestamp**: 2026-10-28
+**Phase**: GATE
+**Author**: Integration recorder (citing independent Judge's review; not the reviewer)
+**Risk Grade**: L2
+**Verdict**: PASS, narrowly scoped
+**Session**: #786 store-boundary qualification
+**Target**: `reports/benchmarks/currentness-generalization/amendments/A3/review-4/REVIEW.md`; independently reviewed `a2014386abeed4b01e554eacf998dfe69688cae4`, checker blob `e2967b54bf0ad67bbce6f6c3ffb020e884d4ef5d`. Evidence on engineering candidate `5960429b335761eda1c47579ba8072e0d0077f88`.
+
+**Content Hash**:
+SHA256(reports/benchmarks/currentness-generalization/amendments/A3/review-4/REVIEW.md) = 180b28d4730efa6f3c5cdf031d56ad37fdae8a48760f17d38051193373c60133
+
+**Previous Hash**: `f4e71a5f9ae3393832ca336c4dec76ebe3ec2168a3f85d0f4ace6525be2a9c2d`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = f7381a88c01d17257a9487929e2f097b677ba2428b559162aeb9773fd1679f80
+
+**Decision**: Record the independent review 4 **PASS** of A3's exact audited checker; this entry transcribes the independent verdict rather than self-certifying a new review. Review 1 and review 2 were VETO; review 3 was PASS with remediated host-advisories; review 4 independently verified the corrected checker. The later A4-1 test gaps were closed without changing the checker. Candidate evidence reports 53/53 must-detect mutations killed, byte-identical historical replay, and retained original frozen input, corpus, K-rules and 0.5 threshold. The 32-bit prefix bypass is replaced with the full blob; source bytes bypass Git clean filters.
+
+**Limits**: This gate accepts **only the G3b amendment's template-source authentication and contamination-rule equivalence**. It does not declare cross-fact currentness generalization successful, authorize benchmark tuning, accept M2 judged recall, publish Runtime Baseline v7, or close #732/#786. External host code/import-state control is outside this checker; the release boundary remains governed separately.
+
+---
+
+### Entry #125: SUBSTANTIATION — mesa-formal-v4 prediction replay (not formal benchmark acceptance)
+
+**Timestamp**: 2026-10-28
+**Phase**: SUBSTANTIATE
+**Author**: Integration recorder (binding executor's replay evidence)
+**Risk Grade**: L2
+**Session**: #786 store-boundary qualification
+**Target**: `reports/benchmarks/agentmembench-mesa-formal/mesa-formal-v4-prediction-evaluation.json`, refrozen `mesa-formal-v4` candidate and replay at `1172a20031b439c84ce319c4a1637c756ac0046b`.
+
+**Content Hash**:
+SHA256(reports/benchmarks/agentmembench-mesa-formal/mesa-formal-v4-prediction-evaluation.json) = 5014efd0569b6a5de221ccf137cac6fa2ced30e8873455b285cd95f2d32ec8bd
+
+**Previous Hash**: `f7381a88c01d17257a9487929e2f097b677ba2428b559162aeb9773fd1679f80`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = 5407d25e62ad76270a6150f6ae2c2dac86d3c165431eb4cfd415033b916bd750
+
+**Decision**: Admit the **executed v4 replay as version-bound regression/prediction evidence, not as an accepted formal score or benchmark publication**. The report records all six preregistered predictions holding, 0 C7 blockers and matching v6 C7 output, a pinned CPython 3.11.15 package environment, and pinned upstream revision/dataset digests. The clean-clone qualification at `5960429b335761eda1c47579ba8072e0d0077f88` reproduced the prediction evaluator as reported by the executing engineer.
+
+**Limits**: `M2` judged recall remains **BLOCKED** without an authorized, version-pinned judge. Timing and throughput are labelled non-comparable with the predecessor; no formal latency or comparative performance claim is accepted. The v4 report explicitly labels itself `not benchmark acceptance`; this ledger entry preserves that constraint. Runtime Baseline v7 still requires docs/67 B1/B2, actual v7 lane and publication evidence. No Actions, release, merge, or retrospective benchmark-score update is authorized.
