@@ -83,10 +83,11 @@ def run_m4(pairs: int = M4_PAIRS) -> dict:
         scope = f"user:conflict_{index:05d}"
         # One serialized host-bound scope at a time. The persistent store
         # remains shared so identifiers and global-state interference
-        # remain visible to the qualification comparator.
+        # remain visible to the qualification comparator. Many projects share
+        # it, so it binds keys per project (#786).
         with AgentMemory.open(
             root, tenant=tenant, actor_id="agent:benchmark", scope=scope,
-            purpose="AgentMemBench MESA formal evaluation",
+            purpose="AgentMemBench MESA formal evaluation", store_profile="scope_distinct_v1",
         ) as memory:
             old_result = memory.remember(
                 f"memory:m4:{index}:old", old_t.format(old=f"OLD_{category}_{index:04d}")
