@@ -1,0 +1,1090 @@
+{
+ "replay_id": "public-tombstone-redaction-and-observer-separation-v4",
+ "fixture_version": 4,
+ "dsl_version": "786-security-replay-dsl/5",
+ "store_profile": "scope_distinct_v1",
+ "owning_issue": 786,
+ "frozen_on": "2026-10-28",
+ "status": "supersedes_v3_on_the_integrated_v7_tree",
+ "supersession_reason": "public-tombstone-redaction-and-observer-separation-v3 (786-security-replay-dsl/2) opens several projects in one root; the integrated v7 candidate (#836 x #786, store-open contract 1.0.0) refuses that on its default single_project_v1 profile, so its evidence (674-cumulative-candidate/security-replays-2ad4cf23...) cannot be re-recorded and is STALE. This generation runs every case on the supported multi-project profile, scope_distinct_v1; expectations change only where the store-open contract changes what the case observes (author_fixtures_dsl5.py).",
+ "superseded_fixture": {
+  "path": "reference/fixtures/786-security-replays/public-tombstone-redaction-and-observer-separation-v3.json",
+  "sha256": "80338243a6f4a995dccd7b90f7e6688728fb6a4bf11753b06d8d522996b3f8e4"
+ },
+ "base_commit": "6a12e1cdea3cd1dd4f01531e6b1ed45c7d8e1bf6",
+ "independence": "Expected outcomes were written from the contract documents listed in contract_sources at base_commit, clause by clause (`clauses` on every case), before this fixture was first executed by the runner, and compared to those clauses by a separate reviewer before that first execution (the record is committed beside the evidence). A failing expectation is a finding, never a reason to edit this fixture; a corrected expectation requires a superseding -v4 with a recorded reason. Observables listed under `implementation_evidence` are recorded, never expected, and never count toward acceptance; observables listed under `controls` are positive controls expected for falsifiability (a refuse-everything runtime must fail), not derivations of a clause. No frozen holdout phrase or #644 fixture vocabulary is used.",
+ "stop_lines": [
+  "no fixture edit after first execution; supersede with -v4 and record why",
+  "no expectation weakened to obtain PASS",
+  "no runtime change motivated by a replay outcome without a preregistered reproducer",
+  "a replay verdict is evidence, not successor acceptance; acceptance requires independent review",
+  "a complete-scope override proves host re-declaration, never end-user isolation"
+ ],
+ "title": "The owner of a deleted memory reads only its tombstone; every other observer reads nothing; views are stable under other scopes and restart",
+ "contract_sources": [
+  {
+   "path": "docs/777-public-contract-1-7-successor-qualification.md",
+   "sha256_at_base": "28405f0448c772e944c9e5560479dbd641a5df9a1965f6caac0375e8c91faba9"
+  },
+  {
+   "path": "docs/44-public-api-contract.md",
+   "sha256_at_base": "c6ba13869a20129ecf6d25dc3c6a34ab55b36a9a50ba8035236a60500be7e639"
+  },
+  {
+   "path": "docs/786-cross-scope-write-authority.md",
+   "sha256_at_base": "1dfa1e6b3fd1d9bc13d8b6dfac6c2b68edc58cfbec30cb6387e425f402e76b0a"
+  },
+  {
+   "path": "docs/plan-776-777-772-exact-head-qualification.md",
+   "sha256_at_base": "c8e724ae8cf58c0e61814c69cccff24c546b222dd6d4908b5d1b552b15734922"
+  }
+ ],
+ "invariants": [
+  {
+   "id": "R1",
+   "statement": "The owner of a governed-deleted memory reads tombstoned, no current fact, no events, no rejected values, the version its deletion recorded, and no identifier or text of the deleted generation, live and after restart.",
+   "falsified_by": "any identifier, text, event or rejected value, or a different version"
+  },
+  {
+   "id": "R2",
+   "statement": "Another project reads the deleted memory byte-identically (ids and timestamps folded) to an id nobody wrote: history, a value probe, recall by logical reference, and historical recall, live and after restart.",
+   "falsified_by": "any difference from the unknown-id result"
+  },
+  {
+   "id": "R3",
+   "statement": "The owner's deleted view does not change when another project re-creates, corrects and deletes the same id, and each deleting scope reads exactly the version its own deletion recorded (the two generations have different lengths, so a view serving the largest or latest deletion would differ).",
+   "falsified_by": "any field of the owner's view changing, or either scope reading the other's recorded version"
+  },
+  {
+   "id": "R4",
+   "statement": "A memory derived from a deleted fact is withheld from public recall while a live derivation keeps its provenance.",
+   "falsified_by": "the derived-from-deleted memory or the deleted fact surfacing, or the live derivation lost"
+  },
+  {
+   "id": "R5",
+   "statement": "A re-created generation's public history carries only its own events and nothing of another project's memory of the same public key or of a former generation; the owner may re-create its own deleted id independently.",
+   "falsified_by": "an event, identifier or text from the former generation or from a refused attempt"
+  },
+  {
+   "id": "R6",
+   "statement": "No receipt on a governed-deleted id -- committed, refused or policy-parked, from any writer -- and no history of a new generation carries the former generation's version count.",
+   "falsified_by": "a before_state, after_state, snapshot or history version continuing the former count"
+  }
+ ],
+ "cases": [
+  {
+   "id": "R1-owner-tombstone-live",
+   "invariants": [
+    "R1"
+   ],
+   "clauses": [
+    {
+     "source": "docs/plan-776-777-772-exact-head-qualification.md",
+     "clause": "a reader who could have read the deleted head (same tenant; domain, project and task eligible against the canonical `_fact_scope`, which survives pruning and permanent deletion) reads `{\"current_fact_uuid\": null, \"tombstoned\": true, \"events\": [], \"state_version\": <canonical>}` and, with a value probe, `rejected_values: []`; no deleted-generation identifier, timestamp, event or value is served",
+     "observables": [
+      "owner_history",
+      "owner_probe",
+      "mentions"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "Versions are generation-relative ... After a governed deletion of the head the id reports `0` to any writer, a re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one; the owner of the deleted generation still reads the version its deletion recorded (`tombstoned`, DUR-DEL-001).",
+     "observables": [
+      "owner_history"
+     ]
+    }
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:t",
+     "text": "Tessaly orchard harvest window is early",
+     "prop": {
+      "s": "Tessaly orchard harvest",
+      "a": "window",
+      "v": "early",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    },
+    {
+     "op": "correct",
+     "ref": "memory:t",
+     "text": "Tessaly orchard harvest window is late",
+     "kind": "state_change",
+     "require_committed": true
+    },
+    {
+     "op": "forget",
+     "ref": "memory:t",
+     "require_committed": true
+    }
+   ],
+   "probes": {
+    "owner_history": {
+     "probe": "history",
+     "ref": "memory:t"
+    },
+    "owner_probe": {
+     "probe": "history",
+     "ref": "memory:t",
+     "fact_text": "Tessaly orchard harvest window is early"
+    },
+    "mentions": {
+     "probe": "recall_mentions",
+     "query": "Tessaly orchard harvest window",
+     "historical": true,
+     "tokens": [
+      "memory:t",
+      "memory:t@2",
+      "early",
+      "late"
+     ]
+    }
+   },
+   "expect": {
+    "owner_history": {
+     "eq": {
+      "current": null,
+      "state_version": 3,
+      "tombstoned": true,
+      "events": []
+     }
+    },
+    "owner_probe": {
+     "eq": {
+      "current": null,
+      "state_version": 3,
+      "tombstoned": true,
+      "events": [],
+      "rejected_values": 0
+     }
+    },
+    "mentions": {
+     "eq": []
+    }
+   },
+   "dsl5_disposition": "carried forward unchanged: its observables do not depend on the store profile"
+  },
+  {
+   "id": "R1-owner-tombstone-after-restart",
+   "invariants": [
+    "R1"
+   ],
+   "clauses": [
+    {
+     "source": "docs/plan-776-777-772-exact-head-qualification.md",
+     "clause": "a reader who could have read the deleted head (same tenant; domain, project and task eligible against the canonical `_fact_scope`, which survives pruning and permanent deletion) reads `{\"current_fact_uuid\": null, \"tombstoned\": true, \"events\": [], \"state_version\": <canonical>}` and, with a value probe, `rejected_values: []`; no deleted-generation identifier, timestamp, event or value is served",
+     "observables": [
+      "owner_history",
+      "owner_probe",
+      "mentions"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "Versions are generation-relative ... After a governed deletion of the head the id reports `0` to any writer, a re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one; the owner of the deleted generation still reads the version its deletion recorded (`tombstoned`, DUR-DEL-001).",
+     "observables": [
+      "owner_history"
+     ]
+    }
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:t",
+     "text": "Tessaly orchard harvest window is early",
+     "prop": {
+      "s": "Tessaly orchard harvest",
+      "a": "window",
+      "v": "early",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    },
+    {
+     "op": "correct",
+     "ref": "memory:t",
+     "text": "Tessaly orchard harvest window is late",
+     "kind": "state_change",
+     "require_committed": true
+    },
+    {
+     "op": "forget",
+     "ref": "memory:t",
+     "require_committed": true
+    },
+    {
+     "op": "reopen"
+    }
+   ],
+   "probes": {
+    "owner_history": {
+     "probe": "history",
+     "ref": "memory:t"
+    },
+    "owner_probe": {
+     "probe": "history",
+     "ref": "memory:t",
+     "fact_text": "Tessaly orchard harvest window is early"
+    },
+    "mentions": {
+     "probe": "recall_mentions",
+     "query": "Tessaly orchard harvest window",
+     "historical": true,
+     "tokens": [
+      "memory:t",
+      "memory:t@2",
+      "early",
+      "late"
+     ]
+    }
+   },
+   "expect": {
+    "owner_history": {
+     "eq": {
+      "current": null,
+      "state_version": 3,
+      "tombstoned": true,
+      "events": []
+     }
+    },
+    "owner_probe": {
+     "eq": {
+      "current": null,
+      "state_version": 3,
+      "tombstoned": true,
+      "events": [],
+      "rejected_values": 0
+     }
+    },
+    "mentions": {
+     "eq": []
+    }
+   },
+   "dsl5_disposition": "carried forward unchanged: its observables do not depend on the store profile"
+  },
+  {
+   "id": "R2-other-reads-unknown-live",
+   "invariants": [
+    "R2"
+   ],
+   "clauses": [
+    {
+     "source": "docs/plan-776-777-772-exact-head-qualification.md",
+     "clause": "a reader outside that scope reads byte-identically to a memory that never existed",
+     "observables": [
+      "history",
+      "value_probe",
+      "by_ref",
+      "historical"
+     ]
+    }
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:t",
+     "text": "Tessaly orchard harvest window is early",
+     "prop": {
+      "s": "Tessaly orchard harvest",
+      "a": "window",
+      "v": "early",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    },
+    {
+     "op": "correct",
+     "ref": "memory:t",
+     "text": "Tessaly orchard harvest window is late",
+     "kind": "state_change",
+     "require_committed": true
+    },
+    {
+     "op": "forget",
+     "ref": "memory:t",
+     "require_committed": true
+    }
+   ],
+   "probes": {
+    "history": {
+     "probe": "history_same_as_unknown",
+     "ref": "memory:t",
+     "as": "project:b"
+    },
+    "value_probe": {
+     "probe": "history_same_as_unknown",
+     "ref": "memory:t",
+     "fact_text": "Tessaly orchard harvest window is early",
+     "as": "project:b"
+    },
+    "by_ref": {
+     "probe": "recall_same_as_unknown",
+     "query": "Tessaly orchard harvest window",
+     "ref": "memory:t",
+     "as": "project:b"
+    },
+    "historical": {
+     "probe": "recall_admitted",
+     "query": "Tessaly orchard harvest window",
+     "historical": true,
+     "as": "project:b"
+    }
+   },
+   "expect": {
+    "history": {
+     "eq": true
+    },
+    "value_probe": {
+     "eq": true
+    },
+    "by_ref": {
+     "eq": true
+    },
+    "historical": {
+     "eq": []
+    }
+   },
+   "dsl5_disposition": "carried forward unchanged: its observables do not depend on the store profile"
+  },
+  {
+   "id": "R2-other-reads-unknown-after-restart",
+   "invariants": [
+    "R2"
+   ],
+   "clauses": [
+    {
+     "source": "docs/plan-776-777-772-exact-head-qualification.md",
+     "clause": "a reader outside that scope reads byte-identically to a memory that never existed",
+     "observables": [
+      "history",
+      "value_probe",
+      "by_ref"
+     ]
+    }
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:t",
+     "text": "Tessaly orchard harvest window is early",
+     "prop": {
+      "s": "Tessaly orchard harvest",
+      "a": "window",
+      "v": "early",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    },
+    {
+     "op": "correct",
+     "ref": "memory:t",
+     "text": "Tessaly orchard harvest window is late",
+     "kind": "state_change",
+     "require_committed": true
+    },
+    {
+     "op": "forget",
+     "ref": "memory:t",
+     "require_committed": true
+    },
+    {
+     "op": "reopen"
+    }
+   ],
+   "probes": {
+    "history": {
+     "probe": "history_same_as_unknown",
+     "ref": "memory:t",
+     "as": "project:b"
+    },
+    "value_probe": {
+     "probe": "history_same_as_unknown",
+     "ref": "memory:t",
+     "fact_text": "Tessaly orchard harvest window is early",
+     "as": "project:b"
+    },
+    "by_ref": {
+     "probe": "recall_same_as_unknown",
+     "query": "Tessaly orchard harvest window",
+     "ref": "memory:t",
+     "as": "project:b"
+    }
+   },
+   "expect": {
+    "history": {
+     "eq": true
+    },
+    "value_probe": {
+     "eq": true
+    },
+    "by_ref": {
+     "eq": true
+    }
+   },
+   "dsl5_disposition": "carried forward unchanged: its observables do not depend on the store profile"
+  },
+  {
+   "id": "R3-owner-view-stable-under-other-scope-with-distinct-generation-lengths",
+   "invariants": [
+    "R3",
+    "R6"
+   ],
+   "clauses": [
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "Versions are generation-relative ... After a governed deletion of the head the id reports `0` to any writer, a re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one; the owner of the deleted generation still reads the version its deletion recorded (`tombstoned`, DUR-DEL-001).",
+     "observables": [
+      "owner_history",
+      "other_history",
+      "b1_before",
+      "b1_after",
+      "b3_after"
+     ]
+    },
+    {
+     "source": "docs/plan-776-777-772-exact-head-qualification.md",
+     "clause": "a reader who could have read the deleted head (same tenant; domain, project and task eligible against the canonical `_fact_scope`, which survives pruning and permanent deletion) reads `{\"current_fact_uuid\": null, \"tombstoned\": true, \"events\": [], \"state_version\": <canonical>}` and, with a value probe, `rejected_values: []`; no deleted-generation identifier, timestamp, event or value is served",
+     "observables": [
+      "owner_history",
+      "other_history"
+     ]
+    },
+    {
+     "source": "docs/786-cross-scope-write-authority.md",
+     "clause": "| B re-creates A's **deleted** id | allowed (fresh generation) | unchanged, with isolation proven (A cannot write it back while B's generation is live) |",
+     "observables": [
+      "owner_mentions"
+     ]
+    }
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:t",
+     "text": "Tessaly orchard harvest window is early",
+     "prop": {
+      "s": "Tessaly orchard harvest",
+      "a": "window",
+      "v": "early",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    },
+    {
+     "op": "correct",
+     "ref": "memory:t",
+     "text": "Tessaly orchard harvest window is late",
+     "kind": "state_change",
+     "require_committed": true
+    },
+    {
+     "op": "forget",
+     "ref": "memory:t",
+     "require_committed": true
+    },
+    {
+     "op": "remember",
+     "ref": "memory:t",
+     "text": "Tessaly orchard harvest window is mid",
+     "prop": {
+      "s": "Tessaly orchard harvest",
+      "a": "window",
+      "v": "mid",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "as": "project:b",
+     "label": "gen-b",
+     "name": "b1",
+     "require_committed": true
+    },
+    {
+     "op": "reopen"
+    },
+    {
+     "op": "forget",
+     "ref": "memory:t",
+     "as": "project:b",
+     "name": "b3",
+     "require_committed": true
+    }
+   ],
+   "probes": {
+    "owner_history": {
+     "probe": "history",
+     "ref": "memory:t"
+    },
+    "owner_mentions": {
+     "probe": "recall_mentions",
+     "query": "Tessaly orchard harvest window",
+     "historical": true,
+     "tokens": [
+      "gen-b",
+      "mid"
+     ]
+    },
+    "other_history": {
+     "probe": "history",
+     "ref": "memory:t",
+     "as": "project:b"
+    },
+    "b1_before": {
+     "probe": "op_result",
+     "name": "b1",
+     "field": "before_state"
+    },
+    "b1_after": {
+     "probe": "op_result",
+     "name": "b1",
+     "field": "after_state"
+    },
+    "b3_after": {
+     "probe": "op_result",
+     "name": "b3",
+     "field": "after_state"
+    }
+   },
+   "expect": {
+    "owner_history": {
+     "eq": {
+      "current": null,
+      "state_version": 3,
+      "tombstoned": true,
+      "events": []
+     }
+    },
+    "owner_mentions": {
+     "eq": []
+    },
+    "other_history": {
+     "eq": {
+      "current": null,
+      "state_version": 2,
+      "tombstoned": true,
+      "events": []
+     }
+    },
+    "b1_before": {
+     "eq": "v0"
+    },
+    "b1_after": {
+     "eq": "v1"
+    },
+    "b3_after": {
+     "eq": "v2"
+    }
+   },
+   "dsl5_disposition": "carried forward unchanged: its observables do not depend on the store profile"
+  },
+  {
+   "id": "R4-derived-from-deleted-withheld-live-derivation-kept",
+   "invariants": [
+    "R4"
+   ],
+   "clauses": [
+    {
+     "source": "docs/786-cross-scope-write-authority.md",
+     "clause": "a write deriving from a deleted source is withheld (`derived_from_tombstoned_source`)",
+     "observables": [
+      "withheld"
+     ]
+    },
+    {
+     "source": "docs/plan-776-777-772-exact-head-qualification.md",
+     "clause": "a reader who could have read the deleted head (same tenant; domain, project and task eligible against the canonical `_fact_scope`, which survives pruning and permanent deletion) reads `{\"current_fact_uuid\": null, \"tombstoned\": true, \"events\": [], \"state_version\": <canonical>}` and, with a value probe, `rejected_values: []`; no deleted-generation identifier, timestamp, event or value is served",
+     "observables": [
+      "withheld"
+     ]
+    }
+   ],
+   "controls": [
+    "kept"
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:t",
+     "text": "Tessaly orchard harvest window is early",
+     "prop": {
+      "s": "Tessaly orchard harvest",
+      "a": "window",
+      "v": "early",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    },
+    {
+     "op": "remember",
+     "ref": "memory:d",
+     "text": "Digest: Tessaly orchard harvest window used to be early",
+     "evidence_refs": [
+      "memory:t"
+     ],
+     "label": "digest",
+     "require_committed": true
+    },
+    {
+     "op": "remember",
+     "ref": "memory:l",
+     "text": "Tessaly orchard harvest steward is Team Larch",
+     "prop": {
+      "s": "Tessaly orchard harvest",
+      "a": "steward",
+      "v": "Team Larch",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "label": "live",
+     "require_committed": true
+    },
+    {
+     "op": "remember",
+     "ref": "memory:ld",
+     "text": "Digest: Tessaly orchard harvest steward Team Larch",
+     "evidence_refs": [
+      "live"
+     ],
+     "label": "live-digest",
+     "require_committed": true
+    },
+    {
+     "op": "forget",
+     "ref": "memory:t",
+     "require_committed": true
+    }
+   ],
+   "probes": {
+    "withheld": {
+     "probe": "recall_mentions",
+     "query": "Tessaly orchard harvest window steward Team Larch digest early",
+     "historical": true,
+     "tokens": [
+      "digest",
+      "memory:t",
+      "early"
+     ]
+    },
+    "kept": {
+     "probe": "recall_mentions",
+     "query": "Tessaly orchard harvest window steward Team Larch digest early",
+     "historical": true,
+     "tokens": [
+      "live",
+      "live-digest"
+     ]
+    }
+   },
+   "expect": {
+    "withheld": {
+     "eq": []
+    },
+    "kept": {
+     "eq": [
+      "live",
+      "live-digest"
+     ]
+    }
+   },
+   "dsl5_disposition": "carried forward unchanged: its observables do not depend on the store profile"
+  },
+  {
+   "id": "R6b-refused-proposals-on-the-tombstoned-id-carry-no-former-count",
+   "invariants": [
+    "R6"
+   ],
+   "clauses": [
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "Versions are generation-relative ... After a governed deletion of the head the id reports `0` to any writer, a re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one; the owner of the deleted generation still reads the version its deletion recorded (`tombstoned`, DUR-DEL-001).",
+     "observables": [
+      "parked_after",
+      "parked_mentions",
+      "a_back_mentions",
+      "other_view"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "A governed-deleted generation is closed. At the fact level (`dispute` of a tombstoned fact by its uuid, a governed pruning of one of its versions, the adapter's delete of a member of a deleted lineage) the answer is `already_deleted`; at the facade's logical-reference level (`forget`, permanent `forget`, `correct`, `dispute` by `target_reference`) the former owner reads the bare `fact_not_found` result, because the reference has no visible head. Either answer is the same whether or not another scope has since re-created the id, and neither moves or reads the live generation [...] The one further governed act is the escalation of a reversible pruning to a permanent deletion by a writer eligible for that generation: it keeps the tombstone's `deleted_at`, recorded version and lineage, erases the content, and neither reads nor moves a live generation another scope holds.",
+     "observables": [
+      "a_disp",
+      "a_disp_mentions"
+     ]
+    },
+    {
+     "source": "docs/plan-776-777-772-exact-head-qualification.md",
+     "clause": "a re-created memory shows only its live generation",
+     "observables": [
+      "other_history_mentions"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "| A `scope_distinct_v1` store binds every public key to (tenant, scope, key) | the only multi-project profile |",
+     "observables": [
+      "parked_mentions",
+      "a_back_mentions",
+      "a_disp_mentions",
+      "other_view",
+      "other_history_mentions"
+     ]
+    }
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:t",
+     "text": "Tessaly orchard harvest window is early",
+     "prop": {
+      "s": "Tessaly orchard harvest",
+      "a": "window",
+      "v": "early",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    },
+    {
+     "op": "correct",
+     "ref": "memory:t",
+     "text": "Tessaly orchard harvest window is late",
+     "kind": "state_change",
+     "require_committed": true
+    },
+    {
+     "op": "forget",
+     "ref": "memory:t",
+     "require_committed": true
+    },
+    {
+     "op": "remember",
+     "ref": "memory:t",
+     "text": "Tessaly orchard harvest window is mid",
+     "as": "project:b",
+     "overrides": {
+      "risk_class": "medium"
+     },
+     "name": "parked"
+    },
+    {
+     "op": "remember",
+     "ref": "memory:t",
+     "text": "Tessaly orchard harvest window is mid",
+     "prop": {
+      "s": "Tessaly orchard harvest",
+      "a": "window",
+      "v": "mid",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "as": "project:b",
+     "label": "gen-b",
+     "require_committed": true
+    },
+    {
+     "op": "remember",
+     "ref": "memory:t",
+     "text": "Tessaly orchard harvest window is late",
+     "name": "a_back"
+    },
+    {
+     "op": "dispute",
+     "ref": "memory:t",
+     "fact": "memory:t@2",
+     "name": "a_disp"
+    }
+   ],
+   "probes": {
+    "parked_after": {
+     "probe": "op_result",
+     "name": "parked",
+     "field": "after_state"
+    },
+    "parked_mentions": {
+     "probe": "op_mentions",
+     "name": "parked",
+     "tokens": [
+      "v3",
+      "memory:t",
+      "memory:t@2",
+      "early",
+      "late"
+     ]
+    },
+    "a_back_mentions": {
+     "probe": "op_mentions",
+     "name": "a_back",
+     "tokens": [
+      "gen-b",
+      "mid"
+     ]
+    },
+    "a_disp": {
+     "probe": "op_result",
+     "name": "a_disp",
+     "field": "committed"
+    },
+    "a_disp_mentions": {
+     "probe": "op_mentions",
+     "name": "a_disp",
+     "tokens": [
+      "gen-b",
+      "mid"
+     ]
+    },
+    "other_view": {
+     "probe": "history_summary",
+     "ref": "memory:t",
+     "as": "project:b"
+    },
+    "other_history": {
+     "probe": "history",
+     "ref": "memory:t",
+     "as": "project:b"
+    },
+    "other_history_mentions": {
+     "probe": "history_mentions",
+     "ref": "memory:t",
+     "as": "project:b",
+     "tokens": [
+      "memory:t",
+      "memory:t@2",
+      "early",
+      "late",
+      "v3",
+      "project:a"
+     ]
+    },
+    "a_back_committed": {
+     "probe": "op_result",
+     "name": "a_back",
+     "field": "committed"
+    }
+   },
+   "expect": {
+    "parked_after": {
+     "eq": "v0"
+    },
+    "parked_mentions": {
+     "eq": []
+    },
+    "a_back_mentions": {
+     "eq": []
+    },
+    "a_disp": {
+     "eq": false
+    },
+    "a_disp_mentions": {
+     "eq": []
+    },
+    "other_view": {
+     "eq": {
+      "current": "gen-b",
+      "state_version": 1,
+      "tombstoned": false
+     }
+    },
+    "other_history_mentions": {
+     "eq": []
+    }
+   },
+   "record": [
+    "a_back_committed",
+    "other_history"
+   ],
+   "implementation_evidence": [
+    "other_history"
+   ],
+   "dsl5_disposition": "A's re-creation writes the value of its own deleted version; no cited clause decides readmission of that value (R1). M1 drops version tokens from A's own receipts."
+  },
+  {
+   "id": "R5-recreated-history-only-own-events",
+   "invariants": [
+    "R5",
+    "R6"
+   ],
+   "clauses": [
+    {
+     "source": "docs/786-cross-scope-write-authority.md",
+     "clause": "the authorize event of a write-target-refused proposal carries `authority_refs: [\"write-target:refused\"]` (schema-valid) and the public history projection withholds that correlation",
+     "observables": [
+      "other_history",
+      "a_back"
+     ]
+    },
+    {
+     "source": "docs/plan-776-777-772-exact-head-qualification.md",
+     "clause": "a re-created memory shows only its live generation",
+     "observables": [
+      "other_history",
+      "other_history_mentions"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "Versions are generation-relative ... After a governed deletion of the head the id reports `0` to any writer, a re-creation's receipt reads `v0 -> v1`, and the former generation's count never reaches the new one; the owner of the deleted generation still reads the version its deletion recorded (`tombstoned`, DUR-DEL-001).",
+     "observables": [
+      "b1_snapshot",
+      "b1_before",
+      "b1_after"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "`remember` onto a live head outside the writer's scope: `committed: false`, `refusal: \"target_unavailable\"`, receipt `before_state`/`after_state` `v0`, `state_snapshot` `v0`. Nothing is written, no episode is retained, no version moves.",
+     "observables": [
+      "a_back"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "| A `scope_distinct_v1` store binds every public key to (tenant, scope, key) | the only multi-project profile |",
+     "observables": [
+      "a_back",
+      "other_history",
+      "other_history_mentions"
+     ]
+    },
+    {
+     "source": "docs/44-public-api-contract.md",
+     "clause": "An id with no live head (never written or governed-deleted) is open to any writer in the tenant: creation and the #776 re-creation of a deleted id as a fresh generation are unchanged.",
+     "observables": [
+      "a_back"
+     ]
+    }
+   ],
+   "steps": [
+    {
+     "op": "remember",
+     "ref": "memory:t",
+     "text": "Tessaly orchard harvest window is early",
+     "prop": {
+      "s": "Tessaly orchard harvest",
+      "a": "window",
+      "v": "early",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "require_committed": true
+    },
+    {
+     "op": "forget",
+     "ref": "memory:t",
+     "require_committed": true
+    },
+    {
+     "op": "remember",
+     "ref": "memory:t",
+     "text": "Tessaly orchard harvest window is mid",
+     "prop": {
+      "s": "Tessaly orchard harvest",
+      "a": "window",
+      "v": "mid",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "as": "project:b",
+     "label": "gen-b",
+     "name": "b1",
+     "require_committed": true
+    },
+    {
+     "op": "remember",
+     "ref": "memory:t",
+     "text": "Tessaly orchard harvest window is late",
+     "prop": {
+      "s": "Tessaly orchard harvest",
+      "a": "window",
+      "v": "late",
+      "assertion": "state",
+      "cardinality": "single"
+     },
+     "name": "a_back"
+    },
+    {
+     "op": "reopen"
+    }
+   ],
+   "probes": {
+    "other_history": {
+     "probe": "history",
+     "ref": "memory:t",
+     "as": "project:b"
+    },
+    "other_history_mentions": {
+     "probe": "history_mentions",
+     "ref": "memory:t",
+     "as": "project:b",
+     "tokens": [
+      "memory:t",
+      "early",
+      "late",
+      "v2",
+      "project:a"
+     ]
+    },
+    "a_back": {
+     "probe": "op_result",
+     "name": "a_back",
+     "field": "committed"
+    },
+    "b1_snapshot": {
+     "probe": "op_result",
+     "name": "b1",
+     "field": "state_snapshot"
+    },
+    "b1_before": {
+     "probe": "op_result",
+     "name": "b1",
+     "field": "before_state"
+    },
+    "b1_after": {
+     "probe": "op_result",
+     "name": "b1",
+     "field": "after_state"
+    }
+   },
+   "expect": {
+    "other_history": {
+     "eq": {
+      "current": "gen-b",
+      "state_version": 1,
+      "tombstoned": false,
+      "events": [
+       "memory.propose",
+       "memory.authorize",
+       "memory.commit",
+       "memory.receipt"
+      ]
+     }
+    },
+    "other_history_mentions": {
+     "eq": []
+    },
+    "a_back": {
+     "eq": true
+    },
+    "b1_snapshot": {
+     "eq": "v0"
+    },
+    "b1_before": {
+     "eq": "v0"
+    },
+    "b1_after": {
+     "eq": "v1"
+    }
+   },
+   "record": [],
+   "dsl5_disposition": "A's own deleted id stays open to A (SD, OPEN). B's history still carries only its own events."
+  }
+ ]
+}
