@@ -81,13 +81,18 @@
         "revision": "785f49c9606f5be69b789f2bb3766272dc578f8a",
         "superseded_at": "3b778a3ad05e2442a0e40d613f0c6cae3786798a",
         "reason": "the protected runtime changed (v7 integration of #786 into the #836 cumulative runtime); the pin names the runtime under test"
+      },
+      {
+        "revision": "3b778a3ad05e2442a0e40d613f0c6cae3786798a",
+        "superseded_at": "9eb723911baa5b5b05593a8bf7ecd01335969d30",
+        "reason": "the protected runtime changed (#840 temporary staging, independent-review fixes RF1/RF2); the pin names the runtime under test"
       }
     ]
   },
   "system": {
     "id": "agent-memory-public-runtime",
     "kind": "agent_memory",
-    "revision": "public-contract-1.8.0@3b778a3ad05e2442a0e40d613f0c6cae3786798a",
+    "revision": "public-contract-1.8.0@9eb723911baa5b5b05593a8bf7ecd01335969d30",
     "version": "1.8.0"
   },
   "transport": {

@@ -10,7 +10,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = ROOT / "examples/gauntlet/agent-memory-runtime-baseline-v7.json"
 ADAPTER = ROOT / "examples/gauntlet/agent_memory_runtime_baseline_v7_stdio.py"
-EXPECTED_RUNTIME = "3b778a3ad05e2442a0e40d613f0c6cae3786798a"
+EXPECTED_RUNTIME = "9eb723911baa5b5b05593a8bf7ecd01335969d30"
 
 
 class V7GauntletCandidateTests(unittest.TestCase):

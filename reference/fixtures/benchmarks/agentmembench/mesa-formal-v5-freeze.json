@@ -182,7 +182,7 @@
     "sha256": "ba6ca203fbeb52ecf522160293fdd0af1d993ade4d13e3a0d6a44610b80e2a44"
   },
   "agent_memory": {
-    "runtime_tree": "d1218ebeb1dc657a741d168cd1565453e8a7e6f3",
+    "runtime_tree": "975b09412b096a9eac4a92478e7d3a39700ba5d9",
     "runtime_tree_rule": "git tree id of reference/agentmem_ref at the executed revision (covers the runtime, ranking policy, interpreter, admission and the packaged rc1-local profile); the run refuses on mismatch or on any dirty/untracked file in the repository",
     "ranking_policy_id": "multi-route-default",
     "ranking_policy_version": "3.4.0",
@@ -266,7 +266,7 @@
     "changed": {
       "agent_memory.runtime_tree": {
         "from": "eafa528fad90c5ca044bc3c897d351520f921232",
-        "to": "d1218ebeb1dc657a741d168cd1565453e8a7e6f3"
+        "to": "975b09412b096a9eac4a92478e7d3a39700ba5d9"
       },
       "agent_memory.public_contract_version": {
         "from": "1.6.0",
@@ -283,5 +283,16 @@
     },
     "unchanged": "runner (sha256 ba6ca203...), upstream, arguments, phases, adapter mappings, judge, deterministic diagnostics, m4 classifier, axis plan, runtime environment, stop lines, deviations and predictions",
     "why": "the formal workload runs one scope_distinct_v1 store with one host-bound handle per user scope and no cross-scope write, so the 1.8.0 changes (cross-scope refusal tokens, generation-relative versions of re-created ids, the #777 projection) are not expected to move any non-latency field; the predictions are therefore carried unchanged and v5 is a confirmation run against v4's executed replay"
+  },
+  "refreeze": {
+    "refrozen_on": "2026-10-28",
+    "before_any_run": true,
+    "changed": {
+      "agent_memory.runtime_tree": {
+        "from": "d1218ebeb1dc657a741d168cd1565453e8a7e6f3",
+        "to": "975b09412b096a9eac4a92478e7d3a39700ba5d9"
+      }
+    },
+    "why": "the runner's runtime_tree rule covers all of reference/agentmem_ref, and the v7 lane specs under agentmem_ref/evaluation/lanes were re-pinned to the requalified declaration after the first freeze (b4551edb); the protected runtime is unchanged. No run was executed and no score inspected."
   }
 }

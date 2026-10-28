@@ -1,7 +1,7 @@
 {
   "adapter": {
     "id": "agent-memory-runtime-baseline-v7-stdio",
-    "revision": "git-blob:fb4f47d000a0a80f63b1edf463a40397a319b771",
+    "revision": "git-blob:23b682a0c45b373e82ddd080fbfdb757fbb9ec16",
     "version": "0.1.0"
   },
   "authority_effect": "none",
@@ -40,10 +40,10 @@
     "runtime_profile": "rc1-local-sqlite-composition"
   },
   "system": {
-    "configuration_digest": "sha256:427db0c22a455fd97e66dfc2ee075df89ebba3f73decbfd3a4269549694c01ab",
+    "configuration_digest": "sha256:30794c3b624e9e0147f844845f57e3c7de9fd6e65bc496833719a2eb2b3697e1",
     "id": "agent-memory-runtime-baseline-v7",
     "kind": "agent_memory",
-    "revision": "git-commit:3b778a3ad05e2442a0e40d613f0c6cae3786798a",
+    "revision": "git-commit:9eb723911baa5b5b05593a8bf7ecd01335969d30",
     "version": "0.2.0-rc1"
   },
   "transport": {
