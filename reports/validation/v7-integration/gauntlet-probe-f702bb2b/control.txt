@@ -1,0 +1,8 @@
+Gauntlet run: gauntlet-gauntlet-orchestration-retrieval-probe-v1-agent-memory-runtime-baseline-v7-4e7e0c68587e
+Profile: gauntlet-orchestration-retrieval-probe-v1
+System: agent-memory-runtime-baseline-v7 @ git-commit:3b778a3ad05e2442a0e40d613f0c6cae3786798a
+Negotiation: eligible
+Execution: blocked
+Failure: system_adapter / runtime_identity_unverified: imported agentmem_ref is not this checkout's runtime at FROZEN_RUNTIME_REVISION
+Normalized evidence: <scratch>/tmp.AxzQlzzhmG/control/gauntlet-gauntlet-orchestration-retrieval-probe-v1-agent-memory-runtime-baseline-v7-4e7e0c68587e/normalized-run.json
+Authority effect: none

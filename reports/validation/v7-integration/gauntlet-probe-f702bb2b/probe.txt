@@ -1,0 +1,7 @@
+Gauntlet run: gauntlet-gauntlet-orchestration-retrieval-probe-v1-agent-memory-runtime-baseline-v7-1d22344f7ac1
+Profile: gauntlet-orchestration-retrieval-probe-v1
+System: agent-memory-runtime-baseline-v7 @ git-commit:3b778a3ad05e2442a0e40d613f0c6cae3786798a
+Negotiation: eligible
+Execution: complete
+Normalized evidence: <scratch>/tmp.8hF0N7IGXN/probe/gauntlet-gauntlet-orchestration-retrieval-probe-v1-agent-memory-runtime-baseline-v7-1d22344f7ac1/normalized-run.json
+Authority effect: none

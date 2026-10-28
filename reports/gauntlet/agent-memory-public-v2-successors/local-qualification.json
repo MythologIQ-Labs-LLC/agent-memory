@@ -19,7 +19,7 @@
         "wrapper_revision_is_real_blob": true
       },
       "manifest": "fixtures/gauntlet/agent-memory-public-durability-adapter-v2.json",
-      "manifest_sha256": "b8750a5af3fd1c4097e1c59b7efe45cfd1231c35b843cddb5443fb53c93ec535",
+      "manifest_sha256": "12791fce02ada921ff51a743dd29a22bac6dd9f9324b44de48c2646688273918",
       "profile_id": "durability-recovery-alpha-v1",
       "qualified": true,
       "run": {
@@ -66,16 +66,16 @@
           "configuration_digest": "a0ed220265c2b4876857d66b20b5e2903e07129d58260d19a600b391a2ac6034",
           "id": "agent-memory-runtime-baseline-v7-candidate",
           "kind": "agent_memory",
-          "revision": "git-commit:785f49c9606f5be69b789f2bb3766272dc578f8a"
+          "revision": "git-commit:3b778a3ad05e2442a0e40d613f0c6cae3786798a"
         }
       },
-      "runtime_pin": "785f49c9606f5be69b789f2bb3766272dc578f8a",
+      "runtime_pin": "3b778a3ad05e2442a0e40d613f0c6cae3786798a",
       "supersedes": {
         "manifest": "fixtures/gauntlet/agent-memory-public-durability-adapter.json",
         "reason": "v1 drives several projects through one tenant-wide store, which #786 store profiles refuse",
         "sha256": "e33761c01f0245214fe542ba2483ebb2f4ba6a8bfa415f147d6fbaf14e09fbb5"
       },
-      "system_revision": "git-commit:785f49c9606f5be69b789f2bb3766272dc578f8a"
+      "system_revision": "git-commit:3b778a3ad05e2442a0e40d613f0c6cae3786798a"
     },
     {
       "adapter_id": "agent-memory-public-governance-adapter-v2",
@@ -91,7 +91,7 @@
         "supersedes_names_exact_v1_bytes": true
       },
       "manifest": "fixtures/gauntlet/agent-memory-public-governance-adapter-v2.json",
-      "manifest_sha256": "b5504fc6ab680964c2dcc2cf179167096014a036f80e6738074118a123015120",
+      "manifest_sha256": "dce6f4726603aee4a5e61df3ae5068c1bd5cda01b5d313f04da2358ba65447de",
       "profile_id": "governance-isolation-deletion-alpha-v1",
       "qualified": true,
       "run": {
@@ -143,19 +143,19 @@
           "adapter_revision": "git-blob:6223ebd993b0fd546fa05e2d6498d3ab1749a22f",
           "id": "agent-memory-public-runtime",
           "kind": "agent_memory",
-          "revision": "public-contract-1.6.0@785f49c9606f5be69b789f2bb3766272dc578f8a"
+          "revision": "public-contract-1.8.0@3b778a3ad05e2442a0e40d613f0c6cae3786798a"
         }
       },
-      "runtime_pin": "785f49c9606f5be69b789f2bb3766272dc578f8a",
+      "runtime_pin": "3b778a3ad05e2442a0e40d613f0c6cae3786798a",
       "supersedes": {
         "manifest": "fixtures/gauntlet/agent-memory-public-governance-adapter.json",
         "reason": "v1 drives several projects through one tenant-wide store, which #786 store profiles refuse",
         "sha256": "ef33d49bc24cf605cc205ff5835d77f5cd4ffeace6575d7318d68b0c1c1afd96"
       },
-      "system_revision": "public-contract-1.6.0@785f49c9606f5be69b789f2bb3766272dc578f8a"
+      "system_revision": "public-contract-1.8.0@3b778a3ad05e2442a0e40d613f0c6cae3786798a"
     }
   ],
-  "envelope_contract_version": "1.6.0",
+  "envelope_contract_version": "1.8.0",
   "environment": {
     "platform": "linux",
     "python": "3.12.3",
@@ -163,7 +163,7 @@
   },
   "evidence_class": "local_pre_publication",
   "evidence_id": "agent-memory-public-v2-successors-local-qualification",
-  "executed_at_head": "e592fec5b189c4dd97fa9f7e04f193b9489dd964",
+  "executed_at_head": "f702bb2b674087c94bc52b8bed66110223250f38",
   "historical_v1_untouched": {
     "fixtures/gauntlet/agent-memory-public-durability-adapter.json": "e33761c01f0245214fe542ba2483ebb2f4ba6a8bfa415f147d6fbaf14e09fbb5",
     "fixtures/gauntlet/agent-memory-public-governance-adapter.json": "ef33d49bc24cf605cc205ff5835d77f5cd4ffeace6575d7318d68b0c1c1afd96"

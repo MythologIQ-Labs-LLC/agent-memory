@@ -1,0 +1,6 @@
+Gauntlet adapter: valid
+System: agent-memory-runtime-baseline-v7 @ git-commit:3b778a3ad05e2442a0e40d613f0c6cae3786798a
+Adapter: agent-memory-runtime-baseline-v7-stdio @ git-blob:fb4f47d000a0a80f63b1edf463a40397a319b771
+Transport: stdio
+Digest: 22b55cf24de7176050115e105535b03b9df37cda8d5efce0b7194b73023be073
+Authority effect: none
