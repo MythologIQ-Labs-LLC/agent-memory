@@ -21,7 +21,7 @@ control. It is not lane acceptance, v7 publication, or independent review.
 - **New runner**: `reference/run_amb_external_scope_distinct.py`
   (blob `f2ff518eb3ea1e542ced1f4fcd939fabc6dd331f`).
   It imports the new bridge without modifying the frozen external runner.
-- **New lane**: `amb-precisionmembench-retrieval-v7-scope-distinct-v1`;
+- **New lane**: `amb-precisionmembench-retrieval-v7-scope-distinct-v1`, stored in this separate qualification directory (not under `reference/agentmem_ref`), to preserve the exact package tree pinned by the unexecuted `mesa-formal-v5` freeze;
   `status=frozen` before its first score. It binds the integrated candidate
   v7 declaration blob `981108866e45a46b9e96ab283517324d6349e586`
   and the new bridge and runner blobs.
