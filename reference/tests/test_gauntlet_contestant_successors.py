@@ -111,6 +111,37 @@ class SuccessorIdentityTests(unittest.TestCase):
         self.assertEqual(_manifest(DURABILITY_V2)["system"]["configuration_digest"], live)
 
 
+class LocalQualificationRecordTests(unittest.TestCase):
+    """The committed pre-publication record still describes the manifests and runtime at HEAD."""
+
+    RECORD = REPO_ROOT / "reports" / "gauntlet" / "agent-memory-public-v2-successors" / "local-qualification.json"
+
+    def setUp(self):
+        self.record = json.loads(self.RECORD.read_text(encoding="utf-8"))
+
+    def test_record_is_qualified_local_evidence_without_authority(self):
+        self.assertTrue(self.record["qualified"])
+        self.assertTrue(self.record["worktree_clean_for_inputs"])
+        self.assertEqual(self.record["evidence_class"], "local_pre_publication")
+        self.assertEqual(self.record["authority_effect"], "none")
+        for contestant in self.record["contestants"]:
+            self.assertTrue(all(contestant["checks"].values()), contestant["checks"])
+
+    def test_record_binds_the_current_manifests_and_runtime(self):
+        for contestant in self.record["contestants"]:
+            path = REPO_ROOT / contestant["manifest"]
+            self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), contestant["manifest_sha256"], path.name)
+        drift = subprocess.run(["git", "diff", "--name-only", self.record["executed_at_head"], "HEAD", "--",
+                                *PROTECTED_RUNTIME], cwd=REPO_ROOT, capture_output=True, text=True,
+                               check=True).stdout.split()
+        self.assertEqual(drift, [], "the protected runtime moved after the record was produced; re-run the evidence")
+
+    def test_record_leaves_v1_untouched(self):
+        recorded = self.record["historical_v1_untouched"]
+        for path, digest in V1_MANIFEST_SHA256.items():
+            self.assertEqual(recorded[str(path.relative_to(REPO_ROOT))], digest)
+
+
 class SuccessorRunTests(unittest.TestCase):
     def test_durability_successor_qualifies_with_scope_isolation_and_digest(self):
         with tempfile.TemporaryDirectory() as temporary, _qualified_contestant_launch():

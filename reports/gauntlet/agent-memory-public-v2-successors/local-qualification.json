@@ -1,0 +1,177 @@
+{
+  "authority_effect": "none",
+  "baseline_id": "agent-memory-runtime-baseline-v7",
+  "baseline_status": "unaccepted transition candidate; publication evidence comes from the docs/67 B1/B2 workflow runs",
+  "contestants": [
+    {
+      "adapter_id": "agent-memory-public-durability-adapter-v2",
+      "adapter_revision": "git-blob:0fd99c13b5f3bd4a8c3ec60c20cd1cebdbb6c366",
+      "checks": {
+        "adapter_revision_is_real_blob": true,
+        "configuration_digest_is_live_posture_digest": true,
+        "manifest_validates": true,
+        "run_records_manifest_identity": true,
+        "runs_complete": true,
+        "runs_deterministic": true,
+        "runtime_pin_equals_head_protected_surface": true,
+        "store_profile_is_scope_distinct": true,
+        "supersedes_names_exact_v1_bytes": true,
+        "wrapper_revision_is_real_blob": true
+      },
+      "manifest": "fixtures/gauntlet/agent-memory-public-durability-adapter-v2.json",
+      "manifest_sha256": "b8750a5af3fd1c4097e1c59b7efe45cfd1231c35b843cddb5443fb53c93ec535",
+      "profile_id": "durability-recovery-alpha-v1",
+      "qualified": true,
+      "run": {
+        "authority_effect": "none",
+        "cases": {
+          "DUR-CHK-001": {
+            "behavioral_outcome": "unsupported",
+            "evidence_qualification": "sufficient"
+          },
+          "DUR-COR-001": {
+            "behavioral_outcome": "unsupported",
+            "evidence_qualification": "sufficient"
+          },
+          "DUR-DEL-001": {
+            "behavioral_outcome": "pass",
+            "evidence_qualification": "sufficient"
+          },
+          "DUR-DET-001": {
+            "behavioral_outcome": "pass",
+            "evidence_qualification": "sufficient"
+          },
+          "DUR-ISO-001": {
+            "behavioral_outcome": "pass",
+            "evidence_qualification": "sufficient"
+          },
+          "DUR-REC-001": {
+            "behavioral_outcome": "pass",
+            "evidence_qualification": "sufficient"
+          }
+        },
+        "dimension_status": {
+          "currentness": "not_applicable",
+          "efficiency": "not_applicable",
+          "evaluator_integrity": "measured",
+          "governance": "partial",
+          "reasoning": "not_applicable",
+          "reproducibility": "measured",
+          "retrieval": "not_applicable"
+        },
+        "status": "complete",
+        "system": {
+          "adapter_id": "agent-memory-public-durability-adapter-v2",
+          "adapter_revision": "git-blob:0fd99c13b5f3bd4a8c3ec60c20cd1cebdbb6c366",
+          "configuration_digest": "a0ed220265c2b4876857d66b20b5e2903e07129d58260d19a600b391a2ac6034",
+          "id": "agent-memory-runtime-baseline-v7-candidate",
+          "kind": "agent_memory",
+          "revision": "git-commit:785f49c9606f5be69b789f2bb3766272dc578f8a"
+        }
+      },
+      "runtime_pin": "785f49c9606f5be69b789f2bb3766272dc578f8a",
+      "supersedes": {
+        "manifest": "fixtures/gauntlet/agent-memory-public-durability-adapter.json",
+        "reason": "v1 drives several projects through one tenant-wide store, which #786 store profiles refuse",
+        "sha256": "e33761c01f0245214fe542ba2483ebb2f4ba6a8bfa415f147d6fbaf14e09fbb5"
+      },
+      "system_revision": "git-commit:785f49c9606f5be69b789f2bb3766272dc578f8a"
+    },
+    {
+      "adapter_id": "agent-memory-public-governance-adapter-v2",
+      "adapter_revision": "git-blob:6223ebd993b0fd546fa05e2d6498d3ab1749a22f",
+      "checks": {
+        "adapter_revision_is_real_blob": true,
+        "manifest_validates": true,
+        "run_records_manifest_identity": true,
+        "runs_complete": true,
+        "runs_deterministic": true,
+        "runtime_pin_equals_head_protected_surface": true,
+        "store_profile_is_scope_distinct": true,
+        "supersedes_names_exact_v1_bytes": true
+      },
+      "manifest": "fixtures/gauntlet/agent-memory-public-governance-adapter-v2.json",
+      "manifest_sha256": "b5504fc6ab680964c2dcc2cf179167096014a036f80e6738074118a123015120",
+      "profile_id": "governance-isolation-deletion-alpha-v1",
+      "qualified": true,
+      "run": {
+        "authority_effect": "none",
+        "cases": {
+          "GOV-AUTH-002": {
+            "result": "unsupported"
+          },
+          "GOV-AUTH-003": {
+            "result": "unsupported"
+          },
+          "GOV-AUTH-004": {
+            "result": "unsupported"
+          },
+          "GOV-AUTH-005": {
+            "result": "unsupported"
+          },
+          "GOV-DEL-001": {
+            "result": "pass"
+          },
+          "GOV-DEL-002": {
+            "result": "blocked"
+          },
+          "GOV-ISO-001": {
+            "result": "unsupported"
+          },
+          "GOV-ISO-002": {
+            "result": "pass"
+          },
+          "GOV-ISO-005": {
+            "result": "unsupported"
+          },
+          "GOV-SRC-002": {
+            "result": "unsupported"
+          }
+        },
+        "dimension_status": {
+          "currentness": "not_applicable",
+          "efficiency": "not_applicable",
+          "evaluator_integrity": "measured",
+          "governance": "partial",
+          "reasoning": "not_applicable",
+          "reproducibility": "measured",
+          "retrieval": "not_applicable"
+        },
+        "status": "complete",
+        "system": {
+          "adapter_id": "agent-memory-public-governance-adapter-v2",
+          "adapter_revision": "git-blob:6223ebd993b0fd546fa05e2d6498d3ab1749a22f",
+          "id": "agent-memory-public-runtime",
+          "kind": "agent_memory",
+          "revision": "public-contract-1.6.0@785f49c9606f5be69b789f2bb3766272dc578f8a"
+        }
+      },
+      "runtime_pin": "785f49c9606f5be69b789f2bb3766272dc578f8a",
+      "supersedes": {
+        "manifest": "fixtures/gauntlet/agent-memory-public-governance-adapter.json",
+        "reason": "v1 drives several projects through one tenant-wide store, which #786 store profiles refuse",
+        "sha256": "ef33d49bc24cf605cc205ff5835d77f5cd4ffeace6575d7318d68b0c1c1afd96"
+      },
+      "system_revision": "public-contract-1.6.0@785f49c9606f5be69b789f2bb3766272dc578f8a"
+    }
+  ],
+  "envelope_contract_version": "1.6.0",
+  "environment": {
+    "platform": "linux",
+    "python": "3.12.3",
+    "sqlite": "3.45.1"
+  },
+  "evidence_class": "local_pre_publication",
+  "evidence_id": "agent-memory-public-v2-successors-local-qualification",
+  "executed_at_head": "e592fec5b189c4dd97fa9f7e04f193b9489dd964",
+  "historical_v1_untouched": {
+    "fixtures/gauntlet/agent-memory-public-durability-adapter.json": "e33761c01f0245214fe542ba2483ebb2f4ba6a8bfa415f147d6fbaf14e09fbb5",
+    "fixtures/gauntlet/agent-memory-public-governance-adapter.json": "ef33d49bc24cf605cc205ff5835d77f5cd4ffeace6575d7318d68b0c1c1afd96"
+  },
+  "issue": 786,
+  "live_configuration_digest": "sha256:a0ed220265c2b4876857d66b20b5e2903e07129d58260d19a600b391a2ac6034",
+  "qualified": true,
+  "schema_version": 1,
+  "store_open_contract": "agent-memory-store-open 1.0.0",
+  "worktree_clean_for_inputs": true
+}
