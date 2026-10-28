@@ -90,7 +90,8 @@ owner decision in section 7.
 | Run | Commit | Result |
 |---|---|---|
 | Full reference suite (pre-commit, staged merge) | tree of `3b778a3a` | 3376 tests. 20 failures and 2 errors, all bound to HEAD or to the frozen multi-project runners. All were reconciled below. |
-| Full reference suite | `5e3c2fda` | see [`full-suite-5e3c2fda.txt`](full-suite-5e3c2fda.txt) |
+| Full reference suite | `5e3c2fda` | 3382 tests: 2 failures and 1 error, all from three tests that resolve repo-root-relative paths and were started from `reference/`. Run from the repo root they pass, 14/14 ([`full-suite-5e3c2fda.txt`](full-suite-5e3c2fda.txt)). |
+| Clean-clone verification (canonical repo-root invocation) | final head | [`clean-clone-verification.txt`](clean-clone-verification.txt) |
 | Security-branch suites (`test_786_*`, `test_776_deleted_lineage_sqlite`) | integrated | pass (part of the full suite) |
 | Oracle v2 (`security_falsifiers/test_786_store_profile_oracle_v2.py`) | integrated | 18/18 OK |
 | Oracle v2 sensitivity | integrated | 8/8 must-detect detected. Three regressions name the #836 adapter's equivalent defence. |

@@ -5475,3 +5475,44 @@ SHA256(content_hash + previous_hash) = 64d832111cc9b3db2c160b14bc2056d9023d18ff0
 **Decision**: Admit the **executed v4 replay as version-bound regression/prediction evidence, not as an accepted formal score or benchmark publication**. The report records all six preregistered predictions holding, 0 C7 blockers and matching v6 C7 output, a pinned CPython 3.11.15 package environment, and pinned upstream revision/dataset digests. The clean-clone qualification at `5960429b335761eda1c47579ba8072e0d0077f88` reproduced the prediction evaluator as reported by the executing engineer.
 
 **Limits**: `M2` judged recall remains **BLOCKED** without an authorized, version-pinned judge. Timing and throughput are labelled non-comparable with the predecessor; no formal latency or comparative performance claim is accepted. The prediction-evaluation record and the v4 freeze status both state `not benchmark acceptance`, and the v4 formal report labels itself `candidate_only` with `accepted_frozen_score: false`; this ledger entry preserves that constraint. Runtime Baseline v7 still requires docs/67 B1/B2, actual v7 lane and publication evidence. No Actions, release, merge, or retrospective benchmark-score update is authorized.
+
+### Entry #130: SUBSTANTIATION — Runtime Baseline v7 integration candidate (#836 × #786), not qualified for publication
+
+**Timestamp**: 2026-10-28
+**Phase**: SUBSTANTIATE
+**Author**: Integration engineer (reconciliation and local qualification evidence)
+**Risk Grade**: L3
+**Session**: v7 integration of the #786 store-profile/revocation branch into the #836 cumulative runtime
+**Target**: `reports/validation/v7-integration/README.md` on `integration/v7-786-836-reconciliation-no-ci`. The integration merge is `3b778a3ad05e2442a0e40d613f0c6cae3786798a` (parents `f4386e2a`, `f3acce3b`), with runtime tree `e9dce74b` and declaration blob `06e33d93`.
+
+**Content Hash**:
+SHA256(reports/validation/v7-integration/README.md) = 6a213a855c0c4a7304a71c8f54839c4fa35836bf5b4703313354c09bf501b409
+
+**Previous Hash**: `64d832111cc9b3db2c160b14bc2056d9023d18ff0ed8f80db6e4f18a9cfc1473`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = 3ba2feab518e632b8a3edf969b4145aac4dd034472f64c08c99ff6c625a2b386
+
+**Decision**: Record one integrated v7 successor candidate. Its rules were preregistered in `reports/validation/v7-integration/PREREGISTRATION.md`:
+
+- Envelope contract 1.8.0, as #836 accepted it.
+- Store-open contract 1.0.0, versioned independently.
+- #836's retrieval scope gates, write-target authority and generations.
+- The security branch's store profiles and host-bound revocation.
+- Opt-in creator ownership.
+- Facade identity binding.
+
+The register is unchanged. No baseline identity is claimed or published.
+
+**Evidence**: The Runtime Baseline checker reports TRANSITION v6 to v7 with 27 declared blobs. Oracle v2 passes 18/18. The oracle sensitivity, store-open sensitivity and A3 sensitivity harnesses detect every must-detect regression (8/8, 7/7 and 53/53). A3 re-gate evidence holds at `59b76aa6`. A non-recording cross-check reproduces all ten frozen #786/#809/#644 replay digests. Both v2 Gauntlet successors are qualified locally at `f702bb2b`, and the v7 probe equals #836's probe. Full-suite results are in the record. One cross-branch harness defect was found and fixed: the oracle v2 canonical-gate probe was vacuous under #816.
+
+**Invalidated (fresh qualification required)**: the #786/#809/#835 security replay evidence and the #644 replay evidence at `2ad4cf23`, which are STALE for the runtime change alone; the two v7 lanes, now re-pinned; and mesa-formal-v4, which is pinned to 1.6.0. Historical evidence is unchanged.
+
+**Limits**: The following owner decisions are open. None is recorded here.
+
+- Adopting the integrated declaration content.
+- Facade W4 refusal under store-open 1.0.0.
+- The #809 multi-project legacy upgrade path.
+- Rebasing #839, #840 and #841, each with its own successor declaration.
+- Authorizing the replay successor generations, the lane re-execution and the mesa refreeze.
+
+No Actions, merge, release, tag, register update or benchmark-score change is authorized.

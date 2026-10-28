@@ -1,0 +1,12 @@
+Full reference suite at 5e3c2fda7532f83ac6ce1a3ddd16a1bc74967326 (CPython 3.12.3, pinned requirements; bare 'python' on PATH = python3.12)
+Invocation: (cd reference && python3.12 -m unittest discover -s tests -t .)
+
+ERROR: test_wave2_harvest_matrix_records_uor_r4_disposition (tests.test_keyed_rebinding_benchmark.KeyedRebindingBenchmarkTests.test_wave2_harvest_matrix_records_uor_r4_disposition)
+FAIL: test_gauntlet_bound_profile_runs_baselines_and_external_contestant (tests.test_benchmark_author_golden_path.BenchmarkAuthorGoldenPathTests.test_gauntlet_bound_profile_runs_baselines_and_external_contestant)
+FAIL: test_external_example_requires_opt_in_and_completes_probe (tests.test_gauntlet_external_example.ExternalGauntletExampleTests.test_external_example_requires_opt_in_and_completes_probe)
+Ran 3382 tests in 363.967s
+FAILED (failures=2, errors=1, skipped=18, expected failures=1)
+
+The three non-passing tests resolve repo-root-relative paths (reference/fixtures/..., examples/...) and were started from reference/.
+Re-run from the repository root (PYTHONPATH=reference python3.12 -m unittest tests.test_keyed_rebinding_benchmark tests.test_benchmark_author_golden_path tests.test_gauntlet_external_example): Ran 14 tests, OK.
+The canonical repository-root invocation is re-run in a clean clone at the final head: clean-clone-verification.txt.
