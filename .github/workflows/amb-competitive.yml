@@ -255,7 +255,14 @@ jobs:
           for path, blob in lane["harness"]["source_blobs"].items():
               if not path.startswith("reference/"):
                   continue  # upstream AMB files are bound by the upstream revision
-              actual = subprocess.run(["git", "hash-object", path], capture_output=True, text=True, check=True).stdout.strip()
+              if lane["lane_id"] == "amb-precisionmembench-retrieval-v7-scope-distinct-v1":
+                  # Hash actual source bytes. Git clean filters must not replace
+                  # a different working-tree file with the pinned blob identity.
+                  data = Path(path).read_bytes()
+                  actual = hashlib.sha1(b"blob " + str(len(data)).encode("ascii") + b"\\x00" + data).hexdigest()
+              else:
+                  # Historic lane behavior remains unchanged.
+                  actual = subprocess.run(["git", "hash-object", path], capture_output=True, text=True, check=True).stdout.strip()
               assert actual == blob, (path, actual, blob)
               print(f"{path} blob {actual}: frozen")
           combined = hashlib.sha256()
@@ -331,6 +338,12 @@ jobs:
           def blob(path):
               return subprocess.run(["git", "hash-object", path], capture_output=True, text=True, check=True).stdout.strip()
 
+          def raw_blob(path):
+              # Avoid Git filters, attributes and environment rebinding.
+              import hashlib
+              data = Path(path).read_bytes()
+              return hashlib.sha1(b"blob " + str(len(data)).encode("ascii") + b"\\x00" + data).hexdigest()
+
           lane_file = os.environ["LANE_FILE"]
           lane = json.loads(Path(lane_file).read_text(encoding="utf-8"))
           validation_path = Path(os.environ["RUNNER_TEMP"], "amb-output", "lane-validation.json")
@@ -344,7 +357,7 @@ jobs:
               # New lane must pin the successor bridge AND runner by the
               # committed source blobs, not by original 0.4.0 defaults.
               bridge_blobs = {
-                  path: blob(path)
+                  path: raw_blob(path)
                   for path in lane["harness"]["source_blobs"]
                   if path.startswith("reference/")
               }
