@@ -261,11 +261,11 @@ CROSS_FACT_RECORD_FIELDS = (
     "returned_document_ids",
     "returned_document_ids_mechanism_off",
 )
-_GENERATION_RE = re.compile(r"-v(\d+)$")
+_GENERATION_RE = re.compile(r"-v(\d+)(?:-|$)")
 
 
 def lane_generation(lane: dict) -> int:
-    """The lane generation its id names (``...-v5`` is 5; the unsuffixed v1 id is 1)."""
+    """The lane protocol generation (first -vN), not a successor suffix.\n\n    For example ...-retrieval-v7-scope-distinct-v1 is v7, not v1.\n    Older ...-vN lane identities retain the same generation.\n    """
 
     found = _GENERATION_RE.search(str(lane["lane_id"]))
     return int(found.group(1)) if found else 1
