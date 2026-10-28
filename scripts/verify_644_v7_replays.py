@@ -36,6 +36,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "reference"))
 import run_644_v7_replays as runner  # noqa: E402
+import run_644_v7_replays_sd as runner_sd  # noqa: E402
 
 DECLARATION = ROOT / "reports/runtime/baseline-v7-declaration.json"
 EVIDENCE_ROOT = ROOT / "reports/validation/644-v7-replays"
@@ -154,9 +155,29 @@ def verify_one(replay_id: str, evidence_root: Path, fixture_dir: Path, reexecute
             "reexecuted": bool(reexecute and status == "VERIFIED")}
 
 
+def runner_for(replay_id: str, evidence_root: Path, default=runner):
+    """The runner a family's evidence was recorded with, chosen from a fixed allowlist.
+
+    The candidates are the frozen ``run_644_v7_replays.py``, and, for the families it executes,
+    ``run_644_v7_replays_sd.py``, the same frozen fixture on a ``scope_distinct_v1`` store (v7
+    integration). The chosen runner's bytes are still compared with the hash the evidence recorded,
+    so naming the other runner cannot make evidence verify; it only selects which exact bytes it
+    must match. A caller that passes its own runner (the #786 verifier) is never redirected."""
+    if default is not runner:
+        return default
+    try:
+        recorded = json.loads((evidence_root / replay_id / "manifest.json").read_text(encoding="utf-8"))["runner"]["path"]
+    except (OSError, ValueError, KeyError, TypeError):
+        return default
+    if replay_id in runner_sd.REPLAYS and recorded == "reference/run_644_v7_replays_sd.py":
+        return runner_sd
+    return default
+
+
 def verify(evidence_root: Path = EVIDENCE_ROOT, declaration: Path = DECLARATION,
            fixture_dir: Path = runner.FIXTURE_DIR, reexecute: bool = False, *, runner=runner, kind: str = "replay") -> dict:
-    rows = [verify_one(r, evidence_root, fixture_dir, reexecute, runner) for r in declared_replays(declaration, kind)]
+    rows = [verify_one(r, evidence_root, fixture_dir, reexecute, runner_for(r, evidence_root, runner))
+            for r in declared_replays(declaration, kind)]
     complete = all(r["status"] == "VERIFIED" and r["verdict"] == "PASS" for r in rows)
     return {"replays": rows, "evidence_verified": complete,
             "acceptance": "NOT GRANTED: requires an independent reviewer's decision recorded in META_LEDGER"}
