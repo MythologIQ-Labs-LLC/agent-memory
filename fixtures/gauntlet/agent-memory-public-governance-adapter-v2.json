@@ -70,12 +70,19 @@
       "reason": "v1 drives several projects through one tenant-wide store, which #786 store profiles refuse",
       "sha256": "ef33d49bc24cf605cc205ff5835d77f5cd4ffeace6575d7318d68b0c1c1afd96"
     },
-    "trusted_fixture": true
+    "trusted_fixture": true,
+    "runtime_pin_history": [
+      {
+        "revision": "2b2a6199edf30feefd024aa10baace888aef5ffb",
+        "superseded_at": "785f49c9606f5be69b789f2bb3766272dc578f8a",
+        "reason": "the protected runtime changed (#786 store-open contract version separation); the pin names the runtime under test"
+      }
+    ]
   },
   "system": {
     "id": "agent-memory-public-runtime",
     "kind": "agent_memory",
-    "revision": "public-contract-1.6.0@2b2a6199edf30feefd024aa10baace888aef5ffb",
+    "revision": "public-contract-1.6.0@785f49c9606f5be69b789f2bb3766272dc578f8a",
     "version": "1.6.0"
   },
   "transport": {

@@ -85,13 +85,20 @@
       "reason": "v1 drives several projects through one tenant-wide store, which #786 store profiles refuse",
       "sha256": "e33761c01f0245214fe542ba2483ebb2f4ba6a8bfa415f147d6fbaf14e09fbb5"
     },
-    "transport_wrapper_revision": "git-blob:3d268ec5c9ec8150606b6abada86c9ccaf5ebe28"
+    "transport_wrapper_revision": "git-blob:3d268ec5c9ec8150606b6abada86c9ccaf5ebe28",
+    "runtime_pin_history": [
+      {
+        "revision": "2b2a6199edf30feefd024aa10baace888aef5ffb",
+        "superseded_at": "785f49c9606f5be69b789f2bb3766272dc578f8a",
+        "reason": "the protected runtime changed (#786 store-open contract version separation); the pin names the runtime under test"
+      }
+    ]
   },
   "system": {
     "configuration_digest": "sha256:a0ed220265c2b4876857d66b20b5e2903e07129d58260d19a600b391a2ac6034",
     "id": "agent-memory-runtime-baseline-v7-candidate",
     "kind": "agent_memory",
-    "revision": "git-commit:2b2a6199edf30feefd024aa10baace888aef5ffb",
+    "revision": "git-commit:785f49c9606f5be69b789f2bb3766272dc578f8a",
     "version": "0.2.0"
   },
   "transport": {
