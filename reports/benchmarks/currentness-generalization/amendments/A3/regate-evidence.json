@@ -1,0 +1,92 @@
+{
+  "all_checks_hold": true,
+  "amendment_id": "plan-732-g3b-amendment-A3-786",
+  "authority_effect": "none",
+  "checks": {
+    "digest matches": true,
+    "effective value frozen": true,
+    "no rebinding or shadowing": true,
+    "recorded rejections reproduced": true,
+    "replay bases": true,
+    "replay byte-identical": true,
+    "sensitivity complete": true,
+    "strict refuses current": true,
+    "tests pass": true,
+    "worktree clean": true
+  },
+  "comparison_digest": {
+    "independent": {
+      "5555504": "0bcc7365667fe14a64ec355d5ee6c9e0d35b2aa432e52b53f574fce8761d1f03",
+      "76a9e30": "0bcc7365667fe14a64ec355d5ee6c9e0d35b2aa432e52b53f574fce8761d1f03",
+      "HEAD": "0bcc7365667fe14a64ec355d5ee6c9e0d35b2aa432e52b53f574fce8761d1f03"
+    },
+    "matches_at_gate_revisions_and_head": true,
+    "recorded": "0bcc7365667fe14a64ec355d5ee6c9e0d35b2aa432e52b53f574fce8761d1f03"
+  },
+  "effective_value": {
+    "consumer_equals_frozen": true,
+    "direct_equals_frozen": true
+  },
+  "evidence_id": "plan-732-g3b-amendment-A3-786-regate-evidence",
+  "historical_replay": {
+    "comparisons": {
+      "attempt2": {
+        "equals_recorded_rejections_final": true,
+        "frozen_checker_exit": 0,
+        "head_basis": "plan-732-g3b-amendment-A3-786",
+        "head_exit": 0,
+        "head_strict_on_frozen_bytes_basis": "frozen_blob",
+        "rejections": [],
+        "rejections_byte_identical": true,
+        "report_identical_but_template_basis": true,
+        "stdout_byte_identical": true
+      },
+      "freeze": {
+        "frozen_checker_exit": 0,
+        "head_basis": "plan-732-g3b-amendment-A3-786",
+        "head_exit": 0,
+        "head_strict_on_frozen_bytes_basis": "frozen_blob",
+        "rejections": [],
+        "rejections_byte_identical": true,
+        "report_identical_but_template_basis": true,
+        "stdout_byte_identical": true
+      }
+    },
+    "frozen_checker_revision": "76a9e30e191dd1e21c524a5425c6d4708c24d768",
+    "strict_mode_on_current_source": {
+      "exit": 1,
+      "refused_with_historical_message": true
+    }
+  },
+  "identity": {
+    "a3_tests_blob": "af61d985c32ef32e2424e7edf8bdea021c4370f3",
+    "checker_blob": "cc9cf43efca1fc6c92a23fcaaa0629c0053eea58",
+    "frozen_template_blob": "745f789c01b7a542f906a9034ae63ebdd6776f7c",
+    "head": "656bbe4d67efaeda37154fe44760f1bbc8e77911",
+    "python": "3.12.3",
+    "template_source_blob": "7cb9535695dd5bc760831eba50aefd5622fc1fa5",
+    "tree": "032ac2beeba04168726720f92d4fc724294a76b5",
+    "worktree_clean_for_inputs": true
+  },
+  "mutation_sensitivity": {
+    "equivalent": [
+      "global clause removed",
+      "binding identity clause removed",
+      "frozen blob binding check removed"
+    ],
+    "exit": 0,
+    "killed": 30,
+    "summary": "every must-detect mutation was killed (30/30); 30 killed in total",
+    "survived": []
+  },
+  "repository_scan": {
+    "rebinding_findings": [],
+    "shadowing_paths": []
+  },
+  "schema_version": 1,
+  "tests": {
+    "exit": 0,
+    "summary": "OK",
+    "tests": 45
+  }
+}
