@@ -9,8 +9,12 @@
       "blob": "378ac09fea101287e19d9b3726661d5245f6a4bb"
     },
     {
+      "path": "reference/agentmem_ref/api/store_contract.py",
+      "blob": "83274c78ac581c54bc4ecd54118e84e01946ed9b"
+    },
+    {
       "path": "reference/agentmem_ref/api/surface.py",
-      "blob": "32a671c9bd1a47608ad390b23cf6bd42e68ba687"
+      "blob": "a62a330cce2ae15f6052275db0b33b185c2b9757"
     },
     {
       "path": "reference/agentmem_ref/memory/procedural_memory.py",
@@ -43,6 +47,10 @@
     {
       "path": "reference/agentmem_ref/scoped_identity.py",
       "blob": "36c03894500f63f43541b105ac8dd59a2d2a274a"
+    },
+    {
+      "path": "reference/agentmem_ref/store_contract.py",
+      "blob": "d7b506cb165abd3fc6b9014b6d6925f3af7f1064"
     }
   ],
   "identity_deltas": [],

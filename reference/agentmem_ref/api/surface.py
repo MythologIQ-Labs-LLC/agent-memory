@@ -33,7 +33,7 @@ from ..runtime import doctor
 from ..runtime.adapter import REPLACEMENT_KINDS, GovernedMemoryAdapter
 from ..runtime.restart_runtime import RuntimeRecoveryError
 from ..runtime.temporal_intent import declared_temporal, resolve_intent
-from . import contract
+from . import contract, store_contract
 
 __all__ = [
     "AgentMemory",
@@ -200,7 +200,8 @@ _DEFAULT_CONFIG_NAME = "runtime-config.json"
 _DATABASE_NAME = "agent-memory.sqlite3"
 _BINDING_NAME = "configuration-binding.json"
 
-# #786 store identity profiles (proposed contract; promotion requires owner approval).
+# #786 store identity profiles, versioned by the store-open contract
+# (``store_contract.STORE_OPEN_CONTRACT_VERSION``), not by the envelope contract.
 # A profile is recorded once, when a store is created, and never rewritten.
 STORE_PROFILE_FILE = "store-identity.json"
 STORE_PROFILE_SINGLE_PROJECT = "single_project_v1"
@@ -261,9 +262,22 @@ def _read_store_identity(path: Path) -> dict | None:
     except (OSError, ValueError) as exc:
         raise StoreIdentityError("store identity record is unreadable") from exc
     if (
+        isinstance(record, dict)
+        and record.get("schema") == _STORE_IDENTITY_SCHEMA
+        and store_contract.record_compatibility(record.get("version")) == store_contract.MIGRATION_REQUIRED
+    ):
+        # Written under a newer store-open contract: its admission rules are not ours to
+        # apply, so the store is neither opened, rewritten nor downgraded.
+        raise StoreIdentityError(
+            "store identity record requires a newer store-open contract than "
+            f"{store_contract.STORE_OPEN_CONTRACT_ID} {store_contract.STORE_OPEN_CONTRACT_VERSION}"
+        )
+    if (
         not isinstance(record, dict)
         or record.get("schema") != _STORE_IDENTITY_SCHEMA
-        or record.get("version") != 1
+        # Exact type: JSON true or 1.0 compare equal to 1 in Python and are not version 1.
+        or type(record.get("version")) is not int
+        or record.get("version") != store_contract.RECORD_VERSION
         or record.get("profile") not in STORE_PROFILES
         or not isinstance(record.get("tenant"), str)
         or (record["profile"] == STORE_PROFILE_SINGLE_PROJECT
@@ -446,6 +460,7 @@ class AgentMemory:
         proposition_extractor: Any = None,
         task_ref: str = "",
         store_profile: str | None = None,
+        store_open_contract: str | None = None,
     ) -> "AgentMemory":
         """Create or recover one qualified local SQLite composition.
 
@@ -461,6 +476,12 @@ class AgentMemory:
         A store created before profiles existed is never migrated: it opens only for
         the single project its canonical scope metadata already contains, and only
         without an explicit ``store_profile``.
+
+        These rules are the store-open contract (``store_contract``), versioned apart
+        from the envelope contract: ``contract_version`` stays the envelope version and
+        every 1.x envelope keeps its ADR-030 state. A host may pin the store-open
+        contract it was written against with ``store_open_contract``; any state other
+        than ``current`` refuses the open before the filesystem is touched.
 
         ``semantic_retrieval`` (#669) is ``"off"`` (default), ``"auto"`` or
         ``"required"``. ``auto`` enables the semantic vector route only when the
@@ -501,6 +522,13 @@ class AgentMemory:
             or (task_ref and any(ord(ch) < 32 for ch in task_ref))
         ):
             raise ValueError("task_ref must be a canonical, optional host-bound string")
+        if store_open_contract is not None:
+            state = store_contract.compatibility(store_open_contract)
+            if state != store_contract.CURRENT:
+                raise StoreIdentityError(
+                    f"host store-open contract {store_open_contract!r} is {state} against "
+                    f"{store_contract.STORE_OPEN_CONTRACT_ID} {store_contract.STORE_OPEN_CONTRACT_VERSION}"
+                )
         root = Path(path)
         root.mkdir(parents=True, exist_ok=True)
         if not tenant or not actor_id or not charter_version or not scope:
@@ -547,7 +575,7 @@ class AgentMemory:
             requested_profile = store_profile or STORE_PROFILE_SINGLE_PROJECT
             identity = _claim_store_identity(identity_path, {
                 "schema": _STORE_IDENTITY_SCHEMA,
-                "version": 1,
+                "version": store_contract.RECORD_VERSION,
                 "profile": requested_profile,
                 "tenant": tenant,
                 "bound_project": scope if requested_profile == STORE_PROFILE_SINGLE_PROJECT else None,
@@ -633,6 +661,11 @@ class AgentMemory:
     @property
     def contract_version(self) -> str:
         return contract.CONTRACT_VERSION
+
+    @property
+    def store_open_contract(self) -> dict:
+        """The store-open contract this handle was opened under (#786); read-only."""
+        return store_contract.describe(self.store_profile, contract.CONTRACT_VERSION)
 
     @property
     def closed(self) -> bool:

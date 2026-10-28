@@ -39,6 +39,14 @@ class IsolationTests(unittest.TestCase):
         self.assertIn("unaccepted", record["status"])
         self.assertIn("explicit owner approval", record["promotion_requires"])
 
+    def test_disposition_is_the_separately_versioned_store_open_contract(self):
+        from agentmem_ref.api import store_contract
+
+        disposition = candidate.load_record()["disposition"]
+        self.assertTrue(disposition.startswith("not promoted"))
+        self.assertIn(f"{store_contract.STORE_OPEN_CONTRACT_ID} {store_contract.STORE_OPEN_CONTRACT_VERSION}", disposition)
+        self.assertIn(f"envelope contract stays {contract.CONTRACT_VERSION}", disposition)
+
 
 class AdrCompatibilityTests(unittest.TestCase):
     def test_every_1x_envelope_is_incompatible_against_the_candidate(self):

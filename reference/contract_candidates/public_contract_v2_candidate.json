@@ -5,6 +5,7 @@
   "predecessor_version": "1.6.0",
   "issue": 786,
   "status": "unaccepted candidate; not published; not wired into the runtime",
+  "disposition": "not promoted (owner decision, 2026-10-28): store-open semantics are versioned separately as agent-memory-store-open 1.0.0 (agentmem_ref.api.store_contract); the envelope contract stays 1.6.0 and 1.x envelopes remain current; this record is retained as the measured alternative",
   "breaking_changes": [
     {
       "id": "BC1-default-single-project-store",

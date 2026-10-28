@@ -33,6 +33,23 @@ Contract `1.0.0` shipped this rule inverted (an older minor was reported `migrat
 
 Schema validation is a second, separate check ("serialization success is not semantic compatibility", ADR-030): a `current` envelope that fails its schema returns `stage: none` with `validation_error` naming the property.
 
+## Store-open contract (`agent-memory-store-open` `1.0.0`, #786; envelope contract unchanged at `1.6.0`)
+
+#786 store identity profiles change what `AgentMemory.open` admits, not any envelope. They are therefore versioned by a separate **store-open contract** (`agentmem_ref.api.store_contract`), and `CONTRACT_VERSION` stays `1.6.0`: every `1.0.0`-`1.6.0` envelope keeps the ADR-030 state in the table above on every store this runtime opens. The isolated 2.0.0 candidate (`reference/contract_candidates/`) measured the alternative: folding the open-time change into the envelope contract makes every 1.x envelope `incompatible`. It is not promoted.
+
+| store-open `1.0.0` rule | observable |
+|---|---|
+| A new store records `store-identity.json` (record `version` 1) once, exclusively, before the database exists | `single_project_v1` by default, bound to the opening `scope`; `scope_distinct_v1` on request |
+| A `single_project_v1` store opens only for its bound project, and only while canonical scope metadata agrees with the record | any other project raises `StoreIdentityError` before a key is read |
+| A `scope_distinct_v1` store binds every public key to (tenant, scope, key) | the only multi-project profile |
+| A store without a record (`legacy_unprofiled`) opens only for the single project it already contains, without an explicit `store_profile` | a multi-project legacy store is refused for every project and left byte-identical; it is never migrated implicitly |
+| A record whose `version` is newer than this contract's | refused (`requires a newer store-open contract`), never opened, rewritten or downgraded |
+| A record whose `version` is not exactly the integer `1` (including JSON `true` and `1.0`) | refused as malformed |
+
+A host may pin the store-open contract it was written against: `AgentMemory.open(..., store_open_contract="1.0.0")`. The declaration is evaluated with ADR-030's four states against `STORE_OPEN_CONTRACT_VERSION`; anything but `current` raises `StoreIdentityError` before the filesystem is touched. No declaration, store-open or envelope, restores multi-project access to a single-project or legacy store. A handle reports both versions through `AgentMemory.store_open_contract` (`contract_id`, `contract_version`, `record_version`, `store_profile`, `envelope_contract_version`); `contract_version` remains the envelope version.
+
+Evidence: `reference/tests/test_786_store_open_contract.py` (both halves on real SQLite stores), `reference/security_falsifiers/store_open_contract_sensitivity.py` (seven injected regressions, each detected by a behavioural test). Runtime Baseline identity does not yet carry the store-open version: the declaration schema admits deltas only for identities the predecessor record already has, so adding `identity.store_open_contract_version` is a baseline-tooling change for v7 publication.
+
 ## The stages
 
 | function | stage | writes? | what it does |
